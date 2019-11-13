@@ -2,170 +2,157 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B1AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32153C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F86222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADBF2245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HBHsCShK"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xgq0Qdfp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i3uhVvKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfKMPAi (ORCPT
+        id S1727952AbfKMPAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:00:38 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43388 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727550AbfKMPAi (ORCPT
+        Wed, 13 Nov 2019 10:00:43 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:46268 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727550AbfKMPAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:00:38 -0500
-Received: by mail-ot1-f66.google.com with SMTP id l14so1842506oti.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 07:00:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hn0rE8EvQLayCzvR+VM/mjAxPaLh9HP6Et6bUGhBo8g=;
-        b=HBHsCShKPxflrvZ7COZyam7cSyPMVSE2Df2KInwngnmj3XC6CG1iIdad+zrmgxjpoL
-         pSxx4/TtFbnMa8p0ZzauIadXVwYEW8KF0fCHGOYcggwDmdl//Oog+V52wV3Flug/P1xp
-         tGL4mvdwDE/9Y8unvP2kivCJXLeetnnoiVjsYJwtZwlp7+cp3seRr7udcMQLGDVX8Xus
-         p3tPTd4KIL68djgdYqFrWe1NHLSxqA25dDRo8Ax/Ah0RoEO4FcK3d6EL95e6TVEyJJ1V
-         QnX0eZljqiSf+2Rb+ggZUNKxx58eTL0jxZ4uByrkKDFwEZe6fUdBiGg6md11I/g/g5Cx
-         FCaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hn0rE8EvQLayCzvR+VM/mjAxPaLh9HP6Et6bUGhBo8g=;
-        b=PnrXFCfiNmw881h6j3MnbucXWqiUsioTDjnyWx5pzAVffRT/k48wA2o7Wzc9qeGv3Y
-         4ydIyMLUrBtIpEbRCRzR3MXbumvmtPHUcRAVouhd8dYYN7K1kLwPMaL57tFUrLrdEt1p
-         2/d1bYm4KGHUya6zq68O89Hrpjlhcca8PJZGVaumUaCd1iSQ5QK4HP0hjp4ug+BMNRDd
-         8Gx+WOWUP/n+DGVzRnlAcsuBFnKSKEGt2InoHegOmEvHg+cKaRjvNz9VLKgN5rpHUNfb
-         yWhBqvxvGw2/pXfSJgbDZ4MfCPC7SEbDkYKYrZKJ7K96xiEpi+dOclJ/dAi8bk9DaLvL
-         7XLg==
-X-Gm-Message-State: APjAAAWcNRDech+Wg+ea2GfbH0NTzPdtAMb8u84lctMz76ekVHAKCX39
-        VD8dd97K6zKQI6YvDVTUHu/U98TeQNIulPwe4mllUw==
-X-Google-Smtp-Source: APXvYqxJ3c6MEZ0/2hGP2/5UKDNPX6bPtZFJ9h4viwgj5WeAEavitL5ck3Xe6xnzWLwZazm4TAy56EBFRkAq0wZABQk=
-X-Received: by 2002:a9d:69cf:: with SMTP id v15mr3119489oto.251.1573657235271;
- Wed, 13 Nov 2019 07:00:35 -0800 (PST)
+        Wed, 13 Nov 2019 10:00:43 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DB7646030B; Wed, 13 Nov 2019 15:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573657241;
+        bh=6KJbCUxPimYHs4dQnfQiI+lDr5dgFdlKC/Z1ifkfhI0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Xgq0QdfprfvO891edqUa5hL252PgrGodyJhTWkNnZFguVg4feNCT/q7YamuaRGSBI
+         KgE4EbLGeCzTjn2JqK8DMIXUZFxG3aj0aslwVLFYU9Y+ZstWqw0ZeRvfY51EN6TF8u
+         WBSZ+bRL9OI8ur2ky2WltRmjGKWOTYq4HFlBEki8=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id B99626030B;
+        Wed, 13 Nov 2019 15:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573657240;
+        bh=6KJbCUxPimYHs4dQnfQiI+lDr5dgFdlKC/Z1ifkfhI0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i3uhVvKZD0Wztude+9oqQQE+wI8vdO5XMPxSc2QFKCMBwLqn0aSzNROj/7rs6Wmi8
+         PCYlKZfMtR6iu6fr3kf2dnZ6qXVnzZb5LVSctoAm/v993LKBRfewi+z5JkFE8bWzcn
+         ccy1gYEg5acNuBv0N0m0zdqB7d6DvpXILwoQ4x80=
 MIME-Version: 1.0
-References: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
- <Pine.LNX.4.44L0.1911121639540.1567-100000@iolanthe.rowland.org>
- <CANn89iKjWH86kChzPiVtCgVpt3GookwGk2x1YCTMeBSPpKU+Ww@mail.gmail.com>
- <20191112224441.2kxmt727qy4l4ncb@ast-mbp.dhcp.thefacebook.com>
- <CANn89iKLy-5rnGmVt-nzf6as4MvXgZzSH+BSReXZKpSTjhoWAw@mail.gmail.com> <CAHk-=wj_rFOPF9Sw_-h-6J93tP9qO_UOEvd-e02z9+DEDs2kLQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wj_rFOPF9Sw_-h-6J93tP9qO_UOEvd-e02z9+DEDs2kLQ@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 13 Nov 2019 16:00:21 +0100
-Message-ID: <CANpmjNNkbWoqckyPfhq52W4WfJWR2=rt8WXzs+WXEZzv9xxL0g@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 Nov 2019 20:30:40 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
+In-Reply-To: <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org>
+References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
+ <20191021033220.GG4500@tuxbook-pro>
+ <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
+ <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
+ <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
+ <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org>
+Message-ID: <1565197bda60573937453e95dcafbe68@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 at 00:41, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, Nov 12, 2019 at 3:18 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > Hmm we have the ' volatile'  attribute on jiffies, and it causes
-> > confusion already :p
->
-> The jiffies case is partly historical, but partly also because it's
-> one of the very very few data structures where 99% of all uses are
-> unlocked and for convenience reasons we really don't want to force
-> those legacy cases to do anything special about it.
->
-> "jiffies" really is very special for those kinds of legacy reasons.
-> Look at the kinds of games we play with it on 32-bit architectures:
-> the "real" storage is "jiffies_64", but nobody actually wants to use
-> that, and because of load tearing issues it's actually hard to use
-> too. So what everybody _uses_ is just the low 32 bits, and 'jiffies'
-> isn't a real variable, it's done with linker tricks in our
-> vmlinux.lds.S files. So, for example, on sparc32, you find this:
->
->     jiffies = jiffies_64 + 4;
->
-> in the vmlinux.lds.S file, because it's big-endian, and the lower 32
-> bits are at offset 4 from the real 64-bit variable.
->
-> Note that to actually read the "true" full 64-bit value, you have to
-> then call a function that does the proper sequence counter stuff etc.
-> But nobody really wants it, since what everybody actually _uses_ is
-> the "time_after(x,jiffies+10)" kind of thing, which is only done in
-> the wrapping "unsigned long" time base. So the odd "linker tricks with
-> the atomic low bits marked as a volatile data structure" is actually
-> exactly what we want, but people should realize that this is not
-> normal.
->
-> So 'jiffies' is really really special.
->
-> And absolutely nothing else should use 'volatile' on data structures
-> and be that special.  In the case of jiffies, the rule ends up being
-> that nobody should ever write to it (you write to the real
-> jiffies_64), and the real jiffies_64 thing gets the real locking, and
-> 'jiffies' is a read-only volatile thing.
->
-> So "READ_ONCE()" is indeed unnecessary with jiffies, but it won't
-> hurt. It's not really "confusion" - there's nothing _wrong_ with using
-> READ_ONCE() on volatile data, but we just normally don't do volatile
-> data in the kernel (because our normal model is that data is never
-> really volatile in general - there may be locked and unlocked accesses
-> to it, so it's stable or volatile depending on context, and thus the
-> 'volatile' goes on the _code_, not on the data structure)
->
-> But while jiffies READ_ONCE() accesses isn't _wrong_, it is also not
-> really paired with any WRITE_ONCE(), because the real update is to
-> technically not even to the same full data structure.
->
-> So don't look to jiffies for how to do things. It's an odd one-off.
->
-> That said, for "this might be used racily", if there are annotations
-> for clang to just make it shut up about one particular field in a
-> structure, than I think that would be ok. As long as it doesn't then
-> imply special code generation (outside of the checking, of course).
+Hello Rob,
 
-There are annotations that work for globals only. This limitation is
-because once you take a pointer of a variable, and just pass around
-the address, the attribute will be lost. So sometimes you might do the
-right thing, but other times you might not.
+On 2019-10-25 13:24, Sai Prakash Ranjan wrote:
+> On 2019-10-25 04:03, Rob Herring wrote:
+>> On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
+>> <saiprakash.ranjan@codeaurora.org> wrote:
+>>> 
+>>> Hi Rob,
+>>> 
+>>> On 2019-10-24 01:19, Rob Herring wrote:
+>>> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
+>>> > <bjorn.andersson@linaro.org> wrote:
+>>> >>
+>>> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
+>>> >>
+>>> >> > LLCC behaviour is controlled by the configuration data set
+>>> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
+>>> >> > Also convert the existing bindings to json-schema and add
+>>> >> > the compatible for SC7180 SoC.
+>>> >> >
+>>> >>
+>>> >> Thanks for the patches and thanks for the review Stephen. Series
+>>> >> applied
+>>> >
+>>> > And they break dt_binding_check. Please fix.
+>>> >
+>>> 
+>>> I did check this and think that the error log from dt_binding_check 
+>>> is
+>>> not valid because it says cache-level is a required property [1], but
+>>> there is no such property in LLCC bindings.
+>> 
+>> Then you should point out the issue and not just submit stuff ignoring
+>> it. It has to be resolved one way or another.
+>> 
+> 
+> I did not ignore it. When I ran the dt-binding check locally, it did 
+> not
+> error out and just passed on [1] and it was my bad that I did not check
+> the entire build logs to see if llcc dt binding check had some warning 
+> or
+> not. But this is the usual case where most of us don't look at the 
+> entire
+> build logs to check if there is a warning or not. We notice if there is 
+> an
+> immediate exit/fail in case of some warning/error. So it would be good 
+> if
+> we fail the dt-binding check build if there is some warning/error or 
+> atleast
+> provide some option to strict build to fail on warning, maybe there is 
+> already
+> a flag to do this?
+> 
+> After submitting the patch, I noticed this build failure on
+> patchwork.ozlabs.org and was waiting for your reply.
+> 
+> [1] https://paste.ubuntu.com/p/jNK8yfVkMG/
+> 
+>> If you refer to the DT spec[1], cache-level is required. The schema is
+>> just enforcing that now. It's keying off the node name of
+>> 'cache-controller'.
+>> 
+> 
+> This is not L2 or L3 cache, this is a system cache (last level cache) 
+> shared by
+> clients other than just CPU. So I don't know how do we specify 
+> cache-level for
+> this, let me know if you have some pointers.
+> 
 
-Just to summarize the options we've had so far:
-1. Add a comment, and let the tool parse it somehow.
-2. Add attribute to variables.
-3. Add some new macro to use with expressions, which doesn't do
-anything if the tool is disabled. E.g. "racy__(counter++)",
-"lossy__(counter++);" or any suitable name.
-
-1 and 3 are almost equivalent, except that 3 introduces "structured"
-comments that are much easier to understand for tooling. Both 1 and 2
-need compiler support.
-
-Right now both gcc and clang support KCSAN, and doing 1 or 2 would
-probably imply dropping one of them. Both 1 and 2 are also brittle: 1
-because comments are not forced to be structured, and 2 because
-attributes on variables do not propagate through pointers.
-
-From our perspective, macro-based annotations would be most reliable.
+Any ideas on specifying the cache-level for system cache? Does 
+dt-binding-check
+needs to be updated for this case?
 
 Thanks,
--- Marco
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
