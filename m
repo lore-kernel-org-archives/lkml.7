@@ -2,117 +2,167 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F304EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62ABC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0100206F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324C0206F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=laposte.net header.i=@laposte.net header.b="mJyJM8mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKMUZC (ORCPT
+        id S1727004AbfKMUZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:25:02 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58358 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726179AbfKMUZC (ORCPT
+        Wed, 13 Nov 2019 15:25:36 -0500
+Received: from smtpoutz29.laposte.net ([194.117.213.104]:60244 "EHLO
+        smtp.laposte.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726303AbfKMUZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:25:02 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADKLp8C067025
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:25:00 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w8q1tbr01-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:25:00 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 13 Nov 2019 20:24:58 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Nov 2019 20:24:54 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADKOres47185922
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 20:24:53 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A392C42049;
-        Wed, 13 Nov 2019 20:24:53 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C02D4203F;
-        Wed, 13 Nov 2019 20:24:52 +0000 (GMT)
-Received: from dhcp-9-31-103-201.watson.ibm.com (unknown [9.31.103.201])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Nov 2019 20:24:52 +0000 (GMT)
-Subject: Re: [PATCH v6 1/3] IMA: Add KEY_CHECK func to measure keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 13 Nov 2019 15:24:52 -0500
-In-Reply-To: <320826aa-f744-f2ae-8693-a6ce9461d886@linux.microsoft.com>
-References: <20191113184658.2862-1-nramas@linux.microsoft.com>
-         <20191113184658.2862-2-nramas@linux.microsoft.com>
-         <1573676066.4843.18.camel@linux.ibm.com>
-         <320826aa-f744-f2ae-8693-a6ce9461d886@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111320-0012-0000-0000-000003636213
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111320-0013-0000-0000-0000219ED864
-Message-Id: <1573676692.4843.20.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911130167
+        Wed, 13 Nov 2019 15:25:35 -0500
+X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 15:25:33 EST
+Received: from smtp.laposte.net (localhost [127.0.0.1])
+        by lpn-prd-vrout017 (Postfix) with ESMTP id D15E3BC18F9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 21:18:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=laposte.net; s=mail0;
+        t=1573676306; bh=SroHNBwy4onOK+eJMeJyZO/vrstwXvYfrcOD+IJg7+Q=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=mJyJM8mmkYHBFg6tOJFYTpaFi+S8XBStuIKzRZKeIa9/CIiJKWMntuANRj98Up18r
+         i/LlEJrwyszje6pHAJRAGBXf1nyb/s3V2kNGam+C59/aeffkPbgUAoWqNhcZYK9kn8
+         PZ2dublz0m7NtohTiA7NY8W3jTS2zqLslTCrZWh9dQ9Iasz8IkrabG3/3o5iaKzWAH
+         PThxRyZU3QHtV4QEwoFv9It61TsUWf8fZZhrNk3Lylx3xynsyZzn/OFArF2vzMlids
+         xPENnin1EoRTlRh6XmXbhh7UJy93vme3loJE97C491beCX5xbNrVSqh9V/7G/NIQmf
+         cUpXINfy5r6qw==
+Received: from smtp.laposte.net (localhost [127.0.0.1])
+        by lpn-prd-vrout017 (Postfix) with ESMTP id C27B7BC1903
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 21:18:26 +0100 (CET)
+Received: from lpn-prd-vrin002 (lpn-prd-vrin002.laposte [10.128.63.3])
+        by lpn-prd-vrout017 (Postfix) with ESMTP id C00B9BC18F5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 21:18:26 +0100 (CET)
+Received: from lpn-prd-vrin002 (localhost [127.0.0.1])
+        by lpn-prd-vrin002 (Postfix) with ESMTP id A26775E871E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 21:18:26 +0100 (CET)
+Received: from [192.168.43.153] (unknown [37.165.60.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by lpn-prd-vrin002 (Postfix) with ESMTPSA id E75F85E8710;
+        Wed, 13 Nov 2019 21:18:24 +0100 (CET)
+Subject: Re: [PATCH][RFC] ecryptfs_lookup_interpose(): lower_dentry->d_inode
+ is not stable
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, wugyuan@cn.ibm.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        ecryptfs@vger.kernel.org
+References: <20191022143736.GX26530@ZenIV.linux.org.uk>
+ <20191022201131.GZ26530@ZenIV.linux.org.uk>
+ <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
+ <20191101234622.GM26530@ZenIV.linux.org.uk>
+ <20191102172229.GT20975@paulmck-ThinkPad-P72>
+ <20191102180842.GN26530@ZenIV.linux.org.uk>
+ <20191103163524.GO26530@ZenIV.linux.org.uk>
+ <20191103182058.GQ26530@ZenIV.linux.org.uk>
+ <20191103185133.GR26530@ZenIV.linux.org.uk>
+ <CAOQ4uxiHH=e=Y5Xb3bkv+USxE0AftHiP935GGQEKkv54E17oDA@mail.gmail.com>
+ <20191113125216.GF26530@ZenIV.linux.org.uk>
+From:   Jean-Louis Biasini <jl.biasini@laposte.net>
+Message-ID: <073aec80-353a-1568-8f4b-4d9330c0d5b4@laposte.net>
+Date:   Wed, 13 Nov 2019 21:18:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191113125216.GF26530@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-VR-FullState: 0
+X-VR-Score: -100
+X-VR-Cause-1: gggruggvucftvghtrhhoucdtuddrgedufedrudefuddgudeflecutefuodetggdotefrodftvfcurfhr
+X-VR-Cause-2: ohhfihhlvgemucfntefrqffuvffgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghn
+X-VR-Cause-3: thhsucdlqddutddtmdenucfjughrpefuvfhfhffkffgfgggjtgfgsehtqhertddtfeejnecuhfhrohhm
+X-VR-Cause-4: peflvggrnhdqnfhouhhishcuuehirghsihhnihcuoehjlhdrsghirghsihhniheslhgrphhoshhtvgdr
+X-VR-Cause-5: nhgvtheqnecukfhppeefjedrudeihedriedtrddufeefnecurfgrrhgrmhepmhhouggvpehsmhhtphho
+X-VR-Cause-6: uhhtpdhinhgvthepfeejrdduieehrdeitddrudeffedphhgvlhhopegludelvddrudeikedrgeefrddu
+X-VR-Cause-7: heefngdpmhgrihhlfhhrohhmpehjlhdrsghirghsihhniheslhgrphhoshhtvgdrnhgvthdprhgtphht
+X-VR-Cause-8: thhopegvtghrhihpthhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgr
+X-VR-Cause-9: lhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepjhgrtghksehsuhhs
+X-VR-Cause-10: vgdrtgiipdhrtghpthhtohephhhsihgrnhhgkhgrohesrgholhdrtghomhdprhgtphhtthhopehjlhgr
+X-VR-Cause-11: hihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifuhhghihurghnsegtnhdrihgsmhdrtgho
+X-VR-Cause-12: mhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+X-VR-Cause-13: phhtthhopehrihhtvghshhhhsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtoheplhhinhhugidq
+X-VR-Cause-14: fhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrmhhirhejfehilhes
+X-VR-Cause-15: ghhmrghilhdrtghomhdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhk
+X-VR-Cause-16: necuvehluhhsthgvrhfuihiivgeptd
+X-VR-AvState: No
+X-VR-State: 0
+X-VR-State: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-13 at 12:21 -0800, Lakshmi Ramasubramanian wrote:
-> On 11/13/2019 12:14 PM, Mimi Zohar wrote:
-> 
-> >> @@ -655,6 +655,13 @@ void process_buffer_measurement(const void *buf, int size,
-> >>   	int action = 0;
-> >>   	u32 secid;
-> >>   
-> >> +	/*
-> >> +	 * If IMA is not yet initialized or IMA policy is empty
-> >> +	 * then there is no need to measure.
-> >> +	 */
-> >> +	if (!ima_policy_flag)
-> >> +		return;
-> >> +
-> > 
-> > This addition has nothing to do with defining a new IMA hook and
-> > should be a separate patch.  This can be posted independently of this
-> > patch set.
-> > 
-> > Mimi
-> 
-> I'll move this change to a different patch,
-> but it has to be either part of this patch set or the above change alone 
-> needs to be taken before this patch set for the following reason:
-> 
-> The IMA hook gets called early in the boot process (for example, when 
-> builtin_trusted_keys are added). If the above check is not there, 
-> ima_get_action() is called and causes kernel panic (since IMA is not yet 
-> initialized).
+Please can you UNSUBSCRIBE me from this list?
 
-It will be upstreamed prior to this patch set.
- 
-Mimi
+thx
+
+Le 13/11/2019 =C3=A0 13:52, Al Viro a =C3=A9crit=C2=A0:
+> On Wed, Nov 13, 2019 at 09:01:36AM +0200, Amir Goldstein wrote:
+>>> -       if (d_really_is_negative(lower_dentry)) {
+>>> +       /*
+>>> +        * negative dentry can go positive under us here - its parent=
+ is not
+>>> +        * locked.  That's OK and that could happen just as we return=
+ from
+>>> +        * ecryptfs_lookup() anyway.  Just need to be careful and fet=
+ch
+>>> +        * ->d_inode only once - it's not stable here.
+>>> +        */
+>>> +       lower_inode =3D READ_ONCE(lower_dentry->d_inode);
+>>> +
+>>> +       if (!lower_inode) {
+>>>                 /* We want to add because we couldn't find in lower *=
+/
+>>>                 d_add(dentry, NULL);
+>>>                 return NULL;
+>> Sigh!
+>>
+>> Open coding a human readable macro to solve a subtle lookup race.
+>> That doesn't sound like a scalable solution.
+>> I have a feeling this is not the last patch we will be seeing along
+>> those lines.
+>>
+>> Seeing that developers already confused about when they should use
+>> d_really_is_negative() over d_is_negative() [1] and we probably
+>> don't want to add d_really_really_is_negative(), how about
+>> applying that READ_ONCE into d_really_is_negative() and
+>> re-purpose it as a macro to be used when races with lookup are
+>> a concern?
+> Would you care to explain what that "fix" would've achieved here,
+> considering the fact that barriers are no-ops on UP and this is
+> *NOT* an SMP race?
+>
+> And it's very much present on UP - we have
+> 	fetch ->d_inode into local variable
+> 	do blocking allocation
+> 	check if ->d_inode is NULL now
+> 	if it is not, use the value in local variable and expect it to be non-=
+NULL
+>
+> That's not a case of missing barriers.  At all.  And no redefinition of=
+
+> d_really_is_negative() is going to help - it can't retroactively affect=
+
+> the value explicitly fetched into a local variable some time prior to
+> that.
+>
+> There are other patches dealing with ->d_inode accesses, but they are
+> generally not along the same lines.  The problem is rarely the same...
+>
 
