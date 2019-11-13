@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65C8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650EFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22DC206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3166421783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610788;
-	bh=yPJ2/XulO2bDi2HBr4ZZGwNMrmIfrdf5A0gQw9f4l5g=;
+	s=default; t=1573610793;
+	bh=7Eclvyk1oSXbFBFh01VOpWjcHVSzMgEQTosnOwSpzDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SkW7MLtNNDBlaya+Qa0EUVi2u6TyxAnr6DbS8ao9ayBFuUl60Z4HU4uyfeovHHlFH
-	 vNG7hSy3cZrI3rZdJoctvMfI7ATZxry7+cTCjhd795e0vVlH4xNMMisDCKfEssNSVr
-	 Y9X16vjam14YJABGjOuWpq+eMqQLGsigShTI7bZs=
+	b=QW4UVolqkAZjChTCgics0xRM0EsclADuhp9STIjlMOdbTKFddmyHHy/f8rG+efYFx
+	 nOSJnLB0h+YMcjhA+mBMrB6iCZPnD59aL3sSgSM2Fo4lIN3tr4mJUABwpIO3mbzKf1
+	 zNYNUFZ84vcA06uJNLB+gA4x1iZ4PsrmLQj2ahQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfKMCBN (ORCPT
+        id S1730670AbfKMCGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:01:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56748 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:06:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730647AbfKMCBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:05 -0500
+        id S1728719AbfKMCBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:01:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3CDD2245A;
-        Wed, 13 Nov 2019 02:01:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F98E22474;
+        Wed, 13 Nov 2019 02:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610464;
-        bh=yPJ2/XulO2bDi2HBr4ZZGwNMrmIfrdf5A0gQw9f4l5g=;
+        s=default; t=1573610472;
+        bh=7Eclvyk1oSXbFBFh01VOpWjcHVSzMgEQTosnOwSpzDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uao3u0uFW32j/t00vERUHpv4oq8iKANWqeK/TVuYVHDkCMzWaL9kX3CLbG9Q6dTq7
-         1hph3FtaKN/Ih65cUHzhhGghgCteN2nKglT95HxU0x3MDli5S85MwfF3UqIsxXr31N
-         5xxA49aoLgdH4jazSX0wXflANM91hFwIZUwiZ+4M=
+        b=joZzPXgyWhYguNhwGxiI92QzhfgwRawo5Q28bU5DasxDlmHXtTBKoSjHb8suXEcsl
+         Nt/KeXYO1NqhETgb7NXaG43YUHmmoCGhuwQTb82y/GRyzszSX6D1/4xpPc7a5ZhdRS
+         TjMNvC+1ZFtSw9YZMZkmYN3Z6DCfbVmezU2/cfts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Lianbo Jiang <lijiang@redhat.com>,
-        x86@kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 51/68] proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
-Date:   Tue, 12 Nov 2019 20:59:15 -0500
-Message-Id: <20191113015932.12655-51-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 57/68] media: cx231xx: fix potential sign-extension overflow on large shift
+Date:   Tue, 12 Nov 2019 20:59:21 -0500
+Message-Id: <20191113015932.12655-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -59,47 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit cf089611f4c446285046fcd426d90c18f37d2905 ]
+[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
 
-Lianbo reported a build error with a particular 32-bit config, see Link
-below for details.
+Shifting the u8 value[3] by an int can lead to sign-extension
+overflow. For example, if value[3] is 0xff and the shift is 24 then it
+is promoted to int and then the top bit is sign-extended so that all
+upper 32 bits are set.  Fix this by casting value[3] to a u32 before
+the shift.
 
-Provide a weak copy_oldmem_page_encrypted() function which architectures
-can override, in the same manner other functionality in that file is
-supplied.
+Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
 
-Reported-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: x86@kernel.org
-Link: http://lkml.kernel.org/r/710b9d95-2f70-eadf-c4a1-c3dc80ee4ebb@redhat.com
+Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/vmcore.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 8ab782d8b33dd..93d13f4010c14 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -164,6 +164,16 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 	return remap_pfn_range(vma, from, pfn, size, prot);
- }
- 
-+/*
-+ * Architectures which support memory encryption override this.
-+ */
-+ssize_t __weak
-+copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
-+			   unsigned long offset, int userbuf)
-+{
-+	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
-+}
-+
- /*
-  * Copy to either kernel or user space
-  */
+diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
+index 6414188ffdfac..cd973e780da93 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-video.c
++++ b/drivers/media/usb/cx231xx/cx231xx-video.c
+@@ -1389,7 +1389,7 @@ int cx231xx_g_register(struct file *file, void *priv,
+ 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
+ 				(u16)reg->reg, value, 4);
+ 		reg->val = value[0] | value[1] << 8 |
+-			value[2] << 16 | value[3] << 24;
++			value[2] << 16 | (u32)value[3] << 24;
+ 		reg->size = 4;
+ 		break;
+ 	case 1:	/* AFE - read byte */
 -- 
 2.20.1
 
