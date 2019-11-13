@@ -2,31 +2,31 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C73C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136C9C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3694206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E9E206FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfKMVCW (ORCPT
+        id S1727097AbfKMVCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:02:22 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38891 "EHLO
+        Wed, 13 Nov 2019 16:02:25 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38880 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbfKMVCV (ORCPT
+        with ESMTP id S1726979AbfKMVCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:02:21 -0500
+        Wed, 13 Nov 2019 16:02:20 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iUzmN-000671-90; Wed, 13 Nov 2019 22:02:19 +0100
-Message-Id: <20191113210104.591976506@linutronix.de>
+        id 1iUzmH-00066C-Lg; Wed, 13 Nov 2019 22:02:13 +0100
+Message-Id: <20191113204240.767922595@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 13 Nov 2019 21:42:49 +0100
+Date:   Wed, 13 Nov 2019 21:42:40 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -35,138 +35,110 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>
-Subject: [patch V3 09/20] x86/tss: Move I/O bitmap data into a seperate struct
-References: <20191113204240.767922595@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [patch V3 00/20] x86/iopl: Prevent user space from using CLI/STI with
+ iopl(3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the non hardware portion of I/O bitmap data into a seperate struct for
-readability sake.
+This is the third version of the attempt to confine the unwanted side
+effects of iopl(). The first version of this series can be found here:
 
-Originally-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+   https://lore.kernel.org/r/20191106193459.581614484@linutronix.de
+
+Second version is here:
+
+   https://lore.kernel.org/r/20191111220314.519933535@linutronix.de
+
+The V1 cover letter also contains a longer variant of the
+background. Summary:
+
+iopl(level = 3) enables aside of access to all 65536 I/O ports also the
+usage of CLI/STI in user space.
+
+Disabling interrupts in user space can lead to system lockups and breaks
+assumptions in the kernel that userspace always runs with interrupts
+enabled.
+
+iopl() is often preferred over ioperm() as it avoids the overhead of
+copying the tasks I/O bitmap to the TSS bitmap on context switch. This
+overhead can be avoided by providing a all zeroes bitmap in the TSS and
+switching the TSS bitmap offset to this permit all IO bitmap. It's
+marginally slower than iopl() which is a one time setup, but prevents the
+usage of CLI/STI in user space.
+
+The changes vs. V3:
+
+    - Split out the restructuring of the first/subsequent ioperm()
+      invocation into a seperate patch to address the inconsisteny which
+      Andy detected in the patch which introduces the concept of
+      invalidating the I/O bitmap base to speed up context switching.
+      This change is moved in front so the subsequent changes are
+      functionally correct.
+
+    - Moved the non HW TSS data related to I/O bitmap(s) into a seperate
+      data structure. Modified version of Ingos proposed patch.
+
+    - Made struct memeber names more consistent (Ingo)
+
+    - Dropped the bitmap union. It is not longer necessary because V2
+      already dropped the finer grained copying algorithm. The sequence
+      count approach should avoid most of the copying overhead when the
+      number of ioperm() using processes is very low which is the normal
+      case.
+
+    - Dropped the pointer storage of the bitmap in the TSS data as it is
+      not required (Peter, Andy)
+
+    - Fixed the missing refcount setting in the bitmap duplication code
+      path. (Peter, Andy)
+
+    - Updated changelog and comment to explain the bitmap invalidation
+      logic. (Andy)
+
+    - Removed TIF_IO_BITMAP from the TIF flags which are evaluated on the
+      next task for entering the slow path.
+
+    - Folded the NULL pointer check fix
+
+    - Simplified the config option in the legacy removal patch (Andy)
+
+    - Extended the scope of the config option to disable ioperm() along
+      with iopl() which also mokes all related storage and functions
+      compile time conditional. (Andy)
+
+The series is also available from git:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/iopl
+
+Thanks,
+
+	tglx
 ---
-V3: New patch
----
- arch/x86/include/asm/processor.h |   35 +++++++++++++++++++++--------------
- arch/x86/kernel/cpu/common.c     |    4 ++--
- arch/x86/kernel/ioport.c         |    4 ++--
- arch/x86/kernel/process.c        |    6 +++---
- 4 files changed, 28 insertions(+), 21 deletions(-)
-
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -328,11 +328,11 @@ struct x86_hw_tss {
-  * IO-bitmap sizes:
-  */
- #define IO_BITMAP_BITS			65536
--#define IO_BITMAP_BYTES			(IO_BITMAP_BITS/8)
--#define IO_BITMAP_LONGS			(IO_BITMAP_BYTES/sizeof(long))
-+#define IO_BITMAP_BYTES			(IO_BITMAP_BITS / BITS_PER_BYTE)
-+#define IO_BITMAP_LONGS			(IO_BITMAP_BYTES / sizeof(long))
- 
--#define IO_BITMAP_OFFSET_VALID				\
--	(offsetof(struct tss_struct, io_bitmap) -	\
-+#define IO_BITMAP_OFFSET_VALID					\
-+	(offsetof(struct tss_struct, io_bitmap.bitmap) -	\
- 	 offsetof(struct tss_struct, x86_tss))
- 
- /*
-@@ -356,14 +356,10 @@ struct entry_stack_page {
- 	struct entry_stack stack;
- } __aligned(PAGE_SIZE);
- 
--struct tss_struct {
--	/*
--	 * The fixed hardware portion.  This must not cross a page boundary
--	 * at risk of violating the SDM's advice and potentially triggering
--	 * errata.
--	 */
--	struct x86_hw_tss	x86_tss;
--
-+/*
-+ * All IO bitmap related data stored in the TSS:
-+ */
-+struct x86_io_bitmap {
- 	/*
- 	 * Store the dirty size of the last io bitmap offender. The next
- 	 * one will have to do the cleanup as the switch out to a non io
-@@ -371,7 +367,7 @@ struct tss_struct {
- 	 * outside of the TSS limit. So for sane tasks there is no need to
- 	 * actually touch the io_bitmap at all.
- 	 */
--	unsigned int		io_bitmap_prev_max;
-+	unsigned int		prev_max;
- 
- 	/*
- 	 * The extra 1 is there because the CPU will access an
-@@ -379,7 +375,18 @@ struct tss_struct {
- 	 * bitmap. The extra byte must be all 1 bits, and must
- 	 * be within the limit.
- 	 */
--	unsigned long		io_bitmap[IO_BITMAP_LONGS + 1];
-+	unsigned long		bitmap[IO_BITMAP_LONGS + 1];
-+};
-+
-+struct tss_struct {
-+	/*
-+	 * The fixed hardware portion.  This must not cross a page boundary
-+	 * at risk of violating the SDM's advice and potentially triggering
-+	 * errata.
-+	 */
-+	struct x86_hw_tss	x86_tss;
-+
-+	struct x86_io_bitmap	io_bitmap;
- } __aligned(PAGE_SIZE);
- 
- DECLARE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw);
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1861,8 +1861,8 @@ void cpu_init(void)
- 	/* Initialize the TSS. */
- 	tss_setup_ist(tss);
- 	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
--	tss->io_bitmap_prev_max = 0;
--	memset(tss->io_bitmap, 0xff, sizeof(tss->io_bitmap));
-+	tss->io_bitmap.prev_max = 0;
-+	memset(tss->io_bitmap.bitmap, 0xff, sizeof(tss->io_bitmap.bitmap));
- 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
- 
- 	load_TR_desc();
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -81,9 +81,9 @@ long ksys_ioperm(unsigned long from, uns
- 
- 	/* Update the TSS */
- 	tss = this_cpu_ptr(&cpu_tss_rw);
--	memcpy(tss->io_bitmap, t->io_bitmap_ptr, bytes_updated);
-+	memcpy(tss->io_bitmap.bitmap, t->io_bitmap_ptr, bytes_updated);
- 	/* Store the new end of the zero bits */
--	tss->io_bitmap_prev_max = bytes;
-+	tss->io_bitmap.prev_max = bytes;
- 	/* Make the bitmap base in the TSS valid */
- 	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
- 	/* Make sure the TSS limit covers the I/O bitmap. */
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -368,11 +368,11 @@ static inline void switch_to_bitmap(stru
- 		 * bits permitted, then the copy needs to cover those as
- 		 * well so they get turned off.
- 		 */
--		memcpy(tss->io_bitmap, next->io_bitmap_ptr,
--		       max(tss->io_bitmap_prev_max, next->io_bitmap_max));
-+		memcpy(tss->io_bitmap.bitmap, next->io_bitmap_ptr,
-+		       max(tss->io_bitmap.prev_max, next->io_bitmap_max));
- 
- 		/* Store the new max and set io_bitmap_base valid */
--		tss->io_bitmap_prev_max = next->io_bitmap_max;
-+		tss->io_bitmap.prev_max = next->io_bitmap_max;
- 		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
- 
- 		/*
-
+ arch/x86/Kconfig                        |   18 ++
+ arch/x86/entry/common.c                 |    4 
+ arch/x86/include/asm/io_bitmap.h        |   29 ++++
+ arch/x86/include/asm/paravirt.h         |    4 
+ arch/x86/include/asm/paravirt_types.h   |    2 
+ arch/x86/include/asm/pgtable_32_types.h |    2 
+ arch/x86/include/asm/processor.h        |  113 ++++++++++-------
+ arch/x86/include/asm/ptrace.h           |    6 
+ arch/x86/include/asm/switch_to.h        |   10 +
+ arch/x86/include/asm/thread_info.h      |   14 +-
+ arch/x86/include/asm/xen/hypervisor.h   |    2 
+ arch/x86/kernel/cpu/common.c            |  188 ++++++++++++----------------
+ arch/x86/kernel/doublefault.c           |    2 
+ arch/x86/kernel/ioport.c                |  209 +++++++++++++++++++++-----------
+ arch/x86/kernel/paravirt.c              |    2 
+ arch/x86/kernel/process.c               |  200 ++++++++++++++++++++++++------
+ arch/x86/kernel/process_32.c            |   77 -----------
+ arch/x86/kernel/process_64.c            |   86 -------------
+ arch/x86/kernel/ptrace.c                |   12 +
+ arch/x86/kvm/vmx/vmx.c                  |    8 -
+ arch/x86/mm/cpu_entry_area.c            |    8 +
+ arch/x86/xen/enlighten_pv.c             |   10 -
+ tools/testing/selftests/x86/ioperm.c    |   16 ++
+ tools/testing/selftests/x86/iopl.c      |  129 ++++++++++++++++++-
+ 24 files changed, 674 insertions(+), 477 deletions(-)
 
