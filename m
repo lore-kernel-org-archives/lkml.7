@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5DBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B69AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9738821D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C8721D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611786;
-	bh=Em/6r+eVCEBPBMQzKf3l+OODRJz6v5UF0j2kgMaZOdQ=;
+	s=default; t=1573611792;
+	bh=0Sjkf189679x4uXqj5BLH1BM4wR2jv51XnrwoMD8oH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KT1SjuoGomlJWhkjxAhOry9udM648v+590iyC6qLZNxPdw83/8pSHbFihoUvxywLB
-	 1AIy09NA/zo9hy75dd8PZ0sQVgadhqN+Lu+0AuTLIRdiL+BgOpl/JHVQIHoscmEsV4
-	 /ChbZrwKbq0T0M+evmPeFKLNmyo/jYkviz9LkeDE=
+	b=WU9D7zgyGYbug+VW3u4QLjrK7Kuvh5HjQnLckFFWyrmE4v5CwK85vTinYVPMULLH+
+	 D5GTTmy3lZxAQnA+FTwAWuOZSN+vDV4oXPepygCQOa+ts45bwNYlaioW57gc6eEG4K
+	 VUu1Q91r22XwOAhUOkcB4sfbJ6SfDM69bPlofpsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbfKMCXF (ORCPT
+        id S1728395AbfKMBwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:23:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42228 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:52:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728344AbfKMBw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:56 -0500
+        id S1728327AbfKMBwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF46222CD;
-        Wed, 13 Nov 2019 01:52:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8C28222CA;
+        Wed, 13 Nov 2019 01:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609974;
-        bh=Em/6r+eVCEBPBMQzKf3l+OODRJz6v5UF0j2kgMaZOdQ=;
+        s=default; t=1573609954;
+        bh=0Sjkf189679x4uXqj5BLH1BM4wR2jv51XnrwoMD8oH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cis2shCPkh/6aSYjOwmgosilxQ0x9o3s2PQ16VXmX2YT6byHjS9C7EpydbvSQf+cA
-         4yHlTSNudcvTGgyZqK3Cek5Uc9bEW7CbE4jv1JUtWwTHrDUx0oUKjR2qUIuMMmMyGE
-         TgNXY0ZPsXbeaQrkjFC7BylSOntW+yL6RJZYlSH0=
+        b=WNgJMfd2b8JwA1KlXQAZv6VJLbOQfrXwR2k5dGamy+1HnPq5UKxSqFm9ZGkrYqSmA
+         uLTlEGhol1XBr44KY6B2mxCbrnk+ROeWj7g3cyOhPQxQwBEgpd5GF0rFVLmta8R0K+
+         UDrXHdNA8YQ0AZOoxZIBUHznarajPVjE2w3Jxa+c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 100/209] brcmfmac: reduce timeout for action frame scan
-Date:   Tue, 12 Nov 2019 20:48:36 -0500
-Message-Id: <20191113015025.9685-100-sashal@kernel.org>
+Cc:     Matthias Reichl <hias@horus.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 089/209] media: rc: ir-rc6-decoder: enable toggle bit for Kathrein RCU-676 remote
+Date:   Tue, 12 Nov 2019 20:48:25 -0500
+Message-Id: <20191113015025.9685-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -63,75 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+From: Matthias Reichl <hias@horus.com>
 
-[ Upstream commit edb6d6885bef82d1eac432dbeca9fbf4ec349d7e ]
+[ Upstream commit 85e4af0a7ae2f146769b7475ae531bf8a3f3afb4 ]
 
-Finding a common channel to send an action frame out is required for
-some action types. Since a loop with several scan retry is used to find
-the channel, a short wait time could be considered for each attempt.
-This patch reduces the wait time from 1500 to 450 msec for each action
-frame scan.
+The Kathrein RCU-676 remote uses the 32-bit rc6 protocol and toggles
+bit 15 (0x8000) on repeated button presses, like MCE remotes.
 
-This patch fixes the WFA p2p certification 5.1.20 failure caused by the
-long action frame send time.
+Add it's customer code 0x80460000 to the 32-bit rc6 toggle
+handling code to get proper scancodes and toggle reports.
 
-Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
-Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Matthias Reichl <hias@horus.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/media/rc/ir-rc6-decoder.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-index 3e9c4f2f5dd12..7822740a8cb40 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-@@ -74,7 +74,7 @@
- #define P2P_AF_MAX_WAIT_TIME		msecs_to_jiffies(2000)
- #define P2P_INVALID_CHANNEL		-1
- #define P2P_CHANNEL_SYNC_RETRY		5
--#define P2P_AF_FRM_SCAN_MAX_WAIT	msecs_to_jiffies(1500)
-+#define P2P_AF_FRM_SCAN_MAX_WAIT	msecs_to_jiffies(450)
- #define P2P_DEFAULT_SLEEP_TIME_VSDB	200
- 
- /* WiFi P2P Public Action Frame OUI Subtypes */
-@@ -1134,7 +1134,6 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
- {
- 	struct afx_hdl *afx_hdl = &p2p->afx_hdl;
- 	struct brcmf_cfg80211_vif *pri_vif;
--	unsigned long duration;
- 	s32 retry;
- 
- 	brcmf_dbg(TRACE, "Enter\n");
-@@ -1150,7 +1149,6 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
- 	 * pending action frame tx is cancelled.
- 	 */
- 	retry = 0;
--	duration = msecs_to_jiffies(P2P_AF_FRM_SCAN_MAX_WAIT);
- 	while ((retry < P2P_CHANNEL_SYNC_RETRY) &&
- 	       (afx_hdl->peer_chan == P2P_INVALID_CHANNEL)) {
- 		afx_hdl->is_listen = false;
-@@ -1158,7 +1156,8 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
- 			  retry);
- 		/* search peer on peer's listen channel */
- 		schedule_work(&afx_hdl->afx_work);
--		wait_for_completion_timeout(&afx_hdl->act_frm_scan, duration);
-+		wait_for_completion_timeout(&afx_hdl->act_frm_scan,
-+					    P2P_AF_FRM_SCAN_MAX_WAIT);
- 		if ((afx_hdl->peer_chan != P2P_INVALID_CHANNEL) ||
- 		    (!test_bit(BRCMF_P2P_STATUS_FINDING_COMMON_CHANNEL,
- 			       &p2p->status)))
-@@ -1171,7 +1170,7 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
- 			afx_hdl->is_listen = true;
- 			schedule_work(&afx_hdl->afx_work);
- 			wait_for_completion_timeout(&afx_hdl->act_frm_scan,
--						    duration);
-+						    P2P_AF_FRM_SCAN_MAX_WAIT);
- 		}
- 		if ((afx_hdl->peer_chan != P2P_INVALID_CHANNEL) ||
- 		    (!test_bit(BRCMF_P2P_STATUS_FINDING_COMMON_CHANNEL,
+diff --git a/drivers/media/rc/ir-rc6-decoder.c b/drivers/media/rc/ir-rc6-decoder.c
+index 68487ce9f79b6..d96aed1343e42 100644
+--- a/drivers/media/rc/ir-rc6-decoder.c
++++ b/drivers/media/rc/ir-rc6-decoder.c
+@@ -40,6 +40,7 @@
+ #define RC6_6A_MCE_TOGGLE_MASK	0x8000	/* for the body bits */
+ #define RC6_6A_LCC_MASK		0xffff0000 /* RC6-6A-32 long customer code mask */
+ #define RC6_6A_MCE_CC		0x800f0000 /* MCE customer code */
++#define RC6_6A_KATHREIN_CC	0x80460000 /* Kathrein RCU-676 customer code */
+ #ifndef CHAR_BIT
+ #define CHAR_BIT 8	/* Normally in <limits.h> */
+ #endif
+@@ -242,13 +243,17 @@ static int ir_rc6_decode(struct rc_dev *dev, struct ir_raw_event ev)
+ 				toggle = 0;
+ 				break;
+ 			case 32:
+-				if ((scancode & RC6_6A_LCC_MASK) == RC6_6A_MCE_CC) {
++				switch (scancode & RC6_6A_LCC_MASK) {
++				case RC6_6A_MCE_CC:
++				case RC6_6A_KATHREIN_CC:
+ 					protocol = RC_PROTO_RC6_MCE;
+ 					toggle = !!(scancode & RC6_6A_MCE_TOGGLE_MASK);
+ 					scancode &= ~RC6_6A_MCE_TOGGLE_MASK;
+-				} else {
++					break;
++				default:
+ 					protocol = RC_PROTO_RC6_6A_32;
+ 					toggle = 0;
++					break;
+ 				}
+ 				break;
+ 			default:
 -- 
 2.20.1
 
