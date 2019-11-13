@@ -4,104 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A416FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76D7C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4614F20643
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF9F206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfKMRat (ORCPT
+        id S1727074AbfKMRhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:30:49 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54148 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726350AbfKMRap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:30:45 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E04425BCBE64080B92D2;
-        Thu, 14 Nov 2019 01:30:42 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 14 Nov 2019 01:30:37 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 2/2] sbitmap: Delete sbitmap_any_bit_clear()
-Date:   Thu, 14 Nov 2019 01:27:22 +0800
-Message-ID: <1573666042-176756-3-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1573666042-176756-1-git-send-email-john.garry@huawei.com>
-References: <1573666042-176756-1-git-send-email-john.garry@huawei.com>
+        Wed, 13 Nov 2019 12:37:07 -0500
+Received: from muru.com ([72.249.23.125]:42042 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbfKMRhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:37:07 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 3C02580E2;
+        Wed, 13 Nov 2019 17:37:42 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] bus: ti-sysc: Add module enable quirk for audio AESS
+Date:   Wed, 13 Nov 2019 09:37:02 -0800
+Message-Id: <20191113173702.57107-1-tony@atomide.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the only caller of this function has been deleted, delete this one
-also.
+We must set the autogating bit on enable for AESS (Audio Engine SubSystem)
+when probed with ti-sysc interconnect target module driver. Otherwise it
+won't idle properly.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- include/linux/sbitmap.h |  9 ---------
- lib/sbitmap.c           | 17 -----------------
- 2 files changed, 26 deletions(-)
+ drivers/bus/ti-sysc.c                 | 14 +++++++++++++-
+ include/linux/platform_data/ti-sysc.h |  1 +
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-index a986ac12a848..e40d019c3d9d 100644
---- a/include/linux/sbitmap.h
-+++ b/include/linux/sbitmap.h
-@@ -216,15 +216,6 @@ int sbitmap_get_shallow(struct sbitmap *sb, unsigned int alloc_hint,
-  */
- bool sbitmap_any_bit_set(const struct sbitmap *sb);
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1248,6 +1248,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 		   SYSC_QUIRK_SWSUP_SIDLE),
  
--/**
-- * sbitmap_any_bit_clear() - Check for an unset bit in a &struct
-- * sbitmap.
-- * @sb: Bitmap to check.
-- *
-- * Return: true if any bit in the bitmap is clear, false otherwise.
-- */
--bool sbitmap_any_bit_clear(const struct sbitmap *sb);
--
- #define SB_NR_TO_INDEX(sb, bitnr) ((bitnr) >> (sb)->shift)
- #define SB_NR_TO_BIT(sb, bitnr) ((bitnr) & ((1U << (sb)->shift) - 1U))
- 
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index 969e5400a615..33feec8989f1 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -236,23 +236,6 @@ bool sbitmap_any_bit_set(const struct sbitmap *sb)
+ 	/* Quirks that need to be set based on detected module */
++	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
++		   SYSC_MODULE_QUIRK_AESS),
+ 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
+ 		   SYSC_MODULE_QUIRK_HDQ1W),
+ 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
+@@ -1276,7 +1278,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ #ifdef DEBUG
+ 	SYSC_QUIRK("adc", 0, 0, 0x10, -1, 0x47300001, 0xffffffff, 0),
+ 	SYSC_QUIRK("atl", 0, 0, -1, -1, 0x0a070100, 0xffffffff, 0),
+-	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff, 0),
+ 	SYSC_QUIRK("cm", 0, 0, -1, -1, 0x40000301, 0xffffffff, 0),
+ 	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
+ 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
+@@ -1408,6 +1409,14 @@ static void sysc_clk_enable_quirk_hdq1w(struct sysc *ddata)
+ 	sysc_write(ddata, offset, val);
  }
- EXPORT_SYMBOL_GPL(sbitmap_any_bit_set);
  
--bool sbitmap_any_bit_clear(const struct sbitmap *sb)
--{
--	unsigned int i;
--
--	for (i = 0; i < sb->map_nr; i++) {
--		const struct sbitmap_word *word = &sb->map[i];
--		unsigned long mask = word->word & ~word->cleared;
--		unsigned long ret;
--
--		ret = find_first_zero_bit(&mask, word->depth);
--		if (ret < word->depth)
--			return true;
--	}
--	return false;
--}
--EXPORT_SYMBOL_GPL(sbitmap_any_bit_clear);
--
- static unsigned int __sbitmap_weight(const struct sbitmap *sb, bool set)
++/* AESS (Audio Engine SubSystem) needs autogating set after enable */
++static void sysc_module_enable_quirk_aess(struct sysc *ddata)
++{
++	int offset = 0x7c;	/* AESS_AUTO_GATING_ENABLE */
++
++	sysc_write(ddata, offset, 1);
++}
++
+ /* I2C needs extra enable bit toggling for reset */
+ static void sysc_clk_quirk_i2c(struct sysc *ddata, bool enable)
  {
- 	unsigned int i, weight = 0;
+@@ -1490,6 +1499,9 @@ static void sysc_init_module_quirks(struct sysc *ddata)
+ 		return;
+ 	}
+ 
++	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_AESS)
++		ddata->module_enable_quirk = sysc_module_enable_quirk_aess;
++
+ 	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_SGX)
+ 		ddata->module_enable_quirk = sysc_module_enable_quirk_sgx;
+ 
+diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
+--- a/include/linux/platform_data/ti-sysc.h
++++ b/include/linux/platform_data/ti-sysc.h
+@@ -49,6 +49,7 @@ struct sysc_regbits {
+ 	s8 emufree_shift;
+ };
+ 
++#define SYSC_MODULE_QUIRK_AESS		BIT(19)
+ #define SYSC_MODULE_QUIRK_SGX		BIT(18)
+ #define SYSC_MODULE_QUIRK_HDQ1W		BIT(17)
+ #define SYSC_MODULE_QUIRK_I2C		BIT(16)
 -- 
-2.17.1
-
+2.23.0
