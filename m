@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7989BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DBC206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A20B206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610857;
-	bh=5W2ErCyc47JdlxUbc9VA8AEfZ4i7AtaSVHCx4GuH8Jc=;
+	s=default; t=1573610866;
+	bh=Zgkwqrff4/iY33NyPBf0FfOVn1J4uPqkRyaGWhNjPxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqv7xute4aIhugEbDF4vAWZRPC2Uvwoz7MJG61gP4MJqjKreQ67u7mIe1b7wA+/Mq
-	 XN1JxFwPs6hJE3uercLSOFlKlhNXBVYzAHUTGhjZaL1MO0jrS3T7VkNoj+LNhPzx/y
-	 DG5IW2uEGT+xTrOawNM9fkQ4PsonmDasdEMBFxQg=
+	b=aR2Gg0a98fUD+ggY+M+4YKL0bmR9u0xHxqEUd7G2+xJRsKREciDdYc+MpHECqT9um
+	 IEcITbM+90YX9IJwCqru+lt4kRd3+AoDalN9fm12JOePhBCiOeKfxZ+WZxWl3y82wv
+	 GaLN4AvFcmJWwdK9bGWPROwnN9MaoVFBQJycRZmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730854AbfKMCHg (ORCPT
+        id S1730290AbfKMCHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:07:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56040 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:07:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730542AbfKMCAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:40 -0500
+        id S1730512AbfKMCAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03D942053B;
-        Wed, 13 Nov 2019 02:00:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDDE922467;
+        Wed, 13 Nov 2019 02:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610439;
-        bh=5W2ErCyc47JdlxUbc9VA8AEfZ4i7AtaSVHCx4GuH8Jc=;
+        s=default; t=1573610433;
+        bh=Zgkwqrff4/iY33NyPBf0FfOVn1J4uPqkRyaGWhNjPxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUwLJwZUQmAxRQcTvt8AlMeeckNlqN6O9aBC9XUuuKXwIICk5dBfbJpPf653kjAez
-         1GUdesABTwPA7oek7B+0634zusFNxQ3s/wQSZIEH6Qr9/02M0StD+zebSb+Nea9D0I
-         UrYxnHUGJE+MtMUy6055xY7a7SBqI/MwwwxjQ0cA=
+        b=Ovz5ZaFhDZH21SEeqCmayfYg5MFUMQ3HNzaJQ1B+aKklzyC2MAT8Yrm/e0+3UfVEX
+         No6A9yBJLLqqfmOo2CMuIzXRvKsUjXzWcIB1aJOogtVirlj8+BLCXo1AseRWPWfEwG
+         RTgLWw06+4vp/A+p59c/3BGufD/1O4Ta1lqsxHBY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rami Rosen <ramirose@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 38/68] dmaengine: ioat: fix prototype of ioat_enumerate_channels
-Date:   Tue, 12 Nov 2019 20:59:02 -0500
-Message-Id: <20191113015932.12655-38-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 35/68] clk: samsung: Use clk_hw API for calling clk framework from clk notifiers
+Date:   Tue, 12 Nov 2019 20:58:59 -0500
+Message-Id: <20191113015932.12655-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -58,56 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rami Rosen <ramirose@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit f4d34aa8c887a8a2d23ef546da0efa10e3f77241 ]
+[ Upstream commit 1da220e3a5d22fccda0bc8542997abc1d1741268 ]
 
-Signed-off-by: Rami Rosen <ramirose@gmail.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+clk_notifier_register() documentation states, that the provided notifier
+callbacks associated with the notifier must not re-enter into the clk
+framework by calling any top-level clk APIs. Fix this by replacing
+clk_get_rate() calls with clk_hw_get_rate(), which is safe in this
+context.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <snawrocki@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/init.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/clk/samsung/clk-cpu.c | 6 +++---
+ drivers/clk/samsung/clk-cpu.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index d139706f01fe8..9d936584d3310 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -129,7 +129,7 @@ static void
- ioat_init_channel(struct ioatdma_device *ioat_dma,
- 		  struct ioatdma_chan *ioat_chan, int idx);
- static void ioat_intr_quirk(struct ioatdma_device *ioat_dma);
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
- static int ioat3_dma_self_test(struct ioatdma_device *ioat_dma);
- 
- static int ioat_dca_enabled = 1;
-@@ -573,7 +573,7 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
-  * ioat_enumerate_channels - find and initialize the device's channels
-  * @ioat_dma: the ioat dma device to be enumerated
-  */
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
+index 8bf7e805fd349..1271315b0c25b 100644
+--- a/drivers/clk/samsung/clk-cpu.c
++++ b/drivers/clk/samsung/clk-cpu.c
+@@ -152,7 +152,7 @@ static int exynos_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
+ 			struct exynos_cpuclk *cpuclk, void __iomem *base)
  {
- 	struct ioatdma_chan *ioat_chan;
- 	struct device *dev = &ioat_dma->pdev->dev;
-@@ -592,7 +592,7 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 	xfercap_log = readb(ioat_dma->reg_base + IOAT_XFERCAP_OFFSET);
- 	xfercap_log &= 0x1f; /* bits [4:0] valid */
- 	if (xfercap_log == 0)
--		return 0;
-+		return;
- 	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
+ 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
+-	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
++	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
+ 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
+ 	unsigned long div0, div1 = 0, mux_reg;
+ 	unsigned long flags;
+@@ -280,7 +280,7 @@ static int exynos5433_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
+ 			struct exynos_cpuclk *cpuclk, void __iomem *base)
+ {
+ 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
+-	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
++	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
+ 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
+ 	unsigned long div0, div1 = 0, mux_reg;
+ 	unsigned long flags;
+@@ -432,7 +432,7 @@ int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
+ 	else
+ 		cpuclk->clk_nb.notifier_call = exynos_cpuclk_notifier_cb;
  
- 	for (i = 0; i < dma->chancnt; i++) {
-@@ -609,7 +609,6 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 		}
- 	}
- 	dma->chancnt = i;
--	return i;
- }
- 
- /**
+-	cpuclk->alt_parent = __clk_lookup(alt_parent);
++	cpuclk->alt_parent = __clk_get_hw(__clk_lookup(alt_parent));
+ 	if (!cpuclk->alt_parent) {
+ 		pr_err("%s: could not lookup alternate parent %s\n",
+ 				__func__, alt_parent);
+diff --git a/drivers/clk/samsung/clk-cpu.h b/drivers/clk/samsung/clk-cpu.h
+index d4b6b517fe1b4..bd38c6aa38970 100644
+--- a/drivers/clk/samsung/clk-cpu.h
++++ b/drivers/clk/samsung/clk-cpu.h
+@@ -49,7 +49,7 @@ struct exynos_cpuclk_cfg_data {
+  */
+ struct exynos_cpuclk {
+ 	struct clk_hw				hw;
+-	struct clk				*alt_parent;
++	struct clk_hw				*alt_parent;
+ 	void __iomem				*ctrl_base;
+ 	spinlock_t				*lock;
+ 	const struct exynos_cpuclk_cfg_data	*cfg;
 -- 
 2.20.1
 
