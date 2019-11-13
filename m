@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF0C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E728DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A73D206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D5E206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610849;
-	bh=uwR+ZkkgiwpN6ZchteRgte5Qy/AWfYAwBCYwH+Xv/ZM=;
+	s=default; t=1573610853;
+	bh=cAjZ586zGlwwEAc6mS6QatfsCBkzzwO45shjpQ2vYxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMlpToVJHe1nhoNqRmKxjwHyWz19z8slxeOwk2y5sGICC+m/fRFMWHOkkikhd2m1Y
-	 UQleW/8SbCpcP3ZsGlzXCzHa3dWN6x8eq4vEBv7rMevfS/edBN+bQpaxGMLllIYIaG
-	 UaXvZ5MatTme4TXNMNmkPGw851ybJ1PvyxiY1RQU=
+	b=QqYCsfrVvHqgEKA18H1SukMJ/exAK1luST6bEwZG/c/7pqhSKnsyNtSjWnE/8dJgk
+	 wuoOlN5HMO+BV44SX9wARbOo09N5OMEOTQO0VlcyGMaWGAk6oUupY6k15gUyqT1iN/
+	 ye55uOP7LBhL2QLztCpvf5NbciiE3O5UCEK4Xi0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730848AbfKMCH2 (ORCPT
+        id S1727783AbfKMCAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:07:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56136 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:00:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730550AbfKMCAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:44 -0500
+        id S1730489AbfKMCA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B7B22470;
-        Wed, 13 Nov 2019 02:00:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1025B2053B;
+        Wed, 13 Nov 2019 02:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610443;
-        bh=uwR+ZkkgiwpN6ZchteRgte5Qy/AWfYAwBCYwH+Xv/ZM=;
+        s=default; t=1573610428;
+        bh=cAjZ586zGlwwEAc6mS6QatfsCBkzzwO45shjpQ2vYxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RhRD94IGCvYaj1I6hgP/+ALK4ik5W2u0GM48hkqjmFy0dwF4uuQ9bvYiYkkFUgc5e
-         gD85Oja/Z6hkvlmegoDrVTHLmazmgMkOF205RlUmzEzL4+MJEYGMBN5seQFVDP7VPq
-         UUtx8VCa2MdLo3JO6q2xTYGEKfLivKhxZiGjWEDY=
+        b=UdBPZ8cSSYS2MPbmwZV5l8iLO2jRGslmd9kGwzYU2WTmwZFFxnhpVhIsxoYPfxFiB
+         KRwiYgUFnUllg5TmmA79y6dcvrP3lRonXkPwrG3yU/iRLKmcg6D5XvdaeFMKXflxjl
+         9Fo5CGTgr+15RMjTAj3jLVC9sbAml657s2M/aB0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Sax <jsbc@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 40/68] Input: silead - try firmware reload after unsuccessful resume
-Date:   Tue, 12 Nov 2019 20:59:04 -0500
-Message-Id: <20191113015932.12655-40-sashal@kernel.org>
+Cc:     Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 33/68] brcmfmac: reduce timeout for action frame scan
+Date:   Tue, 12 Nov 2019 20:58:57 -0500
+Message-Id: <20191113015932.12655-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -60,60 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Sax <jsbc@gmx.de>
+From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
 
-[ Upstream commit dde27443211062e841806feaf690674b7c3a599f ]
+[ Upstream commit edb6d6885bef82d1eac432dbeca9fbf4ec349d7e ]
 
-A certain silead controller (Chip ID: 0x56810000) loses its firmware
-after suspend, causing the resume to fail. This patch tries to load
-the firmware, should a resume error occur and retries the resuming.
+Finding a common channel to send an action frame out is required for
+some action types. Since a loop with several scan retry is used to find
+the channel, a short wait time could be considered for each attempt.
+This patch reduces the wait time from 1500 to 450 msec for each action
+frame scan.
 
-Signed-off-by: Julian Sax <jsbc@gmx.de>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This patch fixes the WFA p2p certification 5.1.20 failure caused by the
+long action frame send time.
+
+Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/silead.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index f502c8488be86..867772878c0c8 100644
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -504,20 +504,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
- static int __maybe_unused silead_ts_resume(struct device *dev)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+index f78d91b692871..c91f5ef0be7c3 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+@@ -74,7 +74,7 @@
+ #define P2P_AF_MAX_WAIT_TIME		msecs_to_jiffies(2000)
+ #define P2P_INVALID_CHANNEL		-1
+ #define P2P_CHANNEL_SYNC_RETRY		5
+-#define P2P_AF_FRM_SCAN_MAX_WAIT	msecs_to_jiffies(1500)
++#define P2P_AF_FRM_SCAN_MAX_WAIT	msecs_to_jiffies(450)
+ #define P2P_DEFAULT_SLEEP_TIME_VSDB	200
+ 
+ /* WiFi P2P Public Action Frame OUI Subtypes */
+@@ -1139,7 +1139,6 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
  {
- 	struct i2c_client *client = to_i2c_client(dev);
-+	bool second_try = false;
- 	int error, status;
+ 	struct afx_hdl *afx_hdl = &p2p->afx_hdl;
+ 	struct brcmf_cfg80211_vif *pri_vif;
+-	unsigned long duration;
+ 	s32 retry;
  
- 	silead_ts_set_power(client, SILEAD_POWER_ON);
- 
-+ retry:
- 	error = silead_ts_reset(client);
- 	if (error)
- 		return error;
- 
-+	if (second_try) {
-+		error = silead_ts_load_fw(client);
-+		if (error)
-+			return error;
-+	}
-+
- 	error = silead_ts_startup(client);
- 	if (error)
- 		return error;
- 
- 	status = silead_ts_get_status(client);
- 	if (status != SILEAD_STATUS_OK) {
-+		if (!second_try) {
-+			second_try = true;
-+			dev_dbg(dev, "Reloading firmware after unsuccessful resume\n");
-+			goto retry;
-+		}
- 		dev_err(dev, "Resume error, status: 0x%02x\n", status);
- 		return -ENODEV;
- 	}
+ 	brcmf_dbg(TRACE, "Enter\n");
+@@ -1155,7 +1154,6 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
+ 	 * pending action frame tx is cancelled.
+ 	 */
+ 	retry = 0;
+-	duration = msecs_to_jiffies(P2P_AF_FRM_SCAN_MAX_WAIT);
+ 	while ((retry < P2P_CHANNEL_SYNC_RETRY) &&
+ 	       (afx_hdl->peer_chan == P2P_INVALID_CHANNEL)) {
+ 		afx_hdl->is_listen = false;
+@@ -1163,7 +1161,8 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
+ 			  retry);
+ 		/* search peer on peer's listen channel */
+ 		schedule_work(&afx_hdl->afx_work);
+-		wait_for_completion_timeout(&afx_hdl->act_frm_scan, duration);
++		wait_for_completion_timeout(&afx_hdl->act_frm_scan,
++					    P2P_AF_FRM_SCAN_MAX_WAIT);
+ 		if ((afx_hdl->peer_chan != P2P_INVALID_CHANNEL) ||
+ 		    (!test_bit(BRCMF_P2P_STATUS_FINDING_COMMON_CHANNEL,
+ 			       &p2p->status)))
+@@ -1176,7 +1175,7 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
+ 			afx_hdl->is_listen = true;
+ 			schedule_work(&afx_hdl->afx_work);
+ 			wait_for_completion_timeout(&afx_hdl->act_frm_scan,
+-						    duration);
++						    P2P_AF_FRM_SCAN_MAX_WAIT);
+ 		}
+ 		if ((afx_hdl->peer_chan != P2P_INVALID_CHANNEL) ||
+ 		    (!test_bit(BRCMF_P2P_STATUS_FINDING_COMMON_CHANNEL,
 -- 
 2.20.1
 
