@@ -2,126 +2,160 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B26C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D37C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CC9222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB93222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jFMGKMVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfKMMUh (ORCPT
+        id S1727281AbfKMMZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:20:37 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52214 "EHLO mx1.suse.de"
+        Wed, 13 Nov 2019 07:25:02 -0500
+Received: from mail-eopbgr00075.outbound.protection.outlook.com ([40.107.0.75]:28093
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726543AbfKMMUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 07:20:37 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4EFA7AD6F;
-        Wed, 13 Nov 2019 12:20:34 +0000 (UTC)
-Message-ID: <1573647975.2933.17.camel@suse.cz>
-Subject: Re: [PATCH 6/6] x86: intel_pstate: handle runtime turbo
- disablement/enablement in freq. invariance
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Date:   Wed, 13 Nov 2019 13:26:15 +0100
-In-Reply-To: <201911130542.dtVRgDKU%lkp@intel.com>
-References: <20191111180549.12166-7-ggherdovich@suse.cz>
-         <201911130542.dtVRgDKU%lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726449AbfKMMZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 07:25:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eLiMeuPst/KQIukQ/zPTIUkAajNhWHw5txj35h0Wb97b9M21rKyNk5JLEACyJOzSsWIgTmMHv5mj5C7bH2CZG6aHchp5BaJQEXdiBZqI1PqoAhvn6o5K0AJARsK/CiLDlLzq1/r7vTPzS/pan7qLEE3CqCSpX5IJbyh4gFxgAAxh2m+OZH07UGWxmti9Wluf+5VIf6S7h/nnMQRrRNpb30zyvsqzmPtUsPRFV11btgCytvOppbo5C1hy0f36GO/wsyE8GGViBSiSTxogUeFs5dZY+xfwgOJI5BMx3pvGhC5pCVBs3TlpTgJ6dnJSlbGIB4/BBalw8jvM2FA7/YB5/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5DpofxCMyAgJCTZ1sUOB884BST8xJfXAYUtzzds67u8=;
+ b=iffUgQnCgPR9XOUVeoCSIRMURgNhe7pLKqwHbVYfjK50HUw9s5EZE+A0I7wPSw7Kc+UGLN0n9wG2s02Ms751eWmGACUhYCy1tIMZAoeNohiPuZkc82IU8K4fBgB2IT+/CDoIxYkPJ7u3rEf4VkID9487R5qoOXLv6tocw23Cj/cQBjfrHFcR1o1OTLLvkmcV/GYTirjbgKeCZr4qqeY/Dq4wnJ/pkK/kMWnTVp7r/i/pyfV0E94IPBaie3BuEovLz09SrdYFaO4B+uQCko+LilBfQHAXqy0yaBao3ncnXAE78+4hbKnaNdZGdPVU/P7jqegheSe0w9TgZOqZbRJ5JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5DpofxCMyAgJCTZ1sUOB884BST8xJfXAYUtzzds67u8=;
+ b=jFMGKMVB9K/WqKVR0i/PRcyg8oUyPHgfg6rh7UaK7C/6Y9PdwvF5fL9w9FbmZuRa8MD0a00a3yGvAk0O3lY3WZQaZtxtZJ4JqfgNI45I+R/rNLpGsMSn8llEyuyw10q6RHE0JaMK5eew4HVf0oYR+Qfs/ii5btIFZYaGdbG3skc=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
+ VI1PR04MB6142.eurprd04.prod.outlook.com (20.179.27.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.25; Wed, 13 Nov 2019 12:24:17 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::71d2:55b3:810d:c75b]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::71d2:55b3:810d:c75b%7]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
+ 12:24:17 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     "hch@lst.de" <hch@lst.de>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>
+CC:     Leo Li <leoyang.li@nxp.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH v3 0/4] dma-mapping: introduce new dma unmap and sync variants
+Thread-Topic: [PATCH v3 0/4] dma-mapping: introduce new dma unmap and sync
+ variants
+Thread-Index: AQHVmh1EAM9HSxnkaEm+5zOWq0YV/g==
+Date:   Wed, 13 Nov 2019 12:24:17 +0000
+Message-ID: <20191113122407.1171-1-laurentiu.tudor@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR02CA0008.eurprd02.prod.outlook.com
+ (2603:10a6:208:3e::21) To VI1PR04MB5134.eurprd04.prod.outlook.com
+ (2603:10a6:803:5f::16)
+x-mailer: git-send-email 2.17.1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9fcb4b72-3d95-4cf0-4dd7-08d768346707
+x-ms-traffictypediagnostic: VI1PR04MB6142:|VI1PR04MB6142:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB614249E8389401ADCB6E2761EC760@VI1PR04MB6142.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(366004)(189003)(199004)(6486002)(66066001)(486006)(966005)(110136005)(86362001)(6436002)(44832011)(6306002)(5660300002)(54906003)(2906002)(305945005)(476003)(14454004)(2201001)(6512007)(186003)(3846002)(316002)(6116002)(66946007)(2616005)(7736002)(256004)(14444005)(66556008)(66446008)(99286004)(52116002)(6636002)(36756003)(64756008)(25786009)(2501003)(386003)(71190400001)(6506007)(478600001)(1076003)(8936002)(71200400001)(26005)(50226002)(102836004)(81156014)(81166006)(4326008)(66476007)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6142;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PdQAEznC9yQnYG7dSl1MAIwwiwTHxK+rkV30FMI3AVPjlg9FNUqVmnCricJOQgym31LJVTW273u9T5DGkE0UHb2OxgXsS/VFmFvd+dDMh8T3Nk/K5xqilB7j0ZB7AEJ/ixU+Nv5L3Xuzxt7C+fVT4FMQGBnB5TH2ZShsMvt7TBrRBOsIPJzDZ7kqtZ7xbB8E4B1F97PbgSAWy9+J3f/cWcOomYYq0gk/1cBB4qNfL243snY8h2pe6RVeSKuzuchwDCKuB437RZP+hnCtwy+YAYL3MErDXp/AmzQKe5DNdiPj3Ex9mjPhYgsqsk7F1+pp9ENINJyNo3Sam+FGxzznvtqw+6CXGjF7oHRz43L5bZqEayTHGfhzAkPNxGH5SK8c13TWr9NU4frifm+m50kqkBhESdMI83zIi0TFdDA13pzln2kKQOtwMkRNuDld1sPhq/MeWJ+7zk4SB4A8ku8OLF/gtojDvSvGr4TGI2j+Ni0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DC0B467A1118CD40BBB0E04D9E025C72@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9fcb4b72-3d95-4cf0-4dd7-08d768346707
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 12:24:17.5423
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B/ME1afsdfW/HOnKGOZRrFNpFSdeo2dk5e0uhmzUtNVtjtrhu3sG4l5nNcyG+60GLyZ5DNlzaJRWYUl0H3RspQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-13 at 05:28 +0800, kbuild test robot wrote:
-> Hi Giovanni,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on tip/sched/core]
-> [cannot apply to v5.4-rc7 next-20191111]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Giovanni-Gherdovich/Add-support-for-frequency-invariance-for-some-x86/20191113-035438
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git a0e813f26ebcb25c0b5e504498fbd796cca1a4ba
-> config: i386-randconfig-e001-201945 (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/cpufreq/intel_pstate.c: In function 'intel_pstate_update_limits':
-> > > drivers/cpufreq/intel_pstate.c:925:3: error: implicit declaration of function 'set_arch_max_freq' [-Werror=implicit-function-declaration]
-> 
->       set_arch_max_freq(global.turbo_disabled);
->       ^~~~~~~~~~~~~~~~~
->    cc1: some warnings being treated as errors
-> 
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Good bot. I'm defining the function set_arch_max_freq only if CONFIG_SMP,
-I forgot to provide a definition (with empty body) in the other case.
+This series introduces a few new dma unmap and sync api variants that,
+on top of what the originals do, return the virtual address
+corresponding to the input dma address. In order to do that a new dma
+map op is added, .get_virt_addr that takes the input dma address and
+returns the virtual address backing it up.
+The second patch adds an implementation for this new dma map op in the
+generic iommu dma glue code and wires it in.
+The third patch updates the dpaa2-eth driver to use the new apis.
 
-Resending.
+Context: https://lkml.org/lkml/2019/5/31/684
 
-Giovanni
+Changes in v3
+ * drop useless check for null iommu domain (Robin)
+ * add dma_can_unmap_by_dma_addr() to check availability of
+   these new apis (Christoph)
+ * make apis work with direct dma (Christoph)
+ * add support for swiotlb (Robin)
+ * simplify dpaa2_eth driver code by using dma_unmap_single_desc()
+   instead of dma_unmap_page_desc()
 
-> vim +/set_arch_max_freq +925 drivers/cpufreq/intel_pstate.c
-> 
->    913	
->    914	static void intel_pstate_update_limits(unsigned int cpu)
->    915	{
->    916		mutex_lock(&intel_pstate_driver_lock);
->    917	
->    918		update_turbo_state();
->    919		/*
->    920		 * If turbo has been turned on or off globally, policy limits for
->    921		 * all CPUs need to be updated to reflect that.
->    922		 */
->    923		if (global.turbo_disabled_mf != global.turbo_disabled) {
->    924			global.turbo_disabled_mf = global.turbo_disabled;
->  > 925			set_arch_max_freq(global.turbo_disabled);
->    926			for_each_possible_cpu(cpu)
->    927				intel_pstate_update_max_freq(cpu);
->    928		} else {
->    929			cpufreq_update_policy(cpu);
->    930		}
->    931	
->    932		mutex_unlock(&intel_pstate_driver_lock);
->    933	}
->    934	
-> 
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Changes in v2
+ * use "dma_unmap_*_desc" names (Robin)
+ * return va/page instead of phys addr (Robin)
+
+Changes since RFC
+ * completely changed the approach: added unmap and sync variants that
+   return the phys addr instead of adding a new dma to phys conversion
+   function
+
+Laurentiu Tudor (4):
+  dma-mapping: introduce new dma unmap and sync api variants
+  iommu/dma: wire-up new dma map op .get_virt_addr
+  swiotlb: make new {unmap,sync}_desc dma apis work with swiotlb
+  dpaa2_eth: use new unmap and sync dma api variants
+
+ drivers/iommu/dma-iommu.c                     | 13 ++++
+ .../net/ethernet/freescale/dpaa2/dpaa2-eth.c  | 43 +++++-----
+ .../net/ethernet/freescale/dpaa2/dpaa2-eth.h  |  1 -
+ include/linux/dma-mapping.h                   | 45 +++++++++++
+ include/linux/swiotlb.h                       |  7 ++
+ kernel/dma/mapping.c                          | 78 +++++++++++++++++++
+ kernel/dma/swiotlb.c                          |  8 ++
+ 7 files changed, 169 insertions(+), 26 deletions(-)
+
+--=20
+2.17.1
+
