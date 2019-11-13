@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9B7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56260C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C4121D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2488A21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611467;
-	bh=Yk0BthtfhCwG5HdWsol18bF1E9VmSioqlac3A/a++5w=;
+	s=default; t=1573611477;
+	bh=GiRq6isUKqlw5ic9C6s8nWtJ3WvmPvXY0nX5Cv07Y+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RCNVNHxJ+Cs+sYLpP+9eYjyEHtHCmzBETlyJQ5Kt04xBQQmExgVWP1G+Z2nmNyPZy
-	 GcaCTuTTAOyxW/eGsSWaImWVpMEoPsBcIndUVEGM/3O8FZtTuOydyULfkPFkym+xl1
-	 4BYBY57rSthF2lGc9vasneHTri8D2gbasB97+1sw=
+	b=FQfCJq0lJGA2ZI3bUe6TGO3t0nk5rfaWiuqZw4ZiPbEPxt3bYn8l8D21D5MAoum61
+	 3OexFO/eL+CN5ZQaZfKpKr5KcK42xD0EIjDtOkiDtbv68Y2Hrymm0a/6ThFweDQlFd
+	 SOWRvzFOBzeWy8MVwYhX3YNfu4efhwkxFaozarNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbfKMCRm (ORCPT
+        id S1730070AbfKMCRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:17:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47974 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:17:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729277AbfKMBz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:59 -0500
+        id S1729312AbfKMBzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DEBE22474;
-        Wed, 13 Nov 2019 01:55:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB1252245D;
+        Wed, 13 Nov 2019 01:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610159;
-        bh=Yk0BthtfhCwG5HdWsol18bF1E9VmSioqlac3A/a++5w=;
+        s=default; t=1573610154;
+        bh=GiRq6isUKqlw5ic9C6s8nWtJ3WvmPvXY0nX5Cv07Y+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNuzEANb/wLXvvYEq5GZfdOuVahIyEmuZDTqn+VsJRG/n2gXrkiCPqfuGHxkJFeCr
-         De4BMUO7r8zgOB8MHpy1hWGhKl79b9w1dlDRdnb6mimXP442YEq0zaXaEnvazFjMKQ
-         kTKV8pTEM2ngM9KEN4AK/Lhe+JlntUUp2rOcIvnY=
+        b=mnksK09qq4IsD7lLgxJ0efdIJ8Fv5qlOkM6YhXU3fpqN/OY1tYPxxDlx589jwV/dv
+         NU93JTs4FPFilqUtKKB5EMJuTcEzQWE9dS/Y+MRjsttEqh2xZF++GfNvairBomjWvx
+         siIjPFAnmdwngagt/qdXZH3FOnsG6evYJwi8iFtQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roger Quadros <rogerq@ti.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 202/209] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
-Date:   Tue, 12 Nov 2019 20:50:18 -0500
-Message-Id: <20191113015025.9685-202-sashal@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 198/209] mac80211: minstrel: fix CCK rate group streams value
+Date:   Tue, 12 Nov 2019 20:50:14 -0500
+Message-Id: <20191113015025.9685-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,37 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit a763ecc15d0e37c3a15ff6825183061209832685 ]
+[ Upstream commit 80df9be67c44cb636bbc92caeddad8caf334c53c ]
 
-OMAP5's Super-Speed USB port has a software mailbox register
-that needs to be fed with VBUS and ID events from an external
-VBUS/ID comparator.
+Fixes a harmless underflow issue when CCK rates are actively being used
 
-Without this, Host role will not work correctly.
-
-Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ net/mac80211/rc80211_minstrel_ht.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-index c2dc4199b4ec2..61a06f6add3ca 100644
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -704,6 +704,7 @@
- };
+diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
+index ae1a180d2eee3..2ecca10f6c24a 100644
+--- a/net/mac80211/rc80211_minstrel_ht.c
++++ b/net/mac80211/rc80211_minstrel_ht.c
+@@ -129,7 +129,7 @@
  
- &dwc3 {
-+	extcon = <&extcon_usb3>;
- 	dr_mode = "otg";
- };
- 
+ #define CCK_GROUP					\
+ 	[MINSTREL_CCK_GROUP] = {			\
+-		.streams = 0,				\
++		.streams = 1,				\
+ 		.flags = 0,				\
+ 		.duration = {				\
+ 			CCK_DURATION_LIST(false),	\
 -- 
 2.20.1
 
