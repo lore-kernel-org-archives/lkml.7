@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAFDC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74920C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5088921D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E16C21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611183;
-	bh=JAvM7CkiVRXc3zfljbJU26xCBWfObc0AvnV9AUKGXWk=;
+	s=default; t=1573611193;
+	bh=1CoKczlBB1iIl9HG7yyi/uWIsWV4eb00AiNisJOIj7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uS+5Nhxulgbgw5Bqw8TqRJqNHMcpYeRerknxQf4K3CIaAzvvsX+W3zg83PrX0f2n3
-	 rwu39VBnyufK5wOg2MW8rQttRL6VKSZrPEHxwSW0pcn5cl/9vH5OrLSQkUJagUwS9P
-	 Oj1fdz3wLdRWEhW0X1+mPLGFdlyUIKUXK1uFMjDM=
+	b=CfMjktwhO+rPY4ocsmIJYEIR1jGm+Q2xXS/OsR5oxNHZ/BOogrO5uKMptxvDoldwt
+	 pp41lTzYWab5o6M4DZkZ7EqnEBT+0YWDez4K1dkpzmSQgHf3UiOcCNYYCXmNveRXMg
+	 kmRX0HgrHXJLSTPMhOHgr2pOZ6etdXujIUt3yEPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfKMCNB (ORCPT
+        id S1729876AbfKMB5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:13:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51466 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:57:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728890AbfKMB57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:59 -0500
+        id S1728256AbfKMB5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C70CA222D3;
-        Wed, 13 Nov 2019 01:57:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E17D222D3;
+        Wed, 13 Nov 2019 01:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610278;
-        bh=JAvM7CkiVRXc3zfljbJU26xCBWfObc0AvnV9AUKGXWk=;
+        s=default; t=1573610257;
+        bh=1CoKczlBB1iIl9HG7yyi/uWIsWV4eb00AiNisJOIj7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t84M/dadbQ2DGuu3eCa2OKzVvqbYE9NIpZqEEB7XLQrLG2w/y0rrh8rHVdJfsW6Zj
-         AQpBeJSOvu/1XriFh3lUlEH7QnyzYKHgCOsFO1j0MiAGBZEWGcGom2eT88Un0F9Dl+
-         k11z0iym0xJeqimy73l0mIEVarDtsfwii3G2+lek=
+        b=ze7Z1wEsork3kLP6WdqEPkjQFcl/NMwWcWhAp3ZOGzrirvsM8eBplIOYld3tJzRrG
+         safMVOsV2vwn9U+lxaewKGZSDEYzTZ1eTTLRlj6FoXJM0tF2SsCWMG1vwAgcJaes8m
+         fxAb8WqEjj0a5lqenCGXg2LntcdG+2ANI53lQqt4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 060/115] brcmfmac: fix full timeout waiting for action frame on-channel tx
-Date:   Tue, 12 Nov 2019 20:55:27 -0500
-Message-Id: <20191113015622.11592-60-sashal@kernel.org>
+Cc:     Matthias Reichl <hias@horus.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 051/115] media: rc: ir-rc6-decoder: enable toggle bit for Kathrein RCU-676 remote
+Date:   Tue, 12 Nov 2019 20:55:18 -0500
+Message-Id: <20191113015622.11592-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -63,88 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+From: Matthias Reichl <hias@horus.com>
 
-[ Upstream commit fbf07000960d9c8a13fdc17c6de0230d681c7543 ]
+[ Upstream commit 85e4af0a7ae2f146769b7475ae531bf8a3f3afb4 ]
 
-The driver sends an action frame down and waits for a completion signal
-triggered by the received BRCMF_E_ACTION_FRAME_OFF_CHAN_COMPLETE event
-to continue the process. However, the action frame could be transmitted
-either on the current channel or on an off channel. For the on-channel
-case, only BRCMF_E_ACTION_FRAME_COMPLETE event will be received when
-the frame is transmitted, which make the driver always wait a full
-timeout duration. This patch has the completion signal be triggered by
-receiving the BRCMF_E_ACTION_FRAME_COMPLETE event for the on-channel
-case.
+The Kathrein RCU-676 remote uses the 32-bit rc6 protocol and toggles
+bit 15 (0x8000) on repeated button presses, like MCE remotes.
 
-This change fixes WFA p2p certification 5.1.19 failure.
+Add it's customer code 0x80460000 to the 32-bit rc6 toggle
+handling code to get proper scancodes and toggle reports.
 
-Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
-Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Matthias Reichl <hias@horus.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/broadcom/brcm80211/brcmfmac/p2p.c  | 17 +++++++++++++++--
- .../wireless/broadcom/brcm80211/brcmfmac/p2p.h  |  2 ++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ drivers/media/rc/ir-rc6-decoder.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-index c9566c9036721..4a883f4bbf885 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-@@ -1462,10 +1462,12 @@ int brcmf_p2p_notify_action_tx_complete(struct brcmf_if *ifp,
- 		return 0;
- 
- 	if (e->event_code == BRCMF_E_ACTION_FRAME_COMPLETE) {
--		if (e->status == BRCMF_E_STATUS_SUCCESS)
-+		if (e->status == BRCMF_E_STATUS_SUCCESS) {
- 			set_bit(BRCMF_P2P_STATUS_ACTION_TX_COMPLETED,
- 				&p2p->status);
--		else {
-+			if (!p2p->wait_for_offchan_complete)
-+				complete(&p2p->send_af_done);
-+		} else {
- 			set_bit(BRCMF_P2P_STATUS_ACTION_TX_NOACK, &p2p->status);
- 			/* If there is no ack, we don't need to wait for
- 			 * WLC_E_ACTION_FRAME_OFFCHAN_COMPLETE event
-@@ -1516,6 +1518,17 @@ static s32 brcmf_p2p_tx_action_frame(struct brcmf_p2p_info *p2p,
- 	p2p->af_sent_channel = le32_to_cpu(af_params->channel);
- 	p2p->af_tx_sent_jiffies = jiffies;
- 
-+	if (test_bit(BRCMF_P2P_STATUS_DISCOVER_LISTEN, &p2p->status) &&
-+	    p2p->af_sent_channel ==
-+	    ieee80211_frequency_to_channel(p2p->remain_on_channel.center_freq))
-+		p2p->wait_for_offchan_complete = false;
-+	else
-+		p2p->wait_for_offchan_complete = true;
-+
-+	brcmf_dbg(TRACE, "Waiting for %s tx completion event\n",
-+		  (p2p->wait_for_offchan_complete) ?
-+		   "off-channel" : "on-channel");
-+
- 	timeout = wait_for_completion_timeout(&p2p->send_af_done,
- 					      P2P_AF_MAX_WAIT_TIME);
- 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
-index 0e8b34d2d85cb..39f0d02180882 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.h
-@@ -124,6 +124,7 @@ struct afx_hdl {
-  * @gon_req_action: about to send go negotiation requets frame.
-  * @block_gon_req_tx: drop tx go negotiation requets frame.
-  * @p2pdev_dynamically: is p2p device if created by module param or supplicant.
-+ * @wait_for_offchan_complete: wait for off-channel tx completion event.
-  */
- struct brcmf_p2p_info {
- 	struct brcmf_cfg80211_info *cfg;
-@@ -144,6 +145,7 @@ struct brcmf_p2p_info {
- 	bool gon_req_action;
- 	bool block_gon_req_tx;
- 	bool p2pdev_dynamically;
-+	bool wait_for_offchan_complete;
- };
- 
- s32 brcmf_p2p_attach(struct brcmf_cfg80211_info *cfg, bool p2pdev_forced);
+diff --git a/drivers/media/rc/ir-rc6-decoder.c b/drivers/media/rc/ir-rc6-decoder.c
+index 5d0d2fe3b7a7f..90f7930444a1a 100644
+--- a/drivers/media/rc/ir-rc6-decoder.c
++++ b/drivers/media/rc/ir-rc6-decoder.c
+@@ -40,6 +40,7 @@
+ #define RC6_6A_MCE_TOGGLE_MASK	0x8000	/* for the body bits */
+ #define RC6_6A_LCC_MASK		0xffff0000 /* RC6-6A-32 long customer code mask */
+ #define RC6_6A_MCE_CC		0x800f0000 /* MCE customer code */
++#define RC6_6A_KATHREIN_CC	0x80460000 /* Kathrein RCU-676 customer code */
+ #ifndef CHAR_BIT
+ #define CHAR_BIT 8	/* Normally in <limits.h> */
+ #endif
+@@ -252,13 +253,17 @@ static int ir_rc6_decode(struct rc_dev *dev, struct ir_raw_event ev)
+ 				toggle = 0;
+ 				break;
+ 			case 32:
+-				if ((scancode & RC6_6A_LCC_MASK) == RC6_6A_MCE_CC) {
++				switch (scancode & RC6_6A_LCC_MASK) {
++				case RC6_6A_MCE_CC:
++				case RC6_6A_KATHREIN_CC:
+ 					protocol = RC_PROTO_RC6_MCE;
+ 					toggle = !!(scancode & RC6_6A_MCE_TOGGLE_MASK);
+ 					scancode &= ~RC6_6A_MCE_TOGGLE_MASK;
+-				} else {
++					break;
++				default:
+ 					protocol = RC_PROTO_RC6_6A_32;
+ 					toggle = 0;
++					break;
+ 				}
+ 				break;
+ 			default:
 -- 
 2.20.1
 
