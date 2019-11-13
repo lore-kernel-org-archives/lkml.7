@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBDEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFF1C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636B1222CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B57B2246D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610345;
-	bh=JQAqd3/36HKh/pU2BDrNqBNz2bCic8kK4z5cvAQx8z0=;
+	s=default; t=1573610349;
+	bh=FxbYPhvLR8fg0DHgSH8WQhAhiiLiSwo6/aH4Zs4YwwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5Z2b+zNgmPmX8/VIYAVt9t9rtts91esp/P98yu+TeLao1Ijpg7a0aJWk0qGbDhsj
-	 lBP8FGiAYhu2pmw4nmx++5JG7BSyFWU+m00J9lN6ExDLfan5pdB+vIO1mtzPrnwRNR
-	 TK13nCNIc/tNrcuIJls+hUkRSh9zN5UXcOFpjGRQ=
+	b=WeI3wcYZIDm9YfpZsB45oZBvoMNNRllEcAdP/LgomImzXFZtqrhJ4bW8SN+CT+tvX
+	 uSsh2VE8WsFSC2ZIEXIXA2cSAPsOH/t/Dm5XKzd8LyZ3XrUmby+mtGaZugnEUoQUqE
+	 jE5BJHyrAgJxcQkXTQJvyy4kOH6/K8StR0VBqspw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbfKMB7E (ORCPT
+        id S1730203AbfKMB7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:59:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53054 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:59:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730137AbfKMB64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:56 -0500
+        id S1730137AbfKMB7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:59:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 983FC2053B;
-        Wed, 13 Nov 2019 01:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7F24222CF;
+        Wed, 13 Nov 2019 01:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610336;
-        bh=JQAqd3/36HKh/pU2BDrNqBNz2bCic8kK4z5cvAQx8z0=;
+        s=default; t=1573610344;
+        bh=FxbYPhvLR8fg0DHgSH8WQhAhiiLiSwo6/aH4Zs4YwwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8H9Qk0a0L2rIafIWXBPQRKB7uJj85dZR+1jzqyXsZykpztnwEMAtHSNOhY6ePJHf
-         TuY8r6q53c42+nm4GhXTImSSdLppVy+HcICfG/6j38KLfK/UQcLjIy6LYuOE8rPORj
-         BQSScx/rYi3gFgWvc2/Fa/hdO2pH+or8N559Zf24=
+        b=u+N7D3sDnRSAINv449sHBNV37jhdOJQPBQqKGcJm7s/qWscEQY+n8b4Bmt8FOIRbF
+         TKD1KZLCQImD4lQivTD/fJmmAPJ7obBtEXwj1FxPBXAJQHgUCkfvjl6u5uuY7s5yDl
+         Acd9gH3dJuSVIp8T+nb6qLEimwmK5UvhpBea0G7E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tim Smith <tim.smith@citrix.com>, Mark Syms <mark.syms@citrix.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.14 093/115] GFS2: Flush the GFS2 delete workqueue before stopping the kernel threads
-Date:   Tue, 12 Nov 2019 20:56:00 -0500
-Message-Id: <20191113015622.11592-93-sashal@kernel.org>
+Cc:     Hieu Tran Dang <dangtranhieu2012@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 097/115] spi: fsl-lpspi: Prevent FIFO under/overrun by default
+Date:   Tue, 12 Nov 2019 20:56:04 -0500
+Message-Id: <20191113015622.11592-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,62 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Smith <tim.smith@citrix.com>
+From: Hieu Tran Dang <dangtranhieu2012@gmail.com>
 
-[ Upstream commit 1eb8d7387908022951792a46fa040ad3942b3b08 ]
+[ Upstream commit de8978c388c66b8fca192213ec9f0727e964c652 ]
 
-Flushing the workqueue can cause operations to happen which might
-call gfs2_log_reserve(), or get stuck waiting for locks taken by such
-operations.  gfs2_log_reserve() can io_schedule(). If this happens, it
-will never wake because the only thing which can wake it is gfs2_logd()
-which was already stopped.
+Certain devices don't work well when a transmit FIFO underrun or
+receive FIFO overrun occurs. Example is the SAF400x radio chip when
+running at high speed which leads to garbage being sent to/received from
+the chip. In which case, it should stall waiting for further data to be
+available before proceeding. This patch unset the NOSTALL bit in CFGR1
+by default to prevent this issue.
 
-This causes umount of a gfs2 filesystem to wedge permanently if, for
-example, the umount immediately follows a large delete operation.
-
-When this occured, the following stack trace was obtained from the
-umount command
-
-[<ffffffff81087968>] flush_workqueue+0x1c8/0x520
-[<ffffffffa0666e29>] gfs2_make_fs_ro+0x69/0x160 [gfs2]
-[<ffffffffa0667279>] gfs2_put_super+0xa9/0x1c0 [gfs2]
-[<ffffffff811b7edf>] generic_shutdown_super+0x6f/0x100
-[<ffffffff811b7ff7>] kill_block_super+0x27/0x70
-[<ffffffffa0656a71>] gfs2_kill_sb+0x71/0x80 [gfs2]
-[<ffffffff811b792b>] deactivate_locked_super+0x3b/0x70
-[<ffffffff811b79b9>] deactivate_super+0x59/0x60
-[<ffffffff811d2998>] cleanup_mnt+0x58/0x80
-[<ffffffff811d2a12>] __cleanup_mnt+0x12/0x20
-[<ffffffff8108c87d>] task_work_run+0x7d/0xa0
-[<ffffffff8106d7d9>] exit_to_usermode_loop+0x73/0x98
-[<ffffffff81003961>] syscall_return_slowpath+0x41/0x50
-[<ffffffff815a594c>] int_ret_from_sys_call+0x25/0x8f
-[<ffffffffffffffff>] 0xffffffffffffffff
-
-Signed-off-by: Tim Smith <tim.smith@citrix.com>
-Signed-off-by: Mark Syms <mark.syms@citrix.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Hieu Tran Dang <dangtranhieu2012@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/super.c | 2 +-
+ drivers/spi/spi-fsl-lpspi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index 8e54f2e3a3040..c3f3f1ae4e1b7 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -845,10 +845,10 @@ static int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
- 	if (error && !test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
- 		return error;
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index cb3c73007ca15..8fe51f7541bb3 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -287,7 +287,7 @@ static int fsl_lpspi_config(struct fsl_lpspi_data *fsl_lpspi)
  
-+	flush_workqueue(gfs2_delete_workqueue);
- 	kthread_stop(sdp->sd_quotad_process);
- 	kthread_stop(sdp->sd_logd_process);
+ 	fsl_lpspi_set_watermark(fsl_lpspi);
  
--	flush_workqueue(gfs2_delete_workqueue);
- 	gfs2_quota_sync(sdp->sd_vfs, 0);
- 	gfs2_statfs_sync(sdp->sd_vfs, 0);
- 
+-	temp = CFGR1_PCSCFG | CFGR1_MASTER | CFGR1_NOSTALL;
++	temp = CFGR1_PCSCFG | CFGR1_MASTER;
+ 	if (fsl_lpspi->config.mode & SPI_CS_HIGH)
+ 		temp |= CFGR1_PCSPOL;
+ 	writel(temp, fsl_lpspi->base + IMX7ULP_CFGR1);
 -- 
 2.20.1
 
