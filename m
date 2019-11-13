@@ -2,554 +2,182 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0149C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB05C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01CD3206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:43:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n4oPiDNZ"
+	by mail.kernel.org (Postfix) with ESMTP id EC6C2206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfKMQnq (ORCPT
+        id S1728375AbfKMQqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:43:46 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59854 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbfKMQnq (ORCPT
+        Wed, 13 Nov 2019 11:46:23 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48104 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727550AbfKMQqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:43:46 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADGhcbD082565;
-        Wed, 13 Nov 2019 10:43:38 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573663418;
-        bh=paVykNsFG89EAYUXH9lqwwyyCdE1neML6AzAKD/PJC0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=n4oPiDNZtheKeZtH+8+4wSjk0rsUxZjORymZQ+m3qoUa3wm8sHEtz5mcm0nsKJA1T
-         ZU73DSMBjMCiKiGAhou79vTtL3cOYTg4IIKw1qAVzW9c5gaWHlYTo7+gvCvujfwcFn
-         TWK2e/zVZ65kxh4LLaYpFwDYjzja7OV1gbFJXvdo=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADGhcrt088352
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 10:43:38 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 10:43:20 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 10:43:20 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADGhb4j067065;
-        Wed, 13 Nov 2019 10:43:38 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 2/2] net: phy: dp83869: Add TI dp83869 phy
-Date:   Wed, 13 Nov 2019 10:42:26 -0600
-Message-ID: <20191113164226.3281-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20191113164226.3281-1-dmurphy@ti.com>
-References: <20191113164226.3281-1-dmurphy@ti.com>
+        Wed, 13 Nov 2019 11:46:23 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADGTE1P195310
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 11:46:22 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7qdbjskm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 11:46:21 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
+        Wed, 13 Nov 2019 16:46:18 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Nov 2019 16:46:15 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADGkEVo46203060
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 16:46:14 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48D984C050;
+        Wed, 13 Nov 2019 16:46:14 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CFA974C044;
+        Wed, 13 Nov 2019 16:46:13 +0000 (GMT)
+Received: from bahia.lan (unknown [9.145.184.11])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Nov 2019 16:46:13 +0000 (GMT)
+Subject: [PATCH v2 1/2] KVM: PPC: Book3S HV: XIVE: Free previous EQ page
+ when setting up a new one
+From:   Greg Kurz <groug@kaod.org>
+To:     Paul Mackerras <paulus@ozlabs.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?utf-8?q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Lijun Pan <ljp@linux.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Laurent Vivier <lvivier@redhat.com>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 13 Nov 2019 17:46:13 +0100
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-AS-GCONF: 00
+x-cbid: 19111316-0008-0000-0000-0000032EBB32
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111316-0009-0000-0000-00004A4DC604
+Message-Id: <157366357346.1026356.14522564753643067538.stgit@bahia.lan>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911130146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the TI DP83869 Gigabit ethernet phy
-device.
+The EQ page is allocated by the guest and then passed to the hypervisor
+with the H_INT_SET_QUEUE_CONFIG hcall. A reference is taken on the page
+before handing it over to the HW. This reference is dropped either when
+the guest issues the H_INT_RESET hcall or when the KVM device is released.
+But, the guest can legitimately call H_INT_SET_QUEUE_CONFIG several times,
+either to reset the EQ (vCPU hot unplug) or to set a new EQ (guest reboot).
+In both cases the existing EQ page reference is leaked because we simply
+overwrite it in the XIVE queue structure without calling put_page().
 
-The DP83869 is a robust, low power, fully featured
-Physical Layer transceiver with integrated PMD
-sublayers to support 10BASE-T, 100BASE-TX and
-1000BASE-T Ethernet protocols.
+This is especially visible when the guest memory is backed with huge pages:
+start a VM up to the guest userspace, either reboot it or unplug a vCPU,
+quit QEMU. The leak is observed by comparing the value of HugePages_Free in
+/proc/meminfo before and after the VM is run.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Ideally we'd want the XIVE code to handle the EQ page de-allocation at the
+platform level. This isn't the case right now because the various XIVE
+drivers have different allocation needs. It could maybe worth introducing
+hooks for this purpose instead of exposing XIVE internals to the drivers,
+but this is certainly a huge work to be done later.
+
+In the meantime, for easier backport, fix both vCPU unplug and guest reboot
+leaks by introducing a wrapper around xive_native_configure_queue() that
+does the necessary cleanup.
+
+Reported-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org # v5.2
+Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Greg Kurz <groug@kaod.org>
 ---
- drivers/net/phy/Kconfig   |   6 +
- drivers/net/phy/Makefile  |   1 +
- drivers/net/phy/dp83869.c | 431 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 438 insertions(+)
- create mode 100644 drivers/net/phy/dp83869.c
+v2: use wrapper as suggested by Cedric
+---
+ arch/powerpc/kvm/book3s_xive_native.c |   31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index fe602648b99f..4f8db1bb72a8 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -364,6 +364,12 @@ config DP83867_PHY
- 	---help---
- 	  Currently supports the DP83867 PHY.
+diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
+index 34bd123fa024..0e1fc5a16729 100644
+--- a/arch/powerpc/kvm/book3s_xive_native.c
++++ b/arch/powerpc/kvm/book3s_xive_native.c
+@@ -50,6 +50,24 @@ static void kvmppc_xive_native_cleanup_queue(struct kvm_vcpu *vcpu, int prio)
+ 	}
+ }
  
-+config DP83869_PHY
-+	tristate "Texas Instruments DP83869 Gigabit PHY"
-+	---help---
-+	  Currently supports the DP83869 PHY.  This PHY supports copper and
-+	  fiber connections.
-+
- config FIXED_PHY
- 	tristate "MDIO Bus/PHY emulation with fixed speed/link PHYs"
- 	depends on PHYLIB
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index a03437e091f3..b433ec3bf9a6 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -70,6 +70,7 @@ obj-$(CONFIG_DP83822_PHY)	+= dp83822.o
- obj-$(CONFIG_DP83TC811_PHY)	+= dp83tc811.o
- obj-$(CONFIG_DP83848_PHY)	+= dp83848.o
- obj-$(CONFIG_DP83867_PHY)	+= dp83867.o
-+obj-$(CONFIG_DP83869_PHY)	+= dp83869.o
- obj-$(CONFIG_FIXED_PHY)		+= fixed_phy.o
- obj-$(CONFIG_ICPLUS_PHY)	+= icplus.o
- obj-$(CONFIG_INTEL_XWAY_PHY)	+= intel-xway.o
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-new file mode 100644
-index 000000000000..fcd418716c10
---- /dev/null
-+++ b/drivers/net/phy/dp83869.c
-@@ -0,0 +1,431 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Driver for the Texas Instruments DP83869 PHY
-+ * Copyright (C) 2019 Texas Instruments Inc.
-+ */
-+
-+#include <linux/ethtool.h>
-+#include <linux/kernel.h>
-+#include <linux/mii.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/phy.h>
-+#include <linux/delay.h>
-+
-+#include <dt-bindings/net/ti-dp83869.h>
-+
-+#define DP83869_PHY_ID		0x2000a0f1
-+#define DP83869_DEVADDR		0x1f
-+
-+#define MII_DP83869_PHYCTRL	0x10
-+#define MII_DP83869_MICR	0x12
-+#define MII_DP83869_ISR		0x13
-+#define DP83869_CTRL		0x1f
-+#define DP83869_CFG4		0x1e
-+
-+/* Extended Registers */
-+#define DP83869_GEN_CFG3        0x0031
-+#define DP83869_RGMIICTL	0x0032
-+#define DP83869_STRAP_STS1	0x006e
-+#define DP83869_RGMIIDCTL	0x0086
-+#define DP83869_IO_MUX_CFG	0x0170
-+#define DP83869_OP_MODE		0x01df
-+#define DP83869_FX_CTRL		0x0c00
-+
-+#define DP83869_SW_RESET	BIT(15)
-+#define DP83869_SW_RESTART	BIT(14)
-+
-+/* MICR Interrupt bits */
-+#define MII_DP83869_MICR_AN_ERR_INT_EN		BIT(15)
-+#define MII_DP83869_MICR_SPEED_CHNG_INT_EN	BIT(14)
-+#define MII_DP83869_MICR_DUP_MODE_CHNG_INT_EN	BIT(13)
-+#define MII_DP83869_MICR_PAGE_RXD_INT_EN	BIT(12)
-+#define MII_DP83869_MICR_AUTONEG_COMP_INT_EN	BIT(11)
-+#define MII_DP83869_MICR_LINK_STS_CHNG_INT_EN	BIT(10)
-+#define MII_DP83869_MICR_FALSE_CARRIER_INT_EN	BIT(8)
-+#define MII_DP83869_MICR_SLEEP_MODE_CHNG_INT_EN	BIT(4)
-+#define MII_DP83869_MICR_WOL_INT_EN		BIT(3)
-+#define MII_DP83869_MICR_XGMII_ERR_INT_EN	BIT(2)
-+#define MII_DP83869_MICR_POL_CHNG_INT_EN	BIT(1)
-+#define MII_DP83869_MICR_JABBER_INT_EN		BIT(0)
-+
-+#define MII_DP83869_BMCR_DEFAULT	(BMCR_ANENABLE | \
-+					 BMCR_FULLDPLX | \
-+					 BMCR_SPEED1000)
-+
-+/* This is the same bit mask as the BMCR so re-use the BMCR default */
-+#define DP83869_FX_CTRL_DEFAULT	MII_DP83869_BMCR_DEFAULT
-+
-+/* CFG1 bits */
-+#define DP83869_CFG1_DEFAULT	(ADVERTISE_1000HALF | \
-+				 ADVERTISE_1000FULL | \
-+				 CTL1000_AS_MASTER)
-+
-+/* RGMIICTL bits */
-+#define DP83869_RGMII_TX_CLK_DELAY_EN		BIT(1)
-+#define DP83869_RGMII_RX_CLK_DELAY_EN		BIT(0)
-+
-+/* STRAP_STS1 bits */
-+#define DP83869_STRAP_STS1_RESERVED		BIT(11)
-+
-+/* PHYCTRL bits */
-+#define DP83869_RX_FIFO_SHIFT	12
-+#define DP83869_TX_FIFO_SHIFT	14
-+
-+/* PHY_CTRL lower bytes 0x48 are declared as reserved */
-+#define DP83869_PHY_CTRL_DEFAULT	0x48
-+#define DP83869_PHYCR_FIFO_DEPTH_MASK	GENMASK(15, 12)
-+#define DP83869_PHYCR_RESERVED_MASK	BIT(11)
-+
-+/* RGMIIDCTL bits */
-+#define DP83869_RGMII_TX_CLK_DELAY_SHIFT	4
-+
-+/* IO_MUX_CFG bits */
-+#define DP83869_IO_MUX_CFG_IO_IMPEDANCE_CTRL	0x1f
-+
-+#define DP83869_IO_MUX_CFG_IO_IMPEDANCE_MAX	0x0
-+#define DP83869_IO_MUX_CFG_IO_IMPEDANCE_MIN	0x1f
-+#define DP83869_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
-+#define DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
-+
-+/* CFG3 bits */
-+#define DP83869_CFG3_PORT_MIRROR_EN              BIT(0)
-+
-+/* CFG4 bits */
-+#define DP83869_INT_OE	BIT(7)
-+
-+/* OP MODE */
-+#define DP83869_OP_MODE_MII			BIT(5)
-+#define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
-+
-+enum {
-+	DP83869_PORT_MIRRORING_KEEP,
-+	DP83869_PORT_MIRRORING_EN,
-+	DP83869_PORT_MIRRORING_DIS,
-+};
-+
-+struct dp83869_private {
-+	int tx_fifo_depth;
-+	int rx_fifo_depth;
-+	int io_impedance;
-+	int port_mirroring;
-+	bool rxctrl_strap_quirk;
-+	int clk_output_sel;
-+	int mode;
-+};
-+
-+static int dp83869_ack_interrupt(struct phy_device *phydev)
++static int kvmppc_xive_native_configure_queue(u32 vp_id, struct xive_q *q,
++					      u8 prio, __be32 *qpage,
++					      u32 order, bool can_escalate)
 +{
-+	int err = phy_read(phydev, MII_DP83869_ISR);
++	int rc;
++	__be32 *qpage_prev = q->qpage;
 +
-+	if (err < 0)
-+		return err;
++	rc = xive_native_configure_queue(vp_id, q, prio, qpage, order,
++					 can_escalate);
++	if (rc)
++		return rc;
 +
-+	return 0;
++	if (qpage_prev)
++		put_page(virt_to_page(qpage_prev));
++
++	return rc;
 +}
 +
-+static int dp83869_config_intr(struct phy_device *phydev)
-+{
-+	int micr_status = 0;
-+
-+	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
-+		micr_status = phy_read(phydev, MII_DP83869_MICR);
-+		if (micr_status < 0)
-+			return micr_status;
-+
-+		micr_status |=
-+			(MII_DP83869_MICR_AN_ERR_INT_EN |
-+			MII_DP83869_MICR_SPEED_CHNG_INT_EN |
-+			MII_DP83869_MICR_AUTONEG_COMP_INT_EN |
-+			MII_DP83869_MICR_LINK_STS_CHNG_INT_EN |
-+			MII_DP83869_MICR_DUP_MODE_CHNG_INT_EN |
-+			MII_DP83869_MICR_SLEEP_MODE_CHNG_INT_EN);
-+
-+		return phy_write(phydev, MII_DP83869_MICR, micr_status);
-+	}
-+
-+	return phy_write(phydev, MII_DP83869_MICR, micr_status);
-+}
-+
-+static int dp83869_config_port_mirroring(struct phy_device *phydev)
-+{
-+	struct dp83869_private *dp83869 = phydev->priv;
-+
-+	if (dp83869->port_mirroring == DP83869_PORT_MIRRORING_EN)
-+		phy_set_bits_mmd(phydev, DP83869_DEVADDR, DP83869_GEN_CFG3,
-+				 DP83869_CFG3_PORT_MIRROR_EN);
-+	else
-+		phy_clear_bits_mmd(phydev, DP83869_DEVADDR, DP83869_GEN_CFG3,
-+				   DP83869_CFG3_PORT_MIRROR_EN);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF_MDIO
-+static int dp83869_of_init(struct phy_device *phydev)
-+{
-+	struct dp83869_private *dp83869 = phydev->priv;
-+	struct device *dev = &phydev->mdio.dev;
-+	struct device_node *of_node = dev->of_node;
-+	int ret;
-+
-+	if (!of_node)
-+		return -ENODEV;
-+
-+	dp83869->io_impedance = -EINVAL;
-+
-+	/* Optional configuration */
-+	ret = of_property_read_u32(of_node, "ti,clk-output-sel",
-+				   &dp83869->clk_output_sel);
-+	if (ret || dp83869->clk_output_sel > DP83869_CLK_O_SEL_REF_CLK)
-+		dp83869->clk_output_sel = DP83869_CLK_O_SEL_REF_CLK;
-+
-+	ret = of_property_read_u32(of_node, "ti,op-mode", &dp83869->mode);
-+	if (ret == 0) {
-+		if (dp83869->mode < DP83869_RGMII_COPPER_ETHERNET ||
-+		    dp83869->mode > DP83869_SGMII_COPPER_ETHERNET)
-+			return -EINVAL;
-+	}
-+
-+	if (of_property_read_bool(of_node, "ti,max-output-impedance"))
-+		dp83869->io_impedance = DP83869_IO_MUX_CFG_IO_IMPEDANCE_MAX;
-+	else if (of_property_read_bool(of_node, "ti,min-output-impedance"))
-+		dp83869->io_impedance = DP83869_IO_MUX_CFG_IO_IMPEDANCE_MIN;
-+
-+	if (of_property_read_bool(of_node, "enet-phy-lane-swap"))
-+		dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
-+	else
-+		dp83869->port_mirroring = DP83869_PORT_MIRRORING_DIS;
-+
-+	if (of_property_read_u32(of_node, "rx-fifo-depth",
-+				 &dp83869->rx_fifo_depth))
-+		dp83869->rx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
-+
-+	if (of_property_read_u32(of_node, "tx-fifo-depth",
-+				 &dp83869->tx_fifo_depth))
-+		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
-+
-+	return 0;
-+}
-+#else
-+static int dp83869_of_init(struct phy_device *phydev)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_OF_MDIO */
-+
-+static int dp83869_configure_rgmii(struct phy_device *phydev,
-+				   struct dp83869_private *dp83869)
-+{
-+	int ret, val;
-+
-+	if (phy_interface_is_rgmii(phydev)) {
-+		val = phy_read(phydev, MII_DP83869_PHYCTRL);
-+		if (val < 0)
-+			return val;
-+
-+		val &= ~DP83869_PHYCR_FIFO_DEPTH_MASK;
-+		val |= (dp83869->tx_fifo_depth << DP83869_TX_FIFO_SHIFT);
-+		val |= (dp83869->rx_fifo_depth << DP83869_RX_FIFO_SHIFT);
-+
-+		ret = phy_write(phydev, MII_DP83869_PHYCTRL, val);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (dp83869->io_impedance >= 0)
-+		phy_modify_mmd(phydev, DP83869_DEVADDR,
-+			       DP83869_IO_MUX_CFG,
-+			       DP83869_IO_MUX_CFG_IO_IMPEDANCE_CTRL,
-+			       dp83869->io_impedance &
-+			       DP83869_IO_MUX_CFG_IO_IMPEDANCE_CTRL);
-+
-+	return ret;
-+}
-+
-+static int dp83869_configure_mode(struct phy_device *phydev,
-+				  struct dp83869_private *dp83869)
-+{
-+	int phy_ctrl_val;
-+	int ret;
-+
-+	if (dp83869->mode < DP83869_RGMII_COPPER_ETHERNET ||
-+	    dp83869->mode > DP83869_SGMII_COPPER_ETHERNET)
-+		return -EINVAL;
-+
-+	/* Below init sequence for each operational mode is defined in
-+	 * section 9.4.8 of the datasheet.
-+	 */
-+	ret = phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_OP_MODE,
-+			    dp83869->mode);
-+	if (ret)
-+		return ret;
-+
-+	ret = phy_write(phydev, MII_BMCR, MII_DP83869_BMCR_DEFAULT);
-+	if (ret)
-+		return ret;
-+
-+	phy_ctrl_val = (dp83869->rx_fifo_depth << DP83869_RX_FIFO_SHIFT |
-+			dp83869->tx_fifo_depth << DP83869_TX_FIFO_SHIFT |
-+			DP83869_PHY_CTRL_DEFAULT);
-+
-+	switch (dp83869->mode) {
-+	case DP83869_RGMII_COPPER_ETHERNET:
-+		ret = phy_write(phydev, MII_DP83869_PHYCTRL,
-+				phy_ctrl_val);
-+		if (ret)
-+			return ret;
-+
-+		ret = phy_write(phydev, MII_CTRL1000, DP83869_CFG1_DEFAULT);
-+		if (ret)
-+			return ret;
-+
-+		ret = dp83869_configure_rgmii(phydev, dp83869);
-+		if (ret)
-+			return ret;
-+		break;
-+	case DP83869_RGMII_SGMII_BRIDGE:
-+		phy_modify_mmd(phydev, DP83869_DEVADDR, DP83869_OP_MODE,
-+			       DP83869_SGMII_RGMII_BRIDGE,
-+			       DP83869_SGMII_RGMII_BRIDGE);
-+
-+		ret = phy_write_mmd(phydev, DP83869_DEVADDR,
-+				    DP83869_FX_CTRL, DP83869_FX_CTRL_DEFAULT);
-+		if (ret)
-+			return ret;
-+
-+		break;
-+	case DP83869_1000M_MEDIA_CONVERT:
-+		ret = phy_write(phydev, MII_DP83869_PHYCTRL,
-+				phy_ctrl_val);
-+		if (ret)
-+			return ret;
-+
-+		ret = phy_write_mmd(phydev, DP83869_DEVADDR,
-+				    DP83869_FX_CTRL, DP83869_FX_CTRL_DEFAULT);
-+		if (ret)
-+			return ret;
-+		break;
-+	case DP83869_100M_MEDIA_CONVERT:
-+		ret = phy_write(phydev, MII_DP83869_PHYCTRL,
-+				phy_ctrl_val);
-+		if (ret)
-+			return ret;
-+		break;
-+	case DP83869_SGMII_COPPER_ETHERNET:
-+		ret = phy_write(phydev, MII_DP83869_PHYCTRL,
-+				phy_ctrl_val);
-+		if (ret)
-+			return ret;
-+
-+		ret = phy_write(phydev, MII_CTRL1000, DP83869_CFG1_DEFAULT);
-+		if (ret)
-+			return ret;
-+
-+		ret = phy_write_mmd(phydev, DP83869_DEVADDR,
-+				    DP83869_FX_CTRL, DP83869_FX_CTRL_DEFAULT);
-+		if (ret)
-+			return ret;
-+
-+		break;
-+	case DP83869_RGMII_1000_BASE:
-+	case DP83869_RGMII_100_BASE:
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	return 0;
-+}
-+
-+static int dp83869_config_init(struct phy_device *phydev)
-+{
-+	struct dp83869_private *dp83869 = phydev->priv;
-+	int ret, val;
-+
-+	ret = dp83869_configure_mode(phydev, dp83869);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable Interrupt output INT_OE in CFG4 register */
-+	if (phy_interrupt_is_valid(phydev)) {
-+		val = phy_read(phydev, DP83869_CFG4);
-+		val |= DP83869_INT_OE;
-+		phy_write(phydev, DP83869_CFG4, val);
-+	}
-+
-+	if (dp83869->port_mirroring != DP83869_PORT_MIRRORING_KEEP)
-+		dp83869_config_port_mirroring(phydev);
-+
-+	/* Clock output selection if muxing property is set */
-+	if (dp83869->clk_output_sel != DP83869_CLK_O_SEL_REF_CLK)
-+		phy_modify_mmd(phydev, DP83869_DEVADDR, DP83869_IO_MUX_CFG,
-+			       DP83869_IO_MUX_CFG_CLK_O_SEL_MASK,
-+			       dp83869->clk_output_sel <<
-+			       DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT);
-+
-+	return 0;
-+}
-+
-+static int dp83869_probe(struct phy_device *phydev)
-+{
-+	struct dp83869_private *dp83869;
-+	int ret;
-+
-+	dp83869 = devm_kzalloc(&phydev->mdio.dev, sizeof(*dp83869),
-+			       GFP_KERNEL);
-+	if (!dp83869)
-+		return -ENOMEM;
-+
-+	phydev->priv = dp83869;
-+
-+	ret = dp83869_of_init(phydev);
-+	if (ret)
-+		return ret;
-+
-+	return dp83869_config_init(phydev);
-+}
-+
-+static int dp83869_phy_reset(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = phy_write(phydev, DP83869_CTRL, DP83869_SW_RESET);
-+	if (ret < 0)
-+		return ret;
-+
-+	usleep_range(10, 20);
-+
-+	/* Global sw reset sets all registers to default.
-+	 * Need to set the registers in the PHY to the right config.
-+	 */
-+	return dp83869_config_init(phydev);
-+}
-+
-+static struct phy_driver dp83869_driver[] = {
-+	{
-+		PHY_ID_MATCH_MODEL(DP83869_PHY_ID),
-+		.name		= "TI DP83869",
-+
-+		.probe          = dp83869_probe,
-+		.config_init	= dp83869_config_init,
-+		.soft_reset	= dp83869_phy_reset,
-+
-+		/* IRQ related */
-+		.ack_interrupt	= dp83869_ack_interrupt,
-+		.config_intr	= dp83869_config_intr,
-+
-+		.suspend	= genphy_suspend,
-+		.resume		= genphy_resume,
-+	},
-+};
-+module_phy_driver(dp83869_driver);
-+
-+static struct mdio_device_id __maybe_unused dp83869_tbl[] = {
-+	{ PHY_ID_MATCH_MODEL(DP83869_PHY_ID) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(mdio, dp83869_tbl);
-+
-+MODULE_DESCRIPTION("Texas Instruments DP83869 PHY driver");
-+MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com");
-+MODULE_LICENSE("GPL v2");
--- 
-2.22.0.214.g8dca754b1e
+ void kvmppc_xive_native_cleanup_vcpu(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvmppc_xive_vcpu *xc = vcpu->arch.xive_vcpu;
+@@ -575,19 +593,14 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
+ 		q->guest_qaddr  = 0;
+ 		q->guest_qshift = 0;
+ 
+-		rc = xive_native_configure_queue(xc->vp_id, q, priority,
+-						 NULL, 0, true);
++		rc = kvmppc_xive_native_configure_queue(xc->vp_id, q, priority,
++							NULL, 0, true);
+ 		if (rc) {
+ 			pr_err("Failed to reset queue %d for VCPU %d: %d\n",
+ 			       priority, xc->server_num, rc);
+ 			return rc;
+ 		}
+ 
+-		if (q->qpage) {
+-			put_page(virt_to_page(q->qpage));
+-			q->qpage = NULL;
+-		}
+-
+ 		return 0;
+ 	}
+ 
+@@ -646,8 +659,8 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
+ 	  * OPAL level because the use of END ESBs is not supported by
+ 	  * Linux.
+ 	  */
+-	rc = xive_native_configure_queue(xc->vp_id, q, priority,
+-					 (__be32 *) qaddr, kvm_eq.qshift, true);
++	rc = kvmppc_xive_native_configure_queue(xc->vp_id, q, priority,
++					(__be32 *) qaddr, kvm_eq.qshift, true);
+ 	if (rc) {
+ 		pr_err("Failed to configure queue %d for VCPU %d: %d\n",
+ 		       priority, xc->server_num, rc);
 
