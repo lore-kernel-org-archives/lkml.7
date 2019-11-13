@@ -2,138 +2,111 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CD0C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE814C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CCD206E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:19:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bs4Ay0Sb"
+	by mail.kernel.org (Postfix) with ESMTP id 03A40206E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfKMSTT (ORCPT
+        id S1728387AbfKMSUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:19:19 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:46030 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfKMSTS (ORCPT
+        Wed, 13 Nov 2019 13:20:18 -0500
+Received: from 4.mo2.mail-out.ovh.net ([87.98.172.75]:54680 "EHLO
+        4.mo2.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfKMSUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:19:18 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xADI97jv110780;
-        Wed, 13 Nov 2019 18:19:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=QqPLR23WbtLLmBLv1Y/qMpibvkpOaVLJ71YqnsOGErk=;
- b=Bs4Ay0SbJRQz44r+iYu8kbiAT0IpoBiCDnukqLvyTDw784iMccDyO/YGpH1zYxz9r4T2
- AvkMQDevx/10faleSSYf/eenNzt6qfkS0IkpKXTR5RRluFTDDZt5SORDZsed+M0JtoFA
- f1N2Dpz4rvd2L70vpso4VLdPRXP2Ozt5S3a5rsjzvhB/8CmrQ0awcsWiNYZ28XduWeyC
- F279alDiCS/WyWkG/dzO0j318w7eIz6+G9iGUHdoUDigTLDGZ8ZBiw8OtdqaXAICdnN8
- 344t3/foyIUJ92MkZBauI0YAAxPMG8Kw0k7vKyGcIiyI5wItzJN70lnRfaAT/5J5LkhM uQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2w5mvtxckr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 18:19:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xADIDebh006778;
-        Wed, 13 Nov 2019 18:19:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2w7vbdatdr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 18:19:14 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xADIJEFd002374;
-        Wed, 13 Nov 2019 18:19:14 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 13 Nov 2019 10:19:13 -0800
-Date:   Wed, 13 Nov 2019 21:19:04 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc:     gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 8/9] staging: exfat: Collapse redundant return code
- translations
-Message-ID: <20191113181904.GD3284@kadam>
-References: <20191112021000.42091-1-Valdis.Kletnieks@vt.edu>
- <20191112021000.42091-9-Valdis.Kletnieks@vt.edu>
+        Wed, 13 Nov 2019 13:20:18 -0500
+X-Greylist: delayed 4199 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 13:20:17 EST
+Received: from player792.ha.ovh.net (unknown [10.109.159.139])
+        by mo2.mail-out.ovh.net (Postfix) with ESMTP id B59F01B1309
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 18:00:53 +0100 (CET)
+Received: from kaod.org (deibp9eh1--blueice1n4.emea.ibm.com [195.212.29.166])
+        (Authenticated sender: clg@kaod.org)
+        by player792.ha.ovh.net (Postfix) with ESMTPSA id B5E55C0CFAD3;
+        Wed, 13 Nov 2019 17:00:36 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] KVM: PPC: Book3S HV: XIVE: Fix potential page leak
+ on error path
+To:     Greg Kurz <groug@kaod.org>, Paul Mackerras <paulus@ozlabs.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Lijun Pan <ljp@linux.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Laurent Vivier <lvivier@redhat.com>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <157366357346.1026356.14522564753643067538.stgit@bahia.lan>
+ <157366357929.1026356.18181561111939034621.stgit@bahia.lan>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Message-ID: <e49f522e-c265-4f00-f6f8-57f8583e7d8a@kaod.org>
+Date:   Wed, 13 Nov 2019 18:00:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112021000.42091-9-Valdis.Kletnieks@vt.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9440 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911130157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9440 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911130157
+In-Reply-To: <157366357929.1026356.18181561111939034621.stgit@bahia.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 3946560650099067671
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrudefuddgleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdqfffguegfifdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucfkpheptddrtddrtddrtddpudelhedrvdduvddrvdelrdduieeinecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejledvrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheptghlgheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:09:56PM -0500, Valdis Kletnieks wrote:
-> Now that we no longer use odd internal return codes, we can
-> heave the translation code over the side, and just pass the
-> error code back up the call chain.
+On 13/11/2019 17:46, Greg Kurz wrote:
+> We need to check the host page size is big enough to accomodate the
+> EQ. Let's do this before taking a reference on the EQ page to avoid
+> a potential leak if the check fails.
 > 
-> Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+> Cc: stable@vger.kernel.org # v5.2
+> Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
+> Signed-off-by: Greg Kurz <groug@kaod.org>
+
+
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+
 > ---
->  drivers/staging/exfat/exfat_super.c | 92 +++++------------------------
->  1 file changed, 14 insertions(+), 78 deletions(-)
+>  arch/powerpc/kvm/book3s_xive_native.c |   13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-> index 5d538593b5f6..a97a61a60517 100644
-> --- a/drivers/staging/exfat/exfat_super.c
-> +++ b/drivers/staging/exfat/exfat_super.c
-> @@ -650,7 +650,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
->  	struct uni_name_t uni_name;
->  	struct super_block *sb = inode->i_sb;
->  	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-> -	int ret;
-> +	int ret = 0;
-
-Why are you adding this initializer?  It just disables static analysis
-warnings about uninitialized variables and it creates a static analysis
-warning about unused assignments.
-
+> diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
+> index 0e1fc5a16729..d83adb1e1490 100644
+> --- a/arch/powerpc/kvm/book3s_xive_native.c
+> +++ b/arch/powerpc/kvm/book3s_xive_native.c
+> @@ -630,12 +630,6 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
 >  
->  	/* check the validity of pointer parameters */
->  	if (!fid || !path || (*path == '\0'))
-
-[ snip ]
-
-> @@ -3161,12 +3102,7 @@ static int exfat_bmap(struct inode *inode, sector_t sector, sector_t *phys,
+>  	srcu_idx = srcu_read_lock(&kvm->srcu);
+>  	gfn = gpa_to_gfn(kvm_eq.qaddr);
+> -	page = gfn_to_page(kvm, gfn);
+> -	if (is_error_page(page)) {
+> -		srcu_read_unlock(&kvm->srcu, srcu_idx);
+> -		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
+> -		return -EINVAL;
+> -	}
 >  
->  	err = ffsMapCluster(inode, clu_offset, &cluster);
->  
-> -	if (err) {
-> -		if (err == -ENOSPC)
-> -			return -ENOSPC;
-> -		else
-> -			return -EIO;
-> -	} else if (cluster != CLUSTER_32(~0)) {
-> +	if (!err && (cluster != CLUSTER_32(~0))) {
->  		*phys = START_SECTOR(cluster) + sec_offset;
->  		*mapped_blocks = p_fs->sectors_per_clu - sec_offset;
+>  	page_size = kvm_host_page_size(kvm, gfn);
+>  	if (1ull << kvm_eq.qshift > page_size) {
+> @@ -644,6 +638,13 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
+>  		return -EINVAL;
 >  	}
-
-
-If ffsMapCluster() fails then we return success now.  Is that
-intentional?
-
-regards,
-dan carpener
+>  
+> +	page = gfn_to_page(kvm, gfn);
+> +	if (is_error_page(page)) {
+> +		srcu_read_unlock(&kvm->srcu, srcu_idx);
+> +		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
+> +		return -EINVAL;
+> +	}
+> +
+>  	qaddr = page_to_virt(page) + (kvm_eq.qaddr & ~PAGE_MASK);
+>  	srcu_read_unlock(&kvm->srcu, srcu_idx);
+>  
+> 
 
