@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4300C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08265C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19D12084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C698F2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611518;
-	bh=dONCx61Ia/sj7WTQHEcMz5HEIkjAqNopjr/Sy89EPhA=;
+	s=default; t=1573611522;
+	bh=+E19Huy+AE+P6Kn7PRtmtBXtIXdaMq31874qfiMh7I0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cORWZfwEvYhLmqrjoDfTxnV0ZHl6hDOiduu+rlwfwa3tEK3m2ujLVU8CWdw23VBS1
-	 C6i7xnPwtoCVxh+ideko4LbAGPHJJvl28w5OIsWFjhZy5NKJ2hd+fD3VQdmo5yNj03
-	 Xb+wT1pnDgxhpCQZ1vtW4U8hEssgNSfWxfJxb+qs=
+	b=ctBoBbSETbcMMFB4KbJL5Hp3qMNvbzVLphiHND/2e+YZGdmMwzOv3pwwJRSEnmyU0
+	 o3I3grhHdzaafGtfdF1ESKxahAbYw6SxYl5Ea7ItFzjPbWISxFfUpFlTvxkhHnq+Zk
+	 mDY1QsC6K4Zr9bSRSzCxq9q8OKo+ergR7ZtJIYxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfKMBzh (ORCPT
+        id S1729976AbfKMCSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbfKMBza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:30 -0500
+        id S1729175AbfKMBzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E037222D3;
-        Wed, 13 Nov 2019 01:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65B542245A;
+        Wed, 13 Nov 2019 01:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610130;
-        bh=dONCx61Ia/sj7WTQHEcMz5HEIkjAqNopjr/Sy89EPhA=;
+        s=default; t=1573610137;
+        bh=+E19Huy+AE+P6Kn7PRtmtBXtIXdaMq31874qfiMh7I0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8uB09/UzUVjU3lmpTr1iI92t9Bj58/0yiTOW62ZlYm3Uy0sduIcSH3laolYl6kq/
-         IWT8WcUObWrr9loPBZTq7sEswJbrljabRRHHVsl/A3bPWiWmTQFX73WjseNnHUCjfT
-         eSQHnDPeyzgMarYPbwE7Y4eFc1w3nbHbciJJQXmA=
+        b=1cIgwI5kP/3tEpdy5Tf6jXRF4Kl7Jd6L35lAmBXgEC2ibw/tOMm6HyJ90nc/Mq9IH
+         ijeCUB1EoiXsZ9ZG8DzIYHAFuX3MwSNvAC3qoHA7vFgjINUQB0goiSPRgoq+KBgXzA
+         onS4EHrjzY7uRZSnXMJH5aKiqQ8iml0eD5oHu6WQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hieu Tran Dang <dangtranhieu2012@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 180/209] spi: fsl-lpspi: Prevent FIFO under/overrun by default
-Date:   Tue, 12 Nov 2019 20:49:56 -0500
-Message-Id: <20191113015025.9685-180-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
+Subject: [PATCH AUTOSEL 4.19 185/209] orangefs: rate limit the client not running info message
+Date:   Tue, 12 Nov 2019 20:50:01 -0500
+Message-Id: <20191113015025.9685-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,37 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hieu Tran Dang <dangtranhieu2012@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit de8978c388c66b8fca192213ec9f0727e964c652 ]
+[ Upstream commit 2978d873471005577e7b68a528b4f256a529b030 ]
 
-Certain devices don't work well when a transmit FIFO underrun or
-receive FIFO overrun occurs. Example is the SAF400x radio chip when
-running at high speed which leads to garbage being sent to/received from
-the chip. In which case, it should stall waiting for further data to be
-available before proceeding. This patch unset the NOSTALL bit in CFGR1
-by default to prevent this issue.
+Currently accessing various /sys/fs/orangefs files will spam the
+kernel log with the following info message when the client is not
+running:
 
-Signed-off-by: Hieu Tran Dang <dangtranhieu2012@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[  491.489284] sysfs_service_op_show: Client not running :-5:
+
+Rate limit this info message to make it less spammy.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Mike Marshall <hubcap@omnibond.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-lpspi.c | 2 +-
+ fs/orangefs/orangefs-sysfs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index e6d5cc6ab108b..51670976faa35 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -276,7 +276,7 @@ static int fsl_lpspi_config(struct fsl_lpspi_data *fsl_lpspi)
- 
- 	fsl_lpspi_set_watermark(fsl_lpspi);
- 
--	temp = CFGR1_PCSCFG | CFGR1_MASTER | CFGR1_NOSTALL;
-+	temp = CFGR1_PCSCFG | CFGR1_MASTER;
- 	if (fsl_lpspi->config.mode & SPI_CS_HIGH)
- 		temp |= CFGR1_PCSPOL;
- 	writel(temp, fsl_lpspi->base + IMX7ULP_CFGR1);
+diff --git a/fs/orangefs/orangefs-sysfs.c b/fs/orangefs/orangefs-sysfs.c
+index dd28079f518c0..19739aaee6755 100644
+--- a/fs/orangefs/orangefs-sysfs.c
++++ b/fs/orangefs/orangefs-sysfs.c
+@@ -323,7 +323,7 @@ static ssize_t sysfs_service_op_show(struct kobject *kobj,
+ 	/* Can't do a service_operation if the client is not running... */
+ 	rc = is_daemon_in_service();
+ 	if (rc) {
+-		pr_info("%s: Client not running :%d:\n",
++		pr_info_ratelimited("%s: Client not running :%d:\n",
+ 			__func__,
+ 			is_daemon_in_service());
+ 		goto out;
 -- 
 2.20.1
 
