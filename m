@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A830C17448
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591AEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6CF206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F01206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610889;
-	bh=ZxkIgG+Oa+kY1HAulN5VVJ7/HOzwWg4gtRjfk+JdGC0=;
+	s=default; t=1573610894;
+	bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQ7nTCKvMMCa05ky2/JOkh0ID8/G3ZS1OkFgtS4dhXhKgWj/5K7tLSKEwZe/jRRJF
-	 JSGF3Y11gsDFN5GnUDjHdFBnLclbp3bE4Qa3NBSfhZC+LxisJZJo3+ZXN/iBiVSxwf
-	 lswvHoqImztV3E64tx/HtmI7Hwam71xYVoTw2/QY=
+	b=XSesbkEyke/GUFJyvViAXa+uXqDh3N1gY2u/z4UuM7G8jBuWZgLdcFVsB37GBfVnm
+	 5Mi4mJTromsnxBxggbUoJx2DCAH/Ch5Xk635dzgLrvWdw7AeOlVOGIsF22We0Hf43X
+	 qnducjr7J6LV+XAyN+ZHgz2Xi0/fPPEYdJJQY7iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfKMCAL (ORCPT
+        id S1730302AbfKMCIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:00:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55046 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:08:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730417AbfKMCAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:05 -0500
+        id S1730378AbfKMCAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB5412053B;
-        Wed, 13 Nov 2019 02:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9022053B;
+        Wed, 13 Nov 2019 02:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610404;
-        bh=ZxkIgG+Oa+kY1HAulN5VVJ7/HOzwWg4gtRjfk+JdGC0=;
+        s=default; t=1573610409;
+        bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mUx/Twj8ujOA6mNG/pcQLbUGk5gN2SJsuym/ZqF6pTeCZHSGIgFFrs+kingUFarnY
-         WG0wN7X5WL1+EeEUjcilB/SPq4pT9m8C7uLze+ble7xF5uu32b0D7oaJXv3rxwgVZc
-         awo7EQUN4WaItWj8tgdO0vGNTMASi8vu6sN8kZts=
+        b=LtvuPeg1Qq1LlCQvH59ZtfH9rMvzaZAjbe3moGpMTSsO5gW0NNJdyNfh2ZztC74cb
+         6X/gCJaEI1mxmTQ+iVJfSBFAMKFt6YfP0H/lNiUfos94RSyZJN6kKsKRAE/Sc1Jha+
+         wey+/8W41LiM0tl2cEtD9SxbNp+rzdVSrTKPwlHk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 20/68] powerpc/pseries: Fix how we iterate over the DTL entries
-Date:   Tue, 12 Nov 2019 20:58:44 -0500
-Message-Id: <20191113015932.12655-20-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 23/68] IB/mthca: Fix error return code in __mthca_init_one()
+Date:   Tue, 12 Nov 2019 20:58:47 -0500
+Message-Id: <20191113015932.12655-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -59,38 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 9258227e9dd1da8feddb07ad9702845546a581c9 ]
+[ Upstream commit 39f2495618c5e980d2873ea3f2d1877dd253e07a ]
 
-When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we look up dtl_idx in
-the lppaca to determine the number of entries in the buffer. Since
-lppaca is in big endian, we need to do an endian conversion before using
-this in our calculation to determine the number of entries in the
-buffer. Without this, we do not iterate over the existing entries in the
-DTL buffer properly.
+Fix to return a negative error code from the mthca_cmd_init() error
+handling case instead of 0, as done elsewhere in this function.
 
-Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 80fd8238734c ("[PATCH] IB/mthca: Encapsulate command interface init")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/dtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mthca/mthca_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index 37de83c5ef172..7a4d172c93765 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -185,7 +185,7 @@ static void dtl_stop(struct dtl *dtl)
+diff --git a/drivers/infiniband/hw/mthca/mthca_main.c b/drivers/infiniband/hw/mthca/mthca_main.c
+index ded76c101dde3..834b06aacc2bf 100644
+--- a/drivers/infiniband/hw/mthca/mthca_main.c
++++ b/drivers/infiniband/hw/mthca/mthca_main.c
+@@ -989,7 +989,8 @@ static int __mthca_init_one(struct pci_dev *pdev, int hca_type)
+ 		goto err_free_dev;
+ 	}
  
- static u64 dtl_current_index(struct dtl *dtl)
- {
--	return lppaca_of(dtl->cpu).dtl_idx;
-+	return be64_to_cpu(lppaca_of(dtl->cpu).dtl_idx);
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
- 
+-	if (mthca_cmd_init(mdev)) {
++	err = mthca_cmd_init(mdev);
++	if (err) {
+ 		mthca_err(mdev, "Failed to init command interface, aborting.\n");
+ 		goto err_free_dev;
+ 	}
 -- 
 2.20.1
 
