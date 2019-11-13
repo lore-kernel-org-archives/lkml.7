@@ -2,220 +2,175 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404E9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C3DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11ED82245B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E312245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:51:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arrikto-com.20150623.gappssmtp.com header.i=@arrikto-com.20150623.gappssmtp.com header.b="zP4PL6GG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbfKMLux (ORCPT
+        id S1727942AbfKMLvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 06:50:53 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59283 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbfKMLuw (ORCPT
+        Wed, 13 Nov 2019 06:51:06 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40676 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727845AbfKMLvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:50:52 -0500
-Received: from [79.140.120.64] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iUrAY-0001rJ-FM; Wed, 13 Nov 2019 11:50:42 +0000
-Date:   Wed, 13 Nov 2019 12:50:41 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v8 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191113115040.vfsxcwmrxub6ifks@wittgenstein>
-References: <20191113080301.1197762-1-areber@redhat.com>
+        Wed, 13 Nov 2019 06:51:05 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q2so2219308ljg.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 03:51:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arrikto-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=F3ba3fPaNjj6mlJHz6ZNFQ1Kt4UtZpzpsGyGcMEsfIQ=;
+        b=zP4PL6GGMs7Kj1scjhgJHt2sVT3/NC5Acea4ch+a+0FuOqO5MOtgX0w4hMuz/ja5Iy
+         Gt38FE9o1dloB4Z5+S0lVOSLOYCqD0+IJh1Cl6Yhz32Thzkp0P4qCXoyAyDjW+OQLaEB
+         DhAU7qFnVX/Z+8DM1kYLOww9SLjFRtV3GPwa+UQeqQyJWfmp3RAPAV5MuOtOAol3wuyH
+         o+tQBc3FZzL+aIBxqkJy6JaxIuTDoCf0Exg0gAuugREZVVM2CWvOuB8Dn5vUZVDipNJY
+         Ci26/iXyMUHacFU2dBbl/GnTQwRMzj039b9UmINh2AoUz3NT3tAiuDVVU+uEGQ0U7DuO
+         id0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=F3ba3fPaNjj6mlJHz6ZNFQ1Kt4UtZpzpsGyGcMEsfIQ=;
+        b=CsNelrIM8NKwAXgf7cGHvMGVBn4pfRHb6qsrMe5tiUUU/E3zrKd0DfotX1rJkC8w1+
+         iCo5J8fwtc7bJO/cISkjYvLJAFIMzB7cWevATYPLGojsseItMP/dKr+52vi1OBOFaSmi
+         KqalhaTY4VQPySZrN4FA2wzpCO2W10VDEsoNraCYdVeulJsn1sn78WXgEaphyfMCv+Oe
+         PZhXEQqhcVbpt0FX8S8pgCVOze0RFFhyPHxGNOUj8WiNohIxf8dy3getYiTAUIOrA9fS
+         o2S6ZXID3xhQ4Gqa4h3O43EwurIFq6MJKR9ra3YEmUe28XdykD2pcO5lSO3ZhH9sNSZF
+         qnSw==
+X-Gm-Message-State: APjAAAVUhR0YvbbSfpAjF2fafcMnGIv/etcT0hpsKLAvoKk5llg2S/QZ
+        uJfHukZClOxoECzhCY+FYSlRsg==
+X-Google-Smtp-Source: APXvYqzKYvomWMYyrqmUw0GA6R5IG9gdUX23Ot2rzD6JQd1DJwcOXpb4Rwcb+3ZDxTO+fAwaPzJErA==
+X-Received: by 2002:a2e:7204:: with SMTP id n4mr2215410ljc.139.1573645863283;
+        Wed, 13 Nov 2019 03:51:03 -0800 (PST)
+Received: from [10.94.250.119] ([31.177.62.212])
+        by smtp.gmail.com with ESMTPSA id q124sm789120ljq.93.2019.11.13.03.51.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 03:51:02 -0800 (PST)
+Subject: Re: [PATCH RT 2/2 v2] list_bl: avoid BUG when the list is not locked
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     tglx@linutronix.de, linux-rt-users@vger.kernel.org,
+        Mike Snitzer <msnitzer@redhat.com>,
+        Scott Wood <swood@redhat.com>,
+        Ilias Tsitsimpis <iliastsi@arrikto.com>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+References: <alpine.LRH.2.02.1911121110430.12815@file01.intranet.prod.int.rdu2.redhat.com>
+ <335dafcb-5e07-63ed-b288-196516170bde@arrikto.com>
+ <alpine.LRH.2.02.1911130616240.20335@file01.intranet.prod.int.rdu2.redhat.com>
+From:   Nikos Tsironis <ntsironis@arrikto.com>
+Message-ID: <7020d479-e8c7-7249-c6cd-c6d01b01c92a@arrikto.com>
+Date:   Wed, 13 Nov 2019 13:50:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191113080301.1197762-1-areber@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <alpine.LRH.2.02.1911130616240.20335@file01.intranet.prod.int.rdu2.redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 09:03:00AM +0100, Adrian Reber wrote:
-> The main motivation to add set_tid to clone3() is CRIU.
+On 11/13/19 1:16 PM, Mikulas Patocka wrote:
 > 
-> To restore a process with the same PID/TID CRIU currently uses
-> /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-> ns_last_pid and then (quickly) does a clone(). This works most of the
-> time, but it is racy. It is also slow as it requires multiple syscalls.
 > 
-> Extending clone3() to support *set_tid makes it possible restore a
-> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> race free (as long as the desired PID/TID is available).
+> On Wed, 13 Nov 2019, Nikos Tsironis wrote:
 > 
-> This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-> on clone3() with *set_tid as they are currently in place for ns_last_pid.
+>> On 11/12/19 6:16 PM, Mikulas Patocka wrote:
+>>> list_bl would crash with BUG() if we used it without locking. dm-snapshot 
+>>> uses its own locking on realtime kernels (it can't use list_bl because 
+>>> list_bl uses raw spinlock and dm-snapshot takes other non-raw spinlocks 
+>>> while holding bl_lock).
+>>>
+>>> To avoid this BUG, we must set LIST_BL_LOCKMASK = 0.
+>>>
+>>> This patch is intended only for the realtime kernel patchset, not for the 
+>>> upstream kernel.
+>>>
+>>> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+>>>
+>>> Index: linux-rt-devel/include/linux/list_bl.h
+>>> ===================================================================
+>>> --- linux-rt-devel.orig/include/linux/list_bl.h	2019-11-07 14:01:51.000000000 +0100
+>>> +++ linux-rt-devel/include/linux/list_bl.h	2019-11-08 10:12:49.000000000 +0100
+>>> @@ -19,7 +19,7 @@
+>>>   * some fast and compact auxiliary data.
+>>>   */
+>>>  
+>>> -#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+>>> +#if (defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)) && !defined(CONFIG_PREEMPT_RT_BASE)
+>>>  #define LIST_BL_LOCKMASK	1UL
+>>>  #else
+>>>  #define LIST_BL_LOCKMASK	0UL
+>>> @@ -161,9 +161,6 @@ static inline void hlist_bl_lock(struct
+>>>  	bit_spin_lock(0, (unsigned long *)b);
+>>>  #else
+>>>  	raw_spin_lock(&b->lock);
+>>> -#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+>>> -	__set_bit(0, (unsigned long *)b);
+>>> -#endif
+>>>  #endif
+>>>  }
+>>>  
+>>
+>> Hi Mikulas,
+>>
+>> I think removing __set_bit()/__clear_bit() breaks hlist_bl_is_locked(),
+>> which is used by the RCU variant of list_bl.
+>>
+>> Nikos
 > 
-> The original version of this change was using a single value for
-> set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
-> decided to change set_tid to an array to enable setting the PID of a
-> process in multiple PID namespaces at the same time. If a process is
-> created in a PID namespace it is possible to influence the PID inside
-> and outside of the PID namespace. Details also in the corresponding
-> selftest.
+> OK. so I can remove this part of the patch.
 > 
-> To create a process with the following PIDs:
-> 
->       PID NS level         Requested PID
->         0 (host)              31496
->         1                        42
->         2                         1
-> 
-> For that example the two newly introduced parameters to struct
-> clone_args (set_tid and set_tid_size) would need to be:
-> 
->   set_tid[0] = 1;
->   set_tid[1] = 42;
->   set_tid[2] = 31496;
->   set_tid_size = 3;
-> 
-> If only the PIDs of the two innermost nested PID namespaces should be
-> defined it would look like this:
-> 
->   set_tid[0] = 1;
->   set_tid[1] = 42;
->   set_tid_size = 2;
-> 
-> The PID of the newly created process would then be the next available
-> free PID in the PID namespace level 0 (host) and 42 in the PID namespace
-> at level 1 and the PID of the process in the innermost PID namespace
-> would be 1.
-> 
-> The set_tid array is used to specify the PID of a process starting
-> from the innermost nested PID namespaces up to set_tid_size PID namespaces.
-> 
-> set_tid_size cannot be larger then the current PID namespace level.
-> 
-> Signed-off-by: Adrian Reber <areber@redhat.com>
 
-Adrian, when you resend, can you please add --base=<commit> with the
-base commit this series applies to? This makes my life easier when
-applying this series.
+I think this causes another problem. LIST_BL_LOCKMASK is used in various
+functions to set/clear the lock bit, e.g. in hlist_bl_first(). So, if we
+lock the list through hlist_bl_lock(), thus setting the lock bit with
+__set_bit(), and then call hlist_bl_first() to get the first element,
+the returned pointer will be invalid. As LIST_BL_LOCKMASK is zero the
+least significant bit of the pointer will be 1.
 
-Other from missing kernel-doc (see below) I don't have any further
-complaints atm.
+I think for dm-snapshot to work using its own locking, and without
+list_bl complaining, the following is sufficient:
 
-> ---
-> v2:
->  - Removed (size < sizeof(struct clone_args)) as discussed with
->    Christian and Dmitry
->  - Added comment to ((set_tid != 1) && idr_get_cursor() <= 1) (Oleg)
->  - Use idr_alloc() instead of idr_alloc_cyclic() (Oleg)
-> 
-> v3:
->  - Return EEXIST if PID is already in use (Christian)
->  - Drop CLONE_SET_TID (Christian and Oleg)
->  - Use idr_is_empty() instead of idr_get_cursor() (Oleg)
->  - Handle different `struct clone_args` sizes (Dmitry)
-> 
-> v4:
->  - Rework struct size check with defines (Christian)
->  - Reduce number of set_tid checks (Oleg)
->  - Less parentheses and more robust code (Oleg)
->  - Do ns_capable() on correct user_ns (Oleg, Christian)
-> 
-> v5:
->  - make set_tid checks earlier in alloc_pid() (Christian)
->  - remove unnecessary comment and struct size check (Christian)
-> 
-> v6:
->  - remove CLONE_SET_TID from description (Christian)
->  - add clone3() tests for different clone_args sizes (Christian)
->  - move more set_tid checks to alloc_pid() (Oleg)
->  - make all set_tid checks lockless (Oleg)
-> 
-> v7:
->  - changed set_tid to be an array to set the PID of a process
->    in multiple nested PID namespaces at the same time as discussed
->    at LPC 2019 (container MC)
-> 
-> v8:
->  - skip unnecessary memset() (Rasmus)
->  - replace set_tid copy loop with a single copy (Christian)
->  - more parameter error checking (Christian)
->  - cache set_tid in alloc_pid() (Oleg)
->  - move code in "else" branch (Oleg)
-> ---
->  include/linux/pid.h           |  3 +-
->  include/linux/pid_namespace.h |  2 ++
->  include/linux/sched/task.h    |  3 ++
->  include/uapi/linux/sched.h    |  2 ++
->  kernel/fork.c                 | 24 ++++++++++++-
->  kernel/pid.c                  | 64 +++++++++++++++++++++++++++--------
->  kernel/pid_namespace.c        |  2 --
->  7 files changed, 82 insertions(+), 18 deletions(-)
-> 
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 9645b1194c98..034b7df25888 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -120,7 +120,8 @@ extern struct pid *find_vpid(int nr);
->  extern struct pid *find_get_pid(int nr);
->  extern struct pid *find_ge_pid(int nr, struct pid_namespace *);
->  
-> -extern struct pid *alloc_pid(struct pid_namespace *ns);
-> +extern struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
-> +			     size_t set_tid_size);
->  extern void free_pid(struct pid *pid);
->  extern void disable_pid_allocation(struct pid_namespace *ns);
->  
-> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
-> index 49538b172483..2ed6af88794b 100644
-> --- a/include/linux/pid_namespace.h
-> +++ b/include/linux/pid_namespace.h
-> @@ -12,6 +12,8 @@
->  #include <linux/ns_common.h>
->  #include <linux/idr.h>
->  
-> +/* MAX_PID_NS_LEVEL is needed for limiting size of 'struct pid' */
-> +#define MAX_PID_NS_LEVEL 32
->  
->  struct fs_pin;
->  
-> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> index 4b1c3b664f51..f1879884238e 100644
-> --- a/include/linux/sched/task.h
-> +++ b/include/linux/sched/task.h
-> @@ -26,6 +26,9 @@ struct kernel_clone_args {
->  	unsigned long stack;
->  	unsigned long stack_size;
->  	unsigned long tls;
-> +	pid_t *set_tid;
-> +	/* Number of elements in *set_tid */
-> +	size_t set_tid_size;
->  };
->  
->  /*
-> diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> index 25b4fa00bad1..13f74c40a629 100644
-> --- a/include/uapi/linux/sched.h
-> +++ b/include/uapi/linux/sched.h
-> @@ -72,6 +72,8 @@ struct clone_args {
->  	__aligned_u64 stack;
->  	__aligned_u64 stack_size;
->  	__aligned_u64 tls;
-> +	__aligned_u64 set_tid;
-> +	__aligned_u64 set_tid_size;
+--- a/include/linux/list_bl.h
++++ b/include/linux/list_bl.h
+@@ -25,7 +25,7 @@
+ #define LIST_BL_LOCKMASK       0UL
+ #endif
 
-Please add kernel-doc comments for these two new fields to the top of
-the like we did for all the other fields.
+-#ifdef CONFIG_DEBUG_LIST
++#if defined(CONFIG_DEBUG_LIST) && !defined(CONFIG_PREEMPT_RT_BASE)
+ #define LIST_BL_BUG_ON(x) BUG_ON(x)
+ #else
+ #define LIST_BL_BUG_ON(x)
 
-	Christian
+Nikos
+
+> Mikulas
+> 
+>>> @@ -172,9 +169,6 @@ static inline void hlist_bl_unlock(struc
+>>>  #ifndef CONFIG_PREEMPT_RT_BASE
+>>>  	__bit_spin_unlock(0, (unsigned long *)b);
+>>>  #else
+>>> -#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+>>> -	__clear_bit(0, (unsigned long *)b);
+>>> -#endif
+>>>  	raw_spin_unlock(&b->lock);
+>>>  #endif
+>>>  }
+>>>
+>>
+> 
