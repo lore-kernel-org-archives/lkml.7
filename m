@@ -2,101 +2,133 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCF7C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79B6C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2AB20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:41:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hEU4Jc+T"
+	by mail.kernel.org (Postfix) with ESMTP id 170E922B41
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfKMQlC (ORCPT
+        id S1728126AbfKMPq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:41:02 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33503 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfKMQlB (ORCPT
+        Wed, 13 Nov 2019 10:46:29 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39432 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726311AbfKMPq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:41:01 -0500
-Received: by mail-oi1-f196.google.com with SMTP id m193so2386872oig.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:41:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oVfwiSp+CCVuO7gwDDwfVCYiALcYNYj8C4nivlUEYh4=;
-        b=hEU4Jc+TMKFYo/hClXe4LbEOv2c6xDkpCXQqwl0Z22xOispCr4ItFBq6P3SIqqjsFY
-         VMPkl2Ip3H8rGxZ+odTDTzTUfRJqbARb1f9rXcXv9CUCREofvYLctcVawyyirByAJMwN
-         ei9fYe5bFlcuSzGJ5HwVndtFoKKv1vq4h+2X/TvDP618luMx3USRKABKneg9QTW0bRYp
-         tkrge1Oo0QMqdYnIZnCmlxjw8E75S707Q2y3nfSTEUBKrhHBJIA0SMfHFNrHUt2bVP/7
-         ZCtGzajbwdi4S8LQsNV+0V9OHy41RBEk3rr3XBiAVi05uEylHilzdK2PGwAkDhAT7pE1
-         m7uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oVfwiSp+CCVuO7gwDDwfVCYiALcYNYj8C4nivlUEYh4=;
-        b=B+GZC6hGGWQH6z9fk6rkTMQk7w5ICaN6QK7xLtPAVXxJC2Sb6mAHdg1Ig7nPqKrOEv
-         ZmKniawaQx8otF7TBlhX/8ssa6tJgHW+xRkJ5MN4fFBmNpfES02I127Doc0sAb72zeIr
-         zGz/s0+QAT4ZAaeksuUaDkeKwyKYfUPp/ttVpKjP+siNutCAgjUZIU5S8oyc4km+9mi0
-         NU7sJvwrFpPE7BJdR0cGZ2YJ+lT/U18YN5O0tQhotQLP9RBR9f7P5GZkqoVqlpuNQlR2
-         6pTwCHwbIOJI1xVofEZ2sg1GhXS6bLSuWJLtfVdWkjFtuLnfgh50aCylD8zEQfuYXm+s
-         6EOA==
-X-Gm-Message-State: APjAAAWlNn5eRRBhAOaAWOZ2d4NBkn4MXNzD4TQPvPHQf/ws4xg6eVeA
-        99JLB/kgPPnucP/IRTZAQvcKJlvXlB2+5MEM2FXIiA==
-X-Google-Smtp-Source: APXvYqxsagONtdiNjq6NZ5m7sI0CzPjh/C+hYdKwSFkcYayF5GIcMok6FIb/ScIimmm+EHJtckaZo27u5SdUKfTZ9s8=
-X-Received: by 2002:a05:6808:9a1:: with SMTP id e1mr4473205oig.175.1573663259884;
- Wed, 13 Nov 2019 08:40:59 -0800 (PST)
-MIME-Version: 1.0
-References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
- <20191112232239.yevpeemgxz4wy32b@wittgenstein> <CAG48ez0j_7NyCyvGn8U8NS2p=CQQb=me-5KTa7k5E6xpHJphaA@mail.gmail.com>
- <13bc7935-8341-bb49-74ea-2eb58f72fd1f@gmail.com>
-In-Reply-To: <13bc7935-8341-bb49-74ea-2eb58f72fd1f@gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 13 Nov 2019 17:40:33 +0100
-Message-ID: <CAG48ez1qtVXSBCmLCWdRwfemw6u5d-Zargm-MNJV_N0WAAoVwg@mail.gmail.com>
-Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Wed, 13 Nov 2019 10:46:29 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADFhIHB136897
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:46:28 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w8kkkb27c-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:46:27 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 13 Nov 2019 15:46:25 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Nov 2019 15:46:21 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADFkKZ738404258
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 15:46:20 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 931F9AE057;
+        Wed, 13 Nov 2019 15:46:20 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C70DAE04D;
+        Wed, 13 Nov 2019 15:46:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.227.104])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Nov 2019 15:46:19 +0000 (GMT)
+Subject: Re: One question about trusted key of keyring in Linux kernel.
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     "Zhao, Shirley" <shirley.zhao@intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>
+Date:   Wed, 13 Nov 2019 10:46:18 -0500
+In-Reply-To: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49094313@shsmsx102.ccr.corp.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111315-0028-0000-0000-000003B69508
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111315-0029-0000-0000-000024799DE0
+Message-Id: <1573659978.17949.83.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911130143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 5:19 PM Topi Miettinen <toiwoton@gmail.com> wrote:
-> On 13.11.2019 18.00, Jann Horn wrote:
-> > On Wed, Nov 13, 2019 at 12:22 AM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> >> On Sun, Nov 03, 2019 at 04:55:48PM +0200, Topi Miettinen wrote:
-> >>> Several items in /proc/sys need not be accessible to unprivileged
-> >>> tasks. Let the system administrator change the permissions, but only
-> >>> to more restrictive modes than what the sysctl tables allow.
-[...]
-> > In kernel/ucount.c, the ->permissions handler set_permissions() grants
-> > access based on whether the caller has CAP_SYS_RESOURCE. And in
-> > net/sysctl_net.c, the handler net_ctl_permissions() grants access
-> > based on whether the caller has CAP_NET_ADMIN. This added check is
-> > going to break those, right?
-> >
->
-> Right. The comment above seems then a bit misleading:
->         /*
->          * sysctl entries that are not writeable,
->          * are _NOT_ writeable, capabilities or not.
->          */
+On Wed, 2019-11-13 at 01:22 +0000, Zhao, Shirley wrote:
+> Hi, all,
+> 
+> This is Shirley from Intel. I have one question about trusted key of
+> keyring in kernel. Please help.
+> 
+> According the to description in https://github.com/torvalds/linux/bl
+> ob/master/Documentation/security/keys/trusted-encrypted.rst.
+> Trusted key will be saved in TPM with PCR policy protected.
 
-I don't see the problem. Those handlers never make a file writable
-that doesn't have one of the three write bits (0222) set.
+"Trusted Keys use a TPM both to generate and to seal the keys. Keys
+are sealed under a 2048 bit RSA key in the TPM, ..."
+
+Trusted keys are not TPM keys.  They are not stored in the TPM.
+
+> 
+> Then, I running the following command to create a trusted key.
+> keyctl add trusted test_trusted "new 32 keyhandle=0x81000001" @u
+> 
+> I also tried the following command, it can add one trusted key, too.
+> keyctl add trusted test_trusted "new 32 keyhandle=0x81000001
+> pcrinfo=`cat pcr7.blob`" @u
+> 
+> But after reboot, this key will be removed.
+> I need to re-added during boot.
+
+Right, they need to be re-loaded on boot.  Refer to the dracut
+module /modules.d/97masterkey for loading a trusted key during boot.
+
+> 
+> Then the question is since this key is saved in TPM, how to get it
+> back from TPM?
+
+Trusted keys are not stored in the TPM.  Refer to the ima-evm-utils
+README for examples of creating a trusted key (kmk) and an encrypted
+key (evm-key).
+
+> 
+> From the document, I need to use "keyctl pipe" to save the key into
+> a blob, then load it.
+> But the blob contend key text, and this is a file on hard disk, it
+> is not safe to protect the key.
+> 
+> So what can TPM do here?
+
+The hex ascii encoded trusted key is sealed under the TPM SRK.
+
+Mimi
+
