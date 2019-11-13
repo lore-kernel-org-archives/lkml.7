@@ -2,125 +2,130 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7678C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE4C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974DA2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:19:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCupdneR"
+	by mail.kernel.org (Postfix) with ESMTP id 1D0232084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfKMQTW (ORCPT
+        id S1728292AbfKMQVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:19:22 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36217 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfKMQTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:19:22 -0500
-Received: by mail-lj1-f196.google.com with SMTP id k15so3258969lja.3;
-        Wed, 13 Nov 2019 08:19:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=7q0LZz55qiLXCLO3cYRIglXjE7xsHXGROHGLHX16zOY=;
-        b=hCupdneRc9+s4dAK+Uu58Ry5YbKYmoYjF0nknVFegxtEwSk7SvIPlUSjfllkcTwmfb
-         nwk6vHpy/hOl+pxSL/NoPFQOPN2q9EDG+AdFR4z7QH4Qkavzkp0OPGfwYcLbvG6MJndi
-         D0yAuqHYGQAbFY2O0PLJPtkD0ITp6rUVRM2J6Sfu0R6ccOAKDTmHtEkkIj8/BFfge1E3
-         iyrzA8CiGd5G2fax9ZNz2D6X8Ky1SGsdtzBhsNYlvzThUB9L/8dxPQgrNighakb4gWoH
-         3hbPN/wtOiEGwMANw0VnNKWWpVxZLL2At+VzR3lfuy1VeA4ADdZo47tCRQs23NjE97xP
-         VwDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=7q0LZz55qiLXCLO3cYRIglXjE7xsHXGROHGLHX16zOY=;
-        b=KuvFLmTGdYsgkOCO+14jiqY3FsHTvrWe4FT0/dNMCX+6UDbOWrymYYqP3qqHw+mhCA
-         nGVZ8xz2CkkmGvGpY9hBV3vU9lIuWt/oA3x9Mx3mhjv+HHQR+zbuwmQnjdvoQtVgWQmN
-         P9bzR8dGF18iF2US6AdwftfI7rgMFT0lIXQh5yE0OcfqQXsgjsWxoRVV7M/4LEnGU3r/
-         l6AEbF0hV/fOblxpSloQJlnkgrcGKANa5DMjfPG5s0oWLhDEjR3Zjvdm5wOcsoqneWNL
-         bA47Z6Rnot/o9aHfzY2IiEmImLu7oj4KFEB7T4DdtxHJvK4rbOw8bV1Si7jOiAPKa3iU
-         5tqQ==
-X-Gm-Message-State: APjAAAVujk9e3jXoI2iJaaOEh3CqQdvUhCmgt3TnWzaeFpqYlYJKa0ER
-        /wLMymXfc6Pi2+meoOCJsm0=
-X-Google-Smtp-Source: APXvYqxXw+EGCcS+eCaEOXxYLXSmU8MWKfnJwqd5tsR6aVrY3Zs4KN3r+06UIIxjBGrWB/r3cUTMDQ==
-X-Received: by 2002:a2e:b163:: with SMTP id a3mr3177191ljm.72.1573661959688;
-        Wed, 13 Nov 2019 08:19:19 -0800 (PST)
-Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
-        by smtp.gmail.com with ESMTPSA id 186sm1372730lfb.28.2019.11.13.08.19.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 08:19:19 -0800 (PST)
-Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
-To:     Jann Horn <jannh@google.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Wed, 13 Nov 2019 11:21:24 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2095 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726098AbfKMQVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:21:23 -0500
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 3C5CE5A3F24822F087FD;
+        Wed, 13 Nov 2019 16:21:22 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 13 Nov 2019 16:21:21 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 13 Nov
+ 2019 16:21:21 +0000
+Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
+To:     Hannes Reinecke <hare@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
- <20191112232239.yevpeemgxz4wy32b@wittgenstein>
- <CAG48ez0j_7NyCyvGn8U8NS2p=CQQb=me-5KTa7k5E6xpHJphaA@mail.gmail.com>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <13bc7935-8341-bb49-74ea-2eb58f72fd1f@gmail.com>
-Date:   Wed, 13 Nov 2019 18:19:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "hare@suse.com" <hare@suse.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+ <1573652209-163505-4-git-send-email-john.garry@huawei.com>
+ <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
+ <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
+ <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
+Date:   Wed, 13 Nov 2019 16:21:20 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez0j_7NyCyvGn8U8NS2p=CQQb=me-5KTa7k5E6xpHJphaA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.11.2019 18.00, Jann Horn wrote:
-> On Wed, Nov 13, 2019 at 12:22 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
->> On Sun, Nov 03, 2019 at 04:55:48PM +0200, Topi Miettinen wrote:
->>> Several items in /proc/sys need not be accessible to unprivileged
->>> tasks. Let the system administrator change the permissions, but only
->>> to more restrictive modes than what the sysctl tables allow.
->>>
->>> Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
->>> ---
->>>   fs/proc/proc_sysctl.c | 41 +++++++++++++++++++++++++++++++----------
->>>   1 file changed, 31 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
->>> index d80989b6c344..88c4ca7d2782 100644
->>> --- a/fs/proc/proc_sysctl.c
->>> +++ b/fs/proc/proc_sysctl.c
->>> @@ -818,6 +818,10 @@ static int proc_sys_permission(struct inode *inode, int
->>> mask)
->>>          if ((mask & MAY_EXEC) && S_ISREG(inode->i_mode))
->>>                  return -EACCES;
->>>
->>> +       error = generic_permission(inode, mask);
->>> +       if (error)
->>> +               return error;
-> 
-> In kernel/ucount.c, the ->permissions handler set_permissions() grants
-> access based on whether the caller has CAP_SYS_RESOURCE. And in
-> net/sysctl_net.c, the handler net_ctl_permissions() grants access
-> based on whether the caller has CAP_NET_ADMIN. This added check is
-> going to break those, right?
-> 
+On 13/11/2019 15:38, Hannes Reinecke wrote:
+>>>> -        if (clear_ctx_on_error)
+>>>> -            data->ctx = NULL;
+>>>> -        blk_queue_exit(q);
+>>>> -        return NULL;
+>>>> +    if (data->hctx->shared_tags) {
+>>>> +        shared_tag = blk_mq_get_shared_tag(data);
+>>>> +        if (shared_tag == BLK_MQ_TAG_FAIL)
+>>>> +            goto err_shared_tag;
+>>>>        }
+>>>>    -    rq = blk_mq_rq_ctx_init(data, tag, data->cmd_flags,
+>>>> alloc_time_ns);
+>>>> +    tag = blk_mq_get_tag(data);
+>>>> +    if (tag == BLK_MQ_TAG_FAIL)
+>>>> +        goto err_tag;
+>>>> +
+>>>> +    rq = blk_mq_rq_ctx_init(data, tag, shared_tag, data->cmd_flags,
+>>>> alloc_time_ns);
+>>>>        if (!op_is_flush(data->cmd_flags)) {
+>>>>            rq->elv.icq = NULL;
+>>>>            if (e && e->type->ops.prepare_request) {
+>> Hi Hannes,
+>>
+>>> Why do you need to keep a parallel tag accounting between 'normal' and
+>>> 'shared' tags here?
+>>> Isn't is sufficient to get a shared tag only, and us that in lieo of the
+>>> 'real' one?
+>> In theory, yes. Just the 'shared' tag should be adequate.
+>>
+>> A problem I see with this approach is that we lose the identity of which
+>> tags are allocated for each hctx. As an example for this, consider
+>> blk_mq_queue_tag_busy_iter(), which iterates the bits for each hctx.
+>> Now, if you're just using shared tags only, that wouldn't work.
+>>
+>> Consider blk_mq_can_queue() as another example - this tells us if a hctx
+>> has any bits unset, while with only using shared tags it would tell if
+>> any bits unset over all queues, and this change in semantics could break
+>> things. At a glance, function __blk_mq_tag_idle() looks problematic also.
+>>
+>> And this is where it becomes messy to implement.
+>>
 
-Right. The comment above seems then a bit misleading:
-	/*
-	 * sysctl entries that are not writeable,
-	 * are _NOT_ writeable, capabilities or not.
-	 */
+Hi Hannes,
 
--Topi
+> Oh, my. Indeed, that's correct.
+
+The tags could be kept in sync like this:
+
+shared_tag = blk_mq_get_tag(shared_tagset);
+if (shared_tag != -1)
+	sbitmap_set(hctx->tags, shared_tag);
+
+But that's obviously not ideal.
+
+> 
+> But then we don't really care _which_ shared tag is assigned; so
+> wouldn't be we better off by just having an atomic counter here?
+> Cache locality will be blown anyway ...
+The atomic counter would solve the issuing more than Scsi_host.can_queue 
+to the LLDD, but we still need a unique tag, which is what the shared 
+tag is.
+
+Thanks,
+John
