@@ -2,202 +2,99 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB57EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D4BC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5212068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8DA20643
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B3fvV0aQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="CHKMbtWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfKMQiv (ORCPT
+        id S1728530AbfKMQkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:38:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28000 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727835AbfKMQiu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:38:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573663129;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QqzCZrrw+N1LqLUBngxMhEYqWKp5yMdHfOeTcezaP3c=;
-        b=B3fvV0aQqI2IdTj0FBfXfd9gyVROAqBr+BbM2U05MxVkct6bUtImRPAsYesHYBhWyT1YOG
-        DIap0conT6MyRfVR5H993pRcNJJioW5rrwhENnWOh51DEuwC/+oSbmQbmnqbYLuX8F72AY
-        kNq1KmqUiVkHKT/1zGiMfjY+rj/mXBg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-LjnA9GNmP8C3hv9JVzQ6_g-1; Wed, 13 Nov 2019 11:38:48 -0500
-Received: by mail-wm1-f71.google.com with SMTP id t203so1416771wmt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:38:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9rmRmGxbCej/NSmLlrw5qBptbx4sAiez+aV0DPKoxmk=;
-        b=gFxb3Hww+m2+Dz90DO4ro5oIPSkgib96gbBUolF4kiz+dMTKJ7bDLNPfQbACF/Mzbl
-         ovi8IbcXfic0JrJsWyyQBeTzYXWKd+dEFya14JWAdnl+WfggteBi7tuWAimEM/ZA890B
-         6idVbhnKwlsNFX+24URlcpZ3gT/dCySQ+z0pmY8LOPXZdAjSJFVVXcTyCPoDXUi22bjz
-         ir0qQZ+ikRKCB7OT9vtyYrMtCn0/LCYsClf55MZEfcPjrzMEQMjOStai1VKWHwnD9Sjk
-         9yAqARUeARxGkUAgzL3AO/35lA3Zmx6nCCpXZxODOXMeYyH5g1Y+h9dbS5Zil2FFd+aR
-         gs7Q==
-X-Gm-Message-State: APjAAAUnaN+z4oESfrteFSXOYdMm4uIX+l0x66kN5GCXQ2Q6B9VVM0DN
-        XzsaBhTQo7XCx9pomuKo9q+b8wLVFtq989nVA0jvl3zJRJyrscI386no27KoP4neP+EAtbNCiWt
-        zcjamc/+gORpOka9jukOrmHO+
-X-Received: by 2002:adf:f0c4:: with SMTP id x4mr2417498wro.217.1573663126801;
-        Wed, 13 Nov 2019 08:38:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxXrDaHddzqNUvTPvMV4jXm5tNoMjrSJ3IvH3rKSatkd4o3Pvp2hT95nFuBwmA+H3+NDewgsg==
-X-Received: by 2002:adf:f0c4:: with SMTP id x4mr2417472wro.217.1573663126527;
-        Wed, 13 Nov 2019 08:38:46 -0800 (PST)
-Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
-        by smtp.gmail.com with ESMTPSA id q17sm2813058wmj.12.2019.11.13.08.38.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 08:38:45 -0800 (PST)
-Date:   Wed, 13 Nov 2019 17:38:42 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jorgen Hansen <jhansen@vmware.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH net-next 11/14] vsock: add multi-transports support
-Message-ID: <20191113163842.6byl2qul4nbjf5no@steredhat>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191023095554.11340-12-sgarzare@redhat.com>
- <MWHPR05MB33761FE4DA27130C72FC5048DA740@MWHPR05MB3376.namprd05.prod.outlook.com>
- <20191111171740.xwo7isdmtt7ywibo@steredhat>
- <MWHPR05MB33764F82AFA882B921A11E56DA770@MWHPR05MB3376.namprd05.prod.outlook.com>
- <20191112103630.vd3kbk7xnplv6rey@steredhat>
- <MWHPR05MB3376560CFD2A710723843828DA760@MWHPR05MB3376.namprd05.prod.outlook.com>
+        Wed, 13 Nov 2019 11:40:01 -0500
+Received: from vern.gendns.com ([98.142.107.122]:33890 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727578AbfKMQkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:40:00 -0500
+X-Greylist: delayed 1780 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 11:39:59 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1barl4LpDu79nPCoSjjU5D0XU/aFzdp/OvRiRUJvuu4=; b=CHKMbtWjUEP5Z9HxUTK44zytaD
+        GeMuIzYEjve7YUvU0+Gj+e+pYUpxXtnhSxCapF5tTdiRZM0mmjGx39ZDbaKcjLqBUzlkNB0JtsOdq
+        w5XE2Nr1h41pxvtjDRUm34LDSzeyWLxCJomyoC9Cyuqq/Tj35cCoy0mEqDNyTsQuUsiTJTAw12YoG
+        SWPpnJ68Yudfjqe7WM2gPuItES8UZ/ljmzsIJKuZgRHZBT46CdFEvuJaomoqtSb2ELeckXaWOzyP/
+        kQgcfLvzPBuLLFKnIwtaLZGrw2jo6NPEw15alM4nXN8hUBgv3z9L1jzkbgbI41CTkLFvVGJvASRmT
+        s5XDUEAQ==;
+Received: from [2600:1700:4830:165f::fb2] (port=42824)
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1iUvDm-0004Fk-9d; Wed, 13 Nov 2019 11:10:18 -0500
+Subject: Re: [PATCH AUTOSEL 4.14 050/115] ARM: dts: da850-lego-ev3: slow down
+ A/DC as much as possible
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Sekhar Nori <nsekhar@ti.com>, devicetree@vger.kernel.org
+References: <20191113015622.11592-1-sashal@kernel.org>
+ <20191113015622.11592-50-sashal@kernel.org>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <a1b3b613-8b70-56a3-dee6-264bd5fa5049@lechnology.com>
+Date:   Wed, 13 Nov 2019 10:10:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <MWHPR05MB3376560CFD2A710723843828DA760@MWHPR05MB3376.namprd05.prod.outlook.com>
-X-MC-Unique: LjnA9GNmP8C3hv9JVzQ6_g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191113015622.11592-50-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 02:30:24PM +0000, Jorgen Hansen wrote:
-> > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
-> > Sent: Tuesday, November 12, 2019 11:37 AM
->=20
-> > > > > You already mentioned that you are working on a fix for loopback
-> > > > > here for the guest, but presumably a host could also do loopback.
-> > > >
-> > > > IIUC we don't support loopback in the host, because in this case th=
-e
-> > > > application will use the CID_HOST as address, but if we are in a ne=
-sted
-> > > > VM environment we are in trouble.
-> > >
-> > > If both src and dst CID are CID_HOST, we should be fairly sure that t=
-his
-> > > Is host loopback, no? If src is anything else, we would do G2H.
-> > >
-> >=20
-> > The problem is that we don't know the src until we assign a transport
-> > looking at the dst. (or if the user bound the socket to CID_HOST before
-> > the connect(), but it is not very common)
-> >=20
-> > So if we are in a L1 and the user uses the local guest CID, it works, b=
-ut if
-> > it uses the HOST_CID, the packet will go to the L0.
-> >=20
-> > If we are in L0, it could be simple, because we can simply check if G2H
-> > is not loaded, so any packet to CID_HOST, is host loopback.
-> >=20
-> > I think that if the user uses the IOCTL_VM_SOCKETS_GET_LOCAL_CID, to se=
-t
-> > the dest CID for the loopback, it works in both cases because we return=
- the
-> > HOST_CID in L0, and always the guest CID in L1, also if a H2G is loaded=
- to
-> > handle the L2.
-> >=20
-> > Maybe we should document this in the man page.
->=20
-> Yeah, it seems like a good idea to flesh out the routing behavior for nes=
-ted
-> VMs in the man page.
+On 11/12/19 7:55 PM, Sasha Levin wrote:
+> From: David Lechner <david@lechnology.com>
+> 
+> [ Upstream commit aea4762fb46e048c059ff49565ee33da07c8aeb3 ]
+> 
+> Due to the electrical design of the A/DC circuits on LEGO MINDSTORMS EV3,
+> if we are reading analog values as fast as possible (i.e. using DMA to
+> service the SPI) the A/DC chip will read incorrect values - as much as
+> 0.1V off when the SPI is running at 10MHz. (This has to do with the
+> capacitor charge time when channels are muxed in the A/DC.)
+> 
+> This patch slows down the SPI as much as possible (if CPU is at 456MHz,
+> SPI runs at 1/2 of that, so 228MHz and has a max prescalar of 256, so
+> we could get ~891kHz, but we're just rounding it to 1MHz). We also use
+> the max allowable value for WDELAY to slow things down even more.
+> 
+> These changes reduce the error of the analog values to about 5mV, which
+> is tolerable.
+> 
+> Commits a3762b13a596 ("spi: spi-davinci: Add support for SPI_CS_WORD")
+> and e2540da86ef8 ("iio: adc: ti-ads7950: use SPI_CS_WORD to reduce
+> CPU usage") introduce changes that allow DMA transfers to be used, so
+> this slow down is needed now.
+> 
 
-I'll do it.
-
->=20
-> >=20
-> > But I have a question: Does vmci support the host loopback?
-> > I've tried, and it seems not.
->=20
-> Only for datagrams - not for stream sockets.
-> =20
-
-Ok, I'll leave the datagram loopback as before.
-
-> > Also vhost-vsock doesn't support it, but virtio-vsock does.
-> >=20
-> > > >
-> > > > Since several people asked about this feature at the KVM Forum, I w=
-ould
-> > like
-> > > > to add a new VMADDR_CID_LOCAL (i.e. using the reserved 1) and
-> > implement
-> > > > loopback in the core.
-> > > >
-> > > > What do you think?
-> > >
-> > > What kind of use cases are mentioned in the KVM forum for loopback?
-> > One concern
-> > > is that we have to maintain yet another interprocess communication
-> > mechanism,
-> > > even though other choices exist already  (and those are likely to be =
-more
-> > efficient
-> > > given the development time and specific focus that went into those). =
-To
-> > me, the
-> > > local connections are mainly useful as a way to sanity test the proto=
-col and
-> > transports.
-> > > However, if loopback is compelling, it would make sense have it in th=
-e core,
-> > since it
-> > > shouldn't need a specific transport.
-> >=20
-> > The common use cases is for developer point of view, and to test the
-> > protocol and transports as you said.
-> >=20
-> > People that are introducing VSOCK support in their projects, would like=
- to
-> > test them on their own PC without starting a VM.
-> >=20
-> > The idea is to move the code to handle loopback from the virtio-vsock,
-> > in the core, but in another series :-)
->=20
-> OK, that makes sense.
-
-Thanks,
-Stefano
-
+I doubt that the commits above would be backported, so it does not
+make sense to backport this patch.
