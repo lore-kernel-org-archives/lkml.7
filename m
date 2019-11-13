@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270EEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5537C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0013B222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C5321783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611147;
-	bh=PsgG2G08UykoSKpvOhRLvUJtYY5s7r6XwXM22km+Nwk=;
+	s=default; t=1573611161;
+	bh=0PiJltGkCCUSn6b6SczZyBlHFzdXyCOaUGSaDBXebiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K3Fy5XfHBd2XFKfLz+c/M9C2s1LTtlMpe230Dp3cfT6ygDv6Wh+HluqiJ4i9g9NgJ
-	 1viLuro4Rz9X3gESXSf8udheRY8uR+VIyIQ13vd8J+Ea6JcblbXpIwbgJ6Wy//vn3+
-	 sJGydiRl0bV52TjdnRIUFWp7URnm+WlaTF1M31uQ=
+	b=zaALs/hWnfJ+Jxi4YYt9jaSNyKHYdF89DafiygZpvuMZarsNmFsNQTT2PIHoF5WZG
+	 JqNHTaZGm1zuz613VxIjpayCLiCVa9ufpapWxOCrT7aw8lqG+sU8ljkjI99ytK+awW
+	 wThKSrkQZv0CIEdUClkwpUGxn/qZBXR2NKd1OSKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730386AbfKMCMZ (ORCPT
+        id S1729959AbfKMB6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:12:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:58:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730006AbfKMB6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:23 -0500
+        id S1729936AbfKMB6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 112B82245A;
-        Wed, 13 Nov 2019 01:58:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EC462245C;
+        Wed, 13 Nov 2019 01:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610302;
-        bh=PsgG2G08UykoSKpvOhRLvUJtYY5s7r6XwXM22km+Nwk=;
+        s=default; t=1573610286;
+        bh=0PiJltGkCCUSn6b6SczZyBlHFzdXyCOaUGSaDBXebiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cd3Y/8+wCnzE3ePWjlgAbdeHQQL98aHymtmUn7KlFOLKMwxEBxCiZiFtBzQg1iaiT
-         FiXWFhhDXaHyHv0H8J9Ao4jWE7m4/cFVdQBScCtd1q7wTGUBIyVRYVBzJj3qqmuDNe
-         /GP4MKhGnMGmDVdieiH5gzDg+tU7izk319V88Pdg=
+        b=0NckyA2oJHjZGsXaSmTWpcz0hoyAD0LRcwVnulI5O+ousEUVZl/yzIPXJxYsRMbnU
+         dY4uyxgJGHo+jGJ0K6G8HCwWP88rVz6cQs5xCaeACZp+AXR9zkBfIUvsNlROIOckKP
+         bnB+Fnawq2fvvHGjU6BXkW8zuCH/9KdD4PI2XgNs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Lubomir Rintel <lkundrak@v3.sk>,
-        x86@kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 073/115] x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
-Date:   Tue, 12 Nov 2019 20:55:40 -0500
-Message-Id: <20191113015622.11592-73-sashal@kernel.org>
+Cc:     Joonyoung Shim <jy0922.shim@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 063/115] clk: samsung: exynos5420: Define CLK_SECKEY gate clock only or Exynos5420
+Date:   Tue, 12 Nov 2019 20:55:30 -0500
+Message-Id: <20191113015622.11592-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -58,45 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Joonyoung Shim <jy0922.shim@samsung.com>
 
-[ Upstream commit fa112cf1e8bc693d5a666b1c479a2859c8b6e0f1 ]
+[ Upstream commit d32dd2a1a0f80edad158c9a1ba5f47650d9504a0 ]
 
-When building a 32-bit config which has the above MFD item as module
-but OLPC_XO1_PM is enabled =y - which is bool, btw - the kernel fails
-building with:
+The bit of GATE_BUS_PERIS1 for CLK_SECKEY is just reserved on
+exynos5422/5800, not exynos5420. Define gate clk for exynos5420 to
+handle the bit only on exynos5420.
 
-  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_remove':
-  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:159: undefined reference to `mfd_cell_disable'
-  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_probe':
-  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:133: undefined reference to `mfd_cell_enable'
-  make: *** [Makefile:1030: vmlinux] Error 1
-
-Force MFD_CS5535 to y if OLPC_XO1_PM is enabled.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Lubomir Rintel <lkundrak@v3.sk>
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/20181005131750.GA5366@zn.tnic
+Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
+[m.szyprow: rewrote commit subject]
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <snawrocki@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Kconfig | 3 +--
+ drivers/clk/samsung/clk-exynos5420.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 8fec1585ac7ab..ce147c0e76f0d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2671,8 +2671,7 @@ config OLPC
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index 500a55415e900..a882f7038bcec 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -633,6 +633,7 @@ static const struct samsung_div_clock exynos5420_div_clks[] __initconst = {
+ };
  
- config OLPC_XO1_PM
- 	bool "OLPC XO-1 Power Management"
--	depends on OLPC && MFD_CS5535 && PM_SLEEP
--	select MFD_CORE
-+	depends on OLPC && MFD_CS5535=y && PM_SLEEP
- 	---help---
- 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
+ static const struct samsung_gate_clock exynos5420_gate_clks[] __initconst = {
++	GATE(CLK_SECKEY, "seckey", "aclk66_psgen", GATE_BUS_PERIS1, 1, 0, 0),
+ 	GATE(CLK_MAU_EPLL, "mau_epll", "mout_mau_epll_clk",
+ 			SRC_MASK_TOP7, 20, CLK_SET_RATE_PARENT, 0),
+ };
+@@ -1167,8 +1168,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+ 	GATE(CLK_TMU, "tmu", "aclk66_psgen", GATE_IP_PERIS, 21, 0, 0),
+ 	GATE(CLK_TMU_GPU, "tmu_gpu", "aclk66_psgen", GATE_IP_PERIS, 22, 0, 0),
  
+-	GATE(CLK_SECKEY, "seckey", "aclk66_psgen", GATE_BUS_PERIS1, 1, 0, 0),
+-
+ 	/* GEN Block */
+ 	GATE(CLK_ROTATOR, "rotator", "mout_user_aclk266", GATE_IP_GEN, 1, 0, 0),
+ 	GATE(CLK_JPEG, "jpeg", "aclk300_jpeg", GATE_IP_GEN, 2, 0, 0),
 -- 
 2.20.1
 
