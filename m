@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D246BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A830C17448
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DA6206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6CF206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610884;
-	bh=0lcDox0pzW+j0DkcAwN8jvU/lx22Ypx2/yL4h5meA2Q=;
+	s=default; t=1573610889;
+	bh=ZxkIgG+Oa+kY1HAulN5VVJ7/HOzwWg4gtRjfk+JdGC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+CGrUbP5nVf109MiKbEfrB0b+5Z03ikNk+6FYnT/HY33D+L1to3uY00veNd5M+MJ
-	 gEAN9dtcuLAoS7RBE0xUrDXtAcoQKXZbvo1RiZcgxWn7HMNBaOJ4/nFqG8UpyNsQbj
-	 p2jaaDMgAKwf1CJacWDht6xwCmwqymH4+Q9Uy27Q=
+	b=ZQ7nTCKvMMCa05ky2/JOkh0ID8/G3ZS1OkFgtS4dhXhKgWj/5K7tLSKEwZe/jRRJF
+	 JSGF3Y11gsDFN5GnUDjHdFBnLclbp3bE4Qa3NBSfhZC+LxisJZJo3+ZXN/iBiVSxwf
+	 lswvHoqImztV3E64tx/HtmI7Hwam71xYVoTw2/QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbfKMCID (ORCPT
+        id S1730437AbfKMCAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:08:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:00:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730444AbfKMCAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:12 -0500
+        id S1730417AbfKMCAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A0A722467;
-        Wed, 13 Nov 2019 02:00:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB5412053B;
+        Wed, 13 Nov 2019 02:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610411;
-        bh=0lcDox0pzW+j0DkcAwN8jvU/lx22Ypx2/yL4h5meA2Q=;
+        s=default; t=1573610404;
+        bh=ZxkIgG+Oa+kY1HAulN5VVJ7/HOzwWg4gtRjfk+JdGC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AV4vGSATmMQwVRFhmFGrl0TiVMfxcwoqSAYRkfAb/STl3fDSG0vT7SGsDRvmEwqJ8
-         eOubgsO9+W2jvS6luQwltMv8CTqGYfyU4CEZ6/gMr7Aeu57fZX6uvqgd/T/xCWerZJ
-         //1Fb3hiJ2Z4wq5eTZhZtzPUczjNyzTehnTvOS+I=
+        b=mUx/Twj8ujOA6mNG/pcQLbUGk5gN2SJsuym/ZqF6pTeCZHSGIgFFrs+kingUFarnY
+         WG0wN7X5WL1+EeEUjcilB/SPq4pT9m8C7uLze+ble7xF5uu32b0D7oaJXv3rxwgVZc
+         awo7EQUN4WaItWj8tgdO0vGNTMASi8vu6sN8kZts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org
-Subject: [PATCH AUTOSEL 4.9 25/68] ACPICA: Never run _REG on system_memory and system_IO
-Date:   Tue, 12 Nov 2019 20:58:49 -0500
-Message-Id: <20191113015932.12655-25-sashal@kernel.org>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 20/68] powerpc/pseries: Fix how we iterate over the DTL entries
+Date:   Tue, 12 Nov 2019 20:58:44 -0500
+Message-Id: <20191113015932.12655-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -61,132 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Moore <robert.moore@intel.com>
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 
-[ Upstream commit 8b1cafdcb4b75c5027c52f1e82b47ebe727ad7ed ]
+[ Upstream commit 9258227e9dd1da8feddb07ad9702845546a581c9 ]
 
-These address spaces are defined by the ACPI spec to be
-"always available", and thus _REG should never be run on them.
-Provides compatibility with other ACPI implementations.
+When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we look up dtl_idx in
+the lppaca to determine the number of entries in the buffer. Since
+lppaca is in big endian, we need to do an endian conversion before using
+this in our calculation to determine the number of entries in the
+buffer. Without this, we do not iterate over the existing entries in the
+DTL buffer properly.
 
-Signed-off-by: Bob Moore <robert.moore@intel.com>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/acevents.h |  2 ++
- drivers/acpi/acpica/aclocal.h  |  2 +-
- drivers/acpi/acpica/evregion.c | 17 +++++++++++++++--
- drivers/acpi/acpica/evrgnini.c |  6 +-----
- drivers/acpi/acpica/evxfregn.c |  1 -
- 5 files changed, 19 insertions(+), 9 deletions(-)
+ arch/powerpc/platforms/pseries/dtl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
-index 92fa47c6498cd..20fd17aaa9189 100644
---- a/drivers/acpi/acpica/acevents.h
-+++ b/drivers/acpi/acpica/acevents.h
-@@ -247,6 +247,8 @@ acpi_status
- acpi_ev_initialize_region(union acpi_operand_object *region_obj,
- 			  u8 acpi_ns_locked);
+diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
+index 37de83c5ef172..7a4d172c93765 100644
+--- a/arch/powerpc/platforms/pseries/dtl.c
++++ b/arch/powerpc/platforms/pseries/dtl.c
+@@ -185,7 +185,7 @@ static void dtl_stop(struct dtl *dtl)
  
-+u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
-+
- /*
-  * evsci - SCI (System Control Interrupt) handling/dispatch
-  */
-diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
-index dff1207a60788..219bc576d1270 100644
---- a/drivers/acpi/acpica/aclocal.h
-+++ b/drivers/acpi/acpica/aclocal.h
-@@ -428,9 +428,9 @@ struct acpi_simple_repair_info {
- /* Info for running the _REG methods */
- 
- struct acpi_reg_walk_info {
--	acpi_adr_space_type space_id;
- 	u32 function;
- 	u32 reg_run_count;
-+	acpi_adr_space_type space_id;
- };
- 
- /*****************************************************************************
-diff --git a/drivers/acpi/acpica/evregion.c b/drivers/acpi/acpica/evregion.c
-index 4c6f795140402..9cb60fdc77e50 100644
---- a/drivers/acpi/acpica/evregion.c
-+++ b/drivers/acpi/acpica/evregion.c
-@@ -677,6 +677,19 @@ acpi_ev_execute_reg_methods(struct acpi_namespace_node *node,
- 
- 	ACPI_FUNCTION_TRACE(ev_execute_reg_methods);
- 
-+	/*
-+	 * These address spaces do not need a call to _REG, since the ACPI
-+	 * specification defines them as: "must always be accessible". Since
-+	 * they never change state (never become unavailable), no need to ever
-+	 * call _REG on them. Also, a data_table is not a "real" address space,
-+	 * so do not call _REG. September 2018.
-+	 */
-+	if ((space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) ||
-+	    (space_id == ACPI_ADR_SPACE_SYSTEM_IO) ||
-+	    (space_id == ACPI_ADR_SPACE_DATA_TABLE)) {
-+		return_VOID;
-+	}
-+
- 	info.space_id = space_id;
- 	info.function = function;
- 	info.reg_run_count = 0;
-@@ -738,8 +751,8 @@ acpi_ev_reg_run(acpi_handle obj_handle,
- 	}
- 
- 	/*
--	 * We only care about regions.and objects that are allowed to have address
--	 * space handlers
-+	 * We only care about regions and objects that are allowed to have
-+	 * address space handlers
- 	 */
- 	if ((node->type != ACPI_TYPE_REGION) && (node != acpi_gbl_root_node)) {
- 		return (AE_OK);
-diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
-index 75ddd160a716f..c8646c3977865 100644
---- a/drivers/acpi/acpica/evrgnini.c
-+++ b/drivers/acpi/acpica/evrgnini.c
-@@ -50,9 +50,6 @@
- #define _COMPONENT          ACPI_EVENTS
- ACPI_MODULE_NAME("evrgnini")
- 
--/* Local prototypes */
--static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
--
- /*******************************************************************************
-  *
-  * FUNCTION:    acpi_ev_system_memory_region_setup
-@@ -67,7 +64,6 @@ static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
-  * DESCRIPTION: Setup a system_memory operation region
-  *
-  ******************************************************************************/
--
- acpi_status
- acpi_ev_system_memory_region_setup(acpi_handle handle,
- 				   u32 function,
-@@ -347,7 +343,7 @@ acpi_ev_pci_config_region_setup(acpi_handle handle,
-  *
-  ******************************************************************************/
- 
--static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node)
-+u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node)
+ static u64 dtl_current_index(struct dtl *dtl)
  {
- 	acpi_status status;
- 	struct acpi_pnp_device_id *hid;
-diff --git a/drivers/acpi/acpica/evxfregn.c b/drivers/acpi/acpica/evxfregn.c
-index d2743067126af..f87d59a05c681 100644
---- a/drivers/acpi/acpica/evxfregn.c
-+++ b/drivers/acpi/acpica/evxfregn.c
-@@ -227,7 +227,6 @@ acpi_remove_address_space_handler(acpi_handle device,
- 				 */
- 				region_obj =
- 				    handler_obj->address_space.region_list;
--
- 			}
+-	return lppaca_of(dtl->cpu).dtl_idx;
++	return be64_to_cpu(lppaca_of(dtl->cpu).dtl_idx);
+ }
+ #endif /* CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
  
- 			/* Remove this Handler object from the list */
 -- 
 2.20.1
 
