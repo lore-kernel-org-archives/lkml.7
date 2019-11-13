@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC0FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C81C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1FA206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3FE206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610913;
-	bh=HbgVx4qjb6kTQShWNZlxWmMuVhrxfteiZTihwmQgvoo=;
+	s=default; t=1573610916;
+	bh=Ezy/2toqxH4vDYuGNzQ7l2KT4KeAUcuyJ9W611bMqB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g19LpxCpcEXViSKF1Irh/HZnmPlQn2+i9XaRrX11h1ddLsYH/VGPu2rt/Mx9aRAxR
-	 Z8JqEf5gJQglF/j4KazNiwkZYqJv7GZhbRDhNBKznrdsXB+ITGVc0PpqEnFIFwCtz4
-	 4OqbuLdkMGNVpYfzjeoQbfF2XjB2FIJWqVX/fR60=
+	b=EhVrf4YD6SU7arbXkRn2gscNYxwAau6idjjUp25py5THOXJqXgCF5q08yVcgRXfti
+	 5xjzJDU0FKe/QQNA5LZLL578sNF6qAgFxGiGWXx+5ORnHvQvDxQ1tzzQJriUClptXE
+	 VTYrqUwxEuvrzGBIPkph6ur3jz5XLyap+CCmx6bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfKMCIc (ORCPT
+        id S1730389AbfKMCAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:08:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55004 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:00:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730345AbfKMCAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:02 -0500
+        id S1730345AbfKMB7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:59:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94098222CF;
-        Wed, 13 Nov 2019 02:00:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE7CE222CF;
+        Wed, 13 Nov 2019 01:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610402;
-        bh=HbgVx4qjb6kTQShWNZlxWmMuVhrxfteiZTihwmQgvoo=;
+        s=default; t=1573610391;
+        bh=Ezy/2toqxH4vDYuGNzQ7l2KT4KeAUcuyJ9W611bMqB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aadU0IQIT+HLt1mKlF9BASIMVAVA5teMW71EQJO79ZBICyyAprVPfxXuMBvoYMTZA
-         Ze0Oxh2GeqqMIJZIXtuQkz9mDOFyQegUPkzWPtokwGaFmFiqGxko2x7745en4RZ/hA
-         I9XvUCRzyUReXKR45zbWBmPJSJkgO3Tn+VuxElDQ=
+        b=MmX25UcfYYSYOSdEOUwgKKCZ9lxi3E5PZXlTMCb//e7lV9In0mUT58fQhXrQGCcMt
+         YOYxfiAEXA9MHaTLcARxKElUMMAJSHpOgZt/Ce1J3Q/QDnzuqNGYh4iThaBgq7BgGC
+         A5vjs/ROd5LpilDdy6YEO3SHChLUxIfvylo36Lx0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 19/68] powerpc/pseries: Fix DTL buffer registration
-Date:   Tue, 12 Nov 2019 20:58:43 -0500
-Message-Id: <20191113015932.12655-19-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/68] usb: gadget: udc: fotg210-udc: Fix a sleep-in-atomic-context bug in fotg210_get_status()
+Date:   Tue, 12 Nov 2019 20:58:36 -0500
+Message-Id: <20191113015932.12655-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -59,42 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit db787af1b8a6b4be428ee2ea7d409dafcaa4a43c ]
+[ Upstream commit 2337a77c1cc86bc4e504ecf3799f947659c86026 ]
 
-When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we register the DTL
-buffer for a cpu when the associated file under powerpc/dtl in debugfs
-is opened. When doing so, we need to set the size of the buffer being
-registered in the second u32 word of the buffer. This needs to be in big
-endian, but we are not doing the conversion resulting in the below error
-showing up in dmesg:
+The driver may sleep in an interrupt handler.
+The function call path (from bottom to top) in Linux-4.17 is:
 
-	dtl_start: DTL registration for cpu 0 (hw 0) failed with -4
+[FUNC] fotg210_ep_queue(GFP_KERNEL)
+drivers/usb/gadget/udc/fotg210-udc.c, 744:
+	fotg210_ep_queue in fotg210_get_status
+drivers/usb/gadget/udc/fotg210-udc.c, 768:
+	fotg210_get_status in fotg210_setup_packet
+drivers/usb/gadget/udc/fotg210-udc.c, 949:
+	fotg210_setup_packet in fotg210_irq (interrupt handler)
 
-Fix this in the obvious manner.
+To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
+If possible, spin_unlock() and spin_lock() around fotg210_ep_queue()
+can be also removed.
 
-Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+This bug is found by my static analysis tool DSAC.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/dtl.c | 2 +-
+ drivers/usb/gadget/udc/fotg210-udc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index 39049e4884fbd..37de83c5ef172 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -150,7 +150,7 @@ static int dtl_start(struct dtl *dtl)
+diff --git a/drivers/usb/gadget/udc/fotg210-udc.c b/drivers/usb/gadget/udc/fotg210-udc.c
+index 95df2b3bb6a1a..76e991557116a 100644
+--- a/drivers/usb/gadget/udc/fotg210-udc.c
++++ b/drivers/usb/gadget/udc/fotg210-udc.c
+@@ -744,7 +744,7 @@ static void fotg210_get_status(struct fotg210_udc *fotg210,
+ 	fotg210->ep0_req->length = 2;
  
- 	/* Register our dtl buffer with the hypervisor. The HV expects the
- 	 * buffer size to be passed in the second word of the buffer */
--	((u32 *)dtl->buf)[1] = DISPATCH_LOG_BYTES;
-+	((u32 *)dtl->buf)[1] = cpu_to_be32(DISPATCH_LOG_BYTES);
+ 	spin_unlock(&fotg210->lock);
+-	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_KERNEL);
++	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_ATOMIC);
+ 	spin_lock(&fotg210->lock);
+ }
  
- 	hwcpu = get_hard_smp_processor_id(dtl->cpu);
- 	addr = __pa(dtl->buf);
 -- 
 2.20.1
 
