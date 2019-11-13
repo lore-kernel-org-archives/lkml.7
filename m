@@ -2,251 +2,143 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DCCC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC909C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1E4214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA62222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573642193;
+	bh=lShpq6wKKwja1j0m890wmOSQ8hsSDtUNvq+rYaZInxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vDtDZasQsEz9c9W3bQo2zMo+wrEI5o/UdxfoQLYIzUO8Nc8zXHwV8dVguRLepxiEN
+	 55983DHoCHkmaZbwa8Fm8yEVilocL6qGpkRHWdSllG4om5DO48FGvwtFN7AEfXNMZf
+	 TJTE7HsCETQn6FRZTW7AE67B4K27GvP4jvoFKBks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfKMKt0 (ORCPT
+        id S1727705AbfKMKtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:49:26 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33058 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbfKMKtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:49:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B5441B20D;
-        Wed, 13 Nov 2019 10:49:20 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 1B6A71E1498; Wed, 13 Nov 2019 11:49:20 +0100 (CET)
-Date:   Wed, 13 Nov 2019 11:49:20 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 04/23] mm: devmap: refactor 1-based refcounting for
- ZONE_DEVICE pages
-Message-ID: <20191113104920.GF6367@quack2.suse.cz>
-References: <20191113042710.3997854-1-jhubbard@nvidia.com>
- <20191113042710.3997854-5-jhubbard@nvidia.com>
+        Wed, 13 Nov 2019 05:49:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727685AbfKMKtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:49:52 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67506222BD;
+        Wed, 13 Nov 2019 10:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573642191;
+        bh=lShpq6wKKwja1j0m890wmOSQ8hsSDtUNvq+rYaZInxw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wPnE1zAHiIFwyXcEZWslE5NZbjOYK8Mtp2UVLPfJUV5A8zLtZN16gymcbXt4T9E0w
+         vr9D8BGgaUKkY0L67IWMDDa/606Iz++ZY/5WwHZkuwLhltaTO6FWHD47LU7w1r/Wl1
+         3tXFT9hUNqDfATuVVvF75t+8Gq7/7NBQjvglskH0=
+Date:   Wed, 13 Nov 2019 10:49:45 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Vincent Whitchurch <rabinv@axis.com>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>
+Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
+ hazard
+Message-ID: <20191113104945.GC25900@willie-the-truck>
+References: <20191112130244.16630-1-vincent.whitchurch@axis.com>
+ <20191112160855.GA22025@arrakis.emea.arm.com>
+ <20191112180034.GB19889@willie-the-truck>
+ <20191112182249.GB22025@arrakis.emea.arm.com>
+ <CAHk-=wg4vi27mnMVgZ-rzcEdDAjTXrY1Jyz3+=5STcY0bw4-jQ@mail.gmail.com>
+ <20191113102357.GA25875@willie-the-truck>
+ <20191113103150.GL25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191113042710.3997854-5-jhubbard@nvidia.com>
+In-Reply-To: <20191113103150.GL25745@shell.armlinux.org.uk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-11-19 20:26:51, John Hubbard wrote:
-> An upcoming patch changes and complicates the refcounting and
-> especially the "put page" aspects of it. In order to keep
-> everything clean, refactor the devmap page release routines:
-> 
-> * Rename put_devmap_managed_page() to page_is_devmap_managed(),
->   and limit the functionality to "read only": return a bool,
->   with no side effects.
-> 
-> * Add a new routine, put_devmap_managed_page(), to handle checking
->   what kind of page it is, and what kind of refcount handling it
->   requires.
-> 
-> * Rename __put_devmap_managed_page() to free_devmap_managed_page(),
->   and limit the functionality to unconditionally freeing a devmap
->   page.
-> 
-> This is originally based on a separate patch by Ira Weiny, which
-> applied to an early version of the put_user_page() experiments.
-> Since then, Jérôme Glisse suggested the refactoring described above.
-> 
-> Suggested-by: Jérôme Glisse <jglisse@redhat.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Hi Russell,
 
-Looks good to me. You can add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  include/linux/mm.h | 27 ++++++++++++++++---
->  mm/memremap.c      | 67 ++++++++++++++++++++--------------------------
->  2 files changed, 53 insertions(+), 41 deletions(-)
+On Wed, Nov 13, 2019 at 10:31:51AM +0000, Russell King - ARM Linux admin wrote:
+> On Wed, Nov 13, 2019 at 10:23:58AM +0000, Will Deacon wrote:
+> > On Tue, Nov 12, 2019 at 10:39:01AM -0800, Linus Torvalds wrote:
+> > > On Tue, Nov 12, 2019 at 10:22 AM Catalin Marinas
+> > > <catalin.marinas@arm.com> wrote:
+> > > >
+> > > > OK, so this includes changing test_bit() to perform a READ_ONCE.
+> > > 
+> > > That's not going to happen.
+> > 
+> > Ok, I'll stick my neck out here, but if test_bit() is being used to read
+> > a bitmap that is being concurrently modified (e.g. by set_bit() which boils
+> > down to atomic_long_or()), then why isn't READ_ONCE() required? Right now,
+> > test_bit takes a 'const volatile unsigned long *addr' argument, so I don't
+> > see that you'll get a change in codegen except on alpha and, with this
+> > erratum, arm32.
 > 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index a2adf95b3f9c..96228376139c 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -967,9 +967,10 @@ static inline bool is_zone_device_page(const struct page *page)
->  #endif
->  
->  #ifdef CONFIG_DEV_PAGEMAP_OPS
-> -void __put_devmap_managed_page(struct page *page);
-> +void free_devmap_managed_page(struct page *page);
->  DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
-> -static inline bool put_devmap_managed_page(struct page *page)
-> +
-> +static inline bool page_is_devmap_managed(struct page *page)
->  {
->  	if (!static_branch_unlikely(&devmap_managed_key))
->  		return false;
-> @@ -978,7 +979,6 @@ static inline bool put_devmap_managed_page(struct page *page)
->  	switch (page->pgmap->type) {
->  	case MEMORY_DEVICE_PRIVATE:
->  	case MEMORY_DEVICE_FS_DAX:
-> -		__put_devmap_managed_page(page);
->  		return true;
->  	default:
->  		break;
-> @@ -986,6 +986,27 @@ static inline bool put_devmap_managed_page(struct page *page)
->  	return false;
->  }
->  
-> +static inline bool put_devmap_managed_page(struct page *page)
-> +{
-> +	bool is_devmap = page_is_devmap_managed(page);
-> +
-> +	if (is_devmap) {
-> +		int count = page_ref_dec_return(page);
-> +
-> +		/*
-> +		 * devmap page refcounts are 1-based, rather than 0-based: if
-> +		 * refcount is 1, then the page is free and the refcount is
-> +		 * stable because nobody holds a reference on the page.
-> +		 */
-> +		if (count == 1)
-> +			free_devmap_managed_page(page);
-> +		else if (!count)
-> +			__put_page(page);
-> +	}
-> +
-> +	return is_devmap;
-> +}
-> +
->  #else /* CONFIG_DEV_PAGEMAP_OPS */
->  static inline bool put_devmap_managed_page(struct page *page)
->  {
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index 03ccbdfeb697..bc7e2a27d025 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -410,48 +410,39 @@ struct dev_pagemap *get_dev_pagemap(unsigned long pfn,
->  EXPORT_SYMBOL_GPL(get_dev_pagemap);
->  
->  #ifdef CONFIG_DEV_PAGEMAP_OPS
-> -void __put_devmap_managed_page(struct page *page)
-> +void free_devmap_managed_page(struct page *page)
->  {
-> -	int count = page_ref_dec_return(page);
-> +	/* Clear Active bit in case of parallel mark_page_accessed */
-> +	__ClearPageActive(page);
-> +	__ClearPageWaiters(page);
-> +
-> +	mem_cgroup_uncharge(page);
->  
->  	/*
-> -	 * If refcount is 1 then page is freed and refcount is stable as nobody
-> -	 * holds a reference on the page.
-> +	 * When a device_private page is freed, the page->mapping field
-> +	 * may still contain a (stale) mapping value. For example, the
-> +	 * lower bits of page->mapping may still identify the page as
-> +	 * an anonymous page. Ultimately, this entire field is just
-> +	 * stale and wrong, and it will cause errors if not cleared.
-> +	 * One example is:
-> +	 *
-> +	 *  migrate_vma_pages()
-> +	 *    migrate_vma_insert_page()
-> +	 *      page_add_new_anon_rmap()
-> +	 *        __page_set_anon_rmap()
-> +	 *          ...checks page->mapping, via PageAnon(page) call,
-> +	 *            and incorrectly concludes that the page is an
-> +	 *            anonymous page. Therefore, it incorrectly,
-> +	 *            silently fails to set up the new anon rmap.
-> +	 *
-> +	 * For other types of ZONE_DEVICE pages, migration is either
-> +	 * handled differently or not done at all, so there is no need
-> +	 * to clear page->mapping.
->  	 */
-> -	if (count == 1) {
-> -		/* Clear Active bit in case of parallel mark_page_accessed */
-> -		__ClearPageActive(page);
-> -		__ClearPageWaiters(page);
-> -
-> -		mem_cgroup_uncharge(page);
-> -
-> -		/*
-> -		 * When a device_private page is freed, the page->mapping field
-> -		 * may still contain a (stale) mapping value. For example, the
-> -		 * lower bits of page->mapping may still identify the page as
-> -		 * an anonymous page. Ultimately, this entire field is just
-> -		 * stale and wrong, and it will cause errors if not cleared.
-> -		 * One example is:
-> -		 *
-> -		 *  migrate_vma_pages()
-> -		 *    migrate_vma_insert_page()
-> -		 *      page_add_new_anon_rmap()
-> -		 *        __page_set_anon_rmap()
-> -		 *          ...checks page->mapping, via PageAnon(page) call,
-> -		 *            and incorrectly concludes that the page is an
-> -		 *            anonymous page. Therefore, it incorrectly,
-> -		 *            silently fails to set up the new anon rmap.
-> -		 *
-> -		 * For other types of ZONE_DEVICE pages, migration is either
-> -		 * handled differently or not done at all, so there is no need
-> -		 * to clear page->mapping.
-> -		 */
-> -		if (is_device_private_page(page))
-> -			page->mapping = NULL;
-> +	if (is_device_private_page(page))
-> +		page->mapping = NULL;
->  
-> -		page->pgmap->ops->page_free(page);
-> -	} else if (!count)
-> -		__put_page(page);
-> +	page->pgmap->ops->page_free(page);
->  }
-> -EXPORT_SYMBOL(__put_devmap_managed_page);
-> +EXPORT_SYMBOL(free_devmap_managed_page);
->  #endif /* CONFIG_DEV_PAGEMAP_OPS */
-> -- 
-> 2.24.0
+> I'm not entirely clear what you're suggesting, so I'll just pick the
+> scenario that I think you're talking about - but I'm not sure it's the
+> one you're intending.
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Using test_bit() in one thread and set_bit() on the same bit in another
+> thread without locking is going to be racy by definition.  It's entirely
+> possible for:
+> 
+> 	Thread 1			Thread 2
+> 	bit = test_bit(...);
+> 					set_bit(...);
+> 	/* use bit */
+> 
+> and here, bit == 0 but the bit has been set by thread 2.  Use of the
+> result from test_bit() is inherently a non-atomic operation.
+
+I think it's atomic in the same way that atomic_read() is atomic (which is
+typically defined using READ_ONCE()).
+
+> This is why we have test_and_set_bit() and friends that atomically test
+> that a bit is clear before setting it.  Where this is especially
+> important is for some filesystems, as they use test_and_xxx_bit() to
+> manage their allocation bitmaps.
+
+Agreed, but what we don't want is something like:
+
+	Thread 1			Thread 2
+					set_bit(...); // bit is now 1
+	test_bit(...); // returns 1
+	test_bit(...); // returns 0
+
+which is what can happen due to this erratum. It's generally good practice
+to use READ_ONCE() when reading something which can be updated concurrently
+because:
+
+	* It ensures that the value is (re-)loaded from memory
+
+	* It prevents the compiler from performing harmful optimisations,
+	  such as merging or tearing (although in this case I suspect
+	  these are ok because we're dealing with a single bit)
+
+	* On Alpha, it gives you a barrier so that dependency ordering
+	  can be relied upon from the load
+
+	* It keeps KCSAN happy
+
+I think the current definition of test_bit() gives you the first two by
+casting to volatile explicitly, but not the second two.
+
+So I'm mainly curious as to the disconnect between my thinking and Linus's
+"That's not going to happen" comment, given that it shouldn't have an
+impact on architectures that don't need magic here.
+
+Will
