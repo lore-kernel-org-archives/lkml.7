@@ -2,138 +2,88 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375A2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F77CC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1864F2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C3D206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:38:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EDn7Q97S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfKMCgQ (ORCPT
+        id S1727378AbfKMCix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:36:16 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:38752 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbfKMCgO (ORCPT
+        Tue, 12 Nov 2019 21:38:53 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:4659 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727100AbfKMCiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:36:14 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47CTJ769lnzQlB7;
-        Wed, 13 Nov 2019 03:36:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id wVw8SxpwKUfa; Wed, 13 Nov 2019 03:36:01 +0100 (CET)
-Date:   Wed, 13 Nov 2019 13:35:37 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 7/9] open: introduce openat2(2) syscall
-Message-ID: <20191113023537.epcgw5u2fdbinnyj@yavin.dot.cyphar.com>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-8-cyphar@cyphar.com>
- <20191113022906.GD26530@ZenIV.linux.org.uk>
+        Tue, 12 Nov 2019 21:38:52 -0500
+X-UUID: d6be83bb4be841549548a861ab62b3ec-20191113
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=1NPMi5s0B7PLycleggl/Ct6ul55hyyE2HzaKv33AkXA=;
+        b=EDn7Q97SYGe/ISn7VL40J628+hoVivlbsz1L2h9kC6FgazP0cjWcyDbn3c1pvtq//nSzxCMNLrl6IQGXa7Eptlkt8wNqTZiBcSTY2G9xKgZELPaS5XmFEJqoXE2EqYxdxZ5v1GvUH2PWo3MQAwltPWQ3YjPa95xHB4adVhkbaAc=;
+X-UUID: d6be83bb4be841549548a861ab62b3ec-20191113
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <mark-mc.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1318690175; Wed, 13 Nov 2019 10:38:48 +0800
+Received: from mtkmbs05dr.mediatek.inc (172.21.101.97) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 13 Nov 2019 10:38:44 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05dr.mediatek.inc (172.21.101.97) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 13 Nov 2019 10:38:43 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 13 Nov 2019 10:38:43 +0800
+From:   MarkLee <Mark-MC.Lee@mediatek.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Sean Wang <sean.wang@mediatek.com>,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rene van Dorst <opensource@vdorst.com>,
+        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
+        MarkLee <Mark-MC.Lee@mediatek.com>
+Subject: [PATCH net,v3 0/3]  Rework mt762x GDM setup flow
+Date:   Wed, 13 Nov 2019 10:38:41 +0800
+Message-ID: <20191113023844.17800-1-Mark-MC.Lee@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ohhoiky5cv3wybqd"
-Content-Disposition: inline
-In-Reply-To: <20191113022906.GD26530@ZenIV.linux.org.uk>
+Content-Type: text/plain
+X-MTK:  N
+X-TM-SNTS-SMTP: 32640BFCC71B67AE68BCB7C85E4EA964955D4B64C5431A75173FF7830C9226DE2000:8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+VGhlIG10NzYyeCBHRE0gYmxvY2sgaXMgbWFpbmx5IHVzZWQgdG8gc2V0dXAgdGhlIEhXIGludGVy
+bmFsDQpyeCBwYXRoIGZyb20gR01BQyB0byBSWCBETUEgZW5naW5lKFBETUEpIGFuZCB0aGUgcGFj
+a2V0DQpzd2l0Y2hpbmcgZW5naW5lKFBTRSkgaXMgcmVzcG9uc2VkIHRvIGRvIHRoZSBkYXRhIGZv
+cndhcmQNCmZvbGxvd2luZyB0aGUgR0RNIGNvbmZpZ3VyYXRpb24uDQoNClRoaXMgcGF0Y2ggc2V0
+IGhhdmUgdGhyZWUgZ29hbHMgOg0KDQoxLiBJbnRlZ3JhdGUgR0RNL1BTRSBzZXR1cCBvcGVyYXRp
+b25zIGludG8gc2luZ2xlIGZ1bmN0aW9uICJtdGtfZ2RtX2NvbmZpZyINCg0KMi4gUmVmaW5lIHRo
+ZSB0aW1pbmcgb2YgR0RNL1BTRSBzZXR1cCwgbW92ZSBpdCBmcm9tIG10a19od19pbml0IA0KICAg
+dG8gbXRrX29wZW4NCg0KMy4gRW5hYmxlIEdETSBHRE1BX0RST1BfQUxMIG1vZGUgdG8gZHJvcCBh
+bGwgcGFja2V0IGR1cmluZyB0aGUgDQogICBzdG9wIG9wZXJhdGlvbg0KDQpNYXJrTGVlICgzKToN
+CiAgbmV0OiBldGhlcm5ldDogbWVkaWF0ZWs6IEludGVncmF0ZSBHRE0vUFNFIHNldHVwIG9wZXJh
+dGlvbnMNCiAgbmV0OiBldGhlcm5ldDogbWVkaWF0ZWs6IFJlZmluZSB0aGUgdGltaW5nIG9mIEdE
+TS9QU0Ugc2V0dXANCiAgbmV0OiBldGhlcm5ldDogbWVkaWF0ZWs6IEVuYWJsZSBHRE0gR0RNQV9E
+Uk9QX0FMTCBtb2RlDQoNCiBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWRpYXRlay9tdGtfZXRoX3Nv
+Yy5jIHwgNDQgKysrKysrKysrKysrKystLS0tLS0tDQogZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVk
+aWF0ZWsvbXRrX2V0aF9zb2MuaCB8ICAyICsNCiAyIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlv
+bnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMTcuMQ0K
 
---ohhoiky5cv3wybqd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Tue, Nov 05, 2019 at 08:05:51PM +1100, Aleksa Sarai wrote:
-> > +/*
-> > + * Arguments for how openat2(2) should open the target path. If @resol=
-ve is
-> > + * zero, then openat2(2) operates very similarly to openat(2).
-> > + *
-> > + * However, unlike openat(2), unknown bits in @flags result in -EINVAL=
- rather
-> > + * than being silently ignored. @mode must be zero unless one of {O_CR=
-EAT,
-> > + * O_TMPFILE} are set, and @upgrade_mask must be zero unless O_PATH is=
- set.
-> > + *
-> > + * @flags: O_* flags.
-> > + * @mode: O_CREAT/O_TMPFILE file mode.
-> > + * @upgrade_mask: UPGRADE_* flags (to restrict O_PATH re-opening).
->=20
-> ???
-
-Sorry, that was left over from a previous revision (where the magic-link
-re-opening restrictions were part of this series).
-
-> > + * @resolve: RESOLVE_* flags.
-> > + */
-> > +struct open_how {
-> > +	__aligned_u64 flags;
-> > +	__u16 mode;
-> > +	__u16 __padding[3]; /* must be zeroed */
-> > +	__aligned_u64 resolve;
-> > +};
-
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---ohhoiky5cv3wybqd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXctr9QAKCRCdlLljIbnQ
-Ej91AQDSESPrMbumo+B1bVc2FthUOUuONyqVLG0aRmu7PQjnOgD7BOxMC9suhDip
-ayqrtLJhXKxmKpbFt69x0a97Rx8tGQ8=
-=4v0x
------END PGP SIGNATURE-----
-
---ohhoiky5cv3wybqd--
