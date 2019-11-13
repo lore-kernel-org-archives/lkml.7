@@ -2,173 +2,124 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C909C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6182FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42740222CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:28:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hlsLs9h9"
+	by mail.kernel.org (Postfix) with ESMTP id 33569222CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKMB2e (ORCPT
+        id S1727275AbfKMB2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:28:34 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:34983 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfKMB2e (ORCPT
+        Tue, 12 Nov 2019 20:28:43 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:33735 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726936AbfKMB2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:28:34 -0500
-Received: by mail-pg1-f201.google.com with SMTP id t11so623348pgm.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 17:28:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=jKMqCQFEoSSTJ2SShJNtFv+iwOoSX52Fh5gJat66tHM=;
-        b=hlsLs9h9D517WqWNmk3xWR52I1v68oK+sW9Wnfji3t5BOWHYMVK1woSQDT/LRD+Ecl
-         bUwDdcScSuMkkgWV0nngRuhSBn0nRfX4Ky8i6HsrWMWc7coSO+MxtGdbZBAzGjjrm48j
-         G9MlsV8nUNHSjvQL27HtJNSRm49r8bStInCo4cibWgvj/irzj5Ojh/zhr0doDNysZYiR
-         1J+//S0frymecb+lIFxoimztvAzM0apP/Z8uQn6+QRDj58TCWJj5c0IN8cYFkJ3Hv64d
-         fzRCE3z/Cla32108uLOMomqIBmeSkr/yf0t21/rjfNVO8CWo/Qq/Iya0zpivE3FmLX7Z
-         7IYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=jKMqCQFEoSSTJ2SShJNtFv+iwOoSX52Fh5gJat66tHM=;
-        b=W0abvVg6Zd1IINsbSIKiV2QiiDjwhVykzKmovykF5SYyAbBkF4C+lBqWQ4ocOCaUUE
-         cQuyZK18mRrpyWjGWyfmIdYzKzYQ9IymEQS4PwelHcLkHqnLWocJeppZMGlrsJZvy/2e
-         iBgJSh27xHkzHxxp4aWmX+KhVV0KaPpdFDa0ZQdphkGHde5nMl8dYDb9fkVxVe4OWCym
-         T5vMx9kTiP3EtvqAJFg7a1W3mfuBRY5p2qfsz1IgiALF/2Tar5TTEEYNqVy8Xu6TiySY
-         +qpy0tHrUweTkWc7VTpK9CrvDUoX/hs0Z799WYTsNlknwctf8Fb9jK6jyJDB766V+uie
-         1PsA==
-X-Gm-Message-State: APjAAAUtnIwloDWM1pjxDUASF5Ttt/He7+oaYtvBXuCGvS9b3lE2mhOK
-        n0Bx9RNQNOudHasHJsG9/8d0zIbCXR96JuFvFz2MXA==
-X-Google-Smtp-Source: APXvYqxc44Q6R+YXNLRxByMsegXzjdrZQJG4+hZKKdy8MCZim9YpQRM2AB9iS/NNXnkicVFZbuInpqJMFKxfkGR+XF2hZg==
-X-Received: by 2002:a65:4085:: with SMTP id t5mr580684pgp.335.1573608512964;
- Tue, 12 Nov 2019 17:28:32 -0800 (PST)
-Date:   Tue, 12 Nov 2019 17:27:46 -0800
-Message-Id: <20191113012746.52804-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH linux-kselftest/test v1] Documentation: kunit: add
- documentation for kunit_tool
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     shuah@kernel.org, davidgow@google.com
-Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-        corbet@lwn.net, tytso@mit.edu,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 12 Nov 2019 20:28:43 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Thwrhsx_1573608519;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Thwrhsx_1573608519)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 13 Nov 2019 09:28:40 +0800
+Subject: Re: ocfs2: xattr problems with 5.4.0-rc7
+To:     Thomas Voegtle <tv@lio96.de>, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <alpine.LSU.2.21.1911121355550.7620@er-systems.de>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <fc2993e9-f0d6-fb7c-5050-8dbb36338140@linux.alibaba.com>
+Date:   Wed, 13 Nov 2019 09:28:39 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <alpine.LSU.2.21.1911121355550.7620@er-systems.de>
+Content-Type: text/plain; charset=iso-8859-7
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for the Python script used to build, run, and collect
-results from the kernel known as kunit_tool. kunit_tool
-(tools/testing/kunit/kunit.py) was already added in previous commits.
+Hi Thomas,
+Thanks for reporting this issue.
+I have some doubts on it, please see my comments below.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- Documentation/dev-tools/kunit/index.rst      |  1 +
- Documentation/dev-tools/kunit/kunit-tool.rst | 57 ++++++++++++++++++++
- Documentation/dev-tools/kunit/start.rst      |  3 ++
- 3 files changed, 61 insertions(+)
- create mode 100644 Documentation/dev-tools/kunit/kunit-tool.rst
+On 19/11/12 22:45, Thomas Voegtle wrote:
+> 
+> Hello,
+> 
+> with 5.4.0-rc7 and 4.9.200 we see the following errors with mkdir or touch on a ocfs2 mountpoint:
+> 
+> root@s2:/shared/ClusterShareDisk# mkdir dir
+> mkdir: cannot create directory ¡dir¢: Invalid argument
+> 
+> which produces this output:
+> 
+> root@s2:/shared/ClusterShareDisk# dmesg
+> [ 6918.815770] (mkdir,19461,0):ocfs2_xa_set:2242 ERROR: status = -22
+> [ 6918.815772] (mkdir,19461,0):ocfs2_mknod:408 ERROR: status = -22
+> [ 6918.816215] (mkdir,19461,0):ocfs2_mknod:486 ERROR: status = -22
+> [ 6918.816216] (mkdir,19461,0):ocfs2_mkdir:652 ERROR: status = -22
+> 
+ocfs2_xa_set
+  ocfs2_xa_prepare_entry
 
-diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
-index 26ffb46bdf99d..c60d760a0eed1 100644
---- a/Documentation/dev-tools/kunit/index.rst
-+++ b/Documentation/dev-tools/kunit/index.rst
-@@ -9,6 +9,7 @@ KUnit - Unit Testing for the Linux Kernel
- 
- 	start
- 	usage
-+	kunit-tool
- 	api/index
- 	faq
- 
-diff --git a/Documentation/dev-tools/kunit/kunit-tool.rst b/Documentation/dev-tools/kunit/kunit-tool.rst
-new file mode 100644
-index 0000000000000..aa1a93649a45a
---- /dev/null
-+++ b/Documentation/dev-tools/kunit/kunit-tool.rst
-@@ -0,0 +1,57 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+kunit_tool How-To
-+=================
-+
-+What is kunit_tool?
-+===================
-+
-+kunit_tool is a set of scripts that aid in building the Linux kernel as UML
-+(`User Mode Linux <http://user-mode-linux.sourceforge.net/old/>`_), running
-+KUnit tests, parsing the test results and displaying them in a user friendly
-+manner.
-+
-+What is a kunitconfig?
-+======================
-+
-+It's just a defconfig that kunit_tool looks for in the base directory.
-+kunit_tool uses it to generate a .config as you might expect. In addition, it
-+verifies that the generated .config contains the CONFIG options in the
-+kunitconfig; the reason it does this is so that it is easy to be sure that a
-+CONFIG that enables a test actually ends up in the .config.
-+
-+How do I use kunit_tool?
-+=================================
-+
-+If a kunitconfig is present at the root directory, all you have to do is:
-+
-+.. code-block:: bash
-+
-+	./tools/testing/kunit/kunit.py run
-+
-+However, you most likely want to use it with the following options:
-+
-+.. code-block:: bash
-+
-+	./tools/testing/kunit/kunit.py run --timeout=30 --jobs=8
-+
-+- ``--timeout`` sets a maximum amount of time to allow tests to run.
-+- ``--jobs`` sets the number of threads to use to build the kernel.
-+
-+If you just want to use the defconfig that ships with the kernel, you can
-+append the ``--defconfig`` flag as well:
-+
-+.. code-block:: bash
-+
-+	./tools/testing/kunit/kunit.py run --timeout=30 --jobs=8 --defconfig
-+
-+.. note::
-+	This command is particularly helpful for getting started because it
-+	just works. No kunitconfig needs to be present.
-+
-+For a list of all the flags supported by kunit_tool, you can run:
-+
-+.. code-block:: bash
-+
-+	./tools/testing/kunit/kunit.py run --help
-diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-index aeeddfafeea20..1535c4394cfa2 100644
---- a/Documentation/dev-tools/kunit/start.rst
-+++ b/Documentation/dev-tools/kunit/start.rst
-@@ -21,6 +21,9 @@ The wrapper can be run with:
- 
-    ./tools/testing/kunit/kunit.py run
- 
-+For more information on this wrapper (also called kunit_tool) checkout the
-+:doc:`kunit-tool` page.
-+
- Creating a kunitconfig
- ======================
- The Python script is a thin wrapper around Kbuild as such, it needs to be
--- 
-2.24.0.432.g9d3f5f5b63-goog
+Since ocfs2_xa_set() returns -EINVAL, it means loc->xl_entry is NULL.
 
+	if (!loc->xl_entry) {
+		rc = -EINVAL;
+		goto out;
+	}
+
+After reverting
+commit 56e94ea132bb "fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()",
+it will call ocfs2_xa_add_entry(),
+
+	if (loc->xl_entry) {
+		...
+	} else
+		ocfs2_xa_add_entry(loc, name_hash);
+
+Theoretically it will cause NULL pointer dereference when access attributes of loc->xl_entry.
+So could you please check if the issue is caused by NULL loc->xl_entry?
+
+Thanks,
+Joseph
+
+> We got some ACLs:
+> $ getfacl /shared/ClusterShareDisk/
+> getfacl: Removing leading '/' from absolute path names
+> # file: shared/ClusterShareDisk/
+> # owner: root
+> # group: root
+> user::rwx
+> user:admin:rwx
+> group::rwx
+> mask::rwx
+> other::---
+> default:user::rwx
+> default:user:admin:rwx
+> default:group::rwx
+> default:mask::rwx
+> default:other::---
+> 
+> And of course it is mounted with user_xattr and acl option.
+> 
+> Reverting
+> commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d
+> Author: Jia-Ju Bai <baijiaju1990@gmail.com>
+> Date:   Sun Oct 6 17:57:50 2019 -0700
+> 
+>     fs: ocfs2: fix possible null-pointer dereferences in
+> ocfs2_xa_prepare_entry()
+> 
+> fixes the problem.
+> 
+> Greetings,
+> 
+> 
+>     Thomas
