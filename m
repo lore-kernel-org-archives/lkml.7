@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C6AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BD3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C78E22473
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C632246A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610466;
-	bh=oIuPZIKjSWr+B1tN15q/Yf7G/jszH9poscu1Os74aYY=;
+	s=default; t=1573610475;
+	bh=DaQLybh/xJL6ICV5KQelju/IXatkVj3q7xwN1oiX+YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AL/gIcTbwDeESXLG8BH2PfgvobTphrQ3ET/Z9SMh18IV6iKq8rHDlGA0oIWCsXuT5
-	 JJ+INsrD51DZ2FdcOSzvuKv/MFMFyGTFRczCx5ozaxZDsQXth0hGeFz3WQdF0Sh0es
-	 CBlysFaJdQMEEUrdxHpFYoHoxPLL/wgs4T8ri+BI=
+	b=B/n/hhbWuUPJgfbXmfbK1xsr3/+PbvzXKjwyLF9zFPDJOyEKDgAAhm9niRcGbCRK4
+	 KFIXEbZayRAersMKgXRohAe2VM9fyRcGXWO1VwwwFV/dcO+xqRXMUVyFPE8mVb0lLM
+	 Nv/rTIqSP5yMA9EbXyG5zvxgj8ubRqn77fI4ZVuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730642AbfKMCBE (ORCPT
+        id S1730701AbfKMCBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:01:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56340 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:01:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbfKMCAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:51 -0500
+        id S1730669AbfKMCBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:01:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C0982246D;
-        Wed, 13 Nov 2019 02:00:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 530AE2247C;
+        Wed, 13 Nov 2019 02:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610450;
-        bh=oIuPZIKjSWr+B1tN15q/Yf7G/jszH9poscu1Os74aYY=;
+        s=default; t=1573610466;
+        bh=DaQLybh/xJL6ICV5KQelju/IXatkVj3q7xwN1oiX+YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Px5sp0gjSHsWymfPJ7wNOSPrN9lOsaPM1En4xJdMQeQzs3fqoDsrLVKIA6peoBb0h
-         0hmPp3Pxi/5xCi7QTCC8UhFH0hZvf7nphB51H9CohUbsCkJ1cQJsJLZoH7ZrYag9S6
-         Rf0rwTzK07BnjJWvbr5v1mjltgAWzWs+6gFLrwzY=
+        b=IvSX3VPk7wn/EsX/LssOj3bIKBwyLUpqXlL+9M78EUQ+KsTqr6lwjKpcrHD69bQ4a
+         UM9nhHOTnK479+HWtd4oYq/cCh9RBq2e+eKGdKhVd9ap6n/6D2Z6k7ruDIqc2W0riD
+         qfn7pfKYIxgO6Ael17HAjo07tUESUIPMfbyvYFFg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 45/68] iwlwifi: mvm: don't send keys when entering D3
-Date:   Tue, 12 Nov 2019 20:59:09 -0500
-Message-Id: <20191113015932.12655-45-sashal@kernel.org>
+Cc:     Vignesh R <vigneshr@ti.com>, Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 53/68] mfd: ti_am335x_tscadc: Keep ADC interface on if child is wakeup capable
+Date:   Tue, 12 Nov 2019 20:59:17 -0500
+Message-Id: <20191113015932.12655-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -60,40 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit 8c7fd6a365eb5b2647b2c01918730d0a485b9f85 ]
+[ Upstream commit c974ac771479327b5424f60d58845e31daddadea ]
 
-In the past, we needed to program the keys when entering D3. This was
-since we replaced the image. However, now that there is a single
-image, this is no longer needed.  Note that RSC is sent separately in
-a new command.  This solves issues with newer devices that support PN
-offload. Since driver re-sent the keys, the PN got zeroed and the
-receiver dropped the next packets, until PN caught up again.
+If a child device like touchscreen is wakeup capable, then keep ADC
+interface on, so that a touching resistive screen will generate wakeup
+event to the system.
 
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mfd/ti_am335x_tscadc.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-index 207d8ae1e1160..19052efe53f12 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-@@ -935,8 +935,10 @@ int iwl_mvm_wowlan_config_key_params(struct iwl_mvm *mvm,
+diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
+index 60286adbd6a1c..e56f0844b98de 100644
+--- a/drivers/mfd/ti_am335x_tscadc.c
++++ b/drivers/mfd/ti_am335x_tscadc.c
+@@ -295,11 +295,24 @@ static int ti_tscadc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int __maybe_unused ti_tscadc_can_wakeup(struct device *dev, void *data)
++{
++	return device_may_wakeup(dev);
++}
++
+ static int __maybe_unused tscadc_suspend(struct device *dev)
  {
- 	struct iwl_wowlan_kek_kck_material_cmd kek_kck_cmd = {};
- 	struct iwl_wowlan_tkip_params_cmd tkip_cmd = {};
-+	bool unified = fw_has_capa(&mvm->fw->ucode_capa,
-+				   IWL_UCODE_TLV_CAPA_CNSLDTD_D3_D0_IMG);
- 	struct wowlan_key_data key_data = {
--		.configure_keys = !d0i3,
-+		.configure_keys = !d0i3 && !unified,
- 		.use_rsc_tsc = false,
- 		.tkip = &tkip_cmd,
- 		.use_tkip = false,
+ 	struct ti_tscadc_dev	*tscadc = dev_get_drvdata(dev);
+ 
+ 	regmap_write(tscadc->regmap, REG_SE, 0x00);
++	if (device_for_each_child(dev, NULL, ti_tscadc_can_wakeup)) {
++		u32 ctrl;
++
++		regmap_read(tscadc->regmap, REG_CTRL, &ctrl);
++		ctrl &= ~(CNTRLREG_POWERDOWN);
++		ctrl |= CNTRLREG_TSCSSENB;
++		regmap_write(tscadc->regmap, REG_CTRL, ctrl);
++	}
+ 	pm_runtime_put_sync(dev);
+ 
+ 	return 0;
 -- 
 2.20.1
 
