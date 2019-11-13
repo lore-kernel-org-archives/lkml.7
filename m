@@ -2,82 +2,123 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8877C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56F4C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C0921A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BEF821A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:50:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="qCd+8R77"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LM0vB6+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfKMMrx (ORCPT
+        id S1727015AbfKMMuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:47:53 -0500
-Received: from ns.mm-sol.com ([37.157.136.199]:45304 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfKMMrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 07:47:53 -0500
-Received: from [192.168.27.209] (unknown [37.157.136.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 1E1A1CF23;
-        Wed, 13 Nov 2019 14:47:50 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1573649270; bh=V9P+kuRuVLcbVw6LCSQAo0MaJg66SRNAL9F0hA89RRg=;
-        h=Subject:To:Cc:From:Date:From;
-        b=qCd+8R770gN4/MIN7qXaGcwwcjl8AsBKzUnfmS0InYQiMBMp7AaAJ9RT2VMdRnjUK
-         HSZXy3H8+GQXbcSS8h72hy4a/CiWYxmN7wT/KkP3ougv4u4v5FLI2pXi719wX9Cdeq
-         p8JOHbFsuVeHMucVpM46CvXPsU2UOXwb+9zG9XQFFJ9kEy4GPAvGrfj0TU+7SHOWFg
-         q+GVgSFInY4uq0bGIBy1lyf34I2EcqL86uJ/Pv2y0hv+n+bGs6IUCTKRyJWChEVSYb
-         Ht3y4E1pn75iEfeXYKY2Ll/9Yi1C2oLh2zAzPrT3faXHoxPnB4QZNXRmrNYAl1V5Xy
-         eU6MuDQHdHCfg==
-Subject: Re: [PATCH v3 2/2] PCI: qcom: Add support for SDM845 PCIe controller
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
- <20191107001642.1127561-3-bjorn.andersson@linaro.org>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <d2aa3189-fdf5-23d9-c6d7-9ab577fa98bd@mm-sol.com>
-Date:   Wed, 13 Nov 2019 14:47:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 13 Nov 2019 07:50:17 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39533 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfKMMuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 07:50:17 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w24so998946otk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 04:50:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xKNQ7v4yv1nHmpKbLcQIzTqXHeIHYPJhDQUIafBrUCo=;
+        b=LM0vB6+8Ne7H07hxWLkz3Uwzgsdk3gzgJzHbZ37eVIC4oFtORQ85UnfEtJ8FoHHNBE
+         s26758Ku8mxiQnVuIuR0QbmkIPWXeKlItB7UE/KWXjFyFQCjxbjHpJCMoXuBK0+vPi9H
+         GBut02p0Sjb+QT5pRyEuPPKQAI6iKcUCJbYpsKEfJcoV+dhwmhdwA4WMzoHMFSU3VeCV
+         e5OFRB2axfyh7bXT61SNTbdtpbiEgXWtjQLjzgFbSVz/08lIITk6vbIbczOQdmFj6N5j
+         Y0yUOsInw4IDVgMsRybL3sOt1q7n8Fktow4YtoJAKUCbsRvXfROnji+TXlSff9JEF3SJ
+         +/6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xKNQ7v4yv1nHmpKbLcQIzTqXHeIHYPJhDQUIafBrUCo=;
+        b=IgA4OhW6a1dVTZhWicMuWVTV4CL9ye213t3wzSQuF/kgkcfIXv9pM3/9d93TkNzqU2
+         wTS3ZuvrZiyfyplwdOu8fSm7RQmatjvbCG9XZXoR9CUAJUbZn6uvU4GGo9aZel/GXGjo
+         xi6cT0oTmLv6fsp108SIm1E98qll9qoNRW7hLyFCwMWAFgkQhnQ29KYet8PFg/ntW6RI
+         x5iTGlf58X7XXLGlzU/z7NyyfsdxmsSMXjqyCQPIXFpxDeDM2taFamzCQQx2eRjTsjQ3
+         6FJmGVYlmucL3b3jaCyrUT+gkOZ0XhjgBU9XpiNgMIbrpbnCX6lJ68/eBP2GhKmeDO1E
+         wz1Q==
+X-Gm-Message-State: APjAAAVe7S1be5fMHlB3x3/jhRDoU6V9kKwp8Ea6F6HCbU3gwR/Hzd1Y
+        rimkWWh5RdoLtYnWFrWJoOp3WFeDvPw9i0f96Vp8KA==
+X-Google-Smtp-Source: APXvYqxVBL98LhQNMDEZ+JCt3DYDZmvFZn/sBaunf1BYMjKSFf+P7kKH1lyOQa8E2L9C+/To/hXUX1yE/Yn5+ZKKqUk=
+X-Received: by 2002:a05:6830:453:: with SMTP id d19mr2708443otc.256.1573649416541;
+ Wed, 13 Nov 2019 04:50:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191107001642.1127561-3-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191113084352.GA25535@localhost.localdomain>
+In-Reply-To: <20191113084352.GA25535@localhost.localdomain>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 13 Nov 2019 13:50:05 +0100
+Message-ID: <CAMpxmJU3fSa_dUiLs44FKuuTAVTD+_q3WxUX5PCRuvaWCuxKdA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mmio: remove untrue leftover comment
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 11/7/19 2:16 AM, Bjorn Andersson wrote:
-> The SDM845 has one Gen2 and one Gen3 controller, add support for these.
-> 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+=C5=9Br., 13 lis 2019 o 09:44 Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
+>
+> The comment should have been removed when new GPIO direction
+> definitions were taken in use as the function logic was changed. It
+> is now perfectly valid and Ok to hit the return from the bottom of
+> the direction getting function.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > ---
-> 
-> Changes since v1:
-> - Don't assert the reset in the failure path
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 150 +++++++++++++++++++++++++
->  1 file changed, 150 insertions(+)
+>
+> Sorry guys. Just noticed that I should've removed this comment in
+> original patch series.
+>
+>  drivers/gpio/gpio-mmio.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+> index cd07c948649f..f729e3e9e983 100644
+> --- a/drivers/gpio/gpio-mmio.c
+> +++ b/drivers/gpio/gpio-mmio.c
+> @@ -386,7 +386,6 @@ static int bgpio_get_dir(struct gpio_chip *gc, unsign=
+ed int gpio)
+>                 if (!(gc->read_reg(gc->reg_dir_in) & bgpio_line2mask(gc, =
+gpio)))
+>                         return GPIO_LINE_DIRECTION_OUT;
+>
+> -       /* This should not happen */
+>         return GPIO_LINE_DIRECTION_IN;
+>  }
+>
+>
+> base-commit: 70d97e099bb426ecb3ad4bf31e88dbf2ef4b2e4c
+> --
+> 2.21.0
+>
+>
+> --
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+>
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =3D]
 
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Queued for v5.5, thanks!
 
--- 
-regards,
-Stan
+Bartosz
