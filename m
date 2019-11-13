@@ -2,158 +2,78 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F21BC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CB9C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7441206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D98206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:07:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="A7yzewJb"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JK+mbHNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfKMTGr (ORCPT
+        id S1728631AbfKMTHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:06:47 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44401 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727290AbfKMTGr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:06:47 -0500
-Received: by mail-oi1-f195.google.com with SMTP id s71so2784534oih.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 11:06:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=evIuNrrlG6EZmvamCM+sMtWrypDnzooLTyDJ1S1Tl1k=;
-        b=A7yzewJb20+HepONFpbwXw3tYORpvEyr4MDoe2TBcw3ff8pgibms8R+9F7w6h19QZK
-         eKZ7S7noqVDg8eD4984+lLkv4gvgtVffwrv5u2KDDpHd0Yv+jkyyVxekrGqCbCfw14kB
-         NFFyuRihnCZ6iyRO72+2RUoK5XzscuNVKKIB//ZTXlG61OMDX++6m4R7zekIU9dgbTQQ
-         XqBIKYl010Jyiew74YNcmwIyqg4TIgjAcQz1cS1MrAaPzKub/ug++ShTixXLaA4cSWMn
-         iewaa0BwrX1HI3uCr+iY+C8eptHxTX9dKdZQZ9sp+KTfYi39+GacuoIrkTNvENfQzi1E
-         g4yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=evIuNrrlG6EZmvamCM+sMtWrypDnzooLTyDJ1S1Tl1k=;
-        b=M4ktB+NrsbsEP68QgU0qkcE/YaldsrquLGuHXFKWDfAovIal5WMq5OUkzYywk719RO
-         e7lseo5ZwwLDvTsDfmzzW6rlVJzVpJOVufRSk25sbc0+2LyQHwXtFBH55K5wUA1eoMZl
-         cqyJkojs+3MLXLb+sGk+xLc6duYAXPK4qZnljxm/8S+X2buafDICYlQr88n6iE6KgR39
-         tajI3WDDV081teUZT7SSU/2m4Mo4XCcocXHIANjdN2iHx2On9u6OZVIkdQetoa5pW5v3
-         97dfxpI1cin7Xy42DUcUrLQ6Y9B+2MBRatQ5YM7ARAXzLQHo6ahNJb7iaUGg+slRIzdp
-         NQfw==
-X-Gm-Message-State: APjAAAWjWp7C4Y8Lp8BtaG/icSE0GMjEHSe8h3TvB0bKBI0d7FMDMlI4
-        xHSrWlNyVeZOIO94lTG8iXZ4Uzmp5r5MfqQ9k9BTBg==
-X-Google-Smtp-Source: APXvYqxlCW2sXfqrOozCNuUeVMdzUz9tPqWKwSathCzp4elJR1uVRsYFgSgb7sV27mHmtvy8uoZBmtl6l8JsUG7E7XI=
-X-Received: by 2002:aca:ead7:: with SMTP id i206mr193568oih.0.1573672006126;
- Wed, 13 Nov 2019 11:06:46 -0800 (PST)
+        Wed, 13 Nov 2019 14:07:24 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:37258 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbfKMTHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 14:07:24 -0500
+Received: from zn.tnic (p200300EC2F0FA700E9EFB2260700430D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:a700:e9ef:b226:700:430d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C33E31EC02C1;
+        Wed, 13 Nov 2019 20:07:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573672043;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=yUICw90EwxIhckdlyTk+klEoGtb3cVWCQA5GZK19iWk=;
+        b=JK+mbHNoor1HraKw6wuD2U2c4PUvdqCdlBJ08mPVxTHWcJ8kSjsFj5UI3SbgT76hCmZAX6
+        yt+FJhoVU02BbJ/VDycfUgUX2Lbq3wf7Xb8wgFuZAQqfbeIayh+ohh/1HyYEbmzNln0VTW
+        OBzI5OyWDcL+WLf4PDOG6QMJ3TuH3dA=
+Date:   Wed, 13 Nov 2019 20:07:18 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     thor.thayer@linux.intel.com
+Cc:     mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
+        rrichter@marvell.com, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Altera EDAC Cleanup
+Message-ID: <20191113190718.GD1647@zn.tnic>
+References: <1573156890-26891-1-git-send-email-thor.thayer@linux.intel.com>
 MIME-Version: 1.0
-References: <20191108000855.25209-1-t-fukasawa@vx.jp.nec.com>
- <20191108000855.25209-3-t-fukasawa@vx.jp.nec.com> <CAPcyv4h+++k1VTB2xKWHXjC4LC0N=nvDUMcdbGAsDBmwMob5dw@mail.gmail.com>
- <163d1d41-19c1-d8cf-6c1c-eec226c34ac1@redhat.com>
-In-Reply-To: <163d1d41-19c1-d8cf-6c1c-eec226c34ac1@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 13 Nov 2019 11:06:35 -0800
-Message-ID: <CAPcyv4iPk4bzOCE=7Eq8w-jwUuOXzZP9F=+RcxjqdXCn0SC01A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1573156890-26891-1-git-send-email-thor.thayer@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 10:51 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 08.11.19 20:13, Dan Williams wrote:
-> > On Thu, Nov 7, 2019 at 4:15 PM Toshiki Fukasawa
-> > <t-fukasawa@vx.jp.nec.com> wrote:
-> >>
-> >> Currently, there is no way to identify pfn on ZONE_DEVICE.
-> >> Identifying pfn on system memory can be done by using a
-> >> section-level flag. On the other hand, identifying pfn on
-> >> ZONE_DEVICE requires a subsection-level flag since ZONE_DEVICE
-> >> can be created in units of subsections.
-> >>
-> >> This patch introduces a new bitmap subsection_dev_map so that
-> >> we can identify pfn on ZONE_DEVICE.
-> >>
-> >> Also, subsection_dev_map is used to prove that struct pages
-> >> included in the subsection have been initialized since it is
-> >> set after memmap_init_zone_device(). We can avoid accessing
-> >> pages currently being initialized by checking subsection_dev_map.
-> >>
-> >> Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-> >> ---
-> >>   include/linux/mmzone.h | 19 +++++++++++++++++++
-> >>   mm/memremap.c          |  2 ++
-> >>   mm/sparse.c            | 32 ++++++++++++++++++++++++++++++++
-> >>   3 files changed, 53 insertions(+)
-> >>
-> >> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> >> index bda2028..11376c4 100644
-> >> --- a/include/linux/mmzone.h
-> >> +++ b/include/linux/mmzone.h
-> >> @@ -1174,11 +1174,17 @@ static inline unsigned long section_nr_to_pfn(unsigned long sec)
-> >>
-> >>   struct mem_section_usage {
-> >>          DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
-> >> +#ifdef CONFIG_ZONE_DEVICE
-> >> +       DECLARE_BITMAP(subsection_dev_map, SUBSECTIONS_PER_SECTION);
-> >> +#endif
-> >
-> > Hi Toshiki,
-> >
-> > There is currently an effort to remove the PageReserved() flag as some
-> > code is using that to detect ZONE_DEVICE. In reviewing those patches
-> > we realized that what many code paths want is to detect online memory.
-> > So instead of a subsection_dev_map add a subsection_online_map. That
-> > way pfn_to_online_page() can reliably avoid ZONE_DEVICE ranges. I
-> > otherwise question the use case for pfn_walkers to return pages for
-> > ZONE_DEVICE pages, I think the skip behavior when pfn_to_online_page()
-> > == false is the right behavior.
->
-> To be more precise, I recommended an subsection_active_map, to indicate
-> which memmaps were fully initialized and can safely be touched (e.g., to
-> read the zone/nid). This map would also be set when the devmem memmaps
-> were initialized (race between adding memory/growing the section and
-> initializing the memmap).
->
-> See
->
-> https://lkml.org/lkml/2019/10/10/87
->
-> and
->
-> https://www.spinics.net/lists/linux-driver-devel/msg130012.html
+On Thu, Nov 07, 2019 at 02:01:28PM -0600, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> This patchset is a cleanup of the Altera EDAC driver that has
+> accumulated as the driver evolved.
+> 
+> Thor Thayer (2):
+>   EDAC/altera: Cleanup the ECC Manager
+>   EDAC/altera: Use Altera System Manager driver
+> 
+>  drivers/edac/altera_edac.c | 150 +++------------------------------------------
+>  1 file changed, 9 insertions(+), 141 deletions(-)
 
-I'm still struggling to understand the motivation of distinguishing
-"active" as something distinct from "online". As long as the "online"
-granularity is improved from sections down to subsections then most
-code paths are good to go. The others can use get_devpagemap() to
-check for ZONE_DEVICE in a race free manner as they currently do.
+Can't complain about a diffstat like that! :-)
 
-> I dislike a map that is specific to ZONE_DEVICE or (currently)
-> !ZONE_DEVICE. I rather want an indication "this memmap is safe to
-> touch". As discussed along the mentioned threads, we can combine this
-> later with RCU to handle some races that are currently possible.
+Applied, thanks.
 
-The rcu protection is independent of the pfn_active vs pfn_online
-distinction afaics.
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
