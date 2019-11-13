@@ -2,98 +2,191 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBC6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79FAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA1522459
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573641062;
-	bh=S89ucV6O9uSjWXXnTQZbFJ7GpLXkEqqeu/ktwkynl0w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PwyYov6bL8Kb+8E6LiI45TENmy2ho/G5pF3QZa+Psy0hihD0CWBuDiQLrUv8CwOPg
-	 lIci8jCZCLb/TpxfLX0jJ54JxzTWd+1T3PmriFpzIVrX7lJsYd9OjzwPgYm4JPM7XW
-	 jZ02TL8AA+CMD4BVOhHmvpV1/roCpdE4Anw90HEc=
+	by mail.kernel.org (Postfix) with ESMTP id A441F222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nkxXB5V+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Nr5Mnjmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfKMKbB (ORCPT
+        id S1727417AbfKMKbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:31:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbfKMKbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:31:01 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 Nov 2019 05:31:17 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:42886 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKMKbR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:31:17 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 77E306043F; Wed, 13 Nov 2019 10:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573641076;
+        bh=/66u/Suwke1zMwFS5nxwNNZ4s1ARpfkENpmO/QNhmqc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nkxXB5V+fcmm//QLuYk23f31tl5cztvvmF98MUePWjsPmlmMukL8jbcJ2zbT2hHC+
+         YYH9fCYQI+o+5kkxknyrM6I/NATjFTlSnN/OoyPVRef/xj0Hh0QCeF62KFvYZvBYli
+         n1ufw3bZVyfGABnpYvkqFHwCYGER6l+KDesTx2G4=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32D5B222C6;
-        Wed, 13 Nov 2019 10:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573641060;
-        bh=S89ucV6O9uSjWXXnTQZbFJ7GpLXkEqqeu/ktwkynl0w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bLHOnpyoX0FUQ5F0X6AhgOQTaJO/s2dg0gzlmfKxh3mABw8CMcwxtHSwlh/pJnmJ/
-         GJyDzTpw1jpygiQ9hQm9xfABVskaAdIZR09L1FAbjGgaW5oAAdCMTeZftFiiH22Kn4
-         UwjWD5FmfnxMbASfgjk5b227k3eU1cUgimBAQDTU=
-Date:   Wed, 13 Nov 2019 10:30:55 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Ilie Halip <ilie.halip@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] scripts/tools-support-relr.sh: un-quote variables
-Message-ID: <20191113103055.GA25900@willie-the-truck>
-References: <20191112134522.12177-1-ilie.halip@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112134522.12177-1-ilie.halip@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D3A160592;
+        Wed, 13 Nov 2019 10:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573641074;
+        bh=/66u/Suwke1zMwFS5nxwNNZ4s1ARpfkENpmO/QNhmqc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Nr5MnjmbZ5sAfMwxAqXAepG0Es1g8ocLUj/anOxjmBb5lZxdQDdhAFyjmJDcFwJ9E
+         HNpWSGu/noC7Tut/mKqQLFn4bETwV0P3sh2JeVO7/QSvsRO4/y8lHu1cILolmJadIq
+         vOB70Rs3CFL0UxxSxdvmWPfvaFHvCTbDYVvQ7kv8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D3A160592
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] f2fs: Fix deadlock in f2fs_gc() context during atomic files handling
+Date:   Wed, 13 Nov 2019 16:01:03 +0530
+Message-Id: <1573641063-21232-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 03:45:20PM +0200, Ilie Halip wrote:
-> When the CC variable contains quotes, e.g. when using
-> ccache (make CC="ccache <compiler>"), this script always
-> fails, so CONFIG_RELR is never enabled, even when the
-> toolchain supports this feature. Removing the /dev/null
-> redirect and invoking the script manually shows the issue:
-> 
->     $ CC='/usr/bin/ccache clang' ./scripts/tools-support-relr.sh
->     ./scripts/tools-support-relr.sh: 7: ./scripts/tools-support-relr.sh: /usr/bin/ccache clang: not found
-> 
-> Fix this by un-quoting the variables.
-> 
-> Before:
->     $ make ARCH=arm64 CC='/usr/bin/ccache clang' LD=ld.lld \
->         NM=llvm-nm OBJCOPY=llvm-objcopy defconfig
->     $ grep RELR .config
->     CONFIG_ARCH_HAS_RELR=y
-> 
-> With this change:
->     $ make ARCH=arm64 CC='/usr/bin/ccache clang' LD=ld.lld \
->         NM=llvm-nm OBJCOPY=llvm-objcopy defconfig
->     $ grep RELR .config
->     CONFIG_TOOLS_SUPPORT_RELR=y
->     CONFIG_ARCH_HAS_RELR=y
->     CONFIG_RELR=y
-> 
-> Fixes: 5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
-> Reported-by: Dmitry Golovin <dima@golovin.in>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/769
-> Cc: Peter Collingbourne <pcc@google.com>
-> Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
-> ---
->  scripts/tools-support-relr.sh | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+The FS got stuck in the below stack when the storage is almost
+full/dirty condition (when FG_GC is being done).
 
-Thanks, I'll queue this as a fix.
+schedule_timeout
+io_schedule_timeout
+congestion_wait
+f2fs_drop_inmem_pages_all
+f2fs_gc
+f2fs_balance_fs
+__write_node_page
+f2fs_fsync_node_pages
+f2fs_do_sync_file
+f2fs_ioctl
 
-Will
+The root cause for this issue is there is a potential infinite loop
+in f2fs_drop_inmem_pages_all() for the case where gc_failure is true
+and when there an inode whose i_gc_failures[GC_FAILURE_ATOMIC] is
+not set. Fix this by keeping track of the total atomic files
+currently opened and using that to exit from this condition.
+
+Fix-suggested-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+v2:
+- change fix as per Chao's suggestion
+- decrement sbi->atomic_files protected under sbi->inode_lock[ATOMIC_FILE] and
+  only when atomic flag is cleared for the first time, otherwise, the count
+  goes to an invalid/high value as f2fs_drop_inmem_pages() can be called from
+  two contexts at the same time.
+
+ fs/f2fs/f2fs.h    |  1 +
+ fs/f2fs/file.c    |  1 +
+ fs/f2fs/segment.c | 21 +++++++++++++++------
+ 3 files changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index c681f51..e04a665 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1297,6 +1297,7 @@ struct f2fs_sb_info {
+ 	unsigned int gc_mode;			/* current GC state */
+ 	unsigned int next_victim_seg[2];	/* next segment in victim section */
+ 	/* for skip statistic */
++	unsigned int atomic_files;              /* # of opened atomic file */
+ 	unsigned long long skipped_atomic_files[2];	/* FG_GC and BG_GC */
+ 	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
+ 
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index f6c038e..22c4949 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1919,6 +1919,7 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
+ 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+ 	if (list_empty(&fi->inmem_ilist))
+ 		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
++	sbi->atomic_files++;
+ 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+ 
+ 	/* add inode in inmem_list first and set atomic_file */
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index da830fc..0b7a33b 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -288,6 +288,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
+ 	struct list_head *head = &sbi->inode_list[ATOMIC_FILE];
+ 	struct inode *inode;
+ 	struct f2fs_inode_info *fi;
++	unsigned int count = sbi->atomic_files;
++	unsigned int looped = 0;
+ next:
+ 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+ 	if (list_empty(head)) {
+@@ -296,22 +298,26 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
+ 	}
+ 	fi = list_first_entry(head, struct f2fs_inode_info, inmem_ilist);
+ 	inode = igrab(&fi->vfs_inode);
++	if (inode)
++		list_move_tail(&fi->inmem_ilist, head);
+ 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+ 
+ 	if (inode) {
+ 		if (gc_failure) {
+-			if (fi->i_gc_failures[GC_FAILURE_ATOMIC])
+-				goto drop;
+-			goto skip;
++			if (!fi->i_gc_failures[GC_FAILURE_ATOMIC])
++				goto skip;
+ 		}
+-drop:
+ 		set_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
+ 		f2fs_drop_inmem_pages(inode);
++skip:
+ 		iput(inode);
+ 	}
+-skip:
+ 	congestion_wait(BLK_RW_ASYNC, HZ/50);
+ 	cond_resched();
++	if (gc_failure) {
++		if (++looped >= count)
++			return;
++	}
+ 	goto next;
+ }
+ 
+@@ -327,13 +333,16 @@ void f2fs_drop_inmem_pages(struct inode *inode)
+ 		mutex_unlock(&fi->inmem_lock);
+ 	}
+ 
+-	clear_inode_flag(inode, FI_ATOMIC_FILE);
+ 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+ 	stat_dec_atomic_write(inode);
+ 
+ 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+ 	if (!list_empty(&fi->inmem_ilist))
+ 		list_del_init(&fi->inmem_ilist);
++	if (f2fs_is_atomic_file(inode)) {
++		clear_inode_flag(inode, FI_ATOMIC_FILE);
++		sbi->atomic_files--;
++	}
+ 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+ }
+ 
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
