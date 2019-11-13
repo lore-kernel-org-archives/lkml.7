@@ -2,81 +2,95 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D760C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BF5C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FE322467
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5AC222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:40:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVRobaX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfKMOeb (ORCPT
+        id S1727614AbfKMOkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:34:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727578AbfKMOeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:34:31 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 Nov 2019 09:40:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53951 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726957AbfKMOkN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 09:40:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573656012;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bSHrFQsbaC1yAitK7Law8cbj6Z2ZKZzmHqlB5M3qljE=;
+        b=CVRobaX/zg1fEGwJX5b9dR4DiYfTAwblF8YyXa0zxsw3TXDDx6d6b7pun6GJfBCYstgCm+
+        qLOTFc5eDUUdSe20ZcIjlNdqh1DI3oCcjLGlqi10NQ75o0zqd50uZWlBHi2OjYtQ3yDFj+
+        gCuvdHJoGG0Fn5S8LvLnnqOa1xr11NY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-yOlrfIIcMb-iBtVC6B25Hg-1; Wed, 13 Nov 2019 09:40:08 -0500
+X-MC-Unique: yOlrfIIcMb-iBtVC6B25Hg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 742B32245D;
-        Wed, 13 Nov 2019 14:34:29 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 09:34:27 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 03/10] ftrace: Add register_ftrace_direct()
-Message-ID: <20191113093427.53cabea1@gandalf.local.home>
-In-Reply-To: <alpine.LSU.2.21.1911131500210.18679@pobox.suse.cz>
-References: <20191108212834.594904349@goodmis.org>
-        <20191108213450.032003836@goodmis.org>
-        <alpine.LSU.2.21.1911131500210.18679@pobox.suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C76C8EDBC1;
+        Wed, 13 Nov 2019 14:40:07 +0000 (UTC)
+Received: from localhost (ovpn-117-166.ams2.redhat.com [10.36.117.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBE4860C88;
+        Wed, 13 Nov 2019 14:40:03 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 14:40:02 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, virtualization@lists.linux-foundation.org,
+        miklos@szeredi.hu, dgilbert@redhat.com
+Subject: Re: [PATCH 3/3] virtiofs: Use completions while waiting for queue to
+ be drained
+Message-ID: <20191113144002.GB554680@stefanha-x1.localdomain>
+References: <20191030150719.29048-1-vgoyal@redhat.com>
+ <20191030150719.29048-4-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191030150719.29048-4-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="8P1HSweYDcXXzwPJ"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 15:13:44 +0100 (CET)
-Miroslav Benes <mbenes@suse.cz> wrote:
+--8P1HSweYDcXXzwPJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > @@ -1757,6 +1761,18 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
-> >  				return false;
-> >  			rec->flags--;
-> >  
-> > +			if (ops->flags & FTRACE_OPS_FL_DIRECT)
-> > +				rec->flags &= ~FTRACE_FL_DIRECT;
-> > +
-> > +			/*
-> > +			 * Only the internal direct_ops should have the
-> > +			 * DIRECT flag set. Thus, if it is removing a
-> > +			 * function, then that function should no longer
-> > +			 * be direct.
-> > +			 */
-> > +			if (ops->flags & FTRACE_OPS_FL_DIRECT)
-> > +				rec->flags &= ~FTRACE_FL_DIRECT;
-> > +  
-> 
-> The flag is dropped twice here.
+On Wed, Oct 30, 2019 at 11:07:19AM -0400, Vivek Goyal wrote:
+> While we wait for queue to finish draining, use completions instead of
+> uslee_range(). This is better way of waiting for event.
 
-Ah, thanks for pointing this out. It appears that a rebase I did (where
-I modified and rebased on a previous version) add this as a new change
-(with the comment).
+s/uslee_range()/usleep_range()/
 
--- Steve
+--8P1HSweYDcXXzwPJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3MFcIACgkQnKSrs4Gr
+c8iVMQgAlnZ9d6GvnmORD+LRCvqgvHMMUlFoZS9nF/QBnEG7N4Pqr8BPRJw7Gi0D
+uBdcZjReMZY2fG9ZNXoMA0ivvPUPa3eDEBeuXlQrp8Qw4yx32ciL9VYvKly8vvV2
+2SMpOnsiuxDhldW2norjAP2piC7VCt+ni8x0yMTECQbaIfvrMhAxR/be/NWOj3pa
+RIFzuyeB4yqi73m0yRXtuN4AwL8Fzq/R0NFAfZDlGSiDmhWJ+xIJpPiL4ZfwVBaK
+hwzVPIkrA6TmDNNLtI7aCmVrQiA8lpnMH5FbKLmobmXjhedf4PwtiUEMSa3ESC6Y
+lBzMsJ4gnruQmDefdEdC1G7ohBHzSg==
+=47Ie
+-----END PGP SIGNATURE-----
+
+--8P1HSweYDcXXzwPJ--
+
