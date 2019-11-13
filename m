@@ -2,187 +2,151 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58422C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7500DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEB52196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F416206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:17:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OtRCk18a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfKMAP0 convert rfc822-to-8bit (ORCPT
+        id S1727058AbfKMARI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:15:26 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:53699 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfKMAPZ (ORCPT
+        Tue, 12 Nov 2019 19:17:08 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:39892 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKMARH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:15:25 -0500
-Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D7FB5CECF4;
-        Wed, 13 Nov 2019 01:24:28 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v4 1/4] Bluetooth: hci_bcm: Disallow set_baudrate for
- BCM4354
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191112230944.48716-2-abhishekpandit@chromium.org>
-Date:   Wed, 13 Nov 2019 01:15:23 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <5DFA1A5A-0361-480F-8B26-5AAF7359F17F@holtmann.org>
-References: <20191112230944.48716-1-abhishekpandit@chromium.org>
- <20191112230944.48716-2-abhishekpandit@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Tue, 12 Nov 2019 19:17:07 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACNXl1K135983;
+        Wed, 13 Nov 2019 00:15:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=YKnNlHy0DUbrXsKvmTlXett9dRA3uu84W6nlYwK7WPw=;
+ b=OtRCk18axfdF4oP5eOSoQ255dsj2+JtUfDqCk4AKRm0gxI5p9+lT05yi4or6qur/ojqz
+ rVih4IJPHL9vCLFflaolfcQvyHnAqB5S0UbpS2ZnMLxFCRKa4HxVvhJ/SvR9Rxbr2mis
+ qNhVAHkybGq3k0jBkLOo/P0D8fo36RyfiaxAY0qbDc+NJO68Ibl1P0k3qR/ObuZSPBW/
+ HaCmMMCBiNpCyo+Bg5lcOzHOVZQdepXw9RlRO+8Y4BPSrlXWcK+m1GuBf8J7IiX5w2Nn
+ JF/znz71f08aEWFBrU2A8tXBFrq3I1IR0dDBEJr4IuY37JE9xGlKntVkHMVgji0ePDcJ Hg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2w5mvtrfpp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 00:15:42 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xACNXED6176128;
+        Wed, 13 Nov 2019 00:15:41 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2w7j03sbdn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 00:15:41 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAD0FeKU012264;
+        Wed, 13 Nov 2019 00:15:40 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Nov 2019 16:15:40 -0800
+Subject: Re: [PATCH 3/3] xen/mcelog: also allow building for 32-bit kernels
+To:     Jan Beulich <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>
+Cc:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <a83f42ad-c380-c07f-7d22-7f19107db5d5@suse.com>
+ <07358162-1d03-63f5-ad14-95a2e0e23018@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ mQINBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
+ PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
+ MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
+ C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
+ d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
+ woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
+ FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
+ SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
+ Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
+ 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABtDNCb3JpcyBPc3Ry
+ b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT6JAjgEEwECACIFAlH8
+ CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
+ 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
+ JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
+ VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
+ jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
+ qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
+ tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
+ kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
+ m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
+ nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
+ hWwveNeRTkxh+2x1Qb3GT46uuQINBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
+ Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
+ yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
+ kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
+ KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
+ BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
+ gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
+ XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
+ 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
+ kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
+ SQARAQABiQIfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
+ jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
+ 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
+ PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
+ u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
+ qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
+ t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
+ ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
+ Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
+ 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
+ Jg6OxFYd01z+a+oL
+Message-ID: <cd81b75f-bf43-9094-7236-8efa4da27da1@oracle.com>
+Date:   Tue, 12 Nov 2019 19:15:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <07358162-1d03-63f5-ad14-95a2e0e23018@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=949
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911120201
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911120201
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+On 11/11/19 9:46 AM, Jan Beulich wrote:
+> There's no apparent reason why it can be used on 64-bit only.
+>
+> Signed-off-by: Jan Beulich <jbeulich@suse.com>
+>
+> --- a/drivers/xen/Kconfig
+> +++ b/drivers/xen/Kconfig
+> @@ -285,7 +285,7 @@ config XEN_ACPI_PROCESSOR
+>  
+>  config XEN_MCE_LOG
+>  	bool "Xen platform mcelog"
+> -	depends on XEN_DOM0 && X86_64 && X86_MCE
+> +	depends on XEN_DOM0 && X86 && X86_MCE
 
-> Without updating the patchram, the BCM4354 does not support a higher
-> operating speed. The normal bcm_setup follows the correct order
-> (init_speed, patchram and then oper_speed) but the serdev driver will
-> set the operating speed before calling the hu->setup function. Thus,
-> for the BCM4354, disallow setting the operating speed before patchram.
-> If set_baudrate is called before setup, it will return -EBUSY.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
-> drivers/bluetooth/hci_bcm.c | 37 ++++++++++++++++++++++++++++++++++++-
-> 1 file changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-> index 0f851c0dde7f..6134bff58748 100644
-> --- a/drivers/bluetooth/hci_bcm.c
-> +++ b/drivers/bluetooth/hci_bcm.c
-> @@ -47,6 +47,14 @@
-> 
-> #define BCM_NUM_SUPPLIES 2
-> 
-> +/**
-> + * struct bcm_device_data - device specific data
-> + * @no_early_set_baudrate: Disallow set baudrate before driver setup()
-> + */
-> +struct bcm_device_data {
-> +	bool	no_early_set_baudrate;
-> +};
-> +
-> /**
->  * struct bcm_device - device driver resources
->  * @serdev_hu: HCI UART controller struct
-> @@ -79,6 +87,7 @@
->  * @hu: pointer to HCI UART controller struct,
->  *	used to disable flow control during runtime suspend and system sleep
->  * @is_suspended: whether flow control is currently disabled
-> + * @disallow_set_baudrate: don't allow set_baudrate
->  */
-> struct bcm_device {
-> 	/* Must be the first member, hci_serdev.c expects this. */
-> @@ -112,6 +121,7 @@ struct bcm_device {
-> 	struct hci_uart		*hu;
-> 	bool			is_suspended;
-> #endif
-> +	bool			disallow_set_baudrate;
-> };
+Can we have X86_MCE without X86?
 
-call it no_early_set_baudrate here as well.
+-boris
 
-> 
-> /* generic bcm uart resources */
-> @@ -141,9 +151,13 @@ static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
-> static int bcm_set_baudrate(struct hci_uart *hu, unsigned int speed)
-> {
-> 	struct hci_dev *hdev = hu->hdev;
-> +	struct bcm_data *bcm = hu->priv;
-> 	struct sk_buff *skb;
-> 	struct bcm_update_uart_baud_rate param;
-> 
-> +	if (bcm && bcm->dev && bcm->dev->disallow_set_baudrate)
-> +		return -EBUSY;
-> +
-> 	if (speed > 3000000) {
-> 		struct bcm_write_uart_clock_setting clock;
-> 
-> @@ -551,6 +565,12 @@ static int bcm_setup(struct hci_uart *hu)
-> 		goto finalize;
-> 	}
-> 
-> +	/* If we disallow early set baudrate, we can re-enable it now that
-> +	 * patchram is done
-> +	 */
-> +	if (bcm->dev && bcm->dev->disallow_set_baudrate)
-> +		bcm->dev->disallow_set_baudrate = false;
-> +
-
-Lets not hack a different behavior of bcm_set_baudrate that magically changes based on a bool.
-
-Actually wouldn’t be setting hu->oper_speed to 0 have the same affect and bcm_set_baudrate will not be called after setting the init speed. We should be ensuring that in the case where we do not want the baudrate change before calling ->setup() is somehow covered in hci_ldisc directly and not hacked into the ->set_baudrate callback.
-
-> 	/* Init speed if any */
-> 	if (hu->init_speed)
-> 		speed = hu->init_speed;
-> @@ -1371,6 +1391,15 @@ static struct platform_driver bcm_driver = {
-> 	},
-> };
-> 
-> +static void bcm_configure_device_data(struct bcm_device *bdev)
-> +{
-> +	const struct bcm_device_data *data = device_get_match_data(bdev->dev);
-> +
-> +	if (data) {
-> +		bdev->disallow_set_baudrate = data->no_early_set_baudrate;
-> +	}
-> +}
-> +
-> static int bcm_serdev_probe(struct serdev_device *serdev)
-> {
-> 	struct bcm_device *bcmdev;
-> @@ -1408,6 +1437,8 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
-> 	if (err)
-> 		dev_err(&serdev->dev, "Failed to power down\n");
-> 
-> +	bcm_configure_device_data(bcmdev);
-> +
-
-I would not split this out into a separate function. Lets do this in probe() right here.
-
-> 	return hci_uart_register_device(&bcmdev->serdev_hu, &bcm_proto);
-> }
-> 
-> @@ -1419,12 +1450,16 @@ static void bcm_serdev_remove(struct serdev_device *serdev)
-> }
-> 
-> #ifdef CONFIG_OF
-> +struct bcm_device_data bcm4354_device_data = {
-> +	.no_early_set_baudrate = true,
-> +};
-> +
-> static const struct of_device_id bcm_bluetooth_of_match[] = {
-> 	{ .compatible = "brcm,bcm20702a1" },
-> 	{ .compatible = "brcm,bcm4345c5" },
-> 	{ .compatible = "brcm,bcm4330-bt" },
-> 	{ .compatible = "brcm,bcm43438-bt" },
-> -	{ .compatible = "brcm,bcm43540-bt" },
-> +	{ .compatible = "brcm,bcm43540-bt", .data = &bcm4354_device_data },
-> 	{ },
-> };
-> MODULE_DEVICE_TABLE(of, bcm_bluetooth_of_match);
-
-Regards
-
-Marcel
+>  	help
+>  	  Allow kernel fetching MCE error from Xen platform and
+>  	  converting it into Linux mcelog format for mcelog tools
+>
 
