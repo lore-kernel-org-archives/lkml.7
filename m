@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83A6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F210C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE52222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028D6222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611428;
-	bh=PP0VoN0gfOnQZCCZJ3I7rIYd7iS6ObVjGVuvpnxLw1A=;
+	s=default; t=1573611436;
+	bh=PoHu/DhS+f5VCbwNRPxqlH6ZIVZ4cG59h9sqHS6KGpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PWC9yGaHygvjCT9H2GqCDT3mbF2yW6R5TcoOlNeDGkzyHHjIwDlT3nB3tvEuMBH6q
-	 EmxwVhwejsrJ0y5N4OLdg0DZIFfnnJ+Jjk9YUKkTsTxKsbjUR57KdoVsE1U/v3UxmZ
-	 xXoySeh5eCjDJqLwA9WYWqpMAhg1fPZtaGi+5L8s=
+	b=CcIXwBkIQbp3iPxL6VMfw2aPgZ8p7lB6KIZcqRjgIuoQY5/r18cs4lK2dSqz8TtdK
+	 7Uqt3fmzk/e0523jl1iRy/45bryWoNAbkR7LDtrV/QZRWKxDFuWoxfRkWLFArnrsx7
+	 yGEbNVgCj1WxlTX20h6V26JVlEVT6u/KyEsKzLmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfKMB4M (ORCPT
+        id S1730119AbfKMCRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47742 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:17:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbfKMBzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:53 -0500
+        id S1729382AbfKMB4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E442246D;
-        Wed, 13 Nov 2019 01:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BECAD2245D;
+        Wed, 13 Nov 2019 01:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610153;
-        bh=PP0VoN0gfOnQZCCZJ3I7rIYd7iS6ObVjGVuvpnxLw1A=;
+        s=default; t=1573610167;
+        bh=PoHu/DhS+f5VCbwNRPxqlH6ZIVZ4cG59h9sqHS6KGpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zFLrbfK1aIfLQHmQkSpWLIn/X4SB/lWmpnRfp18hK9rJfZhi+zhTZbe6pI0R9r8WL
-         jAhXltmWavyfSEP/Uc3vIhryccgpjXWMkHqea4i63je/le0B/bMaPTSYiZaeoaKLZP
-         Igaz4w3elOLn4xr6i/Pbdr16+BsKhKqfY+cbToZ8=
+        b=mYSR6vwuwedjCDq10mEhSWx9UE8gDtPjtSyQCjlOTuQIubwvAakqeURHsZy3B9TD+
+         svAJR1mlW0ZvxT/7xy1ByzUPSvS/IzGAS2VTlZ2Ya8LQOTi5ynBby9E/+OaznJsY3v
+         DtpvykzpX7TewfCPw7FaxFDreUAwObpMM/qin8fE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 197/209] mac80211: minstrel: fix using short preamble CCK rates on HT clients
-Date:   Tue, 12 Nov 2019 20:50:13 -0500
-Message-Id: <20191113015025.9685-197-sashal@kernel.org>
+Cc:     Takeshi Saito <takeshi.saito.xv@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 208/209] mmc: tmio: fix SCC error handling to avoid false positive CRC error
+Date:   Tue, 12 Nov 2019 20:50:24 -0500
+Message-Id: <20191113015025.9685-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,45 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Takeshi Saito <takeshi.saito.xv@renesas.com>
 
-[ Upstream commit 37439f2d6e43ae79e22be9be159f0af157468f82 ]
+[ Upstream commit 51b72656bb39fdcb8f3174f4007bcc83ad1d275f ]
 
-mi->supported[MINSTREL_CCK_GROUP] needs to be updated
-short preamble rates need to be marked as supported regardless of
-whether it's currently enabled. Its state can change at any time without
-a rate_update call.
+If an SCC error occurs during a read/write command execution, a false
+positive CRC error message is output.
 
-Fixes: 782dda00ab8e ("mac80211: minstrel_ht: move short preamble check out of get_rate")
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+mmcblk0: response CRC error sending r/w cmd command, card status 0x900
+
+check_scc_error() checks SCC_RVSREQ.RVSERR bit. RVSERR detects a
+correction error in the next (up or down) delay tap position. However,
+since the command is successful, only retuning needs to be executed.
+This has been confirmed by HW engineers.
+
+Thus, on SCC error, set retuning flag instead of setting an error code.
+
+Fixes: b85fb0a1c8ae ("mmc: tmio: Fix SCC error detection")
+Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
+[wsa: updated comment and commit message, removed some braces]
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/mmc/host/tmio_mmc_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index 67ebdeaffbbc8..ae1a180d2eee3 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -1132,7 +1132,6 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
- 	struct ieee80211_mcs_info *mcs = &sta->ht_cap.mcs;
- 	u16 sta_cap = sta->ht_cap.cap;
- 	struct ieee80211_sta_vht_cap *vht_cap = &sta->vht_cap;
--	struct sta_info *sinfo = container_of(sta, struct sta_info, sta);
- 	int use_vht;
- 	int n_supported = 0;
- 	int ack_dur;
-@@ -1258,8 +1257,7 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
- 	if (!n_supported)
- 		goto use_legacy;
+diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+index 94c43c3d3ae58..35630ccbe9e5d 100644
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -926,8 +926,9 @@ static void tmio_mmc_finish_request(struct tmio_mmc_host *host)
+ 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
+ 		tmio_mmc_abort_dma(host);
  
--	if (test_sta_flag(sinfo, WLAN_STA_SHORT_PREAMBLE))
--		mi->cck_supported_short |= mi->cck_supported_short << 4;
-+	mi->supported[MINSTREL_CCK_GROUP] |= mi->cck_supported_short << 4;
++	/* SCC error means retune, but executed command was still successful */
+ 	if (host->check_scc_error && host->check_scc_error(host))
+-		mrq->cmd->error = -EILSEQ;
++		mmc_retune_needed(host->mmc);
  
- 	/* create an initial rate table with the lowest supported rates */
- 	minstrel_ht_update_stats(mp, mi);
+ 	/* If SET_BLOCK_COUNT, continue with main command */
+ 	if (host->mrq && !mrq->cmd->error) {
 -- 
 2.20.1
 
