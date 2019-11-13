@@ -2,82 +2,236 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B44C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D33C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6CE6206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC2420409
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IJIqQghh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfKMRFr (ORCPT
+        id S1728697AbfKMRGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:05:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:55730 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbfKMRFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:05:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4333C30E;
-        Wed, 13 Nov 2019 09:05:46 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 353E13F534;
-        Wed, 13 Nov 2019 09:05:45 -0800 (PST)
-Subject: Re: [PATCH] iommu/arm-smmu-v3: Populate VMID field for
- CMDQ_OP_TLBI_NH_VA
-To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        will@kernel.org
-Cc:     joro@8bytes.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        xuwei5@hisilicon.com, linuxarm@huawei.com
-References: <20191113161138.22336-1-shameerali.kolothum.thodi@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e91b2c6e-ab0a-5908-bcd3-e62c5b7b536a@arm.com>
-Date:   Wed, 13 Nov 2019 17:05:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 12:06:39 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43288 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbfKMRGi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:06:38 -0500
+Received: by mail-lf1-f66.google.com with SMTP id q5so2559526lfo.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:06:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YUGF3lpYgO9cloOjHxsuyc+u/ViuA1RPV0SW81a51p8=;
+        b=IJIqQghhZIc7LcLbEwUqf+yG40VtSG/n49YzgeYHcf7KyekEWWFTOKEzfYKUOJc2jD
+         R7uC2QjEtNMsARz9qly8kXRt/ZZiKRZFB09TEfOFHt9IlEoDrn52FFpP6VBbDbG9D4a2
+         LHO+SENLr3b6C5+rQHvAChig7eek+mhi5Fuems3u5+qAA9QYHjXC7WS4epoVrrna/Bji
+         ub9W1mOHkfoJRHXEXleUZSJ5esJCOc553K2wOH6JCmTNsuXdMZsTUuGRkmR++BotgCiZ
+         mJVuZY4wwnl2YPBV/LCzRTxSgHTWzoVPnmN126pvhdlBgRGYTDbpG4QZfMuBl4rQYPod
+         T/Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YUGF3lpYgO9cloOjHxsuyc+u/ViuA1RPV0SW81a51p8=;
+        b=As34QZ2+D1hYAr/lABbTTMhfUwho7gXyLRCBmaayEOPnhK05NLKmqMBJf8U6Dqd2Bk
+         6+nCW0qTV7sY8Fyf/okaSptq+0N01ktZD4FX2kKCIBmQ5sGdPqj4UU/HWBQzU9sONyTz
+         02ZEbJqY258xjNcfpBpA3zaO6CCjFCxL8aAMmghv0dVkP9o1h+lbj2eI22/NXFYcdbpZ
+         bMS/CPGNQ2tyOR2FnCT2Rrtj7O0zjeVBE5KEPohlzjcuwcs0X31Q+nS8A8ne+EnK47v8
+         7YNWBnGz+SrJGVW/ajLa8yzgbZfeFxoeWBvyZYvE0CdUj6LWkuhnGhfeiecVkzfWeHt9
+         J+8Q==
+X-Gm-Message-State: APjAAAX3wC+tf23XPa/dJuhLgCagHa9yZZqERzSYsKfGCq6/8cIOXKpR
+        CpGg73vPP7WEeTSYUnBMtxW4pglI6pg1GdJuennypQ==
+X-Google-Smtp-Source: APXvYqzC+Vh388YW3kxl3FCM93yogKwNCSplmHzAV1zL26+ogaBhxbpWxYMKbiKJu8VyczKRX/qX4SBexvsxIKmXtP4=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr3268410lfn.86.1573664796067;
+ Wed, 13 Nov 2019 09:06:36 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113161138.22336-1-shameerali.kolothum.thodi@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191030114530.872-1-peter.ujfalusi@ti.com> <CACRpkdbw9MVrQMSgVMenSqAOiti1pAy4d2LvWY-ssx9dhzWEcw@mail.gmail.com>
+ <8bd0f286-dc54-72a6-0aaf-2dc7b9972883@ti.com>
+In-Reply-To: <8bd0f286-dc54-72a6-0aaf-2dc7b9972883@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 13 Nov 2019 18:06:23 +0100
+Message-ID: <CACRpkdZ-qf3OKAxsoj+36V_N6Y_gFte1LHM+66OqekXBAWxsVA@mail.gmail.com>
+Subject: Re: [RFC 0/2] gpio: Support for shared GPIO lines on boards
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Grant Likely <glikely@secretlab.ca>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/11/2019 4:11 pm, Shameer Kolothum wrote:
-> CMDQ_OP_TLBI_NH_VA requires VMID and this was missing since
-> commit 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask
-> for CMD_TLBI_S2_IPA"). Add it back.
+On Fri, Nov 8, 2019 at 12:20 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-Whoops indeed... although we do currently issue S1 invalidations with 
-the VMID hardcoded to 0, so nothing's actually broken as things stand.
+> To start with I would let GPIO core to allow requesting the same GPIO
+> line by multiple consumers all the time.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+It already allows that with GPIOD_FLAGS_BIT_NONEXCLUSIVE.
 
-> Fixes: 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask for CMD_TLBI_S2_IPA")
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> ---
-> This came to light while verifying the "SMMUv3 Nested Stage Setup"
-> series by Eric. Please find the discusiion here,
-> https://lore.kernel.org/patchwork/cover/1099617/
-> ---
->   drivers/iommu/arm-smmu-v3.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 8da93e730d6f..9b5274346df0 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -856,6 +856,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
->   		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
->   		break;
->   	case CMDQ_OP_TLBI_NH_VA:
-> +		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
->   		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
->   		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
->   		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
-> 
+> If the flags for the gpio_request does not contain
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE (probably we can have another define for
+> BIT(4) as GPIOD_FLAGS_BIT_MIGHT_BE_SHARED?) then print with dev_warn()
+> to get the attention of the developer that all users of the shared GPIO
+> line must be checked and change the current dev_info() to dev_dbg() when
+> the flag is provided.
+
+We already have that. Unless all users request it with the same
+GPIOD_FLAGS_BIT_NONEXCLUSIVE they will simply fail,
+it is an excellent warning since it creates a strict semantic
+requirement for all participating consumer to explicitly specify
+if they want to share a line.
+
+Adding a GPIOD_FLAGS_BIT_MIGHT_BE_SHARED with some
+soft semantics sort of allowing deviant nonstrict behavior seems
+like a real bad idea to me, it will likely create all kind of ambiguities
+we cannot foresee.
+
+> When the consumer drivers are checked (and modified if needed) that they
+> behave OK in this situation we can snap the
+> GPIOD_FLAGS_BIT_MIGHT_BE_SHARED to silence the warning.
+
+I have burnt myself a bit on "let's poke in this transitional
+thing that I promise to remove later" and that later never
+happens so I'd say don't do that.
+
+> gpiod_deassert() would be equivalent to Philipp's
+> gpiod_politely_suggest_value()
+
+I don't intuitively understand the semantics of these calls.
+Consider Rusty Russells API design manifesto:
+http://sweng.the-davies.net/Home/rustys-api-design-manifesto
+
+> Not sure how the core would refcount things, but to align with what Rob
+> was saying about the misleading API naming:
+> gpiod_set_value(priv->en_gpio, 1/0) against the DT's
+> GPIO_ACTIVE_HIGH/LOW of the line's active state we might want to have:
+> gpiod_assert(priv->en_gpio);
+> gpiod_deassert(priv->en_gpio);
+
+This is what gpiod_set_value() already does today in a way
+just name
+gpiod_set_value() -> gpio_set_asserted() and change
+the second argument to a bool named "asserted".
+
+It seems like a totally different and entirely syntactic problem
+separate from the reset business you're trying to solve?
+
+We had this discussion before this week and yeah, if we
+historically named the logical levels on the line "asserted"
+and "deasserted" everywhere it would be great.
+
+It is up to someone driving the change and changing it
+everywhere in that case. Preferably with a semantic
+coccinelle patch or sed script since it is purely
+syntactic, then plan where and when to
+run that. Then do that first, wait a kernel cycle and scoop up
+any fallout and leftovers and then start the next thing.
+
+> Basically assert would set the level to the active state defined by the
+> DT.
+
+Or ACPI. Or machine descriptor tables. I suppose.
+Doing APIs becomes generic, the suggestion I had
+above was more like doing something like detecting
+a shared line *specifically* for device tree and nothing
+else and handle it in gpiolib-of.c but maybe that is not
+possible.
+
+> Gradually drivers can be moved to this API pair from gpiod_set_value()
+> when it makes sense.
+
+The problem I have right now as subsystem maintainer is people
+starting things like that and never finishing them.
+
+If you wanna do this I suggest a fix it everywhere in one swift stroke
+approach with broad buy-in from everyone-approach or fail totally.
+We have too many in-transit API changes.
+
+> The current gpiod_set_* would operate like as it is right now by not
+> asking politely a level, whatever it is.
+>
+> Hrm, probably both gpiod_assert() and gpiod_deassert() should be polite
+> when asking for level change?
+
+These APIs really need names that can be understood right off
+and they should be compile-time optional (a Kconfig option) so
+that drivers that really need them can select to have them
+explicitly.
+
+> If all consumers of the shared line is using gpiod_assert/deassert, then
+> the core should 'protect' the raw level of the gpiod_assert() calls.
+>
+> At the end we will see drivers converted to assert/deassert API when a
+> developer faces issues that they use shared GPIO line on a board.
+
+> Another thing is that currently gpio core does not have refcounting and
+> most of the client drivers treat it like that.
+
+Notably all the drivers specifying GPIOD_FLAGS_BIT_NONEXCLUSIVE
+does not treat it like that and that is why they specify that
+flag. All regulators, I think.
+
+> It is perfectly fine to
+> gpiod_get(priv->en_gpio,1);
+> gpiod_get(priv->en_gpio,1);
+> gpiod_get(priv->en_gpio,1);
+> gpiod_get(priv->en_gpio,0);
+
+I guess you mean gpiod_set()
+
+> at the last call the GPIO value is going to be set to 0 no matter if it
+> was set to 1 three times prior, but I guess this can be worked out when
+> the driver(s) are converted to assert/deassert.
+
+I don't understand why that would not be allowed?
+
+Again I guess not really related to the original problem,
+so if you want to work on that it can be done in isolation.
+
+To the overall question of a refcounting GPIO API:
+
+OK to add a new API like that I would say first convert the
+regulators to use them so we have a strong buy-in from a
+subsystem that already does this. That way we can get rid of
+the existing GPIOD_FLAGS_BIT_NONEXCLUSIVE and pull
+the handling of shared GPIO lines into gpiolib using these
+new APIs.
+
+I'm all for this.
+
+But the general usability needs to be proven.
+It is not a very huge task:
+ git grep BIT_NONEXCLUSIVE |wc -l
+24
+
+24 occurrences in the whole kernel.
+
+If the suggested API doesn't fit regulators as well it is dead
+in the water. Then the usecase is likely specific to resets,
+and what you would need to do is rather improve the
+available semantics in the reset subsystem.
+
+So begin with creating a way to pull the shared handling of
+regulators into gpiolib with these clearly cut semantics
+delete the NONEXCLUSIVE thing and then when you are
+done with that exploit the same
+infrastructure for GPIO reset.
+
+Yours,
+Linus Walleij
