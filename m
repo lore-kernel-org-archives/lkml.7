@@ -2,122 +2,138 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEBBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59710C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507EF222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22256222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X8HMahfV"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="prv+uukc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfKMLGy (ORCPT
+        id S1727780AbfKMLIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 06:06:54 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51562 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfKMLGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:06:54 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADB6XsH114264;
-        Wed, 13 Nov 2019 05:06:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573643193;
-        bh=gSAJ+1KpkGy+Q87mlI/tRdXnYA0Fp4XtcaHY6UfujOc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=X8HMahfV7qdJsgEfNTulOHlp4TJPpj8nc0CC/YuUcqC+GwSC256cdrxmxhENY2e04
-         61oz5VO/LASJhQ6t8VoztScF/KDh/y35LJ2aiXKQVOJyZT17XY2kNpp2lcswkz8cfF
-         dRgCdPrCHiN/hq8y1ejhy1NM/P4Z2Pqh2ELfzubI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADB6Wu9096144
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 05:06:32 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 05:06:15 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 05:06:15 -0600
-Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADB6T5G127091;
-        Wed, 13 Nov 2019 05:06:29 -0600
-Subject: Re: [PATCH] irqchip/ti-sci-inta: Use ERR_CAST inlined function
- instead of ERR_PTR(PTR_ERR(...))
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Markus Elfring <markus.elfring@web.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
+        Wed, 13 Nov 2019 06:08:55 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56473 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726086AbfKMLIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 06:08:54 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Chgh6SPTz9sNH;
+        Wed, 13 Nov 2019 22:08:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1573643331;
+        bh=ToKhbEA1zIEt/CqcqU8IvA0xCdgG7bCPEQrifiO4Ef4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=prv+uukcXKixsHi6a8IlTLYS2Risu4DU1MJixf5189oCDB3vTaTA22QlIa7AaGeFp
+         yX+zuh+uBXKNykQDYeCciV7d2W7eZ98SmA4fHHynwRiGG4wShJQyVqyWdSlUUD5nn0
+         vIxKztntKAp3kLcIYsQW56+F1hwT7VAyfCowvjD53PuzoRDJMG4YmSJIyx4adpTztz
+         OJ5q1UhFZyETdY39NfxN3YPvXV6lSP+onIUb3shwisbQxAOY0PRbQAHeNXStRCubzq
+         /vd7ysb8tUZUBQNbYrujZVyglaSnOpcVg4M+PgCfxdHKTQtgN6F8euFxIcKjVy+FUm
+         5kS2ey3jPm83A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        "Enrico Weigelt\, metux IT consult" <info@metux.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <776b7135-26af-df7d-c3a9-4339f7bf1f15@web.de>
- <670cd9a2-2083-bb5e-7bfc-58d5c90ec756@ti.com>
- <29a69991ec7726d133e54a2891159e86@www.loen.fr>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <3642882b-edab-1667-f370-47e8358edc82@ti.com>
-Date:   Wed, 13 Nov 2019 16:35:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Arun KS <arunks@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Gao Xiang <xiang@kernel.org>,
+        Greg Hackmann <ghackmann@google.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH v1 08/12] powerpc/pseries: CMM: Implement balloon compaction
+In-Reply-To: <8e46b1c5-f52b-0155-4d4f-e3bbdea95384@redhat.com>
+References: <20191031142933.10779-1-david@redhat.com> <20191031142933.10779-9-david@redhat.com> <be7c1424-f240-b72c-8d6d-310ebbd816e1@redhat.com> <87blth2wyk.fsf@mpe.ellerman.id.au> <8e46b1c5-f52b-0155-4d4f-e3bbdea95384@redhat.com>
+Date:   Wed, 13 Nov 2019 22:08:44 +1100
+Message-ID: <87lfsk11ab.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <29a69991ec7726d133e54a2891159e86@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/11/19 3:45 PM, Marc Zyngier wrote:
-> On 2019-11-11 04:45, Lokesh Vutla wrote:
->> On 05/11/19 5:00 PM, Markus Elfring wrote:
->>> From: Markus Elfring <elfring@users.sourceforge.net>
->>> Date: Tue, 5 Nov 2019 12:19:39 +0100
+David Hildenbrand <david@redhat.com> writes:
+> On 12.11.19 11:46, Michael Ellerman wrote:
+>> David Hildenbrand <david@redhat.com> writes:
+>>> On 31.10.19 15:29, David Hildenbrand wrote:
+>>>> We can now get rid of the cmm_lock and completely rely on the balloon
+>>>> compaction internals, which now also manage the page list and the lock.
+>> ...
+>>>> +
+>>>> +static int cmm_migratepage(struct balloon_dev_info *b_dev_info,
+>>>> +			   struct page *newpage, struct page *page,
+>>>> +			   enum migrate_mode mode)
+>>>> +{
+>>>> +	unsigned long flags;
+>>>> +
+>>>> +	/*
+>>>> +	 * loan/"inflate" the newpage first.
+>>>> +	 *
+>>>> +	 * We might race against the cmm_thread who might discover after our
+>>>> +	 * loan request that another page is to be unloaned. However, once
+>>>> +	 * the cmm_thread runs again later, this error will automatically
+>>>> +	 * be corrected.
+>>>> +	 */
+>>>> +	if (plpar_page_set_loaned(newpage)) {
+>>>> +		/* Unlikely, but possible. Tell the caller not to retry now. */
+>>>> +		pr_err_ratelimited("%s: Cannot set page to loaned.", __func__);
+>>>> +		return -EBUSY;
+>>>> +	}
+>>>> +
+>>>> +	/* balloon page list reference */
+>>>> +	get_page(newpage);
+>>>> +
+>>>> +	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+>>>> +	balloon_page_insert(b_dev_info, newpage);
+>>>> +	balloon_page_delete(page);
 >>>
->>> A coccicheck run provided information like the following.
->>>
->>> drivers/irqchip/irq-ti-sci-inta.c:250:9-16: WARNING: ERR_CAST can be used
->>> with vint_desc.
->>>
->>> Generated by: scripts/coccinelle/api/err_cast.cocci
->>>
->>> Thus adjust the exception handling in one if branch.
->>>
->>> Fixes: 9f1463b86c13277d0bd88d5ee359577ef40f4da7 ("irqchip/ti-sci-inta: Add
->>> support for Interrupt Aggregator driver")
->>
->> Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt
->> Aggregator driver")
-> 
-> I fundamentally disagree with the "Fixes:" tag. This isn't a fix,
-> just a minor readability improvement. Flagging things as "Fixes:"
-> ends up triggering all kind of unnecessary backports to -stable.
-> 
->> With this:
+>>> I think I am missing a b_dev_info->isolated_pages-- here.
+>> 
+>> I don't know this code at all, but looking at other balloon drivers they
+>> do seem to do that in roughly the same spot.
+>> 
+>> I'll add it, how can we test that it's correct?
+>
+> It's certainly correct. We increment when we isolate 
+> (balloon_page_isolate()) and decrement when we un-isolate.
+>
+> Un-isolate happens when we putback a isolated page 
+> (balloon_page_putback() - migration aborted) or when we successfully 
+> migrate it (via balloon_page_migrate()).
+>
+> The issue is that we cannot decrement in balloon_page_migrate(), as we 
+> have to hold the b_dev_info->pages_lock. That's why we have to do it in 
+> the registered callback under lock.
 
-Fine with me. Please drop the fixes tag.
+OK, I get it now.
 
-Thanks and regards.
-Lokesh
+> Please note that b_dev_info->isolated_pages is only needed for a sanity 
+> check in balloon_page_dequeue(). That's why I didn't notice during 
+> testing. I wonder if we should at some point rip out that sanity check ...
 
->>
->> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-> 
-> I'll otherwise take this patch in -next.
-> 
-> Thanks,
-> 
->         M.
+OK. Sanity checks can be good, though checks that call BUG() are less
+nice :)  But I'm not an mm expert so I'll defer to you folks on the
+sanity check.
+
+For now I've merged this series with the decrement added to
+cmm_migratepage().
+
+cheers
