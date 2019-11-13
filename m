@@ -2,166 +2,116 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3068C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474BAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D5D222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B57222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:36:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cFFZOvWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfKMIfe (ORCPT
+        id S1727170AbfKMIgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:35:34 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40487 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfKMIfe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:35:34 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUo7Z-0004tD-Sc; Wed, 13 Nov 2019 09:35:25 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUo7Z-0001Wi-0E; Wed, 13 Nov 2019 09:35:25 +0100
-Date:   Wed, 13 Nov 2019 09:35:24 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v4 3/7] pwm: sun4i: Add an optional probe for bus clock
-Message-ID: <20191113083524.aqtf2ed4ltuiazjg@pengutronix.de>
-References: <20191108084517.21617-1-peron.clem@gmail.com>
- <20191108084517.21617-4-peron.clem@gmail.com>
+        Wed, 13 Nov 2019 03:36:24 -0500
+Received: from m12-14.163.com ([220.181.12.14]:50514 "EHLO m12-14.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbfKMIgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 03:36:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=dA+ZN
+        83cVR4cL1YH5CVSfq7SE556RGr+LTFA07tkT5E=; b=cFFZOvWI+2mgSBD6/Rr1E
+        CbzfpiM1dd4QzN0vlqzn4dXbsAbCmPLaMAWIoL1+vVx2vqxHcRP7T8rI7x6VMe/0
+        QzAXfscip9jNP2VuQqiliQYVGUIP5l1BQkh3B1LD37MgU5PXMpjdVWOiQUL8uUnl
+        wH++EsFKgxtzh0g2RYAytw=
+Received: from [192.168.1.133] (unknown [112.25.212.39])
+        by smtp10 (Coremail) with SMTP id DsCowADHz2ddwMtd9XrUCg--.280S2;
+        Wed, 13 Nov 2019 16:35:43 +0800 (CST)
+Subject: Re: Question about "asm/rwonce.h: No such file or directory"
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com>
+ <20191112123125.GD17835@willie-the-truck>
+ <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+ <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net>
+ <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
+ <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com>
+ <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
+ <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com>
+ <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
+From:   Xiao Yang <ice_yangxiao@163.com>
+Message-ID: <50602386-68b1-be38-a022-0bcf9df6a54e@163.com>
+Date:   Wed, 13 Nov 2019 16:35:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191108084517.21617-4-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: DsCowADHz2ddwMtd9XrUCg--.280S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZw47Wr13AFWxCw4kCF13twb_yoWDKrgEvw
+        10krykCr1fKr13JanxKFsxXFsrKw4kAryDX34rurn0gwsxAFZIg3ZYqFn5ZFs5t398ZFn3
+        WF1FvFsa9F98ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU55u4UUUUUU==
+X-Originating-IP: [112.25.212.39]
+X-CM-SenderInfo: 5lfhs5xdqj5xldr6il2tof0z/xtbB0h9sXlUMSx9uAQAAsd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 09:45:13AM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> H6 PWM core needs bus clock to be enabled in order to work.
-> 
-> Add an optional probe for it and a fallback for previous
-> bindings without name on module clock.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 46 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 2b9a2a78591f..a10022d6c0fd 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
->  
->  struct sun4i_pwm_chip {
->  	struct pwm_chip chip;
-> +	struct clk *bus_clk;
->  	struct clk *clk;
->  	struct reset_control *rst;
->  	void __iomem *base;
-> @@ -363,9 +364,38 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
->  	if (IS_ERR(pwm->base))
->  		return PTR_ERR(pwm->base);
->  
-> -	pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> -	if (IS_ERR(pwm->clk))
-> +	/* Get all clocks and reset line */
-> +	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> +	if (IS_ERR(pwm->clk)) {
-> +		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "get clock failed %pe\n",
-> +				pwm->clk);
->  		return PTR_ERR(pwm->clk);
-> +	}
-> +
-> +	/*
-> +	 * Fallback for old dtbs with a single clock and no name.
-> +	 * If a parent has a clock-name called "mod" whereas the
-> +	 * current node is unnamed the clock reference will be
-> +	 * incorrectly obtained and will not go into this fallback.
+On 11/13/19 3:53 PM, Masahiro Yamada wrote:
+> On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+>> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
+>>> Sorry, I really do not understand what you are doing.
+>>>
+>>> include/linux/compiler.h is only for kernel-space.
+>>> Shrug if a user-land program includes it.
+>> Hi Masahiro,
+>>
+>> For building tools/bpf, it is good to fix the compiler error by Daniel's
+>> patch(i.e. use linux/filter from linux header).
+>>
+>> linux/compiler.h may be used by other code in kernel.  Is it possible to
+>> trigger the same error when the other code
+>>
+>> including linux/compiler.h is built? Is this kind of code able to find
+>> the location of <asm/rwonce.h>?
+>
+> <asm/rwonce.h> is also kernel-only header.
+>
+> The kernel code can find <asm/rwonce.h>, but user-land code cannot.
 
-For me "old dtbs" suggests that today a device tree should have a "mod"
-clock. Is this true also for machines other than H6? And I'd put the
-comment before the acquisition of the "mod" clock. Something like:
+Hi Masahiro,
 
-	/*
-	 * A clock called "mod" is only required on H6 (for now) and on
-	 * other SoCs we expect an unnamed clock. So we request "mod"
-	 * first (and ignore the corner case that a parent provides a
-	 * "mod" clock) and if this is not found we fall back to the
-	 * first clock of the PWM.
-	 */
+Sorry, I am not familar with it.
 
-> +	 */
-> +	if (!pwm->clk) {
-> +		pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> +		if (IS_ERR(pwm->clk)) {
-> +			if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-> +				dev_err(&pdev->dev, "get clock failed %pe\n",
-> +					pwm->clk);
-> +			return PTR_ERR(pwm->clk);
-> +		}
-> +	}
-> +
-> +	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
-> +	if (IS_ERR(pwm->bus_clk)) {
-> +		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "get bus_clock failed %pe\n",
-> +				pwm->bus_clk);
-> +		return PTR_ERR(pwm->bus_clk);
-> +	}
->  
->  	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
->  	if (IS_ERR(pwm->rst)) {
-> @@ -382,6 +412,17 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	/*
-> +	 * We're keeping the bus clock on for the sake of simplicity.
-> +	 * Actually it only needs to be on for hardware register
-> +	 * accesses.
-> +	 */
-> +	ret = clk_prepare_enable(pwm->bus_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Cannot prepare and enable bus_clk\n");
-> +		goto err_bus;
-> +	}
-> +
+Thanks a lot for your explanation and I have seen the LINUXINCLUDE 
+variable in Makefile.
 
-Would it make sense to split this patch into "Prefer "mod" clock to
-(unnamed) clock" and "Introduce optional bus clock"?
+I will try to send a patch as Daniel suggested.
 
-Best regards
-Uwe
+Best Regards,
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Xiao Yang
+
+>
+>
+>
+>
+>> Best Regards,
+>>
+>> Xiao Yang
+>>
+>>
+>
+
