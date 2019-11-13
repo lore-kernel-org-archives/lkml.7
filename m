@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6EFC17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD43C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6062084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DC32084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611445;
-	bh=Nbm+0sMkxlk6HRLaRQOFwTLW1an+JMQpxxCNSerK81o=;
+	s=default; t=1573611449;
+	bh=b1zZCWHgviqi7cGaVJbe44nWhVRzGNjrthtf+9iCCxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S7YDAMYVW645ODLuFnxNMNsZZU9mKBuqFkNJ6F+8k8P99nY2ra0CEzpaVxp48Lkvq
-	 A5HCq2FolatAyh8G1s4t41XEsbs4IlMQhIune6Zbq+s/EmoLlkGXdyoiIeqX5E8E5Z
-	 pPK8yOWkSnyUUby9Iytkc+fLXWD+oR6EyIGxGQg0=
+	b=G9em5IuOA1QoCurOk51P+U+bkpi73GfvaExY9SN1oWh1DONeNT0A4wJ4a1zCgMK17
+	 TV1kBDqAM6X8JK9Hxo513p50J8OzZQo+cHGwVAj3ZSH7uWc693rGcsTu8g9Q9Qoc5D
+	 2JmGC3EmUiSGjapDJIR84dkrb2UphYc7LabcRijI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbfKMB4E (ORCPT
+        id S1729379AbfKMCR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:17:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729253AbfKMBzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:49 -0500
+        id S1729361AbfKMB4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C19F122473;
-        Wed, 13 Nov 2019 01:55:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3613022499;
+        Wed, 13 Nov 2019 01:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610148;
-        bh=Nbm+0sMkxlk6HRLaRQOFwTLW1an+JMQpxxCNSerK81o=;
+        s=default; t=1573610163;
+        bh=b1zZCWHgviqi7cGaVJbe44nWhVRzGNjrthtf+9iCCxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bVXUZWaE5NnLDtRveSoXvK0b6E6YR7GMvmQKCCpS6ObUIfVxEdm8SABdP/DacKF6y
-         oWon788sJI32rtvCC8xqtHLhpsbfqF8JwL7fw/6T1jnc9PDUWKFM+QXbyk/t0TXdna
-         mCqOF1+6UPyEw0G+uNFGXaUDosRPzYlvdfW+NGd8=
+        b=RqvmzKa+BzlTc83bUQQWK34qBzGg5KyIUIo7Esq5/G6e7DjDNqeX9Dm++UNIoxPOI
+         Nn2glwcJyMaFK66TvR3myQjJ7jycLcKJX6VXaReAJvgM8GyeF5n1A7gpZ3U1KY4QI1
+         u6jRnn50OlIudVVCWPlNXYuhK+CvSzKGTG/vxxfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 193/209] selftests: forwarding: Have lldpad_app_wait_set() wait for unknown, too
-Date:   Tue, 12 Nov 2019 20:50:09 -0500
-Message-Id: <20191113015025.9685-193-sashal@kernel.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 205/209] PM / devfreq: Fix static checker warning in try_then_request_governor
+Date:   Tue, 12 Nov 2019 20:50:21 -0500
+Message-Id: <20191113015025.9685-205-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,42 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 372809055f6c830ff978564e09f58bcb9e9b937c ]
+[ Upstream commit b53b0128052ffd687797d5f4deeb76327e7b5711 ]
 
-Immediately after mlxsw module is probed and lldpad started, added APP
-entries are briefly in "unknown" state before becoming "pending". That's
-the state that lldpad_app_wait_set() typically sees, and since there are
-no pending entries at that time, it bails out. However the entries have
-not been pushed to the kernel yet at that point, and thus the test case
-fails.
+The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
+drivers are built as modules." leads to the following static checker
+warning:
 
-Fix by waiting for both unknown and pending entries to disappear before
-proceeding.
+    drivers/devfreq/devfreq.c:1043 governor_store()
+    warn: 'governor' can also be NULL
 
-Fixes: d159261f3662 ("selftests: mlxsw: Add test for trust-DSCP")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The reason is that the try_then_request_governor() function returns both
+error pointers and NULL. It should just return error pointers, so fix
+this by returning a ERR_PTR to the error intead of returning NULL.
+
+Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/lib.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/devfreq/devfreq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/lib.sh b/tools/testing/selftests/net/forwarding/lib.sh
-index ca53b539aa2d1..08bac6cf1bb3a 100644
---- a/tools/testing/selftests/net/forwarding/lib.sh
-+++ b/tools/testing/selftests/net/forwarding/lib.sh
-@@ -251,7 +251,7 @@ lldpad_app_wait_set()
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index bcd2279106760..e2ab46bfa666e 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -231,7 +231,7 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
+  * if is not found. This can happen when both drivers (the governor driver
+  * and the driver that call devfreq_add_device) are built as modules.
+  * devfreq_list_lock should be held by the caller. Returns the matched
+- * governor's pointer.
++ * governor's pointer or an error pointer.
+  */
+ static struct devfreq_governor *try_then_request_governor(const char *name)
  {
- 	local dev=$1; shift
+@@ -257,7 +257,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
+ 		/* Restore previous state before return */
+ 		mutex_lock(&devfreq_list_lock);
+ 		if (err)
+-			return NULL;
++			return ERR_PTR(err);
  
--	while lldptool -t -i $dev -V APP -c app | grep -q pending; do
-+	while lldptool -t -i $dev -V APP -c app | grep -Eq "pending|unknown"; do
- 		echo "$dev: waiting for lldpad to push pending APP updates"
- 		sleep 5
- 	done
+ 		governor = find_devfreq_governor(name);
+ 	}
 -- 
 2.20.1
 
