@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF442C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535BBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4C020674
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F21D20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610773;
-	bh=njXyVfjBG0LIkr/kk7vRsRBmHRAmpy7aAcVwBzyjTw4=;
+	s=default; t=1573610776;
+	bh=Tc0bizS36rmC3FiUcdlL/HBwy58q2eHM3k8vAr3PYBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PwpD7+Do9PqH91NdTdaXIzsYqyKvMCymv11JMop5bHnDU1IUUyWjyPlaFvoI77eqT
-	 NMf0fGg2JL5Y56qvICSf4uYiTXExtffw0yERcn4VFckScifJjMhB9HKjwPWQNUXVfb
-	 Vq4y7pPvaKff4kdrsgYJLa/86o2iFxPSyOGdUc7w=
+	b=pe0X9ED+l1CWugBAcC3HkGCED9Nr51J177icej9GNAdwRTwQzK8jfZlpamoONFUl1
+	 SRbWwHHN1YjKwXy022ZOGFL0bYLV7ZKOK3FpXC/xje8MIqIh0zqThuSBrXKacvkiOi
+	 9NsHAbVX+fnnUXYFQZdRb3twBXrWUc+m+Hiv2EiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730754AbfKMCGM (ORCPT
+        id S1730730AbfKMCBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:06:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730729AbfKMCBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Nov 2019 21:01:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730707AbfKMCBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:01:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02D0822474;
-        Wed, 13 Nov 2019 02:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FF7622474;
+        Wed, 13 Nov 2019 02:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610480;
-        bh=njXyVfjBG0LIkr/kk7vRsRBmHRAmpy7aAcVwBzyjTw4=;
+        s=default; t=1573610477;
+        bh=Tc0bizS36rmC3FiUcdlL/HBwy58q2eHM3k8vAr3PYBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3cjhSXConKbRyDMujFnsaY0k2t10rYYKVBTiT9QuhtucinrbDDjeBpuqthSutvpm
-         dhEwiOV+ger2w9PSpx0xqMGHdeA/VzHTTuoL7lgHlnMlNvswyuRTRdoLif81OliDqg
-         Cujf/OPDXFIw60S380dOKKmhZvXUlAK5VVEZjw/Q=
+        b=lUgmxhb+bvasLrnaAl8nayI/lH7vykoiUuaCLvWTt2DJqNveCAWMu3p8AQZQCeMvD
+         Ixfa7zkbR2bw9otjagUF7lxnB8giDvAt1R2nU+fjP1ONX5jcSZsEc6XfRFBkYPBBkN
+         9POsH7UARTKI6ukxSxTe1DLDaksEcvUbzdbBFXZk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>,
-        Eugene Syromyatnikov <evgsyr@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 61/68] ARM: 8802/1: Call syscall_trace_exit even when system call skipped
-Date:   Tue, 12 Nov 2019 20:59:25 -0500
-Message-Id: <20191113015932.12655-61-sashal@kernel.org>
+Cc:     Marek Vasut <marex@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 59/68] gpio: syscon: Fix possible NULL ptr usage
+Date:   Tue, 12 Nov 2019 20:59:23 -0500
+Message-Id: <20191113015932.12655-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -61,55 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit f18aef742c8fbd68e280dff0a63ba0ca6ee8ad85 ]
+[ Upstream commit 70728c29465bc4bfa7a8c14304771eab77e923c7 ]
 
-On at least x86 and ARM64, and as documented in the ptrace man page
-a skipped system call will still cause a syscall exit ptrace stop.
+The priv->data->set can be NULL while flags contains GPIO_SYSCON_FEAT_OUT
+and chip->set is valid pointer. This happens in case the controller uses
+the default GPIO setter. Always use chip->set to access the setter to avoid
+possible NULL pointer dereferencing.
 
-Previous to this commit 32-bit ARM did not, resulting in strace
-being confused when seccomp skips system calls.
-
-This change also impacts programs that use ptrace to skip system calls.
-
-Fixes: ad75b51459ae ("ARM: 7579/1: arch/allow a scno of -1 to not cause a SIGILL")
-Signed-off-by: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
-Signed-off-by: Eugene Syromyatnikov <evgsyr@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Kees Cook <keescook@chromium.org>
-Tested-by: Eugene Syromyatnikov <evgsyr@gmail.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/entry-common.S | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpio/gpio-syscon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index d69adfb3d79e6..178a2a9606595 100644
---- a/arch/arm/kernel/entry-common.S
-+++ b/arch/arm/kernel/entry-common.S
-@@ -263,16 +263,15 @@ __sys_trace:
- 	cmp	scno, #-1			@ skip the syscall?
- 	bne	2b
- 	add	sp, sp, #S_OFF			@ restore stack
--	b	ret_slow_syscall
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 537cec7583fca..cf88a0bfe99ea 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -122,7 +122,7 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
+ 				   BIT(offs % SYSCON_REG_BITS));
+ 	}
  
--__sys_trace_return:
--	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
-+__sys_trace_return_nosave:
-+	enable_irq_notrace
- 	mov	r0, sp
- 	bl	syscall_trace_exit
- 	b	ret_slow_syscall
+-	priv->data->set(chip, offset, val);
++	chip->set(chip, offset, val);
  
--__sys_trace_return_nosave:
--	enable_irq_notrace
-+__sys_trace_return:
-+	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
- 	mov	r0, sp
- 	bl	syscall_trace_exit
- 	b	ret_slow_syscall
+ 	return 0;
+ }
 -- 
 2.20.1
 
