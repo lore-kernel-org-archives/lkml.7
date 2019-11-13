@@ -2,131 +2,112 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F28AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3ECC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D029D22459
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:53:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Fu4JZWt6"
+	by mail.kernel.org (Postfix) with ESMTP id DFD6D222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfKMMxF (ORCPT
+        id S1727074AbfKMM4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:53:05 -0500
-Received: from mail-eopbgr30061.outbound.protection.outlook.com ([40.107.3.61]:30958
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726185AbfKMMxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 07:53:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l+2qpdBmlSIWNb0/sqxvJjPF3bWWp1jJ7/B+j+DWNyukC4eUoiNX0vJ3YSE5VvbvcaD1OVAIR9/0q8j88gRWWdZRQMJHk3QvxLpRSZmKUU1fWSXvdPYEf6ViCK6Znk6qyo6gS9SGWQEjqrsKuXrd34JKaKhiW12gzmFXra6F8u/wFNLbYHgv4JTtpHiIyTnjzLbE7PH4dTAXKxNUTa7fw47cAiqiK4YWNz79DinrEDnch/CImnEv+LLgpVYVmaW4MeE3oyHt+JXuHSQpd88bsWhvxgtsTAILWXxTeztCXUOcF9sSncue5ut9BSKjvTarOgjk1wcW7v2J45ylftyQzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v51jS1YbWoU2bWpd7iOpJZoCSZ9pXOl6bHwY/TGI6hU=;
- b=MTuNnb/GP+waP3xYsmie/C9hLSfTgwxK2NtK0tdpVl9BfedvJggF30Iq6v/HHyCw7He/+g2sbU03KJirGCsWVaz2IVbYyKYOZSPUA/vgOnBYDZAkYNjQ6fHMdI6zLj6DIOUohCQFadW+yRCi7XINrK6vHPV8U6hubi9M8qo4TpWtmtyARlYWpt+jsKZch2kyZ7rBGC3Jb5ZgOBUXAD/iskXGddGpsSX1bF16gg5kJWU0D6oYRT77ezfmC+cRANCsVepXspTtUeCuad7qVgtxgKddnKFtmlU+9sWo+q1MSlaWag8z+qyJubrK5VE0Z+zPqU+8rub+OUZYjn6H5AAJJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v51jS1YbWoU2bWpd7iOpJZoCSZ9pXOl6bHwY/TGI6hU=;
- b=Fu4JZWt6zTA12fV3XU01fhZcNPQxMvxwy6TamPjTPSUM9oVktuRQpwNikwMjsZDMuBASTOjmEGmhPJvUZVNihXmkzMG7BF8pN7S5QU4DBCb7jhcQ3xicU2p3GF5sAyWH8PweXYQTVGSSJiMrjmyPPv5+Un7qe0a2B43v4TiTG7I=
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
- VI1PR0402MB3773.eurprd04.prod.outlook.com (52.134.14.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.25; Wed, 13 Nov 2019 12:52:53 +0000
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::8997:3705:3f41:1d1b]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::8997:3705:3f41:1d1b%7]) with mapi id 15.20.2430.028; Wed, 13 Nov 2019
- 12:52:52 +0000
-From:   Mirela Rabulea <mirela.rabulea@nxp.com>
-To:     "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-Thread-Topic: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-Thread-Index: AQHVlLXLzR/BR8Qmu0iHDS94ZPyJ2qeHv+UAgAFZNAA=
-Date:   Wed, 13 Nov 2019 12:52:52 +0000
-Message-ID: <1573649572.16477.40.camel@nxp.com>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
-         <b84f3c8c3913de6d897ad91576afe0df913c7d98.camel@collabora.com>
-In-Reply-To: <b84f3c8c3913de6d897ad91576afe0df913c7d98.camel@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mirela.rabulea@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a20b57b0-8713-42d8-db24-08d7683865b0
-x-ms-traffictypediagnostic: VI1PR0402MB3773:|VI1PR0402MB3773:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3773FED84A1CB6D19F987BE38F760@VI1PR0402MB3773.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(76176011)(2201001)(64756008)(14454004)(66476007)(66446008)(66556008)(86362001)(5660300002)(102836004)(256004)(7416002)(478600001)(305945005)(36756003)(91956017)(2501003)(7736002)(4001150100001)(6506007)(76116006)(66946007)(486006)(316002)(66066001)(6116002)(81156014)(54906003)(6246003)(71190400001)(71200400001)(6486002)(229853002)(8936002)(25786009)(99286004)(6436002)(50226002)(11346002)(81166006)(26005)(3846002)(186003)(103116003)(4744005)(44832011)(476003)(4326008)(2616005)(2906002)(6512007)(446003)(110136005)(8676002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3773;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5HslXcSKew54QwzzIe58FOnCwubDVTXGzSer0CgQK7M+Qae01sRKG8cabtuiWqQWTu0dsWXzC9Chytn7kRNzy0LpiWU68ZGjh38YSRVSZnqh0W8ouuTMlNC12a8GAc9owZ83/dYAVEZ5aS7W/FkUuSGxslFN1zs9ByPfk2IN8HrjjOe35G2Gl3k7Jpog8LsOJ8owUPqCKy3PyCbpT5f3nqkX68I5xQTG4B6IndjC68/NhmRA0h9oKdKDouzbezipTNwrEUEyxhdlMpynADOXnckdSxOwBLDg2aXyU4V7A667D3p57Q5Pit8PearMVy2beWIZWbAoYwPQlMcwS8QZZYCNpFTWKQxNZGvO7wnYlEm7dPMXXmayII3RcC+ib495SzRbJHSUJoG9k6dyu2z7jTV8+hRQj7/WXtQZjw9JTab3Ug7sO0wphh2641oRYFh5
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5CB67F455DDFD44CA512C82CC196E5C5@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 13 Nov 2019 07:56:03 -0500
+Received: from mga11.intel.com ([192.55.52.93]:45031 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbfKMM4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 07:56:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 04:56:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
+   d="scan'208";a="355461118"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 13 Nov 2019 04:56:00 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iUsBk-0006TK-9U; Wed, 13 Nov 2019 20:56:00 +0800
+Date:   Wed, 13 Nov 2019 20:55:44 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Jon Flatley <jflat@chromium.org>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        bleung@chromium.org, groeck@chromium.org, sre@kernel.org,
+        jflat@chromium.org
+Subject: Re: [PATCH 3/3] platform: chrome: Added cros-ec-typec driver
+Message-ID: <201911132033.3UoCbltt%lkp@intel.com>
+References: <20191113031044.136232-4-jflat@chromium.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a20b57b0-8713-42d8-db24-08d7683865b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 12:52:52.8161
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OhR1pdayjNdO7KJ2VuPzkkGo2zkT9lJLURCjyHEj294q7+gz9ZpwhlbPguepaqvjStFPmDb+PN2Yr/O6DMynBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3773
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113031044.136232-4-jflat@chromium.org>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGnCoEV6ZXF1aWVsLA0KDQpPbiBNYSwgMjAxOS0xMS0xMiBhdCAxMzoxNyAtMDMwMCwgRXplcXVp
-ZWwgR2FyY2lhIHdyb3RlOg0KPiBUaGlzIHBhdGNoIHNldCBhZGRzIHRoZSBWNEwyIGRyaXZlciBm
-b3IgaS5NWDhRWFAvUU0gSlBFRw0KPiA+IGVuY29kZXIvZGVjb2Rlcg0KPiA+IGFuZCBpdCdzIGRl
-cGVuZGVuY2llcy4NCj4gPiBUaGUgZHJpdmVyIHdhcyB0ZXN0ZWQgb24gaS5NWDhRWFAsIHVzaW5n
-IGEgdW5pdCB0ZXN0IGFwcGxpY2F0aW9uDQo+ID4gYW5kDQo+IFdoYXQncyB0aGUgcmVsYXRpb3No
-aXAgYmV0d2VlbiB0aGlzIGhhcmR3YXJlIGFuZCB0aGUgSlBFRyBoYXJkd2FyZQ0KPiBzdXBwb3J0
-IHRoYXQNCj4gaXMgYXZhaWxhYmxlIG9uIGkuTVggOE0/DQoNCklmIHlvdSBhcmUgcmVmZXJyaW5n
-IHRvIHRoZSBWUFUsIHRoZSByZWxhdGlvbiBpcyBub25lLCBpdCdzIGEgZGlmZmVyZW50DQpJUC4g
-VGhlIFZQVSBpcyBhbHNvIGNhcGFibGUgb2YgTUpQRUcgZGVjb2RpbmcsIGJ1dCBubyBlbmNvZGlu
-Zy4NCg0KVGhlIElQcyBmb3Igd2hpY2ggdGhpcyBkcml2ZXIgaXMgd3JpdHRlbiBhcmUgdGhlIEpQ
-RUdFTkMgYW5kIEpQRUdERUMsDQphbmQgaXQncyBwcmVzZW50IG9ubHkgb24gOFFNICYgOFFYUCAo
-d2hpY2ggYWxzbyBoYXZlIHRoZSBWUFUpLg0KDQpSZWdhcmRzLA0KTWlyZWxh
+Hi Jon,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on ljones-mfd/for-mfd-next]
+[cannot apply to v5.4-rc7 next-20191113]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Jon-Flatley/ChromeOS-EC-USB-C-Connector-Class/20191113-193504
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/platform/chrome/cros_ec_typec.c:223:9-16: ERROR: PTR_ERR applied after initialization to constant on line 222
+
+vim +223 drivers/platform/chrome/cros_ec_typec.c
+
+   206	
+   207	static int cros_typec_add_partner(struct typec_data *typec, int port_num,
+   208			bool pd_enabled)
+   209	{
+   210		struct port_data *port;
+   211		struct typec_partner_desc p_desc;
+   212		int ret;
+   213	
+   214		port = typec->ports[port_num];
+   215		p_desc.usb_pd = pd_enabled;
+   216		p_desc.identity = &port->p_identity;
+   217	
+   218		port->partner = typec_register_partner(port->port, &p_desc);
+   219		if (IS_ERR_OR_NULL(port->partner)) {
+   220			dev_err(typec->dev, "Port %d partner register failed\n",
+   221					port_num);
+ > 222			port->partner = NULL;
+ > 223			return PTR_ERR(port->partner);
+   224		}
+   225	
+   226		ret = cros_typec_query_pd_info(typec, port_num);
+   227		if (ret < 0) {
+   228			dev_err(typec->dev, "Port %d PD query failed\n", port_num);
+   229			typec_unregister_partner(port->partner);
+   230			port->partner = NULL;
+   231			return ret;
+   232		}
+   233	
+   234		ret = typec_partner_set_identity(port->partner);
+   235		return ret;
+   236	}
+   237	
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
