@@ -2,208 +2,135 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52DEC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E8FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AA5222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AFE206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:06:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCz3DVS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfKMGFs (ORCPT
+        id S1727089AbfKMGGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:05:48 -0500
-Received: from mga06.intel.com ([134.134.136.31]:28500 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfKMGFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:05:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 22:05:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,299,1569308400"; 
-   d="scan'208";a="287782908"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 12 Nov 2019 22:05:46 -0800
-Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
-        by linux.intel.com (Postfix) with ESMTP id C79F9580372;
-        Tue, 12 Nov 2019 22:05:44 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     Rob Herring <robh@kernel.org>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
- <20191112191432.GA19579@bogus>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <5ee8920d-582e-176f-6681-79c0122274fb@linux.intel.com>
-Date:   Wed, 13 Nov 2019 14:05:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 13 Nov 2019 01:06:09 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42762 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfKMGGJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 01:06:09 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b16so626131otk.9;
+        Tue, 12 Nov 2019 22:06:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+QE4XASVIkmqkoyLlQVR4J5C2c9+Lx6ndpeyktLyfQ4=;
+        b=lCz3DVS1lKfCY3SgtsEmnOyb1HlRJkV7+nVxdYnV9S5uP4Fr/Tas3Oby6qOwCrwGgm
+         Tf68KOT++FEB5Kd87D28wQobDdgloCNl64XlY9Ul/ZfC5r36CPanTDfs8aPkznCtsTP6
+         zz5zdAjtDLITq3YUs11NC04xvkHVg9UJhS8jqWAU48cm9Y5QffDHC0rwOhVK0GqnZ0x9
+         Y+AlJzvDZPga+ZP1kPM/2/P5hEhl/Kam3iVCgkI2KWaG0Sy+XdtSHHpC+Jc08gNM8SnO
+         R845UtaN01sashkJcXhWtCR7PUiG1kFlUZ87Ig2TR1zqKQiJHccCz2Uvza67zKuK5MGD
+         mGGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+QE4XASVIkmqkoyLlQVR4J5C2c9+Lx6ndpeyktLyfQ4=;
+        b=qILnAwXiQmR1Mgm3B/ouTpW3rMsaalTDHpuTFT2ZdQH95B06sNX0nanVAdM/6Pa8jq
+         baVEVs+UM1JRyMmwtUYjE0X1/AziYJA+Ax/MRNLr1BzNuGJDt8baSoPB64GDpWHpZB/t
+         27RZfnwUHHwqUxOR0LlaJ6T7519n5I4r+9EesqyHwlF8r/yVnGLOx2+MQfeFDyHvzvcv
+         ZpgRiXf///WAzu042AibFUPPVJXUsba1pdhu4s2DbuRXNtgjVsjRyRHm0QijmeM5bund
+         7F/MzCXwmjkYsG6agUP/8KKgiGEEIpZ6P5eGY6FPWOzEv+6jRmF+LWU2KdCq2SfCvrrU
+         zq1A==
+X-Gm-Message-State: APjAAAVtd0SAspZOELqDGMHaS7xrjSCq5gGarn4c2U9IgiKUHzkG7PnT
+        JN7WCwP1fHyqCD6JJJubTQbzUEMxYfNoyBj+meE=
+X-Google-Smtp-Source: APXvYqxBDUdPjaUK+N/uVjGsJ7h4rObhrYujlUDtL9QfRRobxCFg8lPuVY9m6xx6GKQc3Ri4xxgaiMuL50mIJRCHfS0=
+X-Received: by 2002:a9d:590f:: with SMTP id t15mr1238056oth.118.1573625168434;
+ Tue, 12 Nov 2019 22:06:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191112191432.GA19579@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
+ <4418c734-68e1-edaf-c939-f24d041acf2e@redhat.com> <CANRm+CzK_h2E9XWFipkNpAALLCBcM2vrUkdBpumwmT9AP09hfA@mail.gmail.com>
+In-Reply-To: <CANRm+CzK_h2E9XWFipkNpAALLCBcM2vrUkdBpumwmT9AP09hfA@mail.gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 13 Nov 2019 14:05:59 +0800
+Message-ID: <CANRm+CzLvyWswEX1UDnESSLHO5xt2wPciL6b=TTr-ua7yKZSTA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Rob,
-
-Thanks for feedback.
-
-On 13/11/2019 3:14 AM, Rob Herring wrote:
-> On Mon, Nov 11, 2019 at 06:11:30PM +0800, Rahul Tanwar wrote:
->> Add dt bindings document for pinmux & GPIO controller driver of
->> Intel Lightning Mountain SoC.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 98 ++++++++++++++++++++++
->>  1 file changed, 98 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
->> new file mode 100644
->> index 000000000000..d54a3bda1f4f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
->> @@ -0,0 +1,98 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
-> For new bindings:
+On Tue, 12 Nov 2019 at 09:33, Wanpeng Li <kernellwp@gmail.com> wrote:
 >
-> # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-
-Well noted.
-
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
->> +
->> +maintainers:
->> +  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> +
->> +description: |
->> +  Pinmux & GPIO controller controls pin multiplexing & configuration including
->> +  GPIO function selection & GPIO attributes configuration.
->> +
->> +  Please refer to [1] for details of the common pinctrl bindings used by the
->> +  client devices.
->> +
->> +  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> +
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-pinctrl
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +# Client device subnode's properties
->> +patternProperties:
->> +  '-pins$':
->> +    type: object
->> +    description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +
->> +    properties:
->> +      function:
->> +        $ref: /schemas/types.yaml#/definitions/string
->> +        description:
->> +          A string containing the name of the function to mux to the group.
-> Possible strings should be listed out here.
-
-Possible number of strings here is a huge number. I agree that it makes
-sense to list out the possible strings here but when the possible strings
-are huge, can we just omit specifying all of the strings ? I see many
-examples here where they only specify the string in examples.
-
->> +
->> +      groups:
->> +        $ref: /schemas/types.yaml#/definitions/string-array
->> +        description:
->> +          An array of strings identifying the list of groups.
-> Possible strings should be listed out here.
-
-Same point for groups. Too many strings to list out here.
-
->> +
->> +      pins:
->> +        $ref: /schemas/types.yaml#/definitions/uint32-array
->> +        description:
->> +          List of pins to select with this function.
->> +
->> +      pinmux:
->> +        description: The applicable mux group.
->> +        allOf:
->> +          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
->> +
->> +      bias-pull-up:
->> +        type: boolean
->> +      bias-pull-down:
->> +        type: boolean
->> +      drive-strength:
->> +        type: boolean
-> Not a boolean. Need to define possible values.
-
-Agree. My mistake. Will fix it on v7.
-
->> +      slew-rate:
->> +        type: boolean
-> Not a boolean. Need to define possible values.
-
-In our case, 0 here means slow slew & 1 means fast slew. There are no other
-possible values. Probably, i can add it in description while keeping data
-type as boolean.
-
->> +      drive-open-drain:
->> +        type: boolean
->> +      output-enable:
->> +        type: boolean
->> +
->> +    required:
->> +      - function
->> +      - groups
-> For the -pins nodes too:
+> On Tue, 12 Nov 2019 at 05:59, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> > On 09/11/19 08:05, Wanpeng Li wrote:
+> > > From: Wanpeng Li <wanpengli@tencent.com>
+> > >
+> > > This patch tries to optimize x2apic physical destination mode, fixed delivery
+> > > mode single target IPI by delivering IPI to receiver immediately after sender
+> > > writes ICR vmexit to avoid various checks when possible.
+> > >
+> > > Testing on Xeon Skylake server:
+> > >
+> > > The virtual IPI latency from sender send to receiver receive reduces more than
+> > > 330+ cpu cycles.
+> > >
+> > > Running hackbench(reschedule ipi) in the guest, the avg handle time of MSR_WRITE
+> > > caused vmexit reduces more than 1000+ cpu cycles:
+> > >
+> > > Before patch:
+> > >
+> > >   VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+> > > MSR_WRITE    5417390    90.01%    16.31%      0.69us    159.60us    1.08us
+> > >
+> > > After patch:
+> > >
+> > >   VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+> > > MSR_WRITE    6726109    90.73%    62.18%      0.48us    191.27us    0.58us
+> >
+> > Do you have retpolines enabled?  The bulk of the speedup might come just
+> > from the indirect jump.
 >
->        additionalProperties: false
+> Adding 'mitigations=off' to the host grub parameter:
+>
+> Before patch:
+>
+>     VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+> MSR_WRITE    2681713    92.98%    77.52%      0.38us     18.54us
+> 0.73us ( +-   0.02% )
+>
+> After patch:
+>
+>     VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+> MSR_WRITE    2953447    92.48%    62.47%      0.30us     59.09us
+> 0.40us ( +-   0.02% )
+>
+> Actually, this is not the first attempt to add shortcut for MSR writes
+> which performance sensitive, the other effort is tscdeadline timer
+> from Isaku Yamahata, https://patchwork.kernel.org/cover/10541035/ ,
+> ICR and TSCDEADLINE MSR writes cause the main MSR write vmexits in our
+> product observation, multicast IPIs are not as common as unicast IPI
+> like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc. As far as
+> I know, something similar to this patch has already been deployed in
+> some cloud companies private kvm fork.
 
-Well noted.
+Hi Paolo,
 
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  # Pinmux controller node
->> +  - |
->> +    pinctrl: pinctrl@e2880000 {
->> +          compatible = "intel,lgm-pinctrl";
->> +          reg = <0xe2880000 0x100000>;
->> +
->> +          # Client device subnode
->> +          uart0-pins: uart0 {
-> This fails 'make dt_binding_check'. Please fix and run that.
+Do you think I should continue for this?
 
-Will run & fix it in v7. Thanks.
-
-Regards,
-Rahul
-
-
+    Wanpeng
