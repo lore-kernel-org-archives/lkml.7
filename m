@@ -2,91 +2,238 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CBAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A08C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503C6206EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43394206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfKMVCr (ORCPT
+        id S1727216AbfKMVCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:02:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727205AbfKMVCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:02:39 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4BA0206ED;
-        Wed, 13 Nov 2019 21:02:39 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 16:02:37 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        andriy.shevchenko@intel.com, cezary.rojewski@intel.com,
-        gustaw.lewandowski@intel.com
-Subject: Re: [PATCH v2 1/2] seq_buf: Add printing formatted hex dumps
-Message-ID: <20191113160237.6b8efe12@gandalf.local.home>
-In-Reply-To: <1573130738-29390-1-git-send-email-piotrx.maziarz@linux.intel.com>
-References: <1573130738-29390-1-git-send-email-piotrx.maziarz@linux.intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 13 Nov 2019 16:02:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38989 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbfKMVC2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 16:02:28 -0500
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iUzmU-00069D-G1; Wed, 13 Nov 2019 22:02:26 +0100
+Message-Id: <20191113210105.671132359@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Wed, 13 Nov 2019 21:43:00 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [patch V3 20/20] selftests/x86/iopl: Extend test to cover IOPL
+ emulation
+References: <20191113204240.767922595@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  7 Nov 2019 13:45:37 +0100
-Piotr Maziarz <piotrx.maziarz@linux.intel.com> wrote:
+From: Thomas Gleixner <tglx@linutronix.de>
 
-> Provided function is an analogue of print_hex_dump().
-> 
-> Implementing this function in seq_buf allows using for multiple
-> purposes (e.g. for tracing) and therefore prevents from code duplication
-> in every layer that uses seq_buf.
-> 
-> print_hex_dump() is an essential part of logging data to dmesg. Adding
-> similar capability for other purposes is beneficial to all users.
-> 
-> Example usage:
-> seq_buf_hex_dump(seq, "", DUMP_PREFIX_OFFSET, 16, 4, buf,
-> 		 ARRAY_SIZE(buf), true);
-> Example output:
-> 00000000: 00000000 ffffff10 ffffff32 ffff3210  ........2....2..
-> 00000010: ffff3210 83d00437 c0700000 00000000  .2..7.....p.....
-> 00000020: 02010004 0000000f 0000000f 00004002  .............@..
-> 00000030: 00000fff 00000000                    ........
-> 
-> Signed-off-by: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-> Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Add tests that the now emulated iopl() functionality:
 
-I'm curious about the two signed off bys? Was Cezary a co-author?
+    - does not longer allow user space to disable interrupts.
+
+    - does restore a I/O bitmap when IOPL is dropped
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 
-> ---
-> v2
-> Add kernel doc header
-> Explain linebuf magic number size
-> 
-> Decided not to change declaration order or remaining -= rowsize to
-> remaining -= linelen in order to stay aligned with base print_hex_dump
-> function. However I can change it if requested.
+---
+ tools/testing/selftests/x86/iopl.c |  129 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 118 insertions(+), 11 deletions(-)
 
-I don't care as much to make the change. Perhaps we can clean that up
-in the future.
+--- a/tools/testing/selftests/x86/iopl.c
++++ b/tools/testing/selftests/x86/iopl.c
+@@ -35,6 +35,16 @@ static void sethandler(int sig, void (*h
+ 
+ }
+ 
++static void clearhandler(int sig)
++{
++	struct sigaction sa;
++	memset(&sa, 0, sizeof(sa));
++	sa.sa_handler = SIG_DFL;
++	sigemptyset(&sa.sa_mask);
++	if (sigaction(sig, &sa, 0))
++		err(1, "sigaction");
++}
++
+ static jmp_buf jmpbuf;
+ 
+ static void sigsegv(int sig, siginfo_t *si, void *ctx_void)
+@@ -42,25 +52,128 @@ static void sigsegv(int sig, siginfo_t *
+ 	siglongjmp(jmpbuf, 1);
+ }
+ 
++static bool try_outb(unsigned short port)
++{
++	sethandler(SIGSEGV, sigsegv, SA_RESETHAND);
++	if (sigsetjmp(jmpbuf, 1) != 0) {
++		return false;
++	} else {
++		asm volatile ("outb %%al, %w[port]"
++			      : : [port] "Nd" (port), "a" (0));
++		return true;
++	}
++	clearhandler(SIGSEGV);
++}
++
++static void expect_ok_outb(unsigned short port)
++{
++	if (!try_outb(port)) {
++		printf("[FAIL]\toutb to 0x%02hx failed\n", port);
++		exit(1);
++	}
++
++	printf("[OK]\toutb to 0x%02hx worked\n", port);
++}
++
++static void expect_gp_outb(unsigned short port)
++{
++	if (try_outb(port)) {
++		printf("[FAIL]\toutb to 0x%02hx worked\n", port);
++		nerrs++;
++	}
++
++	printf("[OK]\toutb to 0x%02hx failed\n", port);
++}
++
++static bool try_cli(void)
++{
++	sethandler(SIGSEGV, sigsegv, SA_RESETHAND);
++	if (sigsetjmp(jmpbuf, 1) != 0) {
++		return false;
++	} else {
++		asm volatile ("cli");
++		return true;
++	}
++	clearhandler(SIGSEGV);
++}
++
++static bool try_sti(void)
++{
++	sethandler(SIGSEGV, sigsegv, SA_RESETHAND);
++	if (sigsetjmp(jmpbuf, 1) != 0) {
++		return false;
++	} else {
++		asm volatile ("sti");
++		return true;
++	}
++	clearhandler(SIGSEGV);
++}
++
++static void expect_gp_sti(void)
++{
++	if (try_sti()) {
++		printf("[FAIL]\tSTI worked\n");
++		nerrs++;
++	} else {
++		printf("[OK]\tSTI faulted\n");
++	}
++}
++
++static void expect_gp_cli(void)
++{
++	if (try_cli()) {
++		printf("[FAIL]\tCLI worked\n");
++		nerrs++;
++	} else {
++		printf("[OK]\tCLI faulted\n");
++	}
++}
++
+ int main(void)
+ {
+ 	cpu_set_t cpuset;
++
+ 	CPU_ZERO(&cpuset);
+ 	CPU_SET(0, &cpuset);
+ 	if (sched_setaffinity(0, sizeof(cpuset), &cpuset) != 0)
+ 		err(1, "sched_setaffinity to CPU 0");
+ 
+ 	/* Probe for iopl support.  Note that iopl(0) works even as nonroot. */
+-	if (iopl(3) != 0) {
++	switch(iopl(3)) {
++	case 0:
++		break;
++	case -ENOSYS:
++		printf("[OK]\tiopl() nor supported\n");
++		return 0;
++	default:
+ 		printf("[OK]\tiopl(3) failed (%d) -- try running as root\n",
+ 		       errno);
+ 		return 0;
+ 	}
+ 
+-	/* Restore our original state prior to starting the test. */
++	/* Make sure that CLI/STI are blocked even with IOPL level 3 */
++	expect_gp_cli();
++	expect_gp_sti();
++	expect_ok_outb(0x80);
++
++	/* Establish an I/O bitmap to test the restore */
++	if (ioperm(0x80, 1, 1) != 0)
++		err(1, "ioperm(0x80, 1, 1) failed\n");
++
++	/* Restore our original state prior to starting the fork test. */
+ 	if (iopl(0) != 0)
+ 		err(1, "iopl(0)");
+ 
++	/*
++	 * Verify that IOPL emulation is disabled and the I/O bitmap still
++	 * works.
++	 */
++	expect_ok_outb(0x80);
++	expect_gp_outb(0xed);
++	/* Drop the I/O bitmap */
++	if (ioperm(0x80, 1, 0) != 0)
++		err(1, "ioperm(0x80, 1, 0) failed\n");
++
+ 	pid_t child = fork();
+ 	if (child == -1)
+ 		err(1, "fork");
+@@ -90,14 +203,9 @@ int main(void)
+ 
+ 	printf("[RUN]\tparent: write to 0x80 (should fail)\n");
+ 
+-	sethandler(SIGSEGV, sigsegv, 0);
+-	if (sigsetjmp(jmpbuf, 1) != 0) {
+-		printf("[OK]\twrite was denied\n");
+-	} else {
+-		asm volatile ("outb %%al, $0x80" : : "a" (0));
+-		printf("[FAIL]\twrite was allowed\n");
+-		nerrs++;
+-	}
++	expect_gp_outb(0x80);
++	expect_gp_cli();
++	expect_gp_sti();
+ 
+ 	/* Test the capability checks. */
+ 	printf("\tiopl(3)\n");
+@@ -133,4 +241,3 @@ int main(void)
+ done:
+ 	return nerrs ? 1 : 0;
+ }
+-
 
--- Steve
 
-> 
->  include/linux/seq_buf.h |  3 +++
->  lib/seq_buf.c           | 62 +++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 65 insertions(+)
-> 
->
+
+
