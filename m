@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21D7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B28C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905AE2245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F90222478
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610186;
-	bh=o2JFch+A6p3gmn/4HgcsJDUv94dfZLgFB7wi3AqrSk8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LbJSvlJVUH5RoTsr7OV2778o0z/2ugKz3R6v7OmZvgLP7BK5fh9+Z8Sb33XZOuUkL
-	 1HVJchVroEYrOCxX9SKLLCWPnI6rW6EAC6RNchJ/S6D85r/+Yf/dps4pzlDBvAecqE
-	 9H3an9pnPmRDBLk31a2a/aLp41JJvsAwksV0RIxw=
+	s=default; t=1573610188;
+	bh=OxXzQAr70fXBBzcLAr9eVFr6RFQbVwNx2hw2gPHvS3M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=k/wGFzmXd6IHMlfSalZfzM+RgrEePGrorJaUz+WuISwJgvKENplqUJ12mI3QI1v4X
+	 wvmy5RmmYaXJ57dPBUnsq7ErNl8Gq67jBQcYyn1YMeEoFSVvs67sMjkwIe/XGxbRgu
+	 1i73hOqE4yItV4ox5jmmqbeRXNqmkyUCztLEaZ80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfKMB4V (ORCPT
+        id S1729477AbfKMB40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48112 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729367AbfKMB4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:05 -0500
+        id S1727725AbfKMB4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71A8E22473;
-        Wed, 13 Nov 2019 01:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB4C1222D3;
+        Wed, 13 Nov 2019 01:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610164;
-        bh=o2JFch+A6p3gmn/4HgcsJDUv94dfZLgFB7wi3AqrSk8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ybtBZJmkqSLBjs1wYr6uHzEIYNRIdTI9+9PM0uiEiYJWRw1xHUtG+va8CLFdUYiX1
-         lZIKOX/U6wq28gkFLEsj+GBfAM0Isv1caaA8kIjNUeJXgmZYUVuOIMqlfLyPhR+xlf
-         GPuYFMsL92opni2m4yBCW0mtsiC2hidhowqc03eU=
+        s=default; t=1573610184;
+        bh=OxXzQAr70fXBBzcLAr9eVFr6RFQbVwNx2hw2gPHvS3M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1Zmqm50ZsWdv73AWv/nw1ZowuQu78QEpzAt6UBnIuZoYhrjeDC0WUSzUfumfnDiPq
+         zMu5r8wnhsx2yp6JLqCP4XOzimP2UpSegtcELHL/fyRz2tnxJz7lvC7rEkBlC2j8tX
+         DgCVUDhDUJJ7Y6Z1qAFBmIK49BGSAbk5YKGjTYvk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 206/209] tools: PCI: Fix broken pcitest compilation
-Date:   Tue, 12 Nov 2019 20:50:22 -0500
-Message-Id: <20191113015025.9685-206-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        dev@openvswitch.org
+Subject: [PATCH AUTOSEL 4.14 001/115] net: ovs: fix return type of ndo_start_xmit function
+Date:   Tue, 12 Nov 2019 20:54:28 -0500
+Message-Id: <20191113015622.11592-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
-References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,55 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 8a5e0af240e07dd3d4897eb8ff52aab757da7fab ]
+[ Upstream commit eddf11e18dff0e8671e06ce54e64cfc843303ab9 ]
 
-pcitest is currently broken due to the following compiler error
-and related warning. Fix by changing the run_test() function
-signature to return an integer result.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-pcitest.c: In function run_test:
-pcitest.c:143:9: warning: return with a value, in function
-returning void
-  return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+Found by coccinelle.
 
-pcitest.c: In function main:
-pcitest.c:232:9: error: void value not ignored as it ought to be
-  return run_test(test);
-
-Fixes: fef31ecaaf2c ("tools: PCI: Fix compilation warnings")
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/pci/pcitest.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/openvswitch/vport-internal_dev.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index ec4d51f3308b8..4c5be77c211f0 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -47,15 +47,15 @@ struct pci_test {
- 	unsigned long	size;
- };
+diff --git a/net/openvswitch/vport-internal_dev.c b/net/openvswitch/vport-internal_dev.c
+index b9377afeaba45..1025bed255b9b 100644
+--- a/net/openvswitch/vport-internal_dev.c
++++ b/net/openvswitch/vport-internal_dev.c
+@@ -44,7 +44,8 @@ static struct internal_dev *internal_dev_priv(struct net_device *netdev)
+ }
  
--static void run_test(struct pci_test *test)
-+static int run_test(struct pci_test *test)
+ /* Called with rcu_read_lock_bh. */
+-static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t
++internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
  {
--	long ret;
-+	int ret = -EINVAL;
- 	int fd;
+ 	int len, err;
  
- 	fd = open(test->device, O_RDWR);
- 	if (fd < 0) {
- 		perror("can't open PCI Endpoint Test device");
--		return;
-+		return -ENODEV;
+@@ -63,7 +64,7 @@ static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	} else {
+ 		netdev->stats.tx_errors++;
  	}
+-	return 0;
++	return NETDEV_TX_OK;
+ }
  
- 	if (test->barnum >= 0 && test->barnum <= 5) {
+ static int internal_dev_open(struct net_device *netdev)
 -- 
 2.20.1
 
