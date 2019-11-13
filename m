@@ -2,51 +2,52 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DF8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049AAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415802053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED7B222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611617;
-	bh=RCjXUI6866u57JwmTNcRqya4SFDlPhHwx59HYYacEfk=;
+	s=default; t=1573611619;
+	bh=KTkvUQEH+MTZwMLJGI6O1q79iMJJn6gCBtjwVFifjm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gI2kSk8Xn2BjGGuV25Bf34XTWgWJ01zn4b+dlgqkxE2f/T9UvK1FvhSEhnf72zh/h
-	 HNfNOgbAS3WE2Mjiyzpj69fwVrc0IBwkjWa72oZBVdB9gtZtNowBGmmDMR2jbQp45K
-	 M8oitCn5DV7HjEujsjP4nqJPa5EF/lKZiRAvz880=
+	b=YkAkxHeH6g+H7vM/0AKxpfh/NQCSl3+/jk/+/dr70/IzwYlCNzmPZM2xI1Ac8Yx78
+	 fjsL5/jAX4WSOyY7Plr28qsuSEr9ih9ezObYZNxmMTdb1dnVf3IDt+2MIMYexyqr5N
+	 DwmLcxINQrRUA/TqcsfJR26fxAV7pyWUaB2v6Q0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbfKMCUQ (ORCPT
+        id S1729745AbfKMCUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:20:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45572 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:20:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbfKMByg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:54:36 -0500
+        id S1728909AbfKMByd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:54:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD5D42245D;
-        Wed, 13 Nov 2019 01:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42FE9222D4;
+        Wed, 13 Nov 2019 01:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610075;
-        bh=RCjXUI6866u57JwmTNcRqya4SFDlPhHwx59HYYacEfk=;
+        s=default; t=1573610073;
+        bh=KTkvUQEH+MTZwMLJGI6O1q79iMJJn6gCBtjwVFifjm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XTsqZs1jpKScPlveYOPeTltzaPtw6SWg0U/mF0c6CcpjEbEYkevF0lEAgmdmzXVmN
-         MyXSPmU3nTqlrNIs4L8xe566g3bn2WICrpn5UopN78+e3j/THsYn/n4e0HmoSdmLmz
-         3dQg/4NxXCDBls95925nr4Z43ZDkNYunGZpb/pyg=
+        b=RY93mNUVDjKuF5UyHDNJtndzLkDZHwJirf+dOM+t7DbXmmy586O5a5KBotbirqVOT
+         v481YYUyEAtNpuHz0MI0PX7FguczU9LyWTTgjJyll1VHjvsT+xtproq6AT2+CEbNst
+         p3sNOi5UkuVepSuNWuAIz5UeP14Q+55wxnt0kilU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yogesh Gaur <yogeshnarayan.gaur@nxp.com>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Boris Brezillon <boris.brezillon@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 152/209] mtd: devices: m25p80: Make sure WRITE_EN is issued before each write
-Date:   Tue, 12 Nov 2019 20:49:28 -0500
-Message-Id: <20191113015025.9685-152-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 151/209] mtd: spi-nor: cadence-quadspi: Use proper enum for dma_[un]map_single
+Date:   Tue, 12 Nov 2019 20:49:27 -0500
+Message-Id: <20191113015025.9685-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,69 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 3baa8ec88c2feb902328e59a4dcf0f0aaab7d2ff ]
+[ Upstream commit 900f5e0d8c9edc5dacc57873d22aee2ae699a8e1 ]
 
-Some SPI controllers can't write nor->page_size bytes in a single step
-because their TX FIFO is too small, but when that happens we should
-make sure a WRITE_EN command before each write access and READ_SR command
-after each write access is issued.
+Clang warns when one enumerated type is converted implicitly to another.
 
-The core is already taking care of that, so all we have to do here is
-return the actual number of bytes that were written during the
-spi_mem_exec_op() operation.
+drivers/mtd/spi-nor/cadence-quadspi.c:962:47: warning: implicit
+conversion from enumeration type 'enum dma_transfer_direction' to
+different enumeration type 'enum dma_data_direction' [-Wenum-conversion]
+        dma_dst = dma_map_single(nor->dev, buf, len, DMA_DEV_TO_MEM);
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+./include/linux/dma-mapping.h:428:66: note: expanded from macro
+'dma_map_single'
+                                   ~~~~~~~~~~~~~~~~~~~~          ^
+drivers/mtd/spi-nor/cadence-quadspi.c:997:43: warning: implicit
+conversion from enumeration type 'enum dma_transfer_direction' to
+different enumeration type 'enum dma_data_direction' [-Wenum-conversion]
+        dma_unmap_single(nor->dev, dma_dst, len, DMA_DEV_TO_MEM);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+./include/linux/dma-mapping.h:429:70: note: expanded from macro
+'dma_unmap_single'
+                                     ~~~~~~~~~~~~~~~~~~~~~~          ^
+2 warnings generated.
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Use the proper enums from dma_data_direction to satisfy Clang.
+
+DMA_FROM_DEVICE = DMA_DEV_TO_MEM = 2
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/108
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/devices/m25p80.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+ drivers/mtd/spi-nor/cadence-quadspi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-index 270d3c9580c51..c4a1d04b8c800 100644
---- a/drivers/mtd/devices/m25p80.c
-+++ b/drivers/mtd/devices/m25p80.c
-@@ -90,7 +90,6 @@ static ssize_t m25p80_write(struct spi_nor *nor, loff_t to, size_t len,
- 				   SPI_MEM_OP_ADDR(nor->addr_width, to, 1),
- 				   SPI_MEM_OP_NO_DUMMY,
- 				   SPI_MEM_OP_DATA_OUT(len, buf, 1));
--	size_t remaining = len;
- 	int ret;
+diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+index 0806c7a81c0f7..04cedd3a2bf66 100644
+--- a/drivers/mtd/spi-nor/cadence-quadspi.c
++++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+@@ -972,7 +972,7 @@ static int cqspi_direct_read_execute(struct spi_nor *nor, u_char *buf,
+ 		return 0;
+ 	}
  
- 	/* get transfer protocols. */
-@@ -101,22 +100,16 @@ static ssize_t m25p80_write(struct spi_nor *nor, loff_t to, size_t len,
- 	if (nor->program_opcode == SPINOR_OP_AAI_WP && nor->sst_write_second)
- 		op.addr.nbytes = 0;
+-	dma_dst = dma_map_single(nor->dev, buf, len, DMA_DEV_TO_MEM);
++	dma_dst = dma_map_single(nor->dev, buf, len, DMA_FROM_DEVICE);
+ 	if (dma_mapping_error(nor->dev, dma_dst)) {
+ 		dev_err(nor->dev, "dma mapping failed\n");
+ 		return -ENOMEM;
+@@ -1007,7 +1007,7 @@ static int cqspi_direct_read_execute(struct spi_nor *nor, u_char *buf,
+ 	}
  
--	while (remaining) {
--		op.data.nbytes = remaining < UINT_MAX ? remaining : UINT_MAX;
--		ret = spi_mem_adjust_op_size(flash->spimem, &op);
--		if (ret)
--			return ret;
--
--		ret = spi_mem_exec_op(flash->spimem, &op);
--		if (ret)
--			return ret;
-+	ret = spi_mem_adjust_op_size(flash->spimem, &op);
-+	if (ret)
-+		return ret;
-+	op.data.nbytes = len < op.data.nbytes ? len : op.data.nbytes;
+ err_unmap:
+-	dma_unmap_single(nor->dev, dma_dst, len, DMA_DEV_TO_MEM);
++	dma_unmap_single(nor->dev, dma_dst, len, DMA_FROM_DEVICE);
  
--		op.addr.val += op.data.nbytes;
--		remaining -= op.data.nbytes;
--		op.data.buf.out += op.data.nbytes;
--	}
-+	ret = spi_mem_exec_op(flash->spimem, &op);
-+	if (ret)
-+		return ret;
- 
--	return len;
-+	return op.data.nbytes;
+ 	return ret;
  }
- 
- /*
 -- 
 2.20.1
 
