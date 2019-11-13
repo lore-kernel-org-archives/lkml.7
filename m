@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A164C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C29C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68EE7214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1146C214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611124;
-	bh=AIoefMBkzTyQpQDx+wHLCeWHS00qU4UIZRBzUd3m66k=;
+	s=default; t=1573611130;
+	bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wqmR/n3C2ppfT3TOID2DYTeXePWYuPX/aqyT3iG6EvnzwW7cOfRdjEXW+FY8ShOda
-	 H+tAyd8j6SNJxQjZWk0rfC4hNSJaFziKB0mIN7W7u6CfcsWKNGeyU/ta8IjzrBMuGE
-	 bH3KUBj1fFNBjP6CmzJ8Oc5qG+bAaOrX18EgwsAQ=
+	b=EFI0OO/rWQPh9zwnfK5vEaDxU+jHzxFKaSlSin8AGurxHHqdo01HZWgOdyeTz0ysw
+	 JF7MCqRiGmRmw87gSZGOKxNu/o8VOmCOa0crlKrefgJ7N5JSalS+Rl8kANeil76Z/r
+	 M5UOSexlj0ctK14igmVD8e/lLIAp1yfnVWqbsTqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbfKMCMD (ORCPT
+        id S1730049AbfKMB6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:12:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:58:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730051AbfKMB6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:32 -0500
+        id S1730002AbfKMB6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA9C52245C;
-        Wed, 13 Nov 2019 01:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B097F222D3;
+        Wed, 13 Nov 2019 01:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610312;
-        bh=AIoefMBkzTyQpQDx+wHLCeWHS00qU4UIZRBzUd3m66k=;
+        s=default; t=1573610299;
+        bh=GTMVDaXzuzU2Vu00XLlOwXvvEsFSRCcG11kDpNM1lzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CqbOg3pXj6R7rdr6s2w/g1plgrbhO8pMDBIQaw4paQUobxUEon7qsNWoxak9mS9bo
-         goWV/NLqnOQO7dfcMMfiMNMHlB/TJ+q37A/uDxi2i6C+iJcvdqvxksYwP/XPFW/ZBh
-         XSmC5ItvqwWl7IcucGtMDK/WW9xfB1genJ6oeBm0=
+        b=mXEbrKRLyKmPKvhwxHam1yuGW7sb4Pl13GX6og9uLXRUCnERKTU2wKituwTdvg+o6
+         IruhyorvC73zEQLUV5h/3jPHyGPfGCWSklCtCPkY2Ky1fteBlA85OlFMjQxR9pBqQ9
+         4YZbnisnibtq/h2ZAugqS5V2T4hKDBM/Hwoz/cbY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+Cc:     Suman Anna <s-anna@ti.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 079/115] iwlwifi: mvm: don't send keys when entering D3
-Date:   Tue, 12 Nov 2019 20:55:46 -0500
-Message-Id: <20191113015622.11592-79-sashal@kernel.org>
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 071/115] remoteproc: Check for NULL firmwares in sysfs interface
+Date:   Tue, 12 Nov 2019 20:55:38 -0500
+Message-Id: <20191113015622.11592-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -60,40 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Suman Anna <s-anna@ti.com>
 
-[ Upstream commit 8c7fd6a365eb5b2647b2c01918730d0a485b9f85 ]
+[ Upstream commit faeadbb64094757150a8c2a3175ca418dbdd472c ]
 
-In the past, we needed to program the keys when entering D3. This was
-since we replaced the image. However, now that there is a single
-image, this is no longer needed.  Note that RSC is sent separately in
-a new command.  This solves issues with newer devices that support PN
-offload. Since driver re-sent the keys, the PN got zeroed and the
-receiver dropped the next packets, until PN caught up again.
+The remoteproc framework provides a sysfs file 'firmware'
+for modifying the firmware image name from userspace. Add
+an additional check to ensure NULL firmwares are errored
+out right away, rather than getting a delayed error while
+requesting a firmware during the start of a remoteproc
+later on.
 
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Tested-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/remoteproc/remoteproc_sysfs.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-index b205a7bfb828d..65c51c6983288 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-@@ -947,8 +947,10 @@ int iwl_mvm_wowlan_config_key_params(struct iwl_mvm *mvm,
- {
- 	struct iwl_wowlan_kek_kck_material_cmd kek_kck_cmd = {};
- 	struct iwl_wowlan_tkip_params_cmd tkip_cmd = {};
-+	bool unified = fw_has_capa(&mvm->fw->ucode_capa,
-+				   IWL_UCODE_TLV_CAPA_CNSLDTD_D3_D0_IMG);
- 	struct wowlan_key_data key_data = {
--		.configure_keys = !d0i3,
-+		.configure_keys = !d0i3 && !unified,
- 		.use_rsc_tsc = false,
- 		.tkip = &tkip_cmd,
- 		.use_tkip = false,
+diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+index 47be411400e56..3a4c3d7cafca3 100644
+--- a/drivers/remoteproc/remoteproc_sysfs.c
++++ b/drivers/remoteproc/remoteproc_sysfs.c
+@@ -48,6 +48,11 @@ static ssize_t firmware_store(struct device *dev,
+ 	}
+ 
+ 	len = strcspn(buf, "\n");
++	if (!len) {
++		dev_err(dev, "can't provide a NULL firmware\n");
++		err = -EINVAL;
++		goto out;
++	}
+ 
+ 	p = kstrndup(buf, len, GFP_KERNEL);
+ 	if (!p) {
 -- 
 2.20.1
 
