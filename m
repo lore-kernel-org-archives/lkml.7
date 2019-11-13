@@ -2,162 +2,136 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B36C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24D5C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E439E20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0350E206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:22:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OsCPK9MB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfKMTRK (ORCPT
+        id S1726338AbfKMTW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:17:10 -0500
-Received: from mga11.intel.com ([192.55.52.93]:15422 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfKMTRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:17:09 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 11:17:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,301,1569308400"; 
-   d="scan'208";a="379324206"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga005.jf.intel.com with ESMTP; 13 Nov 2019 11:17:06 -0800
-Date:   Wed, 13 Nov 2019 11:17:06 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 08/23] vfio, mm: fix get_user_pages_remote() and
- FOLL_LONGTERM
-Message-ID: <20191113191705.GE12947@iweiny-DESK2.sc.intel.com>
-References: <20191113042710.3997854-1-jhubbard@nvidia.com>
- <20191113042710.3997854-9-jhubbard@nvidia.com>
- <20191113130202.GA26068@ziepe.ca>
+        Wed, 13 Nov 2019 14:22:26 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40795 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfKMTW0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 14:22:26 -0500
+Received: by mail-wr1-f65.google.com with SMTP id i10so3709412wrs.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 11:22:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qkdacaVdhS5V1JI0trEPqYF0NgGr5+r4W2AqnZo0b/g=;
+        b=OsCPK9MBTPx/N1epP5ySwSXv8jXL9MBO2c6cgnFpGnQDrK4O9vJ4hYcWPMpOqMi5kS
+         dNfvRjXyF0fJZMMczbekLSUUcDb9/XQL/y7urvRITxFB2vBreT4wHncx5ZNYi+Wne56q
+         EvmYeZQ/WsChHCIqDsczY9KJ9vXp4p6/LHGs/CYJwPQLnZe7tux5ptPGNJY5pCna1Fwj
+         3tyiFklfcNtEdJPhbd68gpiQtv/JQxa94pfL6cE7KfHVyd9dgJzB/jqaIP/2qsUqbwxx
+         48FnxoP7P3GKjLRcKQpnhEclVI8NKS0k3hbCrBrlRX6ohiLmzgvFaV04iKxyDmje9gyp
+         aSwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qkdacaVdhS5V1JI0trEPqYF0NgGr5+r4W2AqnZo0b/g=;
+        b=EKvzI7vQBrYTt6N74zx6Xe+No6bG8M/I+Pe14H7q2jvIuYW0UEgesS7ZnNTrrbO/gh
+         d5MQtJL5XvxgAI9Qe3PU02Pr6lfG4crjW/DOu1kShPOj3C7S6Bw82AOhsXT0GOs1OsaK
+         PsjICWLF+5yfIhtAEM9yKyKsAxhfyeLE0kPWY6THEwmJhpPoMTjlsl6X04GkzXAeYSnl
+         ysThkVIzj5n3kTDcQHLXzGsjicoyORVTwERxKOavXQDDhjsn8sbtjP/dx+Br0tIxGzLk
+         FDbj5w9AjrVN6iCyTjm58BvCnWVjMVJrPapfPfn94lbPi8KRBGMj7l62+36CZBG4UC7o
+         As6w==
+X-Gm-Message-State: APjAAAV0U0PVPufg4753vEE6wHzOeNf2v8vjPjdM4gC/M6bvnwpnSi+x
+        419gbqFwIsMhFZRJyDY+RvKK3LwfXwkVRSwsszU=
+X-Google-Smtp-Source: APXvYqyp9pkH+51iCa/hlQVEjIKtehxcBLsZVD0syYP6jy5OdSJfhR9kxXpI8hyUHS3wAiZs5PfUT1Wur+FcA2lhWwg=
+X-Received: by 2002:adf:f010:: with SMTP id j16mr4582598wro.206.1573672942308;
+ Wed, 13 Nov 2019 11:22:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113130202.GA26068@ziepe.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <1573649074-72589-1-git-send-email-yukuai3@huawei.com>
+ <1573649074-72589-2-git-send-email-yukuai3@huawei.com> <ac4566662a04e0c25039df7ed30789d0792885cd.camel@perches.com>
+In-Reply-To: <ac4566662a04e0c25039df7ed30789d0792885cd.camel@perches.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 13 Nov 2019 14:22:10 -0500
+Message-ID: <CADnq5_Pwc9U03+1=tKs2hxKVdqfwXOc14XRD=yeJCsc4=5NJtw@mail.gmail.com>
+Subject: Re: [PATCH 1/7] drm/amdgpu: remove set but not used variable
+ 'mc_shared_chmap' from 'gfx_v6_0.c' and 'gfx_v7_0.c'
+To:     Joe Perches <joe@perches.com>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Rex Zhu <Rex.Zhu@amd.com>,
+        "Quan, Evan" <evan.quan@amd.com>, zhengbin <zhengbin13@huawei.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, yi.zhang@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 09:02:02AM -0400, Jason Gunthorpe wrote:
-> On Tue, Nov 12, 2019 at 08:26:55PM -0800, John Hubbard wrote:
-> > As it says in the updated comment in gup.c: current FOLL_LONGTERM
-> > behavior is incompatible with FAULT_FLAG_ALLOW_RETRY because of the
-> > FS DAX check requirement on vmas.
-> > 
-> > However, the corresponding restriction in get_user_pages_remote() was
-> > slightly stricter than is actually required: it forbade all
-> > FOLL_LONGTERM callers, but we can actually allow FOLL_LONGTERM callers
-> > that do not set the "locked" arg.
-> > 
-> > Update the code and comments accordingly, and update the VFIO caller
-> > to take advantage of this, fixing a bug as a result: the VFIO caller
-> > is logically a FOLL_LONGTERM user.
-> > 
-> > Also, remove an unnessary pair of calls that were releasing and
-> > reacquiring the mmap_sem. There is no need to avoid holding mmap_sem
-> > just in order to call page_to_pfn().
-> > 
-> > Also, move the DAX check ("if a VMA is DAX, don't allow long term
-> > pinning") from the VFIO call site, all the way into the internals
-> > of get_user_pages_remote() and __gup_longterm_locked(). That is:
-> > get_user_pages_remote() calls __gup_longterm_locked(), which in turn
-> > calls check_dax_vmas(). It's lightly explained in the comments as well.
-> > 
-> > Thanks to Jason Gunthorpe for pointing out a clean way to fix this,
-> > and to Dan Williams for helping clarify the DAX refactoring.
-> > 
-> > Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Jerome Glisse <jglisse@redhat.com>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> >  drivers/vfio/vfio_iommu_type1.c | 25 ++-----------------------
-> >  mm/gup.c                        | 27 ++++++++++++++++++++++-----
-> >  2 files changed, 24 insertions(+), 28 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > index d864277ea16f..7301b710c9a4 100644
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -340,7 +340,6 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
-> >  {
-> >  	struct page *page[1];
-> >  	struct vm_area_struct *vma;
-> > -	struct vm_area_struct *vmas[1];
-> >  	unsigned int flags = 0;
-> >  	int ret;
-> >  
-> > @@ -348,33 +347,13 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
-> >  		flags |= FOLL_WRITE;
-> >  
-> >  	down_read(&mm->mmap_sem);
-> > -	if (mm == current->mm) {
-> > -		ret = get_user_pages(vaddr, 1, flags | FOLL_LONGTERM, page,
-> > -				     vmas);
-> > -	} else {
-> > -		ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags, page,
-> > -					    vmas, NULL);
-> > -		/*
-> > -		 * The lifetime of a vaddr_get_pfn() page pin is
-> > -		 * userspace-controlled. In the fs-dax case this could
-> > -		 * lead to indefinite stalls in filesystem operations.
-> > -		 * Disallow attempts to pin fs-dax pages via this
-> > -		 * interface.
-> > -		 */
-> > -		if (ret > 0 && vma_is_fsdax(vmas[0])) {
-> > -			ret = -EOPNOTSUPP;
-> > -			put_page(page[0]);
-> > -		}
-> > -	}
-> > -	up_read(&mm->mmap_sem);
-> > -
-> > +	ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
-> > +				    page, NULL, NULL);
-> >  	if (ret == 1) {
-> >  		*pfn = page_to_pfn(page[0]);
-> >  		return 0;
-> 
-> Mind the return with the lock held this needs some goto unwind
+On Wed, Nov 13, 2019 at 11:56 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Wed, 2019-11-13 at 20:44 +0800, yu kuai wrote:
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> >
+> > drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c: In function
+> > =E2=80=98gfx_v6_0_constants_init=E2=80=99:
+> > drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c:1579:6: warning: variable
+> > =E2=80=98mc_shared_chmap=E2=80=99 set but not used [-Wunused-but-set-va=
+riable]
+> []
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c b/drivers/gpu/drm/am=
+d/amdgpu/gfx_v6_0.c
+> []
+> > @@ -1678,7 +1678,6 @@ static void gfx_v6_0_constants_init(struct amdgpu=
+_device *adev)
+> >
+> >       WREG32(mmBIF_FB_EN, BIF_FB_EN__FB_READ_EN_MASK | BIF_FB_EN__FB_WR=
+ITE_EN_MASK);
+> >
+> > -     mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
+>
+> I do not know the hardware but frequently hardware like
+> this has read ordering requirements and various registers
+> can not be read in a random order.
+>
+> Does removing this read have no effect on the hardware?
 
-Ah yea...  retract my reviewed by...  :-(
+There is no dependency.  It's safe.  Same thing below.
 
-Ira
+Alex
 
+>
+> >       adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
+> >       mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c b/drivers/gpu/drm/am=
+d/amdgpu/gfx_v7_0.c
+> []
+> > @@ -4336,7 +4336,6 @@ static void gfx_v7_0_gpu_early_init(struct amdgpu=
+_device *adev)
+> >               break;
+> >       }
+> >
+> > -     mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
+> >       adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
+> >       mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
+>
+> Same question.
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
