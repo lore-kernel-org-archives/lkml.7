@@ -2,177 +2,114 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E8C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0ACC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B54206E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F42206E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ymS1XAra"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEZwRf7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfKMSJj (ORCPT
+        id S1728114AbfKMSLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:09:39 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54309 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfKMSJi (ORCPT
+        Wed, 13 Nov 2019 13:11:05 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37860 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfKMSLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:09:38 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z26so2999569wmi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:09:36 -0800 (PST)
+        Wed, 13 Nov 2019 13:11:04 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z24so1862427pgu.4;
+        Wed, 13 Nov 2019 10:11:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=M+vh+JtPBA/nELsdW8FXtsVseJ/XSaHzYgPaZO1dM+k=;
-        b=ymS1XAraf98PBmkpZgbandG8SepionTVitSyVJ3HE5CT9CgRmGSWPljQ6pHaDOT6bv
-         SOwwIVal93txZ45NRyKqlavEHJdQeYEIFJDldelwfpokq0npZ8qcGOtCfuZsoHSa+A6Z
-         Lg2dE1YIwma3+snkOjhYe/tIQmdVpniaY4LTjoQMaj8QQkwvGhnPUlbtpHFolHPM3o9k
-         tpILFP4wXYDOeOUMte7X5iNidAeSth6TwP5BF/3Gk1HtyOK6J4mNl8/MBi4jEwIpxaXq
-         LLQgtUCymMMlVeelxIBEk/WA6CPrPQh4uDoASJncvwUTNOVUTUNtfWN6ENVOUmTtzwD+
-         cy0Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=tGvQd5G0SntDT8HkYM+TSejmQNivNQ7SWZ4INNCNjjw=;
+        b=EEZwRf7busU0um8mSGmdA1Nl6LjcjETlyx6ouiZkotB+x2genOAnVYJpzhoxCvc0+T
+         2u0LgB9O901AeWkBQ64kvQTVi1szA/cINnCP/9F1jQifiQWWOKh7XySjcpiBXTwJA2GC
+         esovxJBtuN7S95Hz5rmaiK4Lxozaz65Nh6t33RxH0Qf/IspnL0lu/BJrjrAycOz/J3Bg
+         gh+0ut6ua2dMAj325DKLi0vUb3fN02M+TSRt9x70E253TJ47Q3Hr9KrHT6wDIrzJTvgg
+         R9HtOdjDX/7xJJtD2Fq84E50OC/c8S3eyDtHXfiegOin60MkfI/ve/4sEHPMGG1UaBDN
+         dVNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=M+vh+JtPBA/nELsdW8FXtsVseJ/XSaHzYgPaZO1dM+k=;
-        b=qAZudNbybIpL+tORB1wCwwVicUKZWi32jd09bZoQ4QJ7tg1S8JwM+hnMWu47wlGYnM
-         bxbUvIsGRNb1Ie79McWXYrpdz8o/RjA3oyFWSBKik0DVUsGoLQqvtzkgMOk4NxqS/tVV
-         ZkkEjbegZE1q+2HNAtgGNVhcPY6bcXIaO+pqb9I1JCeLV6nzJvRny5uN8ytV1V50tKMD
-         67tKoTgOqcO8avAHYG36G69vrlfR6SNQx4pgN5oFm9n8/g/Njg+CAWusMBoJjQV/A+yZ
-         K6Y+gElHgSbG4QS2grTOPHRIAk6hamvIocuZRNgGTuUAzD/yq7EU+lWO8QEGytLrKWVl
-         CNfA==
-X-Gm-Message-State: APjAAAUuZ1jIG1umgvK3+F/3ZyiiIeKmL8JdNHWkCZm59F2BWZfDw1fn
-        TMnpB55YUPnYscD224D/YD7Yhw==
-X-Google-Smtp-Source: APXvYqx1692n6c6jZamqQWXLIh1PjQUnanC8Gmv1QQBmTl6/FzG1v9T/32/TTnlGT7giZXO7b4hBtA==
-X-Received: by 2002:a7b:c001:: with SMTP id c1mr4117921wmb.96.1573668575773;
-        Wed, 13 Nov 2019 10:09:35 -0800 (PST)
-Received: from linaro.org ([2a01:e0a:f:6020:bdd0:28e6:f0d9:a18c])
-        by smtp.gmail.com with ESMTPSA id z8sm3605501wrp.49.2019.11.13.10.09.34
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=tGvQd5G0SntDT8HkYM+TSejmQNivNQ7SWZ4INNCNjjw=;
+        b=LvNBSv36+k6GXoVACKSOrVk4YE0KHXxZJYLfSBD4MHw7ly6perGOczjVNAZIKk7L2r
+         X+gNCN8Xmmppv7+PeRgmF190l4cyjruQkm+IezpR0wft2IMGto8GjpTslcUguul53zLe
+         PmyNfWB6DT9t/PwmSmqg7RTOEGURybujY8DneGyIRc4+RNcFnFuhLRQZXhHDL6o5QBb+
+         okRLfKrdslGfATdmVJxYTdKc7eRQqndm6U+TgAR8JeMhhvYyMw3qlRqHM7768QmOHzYc
+         Abwz62fIlxxjKx38f4dQFtW7P2rTQLNKqHPkrtqJ/OSH1CYUnaDDi1vQnSM6IuMN2zOH
+         V/Bg==
+X-Gm-Message-State: APjAAAWwB3EOiVaOE0RrVnPdqeCFkkXX4IsvElXtVuiInukPtLjX1CEt
+        holtUz3/aWXQwWm9dUZMrZkh48ZvWIs=
+X-Google-Smtp-Source: APXvYqzNBXBcf0glrFbmi2UZpMekxq9W1smDcK0LKBPS+yMxOpPtUAWSzrnyZRukyAXMThapoLY+nw==
+X-Received: by 2002:a63:154e:: with SMTP id 14mr5127316pgv.182.1573668661869;
+        Wed, 13 Nov 2019 10:11:01 -0800 (PST)
+Received: from [10.2.144.69] ([66.170.99.2])
+        by smtp.gmail.com with ESMTPSA id q185sm4877110pfc.153.2019.11.13.10.11.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 10:09:34 -0800 (PST)
-Date:   Wed, 13 Nov 2019 19:09:32 +0100
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
-Message-ID: <20191113180932.GA24352@linaro.org>
-References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
- <20191112150544.GA3664@linaro.org>
- <3b8cafb7-894d-c302-e6c6-b5844b1298b5@arm.com>
- <CAKfTPtBMNnM2tTfb72VtufDpwBvqu6Ttj3dnLgoNOZ--Q6qo+Q@mail.gmail.com>
- <bcba52bc-6780-1efc-6ef4-1a75f1cef33d@arm.com>
- <20191113175035.GA8553@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191113175035.GA8553@linaro.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 13 Nov 2019 10:11:01 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+Date:   Wed, 13 Nov 2019 10:10:59 -0800
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <DEF550EE-F476-48FB-A226-66D34503CF70@gmail.com>
+References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le Wednesday 13 Nov 2019 à 18:50:35 (+0100), Vincent Guittot a écrit :
-> Le Wednesday 13 Nov 2019 à 15:09:47 (+0100), Dietmar Eggemann a écrit :
-> > On 13.11.19 14:30, Vincent Guittot wrote:
-> > > On Wed, 13 Nov 2019 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> > >>
-> > >> On 12.11.19 16:05, Vincent Guittot wrote:
-> > >>> Le Tuesday 12 Nov 2019 à 15:48:13 (+0100), Vincent Guittot a écrit :
-> > 
-> > [...]
-> > 
-> > >>>> @@ -7493,9 +7495,9 @@ static void update_blocked_averages(int cpu)
-> > >>>>       * that RT, DL and IRQ signals have been updated before updating CFS.
-> > >>>>       */
-> > >>>>      curr_class = rq->curr->sched_class;
-> > >>>> -    update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> > >>>> -    update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> > >>>> -    update_irq_load_avg(rq, 0);
-> > >>>> +    decayed |= update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> > >>>> +    decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> > >>>> +    decayed |= update_irq_load_avg(rq, 0);
-> > >>
-> > >> Why not 'decayed  = update_cfs_rq_load_avg()' like in the
-> > >> !CONFIG_FAIR_GROUP_SCHED case?
-> > > 
-> > > Because it is handled by the update_load_avg() in
-> > > for_each_leaf_cfs_rq_safe() loop
-> > > 
-> > > This means that we can have 2 calls to cpufreq_update_util in
-> > > update_blocked_average() but at least the values will be up to date in
-> > > both calls unlike previously.
-> > > 
-> > > I'm going to prepare an additional patch to remove this useless call.
-> > > I have also seen some possible further optimization that i need to
-> > > study a bit more before preparing a patch
-> > 
-> > I see. The update_load_avg() call for the taskgroup skeleton se
-> > (cfs_rq->tg->se[cpu]). But what happens to the cpu which only has the
-> > root cfs_rq i the list? It doesn't have a skeleton se.
-> 
-> you're right. I have to add the following to make sure it will be called
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 2eb1aa8..9fc077c 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7604,9 +7604,13 @@ static void update_blocked_averages(int cpu)
->                         cpu,
->                         cfs_rq == &rq->cfs ? 0 : (long)cfs_rq->tg );
->  
-> -               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
-> +               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
->                         update_tg_load_avg(cfs_rq, 0);
->  
-> +                       if (cfs_rq == &rq->cfs)
-> +                               decayed = 1;
-> +               }
-> +
->                 trace_sched_load_contrib_blocked(cpu,
->                         &cfs_rq->avg,
->                         cfs_rq == &rq->cfs ? 0 : (long)cfs_rq->tg );
 
-the proper fix without some debug trace events :-)
+> On Nov 12, 2019, at 1:21 PM, Paolo Bonzini <pbonzini@redhat.com> =
+wrote:
+>=20
+> CVE-2018-12207 is a microarchitectural implementation issue
+> that could allow an unprivileged local attacker to cause system wide
+> denial-of-service condition.
+>=20
+> Privileged software may change the page size (ex. 4KB, 2MB, 1GB) in =
+the
+> paging structures, without following such paging structure changes =
+with
+> invalidation of the TLB entries corresponding to the changed pages. In
+> this case, the attacker could invoke instruction fetch, which will =
+result
+> in the processor hitting multiple TLB entries, reporting a machine =
+check
+> error exception, and ultimately hanging the system.
+>=20
+> The attached patches mitigate the vulnerability by making huge pages
+> non-executable. The processor will not be able to execute an =
+instruction
+> residing in a large page (ie. 2MB, 1GB, etc.) without causing a trap =
+into
+> the host kernel/hypervisor; KVM will then break the large page into =
+4KB
+> pages and gives executable permission to 4KB pages.
 
-@@ -7567,9 +7569,13 @@ static void update_blocked_averages(int cpu)
- 	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
- 		struct sched_entity *se;
- 
--		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
-+		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
- 			update_tg_load_avg(cfs_rq, 0);
- 
-+			if (cfs_rq == &rq->cfs)
-+				decayed = 1;
-+		}
-+
- 		/* Propagate pending load changes to the parent, if any: */
- 		se = cfs_rq->tg->se[cpu];
- 		if (se && !skip_blocked_update(se))
+It sounds that this mitigation will trigger the =E2=80=9Cpage =
+fracturing=E2=80=9D problem
+I once encountered [1], causing frequent full TLB flushes when invlpg
+runs. I wonder if VMs would benefit in performance from changing
+/sys/kernel/debug/x86/tlb_single_page_flush_ceiling to zero.
 
+On a different note - I am not sure I fully understand the exact =
+scenario.
+Any chance of getting a kvm-unit-test for this case?
 
-
-> 
-> 
+[1] https://patchwork.kernel.org/patch/9099311/=
