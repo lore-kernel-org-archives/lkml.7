@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EDBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113FE222D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310A2222D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610241;
-	bh=lFxxBxjXHU5mvLq0/vlgvYPguApXQkNTD64lNsNZdvk=;
+	s=default; t=1573610248;
+	bh=JzuVXnbANtHScJdB3rqEe/ae8c7To3o2P+Dk19lLAnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3YWamm80NLEZYgFeoFtHjB+bqw+X23PTs+BuJffnAWz86J8nCO4KdrDmcK8JTX2E
-	 Tl5doyOituLHbOg+grz0Ra4A9S84Ge0cLgosZgOYr24+7O5JqCOAHv/98fvUeEbEFb
-	 g0SpzKjTcUAqCSqwp4lzyF4G9MErYqjKrXbHaLDg=
+	b=Tvt3llXRyfy5OaZ7FUCPSrXOPovSz0mS1OBpzfz7s8rVg/CuIdunZPaXcL9CJu5x5
+	 nO5XKHgP1JMbUM8RNT3q8ubX8RRzr1wIfk1MigWywQsfyYRfKMNFC9f6AYG0XxK/fN
+	 NKRf5Vseh+ue4GqoDulsuvtINgA9gWLFyt4elbO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfKMB5T (ORCPT
+        id S1729804AbfKMB51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:57:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50334 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:57:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728664AbfKMB5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:17 -0500
+        id S1729757AbfKMB5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43BC82247A;
-        Wed, 13 Nov 2019 01:57:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E75972053B;
+        Wed, 13 Nov 2019 01:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610237;
-        bh=lFxxBxjXHU5mvLq0/vlgvYPguApXQkNTD64lNsNZdvk=;
+        s=default; t=1573610241;
+        bh=JzuVXnbANtHScJdB3rqEe/ae8c7To3o2P+Dk19lLAnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXEW6sBN7qEHe5jZTblr3TMe9n8/RdGLpHTDKJd3mf+h5Eg+OpDmg58K4LyfwzbkJ
-         +ZdMrql9huHOUSp1lYYqPuo+SYtMOH14VWYFFZ71YGFYVyDyDbxOblrrJiwTQbW/ZO
-         aBBE7Hao1whqCKmXWAwfnA8zJx8BjKWqak9BJeH8=
+        b=wwTsFSYbhMBPSyhZ2V9UT25VOfugXm+ourbaCgXcM6ElqiIpM26GFdYY7ZdLOuw+d
+         6KTHTslY0Ncy6AIfdC/jGt39UOfgzU4ux1atQvjmmvkSjrCsdwcqmzhT7LMMcRqZI+
+         Y4otyWZGJrxO6b8Bs/JRcOkiIR5XWhv1S1xS+woc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Yu <yu.c.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 037/115] PM / hibernate: Check the success of generating md5 digest before hibernation
-Date:   Tue, 12 Nov 2019 20:55:04 -0500
-Message-Id: <20191113015622.11592-37-sashal@kernel.org>
+Cc:     NeilBrown <neilb@suse.com>, Jeff Mahoney <jeffm@suse.com>,
+        Shaohua Li <shli@fb.com>, Sasha Levin <sashal@kernel.org>,
+        linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 041/115] md: allow metadata updates while suspending an array - fix
+Date:   Tue, 12 Nov 2019 20:55:08 -0500
+Message-Id: <20191113015622.11592-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -61,63 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Yu <yu.c.chen@intel.com>
+From: NeilBrown <neilb@suse.com>
 
-[ Upstream commit 749fa17093ff67b31dea864531a3698b6a95c26c ]
+[ Upstream commit 059421e041eb461fb2b3e81c9adaec18ef03ca3c ]
 
-Currently if get_e820_md5() fails, then it will hibernate nevertheless.
-Actually the error code should be propagated to upper caller so that
-the hibernation could be aware of the result and terminates the process
-if md5 digest fails.
+Commit 35bfc52187f6 ("md: allow metadata update while suspending.")
+added support for allowing md_check_recovery() to still perform
+metadata updates while the array is entering the 'suspended' state.
+This is needed to allow the processes of entering the state to
+complete.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Unfortunately, the patch doesn't really work.  The test for
+"mddev->suspended" at the start of md_check_recovery() means that the
+function doesn't try to do anything at all while entering suspend.
+
+This patch moves the code of updating the metadata while suspending to
+*before* the test on mddev->suspended.
+
+Reported-by: Jeff Mahoney <jeffm@suse.com>
+Fixes: 35bfc52187f6 ("md: allow metadata update while suspending.")
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Shaohua Li <shli@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/power/hibernate_64.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/md/md.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/power/hibernate_64.c b/arch/x86/power/hibernate_64.c
-index 9c80966c80bae..692a179b1ba32 100644
---- a/arch/x86/power/hibernate_64.c
-+++ b/arch/x86/power/hibernate_64.c
-@@ -250,9 +250,9 @@ static int get_e820_md5(struct e820_table *table, void *buf)
- 	return ret;
- }
- 
--static void hibernation_e820_save(void *buf)
-+static int hibernation_e820_save(void *buf)
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index e529cef5483a8..b942c74f1ce83 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -8736,6 +8736,18 @@ static void md_start_sync(struct work_struct *ws)
+  */
+ void md_check_recovery(struct mddev *mddev)
  {
--	get_e820_md5(e820_table_firmware, buf);
-+	return get_e820_md5(e820_table_firmware, buf);
++	if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags) && mddev->sb_flags) {
++		/* Write superblock - thread that called mddev_suspend()
++		 * holds reconfig_mutex for us.
++		 */
++		set_bit(MD_UPDATING_SB, &mddev->flags);
++		smp_mb__after_atomic();
++		if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags))
++			md_update_sb(mddev, 0);
++		clear_bit_unlock(MD_UPDATING_SB, &mddev->flags);
++		wake_up(&mddev->sb_wait);
++	}
++
+ 	if (mddev->suspended)
+ 		return;
+ 
+@@ -8896,16 +8908,6 @@ void md_check_recovery(struct mddev *mddev)
+ 	unlock:
+ 		wake_up(&mddev->sb_wait);
+ 		mddev_unlock(mddev);
+-	} else if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags) && mddev->sb_flags) {
+-		/* Write superblock - thread that called mddev_suspend()
+-		 * holds reconfig_mutex for us.
+-		 */
+-		set_bit(MD_UPDATING_SB, &mddev->flags);
+-		smp_mb__after_atomic();
+-		if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags))
+-			md_update_sb(mddev, 0);
+-		clear_bit_unlock(MD_UPDATING_SB, &mddev->flags);
+-		wake_up(&mddev->sb_wait);
+ 	}
  }
- 
- static bool hibernation_e820_mismatch(void *buf)
-@@ -272,8 +272,9 @@ static bool hibernation_e820_mismatch(void *buf)
- 	return memcmp(result, buf, MD5_DIGEST_SIZE) ? true : false;
- }
- #else
--static void hibernation_e820_save(void *buf)
-+static int hibernation_e820_save(void *buf)
- {
-+	return 0;
- }
- 
- static bool hibernation_e820_mismatch(void *buf)
-@@ -318,9 +319,7 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
- 
- 	rdr->magic = RESTORE_MAGIC;
- 
--	hibernation_e820_save(rdr->e820_digest);
--
--	return 0;
-+	return hibernation_e820_save(rdr->e820_digest);
- }
- 
- /**
+ EXPORT_SYMBOL(md_check_recovery);
 -- 
 2.20.1
 
