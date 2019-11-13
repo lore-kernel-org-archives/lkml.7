@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9760CC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32BFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F051222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68EE222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:37:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGFxbyyj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e861HBFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfKMGhP (ORCPT
+        id S1726516AbfKMGhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:37:15 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44636 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfKMGhO (ORCPT
+        Wed, 13 Nov 2019 01:37:45 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38017 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfKMGho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:37:14 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q26so926793pfn.11;
-        Tue, 12 Nov 2019 22:37:14 -0800 (PST)
+        Wed, 13 Nov 2019 01:37:44 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 15so734253pgh.5;
+        Tue, 12 Nov 2019 22:37:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=voR8XQk2CC3vnccynDlGH9xxP2Lq83CWSGXGxEUwD7A=;
-        b=cGFxbyyj/3qQrrutSScWLNTMv2UWUdyZFsXeqM/6A6Mg946RO5J2bi1MlMZoMrT3Bf
-         6qtgs86jdQJhBWbD6xRRC5wP6EhhdAHEuxFpVGYoDGUAsYyVRzHfhmQoovkWvoixBGFw
-         +ZzMJaNiaYElvD2w+B5TzR72Qg/Ai8G6757j6/12nONbLqlcK8wz1pINfnblKqDA7Gi8
-         WfN0fUk94Vz7aEZCfgZ389kWf+lGw0az+4IRjRr2Tfi1cumDkA2EHCDaZMgtVyBxIrmf
-         Iu+Fys2/7i0UWjIxiq9NAQEZ52sTn8JGBKhaz93/fHPgEGblUfUc9a9J/rVVWv9KJ/Lu
-         xOqg==
+        bh=hBMWNBe+ajGPyroH9xX0CnOxEfxyrNH26XF/4DoPOfI=;
+        b=e861HBFaQDhUO0OFaRlI921rTJYFWvqygV2ToxRWlZ1iGhl6xTLV+oe+rcw9zefXe4
+         ivCZCMu/5DO2kblI7BKZABJw8VS9iIUvBp7AZFY6ozBwbIC6lHLYFWGSdaJGKA34yEDX
+         xEkHpFNQFEIDi+8Ne4mspjIlzNpIkmJolzso8GnZYMxF5ugXJZ0M/uZAeIEiv5w+rkCe
+         Bhr2GLEj0uvfxWMrIiAJ2LW9pSVjxzRcUCiKE/C63QmMlt0wSk7eUZJbneYmbDPuWX/j
+         M9nnd/Cvt9txjUKHStew8gOh0SWui+6cvIYJyaTi0WS7tJChPizT8whnqtCZzje36iQv
+         xV0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=voR8XQk2CC3vnccynDlGH9xxP2Lq83CWSGXGxEUwD7A=;
-        b=dTp8CPJpMHPSJ96Puj7+DRO27V6Ffg4X54f7C1DT6UmKXSABxorf8i5nh31hJti1nm
-         CaTpjeSLt2CPkzl3P1VDnEmS51h14KcRuft31dWkoQ4vi9os6TGNzeuGg3AZjE2881ra
-         cSkI5Csj4Mrav4HZTz5Up8SpT+bsmp0hulWwWAgR9hNMMGQPZiMX5dgRBNa+rIOQ4jCo
-         KhgfVnh/lmnoIS2RxkwwtkD2Gs4ZXGsyg09w2Mw6OLeMCEVdPXbIRgqml4qhokQ2Zi3K
-         4fBEuNGuk4kdEhKMQjCt6x/r4/fwrzAWR+OsydwfrUJ18kEJMyQHhh3BPEsqPReQp7o+
-         bUbg==
-X-Gm-Message-State: APjAAAUWzCgfjj1wb6kAkYSTtVsiIW/Jy1Um3rDB1rMM3o0LXzA/JeN8
-        xcAMc9Uzt6FVVTRp/UoW1JU=
-X-Google-Smtp-Source: APXvYqzyZdy2Y11hisqEHnoMiavn/ffHFdr/fBWi7fBCfeAcMFAqb9Cfh+4fMY/o1m5PE6veSJM5OA==
-X-Received: by 2002:a63:c60f:: with SMTP id w15mr1842093pgg.33.1573627034238;
-        Tue, 12 Nov 2019 22:37:14 -0800 (PST)
+        bh=hBMWNBe+ajGPyroH9xX0CnOxEfxyrNH26XF/4DoPOfI=;
+        b=CPJQB4t6i+WD9mKNiBDAF4UMhUUR2NbKLFtnMormq9rO0J0nPObT6WN5/usNy5jYfq
+         pnkDc2zTERMtHUiOpRQLRQ1Wa+AJHARDFfMNlORTC2b//u/Lc+WmeEhNR66U5oOWMDi2
+         D/Fy1pd8uO3SVypjOJm7eq/OZmaRnGkrCYMl6f0fKTO9r71HKTb3MoU8tYFTvHYWtn6x
+         Ea1xh24F+6NAjAeEMniuGM9a4BtpGFk50rtEDBGFkxIn6EuO8YPIEXVZ61Cl5VoXs4HT
+         AJ8nJmo6eqjg/wcU0G3kNo2SBxB3+1gpr1kXKaFLLdcuIbIzNjhk3cEj6NsYtX/3jb8f
+         QoPw==
+X-Gm-Message-State: APjAAAUQwZ+zqQdG5O9C1+SKeSTQ4sGLUd+gLXUlidqLWd1gXIYpOJ3e
+        HWY/D4MGH38rdEx3MocVtS8=
+X-Google-Smtp-Source: APXvYqy40KGHXqbelELr+lYDHJEuaYs0EaC1n8Pm3xmcoICsDTL2PnlNVDt21bFbKKyTN6JSeOHFKg==
+X-Received: by 2002:a63:1323:: with SMTP id i35mr1890724pgl.450.1573627063430;
+        Tue, 12 Nov 2019 22:37:43 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id o7sm1531920pjo.7.2019.11.12.22.37.10
+        by smtp.gmail.com with ESMTPSA id c184sm1411329pfc.159.2019.11.12.22.37.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 22:37:13 -0800 (PST)
+        Tue, 12 Nov 2019 22:37:42 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] Input: synaptics-rmi4 - add missed operations in remove
-Date:   Wed, 13 Nov 2019 14:36:56 +0800
-Message-Id: <20191113063656.8713-1-hslester96@gmail.com>
+Subject: [PATCH] media: bdisp: add missed destroy_workqueue in remove and probe failure
+Date:   Wed, 13 Nov 2019 14:37:30 +0800
+Message-Id: <20191113063730.8776-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,29 +74,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to deal with work and workqueue in remove like what
-is done when probe fails.
-Add the missed operations to fix it.
+The driver forgets to call destroy_workqueue when remove and probe fails.
+Add the missed calls to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/input/rmi4/rmi_f54.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/sti/bdisp/bdisp-v4l2.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/rmi4/rmi_f54.c b/drivers/input/rmi4/rmi_f54.c
-index 710b02595486..2c0cde5c775c 100644
---- a/drivers/input/rmi4/rmi_f54.c
-+++ b/drivers/input/rmi4/rmi_f54.c
-@@ -730,6 +730,9 @@ static void rmi_f54_remove(struct rmi_function *fn)
+diff --git a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+index e90f1ba30574..4c0b36236a38 100644
+--- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
++++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+@@ -1275,6 +1275,8 @@ static int bdisp_remove(struct platform_device *pdev)
+ 	if (!IS_ERR(bdisp->clock))
+ 		clk_unprepare(bdisp->clock);
  
- 	video_unregister_device(&f54->vdev);
- 	v4l2_device_unregister(&f54->v4l2);
-+	cancel_delayed_work_sync(&f54->work);
-+	flush_workqueue(f54->workqueue);
-+	destroy_workqueue(f54->workqueue);
++	destroy_workqueue(bdisp->work_queue);
++
+ 	dev_dbg(&pdev->dev, "%s driver unloaded\n", pdev->name);
+ 
+ 	return 0;
+@@ -1318,20 +1320,22 @@ static int bdisp_probe(struct platform_device *pdev)
+ 	bdisp->regs = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(bdisp->regs)) {
+ 		dev_err(dev, "failed to get regs\n");
+-		return PTR_ERR(bdisp->regs);
++		ret = PTR_ERR(bdisp->regs);
++		goto err_wq;
+ 	}
+ 
+ 	bdisp->clock = devm_clk_get(dev, BDISP_NAME);
+ 	if (IS_ERR(bdisp->clock)) {
+ 		dev_err(dev, "failed to get clock\n");
+-		return PTR_ERR(bdisp->clock);
++		ret = PTR_ERR(bdisp->clock);
++		goto err_wq;
+ 	}
+ 
+ 	ret = clk_prepare(bdisp->clock);
+ 	if (ret < 0) {
+ 		dev_err(dev, "clock prepare failed\n");
+ 		bdisp->clock = ERR_PTR(-EINVAL);
+-		return ret;
++		goto err_wq;
+ 	}
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+@@ -1403,7 +1407,8 @@ static int bdisp_probe(struct platform_device *pdev)
+ err_clk:
+ 	if (!IS_ERR(bdisp->clock))
+ 		clk_unprepare(bdisp->clock);
+-
++err_wq:
++	destroy_workqueue(bdisp->work_queue);
+ 	return ret;
  }
  
- struct rmi_function_handler rmi_f54_handler = {
 -- 
 2.23.0
 
