@@ -2,89 +2,110 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA083C47423
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28B8C33CA2
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0D822488
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA12C2249C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:39:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="ryDVLjY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfKMPjS (ORCPT
+        id S1728011AbfKMPjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:39:18 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:41324 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727515AbfKMPjS (ORCPT
+        Wed, 13 Nov 2019 10:39:51 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:27310 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKMPju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:39:18 -0500
-Received: (qmail 2537 invoked by uid 2102); 13 Nov 2019 10:39:17 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 13 Nov 2019 10:39:17 -0500
-Date:   Wed, 13 Nov 2019 10:39:17 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Michael Olbrich <m.olbrich@pengutronix.de>
-cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 2/2] usb: dwc3: gadget: restart the transfer if a isoc
- request is queued too late
-In-Reply-To: <20191113075308.qwwgpg7kpfcyjxau@pengutronix.de>
-Message-ID: <Pine.LNX.4.44L0.1911131036340.1558-100000@iolanthe.rowland.org>
+        Wed, 13 Nov 2019 10:39:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573659588;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=IcWKXBk6OLF61eXvC2m4VfKEa190SInPY4yvpfHGVq8=;
+        b=ryDVLjY8KyB/NCNFYxPmfZGHBnzh75BV/lK76fu+GH3vZrwpKBsexachgbWUKK6a0l
+        53hW9sRuey2jyjm1VjyIVjXsyEr/n40eInEyIbsFlYlf5jGs+If3NqoOhC2l9FtX3Rhv
+        L+nPUOqgJmAw7yQyNlX1BdanHxvLD9abKmv+Oz7kEmDG/Ts8OieqXqx7PtnZGahZXPqa
+        CTpbpYAddMJq8fb0auBT8N1dkWDIDToFCgUXFb4PabqDEk92VjjnAZ9lQu50c8FW856A
+        K2lRuUUbivrkP5Crer8VL4fp7ix3FkjUZPwl1OCLECu8EdX/ELd1AGaDyjsW0wwULVGl
+        Uzmg==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4AUztn93FPS2dyuY8hl6Q=="
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
+        with ESMTPSA id 20735bvADFdmGbJ
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 13 Nov 2019 16:39:48 +0100 (CET)
+Date:   Wed, 13 Nov 2019 16:39:41 +0100
+From:   Olaf Hering <olaf@aepfle.de>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "open list\:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
+Message-ID: <20191113163941.59124120.olaf@aepfle.de>
+In-Reply-To: <87wocbagqc.fsf@vitty.brq.redhat.com>
+References: <20191024144943.26199-1-olaf@aepfle.de>
+        <874kzfbybk.fsf@vitty.brq.redhat.com>
+        <20191107144850.37587edb.olaf@aepfle.de>
+        <87zhh7ai26.fsf@vitty.brq.redhat.com>
+        <20191107152059.6cae8f30.olaf@aepfle.de>
+        <87wocbagqc.fsf@vitty.brq.redhat.com>
+X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/jIGef0Ofd=8F/1tOqnM7Fbw"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019, Michael Olbrich wrote:
+--Sig_/jIGef0Ofd=8F/1tOqnM7Fbw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Nov 13, 2019 at 03:55:01AM +0000, Thinh Nguyen wrote:
-> > Michael Olbrich wrote:
-> > > Currently, most gadget drivers handle isoc transfers on a best effort
-> > > bases: If the request queue runs empty, then there will simply be gaps in
-> > > the isoc data stream.
-> > >
-> > > The UVC gadget depends on this behaviour. It simply provides new requests
-> > > when video frames are available and assumes that they are sent as soon as
-> > > possible.
-> > >
-> > > The dwc3 gadget currently works differently: It assumes that there is a
-> > > contiguous stream of requests without any gaps. If a request is too late,
-> > > then it is dropped by the hardware.
-> > > For the UVC gadget this means that a live stream stops after the first
-> > > frame because all following requests are late.
-> > 
-> > Can you explain little more how UVC gadget fails?
-> > dwc3 controller expects a steady stream of data otherwise it will result 
-> > in missed_isoc status, and it should be fine as long as new requests are 
-> > queued. The controller doesn't just drop the request unless there's some 
-> > other failure.
-> 
-> UVC (with a live stream) does not fill the complete bandwidth of an
-> isochronous endpoint. Let's assume for the example that one video frame
-> fills 3 requests. Because it is a live stream, there will be a gap between
-> video frames. This is unavoidable, especially for compressed video. So the
-> UVC gadget will have requests for the frame numbers 1 2 3 5 6 7 9 10 11 13 14
-> 15 and so on.
-> The dwc3 hardware tries to send those with frame numbers 1 2 3 4 5 6 7 8 9
-> 10 11 12. So except for the fist few requests, all are late and result in a
-> missed_isoc. I tried to just ignore the missed_isoc but that did not work
-> for me. I only received the first frame at the other end.
-> Maybe I missing something here, i don't have access to the hardware
-> documentation, so I can only guess from the existing driver.
+Am Thu, 07 Nov 2019 15:44:27 +0100
+schrieb Vitaly Kuznetsov <vkuznets@redhat.com>:
 
-How about changing the gadget driver instead?  For frames where the UVC
-gadget knows no video frame data is available (numbers 4, 8, 12, and so
-on in the example above), queue a zero-length request.  Then there
-won't be any gaps in the isochronous packet stream.
+> I *think* what you're aiming at is EAI_AGAIN and EAI_FAIL, the rest
+> should probably terminate the resolver thread (e.g. AF_INET is
+> unsupported or something like that).
 
-Alan Stern
+The thread aims for success. Resolving of the hostname can take some time.
+Maybe the network is not fully functional when the thread starts.
+Maybe the VM admin does further tweaks while the thread is running.
+IMO there is no downside to wait for success.
 
+
+Olaf
+
+--Sig_/jIGef0Ofd=8F/1tOqnM7Fbw
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl3MI70ACgkQ86SN7mm1
+DoD+TA//UuW2hrqWiB33HTuz3g0RxmA7ZY1UuaEs+khSCMV/W8ktIEnYLgZkON5S
+JTGG2II0xGZhmNkV8GgwgwQbIuPhrgsYAdz1Z6G5q+zDpow82O4cGQeMUgKG6Xfi
+N1c+dQUJYMo2SuAkYfvHks/7L20TZBi3tw43ZpKQtoNyQG1w2RdYMFKLBhpHIMaJ
+BuL8GRo58x/n7YjLDVqWRurYC3Iu7FrkJT98g8ccrgGhh8hfNC9Mkvy/oJRdes4W
++QooloWFEwmMRhkZZof2xCJg8fkXxOHFaEL8YxVed66OxlQjus8uv/pO++TTdaxf
+DKuxxfjkM/JOzFwKnObIJUXUbh3gEjQj+9/EFLNE/oJvXPQb2LVBFYnQLseF4t9C
+rg8tL1WPSZdTtPZCqKbS8Ng7CiKmwj/tYqG/ooQ3qDWp+lQ1mK9762XBO1+Q+PV8
+rm8LimGnIvUHo46rRP1F4ncoNZ+y8jKvwrG4AjzsQHwP2uLBvSIjs91GJem4oeSr
+qHC4VKeF0dzeuFaQZASI6nHomWyxn9JiMU7ED4C+vt0O7T3dv5gY175xCxDbg8pr
+2fryLn73oFOz+QVyI0Qe0Vf6uIW3s4mTnXNtAxlOgVFK8dxQlRk/OnEA/+X7ZmuE
+gPLrNZJWRpAya3fWob6dFBqv2nZ2d1jb7wZoYGJvpH5iaRCCatE=
+=88wJ
+-----END PGP SIGNATURE-----
+
+--Sig_/jIGef0Ofd=8F/1tOqnM7Fbw--
