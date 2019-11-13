@@ -2,194 +2,101 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA97C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC40DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5398F2196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:30:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XKiI/Jub"
+	by mail.kernel.org (Postfix) with ESMTP id AA53D2196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfKMJaz (ORCPT
+        id S1727124AbfKMJcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:30:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23970 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726598AbfKMJay (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:30:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573637453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KfiIJYnhwIPb8ies+GY26eVHRvipn+z/HevJMP92/8A=;
-        b=XKiI/JubTH57aGQE9bXdRegVHcbKTV3OgcfykwYnPHoF6zIWlqntw/16GUEEtjzCLh+2wj
-        5vFed1NHzrileFTAiqXsy/V/foxN/gCETx7qBbJ1LVC23pF2iVCXA7LWJ4BcaGW+5JutYD
-        g84/lnJI/EbkbFSo7bj+1HWMSgvuTJA=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-nj06QX41N1SouMLNaKG29A-1; Wed, 13 Nov 2019 04:30:52 -0500
-Received: by mail-qt1-f198.google.com with SMTP id x21so938978qtp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 01:30:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hz47sGg839T2K5KCo2tSAJMtBP36J6bni/N4ATh4qyY=;
-        b=DfzhbfIb9Z0oBV/2fi5uEQ9MxyPniYS0trgUAfhbYjgoyrERL/1NT2on9s4xAfjPZ/
-         NruE35EsErg1OXR/pFKvD+JfU0/ZuOO/I68N9EpeYt6fTczW97spVB28VP4qdcMIQsUf
-         8m8g2T/8q5WPjnBHvwRgYyxctg9eBDXw7/+zT5zgFkRR3KamDPqz6sHalNMUZQtOA+9D
-         HbBWUSNBoh1zFfSIjp1nJAuGxlV42fi9aZMBhFqO3K8P66mrE6K7ACPpXgtBumLrkmTo
-         0CJSioOUNqUJnNZuc+7Uv246KAgp476/w/H3nGkXJcdzrn1xu7JbW/XcR91VtfYCZQAZ
-         jrLQ==
-X-Gm-Message-State: APjAAAVx7s6TdBSwutwyLzoLt6MkDTbpHl17WGQdNpAf7hT3mpPTS7q/
-        VT/BvPhgbsYJXdb1rC6HzpkivOIjTfnSsMKuiVSeAd4DTVQqkwmz2zW1AdQHzOsr+n/lrV1rjJQ
-        zYVT5j4XeMohXZSY602P2+XaHLpfWKfwD+q8evLX6
-X-Received: by 2002:ac8:1c03:: with SMTP id a3mr1631534qtk.31.1573637451861;
-        Wed, 13 Nov 2019 01:30:51 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyQpDT1ZafGlHqigVXzWNpvKLF+xEID7Y+nNygKPNFImm3esWvrN1WNXzuqvEPRocHYM7fdnYrsZIt18L3KZ6U=
-X-Received: by 2002:ac8:1c03:: with SMTP id a3mr1631512qtk.31.1573637451614;
- Wed, 13 Nov 2019 01:30:51 -0800 (PST)
+        Wed, 13 Nov 2019 04:32:02 -0500
+Received: from mga05.intel.com ([192.55.52.43]:42593 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726086AbfKMJcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 04:32:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 01:32:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
+   d="scan'208";a="257087926"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Nov 2019 01:31:56 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iUp0E-0000Lp-H8; Wed, 13 Nov 2019 11:31:54 +0200
+Date:   Wed, 13 Nov 2019 11:31:54 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Juergen Gross <jgross@suse.com>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Roman Gilg <subdiff@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Luis R. Rodriguez" <mcgrof@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and
+ ia64
+Message-ID: <20191113093154.GB32742@smile.fi.intel.com>
+References: <20191111192258.2234502-1-arnd@arndb.de>
+ <20191112105507.GA7122@lst.de>
+ <CAKMK7uEEz1n+zuTs29rbPHU74Dspaib=prpMge63L_-rUk_o4A@mail.gmail.com>
+ <20191112140631.GA10922@lst.de>
+ <CAKMK7uFaA607rOS6x_FWjXQ2+Qdm8dQ1dQ+Oi-9if_Qh_wHWPg@mail.gmail.com>
+ <20191112222423.GO11244@42.do-not-panic.com>
+ <20191113072708.GA3213@lst.de>
+ <CAK8P3a3OpiWAep86tOiN1Fj2W7ud5hQ1OLTkBR8ueAKsMHk-dA@mail.gmail.com>
 MIME-Version: 1.0
-References: <e1e05bd3-19f5-0dfe-66ad-70717c1c29c6@codeaurora.org>
-In-Reply-To: <e1e05bd3-19f5-0dfe-66ad-70717c1c29c6@codeaurora.org>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 13 Nov 2019 10:30:39 +0100
-Message-ID: <CAO-hwJLdz1sA4tNsLLgZKGA7Ko6dqt9VF5T2nh5uczHxU532HA@mail.gmail.com>
-Subject: Re: Query regarding hid-multitouch.c driver in 4.14/4.19
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org, prsood@codeaurora.org,
-        gkohli@codeaurora.org
-X-MC-Unique: nj06QX41N1SouMLNaKG29A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3OpiWAep86tOiN1Fj2W7ud5hQ1OLTkBR8ueAKsMHk-dA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neeraj,
+On Wed, Nov 13, 2019 at 08:38:15AM +0100, Arnd Bergmann wrote:
+> On Wed, Nov 13, 2019 at 8:27 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Tue, Nov 12, 2019 at 10:24:23PM +0000, Luis Chamberlain wrote:
+> > > I think this would be possible if we could flop ioremap_nocache() to UC
+> > > instead of UC- on x86. Otherwise, I can't see how we can remove this by
+> > > still not allowing direct MTRR calls.
+> >
+> > If everything goes well ioremap_nocache will be gone as of 5.5.
+> 
+> As ioremap_nocache() just an alias for ioremap(), I suppose the idea would
+> then be to make x86 ioremap be UC instead of UC-, again matching what the
+> other architectures do already.
 
-On Wed, Nov 13, 2019 at 4:11 AM Neeraj Upadhyay <neeraju@codeaurora.org> wr=
-ote:
->
-> Hi,
->
-> I have one query regarding hid-multitouch.c driver and need your guidance=
- on
-> how hid-multitouchc can restore/support the original behaviour, where, fo=
-r
-> devices, for which application is not
-> HID_DG_TOUCHSCREEN/HID_DG_TOUCHPAD, and has
-> HID_DG_CONTACTID usage in its report, can still use generic input mapping=
-s.
->
-> We are using kernel versions 4.14 , 4.19 respectively in 2 different
-> projects:
->
-> 4.14:
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/dri=
-vers/hid/hid-multitouch.c?h=3Dv4.14.153
-> 4.19:
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/dri=
-vers/hid/hid-multitouch.c?h=3Dv4.19.83
->
-> I checked the application for our hid device, it's HID_DG_PEN, device
-> also has a HID_DG_CONTACTID usage defined in
->
-> its report.
->
-> In 4.19, is_mt_collection is set to 'true'. All multitouch code paths or
-> input mapping is configured
->
-> mt_allocate_report_data()
->          ...
->          for (n =3D 0; n < field->report_count; n++) {
->                          if (field->usage[n].hid =3D=3D HID_DG_CONTACTID)
->                                  rdata->is_mt_collection =3D true;   //
-> is_mt_collection is set to 'true'
->                  }
->          }
->
-> mt_input_mapping()
->          ...
->          if (rdata->is_mt_collection)
->              return mt_touch_input_mapping(...)  //
-> mt_touch_input_mapping() is called
->
-> mt_event()
->          if (rdata && rdata->is_mt_collection)
->              return mt_touch_event();  // mt_touch_event() is called
->
-> However, in 4.14, the behaviour was different, mt input mapping was done
-> only
-> for HID_DG_TOUCHSCREEN/HID_DG_TOUCHPAD , and because our hid device is
-> HID_DG_PEN, generic mappings were applied for it; with these settings,
-> device
-> responds to events.
->
-> static int mt_input_mapping()
->          if (field->application =3D=3D HID_DG_TOUCHSCREEN ||
->              field->application =3D=3D HID_DG_TOUCHPAD)
->              return mt_touch_input_mapping();  // This is not called.
->
->
-> mt_touch_input_mapping()
->          case HID_DG_CONTACTID:
->                          mt_store_field(usage, td, hi);
->                          td->touches_by_report++;
->                          td->mt_report_id =3D field->report->id; //
-> mt_report_id is not set.
->                          return 1;
->
->
-> Looks like this behaviour changed, with below commits:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/d=
-rivers/hid/hid-multitouch.c?h=3Dv4.19.83&id=3D8dfe14b3b47ff832cb638731f9fc6=
-96a3a84f804
-> 8dfe14b3b47f    HID: multitouch: ditch mt_report_id
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/d=
-rivers/hid/hid-multitouch.c?h=3Dv4.19.83&id=3Dba6b055e0f3b4ff4942e4ab273260=
-affcfad9bff
-> ba6b055e0f3b     HID: input: enable Totem on the Dell Canvas 27
->
-> Can you please suggest on how we can support/preserve the original
-> behaviour?
+I think it's right thing to do, i.e. assume that ioremap() always does strong
+UC independently on MTRR settings.
 
-Hmm, I would initially say that a firmware that exports Contact ID for
-a Pen is definitely wrong. The Contact ID usage has been introduced in
-https://www.usb.org/sites/default/files/hutrr34.pdf and is
-specifically for multi-touch, not multi pen.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Anyway, couple of questions:
-- does the device supports multi-pen?
-- can you share the report descriptor and a few events when triggering
-this particular report (ideally with hid-recorder from
-https://gitlab.freedesktop.org/libevdev/hid-tools/
-
-Cheers,
-Benjamin
-
->
->
-> Thanks
-> Neeraj
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member=
- of the Code Aurora Forum, hosted by The Linux Foundation
->
 
