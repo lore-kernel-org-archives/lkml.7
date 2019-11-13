@@ -2,169 +2,91 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DCBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E8A222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FB12245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbfKMPJR (ORCPT
+        id S1727928AbfKMPJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:09:17 -0500
-Received: from ms.lwn.net ([45.79.88.28]:48940 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbfKMPJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:09:16 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 710685A0;
-        Wed, 13 Nov 2019 15:09:14 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 08:09:12 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Michal =?UTF-8?B?S291dG7DvQ==?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH 3/3] sched/numa: documentation for per-cgroup numa stat
-Message-ID: <20191113080912.041918ce@lwn.net>
-In-Reply-To: <896a7da3-f139-32e7-8a64-b3562df1a091@linux.alibaba.com>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
-        <896a7da3-f139-32e7-8a64-b3562df1a091@linux.alibaba.com>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 13 Nov 2019 10:09:37 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:44459 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfKMPJh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:09:37 -0500
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N5n3t-1hq9Tw3ncR-017HxJ for <linux-kernel@vger.kernel.org>; Wed, 13 Nov
+ 2019 16:09:36 +0100
+Received: by mail-qk1-f182.google.com with SMTP id d13so2015720qko.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 07:09:35 -0800 (PST)
+X-Gm-Message-State: APjAAAUt1kITgAgZLHtsHa44P6KkJp7ihfZyzWmwhfDxPa0kzfTSDIW1
+        ztoNQcsdHZg3RfKDvFWrwL9FgMngg0WrrLFCP2E=
+X-Google-Smtp-Source: APXvYqzQ08oWGBtIBKfGwjyYF/iVEHvO+TappMGnZDNXcHZ/2ulhuHUZC/UgZA1ht67tDy6BsfjyTBfPL3Z6pLWgoTA=
+X-Received: by 2002:a37:4f13:: with SMTP id d19mr2794772qkb.138.1573657774816;
+ Wed, 13 Nov 2019 07:09:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191112151642.680072-1-arnd@arndb.de> <20191112151642.680072-3-arnd@arndb.de>
+ <s5hblthp0di.wl-tiwai@suse.de> <CAK8P3a1fsC+05i-i77g2aR3bkzprnhbhROLkMPcy=UFfsV3GMw@mail.gmail.com>
+ <s5hlfsk7sbt.wl-tiwai@suse.de>
+In-Reply-To: <s5hlfsk7sbt.wl-tiwai@suse.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 13 Nov 2019 16:09:18 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3EKr4-ygUJ453Fv9DdW0YTHMcTuMu5TmbZ=aLxsWzU0g@mail.gmail.com>
+Message-ID: <CAK8P3a3EKr4-ygUJ453Fv9DdW0YTHMcTuMu5TmbZ=aLxsWzU0g@mail.gmail.com>
+Subject: Re: [PATCH v6 2/8] ALSA: Avoid using timespec for struct snd_timer_status
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:DQPeP9fCKR+dtP2gtqXF47VzYNfi5VB6xJ3uB5M5Euvj/0Pbrtg
+ pwZQ54IfrHkDlXFo9Xs8COJVHkk5CtRWWt4tRnQ4+DF/I34gbZpqJvHhcnWiO0Twa1M1nOE
+ puEZUDN1meijTxvF6ytpnJzxaVSK6kWLqZghGqxS4PIhQli280mrJ9+Q7rJpX2Mey35vHXj
+ lL+eqh5aHju3hCQoUrF9g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MuhNGDZnFB0=:W3BTz9XcTpqAb5R3g186l9
+ pBQmkPS43ZgMQLVM0Eu/Z/PvGoJ5EGtyGu3MmnJ6a+89S3tqYaHPqNev9k69Gi2OKeeB58JID
+ Vo49k40QkxlTUeY/6keF7tJjCsSXSuo0SU/o2SuLu2p2qYKdmmIDhe0aM3necRBDxG9d2npmx
+ mss9t+3UqBWpPuoZeG/5QtHMvPrtEm0A0ZjP0yyJDcyxOuTJZgJeOfXy839uShxpGrqC4UW5/
+ cv8qOTlgzegtWZ8Tq/DzeAn0eWtx1+B1tixeMytV1HFRnAOMFAxuGynj/2HJfM4cgFSi36Rpi
+ xdFB5D0V1fCJIPZWmGrzLxwb2pcsmp/t+9AuGrWoAY3gv5jyxQciZIE7LASqejCiiWqHYwxWD
+ CflLwP0BE9GrrJkyWrbnjhgEbHEiKtHHR7ljwb3KIEGiFaJ0UkURbst3kCzDdqnGCxoQVn3Qd
+ M21EMAbW+obHODmrNrhs2Jaw2vNXkEAofi438/wtSjSiImoy1rHKDpiSTuy6NqOZWj2vgPidM
+ +OWJnNlHcyOvaiaScKb9VR6kZWX8DgpsLNyPhUhUtUCwq3NyZFo7US/pgkR6p3D4tpveUsaup
+ GLs6iGZ++2nwwJuUnXouDwRLTYSHH+bAx37Fm96om26gCYdkP25kkyY5wphFr7Az6sCxw9aPo
+ /eHx3e0Jm+FqNEybESF7xTK1Loq8A7uOzA6UQ9su1cK68Q+8LwxMXmb5tx7TDFXa4Zh4Ha9fm
+ QWixxYuTLPuxpEpa2gVQlexde5VTw8qNXfCaQb8GALJHbwEP6vE4ha4qPTWIaHNOqM5NgUTg7
+ zcCsMh0cgGANLikzVZ4eefYcb6bhHVQCWao815bWDt9qPVGz+Lf2DoZ3qKc03WWoYorst2mDZ
+ x/56NSbjaCOhGMA603sA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 11:45:59 +0800
-王贇 <yun.wang@linux.alibaba.com> wrote:
+On Tue, Nov 12, 2019 at 9:28 PM Takashi Iwai <tiwai@suse.de> wrote:
 
-> Add the description for 'cg_numa_stat', also a new doc to explain
-> the details on how to deal with the per-cgroup numa statistics.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Koutný <mkoutny@suse.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> ---
->  Documentation/admin-guide/cg-numa-stat.rst      | 161 ++++++++++++++++++++++++
->  Documentation/admin-guide/kernel-parameters.txt |   4 +
->  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
->  3 files changed, 174 insertions(+)
->  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+> > Well spotted, this is indeed a very recent change I did to the patch.
+> > The idea here is to hide any use of 'time_t', 'timespec' and 'timeval'
+> > from kernel compilation. These types are now defined in an incompatible
+> > way by libc, so we have to remove them from the kernel's uapi headers.
+> > I would prefer to remove them completely from the kernel (rather than
+> > moving them from uapi to internal headers) to make it harder to write
+> > y2038-incompatible code, and with the 90 patches I sent this week,
+> > all users are gone from the kernel (this series was the last part).
+>
+> Could you put this trick in the changelog, too?
 
-Thanks for adding documentation for your new feature!  When you add a new
-RST file, though, you should also add it to index.rst so that it becomes a
-part of the docs build.
+Done.
 
-A couple of nits below...
-
-> diff --git a/Documentation/admin-guide/cg-numa-stat.rst b/Documentation/admin-guide/cg-numa-stat.rst
-> new file mode 100644
-> index 000000000000..87b716c51e16
-> --- /dev/null
-> +++ b/Documentation/admin-guide/cg-numa-stat.rst
-> @@ -0,0 +1,161 @@
-> +===============================
-> +Per-cgroup NUMA statistics
-> +===============================
-> +
-> +Background
-> +----------
-> +
-> +On NUMA platforms, remote memory accessing always has a performance penalty,
-> +although we have NUMA balancing working hard to maximum the local accessing
-> +proportion, there are still situations it can't helps.
-> +
-> +This could happen in modern production environment, using bunch of cgroups
-> +to classify and control resources which introduced complex configuration on
-> +memory policy, CPUs and NUMA node, NUMA balancing could facing the wrong
-> +memory policy or exhausted local NUMA node, lead into the low local page
-> +accessing proportion.
-> +
-> +We need to perceive such cases, figure out which workloads from which cgroup
-> +has introduced the issues, then we got chance to do adjustment to avoid
-> +performance damages.
-> +
-> +However, there are no hardware counter for per-task local/remote accessing
-> +info, we don't know how many remote page accessing has been done for a
-> +particular task.
-> +
-> +Statistics
-> +----------
-> +
-> +Fortunately, we have NUMA Balancing which scan task's mapping and trigger PF
-> +periodically, give us the opportunity to record per-task page accessing info.
-> +
-> +By "echo 1 > /proc/sys/kernel/cg_numa_stat" on runtime or add boot parameter
-> +'cg_numa_stat', we will enable the accounting of per-cgroup numa statistics,
-> +the 'cpu.numa_stat' entry of CPU cgroup will show statistics:
-> +
-> +  locality -- execution time sectioned by task NUMA locality (in ms)
-> +  exectime -- execution time sectioned by NUMA node (in ms)
-> +
-> +We define 'task NUMA locality' as:
-> +
-> +  nr_local_page_access * 100 / (nr_local_page_access + nr_remote_page_access)
-> +
-> +this per-task percentage value will be updated on the ticks for current task,
-> +and the access counter will be updated on task's NUMA balancing PF, so only
-> +the pages which NUMA Balancing paid attention to will be accounted.
-> +
-> +On each tick, we acquire the locality of current task on that CPU, accumulating
-> +the ticks into the counter of corresponding locality region, tasks from the
-> +same group sharing the counters, becoming the group locality.
-> +
-> +Similarly, we acquire the NUMA node of current CPU where the current task is
-> +executing on, accumulating the ticks into the counter of corresponding node,
-> +becoming the per-cgroup node execution time.
-> +
-> +To be noticed, the accounting is in a hierarchy way, which means the numa
-> +statistics representing not only the workload of this group, but also the
-> +workloads of all it's descendants.
-> +
-> +For example the 'cpu.numa_stat' show:
-> +  locality 39541 60962 36842 72519 118605 721778 946553
-> +  exectime 1220127 1458684
-
-You almost certainly want that rendered as a literal block, so say
-"show::".  There are other places where you'll want to do that as well. 
-
-> +The locality is sectioned into 7 regions, closely as:
-> +  0-13% 14-27% 28-42% 43-56% 57-71% 72-85% 86-100%
-> +
-> +And exectime is sectioned into 2 nodes, 0 and 1 in this case.
-> +
-> +Thus we know the workload of this group and it's descendants have totally
-> +executed 1220127ms on node_0 and 1458684ms on node_1, tasks with locality
-> +around 0~13% executed for 39541 ms, and tasks with locality around 87~100%
-> +executed for 946553 ms, which imply most of the memory access are local.
-> +
-> +Monitoring
-> +-----------------
-
-A slightly long underline :)
-
-I'll stop here; thanks again for adding documentation.
-
-jon
+      Arnd
