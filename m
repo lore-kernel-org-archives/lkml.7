@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DFCC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CF0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC2A2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E932053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611640;
-	bh=Pa5fKk6CHyK6RI2MGsaLXHeaFP6X1ftK/j9elCp552A=;
+	s=default; t=1573611648;
+	bh=0gEzsh+7Ngn7kbU3KfbwyUiSURyxIcBfrRMxOaEwNbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sBl+VYAMvpDy+xxHCj2tXO25KRJWLrl9+pNdg0MD3LL6ixhumFR+lCT5Z2F/LogE/
-	 dZmNnCfonQzgw5RvURqd2iwZ1HChOqIeNd5go3HDFq+ma8yUQiB5yoBFbbn1mSFKd8
-	 NrM0W2NIRKcZnJuC7V9BkItb/X61L2XO5FSSxgBQ=
+	b=DxV59tD5ydb/clCBTCjR/6MxQOOpWzU617iOSuxT9CtRqp6WIGrQT7T1F6x+bfoX6
+	 7jChPFy3ncjsdsn+dDA0uAEi5fz+/h6FExzw/cr8SOfD3at5Vffng9pj+N1+OsjODB
+	 2BUUJZ3I/Aeebe7+RN0V3ZEgyFWDs3AsGiFP79Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfKMBy1 (ORCPT
+        id S1728819AbfKMByQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:54:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:54:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbfKMByY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:54:24 -0500
+        id S1728795AbfKMByN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:54:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C72D420674;
-        Wed, 13 Nov 2019 01:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5047E2245D;
+        Wed, 13 Nov 2019 01:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610063;
-        bh=Pa5fKk6CHyK6RI2MGsaLXHeaFP6X1ftK/j9elCp552A=;
+        s=default; t=1573610053;
+        bh=0gEzsh+7Ngn7kbU3KfbwyUiSURyxIcBfrRMxOaEwNbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKBDy4lsTgrpfaJ7g42DI+nLxT77alvzNTRtWVNGRdyE7Ekf4tK8RvSH4iNEaoB1R
-         tXPISHjaq3N8xqS9FShQjfIGkFtig32ioj1YibJav9ck3h0hHJn6Z4xADnBc2INVW4
-         Eg3155VnjF70gEsnE1j9JNwwwqhaUcUtlKrvKEmQ=
+        b=cxo+MAPDgl3abIHpX6dvdTBqo0ZAyWhgBFsr/J7SzbL1vo8iRTe5x4g3q2sTKVXM1
+         v5qg3wsu74Sm1Y2ck3WPo83hfw/Gjy77YeUvFg12iNItZlu7oULZm4kQh0vG0RiFr3
+         g2CshbdKwIxMgZtDlAX010vF6osT9+qYyVquJJ/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 143/209] fbdev: fix broken menu dependencies
-Date:   Tue, 12 Nov 2019 20:49:19 -0500
-Message-Id: <20191113015025.9685-143-sashal@kernel.org>
+Cc:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 139/209] mmc: renesas_sdhi_internal_dmac: set scatter/gather max segment size
+Date:   Tue, 12 Nov 2019 20:49:15 -0500
+Message-Id: <20191113015025.9685-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,119 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[ Upstream commit aae3394ef0ef90cf00a21133357448385f13a5d4 ]
+[ Upstream commit 54541815b43f4e49c82628bf28bbb31d86d2f58a ]
 
-The framebuffer options and devices menu is unintentionally split
-or broken because some items in it do not depend on FB (including
-several under omap and mmp).
-Fix this by moving FB_CMDLINE, FB_NOTIFY, and FB_CLPS711X_OLD to
-just before the FB Kconfig symbol definition and by moving the
-omap, omap2, and mmp menus to last, following FB_SM712.
+Fix warning when running with CONFIG_DMA_API_DEBUG_SG=y by allocating a
+device_dma_parameters structure and filling in the max segment size. The
+size used is the result of a discussion with Renesas hardware engineers
+and unfortunately not found in the datasheet.
 
-Also, the FB_VIA dependencies are duplicated by both being inside
-an "if FB_VIA/endif" block and "depends on FB_VIA", so drop the
-"depends on FB_VIA" lines since they are redundant.
+  renesas_sdhi_internal_dmac ee140000.sd: DMA-API: mapping sg segment
+  longer than device claims to support [len=126976] [max=65536]
 
-Fixes: ea6763c104c9 ("video/fbdev: Always built-in video= cmdline parsing")
-Fixes: 5ec9653806ba ("fbdev: Make fb-notify a no-op if CONFIG_FB=n")
-Fixes: ef74d46a4ef3 ("video: clps711x: Add new Cirrus Logic CLPS711X framebuffer driver")
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Alexander Shiyan <shc_work@mail.ru>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+[wsa: simplified some logic after validating intended dma_parms life cycle
+      and added comment]
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/Kconfig | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ drivers/mmc/host/renesas_sdhi_internal_dmac.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-index 591a13a597874..f99558d006bf4 100644
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -2,6 +2,18 @@
- # fbdev configuration
- #
+diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
+index f4aefa8954bfc..382172fb3da8f 100644
+--- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
++++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
+@@ -310,12 +310,20 @@ static const struct soc_device_attribute gen3_soc_whitelist[] = {
+ static int renesas_sdhi_internal_dmac_probe(struct platform_device *pdev)
+ {
+ 	const struct soc_device_attribute *soc = soc_device_match(gen3_soc_whitelist);
++	struct device *dev = &pdev->dev;
  
-+config FB_CMDLINE
-+	bool
+ 	if (!soc)
+ 		return -ENODEV;
+ 
+ 	global_flags |= (unsigned long)soc->data;
+ 
++	dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms), GFP_KERNEL);
++	if (!dev->dma_parms)
++		return -ENOMEM;
 +
-+config FB_NOTIFY
-+	bool
++	/* value is max of SD_SECCNT. Confirmed by HW engineers */
++	dma_set_max_seg_size(dev, 0xffffffff);
 +
-+config FB_CLPS711X_OLD
-+	tristate
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
-+
- menuconfig FB
- 	tristate "Support for frame buffer devices"
- 	select FB_CMDLINE
-@@ -54,12 +66,6 @@ config FIRMWARE_EDID
- 	 combination with certain motherboards and monitors are known to
- 	 suffer from this problem.
+ 	return renesas_sdhi_probe(pdev, &renesas_sdhi_internal_dmac_dma_ops);
+ }
  
--config FB_CMDLINE
--	bool
--
--config FB_NOTIFY
--	bool
--
- config FB_DDC
-        tristate
-        depends on FB
-@@ -329,12 +335,6 @@ config FB_ACORN
- 	  hardware found in Acorn RISC PCs and other ARM-based machines.  If
- 	  unsure, say N.
- 
--config FB_CLPS711X_OLD
--	tristate
--	select FB_CFB_FILLRECT
--	select FB_CFB_COPYAREA
--	select FB_CFB_IMAGEBLIT
--
- config FB_CLPS711X
- 	tristate "CLPS711X LCD support"
- 	depends on FB && (ARCH_CLPS711X || COMPILE_TEST)
-@@ -1456,7 +1456,6 @@ if FB_VIA
- 
- config FB_VIA_DIRECT_PROCFS
- 	bool "direct hardware access via procfs (DEPRECATED)(DANGEROUS)"
--	depends on FB_VIA
- 	default n
- 	help
- 	  Allow direct hardware access to some output registers via procfs.
-@@ -1466,7 +1465,6 @@ config FB_VIA_DIRECT_PROCFS
- 
- config FB_VIA_X_COMPATIBILITY
- 	bool "X server compatibility"
--	depends on FB_VIA
- 	default n
- 	help
- 	  This option reduces the functionality (power saving, ...) of the
-@@ -2308,10 +2306,6 @@ config FB_SIMPLE
- 	  Configuration re: surface address, size, and format must be provided
- 	  through device tree, or plain old platform data.
- 
--source "drivers/video/fbdev/omap/Kconfig"
--source "drivers/video/fbdev/omap2/Kconfig"
--source "drivers/video/fbdev/mmp/Kconfig"
--
- config FB_SSD1307
- 	tristate "Solomon SSD1307 framebuffer support"
- 	depends on FB && I2C
-@@ -2341,3 +2335,7 @@ config FB_SM712
- 	  This driver is also available as a module. The module will be
- 	  called sm712fb. If you want to compile it as a module, say M
- 	  here and read <file:Documentation/kbuild/modules.txt>.
-+
-+source "drivers/video/fbdev/omap/Kconfig"
-+source "drivers/video/fbdev/omap2/Kconfig"
-+source "drivers/video/fbdev/mmp/Kconfig"
 -- 
 2.20.1
 
