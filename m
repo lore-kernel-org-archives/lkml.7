@@ -2,149 +2,147 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AB7C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB0CC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA41206CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1342206F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfKMR5M (ORCPT
+        id S1728238AbfKMR5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:57:12 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6656 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726105AbfKMR5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:57:12 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0ED179AD0C9DB477799E;
-        Thu, 14 Nov 2019 01:57:10 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
- 01:57:02 +0800
-Date:   Wed, 13 Nov 2019 17:56:55 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Tao Xu <tao3.xu@intel.com>, Linux MM <linux-mm@kvack.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>, "Keith Busch" <keith.busch@intel.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linuxarm <linuxarm@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
-Message-ID: <20191113175655.00005db9@huawei.com>
-In-Reply-To: <CAPcyv4i=Kkycy3YtU7FS-qG02CFjAQTcN7UaGjbKwDnNHDZCEA@mail.gmail.com>
-References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
-        <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
-        <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
-        <20191113094742.00000dc4@huawei.com>
-        <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
-        <CAPcyv4i=Kkycy3YtU7FS-qG02CFjAQTcN7UaGjbKwDnNHDZCEA@mail.gmail.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 13 Nov 2019 12:57:18 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37956 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfKMR5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:57:18 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 168D628A9C8
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v3 0/3] Enable Hantro G1 post-processor
+Date:   Wed, 13 Nov 2019 14:56:00 -0300
+Message-Id: <20191113175603.24742-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 08:52:46 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+Hi all,
 
-> On Wed, Nov 13, 2019 at 5:57 AM Tao Xu <tao3.xu@intel.com> wrote:
-> >
-> > On 11/13/2019 5:47 PM, Jonathan Cameron wrote:  
-> > > On Tue, 12 Nov 2019 09:55:17 -0800
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >  
-> > >> [ add Tao Xu ]
-> > >>
-> > >> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
-> > >> <Jonathan.Cameron@huawei.com> wrote:  
-> > >>>
-> > >>> Generic Initiators are a new ACPI concept that allows for the
-> > >>> description of proximity domains that contain a device which
-> > >>> performs memory access (such as a network card) but neither
-> > >>> host CPU nor Memory.
-> > >>>
-> > >>> This patch has the parsing code and provides the infrastructure
-> > >>> for an architecture to associate these new domains with their
-> > >>> nearest memory processing node.  
-> > >>
-> > >> Thanks for this Jonathan. May I ask how this was tested? Tao has been
-> > >> working on qemu support for HMAT [1]. I have not checked if it already
-> > >> supports generic initiator entries, but it would be helpful to include
-> > >> an example of how the kernel sees these configurations in practice.
-> > >>
-> > >> [1]: http://patchwork.ozlabs.org/cover/1096737/  
-> > >
-> > > Tested against qemu with SRAT and SLIT table overrides from an
-> > > initrd to actually create the node and give it distances
-> > > (those all turn up correctly in the normal places).  DSDT override
-> > > used to move an emulated network card into the GI numa node.  That
-> > > currently requires the PCI patch referred to in the cover letter.
-> > > On arm64 tested both on qemu and real hardware (overrides on tables
-> > > even for real hardware as I can't persuade our BIOS team to implement
-> > > Generic Initiators until an OS is actually using them.)
-> > >
-> > > Main real requirement is memory allocations then occur from one of
-> > > the nodes at the minimal distance when you are do a devm_ allocation
-> > > from a device assigned. Also need to be able to query the distances
-> > > to allow load balancing etc.  All that works as expected.
-> > >
-> > > It only has a fairly tangential connection to HMAT in that HMAT
-> > > can provide information on GI nodes.  Given HMAT code is quite happy
-> > > with memoryless nodes anyway it should work.  QEMU doesn't currently
-> > > have support to create GI SRAT entries let alone HMAT using them.
-> > >
-> > > Whilst I could look at adding such support to QEMU, it's not
-> > > exactly high priority to emulate something we can test easily
-> > > by overriding the tables before the kernel reads them.
-> > >
-> > > I'll look at how hard it is to build an HMAT tables for my test
-> > > configs based on the ones I used to test your HMAT patches a while
-> > > back.  Should be easy if tedious.
-> > >
-> > > Jonathan
-> > >  
-> > Indeed, HMAT can support Generic Initiator, but as far as I know, QEMU
-> > only can emulate a node with cpu and memory, or memory-only. Even if we
-> > assign a node with cpu only, qemu will raise error. Considering
-> > compatibility, there are lots of work to do for QEMU if we change NUMA
-> > or SRAT table.  
-> 
-> Thanks for the background. It would still be a useful feature to be
-> able to define a memory + generic-initiator node in qemu. That will
-> mirror real world accelerators with local memory configurations.
+The Hantro G1 VPU post-processor block can be pipelined with
+the decoder hardware, allowing to perform operations such as
+color conversion, scaling, rotation, cropping, among others.
 
-Ah crossed with my essay.  This simple case you have here is easier to
-discuss.  Lets call it a GPU on a coherent interconnect with local memory.
+When the post-processor is enabled, the decoder hardware
+needs its own set of NV12 buffers (the native decoder format),
+and the post-processor is the owner of the CAPTURE buffers,
+allocated for the post-processed format.
 
-What do you think should happen for access0 in sysfs?  Do we want the
-GPU reflected in there or not?
+This way, applications obtain post-processed
+(scaled, converted, etc) buffers transparently.
 
-This particular case doesn't actually need a GI, though perhaps you
-might want one purely to give HMAT based info.  On a pre GI system
-you would just use a memory only node and use DSDT _PXM to put the
-GPU device in it.
+This feature is implemented by exposing the post-processed pixel
+formats on ENUM_FMT, ordered as "preferred pixelformat first":
 
-Whilst I agree a means of testing this in qemu might be more
-friendly than doing it by overriding tables, the overriding route
-lets you do the crazy corner cases + generate 'invalid' tables
-which are also useful for testing.
+v4l2-ctl -d 1 --list-formats
+ioctl: VIDIOC_ENUM_FMT
+	Type: Video Capture Multiplanar
 
-Thanks,
+	[0]: 'NV12' (Y/CbCr 4:2:0)
+	[1]: 'YUYV' (YUYV 4:2:2)
 
-Jonathan
+The order of preference in ENUM_FMT can be used as a hint
+by applications. This series updates the uAPI specification
+accordingly.
 
+When the application sets a pixel format other than NV12,
+the post-processor is transparently enabled.
+
+Patch 1 is a cleanups needed to easier integrate the post-processor.
+Patch 2 introduces the post-processing support.
+Patch 3 updates the uAPI specification.
+
+This is tested on RK3288 platforms with MPEG-2, VP8 and
+H264 streams, decoding to YUY2 surfaces. For now, this series
+is only adding support for NV12-to-YUY2 conversion.
+
+Applies to media/master.
+
+Future plans
+------------
+
+It seems to me that we should start moving this driver to use
+regmap-based access to registers. However, such move is out of scope
+and not entirely related to this post-processor enablement.
+
+We'll work on that as follow-up patches.
+
+Changelog
+---------
+
+Changes v3:
+
+* After discussing with Hans and Tomasz during the media summit
+in ELCE, we decided to go back on the MC changes. The MC topology
+is now untouched. This means the series is now similar to v1,
+except we explicitly use the ENUM_FMT to hint about the post-processed
+formats.
+
+Changes v2:
+
+* The decoder->post-processor topology is now exposed
+  explicitly and applications need to configure the pipeline.
+  By default, the decoder is enabled and the post-processor
+  is disabled.
+
+* RGB post-processing output has been dropped. We might
+  add this in the future, but for now, it seems it would
+  make the code more complex without a use-case in mind.
+  RGB is much more memory-consuming so less attractive
+  than YUV, and modern GPUs and display controllers support YUV.
+
+* The post-processor implementation still supports RK3288
+  only. However, a generic register infrastructure is introduced
+  to make addition of other variants such as RK3399 really easy.
+
+Ezequiel Garcia (3):
+  media: hantro: Cleanup format negotiation helpers
+  media: hantro: Support color conversion via post-processing
+  media: vidioc-enum-fmt.rst: clarify format preference
+
+ .../media/uapi/v4l/vidioc-enum-fmt.rst        |   4 +-
+ drivers/staging/media/hantro/Makefile         |   1 +
+ drivers/staging/media/hantro/hantro.h         |  64 +++++++-
+ drivers/staging/media/hantro/hantro_drv.c     |   8 +-
+ .../staging/media/hantro/hantro_g1_h264_dec.c |   2 +-
+ .../media/hantro/hantro_g1_mpeg2_dec.c        |   2 +-
+ drivers/staging/media/hantro/hantro_g1_regs.h |  53 +++++++
+ .../staging/media/hantro/hantro_g1_vp8_dec.c  |   2 +-
+ drivers/staging/media/hantro/hantro_h264.c    |   6 +-
+ drivers/staging/media/hantro/hantro_hw.h      |  13 ++
+ .../staging/media/hantro/hantro_postproc.c    | 141 ++++++++++++++++++
+ drivers/staging/media/hantro/hantro_v4l2.c    | 105 ++++++++-----
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |  10 ++
+ 13 files changed, 366 insertions(+), 45 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/hantro_postproc.c
+
+-- 
+2.22.0
 
