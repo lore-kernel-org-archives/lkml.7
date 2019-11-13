@@ -2,112 +2,77 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFF1C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7103CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9568D206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573640453;
-	bh=aFsBOvHVyME8LY3ePTW/JWDZQv8QeWFSB0xthmKTJ4c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FRoCxjg8E43zh0ism4Fbg9EZmWqBa7PZ9OIomvOefn/r4LrqKmZLBXBb3vGvJskQG
-	 lR05YHWmE1UdROL+8REBBsKSuNgUwycURBx/DkEO4mTtl42wmJigEMgF1iD4A8rpcs
-	 Z2lOhATnR7g7CvvbIlHGSpIdmurNqofmgWfkqtF0=
+	by mail.kernel.org (Postfix) with ESMTP id 4F58F222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfKMKUw (ORCPT
+        id S1727237AbfKMKWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:20:52 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35383 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfKMKUv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:20:51 -0500
-Received: by mail-ot1-f65.google.com with SMTP id z6so1157246otb.2;
-        Wed, 13 Nov 2019 02:20:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Lvja61wwJEkxFUoNesZ7CUJfOp6AZA3UJFpr6tZxyM=;
-        b=Vahx1NVOfVngUdWpiVbr8W7QMs1jlP9JWvUBvMyttiC9/GvubEkW0+uiJUPe9tZxwG
-         7dINTQlveyGH9wxuZ1ecFRwDc237Wo/kq9KHsACePsL+VXOi80zOxGOYPDJrq3w2WPe8
-         HlW9zN2uwxv3Lz6GteEbLf8Bt2Vb/dT89PFnBXulIA58i1/ek/GU0pLpyixsYlVEcKoo
-         o7siEm6oPxQ0V4QHjnMTrt7F+FI9mI7B/bvqHT7L3m6K9fjm9FDVP0KDG6bcZQuegrCW
-         RplF6Td/GKT+rMwra1pqHLn2pjK3GVH2IBu86ZCs14ohBPUMuqLq9hGKwSh9G5dim9rp
-         +/yQ==
-X-Gm-Message-State: APjAAAXU3eaX7kiIe7J/PjQV5xBoodCGZlbWmqQvVW3dlQQ/DuhMfV8Y
-        UEsO+dz5CnV+gR1njp4OLmVgpbN9FmpezhmuIfY=
-X-Google-Smtp-Source: APXvYqx7+iaSr/YFYkN/OL/jLYa0u92ocpHWjpBLM/QT3evJcxb2dZgQ4dGsiKKKGXO464GduvcJf5QQBQnKxv9uLdE=
-X-Received: by 2002:a9d:7d01:: with SMTP id v1mr2015836otn.167.1573640449727;
- Wed, 13 Nov 2019 02:20:49 -0800 (PST)
+        Wed, 13 Nov 2019 05:22:31 -0500
+Received: from mga11.intel.com ([192.55.52.93]:33051 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbfKMKWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:22:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 02:22:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
+   d="scan'208";a="355431695"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 13 Nov 2019 02:22:28 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 505FFFD; Wed, 13 Nov 2019 12:22:27 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Lechner <david@lechnology.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v1] Revert "mfd: syscon: Set name of regmap_config"
+Date:   Wed, 13 Nov 2019 12:22:26 +0200
+Message-Id: <20191113102226.71492-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191113023559.62295-1-saravanak@google.com> <20191113023559.62295-2-saravanak@google.com>
-In-Reply-To: <20191113023559.62295-2-saravanak@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 13 Nov 2019 11:20:38 +0100
-Message-ID: <CAJZ5v0j=tpZDe5JU+tBRRmtgK=Vuj7UTzqB2Ravg-BctcP6u+Q@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Clarify documentation for fwnode_operations.add_links()
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 3:36 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> The wording was a bit ambiguous. So update it to make it clear.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+This reverts commit 500f9ff518cf55930c670b0e2b8901caf70a7548.
 
-Looks better with this change IMO:
+The original commit is a duplication of the exactly previously added
+commit 408d1d570a63 ("mfd: syscon: Set regmap name to DT node name").
+Revert the unnecessary later one.
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: David Lechner <david@lechnology.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/syscon.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> ---
->  include/linux/fwnode.h | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> index 766ff9bb5876..23df37f85398 100644
-> --- a/include/linux/fwnode.h
-> +++ b/include/linux/fwnode.h
-> @@ -94,15 +94,16 @@ struct fwnode_reference_args {
->   *             available suppliers.
->   *
->   *             Return 0 if device links have been successfully created to all
-> - *             the suppliers this device needs to create device links to or if
-> - *             the supplier information is not known.
-> + *             the known suppliers of this device or if the supplier
-> + *             information is not known.
->   *
-> - *             Return -ENODEV if and only if the suppliers needed for probing
-> - *             the device are not yet available to create device links to.
-> + *             Return -ENODEV if the suppliers needed for probing this device
-> + *             have not been registered yet (because device links can only be
-> + *             created to devices registered with the driver core).
->   *
-> - *             Return -EAGAIN if there are suppliers that need to be linked to
-> - *             that are not yet available but none of those suppliers are
-> - *             necessary for probing this device.
-> + *             Return -EAGAIN if some of the suppliers of this device have not
-> + *             been registered yet, but none of those suppliers are necessary
-> + *             for probing the device.
->   */
->  struct fwnode_operations {
->         struct fwnode_handle *(*get)(struct fwnode_handle *fwnode);
-> --
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
->
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index 660723276481..e22197c832e8 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -105,7 +105,6 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+ 	syscon_config.reg_stride = reg_io_width;
+ 	syscon_config.val_bits = reg_io_width * 8;
+ 	syscon_config.max_register = resource_size(&res) - reg_io_width;
+-	syscon_config.name = of_node_full_name(np);
+ 
+ 	regmap = regmap_init_mmio(NULL, base, &syscon_config);
+ 	if (IS_ERR(regmap)) {
+-- 
+2.24.0
+
