@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759EDC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DA8C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41357222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C99C222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611727;
-	bh=8Gh9QFWIcV8gouhNwtcnLmaTG574i/mtCXf99Tt1wrU=;
+	s=default; t=1573611735;
+	bh=nn7wuo1qLQGHzAKEC4nO1MUzJUASpsgxIwya/ME3rxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g4+hrtCUFmSSbmQqJSNi7O+i9mHy0R8L6NK7q/s0lOFywAaYSFR/7DaDyhvkeHICj
-	 QZHhMdaH9v3OsZyA/2IAITjcMi1DS3CA79wB8brMuYYdh2jh9s0L+CTuuBqxGkQ0bu
-	 /z6AotGwFLn29nvNeck2QT+bM8U1Ywp41iIF2lz8=
+	b=bbBKJtj72EZCA7Gi9N5MWvO3beSX0ix+P5All5QQBLd/WaKTauX9lQ5n2QxG8VGZE
+	 POPBIH3md+kHH1BgQHrKcZpVrJn4ohKgkx1Q+DHZOwBKWqPyMLJEY3HM22DV2vv9Tv
+	 OEvtI8APKdKy6WEtJf4nbfcXQz/Yim4KZQaG+ZHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbfKMCWG (ORCPT
+        id S1728593AbfKMBxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:22:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43428 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:53:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbfKMBxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:36 -0500
+        id S1727527AbfKMBxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA12222CD;
-        Wed, 13 Nov 2019 01:53:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C4B222CD;
+        Wed, 13 Nov 2019 01:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610015;
-        bh=8Gh9QFWIcV8gouhNwtcnLmaTG574i/mtCXf99Tt1wrU=;
+        s=default; t=1573610002;
+        bh=nn7wuo1qLQGHzAKEC4nO1MUzJUASpsgxIwya/ME3rxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K4P6fxedszWsIDD8EyeS8KZy/1YujwT4JHV5+sWUMN9u5UQWaRgyvoU400Yg9AIu3
-         Oda59DeRppznecPn1V3ye4HC4m3b8vqN0NgfkYBrDXmyxvQJk934VrAWOdHPt2Ofze
-         C65lkAKLF86SPOz5+gKcPpNM3YE4SF699wFLjMlQ=
+        b=za+aWDN884a9VARfLObYhCo/v4wHvc31yUgGXprRpcnjWFIEeuo3xgpI9KxkQht7R
+         ub6EoEEDTDoNYK1zdsKedvG/vyTwowpPV+35WnkAgH2GNLrACvHv6JhBingGfJe/yZ
+         sH6kT8CkwNUpYOOfQw5QYfXGyqeESkKrv33FxHIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 119/209] i2c: zx2967: use core to detect 'no zero length' quirk
-Date:   Tue, 12 Nov 2019 20:48:55 -0500
-Message-Id: <20191113015025.9685-119-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 109/209] i2c: brcmstb: Allow enabling the driver on DSL SoCs
+Date:   Tue, 12 Nov 2019 20:48:45 -0500
+Message-Id: <20191113015025.9685-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,53 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit e2115ace4196bcd2126446fb874bcfc90cba79be ]
+[ Upstream commit e1eba2ea54a2de0e4c58d87270d25706bb77b844 ]
 
-And don't reimplement in the driver.
+ARCH_BCM_63XX which is used by ARM-based DSL SoCs from Broadcom uses the
+same controller, make it possible to select the STB driver and update
+the Kconfig and help text a bit.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-zx2967.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-zx2967.c b/drivers/i2c/busses/i2c-zx2967.c
-index 48281c1b30c6d..b8f9e020d80e6 100644
---- a/drivers/i2c/busses/i2c-zx2967.c
-+++ b/drivers/i2c/busses/i2c-zx2967.c
-@@ -281,9 +281,6 @@ static int zx2967_i2c_xfer_msg(struct zx2967_i2c *i2c,
- 	int ret;
- 	int i;
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 8f803812ea244..ee6dd1b84fac8 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -433,12 +433,13 @@ config I2C_BCM_KONA
+ 	  If you do not need KONA I2C interface, say N.
  
--	if (msg->len == 0)
--		return -EINVAL;
--
- 	zx2967_i2c_flush_fifos(i2c);
+ config I2C_BRCMSTB
+-	tristate "BRCM Settop I2C controller"
+-	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
++	tristate "BRCM Settop/DSL I2C controller"
++	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_63XX || \
++		   COMPILE_TEST
+ 	default y
+ 	help
+ 	  If you say yes to this option, support will be included for the
+-	  I2C interface on the Broadcom Settop SoCs.
++	  I2C interface on the Broadcom Settop/DSL SoCs.
  
- 	i2c->cur_trans = msg->buf;
-@@ -498,6 +495,10 @@ static const struct i2c_algorithm zx2967_i2c_algo = {
- 	.functionality = zx2967_i2c_func,
- };
+ 	  If you do not need I2C interface, say N.
  
-+static const struct i2c_adapter_quirks zx2967_i2c_quirks = {
-+	.flags = I2C_AQ_NO_ZERO_LEN,
-+};
-+
- static const struct of_device_id zx2967_i2c_of_match[] = {
- 	{ .compatible = "zte,zx296718-i2c", },
- 	{ },
-@@ -568,6 +569,7 @@ static int zx2967_i2c_probe(struct platform_device *pdev)
- 	strlcpy(i2c->adap.name, "zx2967 i2c adapter",
- 		sizeof(i2c->adap.name));
- 	i2c->adap.algo = &zx2967_i2c_algo;
-+	i2c->adap.quirks = &zx2967_i2c_quirks;
- 	i2c->adap.nr = pdev->id;
- 	i2c->adap.dev.parent = &pdev->dev;
- 	i2c->adap.dev.of_node = pdev->dev.of_node;
 -- 
 2.20.1
 
