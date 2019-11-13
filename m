@@ -2,156 +2,155 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7154CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBC5C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B105F206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764C7206F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:51:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BM9BKnM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfKMSuf (ORCPT
+        id S1728704AbfKMSvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:50:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbfKMSuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:50:32 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 Nov 2019 13:51:45 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35975 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727582AbfKMSvo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:51:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573671103;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jPirtsbQkWucUwnMuKe8VCWe61zXQyhvRowbxeAY5IA=;
+        b=BM9BKnM9/10+stAYlXfWyGycH2Lnz0gzaNF7Ro7m1Rij0T2ETMugiVKP2cVcL08zLy4Shy
+        CVvNBIIUzM97kjanVrkhCHm+sWNlhymhz5ixt5mwaDOByryZzUd0yDVIs5406vzyZILS2t
+        xnI4q0A4TDfnvgJ7IaQOOHbCSZbUp1c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334-EwpZNYwXM5GafFpVyFCr0g-1; Wed, 13 Nov 2019 13:51:40 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C56206F3;
-        Wed, 13 Nov 2019 18:50:32 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1iUxio-0004UA-Q5; Wed, 13 Nov 2019 13:50:30 -0500
-Message-Id: <20191113185030.687588433@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Wed, 13 Nov 2019 13:49:59 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "John 'Warthog9' Hawley" <warthog9@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masanari Iida <standby24x7@gmail.com>
-Subject: [for-next][PATCH 1/2] ktest: Fix some typos in sample.conf
-References: <20191113184958.730304611@goodmis.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B658D18A07C2;
+        Wed, 13 Nov 2019 18:51:38 +0000 (UTC)
+Received: from [10.36.116.48] (ovpn-116-48.ams2.redhat.com [10.36.116.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BAFC5DA70;
+        Wed, 13 Nov 2019 18:51:27 +0000 (UTC)
+Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+References: <20191108000855.25209-1-t-fukasawa@vx.jp.nec.com>
+ <20191108000855.25209-3-t-fukasawa@vx.jp.nec.com>
+ <CAPcyv4h+++k1VTB2xKWHXjC4LC0N=nvDUMcdbGAsDBmwMob5dw@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <163d1d41-19c1-d8cf-6c1c-eec226c34ac1@redhat.com>
+Date:   Wed, 13 Nov 2019 19:51:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+In-Reply-To: <CAPcyv4h+++k1VTB2xKWHXjC4LC0N=nvDUMcdbGAsDBmwMob5dw@mail.gmail.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: EwpZNYwXM5GafFpVyFCr0g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masanari Iida <standby24x7@gmail.com>
+On 08.11.19 20:13, Dan Williams wrote:
+> On Thu, Nov 7, 2019 at 4:15 PM Toshiki Fukasawa
+> <t-fukasawa@vx.jp.nec.com> wrote:
+>>
+>> Currently, there is no way to identify pfn on ZONE_DEVICE.
+>> Identifying pfn on system memory can be done by using a
+>> section-level flag. On the other hand, identifying pfn on
+>> ZONE_DEVICE requires a subsection-level flag since ZONE_DEVICE
+>> can be created in units of subsections.
+>>
+>> This patch introduces a new bitmap subsection_dev_map so that
+>> we can identify pfn on ZONE_DEVICE.
+>>
+>> Also, subsection_dev_map is used to prove that struct pages
+>> included in the subsection have been initialized since it is
+>> set after memmap_init_zone_device(). We can avoid accessing
+>> pages currently being initialized by checking subsection_dev_map.
+>>
+>> Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+>> ---
+>>   include/linux/mmzone.h | 19 +++++++++++++++++++
+>>   mm/memremap.c          |  2 ++
+>>   mm/sparse.c            | 32 ++++++++++++++++++++++++++++++++
+>>   3 files changed, 53 insertions(+)
+>>
+>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>> index bda2028..11376c4 100644
+>> --- a/include/linux/mmzone.h
+>> +++ b/include/linux/mmzone.h
+>> @@ -1174,11 +1174,17 @@ static inline unsigned long section_nr_to_pfn(un=
+signed long sec)
+>>
+>>   struct mem_section_usage {
+>>          DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
+>> +#ifdef CONFIG_ZONE_DEVICE
+>> +       DECLARE_BITMAP(subsection_dev_map, SUBSECTIONS_PER_SECTION);
+>> +#endif
+>=20
+> Hi Toshiki,
+>=20
+> There is currently an effort to remove the PageReserved() flag as some
+> code is using that to detect ZONE_DEVICE. In reviewing those patches
+> we realized that what many code paths want is to detect online memory.
+> So instead of a subsection_dev_map add a subsection_online_map. That
+> way pfn_to_online_page() can reliably avoid ZONE_DEVICE ranges. I
+> otherwise question the use case for pfn_walkers to return pages for
+> ZONE_DEVICE pages, I think the skip behavior when pfn_to_online_page()
+> =3D=3D false is the right behavior.
 
-This patch fixes some spelling typo in sample.conf
+To be more precise, I recommended an subsection_active_map, to indicate=20
+which memmaps were fully initialized and can safely be touched (e.g., to=20
+read the zone/nid). This map would also be set when the devmem memmaps=20
+were initialized (race between adding memory/growing the section and=20
+initializing the memmap).
 
-Link: http://lkml.kernel.org/r/20190930124925.20250-1-standby24x7@gmail.com
+See
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/testing/ktest/sample.conf | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+https://lkml.org/lkml/2019/10/10/87
 
-diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
-index c3bc933d437b..10af34819642 100644
---- a/tools/testing/ktest/sample.conf
-+++ b/tools/testing/ktest/sample.conf
-@@ -10,7 +10,7 @@
- #
- 
- # Options set in the beginning of the file are considered to be
--# default options. These options can be overriden by test specific
-+# default options. These options can be overridden by test specific
- # options, with the following exceptions:
- #
- #  LOG_FILE
-@@ -204,7 +204,7 @@
- #
- # This config file can also contain "config variables".
- # These are assigned with ":=" instead of the ktest option
--# assigment "=".
-+# assignment "=".
- #
- # The difference between ktest options and config variables
- # is that config variables can be used multiple times,
-@@ -263,7 +263,7 @@
- #### Using options in other options ####
- #
- # Options that are defined in the config file may also be used
--# by other options. All options are evaulated at time of
-+# by other options. All options are evaluated at time of
- # use (except that config variables are evaluated at config
- # processing time).
- #
-@@ -707,7 +707,7 @@
- 
- # Line to define a successful boot up in console output.
- # This is what the line contains, not the entire line. If you need
--# the entire line to match, then use regural expression syntax like:
-+# the entire line to match, then use regular expression syntax like:
- #  (do not add any quotes around it)
- #
- #  SUCCESS_LINE = ^MyBox Login:$
-@@ -839,7 +839,7 @@
- # (ignored if POWEROFF_ON_SUCCESS is set)
- #REBOOT_ON_SUCCESS = 1
- 
--# In case there are isses with rebooting, you can specify this
-+# In case there are issues with rebooting, you can specify this
- # to always powercycle after this amount of time after calling
- # reboot.
- # Note, POWERCYCLE_AFTER_REBOOT = 0 does NOT disable it. It just
-@@ -848,7 +848,7 @@
- # (default undefined)
- #POWERCYCLE_AFTER_REBOOT = 5
- 
--# In case there's isses with halting, you can specify this
-+# In case there's issues with halting, you can specify this
- # to always poweroff after this amount of time after calling
- # halt.
- # Note, POWEROFF_AFTER_HALT = 0 does NOT disable it. It just
-@@ -972,7 +972,7 @@
- #
- #  PATCHCHECK_START is required and is the first patch to
- #   test (the SHA1 of the commit). You may also specify anything
--#   that git checkout allows (branch name, tage, HEAD~3).
-+#   that git checkout allows (branch name, tag, HEAD~3).
- #
- #  PATCHCHECK_END is the last patch to check (default HEAD)
- #
-@@ -994,7 +994,7 @@
- #     IGNORE_WARNINGS is set for the given commit's sha1
- #
- #   IGNORE_WARNINGS can be used to disable the failure of patchcheck
--#     on a particuler commit (SHA1). You can add more than one commit
-+#     on a particular commit (SHA1). You can add more than one commit
- #     by adding a list of SHA1s that are space delimited.
- #
- #   If BUILD_NOCLEAN is set, then make mrproper will not be run on
-@@ -1093,7 +1093,7 @@
- #   whatever reason. (Can't reboot, want to inspect each iteration)
- #   Doing a BISECT_MANUAL will have the test wait for you to
- #   tell it if the test passed or failed after each iteration.
--#   This is basicall the same as running git bisect yourself
-+#   This is basically the same as running git bisect yourself
- #   but ktest will rebuild and install the kernel for you.
- #
- # BISECT_CHECK = 1 (optional, default 0)
-@@ -1239,7 +1239,7 @@
- #
- # CONFIG_BISECT_EXEC (optional)
- #  The config bisect is a separate program that comes with ktest.pl.
--#  By befault, it will look for:
-+#  By default, it will look for:
- #    `pwd`/config-bisect.pl # the location ktest.pl was executed from.
- #  If it does not find it there, it will look for:
- #    `dirname <ktest.pl>`/config-bisect.pl # The directory that holds ktest.pl
--- 
-2.23.0
+and
 
+https://www.spinics.net/lists/linux-driver-devel/msg130012.html
+
+I dislike a map that is specific to ZONE_DEVICE or (currently)=20
+!ZONE_DEVICE. I rather want an indication "this memmap is safe to=20
+touch". As discussed along the mentioned threads, we can combine this=20
+later with RCU to handle some races that are currently possible.
+
+--=20
+
+Thanks,
+
+David / dhildenb
 
