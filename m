@@ -2,148 +2,108 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF31C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6470BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF7621925
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611420;
-	bh=pBZM1+qxDgGdEEMveh3ihD78Jrc09jymm0BKj6GZGOs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVyEZiZwcOho3um/OJzPKYajBv9yovhUAUWQYvH3P4iieMPtTqSQ7B3KZhV0YqnyZ
-	 lulwdvvsEAA5K4PuRyzMAuB0LFMgd4veTrTVMmhp5WjkW9WBQ5QGKEtRe/0FViRZr0
-	 o/ERNEsD+rqrqvSVtyI/41oAAtLB92GjzggX8dPI=
+	by mail.kernel.org (Postfix) with ESMTP id 3CD3F222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C/6sf+uZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfKMCQ7 (ORCPT
+        id S1730273AbfKMCRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:16:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbfKMB4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:14 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F218A222D3;
-        Wed, 13 Nov 2019 01:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610173;
-        bh=pBZM1+qxDgGdEEMveh3ihD78Jrc09jymm0BKj6GZGOs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Td8Q13KJYdIo6JBm3CMqSkZRvXSdEvAnwBBuetoaUUBxRfNC+/vnJFUYvW9cngOMv
-         a8UZ5RYHmCV2onH7GTIQ5xmn19fZXjAapMe+F8i3+z2vUP6t9LxYwbzq/omtA3B8gW
-         Z0SjqPB5rQqKF3eOg69wEQLQDI/QTDcqiKO8FMH8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Reinette Chatre <reinette.chatre@intel.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 12 Nov 2019 21:17:00 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17146 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728471AbfKMCQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:16:57 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcb67610000>; Tue, 12 Nov 2019 18:16:01 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 18:16:57 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 18:16:57 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 02:16:56 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 Nov 2019 02:16:56 +0000
+Received: from henryl-tu10x.nvidia.com (Not Verified[10.19.109.97]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dcb67970000>; Tue, 12 Nov 2019 18:16:56 -0800
+From:   Henry Lin <henryl@nvidia.com>
+CC:     Henry Lin <henryl@nvidia.com>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, fenghua.yu@intel.com,
-        gavin.hindman@intel.com, jithu.joseph@intel.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 209/209] x86/resctrl: Fix rdt_find_domain() return value and checks
-Date:   Tue, 12 Nov 2019 20:50:25 -0500
-Message-Id: <20191113015025.9685-209-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
-References: <20191113015025.9685-1-sashal@kernel.org>
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] usb-audio: not submit urb for stopped endpoint
+Date:   Wed, 13 Nov 2019 10:14:19 +0800
+Message-ID: <20191113021420.13377-1-henryl@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191112065108.7766-1-henryl@nvidia.com>
+References: <20191112065108.7766-1-henryl@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573611361; bh=Tujpg7WZBoOThKGX8MEAml/VB3Yc83jertZP/WdKXl0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=C/6sf+uZj2gOMh/+HER/DbH5WOlnwdrXdu1S2kYhz3Kqc89ZAAQhoOb5k85XqhhvC
+         zWY60Wd/cdyrsszASUdpJmdmOJSLpmnCE0HOHB6Ld1KH2aa40KJPP+kqE/9dgPOy4M
+         S3B0nML7ZS27bkJ0DiQjuH0X+ohSrp6o5a/aOScVdxj5xK4NMzlFpOdliYYVriki45
+         pMn76QfDjqIX+6NGPq5rlRl69ZjxGym+QgaAoslIKGQAK6zrDvr44DA311pJqXoPQc
+         I3iyVcxdgyj0hRlIq0JD7pk+NawUf0zX1SsrG/rsrXCN5+KCPP3kXCwn8/4eACPeZ8
+         XMwUJvgDueUEQ==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinette Chatre <reinette.chatre@intel.com>
+While output urb's snd_complete_urb() is executing, calling
+prepare_outbound_urb() may cause endpoint stopped before
+prepare_outbound_urb() returns and result in next urb submitted
+to stopped endpoint. usb-audio driver cannot re-use it afterwards as
+the urb is still hold by usb stack.
 
-[ Upstream commit 52eb74339a6233c69f4e3794b69ea7c98eeeae1b ]
+This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
+to let snd_complete_urb() know the endpoint already stopped and does not
+submit next urb. Below kind of error will be fixed:
 
-rdt_find_domain() returns an ERR_PTR() that is generated from a provided
-domain id when the value is negative.
+[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
+[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
 
-Care needs to be taken when creating an ERR_PTR() from this value
-because a subsequent check using IS_ERR() expects the error to
-be within the MAX_ERRNO range. Using an invalid domain id as an
-ERR_PTR() does work at this time since this is currently always -1.
-Using this undocumented assumption is fragile since future users of
-rdt_find_domain() may not be aware of thus assumption.
-
-Two related issues are addressed:
-
-- Ensure that rdt_find_domain() always returns a valid error value by
-forcing the error to be -ENODEV when a negative domain id is provided.
-
-- In a few instances the return value of rdt_find_domain() is just
-checked for NULL - fix these to include a check of ERR_PTR.
-
-Fixes: d89b7379015f ("x86/intel_rdt/cqm: Add mon_data")
-Fixes: 521348b011d6 ("x86/intel_rdt: Introduce utility to obtain CDP peer")
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: fenghua.yu@intel.com
-Cc: gavin.hindman@intel.com
-Cc: jithu.joseph@intel.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/b88cd4ff6a75995bf8db9b0ea546908fe50f69f3.1544479852.git.reinette.chatre@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Henry Lin <henryl@nvidia.com>
 ---
- arch/x86/kernel/cpu/intel_rdt.c             | 2 +-
- arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c | 2 +-
- arch/x86/kernel/cpu/intel_rdt_rdtgroup.c    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ sound/usb/endpoint.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/intel_rdt.c b/arch/x86/kernel/cpu/intel_rdt.c
-index abb71ac704433..cc43c5abd187b 100644
---- a/arch/x86/kernel/cpu/intel_rdt.c
-+++ b/arch/x86/kernel/cpu/intel_rdt.c
-@@ -421,7 +421,7 @@ struct rdt_domain *rdt_find_domain(struct rdt_resource *r, int id,
- 	struct list_head *l;
+diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+index a2ab8e8d3a93..4a9a2f6ef5a4 100644
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -388,6 +388,9 @@ static void snd_complete_urb(struct urb *urb)
+ 		}
  
- 	if (id < 0)
--		return ERR_PTR(id);
-+		return ERR_PTR(-ENODEV);
- 
- 	list_for_each(l, &r->domains) {
- 		d = list_entry(l, struct rdt_domain, list);
-diff --git a/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c b/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
-index 627e5c809b33d..968ace3c6d730 100644
---- a/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_ctrlmondata.c
-@@ -459,7 +459,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 
- 	r = &rdt_resources_all[resid];
- 	d = rdt_find_domain(r, domid, NULL);
--	if (!d) {
-+	if (IS_ERR_OR_NULL(d)) {
- 		ret = -ENOENT;
- 		goto out;
- 	}
-diff --git a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-index 0d8ea82acd930..ad64031e82dcd 100644
---- a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-@@ -1023,7 +1023,7 @@ static int rdt_cdp_peer_get(struct rdt_resource *r, struct rdt_domain *d,
- 	 * peer RDT CDP resource. Hence the WARN.
- 	 */
- 	_d_cdp = rdt_find_domain(_r_cdp, d->id, NULL);
--	if (WARN_ON(!_d_cdp)) {
-+	if (WARN_ON(IS_ERR_OR_NULL(_d_cdp))) {
- 		_r_cdp = NULL;
- 		ret = -EINVAL;
- 	}
+ 		prepare_outbound_urb(ep, ctx);
++		/* can be stopped during prepare callback */
++		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
++			goto exit_clear;
+ 	} else {
+ 		retire_inbound_urb(ep, ctx);
+ 		/* can be stopped during retire callback */
 -- 
-2.20.1
+2.17.1
 
