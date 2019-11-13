@@ -2,109 +2,117 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A5FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F44EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6C72245B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573641222;
-	bh=JxJFayWcgdtF1EVaUH4pD+skHU9gsn9dqUwJZvSS4n8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xggDeMes4y8VJTAiCjbcds/PMHZVpeKcq4gi9oPiIfqf11AToA62frQIdl9KA/qp/
-	 ShogitL8Eon00/06D5NKW1+LeV3nlY3sPPWAZdlraPA+Fa5Im6zK2hFluPqGi+y1Gy
-	 2wrurCrowbywpnvO224HRcj4OO04KpbAXq/V2XsU=
+	by mail.kernel.org (Postfix) with ESMTP id 0F123222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfKMKdl (ORCPT
+        id S1727427AbfKMKeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:33:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbfKMKdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:33:40 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62CF1222CD;
-        Wed, 13 Nov 2019 10:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573641220;
-        bh=JxJFayWcgdtF1EVaUH4pD+skHU9gsn9dqUwJZvSS4n8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y+jHpRMnT9LNK+fA4mE2FP5qjkZLBmgSxP4z2FJZD2bVEfioD1Hvefspeckc0F8mK
-         av2ZIlqtGw9gBFlGaDXLZhCww7RFAmnr7bvyf10+OSFODKAHTf5I1L9LFNcyitvYWj
-         1o+E6WO8ej9mIpRSXVZxry8sLC/0+CvM9PfQ37SA=
-Date:   Wed, 13 Nov 2019 10:33:36 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     catalin.marinas@arm.com, john.garry@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: Kconfig: add a choice for endianness
-Message-ID: <20191113103335.GB25900@willie-the-truck>
-References: <20191113092652.28201-1-anders.roxell@linaro.org>
+        Wed, 13 Nov 2019 05:34:11 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54444 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726165AbfKMKeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:34:11 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADAV5tI192257
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:34:10 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7qdb9ef5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:34:09 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 13 Nov 2019 10:33:46 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Nov 2019 10:33:42 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADAXfNR22479104
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 10:33:42 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D53AEAE045;
+        Wed, 13 Nov 2019 10:33:41 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6DE7EAE051;
+        Wed, 13 Nov 2019 10:33:40 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.206.160])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 13 Nov 2019 10:33:40 +0000 (GMT)
+Date:   Wed, 13 Nov 2019 11:33:37 +0100
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, Cao jin <caoj.fnst@cn.fujitsu.com>
+Subject: Re: [PATCH] mm/memblock: Correct doc for function
+References: <20191113051822.3296-1-ruansy.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191113092652.28201-1-anders.roxell@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191113051822.3296-1-ruansy.fnst@cn.fujitsu.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19111310-4275-0000-0000-0000037D58C6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111310-4276-0000-0000-00003890B9AF
+Message-Id: <20191113103336.GB28740@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911130099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 10:26:52AM +0100, Anders Roxell wrote:
-> When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
-> CONFIG_CPU_BIG_ENDIAN gets enabled. Which tends not to be what most
-> people want. Another concern that has come up is that ACPI isn't built
-> for an allmodconfig kernel today since that also depends on !CPU_BIG_ENDIAN.
+On Wed, Nov 13, 2019 at 01:18:22PM +0800, Shiyang Ruan wrote:
+> From: Cao jin <caoj.fnst@cn.fujitsu.com>
 > 
-> Rework so that we introduce a 'choice' and default the choice to
-> CPU_LITTLE_ENDIAN. That means that when we build an allmodconfig kernel
-> it will default to CPU_LITTLE_ENDIAN that most people tends to want.
+> Change "max_addr" to "end" for less confusion
+> in memblock_alloc_range_nid comments.
 > 
-> Reviewed-by: John Garry <john.garry@huawei.com>
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+
 > ---
->  arch/arm64/Kconfig | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+>  mm/memblock.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 64764ca92fca..c599b6b288be 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -877,10 +877,26 @@ config ARM64_PA_BITS
->  	default 48 if ARM64_PA_BITS_48
->  	default 52 if ARM64_PA_BITS_52
->  
-> +choice
-> +	prompt "Endianness"
-> +	default CPU_LITTLE_ENDIAN
-> +	help
-> +	  Select the endianness of data accesses performed by the CPU. Userspace
-> +	  applications will need to be compiled and linked for the endianness
-> +	  that is selected here.
-> +
->  config CPU_BIG_ENDIAN
->         bool "Build big-endian kernel"
->         help
-> -         Say Y if you plan on running a kernel in big-endian mode.
-> +	  Say Y if you plan on running a kernel with a big-endian userspace.
-> +
-> +config CPU_LITTLE_ENDIAN
-> +	bool "Build little-endian kernel"
-> +	help
-> +	  Say Y if you plan on running a kernel with a little-endian userspace.
-> +	  This is usually the case for distributions targetting arm64.
+> Suppose this still goes to Andrew's -mm.
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index ceb6761f526d..203ed317551b 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1321,7 +1321,7 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+>   * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
+>   *
+>   * The allocation is performed from memory region limited by
+> - * memblock.current_limit if @max_addr == %MEMBLOCK_ALLOC_ACCESSIBLE.
+> + * memblock.current_limit if @end == %MEMBLOCK_ALLOC_ACCESSIBLE.
+>   *
+>   * If the specified node can not hold the requested memory the
+>   * allocation falls back to any node in the system
+> -- 
+> 2.21.0
+> 
+> 
+> 
 
-Bah, my typo here: targetting -> targeting
+-- 
+Sincerely yours,
+Mike.
 
-Catalin, could you take this with the above fixed, please?
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
