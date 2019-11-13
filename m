@@ -2,92 +2,90 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F579C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F7EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7487C222CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573652989;
-	bh=G/H/25XOIBV/tVCn3Kcc1t4NrQPyjMLjjJ0VAvwfiew=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=fRdV2NbJ7xCOY7eXp22O71bbKWWqBjhfW+CMmFO6MoG2Bp5AvvPZrPayBKGeeL0MF
-	 IJSDzCCSz02cT6eGDk/lkBL0p+BeLtssEnrp0N4GE6dMGEp6Xxa9w09btQ0buiY62U
-	 SEv3pkcUkt7xklwwgIZkDl6FuJ0jubsux7hyRNE0=
+	by mail.kernel.org (Postfix) with ESMTP id 2BDB4222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H/fmVXpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfKMNts (ORCPT
+        id S1726978AbfKMNtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:49:48 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:58103 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726521AbfKMNts (ORCPT
+        Wed, 13 Nov 2019 08:49:51 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35934 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfKMNtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:49:48 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iUt1c-00023o-CE; Wed, 13 Nov 2019 14:49:36 +0100
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2 5/6] PCI: brcmstb: add MSI capability
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 13 Nov 2019 08:49:49 -0500
+Received: by mail-lf1-f66.google.com with SMTP id m6so2020469lfl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:49:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vy52t4FQzUJl7MVUo8BlNINCjNunGWRfRGrKR4TBf7s=;
+        b=H/fmVXpHY/Bz3Zm3tJMqNv+AwRbpI/Zdj1npokpo1y0SxsWgZjJZnvJrrRC8kmjyF/
+         Ipmvra71qU83rRRC6Zf68jUmOzBcSx9OE4TbXtwGoWuGsNNRcFSmls8L4Ikb9DQ0gbVa
+         bIERJQIfZQrW26RWuowHjLM1w7GcY1aEehUkrnKgOPc0mQmyCxtJxKMuz8ugn6lSgiSO
+         Hv4IN4Sd8TJjiufkEb0EReSwfMXDqhEP6nhCXcfAgql/5dFvrnHc+J1zyyWc0Ky1+fCQ
+         +noraUwssI0RFzdcPnNsMRe6cGAgYpAKJ/w8HgkkkHSaNPT+qtFoEaIeh3t945mNFQay
+         vyIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vy52t4FQzUJl7MVUo8BlNINCjNunGWRfRGrKR4TBf7s=;
+        b=HbxzxeyPBJ9SlNYkBysCKHB5733qYhhNmDzMzvValbPBc6AlgUcs6d03e3jWH/LCzI
+         vt5nk4LoG/XBlc6Yv6nXn0lzcul9KGboF36RreThgxEvKzvnos1dAsd9vOQwv/FpI+FA
+         BAw25qM7jhS70l8btaKMtlj0K1f116mLRnjx1tCV/5V7iF2VYjD7EZMl/rgyKjrTxjCU
+         leX9WOPClpYb7jweoAJelgqRM7hIrlIp/DGFtTH94tRgVAVRxeX8IeejhndIGYAS/TyU
+         6f59qoKSftFSsvuE8HBMemdWoPUE+j/8QTu5q8ILrAZjX2hfqkjdvSCzjRRE8qiA85Wv
+         ggeQ==
+X-Gm-Message-State: APjAAAUCgEJtOvCtqjxnDvvv9yEvkPubSw3uMu2RMQdY0Mh1rWRopYMR
+        MjkBl2zPXakyWBhGmQ5RIXmYJo4rUOwQiVFzk+Ch8g==
+X-Google-Smtp-Source: APXvYqxTHXdzhopP2ypRF0d0fSJw9rDupVGAE6bShbQVd9KMnkQr9bDucRfPSMwvlJeNx+bIQwFND5x8xx9CugRiZao=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr2668883lfn.86.1573652987493;
+ Wed, 13 Nov 2019 05:49:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 13 Nov 2019 14:58:57 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <andrew.murray@arm.com>, <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>, <james.quinlan@broadcom.com>,
-        <mbrugger@suse.com>, <phil@raspberrypi.org>,
-        <jeremy.linton@arm.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <20191112155926.16476-6-nsaenzjulienne@suse.de>
-References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
- <20191112155926.16476-6-nsaenzjulienne@suse.de>
-Message-ID: <d8cae6625265f95441019e33129febcd@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: nsaenzjulienne@suse.de, andrew.murray@arm.com, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, eric@anholt.net, wahrenst@gmx.net, james.quinlan@broadcom.com, mbrugger@suse.com, phil@raspberrypi.org, jeremy.linton@arm.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191014184320.GA161094@dtor-ws>
+In-Reply-To: <20191014184320.GA161094@dtor-ws>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 13 Nov 2019 14:49:36 +0100
+Message-ID: <CACRpkdYwinMT71se1WqmGii=qHH1s-JUOigs37EV+ywZ4aiYSA@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-12 17:08, Nicolas Saenz Julienne wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
->
-> This commit adds MSI to the Broadcom STB PCIe host controller. It 
-> does
-> not add MSIX since that functionality is not in the HW.  The MSI
-> controller is physically located within the PCIe block, however, 
-> there
-> is no reason why the MSI controller could not be moved elsewhere in
-> the future.
->
-> Since the internal Brcmstb MSI controller is intertwined with the 
-> PCIe
-> controller, it is not its own platform device but rather part of the
-> PCIe platform device.
->
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Mon, Oct 14, 2019 at 8:43 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+> Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), but
+> works with arbitrary firmware node.
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+I applied this with some ACKs to the GPIO devel branch for v5.5.
+
+Yours,
+Linus Walleij
