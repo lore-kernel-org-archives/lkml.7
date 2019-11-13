@@ -2,170 +2,81 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5D6C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C5BC17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95512084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:52:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stnNNsN/"
+	by mail.kernel.org (Postfix) with ESMTP id 05433222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfKMKwI (ORCPT
+        id S1727618AbfKMKyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:52:08 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33598 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfKMKwH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:52:07 -0500
-Received: by mail-lj1-f195.google.com with SMTP id t5so2062701ljk.0;
-        Wed, 13 Nov 2019 02:52:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=Ypz5d/EIOPP3+HgUGxWHqAdsciGE/zJP/FpY+Rga3WE=;
-        b=stnNNsN/sfAxPgiBtWDZj00CJI0auiagHBLWp7ywLng3NGgC00xPZQ6N3c/TgoSBSw
-         UldL3aKv/EVTpoXtF5TbxwzxWSrtRUMb67AVtCouH3nePmLbjEbunHen3z2ICaSkd99m
-         3sN1fMrbOr8mk/sm50/+LD1Kyf8jqBCdrvhxVGUXCOOrPQv2Eeg5aCqdEAZrYHyWvwHC
-         OtBvZrm8nvRIEMF3ad6LPv+0j2C0lM6qikbjkJDVn0GnwtpNvJrguwuKuUrA0CXSDEUG
-         jGef7C6p+1WzsESliOiLxuGYlkm2kAkmj8kiS8VcmW2AmYPR2G3VUcZcWcpyiy7Qttgm
-         3g9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=Ypz5d/EIOPP3+HgUGxWHqAdsciGE/zJP/FpY+Rga3WE=;
-        b=FOk9jXrMI3K3Zw1E6xKAyo3Tc61/jmsk7bdQE/xpfjuiu/u1LM3O4dhj+wlRn7UPX8
-         KrjkCBhXW9jjA2QK2I7v64psQG0cssjrrxMjvuyzpdiRU5OQ5IlayemDTG5dcnLjPEJO
-         CCWu50Nd3QvscxtsdZruXIDOTJ96FujTZtmq5Rlz9v7s1pY9rAnTkO7EoJHccLas+nMa
-         BRRx0R+RqCYpxnEatXWtx4X7LiedgY7gPuYFtuX7qydVgS4QP846dWM8BbKmooRZOEj9
-         ksjJQLldtFCmFnIspvKyaNy1DV+Ke70fImq7ExaV/O5PAK4iiMDTSaW+o7xITb1CPpGa
-         xAtw==
-X-Gm-Message-State: APjAAAXT29AOAAmhQbNnObzoHGHWBPOTQRR6iMmGv21Hljc8dNUMQJnl
-        18aYUo6TI4wWEUyoOmKm9Og=
-X-Google-Smtp-Source: APXvYqxTIaFXx7+vrJZk0Tb0sXjmjzbZPFYZVWLtIiEKoaaXbqHjUi3uPPdwmrlXOk8Y2QR0IezC4g==
-X-Received: by 2002:a05:651c:119b:: with SMTP id w27mr1940598ljo.221.1573642324819;
-        Wed, 13 Nov 2019 02:52:04 -0800 (PST)
-Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
-        by smtp.gmail.com with ESMTPSA id z20sm1208922ljj.85.2019.11.13.02.52.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 02:52:04 -0800 (PST)
-Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
-To:     Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
- <20191112232239.yevpeemgxz4wy32b@wittgenstein>
- <CALCETrUEQMdugz1t6HfK5MvDq_kOw13yuF+98euqVJgZ4WR1VA@mail.gmail.com>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <0ba24187-caf6-c851-baaa-f768885cda47@gmail.com>
-Date:   Wed, 13 Nov 2019 12:52:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 05:54:20 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38800 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726340AbfKMKyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:54:19 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 25B3A627E2CF131B800A;
+        Wed, 13 Nov 2019 18:54:17 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
+ 18:54:09 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
+        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>,
+        <qperret@google.com>, <viresh.kumar@linaro.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] thermal: power_allocator: Fix Kconfig warning
+Date:   Wed, 13 Nov 2019 18:53:13 +0800
+Message-ID: <20191113105313.41616-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20191112152801.GA247051@google.com>
+References: <20191112152801.GA247051@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrUEQMdugz1t6HfK5MvDq_kOw13yuF+98euqVJgZ4WR1VA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.11.2019 6.50, Andy Lutomirski wrote:
-> On Tue, Nov 12, 2019 at 3:22 PM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
->>
->> [Cc+ linux-api@vger.kernel.org]
->>
->> since that's potentially relevant to quite a few people.
->>
->> On Sun, Nov 03, 2019 at 04:55:48PM +0200, Topi Miettinen wrote:
->>> Several items in /proc/sys need not be accessible to unprivileged
->>> tasks. Let the system administrator change the permissions, but only
->>> to more restrictive modes than what the sysctl tables allow.
->>>
->>> Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
->>> ---
->>>   fs/proc/proc_sysctl.c | 41 +++++++++++++++++++++++++++++++----------
->>>   1 file changed, 31 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
->>> index d80989b6c344..88c4ca7d2782 100644
->>> --- a/fs/proc/proc_sysctl.c
->>> +++ b/fs/proc/proc_sysctl.c
->>> @@ -818,6 +818,10 @@ static int proc_sys_permission(struct inode *inode, int
->>> mask)
->>>          if ((mask & MAY_EXEC) && S_ISREG(inode->i_mode))
->>>                  return -EACCES;
->>>
->>> +       error = generic_permission(inode, mask);
->>> +       if (error)
->>> +               return error;
->>> +
->>>          head = grab_header(inode);
->>>          if (IS_ERR(head))
->>>                  return PTR_ERR(head);
->>> @@ -837,9 +841,35 @@ static int proc_sys_setattr(struct dentry *dentry,
->>> struct iattr *attr)
->>>          struct inode *inode = d_inode(dentry);
->>>          int error;
->>>
->>> -       if (attr->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID))
->>> +       if (attr->ia_valid & (ATTR_UID | ATTR_GID))
->>>                  return -EPERM;
-> 
-> Supporting at least ATTR_GID would make this much more useful.
+When do randbuiding, we got this:
 
-Yes, also XATTR/ACL support would be useful. But so far I've tried to 
-allow only tightening of permissions.
+WARNING: unmet direct dependencies detected for THERMAL_GOV_POWER_ALLOCATOR
+  Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+  Selected by [y]:
+  - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
 
->>>
->>> +       if (attr->ia_valid & ATTR_MODE) {
->>> +               struct ctl_table_header *head = grab_header(inode);
->>> +               struct ctl_table *table = PROC_I(inode)->sysctl_entry;
->>> +               umode_t max_mode = 0777; /* Only these bits may change */
->>> +
->>> +               if (IS_ERR(head))
->>> +                       return PTR_ERR(head);
->>> +
->>> +               if (!table) /* global root - r-xr-xr-x */
->>> +                       max_mode &= ~0222;
->>> +               else /*
->>> +                     * Don't allow permissions to become less
->>> +                     * restrictive than the sysctl table entry
->>> +                     */
->>> +                       max_mode &= table->mode;
-> 
-> Style nit: please put braces around multi-line if and else branches,
-> even if they're only multi-line because of comments.
+Make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR depend on
+THERMAL_DEFAULT_GOV_POWER_ALLOCATOR to fix this warning.
 
-OK, thanks.
+Suggested-by: Quentin Perret <qperret@google.com>
+Fixes: a4e893e802e6 ("thermal: cpu_cooling: Migrate to using the EM framework")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/thermal/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->>> +
->>> +               sysctl_head_finish(head);
->>> +
->>> +               /* Execute bits only allowed for directories */
->>> +               if (!S_ISDIR(inode->i_mode))
->>> +                       max_mode &= ~0111;
-> 
-> Why is this needed?
-> 
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 59b79fc..79b2786 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -108,7 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
+ 
+ config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+ 	bool "power_allocator"
+-	select THERMAL_GOV_POWER_ALLOCATOR
++	depends on THERMAL_GOV_POWER_ALLOCATOR
+ 	help
+ 	  Select this if you want to control temperature based on
+ 	  system and device power allocation. This governor can only
+-- 
+2.7.4
 
-In general, /proc/sys does not allow executable permissions for the 
-files, so I've continued this policy.
 
--Topi
