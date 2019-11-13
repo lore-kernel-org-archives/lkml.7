@@ -2,103 +2,127 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A133C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AADDC17449
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B602222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3710222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfKMHwk (ORCPT
+        id S1727049AbfKMHxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:52:40 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35637 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfKMHwj (ORCPT
+        Wed, 13 Nov 2019 02:53:04 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:42506 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfKMHxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:52:39 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1iUnSA-0000Cf-8X; Wed, 13 Nov 2019 08:52:38 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1iUnS9-0000KE-Ma; Wed, 13 Nov 2019 08:52:37 +0100
-Date:   Wed, 13 Nov 2019 08:52:37 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Patrick Callaghan <patrickc@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
-Message-ID: <20191113075237.falq46vnmbtd5pa7@pengutronix.de>
-References: <20191111192348.30535-1-patrickc@linux.ibm.com>
+        Wed, 13 Nov 2019 02:53:03 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47CcKk24kPzQlBh;
+        Wed, 13 Nov 2019 08:52:58 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id Bp_N38N4yiqo; Wed, 13 Nov 2019 08:52:50 +0100 (CET)
+Date:   Wed, 13 Nov 2019 18:52:27 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 6/9] namei: LOOKUP_{IN_ROOT,BENEATH}: permit limited
+ ".." resolution
+Message-ID: <20191113075227.lu5b5uvc2nuk76uk@yavin.dot.cyphar.com>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-7-cyphar@cyphar.com>
+ <20191113020917.GC26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qprdfpbfkuvffdu5"
 Content-Disposition: inline
-In-Reply-To: <20191111192348.30535-1-patrickc@linux.ibm.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:48:41 up 128 days, 13:58, 130 users,  load average: 0.01, 0.08,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191113020917.GC26530@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 02:23:48PM -0500, Patrick Callaghan wrote:
-> The integrity_kernel_read() call in ima_calc_file_hash_tfm() can return
-> a value of 0 before all bytes of the file are read. A value of 0 would
-> normally indicate an EOF. This has been observed if a user process is
-> causing a file appraisal and is terminated with a SIGTERM signal. The
-> most common occurrence of seeing the problem is if a shutdown or systemd
-> reload is initiated while files are being appraised.
-> 
-> The problem is similar to commit <f5e1040196db> (ima: always return
-> negative code for error) that fixed the problem in
-> ima_calc_file_hash_atfm().
-> 
-> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> Signed-off-by: Patrick Callaghan <patrickc@linux.ibm.com>
-> ---
->  security/integrity/ima/ima_crypto.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-> index 73044fc..7967a69 100644
-> --- a/security/integrity/ima/ima_crypto.c
-> +++ b/security/integrity/ima/ima_crypto.c
-> @@ -362,8 +362,10 @@ static int ima_calc_file_hash_tfm(struct file *file,
->  			rc = rbuf_len;
->  			break;
->  		}
-> -		if (rbuf_len == 0)
-> +		if (rbuf_len == 0) {	/* unexpected EOF */
-> +			rc = -EINVAL;
->  			break;
-> +		}
 
-There's no point in calling crypto_shash_final() on incomplete data, so
-setting rc to an error to avoid that seems the right thing to do to me,
-so:
+--qprdfpbfkuvffdu5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
+On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Tue, Nov 05, 2019 at 08:05:50PM +1100, Aleksa Sarai wrote:
+>=20
+> > One other possible alternative (which previous versions of this patch
+> > used) would be to check with path_is_under() if there was a racing
+> > rename or mount (after re-taking the relevant seqlocks). While this does
+> > work, it results in possible O(n*m) behaviour if there are many renames
+> > or mounts occuring *anywhere on the system*.
+>=20
+> BTW, do you realize that open-by-fhandle (or working nfsd, for that matte=
+r)
+> will trigger arseloads of write_seqlock(&rename_lock) simply on d_splice_=
+alias()
+> bringing disconnected subtrees in contact with parent?
 
-Sascha
+I wasn't aware of that -- that makes path_is_under() even less viable.
+I'll reword it to be clearer that path_is_under() isn't a good idea and
+why we went with -EAGAIN over an in-kernel retry.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--qprdfpbfkuvffdu5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXcu2OAAKCRCdlLljIbnQ
+EtqZAQCjNdiANKBF7WCOTHUeD48U+o/7WczR7I/1WTsCcSBp9gEA6HgEdHKRHmol
++5Fvn3Eg1Tya83fWQgWoVLu8i6CUUwE=
+=voMa
+-----END PGP SIGNATURE-----
+
+--qprdfpbfkuvffdu5--
