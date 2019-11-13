@@ -2,141 +2,170 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB29C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5466C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432602245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573620665;
-	bh=2HR5j4jMQZ8XywHpceKqovMUe9E/Z2E3JHrn6nNK8II=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VjBBPVcY1D3paRs+cTVHiOOa6Ry2Vvzn08W82O5/m0wPA4WfaT2ij/C+Y51PpTWef
-	 MpuCUGXk7WHv858AhdW1eggVUBWkXevbzmKQ16ffXwCmZzhBUbkzj/PbKntPbMPDBg
-	 dOBQGImdZsORffqt6BCaVi3Q+X/zqztL/5MzhMJM=
+	by mail.kernel.org (Postfix) with ESMTP id C26A3222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfKMEvE (ORCPT
+        id S1727365AbfKMEy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 23:51:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbfKMEvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 23:51:04 -0500
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75ACE22466
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 04:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573620662;
-        bh=2HR5j4jMQZ8XywHpceKqovMUe9E/Z2E3JHrn6nNK8II=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Qu4dJD0Ni66AsrNrH/eEIXfa/16KZ7RZrotDsF6X9hceXsuaWXcl7wuQ7T/rYDBxl
-         By7fSfDHWoWWQjnnO2PrLJWTvVfX3Y7TIuLKwVqfS7WLH2H6jyIEh/Y6m1lih/jDGM
-         5Q5PY9YsYEMdHRvMYPLKPdGpB2dHJgQuoGNdPIJE=
-Received: by mail-wm1-f49.google.com with SMTP id z26so478290wmi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 20:51:02 -0800 (PST)
-X-Gm-Message-State: APjAAAW5ZX7fOs3WleYpRa/etw0YibZSoc9ntZ+SjfRUb8qgM/iO0ASV
-        KM5WLyrfG+m6oW7T4Lh+kgWUPUbMBkvFSctOcTohIw==
-X-Google-Smtp-Source: APXvYqyc3oSgne3bep9Xp7B6mSwi2GF2tpFX9qEMJeGOYHuljwIi7kxpBBiOH4SJj7M2bzS/5n2f9qM3lSkXb7O7bOk=
-X-Received: by 2002:a1c:16:: with SMTP id 22mr943595wma.0.1573620660911; Tue,
- 12 Nov 2019 20:51:00 -0800 (PST)
+        Tue, 12 Nov 2019 23:54:56 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:45841 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfKMEy4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 23:54:56 -0500
+X-Originating-IP: 209.85.217.45
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+        (Authenticated sender: pshelar@ovn.org)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id CCFF71C0005;
+        Wed, 13 Nov 2019 04:54:53 +0000 (UTC)
+Received: by mail-vs1-f45.google.com with SMTP id b16so497459vso.10;
+        Tue, 12 Nov 2019 20:54:53 -0800 (PST)
+X-Gm-Message-State: APjAAAWnE7at9VgipNKtub3F5SbKI+Q2CJ0tc+uPs5SaJ4Orikqa2U7i
+        vqquOmrjDloAIADuSpfC934fRylno9oDZmxwRjQ=
+X-Google-Smtp-Source: APXvYqzk3ISwf1FnBZ+lvJ9jLIuMi3fxIkLe0ppk+TaEM/ZJ/SVCg0jFPdlyJDjdUTh3q8yGyfl+PdSz9MUAkII6pY0=
+X-Received: by 2002:a67:eec7:: with SMTP id o7mr754529vsp.58.1573620892707;
+ Tue, 12 Nov 2019 20:54:52 -0800 (PST)
 MIME-Version: 1.0
-References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com> <20191112232239.yevpeemgxz4wy32b@wittgenstein>
-In-Reply-To: <20191112232239.yevpeemgxz4wy32b@wittgenstein>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 12 Nov 2019 20:50:50 -0800
-X-Gmail-Original-Message-ID: <CALCETrUEQMdugz1t6HfK5MvDq_kOw13yuF+98euqVJgZ4WR1VA@mail.gmail.com>
-Message-ID: <CALCETrUEQMdugz1t6HfK5MvDq_kOw13yuF+98euqVJgZ4WR1VA@mail.gmail.com>
-Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Topi Miettinen <toiwoton@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
+References: <20191112102518.4406-1-mcroce@redhat.com>
+In-Reply-To: <20191112102518.4406-1-mcroce@redhat.com>
+From:   Pravin Shelar <pshelar@ovn.org>
+Date:   Tue, 12 Nov 2019 20:54:43 -0800
+X-Gmail-Original-Message-ID: <CAOrHB_DK1g74ypO_9arOBW0GLqagakNhfjjM0CEhwgS+-87VLA@mail.gmail.com>
+Message-ID: <CAOrHB_DK1g74ypO_9arOBW0GLqagakNhfjjM0CEhwgS+-87VLA@mail.gmail.com>
+Subject: Re: [PATCH net-next] openvswitch: add TTL decrement action
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        ovs dev <dev@openvswitch.org>, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Bindiya Kurle <bindiyakurle@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 3:22 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
+On Tue, Nov 12, 2019 at 2:25 AM Matteo Croce <mcroce@redhat.com> wrote:
 >
-> [Cc+ linux-api@vger.kernel.org]
+> New action to decrement TTL instead of setting it to a fixed value.
+> This action will decrement the TTL and, in case of expired TTL, send the
+> packet to userspace via output_userspace() to take care of it.
 >
-> since that's potentially relevant to quite a few people.
+> Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
 >
-> On Sun, Nov 03, 2019 at 04:55:48PM +0200, Topi Miettinen wrote:
-> > Several items in /proc/sys need not be accessible to unprivileged
-> > tasks. Let the system administrator change the permissions, but only
-> > to more restrictive modes than what the sysctl tables allow.
-> >
-> > Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
-> > ---
-> >  fs/proc/proc_sysctl.c | 41 +++++++++++++++++++++++++++++++----------
-> >  1 file changed, 31 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> > index d80989b6c344..88c4ca7d2782 100644
-> > --- a/fs/proc/proc_sysctl.c
-> > +++ b/fs/proc/proc_sysctl.c
-> > @@ -818,6 +818,10 @@ static int proc_sys_permission(struct inode *inode, int
-> > mask)
-> >         if ((mask & MAY_EXEC) && S_ISREG(inode->i_mode))
-> >                 return -EACCES;
-> >
-> > +       error = generic_permission(inode, mask);
-> > +       if (error)
-> > +               return error;
-> > +
-> >         head = grab_header(inode);
-> >         if (IS_ERR(head))
-> >                 return PTR_ERR(head);
-> > @@ -837,9 +841,35 @@ static int proc_sys_setattr(struct dentry *dentry,
-> > struct iattr *attr)
-> >         struct inode *inode = d_inode(dentry);
-> >         int error;
-> >
-> > -       if (attr->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID))
-> > +       if (attr->ia_valid & (ATTR_UID | ATTR_GID))
-> >                 return -EPERM;
-
-Supporting at least ATTR_GID would make this much more useful.
-
-> >
-> > +       if (attr->ia_valid & ATTR_MODE) {
-> > +               struct ctl_table_header *head = grab_header(inode);
-> > +               struct ctl_table *table = PROC_I(inode)->sysctl_entry;
-> > +               umode_t max_mode = 0777; /* Only these bits may change */
-> > +
-> > +               if (IS_ERR(head))
-> > +                       return PTR_ERR(head);
-> > +
-> > +               if (!table) /* global root - r-xr-xr-x */
-> > +                       max_mode &= ~0222;
-> > +               else /*
-> > +                     * Don't allow permissions to become less
-> > +                     * restrictive than the sysctl table entry
-> > +                     */
-> > +                       max_mode &= table->mode;
-
-Style nit: please put braces around multi-line if and else branches,
-even if they're only multi-line because of comments.
-
-> > +
-> > +               sysctl_head_finish(head);
-> > +
-> > +               /* Execute bits only allowed for directories */
-> > +               if (!S_ISDIR(inode->i_mode))
-> > +                       max_mode &= ~0111;
-
-Why is this needed?
+> Tested with a corresponding change in the userspace:
+>
+>     # ovs-dpctl dump-flows
+>     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl,1
+>     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl,2
+>     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
+>     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
+>
+>     # ping -c1 192.168.0.2 -t 42
+>     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
+>         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
+>     # ping -c1 192.168.0.2 -t 120
+>     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
+>         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
+>     # ping -c1 192.168.0.2 -t 1
+>     #
+>
+> Co-authored-by: Bindiya Kurle <bindiyakurle@gmail.com>
+> Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> ---
+>  include/uapi/linux/openvswitch.h |  2 ++
+>  net/openvswitch/actions.c        | 46 ++++++++++++++++++++++++++++++++
+>  net/openvswitch/flow_netlink.c   |  6 +++++
+>  3 files changed, 54 insertions(+)
+>
+> diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
+> index 1887a451c388..a3bdb1ecd1e7 100644
+> --- a/include/uapi/linux/openvswitch.h
+> +++ b/include/uapi/linux/openvswitch.h
+> @@ -890,6 +890,7 @@ struct check_pkt_len_arg {
+>   * @OVS_ACTION_ATTR_CHECK_PKT_LEN: Check the packet length and execute a set
+>   * of actions if greater than the specified packet length, else execute
+>   * another set of actions.
+> + * @OVS_ACTION_ATTR_DEC_TTL: Decrement the IP TTL.
+>   *
+>   * Only a single header can be set with a single %OVS_ACTION_ATTR_SET.  Not all
+>   * fields within a header are modifiable, e.g. the IPv4 protocol and fragment
+> @@ -925,6 +926,7 @@ enum ovs_action_attr {
+>         OVS_ACTION_ATTR_METER,        /* u32 meter ID. */
+>         OVS_ACTION_ATTR_CLONE,        /* Nested OVS_CLONE_ATTR_*.  */
+>         OVS_ACTION_ATTR_CHECK_PKT_LEN, /* Nested OVS_CHECK_PKT_LEN_ATTR_*. */
+> +       OVS_ACTION_ATTR_DEC_TTL,      /* Decrement ttl action */
+>
+>         __OVS_ACTION_ATTR_MAX,        /* Nothing past this will be accepted
+>                                        * from userspace. */
+> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+> index 12936c151cc0..077b7f309c93 100644
+> --- a/net/openvswitch/actions.c
+> +++ b/net/openvswitch/actions.c
+> @@ -1174,6 +1174,43 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
+>                              nla_len(actions), last, clone_flow_key);
+>  }
+>
+> +static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
+> +{
+> +       int err;
+> +
+> +       if (skb->protocol == htons(ETH_P_IPV6)) {
+> +               struct ipv6hdr *nh = ipv6_hdr(skb);
+> +
+> +               err = skb_ensure_writable(skb, skb_network_offset(skb) +
+> +                                         sizeof(*nh));
+> +               if (unlikely(err))
+> +                       return err;
+> +
+> +               if (nh->hop_limit <= 1)
+> +                       return -EHOSTUNREACH;
+> +
+> +               key->ip.ttl = --nh->hop_limit;
+> +       } else {
+> +               struct iphdr *nh = ip_hdr(skb);
+> +               u8 old_ttl;
+> +
+> +               err = skb_ensure_writable(skb, skb_network_offset(skb) +
+> +                                         sizeof(*nh));
+> +               if (unlikely(err))
+> +                       return err;
+> +
+> +               if (nh->ttl <= 1)
+> +                       return -EHOSTUNREACH;
+> +
+> +               old_ttl = nh->ttl--;
+> +               csum_replace2(&nh->check, htons(old_ttl << 8),
+> +                             htons(nh->ttl << 8));
+> +               key->ip.ttl = nh->ttl;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  /* Execute a list of actions against 'skb'. */
+>  static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
+>                               struct sw_flow_key *key,
+> @@ -1345,6 +1382,15 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
+>
+>                         break;
+>                 }
+> +
+> +               case OVS_ACTION_ATTR_DEC_TTL:
+> +                       err = execute_dec_ttl(skb, key);
+> +                       if (err == -EHOSTUNREACH) {
+> +                               output_userspace(dp, skb, key, a, attr,
+> +                                                len, OVS_CB(skb)->cutlen);
+> +                               OVS_CB(skb)->cutlen = 0;
+> +                       }
+This needs to be programmable rather than fixed action. Can you add
+nested actions list as argument to execute in case of this exception.
+This way we can implement rate limiting or port redirections for
+handling such packet.
