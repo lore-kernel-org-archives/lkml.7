@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B8CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA86EC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724D52245C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF652245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610144;
-	bh=9PcIazD5ai6mg5kNZCsOn/ZzooCD/2R3M4jCxJLn8Pk=;
+	s=default; t=1573610146;
+	bh=0KIFf+yZ8C/VuVjVmiu3e3orCWGVm8Ohdi7wNMRPvMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wCFTtiOBT5ztsIVxxbSzr9aCmzJbKVcU9JL4/ZF9nN/gw/NBe9bPtIujwOv97ERz8
-	 Qo/jsQm/dPxXkE9cf/A9ogmdaEWjcZCI093ICC26d9wCFl4IfBu4JygarLuJYbBRt2
-	 rpFFUI4F5yfaEyuGJzqRGdxiMG7ea/mwrdmjk5V0=
+	b=nPzKaQrc93IC5flIMibOi1s/c72VdbBfeVVv/2kT4y6ZYHCvBinpUiWTk2ty6K4tu
+	 yYhhtgSeZKns2qQMhF4pRftsFS623HvWlFYuIcUNXvrYuFTszdRsXENpb7Pe0UciTk
+	 xQUfUb1BSJf/A2af7YMgW3l1AarTOFNkDUyXriQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfKMBzn (ORCPT
+        id S1729239AbfKMBzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729165AbfKMBzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:36 -0500
+        id S1729159AbfKMBzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1277522469;
-        Wed, 13 Nov 2019 01:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070D622467;
+        Wed, 13 Nov 2019 01:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610136;
-        bh=9PcIazD5ai6mg5kNZCsOn/ZzooCD/2R3M4jCxJLn8Pk=;
+        s=default; t=1573610140;
+        bh=0KIFf+yZ8C/VuVjVmiu3e3orCWGVm8Ohdi7wNMRPvMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IILBRTEvaQPddPGoyGg6a3sfXwu0M+alTcPTLhU83XJPv462KRApdZ6+7nJUip82S
-         Ll6+9Zbq7wqY9VCDStyU6VqdhmUn1Kjsj7er3uURcNwrYqRn++UJHqU0HzMYSE7VdA
-         suIB1c5q3ymxiRXOxkax6fsADbtPOa+jCOrXFj6A=
+        b=nH/4MsQP9iPsxr401Z0CGTsHrKNXAaaGuKuWkwT2WMJu5nJz9pievVHqKzmunT1U4
+         tboidR6AQ0xEMnfPaE/yH7TPaRb38F5jc1nk8cO1Ebwt99d4JKq+4ZjHtelGekYObx
+         Sm5QdH+PormihcK0KzNjb7dXXmTFZsZA9bvq9RQ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Borislav Petkov <bp@suse.de>, Joerg Roedel <joro@8bytes.org>,
-        Kees Cook <keescook@chromium.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 184/209] x86/mm: Do not warn about PCI BIOS W+X mappings
-Date:   Tue, 12 Nov 2019 20:50:00 -0500
-Message-Id: <20191113015025.9685-184-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Ching Huang <ching2048@areca.com.tw>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 187/209] scsi: arcmsr: clean up clang warning on extraneous parentheses
+Date:   Tue, 12 Nov 2019 20:50:03 -0500
+Message-Id: <20191113015025.9685-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -62,96 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit c200dac78fec66d87ef262cac38cfe4feabdf737 ]
+[ Upstream commit ca2ade24157693b4e533ccec69df00ef719d4aad ]
 
-PCI BIOS requires the BIOS area 0x0A0000-0x0FFFFFF to be mapped W+X for
-various legacy reasons. When CONFIG_DEBUG_WX is enabled, this triggers the
-WX warning, but this is misleading because the mapping is required and is
-not a result of an accidental oversight.
+There are extraneous parantheses that are causing clang to produce a
+warning so remove these.
 
-Prevent the full warning when PCI BIOS is enabled and the detected WX
-mapping is in the BIOS area. Just emit a pr_warn() which denotes the
-fact. This is partially duplicating the info which the PCI BIOS code emits
-when it maps the area as executable, but that info is not in the context of
-the WX checking output.
+Clean up 3 clang warnings:
+equality comparison with extraneous parentheses [-Wparentheses-equality]
 
-Remove the extra %p printout in the WARN_ONCE() while at it. %pS is enough.
-
-Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Borislav Petkov <bp@suse.de>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1810082151160.2455@nanos.tec.linutronix.de
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Ching Huang <ching2048@areca.com.tw>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/dump_pagetables.c | 35 +++++++++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 8 deletions(-)
+ drivers/scsi/arcmsr/arcmsr_hba.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index c05a818224bb0..abcb8d00b0148 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -19,7 +19,9 @@
- #include <linux/sched.h>
- #include <linux/seq_file.h>
- #include <linux/highmem.h>
-+#include <linux/pci.h>
- 
-+#include <asm/e820/types.h>
- #include <asm/pgtable.h>
- 
- /*
-@@ -238,6 +240,29 @@ static unsigned long normalize_addr(unsigned long u)
- 	return (signed long)(u << shift) >> shift;
- }
- 
-+static void note_wx(struct pg_state *st)
-+{
-+	unsigned long npages;
-+
-+	npages = (st->current_address - st->start_address) / PAGE_SIZE;
-+
-+#ifdef CONFIG_PCI_BIOS
-+	/*
-+	 * If PCI BIOS is enabled, the PCI BIOS area is forced to WX.
-+	 * Inform about it, but avoid the warning.
-+	 */
-+	if (pcibios_enabled && st->start_address >= PAGE_OFFSET + BIOS_BEGIN &&
-+	    st->current_address <= PAGE_OFFSET + BIOS_END) {
-+		pr_warn_once("x86/mm: PCI BIOS W+X mapping %lu pages\n", npages);
-+		return;
-+	}
-+#endif
-+	/* Account the WX pages */
-+	st->wx_pages += npages;
-+	WARN_ONCE(1, "x86/mm: Found insecure W+X mapping at address %pS\n",
-+		  (void *)st->start_address);
-+}
-+
- /*
-  * This function gets called on a break in a continuous series
-  * of PTE entries; the next one is different so we need to
-@@ -273,14 +298,8 @@ static void note_page(struct seq_file *m, struct pg_state *st,
- 		unsigned long delta;
- 		int width = sizeof(unsigned long) * 2;
- 
--		if (st->check_wx && (eff & _PAGE_RW) && !(eff & _PAGE_NX)) {
--			WARN_ONCE(1,
--				  "x86/mm: Found insecure W+X mapping at address %p/%pS\n",
--				  (void *)st->start_address,
--				  (void *)st->start_address);
--			st->wx_pages += (st->current_address -
--					 st->start_address) / PAGE_SIZE;
--		}
-+		if (st->check_wx && (eff & _PAGE_RW) && !(eff & _PAGE_NX))
-+			note_wx(st);
- 
- 		/*
- 		 * Now print the actual finished series
+diff --git a/drivers/scsi/arcmsr/arcmsr_hba.c b/drivers/scsi/arcmsr/arcmsr_hba.c
+index 12316ef4c8931..c75d4695f9828 100644
+--- a/drivers/scsi/arcmsr/arcmsr_hba.c
++++ b/drivers/scsi/arcmsr/arcmsr_hba.c
+@@ -4135,9 +4135,9 @@ static void arcmsr_hardware_reset(struct AdapterControlBlock *acb)
+ 		pci_read_config_byte(acb->pdev, i, &value[i]);
+ 	}
+ 	/* hardware reset signal */
+-	if ((acb->dev_id == 0x1680)) {
++	if (acb->dev_id == 0x1680) {
+ 		writel(ARCMSR_ARC1680_BUS_RESET, &pmuA->reserved1[0]);
+-	} else if ((acb->dev_id == 0x1880)) {
++	} else if (acb->dev_id == 0x1880) {
+ 		do {
+ 			count++;
+ 			writel(0xF, &pmuC->write_sequence);
+@@ -4161,7 +4161,7 @@ static void arcmsr_hardware_reset(struct AdapterControlBlock *acb)
+ 		} while (((readl(&pmuE->host_diagnostic_3xxx) &
+ 			ARCMSR_ARC1884_DiagWrite_ENABLE) == 0) && (count < 5));
+ 		writel(ARCMSR_ARC188X_RESET_ADAPTER, &pmuE->host_diagnostic_3xxx);
+-	} else if ((acb->dev_id == 0x1214)) {
++	} else if (acb->dev_id == 0x1214) {
+ 		writel(0x20, pmuD->reset_request);
+ 	} else {
+ 		pci_write_config_byte(acb->pdev, 0x84, 0x20);
 -- 
 2.20.1
 
