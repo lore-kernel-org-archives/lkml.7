@@ -4,284 +4,241 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB16AC43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA56C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458CB206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EA7206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfKMTEM (ORCPT
+        id S1728573AbfKMTGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:04:12 -0500
-Received: from mga01.intel.com ([192.55.52.88]:64338 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbfKMTEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:04:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 11:04:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,301,1569308400"; 
-   d="scan'208";a="207545072"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga003.jf.intel.com with ESMTP; 13 Nov 2019 11:03:59 -0800
-Date:   Wed, 13 Nov 2019 11:03:59 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 21/23] mm/gup_benchmark: support pin_user_pages() and
- related calls
-Message-ID: <20191113190359.GB12947@iweiny-DESK2.sc.intel.com>
-References: <20191113042710.3997854-1-jhubbard@nvidia.com>
- <20191113042710.3997854-22-jhubbard@nvidia.com>
+        Wed, 13 Nov 2019 14:06:05 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42266 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbfKMTGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 14:06:04 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iUxwa-0000xi-Sg; Wed, 13 Nov 2019 19:04:44 +0000
+Subject: Re: [PATCH][V3] ovl: fix lookup failure on multi lower squashfs
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20191113175746.110933-1-colin.king@canonical.com>
+ <CAOQ4uxiV06H9s8WMso6A1A7mhdvQ_AuWM0n71VoGYTdryi8KNA@mail.gmail.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a494f07f-c1e3-a9e3-2af5-252d59df4bfd@canonical.com>
+Date:   Wed, 13 Nov 2019 19:04:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113042710.3997854-22-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <CAOQ4uxiV06H9s8WMso6A1A7mhdvQ_AuWM0n71VoGYTdryi8KNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 08:27:08PM -0800, John Hubbard wrote:
-> Up until now, gup_benchmark supported testing of the
-> following kernel functions:
-> 
-> * get_user_pages(): via the '-U' command line option
-> * get_user_pages_longterm(): via the '-L' command line option
-> * get_user_pages_fast(): as the default (no options required)
-> 
-> Add test coverage for the new corresponding pin_*() functions:
-> 
-> * pin_user_pages(): via the '-c' command line option
-> * pin_longterm_pages(): via the '-b' command line option
-> * pin_user_pages_fast(): via the '-a' command line option
-> 
-> Also, add an option for clarity: '-u' for what is now (still) the
-> default choice: get_user_pages_fast().
-> 
-> Also, for the three commands that set FOLL_PIN, verify that the pages
-> really are dma-pinned, via the new is_dma_pinned() routine.
-> Those commands are:
-> 
->     PIN_FAST_BENCHMARK     : calls pin_user_pages_fast()
->     PIN_LONGTERM_BENCHMARK : calls pin_longterm_pages()
->     PIN_BENCHMARK          : calls pin_user_pages()
-> 
-> In between the calls to pin_*() and put_user_pages(),
-> check each page: if page_dma_pinned() returns false, then
-> WARN and return.
-> 
-> Do this outside of the benchmark timestamps, so that it doesn't
-> affect reported times.
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+On 13/11/2019 18:34, Amir Goldstein wrote:
+> On Wed, Nov 13, 2019 at 7:57 PM Colin King <colin.king@canonical.com> wrote:
+>>
+>> From: Amir Goldstein <amir73il@gmail.com>
+>>
+>> In the past, overlayfs required that lower fs have non null
+>> uuid in order to support nfs export and decode copy up origin file handles.
+>>
+>> Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
+>> lower fs") relaxed this requirement for nfs export support, as long
+>> as uuid (even if null) is unique among all lower fs.
+>>
+>> However, said commit unintentionally also relaxed the non null uuid
+>> requirement for decoding copy up origin file handles, regardless of
+>> the unique uuid requirement.
+>>
+>> Amend this mistake by disabling decoding of copy up origin file handle
+>> from lower fs with a conflicting uuid.
+>>
+>> We still encode copy up origin file handles from those fs, because
+>> file handles like those already exist in the wild and because they
+>> might provide useful information in the future.
+>>
+>> [Colin Ian King] fixed the case of index=off,nfs_export=off
+>>
+>> Reported-by: Colin Ian King <colin.king@canonical.com>
+>> Link: https://lore.kernel.org/lkml/20191106234301.283006-1-colin.king@canonical.com/
+>> Fixes: 9df085f3c9a2 ("ovl: relax requirement for non null uuid ...")
+>> Cc: stable@vger.kernel.org # v4.20+
+>> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+>> Tested-by: Colin Ian King <colin.king@canonical.com>
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>`
+>> ---
+>>
+>> V3: fix the following check:
+>>   -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
+>>   +       if (!ofs->config.nfs_export && !ofs->upper_mnt)
+>>
+>> Add the index=off,nfs_export=off comment in the commit message
+>>
+>> ---
+>>  fs/overlayfs/namei.c     |  8 ++++++++
+>>  fs/overlayfs/ovl_entry.h |  2 ++
+>>  fs/overlayfs/super.c     | 15 +++++++++++----
+>>  3 files changed, 21 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
+>> index e9717c2f7d45..f47c591402d7 100644
+>> --- a/fs/overlayfs/namei.c
+>> +++ b/fs/overlayfs/namei.c
+>> @@ -325,6 +325,14 @@ int ovl_check_origin_fh(struct ovl_fs *ofs, struct ovl_fh *fh, bool connected,
+>>         int i;
+>>
+>>         for (i = 0; i < ofs->numlower; i++) {
+>> +               /*
+>> +                * If lower fs uuid is not unique among lower fs we cannot match
+>> +                * fh->uuid to layer.
+>> +                */
+>> +               if (ofs->lower_layers[i].fsid &&
+>> +                   ofs->lower_layers[i].fs->bad_uuid)
+>> +                       continue;
+>> +
+>>                 origin = ovl_decode_real_fh(fh, ofs->lower_layers[i].mnt,
+>>                                             connected);
+>>                 if (origin)
+>> diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
+>> index a8279280e88d..28348c44ea5b 100644
+>> --- a/fs/overlayfs/ovl_entry.h
+>> +++ b/fs/overlayfs/ovl_entry.h
+>> @@ -22,6 +22,8 @@ struct ovl_config {
+>>  struct ovl_sb {
+>>         struct super_block *sb;
+>>         dev_t pseudo_dev;
+>> +       /* Unusable (conflicting) uuid */
+>> +       bool bad_uuid;
+>>  };
+>>
+>>  struct ovl_layer {
+>> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+>> index afbcb116a7f1..e53d399ce0af 100644
+>> --- a/fs/overlayfs/super.c
+>> +++ b/fs/overlayfs/super.c
+>> @@ -1255,7 +1255,7 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
+>>  {
+>>         unsigned int i;
+>>
+>> -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
+>> +       if (!ofs->config.nfs_export && !ofs->upper_mnt)
+>>                 return true;
+>>
+>>         for (i = 0; i < ofs->numlowerfs; i++) {
+>> @@ -1263,9 +1263,13 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
+>>                  * We use uuid to associate an overlay lower file handle with a
+>>                  * lower layer, so we can accept lower fs with null uuid as long
+>>                  * as all lower layers with null uuid are on the same fs.
+>> +                * if we detect multiple lower fs with the same uuid, we
+>> +                * disable lower file handle decoding on all of them.
+>>                  */
+>> -               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid))
+>> +               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid)) {
+>> +                       ofs->lower_fs[i].bad_uuid = true;
+>>                         return false;
+>> +               }
+>>         }
+>>         return true;
+>>  }
+>> @@ -1277,6 +1281,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
+>>         unsigned int i;
+>>         dev_t dev;
+>>         int err;
+>> +       bool bad_uuid = false;
+>>
+>>         /* fsid 0 is reserved for upper fs even with non upper overlay */
+>>         if (ofs->upper_mnt && ofs->upper_mnt->mnt_sb == sb)
+>> @@ -1287,10 +1292,11 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
+>>                         return i + 1;
+>>         }
+>>
+>> -       if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
+>> +       if (ofs->upper_mnt && !ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-> ---
->  mm/gup_benchmark.c                         | 73 ++++++++++++++++++++--
->  tools/testing/selftests/vm/gup_benchmark.c | 23 ++++++-
->  2 files changed, 90 insertions(+), 6 deletions(-)
 > 
-> diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-> index 7fc44d25eca7..8f980d91dbf5 100644
-> --- a/mm/gup_benchmark.c
-> +++ b/mm/gup_benchmark.c
-> @@ -8,6 +8,9 @@
->  #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
->  #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
->  #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
-> +#define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
-> +#define PIN_LONGTERM_BENCHMARK	_IOWR('g', 5, struct gup_benchmark)
-> +#define PIN_BENCHMARK		_IOWR('g', 6, struct gup_benchmark)
->  
->  struct gup_benchmark {
->  	__u64 get_delta_usec;
-> @@ -19,6 +22,44 @@ struct gup_benchmark {
->  	__u64 expansion[10];	/* For future use */
->  };
->  
-> +static void put_back_pages(int cmd, struct page **pages, unsigned long nr_pages)
-> +{
-> +	int i;
-> +
-> +	switch (cmd) {
-> +	case GUP_FAST_BENCHMARK:
-> +	case GUP_LONGTERM_BENCHMARK:
-> +	case GUP_BENCHMARK:
-> +		for (i = 0; i < nr_pages; i++)
-> +			put_page(pages[i]);
-> +		break;
-> +
-> +	case PIN_FAST_BENCHMARK:
-> +	case PIN_LONGTERM_BENCHMARK:
-> +	case PIN_BENCHMARK:
-> +		put_user_pages(pages, nr_pages);
-> +		break;
-> +	}
-> +}
-> +
-> +static void verify_dma_pinned(int cmd, struct page **pages,
-> +			      unsigned long nr_pages)
-> +{
-> +	int i;
-> +
-> +	switch (cmd) {
-> +	case PIN_FAST_BENCHMARK:
-> +	case PIN_LONGTERM_BENCHMARK:
-> +	case PIN_BENCHMARK:
-> +		for (i = 0; i < nr_pages; i++) {
-> +			if (WARN(!page_dma_pinned(pages[i]),
-> +				 "pages[%d] is NOT dma-pinned\n", i))
-> +				break;
-> +		}
-> +		break;
-> +	}
-> +}
-> +
->  static int __gup_benchmark_ioctl(unsigned int cmd,
->  		struct gup_benchmark *gup)
->  {
-> @@ -65,6 +106,18 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
->  			nr = get_user_pages(addr, nr, gup->flags, pages + i,
->  					    NULL);
->  			break;
-> +		case PIN_FAST_BENCHMARK:
-> +			nr = pin_user_pages_fast(addr, nr, gup->flags,
-> +						 pages + i);
-> +			break;
-> +		case PIN_LONGTERM_BENCHMARK:
-> +			nr = pin_longterm_pages(addr, nr, gup->flags, pages + i,
-> +						NULL);
-> +			break;
-> +		case PIN_BENCHMARK:
-> +			nr = pin_user_pages(addr, nr, gup->flags, pages + i,
-> +					    NULL);
-> +			break;
->  		default:
->  			return -1;
->  		}
-> @@ -75,15 +128,22 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
->  	}
->  	end_time = ktime_get();
->  
-> +	/* Shifting the meaning of nr_pages: now it is actual number pinned: */
-> +	nr_pages = i;
-> +
->  	gup->get_delta_usec = ktime_us_delta(end_time, start_time);
->  	gup->size = addr - gup->addr;
->  
-> +	/*
-> +	 * Take an un-benchmark-timed moment to verify DMA pinned
-> +	 * state: print a warning if any non-dma-pinned pages are found:
-> +	 */
-> +	verify_dma_pinned(cmd, pages, nr_pages);
-> +
->  	start_time = ktime_get();
-> -	for (i = 0; i < nr_pages; i++) {
-> -		if (!pages[i])
-> -			break;
-> -		put_page(pages[i]);
-> -	}
-> +
-> +	put_back_pages(cmd, pages, nr_pages);
-> +
->  	end_time = ktime_get();
->  	gup->put_delta_usec = ktime_us_delta(end_time, start_time);
->  
-> @@ -101,6 +161,9 @@ static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
->  	case GUP_FAST_BENCHMARK:
->  	case GUP_LONGTERM_BENCHMARK:
->  	case GUP_BENCHMARK:
-> +	case PIN_FAST_BENCHMARK:
-> +	case PIN_LONGTERM_BENCHMARK:
-> +	case PIN_BENCHMARK:
->  		break;
->  	default:
->  		return -EINVAL;
-> diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
-> index 389327e9b30a..03928e47a86f 100644
-> --- a/tools/testing/selftests/vm/gup_benchmark.c
-> +++ b/tools/testing/selftests/vm/gup_benchmark.c
-> @@ -18,6 +18,15 @@
->  #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
->  #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
->  
-> +/*
-> + * Similar to above, but use FOLL_PIN instead of FOLL_GET. This is done
-> + * by calling pin_user_pages_fast(), pin_longterm_pages(), and pin_user_pages(),
-> + * respectively.
-> + */
-> +#define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
-> +#define PIN_LONGTERM_BENCHMARK	_IOWR('g', 5, struct gup_benchmark)
-> +#define PIN_BENCHMARK		_IOWR('g', 6, struct gup_benchmark)
-> +
->  /* Just the flags we need, copied from mm.h: */
->  #define FOLL_WRITE	0x01	/* check pte is writable */
->  
-> @@ -40,8 +49,17 @@ int main(int argc, char **argv)
->  	char *file = "/dev/zero";
->  	char *p;
->  
-> -	while ((opt = getopt(argc, argv, "m:r:n:f:tTLUwSH")) != -1) {
-> +	while ((opt = getopt(argc, argv, "m:r:n:f:abctTLUuwSH")) != -1) {
->  		switch (opt) {
-> +		case 'a':
-> +			cmd = PIN_FAST_BENCHMARK;
-> +			break;
-> +		case 'b':
-> +			cmd = PIN_LONGTERM_BENCHMARK;
-> +			break;
-> +		case 'c':
-> +			cmd = PIN_BENCHMARK;
-> +			break;
->  		case 'm':
->  			size = atoi(optarg) * MB;
->  			break;
-> @@ -63,6 +81,9 @@ int main(int argc, char **argv)
->  		case 'U':
->  			cmd = GUP_BENCHMARK;
->  			break;
-> +		case 'u':
-> +			cmd = GUP_FAST_BENCHMARK;
-> +			break;
->  		case 'w':
->  			write = 1;
->  			break;
-> -- 
-> 2.24.0
+> Sorry I wasn't clear.
+> Miklos is right. the test ofs->upper_mnt here is bogus because
+> nfs_export could be enabled without upper.
+> The change you made in v3 to ovl_lower_uuid_ok() should be enough.
+
+OK, so the following is required for V4:
+
++	if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
+
 > 
+>> +               bad_uuid = true;
+>>                 ofs->config.index = false;
+>>                 ofs->config.nfs_export = false;
+>> -               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', falling back to index=off,nfs_export=off.\n",
+>> +               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', enforcing index=off,nfs_export=off.\n",
+>>                         uuid_is_null(&sb->s_uuid) ? "null" : "conflicting",
+>>                         path->dentry);
+>>         }
+>> @@ -1303,6 +1309,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
+>>
+>>         ofs->lower_fs[ofs->numlowerfs].sb = sb;
+>>         ofs->lower_fs[ofs->numlowerfs].pseudo_dev = dev;
+>> +       ofs->lower_fs[ofs->numlowerfs].bad_uuid = bad_uuid;
+>>         ofs->numlowerfs++;
+>>
+>>         return ofs->numlowerfs;
+>> --
+>> 2.20.1
+>>
+
