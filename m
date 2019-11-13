@@ -2,199 +2,117 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC186C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F304EC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64511206F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:23:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="We8MKxKp"
+	by mail.kernel.org (Postfix) with ESMTP id A0100206F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKMUXy (ORCPT
+        id S1726985AbfKMUZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:23:54 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53817 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726179AbfKMUXy (ORCPT
+        Wed, 13 Nov 2019 15:25:02 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58358 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726179AbfKMUZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:23:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573676632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rzZq344d343lqY0cB96vERZIMbwEpbMc1qyagFZqr84=;
-        b=We8MKxKp+1KcYxDql7w5adeEQlla+KrEiFTn7GhyD5jebz3Oo9bB4u+tiYZ0PRdw1IMnfE
-        CvsTd470AD1SPu7iEKxBNjztQgf3OVx3gYC2tjL6cO0t9OWNdK1dbeSOIgIgIchvU7kT7/
-        FcX6bmobM2NKJPNN/w6UH2ax97NlPI4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-428-OEtgoPJFNBu_MAPc-IHVhg-1; Wed, 13 Nov 2019 15:23:51 -0500
-Received: by mail-wr1-f69.google.com with SMTP id v6so2472079wrm.18
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:23:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=YYEHOrtwyZ8kvvsSEpNNT3yjbAyxfTpUvM+Fm+WLKR4=;
-        b=mUHBh+fjNo3qP5t9sl7xnvzsCJSpqLDUjDh0zUnQr1Gt103x+bPjRXe/C9DBXwWREc
-         wfI4H6uD+7iunldnr0WhYAXqgh8pjdOcFZ4/r7R43YRgm6LCvZD4kd0Ybp5hPC6yUebO
-         VKLXDUlNZMr33f2ktf/1vLyx+9eXuJZRCihJ11T2FQXxeCz4PhxSrb1tFKwWdeKOU/D5
-         MwiMyYM2/9SzVxuzC31YNJwtCGeraM7ASrmi5mTKbZXz21FadxMR2IF7xlYrfuXZhdZX
-         oz3fX/ZyjYmMYF56VVkj2OobYHNaAC5SAxAt4S2rBrsqY/6fpKlhu3TRvcgor4GwlwRu
-         tEyw==
-X-Gm-Message-State: APjAAAVX/Beq1uNLQ5Xw4uJGx+Xu+UrQ+nu89RWiqBON2kkX8Ndw4Z8+
-        IZCG365MirECIqkG+iFImjzvT7Jyjad4QrtmBmm8d0QipdLSvB0l6byVfVgSiyA2PuUM9gF1MEZ
-        vt4vTwWyvNjfALadGQV1wJAhT
-X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr4709741wme.1.1573676628682;
-        Wed, 13 Nov 2019 12:23:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzOsersnOVnrdO0EYRzGoHQxSW0/jGkAXyM05Z5hLlPfQ37B58HhXl+00eXolXMtlIvXsE+4Q==
-X-Received: by 2002:a1c:9e4c:: with SMTP id h73mr4709720wme.1.1573676628385;
-        Wed, 13 Nov 2019 12:23:48 -0800 (PST)
-Received: from [192.168.3.122] (p5B0C63AB.dip0.t-ipconnect.de. [91.12.99.171])
-        by smtp.gmail.com with ESMTPSA id t1sm4720307wrn.81.2019.11.13.12.23.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 12:23:47 -0800 (PST)
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
-Date:   Wed, 13 Nov 2019 21:23:47 +0100
-Message-Id: <7B45B9B3-0947-459A-B4FD-9F6CB2F9EF3A@redhat.com>
-References: <CAPcyv4h-aPh5yGtAmTm28HgSz5evnvQjq7eh=GetnkY8dqO_Uw@mail.gmail.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-In-Reply-To: <CAPcyv4h-aPh5yGtAmTm28HgSz5evnvQjq7eh=GetnkY8dqO_Uw@mail.gmail.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-X-Mailer: iPhone Mail (17A878)
-X-MC-Unique: OEtgoPJFNBu_MAPc-IHVhg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 Nov 2019 15:25:02 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADKLp8C067025
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:25:00 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w8q1tbr01-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:25:00 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 13 Nov 2019 20:24:58 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Nov 2019 20:24:54 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADKOres47185922
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 20:24:53 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A392C42049;
+        Wed, 13 Nov 2019 20:24:53 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9C02D4203F;
+        Wed, 13 Nov 2019 20:24:52 +0000 (GMT)
+Received: from dhcp-9-31-103-201.watson.ibm.com (unknown [9.31.103.201])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Nov 2019 20:24:52 +0000 (GMT)
+Subject: Re: [PATCH v6 1/3] IMA: Add KEY_CHECK func to measure keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 13 Nov 2019 15:24:52 -0500
+In-Reply-To: <320826aa-f744-f2ae-8693-a6ce9461d886@linux.microsoft.com>
+References: <20191113184658.2862-1-nramas@linux.microsoft.com>
+         <20191113184658.2862-2-nramas@linux.microsoft.com>
+         <1573676066.4843.18.camel@linux.ibm.com>
+         <320826aa-f744-f2ae-8693-a6ce9461d886@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111320-0012-0000-0000-000003636213
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111320-0013-0000-0000-0000219ED864
+Message-Id: <1573676692.4843.20.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911130167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-11-13 at 12:21 -0800, Lakshmi Ramasubramanian wrote:
+> On 11/13/2019 12:14 PM, Mimi Zohar wrote:
+> 
+> >> @@ -655,6 +655,13 @@ void process_buffer_measurement(const void *buf, int size,
+> >>   	int action = 0;
+> >>   	u32 secid;
+> >>   
+> >> +	/*
+> >> +	 * If IMA is not yet initialized or IMA policy is empty
+> >> +	 * then there is no need to measure.
+> >> +	 */
+> >> +	if (!ima_policy_flag)
+> >> +		return;
+> >> +
+> > 
+> > This addition has nothing to do with defining a new IMA hook and
+> > should be a separate patch.  This can be posted independently of this
+> > patch set.
+> > 
+> > Mimi
+> 
+> I'll move this change to a different patch,
+> but it has to be either part of this patch set or the above change alone 
+> needs to be taken before this patch set for the following reason:
+> 
+> The IMA hook gets called early in the boot process (for example, when 
+> builtin_trusted_keys are added). If the above check is not there, 
+> ima_get_action() is called and causes kernel panic (since IMA is not yet 
+> initialized).
 
-
-> Am 13.11.2019 um 21:10 schrieb Dan Williams <dan.j.williams@intel.com>:
->=20
-> =EF=BB=BFOn Wed, Nov 13, 2019 at 11:53 AM David Hildenbrand <david@redhat=
-.com> wrote:
->>=20
->>=20
->>=20
->>>> Am 13.11.2019 um 20:06 schrieb Dan Williams <dan.j.williams@intel.com>=
-:
->>>=20
->>> =EF=BB=BFOn Wed, Nov 13, 2019 at 10:51 AM David Hildenbrand <david@redh=
-at.com> wrote:
->>>>=20
->>>>> On 08.11.19 20:13, Dan Williams wrote:
->>>>> On Thu, Nov 7, 2019 at 4:15 PM Toshiki Fukasawa
->>>>> <t-fukasawa@vx.jp.nec.com> wrote:
->>>>>>=20
->>>>>> Currently, there is no way to identify pfn on ZONE_DEVICE.
->>>>>> Identifying pfn on system memory can be done by using a
->>>>>> section-level flag. On the other hand, identifying pfn on
->>>>>> ZONE_DEVICE requires a subsection-level flag since ZONE_DEVICE
->>>>>> can be created in units of subsections.
->>>>>>=20
->>>>>> This patch introduces a new bitmap subsection_dev_map so that
->>>>>> we can identify pfn on ZONE_DEVICE.
->>>>>>=20
->>>>>> Also, subsection_dev_map is used to prove that struct pages
->>>>>> included in the subsection have been initialized since it is
->>>>>> set after memmap_init_zone_device(). We can avoid accessing
->>>>>> pages currently being initialized by checking subsection_dev_map.
->>>>>>=20
->>>>>> Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
->>>>>> ---
->>>>>> include/linux/mmzone.h | 19 +++++++++++++++++++
->>>>>> mm/memremap.c          |  2 ++
->>>>>> mm/sparse.c            | 32 ++++++++++++++++++++++++++++++++
->>>>>> 3 files changed, 53 insertions(+)
->>>>>>=20
->>>>>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->>>>>> index bda2028..11376c4 100644
->>>>>> --- a/include/linux/mmzone.h
->>>>>> +++ b/include/linux/mmzone.h
->>>>>> @@ -1174,11 +1174,17 @@ static inline unsigned long section_nr_to_pf=
-n(unsigned long sec)
->>>>>>=20
->>>>>> struct mem_section_usage {
->>>>>>        DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
->>>>>> +#ifdef CONFIG_ZONE_DEVICE
->>>>>> +       DECLARE_BITMAP(subsection_dev_map, SUBSECTIONS_PER_SECTION);
->>>>>> +#endif
->>>>>=20
->>>>> Hi Toshiki,
->>>>>=20
->>>>> There is currently an effort to remove the PageReserved() flag as som=
-e
->>>>> code is using that to detect ZONE_DEVICE. In reviewing those patches
->>>>> we realized that what many code paths want is to detect online memory=
-.
->>>>> So instead of a subsection_dev_map add a subsection_online_map. That
->>>>> way pfn_to_online_page() can reliably avoid ZONE_DEVICE ranges. I
->>>>> otherwise question the use case for pfn_walkers to return pages for
->>>>> ZONE_DEVICE pages, I think the skip behavior when pfn_to_online_page(=
-)
->>>>> =3D=3D false is the right behavior.
->>>>=20
->>>> To be more precise, I recommended an subsection_active_map, to indicat=
-e
->>>> which memmaps were fully initialized and can safely be touched (e.g., =
-to
->>>> read the zone/nid). This map would also be set when the devmem memmaps
->>>> were initialized (race between adding memory/growing the section and
->>>> initializing the memmap).
->>>>=20
->>>> See
->>>>=20
->>>> https://lkml.org/lkml/2019/10/10/87
->>>>=20
->>>> and
->>>>=20
->>>> https://www.spinics.net/lists/linux-driver-devel/msg130012.html
->>>=20
->>> I'm still struggling to understand the motivation of distinguishing
->>> "active" as something distinct from "online". As long as the "online"
->>> granularity is improved from sections down to subsections then most
->>> code paths are good to go. The others can use get_devpagemap() to
->>> check for ZONE_DEVICE in a race free manner as they currently do.
->>=20
->> I thought we wanted to unify access if we don=E2=80=99t really care abou=
-t the zone as in most pfn walkers - E.g., for zone shrinking.
->=20
-> Agree, when the zone does not matter, which is most cases, then
-> pfn_online() and pfn_valid() are sufficient.
->=20
->> Anyhow, a subsection online map would be a good start, we can reuse that=
- later for ZONE_DEVICE as well.
->=20
-> Cool, good to go with me sending a patch to introduce pfn_online() and
-> a corresponding subsection_map for the same?
-
-Yeah, let=E2=80=98s see how this turns out and if we=E2=80=98re on the same=
- page. Thanks!
-
->=20
+It will be upstreamed prior to this patch set.
+ 
+Mimi
 
