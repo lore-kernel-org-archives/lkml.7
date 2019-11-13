@@ -2,110 +2,128 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19FCC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A78C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A3C222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p5Mn+phn"
+	by mail.kernel.org (Postfix) with ESMTP id 5D0F42245A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKMJVp (ORCPT
+        id S1727351AbfKMJVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:21:45 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55804 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKMJVp (ORCPT
+        Wed, 13 Nov 2019 04:21:49 -0500
+Received: from andre.telenet-ops.be ([195.130.132.53]:51888 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbfKMJVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:21:45 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAD9LTvd075931;
-        Wed, 13 Nov 2019 03:21:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573636889;
-        bh=+19M8RYh7GYsqFpm6snFxu0nMiEUH/Wi0M5/3kESkSs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=p5Mn+phnCUr7oKAzu6BweVTNRMWqMooon2KLfcgJZ+f5R12BDIzweW29/GPLGHb57
-         kXCl2HVNfP9E/lPKNFlOND+zhc+tIAV3EeZydOtKtFdt9WVMxnX25h1wwMsyGeqM9Y
-         nH3mdt+kHGHNvMnK870IKW/sNd14P9YvkauxbzXI=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAD9LTXc101484
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 03:21:29 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 03:21:11 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 03:21:11 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD9LJ1H056807;
-        Wed, 13 Nov 2019 03:21:24 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <ludovic.desroches@microchip.com>, <agross@kernel.org>,
-        <wsa+renesas@sang-engineering.com>, <ldewangan@nvidia.com>
-CC:     <vkoul@kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <digetx@gmail.com>,
-        <linux-tegra@vger.kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <bjorn.andersson@linaro.org>
-Subject: [PATCH 1/4] i2c: at91: Use dma_request_chan() directly for channel request
-Date:   Wed, 13 Nov 2019 11:22:32 +0200
-Message-ID: <20191113092235.30440-2-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191113092235.30440-1-peter.ujfalusi@ti.com>
-References: <20191113092235.30440-1-peter.ujfalusi@ti.com>
+        Wed, 13 Nov 2019 04:21:46 -0500
+Received: from ramsan ([84.195.182.253])
+        by andre.telenet-ops.be with bizsmtp
+        id RMMk2100G5USYZQ01MMkEE; Wed, 13 Nov 2019 10:21:44 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iUoqO-0001qZ-7m; Wed, 13 Nov 2019 10:21:44 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iUoqO-0006Bh-5R; Wed, 13 Nov 2019 10:21:44 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] iio: adc: max9611: Fix too short conversion time delay
+Date:   Wed, 13 Nov 2019 10:21:33 +0100
+Message-Id: <20191113092133.23723-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel_reason() is:
-#define dma_request_slave_channel_reason(dev, name) \
-	dma_request_chan(dev, name)
+As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+reading in probe"), max9611 initialization sometimes fails on the
+Salvator-X(S) development board with:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+    max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+    max9611: probe of 4-007f failed with error -5
+
+The max9611 driver tests communications with the chip by reading the die
+temperature during the probe function, which returns an invalid value.
+
+According to the datasheet, the typical ADC conversion time is 2 ms, but
+no minimum or maximum values are provided.  However, the driver assumes
+a 1 ms conversion time.  Usually the usleep_range() call returns after
+more than 1.8 ms, hence it succeeds.  When it returns earlier, the data
+register may be read too early, and the previous measurement value will
+be returned.  After boot, this is the temperature POR (power-on reset)
+value, causing the failure above.
+
+Fix this by increasing the delay from 1000-2000 µs to 2000-2200 µs.
+
+Note that this issue has always been present, but it was exposed by the
+aformentioned commit.
+
+Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/i2c/busses/i2c-at91-master.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This problem was exposed in v5.3.
 
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index 6e0b554dcd4e..7a862e00b475 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -758,14 +758,14 @@ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
- 	slave_config.dst_maxburst = 1;
- 	slave_config.device_fc = false;
+After this patch, probing of the two max9611 sensors succeeded during
+ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
+R-Car H3/M3-W/M3-N SoCs.
+---
+ drivers/iio/adc/max9611.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+index da073d72f649f829..b0755f25356d700d 100644
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -89,6 +89,11 @@
+ #define MAX9611_TEMP_SCALE_NUM		1000000
+ #define MAX9611_TEMP_SCALE_DIV		2083
  
--	dma->chan_tx = dma_request_slave_channel_reason(dev->dev, "tx");
-+	dma->chan_tx = dma_request_chan(dev->dev, "tx");
- 	if (IS_ERR(dma->chan_tx)) {
- 		ret = PTR_ERR(dma->chan_tx);
- 		dma->chan_tx = NULL;
- 		goto error;
++/*
++ * Conversion time is 2 ms (typically)
++ */
++#define MAX9611_CONV_TIME_US_RANGE	2000, 2200
++
+ struct max9611_dev {
+ 	struct device *dev;
+ 	struct i2c_client *i2c_client;
+@@ -238,9 +243,9 @@ static int max9611_read_single(struct max9611_dev *max9611,
+ 
+ 	/*
+ 	 * need a delay here to make register configuration
+-	 * stabilize. 1 msec at least, from empirical testing.
++	 * stabilize.
+ 	 */
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
+ 	if (ret < 0) {
+@@ -507,7 +512,7 @@ static int max9611_init(struct max9611_dev *max9611)
+ 			MAX9611_REG_CTRL2, 0);
+ 		return ret;
  	}
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
  
--	dma->chan_rx = dma_request_slave_channel_reason(dev->dev, "rx");
-+	dma->chan_rx = dma_request_chan(dev->dev, "rx");
- 	if (IS_ERR(dma->chan_rx)) {
- 		ret = PTR_ERR(dma->chan_rx);
- 		dma->chan_rx = NULL;
+ 	return 0;
+ }
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
 
