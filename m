@@ -2,149 +2,127 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAA9C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA414C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF4F206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573664290;
-	bh=GGY3G0+6mpa4tHVngh8c0Sn1vF+30kVZm15H32Wqrn0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ULcoN9f+ky+xG/Sv4zRM8qoPYYfCTLDDQBuTjlbb+HzbN0bXSMu/xqhh01hGSFYRv
-	 0T5tEbFGlNuq5DIiKOMW5ne2CvBtHTMjZOyRBvORG0Vsr0sccV73Pvdwby/yAvlgVL
-	 SsR542iQgQ8Gn5+kGllCZyKMxEydEjeUTM1KsWAo=
+	by mail.kernel.org (Postfix) with ESMTP id 7A6D3206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:01:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dD6+CSQ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfKMQ6K (ORCPT
+        id S1728671AbfKMRBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:58:10 -0500
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:46847 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfKMQ6K (ORCPT
+        Wed, 13 Nov 2019 12:01:18 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:43744 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbfKMRBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:58:10 -0500
-Received: by mail-lf1-f54.google.com with SMTP id o65so2516902lff.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:58:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ZYEg/h4QSDcgUnlMwh4w5+X6tHq85c+NTIUoiTVyRk=;
-        b=U7ravdDyiBjUVP8ErfMB91io1YhXvWHGVKa77PMeGvwn8vFpkMlRNnDUtYyuCdHy/V
-         eXLqYfmp5YyTims+8tWu7mnnzxTheo9yQBk18/JI9FYSjBx2+5iIJS2FdZCXQkrg9sy+
-         PAqMgVt9H/TKePAImEEkVIthOmiQ0+tOoY2sY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ZYEg/h4QSDcgUnlMwh4w5+X6tHq85c+NTIUoiTVyRk=;
-        b=pakgHHV0v8neE5Lrdi4uadCmJWWTBv73LTKJ+J6Jzjl/YEodWEBLdhSOjutjT19AOa
-         vTWZkFkHM4o8hTk4v2hUiJhtXlyklwEAC+84nyh3Wvs8s/+IZAAOCsDp0nvAxaNlFNpg
-         u5U3hTyNUJEVYH4UdD9t3IxHO4ScIb/196UHb5Vzhv29GHQ5H0pcSrJt2Ka2MgDZ8w95
-         rzHQP4ynnZjtWDgDtanxto3IWrtH4Uf+WoDRK4gcTVC6GY/7RRTGi2kQr2k+oTaMV6Nf
-         mmwvmx+bHnrDeJM4rHVytdiLWPhj0qFWs8awtfLXnZosAwEeHd6HwvvQxpPSN5Dowcu0
-         Olmw==
-X-Gm-Message-State: APjAAAXc05jYiAsuHim/wsVsBLU8PQxY6ncyP754cF8VMAifaATcKhd0
-        cqN+zjy7FaIf2mpkYM+0Yr92XIn5uGk=
-X-Google-Smtp-Source: APXvYqwRt+JjYUVcmaPHvFF8ZC/0NtIeiNIyhCdideAFZLaRdCywZYcADdEnDPL559+CgEjwdCs6uA==
-X-Received: by 2002:ac2:5236:: with SMTP id i22mr3479770lfl.19.1573664287433;
-        Wed, 13 Nov 2019 08:58:07 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id z19sm1153773ljk.66.2019.11.13.08.58.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 08:58:06 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id r7so3411753ljg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:58:05 -0800 (PST)
-X-Received: by 2002:a2e:8919:: with SMTP id d25mr3368745lji.97.1573664285540;
- Wed, 13 Nov 2019 08:58:05 -0800 (PST)
+        Wed, 13 Nov 2019 12:01:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WQADSNrI4d/HxzMxBtQ+iwGnK4AsKuPRvo12BLZ2hYY=; b=dD6+CSQ/oWdT8C4qLFqsDE0HV
+        dzp2WMa/ykoPKGfI05NSUeIQ+iabkCgAM4fJTJfRioHfdk/Uvp9zA3QUFH/h5g5g9bJxUKbgsV8tb
+        q0yD4DgGXvvwf2hCbQeo0Nq4KkDMbkql0xiyDXMFSZ2QUAmvO7uC/U4+x410VSM3xs++hQ2MKguQV
+        4k/jdBjPcrynl8RtDX8K8lrB3uDv4LulPiB4KQ4lFYZ2HNkynl1Uga58/xzSD1YRTQyPeX5rcYG98
+        NfnJv75jyVDK436ZZ5LwLHRMnhsiDuA1Ocv05Xv1gV/4ENT7xE9QkT7OFejCUzWFHfliMLIds8Awo
+        Zv8VRqbYw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39168)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iUw0s-0005cw-MT; Wed, 13 Nov 2019 17:01:02 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iUw0o-0002bS-Np; Wed, 13 Nov 2019 17:00:58 +0000
+Date:   Wed, 13 Nov 2019 17:00:58 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: don't export unused return_address()
+Message-ID: <20191113170058.GP25745@shell.armlinux.org.uk>
+References: <20190906154706.2449696-1-arnd@arndb.de>
+ <CAMuHMdUMgDBo1gkvQ_Bd8mjMiPjdWWY=9AU6K1S7NcJy5jhvGQ@mail.gmail.com>
+ <CAK7LNASNp4jPYHmh3e4QYwenYbVrK69tvB_LLyK_ew1eqBNrEw@mail.gmail.com>
+ <20191113114517.GO25745@shell.armlinux.org.uk>
+ <CAMuHMdXk9sWBpYWC-X6V3rp2e0+f5ebdRFFXn8Heuy0qkLq0GQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
- <Pine.LNX.4.44L0.1911121639540.1567-100000@iolanthe.rowland.org>
- <CANn89iKjWH86kChzPiVtCgVpt3GookwGk2x1YCTMeBSPpKU+Ww@mail.gmail.com>
- <20191112224441.2kxmt727qy4l4ncb@ast-mbp.dhcp.thefacebook.com>
- <CANn89iKLy-5rnGmVt-nzf6as4MvXgZzSH+BSReXZKpSTjhoWAw@mail.gmail.com>
- <CAHk-=wj_rFOPF9Sw_-h-6J93tP9qO_UOEvd-e02z9+DEDs2kLQ@mail.gmail.com> <CANpmjNNkbWoqckyPfhq52W4WfJWR2=rt8WXzs+WXEZzv9xxL0g@mail.gmail.com>
-In-Reply-To: <CANpmjNNkbWoqckyPfhq52W4WfJWR2=rt8WXzs+WXEZzv9xxL0g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 13 Nov 2019 08:57:49 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com>
-Message-ID: <CAHk-=wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-To:     Marco Elver <elver@google.com>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXk9sWBpYWC-X6V3rp2e0+f5ebdRFFXn8Heuy0qkLq0GQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 7:00 AM Marco Elver <elver@google.com> wrote:
->
-> Just to summarize the options we've had so far:
-> 1. Add a comment, and let the tool parse it somehow.
-> 2. Add attribute to variables.
-> 3. Add some new macro to use with expressions, which doesn't do
-> anything if the tool is disabled. E.g. "racy__(counter++)",
-> "lossy__(counter++);" or any suitable name.
+On Wed, Nov 13, 2019 at 02:15:00PM +0100, Geert Uytterhoeven wrote:
+> Hi Russell,
+> 
+> On Wed, Nov 13, 2019 at 12:45 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Wed, Nov 13, 2019 at 08:40:39PM +0900, Masahiro Yamada wrote:
+> > > On Tue, Oct 1, 2019 at 11:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Fri, Sep 6, 2019 at 5:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > Without the frame pointer enabled, return_address() is an inline
+> > > > > function and does not need to be exported, as shown by this warning:
+> > > > >
+> > > > > WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+> > > > >
+> > > > > Move the EXPORT_SYMBOL_GPL() into the #ifdef as well.
+> > > > >
+> > > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > >
+> > > > Thanks for your patch!
+> > > >
+> > > > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > >
+> > > > > --- a/arch/arm/kernel/return_address.c
+> > > > > +++ b/arch/arm/kernel/return_address.c
+> > > > > @@ -53,6 +53,7 @@ void *return_address(unsigned int level)
+> > > > >                 return NULL;
+> > > > >  }
+> > > > >
+> > > >
+> > > > Checkpatch doesn't like the empty line above:
+> > > >
+> > > > WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
+> > > >
+> > > > > +EXPORT_SYMBOL_GPL(return_address);
+> > > > > +
+> > > > >  #endif /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
+> > > > >
+> > > > > -EXPORT_SYMBOL_GPL(return_address);
+> 
+> > > What has happened to this patch?
+> > >
+> > > I still see this warning.
+> >
+> > Simple - it got merged, it caused build regressions, it got dropped.
+> > A new version is pending me doing another round of patch merging.
+> 
+> I believe that was not Arnd's patch, but Ben Dooks' alternative solution[*]?
 
-I guess I could live with "data_race(x)" or something simple like
-that, assuming we really can just surround a whole expression with it,
-and we don't have to make a hundred different versions for the
-different cases ("racy plain assignment" vs "racy statistics update"
-vs "racy u64 addition" etc etc).
+I don't keep track of who did what, sorry.
 
-I just want the source code to be very legible, which is one of the
-problems with the ugly READ_ONCE() conversions.
-
-Part of that "legible source code" implies no crazy double
-underscores. But a plain "data_race(x)" might not look too bad, and
-would be easy to grep for, and doesn't seem to exist in the current
-kernel as anything else.
-
-One question is if it would be a statement expression or an actual
-expression. I think the expression would read much better, IOW you
-could do
-
-    val = data_race(p->field);
-
-instead of having to write it as
-
-    data_race(val = p->field);
-
-to really point out the race. But at the same time, maybe you need to
-surround several statements, ie
-
-    // intentionally racy xchg because we don't care and it generates
-better code
-    data_race(a = p->field; p->field = b);
-
-which all would work fine with a non-instrumented macro something like this:
-
-    #define data_race(x) ({ x; })
-
-which would hopefully give the proper syntax rules.
-
-But that might be very very inconvenient for KCSAN, depending on how
-you annotate the thing.
-
-So I _suspect_ that what you actually want is to do it as a statement,
-not as an expression. What's the actual underlying syntax for "ignore
-this code for thread safety checking"?
-
-                    Linus
+> 
+> [*] Commit 0b0617e5a610fe12 ("ARM: 8918/1: only build return_address() if
+>     needed"), which I discovered in next-20191031 when checking if Arnd's
+>     patch was applied....
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
