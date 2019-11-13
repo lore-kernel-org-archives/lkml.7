@@ -2,179 +2,106 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E638DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C1AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7136222C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pLQ96LKU"
+	by mail.kernel.org (Postfix) with ESMTP id B93D5222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:33:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573652022;
+	bh=EWykvcYY7821/q/gX4uP4Em4Z7oUrqFXoCp7moWQlLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IhMgU1/0CJuRxw36OTuUFZLByxdx4kTsbWO9aiSSQQoBeep8F4AKM3cniwMkUWmcd
+	 g+WKdkbFKsKpXOB3gOmXsBQkCbgeOhb+2cS+idWzo03SuoSRN7MoMCMxPXMpsF9NKv
+	 FsDRhnf4L1FWnOjcAz81UK65nRbeuWoUb3YTMUts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfKMNar (ORCPT
+        id S1727387AbfKMNdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:30:47 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41962 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfKMNar (ORCPT
+        Wed, 13 Nov 2019 08:33:41 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35848 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfKMNdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:30:47 -0500
-Received: by mail-lj1-f193.google.com with SMTP id d22so2568927lji.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:30:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OOnEuO9COFi4aqj08qcvAhg7573JPt49e4+HEFPh3cQ=;
-        b=pLQ96LKUVUgrh2Xs8imGdJTUy4dQn1wyCiKhmMGZK2M+TBn9MlFaeIycIXKeJ0LG0f
-         qZmGjLSYiy1WoBKwpJsMoMVg+tQCJhv+OPRUdvq940V2jVsjNl2+BA4wYL4UQ6384gNu
-         bwfMOGUvHyyCkUv4obZsVStsWgTwWa0JOKDFPHy4WOLd8MwuNIYBa3JH6FjmWuHVqFat
-         P761xD9lH9Mlkz6EHM3hn6glre11aj3gTxq58kgym9ed6jzOhpm/zLejtjdbisgfMwsS
-         1JP2041OTjxXLsF/tWujkv31qQuHtLaPvUfCohc98qSPbGJAmZX/MXFdpBd4bpCmCGnC
-         W2fw==
+        Wed, 13 Nov 2019 08:33:41 -0500
+Received: by mail-ot1-f68.google.com with SMTP id f10so1607630oto.3;
+        Wed, 13 Nov 2019 05:33:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OOnEuO9COFi4aqj08qcvAhg7573JPt49e4+HEFPh3cQ=;
-        b=Qjs66Ssj36SdA0W2k0UEit+hLcpynl8Lw7Fu+niJdRcgMLcYcl/RZ5jayRtIxmKJql
-         TnQDbHxgQsR4WIUVaSz7VF1wxtDiMYGNzoO5g0THgvt13TEfcypZrSljuTMPjk5YPyZ1
-         Lc0Cs+1oDiZUyCdOhfRl+NTwDeBtiYnN8Q52X0jBg5+rqYeEE3tVC5MfSuDt7OZc6ziQ
-         7SkVjqS/2Wq78OChY4EqDFhKtzrETngSh1alYin1qeAY1Pps1sAMmkd1a6d26qcrMrRU
-         ROVC4fMy3YvtAwTbiYqXfjK1v3DpZ7w711DuwLIjEl7kchjB9RRVQ9sIKmrY97uWLuay
-         HUIw==
-X-Gm-Message-State: APjAAAUsERgTqsNVcPPx8SPkU+4EqzBJQ0pAInhp2bMmKQYSHujOD+OQ
-        9nNuUJlLWL0j+g9f5ONbrMQiDmww6iDVQsc8DZemTg==
-X-Google-Smtp-Source: APXvYqwWujEGA3sqMgB0m8GdEybm4VNcXLjSY8U4Lgc3LKiZkpqhS7SrGPz5w9X1VeygVyGay7PJRPQtcQ+oSkJ8PQM=
-X-Received: by 2002:a2e:9695:: with SMTP id q21mr2549457lji.206.1573651843281;
- Wed, 13 Nov 2019 05:30:43 -0800 (PST)
-MIME-Version: 1.0
-References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
- <20191112150544.GA3664@linaro.org> <3b8cafb7-894d-c302-e6c6-b5844b1298b5@arm.com>
-In-Reply-To: <3b8cafb7-894d-c302-e6c6-b5844b1298b5@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 13 Nov 2019 14:30:31 +0100
-Message-ID: <CAKfTPtBMNnM2tTfb72VtufDpwBvqu6Ttj3dnLgoNOZ--Q6qo+Q@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JMGlC8/pif+jB1W9f7yADN5pub681PWuOZ+nengKGCU=;
+        b=Qr0ycIfWrnd1ks/W+lyYxxeqoxdTAsyK0QGm91lIBqgDFIbGyxBQUKLkJokB7kqv2i
+         74KkIUk5XJzWE0oYa3zhXx7HsFwVnimXSfJOsWUWTqx4naxfqSh20v9giThqoPXIazPx
+         nHSYi00nQ5/xRc15KUxC3BgGbrM/vDZuCXf0uwTk3tTCU9bA1lLjlFRWZWOBpD4g75cR
+         JYMegTN1CcOc8euP4zINJtxhM9TpJae+HG3FU/dyqR4Wxx5fbBkRjfmLV2wsV3+E0NUp
+         ZOcQiRizXOU17R+97u9QOMAv1Tk8IceLGCbCfc/FPTHrMfeU2CyM2Xqi1b3g3NRRlel/
+         K0XQ==
+X-Gm-Message-State: APjAAAXTnC4iCD++3kzuOt7FlHZQN6fVf5SgHzUS5KzWjT8RwJBcyHrL
+        K4LKe7Puokel2bTljoTxtg==
+X-Google-Smtp-Source: APXvYqxD6IWsewO9TdJ3bFTU+gY51WG3vNByXca8SVZxroh1OIj61piRW22xnKzAJ5FMxoSywmWh5A==
+X-Received: by 2002:a05:6830:1f4b:: with SMTP id u11mr2802561oth.60.1573652018588;
+        Wed, 13 Nov 2019 05:33:38 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u204sm685118oig.35.2019.11.13.05.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 05:33:37 -0800 (PST)
+Date:   Wed, 13 Nov 2019 07:33:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        devicetree@vger.kernel.org, letux-kernel@openphoenux.org,
+        linux-mmc@vger.kernel.org, kernel@pyra-handheld.com,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 01/12] Documentation: dt: wireless: update wl1251 for
+ sdio
+Message-ID: <20191113133337.GA3987@bogus>
+References: <cover.1573122644.git.hns@goldelico.com>
+ <17b12e91c878dcb74160e3df5f88bc8a9e3f7fce.1573122644.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <17b12e91c878dcb74160e3df5f88bc8a9e3f7fce.1573122644.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> w=
-rote:
->
-> On 12.11.19 16:05, Vincent Guittot wrote:
-> > Le Tuesday 12 Nov 2019 =C3=A0 15:48:13 (+0100), Vincent Guittot a =C3=
-=A9crit :
-> >> update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt dec=
-ays,
-> >> which might be inefficient when cpufreq driver has rate limitation.
-> >>
-> >> When a task is attached on a CPU, we have call path:
-> >>
-> >> update_blocked_averages()
-> >>   update_cfs_rq_load_avg()
-> >>     cfs_rq_util_change -- > trig frequency update
-> >>   attach_entity_load_avg()
-> >>     cfs_rq_util_change -- > trig frequency update
->
-> This looks like attach_entity_load_avg() is called from
-> update_blocked_averages(). Do you refer to the attach_entity_load_avg()
-> call from attach_entity_cfs_rq() or update_load_avg() here? I assume the
-> former.
+On Thu,  7 Nov 2019 11:30:34 +0100, "H. Nikolaus Schaller" wrote:
+> The standard method for sdio devices connected to
+> an sdio interface is to define them as a child node
+> like we can see with wlcore.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> ---
+>  .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
 
-ah... typo mistake, i wanted to write update_load_avg
-update_blocked_averages()
-  update_cfs_rq_load_avg()
-    cfs_rq_util_change -- > trig frequency update
-  attach_entity_load_avg()
-    cfs_rq_util_change -- > trig frequency update
-
->
-> >> The 1st frequency update will not take into account the utilization of=
- the
-> >> newly attached task and the 2nd one might be discard because of rate
-> >> limitation of the cpufreq driver.
-> >>
-> >> update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> >> and update_load_avg() so we can move the call to
-> >> {cfs_rq,cpufreq}_util_change() into these 2 functions. It's also
->
-> s/cpufreq_util_change()/cpufreq_update_util() ?
-
-yes
-
->
-> [...]
->
-> >> I have just rebased the patch on latest tip/sched/core and made it a p=
-roper
-> >> patchset after Doug reported that the problem has diseappeared accordi=
-ng to
-> >> his 1st results but tests results are not all based on the same v5.4-r=
-cX
-> >> and with menu instead of teo governor.
->
-> I had some minor tweaks to do putting this on a0e813f26ebc ("sched/core:
-> Further clarify sched_class::set_next_task()") ? I saw the '[tip:
-> sched/urgent] sched/pelt: Fix update of blocked PELT ordering' tip-bot
-> msg this morning though.
-
-yes, a0e813f26ebc was item 1 and this patch is item 2 on top
-
->
-> [...]
->
-> >> @@ -7493,9 +7495,9 @@ static void update_blocked_averages(int cpu)
-> >>       * that RT, DL and IRQ signals have been updated before updating =
-CFS.
-> >>       */
-> >>      curr_class =3D rq->curr->sched_class;
-> >> -    update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class =3D=3D &r=
-t_sched_class);
-> >> -    update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class =3D=3D &d=
-l_sched_class);
-> >> -    update_irq_load_avg(rq, 0);
-> >> +    decayed |=3D update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_cl=
-ass =3D=3D &rt_sched_class);
-> >> +    decayed |=3D update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_cl=
-ass =3D=3D &dl_sched_class);
-> >> +    decayed |=3D update_irq_load_avg(rq, 0);
->
-> Why not 'decayed  =3D update_cfs_rq_load_avg()' like in the
-> !CONFIG_FAIR_GROUP_SCHED case?
-
-Because it is handled by the update_load_avg() in
-for_each_leaf_cfs_rq_safe() loop
-
-This means that we can have 2 calls to cpufreq_update_util in
-update_blocked_average() but at least the values will be up to date in
-both calls unlike previously.
-
-I'm going to prepare an additional patch to remove this useless call.
-I have also seen some possible further optimization that i need to
-study a bit more before preparing a patch
-
-
->
-> [...]
+Reviewed-by: Rob Herring <robh@kernel.org>
