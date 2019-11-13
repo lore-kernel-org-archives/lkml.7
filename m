@@ -2,198 +2,407 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4A7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43457C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5F0214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06964214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J3WFsGYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKMICu (ORCPT
+        id S1727044AbfKMIDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:02:50 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725996AbfKMICu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:02:50 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 333D7E05137A09BBC0E5;
-        Wed, 13 Nov 2019 16:02:48 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
- 16:02:38 +0800
-Subject: Re: [PATCH v2 12/36] irqchip/gic-v4.1: Implement the v4.1 flavour of
- VMAPP
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Andrew Murray" <Andrew.Murray@arm.com>,
-        Jayachandran C <jnair@marvell.com>,
-        "Robert Richter" <rrichter@marvell.com>,
-        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>,
-        <jiayanlei@huawei.com>, <liangboyan@hisilicon.com>
-References: <20191027144234.8395-1-maz@kernel.org>
- <20191027144234.8395-13-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <c9ef4c0f-bb34-82ff-c286-8430c1c7c583@huawei.com>
-Date:   Wed, 13 Nov 2019 16:02:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Wed, 13 Nov 2019 03:03:36 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45698 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725996AbfKMIDf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 03:03:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573632213;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/IqkRX0YI5ZLiR4tpOvJ2iygSo1R+pUXOvMfvKWLyTQ=;
+        b=J3WFsGYbdcUUwD+nFbQ+n1pa16sFO3VnGDuci57csa6DYLXIGYB9As5WYItECZ1EaVRecL
+        qZ8tgeTO2ceeXCKubMAJxDhMsgw/MhfL4JcS99J+EMekOT/2pCK13KQBDeBOm2uRqX/EnB
+        5ylJ7nFiR+rtlcrRqk9SfsOBsFFDoqk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-eu4kfjK8Nsq9i1EWBNMzCw-1; Wed, 13 Nov 2019 03:03:30 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B41A68F2F4E;
+        Wed, 13 Nov 2019 08:03:28 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-116-65.ams2.redhat.com [10.36.116.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E1F6601A9;
+        Wed, 13 Nov 2019 08:03:25 +0000 (UTC)
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Adrian Reber <areber@redhat.com>
+Subject: [PATCH v8 1/2] fork: extend clone3() to support setting a PID
+Date:   Wed, 13 Nov 2019 09:03:00 +0100
+Message-Id: <20191113080301.1197762-1-areber@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191027144234.8395-13-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: eu4kfjK8Nsq9i1EWBNMzCw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+The main motivation to add set_tid to clone3() is CRIU.
 
-On 2019/10/27 22:42, Marc Zyngier wrote:
-> The ITS VMAPP command gains some new fields with GICv4.1:
-> - a default doorbell, which allows a single doorbell to be used for
->    all the VLPIs routed to a given VPE
-> - a pointer to the configuration table (instead of having it in a register
->    that gets context switched)
-> - a flag indicating whether this is the first map or the last unmap for
->    this particulat VPE
-> - a flag indicating whether the pending table is known to be zeroed, or not
-> 
-> Plumb in the new fields in the VMAPP builder, and add the map/unmap
-> refcounting so that the ITS can do the right thing.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+To restore a process with the same PID/TID CRIU currently uses
+/proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
+ns_last_pid and then (quickly) does a clone(). This works most of the
+time, but it is racy. It is also slow as it requires multiple syscalls.
 
-[...]
+Extending clone3() to support *set_tid makes it possible restore a
+process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
+race free (as long as the desired PID/TID is available).
 
-> @@ -605,19 +626,45 @@ static struct its_vpe *its_build_vmapp_cmd(struct its_node *its,
->   					   struct its_cmd_block *cmd,
->   					   struct its_cmd_desc *desc)
->   {
-> -	unsigned long vpt_addr;
-> +	unsigned long vpt_addr, vconf_addr;
->   	u64 target;
-> -
-> -	vpt_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->vpt_page));
-> -	target = desc->its_vmapp_cmd.col->target_address + its->vlpi_redist_offset;
-> +	bool alloc;
->   
->   	its_encode_cmd(cmd, GITS_CMD_VMAPP);
->   	its_encode_vpeid(cmd, desc->its_vmapp_cmd.vpe->vpe_id);
->   	its_encode_valid(cmd, desc->its_vmapp_cmd.valid);
-> +
-> +	if (!desc->its_vmapp_cmd.valid) {
-> +		if (is_v4_1(its)) {
-> +			alloc = !atomic_dec_return(&desc->its_vmapp_cmd.vpe->vmapp_count);
-> +			its_encode_alloc(cmd, alloc);
-> +		}
-> +
-> +		goto out;
-> +	}
-> +
-> +	vpt_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->vpt_page));
-> +	target = desc->its_vmapp_cmd.col->target_address + its->vlpi_redist_offset;
-> +
->   	its_encode_target(cmd, target);
->   	its_encode_vpt_addr(cmd, vpt_addr);
->   	its_encode_vpt_size(cmd, LPI_NRBITS - 1);
->   
-> +	if (!is_v4_1(its))
-> +		goto out;
-> +
-> +	vconf_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->its_vm->vprop_page));
-> +
-> +	alloc = atomic_inc_and_test(&desc->its_vmapp_cmd.vpe->vmapp_count);
+This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
+on clone3() with *set_tid as they are currently in place for ns_last_pid.
 
-As the comment block on top of atomic_inc_and_test(atomic *v) says,
+The original version of this change was using a single value for
+set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
+decided to change set_tid to an array to enable setting the PID of a
+process in multiple PID namespaces at the same time. If a process is
+created in a PID namespace it is possible to influence the PID inside
+and outside of the PID namespace. Details also in the corresponding
+selftest.
 
-	 * Atomically increments @v by 1
-	 * and returns true if the result is zero, or false for all
-	 * other cases.
-	 */
+To create a process with the following PIDs:
 
-We will always get the 'alloc' as false here, even if this is the
-first mapping of this vPE.  This is not as expected, I think.
+      PID NS level         Requested PID
+        0 (host)              31496
+        1                        42
+        2                         1
 
-And on the other hand, I wonder what is the reason for 'vmapp_count'
-to be atomic_t?
+For that example the two newly introduced parameters to struct
+clone_args (set_tid and set_tid_size) would need to be:
 
+  set_tid[0] =3D 1;
+  set_tid[1] =3D 42;
+  set_tid[2] =3D 31496;
+  set_tid_size =3D 3;
 
-Thanks,
-Zenghui
+If only the PIDs of the two innermost nested PID namespaces should be
+defined it would look like this:
 
-> +
-> +	its_encode_alloc(cmd, alloc);
-> +
-> +	/* We can only signal PTZ when alloc==1. Why do we have two bits? */
-> +	its_encode_ptz(cmd, alloc);
-> +	its_encode_vconf_addr(cmd, vconf_addr);
-> +	its_encode_vmapp_default_db(cmd, desc->its_vmapp_cmd.vpe->vpe_db_lpi);
-> +
-> +out:
->   	its_fixup_cmd(cmd);
->   
->   	return valid_vpe(its, desc->its_vmapp_cmd.vpe);
-> @@ -3349,7 +3396,10 @@ static int its_vpe_init(struct its_vpe *vpe)
->   
->   	vpe->vpe_id = vpe_id;
->   	vpe->vpt_page = vpt_page;
-> -	vpe->vpe_proxy_event = -1;
-> +	if (gic_rdists->has_rvpeid)
-> +		atomic_set(&vpe->vmapp_count, 0);
-> +	else
-> +		vpe->vpe_proxy_event = -1;
->   
->   	return 0;
->   }
-> diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-> index ab1396afe08a..6213ced6f199 100644
-> --- a/include/linux/irqchip/arm-gic-v4.h
-> +++ b/include/linux/irqchip/arm-gic-v4.h
-> @@ -37,8 +37,20 @@ struct its_vpe {
->   	irq_hw_number_t		vpe_db_lpi;
->   	/* VPE resident */
->   	bool			resident;
-> -	/* VPE proxy mapping */
-> -	int			vpe_proxy_event;
-> +	union {
-> +		/* GICv4.0 implementations */
-> +		struct {
-> +			/* VPE proxy mapping */
-> +			int	vpe_proxy_event;
-> +			/* Implementation Defined Area Invalid */
-> +			bool	idai;
-> +		};
-> +		/* GICv4.1 implementations */
-> +		struct {
-> +			atomic_t vmapp_count;
-> +		};
-> +	};
-> +
->   	/*
->   	 * This collection ID is used to indirect the target
->   	 * redistributor for this VPE. The ID itself isn't involved in
-> @@ -47,8 +59,6 @@ struct its_vpe {
->   	u16			col_idx;
->   	/* Unique (system-wide) VPE identifier */
->   	u16			vpe_id;
-> -	/* Implementation Defined Area Invalid */
-> -	bool			idai;
->   	/* Pending VLPIs on schedule out? */
->   	bool			pending_last;
->   };
-> 
+  set_tid[0] =3D 1;
+  set_tid[1] =3D 42;
+  set_tid_size =3D 2;
+
+The PID of the newly created process would then be the next available
+free PID in the PID namespace level 0 (host) and 42 in the PID namespace
+at level 1 and the PID of the process in the innermost PID namespace
+would be 1.
+
+The set_tid array is used to specify the PID of a process starting
+from the innermost nested PID namespaces up to set_tid_size PID namespaces.
+
+set_tid_size cannot be larger then the current PID namespace level.
+
+Signed-off-by: Adrian Reber <areber@redhat.com>
+---
+v2:
+ - Removed (size < sizeof(struct clone_args)) as discussed with
+   Christian and Dmitry
+ - Added comment to ((set_tid !=3D 1) && idr_get_cursor() <=3D 1) (Oleg)
+ - Use idr_alloc() instead of idr_alloc_cyclic() (Oleg)
+
+v3:
+ - Return EEXIST if PID is already in use (Christian)
+ - Drop CLONE_SET_TID (Christian and Oleg)
+ - Use idr_is_empty() instead of idr_get_cursor() (Oleg)
+ - Handle different `struct clone_args` sizes (Dmitry)
+
+v4:
+ - Rework struct size check with defines (Christian)
+ - Reduce number of set_tid checks (Oleg)
+ - Less parentheses and more robust code (Oleg)
+ - Do ns_capable() on correct user_ns (Oleg, Christian)
+
+v5:
+ - make set_tid checks earlier in alloc_pid() (Christian)
+ - remove unnecessary comment and struct size check (Christian)
+
+v6:
+ - remove CLONE_SET_TID from description (Christian)
+ - add clone3() tests for different clone_args sizes (Christian)
+ - move more set_tid checks to alloc_pid() (Oleg)
+ - make all set_tid checks lockless (Oleg)
+
+v7:
+ - changed set_tid to be an array to set the PID of a process
+   in multiple nested PID namespaces at the same time as discussed
+   at LPC 2019 (container MC)
+
+v8:
+ - skip unnecessary memset() (Rasmus)
+ - replace set_tid copy loop with a single copy (Christian)
+ - more parameter error checking (Christian)
+ - cache set_tid in alloc_pid() (Oleg)
+ - move code in "else" branch (Oleg)
+---
+ include/linux/pid.h           |  3 +-
+ include/linux/pid_namespace.h |  2 ++
+ include/linux/sched/task.h    |  3 ++
+ include/uapi/linux/sched.h    |  2 ++
+ kernel/fork.c                 | 24 ++++++++++++-
+ kernel/pid.c                  | 64 +++++++++++++++++++++++++++--------
+ kernel/pid_namespace.c        |  2 --
+ 7 files changed, 82 insertions(+), 18 deletions(-)
+
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index 9645b1194c98..034b7df25888 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -120,7 +120,8 @@ extern struct pid *find_vpid(int nr);
+ extern struct pid *find_get_pid(int nr);
+ extern struct pid *find_ge_pid(int nr, struct pid_namespace *);
+=20
+-extern struct pid *alloc_pid(struct pid_namespace *ns);
++extern struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
++=09=09=09     size_t set_tid_size);
+ extern void free_pid(struct pid *pid);
+ extern void disable_pid_allocation(struct pid_namespace *ns);
+=20
+diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+index 49538b172483..2ed6af88794b 100644
+--- a/include/linux/pid_namespace.h
++++ b/include/linux/pid_namespace.h
+@@ -12,6 +12,8 @@
+ #include <linux/ns_common.h>
+ #include <linux/idr.h>
+=20
++/* MAX_PID_NS_LEVEL is needed for limiting size of 'struct pid' */
++#define MAX_PID_NS_LEVEL 32
+=20
+ struct fs_pin;
+=20
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 4b1c3b664f51..f1879884238e 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -26,6 +26,9 @@ struct kernel_clone_args {
+ =09unsigned long stack;
+ =09unsigned long stack_size;
+ =09unsigned long tls;
++=09pid_t *set_tid;
++=09/* Number of elements in *set_tid */
++=09size_t set_tid_size;
+ };
+=20
+ /*
+diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+index 25b4fa00bad1..13f74c40a629 100644
+--- a/include/uapi/linux/sched.h
++++ b/include/uapi/linux/sched.h
+@@ -72,6 +72,8 @@ struct clone_args {
+ =09__aligned_u64 stack;
+ =09__aligned_u64 stack_size;
+ =09__aligned_u64 tls;
++=09__aligned_u64 set_tid;
++=09__aligned_u64 set_tid_size;
+ };
+ #endif
+=20
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 55af6931c6ec..6f9e6443e12c 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2026,7 +2026,8 @@ static __latent_entropy struct task_struct *copy_proc=
+ess(
+ =09stackleak_task_init(p);
+=20
+ =09if (pid !=3D &init_struct_pid) {
+-=09=09pid =3D alloc_pid(p->nsproxy->pid_ns_for_children);
++=09=09pid =3D alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid,
++=09=09=09=09args->set_tid_size);
+ =09=09if (IS_ERR(pid)) {
+ =09=09=09retval =3D PTR_ERR(pid);
+ =09=09=09goto bad_fork_cleanup_thread;
+@@ -2529,6 +2530,7 @@ noinline static int copy_clone_args_from_user(struct =
+kernel_clone_args *kargs,
+ {
+ =09int err;
+ =09struct clone_args args;
++=09pid_t *kset_tid =3D kargs->set_tid;
+=20
+ =09if (unlikely(usize > PAGE_SIZE))
+ =09=09return -E2BIG;
+@@ -2539,6 +2541,15 @@ noinline static int copy_clone_args_from_user(struct=
+ kernel_clone_args *kargs,
+ =09if (err)
+ =09=09return err;
+=20
++=09if (unlikely(args.set_tid_size > MAX_PID_NS_LEVEL))
++=09=09return -EINVAL;
++
++=09if (unlikely(!args.set_tid && args.set_tid_size > 0))
++=09=09return -EINVAL;
++
++=09if (unlikely(args.set_tid && args.set_tid_size =3D=3D 0))
++=09=09return -EINVAL;
++
+ =09/*
+ =09 * Verify that higher 32bits of exit_signal are unset and that
+ =09 * it is a valid signal
+@@ -2556,8 +2567,16 @@ noinline static int copy_clone_args_from_user(struct=
+ kernel_clone_args *kargs,
+ =09=09.stack=09=09=3D args.stack,
+ =09=09.stack_size=09=3D args.stack_size,
+ =09=09.tls=09=09=3D args.tls,
++=09=09.set_tid_size=09=3D args.set_tid_size,
+ =09};
+=20
++=09if (args.set_tid &&
++=09=09copy_from_user(kset_tid, u64_to_user_ptr(args.set_tid),
++=09=09=09(kargs->set_tid_size * sizeof(pid_t))))
++=09=09return -EFAULT;
++
++=09kargs->set_tid =3D kset_tid;
++
+ =09return 0;
+ }
+=20
+@@ -2631,6 +2650,9 @@ SYSCALL_DEFINE2(clone3, struct clone_args __user *, u=
+args, size_t, size)
+ =09int err;
+=20
+ =09struct kernel_clone_args kargs;
++=09pid_t set_tid[MAX_PID_NS_LEVEL];
++
++=09kargs.set_tid =3D set_tid;
+=20
+ =09err =3D copy_clone_args_from_user(&kargs, uargs, size);
+ =09if (err)
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 0a9f2e437217..17280da48224 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -157,7 +157,8 @@ void free_pid(struct pid *pid)
+ =09call_rcu(&pid->rcu, delayed_put_pid);
+ }
+=20
+-struct pid *alloc_pid(struct pid_namespace *ns)
++struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
++=09=09      size_t set_tid_size)
+ {
+ =09struct pid *pid;
+ =09enum pid_type type;
+@@ -166,6 +167,17 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+ =09struct upid *upid;
+ =09int retval =3D -ENOMEM;
+=20
++=09/*
++=09 * set_tid_size contains the size of the set_tid array. Starting at
++=09 * the most nested currently active PID namespace it tells alloc_pid()
++=09 * which PID to set for a process in that most nested PID namespace
++=09 * up to set_tid_size PID namespaces. It does not have to set the PID
++=09 * for a process in all nested PID namespaces but set_tid_size must
++=09 * never be greater than the current ns->level + 1.
++=09 */
++=09if (set_tid_size > ns->level + 1)
++=09=09return ERR_PTR(-EINVAL);
++
+ =09pid =3D kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
+ =09if (!pid)
+ =09=09return ERR_PTR(retval);
+@@ -175,23 +187,47 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+=20
+ =09for (i =3D ns->level; i >=3D 0; i--) {
+ =09=09int pid_min =3D 1;
++=09=09int tid =3D 0;
++
++=09=09if (set_tid_size) {
++=09=09=09tid =3D set_tid[ns->level - i];
++=09=09=09if (tid < 1 || tid >=3D pid_max)
++=09=09=09=09return ERR_PTR(-EINVAL);
++=09=09=09/* Also fail if a PID !=3D 1 is requested and no PID 1 exists */
++=09=09=09if (tid !=3D 1 && !tmp->child_reaper)
++=09=09=09=09return ERR_PTR(-EINVAL);
++=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
++=09=09=09=09return ERR_PTR(-EPERM);
++=09=09}
+=20
+ =09=09idr_preload(GFP_KERNEL);
+ =09=09spin_lock_irq(&pidmap_lock);
+=20
+-=09=09/*
+-=09=09 * init really needs pid 1, but after reaching the maximum
+-=09=09 * wrap back to RESERVED_PIDS
+-=09=09 */
+-=09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+-=09=09=09pid_min =3D RESERVED_PIDS;
+-
+-=09=09/*
+-=09=09 * Store a null pointer so find_pid_ns does not find
+-=09=09 * a partially initialized PID (see below).
+-=09=09 */
+-=09=09nr =3D idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+-=09=09=09=09      pid_max, GFP_ATOMIC);
++=09=09if (tid) {
++=09=09=09nr =3D idr_alloc(&tmp->idr, NULL, tid,
++=09=09=09=09       tid + 1, GFP_ATOMIC);
++=09=09=09/*
++=09=09=09 * If ENOSPC is returned it means that the PID is
++=09=09=09 * alreay in use. Return EEXIST in that case.
++=09=09=09 */
++=09=09=09if (nr =3D=3D -ENOSPC)
++=09=09=09=09nr =3D -EEXIST;
++=09=09=09set_tid_size--;
++=09=09} else {
++=09=09=09/*
++=09=09=09 * init really needs pid 1, but after reaching the maximum
++=09=09=09 * wrap back to RESERVED_PIDS
++=09=09=09 */
++=09=09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
++=09=09=09=09pid_min =3D RESERVED_PIDS;
++
++=09=09=09/*
++=09=09=09 * Store a null pointer so find_pid_ns does not find
++=09=09=09 * a partially initialized PID (see below).
++=09=09=09 */
++=09=09=09nr =3D idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
++=09=09=09=09=09      pid_max, GFP_ATOMIC);
++=09=09}
+ =09=09spin_unlock_irq(&pidmap_lock);
+ =09=09idr_preload_end();
+=20
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index a6a79f85c81a..d40017e79ebe 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -26,8 +26,6 @@
+=20
+ static DEFINE_MUTEX(pid_caches_mutex);
+ static struct kmem_cache *pid_ns_cachep;
+-/* MAX_PID_NS_LEVEL is needed for limiting size of 'struct pid' */
+-#define MAX_PID_NS_LEVEL 32
+ /* Write once array, filled from the beginning. */
+ static struct kmem_cache *pid_cache[MAX_PID_NS_LEVEL];
+=20
+--=20
+2.23.0
 
