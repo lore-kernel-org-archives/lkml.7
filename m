@@ -2,140 +2,198 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E20C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4A7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE62214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:02:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H47Jvw5G"
+	by mail.kernel.org (Postfix) with ESMTP id CD5F0214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfKMICj (ORCPT
+        id S1727004AbfKMICu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:02:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36611 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725996AbfKMICj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:02:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573632158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JGmgaddr7lKKt/ylf5c//1s3h7Y5K+L1ZfhRWk4daXU=;
-        b=H47Jvw5GRWjINu55aaqMkPpbSuwTuNvwdCxZXR6I+ZN95HskWyoQ5XC4B0IdzmnUk84oB+
-        oawz96c+MPqzbL/+pRb9qe8GtZcfVIFDc4KtQ3UYmjlcofpDseUMsCnQC0crGCtEqD1dyy
-        wPegAMWrr6lCnuhYsZy2anxMBt0gyWw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-71-W_Xftwb7MeuZrv9730J7wQ-1; Wed, 13 Nov 2019 03:02:32 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 897938025A1;
-        Wed, 13 Nov 2019 08:02:30 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-116-65.ams2.redhat.com [10.36.116.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 36C0E5D9E5;
-        Wed, 13 Nov 2019 08:02:27 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 09:02:25 +0100
-From:   Adrian Reber <areber@redhat.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v7 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191113080225.GA1028126@dcbz.redhat.com>
-References: <20191111131704.656169-1-areber@redhat.com>
- <cc5f90b6-ea1f-dbdb-e713-cc0fceceafbe@rasmusvillemoes.dk>
+        Wed, 13 Nov 2019 03:02:50 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6216 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725996AbfKMICu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 03:02:50 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 333D7E05137A09BBC0E5;
+        Wed, 13 Nov 2019 16:02:48 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
+ 16:02:38 +0800
+Subject: Re: [PATCH v2 12/36] irqchip/gic-v4.1: Implement the v4.1 flavour of
+ VMAPP
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        "Robert Richter" <rrichter@marvell.com>,
+        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>,
+        <jiayanlei@huawei.com>, <liangboyan@hisilicon.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+ <20191027144234.8395-13-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <c9ef4c0f-bb34-82ff-c286-8430c1c7c583@huawei.com>
+Date:   Wed, 13 Nov 2019 16:02:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-In-Reply-To: <cc5f90b6-ea1f-dbdb-e713-cc0fceceafbe@rasmusvillemoes.dk>
-X-Operating-System: Linux (5.3.8-300.fc31.x86_64)
-X-Load-Average: 3.10 2.24 1.75
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-Organization: Red Hat
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: W_Xftwb7MeuZrv9730J7wQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191027144234.8395-13-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:41:39PM +0100, Rasmus Villemoes wrote:
-> On 11/11/2019 14.17, Adrian Reber wrote:
-> > The main motivation to add set_tid to clone3() is CRIU.
-> >=20
-> > To restore a process with the same PID/TID CRIU currently uses
-> > /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-> > ns_last_pid and then (quickly) does a clone(). This works most of the
-> > time, but it is racy. It is also slow as it requires multiple syscalls.
-> >=20
-> > Extending clone3() to support *set_tid makes it possible restore a
-> > process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> > race free (as long as the desired PID/TID is available).
-> >=20
-> > This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-> > on clone3() with *set_tid as they are currently in place for ns_last_pi=
-d.
-> >=20
-> > The original version of this change was using a single value for
-> > set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
-> > decided to change set_tid to an array to enable setting the PID of a
-> > process in multiple PID namespaces at the same time. If a process is
-> > created in a PID namespace it is possible to influence the PID inside
-> > and outside of the PID namespace. Details also in the corresponding
-> > selftest.
-> >=20
->=20
-> >  =09/*
-> >  =09 * Verify that higher 32bits of exit_signal are unset and that
-> >  =09 * it is a valid signal
-> > @@ -2556,8 +2561,17 @@ noinline static int copy_clone_args_from_user(st=
-ruct kernel_clone_args *kargs,
-> >  =09=09.stack=09=09=3D args.stack,
-> >  =09=09.stack_size=09=3D args.stack_size,
-> >  =09=09.tls=09=09=3D args.tls,
-> > +=09=09.set_tid=09=3D kargs->set_tid,
-> > +=09=09.set_tid_size=09=3D args.set_tid_size,
-> >  =09};
->=20
-> This is a bit ugly. And is it even well-defined? I mean, it's a bit
-> similar to the "i =3D i++;". So it would be best to avoid.
->=20
-> > +=09for (i =3D 0; i < args.set_tid_size; i++) {
-> > +=09=09if (copy_from_user(&kargs->set_tid[i],
-> > +=09=09    u64_to_user_ptr(args.set_tid + (i * sizeof(args.set_tid))),
-> > +=09=09    sizeof(pid_t)))
-> > +=09=09=09return -EFAULT;
-> > +=09}
-> > +
->=20
-> If I'm reading this (and your test case) right, you expect the user
-> pointer to point at an array of u64, and here you're copying the first
-> half of each u64 to the pid_t array. That only works on little-endian.
->=20
-> It seems more obvious (since I don't think there's any disagreement
-> anywhere on sizeof(pid_t)) to expect the user pointer to point at an
-> array of pid_t and then simply copy_from_user() the whole thing in one go=
-.
+Hi Marc,
 
-Yes, that was wrong. I changed the test case to use an array of pid_t.
+On 2019/10/27 22:42, Marc Zyngier wrote:
+> The ITS VMAPP command gains some new fields with GICv4.1:
+> - a default doorbell, which allows a single doorbell to be used for
+>    all the VLPIs routed to a given VPE
+> - a pointer to the configuration table (instead of having it in a register
+>    that gets context switched)
+> - a flag indicating whether this is the first map or the last unmap for
+>    this particulat VPE
+> - a flag indicating whether the pending table is known to be zeroed, or not
+> 
+> Plumb in the new fields in the VMAPP builder, and add the map/unmap
+> refcounting so that the ITS can do the right thing.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-=09=09Adrian
+[...]
+
+> @@ -605,19 +626,45 @@ static struct its_vpe *its_build_vmapp_cmd(struct its_node *its,
+>   					   struct its_cmd_block *cmd,
+>   					   struct its_cmd_desc *desc)
+>   {
+> -	unsigned long vpt_addr;
+> +	unsigned long vpt_addr, vconf_addr;
+>   	u64 target;
+> -
+> -	vpt_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->vpt_page));
+> -	target = desc->its_vmapp_cmd.col->target_address + its->vlpi_redist_offset;
+> +	bool alloc;
+>   
+>   	its_encode_cmd(cmd, GITS_CMD_VMAPP);
+>   	its_encode_vpeid(cmd, desc->its_vmapp_cmd.vpe->vpe_id);
+>   	its_encode_valid(cmd, desc->its_vmapp_cmd.valid);
+> +
+> +	if (!desc->its_vmapp_cmd.valid) {
+> +		if (is_v4_1(its)) {
+> +			alloc = !atomic_dec_return(&desc->its_vmapp_cmd.vpe->vmapp_count);
+> +			its_encode_alloc(cmd, alloc);
+> +		}
+> +
+> +		goto out;
+> +	}
+> +
+> +	vpt_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->vpt_page));
+> +	target = desc->its_vmapp_cmd.col->target_address + its->vlpi_redist_offset;
+> +
+>   	its_encode_target(cmd, target);
+>   	its_encode_vpt_addr(cmd, vpt_addr);
+>   	its_encode_vpt_size(cmd, LPI_NRBITS - 1);
+>   
+> +	if (!is_v4_1(its))
+> +		goto out;
+> +
+> +	vconf_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->its_vm->vprop_page));
+> +
+> +	alloc = atomic_inc_and_test(&desc->its_vmapp_cmd.vpe->vmapp_count);
+
+As the comment block on top of atomic_inc_and_test(atomic *v) says,
+
+	 * Atomically increments @v by 1
+	 * and returns true if the result is zero, or false for all
+	 * other cases.
+	 */
+
+We will always get the 'alloc' as false here, even if this is the
+first mapping of this vPE.  This is not as expected, I think.
+
+And on the other hand, I wonder what is the reason for 'vmapp_count'
+to be atomic_t?
+
+
+Thanks,
+Zenghui
+
+> +
+> +	its_encode_alloc(cmd, alloc);
+> +
+> +	/* We can only signal PTZ when alloc==1. Why do we have two bits? */
+> +	its_encode_ptz(cmd, alloc);
+> +	its_encode_vconf_addr(cmd, vconf_addr);
+> +	its_encode_vmapp_default_db(cmd, desc->its_vmapp_cmd.vpe->vpe_db_lpi);
+> +
+> +out:
+>   	its_fixup_cmd(cmd);
+>   
+>   	return valid_vpe(its, desc->its_vmapp_cmd.vpe);
+> @@ -3349,7 +3396,10 @@ static int its_vpe_init(struct its_vpe *vpe)
+>   
+>   	vpe->vpe_id = vpe_id;
+>   	vpe->vpt_page = vpt_page;
+> -	vpe->vpe_proxy_event = -1;
+> +	if (gic_rdists->has_rvpeid)
+> +		atomic_set(&vpe->vmapp_count, 0);
+> +	else
+> +		vpe->vpe_proxy_event = -1;
+>   
+>   	return 0;
+>   }
+> diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+> index ab1396afe08a..6213ced6f199 100644
+> --- a/include/linux/irqchip/arm-gic-v4.h
+> +++ b/include/linux/irqchip/arm-gic-v4.h
+> @@ -37,8 +37,20 @@ struct its_vpe {
+>   	irq_hw_number_t		vpe_db_lpi;
+>   	/* VPE resident */
+>   	bool			resident;
+> -	/* VPE proxy mapping */
+> -	int			vpe_proxy_event;
+> +	union {
+> +		/* GICv4.0 implementations */
+> +		struct {
+> +			/* VPE proxy mapping */
+> +			int	vpe_proxy_event;
+> +			/* Implementation Defined Area Invalid */
+> +			bool	idai;
+> +		};
+> +		/* GICv4.1 implementations */
+> +		struct {
+> +			atomic_t vmapp_count;
+> +		};
+> +	};
+> +
+>   	/*
+>   	 * This collection ID is used to indirect the target
+>   	 * redistributor for this VPE. The ID itself isn't involved in
+> @@ -47,8 +59,6 @@ struct its_vpe {
+>   	u16			col_idx;
+>   	/* Unique (system-wide) VPE identifier */
+>   	u16			vpe_id;
+> -	/* Implementation Defined Area Invalid */
+> -	bool			idai;
+>   	/* Pending VLPIs on schedule out? */
+>   	bool			pending_last;
+>   };
+> 
 
