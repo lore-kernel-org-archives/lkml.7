@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793B0C17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1811C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9CF2245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14AB2245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfKMKGm (ORCPT
+        id S1727422AbfKMKGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:06:42 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37159 "EHLO
+        Wed, 13 Nov 2019 05:06:43 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37164 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbfKMKGk (ORCPT
+        with ESMTP id S1726491AbfKMKGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:06:40 -0500
+        Wed, 13 Nov 2019 05:06:41 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iUpXh-0000LE-Ib; Wed, 13 Nov 2019 11:06:29 +0100
+        id 1iUpXg-0000HU-JR; Wed, 13 Nov 2019 11:06:28 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3CC681C0092;
-        Wed, 13 Nov 2019 11:06:29 +0100 (CET)
-Date:   Wed, 13 Nov 2019 10:06:28 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4547C1C0092;
+        Wed, 13 Nov 2019 11:06:28 +0100 (CET)
+Date:   Wed, 13 Nov 2019 10:06:27 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/core: Avoid spurious lock dependencies
+Subject: [tip: perf/urgent] perf/core: Disallow uncore-cgroup events
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        akpm@linux-foundation.org, bigeasy@linutronix.de, cl@linux.com,
-        keescook@chromium.org, penberg@kernel.org, rientjes@google.com,
-        thgarnie@google.com, tytso@mit.edu, will@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
-References: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Message-ID: <157363958888.29376.9190587096871610849.tip-bot2@tip-bot2>
+Message-ID: <157363958792.29376.17409003248795568881.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,68 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     ff51ff84d82aea5a889b85f2b9fb3aa2b8691668
-Gitweb:        https://git.kernel.org/tip/ff51ff84d82aea5a889b85f2b9fb3aa2b8691668
+Commit-ID:     09f4e8f05d85bfc98fe9227e988a7c1b3ec416ec
+Gitweb:        https://git.kernel.org/tip/09f4e8f05d85bfc98fe9227e988a7c1b3ec416ec
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 01 Oct 2019 11:18:37 +02:00
+AuthorDate:    Wed, 06 Nov 2019 12:51:04 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 13 Nov 2019 08:01:30 +01:00
+CommitterDate: Wed, 13 Nov 2019 08:16:39 +01:00
 
-sched/core: Avoid spurious lock dependencies
+perf/core: Disallow uncore-cgroup events
 
-While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-when DEBUG_OBJETS, can end up doing allocations.
+While discussing uncore event scheduling, I noticed we do not in fact
+seem to dis-allow making uncore-cgroup events. Such events make no
+sense what so ever because the cgroup is a CPU local state where
+uncore counts across a number of CPUs.
 
-This then results in the following lock order:
-
-  rq->lock
-    zone->lock.rlock
-      batched_entropy_u64.lock
-
-Which in turn causes deadlocks when we do wakeups while holding that
-batched_entropy lock -- as the random code does.
-
-Solve this by moving __sched_fork() out from under rq->lock. This is
-safe because nothing there relies on rq->lock, as also evident from the
-other __sched_fork() callsite.
+Disallow them.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qian Cai <cai@lca.pw>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: akpm@linux-foundation.org
-Cc: bigeasy@linutronix.de
-Cc: cl@linux.com
-Cc: keescook@chromium.org
-Cc: penberg@kernel.org
-Cc: rientjes@google.com
-Cc: thgarnie@google.com
-Cc: tytso@mit.edu
-Cc: will@kernel.org
-Fixes: b7d5dc21072c ("random: add a spinlock_t to struct batched_entropy")
-Link: https://lkml.kernel.org/r/20191001091837.GK4536@hirez.programming.kicks-ass.net
+Cc: Vince Weaver <vincent.weaver@maine.edu>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/events/core.c |  9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0f2eb36..33cd250 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6019,10 +6019,11 @@ void init_idle(struct task_struct *idle, int cpu)
- 	struct rq *rq = cpu_rq(cpu);
- 	unsigned long flags;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index aec8dba..022a34b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10535,6 +10535,15 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		goto err_ns;
+ 	}
  
-+	__sched_fork(0, idle);
++	/*
++	 * Disallow uncore-cgroup events, they don't make sense as the cgroup will
++	 * be different on other CPUs in the uncore mask.
++	 */
++	if (pmu->task_ctx_nr == perf_invalid_context && cgroup_fd != -1) {
++		err = -EINVAL;
++		goto err_pmu;
++	}
 +
- 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
- 	raw_spin_lock(&rq->lock);
- 
--	__sched_fork(0, idle);
- 	idle->state = TASK_RUNNING;
- 	idle->se.exec_start = sched_clock();
- 	idle->flags |= PF_IDLE;
+ 	if (event->attr.aux_output &&
+ 	    !(pmu->capabilities & PERF_PMU_CAP_AUX_OUTPUT)) {
+ 		err = -EOPNOTSUPP;
