@@ -2,159 +2,115 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAAAC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4550DC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D54206EE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B8F206EE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dZb5uR28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKMW1c (ORCPT
+        id S1726995AbfKMW2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:27:32 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40556 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfKMW1b (ORCPT
+        Wed, 13 Nov 2019 17:28:33 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:40415 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfKMW2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 17:27:31 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 5C0F42911AD
-Received: by earth.universe (Postfix, from userid 1000)
-        id BF57C3C0C78; Wed, 13 Nov 2019 23:27:26 +0100 (CET)
-Date:   Wed, 13 Nov 2019 23:27:26 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [RFCv1] rtc: m41t80: disable clock provider support
-Message-ID: <20191113222726.ifjp2bhwmplm5r7z@earth.universe>
-References: <20191108170135.9053-1-sebastian.reichel@collabora.com>
- <20191108175329.GH216543@piout.net>
- <20191108223415.dio3pwkf24jfs5o4@earth.universe>
- <20191109002449.534B6207FA@mail.kernel.org>
- <20191109014151.yd2untpgnuinermj@earth.universe>
- <20191109065334.64A03214E0@mail.kernel.org>
- <20191112151526.txl5rwpuiwjpopzx@earth.universe>
- <20191112222012.157CC20674@mail.kernel.org>
+        Wed, 13 Nov 2019 17:28:33 -0500
+Received: by mail-vs1-f67.google.com with SMTP id m9so2495157vsq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 14:28:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=df+DaKSym2F9N38LbwQBau3uyVIjwZlwEI4gpy1fPE4=;
+        b=dZb5uR28WtYmsIGQUl7x9pIgxS9KCCtdlUs9VoItFY5+c1+CApd8HbmkRUyerPpjHO
+         gv+ogesx6Ikklix2lZMfqiwnJqGFYKybH2NcArccBFnXRMyJtTBobVjX2j3X3AvJhFlN
+         9AcGprpxGi6mMOsBsVvcl0XYhdP5V2Ruf+wPdwgRvEtHXksnGjqVuioxHg6oX0MAgyGS
+         O6e9uN/vo4c/x2u7XiDMhCWfzS4QslstYQYB4fu76AkptLbmn2qqu57heYwEhbMgtPH9
+         MQaDP5Jy6GFzLHQIK1QKUN8YLZvx/m59XTd6leHo14UcJ4n880Yi2KQwPbPEAmJFIJfs
+         +i5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=df+DaKSym2F9N38LbwQBau3uyVIjwZlwEI4gpy1fPE4=;
+        b=qwFemxXo/p/apklvxkcXnkID2nANzvPke5pVNLbvOGQoqW5LzT+6RIt6i86wlLQGPO
+         g5faKB3Stp3bzVDY5RVIbbB+Msk6YS/TeotibTSlI+MtpsnRqxR/AsJAewYCVMxM50ym
+         RJIBw+PDH2cYWgE/nDXqI0sXykuSOmseLEbgSfiht/319uC+uKdXQrhKCa+1xHD3E7+s
+         dRZ6qJ/YAzR4NoOifvm98l0kL5J2l+v/XT/hVYmv0cB2QMyGa4X+gefPO/p9KY62JwHN
+         S4tFBPtsNrHLSVQTiekFNDRXF5ygsJ1ZiuZlLRdv1OFEUIwp2UBpC2VayGkRCC3mbPpj
+         0vrg==
+X-Gm-Message-State: APjAAAWZ/g2tub3bHM+c5fm1f2gDkAhgkASsQuG0rJ8L4c8Y/EFsSD7C
+        HoIUqtg9w8MFgmdPGMQocugxsFkCgVHIB2HCKQ8XtA==
+X-Google-Smtp-Source: APXvYqxfpgw1bAj534p0frCXIEt+l0yG7RkVd1Sj5Hvf+PUYmwQzQTLAWLYEMRDZVRNouwEoi67rVA5OIosex2sZLnI=
+X-Received: by 2002:a67:c58e:: with SMTP id h14mr3590395vsk.104.1573684112019;
+ Wed, 13 Nov 2019 14:28:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="c27ca4y5vep6oudt"
-Content-Disposition: inline
-In-Reply-To: <20191112222012.157CC20674@mail.kernel.org>
-User-Agent: NeoMutt/20180716
+References: <20191112223046.176097-1-samitolvanen@google.com> <20191113200419.GE221701@gmail.com>
+In-Reply-To: <20191113200419.GE221701@gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Wed, 13 Nov 2019 14:28:20 -0800
+Message-ID: <CABCJKudoBHo6rZoGMFproXjmexu16gonVKDPdnq9XDCmO2J2cw@mail.gmail.com>
+Subject: Re: [PATCH] crypto: arm64/sha: fix function types
+To:     Sami Tolvanen <samitolvanen@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 13, 2019 at 12:04 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Tue, Nov 12, 2019 at 02:30:46PM -0800, Sami Tolvanen wrote:
+> > Declare assembly functions with the expected function type
+> > instead of casting pointers in C to avoid type mismatch failures
+> > with Control-Flow Integrity (CFI) checking.
+> >
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  arch/arm64/crypto/sha1-ce-glue.c   | 12 +++++-------
+> >  arch/arm64/crypto/sha2-ce-glue.c   | 26 +++++++++++---------------
+> >  arch/arm64/crypto/sha256-glue.c    | 30 ++++++++++++------------------
+> >  arch/arm64/crypto/sha512-ce-glue.c | 23 ++++++++++-------------
+> >  arch/arm64/crypto/sha512-glue.c    | 13 +++++--------
+> >  5 files changed, 43 insertions(+), 61 deletions(-)
+> >
+> > diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
+> > index bdc1b6d7aff7..3153a9bbb683 100644
+> > --- a/arch/arm64/crypto/sha1-ce-glue.c
+> > +++ b/arch/arm64/crypto/sha1-ce-glue.c
+> > @@ -25,7 +25,7 @@ struct sha1_ce_state {
+> >       u32                     finalize;
+> >  };
+> >
+> > -asmlinkage void sha1_ce_transform(struct sha1_ce_state *sst, u8 const *src,
+> > +asmlinkage void sha1_ce_transform(struct sha1_state *sst, u8 const *src,
+> >                                 int blocks);
+>
+> Please update the comments in the corresponding assembly files too.
+>
+> Also, this change doesn't really make sense because the assembly functions still
+> expect struct sha1_ce_state, and they access sha1_ce_state::finalize which is
+> not present in struct sha1_state.  There should either be wrapper functions that
+> explicitly do the cast from sha1_state to sha1_ce_state, or there should be
+> comments in the assembly files that very clearly explain that although the
+> function prototype takes sha1_state, it's really assumed to be a sha1_ce_state.
 
---c27ca4y5vep6oudt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Agreed, this needs a comment explaining the type mismatch. I'm also
+fine with using wrapper functions and explicitly casting the
+parameters instead of changing function declarations. Herbert, Ard,
+any preferences?
 
-Hi Stephen,
-
-On Tue, Nov 12, 2019 at 02:20:11PM -0800, Stephen Boyd wrote:
-> Quoting Sebastian Reichel (2019-11-12 07:15:26)
-> > On Fri, Nov 08, 2019 at 10:53:33PM -0800, Stephen Boyd wrote:
-> > > Quoting Sebastian Reichel (2019-11-08 17:41:51)
-> > > > On Fri, Nov 08, 2019 at 04:24:48PM -0800, Stephen Boyd wrote:
-> > > > >=20
-> > > > > Is this the chicken-egg scenario? I read this thread but I can't =
-follow
-> > > > > along with what the problem is. Sorry.
-> > > >=20
-> > > > Yes. The board has an I2C based RTC (m41t62), which provides a prog=
-rammable 1
-> > > > Hz to 32 kHz square wave (SQW) output defaulting to 32 kHz. The boa=
-rd designers
-> > > > connected the RTC's SQW output to the i.MX6 CKIL clock input instea=
-d of adding
-> > > > another oscillator. The i.MX6 CCM acquires that clock in imx6q_cloc=
-ks_init()
-> > > > (and assumes it is a fixed clock):
-> > > >=20
-> > > > hws[IMX6QDL_CLK_CKIL] =3D imx6q_obtain_fixed_clk_hw(ccm_node, "ckil=
-", 0);
-> > >=20
-> > > Who uses the IMX6QDL_CLK_CKIL though? Grep on kernel sources shows me
-> > > nothing.
-> >=20
-> > The manual specifies, that CKIL is synchronized with the main system
-> > clock. The resulting clock is used by all kind of IP cores inside
-> > the i.MX6, for example the SNVS RTC and watchdog. I couldn't find
-> > any registers to configure the CKIL pipeline and CKIL input is
-> > usually a fixed clock, so current implementation might be "broken"
-> > without anyone noticing. Checking a running i.MX6 system, that
-> > actually seems to be the case :(
-> >=20
-> > $ cat /sys/kernel/debug/clk/ckil/clk_rate        =20
-> > 32768
-> > $ cat /sys/kernel/debug/clk/ckil/clk_enable_count=20
-> > 0
-> > $ cat /sys/kernel/debug/clk/ckil/clk_prepare_count=20
-> > 0
-> > $ cat /sys/kernel/debug/clk/ckil/clk_flags        =20
-> > CLK_IS_BASIC
-> >=20
-> > I suppose an easy fix would be to mark that clock as critical and
-> > that would also keep the parent clocks enabled?
->=20
-> Yes. It sounds like some sort of low frequency timer clk. It probably
-> should always be left enabled with CLK_IS_CRITICAL then.
-
-Right, system expects that clock to be always available including
-low power states. This is supposed not to be turned off at all.
-
-I gave it a try today (I defined ckil clock in DT as fixed
-rate clock with divider and multiplier set to 1 and used
-the RTC as parent clock) and it happened exactly what I
-expected: I received -EPROBE_DEFER. This results in
-the problem, that I pointed out.
-
-Actually imx6 clock manager driver registers a fixed clock, when
-the DT part fails (incl. a -EPROBE_DEFER error), so it still boots.
-But then the reference to the parent clock is obviously missing,
-so RTC clock is not enabled and CKIL is effectivly missing.
-
-If the error code is handled properly the boot does not finish,
-since the i2c bus driver probe defers without the clock manager's
-clocks being available. Without the i2c bus driver, the RTC driver
-is not probed, so the clock never appears.
-
-The simplest fix would be to export of_clk_detect_critical()
-and call it in the RTC driver. Reading the comment above the
-function I suppose this is not an acceptable solution?
-
--- Sebastian
-
---c27ca4y5vep6oudt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3Mg0gACgkQ2O7X88g7
-+prbuA/9H7pQ9y3BOKoO+N4g6YrlW3p4gZJ8BlNNtICeD5ZSYj3782tWJo5DKl2+
-myLZhch30TFObkni/Xl6ZZKbj3GH0d12Jy+sogyffS3S2DKvbhj5mZ78xcEVHqJB
-u/4VyRnqOl9Sadb55S+Zti/8CPgAsoz9MOh72H/kfT4INXsRBeEPAiv4/y4K6QNW
-ysmPG7ZjSgByJQkFNEFk/ULcJViE47IRaY4rNHmpAYQwz+xe1kHIAXKYDJMUEMbO
-Pwtqh/XtxA2XqgFOlRh7SGq10R5NKbXoX9ApHuFtSjZsxMdfcEu1BENF8Xen5AZ1
-5RZN4dfgl1ue10z7qMW/vVZ8RsJmm75zzIFVImFBO+VPmQjNYrqh7aSyQgQJJsgR
-Y2vARKQ/OM7TY4q9UT4Q2yCgHiC50IsRqTpRaqUWXLywBfmhQjSoPDHsJC9hIMB1
-i+7BqFUv5hzFA3sKB0MVjZSZiPtNbGT06YaSeFWRgH75rgWiLZaZ0jQC82SQZyhx
-5wN/3+PnWAdN2MfmltX5qQ6jtKERDTMF69qOIR5iny4pA8whiXnoZVxjWH7a1CNO
-wN4Q2aB70a+7o3d8efRU7Pvj/raYIogB/4fqNbDIKXRei33cQZkXIiAgKvGECEmk
-do7GBKKi0srxWYh2N82gn3qdk8dSdGsUUn411GFeiYaxkHOe3dM=
-=yJyD
------END PGP SIGNATURE-----
-
---c27ca4y5vep6oudt--
+Sami
