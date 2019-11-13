@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461D7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49846C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13EE1222CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6C0222CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609918;
-	bh=GwUErkfOcTNNe8fJakwxrN+hDieJPLPdT00X3OCbnKQ=;
+	s=default; t=1573609923;
+	bh=/5SV11ftb0X8yX48wLyDYS2i4vnc0xOfd1H3wpD0aY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eAavntP1f1ZDcFTb03hR+9Eod1FoOCAnNPd82zrjlyvVlWDed5XswSSedKuVP0KTz
-	 WjYe60mn25Lo9syo94pQZiBXQ/90wpLD8upA2MN1KQGByh/DVAzF9rTMuKGY1ep2XY
-	 mtBZA0/PlEpdQ9/ExBpSljZSfnGaQsdXkxQMMbn8=
+	b=0rcpLznI7aYBeRZuP15buiGtk6ASaSU+Lrus73qrk86KRvL4PmlF8Zkerz3MrPKiF
+	 /xW/4RrmApx3905Pe9Ouw/m4yAaoFxzLunq4wWV6njg9cbMby8pqHWAX8HGHYB3PbE
+	 +2wD4hgWDTWNylVh4MCzy1+7XioUPzWHZDscUrhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfKMBv4 (ORCPT
+        id S1728113AbfKMBwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:51:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40094 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:52:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbfKMBvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:53 -0500
+        id S1728071AbfKMBv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5044A222CD;
-        Wed, 13 Nov 2019 01:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D06F20679;
+        Wed, 13 Nov 2019 01:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609913;
-        bh=GwUErkfOcTNNe8fJakwxrN+hDieJPLPdT00X3OCbnKQ=;
+        s=default; t=1573609917;
+        bh=/5SV11ftb0X8yX48wLyDYS2i4vnc0xOfd1H3wpD0aY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DmpkV7Wm4Exx0ySmIGmPZZ7/SXu4hpf42X1Va4LHvP8qP1dD+/Fh8tUOlPa5PFqej
-         V+pjG8kbZ+ETSg1rYZ9auYLh+/dYl2uIptJ1SF4VQOa+/ijUolLxSZ/QnSqpphOPlj
-         q0ByrSIxEbb3jBP1dMK7ARjENn0J2AqUtpieXUx4=
+        b=v3LeWONuNXccW+gAEJzTckFe19uznmD0GAxjS0hZY12vKgBOTtFjsnG+Yw+1vnZlC
+         kf2WDYWZg/jTdKkxHnW8pPUTs1RzyBiUBOrTnVGjcLhqWjge/CdIopx3jXSnjZAsUV
+         3xvo0NCaQ3tVeG0WeXPwAHc4TSxCLYEaMK5uKsUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Yu <yu.c.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 062/209] PM / hibernate: Check the success of generating md5 digest before hibernation
-Date:   Tue, 12 Nov 2019 20:47:58 -0500
-Message-Id: <20191113015025.9685-62-sashal@kernel.org>
+Cc:     Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 066/209] ice: Fix forward to queue group logic
+Date:   Tue, 12 Nov 2019 20:48:02 -0500
+Message-Id: <20191113015025.9685-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,63 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Yu <yu.c.chen@intel.com>
+From: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
 
-[ Upstream commit 749fa17093ff67b31dea864531a3698b6a95c26c ]
+[ Upstream commit be8ff000bf83e658e63ab64cf4d2755abc5add5b ]
 
-Currently if get_e820_md5() fails, then it will hibernate nevertheless.
-Actually the error code should be propagated to upper caller so that
-the hibernation could be aware of the result and terminates the process
-if md5 digest fails.
+When adding a rule, queue region size needs to be provided as log base 2
+of the number of queues in region. Fix that.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/power/hibernate_64.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_switch.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/power/hibernate_64.c b/arch/x86/power/hibernate_64.c
-index c9986041a5e12..6c3ec193a2465 100644
---- a/arch/x86/power/hibernate_64.c
-+++ b/arch/x86/power/hibernate_64.c
-@@ -266,9 +266,9 @@ static int get_e820_md5(struct e820_table *table, void *buf)
- 	return ret;
- }
+diff --git a/drivers/net/ethernet/intel/ice/ice_switch.c b/drivers/net/ethernet/intel/ice/ice_switch.c
+index 6b7ec2ae5ad67..4012adbab0112 100644
+--- a/drivers/net/ethernet/intel/ice/ice_switch.c
++++ b/drivers/net/ethernet/intel/ice/ice_switch.c
+@@ -468,6 +468,7 @@ ice_fill_sw_rule(struct ice_hw *hw, struct ice_fltr_info *f_info,
+ 	void *daddr = NULL;
+ 	u32 act = 0;
+ 	__be16 *off;
++	u8 q_rgn;
  
--static void hibernation_e820_save(void *buf)
-+static int hibernation_e820_save(void *buf)
- {
--	get_e820_md5(e820_table_firmware, buf);
-+	return get_e820_md5(e820_table_firmware, buf);
- }
- 
- static bool hibernation_e820_mismatch(void *buf)
-@@ -288,8 +288,9 @@ static bool hibernation_e820_mismatch(void *buf)
- 	return memcmp(result, buf, MD5_DIGEST_SIZE) ? true : false;
- }
- #else
--static void hibernation_e820_save(void *buf)
-+static int hibernation_e820_save(void *buf)
- {
-+	return 0;
- }
- 
- static bool hibernation_e820_mismatch(void *buf)
-@@ -334,9 +335,7 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
- 
- 	rdr->magic = RESTORE_MAGIC;
- 
--	hibernation_e820_save(rdr->e820_digest);
--
--	return 0;
-+	return hibernation_e820_save(rdr->e820_digest);
- }
- 
- /**
+ 	if (opc == ice_aqc_opc_remove_sw_rules) {
+ 		s_rule->pdata.lkup_tx_rx.act = 0;
+@@ -503,14 +504,19 @@ ice_fill_sw_rule(struct ice_hw *hw, struct ice_fltr_info *f_info,
+ 		act |= (f_info->fwd_id.q_id << ICE_SINGLE_ACT_Q_INDEX_S) &
+ 			ICE_SINGLE_ACT_Q_INDEX_M;
+ 		break;
++	case ICE_DROP_PACKET:
++		act |= ICE_SINGLE_ACT_VSI_FORWARDING | ICE_SINGLE_ACT_DROP |
++			ICE_SINGLE_ACT_VALID_BIT;
++		break;
+ 	case ICE_FWD_TO_QGRP:
++		q_rgn = f_info->qgrp_size > 0 ?
++			(u8)ilog2(f_info->qgrp_size) : 0;
+ 		act |= ICE_SINGLE_ACT_TO_Q;
+-		act |= (f_info->qgrp_size << ICE_SINGLE_ACT_Q_REGION_S) &
++		act |= (f_info->fwd_id.q_id << ICE_SINGLE_ACT_Q_INDEX_S) &
++			ICE_SINGLE_ACT_Q_INDEX_M;
++		act |= (q_rgn << ICE_SINGLE_ACT_Q_REGION_S) &
+ 			ICE_SINGLE_ACT_Q_REGION_M;
+ 		break;
+-	case ICE_DROP_PACKET:
+-		act |= ICE_SINGLE_ACT_VSI_FORWARDING | ICE_SINGLE_ACT_DROP;
+-		break;
+ 	default:
+ 		return;
+ 	}
 -- 
 2.20.1
 
