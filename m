@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9280C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEFEC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785F722467
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F59C204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609938;
-	bh=zdczaHM1e+s0MRupJD+CEuuKe5ZjbXKKvyHmelqZHoE=;
+	s=default; t=1573609940;
+	bh=GnLDcU3GQlLVz86X48Q6AD2uliaNpA6HTGkKvjNyt+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WVOWrA5xpDCnHBplgCJU5Ht7glCWgPW0Cm0EXMy1nZ4Zlu4u8wAvKm0K8s7OGE91K
-	 4Wni3AA23p3qG325g3I9pZS5VJQJ2VWIk0iulGpr3EBO8v9Ff99nptoy2HVeNUzTLs
-	 KhRhx17pKKIKwP3q4t9R7Cp7AHqG5h/F8xHZE4fo=
+	b=h1vXZ3Jy+EwSF6G+hJy9LY7vZDhEVh+fEYPiFPJf42LgM3zZgVCsmCEkFyxq40F+R
+	 cCKg8oiQKTNtTBSwPt70RDBqJBlxeZ4+VjFOrZpiv1KvVFsCClqj3vfZcwHYm1t8/x
+	 DIs79uyprV7HGwh9xUzDOXHxJA1VNHpL5B0Q1TQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfKMBwR (ORCPT
+        id S1728232AbfKMBwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:52:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40752 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:52:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbfKMBwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:12 -0500
+        id S1728214AbfKMBwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67B6522478;
-        Wed, 13 Nov 2019 01:52:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854452245D;
+        Wed, 13 Nov 2019 01:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609932;
-        bh=zdczaHM1e+s0MRupJD+CEuuKe5ZjbXKKvyHmelqZHoE=;
+        s=default; t=1573609936;
+        bh=GnLDcU3GQlLVz86X48Q6AD2uliaNpA6HTGkKvjNyt+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YvP0o1ULQatkR30ulkK+iOvZqPO8RHdFX3Yj16bhqw2RxmLWJ+m/AoqXwCpTYb7Ws
-         LP5LJKePUZH52wfkceKr4sfwrwpT5L1+LTpN4TZKfXZ5gvWQ7SAtEXfuYQoPtTML0R
-         qSRK17cgzHE+vJr6XtK2P0iPKszfb2bcnCfmMTDE=
+        b=gB9HJpqDdkNOgBy9jkUEw3G8Uoic4x+ZlNqZeANFoioZBIcevSajfY53pkB9pqHlE
+         G4y7P+l8oZGIlTvZ75klbgKlyNL42lyycOmeJiAgFu3Giy8JeQNk/3K0PwF1UVw+Mo
+         fyz74bCE1NQ4P0SHyThVlA8qzaC/A6mAbXROuXpc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 077/209] IB/mlx4: Avoid implicit enumerated type conversion
-Date:   Tue, 12 Nov 2019 20:48:13 -0500
-Message-Id: <20191113015025.9685-77-sashal@kernel.org>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 079/209] msm/gpu/a6xx: Force of_dma_configure to setup DMA for GMU
+Date:   Tue, 12 Nov 2019 20:48:15 -0500
+Message-Id: <20191113015025.9685-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,49 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-[ Upstream commit b56511c15713ba6c7572e77a41f7ddba9c1053ec ]
+[ Upstream commit 32aa27e15c28d3898ed6f9b3c98f95f34a81eab2 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+The point of the 'force_dma' parameter for of_dma_configure
+is to force the device to be set up even if DMA capability is
+not described by the firmware which is exactly the use case
+ we have for GMU - we need SMMU to get set up but we have no
+other dma capabilities since memory is managed by the GPU
+driver. Currently we pass false so of_dma_configure() fails
+and subsequently GMU and GPU probe does as well.
 
-drivers/infiniband/hw/mlx4/mad.c:1811:41: warning: implicit conversion
-from enumeration type 'enum mlx4_ib_qp_flags' to different enumeration
-type 'enum ib_qp_create_flags' [-Wenum-conversion]
-                qp_init_attr.init_attr.create_flags = MLX4_IB_SRIOV_TUNNEL_QP;
-                                                    ~ ^~~~~~~~~~~~~~~~~~~~~~~
-
-drivers/infiniband/hw/mlx4/mad.c:1819:41: warning: implicit conversion
-from enumeration type 'enum mlx4_ib_qp_flags' to different enumeration
-type 'enum ib_qp_create_flags' [-Wenum-conversion]
-                qp_init_attr.init_attr.create_flags = MLX4_IB_SRIOV_SQP;
-                                                    ~ ^~~~~~~~~~~~~~~~~
-
-The type mlx4_ib_qp_flags explicitly provides supplemental values to the
-type ib_qp_create_flags. Make that clear to Clang by changing the
-create_flags type to u32.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 4b565ca5a2c ("drm/msm: Add A6XX device support")
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/rdma/ib_verbs.h | 2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index b7d63c3970d18..decb708b5530f 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -1147,7 +1147,7 @@ struct ib_qp_init_attr {
- 	struct ib_qp_cap	cap;
- 	enum ib_sig_type	sq_sig_type;
- 	enum ib_qp_type		qp_type;
--	enum ib_qp_create_flags	create_flags;
-+	u32			create_flags;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 9acb9dfaf57e6..9cde79a7335c8 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -1140,7 +1140,7 @@ int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
  
- 	/*
- 	 * Only needed for special QP types, or when using the RW API.
+ 	gmu->dev = &pdev->dev;
+ 
+-	of_dma_configure(gmu->dev, node, false);
++	of_dma_configure(gmu->dev, node, true);
+ 
+ 	/* Fow now, don't do anything fancy until we get our feet under us */
+ 	gmu->idle_level = GMU_IDLE_STATE_ACTIVE;
 -- 
 2.20.1
 
