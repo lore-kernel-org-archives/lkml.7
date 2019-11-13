@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE5DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B68FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A83E206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD28C206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610658;
-	bh=jklRnbWyUn1g3R8PppErtgWOyC8AuluYe2sHZYjRpM4=;
+	s=default; t=1573610669;
+	bh=pWTdI8S1UQ1b52XHBqdaoaV7qebei0fVVdclrYBmvxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=deprkgfd3mjXcPNPGvvEWxy30T1pKyy0x9VefII0m8VFKBq6jewLkbJOoZxS4cQGe
-	 xsQaCqwitHZVVlFjnQrnwqCRDbfco6MQmYdHawjthmLxmDIbEZvR6/LBTtWf4AHyvU
-	 bPTwCj2hTcr9UmylkMPoglL1j16CdxLiVnID0ots=
+	b=hreWZAkNbjEc5lkJPn7nBYRHa8zWlHcVUSqyf4mDAP4UFhS7nzxhiaPFP5BBKfRiC
+	 67rdx2ehTN4g+t34me5oLX4XyW3YM2kyYdZJ04D9e2JMqobr8y4UwGgFMHTtvfEe4H
+	 VHUV/ItGk9a0M1i4pGBs62Py0cdqdd/AhLNDlmbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbfKMCER (ORCPT
+        id S1730566AbfKMCE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:04:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58752 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:04:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730986AbfKMCCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:16 -0500
+        id S1730923AbfKMCCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 461B6204EC;
-        Wed, 13 Nov 2019 02:02:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C67420674;
+        Wed, 13 Nov 2019 02:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610535;
-        bh=jklRnbWyUn1g3R8PppErtgWOyC8AuluYe2sHZYjRpM4=;
+        s=default; t=1573610525;
+        bh=pWTdI8S1UQ1b52XHBqdaoaV7qebei0fVVdclrYBmvxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rqmIIHbUSjv66644r3S6KQ1JxrIqOVweTKTKgVnDtMxjXH/M7fHW6ccU15RxhAgM1
-         NDTqA5m3P/HVzHwSsHKgMeLF6s/lO1hj+b/yQy0g4egm0BDsLPdt0Uhca3WNSh9UqM
-         i1TKUf8ryeBKWPedw1jYviY5DhroTTBh7WDuNUrk=
+        b=J074b9V+bldrNc4O7WXyBtecnzUrKEXPvCvMyIN1eZo/KkS6LngU56MoaCQ9podGs
+         C0nxHzjUf+vGLLYKSzpkOK6Y//8t9VCoKz43mVHxUrYnHcZppMnZ1Yxi2XFu8u7mJ2
+         oFEiA89oSqzF9g/wHLG23E9CNP12k3621T7sCWnY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rami Rosen <ramirose@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 26/48] dmaengine: ioat: fix prototype of ioat_enumerate_channels
-Date:   Tue, 12 Nov 2019 21:01:09 -0500
-Message-Id: <20191113020131.13356-26-sashal@kernel.org>
+Cc:     Cameron Kaiser <spectre@floodgap.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 21/48] KVM: PPC: Book3S PR: Exiting split hack mode needs to fixup both PC and LR
+Date:   Tue, 12 Nov 2019 21:01:04 -0500
+Message-Id: <20191113020131.13356-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -58,56 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rami Rosen <ramirose@gmail.com>
+From: Cameron Kaiser <spectre@floodgap.com>
 
-[ Upstream commit f4d34aa8c887a8a2d23ef546da0efa10e3f77241 ]
+[ Upstream commit 1006284c5e411872333967b1970c2ca46a9e225f ]
 
-Signed-off-by: Rami Rosen <ramirose@gmail.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+When an OS (currently only classic Mac OS) is running in KVM-PR and makes a
+linked jump from code with split hack addressing enabled into code that does
+not, LR is not correctly updated and reflects the previously munged PC.
+
+To fix this, this patch undoes the address munge when exiting split
+hack mode so that code relying on LR being a proper address will now
+execute. This does not affect OS X or other operating systems running
+on KVM-PR.
+
+Signed-off-by: Cameron Kaiser <spectre@floodgap.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/init.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/book3s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 106fa9b327d92..92b0a7a042ee0 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -128,7 +128,7 @@ static void
- ioat_init_channel(struct ioatdma_device *ioat_dma,
- 		  struct ioatdma_chan *ioat_chan, int idx);
- static void ioat_intr_quirk(struct ioatdma_device *ioat_dma);
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
- static int ioat3_dma_self_test(struct ioatdma_device *ioat_dma);
- 
- static int ioat_dca_enabled = 1;
-@@ -593,7 +593,7 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
-  * ioat_enumerate_channels - find and initialize the device's channels
-  * @ioat_dma: the ioat dma device to be enumerated
-  */
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index 4aab1c9c83e1a..41ac54bfdfdd9 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -70,8 +70,11 @@ void kvmppc_unfixup_split_real(struct kvm_vcpu *vcpu)
  {
- 	struct ioatdma_chan *ioat_chan;
- 	struct device *dev = &ioat_dma->pdev->dev;
-@@ -612,7 +612,7 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 	xfercap_log = readb(ioat_dma->reg_base + IOAT_XFERCAP_OFFSET);
- 	xfercap_log &= 0x1f; /* bits [4:0] valid */
- 	if (xfercap_log == 0)
--		return 0;
-+		return;
- 	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
- 
- 	for (i = 0; i < dma->chancnt; i++) {
-@@ -629,7 +629,6 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 		}
+ 	if (vcpu->arch.hflags & BOOK3S_HFLAG_SPLIT_HACK) {
+ 		ulong pc = kvmppc_get_pc(vcpu);
++		ulong lr = kvmppc_get_lr(vcpu);
+ 		if ((pc & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
+ 			kvmppc_set_pc(vcpu, pc & ~SPLIT_HACK_MASK);
++		if ((lr & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
++			kvmppc_set_lr(vcpu, lr & ~SPLIT_HACK_MASK);
+ 		vcpu->arch.hflags &= ~BOOK3S_HFLAG_SPLIT_HACK;
  	}
- 	dma->chancnt = i;
--	return i;
  }
- 
- /**
 -- 
 2.20.1
 
