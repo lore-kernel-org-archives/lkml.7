@@ -2,100 +2,211 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0681FC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FB1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5FF2245C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AF92245A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eyAFFpQz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Dyyi5qtw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfKMJq4 (ORCPT
+        id S1727559AbfKMJq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:46:56 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59074 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfKMJqz (ORCPT
+        Wed, 13 Nov 2019 04:46:59 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:47781 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfKMJq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:46:55 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAD9jAoK083668;
-        Wed, 13 Nov 2019 03:45:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573638310;
-        bh=uqVnqEg7jfzzCNxKlUaeLRD250zrEeSg57M2s2f3wmI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eyAFFpQzIWXMss7edh7mGgf6r85grW1ciR5t+B3y0SIjacKUz++sBUtFJlxHJSfYu
-         x6qrR8Vqgip05sTx6kuPhIYMdO5Fh2lFBiJ1C1bLIwbcX4hX5gRqvLcvCB6jvldE6R
-         +1RcRmWseqaiO9ZWWOVBe4Xpfr5+R3OsFoDBW+NY=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAD9jAJ8088897
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 03:45:10 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 03:44:51 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 03:44:51 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD9j2KB078225;
-        Wed, 13 Nov 2019 03:45:06 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <gregkh@linuxfoundation.org>, <linux@armlinux.org.uk>,
-        <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <ldewangan@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>
-CC:     <vkoul@kernel.org>, <jslaby@suse.com>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>
-Subject: [PATCH 1/3] tty: serial: amba-pl011: Use dma_request_chan() directly for channel request
-Date:   Wed, 13 Nov 2019 11:46:16 +0200
-Message-ID: <20191113094618.1725-2-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191113094618.1725-1-peter.ujfalusi@ti.com>
-References: <20191113094618.1725-1-peter.ujfalusi@ti.com>
+        Wed, 13 Nov 2019 04:46:58 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191113094655epoutp03b90c6f7fcb6d563228e94d94ee744340~Wr802PxG62545725457epoutp03A
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:46:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191113094655epoutp03b90c6f7fcb6d563228e94d94ee744340~Wr802PxG62545725457epoutp03A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1573638415;
+        bh=VsyYZ9+HL/OjPZaEPukjhHvzqd+m/yivBbTZkkOgxV8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Dyyi5qtw7/n4x4BsEHMwY+9Vvw+CUDfh1RppT/YDlklgJ6asngQ4pGwCFjBK98//A
+         4iBcXbM4DbqxLCPttgamw4xAM5zjiRqA0XuPWmiOoHMet0QzfO+R5oDDNI/JDH7H38
+         3tOtSBTmZ7/LtAlJw0iU7MM1FzE+9Ow9p5aULG4o=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191113094655epcas1p1fb9d2e93579c5db9818397db3b2aff4d~Wr80YBgzL0338203382epcas1p1g;
+        Wed, 13 Nov 2019 09:46:55 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47Cfs90d11zMqYkb; Wed, 13 Nov
+        2019 09:46:53 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        01.C0.04135.C01DBCD5; Wed, 13 Nov 2019 18:46:52 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191113094652epcas1p255dbe5f7b1b813fb99a7a052d9297d17~Wr8x4DY3R2763427634epcas1p2i;
+        Wed, 13 Nov 2019 09:46:52 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191113094652epsmtrp20876f43432e2026b982aff0b45cfd60a~Wr8x3Rz8r0325703257epsmtrp2i;
+        Wed, 13 Nov 2019 09:46:52 +0000 (GMT)
+X-AuditID: b6c32a36-7e3ff70000001027-d4-5dcbd10c73e8
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BC.9D.24756.C01DBCD5; Wed, 13 Nov 2019 18:46:52 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191113094652epsmtip1b83a1dd5a07b503244f1c19eb1aa2c13~Wr8xk4Ccw0869808698epsmtip1f;
+        Wed, 13 Nov 2019 09:46:52 +0000 (GMT)
+Subject: Re: [PATCH] devfreq: exynos-bus: workaround dev_pm_opp_set_rate()
+ errors on Exynos5422/5800 SoCs
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     k.konieczny@partner.samsung.com
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Organization: Samsung Electronics
+Message-ID: <60d9c577-128a-3ca9-2979-aa444cfb4e12@samsung.com>
+Date:   Wed, 13 Nov 2019 18:52:38 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <4f14d3af-e455-d05b-fc03-cba58e001f41@samsung.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOJsWRmVeSWpSXmKPExsWy7bCmvi7PxdOxBke+2FhsnLGe1aJv339G
+        i/7Hr5ktzp/fwG5xtukNu8Wmx9dYLS7vmsNm8bn3CKPFjPP7mCzWHrnLbnG7cQWbA7fHplWd
+        bB6bl9R7HHy3h8mjb8sqRo/Pm+QCWKOybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0t
+        LcyVFPISc1NtlVx8AnTdMnOALlNSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFFgW
+        6BUn5haX5qXrJefnWhkaGBiZAhUmZGdMWLuKtWCDRMX3/aUNjLeFuxg5OSQETCQWrDvM1sXI
+        xSEksINR4vS9a6wQzidGidvnjrNAON8YJY7Mv8AK09K3dz07iC0ksJdRYt5HQ4ii94wS+1e8
+        YwNJCAtkS3w7vYwZxGYT0JLY/+IGWFxEQFli8r3pzCANzAJdzBL7n14GK+IXUJS4+uMxI4jN
+        K2An8XDeMRYQm0VAVWLh/oNANgeHqECExOmviRAlghInZz4BK+EUsJf40XSICcRmFhCXuPVk
+        PpQtL9G8dTbYLgmBbnaJe7P2MkN84CKx4s50JghbWOLV8S3sELaUxOd3e9kg7GqJlSePsEE0
+        dzBKbNkP876xxP6lk5lADmIW0JRYv0sfIqwosfP3XEaIxXwS7772sIKUSAjwSnS0CUGUKEtc
+        fnAXaq2kxOL2TrYJjEqzkLwzC8kLs5C8MAth2QJGllWMYqkFxbnpqcWGBUbIkb2JEZxotcx2
+        MC4653OIUYCDUYmHV2LhqVgh1sSy4srcQ4wSHMxKIrw7Kk7ECvGmJFZWpRblxxeV5qQWH2I0
+        BQb2RGYp0eR8YBbIK4k3NDUyNja2MDE0MzU0VBLndVy+NFZIID2xJDU7NbUgtQimj4mDU6qB
+        0WK77PmsTQUCHnG3U/90PFGfERHvHqFozZ+85H6O87eXp50WnQ+bJOl0frpO02VRg8TcnjNL
+        H33p0Ghd6Lh717JtvRpKcjW1BzPe5fLc5NrotnONgpYJy5U/mof7NLr3bfVcPW9Pz8uUozM+
+        TV4eqn/oB4ub1Nzq4//n9NftM53jnsLcOiWsQomlOCPRUIu5qDgRANizwHrKAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsWy7bCSnC7PxdOxBnseiFlsnLGe1aJv339G
+        i/7Hr5ktzp/fwG5xtukNu8Wmx9dYLS7vmsNm8bn3CKPFjPP7mCzWHrnLbnG7cQWbA7fHplWd
+        bB6bl9R7HHy3h8mjb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4MiasXcVasEGi4vv+0gbG28Jd
+        jJwcEgImEn1717N3MXJxCAnsZpRYtPE2C0RCUmLaxaPMXYwcQLawxOHDxRA1bxklzi9ZzgRS
+        IyyQLfHt9DJmEJtNQEti/4sbbCC2iICyxOR705lBGpgFepgl2vc3M0F0n2WUeDBvJiNIFb+A
+        osTVH4/BbF4BO4mH846BbWYRUJVYuP8gmC0qECHxfPsNqBpBiZMzn4DFOQXsJX40HQK7gllA
+        XeLPvEvMELa4xK0n86Hi8hLNW2czT2AUnoWkfRaSlllIWmYhaVnAyLKKUTK1oDg3PbfYsMAw
+        L7Vcrzgxt7g0L10vOT93EyM46rQ0dzBeXhJ/iFGAg1GJh1di4alYIdbEsuLK3EOMEhzMSiK8
+        OypOxArxpiRWVqUW5ccXleakFh9ilOZgURLnfZp3LFJIID2xJDU7NbUgtQgmy8TBKdXA2Bcl
+        L9Xx75/fx5e3Di7jOOafckLcw2Si3LNbUlV1y2azRMeucrix9eTtf87FQolNi2zLX/OXqcim
+        edjndy7Me8Sg/W+Nf0WiXGrzoo7dl50D7+eeP8HErVIkop95OkY0zvbhGcXag5tPfXu+4vx6
+        VrG4+ADO5dPe52+/Psl9noPvoR+P6k5dVmIpzkg01GIuKk4EAA5sYfm2AgAA
+X-CMS-MailID: 20191113094652epcas1p255dbe5f7b1b813fb99a7a052d9297d17
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191008134950eucas1p15cfef5800efc10d5b18ec5eb37dde60b
+References: <CGME20191008134950eucas1p15cfef5800efc10d5b18ec5eb37dde60b@eucas1p1.samsung.com>
+        <20191008134923.30123-1-k.konieczny@partner.samsung.com>
+        <4f14d3af-e455-d05b-fc03-cba58e001f41@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel_reason() is:
-#define dma_request_slave_channel_reason(dev, name) \
-	dma_request_chan(dev, name)
+Hi Kamil,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/tty/serial/amba-pl011.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ping.
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index ae63266e181f..38e2d25f7e23 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -414,7 +414,7 @@ static void pl011_dma_probe(struct uart_amba_port *uap)
- 	dma_cap_mask_t mask;
- 
- 	uap->dma_probed = true;
--	chan = dma_request_slave_channel_reason(dev, "tx");
-+	chan = dma_request_chan(dev, "tx");
- 	if (IS_ERR(chan)) {
- 		if (PTR_ERR(chan) == -EPROBE_DEFER) {
- 			uap->dma_probed = false;
+On 10/10/19 11:50 AM, Chanwoo Choi wrote:
+> On 2019년 10월 08일 22:49, k.konieczny@partner.samsung.com wrote:
+>> Commit 4294a779bd8d ("PM / devfreq: exynos-bus: Convert to use
+>> dev_pm_opp_set_rate()") introduced errors:
+>> exynos-bus: new bus device registered: soc:bus_wcore ( 84000 KHz ~ 400000 KHz)
+>> exynos-bus: new bus device registered: soc:bus_noc ( 67000 KHz ~ 100000 KHz)
+>> exynos-bus: new bus device registered: soc:bus_fsys_apb (100000 KHz ~ 200000 KHz)
+>> ...
+>> exynos-bus soc:bus_wcore: dev_pm_opp_set_rate: failed to find current OPP for freq 532000000 (-34)
+>> exynos-bus soc:bus_noc: dev_pm_opp_set_rate: failed to find current OPP for freq 111000000 (-34)
+>> exynos-bus soc:bus_fsys_apb: dev_pm_opp_set_rate: failed to find current OPP for freq 222000000 (-34)
+>>
+>> They are caused by incorrect PLL assigned to clock source, which results
+>> in clock rate outside of OPP range. Add workaround for this in
+>> exynos_bus_parse_of() by adjusting clock rate to those present in OPP.
+> 
+> If the clock caused this issue, you can set the initial clock on DeviceTree
+> with assigned-clock-* properties. Because the probe time of clock driver
+> is early than the any device drivers.
+> 
+> It is not proper to fix the clock issue on other device driver.
+> I think you can fix it by using the supported clock properties.
+
+Is there any reply? or other patch to fix it?
+
+> 
+> 
+>>
+>> Fixes: 4294a779bd8d ("PM / devfreq: exynos-bus: Convert to use dev_pm_opp_set_rate()")
+>> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>> ---
+>>  drivers/devfreq/exynos-bus.c | 14 +++++++++++---
+>>  1 file changed, 11 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>> index c832673273a2..37bd34d5625b 100644
+>> --- a/drivers/devfreq/exynos-bus.c
+>> +++ b/drivers/devfreq/exynos-bus.c
+>> @@ -243,7 +243,7 @@ static int exynos_bus_parse_of(struct device_node *np,
+>>  {
+>>  	struct device *dev = bus->dev;
+>>  	struct dev_pm_opp *opp;
+>> -	unsigned long rate;
+>> +	unsigned long rate, opp_rate;
+>>  	int ret;
+>>  
+>>  	/* Get the clock to provide each bus with source clock */
+>> @@ -267,13 +267,21 @@ static int exynos_bus_parse_of(struct device_node *np,
+>>  	}
+>>  
+>>  	rate = clk_get_rate(bus->clk);
+>> -
+>> -	opp = devfreq_recommended_opp(dev, &rate, 0);
+>> +	opp_rate = rate;
+>> +	opp = devfreq_recommended_opp(dev, &opp_rate, 0);
+>>  	if (IS_ERR(opp)) {
+>>  		dev_err(dev, "failed to find dev_pm_opp\n");
+>>  		ret = PTR_ERR(opp);
+>>  		goto err_opp;
+>>  	}
+>> +	/*
+>> +	 * FIXME: U-boot leaves clock source at incorrect PLL, this results
+>> +	 * in clock rate outside defined OPP rate. Work around this bug by
+>> +	 * setting clock rate to recommended one.
+>> +	 */
+>> +	if (rate > opp_rate)
+>> +		clk_set_rate(bus->clk, opp_rate);
+>> +
+>>  	bus->curr_freq = dev_pm_opp_get_freq(opp);
+>>  	dev_pm_opp_put(opp);
+>>  
+>>
+> 
+> 
+
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
