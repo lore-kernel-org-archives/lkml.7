@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFDEC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EDEC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334DD206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7217F214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611110;
-	bh=h/qoJpUfQOrBJEA7qGpILdqu+csxqNFYDokiCl2xkys=;
+	s=default; t=1573611113;
+	bh=6ae5gLZHT9rVDPo0bjsJcFqpzYZgUkjFH0R3EQ7FAyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dof0+BDpuiL5Led/ybOs8QuvlFmSw5ofPb6oRe3C6rdWpmIBDyojuoTlmQ7rj1WEg
-	 VvoQv97FP2InO2A/eQ/ffsv3irdYSLAtcj+OCN4MCz9N/0OpcTy8fy1FCgnb6sBqj4
-	 AaLTFViXazpBSxwV+OW9MENCJezzCLz+RgbjTfo4=
+	b=1s8ffIS0YN9jx7My2kJrCJJ4AbbbCZuaTzLZhK+HIWBHIHVyfb9/YHjm4xlzhAPFE
+	 81OsqVbjDqdAqB1Wvw1XDl9K7DsiNPr+D9H9CvspBjC7N1lI81lIHRdtp5WKJtsjZM
+	 2Idj9lp9ec7b+7PE8lhPPg5IapIVha9VVoReIiIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfKMB6l (ORCPT
+        id S1730069AbfKMB6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:58:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:58:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730035AbfKMB6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:30 -0500
+        id S1728718AbfKMB63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E0752245A;
-        Wed, 13 Nov 2019 01:58:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED37A22470;
+        Wed, 13 Nov 2019 01:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610309;
-        bh=h/qoJpUfQOrBJEA7qGpILdqu+csxqNFYDokiCl2xkys=;
+        s=default; t=1573610308;
+        bh=6ae5gLZHT9rVDPo0bjsJcFqpzYZgUkjFH0R3EQ7FAyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ARhzSHX+lQqDU5clERzwZMHukXpPTl+AFdubf7kR9qCaXB0lw2VpKTmfsJeyrpMkI
-         3X1n91XIpoKJbFR4xcKQ9wbpEo6OcCos1F0PeX6S/yXWag8hxqJVIUofXsNYwZyNuT
-         kzTBVfKWwxO4lzMIsHUscn3K/BaeAs5qvwJdsIiM=
+        b=F+Rypyseu/60HdfoG4rak7/KimabtHrdYaGRy/ppqhDLu2jVy4pu/NUc4Z1f2Qlfw
+         j1JcBXthYRv8gpIHpiDC3szKVXEfqET0osNSUxZnR8rwfZjq9N0XlHr98y09CidzQD
+         4ZMiJxxXyinQNwQPjkWm6h3Wyo6Ea/n6OmUnBj4o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 078/115] ACPI / SBS: Fix rare oops when removing modules
-Date:   Tue, 12 Nov 2019 20:55:45 -0500
-Message-Id: <20191113015622.11592-78-sashal@kernel.org>
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 077/115] xfrm: use correct size to initialise sp->ovec
+Date:   Tue, 12 Nov 2019 20:55:44 -0500
+Message-Id: <20191113015622.11592-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,61 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronald Tschalär <ronald@innovation.ch>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 757c968c442397f1249bb775a7c8c03842e3e0c7 ]
+[ Upstream commit f1193e915748291fb205a908db33bd3debece6e2 ]
 
-There was a small race when removing the sbshc module where
-smbus_alarm() had queued acpi_smbus_callback() for deferred execution
-but it hadn't been run yet, so that when it did run hc had been freed
-and the module unloaded, resulting in an invalid paging request.
+This place should want to initialize array, not a element,
+so it should be sizeof(array) instead of sizeof(element)
 
-A similar race existed when removing the sbs module with regards to
-acpi_sbs_callback() (which is called from acpi_smbus_callback()).
+but now this array only has one element, so no error in
+this condition that XFRM_MAX_OFFLOAD_DEPTH is 1
 
-We therefore need to ensure no callbacks are pending or executing before
-the cleanups are done and the modules are removed.
-
-Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/osl.c   | 1 +
- drivers/acpi/sbshc.c | 2 ++
- 2 files changed, 3 insertions(+)
+ net/xfrm/xfrm_input.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 191e86c62037a..9da7e7d874bd8 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -1116,6 +1116,7 @@ void acpi_os_wait_events_complete(void)
- 	flush_workqueue(kacpid_wq);
- 	flush_workqueue(kacpi_notify_wq);
- }
-+EXPORT_SYMBOL(acpi_os_wait_events_complete);
+diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
+index 06dec32503bd6..fc0a9ce1be18f 100644
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -130,7 +130,7 @@ struct sec_path *secpath_dup(struct sec_path *src)
+ 	sp->len = 0;
+ 	sp->olen = 0;
  
- struct acpi_hp_work {
- 	struct work_struct work;
-diff --git a/drivers/acpi/sbshc.c b/drivers/acpi/sbshc.c
-index 7a3431018e0ab..5008ead4609a4 100644
---- a/drivers/acpi/sbshc.c
-+++ b/drivers/acpi/sbshc.c
-@@ -196,6 +196,7 @@ int acpi_smbus_unregister_callback(struct acpi_smb_hc *hc)
- 	hc->callback = NULL;
- 	hc->context = NULL;
- 	mutex_unlock(&hc->lock);
-+	acpi_os_wait_events_complete();
- 	return 0;
- }
+-	memset(sp->ovec, 0, sizeof(sp->ovec[XFRM_MAX_OFFLOAD_DEPTH]));
++	memset(sp->ovec, 0, sizeof(sp->ovec));
  
-@@ -292,6 +293,7 @@ static int acpi_smbus_hc_remove(struct acpi_device *device)
- 
- 	hc = acpi_driver_data(device);
- 	acpi_ec_remove_query_handler(hc->ec, hc->query_bit);
-+	acpi_os_wait_events_complete();
- 	kfree(hc);
- 	device->driver_data = NULL;
- 	return 0;
+ 	if (src) {
+ 		int i;
 -- 
 2.20.1
 
