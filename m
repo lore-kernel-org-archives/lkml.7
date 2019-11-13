@@ -2,167 +2,206 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F16C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B1FC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6045206EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573686422;
-	bh=mlqi9LMSsVHfSL1Hny7iTFZmiFOzZQjuUqd3ZcWXsII=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=wDZBMUgWD0iE1izE/5KtXiaflvlU0fcuYRTDz3KKNAeN8KbRVo62YOWoYmOSu/3qq
-	 dG7cSEOdWGPiCZYThPPeOvskDEOZCu2dmhHd+AepOouK43fSHr7+zEDV8gyxIgzBYW
-	 DOP4sY6F7ilV1kW+aB2sDio/RxJNtaqie13SOQms=
+	by mail.kernel.org (Postfix) with ESMTP id AEE4B206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbeO5gt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfKMXG7 (ORCPT
+        id S1726910AbfKMXIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 18:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfKMXG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 18:06:59 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98092206E3;
-        Wed, 13 Nov 2019 23:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573686418;
-        bh=mlqi9LMSsVHfSL1Hny7iTFZmiFOzZQjuUqd3ZcWXsII=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NNmD+2/3gxl9UIoz/xcwE7gQAQkOZQ8QvE3xF0N/64a/9hnokx2A26k1gXDOb52lV
-         pcgsPKNFRjfMsx0JINpHX/mpUr6yWlMrf58zLOSn9UKFLj5qie4IJaUbTTh1Yi5y3N
-         a5Zq2IufAo/JdS7P3LVGiWRNqi3KuknCX52aZ+rQ=
-Date:   Wed, 13 Nov 2019 17:06:55 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] PCI: pciehp: Do not disable interrupt twice on
- suspend
-Message-ID: <20191113230655.GA99849@google.com>
+        Wed, 13 Nov 2019 18:08:10 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36785 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfKMXIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 18:08:10 -0500
+Received: by mail-lf1-f67.google.com with SMTP id m6so3363883lfl.3;
+        Wed, 13 Nov 2019 15:08:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CMXle6FOj7sNaEUWjPwsRpDGPjEMhO8gArBWaBc7RnQ=;
+        b=KbeO5gt7g5oQmoIzg76ofNu//Cwkn9y66SX1Se9lt/AcOiYd8vSLXDWyaHTyl/UPtB
+         7kAIG4iRNeOZYVnHEIDuuAspOMjPC/E0dV/Jgd+jM1QV3AEsUOvMEmp/ynCggay5BJFW
+         vRh8HiycH8X4WSUWP3dDy8JVUuHtre3ekbdqML+hU+y5CpW5O7qwzsWEYjf96jT8QBb5
+         ucKqRwm+wf62S4nGI6qQeUnSDJKFlHY7G9MfFK7WIBGECHWOA8ppRantclcM50XZXbiy
+         WM+uVSn9fu4pPINh4SRgpQYkz9RmHPZJ5F4AnKoTL+rSDHraauhqA4uvaNPJ4X9d3Ng+
+         HnSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=CMXle6FOj7sNaEUWjPwsRpDGPjEMhO8gArBWaBc7RnQ=;
+        b=CMSIjvllRrVzjPr+XtYlYiCTkHPQZka/o0TkbrnLU+pJsT7PQKEAU+GXm8oZX0dvMo
+         +zEz+oI9zWgyaQbemXATmn44lLaKHC8DcCNOxNueAhMjaPKZPhUyqoaw9PSDclRRG4pl
+         yBPP7IhJfZ+OItU9BzFtnO1u79aFMgm4q9+uiNOL1GDz3pxmSSGAmLJiebYFCTicr20Q
+         5KUpVOT0X8N7t2fqKStmeQUVXMPCwVMhv0aN5zYW7Sp/T3YL1bxgJfNtg/IuFDIVhwxN
+         /1R6kRVde2K++cKHGySq9ROucneZPbBWHsGQj/eEfVFxd3eh/yOT2nxU/U0c8z9lbQsp
+         E75Q==
+X-Gm-Message-State: APjAAAXQbinAseu5OyXceWTaklpssGVHsLar5fK3w2yYu8q5uWUHEVnS
+        EvLF+atXSNh2VYhE8TLCBqqNTK9y
+X-Google-Smtp-Source: APXvYqzrbm6t2mCSCwFrd/Lbp6XX59P4pGigxEcp1BH5sfd5J+QKu5liUfIzdYWUPjC9XK9A2B2dFw==
+X-Received: by 2002:a19:494d:: with SMTP id l13mr4557332lfj.66.1573686486865;
+        Wed, 13 Nov 2019 15:08:06 -0800 (PST)
+Received: from localhost ([188.243.226.168])
+        by smtp.gmail.com with ESMTPSA id f24sm1614876lfk.74.2019.11.13.15.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 15:08:05 -0800 (PST)
+Date:   Thu, 14 Nov 2019 02:08:05 +0300
+From:   Andrey Skvortsov <andrej.skvortzov@gmail.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: tps65910: allow using RTC without alarm interrupt
+Message-ID: <20191113230805.GH13629@skv.local>
+Mail-Followup-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191109154652.7419-1-andrej.skvortzov@gmail.com>
+ <20191111171915.GA3572@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HYC+c85AsWjroYih"
 Content-Disposition: inline
-In-Reply-To: <20191029170022.57528-1-mika.westerberg@linux.intel.com>
+In-Reply-To: <20191111171915.GA3572@piout.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 08:00:21PM +0300, Mika Westerberg wrote:
-> We try to keep PCIe hotplug ports runtime suspended when entering system
-> suspend. Due to the fact that the PCIe portdrv sets NEVER_SKIP driver PM
-> flag the PM core always calls system suspend/resume hooks even if the
-> device is left runtime suspended. Since PCIe hotplug driver re-uses the
-> same function for both it ends up disabling hotplug interrupt twice and
-> the second time following is printed:
-> 
->   pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
-> 
-> Prevent this from happening by checking whether the device is already
-> runtime suspended when system suspend hook is called.
-> 
-> Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
-> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Applied both to pci/hotplug for v5.5, thanks!
+--HYC+c85AsWjroYih
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If it's convenient for you, a cover letter on multi-patch series would
-make a good place for responses like this that apply to the whole
-series.
+On 19-11-11 18:19, Alexandre Belloni wrote:
+> Hi,
+>=20
+> This needs a proper commit message.
 
-> ---
-> No changes from previous version.
-> 
->  drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-> index b3122c151b80..56daad828c9e 100644
-> --- a/drivers/pci/hotplug/pciehp_core.c
-> +++ b/drivers/pci/hotplug/pciehp_core.c
-> @@ -253,7 +253,7 @@ static bool pme_is_native(struct pcie_device *dev)
->  	return pcie_ports_native || host->native_pme;
->  }
->  
-> -static int pciehp_suspend(struct pcie_device *dev)
-> +static void pciehp_disable_interrupt(struct pcie_device *dev)
->  {
->  	/*
->  	 * Disable hotplug interrupt so that it does not trigger
-> @@ -261,7 +261,19 @@ static int pciehp_suspend(struct pcie_device *dev)
->  	 */
->  	if (pme_is_native(dev))
->  		pcie_disable_interrupt(get_service_data(dev));
-> +}
->  
-> +#ifdef CONFIG_PM_SLEEP
-> +static int pciehp_suspend(struct pcie_device *dev)
-> +{
-> +	/*
-> +	 * If the port is already runtime suspended we can keep it that
-> +	 * way.
-> +	 */
-> +	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
-> +		return 0;
-> +
-> +	pciehp_disable_interrupt(dev);
->  	return 0;
->  }
->  
-> @@ -279,6 +291,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
->  
->  	return 0;
->  }
-> +#endif
->  
->  static int pciehp_resume(struct pcie_device *dev)
->  {
-> @@ -292,6 +305,12 @@ static int pciehp_resume(struct pcie_device *dev)
->  	return 0;
->  }
->  
-> +static int pciehp_runtime_suspend(struct pcie_device *dev)
-> +{
-> +	pciehp_disable_interrupt(dev);
-> +	return 0;
-> +}
-> +
->  static int pciehp_runtime_resume(struct pcie_device *dev)
->  {
->  	struct controller *ctrl = get_service_data(dev);
-> @@ -318,10 +337,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
->  	.remove		= pciehp_remove,
->  
->  #ifdef	CONFIG_PM
-> +#ifdef	CONFIG_PM_SLEEP
->  	.suspend	= pciehp_suspend,
->  	.resume_noirq	= pciehp_resume_noirq,
->  	.resume		= pciehp_resume,
-> -	.runtime_suspend = pciehp_suspend,
-> +#endif
-> +	.runtime_suspend = pciehp_runtime_suspend,
->  	.runtime_resume	= pciehp_runtime_resume,
->  #endif	/* PM */
->  };
-> -- 
-> 2.23.0
-> 
+Add in v2.
+=20
+> On 09/11/2019 18:46:52+0300, Andrey Skvortsov wrote:
+> > Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+> > ---
+> >  drivers/rtc/rtc-tps65910.c | 19 +++++++++++++++----
+> >  1 file changed, 15 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/rtc/rtc-tps65910.c b/drivers/rtc/rtc-tps65910.c
+> > index 2c0467a9e717..aa3a001ef413 100644
+> > --- a/drivers/rtc/rtc-tps65910.c
+> > +++ b/drivers/rtc/rtc-tps65910.c
+> > @@ -361,6 +361,13 @@ static const struct rtc_class_ops tps65910_rtc_ops=
+ =3D {
+> >  	.set_offset	=3D tps65910_set_offset,
+> >  };
+> > =20
+> > +static const struct rtc_class_ops tps65910_rtc_ops_noirq =3D {
+> > +	.read_time	=3D tps65910_rtc_read_time,
+> > +	.set_time	=3D tps65910_rtc_set_time,
+> > +	.read_offset	=3D tps65910_read_offset,
+> > +	.set_offset	=3D tps65910_set_offset,
+> > +};
+> > +
+> >  static int tps65910_rtc_probe(struct platform_device *pdev)
+> >  {
+> >  	struct tps65910 *tps65910 =3D NULL;
+> > @@ -415,13 +422,17 @@ static int tps65910_rtc_probe(struct platform_dev=
+ice *pdev)
+> >  		tps65910_rtc_interrupt, IRQF_TRIGGER_LOW,
+> >  		dev_name(&pdev->dev), &pdev->dev);
+> >  	if (ret < 0) {
+> > -		dev_err(&pdev->dev, "IRQ is not free.\n");
+> > -		return ret;
+> > +		dev_err(&pdev->dev, "request IRQ:%d failed, err =3D %d\n",
+> > +			 irq, ret);
+>=20
+> Do we actually need an error message here?
+
+You are right. This is definitely not an error anymore.
+What about
+dev_warn(&pdev->dev, "unable to request IRQ, alarms disabled\n");
+like some other drivers do?
+
+
+grep -RHn 'unable to request IRQ, alarms disabled'
+rtc-rv8803.c:576:			dev_warn(&client->dev, "unable to request IRQ, alarms d=
+isabled\n");
+rtc-m41t80.c:914:			dev_warn(&client->dev, "unable to request IRQ, alarms d=
+isabled\n");
+rtc-rv3028.c:651:			dev_warn(&client->dev, "unable to request IRQ, alarms d=
+isabled\n");
+rtc-pcf85363.c:416:			dev_warn(&client->dev, "unable to request IRQ, alarms=
+ disabled\n");
+rtc-pcf85063.c:458:				 "unable to request IRQ, alarms disabled\n");
+rtc-rv3029c2.c:828:			dev_warn(dev, "unable to request IRQ, alarms disabled=
+\n");
+rtc-rx8025.c:540:			dev_err(&client->dev, "unable to request IRQ, alarms di=
+sabled\n");
+rtc-abx80x.c:839:			dev_err(&client->dev, "unable to request IRQ, alarms di=
+sabled\n");
+
+
+>=20
+> > +		irq =3D -1;
+> >  	}
+> >  	tps_rtc->irq =3D irq;
+> > -	device_set_wakeup_capable(&pdev->dev, 1);
+> > +	if (irq !=3D -1) {
+> > +		device_set_wakeup_capable(&pdev->dev, 1);
+> > +		tps_rtc->rtc->ops =3D &tps65910_rtc_ops;
+> > +	} else
+> > +		tps_rtc->rtc->ops =3D &tps65910_rtc_ops_noirq;
+> > =20
+> > -	tps_rtc->rtc->ops =3D &tps65910_rtc_ops;
+> >  	tps_rtc->rtc->range_min =3D RTC_TIMESTAMP_BEGIN_2000;
+> >  	tps_rtc->rtc->range_max =3D RTC_TIMESTAMP_END_2099;
+> > =20
+> > --=20
+> > 2.20.1
+> >=20
+>=20
+> --=20
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+--=20
+Best regards,
+Andrey Skvortsov
+
+--HYC+c85AsWjroYih
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEQ575tvhxWSXeo3tPAXzLovVIsK0FAl3MjM8ACgkQAXzLovVI
+sK1lPxAAvSdgY5bOXPlM53wypSyBxGTbjygKd3QmKLR+vK9Oj+RnmCkWM3IML1Kc
+TsaGKqqinXuiTi5xCV5aH0MTNetcFkqvr2yrQ0oQYLqBKQcF2rwgV6h4FHsai4Jd
+30s4sbXB5Pr2VI2DWWo9WwQwS4tj4llNiFvKJzaPX9OSWOOOfyBMjrdx0ht4S+cx
+DsJrGyMzkuVhwHgagsN0j2KAr+aPqDW8kWof01jHVJFnUCiTawr9UWo5WREMA2ex
+8lpvICaIEAqouXrtG3F3rK0UBqXapYtVwRwOcGF0TmlExpz+OFYmph2caUx7EwUr
+QsHRECRDpmKOad2dDZ0EcyyYk+AdCfHAEnsFOvN5TnjATNgB0tR9v9HAg9IZ+79b
+TisDorXh+Lco2l0NMVsVxB9xBepBLhyKIA4PYychMPwrylVHc7CyooQkWBccB9Gv
+8hB/wjjlS4y/DhSh00WbZHcdYRA7uCbdbPE8G/rCzfPbdmui3pICxKRHL4sWDqrv
+xOiNKm/Bv+01JLmzehs9HeNoI1UTCAAmBpy/y1/hJwLanxAq7htSkddn6UCj2b8K
+RtxnN0EAa9yq9m+3+DdtCraG7Jh4OVn8RqW28Av/VpXdrj1Nar8Y13BKZ5pTugiU
+6JPbNlt3BBeZZITRkBsE0uPDIMNh8AeFOVh0oD+s0AFsi6gHbN0=
+=V66C
+-----END PGP SIGNATURE-----
+
+--HYC+c85AsWjroYih--
