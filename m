@@ -2,169 +2,180 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D472C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7AEC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009BA222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:57:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nlN0BeiM"
+	by mail.kernel.org (Postfix) with ESMTP id 59200222CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfKMO5a (ORCPT
+        id S1727845AbfKMO5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:57:30 -0500
-Received: from m12-16.163.com ([220.181.12.16]:33746 "EHLO m12-16.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfKMO53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:57:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=uc1xN
-        RSd2FCSdwQexfZJOgLv9+uaE7IUvg/ZBRWyIW0=; b=nlN0BeiMB/Yds/bEZDxvY
-        XrJX+b1F9/gQ/FVUEh6GSZJaFxQvRFc8FiqgPaRWl/LPm2SbgjcXhyoa5VelJcpd
-        I2YluspN7uebLQgEape++5EtVZUjFRbsIKdLTI/X/z0r976nfH2rvVtyuebBF/LM
-        ZsBHxlnFZ+lni+xdCpc9JM=
-Received: from [192.168.0.10] (unknown [183.210.50.120])
-        by smtp12 (Coremail) with SMTP id EMCowACX0gRiGcxdP++PAQ--.1725S2;
-        Wed, 13 Nov 2019 22:55:31 +0800 (CST)
-Subject: Re: Question about "asm/rwonce.h: No such file or directory"
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com>
- <20191112123125.GD17835@willie-the-truck>
- <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
- <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net>
- <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
- <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com>
- <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
- <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com>
- <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
- <50602386-68b1-be38-a022-0bcf9df6a54e@163.com>
- <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
-From:   Xiao Yang <ice_yangxiao@163.com>
-Message-ID: <bdbe9e04-4da0-64b2-ab0c-ae739d8fd7ac@163.com>
-Date:   Wed, 13 Nov 2019 22:55:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 13 Nov 2019 09:57:40 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2094 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726251AbfKMO5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 09:57:39 -0500
+Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 3EBB479D1242E9871B03;
+        Wed, 13 Nov 2019 14:57:37 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 13 Nov 2019 14:57:35 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 13 Nov
+ 2019 14:57:35 +0000
+Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
+To:     Hannes Reinecke <hare@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "hare@suse.com" <hare@suse.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+ <1573652209-163505-4-git-send-email-john.garry@huawei.com>
+ <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
+Date:   Wed, 13 Nov 2019 14:57:33 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-CM-TRANSID: EMCowACX0gRiGcxdP++PAQ--.1725S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAF48CF4xtryxKr4UKw18Grg_yoW5Zr1fpa
-        s3G3W3JF4UX3WUArnrtr18Zry8tw48G3WjqryUWry0qryvyF1xJwsFgr48GFy0qry8tF1U
-        ArW7K34agr1UXr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bjE__UUUUU=
-X-Originating-IP: [183.210.50.120]
-X-CM-SenderInfo: 5lfhs5xdqj5xldr6il2tof0z/1tbiFgNsXlWBkhPalwAAs-
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 4:54 PM, Masahiro Yamada wrote:
-> On Wed, Nov 13, 2019 at 5:36 PM Xiao Yang <ice_yangxiao@163.com> wrote:
->> On 11/13/19 3:53 PM, Masahiro Yamada wrote:
->>> On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
->>>> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
->>>>> Sorry, I really do not understand what you are doing.
->>>>>
->>>>> include/linux/compiler.h is only for kernel-space.
->>>>> Shrug if a user-land program includes it.
->>>> Hi Masahiro,
->>>>
->>>> For building tools/bpf, it is good to fix the compiler error by Daniel's
->>>> patch(i.e. use linux/filter from linux header).
->>>>
->>>> linux/compiler.h may be used by other code in kernel.  Is it possible to
->>>> trigger the same error when the other code
->>>>
->>>> including linux/compiler.h is built? Is this kind of code able to find
->>>> the location of <asm/rwonce.h>?
->>> <asm/rwonce.h> is also kernel-only header.
->>>
->>> The kernel code can find <asm/rwonce.h>, but user-land code cannot.
->> Hi Masahiro,
+On 13/11/2019 14:06, Hannes Reinecke wrote:
+> On 11/13/19 2:36 PM, John Garry wrote:
+>> Some SCSI HBAs (such as HPSA, megaraid, mpt3sas, hisi_sas_v3 ..) support
+>> multiple reply queues with single hostwide tags.
 >>
->> Sorry, I am not familar with it.
+>> In addition, these drivers want to use interrupt assignment in
+>> pci_alloc_irq_vectors(PCI_IRQ_AFFINITY). However, as discussed in [0],
+>> CPU hotplug may cause in-flight IO completion to not be serviced when an
+>> interrupt is shutdown.
 >>
->> Thanks a lot for your explanation and I have seen the LINUXINCLUDE
->> variable in Makefile.
+>> To solve that problem, Ming's patchset to drain hctx's should ensure no
+>> IOs are missed in-flight [1].
 >>
->> I will try to send a patch as Daniel suggested.
+>> However, to take advantage of that patchset, we need to map the HBA HW
+>> queues to blk mq hctx's; to do that, we need to expose the HBA HW queues.
 >>
->> Best Regards,
+>> In making that transition, the per-SCSI command request tags are no
+>> longer unique per Scsi host - they are just unique per hctx. As such, the
+>> HBA LLDD would have to generate this tag internally, which has a certain
+>> performance overhead.
 >>
->> Xiao Yang
+>> However another problem is that blk mq assumes the host may accept
+>> (Scsi_host.can_queue * #hw queue) commands. In [2], we removed the Scsi
+>> host busy counter, which would stop the LLDD being sent more than
+>> .can_queue commands; however, we should still ensure that the block layer
+>> does not issue more than .can_queue commands to the Scsi host.
 >>
-> Hmm, digging into the git history,
-> this include path was added by the following commit:
->
->
-> commit d7475de58575c904818efa369c82e88c6648ce2e
-> Author: Kamal Mostafa <kamal@canonical.com>
-> Date:   Wed Nov 11 14:24:27 2015 -0800
->
->      tools/net: Use include/uapi with __EXPORTED_HEADERS__
->
->      Use the local uapi headers to keep in sync with "recently" added #define's
->      (e.g. SKF_AD_VLAN_TPID).  Refactored CFLAGS, and bpf_asm doesn't need -I.
->
->      Fixes: 3f356385e8a4 ("filter: bpf_asm: add minimal bpf asm tool")
->      Signed-off-by: Kamal Mostafa <kamal@canonical.com>
->      Acked-by: Daniel Borkmann <daniel@iogearbox.net>
->      Signed-off-by: David S. Miller <davem@davemloft.net>
->
->
->
-> I am not sure how big a deal it is,
-> but it could be a problem on old distros??
->
-Hi Daniel, Masahiro
+>> To solve this problem, introduce a shared tags per blk_mq_tag_set, which
+>> may be requested when allocating the tagset.
+>>
+>> New flag BLK_MQ_F_TAG_HCTX_SHARED should be set when requesting the
+>> tagset.
+>>
+>> This is based on work originally from Ming Lei in [3].
+>>
+>> [0] https://lore.kernel.org/linux-block/alpine.DEB.2.21.1904051331270.1802@nanos.tec.linutronix.de/
+>> [1] https://lore.kernel.org/linux-block/20191014015043.25029-1-ming.lei@redhat.com/
+>> [2] https://lore.kernel.org/linux-scsi/20191025065855.6309-1-ming.lei@redhat.com/
+>> [3] https://lore.kernel.org/linux-block/20190531022801.10003-1-ming.lei@redhat.com/
+>>
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> ---
+>>   block/blk-core.c       |  1 +
+>>   block/blk-flush.c      |  2 +
+>>   block/blk-mq-debugfs.c |  2 +-
+>>   block/blk-mq-tag.c     | 85 ++++++++++++++++++++++++++++++++++++++++++
+>>   block/blk-mq-tag.h     |  1 +
+>>   block/blk-mq.c         | 61 +++++++++++++++++++++++++-----
+>>   block/blk-mq.h         |  9 +++++
+>>   include/linux/blk-mq.h |  3 ++
+>>   include/linux/blkdev.h |  1 +
+>>   9 files changed, 155 insertions(+), 10 deletions(-)
+>>
+> [ .. ]
+>> @@ -396,15 +398,17 @@ static struct request *blk_mq_get_request(struct request_queue *q,
+>>   		blk_mq_tag_busy(data->hctx);
+>>   	}
+>>   
+>> -	tag = blk_mq_get_tag(data);
+>> -	if (tag == BLK_MQ_TAG_FAIL) {
+>> -		if (clear_ctx_on_error)
+>> -			data->ctx = NULL;
+>> -		blk_queue_exit(q);
+>> -		return NULL;
+>> +	if (data->hctx->shared_tags) {
+>> +		shared_tag = blk_mq_get_shared_tag(data);
+>> +		if (shared_tag == BLK_MQ_TAG_FAIL)
+>> +			goto err_shared_tag;
+>>   	}
+>>   
+>> -	rq = blk_mq_rq_ctx_init(data, tag, data->cmd_flags, alloc_time_ns);
+>> +	tag = blk_mq_get_tag(data);
+>> +	if (tag == BLK_MQ_TAG_FAIL)
+>> +		goto err_tag;
+>> +
+>> +	rq = blk_mq_rq_ctx_init(data, tag, shared_tag, data->cmd_flags, alloc_time_ns);
+>>   	if (!op_is_flush(data->cmd_flags)) {
+>>   		rq->elv.icq = NULL;
+>>   		if (e && e->type->ops.prepare_request) {
 
+Hi Hannes,
 
-Could we include the linux/filter.h generated by "make headers_install" 
-as a higher priority?
+> Why do you need to keep a parallel tag accounting between 'normal' and
+> 'shared' tags here?
+> Isn't is sufficient to get a shared tag only, and us that in lieo of the
+> 'real' one?
 
-(PS: According to above commit, just ensure that tools/bpf keeps in sync 
-with new linux header as far as possible).
+In theory, yes. Just the 'shared' tag should be adequate.
 
-and then use the linux/filter.h in system if kernel doesn't provide 
-linux/filter.h by "make headers_install".
+A problem I see with this approach is that we lose the identity of which 
+tags are allocated for each hctx. As an example for this, consider 
+blk_mq_queue_tag_busy_iter(), which iterates the bits for each hctx. 
+Now, if you're just using shared tags only, that wouldn't work.
 
---------------------------------------------------------------------------------------------------------------------
+Consider blk_mq_can_queue() as another example - this tells us if a hctx 
+has any bits unset, while with only using shared tags it would tell if 
+any bits unset over all queues, and this change in semantics could break 
+things. At a glance, function __blk_mq_tag_idle() looks problematic also.
 
-diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-index 5d1995fd369c..1e0c768132af 100644
---- a/tools/bpf/Makefile
-+++ b/tools/bpf/Makefile
-@@ -10,7 +10,7 @@ MAKE = make
-  INSTALL ?= install
+And this is where it becomes messy to implement.
 
-  CFLAGS += -Wall -O2
--CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi 
--I$(srctree)/include
-+CFLAGS += -I$(srctree)/usr/include
+> 
+> I would love to combine both,
 
-  # This will work when bpf is built in tools env. where srctree
-  # isn't set and when invoked from selftests build, where srctree
+Same here...
 
----------------------------------------------------------------------------------------------------------------------
+  as then we can easily do a reverse mapping
+> by using the 'tag' value to lookup the command itself, and can possibly
+> do the 'scsi_cmd_priv' trick of embedding the LLDD-specific parts within
+> the command. With this split we'll be wasting quite some memory there,
+> as the possible 'tag' values are actually nr_hw_queues * shared_tags.
 
+Yeah, understood. That's just a trade-off I saw.
 
-Best Regards,
-
-Xiao Yang
-
->
-
+Thanks,
+John
