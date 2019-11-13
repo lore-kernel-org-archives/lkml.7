@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F24C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6106DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04782245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388F12245A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610295;
-	bh=PterWFPnUPkV9UOQb8yiRvykr89TFGx0cLH8pyMYIdA=;
+	s=default; t=1573610300;
+	bh=SQX4m5NVGnqJ3q72qKNhjXEzNYaDtD/tZoaOQ9DRSdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dg7RsEa2sjGFP+sIlV+Vg81XMZ5VAFA9iYs7PmHwhBT+pBvk2P5VGrvLj7KbKXpDL
-	 jC2xHSjch1+Osou68rcdLCRzYaPrIvgaIT4+l3yd06K1QdVIy18sQVEKZgey3bE+61
-	 Y7mphvXMvc9dFy+uc2PTtI2wFiDEFHSBFbhjHkuU=
+	b=oKYZhYalLEKhKkWmyN0aX9niyL83lusw4cLme+kMDFI500Ouq4LcmVHChgrLxJLQF
+	 JcLgFA1+lI2ngo4tp1rtpP/FVH4QMOvj6kHQDs42BhuebiwlpKocfU4dHDL38/u22Z
+	 GUcPeGjY/5bGE9rYuzfnUfhGKyGTOWpoaNy9SKRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbfKMB6O (ORCPT
+        id S1729995AbfKMB6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:58:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:58:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729960AbfKMB6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:11 -0500
+        id S1729982AbfKMB6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 419C5222D4;
-        Wed, 13 Nov 2019 01:58:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A75B62246A;
+        Wed, 13 Nov 2019 01:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610290;
-        bh=PterWFPnUPkV9UOQb8yiRvykr89TFGx0cLH8pyMYIdA=;
+        s=default; t=1573610294;
+        bh=SQX4m5NVGnqJ3q72qKNhjXEzNYaDtD/tZoaOQ9DRSdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=czsW0R/Tr57DpW8kQpn209PxjgF80Da+x/AB7YjkMGttPt7cXMBhUZxuLq7JSvVln
-         zcU/1C1lTPByLJLVNG23dq59+yqb9hdXETj5bI/8Wwg8KUECjE50mVTUazncRcWI33
-         86OqnVf27bRPptbp4ePGYoz7ZZccu0L9s5eJOK0I=
+        b=mQ0J67pugn7IBJxXypXsRvnKKgsrErph/nCRQWcpTBCwSe9Mf+sVmebg5+hXV7nPQ
+         7Rwrd9LahhHxDPScp45ctMoR7sDbnbz8s5iMtiUDyu54LrRnTaDWCIufvSKer42jR+
+         sP33QMOVOJjxyxnSpVIerLpKvOfnH+TrifAlk3SU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 066/115] NFSv4.x: fix lock recovery during delegation recall
-Date:   Tue, 12 Nov 2019 20:55:33 -0500
-Message-Id: <20191113015622.11592-66-sashal@kernel.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 068/115] media: cec-gpio: select correct Signal Free Time
+Date:   Tue, 12 Nov 2019 20:55:35 -0500
+Message-Id: <20191113015622.11592-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,55 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
+[ Upstream commit c439d5c1e13dbf66cff53455432f21d4d0536c51 ]
 
-Running "./nfstest_delegation --runtest recall26" uncovers that
-client doesn't recover the lock when we have an appending open,
-where the initial open got a write delegation.
+If a receive is in progress or starts before the transmit has
+a chance, then lower the Signal Free Time of the upcoming transmit
+to no more than CEC_SIGNAL_FREE_TIME_NEW_INITIATOR.
 
-Instead of checking for the passed in open context against
-the file lock's open context. Check that the state is the same.
+This is per the specification requirements.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/cec/cec-pin.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 606dd3871f66b..17acad7d13160 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -91,7 +91,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
- 	return nfs4_do_check_delegation(inode, flags, false);
- }
- 
--static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
-+static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
+diff --git a/drivers/media/cec/cec-pin.c b/drivers/media/cec/cec-pin.c
+index c003b8eac6176..68fc6a24d0771 100644
+--- a/drivers/media/cec/cec-pin.c
++++ b/drivers/media/cec/cec-pin.c
+@@ -529,6 +529,17 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
+ 			/* Start bit, switch to receive state */
+ 			pin->ts = ts;
+ 			pin->state = CEC_ST_RX_START_BIT_LOW;
++			/*
++			 * If a transmit is pending, then that transmit should
++			 * use a signal free time of no more than
++			 * CEC_SIGNAL_FREE_TIME_NEW_INITIATOR since it will
++			 * have a new initiator due to the receive that is now
++			 * starting.
++			 */
++			if (pin->tx_msg.len && pin->tx_signal_free_time >
++			    CEC_SIGNAL_FREE_TIME_NEW_INITIATOR)
++				pin->tx_signal_free_time =
++					CEC_SIGNAL_FREE_TIME_NEW_INITIATOR;
+ 			break;
+ 		}
+ 		if (pin->ts == 0)
+@@ -690,6 +701,15 @@ static int cec_pin_adap_transmit(struct cec_adapter *adap, u8 attempts,
  {
- 	struct inode *inode = state->inode;
- 	struct file_lock *fl;
-@@ -106,7 +106,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
- 	spin_lock(&flctx->flc_lock);
- restart:
- 	list_for_each_entry(fl, list, fl_list) {
--		if (nfs_file_open_context(fl->fl_file) != ctx)
-+		if (nfs_file_open_context(fl->fl_file)->state != state)
- 			continue;
- 		spin_unlock(&flctx->flc_lock);
- 		status = nfs4_lock_delegation_recall(fl, state, stateid);
-@@ -153,7 +153,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
- 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
- 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
- 		if (!err)
--			err = nfs_delegation_claim_locks(ctx, state, stateid);
-+			err = nfs_delegation_claim_locks(state, stateid);
- 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
- 			err = -EAGAIN;
- 		mutex_unlock(&sp->so_delegreturn_mutex);
+ 	struct cec_pin *pin = adap->pin;
+ 
++	/*
++	 * If a receive is in progress, then this transmit should use
++	 * a signal free time of max CEC_SIGNAL_FREE_TIME_NEW_INITIATOR
++	 * since when it starts transmitting it will have a new initiator.
++	 */
++	if (pin->state != CEC_ST_IDLE &&
++	    signal_free_time > CEC_SIGNAL_FREE_TIME_NEW_INITIATOR)
++		signal_free_time = CEC_SIGNAL_FREE_TIME_NEW_INITIATOR;
++
+ 	pin->tx_signal_free_time = signal_free_time;
+ 	pin->tx_msg = *msg;
+ 	pin->work_tx_status = 0;
 -- 
 2.20.1
 
