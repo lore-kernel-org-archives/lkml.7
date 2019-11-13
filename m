@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0109EC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17070C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CCB222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C0421D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="D9hwoOyR"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RZpkSSVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfKMKCI (ORCPT
+        id S1727386AbfKMKCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:02:08 -0500
-Received: from mail-eopbgr20043.outbound.protection.outlook.com ([40.107.2.43]:23271
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        Wed, 13 Nov 2019 05:02:14 -0500
+Received: from mail-eopbgr60040.outbound.protection.outlook.com ([40.107.6.40]:57831
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726338AbfKMKCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:02:07 -0500
+        id S1726338AbfKMKCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:02:12 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bXruUUhSi3HNjtFy9UF7jwkFfavCzE0hqhLoSzI23mzt3Ie7QUjBpDVnczjzSBCSrH4U/ErNy+QY5OcajkjVcu9Z2reK7pYJWRVOuESJrKe/yDTdqVAMtVOC4gOjByDf4ryU0NopILKNHeZyVf9eGyqJDU+DLTbDTZMcXCvkKnkdqZW9ypR/BiOcadgUOXMwwusAtsAdiscbUeWuBj0tB9GSX3zW25126TJQNCXC2z8mG0FeEiBoqDfLizutlwFBArQnp4/JET+gqcBMuEKA5AtwhfJsnOajXlimj4hooTZxAzXWa+u/M6buMnjbWL1+WhdTqovCKDLzXCbt26LeFw==
+ b=ghLBCCT1l5ynKK6LusIHOM8YBh920vjMFYPminq7HU1fyci/q2DiPMrbI8f3ljsWFSyjmfMOknNvDGPsScofAVPDWYq0Xx0AzvYtrgkoR+p1/xNBC69ESMD+HGgZ399AXiPVZ0frgSoUcL5rhdNHuUAwe7FZYMqNijPh2k86gSp25/c6+aPGLq83ZqHy1gTGAv7I2rGRzz2PtSWp21EtMvcYn9fVvJtknJHrSOFvFKCElGM3KZp86ZtP+iObwz3wz9Vs2JItt3xWPcBn7OfsRAK4Piv/XipMEBRr6j+eYLdn9G2YJyuUdIIWXOdBUUXC5PB5jrdsJjKmqCqGfLhYEg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rLmrB5D04yOJegmBFfizvGX9OeLI7oDQb4m2MVPRTFE=;
- b=O8Zt7gjvGcC8wQZEZRQU0buLW3ILULn0TqshgzDB0houOeQPWblKw5/0o40rGOBH5QGQC6mVsw/FUi3dzWU7OjaXcP558U+GBQB5UVuZ4BbGSrAYbzlMLJmhSBeTrzLkh3u+KifsJK4kYsxPYNxMJFJaA8ZDxohikr6konksm2tY8mp9V3hniYdl4SqwlZgAd5bVvlLjMVkHnSzs715OjLhYKbUwwzx1Gjzs7/S5opG6/wQQw2wc9Xsj+ArjAkTwsOaOv2U7fYdZLBGAGLxJhHyKhqvxj96uWNiz8rNiaQRGzP5GtT8vOqME7Kww0gymA/+BopFENJ8SHmr8JP5sWQ==
+ bh=VwULUZZW2NsfXOwtKkSafTgMEJZbCA8DQu7hE4Bg/2k=;
+ b=RJf0dRKi+AJdEM1ldK5uDfgL5Ew02z9U0z1j4rLu3/vWX1+xUKEhPBb+5Xg/qC+pDCqH1A8SlSzKN55L7UIeH8j6OR7ncWZU7sLQxmwEA7/xMAHl4FtwaO4sTM7jwY+/tGpXgguHkaX2nH/YlroMCKFFvLT/C5GWNg2s60sUEMSAtOD+Oi+RrdFwvvrd+ZeJZXXzVdyxwsvsbmxOBhHymqPFcG4IiFxc3HxUY5QYDLBOeMCnidX5KYg9mb+A3tSwKUPdhhi7jOfm0YqvyDcJUsdgFRVgXBLotgJ8yh9cjiSuJdhxL9IQ8ADK6PjZoruH3LOD37bz6TEvCF1ZKivn9A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rLmrB5D04yOJegmBFfizvGX9OeLI7oDQb4m2MVPRTFE=;
- b=D9hwoOyRdNDRIuYdfVXuGs603Ym+QXSeUcO0XsfuqUMPBYSIKDJ9VsfNLkoKbOEefngYNp88nYof5KVsUJMrJztuASFE8GCfcYPm71w0mCsMVx+C7trPq1mH/ztSLgvXY7kbBPZEfolqpT/5GrYU/PEc8qlzB+S6oghn/2xQUnI=
+ bh=VwULUZZW2NsfXOwtKkSafTgMEJZbCA8DQu7hE4Bg/2k=;
+ b=RZpkSSVujitAr/3Pqx31lBjLqhidwoX/bBQl4rovODxzZ80tpwpFPmJ3H3Fa6rcCAlSchITDNKyWvt2n/JH13Hjsm0uVgLnVDriNWfhEZNOfDyC52nVXooi8aEXpDoBNvdZw/8yoF/AgnrFhWCP19WaDHTVckhE+kiCu35RZqYU=
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5812.eurprd04.prod.outlook.com (20.178.119.145) with Microsoft SMTP
+ AM0PR04MB7058.eurprd04.prod.outlook.com (10.186.129.24) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Wed, 13 Nov 2019 10:02:03 +0000
+ 15.20.2430.20; Wed, 13 Nov 2019 10:02:09 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
- 10:02:03 +0000
+ 10:02:09 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     "sboyd@kernel.org" <sboyd@kernel.org>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
@@ -60,11 +60,13 @@ CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 1/2] clk: imx: sccg: use relaxed io api
-Thread-Topic: [PATCH 1/2] clk: imx: sccg: use relaxed io api
-Thread-Index: AQHVmgllyVcYHISGfUyhube4yQW84A==
-Date:   Wed, 13 Nov 2019 10:02:03 +0000
-Message-ID: <1573638817-4363-1-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH 2/2] clk: imx: composite-8m: use relaxed io api
+Thread-Topic: [PATCH 2/2] clk: imx: composite-8m: use relaxed io api
+Thread-Index: AQHVmglpFZP+G4Lm+0e0Ga/vcUI18Q==
+Date:   Wed, 13 Nov 2019 10:02:09 +0000
+Message-ID: <1573638817-4363-2-git-send-email-peng.fan@nxp.com>
+References: <1573638817-4363-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1573638817-4363-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -79,30 +81,30 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dd3e53d3-b599-48e2-4d0a-08d768208730
-x-ms-traffictypediagnostic: AM0PR04MB5812:|AM0PR04MB5812:
+x-ms-office365-filtering-correlation-id: 44863b37-9d58-4c98-9a6b-08d768208b5f
+x-ms-traffictypediagnostic: AM0PR04MB7058:|AM0PR04MB7058:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5812ABFD218BC89BBFDD236988760@AM0PR04MB5812.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-microsoft-antispam-prvs: <AM0PR04MB7058C91771FE2DA05D3B51E988760@AM0PR04MB7058.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:418;
 x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(366004)(39860400002)(199004)(189003)(110136005)(8676002)(2201001)(478600001)(71190400001)(71200400001)(54906003)(50226002)(486006)(81156014)(36756003)(99286004)(86362001)(476003)(25786009)(81166006)(2616005)(8936002)(2906002)(66066001)(7736002)(305945005)(256004)(26005)(14444005)(386003)(102836004)(6506007)(316002)(186003)(2501003)(6636002)(6116002)(52116002)(3846002)(4326008)(66446008)(6512007)(6486002)(6436002)(5660300002)(44832011)(64756008)(66556008)(66476007)(14454004)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5812;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(39860400002)(346002)(396003)(366004)(189003)(199004)(66066001)(2501003)(76176011)(2616005)(71200400001)(486006)(44832011)(3846002)(11346002)(386003)(99286004)(7736002)(446003)(26005)(4326008)(102836004)(2201001)(25786009)(2906002)(71190400001)(6506007)(476003)(36756003)(305945005)(86362001)(6436002)(6116002)(66476007)(66556008)(64756008)(14454004)(478600001)(8936002)(316002)(8676002)(14444005)(81156014)(66446008)(81166006)(54906003)(5660300002)(66946007)(6486002)(110136005)(186003)(50226002)(6512007)(6636002)(52116002)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7058;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: V2R0XVAQJfZK7vl5Ug2OROohyq8RndcOwX0O8gwwdQuAubP6zLY9G9hxQhAFb/R7E/OwOYPRtNy/EJjVCi5FnAA5IjPSNe0hdpWNFHIsJpgk/Dji+lI4cGNdp6jE51fpqaJkEYn7J71SUMdwQsnHAjgmKn8+ifXSwrn6Veoy5tmkIpQ6cR49XggFpnVX+0jstO8WJ2vhenejscZAKSbvPN0sWv08QVIx+ioDPM1WTOpANucCd8Dw9iIViRLtYAEeaUu1ui39kUpHZN9u3oyWmHL2zDcTmp6r09hbMe/RSuPlWfZkMSmqL6xaXKhKTHziJxF29bLFmY+SnL/js2/U0LFsWjUU32bVmwCv9LsuPH+FbmFhxJLE4TEvwK4P6VkXH9LUXnkQTw/A6RfjcSaOu1OOx802E4t4C3nk/ys8gDb2wD5YYWATb/pJc+jwGWav
+x-microsoft-antispam-message-info: S1XgwRkzRlouV8V69Gu3V6w7G+RBp3Xfb5xma6q9vXpXy7Ttdj3MQ2nH/psrNOThagn3Khq01MwiTJR1ezpu1139OndWWI9S5i1Q4aPWarugd9DxqbwMriW5EgBHf1urKfHBB+OI4nCEm6Qkw44XATt+RP4QpKkpHlFaox36UC06UYt/mFZOUNhWSqxlo3Xc9g/EhM4wAhHOr6rC9zzuHhPO3Sc7b1aUv/7avIyPDbOxvXkuCuKLCfSAnHf3XpdG77UoypBlf2i8VDCvNKiKfqXyoQu49ALQZjUDhfcJKrKSdVxSTHP6IkcvVTQJRQHA1mo5QIqbvoIjc5M6mpBQvBOg++PBmhdz0j3VD27UQxNVghzkc7aARHDgbeDu+08y0Qunem6k8A5QcLoyF1QnP7//lcKWkGnBlcx4fWjImT+FNhFCvNUduTc0EBbW876M
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd3e53d3-b599-48e2-4d0a-08d768208730
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 10:02:03.2374
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44863b37-9d58-4c98-9a6b-08d768208b5f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 10:02:09.3089
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mp5ovHvzUmbbRsYktpZSHOtp9HuX3dCm25nj9UsV/c8xP+x9lxTLOt3ee8Bh/KDTQhlrta0AENtTJXbrLPAbGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5812
+X-MS-Exchange-CrossTenant-userprincipalname: b2/9ycAprkbjI0u5Yc06x6em55H9BgX8hdKwV0PPx+ackqJA637nBwBTwcdQtjAwB6AkgRnSwTC69OlVJl9R8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -114,74 +116,49 @@ It is ok to use relaxed api here, no need to use stronger readl/writel
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/clk/imx/clk-sccg-pll.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/clk/imx/clk-composite-8m.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.=
-c
-index 2cf874813458..e03f8acb1e82 100644
---- a/drivers/clk/imx/clk-sccg-pll.c
-+++ b/drivers/clk/imx/clk-sccg-pll.c
-@@ -106,8 +106,9 @@ static int clk_sccg_pll_wait_lock(struct clk_sccg_pll *=
-pll)
+diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-compo=
+site-8m.c
+index 20f7c91c03d2..513dc57483d0 100644
+--- a/drivers/clk/imx/clk-composite-8m.c
++++ b/drivers/clk/imx/clk-composite-8m.c
+@@ -31,14 +31,14 @@ static unsigned long imx8m_clk_composite_divider_recalc=
+_rate(struct clk_hw *hw,
+ 	unsigned int prediv_value;
+ 	unsigned int div_value;
 =20
- 	/* don't wait for lock if all plls are bypassed */
- 	if (!(val & SSCG_PLL_BYPASS2_MASK))
--		return readl_poll_timeout(pll->base, val, val & PLL_LOCK_MASK,
--						0, PLL_SCCG_LOCK_TIMEOUT);
-+		return readl_relaxed_poll_timeout(pll->base, val,
-+						  val & PLL_LOCK_MASK,
-+						  0, PLL_SCCG_LOCK_TIMEOUT);
+-	prediv_value =3D readl(divider->reg) >> divider->shift;
++	prediv_value =3D readl_relaxed(divider->reg) >> divider->shift;
+ 	prediv_value &=3D clk_div_mask(divider->width);
 =20
- 	return 0;
- }
-@@ -349,7 +350,7 @@ static unsigned long clk_sccg_pll_recalc_rate(struct cl=
-k_hw *hw,
+ 	prediv_rate =3D divider_recalc_rate(hw, parent_rate, prediv_value,
+ 						NULL, divider->flags,
+ 						divider->width);
 =20
- 	temp64 =3D parent_rate;
+-	div_value =3D readl(divider->reg) >> PCG_DIV_SHIFT;
++	div_value =3D readl_relaxed(divider->reg) >> PCG_DIV_SHIFT;
+ 	div_value &=3D clk_div_mask(PCG_DIV_WIDTH);
 =20
--	val =3D readl(pll->base + PLL_CFG0);
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
- 	if (val & SSCG_PLL_BYPASS2_MASK) {
- 		temp64 =3D parent_rate;
- 	} else if (val & SSCG_PLL_BYPASS1_MASK) {
-@@ -372,10 +373,10 @@ static int clk_sccg_pll_set_rate(struct clk_hw *hw, u=
-nsigned long rate,
- 	u32 val;
+ 	return divider_recalc_rate(hw, prediv_rate, div_value, NULL,
+@@ -104,13 +104,13 @@ static int imx8m_clk_composite_divider_set_rate(struc=
+t clk_hw *hw,
 =20
- 	/* set bypass here too since the parent might be the same */
--	val =3D readl(pll->base + PLL_CFG0);
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
- 	val &=3D ~SSCG_PLL_BYPASS_MASK;
- 	val |=3D FIELD_PREP(SSCG_PLL_BYPASS_MASK, setup->bypass);
--	writel(val, pll->base + PLL_CFG0);
-+	writel_relaxed(val, pll->base + PLL_CFG0);
+ 	spin_lock_irqsave(divider->lock, flags);
 =20
- 	val =3D readl_relaxed(pll->base + PLL_CFG2);
- 	val &=3D ~(PLL_DIVF1_MASK | PLL_DIVF2_MASK);
-@@ -396,7 +397,7 @@ static u8 clk_sccg_pll_get_parent(struct clk_hw *hw)
- 	u32 val;
- 	u8 ret =3D pll->parent;
+-	val =3D readl(divider->reg);
++	val =3D readl_relaxed(divider->reg);
+ 	val &=3D ~((clk_div_mask(divider->width) << divider->shift) |
+ 			(clk_div_mask(PCG_DIV_WIDTH) << PCG_DIV_SHIFT));
 =20
--	val =3D readl(pll->base + PLL_CFG0);
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
- 	if (val & SSCG_PLL_BYPASS2_MASK)
- 		ret =3D pll->bypass2;
- 	else if (val & SSCG_PLL_BYPASS1_MASK)
-@@ -409,10 +410,10 @@ static int clk_sccg_pll_set_parent(struct clk_hw *hw,=
- u8 index)
- 	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
- 	u32 val;
+ 	val |=3D (u32)(prediv_value  - 1) << divider->shift;
+ 	val |=3D (u32)(div_value - 1) << PCG_DIV_SHIFT;
+-	writel(val, divider->reg);
++	writel_relaxed(val, divider->reg);
 =20
--	val =3D readl(pll->base + PLL_CFG0);
-+	val =3D readl_relaxed(pll->base + PLL_CFG0);
- 	val &=3D ~SSCG_PLL_BYPASS_MASK;
- 	val |=3D FIELD_PREP(SSCG_PLL_BYPASS_MASK, pll->setup.bypass);
--	writel(val, pll->base + PLL_CFG0);
-+	writel_relaxed(val, pll->base + PLL_CFG0);
+ 	spin_unlock_irqrestore(divider->lock, flags);
 =20
- 	return clk_sccg_pll_wait_lock(pll);
- }
 --=20
 2.16.4
 
