@@ -2,571 +2,178 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF030C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A07BFC17449
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF1E222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71602222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="gLG2El7u"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="k19ltE40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfKMIdW (ORCPT
+        id S1727143AbfKMIff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:33:22 -0500
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:41522 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725966AbfKMIdW (ORCPT
+        Wed, 13 Nov 2019 03:35:35 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:50704 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726155AbfKMIfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:33:22 -0500
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 4432E2E07AA;
-        Wed, 13 Nov 2019 11:33:15 +0300 (MSK)
-Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id f2K0MttTEw-XEp0cJh5;
-        Wed, 13 Nov 2019 11:33:15 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1573633995; bh=t1thZIVEu1WTfefubz+/FhHy09qTLth6L7ULHQ78cSs=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=gLG2El7uRmG80gCgITigzw+hRoAWqOQKBKJ3mmb6ZfoT2tnscJPo7guw7bEQky5ie
-         jYGXNejuwrnny8Zhd/R1O13KkhdAxpyumgMLlFapP1jrutRJ9scRSLGdRNaGFAevvX
-         Hsi2hiWstX54gauI4gbqK4pR6HWFX3xvMj8xK50o=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8554:53c0:3d75:2e8a])
-        by iva4-c987840161f8.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id oGayQzLKqq-XEVm8imI;
-        Wed, 13 Nov 2019 11:33:14 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] sched/fair: add burst to cgroup cpu bandwidth
- controller
-To:     Dave Chiluk <chiluk+linux@indeed.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Segall <bsegall@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        cgroups@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>
-References: <157312875706.707.12248531434112979828.stgit@buzz>
- <CAC=E7cXaSya6YxqhuiLsNy1B9jdZ=7DwTgkJ9fXQ9LauLpjhSg@mail.gmail.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <67876463-727c-3381-abec-196f9d8462c7@yandex-team.ru>
-Date:   Wed, 13 Nov 2019 11:33:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 03:35:34 -0500
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAD8WtEl025599;
+        Wed, 13 Nov 2019 03:35:18 -0500
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2054.outbound.protection.outlook.com [104.47.33.54])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2w7pr6k44w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Nov 2019 03:35:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Oc877TE+80M71ItB+zdd3JlLcQFcyYPJVZuRRtXvX8kJh6gL9nq7cZ8Yh6TNrvPuU4PF2R/kI7TpkI14bQ8FyR1Vxv/O1vlTQveBhzB8ssAdKvTULLU9cdXGD6S1Oc/xY26322/3nrEAu5LL3vGCox4pv63LiaoIS53Hr+GEVfNjBsp+qcm2bso4/8SN1wokC9KZS3BWO8lexDeXBd7yoSeE8b2jNBIZXKGgPpppJ2BXyvQcGJw6fihOk2KH1/Ox8HdO53cdyRwU9/XFf3sdTD4ah0jCim35FkqU45g930ClegFcUmo4DYl/Fh55ppUo8woXZMwypXokXJXZPr47sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ACFf3j0dAaFmyDZvuC5Px2tq1qxXMi0WCMoDGHMmLt4=;
+ b=OUkW0LJqVOUReyqwEA9a5ZIHMpIjIt0oF4afmcGAuEnE5fWhqNwkDxGt4aLRo5EY3M5LBa6uJ/1L2Y13v/lBX1H82oIvfostAVZkjHj0ADSLu6gcs1NbF98wLnDzgzgQN4foWmJNkeRD1MqvPHHf113afOvajuMfOS2kDlADEgv+aaNBMRZk7tHg6sItIMLpj4yqv2NXvH6qsr2ZlaoQbr5bSjkbpTFHWP1dnTr8zWqTAlPoE6AYbL3gy5YIAgayffGt1DNL3ZArSgjhZfM42X8bSrNy3pUlZJFwlFW1Luj24hR20GOdjhHag+nsSSk+Qi0stc+DLvv+K0nvzIEKcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ACFf3j0dAaFmyDZvuC5Px2tq1qxXMi0WCMoDGHMmLt4=;
+ b=k19ltE40nan0dt07aI70TrWhgYT/AOitkx6sJ03sU5IKi7AFvh/tRkxp7WMr/wGj+Wq73FU6B8RvWYlKlEQ9kUMFEFZJH6cmBmP3mtvRAEBM3SJV1UgHUBwVhOGTKMXb3DGWx414QoBZf2GOKzJOpco/8XyKH8bAhBVCgTT3/DE=
+Received: from DM6PR03CA0053.namprd03.prod.outlook.com (2603:10b6:5:100::30)
+ by BN7PR03MB3780.namprd03.prod.outlook.com (2603:10b6:408:31::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22; Wed, 13 Nov
+ 2019 08:35:16 +0000
+Received: from BL2NAM02FT039.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::207) by DM6PR03CA0053.outlook.office365.com
+ (2603:10b6:5:100::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22 via Frontend
+ Transport; Wed, 13 Nov 2019 08:35:16 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT039.mail.protection.outlook.com (10.152.77.152) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2451.23
+ via Frontend Transport; Wed, 13 Nov 2019 08:35:16 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xAD8Z7Pk003224
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 13 Nov 2019 00:35:07 -0800
+Received: from tachici-Precision-5530.ad.analog.com (10.48.65.123) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 13 Nov 2019 03:35:15 -0500
+From:   Alexandru Tachici <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <lars@metafoo.de>, <jic23@kernel.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH] iio: dac: ad7303: use regulator get optional to check for ext supply
+Date:   Wed, 13 Nov 2019 10:33:03 +0200
+Message-ID: <20191113083303.2229-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAC=E7cXaSya6YxqhuiLsNy1B9jdZ=7DwTgkJ9fXQ9LauLpjhSg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(39860400002)(376002)(199004)(189003)(8936002)(48376002)(86362001)(7636002)(50226002)(305945005)(51416003)(486006)(1076003)(246002)(8676002)(126002)(70206006)(476003)(7696005)(70586007)(5660300002)(44832011)(2870700001)(2616005)(2906002)(50466002)(26005)(107886003)(336012)(4326008)(36756003)(47776003)(6666004)(316002)(54906003)(478600001)(186003)(106002)(426003)(356004)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR03MB3780;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 66a035a0-4654-4cac-ba7b-08d7681468db
+X-MS-TrafficTypeDiagnostic: BN7PR03MB3780:
+X-Microsoft-Antispam-PRVS: <BN7PR03MB37803ACC4190BECBAACF932890760@BN7PR03MB3780.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
+X-Forefront-PRVS: 0220D4B98D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /Zs0XXy2MxmDJvWv+QkUAyn8of2wqloPl/vz2NGQBNKBrKUbe7nAr8Ra5bPebJWbXvKr52LybEhA1n75WObvp6daldU3NzEQhbpwCXW9zXEHdSXJWJsFAGyVNuTzImEbXg3eBBtocAuH2SbGhlaxp1etOWp7YpeextRekwFKX2oq/u5LYaG29SYPgIIF5z0DtBHzHu500NopZTjSosMX1Wl02v0M751Bs61L6k7iH2HYxoBY2Ik5AKrbNLzGMBZHSrhyNMGXY17ojYK1y+YDRTL7dvQGxUHCqREs/x9ueQAKFbRCWK/nOO/mJk9EwQbu5z14dTjR9kTINhTC/2+cnGO2HVgcheXNWXgaP+iSt3Zv3P9dhtt8eOM458wJoj0dGTJRyGRymZIcBBeEe2eqiBtcKUzsHv4EMJKTeUWNifsRMDo+sU9lf/EJy4xzJCCX
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2019 08:35:16.3639
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66a035a0-4654-4cac-ba7b-08d7681468db
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB3780
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-13_02:2019-11-13,2019-11-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=981 malwarescore=0 adultscore=0
+ impostorscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911130078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/11/2019 10.35, Dave Chiluk wrote:
-> I was going to write this exact patch, but you beat me to it.  I like
-> that it's sequestered into a separate setting.  This would be very
-> useful for interactive applications that have cfs bandwidth control
-> enabled *(cough* kubernetes).  Are you planning on submitting the
-> plumbing for this feature back into docker/containerd/lxc/other
-> container orchestrators?
+Previously, the code was using the of_read_property_bool() to check if
+an external regulator was provided. However, this is redundant, as it's
+more simple/direct to just ask the regulator is provided, via a
+`devm_regulator_get_optional()` call.
 
-I haven't thought about that yet.
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/iio/dac/ad7303.c | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
-Burst size should have reasonable default, like quota for 4 periods.
-So, per-container configuration might be redundant.
+diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
+index 14bbac6bee98..e0c5fed4475c 100644
+--- a/drivers/iio/dac/ad7303.c
++++ b/drivers/iio/dac/ad7303.c
+@@ -12,7 +12,6 @@
+ #include <linux/slab.h>
+ #include <linux/sysfs.h>
+ #include <linux/regulator/consumer.h>
+-#include <linux/of.h>
+ 
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+@@ -202,7 +201,6 @@ static int ad7303_probe(struct spi_device *spi)
+ 	const struct spi_device_id *id = spi_get_device_id(spi);
+ 	struct iio_dev *indio_dev;
+ 	struct ad7303_state *st;
+-	bool ext_ref;
+ 	int ret;
+ 
+ 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+@@ -224,24 +222,13 @@ static int ad7303_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (spi->dev.of_node) {
+-		ext_ref = of_property_read_bool(spi->dev.of_node,
+-				"REF-supply");
+-	} else {
+-		struct ad7303_platform_data *pdata = spi->dev.platform_data;
+-		if (pdata && pdata->use_external_ref)
+-			ext_ref = true;
+-		else
+-		    ext_ref = false;
++	st->vref_reg = devm_regulator_get_optional(&spi->dev, "REF");
++	if (IS_ERR(st->vref_reg)) {
++		ret = PTR_ERR(st->vref_reg);
++		goto err_disable_vdd_reg;
+ 	}
+ 
+-	if (ext_ref) {
+-		st->vref_reg = devm_regulator_get(&spi->dev, "REF");
+-		if (IS_ERR(st->vref_reg)) {
+-			ret = PTR_ERR(st->vref_reg);
+-			goto err_disable_vdd_reg;
+-		}
+-
++	if (st->vref_reg) {
+ 		ret = regulator_enable(st->vref_reg);
+ 		if (ret)
+ 			goto err_disable_vdd_reg;
+-- 
+2.20.1
 
-> 
-> Also this is very similar in desired behavior to a patchset submitted
-> by Cong Wang https://lore.kernel.org/patchwork/patch/907450/
-> .Although, I like this implementation better due to it's simplicity.
-> I guess a lot of the simplification comes from not having to deal with
-> the expiration logic.
-> 
-> Additional comments inlined.  Documentation edits, and my preference
-> for a full burst bank on setting.
-> 
-> Otherwise looks good to me.
-> + Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
-> 
-> I also tested this with my simple test application I use for
-> validating runtime accuracy https://github.com/indeedeng/fibtest.  And
-> everything looks reasonable here.  I'll try to do a bit more testing
-> but so far I'm happy.  Hopefully Ben will give a +1 to this as well.
-
-I've loaded it with fio, something like:
-fio --name=test --ioengine=cpuio --time_based=1 --runtime=600 --cpuload=10 --cpuchunks=100000 --numjobs=10
-
-Statistics in cpu.stat allows to see behaviour even without feedback from workload.
-
-Precise testing isn't trivial though - per-cpu slices adds much noise.
-
-> 
-> Thanks!
-> 
-> On Thu, Nov 7, 2019 at 6:12 AM Konstantin Khlebnikov
-> <khlebnikov@yandex-team.ru> wrote:
->>
->> Currently CFS bandwidth controller assigns cpu.cfs_quota_us runtime into
->> global pool every cpu.cfs_period_us. All unused runtime is expired.
->>
->> Since commit de53fd7aedb1 ("sched/fair: Fix low cpu usage with high
->> throttling by removing expiration of cpu-local slices") slice assigned
->> to cpu does not expire. This allows to serve tiny bursts (upto 1ms),
->> but this runtime pool is cpu-bound and not transferred between cpus.
->>
->> Setup for interactive workload with irregular cpu consumption have to set
->> quota according to relatively short spikes of cpu usage. This eliminates
->> possibility of control for average cpu usage. Increasing period and quota
->> proportionally for getting bigger runtime chunks is not an option because
->> if even bigger spike deplete global pool then execution will stuck until
->> end of period and next refill.
->>
->> This patch adds limited accumulation of unused runtime from past periods.
->> Accumulated runtime does not expire. It stays in global pool and could
->> be used by any cpu. Average cpu usage stays limited with quota / period,
->> but spiky workload could use more cpu power for a short period of time.
->>
->> Size of pool for burst runtime is set in attribute cpu.cfs_burst_us.
->> Default is 0, which reflects current behavior.
->>
->> Statistics for used bust runtime is shown in cpu.stat as "burst_time".
->>
->> Example setup:
->> cpu.cfs_period_us = 100ms
->> cpu.cfs_quota_us = 200ms
->> cpu.cfs_burst_us = 300ms
->>
->> Average cpu usage stays limited with 2 cpus (quota / period), but cgroup
->> could accumulate runtime (burst) and for 100ms could utilize up to 5 cpus
->> (quota / period + burst / 100ms), or 3 cpus for 300ms, an so on.
->>
->> Implementation is simple. All logic is in __refill_cfs_bandwidth_runtime().
->> The rest changes are interface for cgroup and cgroup2.
->>
->> For cgroup2 burst is set as third number in attribute cpu.max:
->> cpu.max = $QUOTA $PERIOD $BURST
->>
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->> ---
->>   Documentation/admin-guide/cgroup-v2.rst |   15 +++--
->>   Documentation/scheduler/sched-bwc.rst   |    8 ++-
->>   kernel/sched/core.c                     |   88 +++++++++++++++++++++++++------
->>   kernel/sched/fair.c                     |   34 ++++++++++--
->>   kernel/sched/sched.h                    |    4 +
->>   5 files changed, 119 insertions(+), 30 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
->> index 5361ebec3361..8c3cc3d882ba 100644
->> --- a/Documentation/admin-guide/cgroup-v2.rst
->> +++ b/Documentation/admin-guide/cgroup-v2.rst
->> @@ -981,11 +981,12 @@ All time durations are in microseconds.
->>          - user_usec
->>          - system_usec
->>
->> -       and the following three when the controller is enabled:
->> +       and the following four when the controller is enabled:
->>
->>          - nr_periods
->>          - nr_throttled
->>          - throttled_usec
->> +       - burst_usec
->>
->>     cpu.weight
->>          A read-write single value file which exists on non-root
->> @@ -1006,16 +1007,18 @@ All time durations are in microseconds.
->>          the closest approximation of the current weight.
->>
->>     cpu.max
->> -       A read-write two value file which exists on non-root cgroups.
->> -       The default is "max 100000".
->> +       A read-write 1..3 values file which exists on non-root cgroups.
->> +       The default is "max 100000 0".
->>
->>          The maximum bandwidth limit.  It's in the following format::
->>
->> -         $MAX $PERIOD
->> +         $MAX $PERIOD $BURST
->>
->>          which indicates that the group may consume upto $MAX in each
->> -       $PERIOD duration.  "max" for $MAX indicates no limit.  If only
->> -       one number is written, $MAX is updated.
->> +       $PERIOD duration and accumulates upto $BURST time for bursts.
->> +
->> +       "max" for $MAX indicates no limit.
->> +       If only one number is written, $MAX is updated.
->>
->>     cpu.pressure
->>          A read-only nested-key file which exists on non-root cgroups.
->> diff --git a/Documentation/scheduler/sched-bwc.rst b/Documentation/scheduler/sched-bwc.rst
->> index 9801d6b284b1..5f1cac7b2d44 100644
->> --- a/Documentation/scheduler/sched-bwc.rst
->> +++ b/Documentation/scheduler/sched-bwc.rst
->> @@ -27,12 +27,14 @@ Quota and period are managed within the cpu subsystem via cgroupfs.
->>
->>   cpu.cfs_quota_us: the total available run-time within a period (in microseconds)
->>   cpu.cfs_period_us: the length of a period (in microseconds)
->> +cpu.cfs_burst_us: the maxumum size of burst run-time pool (in microseconds)
-> 
-> maxumum -> maximum
-> 
->>   cpu.stat: exports throttling statistics [explained further below]
->>
->>   The default values are::
->>
->>          cpu.cfs_period_us=100ms
->> -       cpu.cfs_quota=-1
->> +       cpu.cfs_quota_us=-1
->> +       cpu.cfs_burst_us=0
->>
->>   A value of -1 for cpu.cfs_quota_us indicates that the group does not have any
->>   bandwidth restriction in place, such a group is described as an unconstrained
->> @@ -51,6 +53,9 @@ and return the group to an unconstrained state once more.
->>   Any updates to a group's bandwidth specification will result in it becoming
->>   unthrottled if it is in a constrained state.
->>
->> +Writing positive value into cpu.cfs_burst_us allows to allcumulate unused
->> +run-time (upto this value) and use it later in addition to assigned quota.
-> Writing positive value into cpu.cfs_burst_us allows unused quota to
-> accumulate up to this value and be used later in addition to assigned
-> quota.
-> 
->> +
->>   System wide settings
->>   --------------------
->>   For efficiency run-time is transferred between the global pool and CPU local
->> @@ -75,6 +80,7 @@ cpu.stat:
->>   - nr_throttled: Number of times the group has been throttled/limited.
->>   - throttled_time: The total time duration (in nanoseconds) for which entities
->>     of the group have been throttled.
->> +- burst_time: The total running time consumed from burst pool.
->>
->>   This interface is read-only.
->>
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index dd05a378631a..010b79c45200 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -7354,7 +7354,8 @@ static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
->>
->>   static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
->>
->> -static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
->> +static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota,
->> +                               u64 burst)
->>   {
->>          int i, ret = 0, runtime_enabled, runtime_was_enabled;
->>          struct cfs_bandwidth *cfs_b = &tg->cfs_bandwidth;
->> @@ -7399,12 +7400,13 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
->>          raw_spin_lock_irq(&cfs_b->lock);
->>          cfs_b->period = ns_to_ktime(period);
->>          cfs_b->quota = quota;
->> -
->> -       __refill_cfs_bandwidth_runtime(cfs_b);
->> +       cfs_b->burst = burst;
-> 
-> + cfs_b->burst_runtime = burst;
-> I think we should default to a full burst bank.  After all, during
-> startup applications very likely to need additional CPU.  This is a
-> regular pain point for our applications..  By providing burst bank
-> early we help to mitigate slow start-up times for cpu limited
-> applications.
-
-Makes sense.
-
-> 
->>
->>          /* Restart the period timer (if active) to handle new period expiry: */
->> -       if (runtime_enabled)
->> +       if (runtime_enabled) {
->> +               __refill_cfs_bandwidth_runtime(cfs_b);
->>                  start_cfs_bandwidth(cfs_b);
->> +       }
->>
->>          raw_spin_unlock_irq(&cfs_b->lock);
->>
->> @@ -7432,9 +7434,10 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
->>
->>   static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
->>   {
->> -       u64 quota, period;
->> +       u64 quota, period, burst;
->>
->>          period = ktime_to_ns(tg->cfs_bandwidth.period);
->> +       burst = tg->cfs_bandwidth.burst;
->>          if (cfs_quota_us < 0)
->>                  quota = RUNTIME_INF;
->>          else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
->> @@ -7442,7 +7445,7 @@ static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
->>          else
->>                  return -EINVAL;
->>
->> -       return tg_set_cfs_bandwidth(tg, period, quota);
->> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
->>   }
->>
->>   static long tg_get_cfs_quota(struct task_group *tg)
->> @@ -7460,15 +7463,16 @@ static long tg_get_cfs_quota(struct task_group *tg)
->>
->>   static int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
->>   {
->> -       u64 quota, period;
->> +       u64 quota, period, burst;
->>
->>          if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
->>                  return -EINVAL;
->>
->>          period = (u64)cfs_period_us * NSEC_PER_USEC;
->>          quota = tg->cfs_bandwidth.quota;
->> +       burst = tg->cfs_bandwidth.burst;
->>
->> -       return tg_set_cfs_bandwidth(tg, period, quota);
->> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
->>   }
->>
->>   static long tg_get_cfs_period(struct task_group *tg)
->> @@ -7481,6 +7485,28 @@ static long tg_get_cfs_period(struct task_group *tg)
->>          return cfs_period_us;
->>   }
->>
->> +static long tg_get_cfs_burst(struct task_group *tg)
->> +{
->> +       u64 cfs_burst_us = tg->cfs_bandwidth.burst;
->> +
->> +       do_div(cfs_burst_us, NSEC_PER_USEC);
->> +       return cfs_burst_us;
->> +}
->> +
->> +static int tg_set_cfs_burst(struct task_group *tg, long cfs_burst_us)
->> +{
->> +       u64 quota, period, burst;
->> +
->> +       if ((u64)cfs_burst_us > U64_MAX / NSEC_PER_USEC)
->> +               return -EINVAL;
->> +
->> +       period = ktime_to_ns(tg->cfs_bandwidth.period);
->> +       quota = tg->cfs_bandwidth.quota;
->> +       burst = (u64)cfs_burst_us * NSEC_PER_USEC;
->> +
->> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
->> +}
->> +
->>   static s64 cpu_cfs_quota_read_s64(struct cgroup_subsys_state *css,
->>                                    struct cftype *cft)
->>   {
->> @@ -7505,6 +7531,18 @@ static int cpu_cfs_period_write_u64(struct cgroup_subsys_state *css,
->>          return tg_set_cfs_period(css_tg(css), cfs_period_us);
->>   }
->>
->> +static u64 cpu_cfs_burst_read_u64(struct cgroup_subsys_state *css,
->> +                                 struct cftype *cft)
->> +{
->> +       return tg_get_cfs_burst(css_tg(css));
->> +}
->> +
->> +static int cpu_cfs_burst_write_u64(struct cgroup_subsys_state *css,
->> +                                  struct cftype *cftype, u64 cfs_burst_us)
->> +{
->> +       return tg_set_cfs_burst(css_tg(css), cfs_burst_us);
->> +}
->> +
->>   struct cfs_schedulable_data {
->>          struct task_group *tg;
->>          u64 period, quota;
->> @@ -7596,6 +7634,7 @@ static int cpu_cfs_stat_show(struct seq_file *sf, void *v)
->>          seq_printf(sf, "nr_periods %d\n", cfs_b->nr_periods);
->>          seq_printf(sf, "nr_throttled %d\n", cfs_b->nr_throttled);
->>          seq_printf(sf, "throttled_time %llu\n", cfs_b->throttled_time);
->> +       seq_printf(sf, "burst_time %llu\n", cfs_b->burst_time);
->>
->>          if (schedstat_enabled() && tg != &root_task_group) {
->>                  u64 ws = 0;
->> @@ -7657,6 +7696,11 @@ static struct cftype cpu_legacy_files[] = {
->>                  .read_u64 = cpu_cfs_period_read_u64,
->>                  .write_u64 = cpu_cfs_period_write_u64,
->>          },
->> +       {
->> +               .name = "cfs_burst_us",
->> +               .read_u64 = cpu_cfs_burst_read_u64,
->> +               .write_u64 = cpu_cfs_burst_write_u64,
->> +       },
->>          {
->>                  .name = "stat",
->>                  .seq_show = cpu_cfs_stat_show,
->> @@ -7699,15 +7743,20 @@ static int cpu_extra_stat_show(struct seq_file *sf,
->>                  struct task_group *tg = css_tg(css);
->>                  struct cfs_bandwidth *cfs_b = &tg->cfs_bandwidth;
->>                  u64 throttled_usec;
->> +               u64 burst_usec;
->>
->>                  throttled_usec = cfs_b->throttled_time;
->>                  do_div(throttled_usec, NSEC_PER_USEC);
->>
->> +               burst_usec = cfs_b->burst_time;
->> +               do_div(burst_usec, NSEC_PER_USEC);
->> +
->>                  seq_printf(sf, "nr_periods %d\n"
->>                             "nr_throttled %d\n"
->> -                          "throttled_usec %llu\n",
->> +                          "throttled_usec %llu\n"
->> +                          "burst_usec %llu\n",
->>                             cfs_b->nr_periods, cfs_b->nr_throttled,
->> -                          throttled_usec);
->> +                          throttled_usec, burst_usec);
->>          }
->>   #endif
->>          return 0;
->> @@ -7777,26 +7826,29 @@ static int cpu_weight_nice_write_s64(struct cgroup_subsys_state *css,
->>   #endif
->>
->>   static void __maybe_unused cpu_period_quota_print(struct seq_file *sf,
->> -                                                 long period, long quota)
->> +                                                 long period, long quota,
->> +                                                 long burst)
->>   {
->>          if (quota < 0)
->>                  seq_puts(sf, "max");
->>          else
->>                  seq_printf(sf, "%ld", quota);
->>
->> -       seq_printf(sf, " %ld\n", period);
->> +       seq_printf(sf, " %ld %ld\n", period, burst);
->>   }
->>
->>   /* caller should put the current value in *@periodp before calling */
->>   static int __maybe_unused cpu_period_quota_parse(char *buf,
->> -                                                u64 *periodp, u64 *quotap)
->> +                                                u64 *periodp, u64 *quotap,
->> +                                                s64 *burstp)
->>   {
->>          char tok[21];   /* U64_MAX */
->>
->> -       if (sscanf(buf, "%20s %llu", tok, periodp) < 1)
->> +       if (sscanf(buf, "%20s %llu %llu", tok, periodp, burstp) < 1)
->>                  return -EINVAL;
->>
->>          *periodp *= NSEC_PER_USEC;
->> +       *burstp *= NSEC_PER_USEC;
->>
->>          if (sscanf(tok, "%llu", quotap))
->>                  *quotap *= NSEC_PER_USEC;
->> @@ -7813,7 +7865,8 @@ static int cpu_max_show(struct seq_file *sf, void *v)
->>   {
->>          struct task_group *tg = css_tg(seq_css(sf));
->>
->> -       cpu_period_quota_print(sf, tg_get_cfs_period(tg), tg_get_cfs_quota(tg));
->> +       cpu_period_quota_print(sf, tg_get_cfs_period(tg), tg_get_cfs_quota(tg),
->> +                              tg_get_cfs_burst(tg));
->>          return 0;
->>   }
->>
->> @@ -7822,12 +7875,13 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
->>   {
->>          struct task_group *tg = css_tg(of_css(of));
->>          u64 period = tg_get_cfs_period(tg);
->> +       s64 burst = tg_get_cfs_burst(tg);
->>          u64 quota;
->>          int ret;
->>
->> -       ret = cpu_period_quota_parse(buf, &period, &quota);
->> +       ret = cpu_period_quota_parse(buf, &period, &quota, &burst);
->>          if (!ret)
->> -               ret = tg_set_cfs_bandwidth(tg, period, quota);
->> +               ret = tg_set_cfs_bandwidth(tg, period, quota, burst);
->>          return ret ?: nbytes;
->>   }
->>   #endif
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 682a754ea3e1..26b8dac67c79 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -4353,16 +4353,26 @@ static inline u64 sched_cfs_bandwidth_slice(void)
->>   }
->>
->>   /*
->> - * Replenish runtime according to assigned quota. We use sched_clock_cpu
->> - * directly instead of rq->clock to avoid adding additional synchronization
->> - * around rq->lock.
->> + * Replenish runtime according to assigned quota.
->> + * Called only if quota != RUNTIME_INF.
->>    *
->>    * requires cfs_b->lock
->>    */
->>   void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
->>   {
->> -       if (cfs_b->quota != RUNTIME_INF)
->> -               cfs_b->runtime = cfs_b->quota;
->> +       u64 runtime = cfs_b->runtime;
->> +
->> +       /*
->> +        * Preserve past runtime up to burst size. If remaining runtime lower
->> +        * than previous burst runtime then account delta as used burst time.
->> +        */
->> +       if (runtime > cfs_b->burst)
->> +               runtime = cfs_b->burst;
->> +       else if (runtime < cfs_b->burst_runtime)
->> +               cfs_b->burst_time += cfs_b->burst_runtime - runtime;
->> +
->> +       cfs_b->burst_runtime = runtime;
->> +       cfs_b->runtime = runtime + cfs_b->quota;
->>   }
->>
->>   static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
->> @@ -4968,6 +4978,9 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
->>          cfs_b->runtime = 0;
->>          cfs_b->quota = RUNTIME_INF;
->>          cfs_b->period = ns_to_ktime(default_cfs_period());
->> +       cfs_b->burst = 0;
->> +       cfs_b->burst_runtime = 0;
->> +       cfs_b->burst_time = 0;
->>
->>          INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
->>          hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
->> @@ -4986,14 +4999,23 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
->>
->>   void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
->>   {
->> +       u64 overrun;
->> +
->>          lockdep_assert_held(&cfs_b->lock);
->>
->>          if (cfs_b->period_active)
->>                  return;
->>
->>          cfs_b->period_active = 1;
->> -       hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
->> +       overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
->>          hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
->> +
->> +       /*
->> +        * Refill runtime for periods of inactivity and current.
->> +        * __refill_cfs_bandwidth_runtime() will cut excess.
->> +        */
->> +       cfs_b->runtime += cfs_b->quota * overrun;
->> +       __refill_cfs_bandwidth_runtime(cfs_b);
->>   }
->>
->>   static void destroy_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
->> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
->> index 0db2c1b3361e..eaecd7298f80 100644
->> --- a/kernel/sched/sched.h
->> +++ b/kernel/sched/sched.h
->> @@ -344,10 +344,14 @@ struct cfs_bandwidth {
->>          struct hrtimer          slack_timer;
->>          struct list_head        throttled_cfs_rq;
->>
->> +       u64                     burst;
->> +       u64                     burst_runtime;
->> +
->>          /* Statistics: */
->>          int                     nr_periods;
->>          int                     nr_throttled;
->>          u64                     throttled_time;
->> +       u64                     burst_time;
->>   #endif
->>   };
->>
->>
