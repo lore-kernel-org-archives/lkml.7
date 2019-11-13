@@ -2,82 +2,130 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F446C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2B4C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66E8206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686D1206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="O/8ZMvCU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kAKj678F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfKMT0h (ORCPT
+        id S1727223AbfKMT22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:26:37 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:44420 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfKMT0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:26:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wryp9jGGVuImtf+976fNyBccolmYyzey/YrHktJaiVI=; b=O/8ZMvCU84EUDuGhqEK6xz7Hgd
-        Aft5QSY1fJuN37QnylH4SD0n/xaflJz9+o9+HlujKjQg/X+3FlCFDl56ni0YB5rAG4xhy2bqvrfvP
-        V1PN52aB9LdcKle6B+e1SIUJdxGQTL0fY/q7n9MjnVrQu5D19wdB525O2lc0O/PH5Ez8=;
-Received: from p200300ccff08d9001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff08:d900:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iUyHi-0003Z7-My; Wed, 13 Nov 2019 20:26:34 +0100
-Date:   Wed, 13 Nov 2019 20:26:33 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org, phh@phh.me,
-        b.galvani@gmail.com, stefan@agner.ch
-Subject: Re: [PATCH] regulator: rn5t618: fix rc5t619 ldo10 enable
-Message-ID: <20191113202633.66a91d96@aktux>
-In-Reply-To: <20191113183211.GB4402@sirena.co.uk>
-References: <20191113182643.23885-1-andreas@kemnade.info>
-        <20191113183211.GB4402@sirena.co.uk>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 13 Nov 2019 14:28:28 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42146 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfKMT20 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 14:28:26 -0500
+Received: by mail-pg1-f196.google.com with SMTP id q17so1966260pgt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 11:28:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MAMD8GrM8dHDXrjY8rB11bYG41rlwSHG+RL00OkRN/o=;
+        b=kAKj678FOeRgSTgvgGizY5G9JM6SOedytMkY28h49lcSAdCwJa8TigOkgPmwgEAmFl
+         7lVRSFwk2qORKcwSLUM1DiKTx71kKurWIMaiBtzw/+zUI6DyVo8nIr54GG+84a7z/N4L
+         bJBoL7U57vlio0KtxJPnXPQqNZEmpADcUyz47F1FYT9O2hvMqk1AigAhyOYHwxP8TBqP
+         dzNxLUWBNVslIFHB55wEXdMx4sjqo9BLrz3POeQh4iFTei538Q8lIw7AaU8yzPmro5o4
+         1mTDOZMeWMLxxLNlCNY4RH10WHgw4Hu8lheD6ExtAfsMPWc5bWNscnVoslU1zFhBQtM5
+         VnRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MAMD8GrM8dHDXrjY8rB11bYG41rlwSHG+RL00OkRN/o=;
+        b=boBINU1iqhkHBPSGbMJ7VyI/5i734EkqoDsGgX+goXoNlriLyucrgYl43AjB319oaO
+         rYtl0wnHRWpiivij0wTWqaaA46dJJI+H33VSVFkSw4DGZCx/9pn1X5ZtLvuAwOFOOCUJ
+         JPJBQCzZo+Q3iA5A0qDZmwcNh+vW75dUeBxILe7k0iI2gbClYSfod3MiugdjFUK7DLnq
+         kNa2brOkywIWtfcaSxU4Cp/J/uleKFYYsaXgMfe3CfIOMpU6gF6Xov08lxW2effrP4JM
+         3kfSTz3pGr6/fWlLTW/8qweyB0fmp6/fRJBK2vMe+mE8vRIqqwkKZHlfU695SqKHNfUI
+         2E4w==
+X-Gm-Message-State: APjAAAXmKFU0/8QJDRSMcgsVBJ4hgFVVpK+d0T3wFLjzTP/raVZRAfAM
+        EwNvc9qU2a3K46LRPb/zz+LNvg==
+X-Google-Smtp-Source: APXvYqzVZUY1tsQDfkbM7m/TmFRXF1CAa7JwqkS6wPqF7BuiwbTHdXn0YX0vI9kQk5s72HxPcOWbHg==
+X-Received: by 2002:a62:2686:: with SMTP id m128mr6406494pfm.143.1573673304126;
+        Wed, 13 Nov 2019 11:28:24 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z7sm3437838pgk.10.2019.11.13.11.28.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 11:28:23 -0800 (PST)
+Date:   Wed, 13 Nov 2019 11:28:21 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Wenwen Wang <wenwen@cs.uga.edu>, Kalle Valo <kvalo@codeaurora.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "open list:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER" 
+        <ath10k@lists.infradead.org>,
+        "open list:NETWORKING DRIVERS (WIRELESS)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        jeffrey.l.hugo@gmail.com, govinds@codeaurora.org
+Subject: Re: [PATCH] ath10k: add cleanup in ath10k_sta_state()
+Message-ID: <20191113192821.GA3441686@builder>
+References: <1565903072-3948-1-git-send-email-wenwen@cs.uga.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565903072-3948-1-git-send-email-wenwen@cs.uga.edu>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu 15 Aug 14:04 PDT 2019, Wenwen Wang wrote:
 
-On Wed, 13 Nov 2019 18:32:11 +0000
-Mark Brown <broonie@kernel.org> wrote:
-
-> On Wed, Nov 13, 2019 at 07:26:43PM +0100, Andreas Kemnade wrote:
-> > LDO9 and LDO10 were listed with the same enable bits.
-> > That looks insane and there are no provisions in the code for handling such
-> > a special case. Also other out-of-tree drivers use a separate bit to
-> > enable it.  
+> If 'sta->tdls' is false, no cleanup is executed, leading to memory/resource
+> leaks, e.g., 'arsta->tx_stats'. To fix this issue, perform cleanup before
+> go to the 'exit' label.
 > 
-> This definitely looks like a bug but without a datasheet or testing it's
-> worrying guessing at the register bit to use for the enable for the
-> second LDO...
 
-I am hoping for a Tested-By: from the one who has submitted the patch
-for the regulator. 
+Unfortunately this patch consistently crashes all my msm8998, sdm845 and
+qcs404 devices (running ath10k_snoc).  Upon trying to join a network the
+WiFi firmware crashes with the following:
 
-Well, it is not just guessing, it is there in the url I referenced. But
-I would of course prefer a better source. At first I wanted to spread
-my findings.
-I am not pushing anyone to accept it without Tested-By/Reviewed-Bys.
-What is a good way to avoid people bumping into this bug?
-Maybe I can find the right C on the board to check.
+[  124.315286] wlan0: authenticate with 70:3a:cb:4d:34:f3
+[  124.334051] wlan0: send auth to 70:3a:cb:4d:34:f3 (try 1/3)
+[  124.338828] wlan0: authenticated
+[  124.342470] wlan0: associate with 70:3a:cb:4d:34:f3 (try 1/3)
+[  124.347223] wlan0: RX AssocResp from 70:3a:cb:4d:34:f3 (capab=0x1011 status=0 aid=2)
+[  124.402535] qcom-q6v5-mss 4080000.remoteproc: fatal error received: err_qdi.c:456:EF:wlan_process:1:cmnos_thread.c:3900:Asserted in wlan_vdev.c:_wlan_vdev_up:3219
+
+Can we please revert it for v5.5?
 
 Regards,
-Andreas
+Bjorn
+
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> ---
+>  drivers/net/wireless/ath/ath10k/mac.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+> index 0606416..f99e6d2 100644
+> --- a/drivers/net/wireless/ath/ath10k/mac.c
+> +++ b/drivers/net/wireless/ath/ath10k/mac.c
+> @@ -6548,8 +6548,12 @@ static int ath10k_sta_state(struct ieee80211_hw *hw,
+>  
+>  		spin_unlock_bh(&ar->data_lock);
+>  
+> -		if (!sta->tdls)
+> +		if (!sta->tdls) {
+> +			ath10k_peer_delete(ar, arvif->vdev_id, sta->addr);
+> +			ath10k_mac_dec_num_stations(arvif, sta);
+> +			kfree(arsta->tx_stats);
+>  			goto exit;
+> +		}
+>  
+>  		ret = ath10k_wmi_update_fw_tdls_state(ar, arvif->vdev_id,
+>  						      WMI_TDLS_ENABLE_ACTIVE);
+> -- 
+> 2.7.4
+> 
