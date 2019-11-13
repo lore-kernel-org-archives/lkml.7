@@ -2,122 +2,207 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFB5C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929DFC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D209205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PiT6v1oF"
+	by mail.kernel.org (Postfix) with ESMTP id 680EC23898
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbfKMP25 (ORCPT
+        id S1728274AbfKMQMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:28:57 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45288 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727640AbfKMP25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:28:57 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n21so3010080ljg.12;
-        Wed, 13 Nov 2019 07:28:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=eHN3oJvzngOstWucvggCQJs1qVsjrYE0aT79wNfZxF0=;
-        b=PiT6v1oF/z8ndRDu3IQtqwt0ZdFOMuDJOjQ+lQB72WcqYjuNuQt0UMCAe7d5Hof1PX
-         U4c1VBSlM+hCFIR4cLnofV+c6dBtiWBwts3PReuIXYKKFTYUgzMKMmdyjEaKIlsJ4qHb
-         OfgOOsw4WwXuGX5g5llS/V0Cmz4kdA8YGntyO9mZ2FuK0TEZJ6D0gLPbrN3Oqp5R8e3r
-         wG6aDCatmrm4IiZjQiwa+MKQKex+NoncYNQqIxnr9TwfnyDkGhtq/7fvZdg6HmzWRMdK
-         ESy1m8TK+1asOnj9PB+17tscXlzbCHRp6J2xUreitjqYJ+pw42Sls4sS3FCtM6pHzVBA
-         ngDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=eHN3oJvzngOstWucvggCQJs1qVsjrYE0aT79wNfZxF0=;
-        b=cxvmHnjYkfGNnhno/5eMN0FiGGWNV5zcFm7QUWsXy8ACV9y+1h10BGra/X8hM2j7s1
-         bhGzoYxYmlrYbcMbJGnmMryIDlhUZnlerMqcsXlzPOdgrhLBcqVKdGuMeT+vrxKDV3GE
-         IuWxvIUJ/3MQmdQPyucyGDcXmP8fd7wEh5wKLvBns0t64orVYogEk+XJY4iwKkgJD0XJ
-         CEaINT6ixE8xnycBm20h7sbWadntUWGRFQ/FSh1Ov3Ot/Jluw3ViRQjEzEoQNlMNClPq
-         HitnVU+Bb7YCO2ir/MC4HZ+JJANlm0hQcZ3m0pclbRI9IZF3CcBW3VxaXV/G50VvAIge
-         pmBg==
-X-Gm-Message-State: APjAAAUNfkKOzLdJXAcjjdQHByfhaDnP3tLnC9Q1cHMLIaXdTuW0Rnym
-        NN2F8eRo2Z8iIvouwQBL94TfNeR1
-X-Google-Smtp-Source: APXvYqwn0dKaDZr1L/PaEHdOkc9Kj+A99l6tgP4djrlK7yDVVK/GNCweEoa1AslDT7gTcFY+eN14dw==
-X-Received: by 2002:a05:651c:38f:: with SMTP id e15mr3030692ljp.107.1573658934687;
-        Wed, 13 Nov 2019 07:28:54 -0800 (PST)
-Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
-        by smtp.gmail.com with ESMTPSA id a1sm1261762lfg.11.2019.11.13.07.28.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 07:28:54 -0800 (PST)
-Subject: Re: [PATCH] proc: Allow restricting permissions in /proc/sys
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>
-References: <ed51f7dd-50a2-fbf5-7ea8-4bab6d48279e@gmail.com>
- <201911121523.9C097E7D2C@keescook> <87ftir7rrw.fsf@x220.int.ebiederm.org>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <128e6282-8fa5-0d4b-62f2-0d7408b0d184@gmail.com>
-Date:   Wed, 13 Nov 2019 17:28:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 11:12:24 -0500
+Received: from mga07.intel.com ([134.134.136.100]:56589 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfKMQMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:12:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 08:12:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
+   d="scan'208";a="229792339"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Nov 2019 08:12:20 -0800
+Date:   Thu, 14 Nov 2019 00:12:20 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>, Willy Tarreau <w@1wt.eu>,
+        Yue Cao <ycao009@ucr.edu>, LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+Subject: Re: [LKP] [net] 19f92a030c: apachebench.requests_per_second -37.9%
+ regression
+Message-ID: <20191113161220.GE65640@shbuild999.sh.intel.com>
+References: <20191108083513.GB29418@shao2-debian>
+ <20191113103501.GD65640@shbuild999.sh.intel.com>
+ <CANn89iLnzk5bGzSD5RHa6yuny6c_iaRBE4MfKhTqbTzeX_aZ6A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87ftir7rrw.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANn89iLnzk5bGzSD5RHa6yuny6c_iaRBE4MfKhTqbTzeX_aZ6A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.11.2019 16.52, Eric W. Biederman wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> 
->> Ah! I see the v2 here now. :) Can you please include that in your
->> Subject next time, as "[PATCH v2] proc: Allow restricting permissions
->> in /proc/sys"? Also, can you adjust your MUA to not send a duplicate
->> attachment? The patch inline is fine.
->>
->> Please CC akpm as well, since I think this should likely go through the
->> -mm tree.
->>
->> Eric, do you have any other thoughts on this?
-> 
-> This works seems to be a cousin of having a proc that is safe for
-> containers.
-> 
-> Which leads to the whole mess that hide_pid is broken in proc last I
-> looked.
-> 
-> So my sense is that what we want to do is not allow changing the
-> permissions but to sort through what it will take to provide actual
-> mount options to proc (that are per mount).  Thus removing the sharing
-> that is (currently?) breaking the hide_pid option.
-> 
-> With such an infrastructure in place we can provide a mount option
-> (possibly default on when mounted by non-root) that keeps anything that
-> unprivileged users don't need out of proc.  Which is likely to be most
-> things except the pid files.
-> 
-> It is something I probably should be working on, but I got derailed
-> by the disaster that has that happened with mounting.    Even after
-> I gave code review and showed them how to avoid it the new mount api
-> is still not possible to use safely.
+Hi Eric,
 
-Are you perhaps referring to proc modernization patch set:
+On Wed, Nov 13, 2019 at 06:33:44AM -0800, Eric Dumazet wrote:
+> On Wed, Nov 13, 2019 at 2:35 AM Feng Tang <feng.tang@intel.com> wrote:
+> >
+> > Hi Eric,
+> >
+> > On Fri, Nov 08, 2019 at 04:35:13PM +0800, kernel test robot wrote:
+> > > Greeting,
+> > >
+> > > FYI, we noticed a -37.9% regression of apachebench.requests_per_second due to commit:
+> > >
+> > > commit: 19f92a030ca6d772ab44b22ee6a01378a8cb32d4 ("net: increase SOMAXCONN to 4096")
+> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> >
+> > Any thought on this? The test is actually:
+> >
+> >         sysctl -w net.ipv4.tcp_syncookies=0
+> 
+>
+> I have no plan trying to understand why anyone would disable syncookies .
+> This is a non starter really, since this makes a server vulnerable to
+> a trivial DOS attack.
+>
 
-https://lkml.org/lkml/2018/5/11/155
+Thanks for the prompt response.
 
-Getting that reviewed and committed would be awesome!
+This sysctl change was added to work around one old error when
+running the apachebench. The error was "apr_socket_recv: Connection
+reset by peer (104)"
 
--Topi
+I just removed the sysctl setting of "ipv4.tcp_synccookies" and 
+re-run the same benchmark in 0day, the regression is still there. 
+
+Thanks,
+Feng
+
+> 
+> Since the test changes a sysctl, you also can change other sysctls if
+> you really need to show a ' number of transactions' for a particular
+> benchmark.
+> 
+> The change on SOMAXCONN was driven by a security issue, and security
+> comes first.
+> 
+> 
+> >         enable_apache_mod auth_basic authn_core authn_file authz_core authz_host authz_user access_compat
+> >         systemctl restart apache2
+> >         ab -k -q -t 300 -n 1000000 -c 4000 127.0.0.1/
+> >
+> > And some info about apachebench result is:
+> >
+> > w/o patch:
+> >
+> >         Connection Times (ms)
+> >                       min  mean[+/-sd] median   max
+> >         Connect:        0    0  19.5      0    7145
+> >         Processing:     0    4 110.0      3   21647
+> >         Waiting:        0    2  92.4      1   21646
+> >         Total:          0    4 121.1      3   24762
+> >
+> > w/ patch:
+> >
+> >         Connection Times (ms)
+> >                       min  mean[+/-sd] median   max
+> >         Connect:        0    0  43.2      0    7143
+> >         Processing:     0   19 640.4      3   38708
+> >         Waiting:        0   24 796.5      1   38708
+> >         Total:          0   19 657.5      3   39725
+> >
+> >
+> > Thanks,
+> > Feng
+> >
+> > >
+> > > in testcase: apachebench
+> > > on test machine: 16 threads Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz with 48G memory
+> > > with following parameters:
+> > >
+> > >       runtime: 300s
+> > >       concurrency: 4000
+> > >       cluster: cs-localhost
+> > >       cpufreq_governor: performance
+> > >       ucode: 0x7000019
+> > >
+> > > test-description: apachebench is a tool for benchmarking your Apache Hypertext Transfer Protocol (HTTP) server.
+> > > test-url: https://httpd.apache.org/docs/2.4/programs/ab.html
+> > >
+> > > In addition to that, the commit also has significant impact on the following tests:
+> > >
+> > > +------------------+------------------------------------------------------------------+
+> > > | testcase: change | apachebench: apachebench.requests_per_second -37.5% regression   |
+> > > | test machine     | 16 threads Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz with 48G memory |
+> > > | test parameters  | cluster=cs-localhost                                             |
+> > > |                  | concurrency=8000                                                 |
+> > > |                  | cpufreq_governor=performance                                     |
+> > > |                  | runtime=300s                                                     |
+> > > |                  | ucode=0x7000019                                                  |
+> > > +------------------+------------------------------------------------------------------+
+> > >
+> > >
+> > > If you fix the issue, kindly add following tag
+> > > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > >
+> > >
+> > > Details are as below:
+> > > -------------------------------------------------------------------------------------------------->
+> > >
+> > >
+> > > To reproduce:
+> > >
+> > >         git clone https://github.com/intel/lkp-tests.git
+> > >         cd lkp-tests
+> > >         bin/lkp install job.yaml  # job file is attached in this email
+> > >         bin/lkp run     job.yaml
+> > >
+> > > =========================================================================================
+> > > cluster/compiler/concurrency/cpufreq_governor/kconfig/rootfs/runtime/tbox_group/testcase/ucode:
+> > >   cs-localhost/gcc-7/4000/performance/x86_64-rhel-7.6/debian-x86_64-2019-09-23.cgz/300s/lkp-bdw-de1/apachebench/0x7000019
+> > >
+> > > commit:
+> > >   6d6f0383b6 ("netdevsim: Fix use-after-free during device dismantle")
+> > >   19f92a030c ("net: increase SOMAXCONN to 4096")
+> > >
+> > > 6d6f0383b697f004 19f92a030ca6d772ab44b22ee6a
+> > > ---------------- ---------------------------
+> > >          %stddev     %change         %stddev
+> > >              \          |                \
+> > >      22640 ±  4%     +71.1%      38734        apachebench.connection_time.processing.max
+> > >      24701           +60.9%      39743        apachebench.connection_time.total.max
+> > >      22639 ±  4%     +71.1%      38734        apachebench.connection_time.waiting.max
+> > >      24701        +15042.0       39743        apachebench.max_latency.100%
+> > >      40454           -37.9%      25128        apachebench.requests_per_second
+> > >      25.69           +58.8%      40.79        apachebench.time.elapsed_time
+> > >      25.69           +58.8%      40.79        apachebench.time.elapsed_time.max
+> > >      79.00           -37.0%      49.75        apachebench.time.percent_of_cpu_this_job_got
+> > >      98.88           +61.0%     159.18        apachebench.time_per_request
+> > >     434631           -37.9%     269889        apachebench.transfer_rate
+> > >    1.5e+08 ± 18%    +109.5%  3.141e+08 ± 27%  cpuidle.C3.time
+> > >     578957 ±  7%     +64.1%     949934 ± 12%  cpuidle.C3.usage
+> > >      79085 ±  4%     +24.8%      98720        meminfo.AnonHugePages
+> > >      41176           +14.2%      47013        meminfo.PageTables
+> > >      69429           -34.9%      45222        meminfo.max_used_kB
+> > >      63.48           +12.7       76.15        mpstat.cpu.all.idle%
+> > >       2.42 ±  2%      -0.9        1.56        mpstat.cpu.all.soft%
+> > >      15.30            -5.2       10.13        mpstat.cpu.all.sys%
+> > >      18.80            -6.6       12.16        mpstat.cpu.all.usr%
+> > >      65.00           +17.7%      76.50        vmstat.cpu.id
+> > >      17.00           -35.3%      11.00        vmstat.cpu.us
+> > >       7.00 ± 24%     -50.0%       3.50 ± 14%  vmstat.procs.r
+> > >      62957           -33.3%      42012        vmstat.system.cs
+> > >      33174            -1.4%      32693        vmstat.system.in
