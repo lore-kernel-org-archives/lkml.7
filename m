@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33AFC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE656C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C22206EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE076206EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfKMVC1 (ORCPT
+        id S1727312AbfKMVC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:02:27 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38876 "EHLO
+        Wed, 13 Nov 2019 16:02:58 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38957 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfKMVCV (ORCPT
+        with ESMTP id S1727113AbfKMVC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:02:21 -0500
+        Wed, 13 Nov 2019 16:02:26 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iUzmJ-00066L-Gs; Wed, 13 Nov 2019 22:02:15 +0100
-Message-Id: <20191113210104.002114856@linutronix.de>
+        id 1iUzmS-00068V-31; Wed, 13 Nov 2019 22:02:24 +0100
+Message-Id: <20191113210105.276580787@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 13 Nov 2019 21:42:43 +0100
+Date:   Wed, 13 Nov 2019 21:42:56 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -35,7 +35,7 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>
-Subject: [patch V3 03/20] x86/cpu: Unify cpu_init()
+Subject: [patch V3 16/20] x86/iopl: Fixup misleading comment
 References: <20191113204240.767922595@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -46,272 +46,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Similar to copy_thread_tls() the 32bit and 64bit implementations of
-cpu_init() are very similar and unification avoids duplicate changes in the
-future.
+The comment for the sys_iopl() implementation is outdated and actively
+misleading in some parts. Fix it up.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Andy Lutomirski <luto@kernel.org>
-
 ---
-V2: Fix 32bit build by removing the pointless #ifdef around the uv header include.
----
- arch/x86/kernel/cpu/common.c |  175 ++++++++++++++++---------------------------
- 1 file changed, 66 insertions(+), 109 deletions(-)
+ arch/x86/kernel/ioport.c |   35 +++++++++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -53,10 +53,7 @@
- #include <asm/microcode_intel.h>
- #include <asm/intel-family.h>
- #include <asm/cpu_device_id.h>
--
--#ifdef CONFIG_X86_LOCAL_APIC
- #include <asm/uv/uv.h>
--#endif
- 
- #include "cpu.h"
- 
-@@ -1749,7 +1746,7 @@ static void wait_for_master_cpu(int cpu)
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -41,7 +41,7 @@ void io_bitmap_exit(void)
  }
- 
- #ifdef CONFIG_X86_64
--static void setup_getcpu(int cpu)
-+static inline void setup_getcpu(int cpu)
- {
- 	unsigned long cpudata = vdso_encode_cpunode(cpu, early_cpu_to_node(cpu));
- 	struct desc_struct d = { };
-@@ -1769,7 +1766,43 @@ static void setup_getcpu(int cpu)
- 
- 	write_gdt_entry(get_cpu_gdt_rw(cpu), GDT_ENTRY_CPUNODE, &d, DESCTYPE_S);
- }
-+
-+static inline void ucode_cpu_init(int cpu)
-+{
-+	if (cpu)
-+		load_ucode_ap();
-+}
-+
-+static inline void tss_setup_ist(struct tss_struct *tss)
-+{
-+	/* Set up the per-CPU TSS IST stacks */
-+	tss->x86_tss.ist[IST_INDEX_DF] = __this_cpu_ist_top_va(DF);
-+	tss->x86_tss.ist[IST_INDEX_NMI] = __this_cpu_ist_top_va(NMI);
-+	tss->x86_tss.ist[IST_INDEX_DB] = __this_cpu_ist_top_va(DB);
-+	tss->x86_tss.ist[IST_INDEX_MCE] = __this_cpu_ist_top_va(MCE);
-+}
-+
-+static inline void gdt_setup_doublefault_tss(int cpu) { }
-+
-+#else /* CONFIG_X86_64 */
-+
-+static inline void setup_getcpu(int cpu) { }
-+
-+static inline void ucode_cpu_init(int cpu)
-+{
-+	show_ucode_info_early();
-+}
-+
-+static inline void tss_setup_ist(struct tss_struct *tss) { }
-+
-+static inline void gdt_setup_doublefault_tss(int cpu)
-+{
-+#ifdef CONFIG_DOUBLEFAULT
-+	/* Set up the doublefault TSS pointer in the GDT */
-+	__set_tss_desc(cpu, GDT_ENTRY_DOUBLEFAULT_TSS, &doublefault_tss);
- #endif
-+}
-+#endif /* !CONFIG_X86_64 */
  
  /*
-  * cpu_init() initializes state that is per-CPU. Some data is already
-@@ -1777,21 +1810,15 @@ static void setup_getcpu(int cpu)
-  * and IDT. We reload them nevertheless, this function acts as a
-  * 'CPU state barrier', nothing should get across.
+- * this changes the io permissions bitmap in the current task.
++ * This changes the io permissions bitmap in the current task.
   */
--#ifdef CONFIG_X86_64
--
- void cpu_init(void)
+ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
  {
-+	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
-+	struct task_struct *cur = current;
- 	int cpu = raw_smp_processor_id();
--	struct task_struct *me;
--	struct tss_struct *t;
--	int i;
- 
- 	wait_for_master_cpu(cpu);
- 
--	if (cpu)
--		load_ucode_ap();
--
--	t = &per_cpu(cpu_tss_rw, cpu);
-+	ucode_cpu_init(cpu);
- 
- #ifdef CONFIG_NUMA
- 	if (this_cpu_read(numa_node) == 0 &&
-@@ -1800,63 +1827,48 @@ void cpu_init(void)
- #endif
- 	setup_getcpu(cpu);
- 
--	me = current;
--
- 	pr_debug("Initializing CPU#%d\n", cpu);
- 
--	cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
-+	if (IS_ENABLED(CONFIG_X86_64) || cpu_feature_enabled(X86_FEATURE_VME) ||
-+	    boot_cpu_has(X86_FEATURE_TSC) || boot_cpu_has(X86_FEATURE_DE))
-+		cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
- 
- 	/*
- 	 * Initialize the per-CPU GDT with the boot GDT,
- 	 * and set up the GDT descriptor:
- 	 */
--
- 	switch_to_new_gdt(cpu);
--	loadsegment(fs, 0);
--
- 	load_current_idt();
- 
--	memset(me->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
--	syscall_init();
-+	if (IS_ENABLED(CONFIG_X86_64)) {
-+		loadsegment(fs, 0);
-+		memset(cur->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
-+		syscall_init();
-+
-+		wrmsrl(MSR_FS_BASE, 0);
-+		wrmsrl(MSR_KERNEL_GS_BASE, 0);
-+		barrier();
- 
--	wrmsrl(MSR_FS_BASE, 0);
--	wrmsrl(MSR_KERNEL_GS_BASE, 0);
--	barrier();
--
--	x86_configure_nx();
--	x2apic_setup();
--
--	/*
--	 * set up and load the per-CPU TSS
--	 */
--	if (!t->x86_tss.ist[0]) {
--		t->x86_tss.ist[IST_INDEX_DF] = __this_cpu_ist_top_va(DF);
--		t->x86_tss.ist[IST_INDEX_NMI] = __this_cpu_ist_top_va(NMI);
--		t->x86_tss.ist[IST_INDEX_DB] = __this_cpu_ist_top_va(DB);
--		t->x86_tss.ist[IST_INDEX_MCE] = __this_cpu_ist_top_va(MCE);
-+		x2apic_setup();
- 	}
- 
--	t->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET;
--
--	/*
--	 * <= is required because the CPU will access up to
--	 * 8 bits beyond the end of the IO permission bitmap.
--	 */
--	for (i = 0; i <= IO_BITMAP_LONGS; i++)
--		t->io_bitmap[i] = ~0UL;
--
- 	mmgrab(&init_mm);
--	me->active_mm = &init_mm;
--	BUG_ON(me->mm);
-+	cur->active_mm = &init_mm;
-+	BUG_ON(cur->mm);
- 	initialize_tlbstate_and_flush();
--	enter_lazy_tlb(&init_mm, me);
-+	enter_lazy_tlb(&init_mm, cur);
- 
--	/*
--	 * Initialize the TSS.  sp0 points to the entry trampoline stack
--	 * regardless of what task is running.
--	 */
-+	/* Initialize the TSS. */
-+	tss_setup_ist(tss);
-+	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET;
-+	memset(tss->io_bitmap, 0xff, sizeof(tss->io_bitmap));
- 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
-+
- 	load_TR_desc();
-+	/*
-+	 * sp0 points to the entry trampoline stack regardless of what task
-+	 * is running.
-+	 */
- 	load_sp0((unsigned long)(cpu_entry_stack(cpu) + 1));
- 
- 	load_mm_ldt(&init_mm);
-@@ -1864,6 +1876,8 @@ void cpu_init(void)
- 	clear_all_debug_regs();
- 	dbg_restore_debug_regs();
- 
-+	gdt_setup_doublefault_tss(cpu);
-+
- 	fpu__init_cpu();
- 
- 	if (is_uv_system())
-@@ -1872,63 +1886,6 @@ void cpu_init(void)
- 	load_fixmap_gdt(cpu);
+@@ -136,14 +136,24 @@ SYSCALL_DEFINE3(ioperm, unsigned long, f
  }
  
--#else
--
--void cpu_init(void)
--{
--	int cpu = smp_processor_id();
--	struct task_struct *curr = current;
--	struct tss_struct *t = &per_cpu(cpu_tss_rw, cpu);
--
--	wait_for_master_cpu(cpu);
--
--	show_ucode_info_early();
--
--	pr_info("Initializing CPU#%d\n", cpu);
--
--	if (cpu_feature_enabled(X86_FEATURE_VME) ||
--	    boot_cpu_has(X86_FEATURE_TSC) ||
--	    boot_cpu_has(X86_FEATURE_DE))
--		cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
--
--	load_current_idt();
--	switch_to_new_gdt(cpu);
--
--	/*
--	 * Set up and load the per-CPU TSS and LDT
--	 */
--	mmgrab(&init_mm);
--	curr->active_mm = &init_mm;
--	BUG_ON(curr->mm);
--	initialize_tlbstate_and_flush();
--	enter_lazy_tlb(&init_mm, curr);
--
--	/*
--	 * Initialize the TSS.  sp0 points to the entry trampoline stack
--	 * regardless of what task is running.
--	 */
--	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
--	load_TR_desc();
--	load_sp0((unsigned long)(cpu_entry_stack(cpu) + 1));
--
--	load_mm_ldt(&init_mm);
--
--	t->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET;
--
--#ifdef CONFIG_DOUBLEFAULT
--	/* Set up doublefault TSS pointer in the GDT */
--	__set_tss_desc(cpu, GDT_ENTRY_DOUBLEFAULT_TSS, &doublefault_tss);
--#endif
--
--	clear_all_debug_regs();
--	dbg_restore_debug_regs();
--
--	fpu__init_cpu();
--
--	load_fixmap_gdt(cpu);
--}
--#endif
--
  /*
-  * The microcode loader calls this upon late microcode load to recheck features,
-  * only when microcode has been updated. Caller holds microcode_mutex and CPU
-
-
+- * sys_iopl has to be used when you want to access the IO ports
+- * beyond the 0x3ff range: to get the full 65536 ports bitmapped
+- * you'd need 8kB of bitmaps/process, which is a bit excessive.
++ * The sys_iopl functionality depends on the level argument, which if
++ * granted for the task is used by the CPU to check I/O instruction and
++ * CLI/STI against the current priviledge level (CPL). If CPL is less than
++ * or equal the tasks IOPL level the instructions take effect. If not a #GP
++ * is raised. The default IOPL is 0, i.e. no permissions.
+  *
+- * Here we just change the flags value on the stack: we allow
+- * only the super-user to do it. This depends on the stack-layout
+- * on system-call entry - see also fork() and the signal handling
+- * code.
++ * Setting IOPL to level 0-2 is disabling the userspace access. Only level
++ * 3 enables it. If set it allows the user space thread:
++ *
++ * - Unrestricted access to all 65535 I/O ports
++ * - The usage of CLI/STI instructions
++ *
++ * The advantage over ioperm is that the context switch does not require to
++ * update the I/O bitmap which is especially true when a large number of
++ * ports is accessed. But the allowance of CLI/STI in userspace is
++ * considered a major problem.
++ *
++ * IOPL is strictly per thread and inherited on fork.
+  */
+ SYSCALL_DEFINE1(iopl, unsigned int, level)
+ {
+@@ -164,9 +174,18 @@ SYSCALL_DEFINE1(iopl, unsigned int, leve
+ 		    security_locked_down(LOCKDOWN_IOPORT))
+ 			return -EPERM;
+ 	}
++	/*
++	 * Change the flags value on the return stack, which has been set
++	 * up on system-call entry. See also the fork and signal handling
++	 * code how this is handled.
++	 */
+ 	regs->flags = (regs->flags & ~X86_EFLAGS_IOPL) |
+ 		(level << X86_EFLAGS_IOPL_BIT);
++	/* Store the new level in the thread struct */
+ 	t->iopl = level << X86_EFLAGS_IOPL_BIT;
++	/*
++	 * X86_32 switches immediately and XEN handles it via emulation.
++	 */
+ 	set_iopl_mask(t->iopl);
+ 
+ 	return 0;
 
 
