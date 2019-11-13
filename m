@@ -2,139 +2,170 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D0CC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B1AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03A122469
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F86222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XCnzxz1d"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HBHsCShK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfKMO7W (ORCPT
+        id S1727940AbfKMPAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:59:22 -0500
-Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:62822
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726251AbfKMO7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:59:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KKaxpPiVkRSu8+mRQQ30zNvQDhnVW+z5UDOfk8FrrD0f30lBQL9Adg4FUWnCMN+upMpTaqvBFUU1n8AFk5R6JF3ZkrqUPrj/Oz/Pn3m1/5mH9IlRiFtaZtkv+Y3R/CLFKYhqd94QUhCHSqqtgZ2E8UCTzKLQ9ojqkexpEcqlvzFE5Qv4Ejum6K6sJlgCuyQY0u3FI+PZpXA47HDLAqFhRy6pDeSCOEByaEuQYaeMk98pANthO/7jiKDY6VVlJMaoKBNnY6p2hnplCk65x8VHeGKgPWa/cV6wcfblO7zs+vYltCIOy+srKMmEUTmrx2oxmZZ1Wg+BT+W+ZlBbAMQIig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ta5couTE4b7hBK1YOwypwYIHRTqYSwJtihLmm/O9l0E=;
- b=nHobaN+xADPLEd7h/7xLK+iMcRFucVkZ1LdpPRYjKWETa//ERXV2of2F8Xl+c40Xn10XE90+pdp3PDG0k+kQeg69A8deYQ2E0hyIu2HCLo84KzIHJmt1z2RvHjfuT0gfG2rvknI583pSFi/woEY3uCD7E8BTT8xAIu0HLhFAmA3b0QMX4zl84VWJ2alR7d8ABNaHw/MOpeAUN+1IVONPT1es/zC3X8TiATevQpHXsvMKWMuoxOoUER2n3yrugi1IwCqGKSM9z27CZXPrP1qXbPefguGPiyEfjXT4XCtNpVp7g3Ie2qmoHhNyoxI1VDiwSViAEJwXzZkFMwCWv+JA5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ta5couTE4b7hBK1YOwypwYIHRTqYSwJtihLmm/O9l0E=;
- b=XCnzxz1dYuYVPiTRPq3gR6BERM+QRHIpK4f38cRhuVc8T9S0HUNZiGkWYEStO9us5Q1b82B/TvAzete4Uf/M0eHEC7t3q7bSVxSoV9lgS5xCoL3ew3/Bg0ePvHDT36I86bFMcjeP8O77BUZT+1wKibuWIOzTv5Ook04KRtKNILU=
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
- VI1PR0402MB2768.eurprd04.prod.outlook.com (10.175.24.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.25; Wed, 13 Nov 2019 14:59:17 +0000
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::8997:3705:3f41:1d1b]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::8997:3705:3f41:1d1b%7]) with mapi id 15.20.2430.028; Wed, 13 Nov 2019
- 14:59:17 +0000
-From:   Mirela Rabulea <mirela.rabulea@nxp.com>
-To:     "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH 4/5] media: imx-jpeg: Add V4L2 driver for i.MX8
- JPEG Encoder/Decoder
-Thread-Topic: [EXT] Re: [PATCH 4/5] media: imx-jpeg: Add V4L2 driver for i.MX8
- JPEG Encoder/Decoder
-Thread-Index: AQHVlLXUJKJQ4nqFd0+df7BWHNBYIqeJLAWAgAAQZQA=
-Date:   Wed, 13 Nov 2019 14:59:17 +0000
-Message-ID: <1573657156.16477.47.camel@nxp.com>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
-         <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
-         <58ed179388b6f9d6caddd91dc03e411ca714157d.camel@collabora.com>
-In-Reply-To: <58ed179388b6f9d6caddd91dc03e411ca714157d.camel@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mirela.rabulea@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 84cf8734-278c-4413-16c7-08d7684a0e6f
-x-ms-traffictypediagnostic: VI1PR0402MB2768:|VI1PR0402MB2768:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB2768A7E64DB0954021C4CA878F760@VI1PR0402MB2768.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(346002)(136003)(376002)(199004)(189003)(305945005)(7736002)(7416002)(486006)(64756008)(81166006)(71200400001)(71190400001)(91956017)(5660300002)(316002)(36756003)(54906003)(66946007)(2616005)(81156014)(99286004)(446003)(8676002)(476003)(2501003)(66476007)(186003)(256004)(14444005)(66446008)(66556008)(14454004)(76116006)(110136005)(76176011)(102836004)(26005)(6506007)(44832011)(11346002)(66066001)(6512007)(6486002)(103116003)(2906002)(2201001)(6246003)(6116002)(3846002)(478600001)(4001150100001)(8936002)(50226002)(25786009)(6436002)(86362001)(229853002)(4326008)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2768;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +V1qNwJ+4kdRRsYaB3csFqnUz1OS7Hha4xbx5ERp+WPYEAkuzX95EvoLuF0z3drnGwnM7b5vq0RLECQJIs+UDIgEw/37Fo4YeI+eZwK1AczZ9TlTMYrACWEkgCdMXaJKwevZl9zUcrrMixQdiz/8MckL7K0/Cspo51M7v8Y8XYLhTzy5FSwD/TMrVvSpZyMFIEpw2DfspSz2sbFxBMff7LphJlimbrpYHIuEc4e/F+6TMduQGjxZY3r/COuBiijFe2+hE+/p+o6xNupLm5qaTEKUm5LhAFtraQppsHav1L06fI79aWh0uLkeTB+MWfqeJZo4zjZM17vztSFIuBAn/NcmMRwYEdnvszixUb/yHKhXGESpLE//KIfv51Rebe+YPt/umpzvnTmiZbum4YdrEHjfGr7LT+67ATzBByFLXUyHmgtzQyBy1P1MYgIHTAwT
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <573912F2CC39B8428C4335951F2C3F16@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 13 Nov 2019 10:00:38 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43388 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727550AbfKMPAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:00:38 -0500
+Received: by mail-ot1-f66.google.com with SMTP id l14so1842506oti.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 07:00:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hn0rE8EvQLayCzvR+VM/mjAxPaLh9HP6Et6bUGhBo8g=;
+        b=HBHsCShKPxflrvZ7COZyam7cSyPMVSE2Df2KInwngnmj3XC6CG1iIdad+zrmgxjpoL
+         pSxx4/TtFbnMa8p0ZzauIadXVwYEW8KF0fCHGOYcggwDmdl//Oog+V52wV3Flug/P1xp
+         tGL4mvdwDE/9Y8unvP2kivCJXLeetnnoiVjsYJwtZwlp7+cp3seRr7udcMQLGDVX8Xus
+         p3tPTd4KIL68djgdYqFrWe1NHLSxqA25dDRo8Ax/Ah0RoEO4FcK3d6EL95e6TVEyJJ1V
+         QnX0eZljqiSf+2Rb+ggZUNKxx58eTL0jxZ4uByrkKDFwEZe6fUdBiGg6md11I/g/g5Cx
+         FCaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hn0rE8EvQLayCzvR+VM/mjAxPaLh9HP6Et6bUGhBo8g=;
+        b=PnrXFCfiNmw881h6j3MnbucXWqiUsioTDjnyWx5pzAVffRT/k48wA2o7Wzc9qeGv3Y
+         4ydIyMLUrBtIpEbRCRzR3MXbumvmtPHUcRAVouhd8dYYN7K1kLwPMaL57tFUrLrdEt1p
+         2/d1bYm4KGHUya6zq68O89Hrpjlhcca8PJZGVaumUaCd1iSQ5QK4HP0hjp4ug+BMNRDd
+         8Gx+WOWUP/n+DGVzRnlAcsuBFnKSKEGt2InoHegOmEvHg+cKaRjvNz9VLKgN5rpHUNfb
+         yWhBqvxvGw2/pXfSJgbDZ4MfCPC7SEbDkYKYrZKJ7K96xiEpi+dOclJ/dAi8bk9DaLvL
+         7XLg==
+X-Gm-Message-State: APjAAAWcNRDech+Wg+ea2GfbH0NTzPdtAMb8u84lctMz76ekVHAKCX39
+        VD8dd97K6zKQI6YvDVTUHu/U98TeQNIulPwe4mllUw==
+X-Google-Smtp-Source: APXvYqxJ3c6MEZ0/2hGP2/5UKDNPX6bPtZFJ9h4viwgj5WeAEavitL5ck3Xe6xnzWLwZazm4TAy56EBFRkAq0wZABQk=
+X-Received: by 2002:a9d:69cf:: with SMTP id v15mr3119489oto.251.1573657235271;
+ Wed, 13 Nov 2019 07:00:35 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84cf8734-278c-4413-16c7-08d7684a0e6f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 14:59:17.3425
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5kmn+kb+MEUceJsTiK87OiV2xyCU1T6JHKktadjNCX7KTfy8x25Ph6ulnT3FGwJ2zjlHwN4v/sVrSSl7RYIpuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2768
+References: <CAHk-=wgnjMEvqHnu_iJcbr_kdFyBQLhYojwv5T7p9F+CHxA9pg@mail.gmail.com>
+ <Pine.LNX.4.44L0.1911121639540.1567-100000@iolanthe.rowland.org>
+ <CANn89iKjWH86kChzPiVtCgVpt3GookwGk2x1YCTMeBSPpKU+Ww@mail.gmail.com>
+ <20191112224441.2kxmt727qy4l4ncb@ast-mbp.dhcp.thefacebook.com>
+ <CANn89iKLy-5rnGmVt-nzf6as4MvXgZzSH+BSReXZKpSTjhoWAw@mail.gmail.com> <CAHk-=wj_rFOPF9Sw_-h-6J93tP9qO_UOEvd-e02z9+DEDs2kLQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wj_rFOPF9Sw_-h-6J93tP9qO_UOEvd-e02z9+DEDs2kLQ@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 13 Nov 2019 16:00:21 +0100
+Message-ID: <CANpmjNNkbWoqckyPfhq52W4WfJWR2=rt8WXzs+WXEZzv9xxL0g@mail.gmail.com>
+Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRXplcXVpZWwsDQpPbiBNaSwgMjAxOS0xMS0xMyBhdCAxMTowMCAtMDMwMCwgRXplcXVpZWwg
-R2FyY2lhIHdyb3RlOg0KPiArICogZGVmYXVsdCBjb25maWd1cmF0aW9uIHN0cmVhbSwgNjR4NjQg
-eXV2NDIyDQo+ID4gKyAqIHNwbGl0IGJ5IEpQRUcgbWFya2VyLCBzbyBpdCdzIGVhc2llciB0byBt
-b2RpZnkgJiB1c2UNCj4gPiArICovDQo+ID4gK3N0YXRpYyBjb25zdCB1bnNpZ25lZCBjaGFyIGpw
-ZWdfc29pW10gPSB7MHhGRiwgMHhEOH07DQo+ID4gK3N0YXRpYyBjb25zdCB1bnNpZ25lZCBjaGFy
-IGpwZWdfYXBwMFtdID0gezB4RkYsIDB4RTAsDQo+IEkgdGhpbmsgaXQncyB0aW1lIHRvIHJlLWNv
-bnNpZGVyIGNyZWF0aW5nIHNvbWUgY29tbW9uIGNvZGUNCj4gZm9yIGRyaXZlcnMgdGhhdCBkZWFs
-IHdpdGggSlBFRyBwYXJzaW5nLiBJIGRvbid0IGtub3cNCj4gZXhhY3RseSBob3cgdGhpcyBzaG91
-bGQgYmUgZG9uZSwgYnV0IGl0J3Mgd29ydGggYSB0cnkuDQo+IA0KPiBIYXZpbmcgYmVlbiB0aGVy
-ZSwgaXQgbWlnaHQgc291bmQgdW5mYWlyIHRvIHJlcXVlc3QgeW91IHRvDQo+IHRha2Ugc3VjaCBh
-Y3Rpb24uIEhvd2V2ZXIsIHNvbWVvbmUgaGFzIHRvIGRvIHRoZXNlIGtpbmRzDQo+IG9mIGNsZWFu
-dXBzIGFuZCBpbXByb3ZlbWVudHMsIHNvb25lciBvciBsYXRlciwgaWYgd2Ugd2FudA0KPiB0byBr
-ZWVwIGEgY2xlYW4gY29kZWJhc2UuDQo+IA0KPiBIb3BlIHRoaXMgbWFrZXMgc2Vuc2UuDQoNCkkg
-YWdyZWUsIGl0IG1ha2VzIHNlbnNlLCBhdCBsZWFzdCB0aGUganBlZyBwYXJzaW5nIGlzIHNvbWVo
-b3cgY29tbW9uDQpiZXR3ZWVuIHRoZXNlIGRyaXZlcnMuIEknbSB3aWxsaW5nIHRvIGNvbnRyaWJ1
-dGUgdG8gdGhpcywgYnV0IEkgY2Fubm90DQptYWtlIGEgcHJvbWlzZSB3aGVuLCBhbmQgdGhpcyBp
-cyBzb21ldGhpbmcgdGhhdCByZXF1aXJlcyBjb2xsYWJvcmF0aW9uDQp3aXRoIG90aGVyIGNvbnRy
-aWJ1dG9ycyB3aG8gaGF2ZSB0aGUgbWVhbnMgdG8gdmFsaWRhdGUgY2hhbmdlcyBvbiBhbGwNCnRo
-ZSBoYXJkd2FyZSBhZmZlY3RlZC4NCg0KUmVnYXJkcywNCk1pcmVsYQ==
+On Wed, 13 Nov 2019 at 00:41, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, Nov 12, 2019 at 3:18 PM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > Hmm we have the ' volatile'  attribute on jiffies, and it causes
+> > confusion already :p
+>
+> The jiffies case is partly historical, but partly also because it's
+> one of the very very few data structures where 99% of all uses are
+> unlocked and for convenience reasons we really don't want to force
+> those legacy cases to do anything special about it.
+>
+> "jiffies" really is very special for those kinds of legacy reasons.
+> Look at the kinds of games we play with it on 32-bit architectures:
+> the "real" storage is "jiffies_64", but nobody actually wants to use
+> that, and because of load tearing issues it's actually hard to use
+> too. So what everybody _uses_ is just the low 32 bits, and 'jiffies'
+> isn't a real variable, it's done with linker tricks in our
+> vmlinux.lds.S files. So, for example, on sparc32, you find this:
+>
+>     jiffies = jiffies_64 + 4;
+>
+> in the vmlinux.lds.S file, because it's big-endian, and the lower 32
+> bits are at offset 4 from the real 64-bit variable.
+>
+> Note that to actually read the "true" full 64-bit value, you have to
+> then call a function that does the proper sequence counter stuff etc.
+> But nobody really wants it, since what everybody actually _uses_ is
+> the "time_after(x,jiffies+10)" kind of thing, which is only done in
+> the wrapping "unsigned long" time base. So the odd "linker tricks with
+> the atomic low bits marked as a volatile data structure" is actually
+> exactly what we want, but people should realize that this is not
+> normal.
+>
+> So 'jiffies' is really really special.
+>
+> And absolutely nothing else should use 'volatile' on data structures
+> and be that special.  In the case of jiffies, the rule ends up being
+> that nobody should ever write to it (you write to the real
+> jiffies_64), and the real jiffies_64 thing gets the real locking, and
+> 'jiffies' is a read-only volatile thing.
+>
+> So "READ_ONCE()" is indeed unnecessary with jiffies, but it won't
+> hurt. It's not really "confusion" - there's nothing _wrong_ with using
+> READ_ONCE() on volatile data, but we just normally don't do volatile
+> data in the kernel (because our normal model is that data is never
+> really volatile in general - there may be locked and unlocked accesses
+> to it, so it's stable or volatile depending on context, and thus the
+> 'volatile' goes on the _code_, not on the data structure)
+>
+> But while jiffies READ_ONCE() accesses isn't _wrong_, it is also not
+> really paired with any WRITE_ONCE(), because the real update is to
+> technically not even to the same full data structure.
+>
+> So don't look to jiffies for how to do things. It's an odd one-off.
+>
+> That said, for "this might be used racily", if there are annotations
+> for clang to just make it shut up about one particular field in a
+> structure, than I think that would be ok. As long as it doesn't then
+> imply special code generation (outside of the checking, of course).
+
+There are annotations that work for globals only. This limitation is
+because once you take a pointer of a variable, and just pass around
+the address, the attribute will be lost. So sometimes you might do the
+right thing, but other times you might not.
+
+Just to summarize the options we've had so far:
+1. Add a comment, and let the tool parse it somehow.
+2. Add attribute to variables.
+3. Add some new macro to use with expressions, which doesn't do
+anything if the tool is disabled. E.g. "racy__(counter++)",
+"lossy__(counter++);" or any suitable name.
+
+1 and 3 are almost equivalent, except that 3 introduces "structured"
+comments that are much easier to understand for tooling. Both 1 and 2
+need compiler support.
+
+Right now both gcc and clang support KCSAN, and doing 1 or 2 would
+probably imply dropping one of them. Both 1 and 2 are also brittle: 1
+because comments are not forced to be structured, and 2 because
+attributes on variables do not propagate through pointers.
+
+From our perspective, macro-based annotations would be most reliable.
+
+Thanks,
+-- Marco
