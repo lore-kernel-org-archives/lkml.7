@@ -2,197 +2,170 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F2BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968DBC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632462196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o/srXWDk"
+	by mail.kernel.org (Postfix) with ESMTP id 769BA2196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfKMJft (ORCPT
+        id S1726486AbfKMJgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:35:49 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:60351 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfKMJfs (ORCPT
+        Wed, 13 Nov 2019 04:36:33 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38607 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfKMJgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:35:48 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191113093545epoutp027fee109959562efd81993dddb650186d~WrzFHDEcC0311303113epoutp028
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:35:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191113093545epoutp027fee109959562efd81993dddb650186d~WrzFHDEcC0311303113epoutp028
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573637746;
-        bh=hN/freHQN5DDO02HqUVZsK+Cd5drA67THay2ZfhaDDg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=o/srXWDkjWLNbHvKpnNqZLvVhw4mv9PRDJKSP/yaijisOoMK3uSR/+vgzfGba0GuW
-         ML+FwEr/GqX//xFpadAMj0+jQVMVlcB/BuKKGYs2hCstYZTPui/2FJNRz5AgtDiRaE
-         og/NyR3c53aRBvld0Rnw52BlxBDq+2exB/Ncx/RM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191113093545epcas1p2cb3aa871db575cb1a0c9cbaf8b718d2a~WrzEQjmls3193831938epcas1p2J;
-        Wed, 13 Nov 2019 09:35:45 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47CfcG4GwdzMqYkh; Wed, 13 Nov
-        2019 09:35:42 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        28.54.04068.A6ECBCD5; Wed, 13 Nov 2019 18:35:38 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191113093537epcas1p2fe2754effccb88f2baa61ddd8f60708b~Wry9Y2I4t0946409464epcas1p2i;
-        Wed, 13 Nov 2019 09:35:37 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191113093537epsmtrp2a99e15e51e2db7294b11c5b87f45caf2~Wry9YIcgv2952929529epsmtrp2d;
-        Wed, 13 Nov 2019 09:35:37 +0000 (GMT)
-X-AuditID: b6c32a39-f47ff70000000fe4-69-5dcbce6a96bd
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2F.EC.24756.96ECBCD5; Wed, 13 Nov 2019 18:35:37 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191113093537epsmtip1a3db82c86501fbca8438f39663f22382~Wry9MuTTu0059600596epsmtip1C;
-        Wed, 13 Nov 2019 09:35:37 +0000 (GMT)
-Subject: Re: [PATCH 3/7] devfreq: add clearing transitions stats in sysfs
-To:     Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <3a5096c3-03d2-fd5d-852a-6a19c5b262a5@samsung.com>
-Date:   Wed, 13 Nov 2019 18:41:23 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Wed, 13 Nov 2019 04:36:32 -0500
+X-Originating-IP: 93.34.114.233
+Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E291720010;
+        Wed, 13 Nov 2019 09:36:27 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 10:38:28 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: max9611: Fix too short conversion time delay
+Message-ID: <20191113093828.vk5qqtlr7bs5z5fb@uno.localdomain>
+References: <20191113092133.23723-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <20191113091336.5218-4-k.konieczny@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHec/Zzs7E1evMehTKeSIoY+rJZsfQyIpYdMEuHyoQO7jTNHdj
-        Z0YXiuWH8pJdsA82E7utVBDNRJdWko3KtFnYjSKSHBKldhmaVFbbTpHffs/z/p/3/zzP+9Kk
-        up6KowssDsFu4U0MFSFru7soSbvH15uTMnA7grtW1STnTtz+jbjzX6vkXH9/s4J7VDyi4AY6
-        zlFcoMKLuEbvGwX3+kgdtVKpb2kopfR3xm4S+hOtDUgfaJmXLdtZmJEv8AbBrhEseVZDgcWY
-        yazfmrs6V5eWwmrZdG4Zo7HwZiGTWbMhW7u2wBTshdHs5U1FwVQ2L4pM8ooMu7XIIWjyraIj
-        kxFsBpMt3ZYk8maxyGJMyrOal7MpKUt0QeGuwvwjT64j2wje97a2AznRoKoM0TTgpfD286oy
-        FEGrsQfBUK1bIQVfEZR0fvsbTCB4N1GC/lX4+tRS/haC6s4OuRR8QtDorJOVISUdjddBcXUf
-        GeJZWAsjHjcZEpF4gIDn1x8pQgcUToSu9y+pEM/ECfBscgiFWIVXwJXKfiLEMrwAGi75FSHn
-        GLwdesd5SRIFPWf9YS8lzoDHzvdhLxLPgVf+WkLieGgfPRf2BRygwOeaDN8PeA04Jz7KJY6G
-        D/dbFRLHQWDsFiXxQajv8VJScQmC1q7HfwtSoctdSYQaIvEiaOpIltIJcONHDZKMZ8DY+HG5
-        tC0VlBxVS5L5MDD4hpA4Fi4dK6VOIcY1bRzXtBFc00Zw/Tc7j2QNaLZgE81GQWRtuumP3YLC
-        3zQx3YPu+TZ0I0wjJlIFFx7mqOX8XnG/uRsBTTKzVJ59D3LUKgO//4Bgt+bai0yC2I10wWWf
-        JuNi8qzBT29x5LK6JampqdxSNk3HsswcVdZVd44aG3mHUCgINsH+r46glXFOlFEpazRst487
-        AyPD1T36bVQb/NpYF1k+Rc4t107t+vIxy+yoOW36vumFt6mQPlnzc/NFz0R7hSuCiKnWlnoP
-        H6swJG9sOZOnvLa40jC1x5RVPnn5V2/8aJR2dzyxw9/ct3J4sPOQrXh+q3GhtvmhJnKLb/Hl
-        UZf/Ziz7dG406WZkYj7PJpJ2kf8DoxNff7wDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsWy7bCSnG7mudOxBveuqlpsnLGe1aJv339G
-        iwWfZrBanD+/gd3ibNMbdovLu+awWXzuPcJosfbIXXaL240r2Bw4PTat6mTzOPhuD5NH35ZV
-        jB6fN8kFsERx2aSk5mSWpRbp2yVwZTRe3MxY8Eag4v78XYwNjA94uxg5OCQETCTOnRHqYuTi
-        EBLYzSgxacl8xi5GTqC4pMS0i0eZIWqEJQ4fLoaoecso8eFfEwtIjbCAp0TT7DPMILaIgK7E
-        mx1LwWxmgatMEjtOO0E0HGSU2Dh9JthQNgEtif0vbrCB2PwCihJXfzwGi/MK2Eksm3yeCcRm
-        EVCVWLX4CTuILSoQIfF8+w2oGkGJkzOfgC3mFLCRuNDwAmqZusSfeZegbHGJW0/mM0HY8hLb
-        385hnsAoPAtJ+ywkLbOQtMxC0rKAkWUVo2RqQXFuem6xYYFhXmq5XnFibnFpXrpecn7uJkZw
-        XGlp7mC8vCT+EKMAB6MSD6/EwlOxQqyJZcWVuYcYJTiYlUR4d1SciBXiTUmsrEotyo8vKs1J
-        LT7EKM3BoiTO+zTvWKSQQHpiSWp2ampBahFMlomDU6qBMWDjpspF80ssGf6LzFmQvHLlnk8+
-        ByqLgvScQuZ8SPDseyu9sqBv8lThW8yThUr8JAPOP7NVf8D+W7C065Amz5tQD66Iec5Oc74L
-        rjbv+R9+aP52XinBu0emcR5v6I0oO51cy+zZEOJw9HYjR0f/5bXaBXdTjjWrSZ4yFY2XnjJ1
-        8ZM/IjzPlFiKMxINtZiLihMBBabyP6cCAAA=
-X-CMS-MailID: 20191113093537epcas1p2fe2754effccb88f2baa61ddd8f60708b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191113091352eucas1p2c30c8a73a8362aff872e3cd9312eb24b
-References: <20191113091336.5218-1-k.konieczny@samsung.com>
-        <CGME20191113091352eucas1p2c30c8a73a8362aff872e3cd9312eb24b@eucas1p2.samsung.com>
-        <20191113091336.5218-4-k.konieczny@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="awl3hpbx7r65k2ea"
+Content-Disposition: inline
+In-Reply-To: <20191113092133.23723-1-geert+renesas@glider.be>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-If user only want to use the transitions stats information
-from now, the user just read the sysfs twice and then
-can calculate them between the read data. It is enough
-to get the existing sysfs information. 
+--awl3hpbx7r65k2ea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And I don't know the any other reason. So, I can't agree this patch.
-So, Not ack.
+Hi Geert,
 
-Regards,
-Chanwoo Choi
-
-
-On 11/13/19 6:13 PM, Kamil Konieczny wrote:
-> Add new function trans_reset in sysfs for clearing transition
-> table and time in states devfreq statistics.> 
-> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+On Wed, Nov 13, 2019 at 10:21:33AM +0100, Geert Uytterhoeven wrote:
+> As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+> reading in probe"), max9611 initialization sometimes fails on the
+> Salvator-X(S) development board with:
+>
+>     max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+>     max9611: probe of 4-007f failed with error -5
+>
+> The max9611 driver tests communications with the chip by reading the die
+> temperature during the probe function, which returns an invalid value.
+>
+> According to the datasheet, the typical ADC conversion time is 2 ms, but
+> no minimum or maximum values are provided.  However, the driver assumes
+> a 1 ms conversion time.  Usually the usleep_range() call returns after
+> more than 1.8 ms, hence it succeeds.  When it returns earlier, the data
+> register may be read too early, and the previous measurement value will
+> be returned.  After boot, this is the temperature POR (power-on reset)
+> value, causing the failure above.
+>
+> Fix this by increasing the delay from 1000-2000 =C2=B5s to 2000-2200 =C2=
+=B5s.
+>
+> Note that this issue has always been present, but it was exposed by the
+> aformentioned commit.
+>
+> Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  drivers/devfreq/devfreq.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index ac04b5baef70..0a88055d1362 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -1445,6 +1445,31 @@ static ssize_t trans_stat_show(struct device *dev,
+> This problem was exposed in v5.3.
+>
+> After this patch, probing of the two max9611 sensors succeeded during
+> ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
+> R-Car H3/M3-W/M3-N SoCs.
+> ---
+>  drivers/iio/adc/max9611.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+> index da073d72f649f829..b0755f25356d700d 100644
+> --- a/drivers/iio/adc/max9611.c
+> +++ b/drivers/iio/adc/max9611.c
+> @@ -89,6 +89,11 @@
+>  #define MAX9611_TEMP_SCALE_NUM		1000000
+>  #define MAX9611_TEMP_SCALE_DIV		2083
+>
+> +/*
+> + * Conversion time is 2 ms (typically)
+> + */
+> +#define MAX9611_CONV_TIME_US_RANGE	2000, 2200
+> +
+
+Is a 20% sleep range enough or should it be slightly lengthen ?
+
+Apart from this, thanks a lot for finding the issue root cause!
+
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Thanks
+  j
+
+>  struct max9611_dev {
+>  	struct device *dev;
+>  	struct i2c_client *i2c_client;
+
+> @@ -238,9 +243,9 @@ static int max9611_read_single(struct max9611_dev *ma=
+x9611,
+>
+>  	/*
+>  	 * need a delay here to make register configuration
+> -	 * stabilize. 1 msec at least, from empirical testing.
+> +	 * stabilize.
+>  	 */
+> -	usleep_range(1000, 2000);
+> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+>
+>  	ret =3D i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
+>  	if (ret < 0) {
+> @@ -507,7 +512,7 @@ static int max9611_init(struct max9611_dev *max9611)
+>  			MAX9611_REG_CTRL2, 0);
+>  		return ret;
+>  	}
+> -	usleep_range(1000, 2000);
+> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+>
+>  	return 0;
 >  }
->  static DEVICE_ATTR_RO(trans_stat);
->  
-> +static void defvreq_stats_clear_table(struct devfreq *devfreq)
-> +{
-> +	unsigned int count = devfreq->profile->max_state;
-> +
-> +	spin_lock(&devfreq->stats_lock);
-> +	memset(devfreq->time_in_state, 0, count * sizeof(u64));
-> +	memset(devfreq->trans_table, 0, count * count * sizeof(int));
-> +	devfreq->last_stat_updated = get_jiffies_64();
-> +	devfreq->total_trans = 0;
-> +	spin_unlock(&devfreq->stats_lock);
-> +}
-> +
-> +static ssize_t trans_reset_store(struct device *dev,
-> +				 struct device_attribute *attr,
-> +				 const char *buf,
-> +				 size_t count)
-> +{
-> +	struct devfreq *devfreq = to_devfreq(dev);
-> +
-> +	defvreq_stats_clear_table(devfreq);
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(trans_reset);
-> +
->  static struct attribute *devfreq_attrs[] = {
->  	&dev_attr_governor.attr,
->  	&dev_attr_available_governors.attr,
-> @@ -1455,6 +1480,7 @@ static struct attribute *devfreq_attrs[] = {
->  	&dev_attr_min_freq.attr,
->  	&dev_attr_max_freq.attr,
->  	&dev_attr_trans_stat.attr,
-> +	&dev_attr_trans_reset.attr,
->  	NULL,
->  };
->  ATTRIBUTE_GROUPS(devfreq);
-> 
+> --
+> 2.17.1
+>
 
+--awl3hpbx7r65k2ea
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3LzxQACgkQcjQGjxah
+VjzhdA/7BuGKCuWi3ZGhqxzXvYRF9u8L9W9tpIsAE6Gx6AxVHU9W6kjlYKC/U7sj
+5LnR4aJyXJBH47p6KwIq72GlC20HFrA7jd0cd/sSaP2T3ci459RK+VITyM64UYlU
+WdBDriwpJyqoI0hRimUvpt/ELlP3RwM7p6xL6YgqSI0p86yzv49b1uK7XWnkpNBO
+YANm1dzwVyhOuoefRg7o97QBTJrSdX3bUdGywVMCZs8XnNK0G1YWwOnrx2i8x020
+WcBpw99YZkuLd29A4WcCrhOGxiKyVb4mdteQHKfvpiUN3tcsexhLr/W2TkIeQ1Ic
+tGr8leCsu33R+EWiaJMY58/JRUBrcK0DQasVZO+lZcrOGowrblklrDQkmQYoMQd3
+wB+Ivp47GjpLiRycHnI28JYO78ppxNwBpMChaEtuy5A6RMwDlD+4iPXLiMD7n3iy
+Ar6VwJow65/C36b9U8bTZlVyVqI1vQDjysnLtW+6HocDCb0HAiBJwUlgYqp6e5/c
+hgqm1e7UbVr3syyzHH38mHJ+GzuQEzJ5AASKerOPDTtq6K/a+0dhAGAG2X3bYia8
+0Fe6qEbH14XcE05hpqx8nHdfmERtRzncfb0a1sZ7HzdY7H1eBiTy/+EVBx2Vqx+4
+Ys1dW+z+21WIdtGOCF46fRqNZN6585AVcruHKGFG6wWSCz0eryg=
+=cKOB
+-----END PGP SIGNATURE-----
+
+--awl3hpbx7r65k2ea--
