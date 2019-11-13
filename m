@@ -2,66 +2,95 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDC4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BA0C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C45324121
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D9C2414D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbfKMQ2A (ORCPT
+        id S1727222AbfKMQ3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:28:00 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35660 "EHLO mx1.suse.de"
+        Wed, 13 Nov 2019 11:29:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36170 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726120AbfKMQ2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:28:00 -0500
+        id S1726115AbfKMQ3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:29:38 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA69FB205;
-        Wed, 13 Nov 2019 16:27:58 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Add pattern that matches ppc perf to the perf entry.
-Date:   Wed, 13 Nov 2019 17:27:54 +0100
-Message-Id: <20191113162754.6991-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
+        by mx1.suse.de (Postfix) with ESMTP id 307AFB205;
+        Wed, 13 Nov 2019 16:29:36 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 17:29:34 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
+ get_mem_cgroup_from_mm()
+Message-ID: <20191113162934.GF19372@blackbody.suse.cz>
+References: <20191106225131.3543616-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="l+goss899txtYvYf"
+Content-Disposition: inline
+In-Reply-To: <20191106225131.3543616-1-guro@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index eb19fad370d7..2e6c187bc98c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12772,6 +12772,8 @@ F:	arch/*/kernel/*/perf_event*.c
- F:	arch/*/kernel/*/*/perf_event*.c
- F:	arch/*/include/asm/perf_event.h
- F:	arch/*/kernel/perf_callchain.c
-+F:	arch/*/perf/*
-+F:	arch/*/perf/*/*
- F:	arch/*/events/*
- F:	arch/*/events/*/*
- F:	tools/perf/
--- 
-2.23.0
+--l+goss899txtYvYf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi.
+
+On Wed, Nov 06, 2019 at 02:51:30PM -0800, Roman Gushchin <guro@fb.com> wrote:
+> Let's fix it by switching from css_tryget_online() to css_tryget().
+Is this a safe thing to do? The stack captures a kmem charge path, with
+css_tryget() it may happen it gets an offlined memcg and carry out
+charge into it. What happens when e.g. memcg_deactivate_kmem_caches is
+skipped as a consequence?
+
+> The problem is caused by an exiting task which is associated with
+> an offline memcg. We're iterating over and over in the
+> do {} while (!css_tryget_online()) loop, but obviously the memcg won't
+> become online and the exiting task won't be migrated to a live memcg.
+As discussed in other replies, the task is not yet exiting. However, the
+access to memcg isn't through `current` but `mm->owner`, i.e. another
+task of a threadgroup may have got stuck in an offlined memcg (I don't
+have a good explanation for that though).
+
+HTH,
+Michal
+
+--l+goss899txtYvYf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl3ML2cACgkQia1+riC5
+qSgQZA/+KD6f95XTCnV55rr15xwdquOdz4T+bmiNstvliVaYqvukej5/cCxTPKJK
+I4zHkgTix48h9NDvrvIuOaY68D+nlczIUsAIA1BQlZga7HnV96+d1/j/TFiNMIyr
+FDFHIfNU07mO6C5uCQOYe1VLfa9auNrpNtkhiqYYhaFrLVsQC7veGWg2Euy914Rc
+YgQMhFuz4HxFwOtXaHKh+SvvNhL9qttdOZx1ACAAcNhS0nltpj/mGhG2gO8mChkh
+YhXjf5CeDY4nqnLwgiDlRQN66cSOL/DVUC7Acl3NLpmWzTkKuS3gIIsSTvzhsKAE
+G/B/fbPupZuPuE8tC+kVdKacZVhJ1v1mgcyZxRAXKaSGOhCXhSIQlqt9bgflGMwZ
+Gfp8YY8F1LcFZdTuCvkodnS4TAAnL54GEuvqAxTqs7FzTgb9VBtx7C99spTxXY3q
+uC99i+J8swSO/a14Eo0RGAZB0RKtDpGxHyTa/kwsHx2JcJLrFKQGzstK2rdmUS1q
+2mt6zT+AM8RVJqHSVdtDGdA1fBlZcDvWTRIr/FtQswGFtXN8ikpEfUXRT0NrL75s
+89w/b3qb2PMVaDoIwGEnIudNYCmoEhBo8OocB8pWwt3BYnBX7L+aLXqDX9ITLJOj
+vOwcVSWNy2EuLN6XEa1P8opml3XXoDl2l9D/7a4qIb8214XwAtY=
+=Czsl
+-----END PGP SIGNATURE-----
+
+--l+goss899txtYvYf--
