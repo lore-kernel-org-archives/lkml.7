@@ -2,497 +2,132 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BFDC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA5CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E60222C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D996207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:29:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdqMYuGe"
+	dkim=pass (1024-bit key) header.d=alertlogic.onmicrosoft.com header.i=@alertlogic.onmicrosoft.com header.b="QMqE8x82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfKMH2W (ORCPT
+        id S1726977AbfKMH3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:28:22 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42324 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfKMH2V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:28:21 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s5so1028901pfh.9;
-        Tue, 12 Nov 2019 23:28:19 -0800 (PST)
+        Wed, 13 Nov 2019 02:29:38 -0500
+Received: from mail-eopbgr680096.outbound.protection.outlook.com ([40.107.68.96]:27621
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725966AbfKMH3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 02:29:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HhPUTDo5p64h6IucY7ZS6o/UGPnoFbwZbIsnL9qOKASJGmhSFEDuY84mUY+SMheEVfzYGm+yOtXrR1x1yVNffoQA0tMw+l0Ihgy+xyZn8KvyYfW6Y+tTcObq/R1aj9HYvEP7inbDWXb6OOEUQZIuIqEWCKFjDF8TTmTcLADmbPmiVDgPw9BzuakQ9HyfO+KYUw0kDjL/uNiyf5zL410ynWBSc3XtmySs0gQ3mSq5eFakgseEL54qpnpYo6ZdLET+R8LFN+NmzVlmPUyYswIKhYgVdAz4REv1brrT2MxPfBHa9Kaivr1vipvdH0iHfJeXyykOIQDW301wTZ972RXUDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fcrK36+ewixZOqFtTOR7hTWVsZPnN/PTT+1crPsWITA=;
+ b=df5n6JdtUJ1KjJxaw5Mtv3noWWmTpuh8Z6LN+jrvVtWpUbO+S9NMMvEWZTghi1d45lvS3gk9AFbw/To4uq1EhKcg6+oQRNY0LPKA4IgEcNBDWIJLQGdOLtDw8KD5/O/mFnZawjqPKnQNcQcEjJjh7hES94ysWjLUpvP5x9/uNoHf6WIkEDyQShux037nagSq5e65ybJ3s1EYclKBZBp1w6B9u2r9mv061SNayM5wekb3OBFjUKB2Pafs4PerS1mKzSzV45xZCToYFgNmCxvE4iGDVKtp4ACpBYPIJNBUrcUxfjB0Mq8jCNq/4hSeFYXNyanZuFgTKlyEp+0Nkdmkag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=alertlogic.com; dmarc=pass action=none
+ header.from=alertlogic.com; dkim=pass header.d=alertlogic.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=nIHaoKAlC11rJNcOmL5yon82xc3Ukj3+S88sDAGGNko=;
-        b=WdqMYuGehtD2qBScFrYzqWj5sHFIa4zzjmoDN/3M2TUZHILuE2Xt0xVuGMfeMbY5aZ
-         XYbh3V8HF+/q/7j8YW7DcvtHif/L/kwrOE11Sg3xj3p3dDGemMS/L1nx04rl2bBJvl1N
-         cccpzVCmDOWIdPpyfByA/iF8NBULMMG7WhvXKG3ijRC/bt/0P7627pl4mbzS3WSCwOLF
-         MxOx2IizDF+42t4i/fnnqhStV+PPubMt7J27os30DXpHgm4PTBDXItiHLSsEdCJbGhL2
-         HV+vugM9PgQv6253SoyEMx7Ixbuh/qeiYK9FE6VzT3BmzWJgh3XUJr9Vuw6WDejVJvjQ
-         8ZQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=nIHaoKAlC11rJNcOmL5yon82xc3Ukj3+S88sDAGGNko=;
-        b=AZrKkddeAIJAOkSmgUh2MTGP+dMhtHOUU33PizFGuXG13RgHzNZVENvirFHjrkeLJ3
-         5tS5u1yhCQ1izneIMBgzX0Up0YTOLyFR2f6x2+bIctnzgcSj8iQPzAvFsKEHS/uMFWkY
-         ePUJQn7BW6kC9dnWNKYJTy2a8Iu1NKPD5iBTJXtPWAQB4Xf3FF0eE+d+aOVQhOVcnGOB
-         vus73NeK2Kze2dAEmPz680FFcWJweK26JekFQNAzPM65m5Omgti04v7LWUrpgJhHLErh
-         G6FJ6IXmNNMeIwvyNJELDv/SXdq25YZbqxYKXVYqvvAdTJ078ldKIC0kTdduEbP4Wg6U
-         d79Q==
-X-Gm-Message-State: APjAAAXd4sIDOJq2xbizLd5NaKDVlYZIqIO9LyRkExO9/90vdESi5kbu
-        hrd/1EItuIDGDMqc1uMgIhI=
-X-Google-Smtp-Source: APXvYqxo6B4gXnjGMWYuARKowyDhaKLS4wKmRNT6quFNAPXe3y0d9KK5mGP32FQLZdAH64ZdWVuKNg==
-X-Received: by 2002:a63:2bd2:: with SMTP id r201mr1968330pgr.197.1573630098847;
-        Tue, 12 Nov 2019 23:28:18 -0800 (PST)
-Received: from localhost ([2402:3a80:166c:698d:7a64:6a4b:9d08:b425])
-        by smtp.gmail.com with ESMTPSA id q199sm1467903pfq.147.2019.11.12.23.28.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 23:28:18 -0800 (PST)
-Date:   Wed, 13 Nov 2019 12:58:14 +0530
-From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
-To:     corbet@lwn.net
-Cc:     raven@themaw.net, akpm@linux-foundation.org,
-        jaskaransingh7654321@gmail.com, mchehab+samsung@kernel.org,
-        christian@brauner.io, neilb@suse.com, mszeredi@redhat.com,
-        willy@infradead.org, stefanha@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [RFC PATCH] convert autofs.txt to reST
-Message-ID: <20191113072814.GA31364@localhost.localdomain>
+ d=alertlogic.onmicrosoft.com; s=selector2-alertlogic-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fcrK36+ewixZOqFtTOR7hTWVsZPnN/PTT+1crPsWITA=;
+ b=QMqE8x82PLBcLWEH97WcZ9RX2eiuIILaZU+jLzSs1VzXfrl3qXM9OmCP6rbfdBK4fzA1V8IDXy0nLBsc5koymql7Kd58WBBSkL9Q/HkGo1ei18NTljj3hl8PVIksOl2TSOhpLSABcsK/yS0pidxQObCkpLqnytSYw07X5Uj5hM0=
+Received: from BYAPR20MB2726.namprd20.prod.outlook.com (20.178.238.150) by
+ BYAPR20MB2662.namprd20.prod.outlook.com (20.178.237.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Wed, 13 Nov 2019 07:29:34 +0000
+Received: from BYAPR20MB2726.namprd20.prod.outlook.com
+ ([fe80::b1ef:70a1:4100:26a4]) by BYAPR20MB2726.namprd20.prod.outlook.com
+ ([fe80::b1ef:70a1:4100:26a4%3]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
+ 07:29:34 +0000
+From:   "Harris, Robert" <robert.harris@alertlogic.com>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Help requested: futex(..., FUTEX_WAIT_PRIVATE, ...) returns EPERM
+Thread-Topic: Help requested: futex(..., FUTEX_WAIT_PRIVATE, ...) returns
+ EPERM
+Thread-Index: AQHVmYBWfg0+aL4WQEeFFOC3OWpiUqeItS+A
+Date:   Wed, 13 Nov 2019 07:29:33 +0000
+Message-ID: <0FFCBE3B-65D0-493F-9DB6-D4D64218EB0D@alertlogic.com>
+References: <E0332978-739B-4546-9C3F-975216C349D2@alertlogic.com>
+In-Reply-To: <E0332978-739B-4546-9C3F-975216C349D2@alertlogic.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=robert.harris@alertlogic.com; 
+x-originating-ip: [165.225.81.101]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c1f086fa-7e45-4f5a-4fb8-08d7680b3b1f
+x-ms-traffictypediagnostic: BYAPR20MB2662:
+x-microsoft-antispam-prvs: <BYAPR20MB26625FD7152C90CF15A7381494760@BYAPR20MB2662.namprd20.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(366004)(396003)(39850400004)(189003)(199004)(305945005)(14454004)(66446008)(14444005)(66946007)(5024004)(71200400001)(76176011)(26005)(446003)(25786009)(110136005)(11346002)(91956017)(256004)(64756008)(36756003)(66476007)(2616005)(2501003)(486006)(476003)(71190400001)(86362001)(66556008)(7736002)(53546011)(6506007)(2201001)(99286004)(478600001)(3846002)(8936002)(6116002)(81166006)(6246003)(66066001)(4326008)(102836004)(55236004)(6512007)(8676002)(81156014)(33656002)(2906002)(76116006)(6486002)(5660300002)(229853002)(316002)(186003)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR20MB2662;H:BYAPR20MB2726.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: alertlogic.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: M0QLY090c53ewFVJAZZM5z0LSAfQUUVUTZi0/xih6xQQgMFftvyGSJa1qxrYKikg6l3FKaTh737I/hIYn3RcovXZROUQC6L6Nr++C20p5JQACxxDrWC+guU6HrKutPbiu6QIQQSvi97Hytfh5gVFggJnG4ZbFrL4TWWcDp03+gMVdi71hCspvp4l2fTfq8U/PfggTA6B9AdVDrE/BophxnHgdUB6n3EV6yX155aGbnpsJpl16wyNVEKv0QwL5ru0mTLrEFYabaGaebm3VrqXk+j6V6rxhGBvhJCn+QlAASN7Kh7gK1O5v9TzrV8E3P3NmomWaXWSpglh1CDpIyP4idF++OfQsKx41EwPdylXd87URLiG0yGLCIdFWmDIcLuqThiclU7EaszTqWJZR1zvFjFv5kUJoXPmv+nopxXZ2H7rt6UqOyJJ05LryeCy+3sO
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A394135A6E41AF42913111ADEBEDF147@namprd20.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: alertlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1f086fa-7e45-4f5a-4fb8-08d7680b3b1f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 07:29:34.0072
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 04151827-cb2a-4231-9c24-1ef5ffc408eb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BuLJ5oPFSNbvU2HtPAL7w0tRaLwVav+xoXBz5WQceMiHvO39DK5jHUoGUTlPUQ+iMhwRBTTwEYisnnMaW7WqbYtA8LmPO1ClgEhEjve8FXU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR20MB2662
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch converts autofs.txt to reST.
 
- - Most of the changes pertain to reST formatting.
- - Some of the code snippets are updated to reflect current source.
- - A definition of the autofs packet header has been added in the chapter
-	"Communicating with autofs: the event pipe".
- - An indentation of an 8 space tab has been added wherever suitable, so
-   as to maintain consistency.
- - Removed indentation of the description of the ioctls which are similar
-   to the AUTOFS_IOC ioctls, as it does not come out quite right in HTML.
 
-Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
----
- .../filesystems/{autofs.txt => autofs.rst}    | 258 ++++++++++--------
- Documentation/filesystems/index.rst           |   1 +
- 2 files changed, 140 insertions(+), 119 deletions(-)
- rename Documentation/filesystems/{autofs.txt => autofs.rst} (77%)
+> On 12 Nov 2019, at 17:40, Harris, Robert <robert.harris@alertlogic.com> w=
+rote:
+>
+> I am investigating an issue on 4.9.184 in which futex() returns EPERM
+> intermittently for
+>
+> futex(uaddr, FUTEX_WAIT_PRIVATE, val, &timeout, NULL, 0)
+>
+> The failure affects an application in an AWS lambda;  traditional
+> debugging approaches vary from difficult to impossible.  I cannot
+> reproduce the problem at will, instrument the kernel, install a new
+> kernel or get an application core dump.
+>
+> Understanding the circumstances under which EPERM can be returned for
+> FUTEX_WAIT_PRIVATE would be useful but it is not a documented failure
+> mode.  I have spent some time looking through futex.c but have not
+> found anything yet.  I would be grateful for a hint from someone more
+> knowledgeable.
+>
+> Please address/cc me on any reply.
 
-diff --git a/Documentation/filesystems/autofs.txt b/Documentation/filesystems/autofs.rst
-similarity index 77%
-rename from Documentation/filesystems/autofs.txt
-rename to Documentation/filesystems/autofs.rst
-index 3af38c7fd26d..a130cba76f07 100644
---- a/Documentation/filesystems/autofs.txt
-+++ b/Documentation/filesystems/autofs.rst
-@@ -1,12 +1,9 @@
--<head>
--<style> p { max-width:50em} ol, ul {max-width: 40em}</style>
--</head>
--
-+=====================
- autofs - how it works
- =====================
- 
- Purpose
---------
-+=======
- 
- The goal of autofs is to provide on-demand mounting and race free
- automatic unmounting of various other filesystems.  This provides two
-@@ -28,7 +25,7 @@ key advantages:
-    first accessed a name.
- 
- Context
---------
-+=======
- 
- The "autofs" filesystem module is only one part of an autofs system.
- There also needs to be a user-space program which looks up names
-@@ -43,7 +40,7 @@ filesystem type.  Several "autofs" filesystems can be mounted and they
- can each be managed separately, or all managed by the same daemon.
- 
- Content
---------
-+=======
- 
- An autofs filesystem can contain 3 sorts of objects: directories,
- symbolic links and mount traps.  Mount traps are directories with
-@@ -52,7 +49,7 @@ extra properties as described in the next section.
- Objects can only be created by the automount daemon: symlinks are
- created with a regular `symlink` system call, while directories and
- mount traps are created with `mkdir`.  The determination of whether a
--directory should be a mount trap or not is quite _ad hoc_, largely for
-+directory should be a mount trap or not is quite _ad hoc\_, largely for
- historical reasons, and is determined in part by the
- *direct*/*indirect*/*offset* mount options, and the *maxproto* mount option.
- 
-@@ -80,7 +77,7 @@ where in the tree they are (root, top level, or lower), the *maxproto*,
- and whether the mount was *indirect* or not.
- 
- Mount Traps
-----------------
-+===============
- 
- A core element of the implementation of autofs is the Mount Traps
- which are provided by the Linux VFS.  Any directory provided by a
-@@ -201,7 +198,7 @@ initiated or is being considered, otherwise it returns 0.
- 
- 
- Mountpoint expiry
-------------------
-+=================
- 
- The VFS has a mechanism for automatically expiring unused mounts,
- much as it can expire any unused dentry information from the dcache.
-@@ -301,7 +298,7 @@ completed (together with removing any directories that might have been
- necessary), or has been aborted.
- 
- Communicating with autofs: detecting the daemon
-------------------------------------------------
-+===============================================
- 
- There are several forms of communication between the automount daemon
- and the filesystem.  As we have already seen, the daemon can create and
-@@ -317,33 +314,39 @@ If the daemon ever has to be stopped and restarted a new pgid can be
- provided through an ioctl as will be described below.
- 
- Communicating with autofs: the event pipe
-------------------------------------------
-+=========================================
- 
- When an autofs filesystem is mounted, the 'write' end of a pipe must
- be passed using the 'fd=' mount option.  autofs will write
- notification messages to this pipe for the daemon to respond to.
--For version 5, the format of the message is:
--
--        struct autofs_v5_packet {
--                int proto_version;                /* Protocol version */
--                int type;                        /* Type of packet */
--                autofs_wqt_t wait_queue_token;
--                __u32 dev;
--                __u64 ino;
--                __u32 uid;
--                __u32 gid;
--                __u32 pid;
--                __u32 tgid;
--                __u32 len;
--                char name[NAME_MAX+1];
-+For version 5, the format of the message is: ::
-+
-+	struct autofs_v5_packet {
-+		struct autofs_packet_hdr hdr;
-+		autofs_wqt_t wait_queue_token;
-+		__u32 dev;
-+		__u64 ino;
-+		__u32 uid;
-+		__u32 gid;
-+		__u32 pid;
-+		__u32 tgid;
-+		__u32 len;
-+		char name[NAME_MAX+1];
-         };
- 
--where the type is one of
-+And the format of the header is: ::
-+
-+	struct autofs_packet_hdr {
-+		int proto_version;		/* Protocol version */
-+		int type;			/* Type of packet */
-+	};
- 
--        autofs_ptype_missing_indirect
--        autofs_ptype_expire_indirect
--        autofs_ptype_missing_direct
--        autofs_ptype_expire_direct
-+where the type is one of ::
-+
-+	autofs_ptype_missing_indirect
-+	autofs_ptype_expire_indirect
-+	autofs_ptype_missing_direct
-+	autofs_ptype_expire_direct
- 
- so messages can indicate that a name is missing (something tried to
- access it but it isn't there) or that it has been selected for expiry.
-@@ -360,7 +363,7 @@ acknowledged using one of the ioctls below with the relevant
- `wait_queue_token`.
- 
- Communicating with autofs: root directory ioctls
--------------------------------------------------
-+================================================
- 
- The root directory of an autofs filesystem will respond to a number of
- ioctls.  The process issuing the ioctl must have the CAP_SYS_ADMIN
-@@ -368,58 +371,66 @@ capability, or must be the automount daemon.
- 
- The available ioctl commands are:
- 
--- **AUTOFS_IOC_READY**: a notification has been handled.  The argument
--    to the ioctl command is the "wait_queue_token" number
--    corresponding to the notification being acknowledged.
--- **AUTOFS_IOC_FAIL**: similar to above, but indicates failure with
--    the error code `ENOENT`.
--- **AUTOFS_IOC_CATATONIC**: Causes the autofs to enter "catatonic"
--    mode meaning that it stops sending notifications to the daemon.
--    This mode is also entered if a write to the pipe fails.
--- **AUTOFS_IOC_PROTOVER**:  This returns the protocol version in use.
--- **AUTOFS_IOC_PROTOSUBVER**: Returns the protocol sub-version which
--    is really a version number for the implementation.
--- **AUTOFS_IOC_SETTIMEOUT**:  This passes a pointer to an unsigned
--    long.  The value is used to set the timeout for expiry, and
--    the current timeout value is stored back through the pointer.
--- **AUTOFS_IOC_ASKUMOUNT**:  Returns, in the pointed-to `int`, 1 if
--    the filesystem could be unmounted.  This is only a hint as
--    the situation could change at any instant.  This call can be
--    used to avoid a more expensive full unmount attempt.
--- **AUTOFS_IOC_EXPIRE**: as described above, this asks if there is
--    anything suitable to expire.  A pointer to a packet:
--
--        struct autofs_packet_expire_multi {
--                int proto_version;              /* Protocol version */
--                int type;                       /* Type of packet */
--                autofs_wqt_t wait_queue_token;
--                int len;
--                char name[NAME_MAX+1];
--        };
-+- **AUTOFS_IOC_READY**:
-+	a notification has been handled.  The argument
-+	to the ioctl command is the "wait_queue_token" number
-+	corresponding to the notification being acknowledged.
-+- **AUTOFS_IOC_FAIL**:
-+	similar to above, but indicates failure with
-+	the error code `ENOENT`.
-+- **AUTOFS_IOC_CATATONIC**:
-+	Causes the autofs to enter "catatonic"
-+	mode meaning that it stops sending notifications to the daemon.
-+	This mode is also entered if a write to the pipe fails.
-+- **AUTOFS_IOC_PROTOVER**:
-+	This returns the protocol version in use.
-+- **AUTOFS_IOC_PROTOSUBVER**:
-+	Returns the protocol sub-version which
-+	is really a version number for the implementation.
-+- **AUTOFS_IOC_SETTIMEOUT**:
-+	This passes a pointer to an unsigned
-+	long.  The value is used to set the timeout for expiry, and
-+	the current timeout value is stored back through the pointer.
-+- **AUTOFS_IOC_ASKUMOUNT**:
-+	Returns, in the pointed-to `int`, 1 if
-+	the filesystem could be unmounted.  This is only a hint as
-+	the situation could change at any instant.  This call can be
-+	used to avoid a more expensive full unmount attempt.
-+- **AUTOFS_IOC_EXPIRE**:
-+	as described above, this asks if there is
-+	anything suitable to expire.  A pointer to a packet: ::
-+
-+		struct autofs_packet_expire_multi {
-+			struct autofs_packet_hdr hdr;
-+			autofs_wqt_t wait_queue_token;
-+			int len;
-+			char name[NAME_MAX+1];
-+		};
- 
--     is required.  This is filled in with the name of something
--     that can be unmounted or removed.  If nothing can be expired,
--     `errno` is set to `EAGAIN`.  Even though a `wait_queue_token`
--     is present in the structure, no "wait queue" is established
--     and no acknowledgment is needed.
--- **AUTOFS_IOC_EXPIRE_MULTI**:  This is similar to
--     **AUTOFS_IOC_EXPIRE** except that it causes notification to be
--     sent to the daemon, and it blocks until the daemon acknowledges.
--     The argument is an integer which can contain two different flags.
-+	is required.  This is filled in with the name of something
-+	that can be unmounted or removed.  If nothing can be expired,
-+	`errno` is set to `EAGAIN`.  Even though a `wait_queue_token`
-+	is present in the structure, no "wait queue" is established
-+	and no acknowledgment is needed.
-+- **AUTOFS_IOC_EXPIRE_MULTI**:
-+	This is similar to
-+	**AUTOFS_IOC_EXPIRE** except that it causes notification to be
-+	sent to the daemon, and it blocks until the daemon acknowledges.
-+	The argument is an integer which can contain two different flags.
- 
--     **AUTOFS_EXP_IMMEDIATE** causes `last_used` time to be ignored
--     and objects are expired if the are not in use.
-+	**AUTOFS_EXP_IMMEDIATE** causes `last_used` time to be ignored
-+	and objects are expired if the are not in use.
- 
--     **AUTOFS_EXP_FORCED** causes the in use status to be ignored
--     and objects are expired ieven if they are in use. This assumes
--     that the daemon has requested this because it is capable of
--     performing the umount.
-+	**AUTOFS_EXP_FORCED** causes the in use status to be ignored
-+	and objects are expired ieven if they are in use. This assumes
-+	that the daemon has requested this because it is capable of
-+	performing the umount.
- 
--     **AUTOFS_EXP_LEAVES** will select a leaf rather than a top-level
--     name to expire.  This is only safe when *maxproto* is 4.
-+	**AUTOFS_EXP_LEAVES** will select a leaf rather than a top-level
-+	name to expire.  This is only safe when *maxproto* is 4.
- 
- Communicating with autofs: char-device ioctls
-----------------------------------------------
-+=============================================
- 
- It is not always possible to open the root of an autofs filesystem,
- particularly a *direct* mounted filesystem.  If the automount daemon
-@@ -429,9 +440,9 @@ need there is a "miscellaneous" character device (major 10, minor 235)
- which can be used to communicate directly with the autofs filesystem.
- It requires CAP_SYS_ADMIN for access.
- 
--The `ioctl`s that can be used on this device are described in a separate
-+The `ioctl`\s that can be used on this device are described in a separate
- document `autofs-mount-control.txt`, and are summarised briefly here.
--Each ioctl is passed a pointer to an `autofs_dev_ioctl` structure:
-+Each ioctl is passed a pointer to an `autofs_dev_ioctl` structure: ::
- 
-         struct autofs_dev_ioctl {
-                 __u32 ver_major;
-@@ -469,41 +480,50 @@ that the kernel module can support.
- 
- Commands are:
- 
--- **AUTOFS_DEV_IOCTL_VERSION_CMD**: does nothing, except validate and
--    set version numbers.
--- **AUTOFS_DEV_IOCTL_OPENMOUNT_CMD**: return an open file descriptor
--    on the root of an autofs filesystem.  The filesystem is identified
--    by name and device number, which is stored in `openmount.devid`.
--    Device numbers for existing filesystems can be found in
--    `/proc/self/mountinfo`.
--- **AUTOFS_DEV_IOCTL_CLOSEMOUNT_CMD**: same as `close(ioctlfd)`.
--- **AUTOFS_DEV_IOCTL_SETPIPEFD_CMD**: if the filesystem is in
--    catatonic mode, this can provide the write end of a new pipe
--    in `setpipefd.pipefd` to re-establish communication with a daemon.
--    The process group of the calling process is used to identify the
--    daemon.
--- **AUTOFS_DEV_IOCTL_REQUESTER_CMD**: `path` should be a
--    name within the filesystem that has been auto-mounted on.
--    On successful return, `requester.uid` and `requester.gid` will be
--    the UID and GID of the process which triggered that mount.
--- **AUTOFS_DEV_IOCTL_ISMOUNTPOINT_CMD**: Check if path is a
--    mountpoint of a particular type - see separate documentation for
--    details.
--- **AUTOFS_DEV_IOCTL_PROTOVER_CMD**:
--- **AUTOFS_DEV_IOCTL_PROTOSUBVER_CMD**:
--- **AUTOFS_DEV_IOCTL_READY_CMD**:
--- **AUTOFS_DEV_IOCTL_FAIL_CMD**:
--- **AUTOFS_DEV_IOCTL_CATATONIC_CMD**:
--- **AUTOFS_DEV_IOCTL_TIMEOUT_CMD**:
--- **AUTOFS_DEV_IOCTL_EXPIRE_CMD**:
--- **AUTOFS_DEV_IOCTL_ASKUMOUNT_CMD**:  These all have the same
--    function as the similarly named **AUTOFS_IOC** ioctls, except
--    that **FAIL** can be given an explicit error number in `fail.status`
--    instead of assuming `ENOENT`, and this **EXPIRE** command
--    corresponds to **AUTOFS_IOC_EXPIRE_MULTI**.
-+- **AUTOFS_DEV_IOCTL_VERSION_CMD**:
-+	does nothing, except validate and
-+	set version numbers.
-+- **AUTOFS_DEV_IOCTL_OPENMOUNT_CMD**:
-+	return an open file descriptor
-+	on the root of an autofs filesystem.  The filesystem is identified
-+	by name and device number, which is stored in `openmount.devid`.
-+	Device numbers for existing filesystems can be found in
-+	`/proc/self/mountinfo`.
-+- **AUTOFS_DEV_IOCTL_CLOSEMOUNT_CMD**:
-+	same as `close(ioctlfd)`.
-+- **AUTOFS_DEV_IOCTL_SETPIPEFD_CMD**:
-+	if the filesystem is in
-+	catatonic mode, this can provide the write end of a new pipe
-+	in `setpipefd.pipefd` to re-establish communication with a daemon.
-+	The process group of the calling process is used to identify the
-+	daemon.
-+- **AUTOFS_DEV_IOCTL_REQUESTER_CMD**:
-+	`path` should be a
-+	name within the filesystem that has been auto-mounted on.
-+	On successful return, `requester.uid` and `requester.gid` will be
-+	the UID and GID of the process which triggered that mount.
-+- **AUTOFS_DEV_IOCTL_ISMOUNTPOINT_CMD**:
-+	Check if path is a
-+	mountpoint of a particular type - see separate documentation for
-+	details.
-+
-+- **AUTOFS_DEV_IOCTL_PROTOVER_CMD**
-+- **AUTOFS_DEV_IOCTL_PROTOSUBVER_CMD**
-+- **AUTOFS_DEV_IOCTL_READY_CMD**
-+- **AUTOFS_DEV_IOCTL_FAIL_CMD**
-+- **AUTOFS_DEV_IOCTL_CATATONIC_CMD**
-+- **AUTOFS_DEV_IOCTL_TIMEOUT_CMD**
-+- **AUTOFS_DEV_IOCTL_EXPIRE_CMD**
-+- **AUTOFS_DEV_IOCTL_ASKUMOUNT_CMD**
-+
-+These all have the same
-+function as the similarly named **AUTOFS_IOC** ioctls, except
-+that **FAIL** can be given an explicit error number in `fail.status`
-+instead of assuming `ENOENT`, and this **EXPIRE** command
-+corresponds to **AUTOFS_IOC_EXPIRE_MULTI**.
- 
- Catatonic mode
----------------
-+==============
- 
- As mentioned, an autofs mount can enter "catatonic" mode.  This
- happens if a write to the notification pipe fails, or if it is
-@@ -527,7 +547,7 @@ Catatonic mode can only be left via the
- **AUTOFS_DEV_IOCTL_OPENMOUNT_CMD** ioctl on the `/dev/autofs`.
- 
- The "ignore" mount option
---------------------------
-+=========================
- 
- The "ignore" mount option can be used to provide a generic indicator
- to applications that the mount entry should be ignored when displaying
-@@ -542,18 +562,18 @@ This is intended to be used by user space programs to exclude autofs
- mounts from consideration when reading the mounts list.
- 
- autofs, name spaces, and shared mounts
----------------------------------------
-+======================================
- 
- With bind mounts and name spaces it is possible for an autofs
- filesystem to appear at multiple places in one or more filesystem
- name spaces.  For this to work sensibly, the autofs filesystem should
--always be mounted "shared". e.g.
-+always be mounted "shared". e.g. ::
- 
--> `mount --make-shared /autofs/mount/point`
-+	mount --make-shared /autofs/mount/point
- 
- The automount daemon is only able to manage a single mount location for
- an autofs filesystem and if mounts on that are not 'shared', other
- locations will not behave as expected.  In particular access to those
--other locations will likely result in the `ELOOP` error
-+other locations will likely result in the `ELOOP` error ::
- 
--> Too many levels of symbolic links
-+	Too many levels of symbolic links
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 2c3a9f761205..ad6315a48d14 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -46,4 +46,5 @@ Documentation for filesystem implementations.
- .. toctree::
-    :maxdepth: 2
- 
-+   autofs
-    virtiofs
--- 
-2.21.0
+To be clear, I do mean that futex() is returning -1 and setting errno
+to EPERM.
 
+Robert
+Confidentiality Notice | This email and any included attachments may be pri=
+vileged, confidential and/or otherwise protected from disclosure. Access to=
+ this email by anyone other than the intended recipient is unauthorized. If=
+ you believe you have received this email in error, please contact the send=
+er immediately and delete all copies. If you are not the intended recipient=
+, you are notified that disclosing, copying, distributing or taking any act=
+ion in reliance on the contents of this information is strictly prohibited.
