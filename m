@@ -2,142 +2,119 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EACAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69523C33C8C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44B0206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8EC206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573670710;
+	bh=2mHktS8n2bykBf/7+ImIIlHIEX0Wb12mo7wQ2MjiLBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g0tz2NN/eIcrizzi415DpbHYtazFAsP+BcxRusgi8gXUit+Ut2XWOuXBzNPnsj1h7
+	 SHRqUoAWnTSb0xCHukFwWT7ZD7iXjLiiXqOywdl1+XehyDzvEWhXgHd11ivSgya7K5
+	 /aRcQvEwuTFlyTt3UVTUWCp8DduQMqlUJN6fB+Pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbfKMSif (ORCPT
+        id S1728313AbfKMSpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:38:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53434 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727074AbfKMSi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:38:26 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 73D7BB022;
-        Wed, 13 Nov 2019 18:38:23 +0000 (UTC)
-Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
-To:     John Garry <john.garry@huawei.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "hare@suse.com" <hare@suse.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>
-References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
- <1573652209-163505-4-git-send-email-john.garry@huawei.com>
- <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
- <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
- <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
- <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
-Date:   Wed, 13 Nov 2019 19:38:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 13 Nov 2019 13:45:08 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35021 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbfKMSpI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:45:08 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q13so2242802pff.2;
+        Wed, 13 Nov 2019 10:45:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ytOa/TRpYZHcXnwihJ6zpPIzYpkWSN253EE1mDAjXKo=;
+        b=sQyexlwAOOOOJjs6JytY1RmDs1L97RiDZ4+TprM0G9qxAsmXXJ/vdBH953oW7QdsDx
+         nCNQhPIy6ef6r+JRrQqFjaUYwxnXf8Dum7BAYt/z7spYKiqP1l8vIOQ40FpcAKiJ7RL4
+         /DU38NeMr6Q8p0nLWTzRk80RmpLfp55SvVHVRx/TwN92Bip/AD5XNVE1MV86gN3BJg17
+         uILcZ45cavMR9WAeTwbbedH2I+9dCNrcrXa0BLGhgLiUer6RF3/1ZfYK+0dPlAbgDqDx
+         xNwlWKSUf4vn4K4I6DDAhtkuOaLuG48ttn5w+ukMyUG76VgW6uxfdSLsWs/vRVulqF3f
+         313Q==
+X-Gm-Message-State: APjAAAWwZTnuWB4yOxVq/N5lKqLhof9JpeJP6Y6pcoAlkj9QJ5ndUIEX
+        XGlMa/wt/ZIQTH6fOkVbxTY=
+X-Google-Smtp-Source: APXvYqw6X5AwWUNGodgFhZ6+c75EuWASAsRsHY14mdl8no689akd+8+9HvchuIg7nCAOCno/VfHAOg==
+X-Received: by 2002:aa7:9d8b:: with SMTP id f11mr6212536pfq.20.1573670707173;
+        Wed, 13 Nov 2019 10:45:07 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 21sm4273627pfa.170.2019.11.13.10.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 10:45:06 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 68732403DC; Wed, 13 Nov 2019 18:45:05 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 18:45:05 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Juergen Gross <jgross@suse.com>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Roman Gilg <subdiff@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Luis R. Rodriguez" <mcgrof@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and
+ ia64
+Message-ID: <20191113184505.GW11244@42.do-not-panic.com>
+References: <20191111192258.2234502-1-arnd@arndb.de>
+ <20191112105507.GA7122@lst.de>
+ <CAKMK7uEEz1n+zuTs29rbPHU74Dspaib=prpMge63L_-rUk_o4A@mail.gmail.com>
+ <20191112140631.GA10922@lst.de>
+ <CAKMK7uFaA607rOS6x_FWjXQ2+Qdm8dQ1dQ+Oi-9if_Qh_wHWPg@mail.gmail.com>
+ <20191112222423.GO11244@42.do-not-panic.com>
+ <20191113072708.GA3213@lst.de>
+ <CAK8P3a3OpiWAep86tOiN1Fj2W7ud5hQ1OLTkBR8ueAKsMHk-dA@mail.gmail.com>
+ <20191113093154.GB32742@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113093154.GB32742@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 5:21 PM, John Garry wrote:
-> On 13/11/2019 15:38, Hannes Reinecke wrote:
->>>>> -        if (clear_ctx_on_error)
->>>>> -            data->ctx = NULL;
->>>>> -        blk_queue_exit(q);
->>>>> -        return NULL;
->>>>> +    if (data->hctx->shared_tags) {
->>>>> +        shared_tag = blk_mq_get_shared_tag(data);
->>>>> +        if (shared_tag == BLK_MQ_TAG_FAIL)
->>>>> +            goto err_shared_tag;
->>>>>        }
->>>>>    -    rq = blk_mq_rq_ctx_init(data, tag, data->cmd_flags,
->>>>> alloc_time_ns);
->>>>> +    tag = blk_mq_get_tag(data);
->>>>> +    if (tag == BLK_MQ_TAG_FAIL)
->>>>> +        goto err_tag;
->>>>> +
->>>>> +    rq = blk_mq_rq_ctx_init(data, tag, shared_tag, data->cmd_flags,
->>>>> alloc_time_ns);
->>>>>        if (!op_is_flush(data->cmd_flags)) {
->>>>>            rq->elv.icq = NULL;
->>>>>            if (e && e->type->ops.prepare_request) {
->>> Hi Hannes,
->>>
->>>> Why do you need to keep a parallel tag accounting between 'normal' and
->>>> 'shared' tags here?
->>>> Isn't is sufficient to get a shared tag only, and us that in lieo of 
->>>> the
->>>> 'real' one?
->>> In theory, yes. Just the 'shared' tag should be adequate.
->>>
->>> A problem I see with this approach is that we lose the identity of which
->>> tags are allocated for each hctx. As an example for this, consider
->>> blk_mq_queue_tag_busy_iter(), which iterates the bits for each hctx.
->>> Now, if you're just using shared tags only, that wouldn't work.
->>>
->>> Consider blk_mq_can_queue() as another example - this tells us if a hctx
->>> has any bits unset, while with only using shared tags it would tell if
->>> any bits unset over all queues, and this change in semantics could break
->>> things. At a glance, function __blk_mq_tag_idle() looks problematic 
->>> also.
->>>
->>> And this is where it becomes messy to implement.
->>>
+On Wed, Nov 13, 2019 at 11:31:54AM +0200, Andy Shevchenko wrote:
+> On Wed, Nov 13, 2019 at 08:38:15AM +0100, Arnd Bergmann wrote:
+> > On Wed, Nov 13, 2019 at 8:27 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > On Tue, Nov 12, 2019 at 10:24:23PM +0000, Luis Chamberlain wrote:
+> > > > I think this would be possible if we could flop ioremap_nocache() to UC
+> > > > instead of UC- on x86. Otherwise, I can't see how we can remove this by
+> > > > still not allowing direct MTRR calls.
+> > >
+> > > If everything goes well ioremap_nocache will be gone as of 5.5.
+> > 
+> > As ioremap_nocache() just an alias for ioremap(), I suppose the idea would
+> > then be to make x86 ioremap be UC instead of UC-, again matching what the
+> > other architectures do already.
 > 
-> Hi Hannes,
-> 
->> Oh, my. Indeed, that's correct.
-> 
-> The tags could be kept in sync like this:
-> 
-> shared_tag = blk_mq_get_tag(shared_tagset);
-> if (shared_tag != -1)
->      sbitmap_set(hctx->tags, shared_tag);
-> 
-> But that's obviously not ideal.
-> 
-Actually, I _do_ prefer keeping both in sync.
-We might want to check if the 'normal' tag is set (typically it would 
-not, but then, who knows ...)
-The beauty here is that both 'shared' and 'normal' tag are in sync, so 
-if a driver would be wanting to use the tag as index into a command 
-array it can do so without any surprises.
+> I think it's right thing to do, i.e. assume that ioremap() always does strong
+> UC independently on MTRR settings.
 
-Why do you think it's not ideal?
+Agreed wholeheartedly. What are the blockers from making that happen? Do
+we have any left?
 
->>
->> But then we don't really care _which_ shared tag is assigned; so
->> wouldn't be we better off by just having an atomic counter here?
->> Cache locality will be blown anyway ...
-> The atomic counter would solve the issuing more than Scsi_host.can_queue 
-> to the LLDD, but we still need a unique tag, which is what the shared 
-> tag is.
-> 
-Yeah, true. Daft idea :-)
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                              +49 911 74053 688
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+  Luis
