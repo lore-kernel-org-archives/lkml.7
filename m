@@ -4,60 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFB5C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65C8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63EC3206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22DC206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610784;
-	bh=uXJnpNa2DlT2etLUcYrrcS9giJvdo6ordh6k9tSg9PM=;
+	s=default; t=1573610788;
+	bh=yPJ2/XulO2bDi2HBr4ZZGwNMrmIfrdf5A0gQw9f4l5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZtfPR354FtDmz/SN2dNBlzKtFA+3hEvA25DG8u9rfVdAoOlgV2/04jQ+KSSsJOD5/
-	 SYpKjqDaaFqtoek3szTbnAp4HL2XWtpg9JMGL6L7oESmi2asR0ciC5CM8ISZFk5f3P
-	 g7taOfo5XAfORk+RshtclXDPZtg3XnrGziHR++1E=
+	b=SkW7MLtNNDBlaya+Qa0EUVi2u6TyxAnr6DbS8ao9ayBFuUl60Z4HU4uyfeovHHlFH
+	 vNG7hSy3cZrI3rZdJoctvMfI7ATZxry7+cTCjhd795e0vVlH4xNMMisDCKfEssNSVr
+	 Y9X16vjam14YJABGjOuWpq+eMqQLGsigShTI7bZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730729AbfKMCGW (ORCPT
+        id S1730694AbfKMCBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:06:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57032 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:01:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729178AbfKMCBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:16 -0500
+        id S1730647AbfKMCBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:01:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 628D92245A;
-        Wed, 13 Nov 2019 02:01:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3CDD2245A;
+        Wed, 13 Nov 2019 02:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610476;
-        bh=uXJnpNa2DlT2etLUcYrrcS9giJvdo6ordh6k9tSg9PM=;
+        s=default; t=1573610464;
+        bh=yPJ2/XulO2bDi2HBr4ZZGwNMrmIfrdf5A0gQw9f4l5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNMwlBuHRQZITS7IkKk7EJjqzbWeDvss8mR7eX7kaE4lh8Ppf4gQewGDZEAksivx0
-         ERoY+nghVnDIjMcr+sKUcj78ETIa0DZtyxM08k66mbIXlYbxznZOLn3Ez+6qMIDZ9g
-         Mmzr9iQ4p4HP0iaDF0R7apQ7ngvgmtLUsAl2Y854=
+        b=Uao3u0uFW32j/t00vERUHpv4oq8iKANWqeK/TVuYVHDkCMzWaL9kX3CLbG9Q6dTq7
+         1hph3FtaKN/Ih65cUHzhhGghgCteN2nKglT95HxU0x3MDli5S85MwfF3UqIsxXr31N
+         5xxA49aoLgdH4jazSX0wXflANM91hFwIZUwiZ+4M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
-        dan.j.williams@intel.com, dyoung@redhat.com,
-        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 58/68] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
-Date:   Tue, 12 Nov 2019 20:59:22 -0500
-Message-Id: <20191113015932.12655-58-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Lianbo Jiang <lijiang@redhat.com>,
+        x86@kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 51/68] proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
+Date:   Tue, 12 Nov 2019 20:59:15 -0500
+Message-Id: <20191113015932.12655-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -70,65 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
+[ Upstream commit cf089611f4c446285046fcd426d90c18f37d2905 ]
 
-The only use of KEXEC_BACKUP_SRC_END is as an argument to
-walk_system_ram_res():
+Lianbo reported a build error with a particular 32-bit config, see Link
+below for details.
 
-  int crash_load_segments(struct kimage *image)
-  {
-    ...
-    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                        image, determine_backup_region);
+Provide a weak copy_oldmem_page_encrypted() function which architectures
+can override, in the same manner other functionality in that file is
+supplied.
 
-walk_system_ram_res() expects "start, end" arguments that are inclusive,
-i.e., the range to be walked includes both the start and end addresses.
-
-KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
-first address *past* the desired 0-640KB range.
-
-Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
-region is [0-0x9ffff], not [0-0xa0000].
-
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reported-by: Lianbo Jiang <lijiang@redhat.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Brijesh Singh <brijesh.singh@amd.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Lianbo Jiang <lijiang@redhat.com>
-CC: Takashi Iwai <tiwai@suse.de>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Tom Lendacky <thomas.lendacky@amd.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: baiyaowei@cmss.chinamobile.com
-CC: bhe@redhat.com
-CC: dan.j.williams@intel.com
-CC: dyoung@redhat.com
-CC: kexec@lists.infradead.org
-Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
+CC: x86@kernel.org
+Link: http://lkml.kernel.org/r/710b9d95-2f70-eadf-c4a1-c3dc80ee4ebb@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/kexec.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/proc/vmcore.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 282630e4c6ea4..1624a7ffa95d8 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -66,7 +66,7 @@ struct kimage;
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 8ab782d8b33dd..93d13f4010c14 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -164,6 +164,16 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+ 	return remap_pfn_range(vma, from, pfn, size, prot);
+ }
  
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
- 
++/*
++ * Architectures which support memory encryption override this.
++ */
++ssize_t __weak
++copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
++			   unsigned long offset, int userbuf)
++{
++	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
++}
++
  /*
-  * CPU does not save ss and sp on stack if execution is already
+  * Copy to either kernel or user space
+  */
 -- 
 2.20.1
 
