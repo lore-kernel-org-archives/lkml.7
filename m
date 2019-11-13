@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5C9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93043C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFD3222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6B821D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611802;
-	bh=pDr1sift67S8LRLwSaPY2s2L0AtsVnaKQz8TwC2QZ/4=;
+	s=default; t=1573611808;
+	bh=xLo8An/GGtaYvQusuEEVTAK6bx26bpriaCZTP8Q7WCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5TLA2G6e2FdomXKvzVur2+wnfxsu4yU2UHbLPBJ9pkt0lpqD4TVf+WW5Z2YEoIcT
-	 phgzNjFGiPKKU3AuVeu5svdt4481CwWxDmCavh3qNnlRppy002kfpeSc9lTROqjpkc
-	 hllzBqcn+aZ+YYGkDpUA9fjL6AFGflww0W3SByFk=
+	b=R342a68xX7loy++VOg0Yka2K1av2R4CLHZFItAtF4viUEkzbpoPvwPt8itOcMd3Tx
+	 aVhCB0T2vF0Vwu/AYVzL79e3OWCzHr5VcTqVaIrROkRK6tgIuDN0gJWSCWnGWMBGNM
+	 G1nnaubdvAeVQMfSxhTMB1+OYbzgXiLaVneJzOXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfKMCXV (ORCPT
+        id S1730145AbfKMCX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:23:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41898 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:23:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728386AbfKMBwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:45 -0500
+        id S1728354AbfKMBwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F10D320674;
-        Wed, 13 Nov 2019 01:52:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 357A4222CA;
+        Wed, 13 Nov 2019 01:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609964;
-        bh=pDr1sift67S8LRLwSaPY2s2L0AtsVnaKQz8TwC2QZ/4=;
+        s=default; t=1573609960;
+        bh=xLo8An/GGtaYvQusuEEVTAK6bx26bpriaCZTP8Q7WCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nv4IiM9NgIUNK3G+6sLxX+pqX1ecvXXluAe2w/8SP9npU2eFRXjnm2bPtBwf3J+Zi
-         PgG5So2S1mtpbEC+Ui0zN5SiVYnGyxsul1gKoCSc/1W4hNCOahdz/Zyuw4SDeQr/CU
-         2ynK8CQpL4BPsrIB8t/rUYckZVVANRr06L8t4K/A=
+        b=FZNCL2IMOexpRiGkCaEiZ9eSVScHdTPH+tGXp1rFt1L8yofgCiR0WivoPKQmSIf3h
+         7bF3oUqkDIzseIPbr/wZ+1vXE6pW9PE1ZvS9zgPUqHQG2WXN4dAk1gicYZcAyaiuGt
+         HWexPLj5w+bygCuuUzRnU+LnJmbQ4Z2+SjIg3g3U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cameron Kaiser <spectre@floodgap.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 095/209] KVM: PPC: Book3S PR: Exiting split hack mode needs to fixup both PC and LR
-Date:   Tue, 12 Nov 2019 20:48:31 -0500
-Message-Id: <20191113015025.9685-95-sashal@kernel.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 092/209] media: i2c: adv748x: Support probing a single output
+Date:   Tue, 12 Nov 2019 20:48:28 -0500
+Message-Id: <20191113015025.9685-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,42 +62,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cameron Kaiser <spectre@floodgap.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-[ Upstream commit 1006284c5e411872333967b1970c2ca46a9e225f ]
+[ Upstream commit eccf442ce156ec2b4e06b1239d5fdcb0c732f63f ]
 
-When an OS (currently only classic Mac OS) is running in KVM-PR and makes a
-linked jump from code with split hack addressing enabled into code that does
-not, LR is not correctly updated and reflects the previously munged PC.
+Currently the adv748x driver will fail to probe unless both of its
+output endpoints (TXA and TXB) are connected.
 
-To fix this, this patch undoes the address munge when exiting split
-hack mode so that code relying on LR being a proper address will now
-execute. This does not affect OS X or other operating systems running
-on KVM-PR.
+Make the driver support probing provided that there is at least one
+input, and one output connected and protect the clean-up function from
+accessing un-initialized fields.
 
-Signed-off-by: Cameron Kaiser <spectre@floodgap.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Following patches will fix other uses of un-initialized TXs in the driver,
+such as power management functions.
+
+Tested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/i2c/adv748x/adv748x-core.c | 25 +++++++++++++++++++++---
+ drivers/media/i2c/adv748x/adv748x-csi2.c | 18 ++++++-----------
+ drivers/media/i2c/adv748x/adv748x.h      |  2 ++
+ 3 files changed, 30 insertions(+), 15 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-index 281f074581a3b..cc05f346e0421 100644
---- a/arch/powerpc/kvm/book3s.c
-+++ b/arch/powerpc/kvm/book3s.c
-@@ -78,8 +78,11 @@ void kvmppc_unfixup_split_real(struct kvm_vcpu *vcpu)
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index 6ca88daa0ecd7..65c3024c5f76f 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -569,7 +569,8 @@ static int adv748x_parse_dt(struct adv748x_state *state)
  {
- 	if (vcpu->arch.hflags & BOOK3S_HFLAG_SPLIT_HACK) {
- 		ulong pc = kvmppc_get_pc(vcpu);
-+		ulong lr = kvmppc_get_lr(vcpu);
- 		if ((pc & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
- 			kvmppc_set_pc(vcpu, pc & ~SPLIT_HACK_MASK);
-+		if ((lr & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
-+			kvmppc_set_lr(vcpu, lr & ~SPLIT_HACK_MASK);
- 		vcpu->arch.hflags &= ~BOOK3S_HFLAG_SPLIT_HACK;
+ 	struct device_node *ep_np = NULL;
+ 	struct of_endpoint ep;
+-	bool found = false;
++	bool out_found = false;
++	bool in_found = false;
+ 
+ 	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
+ 		of_graph_parse_endpoint(ep_np, &ep);
+@@ -592,10 +593,17 @@ static int adv748x_parse_dt(struct adv748x_state *state)
+ 		of_node_get(ep_np);
+ 		state->endpoints[ep.port] = ep_np;
+ 
+-		found = true;
++		/*
++		 * At least one input endpoint and one output endpoint shall
++		 * be defined.
++		 */
++		if (ep.port < ADV748X_PORT_TXA)
++			in_found = true;
++		else
++			out_found = true;
  	}
+ 
+-	return found ? 0 : -ENODEV;
++	return in_found && out_found ? 0 : -ENODEV;
  }
+ 
+ static void adv748x_dt_cleanup(struct adv748x_state *state)
+@@ -627,6 +635,17 @@ static int adv748x_probe(struct i2c_client *client,
+ 	state->i2c_clients[ADV748X_PAGE_IO] = client;
+ 	i2c_set_clientdata(client, state);
+ 
++	/*
++	 * We can not use container_of to get back to the state with two TXs;
++	 * Initialize the TXs's fields unconditionally on the endpoint
++	 * presence to access them later.
++	 */
++	state->txa.state = state->txb.state = state;
++	state->txa.page = ADV748X_PAGE_TXA;
++	state->txb.page = ADV748X_PAGE_TXB;
++	state->txa.port = ADV748X_PORT_TXA;
++	state->txb.port = ADV748X_PORT_TXB;
++
+ 	/* Discover and process ports declared by the Device tree endpoints */
+ 	ret = adv748x_parse_dt(state);
+ 	if (ret) {
+diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
+index 469be87a3761f..556e13c911a62 100644
+--- a/drivers/media/i2c/adv748x/adv748x-csi2.c
++++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
+@@ -266,19 +266,10 @@ static int adv748x_csi2_init_controls(struct adv748x_csi2 *tx)
+ 
+ int adv748x_csi2_init(struct adv748x_state *state, struct adv748x_csi2 *tx)
+ {
+-	struct device_node *ep;
+ 	int ret;
+ 
+-	/* We can not use container_of to get back to the state with two TXs */
+-	tx->state = state;
+-	tx->page = is_txa(tx) ? ADV748X_PAGE_TXA : ADV748X_PAGE_TXB;
+-
+-	ep = state->endpoints[is_txa(tx) ? ADV748X_PORT_TXA : ADV748X_PORT_TXB];
+-	if (!ep) {
+-		adv_err(state, "No endpoint found for %s\n",
+-				is_txa(tx) ? "txa" : "txb");
+-		return -ENODEV;
+-	}
++	if (!is_tx_enabled(tx))
++		return 0;
+ 
+ 	/* Initialise the virtual channel */
+ 	adv748x_csi2_set_virtual_channel(tx, 0);
+@@ -288,7 +279,7 @@ int adv748x_csi2_init(struct adv748x_state *state, struct adv748x_csi2 *tx)
+ 			    is_txa(tx) ? "txa" : "txb");
+ 
+ 	/* Ensure that matching is based upon the endpoint fwnodes */
+-	tx->sd.fwnode = of_fwnode_handle(ep);
++	tx->sd.fwnode = of_fwnode_handle(state->endpoints[tx->port]);
+ 
+ 	/* Register internal ops for incremental subdev registration */
+ 	tx->sd.internal_ops = &adv748x_csi2_internal_ops;
+@@ -321,6 +312,9 @@ int adv748x_csi2_init(struct adv748x_state *state, struct adv748x_csi2 *tx)
+ 
+ void adv748x_csi2_cleanup(struct adv748x_csi2 *tx)
+ {
++	if (!is_tx_enabled(tx))
++		return;
++
+ 	v4l2_async_unregister_subdev(&tx->sd);
+ 	media_entity_cleanup(&tx->sd.entity);
+ 	v4l2_ctrl_handler_free(&tx->ctrl_hdl);
+diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+index 65f83741277e1..1cf46c401664d 100644
+--- a/drivers/media/i2c/adv748x/adv748x.h
++++ b/drivers/media/i2c/adv748x/adv748x.h
+@@ -82,6 +82,7 @@ struct adv748x_csi2 {
+ 	struct adv748x_state *state;
+ 	struct v4l2_mbus_framefmt format;
+ 	unsigned int page;
++	unsigned int port;
+ 
+ 	struct media_pad pads[ADV748X_CSI2_NR_PADS];
+ 	struct v4l2_ctrl_handler ctrl_hdl;
+@@ -91,6 +92,7 @@ struct adv748x_csi2 {
+ 
+ #define notifier_to_csi2(n) container_of(n, struct adv748x_csi2, notifier)
+ #define adv748x_sd_to_csi2(sd) container_of(sd, struct adv748x_csi2, sd)
++#define is_tx_enabled(_tx) ((_tx)->state->endpoints[(_tx)->port] != NULL)
+ 
+ enum adv748x_hdmi_pads {
+ 	ADV748X_HDMI_SINK,
 -- 
 2.20.1
 
