@@ -2,139 +2,141 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE65BC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BF7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F892084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8AC32245A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JBRYJf/N"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ihgDbrP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfKMHYx (ORCPT
+        id S1726985AbfKMHY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:24:53 -0500
-Received: from mail-eopbgr00064.outbound.protection.outlook.com ([40.107.0.64]:56582
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725908AbfKMHYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:24:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QRnSEkwLKtDW05ZTHfLmic4pOUHwdf/xs0Fy+rsErSxfxEYBqafbHJvHUpkuAtBvzB7taYDO6XDRwiBtgTfOQNAtIjeqFIPpl9kS9JfOjlxwrskIldVlpQFzr0XY6KI6Ux4fWsZyO2PVD7/5FjgA9fw0Y99ZwW9jSn8e95pElilZwa3yRsA959evYXI5tEB/vwsD99/l3mnt4HUnmcPM00cEBgFBpLqYsQUmfFfS+76dafX0O14cC9/E994CPYfFrkbKKT0Cfx9ggQIxWZlKuylht1w9+RMD93tHyhJHZ4AeXmeUcDY8cYz7x5iG88aKVWJzeCCh6R9IjbXmVnulPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JAsWPc4rNod5xFgv8fXO7pzo4SY9yZcYiaJLQgXpPHs=;
- b=j4MzUy4+hMVbtN/saFIA3Mrh5j/LM4Xtra65gkBg1tvVNjD9bA/6ScptrPS4eKd4M3HT4q61eaaKO3SyizppSwKoV05B/cPYxLLoEU0vu13NoIVWO/sDaBtXTBN9k0XKXYBz/aD8io8kF2odI57R9vQ4wGmBPnv6A88KT5CqBoGSnD3c44T1aBlQp4L+yT3ccuiM/Eve74+VDNQigZVPR6IyKMFlPuqGsfrgjPJ/kOCDi4HmyhE6sMjzjInnmYd/juSh5pt6GSAqlERUXI/xwaHWZhV5u7r6L6ROTtxY6e9E1lw1ZPjvO4cpJoRJQkHBP/KknPknEykkqUVoBDdU4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JAsWPc4rNod5xFgv8fXO7pzo4SY9yZcYiaJLQgXpPHs=;
- b=JBRYJf/NOp7I+4n2iGjgd7WwVBJrIBEK93rk0CctvzlqKRl0P4ZW0TjZBCiBGFTbN8HEW7DIivGs5BnOvNAkF/N7d/8KN3gGq0DUmojXMz98NP0NxSUd9CSHViUWF4DqHPI04xJLSeToOpVKU2MZ+G0Hk1yiRS2ymqB2k3zcFK0=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4651.eurprd04.prod.outlook.com (52.135.138.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Wed, 13 Nov 2019 07:24:48 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::115f:1e4f:9ceb:2a2c]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::115f:1e4f:9ceb:2a2c%7]) with mapi id 15.20.2430.028; Wed, 13 Nov 2019
- 07:24:48 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 1/2] clk: imx: pll14xx: use writel_relaxed
-Thread-Topic: [PATCH 1/2] clk: imx: pll14xx: use writel_relaxed
-Thread-Index: AQHVmfNuHTJgCIWBG0W9BBzI6iT6Ug==
-Date:   Wed, 13 Nov 2019 07:24:48 +0000
-Message-ID: <1573629763-18389-2-git-send-email-peng.fan@nxp.com>
-References: <1573629763-18389-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1573629763-18389-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR02CA0169.apcprd02.prod.outlook.com
- (2603:1096:201:1f::29) To DB7PR04MB4490.eurprd04.prod.outlook.com
- (2603:10a6:5:36::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 601fbdcd-7289-429c-0c58-08d7680a908a
-x-ms-traffictypediagnostic: DB7PR04MB4651:|DB7PR04MB4651:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB4651BF80C3B7DEB7260BE34488760@DB7PR04MB4651.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:663;
-x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(199004)(189003)(54906003)(81156014)(81166006)(44832011)(8676002)(76176011)(50226002)(14444005)(256004)(186003)(52116002)(6636002)(6486002)(66066001)(486006)(110136005)(2906002)(8936002)(36756003)(6436002)(316002)(478600001)(6512007)(7736002)(305945005)(71200400001)(2616005)(386003)(11346002)(102836004)(71190400001)(446003)(2501003)(6506007)(26005)(14454004)(476003)(4744005)(5660300002)(66476007)(66556008)(64756008)(66446008)(86362001)(25786009)(6116002)(66946007)(3846002)(99286004)(2201001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4651;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3q9ejDWl0W/Tsk0I1Od5DhHToCQkZDUWlGKZe1w6P9IBA8peUB41swIJHeGzKXnyT70t04upk3/ZC976rCoJjQMNjbbhLBBLujY9YzOfkdT7NVekUfN9Twj/VfrN7HItLxxYKiCmnTz6byg+T2smCSGvZFfGHlEgO0PagUw9rDLuQqAhnU7eyySHIulp8D5zO9Wd4Whimo4zUMiT9AAs5nQlDHRCyzKr9lkQ9D614L0v4U/w5UKDtY1dg70x2hVEp5LFycEDfs26IhRWEuygE4tuIKozUTR4ZlsPJD9VnMxn3a7u0zUtuFzSMKarexJYaaDpImXru9AJnEosSQqaYVB1TFzZOCNzj2BYgXzM2LxyZKwjSxowpIzXyiRo2mM2K035hSHHWCx04Gw24cnsylMK8ounfw9zkONA3/QMecQ+j9n6qBtGi0b0WIP2XJUI
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 Nov 2019 02:24:56 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36406 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfKMHYz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 02:24:55 -0500
+Received: by mail-ot1-f68.google.com with SMTP id f10so788741oto.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 23:24:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Cw82Z7YfxL1T0WRyGKJbhospSN2a6L7ddj/UV4Mdvrc=;
+        b=ihgDbrP3mYJhLcPkvw/MdUwnNTMWbySH/59Y34+0qjCU8soyEtPCMQ4Lq3mCRSvcmj
+         3bnM96r95d9uww5hDh9YnfCPDCDHatMP2nhONdrBOsGEzUR1ZnuRDoolTFn0VIQaHPq4
+         yRYp04+QIGl3drCiwficIAsRf9mFUK0J47fgg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cw82Z7YfxL1T0WRyGKJbhospSN2a6L7ddj/UV4Mdvrc=;
+        b=BoZk+lJeNV52Qm1VJx0FomTj4D81UWHmy52xn6VV1yi+umyBh7FHpVrrVV/wZDjE/j
+         BX894z4Yc/aGqH+mFBrYak+BEMWJXdESXeYejcaCUmGGj3r1iisPabzhwLsQKwBVIk9G
+         1f/OmmMFZI7Wb2sEw9Hu3kMPtFb685MpLf0FA3tX8Rv193yFlsOUUXxBI92ZmSKbaj2s
+         3Vwl/UEDrEpM5/gO+4WTrkF4gN31FhUI+97cqUc8CwyCqGUCStX5vFO6DFDTzERXRedl
+         h5mUxaWPVuDGnMA6G1PIKW+c/tFcMiHbRfTg9kVFSVY8iKZ6vfUdIBG0LMEq3mhmuGX8
+         oN4Q==
+X-Gm-Message-State: APjAAAV6vAzeBYNyia0GfP+yEv3baWx81CNqb4QT6ZA2v6JJe4rrHLjC
+        wZRpE1UHWFDQHxNxuW8rX0FHcjX+AIZLV4a4c39/cg==
+X-Google-Smtp-Source: APXvYqyUHqjUDE+NYm38Q78Rn0V8WJDBDDjcJJ+6/rfxexh23AV26y67eWOYyrAWkd6wWTKUgp+c1SqKjwcFrQYAcBE=
+X-Received: by 2002:a05:6830:1e4c:: with SMTP id e12mr1479662otj.358.1573629893695;
+ Tue, 12 Nov 2019 23:24:53 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 601fbdcd-7289-429c-0c58-08d7680a908a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 07:24:48.4419
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xAJYZsstNA7o7obKgihI4pCKHqszfJDez2DTIs4m4Yzx4tn2taqc1b1/kxShzo43LIYYIjOTx9ANb8Swkw1fbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4651
+References: <20191112171715.128727-1-paulhsia@chromium.org> <s5h1rud7yel.wl-tiwai@suse.de>
+In-Reply-To: <s5h1rud7yel.wl-tiwai@suse.de>
+From:   Chih-Yang Hsia <paulhsia@chromium.org>
+Date:   Wed, 13 Nov 2019 15:24:41 +0800
+Message-ID: <CAJaf1TaZzsPdydcMZMemVSkjRvhYvx7ZxY2JEvExQ56B+MjQLQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] ALSA: pcm: Fix race condition in runtime access
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Wed, Nov 13, 2019 at 2:16 AM Takashi Iwai <tiwai@suse.de> wrote:
+>
+> On Tue, 12 Nov 2019 18:17:13 +0100,
+> paulhsia wrote:
+> >
+> > Since
+> > - snd_pcm_detach_substream sets runtime to null without stream lock and
+> > - snd_pcm_period_elapsed checks the nullity of the runtime outside of
+> >   stream lock.
+> >
+> > This will trigger null memory access in snd_pcm_running() call in
+> > snd_pcm_period_elapsed.
+>
+> Well, if a stream is detached, it means that the stream must have been
+> already closed; i.e. it's already a clear bug in the driver that
+> snd_pcm_period_elapsed() is called against such a stream.
+>
+> Or am I missing other possible case?
+>
+>
+> thanks,
+>
+> Takashi
+>
 
-It not make sense to use writel, use relaxed variant.
+In multithreaded environment, it is possible to have to access both
+`interrupt_handler` (from irq) and `substream close` (from
+snd_pcm_release) at the same time.
+Therefore, in driver implementation, if "substream close function" and
+the "code section where snd_pcm_period_elapsed() in" do not hold the
+same lock, then the following things can happen:
 
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/clk/imx/clk-pll14xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+1. interrupt_handler -> goes into snd_pcm_period_elapsed with a valid
+sustream pointer
+2. snd_pcm_release_substream: call close without blocking
+3. snd_pcm_release_substream: call snd_pcm_detache_substream and set
+substream->runtime to NULL
+4. interrupt_handler -> call snd_pcm_runtime() and crash while
+accessing fields in `substream->runtime`
 
-diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index 5682fce9f5e5..e34813904023 100644
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -199,7 +199,7 @@ static int clk_pll1416x_set_rate(struct clk_hw *hw, uns=
-igned long drate,
-=20
- 	/* Enable BYPASS */
- 	tmp |=3D BYPASS_MASK;
--	writel(tmp, pll->base);
-+	writel_relaxed(tmp, pll->base);
-=20
- 	div_val =3D (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
---=20
-2.16.4
+e.g. In intel8x0.c driver for ac97 device,
+In driver intel8x0.c, `snd_pcm_period_elapsed` is called after
+checking `ichdev->substream` in `snd_intel8x0_update`.
+And if a `snd_pcm_release` call from alsa-lib and pass through close()
+and run to snd_pcm_detach_substream() in another thread, it's possible
+to trigger a crash.
+I can reproduce the issue within a multithread VM easily.
 
+My patches are trying to provide a basic protection for this situation
+(and internal pcm lock between detach and elapsed), since
+- the usage of `snd_pcm_period_elapsed` does not warn callers about
+the possible race if the driver does not  force the order for `calling
+snd_pcm_period_elapsed` and `close` by lock and
+- lots of drivers already have this hidden issue and I can't fix them
+one by one (You can check the "snd_pcm_period_elapsed usage" and the
+"close implementation" within all the drivers). The most common
+mistake is that
+  - Checking if the substream is null and call into snd_pcm_period_elapsed
+  - But `close` can happen anytime, pass without block and
+snd_pcm_detach_substream will be trigger right after it
+
+Best,
+Paul
+
+> >
+> > paulhsia (2):
+> >   ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
+> >   ALSA: pcm: Use stream lock in snd_pcm_detach_substream()
+> >
+> >  sound/core/pcm.c     | 8 +++++++-
+> >  sound/core/pcm_lib.c | 8 ++++++--
+> >  2 files changed, 13 insertions(+), 3 deletions(-)
+> >
+> > --
+> > 2.24.0.rc1.363.gb1bccd3e3d-goog
+> >
