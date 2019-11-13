@@ -2,245 +2,141 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB4EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE47C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C35D222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A2JtYD8G"
+	by mail.kernel.org (Postfix) with ESMTP id B7842204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfKMKLr (ORCPT
+        id S1727538AbfKMKMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:11:47 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:44144 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfKMKLr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:11:47 -0500
-Received: by mail-qv1-f66.google.com with SMTP id d3so551801qvs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 02:11:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aRCEH7uGRv9k5bHRL7hYJEWrGzCPbbtWyq1WoRT6sfg=;
-        b=A2JtYD8GEyM9hA5io3b2TDwlOYbWABlLimE+zfeiS0xytpNa7+WeJlwTaE/mn/+VrK
-         Hmqd6EotYQV/xlEiSVhWq0aaBmhhvbiKc7Z5YqHdmFEjHtA3V4gcMKfLFzB0LqlIkC/O
-         6F2TZZ7Ds4cubv7rbblRXeOPizcPu+X0X5KsXayqrXg1JwBLf1kPJmCGpf8VQd9aSbZX
-         YpI9Kq80WaDK0Lu2kMgMnOdtXLtlwCf6pU+bWdOj6zx0Aseq9Uuif1FGx4mvI1Nd2xRo
-         utgS3KANGwGDzIYOH/OHBXZUn2QpgjrfH00bd3PZzES2y1BS6Eg4KhWZcUVOSE7vP7tM
-         QZ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aRCEH7uGRv9k5bHRL7hYJEWrGzCPbbtWyq1WoRT6sfg=;
-        b=aoYTE4gD3K71DQHF2I0VM3HVjLjoPt8Ld9c8XfvV1H0cJuxTM4Hs3JW2PcWdZpTfB+
-         PxoBmpijXAOGNKJOtW0+EvAEGqC9utwIkTalttt+G4Ppz3IkoF1TcnM1EInp/cEB9614
-         Mqhne16GY1T9gJNVlcJkhoR6kfyqEbUwh2kchXUojldTjsfi8f8rhjhdyNMfOcElOG+I
-         qVW8y3GoG1F/CcDsZtZoVw7wnkOnV8uXf8Cg64sVXfODjMi4tu3A2kGoyhqbrBCFEZKn
-         j3tJXnIQ1VvjRnY5ngKgYsAh34KI4UPl5BUvFRLSuGPW+84I81JdNnPTiUHvT/2rQbEE
-         4tWg==
-X-Gm-Message-State: APjAAAUb9GQVF7DRX5WL2zIBdhhHC4JpQQFWkzlUW4U92hwzmh5WFvgc
-        S3SMjXhDtK5GqKzcd4Z2XEUrkcZim9Cosn3KqUzTAw==
-X-Google-Smtp-Source: APXvYqwpC4/YCS8ZDGTIuWDJIysku0/7ac4ZMVKSBb9vq372K5m17JRkYWNf9pM1uD70gMK1BI2M3BN2IyqmCN1fylk=
-X-Received: by 2002:a05:6214:8ee:: with SMTP id dr14mr2106594qvb.122.1573639905171;
- Wed, 13 Nov 2019 02:11:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20191112211002.128278-1-jannh@google.com> <20191112211002.128278-3-jannh@google.com>
-In-Reply-To: <20191112211002.128278-3-jannh@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 13 Nov 2019 11:11:33 +0100
-Message-ID: <CACT4Y+aojSsss3+Y2FB9Rw=OPxXgsFrGF0YiAJ9eo2wJM0ruWg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/kasan: Print original address on #GP
-To:     Jann Horn <jannh@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
+        Wed, 13 Nov 2019 05:12:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39804 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726389AbfKMKMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:12:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 826B9B3ED;
+        Wed, 13 Nov 2019 10:12:15 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id CA3AA1E1498; Wed, 13 Nov 2019 11:12:10 +0100 (CET)
+Date:   Wed, 13 Nov 2019 11:12:10 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf <bpf@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 00/23] mm/gup: track dma-pinned pages: FOLL_PIN,
+ FOLL_LONGTERM
+Message-ID: <20191113101210.GD6367@quack2.suse.cz>
+References: <20191112000700.3455038-1-jhubbard@nvidia.com>
+ <20191112203802.GD5584@ziepe.ca>
+ <02fa935c-3469-b766-b691-5660084b60b9@nvidia.com>
+ <CAKMK7uHvk+ti00mCCF2006U003w1dofFg9nSfmZ4bS2Z2pEDNQ@mail.gmail.com>
+ <7b671bf9-4d94-f2cc-8453-863acd5a1115@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7b671bf9-4d94-f2cc-8453-863acd5a1115@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:10 PM 'Jann Horn' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> Make #GP exceptions caused by out-of-bounds KASAN shadow accesses easier
-> to understand by computing the address of the original access and
-> printing that. More details are in the comments in the patch.
->
-> This turns an error like this:
->
->     kasan: CONFIG_KASAN_INLINE enabled
->     kasan: GPF could be caused by NULL-ptr deref or user memory access
->     traps: dereferencing non-canonical address 0xe017577ddf75b7dd
->     general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
->
-> into this:
->
->     traps: dereferencing non-canonical address 0xe017577ddf75b7dd
->     kasan: maybe dereferencing invalid pointer in range
->             [0x00badbeefbadbee8-0x00badbeefbadbeef]
->     general protection fault: 0000 [#3] PREEMPT SMP KASAN PTI
->     [...]
+On Wed 13-11-19 01:02:02, John Hubbard wrote:
+> On 11/13/19 12:22 AM, Daniel Vetter wrote:
+> ...
+> > > > Why are we doing this? I think things got confused here someplace, as
+> > > 
+> > > 
+> > > Because:
+> > > 
+> > > a) These need put_page() calls,  and
+> > > 
+> > > b) there is no put_pages() call, but there is a release_pages() call that
+> > > is, arguably, what put_pages() would be.
+> > > 
+> > > 
+> > > > the comment still says:
+> > > > 
+> > > > /**
+> > > >   * put_user_page() - release a gup-pinned page
+> > > >   * @page:            pointer to page to be released
+> > > >   *
+> > > >   * Pages that were pinned via get_user_pages*() must be released via
+> > > >   * either put_user_page(), or one of the put_user_pages*() routines
+> > > >   * below.
+> > > 
+> > > 
+> > > Ohhh, I missed those comments. They need to all be changed over to
+> > > say "pages that were pinned via pin_user_pages*() or
+> > > pin_longterm_pages*() must be released via put_user_page*()."
+> > > 
+> > > The get_user_pages*() pages must still be released via put_page.
+> > > 
+> > > The churn is due to a fairly significant change in strategy, whis
+> > > is: instead of changing all get_user_pages*() sites to call
+> > > put_user_page(), change selected sites to call pin_user_pages*() or
+> > > pin_longterm_pages*(), plus put_user_page().
+> > 
+> > Can't we call this unpin_user_page then, for some symmetry? Or is that
+> > even more churn?
+> > 
+> > Looking from afar the naming here seems really confusing.
+> 
+> 
+> That look from afar is valuable, because I'm too close to the problem to see
+> how the naming looks. :)
+> 
+> unpin_user_page() sounds symmetrical. It's true that it would cause more
+> churn (which is why I started off with a proposal that avoids changing the
+> names of put_user_page*() APIs). But OTOH, the amount of churn is proportional
+> to the change in direction here, and it's really only 10 or 20 lines changed,
+> in the end.
+> 
+> So I'm open to changing to that naming. It would be nice to hear what others
+> prefer, too...
 
-Nice!
+FWIW I'd find unpin_user_page() also better than put_user_page() as a
+counterpart to pin_user_pages().
 
-+Andrey, do you see any issues for TAGS mode? Or, Jann, did you test
-it by any chance?
-
-
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
->  arch/x86/include/asm/kasan.h |  6 +++++
->  arch/x86/kernel/traps.c      |  2 ++
->  arch/x86/mm/kasan_init_64.c  | 52 +++++++++++++++++++++++++-----------
->  3 files changed, 44 insertions(+), 16 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kasan.h b/arch/x86/include/asm/kasan.h
-> index 13e70da38bed..eaf624a758ed 100644
-> --- a/arch/x86/include/asm/kasan.h
-> +++ b/arch/x86/include/asm/kasan.h
-> @@ -25,6 +25,12 @@
->
->  #ifndef __ASSEMBLY__
->
-> +#ifdef CONFIG_KASAN_INLINE
-> +void kasan_general_protection_hook(unsigned long addr);
-> +#else
-> +static inline void kasan_general_protection_hook(unsigned long addr) { }
-> +#endif
-> +
->  #ifdef CONFIG_KASAN
->  void __init kasan_early_init(void);
->  void __init kasan_init(void);
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 479cfc6e9507..e271a5a1ddd4 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -58,6 +58,7 @@
->  #include <asm/umip.h>
->  #include <asm/insn.h>
->  #include <asm/insn-eval.h>
-> +#include <asm/kasan.h>
->
->  #ifdef CONFIG_X86_64
->  #include <asm/x86_init.h>
-> @@ -544,6 +545,7 @@ static void print_kernel_gp_address(struct pt_regs *regs)
->                 return;
->
->         pr_alert("dereferencing non-canonical address 0x%016lx\n", addr_ref);
-> +       kasan_general_protection_hook(addr_ref);
->  #endif
->  }
->
-> diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-> index 296da58f3013..9ef099309489 100644
-> --- a/arch/x86/mm/kasan_init_64.c
-> +++ b/arch/x86/mm/kasan_init_64.c
-> @@ -246,20 +246,44 @@ static void __init kasan_map_early_shadow(pgd_t *pgd)
->  }
->
->  #ifdef CONFIG_KASAN_INLINE
-> -static int kasan_die_handler(struct notifier_block *self,
-> -                            unsigned long val,
-> -                            void *data)
-> +/*
-> + * With CONFIG_KASAN_INLINE, accesses to bogus pointers (outside the high
-> + * canonical half of the address space) cause out-of-bounds shadow memory reads
-> + * before the actual access. For addresses in the low canonical half of the
-> + * address space, as well as most non-canonical addresses, that out-of-bounds
-> + * shadow memory access lands in the non-canonical part of the address space,
-> + * causing #GP to be thrown.
-> + * Help the user figure out what the original bogus pointer was.
-> + */
-> +void kasan_general_protection_hook(unsigned long addr)
->  {
-> -       if (val == DIE_GPF) {
-> -               pr_emerg("CONFIG_KASAN_INLINE enabled\n");
-> -               pr_emerg("GPF could be caused by NULL-ptr deref or user memory access\n");
-> -       }
-> -       return NOTIFY_OK;
-> -}
-> +       unsigned long orig_addr;
-> +       const char *addr_type;
-> +
-> +       if (addr < KASAN_SHADOW_OFFSET)
-> +               return;
-
-Thinking how much sense it makes to compare addr with KASAN_SHADOW_END...
-If the addr is > KASAN_SHADOW_END, we know it's not a KASAN access,
-but do we ever get GP on canonical addresses?
-
->
-> -static struct notifier_block kasan_die_notifier = {
-> -       .notifier_call = kasan_die_handler,
-> -};
-> +       orig_addr = (addr - KASAN_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT;
-> +       /*
-> +        * For faults near the shadow address for NULL, we can be fairly certain
-> +        * that this is a KASAN shadow memory access.
-> +        * For faults that correspond to shadow for low canonical addresses, we
-> +        * can still be pretty sure - that shadow region is a fairly narrow
-> +        * chunk of the non-canonical address space.
-> +        * But faults that look like shadow for non-canonical addresses are a
-> +        * really large chunk of the address space. In that case, we still
-> +        * print the decoded address, but make it clear that this is not
-> +        * necessarily what's actually going on.
-> +        */
-> +       if (orig_addr < PAGE_SIZE)
-> +               addr_type = "dereferencing kernel NULL pointer";
-> +       else if (orig_addr < TASK_SIZE_MAX)
-> +               addr_type = "probably dereferencing invalid pointer";
-
-This is access to user memory, right? In outline mode we call it
-"user-memory-access". We could say about "user" part here as well.
-
-> +       else
-> +               addr_type = "maybe dereferencing invalid pointer";
-> +       pr_alert("%s in range [0x%016lx-0x%016lx]\n", addr_type,
-> +                orig_addr, orig_addr + (1 << KASAN_SHADOW_SCALE_SHIFT) - 1);
-
-"(1 << KASAN_SHADOW_SCALE_SHIFT) - 1)" part may be replaced with
-KASAN_SHADOW_MASK.
-Overall it can make sense to move this mm/kasan/report.c b/c we are
-open-coding a number of things here (e.g. reverse address mapping). If
-another arch will do the same, it will need all of this code too (?).
-
-But in general I think it's a very good usability improvement for KASAN.
-
-> +}
->  #endif
->
->  void __init kasan_early_init(void)
-> @@ -298,10 +322,6 @@ void __init kasan_init(void)
->         int i;
->         void *shadow_cpu_entry_begin, *shadow_cpu_entry_end;
->
-> -#ifdef CONFIG_KASAN_INLINE
-> -       register_die_notifier(&kasan_die_notifier);
-> -#endif
-> -
->         memcpy(early_top_pgt, init_top_pgt, sizeof(early_top_pgt));
->
->         /*
-> --
-> 2.24.0.432.g9d3f5f5b63-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191112211002.128278-3-jannh%40google.com.
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
