@@ -2,87 +2,96 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C89DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339CAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CA521783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C0021783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573611004;
+	bh=E4c7E0E0gF6jfSVz2Pxox2hy9Q5loNqXt/ABscsuXqo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mc3uOA/yOY3ZEseQ6MmGUx5rDEYF0MMlBgybZ+C3g5dBCDDXTHBvqHuxWujK2f/lh
+	 Gt3Xh0iJqW7svDvns4T7uVe93gLlDCGiKO1/tbYZGdfmq3VkVSBCdi31mkDO54mL74
+	 AzHLV6qp5iKfwvRR9o+S7rHDz+1oHvUQYNLTrEaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfKMCJx (ORCPT
+        id S1730921AbfKMCKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:09:53 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39438 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727468AbfKMCJt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:09:49 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUi5t-0008S0-DR; Wed, 13 Nov 2019 02:09:17 +0000
-Date:   Wed, 13 Nov 2019 02:09:17 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 6/9] namei: LOOKUP_{IN_ROOT,BENEATH}: permit limited
- ".." resolution
-Message-ID: <20191113020917.GC26530@ZenIV.linux.org.uk>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-7-cyphar@cyphar.com>
+        Tue, 12 Nov 2019 21:10:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729334AbfKMB7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:59:23 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C33B02053B;
+        Wed, 13 Nov 2019 01:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573610362;
+        bh=E4c7E0E0gF6jfSVz2Pxox2hy9Q5loNqXt/ABscsuXqo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VmhTo7oCvF9kuqbfNwxhFs07tOqgavvAwn6N2hPHjlmBiHOzXOsgqYYCaIFiCkNOM
+         69QO99HyEDEYz2J46Xzgy9rzypPrkf9lCAICAtkyoeWFAKCeZNfiM7zF4a4YdVU4d0
+         F791Rv7IpU9MN3RXXB4sRIHqHgoqDi8uLkmawFzw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Roger Quadros <rogerq@ti.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 112/115] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
+Date:   Tue, 12 Nov 2019 20:56:19 -0500
+Message-Id: <20191113015622.11592-112-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
+References: <20191113015622.11592-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105090553.6350-7-cyphar@cyphar.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 08:05:50PM +1100, Aleksa Sarai wrote:
+From: Roger Quadros <rogerq@ti.com>
 
-> One other possible alternative (which previous versions of this patch
-> used) would be to check with path_is_under() if there was a racing
-> rename or mount (after re-taking the relevant seqlocks). While this does
-> work, it results in possible O(n*m) behaviour if there are many renames
-> or mounts occuring *anywhere on the system*.
+[ Upstream commit a763ecc15d0e37c3a15ff6825183061209832685 ]
 
-BTW, do you realize that open-by-fhandle (or working nfsd, for that matter)
-will trigger arseloads of write_seqlock(&rename_lock) simply on d_splice_alias()
-bringing disconnected subtrees in contact with parent?
+OMAP5's Super-Speed USB port has a software mailbox register
+that needs to be fed with VBUS and ID events from an external
+VBUS/ID comparator.
+
+Without this, Host role will not work correctly.
+
+Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
+index f65343f8e1d69..c58f14de01451 100644
+--- a/arch/arm/boot/dts/omap5-board-common.dtsi
++++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+@@ -695,6 +695,7 @@
+ };
+ 
+ &dwc3 {
++	extcon = <&extcon_usb3>;
+ 	dr_mode = "otg";
+ };
+ 
+-- 
+2.20.1
+
