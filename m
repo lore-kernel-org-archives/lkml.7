@@ -2,150 +2,133 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBF4C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FDAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457D92084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9974F21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qYIKu66i"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="edAPCHnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfKMA6N (ORCPT
+        id S1727205AbfKMA6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:58:13 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45555 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbfKMA6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:58:13 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CR753PcCz9sPh;
-        Wed, 13 Nov 2019 11:58:09 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573606689;
-        bh=ZBkUHDMWS5AB+9yNCiNLnvsF5dXKFxRx6HUcHSjsaPQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qYIKu66iwF18qDVT+9E8ozi4qN+qMIR4+z0NScyB1lUEpuPmZa9FFE3DfsBPz/Ye/
-         FtR+im7O0SBWPIfYhhWRbIjVD+34DmQ2/pXTpUUFgIIZQssU1g4SBssDnCcpPotgQV
-         ib1eIOuKfTfoGR9LoSa2s9PuXuLtmzqcWGoNfcbws0Gk6Gl2cTYVyZihvwBnus73yl
-         SJPez+a6W/vPUP4QpCxRZ77GYQPum2mhqZ7nwCsCpKRKlicUgA27L+STl8/FZUFeEw
-         0AXzJAPa/1MzkyG1KxDEv3GoZSIUSYEZhxT/1HG+Ip0En1tJTwtyIesG7Mx20EGjRo
-         idSk0BOks1ADg==
-Date:   Wed, 13 Nov 2019 11:58:08 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Imre Deak <imre.deak@intel.com>,
-        Jon Bloomfield <jon.bloomfield@intel.com>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: linux-next: manual merge of the drm tree with Linus' tree
-Message-ID: <20191113115808.65d4138e@canb.auug.org.au>
+        Tue, 12 Nov 2019 19:58:35 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44203 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKMA6f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:58:35 -0500
+Received: by mail-pl1-f195.google.com with SMTP id az9so273266plb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:58:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wtf4tEXNRPFn/5BW+zWiHNiUI7IacNZ8AQ3ioE6MO8g=;
+        b=edAPCHnv7NPYhNea7NPMLMwQUqRI4LZYIv+/gMYnbqxt7dZsFJQTWgXWWWI1D7ilpO
+         un2/eQe93iI6HOfW55rY106m3spgMGPYOVZaybghHH5YhPqvAGapAm0IYpnVs+XXN8wu
+         /kUjVukqikUk2P4Mws3PYm0ix5Dc1Wl1Otjck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wtf4tEXNRPFn/5BW+zWiHNiUI7IacNZ8AQ3ioE6MO8g=;
+        b=b/J2o/1yIOiCRV4PEZo/q3pVrqtKmGlx9rVyAq5mwYSfCXvyzlW2jtvDmm6Qiox/XK
+         m+aO+BOlGQMUga3j6DxLzBHJrEU51rfQJyFIznJAHMFW9/9V0xel3BtJRXirZBzyrhxW
+         ibt/0pSXdIL5BsuboHbH5drkGTYAsZ3hN6K7UMOJjNinuiPfiyxZPRtOkDKfu9wItn4r
+         B4pHtCO9LXT9IL96Tu6BfoSCUwwyvXInEF+cXhfXpQ9ymN8ZeUi+AU+J1FUqEbTyIIUe
+         +FBcEJrvNXbAcAqepJJVDGkMFfjB0IYDTC7vpfeJl/3Wa2bKGpFrraU1dcn8emTHjOP0
+         cW5g==
+X-Gm-Message-State: APjAAAX4Mpku+yoPANFIMIsFi1pjFhMDPsR47vYBoJcW5d8yub8kh1eQ
+        RFbNnsK7evH3Hp8DeWiocg59ag==
+X-Google-Smtp-Source: APXvYqyevxTtdWEuDOk9Qy55ZJEOn6FrL+cJ/ZfQv6kJ8tNlBb5Cy7o7jr7vpACfNHVIyr1Dl82VwQ==
+X-Received: by 2002:a17:902:b28b:: with SMTP id u11mr718853plr.207.1573606714514;
+        Tue, 12 Nov 2019 16:58:34 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id p3sm175519pfb.163.2019.11.12.16.58.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 16:58:33 -0800 (PST)
+From:   Brian Norris <briannorris@chromium.org>
+To:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>,
+        Chun-Hao Lin <hau@realtek.com>
+Subject: [PATCH] [RFC] r8169: check for valid MAC before clobbering
+Date:   Tue, 12 Nov 2019 16:58:16 -0800
+Message-Id: <20191113005816.37084-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kV_LBYPKme8Ev4xmxVLLmHe";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kV_LBYPKme8Ev4xmxVLLmHe
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+I have some old systems with RTL8168g Ethernet, where the BIOS (based on
+Coreboot) programs the MAC address into the MAC0 registers (at offset
+0x0 and 0x4). The relevant Coreboot source is publicly available here:
 
-Hi all,
+https://review.coreboot.org/cgit/coreboot.git/tree/src/mainboard/google/jecht/lan.c?h=4.10#n139
 
-Today's linux-next merge of the drm tree got a conflict in:
+(The BIOS is built off a much older branch, but the code is effectively
+the same.)
 
-  drivers/gpu/drm/i915/i915_drv.c
+Note that this was apparently the recommended solution in an application
+note at the time (I have a copy, but it's not marked for redistribution
+:( ), with no mention of the method used in rtl_read_mac_address().
 
-between commits:
+The result is that ever since commit 89cceb2729c7 ("r8169:add support
+more chips to get mac address from backup mac address register"), my MAC
+address changes to use an address I never intended.
 
-  7e34f4e4aad3 ("drm/i915/gen8+: Add RC6 CTX corruption WA")
-  2f216a850715 ("drm/i915: update rawclk also on resume")
+Unfortunately, these commits don't really provide any documentation, and
+I'm not sure when the recommendation actually changed. So I'm sending
+this as RFC, in case I can get any tips from Realtek on how to avoid
+breaking compatibility like this.
 
+I'll freely admit that the devices in question are currently pinned to
+an ancient kernel. We're only recently testing newer kernels on these
+devices, which brings me here.
 
-from Linus' tree and commits:
+I'll also admit that I don't have much means to test this widely, and
+I'm not sure what implicit behaviors other systems were depending on
+along the way.
 
-  5bcd53aa39f3 ("drm/i915: pass i915 to i915_driver_modeset_probe()")
-  fd6fe087ca47 ("drm/i915/gt: Call intel_gt_sanitize() directly")
+Fixes: 89cceb2729c7 ("r8169:add support more chips to get mac address from backup mac address register")
+Fixes: 6e1d0b898818 ("r8169:add support for RTL8168H and RTL8107E")
+Cc: Chun-Hao Lin <hau@realtek.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+ drivers/net/ethernet/realtek/r8169_main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-from the drm tree.
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index c4e961ea44d5..94067cf30514 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -7031,11 +7031,14 @@ static void rtl_init_mac_address(struct rtl8169_private *tp)
+ 	if (!rc)
+ 		goto done;
+ 
+-	rtl_read_mac_address(tp, mac_addr);
++	/* Check first to see if (e.g.) bootloader already programmed
++	 * something.
++	 */
++	rtl_read_mac_from_reg(tp, mac_addr, MAC0);
+ 	if (is_valid_ether_addr(mac_addr))
+ 		goto done;
+ 
+-	rtl_read_mac_from_reg(tp, mac_addr, MAC0);
++	rtl_read_mac_address(tp, mac_addr);
+ 	if (is_valid_ether_addr(mac_addr))
+ 		goto done;
+ 
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/i915_drv.c
-index 3d717e282908,ccb5b566795f..000000000000
---- a/drivers/gpu/drm/i915/i915_drv.c
-+++ b/drivers/gpu/drm/i915/i915_drv.c
-@@@ -364,11 -296,14 +296,11 @@@ static int i915_driver_modeset_probe(st
-  	if (ret)
-  		goto cleanup_vga_client;
- =20
-- 	intel_power_domains_init_hw(dev_priv, false);
- -	/* must happen before intel_power_domains_init_hw() on VLV/CHV */
- -	intel_update_rawclk(i915);
- -
-+ 	intel_power_domains_init_hw(i915, false);
- =20
-- 	intel_csr_ucode_init(dev_priv);
-+ 	intel_csr_ucode_init(i915);
- =20
-- 	ret =3D intel_irq_install(dev_priv);
-+ 	ret =3D intel_irq_install(i915);
-  	if (ret)
-  		goto cleanup_csr;
- =20
-@@@ -2048,14 -1948,8 +1947,10 @@@ static int i915_drm_resume_early(struc
- =20
-  	intel_display_power_resume_early(dev_priv);
- =20
-- 	intel_sanitize_gt_powersave(dev_priv);
--=20
-  	intel_power_domains_resume(dev_priv);
- =20
- +	i915_rc6_ctx_wa_resume(dev_priv);
- +
-- 	intel_gt_sanitize(&dev_priv->gt, true);
--=20
-  	enable_rpm_wakeref_asserts(&dev_priv->runtime_pm);
- =20
-  	return ret;
-
---Sig_/kV_LBYPKme8Ev4xmxVLLmHe
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LVSAACgkQAVBC80lX
-0GxObAf9EK3RQ7S1TMgfyRmdBWJMZ5oAx/e6sgpyToIerf9imckzafTYAgoIss04
-YJmorDSXjbBkrTcVB6whx+JvV/ULqLBQi9+PI3Af7QWM6pCoRpulCvnT8MGTYdSQ
-Zz/R1cUnbbHxhSCol6KJBXKonxShqKkWJrXMZtj7buFjVAhA9pwLTFh9Cek/Z/zx
-14ju1J07Id65nAFueapYh90uJAC/dm+ookXkSvIt+m+Ar1yHJtkWCsa3CDmjFLLr
-z0mqCkwSEpkloWfFDPSRiP12eSm1R/qJWwYAxdqQrFsAkZTq+DZe/cJUZzPiA2YC
-3d/yd/S6LqqHlpKiLSfR/Pg5XggIoA==
-=nfXk
------END PGP SIGNATURE-----
-
---Sig_/kV_LBYPKme8Ev4xmxVLLmHe--
