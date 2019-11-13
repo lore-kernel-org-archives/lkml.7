@@ -2,129 +2,142 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F98C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E82C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CD32084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:46:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p1v6IzOA"
+	by mail.kernel.org (Postfix) with ESMTP id 20E9221872
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfKMAqY (ORCPT
+        id S1727192AbfKMArN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:46:24 -0500
-Received: from ozlabs.org ([203.11.71.1]:58297 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbfKMAqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:46:24 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 12 Nov 2019 19:47:13 -0500
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:17516 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfKMArM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:47:12 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CQsS1bYjz9sPh;
-        Wed, 13 Nov 2019 11:46:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573605980;
-        bh=Cfu0M8kThALcEqe2HrOjz3qJOIlvCWAsX9fy7Q9sPdo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=p1v6IzOA/1nkHRibV1EEAj6npc1X8TbGFHkw6s2wkIFRboqNAMaDaXA4G6bzv5TEn
-         mVaNOckns/uBs6JUmB08/AF7FAno+NGsqPgm98kTSmYS14I1+ZwROvojoFaiCQqpGE
-         upnuAWyDLxlqopCmED1GbhkFwcIzX6pe9kr+w/HaH6q3+2wnYhq77vj+55wT8IG3sm
-         YE5OIiy//kV7ppOCuVsz1nVae8AwuSd7K/MgtcWAPR6pWJjiewl7FhPhwiow2vN8rx
-         LcOuaOx6aEOF7EPMdheRcL2RsvO5vJv+sKCnEqbt1dOsIKlQ/v48imRV5kj2toYnYf
-         xtdSfjEIs18RQ==
-Date:   Wed, 13 Nov 2019 11:46:19 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jon Bloomfield <jon.bloomfield@intel.com>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: manual merge of the drm tree with Linus' tree
-Message-ID: <20191113114619.0562659e@canb.auug.org.au>
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47CQtM1PgvzKm9q;
+        Wed, 13 Nov 2019 01:47:07 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id rfbcH-n--HBG; Wed, 13 Nov 2019 01:47:00 +0100 (CET)
+Date:   Wed, 13 Nov 2019 11:46:34 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 0/9] open: introduce openat2(2) syscall
+Message-ID: <20191113004634.tz7geloshltkafwj@yavin.dot.cyphar.com>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191111132404.y523iqicbn6fivx5@yavin.dot.cyphar.com>
+ <201911121457.7D02692@keescook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XebMLZ8drmtbK6hvw.rdWJY";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7ndczamgwxls6q65"
+Content-Disposition: inline
+In-Reply-To: <201911121457.7D02692@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XebMLZ8drmtbK6hvw.rdWJY
-Content-Type: text/plain; charset=US-ASCII
+
+--7ndczamgwxls6q65
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 2019-11-12, Kees Cook <keescook@chromium.org> wrote:
+> On Tue, Nov 12, 2019 at 12:24:04AM +1100, Aleksa Sarai wrote:
+> > On 2019-11-05, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > > This patchset is being developed here:
+> > >   <https://github.com/cyphar/linux/tree/openat2/master>
+> > >=20
+> > > Patch changelog:
+> > >  v15:
+> > >   * Fix code style for LOOKUP_IN_ROOT handling in path_init(). [Linus=
+ Torvalds]
+> > >   * Split out patches for each individual LOOKUP flag.
+> > >   * Reword commit messages to give more background information about =
+the
+> > >     series, as well as mention the semantics of each flag in more det=
+ail.
+> > > [...]
+> >=20
+> > Ping -- this patch hasn't been touched for a week. Thanks.
+>=20
+> If I've been following correctly, everyone is happy with this series.
+> (i.e. Linus's comment appear to have been addressed.)
+>=20
+> Perhaps the next question is should this go via a pull request by you to
+> Linus directly during the v5.5 merge window, via akpm, via akpm, via
+> Christian, or some other path? Besides Linus, it's not been clear who
+> should "claim" this series. :)
 
-Today's linux-next merge of the drm tree got a conflict in:
+Given the namei changes, I wanted to avoid stepping on Al's toes. Though
+he did review the series a few versions ago, the discussion didn't focus
+on the openat2(2) semantics (which have also changed since then). I'm
+not sure whether to interpret the silence to mean he's satisfied with
+things as they are, or if he hasn't had more time to look at the series.
 
-  drivers/gpu/drm/i915/gt/intel_engine_types.h
-
-between commit:
-
-  311a50e76a33 ("drm/i915: Add support for mandatory cmdparsing")
-
-from Linus' tree and commits:
-
-  cdb736fa8b8b ("drm/i915: Use engine relative LRIs on context setup")
-  058179e72e09 ("drm/i915/gt: Replace hangcheck by heartbeats")
-
-from the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+As for which tree it should be routed to, I don't mind -- Christian is
+the most straight-forward choice (but if Al wants to route it, that's
+fine with me too).
 
 --=20
-Cheers,
-Stephen Rothwell
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-diff --cc drivers/gpu/drm/i915/gt/intel_engine_types.h
-index 9dd8c299cb2d,c5d1047a4bc5..000000000000
---- a/drivers/gpu/drm/i915/gt/intel_engine_types.h
-+++ b/drivers/gpu/drm/i915/gt/intel_engine_types.h
-@@@ -473,15 -454,13 +454,14 @@@ struct intel_engine_cs=20
-  	/* status_notifier: list of callbacks for context-switch changes */
-  	struct atomic_notifier_head context_status_notifier;
- =20
-- 	struct intel_engine_hangcheck hangcheck;
--=20
- -#define I915_ENGINE_NEEDS_CMD_PARSER BIT(0)
- +#define I915_ENGINE_USING_CMD_PARSER BIT(0)
-  #define I915_ENGINE_SUPPORTS_STATS   BIT(1)
-  #define I915_ENGINE_HAS_PREEMPTION   BIT(2)
-  #define I915_ENGINE_HAS_SEMAPHORES   BIT(3)
-  #define I915_ENGINE_NEEDS_BREADCRUMB_TASKLET BIT(4)
-  #define I915_ENGINE_IS_VIRTUAL       BIT(5)
-+ #define I915_ENGINE_HAS_RELATIVE_MMIO BIT(6)
- +#define I915_ENGINE_REQUIRES_CMD_PARSER BIT(7)
-  	unsigned int flags;
- =20
-  	/*
-
---Sig_/XebMLZ8drmtbK6hvw.rdWJY
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--7ndczamgwxls6q65
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LUlsACgkQAVBC80lX
-0GzODwgAg+bP1OkJ2gbZDoB+jKhaV82WRM2N3AhBzfgXgIRNmr3yzN/NUgSyipM8
-Lf2qRmBbw08V6inl1YMZQ+5Xn+iws0xqrD1TuRJTzJN9qU1VCU6QF1hFfN7FbYtJ
-pkWlhhLdYzg861FjoDPge+Rxa1PbPFSU7HE8p6l9in2o7w38dOXZKJLDneiAK9f6
-x9GRg1BMeTQVJWHtvKuTvCq4kizeVmG4g1tPQK/0vFi3fFlH7XVV4dBYaV7EQSsr
-loXzs3S51neZFwM5ZFS4mHjmV08TCeoD5pubAYbifpaYN4preb0TsYFp6bMfdsY3
-3BJ9ytD2hiQfRno2luu/m9N3wCc6gw==
-=ZgeW
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXctSZgAKCRCdlLljIbnQ
+Ej+PAP0UBMczq8p/OLMeyIryF0EfQ+noWktKHkfgvrRf7bKN7AEAiW1OItA5gtV4
+HiJnADyDHQw1h7livSSrD2X7HKS2BAA=
+=yOzJ
 -----END PGP SIGNATURE-----
 
---Sig_/XebMLZ8drmtbK6hvw.rdWJY--
+--7ndczamgwxls6q65--
