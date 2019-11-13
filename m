@@ -2,136 +2,140 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C89FC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFB6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D640F222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD0A2196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:01:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="iLRBNzKe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiksfhJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfKMHAf (ORCPT
+        id S1726525AbfKMHBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:00:35 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41363 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfKMHAe (ORCPT
+        Wed, 13 Nov 2019 02:01:49 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:38681 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfKMHBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:00:34 -0500
-Received: by mail-wr1-f65.google.com with SMTP id p4so977482wrm.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 23:00:32 -0800 (PST)
+        Wed, 13 Nov 2019 02:01:49 -0500
+Received: by mail-yw1-f68.google.com with SMTP id m196so380603ywd.5;
+        Tue, 12 Nov 2019 23:01:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rugrYaxZCiP2gM4hsS0PmTY/T9FiVMFS6xWRRwp7Uks=;
-        b=iLRBNzKe3Ty81HmbP7CV1b8+p7WvR524FmbkGbeQglx6vlgdPRIEtlT5aQ667wL1tT
-         fa5Jk+lPWh5Aba5vbf7Qv0SxdNsfarPP+m89qaVpdBD6q1y1SSlKcVdKojOZpKOD6o6d
-         jEoXGrwvFyn1VDH2BV6jkMVVKdGisEZ2TLc3U1/71aFYAsETXJS68fekfL7x/wRPQzTg
-         d/pWhoDmZkQTwAmliusnRed7o+iNesnwRFxbNsvtQbpgkOmFNOCfJIHBwFSiHBHwIe+b
-         t9EiLrDZ3+fQ7fkIi/BH3hCQgdP8zNfLg+akdBk7LMt23LTHtzUqpviZYkD8Uxx8o59Z
-         8yWQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PjvWzi5zAYDzWCzMMij4/zfnC+NCGyH/qKPEJGtsxFA=;
+        b=SiksfhJAN1W/uAeCuU4qY1s9ABOuCtBmJRiK+lb7NzZQRYuk0uO5tTA9KwN+GH+A0z
+         9OZ2PalvM9Nsd2P+QfroLRUCmQittDRndNaTPSbOawYIX0uLlNh3Kw7abLGTP5LRCgM7
+         NY3juym5/hTRXqlIn0G3OyvYokefg1pySjfNXhDzBdBMspQ23eIfhgqeyj9VD0eX5iqj
+         aGJn0vg/bHFzS7GUPVGz3xCDDGTc50XuGHa7p9aX/drh/0ISHp6UkXcV1QnZEEwjSK5l
+         ylZfR+5/s+h+CLsY0X/H46pFMBHhkVhPI+LIFj/UlbwsDSE2zT+4Aiyw/OIJWUyH4hYa
+         T4pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rugrYaxZCiP2gM4hsS0PmTY/T9FiVMFS6xWRRwp7Uks=;
-        b=SEYikwFMMhs03Wg6dQeSM6GRVoOM/Fy6EZKe7ZIZiJn8rDAtJ+BjtUuaPkYOEJmBES
-         d+yyMvU9fyLGkLhUNVtOiWvfcCnQH6UuAIvJhTQvcwIsTY+9RIbtNMspOHQk7gOOvsJH
-         Fr9RVRbQu+Vjo7j3WZar6PTwDuSc41T39gq/c1pyCFchgqrtzwyfHWvuMmDwmbgsDBaa
-         onIwxHDJk6NjO+zCfuzGNlS/MUNE5kyolo+kJ8tenK4SUO/M2ELAIvTUV8bSM+BO0A5t
-         IImjU2tl9TQ8+HkqDldRti7+r7W/jhiw8wSZV6jxQow2XZgNTTucsCQfvdzPRAsZe/8N
-         6aVA==
-X-Gm-Message-State: APjAAAV3NEkamWRAD2kiYyQjBNiDLrD5UHrUDhUSmvam66rciixCB0xY
-        SJe4c2VeHv5H3gCPhCEdCh+zcA==
-X-Google-Smtp-Source: APXvYqzxXo5+THKRrJBHRbmsw/q0KRwfVf5UnS3F6vDui9Ylkubka0wc+vrYEI1WSLZkHjvVSA2Odw==
-X-Received: by 2002:adf:e8ce:: with SMTP id k14mr1149133wrn.393.1573628432175;
-        Tue, 12 Nov 2019 23:00:32 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id 4sm1292022wmd.33.2019.11.12.23.00.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 23:00:32 -0800 (PST)
-Date:   Wed, 13 Nov 2019 08:00:31 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, davem@davemloft.net,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ath10k: Handle "invalid" BDFs for msm8998 devices
-Message-ID: <20191113070031.qlikjctfnoxtald5@netronome.com>
-References: <20191106234712.2380-1-jeffrey.l.hugo@gmail.com>
- <20191112090444.ak2xu67eawfgpdgb@netronome.com>
- <CAOCk7NoXv2-8GO=VYS8dNPJF6sj=S3RbkfqQGW0kvvVmR8V1kw@mail.gmail.com>
- <878soks77y.fsf@kamboji.qca.qualcomm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PjvWzi5zAYDzWCzMMij4/zfnC+NCGyH/qKPEJGtsxFA=;
+        b=Me9MTDA9al9UL3sM/HcfZkOR/mKZny40Q8+7KO0FKw8ad2hSHGMM38vZWrnsDu8f3Q
+         w8QjT8UBZ+rzKsp4QAl0FwW5Nca9gfI/QoZ2TaOj33Rz64JcVyg7LNtktvV2vcd0taay
+         VW0rvj6i1hdK2J2cP1sdf4XnvWsn7yxqQRgYYVF20WT5YKG3TPxGfTsRVGui5o1lZJf3
+         8cE4i84Dm48khn/W8S5DiLIu1NzpS9DDp8WYpodi81LRnFkwz1acN+Ftw1UzCYHxBQqb
+         A0cRNbSRWtgn2JA6Fez9BNJhSdn0XaYRVweSz8O6GK740WeTWdtwUYO6VT/M7PJ3QzQq
+         l/Fw==
+X-Gm-Message-State: APjAAAVmoVzeLLww1AYveq/NhsqSq4LB25MfyiJgFHtR9k3h4M8316ij
+        uu8a7suHOJ8plqBWVq881GKnZu8l7a4Ngtx0gXw=
+X-Google-Smtp-Source: APXvYqytmTgUznWrkZNaCm0wGchaTdWq2lIA2CGsbtK9nqE383blgmwrbwRQ5AdkDaQoV4z9HoievrtIxfwEhmytANY=
+X-Received: by 2002:a81:2f0f:: with SMTP id v15mr1186047ywv.183.1573628508049;
+ Tue, 12 Nov 2019 23:01:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878soks77y.fsf@kamboji.qca.qualcomm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+ <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com> <20191022143736.GX26530@ZenIV.linux.org.uk>
+ <20191022201131.GZ26530@ZenIV.linux.org.uk> <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
+ <20191101234622.GM26530@ZenIV.linux.org.uk> <20191102172229.GT20975@paulmck-ThinkPad-P72>
+ <20191102180842.GN26530@ZenIV.linux.org.uk> <20191103163524.GO26530@ZenIV.linux.org.uk>
+ <20191103182058.GQ26530@ZenIV.linux.org.uk> <20191103185133.GR26530@ZenIV.linux.org.uk>
+In-Reply-To: <20191103185133.GR26530@ZenIV.linux.org.uk>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 13 Nov 2019 09:01:36 +0200
+Message-ID: <CAOQ4uxiHH=e=Y5Xb3bkv+USxE0AftHiP935GGQEKkv54E17oDA@mail.gmail.com>
+Subject: Re: [PATCH][RFC] ecryptfs_lookup_interpose(): lower_dentry->d_inode
+ is not stable
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, wugyuan@cn.ibm.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        ecryptfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 06:58:25AM +0200, Kalle Valo wrote:
-> Jeffrey Hugo <jeffrey.l.hugo@gmail.com> writes:
-> 
-> > On Tue, Nov 12, 2019 at 2:04 AM Simon Horman <simon.horman@netronome.com> wrote:
-> >>
-> >> On Wed, Nov 06, 2019 at 03:47:12PM -0800, Jeffrey Hugo wrote:
-> >> > When the BDF download QMI message has the end field set to 1, it signals
-> >> > the end of the transfer, and triggers the firmware to do a CRC check.  The
-> >> > BDFs for msm8998 devices fail this check, yet the firmware is happy to
-> >> > still use the BDF.  It appears that this error is not caught by the
-> >> > downstream drive by concidence, therefore there are production devices
-> >> > in the field where this issue needs to be handled otherwise we cannot
-> >> > support wifi on them.  So, attempt to detect this scenario as best we can
-> >> > and treat it as non-fatal.
-> >> >
-> >> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> >> > ---
-> >> >  drivers/net/wireless/ath/ath10k/qmi.c | 11 +++++++----
-> >> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> >> >
-> >> > diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-> >> > index eb618a2652db..5ff8cfc93778 100644
-> >> > --- a/drivers/net/wireless/ath/ath10k/qmi.c
-> >> > +++ b/drivers/net/wireless/ath/ath10k/qmi.c
-> >> > @@ -265,10 +265,13 @@ static int ath10k_qmi_bdf_dnld_send_sync(struct ath10k_qmi *qmi)
-> >> >                       goto out;
-> >> >
-> >> >               if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
-> >> > -                     ath10k_err(ar, "failed to download board data file: %d\n",
-> >> > -                                resp.resp.error);
-> >> > -                     ret = -EINVAL;
-> >> > -                     goto out;
-> >> > +                     if (!(req->end == 1 &&
-> >> > +                           resp.resp.result == QMI_ERR_MALFORMED_MSG_V01)) {
-> >>
-> >> Would it make sense to combine the inner and outer condition,
-> >> something like this (completely untested) ?
-> >
-> > I guess, make sense from what perspective?  Looks like the assembly
-> > ends up being the same, so it would be down to "readability" which is
-> > subjective - I personally don't see a major advantage to one way or
-> > the other.  It does look like Kalle already picked up this patch, so
-> > I'm guessing that if folks feel your suggestion is superior, then it
-> > would need to be a follow on.
+On Sun, Nov 3, 2019 at 8:52 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> lower_dentry can't go from positive to negative (we have it pinned),
+> but it *can* go from negative to positive.  So fetching ->d_inode
+> into a local variable, doing a blocking allocation, checking that
+> now ->d_inode is non-NULL and feeding the value we'd fetched
+> earlier to a function that won't accept NULL is not a good idea.
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+> diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+> index a905d5f4f3b0..3c2298721359 100644
+> --- a/fs/ecryptfs/inode.c
+> +++ b/fs/ecryptfs/inode.c
+> @@ -319,7 +319,7 @@ static int ecryptfs_i_size_read(struct dentry *dentry, struct inode *inode)
+>  static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
+>                                      struct dentry *lower_dentry)
+>  {
+> -       struct inode *inode, *lower_inode = d_inode(lower_dentry);
+> +       struct inode *inode, *lower_inode;
+>         struct ecryptfs_dentry_info *dentry_info;
+>         struct vfsmount *lower_mnt;
+>         int rc = 0;
+> @@ -339,7 +339,15 @@ static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
+>         dentry_info->lower_path.mnt = lower_mnt;
+>         dentry_info->lower_path.dentry = lower_dentry;
+>
+> -       if (d_really_is_negative(lower_dentry)) {
+> +       /*
+> +        * negative dentry can go positive under us here - its parent is not
+> +        * locked.  That's OK and that could happen just as we return from
+> +        * ecryptfs_lookup() anyway.  Just need to be careful and fetch
+> +        * ->d_inode only once - it's not stable here.
+> +        */
+> +       lower_inode = READ_ONCE(lower_dentry->d_inode);
+> +
+> +       if (!lower_inode) {
+>                 /* We want to add because we couldn't find in lower */
+>                 d_add(dentry, NULL);
+>                 return NULL;
 
-My feeling is that it would reduce the churn in the patch making the
-patch more readable and likewise improving the readability of the code.
-But I do agree this does not affect run-time and I am ambivalent about
-updating the patch if it has already been (semi-)accepted.
+Sigh!
 
-> 
-> Same here, it's only on the pending branch so changes are still
-> possible.
-> 
-> -- 
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Open coding a human readable macro to solve a subtle lookup race.
+That doesn't sound like a scalable solution.
+I have a feeling this is not the last patch we will be seeing along
+those lines.
+
+Seeing that developers already confused about when they should use
+d_really_is_negative() over d_is_negative() [1] and we probably
+don't want to add d_really_really_is_negative(), how about
+applying that READ_ONCE into d_really_is_negative() and
+re-purpose it as a macro to be used when races with lookup are
+a concern?
+
+Thanks,
+Amir.
+
+[1] https://lore.kernel.org/linux-fsdevel/20190903135803.GA25692@hsiangkao-HP-ZHAN-66-Pro-G1/
