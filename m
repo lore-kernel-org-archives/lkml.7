@@ -2,105 +2,95 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D34C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F0AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA483206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A542068F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573669938;
+	bh=CDkBZwULnSajnBmTWsW53vklHTHzXFO1u7/zlRZ/bow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yar4jPHNFQH3EjnRszHE0ZdF4bX0fDnd/EVmTxHESngqMs2XW/CZNgiNgQTUwurSG
+	 emTOv8XDpzJGSXU4iaPwQkL1IWAtGBFcwZg+h9r1vDuNRDCJ0KMzCzUX2coH0ncxTN
+	 ap+2WZWCwCk+AFYQcSc9Koy+Oq2vY3Si35rBho60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfKMSby (ORCPT
+        id S1728507AbfKMScQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:31:54 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35478 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726564AbfKMSby (ORCPT
+        Wed, 13 Nov 2019 13:32:16 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45552 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbfKMScQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:31:54 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iUxQl-0007ig-9k; Wed, 13 Nov 2019 18:31:51 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iUxQk-0003zJ-Rp; Wed, 13 Nov 2019 18:31:50 +0000
-Message-ID: <bd28cd04b9c609303c0a14a003a76fac91bafa6d.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 00/25] 3.16.77-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Wed, 13 Nov 2019 18:31:50 +0000
-In-Reply-To: <20191113181354.GA19912@roeck-us.net>
-References: <lsq.1573602477.548403712@decadent.org.uk>
-         <20191113181354.GA19912@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-/UbXt/om7lVUTchhVZBS"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 13 Nov 2019 13:32:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CDkBZwULnSajnBmTWsW53vklHTHzXFO1u7/zlRZ/bow=; b=uO2/C9W7g+pjJzGe9QdZ/a+Aa
+        Y5FVrmOpMmHSGGHa1fw7jjieZ80SDON4PdWV7aF/X2uAlLBDn8+KdP4pXDFau8zY0Qm+RfH2Gg0oi
+        LE4XsmIp8v4ZTCcpxoaWI/EFh/0+AJxaRHZhshIhk5CHXZPS2CHj8xsUXbiurealn6VIc=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iUxR6-0004HW-It; Wed, 13 Nov 2019 18:32:12 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D3DA7274303A; Wed, 13 Nov 2019 18:32:11 +0000 (GMT)
+Date:   Wed, 13 Nov 2019 18:32:11 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org, phh@phh.me,
+        b.galvani@gmail.com, stefan@agner.ch
+Subject: Re: [PATCH] regulator: rn5t618: fix rc5t619 ldo10 enable
+Message-ID: <20191113183211.GB4402@sirena.co.uk>
+References: <20191113182643.23885-1-andreas@kemnade.info>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
+Content-Disposition: inline
+In-Reply-To: <20191113182643.23885-1-andreas@kemnade.info>
+X-Cookie: Type louder, please.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-/UbXt/om7lVUTchhVZBS
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--bCsyhTFzCvuiizWE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 2019-11-13 at 10:13 -0800, Guenter Roeck wrote:
-> On Tue, Nov 12, 2019 at 11:47:57PM +0000, Ben Hutchings wrote:
-> > This is the start of the stable review cycle for the 3.16.77 release.
-> > There are 25 patches in this series, which will be posted as responses
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >=20
-> > Responses should be made by Fri Nov 15 00:00:00 UTC 2019.
-> > Anything received after that time might be too late.
-> >=20
->=20
-> Build results:
-> 	total: 136 pass: 136 fail: 0
-> Qemu test results:
-> 	total: 229 pass: 229 fail: 0
+On Wed, Nov 13, 2019 at 07:26:43PM +0100, Andreas Kemnade wrote:
+> LDO9 and LDO10 were listed with the same enable bits.
+> That looks insane and there are no provisions in the code for handling such
+> a special case. Also other out-of-tree drivers use a separate bit to
+> enable it.
 
-Great, thanks for testing,
+This definitely looks like a bug but without a datasheet or testing it's
+worrying guessing at the register bit to use for the enable for the
+second LDO...
 
-Ben.
-
---=20
-Ben Hutchings
-Anthony's Law of Force: Don't force it, get a larger hammer.
-
-
-
---=-/UbXt/om7lVUTchhVZBS
+--bCsyhTFzCvuiizWE
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3MTBYACgkQ57/I7JWG
-EQmEvA//T0JH9LV2byfb52J98dgmvihx3stY043ow14Ry12rx/ZMVaOWidLGK/HM
-TU3rDVuoRiTqILqoTr71pIadO2sZjtWcbDGMqm+CVM2+7QBmDACUHLaiLdsXS5QK
-8+YTNR9xe5gbkdYYOx89KA/wOtG5vQU8bo2ZcGMu/Ei7p1Gjb7wew5KOzFaaReeW
-XM2NWAyZAqtW9r0/HmNrSsF1b53zsy9mspR3tatu3mfzzm1Fo5Uu2xRuXPzmqEpb
-ZZ4QfuzoJe5xuZ+GDewFJm4UPfJ0EtbEFH8Zgd7ozdT3RZTZNTxMbhEiusxhXhjx
-A4Jgh0YTvNs5snCpGZwthHHGrOgxVzOWibJiXzzyPdLLIA/TGuCmMjZrPABjUIOH
-0iQwBDwY7GNKj+IDfHlzIDEg7+KTyhCv+Y4PcbCYwh+4VhapeL03yfTvpKj2uE++
-xMw1urHViGG33NKsx+GWX1iWHVE92P0FU0JVq+Za5F03N2rTJ66UrHzj/E4lwvhV
-2j5r6AbSjsylzpczNR6t9zfgnpSsWDBjYElixPmRJFt05AI2YMRZziB0XARadP9u
-IaDu+r+SEL38jtp0KZ1joIGkahpJ9Xyv9YxeuqiUnpTRpl1Oa8PkOdDqoiR5OqJP
-FMqzpfleErtNEZguusSyti+3CBzHWGPhHM8/0SZBbovpcNUxMbc=
-=7sAw
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3MTCsACgkQJNaLcl1U
+h9AjAQgAgUFL9zZM8B3gIkvEHDBDp0+PFbXgC/xEmdNFbMEUKrJg5E+F1421qkqu
+ObE6PYM8J2xAk/LTCIJWv+L5Sc2xdavMUbp8SxcuYdaPE15s4dwwrvI74wTw2xF0
+aPx0g3lhs4u0WWrvfrGXTRDXZSaQzgjiAg371pdQE0oiMcBb+cELbNaZ1zjJmbxB
+bjVZdVFqMN213A2ajHBdMo9fZMX04G4M7R3rtnONc9fopC/f4dAzrRnBvQzgaXIe
+qDXP4zmhMnndb9F+iv9GYDAoaTq7mV0mmpdgIUB6gEmlykdS/Rbc4dfGellOL+H9
+7JL1nRNO6aO8D5TQgL9Gww3V0QqVoQ==
+=7+ws
 -----END PGP SIGNATURE-----
 
---=-/UbXt/om7lVUTchhVZBS--
+--bCsyhTFzCvuiizWE--
