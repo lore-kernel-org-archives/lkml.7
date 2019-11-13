@@ -2,138 +2,117 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40476C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00F6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C81222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975922245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/X7BxOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfKMPXL (ORCPT
+        id S1728001AbfKMPYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:23:11 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:48016 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727655AbfKMPXK (ORCPT
+        Wed, 13 Nov 2019 10:24:21 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37765 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbfKMPYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:23:10 -0500
-Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id RTP72100K5USYZQ01TP7FR; Wed, 13 Nov 2019 16:23:08 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iUuU7-00066b-Jn; Wed, 13 Nov 2019 16:23:07 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iUuU7-0003e5-HW; Wed, 13 Nov 2019 16:23:07 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] i2c: core: Use DEVICE_ATTR_*() helper macros
-Date:   Wed, 13 Nov 2019 16:23:06 +0100
-Message-Id: <20191113152306.13968-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 Nov 2019 10:24:21 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b17so2466354wmj.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 07:24:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZIr8n1tU+j0xhtRpbzRhBLFBsZMuPY7L0CnRVcZR4k=;
+        b=c/X7BxOj/QjILROu0J4DmJluqRkTUtYoR0f7eEpN/8Yq7Vyg64Xb8zYRvXYHRBDTfI
+         Qahh/XnS36s2Q3+nuvxj8n0hh4V+DEQq3MlaejW5Yv/uRPSEPqtWTG9ZTc9Jz3hzIakk
+         HnZjZUGnvxb08VG5g26S5ivktTIFPJ9FWZrCnuYgITCkeu5uPgsIx/6FCy5+qGyhhQ/2
+         pqxmX75YScunIZ3uUo6Krl8P/I23/PJ4eDzVVO6Zuh/q9Qty81S2NJ8ubrVbmrsfHgYZ
+         2Hsk9KE1rsL1pb/e0qyiNonYkWoI1lx4Lqrsq9Q30l+ASHJBNVaxitEpDqH1lndQKH3Y
+         s3uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZIr8n1tU+j0xhtRpbzRhBLFBsZMuPY7L0CnRVcZR4k=;
+        b=pPt5C2smW4uaCB+nVDxwdcMGmQi3g0pEfeqM0331CvSZwl2ztajz6Mz8tWxLzfCNHS
+         dQa2WdySUw+gCTKCx1hg+QDrvXQCqTTG6Qjn8jx4mkti7ZbRMxzHFFrMQVy9c8X4UQyX
+         HmJNe+3L6g6VrSRZs9v4sRWsR3cf19HFLliF9XNJkBvBdqa1Zb0yzSkV813rcPdp31dK
+         IOKU0XxuiC82sylYQnzpunXAQOjGArfH6fx1XZq9I8/T+20vXngMO9E3heL6HZOPCGr9
+         ieBbDzkEMalR4oPQ6E2vu3DgSXKQw8vuEMUf/x/wk8xiFfz5Kbc72Qp7nsGhQ523hSAu
+         WhOg==
+X-Gm-Message-State: APjAAAWC0u4YCMRxPDqEH6eR/GyL5I+L2viuRUJGFMW5S6y7zOG2+shH
+        L6c5OGD1qmCA3yM06ZA5QNF62VRR6KgKaP+TShdtag==
+X-Google-Smtp-Source: APXvYqyh/U3wryjoZZSptRRKloXLftAMfY1jR1cvrpoCxOaKPTJf/IYD45uGLGkd1pxrgI+3IHhHsLJO4Mf4t58c4rs=
+X-Received: by 2002:a1c:790b:: with SMTP id l11mr3485526wme.127.1573658659004;
+ Wed, 13 Nov 2019 07:24:19 -0800 (PST)
+MIME-Version: 1.0
+References: <1573649074-72589-1-git-send-email-yukuai3@huawei.com>
+In-Reply-To: <1573649074-72589-1-git-send-email-yukuai3@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 13 Nov 2019 10:24:07 -0500
+Message-ID: <CADnq5_P38AfOHtRAAYXHVmjPPS9ot4NTGX-dQXgeUiGUjYUCHw@mail.gmail.com>
+Subject: Re: [PATCH 0/7] various '-Wunused-but-set-variable' gcc warning fixes
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Rex Zhu <Rex.Zhu@amd.com>,
+        "Quan, Evan" <evan.quan@amd.com>, yi.zhang@huawei.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i2c core sysfs attributes from DEVICE_ATTR() to
-DEVICE_ATTR_*(), to reduce boilerplate.
-This requires renaming some functions.
+Applied the series, although a couple of the patches were already
+applied from a previous patch set.
 
-Although no suitable macro exists for the delete_device attribute,
-rename i2c_sysfs_delete_device() to delete_device_store() for
-consistency.
+Thanks,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
----
-v2:
-  - s/DEVICE_ATTR_RW/DEVICE_ATTR_*/ in summary and description,
-  - Add Reviewed-by.
----
- drivers/i2c/i2c-core-base.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Alex
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 6a5183cffdfc3e82..c87bf5bcab3f1349 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -449,15 +449,15 @@ static void i2c_client_dev_release(struct device *dev)
- }
- 
- static ssize_t
--show_name(struct device *dev, struct device_attribute *attr, char *buf)
-+name_show(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	return sprintf(buf, "%s\n", dev->type == &i2c_client_type ?
- 		       to_i2c_client(dev)->name : to_i2c_adapter(dev)->name);
- }
--static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
-+static DEVICE_ATTR_RO(name);
- 
- static ssize_t
--show_modalias(struct device *dev, struct device_attribute *attr, char *buf)
-+modalias_show(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	int len;
-@@ -472,7 +472,7 @@ show_modalias(struct device *dev, struct device_attribute *attr, char *buf)
- 
- 	return sprintf(buf, "%s%s\n", I2C_MODULE_PREFIX, client->name);
- }
--static DEVICE_ATTR(modalias, S_IRUGO, show_modalias, NULL);
-+static DEVICE_ATTR_RO(modalias);
- 
- static struct attribute *i2c_dev_attrs[] = {
- 	&dev_attr_name.attr,
-@@ -1039,8 +1039,8 @@ EXPORT_SYMBOL_GPL(i2c_adapter_depth);
-  * the user to provide incorrect parameters.
-  */
- static ssize_t
--i2c_sysfs_new_device(struct device *dev, struct device_attribute *attr,
--		     const char *buf, size_t count)
-+new_device_store(struct device *dev, struct device_attribute *attr,
-+		 const char *buf, size_t count)
- {
- 	struct i2c_adapter *adap = to_i2c_adapter(dev);
- 	struct i2c_board_info info;
-@@ -1095,7 +1095,7 @@ i2c_sysfs_new_device(struct device *dev, struct device_attribute *attr,
- 
- 	return count;
- }
--static DEVICE_ATTR(new_device, S_IWUSR, NULL, i2c_sysfs_new_device);
-+static DEVICE_ATTR_WO(new_device);
- 
- /*
-  * And of course let the users delete the devices they instantiated, if
-@@ -1107,8 +1107,8 @@ static DEVICE_ATTR(new_device, S_IWUSR, NULL, i2c_sysfs_new_device);
-  * the user to delete the wrong device.
-  */
- static ssize_t
--i2c_sysfs_delete_device(struct device *dev, struct device_attribute *attr,
--			const char *buf, size_t count)
-+delete_device_store(struct device *dev, struct device_attribute *attr,
-+		    const char *buf, size_t count)
- {
- 	struct i2c_adapter *adap = to_i2c_adapter(dev);
- 	struct i2c_client *client, *next;
-@@ -1151,7 +1151,7 @@ i2c_sysfs_delete_device(struct device *dev, struct device_attribute *attr,
- 	return res;
- }
- static DEVICE_ATTR_IGNORE_LOCKDEP(delete_device, S_IWUSR, NULL,
--				   i2c_sysfs_delete_device);
-+				  delete_device_store);
- 
- static struct attribute *i2c_adapter_attrs[] = {
- 	&dev_attr_name.attr,
--- 
-2.17.1
-
+On Wed, Nov 13, 2019 at 9:12 AM yu kuai <yukuai3@huawei.com> wrote:
+>
+> This patch set fixes various unrelated gcc '-Wunused-but-set-variable'
+> warnings.
+>
+> yu kuai (7):
+>   drm/amdgpu: remove set but not used variable 'mc_shared_chmap' from
+>     'gfx_v6_0.c' and 'gfx_v7_0.c'
+>   drm/amdgpu: remove set but not used variable 'amdgpu_connector'
+>   drm/amdgpu: remove set but not used variable 'count'
+>   drm/amdgpu: remove set but not used variable 'invalid'
+>   drm/amdgpu: remove set but not used variable 'threshold'
+>   drm/amdgpu: remove set but not used variable 'state'
+>   drm/amdgpu: remove set but not used variable 'us_mvdd'
+>
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c    |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_display.c         |  2 --
+>  drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c               |  3 +--
+>  drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c               |  3 +--
+>  drivers/gpu/drm/amd/amdkfd/kfd_device.c             |  4 ++--
+>  drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c  |  7 ++-----
+>  drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 12 ------------
+>  7 files changed, 8 insertions(+), 27 deletions(-)
+>
+> --
+> 2.7.4
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
