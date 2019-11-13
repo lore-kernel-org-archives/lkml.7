@@ -2,117 +2,239 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F44EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244A0C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F123222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CCD222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfKMKeL (ORCPT
+        id S1727451AbfKMKea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:34:11 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54444 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726165AbfKMKeL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:34:11 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADAV5tI192257
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:34:10 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7qdb9ef5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:34:09 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 13 Nov 2019 10:33:46 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Nov 2019 10:33:42 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADAXfNR22479104
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 10:33:42 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D53AEAE045;
-        Wed, 13 Nov 2019 10:33:41 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6DE7EAE051;
-        Wed, 13 Nov 2019 10:33:40 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.206.160])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 13 Nov 2019 10:33:40 +0000 (GMT)
-Date:   Wed, 13 Nov 2019 11:33:37 +0100
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Cao jin <caoj.fnst@cn.fujitsu.com>
-Subject: Re: [PATCH] mm/memblock: Correct doc for function
-References: <20191113051822.3296-1-ruansy.fnst@cn.fujitsu.com>
+        Wed, 13 Nov 2019 05:34:30 -0500
+Received: from relay.sw.ru ([185.231.240.75]:41300 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbfKMKea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:34:30 -0500
+Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1iUpyi-0006Tj-Ft; Wed, 13 Nov 2019 13:34:24 +0300
+To:     Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: KSM WARN_ON_ONCE(page_mapped(page)) in remove_stable_node()
+Message-ID: <ecaf193e-25fb-18fb-d7f7-92531ee92439@virtuozzo.com>
+Date:   Wed, 13 Nov 2019 13:34:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113051822.3296-1-ruansy.fnst@cn.fujitsu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19111310-4275-0000-0000-0000037D58C6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111310-4276-0000-0000-00003890B9AF
-Message-Id: <20191113103336.GB28740@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911130099
+Content-Type: multipart/mixed;
+ boundary="------------351C813EF078A7303C7FB05B"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 01:18:22PM +0800, Shiyang Ruan wrote:
-> From: Cao jin <caoj.fnst@cn.fujitsu.com>
-> 
-> Change "max_addr" to "end" for less confusion
-> in memblock_alloc_range_nid comments.
-> 
-> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+This is a multi-part message in MIME format.
+--------------351C813EF078A7303C7FB05B
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+When remove_stable_node() races with __mmput() and squeezes in between ksm_exit() and exit_mmap(),
+the WARN_ON_ONCE(page_mapped(page)) in remove_stable_node() could be triggered.
 
-> ---
->  mm/memblock.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Suppose this still goes to Andrew's -mm.
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index ceb6761f526d..203ed317551b 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1321,7 +1321,7 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
->   * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
->   *
->   * The allocation is performed from memory region limited by
-> - * memblock.current_limit if @max_addr == %MEMBLOCK_ALLOC_ACCESSIBLE.
-> + * memblock.current_limit if @end == %MEMBLOCK_ALLOC_ACCESSIBLE.
->   *
->   * If the specified node can not hold the requested memory the
->   * allocation falls back to any node in the system
-> -- 
-> 2.21.0
-> 
-> 
-> 
+Should we just remove the warning? It seems to be safe to do, all callers are able to handle -EBUSY,
+or there is a better way to fix this?
 
+
+
+It's easily reproducible with the following script:
+(ksm_test.c attached)
+
+	#!/bin/bash
+
+	gcc -lnuma -O2 ksm_test.c -o ksm_test
+	echo 1 > /sys/kernel/mm/ksm/run
+	./ksm_test &
+	sleep 1
+	echo 2 > /sys/kernel/mm/ksm/run
+
+and the patch bellow which provokes that race.
+
+---
+ include/linux/ksm.h      | 4 +++-
+ include/linux/mm_types.h | 1 +
+ kernel/fork.c            | 4 ++++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/ksm.h b/include/linux/ksm.h
+index e48b1e453ff5..18384ea472f8 100644
+--- a/include/linux/ksm.h
++++ b/include/linux/ksm.h
+@@ -33,8 +33,10 @@ static inline int ksm_fork(struct mm_struct *mm, struct mm_struct *oldmm)
+ 
+ static inline void ksm_exit(struct mm_struct *mm)
+ {
+-	if (test_bit(MMF_VM_MERGEABLE, &mm->flags))
++	if (test_bit(MMF_VM_MERGEABLE, &mm->flags)) {
+ 		__ksm_exit(mm);
++		mm->ksm_wait = 1;
++	}
+ }
+ 
+ /*
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 270aa8fd2800..3df8290528c2 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -463,6 +463,7 @@ struct mm_struct {
+ 
+ 		/* Architecture-specific MM context */
+ 		mm_context_t context;
++		unsigned long ksm_wait;
+ 
+ 		unsigned long flags; /* Must use atomic bitops to access */
+ 
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 5fb7e1fa0b05..be6ef4e046f0 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1074,6 +1074,10 @@ static inline void __mmput(struct mm_struct *mm)
+ 	uprobe_clear_state(mm);
+ 	exit_aio(mm);
+ 	ksm_exit(mm);
++
++	if (mm->ksm_wait)
++		schedule_timeout_uninterruptible(10*HZ);
++
+ 	khugepaged_exit(mm); /* must run before exit_mmap */
+ 	exit_mmap(mm);
+ 	mm_put_huge_zero_page(mm);
 -- 
-Sincerely yours,
-Mike.
+2.23.0
 
+--------------351C813EF078A7303C7FB05B
+Content-Type: text/x-csrc; charset=UTF-8;
+ name="ksm_test.c"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="ksm_test.c"
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <numaif.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+
+//#define NR_NODES 4
+#define NR_NODES 1
+
+#define MAP_SIZE 4096
+
+#define NR_THREADS 1024
+
+pid_t pids[NR_THREADS];
+
+int merge_and_migrate(void)
+{
+        void *p;
+        unsigned long rnd;
+        unsigned long old_node, new_node;
+        pid_t p_pid, pid;
+        int j;
+
+        p = mmap(NULL, MAP_SIZE, PROT_READ|PROT_WRITE,
+                MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+        if (p == MAP_FAILED)
+                perror("mmap"), exit(1);
+
+        memset(p, 0xff, MAP_SIZE);
+        if (madvise(p, MAP_SIZE, MADV_MERGEABLE))
+                perror("madvise"), exit(1);
+	sleep(1000000);
+
+        while (1) {
+                sleep(0);
+                rnd = rand() % 2;
+                switch (rnd) {
+                case 0: {
+                        rnd = rand() % 128;
+                        memset(p, rnd, MAP_SIZE);
+                        break;
+                }
+                case 1: {
+                        j = rand()%NR_NODES;
+                        old_node = 1 << j;
+                        new_node = 1<<((j+1)%NR_NODES);
+
+                        migrate_pages(0, NR_NODES, &old_node, &new_node);
+                        break;
+                }
+                }
+        }
+        return 0;
+}
+
+int main(void)
+{
+        int i,ret,j;
+        pid_t pid;
+        int wstatus;
+        unsigned long old_node, new_node;
+
+        for (i = 0; i < NR_THREADS; i++) {
+                pid = fork();
+                if (pid < 0) {
+                        perror("fork");
+                        return 1;
+                }
+                if (pid) {
+                        pids[i] = pid;
+                        continue;
+                } else
+                        merge_and_migrate();
+        }
+
+        while (1) {
+                pid = waitpid(-1, &wstatus, WNOHANG);
+                if (pid < 0) {
+                        perror("waitpid failed");
+                        return 1;
+                }
+                if (pid) {
+                        for (i = 0; i< NR_THREADS; i++) {
+                                if (pids[i] == pid) {
+                                        pid = fork();
+                                        if (pid < 0) {
+                                                perror("fork in while");
+                                                return 1;
+                                        }
+                                        if (pid) {
+                                                pids[i] = pid;
+                                                break;
+                                        } else
+                                                merge_and_migrate();
+                                }
+                        }
+                        continue; /*while(1)*/
+                }
+                i = rand()%NR_THREADS;
+                kill(pids[i], SIGKILL);
+        }
+        return 0;
+}
+
+--------------351C813EF078A7303C7FB05B--
