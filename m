@@ -2,382 +2,156 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B468C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167B2C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18F9222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D67222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eb/OYO8t"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="s6yDoIKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfKMLNO (ORCPT
+        id S1727847AbfKMLPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 06:13:14 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43732 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfKMLNN (ORCPT
+        Wed, 13 Nov 2019 06:15:10 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:47628 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbfKMLPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:13:13 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADBClhW112048;
-        Wed, 13 Nov 2019 05:12:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573643567;
-        bh=h9xEOipiMSBQ/v/YefGIqpw3Ed/kooHBIiXxYAocdes=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eb/OYO8tj7OL/hoc9y3kkSLZGYRPSyauoFl0nvlZLkXSLlidkeIxHd59CWgIUGvmS
-         f41UP9EQPfOwc3bknot3JcxNWnVoXdx1kH0vghsv5OZtmGAGX+xJOVurxDKIZfOqfQ
-         uIhR+z2uveXNHrJHmT3yP7lRV07R5t8uCqWjipW8=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADBClMx003439
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 05:12:47 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 05:12:29 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 05:12:29 -0600
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADBChi1006071;
-        Wed, 13 Nov 2019 05:12:44 -0600
-Subject: Re: [PATCH 5/6] blk-cgroup: reimplement basic IO stats using cgroup
- rstat
-To:     Tejun Heo <tj@kernel.org>, <axboe@kernel.dk>
-CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lizefan@huawei.com>,
-        <hannes@cmpxchg.org>, <kernel-team@fb.com>,
-        Dan Schatzberg <dschatzberg@fb.com>, Daniel Xu <dlxu@fb.com>
-References: <20191107191804.3735303-1-tj@kernel.org>
- <20191107191804.3735303-6-tj@kernel.org>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <cd3ebcee-6819-a09b-aeba-de6817f32cde@ti.com>
-Date:   Wed, 13 Nov 2019 16:43:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191107191804.3735303-6-tj@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 13 Nov 2019 06:15:10 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: Cwk9j49k05muuy61Ma9931YppjH7Ayw5PoG3tpIgKHi0Lf8FsrVMw95eKPZIHCQWlMqw5obidp
+ MU/bx3YsW5FFtRbHDQF9GVahe76gE+lX3y6lnhOe+7x/k1zk9YCZq599DI9v124NCp48ejOj1G
+ gWIHU6YPULHXGeySLcDY1eHFdmJLQOj+FUsqnwu8Im3JvvKTBC5J3tuwKCLtqRLyMkEDC5UZ9+
+ fs3sUvQAw76aTL+vwaoW+5BkDyRtixrrwIxID/VeZwKhGCiG7MGYgrI3afcnf9QKG80DNmvpVm
+ vMY=
+X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
+   d="scan'208";a="56886588"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Nov 2019 04:15:08 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 Nov 2019 04:15:09 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 13 Nov 2019 04:15:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JZ/JPXfeRUrnwXVqEXsvVtd+LWm1j5b0gOj4mhTrpEkICNe03WTPeiWAsBOINpySKnrRHhGKOXEhhs4sVX2c94wGr+ySlvrVzemPXXzrAFVMqY6yUGuz60pPW0TvEqhDgMM81E7HF2doGW4pfXyFHbWTwBg2Cs499DiRSqtTINlWUNAFjGi7bMfPaSRMSVGvThHS7V4gssYkLFWHf5BmPyp3QIdpoGujC8LZgFg9GsqzRUKBq2roU0gAbffPgetCF5EeUUF+ZplHBaBMBQJrz1pMzrHiIH/HM0JioAiYtHg+WSm2xQZ7PqoBnO9yiko+e9Ih/Hc058Mk45F7qeuTOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y/AHet2aaRlIDLXgDuPutYNnU8mwg7TxExXu5iCyG8w=;
+ b=cCkaG2IzCFSax7b7mv8fY9I8MLvbXDNXfXi9XUvzRC4K6/gi9GjdKF9lJH03+VeYKno8YsOpvse49tE3DeFc3SVerolbAcw080RKGk9H5gjyS+UIgSJ/wZ+d0j1YZgTAsAnsWEKACBXypmCwIQ+xFnOpL/+n4nhL8o28syT7VNY78Ejb6j4+ydeaV8ZgGfxv1SfGzgcSLdoljKrb0pOsZPBbbFYMG2Rz6bpOYEOWi3MqAo2upGu8GIdsmOPNv8DHQSCsWHyIvdvoX8jE8ji+Kvjkvhw1EHsNZyLhkaR6gBGbmY/qTEMrKb8WSWXhuRxxgjt3eMI8xMcMhkcw901MVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y/AHet2aaRlIDLXgDuPutYNnU8mwg7TxExXu5iCyG8w=;
+ b=s6yDoIKFA8Ssj47FfVHp9D4lP1BDdz9kF5XylYuGDd4NJWXEj37wvnlXMMlG+b06km/4ge+Vx4GCNJn+ERaue/3FgmTLTxmp1gFf4/b0j4L0UdlK8K+rRxETph2n3mfPbeLubmdoQjCRnRgWZczlsnY8R97DNrt7jFRax7oWW0M=
+Received: from BYAPR11MB3224.namprd11.prod.outlook.com (20.177.127.88) by
+ BYAPR11MB3207.namprd11.prod.outlook.com (20.177.184.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Wed, 13 Nov 2019 11:15:07 +0000
+Received: from BYAPR11MB3224.namprd11.prod.outlook.com
+ ([fe80::f4eb:2c83:7aec:ee98]) by BYAPR11MB3224.namprd11.prod.outlook.com
+ ([fe80::f4eb:2c83:7aec:ee98%3]) with mapi id 15.20.2430.023; Wed, 13 Nov 2019
+ 11:15:07 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <linux@armlinux.org.uk>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/13] add defconfig support for SAM9X60
+Thread-Topic: [PATCH 00/13] add defconfig support for SAM9X60
+Thread-Index: AQHVmhOaxsb1PFuwzEKI4243iHeyKA==
+Date:   Wed, 13 Nov 2019 11:15:07 +0000
+Message-ID: <fe877350-d50c-c2d8-a07f-0c577de08358@microchip.com>
+References: <1573635069-30883-1-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1573635069-30883-1-git-send-email-claudiu.beznea@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM4PR08CA0058.eurprd08.prod.outlook.com
+ (2603:10a6:205:2::29) To BYAPR11MB3224.namprd11.prod.outlook.com
+ (2603:10b6:a03:77::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20191113131500526
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b9809fe8-3fc8-4495-194c-08d7682abd45
+x-ms-traffictypediagnostic: BYAPR11MB3207:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB32074EE40873D3E4EA14813487760@BYAPR11MB3207.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(39860400002)(396003)(136003)(199004)(189003)(71200400001)(64756008)(186003)(86362001)(53546011)(66446008)(6116002)(6436002)(6486002)(54906003)(305945005)(66066001)(66946007)(66476007)(66556008)(102836004)(256004)(316002)(6246003)(31686004)(71190400001)(229853002)(110136005)(478600001)(6512007)(7736002)(52116002)(25786009)(6506007)(2616005)(76176011)(8936002)(486006)(31696002)(6636002)(81166006)(2501003)(14454004)(26005)(446003)(99286004)(11346002)(386003)(2906002)(4326008)(5660300002)(476003)(8676002)(36756003)(3846002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB3207;H:BYAPR11MB3224.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7s50Zw0DHh5CGZaskgH9gsB+G+ny29tjwFHAK1sXYsk2LZ1A96i6PwKi+wEia7vyC6GmEYAQFOseVM9YTq1YjQePgRbkKxPVeDyGSJeXi/N/iiXzpxCi18WYJ0fVryASFrUnTYRvcSs2gDig2iFoIHOiHxdy2G5gXYcF1cOjBPFdpzIgCOc0hj0jXYc7wS0/lAjfs0nQO7+9UgXu01rzkj9EdE3yfj+QqjZsc8nXUcvw/iXQG5hb6A9bMM0T74t4QG3St7KLCrRzgCK6cQFGpBR26IdYR6ysUI4VIcK2AyGn5Ugwf0tEK+atbc9twHpxO/Ezn0Bwk9RVPd/5KgXLmzSYRmHIhIMXtIYAn/JEcEi/PymGri4AE8ljzM09CPGCuaoQ28S7KJe+Vgr/+3PhlJuw2133Q8sAQuC+KlXli1HFFt7uz7qe6DA+ovQj7Ick
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B43A231ABEF0FC4BA13AEAB52BFFEE83@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9809fe8-3fc8-4495-194c-08d7682abd45
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 11:15:07.1700
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ub90rkXBAmeHpJ0nPPVZD76N1QAoYIkfMAlWDKbGxh+o8uj7mnONNfRIVdO6oGf2r8hO0Uqr+8wxSRdQR90X0NnpwDsY2GyamVLqA3JY7TE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3207
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 08/11/19 12:48 AM, Tejun Heo wrote:
-> blk-cgroup has been using blkg_rwstat to track basic IO stats.
-> Unfortunately, reading recursive stats scales badly as itinvolves
-> walking all descendants.  On systems with a huge number of cgroups
-> (dead or alive), this can lead to substantial CPU cost when reading IO
-> stats.
-> 
-> This patch reimplements basic IO stats using cgroup rstat which uses
-> more memory but makes recursive stat reading O(# descendants which
-> have been active since last reading) instead of O(# descendants).
-> 
-> * blk-cgroup core no longer uses sync/async stats.  Introduce new stat
->   enums - BLKG_IOSTAT_{READ|WRITE|DISCARD}.
-> 
-> * Add blkg_iostat[_set] which encapsulates byte and io stats, last
->   values for propagation delta calculation and u64_stats_sync for
->   correctness on 32bit archs.
-> 
-> * Update the new percpu stat counters directly and implement
->   blkcg_rstat_flush() to implement propagation.
-> 
-> * blkg_print_stat() can now bring the stats up to date by calling
->   cgroup_rstat_flush() and print them instead of directly summing up
->   all descendants.
-> 
-> * It now allocates 96 bytes per cpu.  It used to be 40 bytes.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: Dan Schatzberg <dschatzberg@fb.com>
-> Cc: Daniel Xu <dlxu@fb.com>
-> ---
-
-I bisected a Kernel OOPs issue to this patch on linux-next. Any idea why
-this is happening? Here is the log:
-
-[   32.033025] 8<--- cut here ---
-[   32.036136] Unable to handle kernel paging request at virtual address
-2e83803c
-[   32.043637] pgd = 75330198
-[   32.046360] [2e83803c] *pgd=00000000
-[   32.050008] Internal error: Oops: 5 [#1] SMP ARM
-[   32.054647] Modules linked in:
-[   32.057724] CPU: 0 PID: 780 Comm: (systemd) Tainted: G        W
-  5.4.0-rc7-next-20191113 #172
-[   32.066893] Hardware name: Generic AM33XX (Flattened Device Tree)
-[   32.073026] PC is at cgroup_rstat_updated+0x30/0xe8
-[   32.077939] LR is at generic_make_request_checks+0x3d4/0x748
-[   32.083621] pc : [<c01e6f50>]    lr : [<c04af820>]    psr: a0040013
-[   32.089912] sp : ed9b3b78  ip : 2e838000  fp : ed826c00
-[   32.095156] r10: 00001000  r9 : 00000000  r8 : ff7ff428
-[   32.100402] r7 : c0d05148  r6 : c0d0554c  r5 : c0c8b9ec  r4 : edb26180
-[   32.106954] r3 : 2e838000  r2 : 2e838000  r1 : 00000000  r0 : eda32000
-[   32.113510] Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM
-Segment none
-[   32.120674] Control: 10c5387d  Table: adac0019  DAC: 00000051
-[   32.126444] Process (systemd) (pid: 780, stack limit = 0x5087843c)
-[   32.132648] Stack: (0xed9b3b78 to 0xed9b4000)
-[   32.137022] 3b60:
-  edb26180 eee19550
-[   32.145237] 3b80: 2e838000 c0d05148 ff7ff428 c04af820 00000004
-00000800 0074e7f8 00000000
-[   32.153452] 3ba0: a0040093 c08d1798 00000000 80040093 00002000
-00000008 00000007 edb8168c
-[   32.161667] 3bc0: 00000000 00000000 ffffe000 71b97da9 00000022
-edb26180 c0d05148 00000008
-[   32.169882] 3be0: c0d05148 00000001 00000000 edb26180 00000000
-c04b0ad8 00000000 00000000
-[   32.178097] 3c00: edb81a00 ed826c00 ed826cc4 71b97da9 c0de2c7c
-edb26180 c0d05148 00000008
-[   32.186312] 3c20: 00000001 00000001 00000000 0005fcfd 00000000
-c04b0de0 c0de2c88 edb81600
-[   32.194526] 3c40: ed826800 0005fcfd 00000000 c04ce968 00001000
-c0d05148 edb26180 efd29a84
-[   32.202741] 3c60: 00000000 00000000 0005fcfd 71b97da9 ed9b3c7b
-00001000 00000001 00000001
-[   32.210956] 3c80: 00000001 00000001 00000000 0005fcfd 00000000
-c039bdb0 20040013 00000001
-[   32.219170] 3ca0: 00000001 00000000 0005fcfd 00000000 ed9b3cc0
-00000001 efd29a84 00000000
-[   32.227385] 3cc0: 00000000 ed9b3e04 edb26180 ec8421b0 00000001
-ec842100 0000000c ec8422b8
-[   32.235600] 3ce0: 0005fcfd 00000000 00000fff 00000000 ee2a7b40
-00080000 00000000 00112cca
-[   32.243814] 3d00: ec8422bc c02983e0 0005fcfd 00000000 00000000
-00000001 00000000 00000008
-[   32.252028] 3d20: 0005fcfd 00000000 00000000 eef82400 00000010
-00000000 00000004 ed9b3e88
-[   32.260242] 3d40: 00000000 ed9b3d68 00000000 00000003 00000000
-c0d05148 60040013 c01837f4
-[   32.268457] 3d60: 00000000 71b97da9 00000000 00000001 00000001
-c03783bc ec8422b8 ed9b3e04
-[   32.276671] 3d80: ed9b3e04 00000001 ec8422bc c0378404 00000001
-00000000 ec8421b0 c0255360
-[   32.284886] 3da0: eeee0000 ed9d2180 ed9b3da8 ed9b3da8 ed9b3db0
-ed9b3db0 00000000 71b97da9
-[   32.293101] 3dc0: 00000000 00000001 00000001 00000000 00000003
-ed9b3e04 00000000 00112cca
-[   32.301316] 3de0: ec8422bc c025563c 00112cca 00000000 00000000
-00000001 ec8422b8 ed9d2180
-[   32.309531] 3e00: ed9b3dfc ed9b3e04 ed9b3e04 71b97da9 ec8422b8
-ed9d21e8 ed9d2180 ec8422b8
-[   32.317746] 3e20: 00000000 00000001 ffffffff 00000000 ed9d2180
-c0255b8c 00000003 00000001
-[   32.325961] 3e40: ec8421b0 ed9b3f00 00000000 00000000 ec8422b8
-c024b73c 00000001 beba6ca0
-[   32.334175] 3e60: c0d05148 00000000 00000000 beba6ca0 ed9b3ee8
-ed9d2180 00000051 00000000
-[   32.342389] 3e80: ed9d21e8 00000001 ffffffff 00000fff 000081a4
-00000001 000003e8 000003e8
-[   32.350604] 3ea0: 00000000 00000000 00000000 71b97da9 000000d2
-ed9d2180 c0d05148 00000000
-[   32.358819] 3ec0: 00000000 ed9b3f78 00001000 00000000 00000000
-c02bdb6c 00001000 00020000
-[   32.367033] 3ee0: 0058b9c8 00001000 00000004 00000000 00001000
-ed9b3ee0 00000001 00000000
-[   32.375248] 3f00: ed9d2180 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[   32.383463] 3f20: 00000000 00000000 00000000 71b97da9 0058b9c8
-00000001 00001000 ed9b3f78
-[   32.391678] 3f40: ed9d2180 00000000 00000000 c02bdc78 00000000
-eda3ce1c eda3cc00 ed9d2180
-[   32.399893] 3f60: ed9d2180 c0d05148 0058b9c8 00001000 ed9b2000
-c02bdf68 00000000 00000000
-[   32.408107] 3f80: 000005e8 71b97da9 005868d8 b6c02f41 000005e8
-00000003 c0101204 00000003
-[   32.416322] 3fa0: 00000000 c01011e0 005868d8 b6c02f41 00000007
-0058b9c8 00001000 00000000
-[   32.424537] 3fc0: 005868d8 b6c02f41 000005e8 00000003 0000000a
-beba6e88 00000000 00000000
-[   32.432753] 3fe0: 00000000 beba6d24 b6c037e1 b6c3e4b8 40040030
-00000007 00000000 00000000
-[   32.440982] [<c01e6f50>] (cgroup_rstat_updated) from [<c04af820>]
-(generic_make_request_checks+0x3d4/0
-x748)
-[   32.450770] [<c04af820>] (generic_make_request_checks) from
-[<c04b0ad8>] (generic_make_request+0x1c/0x
-2e4)
-[   32.460468] [<c04b0ad8>] (generic_make_request) from [<c04b0de0>]
-(submit_bio+0x40/0x1b4)
-[   32.468686] [<c04b0de0>] (submit_bio) from [<c039bdb0>]
-(ext4_mpage_readpages+0x704/0x904)
-[   32.476995] [<c039bdb0>] (ext4_mpage_readpages) from [<c0378404>]
-(ext4_readpages+0x48/0x50)
-[   32.485481] [<c0378404>] (ext4_readpages) from [<c0255360>]
-(read_pages+0x50/0x154)
-[   32.493175] [<c0255360>] (read_pages) from [<c025563c>]
-(__do_page_cache_readahead+0x1d8/0x1f8)
-[   32.501914] [<c025563c>] (__do_page_cache_readahead) from
-[<c0255b8c>] (page_cache_sync_readahead+0xa0
-/0xf4)
-[   32.511799] [<c0255b8c>] (page_cache_sync_readahead) from
-[<c024b73c>] (generic_file_read_iter+0x75c/0
-xc40)
-[   32.521594] [<c024b73c>] (generic_file_read_iter) from [<c02bdb6c>]
-(__vfs_read+0x138/0x1bc)
-[   32.530073] [<c02bdb6c>] (__vfs_read) from [<c02bdc78>]
-(vfs_read+0x88/0x114)
-[   32.537241] [<c02bdc78>] (vfs_read) from [<c02bdf68>]
-(ksys_read+0x54/0xd0)
-[   32.544237] [<c02bdf68>] (ksys_read) from [<c01011e0>]
-(__sys_trace_return+0x0/0x20)
-[   32.552010] Exception stack(0xed9b3fa8 to 0xed9b3ff0)
-[   32.557085] 3fa0:                   005868d8 b6c02f41 00000007
-0058b9c8 00001000 00000000
-[   32.565300] 3fc0: 005868d8 b6c02f41 000005e8 00000003 0000000a
-beba6e88 00000000 00000000
-[   32.573512] 3fe0: 00000000 beba6d24 b6c037e1 b6c3e4b8
-[   32.578591] Code: ee073fba e7962101 e5903168 e0823003 (e593303c)
-[   32.584889] ---[ end trace 08d6b7172e3ff29b ]---
-[   32.797983] 8<--- cut here ---
-[   32.801090] Unable to handle kernel paging request at virtual address
-2e83803c
-[   32.808421] pgd = f285aa90
-[   32.811140] [2e83803c] *pgd=00000000
-[   32.814739] Internal error: Oops: 5 [#2] SMP ARM
-[   32.819378] Modules linked in:
-[   32.822453] CPU: 0 PID: 527 Comm: login Tainted: G      D W
-5.4.0-rc7-next-20191113 #172
-[   32.831273] Hardware name: Generic AM33XX (Flattened Device Tree)
-[   32.837406] PC is at cgroup_rstat_updated+0x30/0xe8
-[   32.842320] LR is at generic_make_request_checks+0x3d4/0x748
-[   32.848002] pc : [<c01e6f50>]    lr : [<c04af820>]    psr: a0070013
-[   32.854292] sp : edbdfb78  ip : 2e838000  fp : eda49c00
-[   32.859537] r10: 00001000  r9 : 00000000  r8 : ff7fff60
-[   32.864782] r7 : c0d05148  r6 : c0d0554c  r5 : c0c8b9ec  r4 : edd8c6c0
-[   32.871335] r3 : 2e838000  r2 : 2e838000  r1 : 00000000  r0 : ed9dec00
-[   32.877891] Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM
-Segment none
-[   32.885056] Control: 10c5387d  Table: adb40019  DAC: 00000051
-[   32.890826] Process login (pid: 527, stack limit = 0x1deade48)
-[   32.896681] Stack: (0xedbdfb78 to 0xedbe0000)
-[   32.901056] fb60:
-  edd8c6c0 eee19550
-[   32.909271] fb80: 2e838000 c0d05148 ff7fff60 c04af820 c0d0554c
-c01023dc 0074e7f8 00000000
-[   32.917487] fba0: 0000000a ffff979f 00400100 71b97da9 ee81ba00
-ffffe000 00000000 c0d0554c
-[   32.925702] fbc0: c0c90e7c 00000000 c0d0554c 71b97da9 00000001
-edd8c6c0 c0d05148 00000008
-[   32.933916] fbe0: c0d05148 00000001 00000000 edd8c6c0 00000000
-c04b0ad8 00000000 c0101aec
-[   32.942130] fc00: 00000000 00000000 00001000 71b97da9 edd8c6c0
-edd8c6c0 c0d05148 00000008
-[   32.950345] fc20: 00000001 00000001 00000000 0005fba9 00000000
-c04b0de0 c04a8f24 c04a8340
-[   32.958560] fc40: 20070013 ffffffff 00000051 bf000000 00001000
-c0d05148 edd8c6c0 efd47fac
-[   32.966775] fc60: 00000000 00000000 0005fba9 71b97da9 edbdfc7b
-00001000 00000001 00000001
-[   32.974990] fc80: 00000001 00000001 00000000 0005fba9 00000000
-c039bdb0 20070013 00000001
-[   32.983204] fca0: 00000001 00000000 0005fba9 00000000 edbdfcc0
-00000001 efd47fac 00000000
-[   32.991418] fcc0: 00000000 edbdfe04 edd8c6c0 ec85dd70 00000001
-ec85dcc0 0000000c ec85de78
-[   32.999633] fce0: 0005fba9 00000000 00000fff 00000000 ee2a7b40
-00080000 00000000 00112cca
-[   33.007848] fd00: ec85de7c c02983e0 0005fba9 00000000 00000000
-00000001 00000000 00000008
-[   33.016061] fd20: 0005fba9 00000000 00000000 eef82400 00000010
-00000000 00000004 edbdfe88
-[   33.024276] fd40: 00000000 edbdfd68 00000000 00000003 00000000
-c0d05148 60070013 c01837f4
-[   33.032491] fd60: 00000000 71b97da9 00000000 00000001 00000001
-c03783bc ec85de78 edbdfe04
-[   33.040705] fd80: edbdfe04 00000001 ec85de7c c0378404 00000001
-00000000 ec85dd70 c0255360
-[   33.048919] fda0: eeee0000 ed952d80 edbdfda8 edbdfda8 edbdfdb0
-edbdfdb0 00000000 71b97da9
-[   33.057134] fdc0: 00000000 00000001 00000001 00000000 00000003
-edbdfe04 00000000 00112cca
-[   33.065348] fde0: ec85de7c c025563c 00112cca 00000000 00000000
-00000001 ec85de78 ed952d80
-[   33.073563] fe00: edbdfdfc edbdfe04 edbdfe04 71b97da9 ec85de78
-ed952de8 ed952d80 ec85de78
-[   33.081777] fe20: 00000000 00000001 ffffffff 00000000 ed952d80
-c0255b8c 00000003 00000001
-[   33.089992] fe40: ec85dd70 edbdff00 00000000 00000000 ec85de78
-c024b73c 00000001 00000041
-[   33.098206] fe60: ffffe000 00000000 00000000 00000000 edbdfee8
-ed952d80 00000000 00000000
-[   33.106422] fe80: ed952de8 00000001 ffffffff 00000fff edbdfe8c
-71b97da9 000003e8 00000004
-[   33.114637] fea0: edbdff70 c0d05148 00000001 71b97da9 edbde000
-ed952d80 c0d05148 00000000
-[   33.122852] fec0: 00000000 edbdff78 000003e8 00000000 00000000
-c02bdb6c 000003e8 00020000
-[   33.131066] fee0: 000365a8 000003e8 00000004 00000000 000003e8
-edbdfee0 00000001 00000000
-[   33.139280] ff00: ed952d80 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[   33.147495] ff20: 00000000 00000000 00000000 71b97da9 000365a8
-00000001 000003e8 edbdff78
-[   33.155709] ff40: ed952d80 00000000 00000000 c02bdc78 00000000
-edd7721c edd77000 ed952d80
-[   33.163923] ff60: ed952d80 c0d05148 000365a8 000003e8 edbde000
-c02bdf68 00000000 00000000
-[   33.172137] ff80: 00000000 71b97da9 000003e8 be9bb7ac 00000000
-00000003 c0101204 00000003
-[   33.180353] ffa0: 00000000 c01011e0 000003e8 be9bb7ac 00000004
-000365a8 000003e8 00000000
-[   33.188567] ffc0: 000003e8 be9bb7ac 00000000 00000003 00000004
-000365a8 b6d74d64 00000000
-[   33.196782] ffe0: 00000000 be9bb704 b6f7516c b6ef64b8 60070030
-00000004 00000000 00000000
-[   33.205010] [<c01e6f50>] (cgroup_rstat_updated) from [<c04af820>]
-(generic_make_request_checks+0x3d4/0
-x748)
-[   33.214800] [<c04af820>] (generic_make_request_checks) from
-[<c04b0ad8>] (generic_make_request+0x1c/0x
-2e4)
-[   33.224495] [<c04b0ad8>] (generic_make_request) from [<c04b0de0>]
-(submit_bio+0x40/0x1b4)
-[   33.232714] [<c04b0de0>] (submit_bio) from [<c039bdb0>]
-(ext4_mpage_readpages+0x704/0x904)
-[   33.241023] [<c039bdb0>] (ext4_mpage_readpages) from [<c0378404>]
-(ext4_readpages+0x48/0x50)
-[   33.249509] [<c0378404>] (ext4_readpages) from [<c0255360>]
-(read_pages+0x50/0x154)
-[   33.257203] [<c0255360>] (read_pages) from [<c025563c>]
-(__do_page_cache_readahead+0x1d8/0x1f8)
-[   33.265943] [<c025563c>] (__do_page_cache_readahead) from
-[<c0255b8c>] (page_cache_sync_readahead+0xa0
-/0xf4)
-[   33.275826] [<c0255b8c>] (page_cache_sync_readahead) from
-[<c024b73c>] (generic_file_read_iter+0x75c/0
-xc40)
-[   33.285621] [<c024b73c>] (generic_file_read_iter) from [<c02bdb6c>]
-(__vfs_read+0x138/0x1bc)
-[   33.294099] [<c02bdb6c>] (__vfs_read) from [<c02bdc78>]
-(vfs_read+0x88/0x114)
-[   33.301268] [<c02bdc78>] (vfs_read) from [<c02bdf68>]
-(ksys_read+0x54/0xd0)
-[   33.308264] [<c02bdf68>] (ksys_read) from [<c01011e0>]
-(__sys_trace_return+0x0/0x20)
-[   33.316038] Exception stack(0xedbdffa8 to 0xedbdfff0)
-[   33.321112] ffa0:                   000003e8 be9bb7ac 00000004
-000365a8 000003e8 00000000
-[   33.329327] ffc0: 000003e8 be9bb7ac 00000000 00000003 00000004
-000365a8 b6d74d64 00000000
-[   33.337540] ffe0: 00000000 be9bb704 b6f7516c b6ef64b8
-[   33.342619] Code: ee073fba e7962101 e5903168 e0823003 (e593303c)
-[   33.348850] ---[ end trace 08d6b7172e3ff29c ]---
-
-Thanks,
-Faiz
+SGksDQoNClBsZWFzZSBpZ25vcmUgdGhpcyBzZXJpZXMgZm9yIHRoZSBtb21lbnQuDQoNClRoYW5r
+IHlvdSwNCkNsYXVkaXUgQmV6bmVhDQoNCk9uIDEzLjExLjIwMTkgMTA6NTAsIENsYXVkaXUgQmV6
+bmVhIHdyb3RlOg0KPiBIaSwNCj4gDQo+IFRoaXMgc2VyaWVzIGVuYWJsZXMgcHJvcGVyIHN1cHBv
+cnQgZm9yIFNBTTlYNjAgaW4gS2NvbmZpZyBhbmQNCj4gZGVmY29uZmlnLg0KPiANCj4gVGhhbmsg
+eW91LA0KPiBDbGF1ZGl1IEJlem5lYQ0KPiANCj4gQ2xhdWRpdSBCZXpuZWEgKDgpOg0KPiAgIEFS
+TTogYXQ5MTogS2NvbmZpZzogYWRkIHNhbTl4NjAgcGxsIGNvbmZpZyBmbGFnDQo+ICAgQVJNOiBh
+dDkxOiBLY29uZmlnOiBhZGQgY29uZmlnIGZsYWcgZm9yIFNBTTlYNjAgU29DDQo+ICAgQVJNOiBh
+dDkxL2RlZmNvbmZpZzogdXNlIHNhdmVkZWZjb25maWcNCj4gICBBUk06IGF0OTEvZGVmY29uZmln
+OiBhZGQgY29uZmlnIG9wdGlvbiBmb3IgU0FNOVg2MCBTb0MNCj4gICBBUk06IGF0OTEvZGVmY29u
+ZmlnOiBlbmFibGUgYXRtZWwgbWF4dG91Y2gNCj4gICBBUk06IGF0OTEvZGVmY29uZmlnOiBlbmFi
+bGUgU0FNQTVEMidzIFNIRFdDDQo+ICAgQVJNOiBhdDkxL2RlZmNvbmZpZzogZW5hYmxlIGZsZXhj
+b20NCj4gICBBUk06IGF0OTEvZGVmY29uZmlnOiBlbmFibGUgWERNQUMNCj4gDQo+IENvZHJpbiBD
+aXVib3Rhcml1ICgzKToNCj4gICBBUk06IGF0OTEvZGVmY29uZmlnOiBBZGQgSTJTIE11bHRpLWNo
+YW5uZWwgZHJpdmVyDQo+ICAgQVJNOiBhdDkxL2RlZmNvbmZpZzogQWRkIGRyaXZlciBmb3IgQXVk
+aW8gUFJPVE8gYm9hcmQNCj4gICBBUk06IGF0OTEvZGVmY29uZmlnOiBlbmFibGUgQ0xBU1NEDQo+
+IA0KPiBUdWRvciBBbWJhcnVzICgyKToNCj4gICBBUk06IGF0OTEvZGVmY29uZmlnOiBlbmFibGUg
+QVQ5MV9TQU1BNUQyX0FEQw0KPiAgIEFSTTogYXQ5MS9kZWZjb25maWc6IGVuYWJsZSBBVE1FTF9R
+VUFEU1BJDQo+IA0KPiAgYXJjaC9hcm0vY29uZmlncy9hdDkxX2R0X2RlZmNvbmZpZyB8IDU2ICsr
+KysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICBhcmNoL2FybS9tYWNoLWF0
+OTEvS2NvbmZpZyAgICAgICAgIHwgMTMgKysrKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDM5
+IGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KPiANCg==
