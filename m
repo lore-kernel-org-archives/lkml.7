@@ -2,132 +2,103 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B28AC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B30C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4DD206CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573678216;
-	bh=Ql3fZa5rjGs7bJMRPqP+fBp7TGA4vnJttL2bmp5cfp4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UABz5LyiQWiAek01SQBVEfuVeO0HCCpXdcV4qJDpD2Vm7Rq49ieHlfkFays2ibcRV
-	 u3Esxmp2JT4jMrNzJB+AZ8sOLxUETPp215O+zWDEBXf9ANck0EgXqYbe21548xLbub
-	 8DbHgmedntYOi8uQ9ZcOxxmtKyj/AMgXZ8J2mbDk=
+	by mail.kernel.org (Postfix) with ESMTP id 1C66E206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:52:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kDVOZLq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfKMUuO (ORCPT
+        id S1726755AbfKMUww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:50:14 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46343 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfKMUuN (ORCPT
+        Wed, 13 Nov 2019 15:52:52 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:59488 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMUwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:50:13 -0500
-Received: by mail-pl1-f196.google.com with SMTP id l4so1550231plt.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:50:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YgE8GLdWFRrNduFilK05nhw+7cZeX1cpxR2N/wuTFX4=;
-        b=m16O6WDgRnJblyl5k+V2Jt0QIK5SUhKRrn9iptcLY7x7fhv6lhM/HWlGKSGBkEuHbI
-         ZJL5etjrd/zDtlh2gWvXS6Npy4Zu3xzKj45S61gFzomFsxBXfDI1A1FgRpKFVLwk9WDg
-         OZEoPJfrI/4iqdk6A3zfgawR65bKmkdfSmNn6MrGgiafPC+LfZaPrPU5+OSo7RMnDRMD
-         RlNCLF7b2xIDXK6fztzP/deFJV/3zXiRyq32RVLmquUmaGvXFrKqZDM6WsTosbPbi5dl
-         7jx9tLAAMvq+MszUS5FLqf7a0Rz6lhelMuXG54iPwDwwL698Z7ewt6fwE7Ky6jfiv1cY
-         mXJA==
-X-Gm-Message-State: APjAAAXIvS+tWcmAOHLlrXk2k7Dtytpz8n8cMZv25KR+CXD744AJWWPs
-        BFuz3CqTc+O3ikbEKpmacf/ylm3d
-X-Google-Smtp-Source: APXvYqzcy4vcwh2whp5snayHmR1i0yy6l2QEz0WLFeJ7GQf6KN0AvGdbSJ7SaBEIKNMSk/rgwnXxqg==
-X-Received: by 2002:a17:902:24b:: with SMTP id 69mr5648838plc.203.1573678212948;
-        Wed, 13 Nov 2019 12:50:12 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id w62sm4464327pfb.15.2019.11.13.12.50.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 12:50:11 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id C065C403DC; Wed, 13 Nov 2019 20:50:10 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 20:50:10 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Robin H. Johnson" <robbat2@gentoo.org>
-Cc:     Drew DeVault <sir@cmpwn.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        " Rafael J. Wysocki" <rafael@kernel.org>,
-        ~sircmpwn/public-inbox@lists.sr.ht
-Subject: Re: [PATCH v2] firmware loader: log path to loaded firmwares
-Message-ID: <20191113205010.GY11244@42.do-not-panic.com>
-References: <20191103180646.34880-1-sir@cmpwn.com>
- <20191113005628.GT11244@42.do-not-panic.com>
- <robbat2-20191113T195158-869302266Z@orbis-terrarum.net>
+        Wed, 13 Nov 2019 15:52:51 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id CC9B520B4901;
+        Wed, 13 Nov 2019 12:52:50 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CC9B520B4901
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573678370;
+        bh=fgQhQUz164u1Ek8QLM0DOcyCkmeH/6O7UhOsdVDDB+I=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=kDVOZLq3aB9m+A9OGzmuvC75nfcZhD/sjDjmXVT/MCU6x0biY6SEaTrpEujP6xAwB
+         aYUHatP8kZVdB3hXXZeUhsqNKD5UunWJIDrPEQJJgQfuQW+xr4eG1ir0dlWIsMuWM9
+         4oVdLgWug+n41qHO++J6sNXAptLa43mYGILzmBIw=
+Subject: Re: [PATCH v6 2/3] IMA: Define an IMA hook to measure keys
+To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191113184658.2862-1-nramas@linux.microsoft.com>
+ <20191113184658.2862-3-nramas@linux.microsoft.com>
+ <1573675761.4843.13.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <8eba665e-637c-d341-c77d-4f2645d3b246@linux.microsoft.com>
+Date:   Wed, 13 Nov 2019 12:52:46 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
-Content-Disposition: inline
-In-Reply-To: <robbat2-20191113T195158-869302266Z@orbis-terrarum.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1573675761.4843.13.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/13/19 12:09 PM, Mimi Zohar wrote:
+>
+> All that is is needed is the key and public_key structures, which are
+> defined in include/linux/keys.h and include/crypto/public_key.h.  If
+> the keys subsystem is disabled, then the new IMA hook won't be called.
+>   There's no need for a new Kconfig option or a new file.
+> 
+> Please move the hook to just after ima_kexec_cmdline().
+> 
+> Mimi
 
---Kj7319i9nmIyA2yE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes - IMA hook won't be called when KEYS subsystem is disabled.
 
-On Wed, Nov 13, 2019 at 08:19:07PM +0000, Robin H. Johnson wrote:
-> I have two uses cases overall:
-> - log so you know exactly when it's loaded successfully (great if
->   loading a firmware causes your system to lock up a few seconds later)
+But, build dependency is breaking since "struct key" is not defined 
+without CONFIG_KEYS.
 
-Then you can change the driver to confirm this, not impose every driver
-to do the same.
+Sasha was able to craft a .config that enabled IMA without enabling KEYS 
+and found the build break.
 
-> - at some point in the future, being able to query what firmware was
->   loaded in the past, and esp. exactly what version/data was in that
->   firmware file.
+Please see the build output he'd shared.
 
-Firmware data is opaque to the firmware loader, as such details to
-extract generic information about firmware details can only be done
-by the driver, which could decode the firmware information. Many
-drivers print these details themselves already, if they want it.
+***********************************************************************
 
-A generic interface to let us query *all* devices and currently loaded
-firmware through the firmware loader would only be possible today for
-firmware which requests (the default) caching of firmware upon
-suspend/resume given that we keep the device / firmware name pair
-around prior to suspend. For those devices it could be possible to
-extend the firmware loader with a driver callback which can extract
-firmware details in a generic codified way. To support *all* drivers
-though, in a more clean way for this, a separate but similar list
-could be kept which enables one to do this. Such items would be
-torn down upon driver removal. But that would then be an opt-in
-new mechanism.
+In file included from security/integrity/ima/ima.h:25,
+                 from security/integrity/ima/ima_fs.c:26:
+./include/keys/asymmetric-type.h: In function ‘asymmetric_key_ids’:
+./include/keys/asymmetric-type.h:72:12: error: dereferencing pointer to 
+incomplete type ‘const struct key’
+  return key->payload.data[asym_key_ids];
+            ^~
+make[3]: *** [scripts/Makefile.build:266: 
+security/integrity/ima/ima_fs.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+In file included from security/integrity/ima/ima.h:25,
+                 from security/integrity/ima/ima_queue.c:22:
+./include/keys/asymmetric-type.h: In function ‘asymmetric_key_ids’:
+./include/keys/asymmetric-type.h:72:12: error: dereferencing pointer to 
+incomplete type ‘const struct key’
+  return key->payload.data[asym_key_ids];
 
-  Luis
+***********************************************************************
 
---Kj7319i9nmIyA2yE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEENnNq2KuOejlQLZofziMdCjCSiKcFAl3MbHsACgkQziMdCjCS
-iKd3Nw//RxzcY2Mjyw2f+UtCBV8rIRfl5oyu4HTDDyy0DnCjL0zBQtWqIdTkP4oI
-jYd6QnYDRO929sBkagad6c5tWTKd9kup8cpyrpZsRZ/FtYoo/0QC/Jyww1pea2gJ
-J/aKwHpBti4lKTz5dwqWM5Vh2EVyMhQmNeMYQiXc03FhGDaFa6RRIjdkWsTQdfjK
-rIIj2dWiquzVwUadro4TfLPU2ZLd06vBwG7dO1FSd7IPlFMxslz+uyH2udND2NTf
-hEZXonNrgoDm6nfv8ZrQWRVQdb2efg5d2K5EAWS2HWz6dzemL7FFJaSxtKf9Gbsi
-c4cdpWGKBKsQmGSG7+Cylu2W0qQvYFzYlKVb37s8eozWPRfQPh0P9KY/QHqrPXtv
-avQe72l1uht70/LwBP7Q8BT1UqberV/waqqY5xLRjyntOkUnUbgyf3ztUMGZTvTj
-YlBVil3fpLzWtgIL527toPD+49ntQ1c0+sxryvlUg8LfWm4VxmT4aJKfIYMLIvbR
-49qy/ouUqmz4iL3h0KplqEVnVvTHRdbY4DZ0DOfcT2DRc4sCjqjKDJ0odrskuNDf
-rHnTqjU0QasgMOeIhXQLoiUK7wr1fWJZ4/JIet2sewi9UNPhEvPMtQLC7TzXppfF
-7fj2/ZxjdKh1Gxe+KDm2M0omMj4bqJJJMny4da+yftmBY7fzJqk=
-=sLKK
------END PGP SIGNATURE-----
-
---Kj7319i9nmIyA2yE--
+thanks,
+  -lakshmi
