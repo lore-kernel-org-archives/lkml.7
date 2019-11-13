@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23B2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67155C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BDB4222D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352C12245D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610174;
-	bh=K4n3aYJXAo17CDZa0QtfmAmu1waj7vh3I8pX8B47fb4=;
+	s=default; t=1573610178;
+	bh=Pa9IDB6Fd3A8IIm+kJX6e40chC4y0g1zGgVAP5mCn/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HHPF9kQ/ARXerg+vsbF5cCZuaSLSRYbHdnpJIOcNdnwitaLXNL/BLP4V/yQQyZ8u3
-	 zpjeSPGM+ljofas088DtO0RMr9grS0PAyO95ipuzk4H3k3Nt8CkOPaSE8rY4RhqAYv
-	 fofkasgVgXjnAS0n/C2NDGqPXNW33JTtDop0+S90=
+	b=YnhljtYuXsVNgvCbfwdCv+F6hunQM+z/o/Fwd8zYCyvKoZymhxRyKpVSBNy6hzMkD
+	 HGhrqjg3EJWg8pZ+FH9mVrhLm88Yso3gH63k5fmOxEio1JBtQrZaYWkSEA1aO0vWk0
+	 b/gZPYu8kL1Ms5be6+RTDTus9z15PZWdmG8zJM3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbfKMB4N (ORCPT
+        id S1729437AbfKMB4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47848 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbfKMBz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:56 -0500
+        id S1729349AbfKMB4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC0CE2247D;
-        Wed, 13 Nov 2019 01:55:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 980832247C;
+        Wed, 13 Nov 2019 01:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610155;
-        bh=K4n3aYJXAo17CDZa0QtfmAmu1waj7vh3I8pX8B47fb4=;
+        s=default; t=1573610160;
+        bh=Pa9IDB6Fd3A8IIm+kJX6e40chC4y0g1zGgVAP5mCn/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z7gTlhbPwaOI+d8CwDcphQ9fa27w+4Zy5xdxor62BfuIF8+onnUShnouwL6DJqXeU
-         0t9+Huvc5bFVyTr2XQTBL77FvVqXiQsp3eEKCvHbjYRedtCmwpEVjz1Y42uDqrx/sg
-         bgQESEZcter7g3XKNcLQl0TaQjs29R9MZ5asF5Gs=
+        b=huwAjqkPIMGYVEMdFklJgIADNpowjtEotdgqm3dJYhmFkVeknMHe66bqJAm8yyEW+
+         Fh3+l2zxHL+Z6JpPFxYXKgWbtniYtiCoA3QCI26RvDGDOGXrzABDXfCQpy+2VXBASq
+         d4XaGSC59MRGuAAJYQ/L7OrRUonUqFHlZjljhQ0s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 199/209] mac80211: minstrel: fix sampling/reporting of CCK rates in HT mode
-Date:   Tue, 12 Nov 2019 20:50:15 -0500
-Message-Id: <20191113015025.9685-199-sashal@kernel.org>
+Cc:     Yuchung Cheng <ycheng@google.com>, Wei Wang <weiwan@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 203/209] tcp: start receiver buffer autotuning sooner
+Date:   Tue, 12 Nov 2019 20:50:19 -0500
+Message-Id: <20191113015025.9685-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,69 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Yuchung Cheng <ycheng@google.com>
 
-[ Upstream commit 972b66b86f85f4e8201db454f4c3e9d990cf9836 ]
+[ Upstream commit 041a14d2671573611ffd6412bc16e2f64469f7fb ]
 
-Long/short preamble selection cannot be sampled separately, since it
-depends on the BSS state. Because of that, sampling attempts to
-currently not used preamble modes are not counted in the statistics,
-which leads to CCK rates being sampled too often.
+Previously receiver buffer auto-tuning starts after receiving
+one advertised window amount of data. After the initial receiver
+buffer was raised by patch a337531b942b ("tcp: up initial rmem to
+128KB and SYN rwin to around 64KB"), the reciver buffer may take
+too long to start raising. To address this issue, this patch lowers
+the initial bytes expected to receive roughly the expected sender's
+initial window.
 
-Fix statistics accounting for long/short preamble by increasing the
-index where necessary.
-Fix excessive CCK rate sampling by dropping unsupported sample attempts.
-
-This improves throughput on 2.4 GHz channels
-
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: a337531b942b ("tcp: up initial rmem to 128KB and SYN rwin to around 64KB")
+Signed-off-by: Yuchung Cheng <ycheng@google.com>
+Signed-off-by: Wei Wang <weiwan@google.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ net/ipv4/tcp_input.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index 2ecca10f6c24a..3d5520776655d 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -282,7 +282,8 @@ minstrel_ht_get_stats(struct minstrel_priv *mp, struct minstrel_ht_sta *mi,
- 				break;
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 0e2b07be08585..57e8dad956ec4 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -438,7 +438,7 @@ void tcp_init_buffer_space(struct sock *sk)
+ 	if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK))
+ 		tcp_sndbuf_expand(sk);
  
- 		/* short preamble */
--		if (!(mi->supported[group] & BIT(idx)))
-+		if ((mi->supported[group] & BIT(idx + 4)) &&
-+		    (rate->flags & IEEE80211_TX_RC_USE_SHORT_PREAMBLE))
- 			idx += 4;
- 	}
- 	return &mi->groups[group].rates[idx];
-@@ -1077,18 +1078,23 @@ minstrel_ht_get_rate(void *priv, struct ieee80211_sta *sta, void *priv_sta,
- 		return;
- 
- 	sample_group = &minstrel_mcs_groups[sample_idx / MCS_GROUP_RATES];
-+	sample_idx %= MCS_GROUP_RATES;
-+
-+	if (sample_group == &minstrel_mcs_groups[MINSTREL_CCK_GROUP] &&
-+	    (sample_idx >= 4) != txrc->short_preamble)
-+		return;
-+
- 	info->flags |= IEEE80211_TX_CTL_RATE_CTRL_PROBE;
- 	rate->count = 1;
- 
--	if (sample_idx / MCS_GROUP_RATES == MINSTREL_CCK_GROUP) {
-+	if (sample_group == &minstrel_mcs_groups[MINSTREL_CCK_GROUP]) {
- 		int idx = sample_idx % ARRAY_SIZE(mp->cck_rates);
- 		rate->idx = mp->cck_rates[idx];
- 	} else if (sample_group->flags & IEEE80211_TX_RC_VHT_MCS) {
- 		ieee80211_rate_set_vht(rate, sample_idx % MCS_GROUP_RATES,
- 				       sample_group->streams);
- 	} else {
--		rate->idx = sample_idx % MCS_GROUP_RATES +
--			    (sample_group->streams - 1) * 8;
-+		rate->idx = sample_idx + (sample_group->streams - 1) * 8;
- 	}
- 
- 	rate->flags = sample_group->flags;
+-	tp->rcvq_space.space = tp->rcv_wnd;
++	tp->rcvq_space.space = min_t(u32, tp->rcv_wnd, TCP_INIT_CWND * tp->advmss);
+ 	tcp_mstamp_refresh(tp);
+ 	tp->rcvq_space.time = tp->tcp_mstamp;
+ 	tp->rcvq_space.seq = tp->copied_seq;
 -- 
 2.20.1
 
