@@ -6,53 +6,52 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D4BC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BEAC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8DA20643
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCA720643
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="CHKMbtWj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="rdK4ZdHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbfKMQkB (ORCPT
+        id S1728546AbfKMQkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:40:01 -0500
-Received: from vern.gendns.com ([98.142.107.122]:33890 "EHLO vern.gendns.com"
+        Wed, 13 Nov 2019 11:40:04 -0500
+Received: from vern.gendns.com ([98.142.107.122]:33946 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727578AbfKMQkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:40:00 -0500
-X-Greylist: delayed 1780 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 11:39:59 EST
+        id S1728532AbfKMQkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:40:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1barl4LpDu79nPCoSjjU5D0XU/aFzdp/OvRiRUJvuu4=; b=CHKMbtWjUEP5Z9HxUTK44zytaD
-        GeMuIzYEjve7YUvU0+Gj+e+pYUpxXtnhSxCapF5tTdiRZM0mmjGx39ZDbaKcjLqBUzlkNB0JtsOdq
-        w5XE2Nr1h41pxvtjDRUm34LDSzeyWLxCJomyoC9Cyuqq/Tj35cCoy0mEqDNyTsQuUsiTJTAw12YoG
-        SWPpnJ68Yudfjqe7WM2gPuItES8UZ/ljmzsIJKuZgRHZBT46CdFEvuJaomoqtSb2ELeckXaWOzyP/
-        kQgcfLvzPBuLLFKnIwtaLZGrw2jo6NPEw15alM4nXN8hUBgv3z9L1jzkbgbI41CTkLFvVGJvASRmT
-        s5XDUEAQ==;
-Received: from [2600:1700:4830:165f::fb2] (port=42824)
+        bh=QrvW6E32K5Vx93CTVXth40KpCgKxLN9+MjmqBa8HhYQ=; b=rdK4ZdHRwSz49vILav5p93Yhsu
+        s0JgORPMrczDhB+6+VsPQBw6DulH10gp+48pYNDxLSIb3+NvlY5YXHUG0aMQkNkN/LRIJgL+q1v11
+        kHVaI1m1z4idkL5UfkrnGvW3wEJr3Dbd7yZnGXBckkHHYF196WmeuTT/ifi1YANq99Es6YE2CZTX3
+        GgPoxxAeJQjzLQ3kQelwc3MvAz0Ugi8WqdiqhftIDzaH62iucTIdQ9XewhtXPLhETHNt3dxmuPZEL
+        DuHdeoORIzasqi78q3dIwxpL2rFCcvvQtMa4zHTs67doZEun6vC4EnjxkZQMcuXlugEP1eM79BlH8
+        ex+KYp8g==;
+Received: from [2600:1700:4830:165f::fb2] (port=42830)
         by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <david@lechnology.com>)
-        id 1iUvDm-0004Fk-9d; Wed, 13 Nov 2019 11:10:18 -0500
-Subject: Re: [PATCH AUTOSEL 4.14 050/115] ARM: dts: da850-lego-ev3: slow down
+        id 1iUvDz-0004Ht-9V; Wed, 13 Nov 2019 11:10:31 -0500
+Subject: Re: [PATCH AUTOSEL 4.19 087/209] ARM: dts: da850-lego-ev3: slow down
  A/DC as much as possible
 To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
         stable@vger.kernel.org
 Cc:     Sekhar Nori <nsekhar@ti.com>, devicetree@vger.kernel.org
-References: <20191113015622.11592-1-sashal@kernel.org>
- <20191113015622.11592-50-sashal@kernel.org>
+References: <20191113015025.9685-1-sashal@kernel.org>
+ <20191113015025.9685-87-sashal@kernel.org>
 From:   David Lechner <david@lechnology.com>
-Message-ID: <a1b3b613-8b70-56a3-dee6-264bd5fa5049@lechnology.com>
-Date:   Wed, 13 Nov 2019 10:10:17 -0600
+Message-ID: <96753746-79ae-3db2-c6d8-e4d5615c0354@lechnology.com>
+Date:   Wed, 13 Nov 2019 10:10:30 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191113015622.11592-50-sashal@kernel.org>
+In-Reply-To: <20191113015025.9685-87-sashal@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,7 +70,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 7:55 PM, Sasha Levin wrote:
+On 11/12/19 7:48 PM, Sasha Levin wrote:
 > From: David Lechner <david@lechnology.com>
 > 
 > [ Upstream commit aea4762fb46e048c059ff49565ee33da07c8aeb3 ]
@@ -98,3 +97,5 @@ On 11/12/19 7:55 PM, Sasha Levin wrote:
 
 I doubt that the commits above would be backported, so it does not
 make sense to backport this patch.
+
+
