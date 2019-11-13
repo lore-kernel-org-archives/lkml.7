@@ -2,158 +2,561 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A343C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5804C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9592084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D11222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfKMMfM (ORCPT
+        id S1726528AbfKMMfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:35:12 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:52393 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKMMfL (ORCPT
+        Wed, 13 Nov 2019 07:35:40 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:60068 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfKMMfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 07:35:11 -0500
-Received: by mail-io1-f72.google.com with SMTP id o5so1374438iob.19
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 04:35:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=xqdtXvTTTPONhkciR3w2Bj2gsEfbK8zDLMwxMbhN7qQ=;
-        b=Vff6Y0NmVx8NMakE6J/YsgLukUd7MS60O7Va45aS2gpMOcJd+q8C38nE5yN+4aChCK
-         0fDHzpoocHYQB1nSJA2K0/48EFNQ2r2//4v3dcFklU0kVMq6Am0MTKxwHTJRwhizH2zB
-         /3+qwEpgzQ41O+Qu3sekoI4Eb+5We1mdcR3jF2r34W58QfUTpeLLSIRNH4m9rtDYcwXJ
-         ySIdeU/i/SxMy0iFEc56f8nLw4Ge6lCoEaWt/oT0W8Fn62z94X3Eo6tvABZLbqvd/Bfg
-         aGCPTi6NMJ3W+D+4lpUApMRtZCmP/WZva2MtEe64anwy3szt+AOqxU2tQEPzZqsym9n5
-         iKkw==
-X-Gm-Message-State: APjAAAXTl0x9jvOJYPtZJF/ffNA8TJDD1k9iHWJvK4Br1tuZ0tPzIUQT
-        7wQa658eJEUumYFyTSlG0rCWAgni5GPlBNvTrkj8/cJ1h3+5
-X-Google-Smtp-Source: APXvYqzV719ubIVLLBjHHvyaILknSra81LMnKSp0gzKvIu5mmmKxABzzgmMAP5h8AfT72XFCtiw9zFcggP8gQ8B2lDp3WXqdv0Ds
+        Wed, 13 Nov 2019 07:35:40 -0500
+Received: from [79.140.120.64] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iUrri-0006yI-5s; Wed, 13 Nov 2019 12:35:18 +0000
+Date:   Wed, 13 Nov 2019 13:35:17 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v8 2/2] selftests: add tests for clone3()
+Message-ID: <20191113123513.znwjj23to5pruevp@wittgenstein>
+References: <20191113080301.1197762-1-areber@redhat.com>
+ <20191113080301.1197762-2-areber@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:b48:: with SMTP id 69mr2602942jad.25.1573648508835;
- Wed, 13 Nov 2019 04:35:08 -0800 (PST)
-Date:   Wed, 13 Nov 2019 04:35:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005ee2a10597399876@google.com>
-Subject: WARNING: ODEBUG bug in input_ff_destroy
-From:   syzbot <syzbot+b6c55daa701fc389e286@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191113080301.1197762-2-areber@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Nov 13, 2019 at 09:03:01AM +0100, Adrian Reber wrote:
+> This tests clone3() with *set_tid to see if all desired PIDs are working
+> as expected. The tests are trying multiple invalid input parameters as
+> well as creating processes while specifying a certain PID in multiple
+> PID namespaces at the same time.
+> 
+> Signed-off-by: Adrian Reber <areber@redhat.com>
+> ---
+>  tools/testing/selftests/clone3/.gitignore     |   1 +
+>  tools/testing/selftests/clone3/Makefile       |   2 +-
+>  .../testing/selftests/clone3/clone3_set_tid.c | 345 ++++++++++++++++++
+>  3 files changed, 347 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/clone3/clone3_set_tid.c
+> 
+> diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/selftests/clone3/.gitignore
+> index 85d9d3ba2524..d56c3c49d869 100644
+> --- a/tools/testing/selftests/clone3/.gitignore
+> +++ b/tools/testing/selftests/clone3/.gitignore
+> @@ -1 +1,2 @@
+>  clone3
+> +clone3_set_tid
+> diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selftests/clone3/Makefile
+> index ea922c014ae4..2d292545ca8e 100644
+> --- a/tools/testing/selftests/clone3/Makefile
+> +++ b/tools/testing/selftests/clone3/Makefile
+> @@ -2,6 +2,6 @@
+>  
+>  CFLAGS += -I../../../../usr/include/
+>  
+> -TEST_GEN_PROGS := clone3
+> +TEST_GEN_PROGS := clone3 clone3_set_tid
 
-syzbot found the following crash on:
+Another example, where --base would help me out. :) (Since I can already
+see that this is missing the clone3_clear_sighand test that's scheduled
+for 5.5. :))
 
-HEAD commit:    3183c037 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=17cf5e72e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
-dashboard link: https://syzkaller.appspot.com/bug?extid=b6c55daa701fc389e286
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b4e53ae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1173fe72e00000
+>  
+>  include ../lib.mk
+> diff --git a/tools/testing/selftests/clone3/clone3_set_tid.c b/tools/testing/selftests/clone3/clone3_set_tid.c
+> new file mode 100644
+> index 000000000000..9a234fd2031e
+> --- /dev/null
+> +++ b/tools/testing/selftests/clone3/clone3_set_tid.c
+> @@ -0,0 +1,345 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Based on Christian Brauner's clone3() example.
+> + * These tests are assuming to be running in the host's
+> + * PID namespace.
+> + */
+> +
+> +#define _GNU_SOURCE
+> +#include <errno.h>
+> +#include <linux/types.h>
+> +#include <linux/sched.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <sys/syscall.h>
+> +#include <sys/types.h>
+> +#include <sys/un.h>
+> +#include <sys/wait.h>
+> +#include <unistd.h>
+> +#include <sched.h>
+> +
+> +#include "../kselftest.h"
+> +
+> +#ifndef MAX_PID_NS_LEVEL
+> +#define MAX_PID_NS_LEVEL 32
+> +#endif
+> +
+> +static int pipe_1[2];
+> +static int pipe_2[2];
+> +
+> +static pid_t raw_clone(struct clone_args *args)
+> +{
+> +	return syscall(__NR_clone3, args, sizeof(struct clone_args));
+> +}
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b6c55daa701fc389e286@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: timer_list hint:  
-ml_effect_timer+0x0/0x70 drivers/input/ff-memless.c:421
-WARNING: CPU: 0 PID: 1918 at lib/debugobjects.c:481  
-debug_print_object+0x160/0x250 lib/debugobjects.c:481
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 1918 Comm: syz-executor941 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x2aa/0x6e1 kernel/panic.c:221
-  __warn.cold+0x2f/0x33 kernel/panic.c:582
-  report_bug+0x27b/0x2f0 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:481
-Code: dd 00 c8 da 85 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48  
-8b 14 dd 00 c8 da 85 48 c7 c7 a0 bd da 85 e8 25 15 30 ff <0f> 0b 83 05 9b  
-bd a2 05 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-RSP: 0018:ffff8881d731f738 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8128c9cd RDI: ffffed103ae63ed9
-RBP: 0000000000000001 R08: ffff8881d23bc800 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff86d0b500
-R13: ffffffff812ed560 R14: ffff8881cfb18310 R15: ffff8881ca291d90
-  __debug_check_no_obj_freed lib/debugobjects.c:963 [inline]
-  debug_check_no_obj_freed+0x2df/0x443 lib/debugobjects.c:994
-  slab_free_hook mm/slub.c:1421 [inline]
-  slab_free_freelist_hook mm/slub.c:1475 [inline]
-  slab_free mm/slub.c:3025 [inline]
-  kfree+0x20b/0x320 mm/slub.c:3977
-  input_ff_destroy+0xb9/0x150 drivers/input/ff-core.c:373
-  input_dev_release+0x19/0xd0 drivers/input/input.c:1537
-  device_release+0x71/0x200 drivers/base/core.c:1101
-  kobject_cleanup lib/kobject.c:693 [inline]
-  kobject_release lib/kobject.c:722 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  kobject_put+0x171/0x280 lib/kobject.c:739
-  put_device+0x1b/0x30 drivers/base/core.c:2301
-  input_put_device include/linux/input.h:363 [inline]
-  evdev_free+0x4c/0x70 drivers/input/evdev.c:347
-  device_release+0x71/0x200 drivers/base/core.c:1101
-  kobject_cleanup lib/kobject.c:693 [inline]
-  kobject_release lib/kobject.c:722 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  kobject_put+0x171/0x280 lib/kobject.c:739
-  kobject_cleanup lib/kobject.c:693 [inline]
-  kobject_release lib/kobject.c:722 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  kobject_put+0x171/0x280 lib/kobject.c:739
-  cdev_put.part.0+0x32/0x50 fs/char_dev.c:365
-  cdev_put fs/char_dev.c:363 [inline]
-  chrdev_open+0x296/0x5c0 fs/char_dev.c:422
-  do_dentry_open+0x494/0x1120 fs/open.c:797
-  do_last fs/namei.c:3408 [inline]
-  path_openat+0x1430/0x3ff0 fs/namei.c:3525
-  do_filp_open+0x1a1/0x280 fs/namei.c:3555
-  do_sys_open+0x3c0/0x580 fs/open.c:1097
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x402000
-Code: 01 f0 ff ff 0f 83 40 0e 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
-44 00 00 83 3d 6d 84 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 14 0e 00 00 c3 48 83 ec 08 e8 7a 03 00 00
-RSP: 002b:00007ffff4b02e58 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 0000000000402000
-RDX: 0000000000000000 RSI: 000000000000107d RDI: 00007ffff4b02f00
-RBP: 000000000000d9d1 R08: 00007ffff4b02e60 R09: 000000000000d9d1
-R10: 00007ffff4b02e60 R11: 0000000000000246 R12: 00000000004032a0
-R13: 0000000000403330 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+So that function is now present in the clone3.c test you've added and
+also in the clone3_clear_sighand.c under sys_clone3().
+If you take [1] as your base tree you could add patches that consolidate
+this definition into a header so we avoid the pointless code
+duplication.
+(Again, if you pass --base when doing --format-patch this will be
+transparent to others.)
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=pidfd
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> +
+> +static int call_clone3_set_tid(pid_t *set_tid,
+> +			       size_t set_tid_size,
+> +			       int flags,
+> +			       int expected_pid,
+> +			       int wait_for_it)
+
+Nit: Why is that an int and not a bool? :)
+
+> +{
+> +	int status;
+> +	int ret = 0;
+> +	pid_t pid = -1;
+> +	struct clone_args args = {0};
+> +
+> +	args.flags = flags;
+> +	args.exit_signal = SIGCHLD;
+> +	args.set_tid = (__u64)set_tid;
+> +	args.set_tid_size = set_tid_size;
+
+Nit: You can save the {0} by just doing:
+
+struct clone_args args = {
+	.flags = flags,
+	.exit_signal = SIGCHLD,
+	.set_tid = (__u64)set_tid,
+	.set_tid_size = set_tid_size,
+};
+
+Also, I'd prefer if the cast would be done "properly" via
+
+#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
+
+struct clone_args args = {
+	.flags = flags,
+	.exit_signal = SIGCHLD,
+	.set_tid = ptr_to_u64(set_tid),
+	.set_tid_size = set_tid_size,
+};
+
+> +
+> +	pid = raw_clone(&args);
+> +	if (pid < 0) {
+> +		ksft_print_msg("%s - Failed to create new process\n",
+> +			       strerror(errno));
+> +		return -errno;
+> +	}
+> +
+> +	if (pid == 0) {
+> +		char tmp = 0;
+> +		ksft_print_msg("I am the child, my PID is %d (expected %d)\n",
+> +			       getpid(), set_tid[0]);
+> +		if (wait_for_it) {
+> +			ksft_print_msg("[%d] Child is ready and waiting\n", getpid());
+> +			/* Signal the parent that the child is ready */
+> +			close(pipe_1[0]);
+> +			write(pipe_1[1], &tmp, 1);
+> +			close(pipe_1[1]);
+> +			close(pipe_2[1]);
+> +			read(pipe_2[0], &tmp, 1);
+> +			close(pipe_2[0]);
+> +		}
+> +
+> +		if (set_tid[0] != getpid())
+> +			_exit(EXIT_FAILURE);
+> +		_exit(EXIT_SUCCESS);
+> +	}
+> +
+> +	if (expected_pid == 0 || expected_pid == pid)
+> +		ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
+> +			       getpid(), pid);
+> +	else {
+
+If one branch needs {} all branches should have {} according to kernel
+coding style.
+
+> +		ksft_print_msg(
+> +			"Expected child pid %d does not match actual pid %d\n",
+> +			expected_pid, pid);
+> +		ret = -1;
+> +	}
+> +
+> +	if (wait(&status) < 0) {
+> +		ksft_print_msg("Child returned %s\n", strerror(errno));
+> +		return -errno;
+> +	}
+> +	if (WEXITSTATUS(status))
+> +		return WEXITSTATUS(status);
+
+You should probably rather check:
+	if (!WIFEXITED(status))
+		return -1;
+	
+	return WEXITSTATUS(status));
+
+Since you can also get killed by a signal.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static void test_clone3_set_tid(pid_t *set_tid,
+> +				size_t set_tid_size,
+> +				int flags,
+> +				int expected,
+> +				int expected_pid,
+> +				int wait_for_it)
+> +{
+> +	int ret;
+> +
+> +	ksft_print_msg(
+> +		"[%d] Trying clone3() with CLONE_SET_TID to %d and 0x%x\n",
+> +		getpid(), set_tid[0], flags);
+> +	ret = call_clone3_set_tid(set_tid, set_tid_size, flags, expected_pid,
+> +				  wait_for_it);
+> +	ksft_print_msg(
+> +		"[%d] clone3() with CLONE_SET_TID %d says :%d - expected %d\n",
+> +		getpid(), set_tid[0], ret, expected);
+> +	if (ret != expected)
+> +		ksft_test_result_fail(
+> +			"[%d] Result (%d) is different than expected (%d)\n",
+> +			getpid(), ret, expected);
+> +	else
+> +		ksft_test_result_pass("[%d] Result (%d) matches expectation (%d)\n",
+> +			getpid(), ret, expected);
+> +}
+> +int main(int argc, char *argv[])
+> +{
+> +	FILE *f;
+> +	char buf;
+> +	pid_t pid;
+> +	pid_t ns1;
+> +	pid_t ns2;
+> +	pid_t ns3;
+
+Nit:
+pid_t pid, ns1, ns2, ns3, ns_pid;
+
+> +	int status;
+> +	char *proc;
+> +	int ret = -1;
+> +	pid_t ns_pid;
+> +	int pid_max = 0;
+> +	uid_t uid = getuid();
+> +	char line[1024] = {0};
+> +	pid_t set_tid[MAX_PID_NS_LEVEL * 2];
+> +	pid_t set_tid_small[1];
+> +
+> +	if (pipe(pipe_1) == -1 || pipe(pipe_2))
+> +		 ksft_exit_fail_msg("pipe() failed\n");
+
+Nit: The error checking here is inconsistent. Either do:
+
+if (pipe(pipe_1) || pipe(pipe_2))
+	 ksft_exit_fail_msg("pipe() failed\n");
+
+or
+
+if (pipe(pipe_1) < 0 || pipe(pipe_2) < 0)
+	 ksft_exit_fail_msg("pipe() failed\n");
+
+or == -1 but not mixed, please. :)
+
+> +
+> +	ksft_print_header();
+> +	ksft_set_plan(27);
+
+Now that's ambitious testing. I like it. :)
+
+> +
+> +	f = fopen("/proc/sys/kernel/pid_max", "r");
+> +	if (f == NULL)
+> +		ksft_exit_fail_msg(
+> +			"%s - Could not open /proc/sys/kernel/pid_max\n",
+> +			strerror(errno));
+> +	fscanf(f, "%d", &pid_max);
+> +	fclose(f);
+> +	ksft_print_msg("/proc/sys/kernel/pid_max %d\n", pid_max);
+> +
+> +	/* Try invalid settings */
+> +	memset(&set_tid, 0, sizeof(set_tid));
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL + 1, 0, -E2BIG, 0, 0);
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 2, 0, -E2BIG, 0, 0);
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 2 + 1, 0, -E2BIG, 0, 0);
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 42, 0, -E2BIG, 0, 0);
+> +
+> +	/* small set_tid array, but maximum set_tid_size */
+> +	/* Find the current active PID */
+> +	pid = fork();
+> +	if (pid == 0) {
+> +		ksft_print_msg("Child has PID %d\n", getpid());
+> +		_exit(EXIT_SUCCESS);
+> +	}
+> +	(void)wait(NULL);
+> +	/* After the child has finished, its PID should be free. */
+> +	set_tid_small[0] = pid;
+> +	/*
+> +	 * There is a chance that this can return -EFAULT as the actual
+> +	 * set_tid array has only one entry, but we are telling the kernel
+> +	 * that it has the size MAX_PID_NS_LEVEL. This could lead to a
+> +	 * situation where copy_from_user() fails. So far it always
+> +	 * succeeds and copies random data (whatever is after set_tid_small).
+> +	 */
+> +	test_clone3_set_tid(set_tid_small, MAX_PID_NS_LEVEL, 0, -EINVAL, 0, 0);
+
+Hm, I'm not sure that test makes a lot of sense.
+
+> +
+> +	/*
+> +	 * This can actually work if this test running in a MAX_PID_NS_LEVEL - 1
+> +	 * nested PID namespace.
+> +	 */
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL - 1, 0, -EINVAL, 0, 0);
+> +
+> +	memset(&set_tid, 0xff, sizeof(set_tid));
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL + 1, 0, -E2BIG, 0, 0);
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 2, 0, -E2BIG, 0, 0);
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 2 + 1, 0, -E2BIG, 0, 0);
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 42, 0, -E2BIG, 0, 0);
+> +	/*
+> +	 * This can actually work if this test running in a MAX_PID_NS_LEVEL - 1
+> +	 * nested PID namespace.
+> +	 */
+> +	test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL - 1, 0, -EINVAL, 0, 0);
+> +
+> +	memset(&set_tid, 0, sizeof(set_tid));
+> +	/* Try with an invalid PID */
+> +	set_tid[0] = 0;
+> +	test_clone3_set_tid(set_tid, 1, 0, -EINVAL, 0, 0);
+> +	set_tid[0] = -1;
+> +	test_clone3_set_tid(set_tid, 1, 0, -EINVAL, 0, 0);
+> +	/* Claim that the set_tid array actually contains 2 elements. */
+> +	test_clone3_set_tid(set_tid, 2, 0, -EINVAL, 0, 0);
+> +	/* Try it in a new PID namespace */
+> +	if (uid == 0)
+> +		test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EINVAL, 0, 0);
+> +	else
+> +		test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EPERM, 0, 0);
+
+[1]:
+I mean, you could really just do 
+if (uid == 0)
+	test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EINVAL, 0, 0);
+the else branch doesn't really test anything meaningful other than you
+can't create new pid namespaces as an unprivileged user without also
+creating a new user namespace.
+
+> +
+> +	/*
+> +	 * Try with a valid PID (1) but as non-root. This should fail
+> +	 * with -EPERM if running in the initial user namespace.
+> +	 * As root it should tell us -EEXIST.
+> +	 */
+> +	set_tid[0] = 1;
+> +	if (uid == 0)
+> +		test_clone3_set_tid(set_tid, 1, 0, -EEXIST, 0, 0);
+> +	else
+> +		test_clone3_set_tid(set_tid, 1, 0, -EPERM, 0, 0);
+
+See [1].
+
+> +
+> +	/* Try it in a new PID namespace */
+> +	if (uid == 0)
+> +		test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, 0, 0, 0);
+> +	else
+> +		test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EPERM, 0, 0);
+
+See [1].
+
+> +
+> +	/* pid_max should fail everywhere */
+> +	set_tid[0] = pid_max;
+> +	test_clone3_set_tid(set_tid, 1, 0, -EINVAL, 0, 0);
+> +	if (uid == 0)
+> +		test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EINVAL, 0, 0);
+> +	else
+> +		test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EPERM, 0, 0);
+
+See [1].
+> +
+
+> +	if (uid != 0) {
+> +		/*
+> +		 * All remaining tests require root. Tell the framework
+> +		 * that all those tests are skipped as non-root.
+> +		 */
+> +		ksft_cnt.ksft_xskip += ksft_plan - ksft_test_num();
+> +		goto out;
+> +	}
+> +
+> +	/* Find the current active PID */
+> +	pid = fork();
+> +	if (pid == 0) {
+> +		ksft_print_msg("Child has PID %d\n", getpid());
+> +		usleep(500);
+
+Why the usleep(500)?
+
+> +		_exit(EXIT_SUCCESS);
+> +	}
+> +	(void)wait(NULL);
+
+\n
+
+> +	/* After the child has finished, its PID should be free. */
+> +	set_tid[0] = pid;
+> +	test_clone3_set_tid(set_tid, 1, 0, 0, 0, 0);
+
+\n
+
+> +	/* This should fail as there is no PID 1 in that namespace */
+> +	test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EINVAL, 0, 0);
+
+Nit: please add \n between a two tests everywhere, especially if they
+have comments on top of it. This is a little hard to read. :)
+
+> +	set_tid[0] = 1;
+> +	set_tid[1] = pid;
+> +	test_clone3_set_tid(set_tid, 2, CLONE_NEWPID, 0, pid, 0);
+
+This is missing a comment.
+
+> +
+> +	ksft_print_msg("unshare PID namespace\n");
+> +	unshare(CLONE_NEWPID);
+
+Why no error checking here when the next line assumes that there is no
+PID 1 in that namespace?
+
+> +	set_tid[0] = pid;
+> +	/* This should fail as there is no PID 1 in that namespace */
+> +	test_clone3_set_tid(set_tid, 1, 0, -EINVAL, 0, 0);
+> +
+> +	/* Let's create a PID 1 */
+> +	ns_pid = fork();
+> +	if (ns_pid == 0) {
+> +		ksft_print_msg("Child in PID namespace has PID %d\n", getpid());
+> +		set_tid[0] = 2;
+> +		test_clone3_set_tid(set_tid, 1, 0, 0, 2, 0);
+> +		set_tid[0] = 1;
+> +		set_tid[1] = 42;
+> +		set_tid[2] = pid;
+> +		/*
+> +		 * This should fail as there are not enough active PID
+> +		 * namespaces. Again assuming this is running in the host's
+> +		 * PID namespace. Not yet nested.
+> +		 */
+> +		test_clone3_set_tid(set_tid, 4, CLONE_NEWPID, -EINVAL, 0, 0);
+> +		/*
+> +		 * This should work and from the parent we should see
+> +		 * something like 'NSpid:	pid	42	1'.
+
+[2]:
+You could verify this...
+In tools/testing/selftests/pidfd/pidfd_fdinfo_test.c in my pidfd tree
+is code that does this. You could just copy it. Look for
+verify_fdinfo(). Though, I'll it for you to judge whether this is too
+much hazzle.
+
+> +		 */
+> +		test_clone3_set_tid(set_tid, 3, CLONE_NEWPID, 0, 42, 1);
+> +		_exit(ksft_cnt.ksft_pass);
+
+Again, the missing \n makes the different tests hard to follow.
+
+> +	}
+> +
+> +	close(pipe_1[1]);
+> +	close(pipe_2[0]);
+> +	while (read(pipe_1[0], &buf, 1) > 0) {
+> +		ksft_print_msg("[%d] Child is ready and waiting\n", getpid());
+> +		break;
+> +	}
+> +
+> +	asprintf(&proc, "/proc/%d/status", pid);
+
+char proc_path[100];
+snprintf(proc_path, sizeof(proc_path), "/proc/%d/status", pid);
+
+should do just fine and doesn't require you to free memory.
+
+> +	f = fopen(proc, "r");
+> +	if (f == NULL)
+> +		ksft_exit_fail_msg(
+> +			"%s - Could not open %s\n",
+> +			strerror(errno), proc);
+> +	while (fgets(line, 1024, f)) {
+
+Ugh, fgets... :) I'd feel much happier with getline().
+
+> +		if (strstr(line, "NSpid")) {
+> +			/* Verify that all generated PIDs are as expected. */
+> +			sscanf(line, "NSpid:\t%d\t%d\t%d", &ns3, &ns2, &ns1);
+> +			break;
+
+Oh this is the verification code for fdinfo, I mentioned in [2]. Again,
+maybe you want to copy verify_fdinfo() and move this into a helper.
+
+> +		}
+> +	}
+> +	fclose(f);
+> +	free(proc);
+> +	close(pipe_2[0]);
+
+\n
+
+> +	/* Tell the clone3()'d child to finish. */
+> +	write(pipe_2[1], &buf, 1);
+> +	close(pipe_2[1]);
+> +
+> +	if (wait(&status) < 0) {
+> +		ksft_print_msg("Child returned %s\n", strerror(errno));
+> +		ret = -errno;
+> +		goto out;
+> +	}
+> +	if (WEXITSTATUS(status))
+
+Nit: This should probably also verify if (WIFEXITED(status)).
