@@ -2,110 +2,135 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6EAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E86C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C0B206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:26:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wi3O4TLR"
+	by mail.kernel.org (Postfix) with ESMTP id 57762206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfKMU0u (ORCPT
+        id S1727032AbfKMU1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:26:50 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35574 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfKMU0u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:26:50 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q13so2416375pff.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:26:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z+jBZPXGfzcnRw7QYo9gRDJnZjTKzZ/V8mqM60vhhaw=;
-        b=wi3O4TLRwAqZuc7rG1hKf1wffoYiplV9EKCXwbESnVGxc8rWUypX7Jv/gCExV56QvW
-         0QhlD9bXNDkCV+wjAjAdF8lBbRM+LYHGH8vKSb11Ufa7eRlZg1kqhtWeHEaVEjJHQH6I
-         X7KBoDDQ73vGJIXZJTiImFias1/fOinLl7ftdC9qqfTlmiPjBaf+TB68+FPaMwEAsLm7
-         uUQu6x6q2bZsomjlGMqdoKtattnlblREftbgb1Jm/TSz9Xz/GzGm3ei1ZZ2pZVK8ddVc
-         FJcmbeOPypuuvLrLTFCOEN1ZMIZHsaicd4CHTy+Zb2Jnwyzkyq6mLORbZCPBJToMWxAo
-         ppqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z+jBZPXGfzcnRw7QYo9gRDJnZjTKzZ/V8mqM60vhhaw=;
-        b=AKOuYNl+KOKDv+keXUplvNo1QYAcotTP3bW6Hz6+Wub1k/gCkDhTEeG77sLkBPbeME
-         hFg2jrEf1zRrtEgZBh7DtWSlxAo49zoTBBMBI4fagNuHgeWxl21kqi4dY3zvrmstmqWa
-         NSS96t+lLn7zuSbOAVtWwec4dMtA3dBrwVEqdDF+wwCZ7qjx2BdeU0DaImnr9kHJuuvL
-         X5VAKg3Da7fX98uP5zAwZBFNdDNcJVBHqKsZa+6z3TQuM4yjX+7ecE8FSZJeKAVZwNqu
-         MRPlVVbtsG33Na1k5PGKSgI8xiQFZPxlfNoK3Tq34kLyqtnJt5lHxKm6qWkZK4M0hA/Z
-         XLVg==
-X-Gm-Message-State: APjAAAVS+O1W2pr/6St5mWZbM6akFLR6O7UxlW68BPgDeFYtLxTgF/Kt
-        7zcbuhyJryqcsk1lX5a1zfqh+g==
-X-Google-Smtp-Source: APXvYqws5sHFjkVpWCAoo2wwOeNcsN0HZ1YtKA/fi79+wXnJUg21ygBsmcG+kSht7hkEW7DWgMr0OA==
-X-Received: by 2002:a63:364d:: with SMTP id d74mr5862446pga.408.1573676809438;
-        Wed, 13 Nov 2019 12:26:49 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a145sm3991905pfa.7.2019.11.13.12.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 12:26:48 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, jeffrey.l.hugo@gmail.com,
-        wenwen@cs.uga.edu
-Subject: [PATCH] ath10k: Revert "ath10k: add cleanup in ath10k_sta_state()"
-Date:   Wed, 13 Nov 2019 12:26:44 -0800
-Message-Id: <20191113202644.3673049-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Wed, 13 Nov 2019 15:27:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfKMU1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:27:06 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9155206E6;
+        Wed, 13 Nov 2019 20:27:04 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 15:27:02 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/17] kprobes: fix compilation without
+ CONFIG_KRETPROBES
+Message-ID: <20191113152702.291884f3@gandalf.local.home>
+In-Reply-To: <20191101221150.116536-9-samitolvanen@google.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+        <20191101221150.116536-1-samitolvanen@google.com>
+        <20191101221150.116536-9-samitolvanen@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'334f5b61a6f2 ("ath10k: add cleanup in ath10k_sta_state()")' causes
-ath10k_snoc on Qualcomm MSM8998, SDM845 and QCS404 platforms to trigger
-an assert in the firmware:
+On Fri,  1 Nov 2019 15:11:41 -0700
+Sami Tolvanen <samitolvanen@google.com> wrote:
 
-err_qdi.c:456:EF:wlan_process:1:cmnos_thread.c:3900:Asserted in wlan_vdev.c:_wlan_vdev_up:3219
+> kprobe_on_func_entry and arch_kprobe_on_func_entry need to be available
+> even if CONFIG_KRETPROBES is not selected.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Revert the offending commit for now.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-This reverts commit 334f5b61a6f29834e881923b98d1e27e5ce9620d.
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/net/wireless/ath/ath10k/mac.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+-- Steve
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index e8bdb2ba9b18..68f7d7246ef2 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -6638,12 +6638,8 @@ static int ath10k_sta_state(struct ieee80211_hw *hw,
- 
- 		spin_unlock_bh(&ar->data_lock);
- 
--		if (!sta->tdls) {
--			ath10k_peer_delete(ar, arvif->vdev_id, sta->addr);
--			ath10k_mac_dec_num_stations(arvif, sta);
--			kfree(arsta->tx_stats);
-+		if (!sta->tdls)
- 			goto exit;
--		}
- 
- 		ret = ath10k_wmi_update_fw_tdls_state(ar, arvif->vdev_id,
- 						      WMI_TDLS_ENABLE_ACTIVE);
--- 
-2.23.0
+> ---
+>  kernel/kprobes.c | 38 +++++++++++++++++++-------------------
+>  1 file changed, 19 insertions(+), 19 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 53534aa258a6..b5e20a4669b8 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1829,6 +1829,25 @@ unsigned long __weak arch_deref_entry_point(void *entry)
+>  	return (unsigned long)entry;
+>  }
+>  
+> +bool __weak arch_kprobe_on_func_entry(unsigned long offset)
+> +{
+> +	return !offset;
+> +}
+> +
+> +bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
+> +{
+> +	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
+> +
+> +	if (IS_ERR(kp_addr))
+> +		return false;
+> +
+> +	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
+> +						!arch_kprobe_on_func_entry(offset))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  #ifdef CONFIG_KRETPROBES
+>  /*
+>   * This kprobe pre_handler is registered with every kretprobe. When probe
+> @@ -1885,25 +1904,6 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>  }
+>  NOKPROBE_SYMBOL(pre_handler_kretprobe);
+>  
+> -bool __weak arch_kprobe_on_func_entry(unsigned long offset)
+> -{
+> -	return !offset;
+> -}
+> -
+> -bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
+> -{
+> -	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
+> -
+> -	if (IS_ERR(kp_addr))
+> -		return false;
+> -
+> -	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
+> -						!arch_kprobe_on_func_entry(offset))
+> -		return false;
+> -
+> -	return true;
+> -}
+> -
+>  int register_kretprobe(struct kretprobe *rp)
+>  {
+>  	int ret = 0;
 
