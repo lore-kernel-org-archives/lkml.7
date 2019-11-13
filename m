@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D18C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A875C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94ED822474
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B01122480
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610157;
-	bh=Hk1LfhPBk8mf4j0A6gLA3Gxbg20jEn3kThQ4rBD+a2E=;
+	s=default; t=1573610162;
+	bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NItSKzRppyNXQtlLv6GlnzE97BDDQzzOL/Z1LBQsMMig/IcykgCNGNK9mU+Zwt5q8
-	 UIr4ZS6XdQlHeXm/Nq969PzNfb7O7SF1nJPqbbzK1oC8bAXVY8u67BCeMDYAYiMZdO
-	 UH+QwVdZq/+QnJSo2TE9Ve+Ik5LRtERwjO/mRiEg=
+	b=jwRnTwqxdcYsxvfqZ5G+4+pD1QfLgJ+5dxdYZ1yOEaVM+eSDlN37ctPHcarOuB2gA
+	 smSHJs7Bdy0vYfUy/Yt4PxPHUSK2GtYWnyvWnGnH+F9YwmS+yfjJxitEdZMrubT2sc
+	 MAbo1RHhP0d9ts4dDH0NZFI9XNUWhp/llk3lPNWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbfKMBz4 (ORCPT
+        id S1729348AbfKMB4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729244AbfKMBzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:46 -0500
+        id S1728370AbfKMBzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8257522469;
-        Wed, 13 Nov 2019 01:55:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E6FB222D3;
+        Wed, 13 Nov 2019 01:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610146;
-        bh=Hk1LfhPBk8mf4j0A6gLA3Gxbg20jEn3kThQ4rBD+a2E=;
+        s=default; t=1573610145;
+        bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Khmou61yh0tFUK8KFT1/bc4QXZAD1izlob7H8/8jZdPHNndd/ZNdz2pJfsqdkaRoK
-         fMTla7MxzfVvWhnKS//UvgTPq8uSohLGzWlJkt5w1R7wiGMOaMIAf7xWCB4b31HLaf
-         2hzOWvZVqmNf935fNildLJwGgXFrFpY8qgX/EaYY=
+        b=i7XYO3vCq1jVG7HGpq0CSUICmZYJRKNeoiKX7OAim5kfqNmu+TI068ybYdRchASS5
+         nuf+d9raoDB6rDCm0/Lzj96ZQmDQwKbM/UKsOHXEQ3ga56ilW7TTaxhKC4daFNgtL3
+         70ZiJVJeh4wmx9h/bfUcCQBb9Zx1IAC3gPr9GDm4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kun Yi <kunyi@google.com>, Guenter Roeck <linux@roeck-us.net>,
+Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 192/209] hwmon: (npcm-750-pwm-fan) Change initial pwm target to 255
-Date:   Tue, 12 Nov 2019 20:50:08 -0500
-Message-Id: <20191113015025.9685-192-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 191/209] hwmon: (ina3221) Fix INA3221_CONFIG_MODE macros
+Date:   Tue, 12 Nov 2019 20:50:07 -0500
+Message-Id: <20191113015025.9685-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -58,34 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kun Yi <kunyi@google.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
 
-[ Upstream commit f21c8e753b1dcb8f9e5b096db1f7f4e6fdfa7258 ]
+[ Upstream commit 791ebc9d34e9d212fc03742c31654b017d385926 ]
 
-Change initial PWM target to 255 to prevent overheating, for example
-when BMC hangs in userspace or when userspace fan control application is
-not implemented yet.
+The three INA3221_CONFIG_MODE macros are not correctly defined here.
+The MODE3-1 bits are located at BIT 2-0 according to the datasheet.
 
-Signed-off-by: Kun Yi <kunyi@google.com>
+So this patch just fixes them by shifting all of them with a correct
+offset. However, this isn't a crital bug fix as the driver does not
+use any of them at this point.
+
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/npcm750-pwm-fan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/ina3221.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwmon/npcm750-pwm-fan.c b/drivers/hwmon/npcm750-pwm-fan.c
-index b998f9fbed41e..979b579bc118f 100644
---- a/drivers/hwmon/npcm750-pwm-fan.c
-+++ b/drivers/hwmon/npcm750-pwm-fan.c
-@@ -52,7 +52,7 @@
+diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
+index e6b49500c52ae..8c9555313fc3d 100644
+--- a/drivers/hwmon/ina3221.c
++++ b/drivers/hwmon/ina3221.c
+@@ -38,9 +38,9 @@
+ #define INA3221_WARN3			0x0c
+ #define INA3221_MASK_ENABLE		0x0f
  
- /* Define the Counter Register, value = 100 for match 100% */
- #define NPCM7XX_PWM_COUNTER_DEFAULT_NUM		255
--#define NPCM7XX_PWM_CMR_DEFAULT_NUM		127
-+#define NPCM7XX_PWM_CMR_DEFAULT_NUM		255
- #define NPCM7XX_PWM_CMR_MAX			255
+-#define INA3221_CONFIG_MODE_SHUNT	BIT(1)
+-#define INA3221_CONFIG_MODE_BUS		BIT(2)
+-#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(3)
++#define INA3221_CONFIG_MODE_SHUNT	BIT(0)
++#define INA3221_CONFIG_MODE_BUS		BIT(1)
++#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(2)
  
- /* default all PWM channels PRESCALE2 = 1 */
+ #define INA3221_RSHUNT_DEFAULT		10000
+ 
 -- 
 2.20.1
 
