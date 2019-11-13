@@ -2,160 +2,138 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9376BC17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC86C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A032196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD132196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfKMCoR (ORCPT
+        id S1727702AbfKMCot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:44:17 -0500
-Received: from regular1.263xmail.com ([211.150.70.198]:48212 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfKMCoQ (ORCPT
+        Tue, 12 Nov 2019 21:44:49 -0500
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:12446 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfKMCos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:44:16 -0500
-Received: from localhost (unknown [192.168.167.13])
-        by regular1.263xmail.com (Postfix) with ESMTP id 59FD51EB;
-        Wed, 13 Nov 2019 10:44:04 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.9] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P27171T139653306865408S1573613042814360_;
-        Wed, 13 Nov 2019 10:44:03 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4f10d3830a5a75db422b247fc6297adc>
-X-RL-SENDER: kever.yang@rock-chips.com
-X-SENDER: yk@rock-chips.com
-X-LOGIN-NAME: kever.yang@rock-chips.com
-X-FST-TO: daniel.lezcano@linaro.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH 2/3] arm64: dts: rk3399-rock960: add vdd_log
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        Akash Gajjar <akash@openedev.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        daniel.lezcano@linaro.org
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <20191111005158.25070-2-kever.yang@rock-chips.com>
- <20191111052232.GA2842@Mani-XPS-13-9360>
- <3d129826-7705-819e-e68b-cc9080eb6c95@rock-chips.com>
- <20191112171726.GA18622@Mani-XPS-13-9360>
-From:   Kever Yang <kever.yang@rock-chips.com>
-Message-ID: <885996a6-e314-52c8-fec4-f66526dd1397@rock-chips.com>
-Date:   Wed, 13 Nov 2019 10:44:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 21:44:48 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47CTV33Jc9zQlBx;
+        Wed, 13 Nov 2019 03:44:43 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id LsOzyR1eKTKd; Wed, 13 Nov 2019 03:44:38 +0100 (CET)
+Date:   Wed, 13 Nov 2019 13:44:14 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 5/9] namei: LOOKUP_IN_ROOT: chroot-like scoped
+ resolution
+Message-ID: <20191113024414.wlmvtjstpnkxa36n@yavin.dot.cyphar.com>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-6-cyphar@cyphar.com>
+ <20191113020307.GB26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191112171726.GA18622@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zcwix2zvi4el6ukc"
+Content-Disposition: inline
+In-Reply-To: <20191113020307.GB26530@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
 
-On 2019/11/13 上午1:17, Manivannan Sadhasivam wrote:
-> On Tue, Nov 12, 2019 at 04:10:17PM +0800, Kever Yang wrote:
->> On 2019/11/11 下午1:22, Manivannan Sadhasivam wrote:
->>> Hi Kever,
->>>
->>> On Mon, Nov 11, 2019 at 08:51:57AM +0800, Kever Yang wrote:
->>>> Add vdd_log node according to rock960 schematic V13.
->>>>
->>>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
->>>> ---
->>>>
->>>>    arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 12 ++++++++++++
->>>>    1 file changed, 12 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
->>>> index c7d48d41e184..73afee257115 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
->>>> @@ -76,6 +76,18 @@
->>>>    		regulator-always-on;
->>>>    		vin-supply = <&vcc5v0_sys>;
->>>>    	};
->>>> +
->>>> +	vdd_log: vdd-log {
->>>> +		compatible = "pwm-regulator";
->>>> +		pwms = <&pwm2 0 25000 1>;
->>>> +		regulator-name = "vdd_log";
->>>> +		regulator-always-on;
->>>> +		regulator-boot-on;
->>>> +		regulator-min-microvolt = <800000>;
->>>> +		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>> The default value seems to be 0.9v as per both Rock960 and Ficus schematics.
->>
->> The default value is 0.9V when pwm-regulator is not enabled, and this
->> 'init-microvolt' suppose to set the
->>
->> init value when pwm-regulator is enabled. I set this to 950mV because Peter
->> report that he experience
->>
->> the system hang during Fedora boot  up, and update the vdd_log to 950mV can
->> fix the issue due to
->>
->> engineer measure on another rk3399 board puma-Q7.
->>
-> okay. Previously we had post-boot hang issue on Rock960 Model A boards when the
-> performance governor was set as default. So the vdd_log node was removed from
-> the devicetree. Have you tested that case also?
->
-> Here is the commit:
-> 13682e524167 ("arm64: dts: rockchip: remove vdd_log from rock960 to fix a stability issues")
+--zcwix2zvi4el6ukc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Tue, Nov 05, 2019 at 08:05:49PM +1100, Aleksa Sarai wrote:
+>=20
+> > @@ -2277,12 +2277,20 @@ static const char *path_init(struct nameidata *=
+nd, unsigned flags)
+> > =20
+> >  	nd->m_seq =3D read_seqbegin(&mount_lock);
+> > =20
+> > -	/* Figure out the starting path and root (if needed). */
+> > -	if (*s =3D=3D '/') {
+> > +	/* Absolute pathname -- fetch the root. */
+> > +	if (flags & LOOKUP_IN_ROOT) {
+> > +		/* With LOOKUP_IN_ROOT, act as a relative path. */
+> > +		while (*s =3D=3D '/')
+> > +			s++;
+>=20
+> Er...  Why bother skipping slashes?  I mean, not only link_path_walk()
+> will skip them just fine, you are actually risking breakage in this:
+>                 if (*s && unlikely(!d_can_lookup(dentry))) {
+>                         fdput(f);
+>                         return ERR_PTR(-ENOTDIR);
+>                 }
+> which is downstream from there with you patch, AFAICS.
 
-For rk3399, the kernel does not touch this regulator, it should be take 
-care by bootloader.
+I switched to stripping the slashes at your suggestion a few revisions
+ago[1], and had (wrongly) assumed we needed to handle "/" somehow in
+path_init(). But you're quite right about link_path_walk() -- and I'd be
+more than happy to drop it.
 
-So I think we need to update both U-Boot and kernel.
+[1]: https://lore.kernel.org/lkml/20190712125552.GL17978@ZenIV.linux.org.uk/
 
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-Thanks,
+--zcwix2zvi4el6ukc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- Kever
+-----BEGIN PGP SIGNATURE-----
 
->
-> thanks,
-> Mani
->> Thanks,
->>
->> - Kever
->>
->>> Other than that,
->>> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>>
->>> Thanks,
->>> Mani
->>>
->>>> +		vin-supply = <&vcc_sys>;
->>>> +	};
->>>>    };
->>>>    &cpu_l0 {
->>>> -- 
->>>> 2.17.1
->>>>
->>
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXctt+gAKCRCdlLljIbnQ
+EtaOAP4wZ6FONr+jCigAii+B0S1x/aNqVoCXGa0s32/c+X1spQEAiLcI0bIEdqjF
+tuAr6TYPTrpe63nhzokAO32LJ1rVrQM=
+=G6qn
+-----END PGP SIGNATURE-----
 
-
+--zcwix2zvi4el6ukc--
