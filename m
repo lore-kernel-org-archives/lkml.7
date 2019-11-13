@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8330BC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C562C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A626222CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494022245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610304;
-	bh=vnj8+xsV7FMyBw4aO08RKTdSzAjFVMYxM+AZ9rLmixM=;
+	s=default; t=1573610309;
+	bh=mVeXe/oLVm/UKSIJ1sNGQhVuu2K8tzzVlbBA6ZHxeuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+lheoBXAJlnakCK22QhI8/tZmvV93rgQUbeldTsxOR8Q1ss3xDg7m3lm9nZkkRU/
-	 B8m8d+FtQB9Qhn79LEWYCsH7PqhsPqQxGkxu5krQnCZrBEXLLIBw4YW8vV7A0wKxtj
-	 GaukrMdWnAIeirG+g0dSmtm+jwk55PvlIMl3rlbg=
+	b=dy4o3YO+9swaFRU5iwyvwHuQLVfqFGYMJgdH24yC79/I5E40XYtEEVQvWTXeNg07n
+	 6Id5Ydmui2ZIZlam1wn29yCl3C1Y+tBKjT76+10vrqaAsAJwhszRt08lxVYODffQOn
+	 NXsFFCfl/jNPl3LeeNZKgQCQsAZHqqTaHKXwOe4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbfKMB6X (ORCPT
+        id S1730026AbfKMB62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:58:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:58:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727952AbfKMB6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:13 -0500
+        id S1728959AbfKMB6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CBDB222D3;
-        Wed, 13 Nov 2019 01:58:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D0B222CF;
+        Wed, 13 Nov 2019 01:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610293;
-        bh=vnj8+xsV7FMyBw4aO08RKTdSzAjFVMYxM+AZ9rLmixM=;
+        s=default; t=1573610298;
+        bh=mVeXe/oLVm/UKSIJ1sNGQhVuu2K8tzzVlbBA6ZHxeuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQsOZ0UOoZsZGKEWqoVz3b5T23DhoESkk4ZYflVQc+UAbDSKoiWZkGyfDpYXlipjl
-         3xpk1Y57P3w5HItvr58kL0Lqkkyxv9QTNZrVM60kWH/MT8wqEcTQb9IO876hiv54vi
-         f5T7J11iAD/pu0vfySHd00tMWxSSvGKBwH0oRZjA=
+        b=iddatUHQySqaYqPKnq3+lYJFpEW/vsoUp2oOHcIMtdUPRnAfOTXPYparycpkCG6BK
+         zBTudqG9QZGEJgGaJyZkGcVIscWeMhLGZpDd/PzOxHOYBi9dd5WnP3rVhr3HHQQFra
+         V1goB+5JL1xfMBN1hxUkjtJhdeTC/JSB/mW1j9PU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rami Rosen <ramirose@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 067/115] dmaengine: ioat: fix prototype of ioat_enumerate_channels
-Date:   Tue, 12 Nov 2019 20:55:34 -0500
-Message-Id: <20191113015622.11592-67-sashal@kernel.org>
+Cc:     Julian Sax <jsbc@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 070/115] Input: silead - try firmware reload after unsuccessful resume
+Date:   Tue, 12 Nov 2019 20:55:37 -0500
+Message-Id: <20191113015622.11592-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -58,56 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rami Rosen <ramirose@gmail.com>
+From: Julian Sax <jsbc@gmx.de>
 
-[ Upstream commit f4d34aa8c887a8a2d23ef546da0efa10e3f77241 ]
+[ Upstream commit dde27443211062e841806feaf690674b7c3a599f ]
 
-Signed-off-by: Rami Rosen <ramirose@gmail.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+A certain silead controller (Chip ID: 0x56810000) loses its firmware
+after suspend, causing the resume to fail. This patch tries to load
+the firmware, should a resume error occur and retries the resuming.
+
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/init.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/input/touchscreen/silead.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 68680e4151eaa..9103a0425f752 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -129,7 +129,7 @@ static void
- ioat_init_channel(struct ioatdma_device *ioat_dma,
- 		  struct ioatdma_chan *ioat_chan, int idx);
- static void ioat_intr_quirk(struct ioatdma_device *ioat_dma);
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma);
- static int ioat3_dma_self_test(struct ioatdma_device *ioat_dma);
- 
- static int ioat_dca_enabled = 1;
-@@ -575,7 +575,7 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
-  * ioat_enumerate_channels - find and initialize the device's channels
-  * @ioat_dma: the ioat dma device to be enumerated
-  */
--static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
-+static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 0dbcf105f7db3..7c0eeef29b3cb 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -534,20 +534,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
+ static int __maybe_unused silead_ts_resume(struct device *dev)
  {
- 	struct ioatdma_chan *ioat_chan;
- 	struct device *dev = &ioat_dma->pdev->dev;
-@@ -594,7 +594,7 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 	xfercap_log = readb(ioat_dma->reg_base + IOAT_XFERCAP_OFFSET);
- 	xfercap_log &= 0x1f; /* bits [4:0] valid */
- 	if (xfercap_log == 0)
--		return 0;
-+		return;
- 	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
+ 	struct i2c_client *client = to_i2c_client(dev);
++	bool second_try = false;
+ 	int error, status;
  
- 	for (i = 0; i < dma->chancnt; i++) {
-@@ -611,7 +611,6 @@ static int ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
- 		}
+ 	silead_ts_set_power(client, SILEAD_POWER_ON);
+ 
++ retry:
+ 	error = silead_ts_reset(client);
+ 	if (error)
+ 		return error;
+ 
++	if (second_try) {
++		error = silead_ts_load_fw(client);
++		if (error)
++			return error;
++	}
++
+ 	error = silead_ts_startup(client);
+ 	if (error)
+ 		return error;
+ 
+ 	status = silead_ts_get_status(client);
+ 	if (status != SILEAD_STATUS_OK) {
++		if (!second_try) {
++			second_try = true;
++			dev_dbg(dev, "Reloading firmware after unsuccessful resume\n");
++			goto retry;
++		}
+ 		dev_err(dev, "Resume error, status: 0x%02x\n", status);
+ 		return -ENODEV;
  	}
- 	dma->chancnt = i;
--	return i;
- }
- 
- /**
 -- 
 2.20.1
 
