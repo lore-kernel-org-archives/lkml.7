@@ -2,111 +2,67 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39B8C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEA5C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB32206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E063206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKMWCS (ORCPT
+        id S1726812AbfKMWDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:02:18 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726528AbfKMWCS (ORCPT
+        Wed, 13 Nov 2019 17:03:30 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39257 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfKMWD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 17:02:18 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADM19Vo032216
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 17:02:17 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w8t8kr1aj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 17:02:16 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 13 Nov 2019 22:02:13 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Nov 2019 22:02:10 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADM29Vg57475134
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 22:02:09 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 859DEA4053;
-        Wed, 13 Nov 2019 22:02:09 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D6B0A4051;
-        Wed, 13 Nov 2019 22:02:08 +0000 (GMT)
-Received: from dhcp-9-31-103-201.watson.ibm.com (unknown [9.31.103.201])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Nov 2019 22:02:08 +0000 (GMT)
-Subject: Re: [PATCH v6 0/3] KEYS: Measure keys when they are created or
- updated
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 13 Nov 2019 17:02:08 -0500
-In-Reply-To: <20191113184658.2862-1-nramas@linux.microsoft.com>
-References: <20191113184658.2862-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111322-0016-0000-0000-000002C36A30
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111322-0017-0000-0000-000033250878
-Message-Id: <1573682528.4793.3.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911130181
+        Wed, 13 Nov 2019 17:03:29 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iV0jA-0007G8-2J; Wed, 13 Nov 2019 23:03:04 +0100
+Date:   Wed, 13 Nov 2019 23:03:02 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     y2038@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org
+Subject: Re: [PATCH 20/23] y2038: move itimer reset into itimer.c
+In-Reply-To: <20191108211323.1806194-11-arnd@arndb.de>
+Message-ID: <alpine.DEB.2.21.1911132301110.2507@nanos.tec.linutronix.de>
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-11-arnd@arndb.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-13 at 10:46 -0800, Lakshmi Ramasubramanian wrote:
-> Keys created or updated in the system are currently not measured.
-> Therefore an attestation service, for instance, would not be able to
-> attest whether or not the trusted keys keyring(s), for instance, contain
-> only known good (trusted) keys.
-> 
-> IMA measures system files, command line arguments passed to kexec,
-> boot aggregate, etc. It can be used to measure keys as well.
-> But there is no mechanism available in the kernel for IMA to
-> know when a key is created or updated.
-> 
-> This change aims to address measuring keys created or updated
-> in the system:
-> 
-> To achieve the above the following changes have been made:
-> 
->  - Added a new IMA hook namely, ima_post_key_create_or_update, which
->    measures the key. This IMA hook is called from key_create_or_update
->    function. The key measurement can be controlled through IMA policy.
-> 
->    A new IMA policy function KEY_CHECK has been added to measure keys.
-> 
->    # measure keys loaded onto any keyring
->    measure func=KEY_CHECK
+On Fri, 8 Nov 2019, Arnd Bergmann wrote:
 
-When re-posting this patch set, please include the support for
-specifying the "keyrings=" policy option, as an additional patch.
+> Preparing for a change to the itimer internals, stop using the
+> do_setitimer() symbol and instead use a new higher-level interface.
+> 
+> The do_getitimer()/do_setitimer functions can now be made static,
+> allowing the compiler to potentially produce better object code.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Mimi
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+
 
