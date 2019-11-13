@@ -2,202 +2,163 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A21CC43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E149C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 641BB206E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fs57GyBC"
+	by mail.kernel.org (Postfix) with ESMTP id 9CD8E206E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfKMSMo (ORCPT
+        id S1728297AbfKMSNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:12:44 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54678 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbfKMSMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:12:43 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z26so3008859wmi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:12:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ki25gnbpyN00Iv5cdTY8OhdgRYpiq6GuA0iUi2qS8JY=;
-        b=Fs57GyBC4KqL9mwZ7pz4er+6yTwZnzeC3f6ecarogyGItcOt761IC74Ow/Fy4yemVK
-         RUqp9/aQEupFLjbQgv1Is7jI9ME2ZM1Urs3WpBzkHiD8m8wVSpaj4qR2HT8NktQ9aIDh
-         83PGyCiMELKFkPAAJ4oKSoHJYw+BxXeDVZHwA+/1F1FsDEdMj437l2T1zBZvMvvheHvL
-         fdLJ8urtUQhsyRrrfXAVw/DhaY2VeUzbmsUBTotErPCNPW/7n17mK4ajJuqRCwV0CKYj
-         W+Zp1BcViOgwN1fFLrhobVuOpXFZhmczbXyYlTzP7butXBzzN7km9hK2nXnGXCXaobqM
-         5tig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ki25gnbpyN00Iv5cdTY8OhdgRYpiq6GuA0iUi2qS8JY=;
-        b=eBxYaVGXFp0Ftm3d4pYWp0bOT/U9HuXD2cfbxWkJQbps0H/cRb8DlEnAP8xA/3tzPI
-         0Dy9anAImnv88WHWmsOdxTFeFqN7d+sKxKCwwPpLKbBn1tZ+cq2vr8hPmI+Dx2ZTQ6bF
-         p7hnXzyQSf7uYS0hcf2z+UDuvblypj/hl/KXeyYZZOiQzFFMOboC5w/EMuaOQO9vu937
-         iVrNb/R1Ab+NM4NddSWCa3kdlaVQLDRphisit0/ywdQyiYv3EI7AHTsU2vDe30vth8ld
-         goUFODpEl+Y5yk/q9DffW6V1JPAKpPKVxFbHVCapui7WtpQfbNbfl7EfCHHDfw8GLAJ4
-         9WJg==
-X-Gm-Message-State: APjAAAVhgEEH+V3UYBEkpyuB0QogffOolLlfDGsAcMdtNMFq7EFNRGPQ
-        1R3L+CKuDA89EMnwlBTH1lsw3OiYCjREmFPxVkjggQ==
-X-Google-Smtp-Source: APXvYqyS2MWVz9Gjs48JrwIYbsO/Nl6/uoy1ID+PXy7Cl0PgKvCG4CClUBfmff8XpKrw/24ncJDArH9Sw7hQb50yikE=
-X-Received: by 2002:a05:600c:295:: with SMTP id 21mr3864373wmk.43.1573668760287;
- Wed, 13 Nov 2019 10:12:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20191113012746.52804-1-brendanhiggins@google.com>
-In-Reply-To: <20191113012746.52804-1-brendanhiggins@google.com>
-From:   David Gow <davidgow@google.com>
-Date:   Wed, 13 Nov 2019 10:12:28 -0800
-Message-ID: <CABVgOS=3AXS1=rpGyNiNYu8hU+t=gQG9JongHXir=76ENnrnnA@mail.gmail.com>
-Subject: Re: [PATCH linux-kselftest/test v1] Documentation: kunit: add
- documentation for kunit_tool
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Shuah Khan <shuah@kernel.org>, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-doc@vger.kernel.org,
-        corbet@lwn.net, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 Nov 2019 13:13:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46002 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726120AbfKMSNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:13:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A510CB219;
+        Wed, 13 Nov 2019 18:13:15 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 19:13:15 +0100
+Message-ID: <s5h1rub7ih0.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 0/8] Fix year 2038 issue for sound subsystem
+In-Reply-To: <CAK8P3a2+DgOBXS9MmPfvyyCUmqMB-pOx-qLjTV-VjDgStP6tww@mail.gmail.com>
+References: <20191112151642.680072-1-arnd@arndb.de>
+        <s5hk1847rvm.wl-tiwai@suse.de>
+        <CAK8P3a2TMEUhzxH7RKvAW9STk33KrbCriUaQawOMffoFC6UTQw@mail.gmail.com>
+        <s5hzhgzn304.wl-tiwai@suse.de>
+        <CAK8P3a3n9hrb-qfAYW9=eYApSX=pkOK5p6iGe0T29-KqGuh0tg@mail.gmail.com>
+        <s5hy2wjn1w2.wl-tiwai@suse.de>
+        <CAK8P3a2+DgOBXS9MmPfvyyCUmqMB-pOx-qLjTV-VjDgStP6tww@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 5:28 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> Add documentation for the Python script used to build, run, and collect
-> results from the kernel known as kunit_tool. kunit_tool
-> (tools/testing/kunit/kunit.py) was already added in previous commits.
->
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
->  Documentation/dev-tools/kunit/index.rst      |  1 +
->  Documentation/dev-tools/kunit/kunit-tool.rst | 57 ++++++++++++++++++++
->  Documentation/dev-tools/kunit/start.rst      |  3 ++
->  3 files changed, 61 insertions(+)
->  create mode 100644 Documentation/dev-tools/kunit/kunit-tool.rst
->
-> diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
-> index 26ffb46bdf99d..c60d760a0eed1 100644
-> --- a/Documentation/dev-tools/kunit/index.rst
-> +++ b/Documentation/dev-tools/kunit/index.rst
-> @@ -9,6 +9,7 @@ KUnit - Unit Testing for the Linux Kernel
->
->         start
->         usage
-> +       kunit-tool
->         api/index
->         faq
->
-> diff --git a/Documentation/dev-tools/kunit/kunit-tool.rst b/Documentation/dev-tools/kunit/kunit-tool.rst
-> new file mode 100644
-> index 0000000000000..aa1a93649a45a
-> --- /dev/null
-> +++ b/Documentation/dev-tools/kunit/kunit-tool.rst
-> @@ -0,0 +1,57 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=================
-> +kunit_tool How-To
-> +=================
-> +
-> +What is kunit_tool?
-> +===================
-> +
-> +kunit_tool is a set of scripts that aid in building the Linux kernel as UML
-> +(`User Mode Linux <http://user-mode-linux.sourceforge.net/old/>`_), running
-> +KUnit tests, parsing the test results and displaying them in a user friendly
-> +manner.
+On Wed, 13 Nov 2019 18:19:56 +0100,
+Arnd Bergmann wrote:
+> 
+> On Wed, Nov 13, 2019 at 6:04 PM Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > On Wed, 13 Nov 2019 17:51:57 +0100,
+> > Arnd Bergmann wrote:
+> > >
+> > > On Wed, Nov 13, 2019 at 5:40 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > > > On Wed, 13 Nov 2019 15:32:44 +0100, Arnd Bergmann wrote:
+> > >
+> > > > > We had discussed alternatives for this one last time, and decided
+> > > > > to go with the solution I posted here. The main alternative would
+> > > > > be to change the 'timespec' in snd_timer_tread to a fixed-length
+> > > > > structure based on two 'long' members. This would avoid the
+> > > > > need to match the command with the time_t type, but the cost would
+> > > > > be requiring CLOCK_MONOTONIC timestamps to avoid the
+> > > > > overflow, and changing all application source code that requires
+> > > > > the type to be compatible with 'timespec'.
+> > > >
+> > > > Fair enough.
+> > > >
+> > > > One thing I forgot to mention: when we add/modify the ioctl or ABI, we
+> > > > need to increment the protocol version, e.g. SNDRV_PCM_VERSION to
+> > > > indicate user-space the supported ABI.  Please change these in your
+> > > > next patches, too.
+> > >
+> > > Just to confirm: this should be a simple one-line patch at the end of the
+> > > series like
+> > >
+> > > diff --git a/tools/include/uapi/sound/asound.h
+> > > b/tools/include/uapi/sound/asound.h
+> > > index df1153cea0b7..72e8380c6dcd 100644
+> > > --- a/include/uapi/sound/asound.h
+> > > +++ b/include/uapi/sound/asound.h
+> > > @@ -154,7 +154,7 @@ struct snd_hwdep_dsp_image {
+> > >   *                                                                           *
+> > >   *****************************************************************************/
+> > >
+> > > -#define SNDRV_PCM_VERSION              SNDRV_PROTOCOL_VERSION(2, 0, 14)
+> > > +#define SNDRV_PCM_VERSION              SNDRV_PROTOCOL_VERSION(2, 0, 15)
+> > >
+> > >  typedef unsigned long snd_pcm_uframes_t;
+> > >  typedef signed long snd_pcm_sframes_t;
+> > >
+> > > right? Most other kernel interfaces have no version numbering, so
+> > > I don't know what policy you have here.
+> >
+> > I don't mind much about that, so it's up to you -- we can fold this
+> > change into the patch that actually adds or modifies the ioctl, too.
+> 
+> I've added the patch below to the end of the series now, will repost
+> the series  after no more comments come in for this version.
+> Having a single patch to update the version seems better than updating
+> it multiple times with each patch touching the ABI in this series.
+> 
+>       Arnd
+> 
+> commit b83a3eaece9b445f897a6f5ac2a903f2566a0e9d
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Wed Nov 13 17:49:14 2019 +0100
+> 
+>     ALSA: bump uapi version number
+> 
+>     Change SNDRV_PCM_VERSION to indicate the addition of the time64
+>     version of the mmap interface and these ioctl commands:
+> 
+>     SNDRV_PCM_IOCTL_SYNC
+>     SNDRV_RAWMIDI_IOCTL_STATUS
+>     SNDRV_PCM_IOCTL_STATUS
+>     SNDRV_PCM_IOCTL_STATUS_EXT
+>     SNDRV_TIMER_IOCTL_TREAD
+>     SNDRV_TIMER_IOCTL_STATUS
+> 
+>     32-bit applications built with 64-bit time_t require both the headers
+>     and the running kernel to support at least API version 2.0.15. When
+>     built with earlier kernel headers, some of these may not work
+>     correctly, so applications are encouraged to fail compilation like
+> 
+>      #if SNDRV_PCM_VERSION < SNDRV_PROTOCOL_VERSION(2, 0, 15)
+>      extern int __fail_build_for_time_64[sizeof(long) - sizeof(time_t)];
+>      #endif
+> 
+>     or provide their own updated copy of the header file.
+> 
+>     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> diff --git a/include/uapi/sound/asound.h b/include/uapi/sound/asound.h
+> index 25dbf71fa667..5cddfe62c97a 100644
+> --- a/include/uapi/sound/asound.h
+> +++ b/include/uapi/sound/asound.h
+> @@ -156,7 +156,7 @@ struct snd_hwdep_dsp_image {
+>   *                                                                           *
+>   *****************************************************************************/
+> 
+> -#define SNDRV_PCM_VERSION              SNDRV_PROTOCOL_VERSION(2, 0, 14)
+> +#define SNDRV_PCM_VERSION              SNDRV_PROTOCOL_VERSION(2, 0, 15)
+> 
+>  typedef unsigned long snd_pcm_uframes_t;
+>  typedef signed long snd_pcm_sframes_t;
 
-Calling this a "set of scripts" is a bit confusing, as the only script
-described is tools/testing/kunit/kunit.py, which isn't mentioned in
-this section.
+I wasn't clear enough.  Each ALSA device API has a protocol version,
+not only PCM, so we need updating SNDRV_RAWMIDI_VERSION and
+SNDRV_TIMER_VERSION as well.
 
-Also, it may be worth linking to the new version of the UML website
-(even if the old one has more content).
 
-> +
-> +What is a kunitconfig?
-> +======================
-> +
-> +It's just a defconfig that kunit_tool looks for in the base directory.
-> +kunit_tool uses it to generate a .config as you might expect. In addition, it
-> +verifies that the generated .config contains the CONFIG options in the
-> +kunitconfig; the reason it does this is so that it is easy to be sure that a
-> +CONFIG that enables a test actually ends up in the .config.
-> +
-> +How do I use kunit_tool?
-> +=================================
-> +
-> +If a kunitconfig is present at the root directory, all you have to do is:
-> +
-> +.. code-block:: bash
-> +
-> +       ./tools/testing/kunit/kunit.py run
-> +
-> +However, you most likely want to use it with the following options:
-> +
-> +.. code-block:: bash
-> +
-> +       ./tools/testing/kunit/kunit.py run --timeout=30 --jobs=8
-> +
-> +- ``--timeout`` sets a maximum amount of time to allow tests to run.
-> +- ``--jobs`` sets the number of threads to use to build the kernel.
-> +
+thanks,
 
-Not directly an issue with the documentation, but this does raise the
-question of why we don't have better defaults. Alternatively, maybe
-this doc could suggest --jobs=`nproc` or similar?
-
-> +If you just want to use the defconfig that ships with the kernel, you can
-> +append the ``--defconfig`` flag as well:
-> +
-> +.. code-block:: bash
-> +
-> +       ./tools/testing/kunit/kunit.py run --timeout=30 --jobs=8 --defconfig
-> +
-> +.. note::
-> +       This command is particularly helpful for getting started because it
-> +       just works. No kunitconfig needs to be present.
-> +
-
-Should we use this in the getting started section below, then?
-Particularly since we're already going over kunitconfigs there
-separately.
-
-> +For a list of all the flags supported by kunit_tool, you can run:
-> +
-> +.. code-block:: bash
-> +
-
-Do you think it's worth documenting the remaining two (--build_dir and
---raw_output) here too?
-
-> +       ./tools/testing/kunit/kunit.py run --help
-> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-> index aeeddfafeea20..1535c4394cfa2 100644
-> --- a/Documentation/dev-tools/kunit/start.rst
-> +++ b/Documentation/dev-tools/kunit/start.rst
-> @@ -21,6 +21,9 @@ The wrapper can be run with:
->
->     ./tools/testing/kunit/kunit.py run
->
-> +For more information on this wrapper (also called kunit_tool) checkout the
-> +:doc:`kunit-tool` page.
-> +
->  Creating a kunitconfig
->  ======================
->  The Python script is a thin wrapper around Kbuild as such, it needs to be
-> --
-> 2.24.0.432.g9d3f5f5b63-goog
->
+Takashi
