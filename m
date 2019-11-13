@@ -2,175 +2,119 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429BDC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF59C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9B2206F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27DC206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umNxMXgm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nqpFgRu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKMUiv (ORCPT
+        id S1726986AbfKMUjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:38:51 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44183 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfKMUiu (ORCPT
+        Wed, 13 Nov 2019 15:39:55 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42664 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfKMUjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:38:50 -0500
-Received: by mail-io1-f66.google.com with SMTP id j20so4073877ioo.11;
-        Wed, 13 Nov 2019 12:38:48 -0800 (PST)
+        Wed, 13 Nov 2019 15:39:55 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q17so2079691pgt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:39:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YxcRlNzcBiAlNudn6kLat8m1vGtNWaR0Jl7FMyM2EN0=;
-        b=umNxMXgm8tIXimc6Ozqie+Gdq82fKd0dw3loWE9SmGvZAEvk9fJbiRnYW0NFTikUTG
-         AOjEZDGuo6/TiRCPGgN68PH+TcYITjdsx3AcWZn/LTfuYDGh47Dlm2+jNYfaOHz1B+rn
-         lh+5DE24bJugrp5ewgePSfZ2sFYuUCjLtxeJHa9LmOFcHA0/FvWGTw5rPGKb6YRTOiNT
-         6F6uV/lMfmyuYvJ0HkxxSGTZfT4TADggleQ578z3uQzjueYa2Y9mRQ+pzkA4N2QCvCT1
-         0JXRsA3pCFDDhBzpFcxtVHFmHbHddlGxGyo//LyBa6rA3QYAa49hiNhO/Ef7HakKmvBC
-         tReA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yJ+OqtXGNDpquBLmUc2gxer4AoTafNPZvnhBD9jto6M=;
+        b=nqpFgRu72ExoW4cdQPUGtYALmsuvJeMgA5ThWflKhT4PB499qw9//2/H6iUop6HXjf
+         csgKyV0x7+XLSru42QPcBk0LzwmlLAGKWUYxQkcb8R5Qn5IqjwvdD0cH2ENUSFhnT68P
+         AFc098+LHsNlsG/u2bByRfTP6ZI15TD6xdRtKmJ1F0u/llR3YBEHKhec889mXKmDZW4+
+         0zdow5PDBGQy9a8WbcT2mMLaNLD8d3kNTcEvlx7ilQ24kjdDwmZdjDmIRjEGfov2827S
+         /21G3LnNDeoK7+J5bQEa3F9P9zYjx0BvyVUCEKJUwU9pCrMwB1dQKWMI2+14P0SG1qzH
+         gAOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YxcRlNzcBiAlNudn6kLat8m1vGtNWaR0Jl7FMyM2EN0=;
-        b=GVHMqLJrSVzpKfc5cIimfhn6FdoCqjiUev6OHGhNRDyYJ2liZrfgBWhSTTpOKQ6L7C
-         ge2I+rdDeBh3vJNOeeXBeGlr63W4UkqPYp31IFgf1zTSIr1Ug45oQXB6xJodCbphxDRr
-         0zPUZFYpaYSz3QPk4COTq7BvEViH2JTqYf5r+rhaO9TwGdhprrXpm2ovHbqmGFQ99pc7
-         kycInqWYStqb2pRZTpoksXPHnHKuFpYzguWku1MIInmc3JRywx6jxgdNTYPclzuBbYsu
-         Y+lcnJZ8z25FBNuyTKlQUz41jnY9bZ3albhtJoa0mMjaUVg+Uzg+uu3LV7OEc1GP9g+i
-         dSdw==
-X-Gm-Message-State: APjAAAVlQ+Q5uh3WwbVzNLqepXtvf8wYW3jR10CNrL7p482V2I+C+FoY
-        LDItD01V/SeqjNY+lM3yZn580+NeCjuqtRxfUXiTVuQU
-X-Google-Smtp-Source: APXvYqxRL9CM16SQPo7Zeq+ZHRXSjENb/hONgI8YRT826tl7bxT8C4vPD8W2YsYzu1nrCI82QHmInaBKQRJzcwW/y60=
-X-Received: by 2002:a5d:8789:: with SMTP id f9mr5317745ion.237.1573677528331;
- Wed, 13 Nov 2019 12:38:48 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yJ+OqtXGNDpquBLmUc2gxer4AoTafNPZvnhBD9jto6M=;
+        b=X6IFuAxyhUu5q7J3vPhrNknBLPL5AAQInqKQ3T//vNqAGb5LPTTJUzxJCyRJAl3TV4
+         UncUEtH+8LTC9P5ABKEzn5Wz9yuNinMo+gJGbV6tzKHoC7hYzifL5f7xNhvQhHqBUyNq
+         NRQZc91uwJXKibQAdm0hX/9YFpdpYimLia4aSE4Eflw3AX64C8ZOjedrl4Eb6EwFVSpY
+         4vgvLuCMPcjAwh9YZKfboMl/RRvOLhKShCyajYKrh55iX1fCMwYRQSHXL/ZEavszjfI6
+         sRBDT89dVuwWBjTqv2g0KsZsvOxH0dIWrz2hO0ZxRhLif+U2tdB0D5Hjd09Mo8q8GP8I
+         2zrA==
+X-Gm-Message-State: APjAAAVWNAYF1gXhk8OzggJ4OPDE/IgtuA7/RSqiIlMKGT4kzTmsQLqB
+        Au4rP3fGR+M84qqVFNIchi3xPAqlBfY=
+X-Google-Smtp-Source: APXvYqxFDGoFj2CIbZ35kJ359jzDsphPskdtvjydZyBSgTkA/d1hX5d0bjWWBiavC5E3In4RqimrKw==
+X-Received: by 2002:a17:90a:9a9:: with SMTP id 38mr7744497pjo.45.1573677594579;
+        Wed, 13 Nov 2019 12:39:54 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z7sm5007361pfr.165.2019.11.13.12.39.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 12:39:53 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: db845c: Move remoteproc firmware to sdm845
+Date:   Wed, 13 Nov 2019 12:39:51 -0800
+Message-Id: <20191113203951.3704428-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <156950767876.30879.17024491763471689960.stgit@warthog.procyon.org.uk>
- <f34aaf61-955a-7867-ef93-f22d3d8732c3@cogentembedded.com>
-In-Reply-To: <f34aaf61-955a-7867-ef93-f22d3d8732c3@cogentembedded.com>
-From:   Han Xu <xhnjupt@gmail.com>
-Date:   Wed, 13 Nov 2019 14:38:37 -0600
-Message-ID: <CA+EcR22=7F7X-9qYXb94dAp6w0_3FoKJPMRhFht+VWgKonoing@mail.gmail.com>
-Subject: Re: [PATCH] jffs2: Fix mounting under new mount API
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        linux-fsdevel@vger.kernel.org,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tested the JFFS2 on 5.4 kernel as the instruction said, still got some
-errors, any ideas?
+The redistributable firmware should work on any engineering device, so
+lets push this to qcom/sdm845, rather than qcom/db845c. Also specify the
+path for the modem firmware.
 
-Without the patch,
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-root@imx8mmevk:~# cat /proc/mtd
-dev:    size   erasesize  name
-mtd0: 00400000 00020000 "mtdram test device"
-mtd1: 04000000 00020000 "5d120000.spi"
-root@imx8mmevk:~# mtd_debug info /dev/mtd0
-mtd.type = MTD_RAM
-mtd.flags = MTD_CAP_RAM
-mtd.size = 4194304 (4M)
-mtd.erasesize = 131072 (128K)
-mtd.writesize = 1
-mtd.oobsize = 0
-regions = 0
-
-root@imx8mmevk:~# flash_erase /dev/mtd0 0 0
-Erasing 128 Kibyte @ 3e0000 -- 100 % complete
-root@imx8mmevk:~# mount -t jffs2 /dev/mtdblock0 test_dir/
-mount: /home/root/test_dir: wrong fs type, bad option, bad superblock
-on /dev/mtdblock0, missing codepage or helper program, or other error.
-
-With the patch,
-
-root@imx8mmevk:~# cat /proc/mtd
-dev:    size   erasesize  name
-mtd0: 00400000 00020000 "mtdram test device"
-mtd1: 04000000 00020000 "5d120000.spi"
-root@imx8mmevk:~# mtd_debug info /dev/mtd0
-mtd.type = MTD_RAM
-mtd.flags = MTD_CAP_RAM
-mtd.size = 4194304 (4M)
-mtd.erasesize = 131072 (128K)
-mtd.writesize = 1
-mtd.oobsize = 0
-regions = 0
-
-root@imx8mmevk:~# flash_erase /dev/mtd0 0 0
-Erasing 128 Kibyte @ 3e0000 -- 100 % complete
-root@imx8mmevk:~# mount -t jffs2 /dev/mtdblock0 test_dir/
-root@imx8mmevk:~# mount
-/dev/mtdblock0 on /home/root/test_dir type jffs2 (rw,relatime)
-
-BUT, it's not writable.
-
-root@imx8mmevk:~# cp test_file test_dir/
-cp: error writing 'test_dir/test_file': Invalid argument
-
-root@imx8mmevk:~# dd if=/dev/urandom of=test_dir/test_file bs=1k count=1
-dd: error writing 'test_dir/test_file': Invalid argument
-1+0 records in
-0+0 records out
-0 bytes copied, 0.000855156 s, 0.0 kB/s
-
-
-On Fri, Sep 27, 2019 at 3:38 AM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->
-> Hello!
->
-> On 26.09.2019 17:21, David Howells wrote:
->
-> > The mounting of jffs2 is broken due to the changes from the new mount API
-> > because it specifies a "source" operation, but then doesn't actually
-> > process it.  But because it specified it, it doesn't return -ENOPARAM and
->
->     What specified what? Too many "it"'s to figure that out. :-)
->
-> > the caller doesn't process it either and the source gets lost.
-> >
-> > Fix this by simply removing the source parameter from jffs2 and letting the
-> > VFS deal with it in the default manner.
-> >
-> > To test it, enable CONFIG_MTD_MTDRAM and allow the default size and erase
-> > block size parameters, then try and mount the /dev/mtdblock<N> file that
-> > that creates as jffs2.  No need to initialise it.
->
->     One "that" should be enough. :-)
->
-> > Fixes: ec10a24f10c8 ("vfs: Convert jffs2 to use the new mount API")
-> > Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-> > Signed-off-by: David Howells <dhowells@redhat.com>
-> > cc: David Woodhouse <dwmw2@infradead.org>
-> > cc: Richard Weinberger <richard@nod.at>
-> > cc: linux-mtd@lists.infradead.org
-> [...]
->
-> MBR, Sergei
->
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
-
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index d100f46791a6..c4f6c6695bbd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -197,7 +197,7 @@
+ &adsp_pas {
+ 	status = "okay";
+ 
+-	firmware-name = "qcom/db845c/adsp.mdt";
++	firmware-name = "qcom/sdm845/adsp.mdt";
+ };
+ 
+ &apps_rsc {
+@@ -343,7 +343,7 @@
+ 
+ &cdsp_pas {
+ 	status = "okay";
+-	firmware-name = "qcom/db845c/cdsp.mdt";
++	firmware-name = "qcom/sdm845/cdsp.mdt";
+ };
+ 
+ &gcc {
+@@ -352,6 +352,11 @@
+ 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+ };
+ 
++&mss_pil {
++	status = "okay";
++	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
++};
++
+ &pm8998_gpio {
+ 	vol_up_pin_a: vol-up-active {
+ 		pins = "gpio6";
 -- 
-Sincerely,
+2.23.0
 
-Han XU
