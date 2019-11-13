@@ -2,406 +2,214 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AE4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32A3C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BEC20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1210C20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b6XpEfgq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wGOiwEh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfKMS1X (ORCPT
+        id S1728391AbfKMS3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:27:23 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43008 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727538AbfKMS1W (ORCPT
+        Wed, 13 Nov 2019 13:29:10 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33497 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfKMS3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:27:22 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 3so2192367pfb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:27:22 -0800 (PST)
+        Wed, 13 Nov 2019 13:29:10 -0500
+Received: by mail-qt1-f195.google.com with SMTP id y39so3695622qty.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:29:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0SldfB0j+4tKzSNZBilCOOuiK+IfM16jHWw6L5StrsI=;
-        b=b6XpEfgqzGrU1tQHqumz1WgRqgES7GyOz0K3XKNnLg4+Q0nhTod/u8TWJuyYeU7ndF
-         vNfnNFTFIetnXt2DOMBnqWxhwX4ky7m/TztimnnKHw7gWjvB+/DawG1mD6urae/cW/De
-         jpFH2jDthBJfC7BPILUjSadtRARH6TvZ45DEE=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AVJp3Nx2fJclkPsZmo5pxsSlY+xokOBoEOQZdALqbJc=;
+        b=wGOiwEh11w+CjxmdcSVIkykUGQlX+8qKLxoUiHNR3bfSzC0tPhrY+FxxOOvZ2UlGlg
+         8OScpTD/VFjc0VAehdzHunnGxsBuIJcyAQE/EkzaCSuF7VXtvdpXJuh4pySRhZ+5cL8c
+         eGjt7lo5TEWfDZzl3eGuLA1EhaF0Nbs6XdmhDynaoRDOakkHjwmz2RQ+8skoU4vgIfq2
+         sDdqoRYWZSwKhuqzafEwdCWI8QAZi9rNeWdc4Rsa0mbqBJRrYqufg8RpdWuB7yhpOiaq
+         7pPo8FPrRlXqV2yqse4WiWBMkLf07ImLYXAvQfQ//PTSVIu2qYCiHJ0+UdX6nLWGA2li
+         YGZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0SldfB0j+4tKzSNZBilCOOuiK+IfM16jHWw6L5StrsI=;
-        b=tP+KYEQ36FDp6j5TAUdS4pUwrzyI/T03RjEXQO+WTyDx9VdCHELgcbZZWLcAXWun5r
-         Py31+Zq6GTh5fe6jiUORd+MXL8K6yc1sxO+V8kLFN7+iLE6y/Sl2UrWC6GxoOQOec+Uw
-         HyhluGK7ix12ppcRvQTki02qnw42vTsEkl3GWbAUEF3VIxNaH28LuzI4AKc00zoTK0Qp
-         BthHeKO5WwRKurZoAcJj6aJM1MwSag1QmGqIcapGIdINH7aMp3CmXYZhKpOJSexr8GuP
-         Rkg5dnQfZJbFPiHDAh95pm0k8702ToIRAHVTQTD4ZxT6+PQ4h4kissZFocSuKoqjNR4S
-         hxvQ==
-X-Gm-Message-State: APjAAAU145Uv7xQPyd6KnXFttG2hkqt4FF6bAFdG76oWqLLnXnAJm5CN
-        CwdIQoX5WUoFU4tZrnQEuzY4bg==
-X-Google-Smtp-Source: APXvYqx0m1GhkzXSTISGNFHQr6CvD7Z1RZv2kccmR0jXTamqQxQSAWsV+5D86v+A+4qJ7/tw+/muIA==
-X-Received: by 2002:a17:90a:fa96:: with SMTP id cu22mr6791848pjb.121.1573669641939;
-        Wed, 13 Nov 2019 10:27:21 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s13sm3803381pfc.110.2019.11.13.10.27.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 10:27:21 -0800 (PST)
-Date:   Wed, 13 Nov 2019 10:27:20 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Biggers <ebiggers@google.com>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: arm64/sha: fix function types
-Message-ID: <201911131026.7B0FA60@keescook>
-References: <20191112223046.176097-1-samitolvanen@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AVJp3Nx2fJclkPsZmo5pxsSlY+xokOBoEOQZdALqbJc=;
+        b=rBFUokmjgUOW/jWRhyQu/evx4mY2EWeXQWFE3u+JhXnMz9aFnINs5W6n9ZQfUeSkAM
+         Y+JyUw48O5u+mZuLXOSE3osS4PfMaDPUgrtdD8k/3Hyz6i7MEELZMaPUsOkeShZsdBvY
+         7Y+EL7YtRJfaXluwOXObls2txHI8YliXfIYN5+zchAhKA4NSTUA5m1yhQY6W3bDDab2e
+         2ijVVALR+SozoU0GGkXc/C5mmAWiU9LrCuqC1xb2/CKndtaXap5jL86dPAq9+DahUROx
+         nTZKW6rjnMG62iHdgcrhpP+sbRMzh6vIyRiP/AIbpE9fkfo3wTaW5puOK4AsXnsmNfja
+         9Rew==
+X-Gm-Message-State: APjAAAXfLqa5IXnkpN8LN4pOb+2Waetqutj5RW4HKzC7UFxRXqmdh4iq
+        /c6Z+iEFaVkWt/RclcTHrC/qgWrUwFi26zIQ39N6
+X-Google-Smtp-Source: APXvYqz6RuVgYs5PhvNTlFRRdDmEaTW7hWupakyWdeAFy65CHcki5bkN96cbOf91R30s0af7NR9u3phubPYifusPKnQ=
+X-Received: by 2002:ac8:1084:: with SMTP id a4mr4196071qtj.114.1573669748685;
+ Wed, 13 Nov 2019 10:29:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112223046.176097-1-samitolvanen@google.com>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com> <896a7da3-f139-32e7-8a64-b3562df1a091@linux.alibaba.com>
+In-Reply-To: <896a7da3-f139-32e7-8a64-b3562df1a091@linux.alibaba.com>
+From:   Iurii Zaikin <yzaikin@google.com>
+Date:   Wed, 13 Nov 2019 10:28:32 -0800
+Message-ID: <CAAXuY3qsckZurUHy5kJUQcmrbn-bmGHnjtPPus5=PrQ+MmJX+g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] sched/numa: documentation for per-cgroup numa stat
+To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 02:30:46PM -0800, Sami Tolvanen wrote:
-> Declare assembly functions with the expected function type
-> instead of casting pointers in C to avoid type mismatch failures
-> with Control-Flow Integrity (CFI) checking.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Since the documentation talks about fairly advanced concepts, every little =
+bit
+of readability improvement helps. I tried to make suggestions that I feel m=
+ake
+it easier to read, hopefully my nitpicking is not too annoying.
+On Tue, Nov 12, 2019 at 7:46 PM =E7=8E=8B=E8=B4=87 <yun.wang@linux.alibaba.=
+com> wrote:
+> +On NUMA platforms, remote memory accessing always has a performance pena=
+lty,
+> +although we have NUMA balancing working hard to maximum the local access=
+ing
+> +proportion, there are still situations it can't helps.
+Nit: working hard to maximize the access locality...
+can't helps -> can't help
+> +
+> +This could happen in modern production environment, using bunch of cgrou=
+ps
+> +to classify and control resources which introduced complex configuration=
+ on
+> +memory policy, CPUs and NUMA node, NUMA balancing could facing the wrong
+> +memory policy or exhausted local NUMA node, lead into the low local page
+> +accessing proportion.
+I find the below a bit easier to read.
+This could happen in modern production environment. When a large
+number of cgroups
+are used to classify and control resources, this creates a complex
+memory policy configuration
+for CPUs and NUMA nodes. In such cases NUMA balancing could end up
+with the wrong
+memory policy or exhausted local NUMA node, which would lead to low
+percentage of local page
+accesses.
 
-Looks good, yes. This looks very similar to what I needed to do for
-x86's SHA routines.
+> +We need to perceive such cases, figure out which workloads from which cg=
+roup
+> +has introduced the issues, then we got chance to do adjustment to avoid
+> +performance damages.
+Nit: perceive -> detect, got-> get, damages-> degradation
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> +However, there are no hardware counter for per-task local/remote accessi=
+ng
+> +info, we don't know how many remote page accessing has been done for a
+> +particular task.
+Nit: counters.
+Nit: we don't know how many remote page accesses have occurred for a
 
-> ---
->  arch/arm64/crypto/sha1-ce-glue.c   | 12 +++++-------
->  arch/arm64/crypto/sha2-ce-glue.c   | 26 +++++++++++---------------
->  arch/arm64/crypto/sha256-glue.c    | 30 ++++++++++++------------------
->  arch/arm64/crypto/sha512-ce-glue.c | 23 ++++++++++-------------
->  arch/arm64/crypto/sha512-glue.c    | 13 +++++--------
->  5 files changed, 43 insertions(+), 61 deletions(-)
-> 
-> diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
-> index bdc1b6d7aff7..3153a9bbb683 100644
-> --- a/arch/arm64/crypto/sha1-ce-glue.c
-> +++ b/arch/arm64/crypto/sha1-ce-glue.c
-> @@ -25,7 +25,7 @@ struct sha1_ce_state {
->  	u32			finalize;
->  };
->  
-> -asmlinkage void sha1_ce_transform(struct sha1_ce_state *sst, u8 const *src,
-> +asmlinkage void sha1_ce_transform(struct sha1_state *sst, u8 const *src,
->  				  int blocks);
->  
->  const u32 sha1_ce_offsetof_count = offsetof(struct sha1_ce_state, sst.count);
-> @@ -41,8 +41,7 @@ static int sha1_ce_update(struct shash_desc *desc, const u8 *data,
->  
->  	sctx->finalize = 0;
->  	kernel_neon_begin();
-> -	sha1_base_do_update(desc, data, len,
-> -			    (sha1_block_fn *)sha1_ce_transform);
-> +	sha1_base_do_update(desc, data, len, sha1_ce_transform);
->  	kernel_neon_end();
->  
->  	return 0;
-> @@ -64,10 +63,9 @@ static int sha1_ce_finup(struct shash_desc *desc, const u8 *data,
->  	sctx->finalize = finalize;
->  
->  	kernel_neon_begin();
-> -	sha1_base_do_update(desc, data, len,
-> -			    (sha1_block_fn *)sha1_ce_transform);
-> +	sha1_base_do_update(desc, data, len, sha1_ce_transform);
->  	if (!finalize)
-> -		sha1_base_do_finalize(desc, (sha1_block_fn *)sha1_ce_transform);
-> +		sha1_base_do_finalize(desc, sha1_ce_transform);
->  	kernel_neon_end();
->  	return sha1_base_finish(desc, out);
->  }
-> @@ -81,7 +79,7 @@ static int sha1_ce_final(struct shash_desc *desc, u8 *out)
->  
->  	sctx->finalize = 0;
->  	kernel_neon_begin();
-> -	sha1_base_do_finalize(desc, (sha1_block_fn *)sha1_ce_transform);
-> +	sha1_base_do_finalize(desc, sha1_ce_transform);
->  	kernel_neon_end();
->  	return sha1_base_finish(desc, out);
->  }
-> diff --git a/arch/arm64/crypto/sha2-ce-glue.c b/arch/arm64/crypto/sha2-ce-glue.c
-> index 604a01a4ede6..a4dacedfe4d4 100644
-> --- a/arch/arm64/crypto/sha2-ce-glue.c
-> +++ b/arch/arm64/crypto/sha2-ce-glue.c
-> @@ -25,7 +25,7 @@ struct sha256_ce_state {
->  	u32			finalize;
->  };
->  
-> -asmlinkage void sha2_ce_transform(struct sha256_ce_state *sst, u8 const *src,
-> +asmlinkage void sha2_ce_transform(struct sha256_state *sst, u8 const *src,
->  				  int blocks);
->  
->  const u32 sha256_ce_offsetof_count = offsetof(struct sha256_ce_state,
-> @@ -33,7 +33,8 @@ const u32 sha256_ce_offsetof_count = offsetof(struct sha256_ce_state,
->  const u32 sha256_ce_offsetof_finalize = offsetof(struct sha256_ce_state,
->  						 finalize);
->  
-> -asmlinkage void sha256_block_data_order(u32 *digest, u8 const *src, int blocks);
-> +asmlinkage void sha256_block_data_order(struct sha256_state *sst, u8 const *src,
-> +					int blocks);
->  
->  static int sha256_ce_update(struct shash_desc *desc, const u8 *data,
->  			    unsigned int len)
-> @@ -42,12 +43,11 @@ static int sha256_ce_update(struct shash_desc *desc, const u8 *data,
->  
->  	if (!crypto_simd_usable())
->  		return sha256_base_do_update(desc, data, len,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> +				sha256_block_data_order);
->  
->  	sctx->finalize = 0;
->  	kernel_neon_begin();
-> -	sha256_base_do_update(desc, data, len,
-> -			      (sha256_block_fn *)sha2_ce_transform);
-> +	sha256_base_do_update(desc, data, len, sha2_ce_transform);
->  	kernel_neon_end();
->  
->  	return 0;
-> @@ -62,9 +62,8 @@ static int sha256_ce_finup(struct shash_desc *desc, const u8 *data,
->  	if (!crypto_simd_usable()) {
->  		if (len)
->  			sha256_base_do_update(desc, data, len,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> -		sha256_base_do_finalize(desc,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> +				sha256_block_data_order);
-> +		sha256_base_do_finalize(desc, sha256_block_data_order);
->  		return sha256_base_finish(desc, out);
->  	}
->  
-> @@ -75,11 +74,9 @@ static int sha256_ce_finup(struct shash_desc *desc, const u8 *data,
->  	sctx->finalize = finalize;
->  
->  	kernel_neon_begin();
-> -	sha256_base_do_update(desc, data, len,
-> -			      (sha256_block_fn *)sha2_ce_transform);
-> +	sha256_base_do_update(desc, data, len, sha2_ce_transform);
->  	if (!finalize)
-> -		sha256_base_do_finalize(desc,
-> -					(sha256_block_fn *)sha2_ce_transform);
-> +		sha256_base_do_finalize(desc, sha2_ce_transform);
->  	kernel_neon_end();
->  	return sha256_base_finish(desc, out);
->  }
-> @@ -89,14 +86,13 @@ static int sha256_ce_final(struct shash_desc *desc, u8 *out)
->  	struct sha256_ce_state *sctx = shash_desc_ctx(desc);
->  
->  	if (!crypto_simd_usable()) {
-> -		sha256_base_do_finalize(desc,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> +		sha256_base_do_finalize(desc, sha256_block_data_order);
->  		return sha256_base_finish(desc, out);
->  	}
->  
->  	sctx->finalize = 0;
->  	kernel_neon_begin();
-> -	sha256_base_do_finalize(desc, (sha256_block_fn *)sha2_ce_transform);
-> +	sha256_base_do_finalize(desc, sha2_ce_transform);
->  	kernel_neon_end();
->  	return sha256_base_finish(desc, out);
->  }
-> diff --git a/arch/arm64/crypto/sha256-glue.c b/arch/arm64/crypto/sha256-glue.c
-> index e273faca924f..dac3157937ba 100644
-> --- a/arch/arm64/crypto/sha256-glue.c
-> +++ b/arch/arm64/crypto/sha256-glue.c
-> @@ -23,28 +23,25 @@ MODULE_LICENSE("GPL v2");
->  MODULE_ALIAS_CRYPTO("sha224");
->  MODULE_ALIAS_CRYPTO("sha256");
->  
-> -asmlinkage void sha256_block_data_order(u32 *digest, const void *data,
-> -					unsigned int num_blks);
-> +asmlinkage void sha256_block_data_order(struct sha256_state *sst, u8 const *src,
-> +					int blocks);
->  EXPORT_SYMBOL(sha256_block_data_order);
->  
-> -asmlinkage void sha256_block_neon(u32 *digest, const void *data,
-> -				  unsigned int num_blks);
-> +asmlinkage void sha256_block_neon(struct sha256_state *sst, u8 const *src,
-> +				  int blocks);
->  
->  static int crypto_sha256_arm64_update(struct shash_desc *desc, const u8 *data,
->  				      unsigned int len)
->  {
-> -	return sha256_base_do_update(desc, data, len,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> +	return sha256_base_do_update(desc, data, len, sha256_block_data_order);
->  }
->  
->  static int crypto_sha256_arm64_finup(struct shash_desc *desc, const u8 *data,
->  				     unsigned int len, u8 *out)
->  {
->  	if (len)
-> -		sha256_base_do_update(desc, data, len,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> -	sha256_base_do_finalize(desc,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> +		sha256_base_do_update(desc, data, len, sha256_block_data_order);
-> +	sha256_base_do_finalize(desc, sha256_block_data_order);
->  
->  	return sha256_base_finish(desc, out);
->  }
-> @@ -87,7 +84,7 @@ static int sha256_update_neon(struct shash_desc *desc, const u8 *data,
->  
->  	if (!crypto_simd_usable())
->  		return sha256_base_do_update(desc, data, len,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> +				sha256_block_data_order);
->  
->  	while (len > 0) {
->  		unsigned int chunk = len;
-> @@ -103,8 +100,7 @@ static int sha256_update_neon(struct shash_desc *desc, const u8 *data,
->  				sctx->count % SHA256_BLOCK_SIZE;
->  
->  		kernel_neon_begin();
-> -		sha256_base_do_update(desc, data, chunk,
-> -				      (sha256_block_fn *)sha256_block_neon);
-> +		sha256_base_do_update(desc, data, chunk, sha256_block_neon);
->  		kernel_neon_end();
->  		data += chunk;
->  		len -= chunk;
-> @@ -118,15 +114,13 @@ static int sha256_finup_neon(struct shash_desc *desc, const u8 *data,
->  	if (!crypto_simd_usable()) {
->  		if (len)
->  			sha256_base_do_update(desc, data, len,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> -		sha256_base_do_finalize(desc,
-> -				(sha256_block_fn *)sha256_block_data_order);
-> +				sha256_block_data_order);
-> +		sha256_base_do_finalize(desc, sha256_block_data_order);
->  	} else {
->  		if (len)
->  			sha256_update_neon(desc, data, len);
->  		kernel_neon_begin();
-> -		sha256_base_do_finalize(desc,
-> -				(sha256_block_fn *)sha256_block_neon);
-> +		sha256_base_do_finalize(desc, sha256_block_neon);
->  		kernel_neon_end();
->  	}
->  	return sha256_base_finish(desc, out);
-> diff --git a/arch/arm64/crypto/sha512-ce-glue.c b/arch/arm64/crypto/sha512-ce-glue.c
-> index 2369540040aa..0f964235d753 100644
-> --- a/arch/arm64/crypto/sha512-ce-glue.c
-> +++ b/arch/arm64/crypto/sha512-ce-glue.c
-> @@ -27,18 +27,18 @@ MODULE_LICENSE("GPL v2");
->  asmlinkage void sha512_ce_transform(struct sha512_state *sst, u8 const *src,
->  				    int blocks);
->  
-> -asmlinkage void sha512_block_data_order(u64 *digest, u8 const *src, int blocks);
-> +asmlinkage void sha512_block_data_order(struct sha512_state *sst, u8 const *src,
-> +					int blocks);
->  
->  static int sha512_ce_update(struct shash_desc *desc, const u8 *data,
->  			    unsigned int len)
->  {
->  	if (!crypto_simd_usable())
->  		return sha512_base_do_update(desc, data, len,
-> -				(sha512_block_fn *)sha512_block_data_order);
-> +					     sha512_block_data_order);
->  
->  	kernel_neon_begin();
-> -	sha512_base_do_update(desc, data, len,
-> -			      (sha512_block_fn *)sha512_ce_transform);
-> +	sha512_base_do_update(desc, data, len, sha512_ce_transform);
->  	kernel_neon_end();
->  
->  	return 0;
-> @@ -50,16 +50,14 @@ static int sha512_ce_finup(struct shash_desc *desc, const u8 *data,
->  	if (!crypto_simd_usable()) {
->  		if (len)
->  			sha512_base_do_update(desc, data, len,
-> -				(sha512_block_fn *)sha512_block_data_order);
-> -		sha512_base_do_finalize(desc,
-> -				(sha512_block_fn *)sha512_block_data_order);
-> +					      sha512_block_data_order);
-> +		sha512_base_do_finalize(desc, sha512_block_data_order);
->  		return sha512_base_finish(desc, out);
->  	}
->  
->  	kernel_neon_begin();
-> -	sha512_base_do_update(desc, data, len,
-> -			      (sha512_block_fn *)sha512_ce_transform);
-> -	sha512_base_do_finalize(desc, (sha512_block_fn *)sha512_ce_transform);
-> +	sha512_base_do_update(desc, data, len, sha512_ce_transform);
-> +	sha512_base_do_finalize(desc, sha512_ce_transform);
->  	kernel_neon_end();
->  	return sha512_base_finish(desc, out);
->  }
-> @@ -67,13 +65,12 @@ static int sha512_ce_finup(struct shash_desc *desc, const u8 *data,
->  static int sha512_ce_final(struct shash_desc *desc, u8 *out)
->  {
->  	if (!crypto_simd_usable()) {
-> -		sha512_base_do_finalize(desc,
-> -				(sha512_block_fn *)sha512_block_data_order);
-> +		sha512_base_do_finalize(desc, sha512_block_data_order);
->  		return sha512_base_finish(desc, out);
->  	}
->  
->  	kernel_neon_begin();
-> -	sha512_base_do_finalize(desc, (sha512_block_fn *)sha512_ce_transform);
-> +	sha512_base_do_finalize(desc, sha512_ce_transform);
->  	kernel_neon_end();
->  	return sha512_base_finish(desc, out);
->  }
-> diff --git a/arch/arm64/crypto/sha512-glue.c b/arch/arm64/crypto/sha512-glue.c
-> index d915c656e5fe..0f6b610a7954 100644
-> --- a/arch/arm64/crypto/sha512-glue.c
-> +++ b/arch/arm64/crypto/sha512-glue.c
-> @@ -20,25 +20,22 @@ MODULE_LICENSE("GPL v2");
->  MODULE_ALIAS_CRYPTO("sha384");
->  MODULE_ALIAS_CRYPTO("sha512");
->  
-> -asmlinkage void sha512_block_data_order(u32 *digest, const void *data,
-> -					unsigned int num_blks);
-> +asmlinkage void sha512_block_data_order(struct sha512_state *sst,
-> +					u8 const *src, int blocks);
->  EXPORT_SYMBOL(sha512_block_data_order);
->  
->  static int sha512_update(struct shash_desc *desc, const u8 *data,
->  			 unsigned int len)
->  {
-> -	return sha512_base_do_update(desc, data, len,
-> -			(sha512_block_fn *)sha512_block_data_order);
-> +	return sha512_base_do_update(desc, data, len, sha512_block_data_order);
->  }
->  
->  static int sha512_finup(struct shash_desc *desc, const u8 *data,
->  			unsigned int len, u8 *out)
->  {
->  	if (len)
-> -		sha512_base_do_update(desc, data, len,
-> -			(sha512_block_fn *)sha512_block_data_order);
-> -	sha512_base_do_finalize(desc,
-> -			(sha512_block_fn *)sha512_block_data_order);
-> +		sha512_base_do_update(desc, data, len, sha512_block_data_order);
-> +	sha512_base_do_finalize(desc, sha512_block_data_order);
->  
->  	return sha512_base_finish(desc, out);
->  }
-> 
-> base-commit: 100d46bd72ec689a5582c2f5f4deadc5bcb92d60
-> -- 
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
-> 
+> +
+> +Statistics
+> +----------
+> +
+> +Fortunately, we have NUMA Balancing which scan task's mapping and trigge=
+r PF
+> +periodically, give us the opportunity to record per-task page accessing =
+info.
+Nit: scans, triggers, gives.
 
--- 
-Kees Cook
+> +By "echo 1 > /proc/sys/kernel/cg_numa_stat" on runtime or add boot param=
+eter
+Nit: at runtime or adding boot parameter
+> +To be noticed, the accounting is in a hierarchy way, which means the num=
+a
+> +statistics representing not only the workload of this group, but also th=
+e
+> +workloads of all it's descendants.
+Note that the accounting is hierarchical, which means the numa
+statistics for a given group represents not only the workload of this
+group, but also the
+workloads of all it's descendants.
+> +
+> +For example the 'cpu.numa_stat' show:
+> +  locality 39541 60962 36842 72519 118605 721778 946553
+> +  exectime 1220127 1458684
+> +
+> +The locality is sectioned into 7 regions, closely as:
+> +  0-13% 14-27% 28-42% 43-56% 57-71% 72-85% 86-100%
+Nit: closely -> approximately?
+
+> +we can draw a line for region_bad_percent, when the line close to 0 thin=
+gs
+nit: we can plot?
+> +are good, when getting close to 100% something is wrong, we can pick a p=
+roper
+> +watermark to trigger warning message.
+
+> +You may want to drop the data if the region_all is too small, which impl=
+y
+Nit: implies
+> +there are not much available pages for NUMA Balancing, just ignore would=
+ be
+Nit: not many... ingoring
+> +fine since most likely the workload is insensitive to NUMA.
+> +Monitoring root group help you control the overall situation, while you =
+may
+Nit: helps
+> +also want to monitoring all the leaf groups which contain the workloads,=
+ this
+Nit: monitor
+> +help to catch the mouse.
+Nit: helps
+> +become too small, for NUMA node X we have:
+Nit: becomes
+> +try put your workload into a memory cgroup which providing per-node memo=
+ry
+Nit: try to put
+> +These two percentage are usually matched on each node, workload should e=
+xecute
+Nit: percentages
+> +Depends on which part of the memory accessed mostly by the workload, loc=
+ality
+Depending on which part of the memory is accessed.
+"mostly by the workload" - not sure what you mean here, the majority
+of accesses from the
+workload fall into this part of memory or that accesses from processes
+other than the workload
+are rare?
+> +could still be good with just a little piece of memory locally.
+?
+> +Thus to tell if things are find or not depends on the understanding of s=
+ystem
+are fine
+> +After locate which workloads introduced the bad locality, check:
+locate -> indentifying
+> +
+> +1). Is the workloads bind into a particular NUMA node?
+bind into -> bound to
+> +2). Is there any NUMA node run out of resources?
+Has any .. run out of resources
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
+ion/admin-guide/kernel-parameters.txt
+> index 5e27d74e2b74..220df1f0beb8 100644
+> +                       lot's of per-cgroup workloads.
+lots
