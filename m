@@ -2,164 +2,176 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9BFC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22AEC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF8820679
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D632206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:10:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="PQ29wPrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfKMUJg (ORCPT
+        id S1726598AbfKMUKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:09:36 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12324 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726986AbfKMUJf (ORCPT
+        Wed, 13 Nov 2019 15:10:46 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38647 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfKMUKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:09:35 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADK7fra091819
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:09:34 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w8n79qvym-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:09:34 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 13 Nov 2019 20:09:31 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Nov 2019 20:09:27 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADK8oos19399068
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 20:08:50 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 843A842042;
-        Wed, 13 Nov 2019 20:09:26 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E9B042041;
-        Wed, 13 Nov 2019 20:09:25 +0000 (GMT)
-Received: from dhcp-9-31-103-201.watson.ibm.com (unknown [9.31.103.201])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Nov 2019 20:09:25 +0000 (GMT)
-Subject: Re: [PATCH v6 3/3] KEYS: Call the IMA hook to measure keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 13 Nov 2019 15:09:24 -0500
-In-Reply-To: <20191113184658.2862-4-nramas@linux.microsoft.com>
-References: <20191113184658.2862-1-nramas@linux.microsoft.com>
-         <20191113184658.2862-4-nramas@linux.microsoft.com>
+        Wed, 13 Nov 2019 15:10:46 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a14so3012654oid.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:10:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YWH9ke4c1/CtD4q6Is1TXT0RQwZYPzq9oYNkDhxs540=;
+        b=PQ29wPrlDDhONQP35XIRij91EVjfglBp0QHwicxi3pzAkWQZe1Zc/BbK7rTlFQ2NMY
+         9xRlbeMP7o1QDsuQM2yN7pZ7+qb2EJOx9o8wYzNLH+jOGHY32ASTlvoRBYMT7ePAaYaF
+         eVUILQRjxsGwGcld3Ub5c3NM9uggulqZsZlGqaRHXIxR4BO1Gv9RClVXZtcYUD3Csbjr
+         V9KtLIqLDR6exny/Tj5u0OAaKvNI3nJfYIvcb2jeQYRfm9M1pDRV2I+68Tg7UMzcxETi
+         FY6i+lBOQp2+ccPaB8nEXggrQaT8Y9UkeW0u9gDyJLqS3/lgawuvZpvowp+fMy+lqUnm
+         j6Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YWH9ke4c1/CtD4q6Is1TXT0RQwZYPzq9oYNkDhxs540=;
+        b=isEToEhF2Kv0lK1n95lJl+oi0JFdFMPR0A6rTvLXt99Fo+FqaQYJgcWbGiNVT0CJnw
+         dMiSbv5osxsYmvI9qQ4MIA4A/3IbogNhd/Qe5WD99OD3hTk6LVLEY/WUSQjHDvWRlVFv
+         rdrPJ3lPQxO3gKAFbIshFYVCuEj832tfI9pfb2DJjBysWj6DumDLJ67oSipXT1X9gPnH
+         oMKYcENZwTHL7s/Kq+YZnAP/aiPgnKxXvTsnhT4QK7FcXvy0Aw3qGJm7OzUTvY1H76pr
+         edvrMw0qfgrwhgT2AXgB8Pq08XmYHS30Q4H6n3P9OwOS8L21rCIBXSJ+y6agSt6OX9gT
+         u8Aw==
+X-Gm-Message-State: APjAAAW16herwwjP1yqkNbFBqkkzqSBhtR/08jZnVa0AXZjK8bR61GY+
+        7txk8sqjGvMhxUTi2++Gw2QxWEeh/TeViifHIRZQ4g==
+X-Google-Smtp-Source: APXvYqxZLEWCKz8wCuh/m700RGuDyJEGtkv8PjsIL0dFtRpTcLmFcrwsWsaRxYDz/RYvDEMt1Z5YnlZfOc4ybJSz5f0=
+X-Received: by 2002:aca:3d84:: with SMTP id k126mr368717oia.70.1573675845013;
+ Wed, 13 Nov 2019 12:10:45 -0800 (PST)
+MIME-Version: 1.0
+References: <CAPcyv4iPk4bzOCE=7Eq8w-jwUuOXzZP9F=+RcxjqdXCn0SC01A@mail.gmail.com>
+ <6193C847-F09C-439A-81EE-98A59473D582@redhat.com>
+In-Reply-To: <6193C847-F09C-439A-81EE-98A59473D582@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Nov 2019 12:10:34 -0800
+Message-ID: <CAPcyv4h-aPh5yGtAmTm28HgSz5evnvQjq7eh=GetnkY8dqO_Uw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111320-4275-0000-0000-0000037D7AD7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111320-4276-0000-0000-00003890DDFC
-Message-Id: <1573675764.4843.14.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=11 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911130164
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-13 at 10:46 -0800, Lakshmi Ramasubramanian wrote:
-> Call the IMA hook from key_create_or_update function to measure
-> the key when a new key is created or an existing key is updated.
-> 
-> This patch adds the call to the IMA hook from key_create_or_update
-> function to measure the key on key create or update.
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  include/linux/ima.h | 13 +++++++++++++
->  security/keys/key.c |  9 +++++++++
->  2 files changed, 22 insertions(+)
-> 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 6d904754d858..ec5afe319ab7 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -25,6 +25,12 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  extern void ima_post_path_mknod(struct dentry *dentry);
->  extern void ima_kexec_cmdline(const void *buf, int size);
->  
-> +#ifdef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
-> +extern void ima_post_key_create_or_update(struct key *keyring,
-> +					  struct key *key,
-> +					  unsigned long flags, bool create);
-> +#endif
-> +
->  #ifdef CONFIG_IMA_KEXEC
->  extern void ima_add_kexec_buffer(struct kimage *image);
->  #endif
-> @@ -101,6 +107,13 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
->  {}
->  #endif
->  
-> +#ifndef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
-> +static inline void ima_post_key_create_or_update(struct key *keyring,
-> +						 struct key *key,
-> +						 unsigned long flags,
-> +						 bool create) {}
-> +#endif
-> +
->  #ifdef CONFIG_IMA_APPRAISE
->  extern bool is_ima_appraise_enabled(void);
->  extern void ima_inode_post_setattr(struct dentry *dentry);
-> diff --git a/security/keys/key.c b/security/keys/key.c
-> index 764f4c57913e..9782d4d046fd 100644
-> --- a/security/keys/key.c
-> +++ b/security/keys/key.c
-> @@ -13,6 +13,7 @@
->  #include <linux/security.h>
->  #include <linux/workqueue.h>
->  #include <linux/random.h>
-> +#include <linux/ima.h>
->  #include <linux/err.h>
->  #include "internal.h"
->  
-> @@ -936,6 +937,9 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
->  		goto error_link_end;
->  	}
->  
-> +	/* let the ima module know about the created key. */
+On Wed, Nov 13, 2019 at 11:53 AM David Hildenbrand <david@redhat.com> wrote=
+:
+>
+>
+>
+> > Am 13.11.2019 um 20:06 schrieb Dan Williams <dan.j.williams@intel.com>:
+> >
+> > =EF=BB=BFOn Wed, Nov 13, 2019 at 10:51 AM David Hildenbrand <david@redh=
+at.com> wrote:
+> >>
+> >>> On 08.11.19 20:13, Dan Williams wrote:
+> >>> On Thu, Nov 7, 2019 at 4:15 PM Toshiki Fukasawa
+> >>> <t-fukasawa@vx.jp.nec.com> wrote:
+> >>>>
+> >>>> Currently, there is no way to identify pfn on ZONE_DEVICE.
+> >>>> Identifying pfn on system memory can be done by using a
+> >>>> section-level flag. On the other hand, identifying pfn on
+> >>>> ZONE_DEVICE requires a subsection-level flag since ZONE_DEVICE
+> >>>> can be created in units of subsections.
+> >>>>
+> >>>> This patch introduces a new bitmap subsection_dev_map so that
+> >>>> we can identify pfn on ZONE_DEVICE.
+> >>>>
+> >>>> Also, subsection_dev_map is used to prove that struct pages
+> >>>> included in the subsection have been initialized since it is
+> >>>> set after memmap_init_zone_device(). We can avoid accessing
+> >>>> pages currently being initialized by checking subsection_dev_map.
+> >>>>
+> >>>> Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+> >>>> ---
+> >>>>  include/linux/mmzone.h | 19 +++++++++++++++++++
+> >>>>  mm/memremap.c          |  2 ++
+> >>>>  mm/sparse.c            | 32 ++++++++++++++++++++++++++++++++
+> >>>>  3 files changed, 53 insertions(+)
+> >>>>
+> >>>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> >>>> index bda2028..11376c4 100644
+> >>>> --- a/include/linux/mmzone.h
+> >>>> +++ b/include/linux/mmzone.h
+> >>>> @@ -1174,11 +1174,17 @@ static inline unsigned long section_nr_to_pf=
+n(unsigned long sec)
+> >>>>
+> >>>>  struct mem_section_usage {
+> >>>>         DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
+> >>>> +#ifdef CONFIG_ZONE_DEVICE
+> >>>> +       DECLARE_BITMAP(subsection_dev_map, SUBSECTIONS_PER_SECTION);
+> >>>> +#endif
+> >>>
+> >>> Hi Toshiki,
+> >>>
+> >>> There is currently an effort to remove the PageReserved() flag as som=
+e
+> >>> code is using that to detect ZONE_DEVICE. In reviewing those patches
+> >>> we realized that what many code paths want is to detect online memory=
+.
+> >>> So instead of a subsection_dev_map add a subsection_online_map. That
+> >>> way pfn_to_online_page() can reliably avoid ZONE_DEVICE ranges. I
+> >>> otherwise question the use case for pfn_walkers to return pages for
+> >>> ZONE_DEVICE pages, I think the skip behavior when pfn_to_online_page(=
+)
+> >>> =3D=3D false is the right behavior.
+> >>
+> >> To be more precise, I recommended an subsection_active_map, to indicat=
+e
+> >> which memmaps were fully initialized and can safely be touched (e.g., =
+to
+> >> read the zone/nid). This map would also be set when the devmem memmaps
+> >> were initialized (race between adding memory/growing the section and
+> >> initializing the memmap).
+> >>
+> >> See
+> >>
+> >> https://lkml.org/lkml/2019/10/10/87
+> >>
+> >> and
+> >>
+> >> https://www.spinics.net/lists/linux-driver-devel/msg130012.html
+> >
+> > I'm still struggling to understand the motivation of distinguishing
+> > "active" as something distinct from "online". As long as the "online"
+> > granularity is improved from sections down to subsections then most
+> > code paths are good to go. The others can use get_devpagemap() to
+> > check for ZONE_DEVICE in a race free manner as they currently do.
+>
+> I thought we wanted to unify access if we don=E2=80=99t really care about=
+ the zone as in most pfn walkers - E.g., for zone shrinking.
 
-This comment and the one below doesn't provide any additional
-information.  Please remove them.
+Agree, when the zone does not matter, which is most cases, then
+pfn_online() and pfn_valid() are sufficient.
 
-> +	ima_post_key_create_or_update(keyring, key, flags, true);
-> +
->  	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
->  
->  error_link_end:
-> @@ -965,6 +969,11 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
->  	}
->  
->  	key_ref = __key_update(key_ref, &prep);
-> +
-> +	/* let the ima module know about the updated key. */
-> +	if (!IS_ERR(key_ref))
-> +		ima_post_key_create_or_update(keyring, key, flags, false);
-> +
->  	goto error_free_prep;
->  }
->  EXPORT_SYMBOL(key_create_or_update);
+> Anyhow, a subsection online map would be a good start, we can reuse that =
+later for ZONE_DEVICE as well.
 
+Cool, good to go with me sending a patch to introduce pfn_online() and
+a corresponding subsection_map for the same?
