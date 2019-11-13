@@ -2,111 +2,108 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2192C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FFDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88137222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:13:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RffYW4TN"
+	by mail.kernel.org (Postfix) with ESMTP id 862AE222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfKMPNF (ORCPT
+        id S1728150AbfKMPNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:13:05 -0500
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:51248 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727550AbfKMPMV (ORCPT
+        Wed, 13 Nov 2019 10:13:44 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37373 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfKMPNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:12:21 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 38E03C0E98;
-        Wed, 13 Nov 2019 15:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573657941; bh=jjICtN6nRPvjHGBNW8f6sLnIxarejkUWdfnGT+fEkhE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=RffYW4TN54gSvtHNErDOxuzEPR6/DnIaT4qIvG4Z1jzdg0kzB8kOXEroRoYNEPPNh
-         DHY/OLqKtEUbb4/tMUuu822UcQv+BfDeLk66Q1glFxlSsx6gT5RWk27Il8pZDflgEM
-         4f7HNGWeatmrf92VybDNnesbjHnyIRDd1pqJzlMF46p41EJj5NUfxU8jQnjC26IMWC
-         Vah+bJtb/vG53vdZRXa2LF30igCDU+J8hK8S2uVrbteRWiTvTX7RoUs/hJAiZghYpw
-         Wgwe+bLTF19xPBxDWALymorx+WFTld0ncIhQI+vjD0Yytzq9smLT2m9RH6LxeODkIz
-         UrkfjS4o6Xgsw==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E3509A0097;
-        Wed, 13 Nov 2019 15:12:19 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 7/7] net: stmmac: TX Coalesce should be per-packet
-Date:   Wed, 13 Nov 2019 16:12:08 +0100
-Message-Id: <904a2b53a0957f6f82562a73dffb4d69218c99b5.1573657593.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1573657592.git.Jose.Abreu@synopsys.com>
-References: <cover.1573657592.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1573657592.git.Jose.Abreu@synopsys.com>
-References: <cover.1573657592.git.Jose.Abreu@synopsys.com>
+        Wed, 13 Nov 2019 10:13:44 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iUuKv-0007F5-My; Wed, 13 Nov 2019 16:13:37 +0100
+Message-ID: <152f7b2bef85cec9ef107b58ba0bac153fde1379.camel@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH 4/5] media: imx-jpeg: Add V4L2 driver for
+ i.MX8 JPEG Encoder/Decoder
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>,
+        "ezequiel@collabora.com" <ezequiel@collabora.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Date:   Wed, 13 Nov 2019 16:13:36 +0100
+In-Reply-To: <1573657156.16477.47.camel@nxp.com>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+         <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
+         <58ed179388b6f9d6caddd91dc03e411ca714157d.camel@collabora.com>
+         <1573657156.16477.47.camel@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TX Coalesce settings are per packet and not per fragment because
-otherwise the coalesce would be different between TSO and non-TSO
-packets.
+Hi Ezequiel, Mirela,
 
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+On Wed, 2019-11-13 at 14:59 +0000, Mirela Rabulea wrote:
+> Hi Ezequiel,
+> On Mi, 2019-11-13 at 11:00 -0300, Ezequiel Garcia wrote:
+> > + * default configuration stream, 64x64 yuv422
+> > > + * split by JPEG marker, so it's easier to modify & use
+> > > + */
+> > > +static const unsigned char jpeg_soi[] = {0xFF, 0xD8};
+> > > +static const unsigned char jpeg_app0[] = {0xFF, 0xE0,
+> > I think it's time to re-consider creating some common code
+> > for drivers that deal with JPEG parsing. I don't know
+> > exactly how this should be done, but it's worth a try.
+> > 
+> > Having been there, it might sound unfair to request you to
+> > take such action. However, someone has to do these kinds
+> > of cleanups and improvements, sooner or later, if we want
+> > to keep a clean codebase.
+> > 
+> > Hope this makes sense.
+> 
+> I agree, it makes sense, at least the jpeg parsing is somehow common
+> between these drivers. I'm willing to contribute to this, but I cannot
+> make a promise when, and this is something that requires collaboration
+> with other contributors who have the means to validate changes on all
+> the hardware affected.
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I just faced the same issue for the coda-vpu driver [1]. I wonder if my
+approach would be usable as a base for i.MX8 JPEGDEC as well. Either
+way, I'd like to collaborate on this, but I can't test most of the
+drivers either.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 6136ada20c8e..140abfcb54c6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3033,7 +3033,7 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
- 	tx_q->tx_skbuff[tx_q->cur_tx] = skb;
- 
- 	/* Manage tx mitigation */
--	tx_q->tx_count_frames += nfrags + 1;
-+	tx_q->tx_count_frames++;
- 	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
- 	    !((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
- 	      priv->hwts_tx_en)) {
-@@ -3241,7 +3241,7 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 	 * This approach takes care about the fragments: desc is the first
- 	 * element in case of no SG.
- 	 */
--	tx_q->tx_count_frames += nfrags + 1;
-+	tx_q->tx_count_frames++;
- 	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
- 	    !((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
- 	      priv->hwts_tx_en)) {
--- 
-2.7.4
+[1] https://patchwork.linuxtv.org/patch/60109/
+
+regards
+Philipp
 
