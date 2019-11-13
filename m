@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE16C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2BFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9E1222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1BC222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611558;
-	bh=m1A12Zj/jy/JTBMwyfGQv0k10etCIufpYcn/+2wqQ04=;
+	s=default; t=1573611563;
+	bh=RgYw0oBSLwQBhdw3WvYdr72j1tYCT0JVBwh8M+A/DAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eXO+r/Kfeaey6FI08XsMx+kaE6IZo7IbtvAJ3x+c1Z7oNkJcHos+4EDiuFyQ54cr4
-	 RmktnjxWVvsCeB497PcuCdSs9tDulOuit5N6NIfYlxl+lQKKBOxL4pbefKfucNGW7L
-	 M/ItZp03epZUJ+8ezKp1BmNGSzbCc3XVTS7hFq90=
+	b=I/MBaKf+Pisbq0tP1reQu1RZQvY1iPWVia2+ZtsMFtQ+TyYWJj5Ko20YyAtHx9/Rr
+	 Bjgw/FgvrA7ysbjex59AmlEd5QHQ5SRUrMFP16hXXthqp/OXJCgJQxlkrmwD3FNrtY
+	 EzzQgHRmAP37vudgqHBlFQAtER0gJE/xWhc8LNNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbfKMBzV (ORCPT
+        id S1729585AbfKMCTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46678 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:19:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729036AbfKMBzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:13 -0500
+        id S1729068AbfKMBzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B602922459;
-        Wed, 13 Nov 2019 01:55:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C303222CD;
+        Wed, 13 Nov 2019 01:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610113;
-        bh=m1A12Zj/jy/JTBMwyfGQv0k10etCIufpYcn/+2wqQ04=;
+        s=default; t=1573610118;
+        bh=RgYw0oBSLwQBhdw3WvYdr72j1tYCT0JVBwh8M+A/DAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lMsnraZ0aE5AYqIWj+hVLAQPb1cCL70OthNcQe49ikOpnvfojR2/YO9cmOgk2atXH
-         CDX7VwtJP0WYrQ2eJwmBPST0wvXBGlfoxevFzeKH13qT9vyS8K6ezdB6DxT9l00Gmq
-         4w0VAe5YJEboAdZzJ9isZx3dX1UkmMUICc4APr6c=
+        b=N97tgouPjOSxzfN4UN0nTKCAT9du+rcWrRRmpcai3ZbRFl/TvOw/CyoLtkXVm0Ora
+         EFMZK3wP5fyC/lyC+y9ngx/uLqfpxQqhUW705csK2v1dqEwjwgxmkC+6xYkz7Lu0Jk
+         9euYKpAbhuZ69+KMILBOkvpPpi/Z9ktxQt4uh32I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+Cc:     =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
         =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@cnexlabs.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 169/209] lightnvm: pblk: fix incorrect min_write_pgs
-Date:   Tue, 12 Nov 2019 20:49:45 -0500
-Message-Id: <20191113015025.9685-169-sashal@kernel.org>
+        linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 173/209] lightnvm: do no update csecs and sos on 1.2
+Date:   Tue, 12 Nov 2019 20:49:49 -0500
+Message-Id: <20191113015025.9685-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,36 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matias Bjørling <mb@lightnvm.io>
+From: Javier González <javier@javigon.com>
 
-[ Upstream commit 8bbd45d02a118cbefdf4e1a6274bd965a6aa3c59 ]
+[ Upstream commit 6fd05cad5ee1290b276dd8ed90a1e019b1fa577a ]
 
-The calculation of pblk->min_write_pgs should only use the optimal
-write size attribute provided by the drive, it does not correlate to
-the memory page size of the system, which can be smaller or larger
-than the LBA size reported.
+1.2 devices exposes their data and metadata size through the separate
+identify command. Make sure that the NVMe LBA format does not override
+these values.
 
+Signed-off-by: Javier González <javier@cnexlabs.com>
 Signed-off-by: Matias Bjørling <mb@lightnvm.io>
-Reviewed-by: Javier González <javier@cnexlabs.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/lightnvm/pblk-init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/lightnvm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/lightnvm/pblk-init.c b/drivers/lightnvm/pblk-init.c
-index 537e98f2b24a2..145922589b0c6 100644
---- a/drivers/lightnvm/pblk-init.c
-+++ b/drivers/lightnvm/pblk-init.c
-@@ -371,7 +371,7 @@ static int pblk_core_init(struct pblk *pblk)
- 	atomic64_set(&pblk->nr_flush, 0);
- 	pblk->nr_flush_rst = 0;
+diff --git a/drivers/nvme/host/lightnvm.c b/drivers/nvme/host/lightnvm.c
+index 6fe5923c95d4a..a69553e75f38e 100644
+--- a/drivers/nvme/host/lightnvm.c
++++ b/drivers/nvme/host/lightnvm.c
+@@ -968,6 +968,9 @@ void nvme_nvm_update_nvm_info(struct nvme_ns *ns)
+ 	struct nvm_dev *ndev = ns->ndev;
+ 	struct nvm_geo *geo = &ndev->geo;
  
--	pblk->min_write_pgs = geo->ws_opt * (geo->csecs / PAGE_SIZE);
-+	pblk->min_write_pgs = geo->ws_opt;
- 	max_write_ppas = pblk->min_write_pgs * geo->all_luns;
- 	pblk->max_write_pgs = min_t(int, max_write_ppas, NVM_MAX_VLBA);
- 	pblk_set_sec_per_write(pblk, pblk->min_write_pgs);
++	if (geo->version == NVM_OCSSD_SPEC_12)
++		return;
++
+ 	geo->csecs = 1 << ns->lba_shift;
+ 	geo->sos = ns->ms;
+ }
 -- 
 2.20.1
 
