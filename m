@@ -2,210 +2,146 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47BAC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296EAC17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4EA222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071582245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfKMLPZ (ORCPT
+        id S1727883AbfKMLP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 06:15:25 -0500
-Received: from mga12.intel.com ([192.55.52.136]:25180 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727495AbfKMLPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:15:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 03:15:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
-   d="scan'208";a="214299186"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 13 Nov 2019 03:15:20 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 13 Nov 2019 13:15:19 +0200
-Date:   Wed, 13 Nov 2019 13:15:19 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PCI: pciehp: Prevent deadlock on disconnect
-Message-ID: <20191113111519.GI34425@lahna.fi.intel.com>
-References: <20191029170022.57528-2-mika.westerberg@linux.intel.com>
- <20191113031752.GA227753@google.com>
+        Wed, 13 Nov 2019 06:15:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47422 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727316AbfKMLP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 06:15:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 69351B4F8;
+        Wed, 13 Nov 2019 11:15:23 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id D45001E1498; Wed, 13 Nov 2019 12:15:21 +0100 (CET)
+Date:   Wed, 13 Nov 2019 12:15:21 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v4 02/23] mm/gup: factor out duplicate code from four
+ routines
+Message-ID: <20191113111521.GI6367@quack2.suse.cz>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com>
+ <20191113042710.3997854-3-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191113031752.GA227753@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191113042710.3997854-3-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 09:17:52PM -0600, Bjorn Helgaas wrote:
-> On Tue, Oct 29, 2019 at 08:00:22PM +0300, Mika Westerberg wrote:
-> > If there are more than one PCIe switch with hotplug downstream ports
-> > hot-removing them leads to a following deadlock:
+On Tue 12-11-19 20:26:49, John Hubbard wrote:
+> There are four locations in gup.c that have a fair amount of code
+> duplication. This means that changing one requires making the same
+> changes in four places, not to mention reading the same code four
+> times, and wondering if there are subtle differences.
 > 
-> Does this happen if two sibling switches are removed simultaneously,
-> or does this happen when switch A leads to switch B and you remove
-> switch A (with obviously also removes switch B)?  I'm guessing the
-> latter because it would be easier to reproduce.  And I guess that's
-> obvious from the text below.
-
-Yes, that's right.
-
-> >  INFO: task irq/126-pciehp:198 blocked for more than 120 seconds.
-> >  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> >  irq/126-pciehp  D    0   198      2 0x80000000
-> >  Call Trace:
-> >   __schedule+0x2a2/0x880
-> >   schedule+0x2c/0x80
-> >   schedule_timeout+0x246/0x350
-> >   ? ttwu_do_activate+0x67/0x90
-> >   wait_for_completion+0xb7/0x140
-> >   ? wake_up_q+0x80/0x80
-> >   kthread_stop+0x49/0x110
-> >   __free_irq+0x15c/0x2a0
-> >   free_irq+0x32/0x70
-> >   pcie_shutdown_notification+0x2f/0x50
-> >   pciehp_remove+0x27/0x50
-> >   pcie_port_remove_service+0x36/0x50
-> >   device_release_driver_internal+0x18c/0x250
-> >   device_release_driver+0x12/0x20
-> >   bus_remove_device+0xec/0x160
-> >   device_del+0x13b/0x350
-> >   ? pcie_port_find_device+0x60/0x60
-> >   device_unregister+0x1a/0x60
-> >   remove_iter+0x1e/0x30
-> >   device_for_each_child+0x56/0x90
-> >   pcie_port_device_remove+0x22/0x40
-> >   pcie_portdrv_remove+0x20/0x60
-> >   pci_device_remove+0x3e/0xc0
-> >   device_release_driver_internal+0x18c/0x250
-> >   device_release_driver+0x12/0x20
-> >   pci_stop_bus_device+0x6f/0x90
-> >   pci_stop_bus_device+0x31/0x90
-> >   pci_stop_and_remove_bus_device+0x12/0x20
-> >   pciehp_unconfigure_device+0x88/0x140
-> >   pciehp_disable_slot+0x6a/0x110
-> >   pciehp_handle_presence_or_link_change+0x263/0x400
-> >   pciehp_ist+0x1c9/0x1d0
-> >   ? irq_forced_thread_fn+0x80/0x80
-> >   irq_thread_fn+0x24/0x60
-> >   irq_thread+0xeb/0x190
-> >   ? irq_thread_fn+0x60/0x60
-> >   kthread+0x120/0x140
-> >   ? irq_thread_check_affinity+0xf0/0xf0
-> >   ? kthread_park+0x90/0x90
-> >   ret_from_fork+0x35/0x40
-> >  INFO: task irq/190-pciehp:2288 blocked for more than 120 seconds.
-> >  irq/190-pciehp  D    0  2288      2 0x80000000
-> >  Call Trace:
-> >   __schedule+0x2a2/0x880
-> >   schedule+0x2c/0x80
-> >   schedule_preempt_disabled+0xe/0x10
-> >   __mutex_lock.isra.9+0x2e0/0x4d0
-> >   ? __mutex_lock_slowpath+0x13/0x20
-> >   __mutex_lock_slowpath+0x13/0x20
-> >   mutex_lock+0x2c/0x30
-> >   pci_lock_rescan_remove+0x15/0x20
-> >   pciehp_unconfigure_device+0x4d/0x140
-> >   pciehp_disable_slot+0x6a/0x110
-> >   pciehp_handle_presence_or_link_change+0x263/0x400
-> >   pciehp_ist+0x1c9/0x1d0
-> >   ? irq_forced_thread_fn+0x80/0x80
-> >   irq_thread_fn+0x24/0x60
-> >   irq_thread+0xeb/0x190
-> >   ? irq_thread_fn+0x60/0x60
-> >   kthread+0x120/0x140
-> >   ? irq_thread_check_affinity+0xf0/0xf0
-> >   ? kthread_park+0x90/0x90
-> >   ret_from_fork+0x35/0x40
-> > 
-> > What happens here is that the whole hierarchy is runtime resumed and the
+> Factor out the common code into static functions, thus reducing the
+> overall line count and the code's complexity.
 > 
-> What is the runtime resume connection here?  I do see that
-> pcie_portdrv_remove() may call pm_runtime_forbid(), which looks like
-> it resumes devices, but I don't see whether that's actually relevant
-> to the deadlock.
-
-When the parent port removes its children the driver core 
-(__device_release_driver) calls pm_runtime_get_sync() for the device
-which ends up calling the resume hook of the child pciehp.
-
-> > parent PCIe downstream port, who got the hot-remove event, starts
-> > removing devices below it taking pci_lock_rescan_remove() lock. When the
-> > child PCIe port is runtime resumed it calls pciehp_check_presence()
-> > which ends up calling pciehp_card_present() and pciehp_check_link_active().
+> Also, take the opportunity to slightly improve the efficiency of the
+> error cases, by doing a mass subtraction of the refcount, surrounded
+> by get_page()/put_page().
 > 
-> Oh, I see, pciehp_resume() calls pciehp_check_presence(), which
-> schedules the IRQ thread via pciehp_request().  So does this deadlock
-> only happen if the port(s) have been runtime suspended?
-
-I'm aware of two cases where this happens with a real hardware.
-
-First one is that all involved ports are runtime suspended and you
-unplug them. This can happen easily if the drivers involved
-automatically enable runtime PM (xHCI for example does that).
-
-The other more common case is that you suspend your laptop (close the
-lid with the dock + something else connected. Then you unplug the dock
-and after some time open the lid. Basically system suspend/resume cycle
-so that you unplug the devices when it is suspended.
-
-This patch helps for both cases above.
-
-As Lukas commented there is also a bit more syntetic case where the
-removal is done through sysfs in paraller to hot-removing the device. I
-believe this one is still unfixed.
-
-> > Both of these read their parts of PCIe config space by calling helper
-> > function pcie_capability_read_word(). Now, this function notices that
-> > the underlying device is already gone and returns PCIBIOS_DEVICE_NOT_FOUND
-> > with the capability value set to 0.  When pciehp gets this value it
-> > thinks that its child device is also hot-removed and schedules its IRQ
-> > thread to handle the event.
+> Also, further simplify (slightly), by waiting until the the successful
+> end of each routine, to increment *nr.
 > 
-> The child device actually *has* been hot-removed, right? :)
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-Yes.
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 85caf76b3012..199da99e8ffc 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1969,6 +1969,34 @@ static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
+>  }
+>  #endif
+>  
+> +static int __record_subpages(struct page *page, unsigned long addr,
+> +			     unsigned long end, struct page **pages, int nr)
+> +{
+> +	int nr_recorded_pages = 0;
+> +
+> +	do {
+> +		pages[nr] = page;
+> +		nr++;
+> +		page++;
+> +		nr_recorded_pages++;
+> +	} while (addr += PAGE_SIZE, addr != end);
+> +	return nr_recorded_pages;
+> +}
 
-> In addition to checking for PCIBIOS_DEVICE_NOT_FOUND, you added checks
-> for ~0:
-> 
-> > +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> > +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
-> > +		return -ENODEV;
-> 
-> That makes sense to me and I think it's the right thing to do.
+Why don't you pass in already pages + nr?
 
-So do I :)
+> +
+> +static void put_compound_head(struct page *page, int refs)
+> +{
+> +	/* Do a get_page() first, in case refs == page->_refcount */
+> +	get_page(page);
+> +	page_ref_sub(page, refs);
+> +	put_page(page);
+> +}
+> +
+> +static void __huge_pt_done(struct page *head, int nr_recorded_pages, int *nr)
+> +{
+> +	*nr += nr_recorded_pages;
+> +	SetPageReferenced(head);
+> +}
 
-> But I do wonder whether pcie_capability_read_word() is doing the wrong
-> thing when it sets "*val = 0" in the error case.  I suspect that just
-> complicates the callers for no good reason.  The callers could
-> otherwise simply check for ~0 as a "this may be an error response"
-> value.
+I don't find this last helper very useful. It seems to muddy water more
+than necessary...
 
-I agree.
+Other than that the cleanup looks nice to me.
 
-We discussed about that in v2 and you said that you would like to
-explore removal of "*val = 0" but not in the context of this issue [1].
-
-[1] https://patchwork.kernel.org/patch/11089973/#22961207
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
