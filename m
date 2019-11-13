@@ -2,110 +2,125 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28B8C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7678C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA12C2249C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974DA2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="ryDVLjY8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCupdneR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfKMPjv (ORCPT
+        id S1728220AbfKMQTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:39:51 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:27310 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfKMPju (ORCPT
+        Wed, 13 Nov 2019 11:19:22 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36217 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfKMQTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:39:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573659588;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=IcWKXBk6OLF61eXvC2m4VfKEa190SInPY4yvpfHGVq8=;
-        b=ryDVLjY8KyB/NCNFYxPmfZGHBnzh75BV/lK76fu+GH3vZrwpKBsexachgbWUKK6a0l
-        53hW9sRuey2jyjm1VjyIVjXsyEr/n40eInEyIbsFlYlf5jGs+If3NqoOhC2l9FtX3Rhv
-        L+nPUOqgJmAw7yQyNlX1BdanHxvLD9abKmv+Oz7kEmDG/Ts8OieqXqx7PtnZGahZXPqa
-        CTpbpYAddMJq8fb0auBT8N1dkWDIDToFCgUXFb4PabqDEk92VjjnAZ9lQu50c8FW856A
-        K2lRuUUbivrkP5Crer8VL4fp7ix3FkjUZPwl1OCLECu8EdX/ELd1AGaDyjsW0wwULVGl
-        Uzmg==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4AUztn93FPS2dyuY8hl6Q=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id 20735bvADFdmGbJ
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 13 Nov 2019 16:39:48 +0100 (CET)
-Date:   Wed, 13 Nov 2019 16:39:41 +0100
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "open list\:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-Message-ID: <20191113163941.59124120.olaf@aepfle.de>
-In-Reply-To: <87wocbagqc.fsf@vitty.brq.redhat.com>
-References: <20191024144943.26199-1-olaf@aepfle.de>
-        <874kzfbybk.fsf@vitty.brq.redhat.com>
-        <20191107144850.37587edb.olaf@aepfle.de>
-        <87zhh7ai26.fsf@vitty.brq.redhat.com>
-        <20191107152059.6cae8f30.olaf@aepfle.de>
-        <87wocbagqc.fsf@vitty.brq.redhat.com>
-X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Wed, 13 Nov 2019 11:19:22 -0500
+Received: by mail-lj1-f196.google.com with SMTP id k15so3258969lja.3;
+        Wed, 13 Nov 2019 08:19:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=7q0LZz55qiLXCLO3cYRIglXjE7xsHXGROHGLHX16zOY=;
+        b=hCupdneRc9+s4dAK+Uu58Ry5YbKYmoYjF0nknVFegxtEwSk7SvIPlUSjfllkcTwmfb
+         nwk6vHpy/hOl+pxSL/NoPFQOPN2q9EDG+AdFR4z7QH4Qkavzkp0OPGfwYcLbvG6MJndi
+         D0yAuqHYGQAbFY2O0PLJPtkD0ITp6rUVRM2J6Sfu0R6ccOAKDTmHtEkkIj8/BFfge1E3
+         iyrzA8CiGd5G2fax9ZNz2D6X8Ky1SGsdtzBhsNYlvzThUB9L/8dxPQgrNighakb4gWoH
+         3hbPN/wtOiEGwMANw0VnNKWWpVxZLL2At+VzR3lfuy1VeA4ADdZo47tCRQs23NjE97xP
+         VwDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=7q0LZz55qiLXCLO3cYRIglXjE7xsHXGROHGLHX16zOY=;
+        b=KuvFLmTGdYsgkOCO+14jiqY3FsHTvrWe4FT0/dNMCX+6UDbOWrymYYqP3qqHw+mhCA
+         nGVZ8xz2CkkmGvGpY9hBV3vU9lIuWt/oA3x9Mx3mhjv+HHQR+zbuwmQnjdvoQtVgWQmN
+         P9bzR8dGF18iF2US6AdwftfI7rgMFT0lIXQh5yE0OcfqQXsgjsWxoRVV7M/4LEnGU3r/
+         l6AEbF0hV/fOblxpSloQJlnkgrcGKANa5DMjfPG5s0oWLhDEjR3Zjvdm5wOcsoqneWNL
+         bA47Z6Rnot/o9aHfzY2IiEmImLu7oj4KFEB7T4DdtxHJvK4rbOw8bV1Si7jOiAPKa3iU
+         5tqQ==
+X-Gm-Message-State: APjAAAVujk9e3jXoI2iJaaOEh3CqQdvUhCmgt3TnWzaeFpqYlYJKa0ER
+        /wLMymXfc6Pi2+meoOCJsm0=
+X-Google-Smtp-Source: APXvYqxXw+EGCcS+eCaEOXxYLXSmU8MWKfnJwqd5tsR6aVrY3Zs4KN3r+06UIIxjBGrWB/r3cUTMDQ==
+X-Received: by 2002:a2e:b163:: with SMTP id a3mr3177191ljm.72.1573661959688;
+        Wed, 13 Nov 2019 08:19:19 -0800 (PST)
+Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
+        by smtp.gmail.com with ESMTPSA id 186sm1372730lfb.28.2019.11.13.08.19.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Nov 2019 08:19:19 -0800 (PST)
+Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
+To:     Jann Horn <jannh@google.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
+ <20191112232239.yevpeemgxz4wy32b@wittgenstein>
+ <CAG48ez0j_7NyCyvGn8U8NS2p=CQQb=me-5KTa7k5E6xpHJphaA@mail.gmail.com>
+From:   Topi Miettinen <toiwoton@gmail.com>
+Message-ID: <13bc7935-8341-bb49-74ea-2eb58f72fd1f@gmail.com>
+Date:   Wed, 13 Nov 2019 18:19:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/jIGef0Ofd=8F/1tOqnM7Fbw"; protocol="application/pgp-signature"
+In-Reply-To: <CAG48ez0j_7NyCyvGn8U8NS2p=CQQb=me-5KTa7k5E6xpHJphaA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jIGef0Ofd=8F/1tOqnM7Fbw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 13.11.2019 18.00, Jann Horn wrote:
+> On Wed, Nov 13, 2019 at 12:22 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+>> On Sun, Nov 03, 2019 at 04:55:48PM +0200, Topi Miettinen wrote:
+>>> Several items in /proc/sys need not be accessible to unprivileged
+>>> tasks. Let the system administrator change the permissions, but only
+>>> to more restrictive modes than what the sysctl tables allow.
+>>>
+>>> Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
+>>> ---
+>>>   fs/proc/proc_sysctl.c | 41 +++++++++++++++++++++++++++++++----------
+>>>   1 file changed, 31 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+>>> index d80989b6c344..88c4ca7d2782 100644
+>>> --- a/fs/proc/proc_sysctl.c
+>>> +++ b/fs/proc/proc_sysctl.c
+>>> @@ -818,6 +818,10 @@ static int proc_sys_permission(struct inode *inode, int
+>>> mask)
+>>>          if ((mask & MAY_EXEC) && S_ISREG(inode->i_mode))
+>>>                  return -EACCES;
+>>>
+>>> +       error = generic_permission(inode, mask);
+>>> +       if (error)
+>>> +               return error;
+> 
+> In kernel/ucount.c, the ->permissions handler set_permissions() grants
+> access based on whether the caller has CAP_SYS_RESOURCE. And in
+> net/sysctl_net.c, the handler net_ctl_permissions() grants access
+> based on whether the caller has CAP_NET_ADMIN. This added check is
+> going to break those, right?
+> 
 
-Am Thu, 07 Nov 2019 15:44:27 +0100
-schrieb Vitaly Kuznetsov <vkuznets@redhat.com>:
+Right. The comment above seems then a bit misleading:
+	/*
+	 * sysctl entries that are not writeable,
+	 * are _NOT_ writeable, capabilities or not.
+	 */
 
-> I *think* what you're aiming at is EAI_AGAIN and EAI_FAIL, the rest
-> should probably terminate the resolver thread (e.g. AF_INET is
-> unsupported or something like that).
-
-The thread aims for success. Resolving of the hostname can take some time.
-Maybe the network is not fully functional when the thread starts.
-Maybe the VM admin does further tweaks while the thread is running.
-IMO there is no downside to wait for success.
-
-
-Olaf
-
---Sig_/jIGef0Ofd=8F/1tOqnM7Fbw
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl3MI70ACgkQ86SN7mm1
-DoD+TA//UuW2hrqWiB33HTuz3g0RxmA7ZY1UuaEs+khSCMV/W8ktIEnYLgZkON5S
-JTGG2II0xGZhmNkV8GgwgwQbIuPhrgsYAdz1Z6G5q+zDpow82O4cGQeMUgKG6Xfi
-N1c+dQUJYMo2SuAkYfvHks/7L20TZBi3tw43ZpKQtoNyQG1w2RdYMFKLBhpHIMaJ
-BuL8GRo58x/n7YjLDVqWRurYC3Iu7FrkJT98g8ccrgGhh8hfNC9Mkvy/oJRdes4W
-+QooloWFEwmMRhkZZof2xCJg8fkXxOHFaEL8YxVed66OxlQjus8uv/pO++TTdaxf
-DKuxxfjkM/JOzFwKnObIJUXUbh3gEjQj+9/EFLNE/oJvXPQb2LVBFYnQLseF4t9C
-rg8tL1WPSZdTtPZCqKbS8Ng7CiKmwj/tYqG/ooQ3qDWp+lQ1mK9762XBO1+Q+PV8
-rm8LimGnIvUHo46rRP1F4ncoNZ+y8jKvwrG4AjzsQHwP2uLBvSIjs91GJem4oeSr
-qHC4VKeF0dzeuFaQZASI6nHomWyxn9JiMU7ED4C+vt0O7T3dv5gY175xCxDbg8pr
-2fryLn73oFOz+QVyI0Qe0Vf6uIW3s4mTnXNtAxlOgVFK8dxQlRk/OnEA/+X7ZmuE
-gPLrNZJWRpAya3fWob6dFBqv2nZ2d1jb7wZoYGJvpH5iaRCCatE=
-=88wJ
------END PGP SIGNATURE-----
-
---Sig_/jIGef0Ofd=8F/1tOqnM7Fbw--
+-Topi
