@@ -2,51 +2,54 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1371C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0508FC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773BD2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2DC22084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611592;
-	bh=H98E+O2rGiNbR2/s9wKrb2qi+Flmw69WX72yGfxD1Vk=;
+	s=default; t=1573611594;
+	bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zeVsZHVHM15ea43YrIA1rVg4kTmwkTDl55N3fpusY/UKTQTXM2mTsdEATmremxYH0
-	 os3IuecuraaVZeCecEc8DAHNJS6DbzJ1CJIt61SanhnfnunbHYbAt2jp61qhFR7ZYr
-	 AM3msQUG6cc19x3WzeHYhnulDHZyEkBef98USFeI=
+	b=Ud6zEFT2zoWo4BzhHkhuR/dUJEHyKxkEn0fXvypQLV6+NdjN5hlsOLPMLpfbXz1fp
+	 psGe5tD0PMd2flJ6bGYJRKkx1E6A0pXfKyVP5j1wsKup8OO0QgSpNDUuXrgJfObitu
+	 XRQjgiV8aW8U1HPDgu7QpEKVAxm/wOQkQB2Z6IEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfKMCTv (ORCPT
+        id S1728995AbfKMBzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:19:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46432 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbfKMBzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:05 -0500
+        id S1727721AbfKMBzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43E8A222CD;
-        Wed, 13 Nov 2019 01:55:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F89222D4;
+        Wed, 13 Nov 2019 01:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610105;
-        bh=H98E+O2rGiNbR2/s9wKrb2qi+Flmw69WX72yGfxD1Vk=;
+        s=default; t=1573610100;
+        bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XUDZZuFu7RLPU6x+4NIgmwo6NJVZmUlk21/0NF5L2lZMvVtcvutO97tcqNx2AAK+S
-         Wz2UeUUXRsI0ZgbOHc2h4rVYNV/N7SomWrhdrO6OpiX21gT0LzQxxfGbz8TYMDln8g
-         4vqAE2tkWVSAt0nshqQlZQOA9mr4WQ0HyNNkfMLw=
+        b=sT4XnQ3ZxZiqbTVuIXxw8uHMd0zx9Kg/d4r/sTSud9K6MXFYmxjOWrIh+GK8wov3t
+         OcmERI6WdSt/4EEyGxsP8aUak0MgTGI2VTtN2d+XDVwraqvE8+CQiLsVAb2OSighcm
+         nRTL4SPKUZZJv+I9RtGla5+M4olK/CZJs2WkCBz4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tim Smith <tim.smith@citrix.com>, Mark Syms <mark.syms@citrix.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.19 164/209] GFS2: Flush the GFS2 delete workqueue before stopping the kernel threads
-Date:   Tue, 12 Nov 2019 20:49:40 -0500
-Message-Id: <20191113015025.9685-164-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 160/209] backlight: lm3639: Unconditionally call led_classdev_unregister
+Date:   Tue, 12 Nov 2019 20:49:36 -0500
+Message-Id: <20191113015025.9685-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,62 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Smith <tim.smith@citrix.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1eb8d7387908022951792a46fa040ad3942b3b08 ]
+[ Upstream commit 7cea645ae9c5a54aa7904fddb2cdf250acd63a6c ]
 
-Flushing the workqueue can cause operations to happen which might
-call gfs2_log_reserve(), or get stuck waiting for locks taken by such
-operations.  gfs2_log_reserve() can io_schedule(). If this happens, it
-will never wake because the only thing which can wake it is gfs2_logd()
-which was already stopped.
+Clang warns that the address of a pointer will always evaluated as true
+in a boolean context.
 
-This causes umount of a gfs2 filesystem to wedge permanently if, for
-example, the umount immediately follows a large delete operation.
+drivers/video/backlight/lm3639_bl.c:403:14: warning: address of
+'pchip->cdev_torch' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pchip->cdev_torch)
+        ~~   ~~~~~~~^~~~~~~~~~
+drivers/video/backlight/lm3639_bl.c:405:14: warning: address of
+'pchip->cdev_flash' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pchip->cdev_flash)
+        ~~   ~~~~~~~^~~~~~~~~~
+2 warnings generated.
 
-When this occured, the following stack trace was obtained from the
-umount command
+These statements have been present since 2012, introduced by
+commit 0f59858d5119 ("backlight: add new lm3639 backlight
+driver"). Given that they have been called unconditionally since
+then presumably without any issues, removing the always true if
+statements to fix the warnings without any real world changes.
 
-[<ffffffff81087968>] flush_workqueue+0x1c8/0x520
-[<ffffffffa0666e29>] gfs2_make_fs_ro+0x69/0x160 [gfs2]
-[<ffffffffa0667279>] gfs2_put_super+0xa9/0x1c0 [gfs2]
-[<ffffffff811b7edf>] generic_shutdown_super+0x6f/0x100
-[<ffffffff811b7ff7>] kill_block_super+0x27/0x70
-[<ffffffffa0656a71>] gfs2_kill_sb+0x71/0x80 [gfs2]
-[<ffffffff811b792b>] deactivate_locked_super+0x3b/0x70
-[<ffffffff811b79b9>] deactivate_super+0x59/0x60
-[<ffffffff811d2998>] cleanup_mnt+0x58/0x80
-[<ffffffff811d2a12>] __cleanup_mnt+0x12/0x20
-[<ffffffff8108c87d>] task_work_run+0x7d/0xa0
-[<ffffffff8106d7d9>] exit_to_usermode_loop+0x73/0x98
-[<ffffffff81003961>] syscall_return_slowpath+0x41/0x50
-[<ffffffff815a594c>] int_ret_from_sys_call+0x25/0x8f
-[<ffffffffffffffff>] 0xffffffffffffffff
-
-Signed-off-by: Tim Smith <tim.smith@citrix.com>
-Signed-off-by: Mark Syms <mark.syms@citrix.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/119
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/video/backlight/lm3639_bl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index c212893534ed6..a971862b186e3 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -854,10 +854,10 @@ static int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
- 	if (error && !test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
- 		return error;
+diff --git a/drivers/video/backlight/lm3639_bl.c b/drivers/video/backlight/lm3639_bl.c
+index cd50df5807ead..086611c7bc03c 100644
+--- a/drivers/video/backlight/lm3639_bl.c
++++ b/drivers/video/backlight/lm3639_bl.c
+@@ -400,10 +400,8 @@ static int lm3639_remove(struct i2c_client *client)
  
-+	flush_workqueue(gfs2_delete_workqueue);
- 	kthread_stop(sdp->sd_quotad_process);
- 	kthread_stop(sdp->sd_logd_process);
+ 	regmap_write(pchip->regmap, REG_ENABLE, 0x00);
  
--	flush_workqueue(gfs2_delete_workqueue);
- 	gfs2_quota_sync(sdp->sd_vfs, 0);
- 	gfs2_statfs_sync(sdp->sd_vfs, 0);
- 
+-	if (&pchip->cdev_torch)
+-		led_classdev_unregister(&pchip->cdev_torch);
+-	if (&pchip->cdev_flash)
+-		led_classdev_unregister(&pchip->cdev_flash);
++	led_classdev_unregister(&pchip->cdev_torch);
++	led_classdev_unregister(&pchip->cdev_flash);
+ 	if (pchip->bled)
+ 		device_remove_file(&(pchip->bled->dev), &dev_attr_bled_mode);
+ 	return 0;
 -- 
 2.20.1
 
