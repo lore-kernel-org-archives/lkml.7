@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE6BC17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270EEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE64921D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0013B222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611144;
-	bh=CyxFmt8RNp2/3hmmxtbe3/3gSyvkKx15wfdi3MWjiG4=;
+	s=default; t=1573611147;
+	bh=PsgG2G08UykoSKpvOhRLvUJtYY5s7r6XwXM22km+Nwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYCJ0KlUt8LhVucCyIFgQMLwkLaWROQSfAUKPw15KpNai/oEsz99Idgv06J+9W0lN
-	 msXouF3WtQVlX3mdz9qIzeODNWF5lyCS3xzwJxSlSkLGdohTux4O8W5wv/QzGEgFtn
-	 Bv708rxe/faxO6a/NG07STto4QTwhADu8xZvsAZk=
+	b=K3Fy5XfHBd2XFKfLz+c/M9C2s1LTtlMpe230Dp3cfT6ygDv6Wh+HluqiJ4i9g9NgJ
+	 1viLuro4Rz9X3gESXSf8udheRY8uR+VIyIQ13vd8J+Ea6JcblbXpIwbgJ6Wy//vn3+
+	 sJGydiRl0bV52TjdnRIUFWp7URnm+WlaTF1M31uQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfKMCMX (ORCPT
+        id S1730386AbfKMCMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:12:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52188 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:12:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730011AbfKMB6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:25 -0500
+        id S1730006AbfKMB6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B0B22245C;
-        Wed, 13 Nov 2019 01:58:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 112B82245A;
+        Wed, 13 Nov 2019 01:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610305;
-        bh=CyxFmt8RNp2/3hmmxtbe3/3gSyvkKx15wfdi3MWjiG4=;
+        s=default; t=1573610302;
+        bh=PsgG2G08UykoSKpvOhRLvUJtYY5s7r6XwXM22km+Nwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Wpb1LrkdQ/dv1j33cBk0WIYghbaOlfQL9zTBPyKrezSzYXfoIkvq117r9gZHldNP
-         LnxkUWUBTYkIhrB7wcQuq/j6B5Bo0h/ZNLir6/lHF3rMtWNAhikJhuTidY/3hjAYBo
-         FGnUqKeAyehbgRt8yd9DZXWXSANTpYygcqYIGptU=
+        b=cd3Y/8+wCnzE3ePWjlgAbdeHQQL98aHymtmUn7KlFOLKMwxEBxCiZiFtBzQg1iaiT
+         FiXWFhhDXaHyHv0H8J9Ao4jWE7m4/cFVdQBScCtd1q7wTGUBIyVRYVBzJj3qqmuDNe
+         /GP4MKhGnMGmDVdieiH5gzDg+tU7izk319V88Pdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 074/115] dmaengine: rcar-dmac: set scatter/gather max segment size
-Date:   Tue, 12 Nov 2019 20:55:41 -0500
-Message-Id: <20191113015622.11592-74-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Lubomir Rintel <lkundrak@v3.sk>,
+        x86@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 073/115] x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
+Date:   Tue, 12 Nov 2019 20:55:40 -0500
+Message-Id: <20191113015622.11592-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,41 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 97d49c59e219acac576e16293a6b8cb99302f62f ]
+[ Upstream commit fa112cf1e8bc693d5a666b1c479a2859c8b6e0f1 ]
 
-Fix warning when running with CONFIG_DMA_API_DEBUG_SG=y by allocating a
-device_dma_parameters structure and filling in the max segment size.
+When building a 32-bit config which has the above MFD item as module
+but OLPC_XO1_PM is enabled =y - which is bool, btw - the kernel fails
+building with:
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_remove':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:159: undefined reference to `mfd_cell_disable'
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_probe':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:133: undefined reference to `mfd_cell_enable'
+  make: *** [Makefile:1030: vmlinux] Error 1
+
+Force MFD_CS5535 to y if OLPC_XO1_PM is enabled.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Lubomir Rintel <lkundrak@v3.sk>
+Cc: x86@kernel.org
+Link: http://lkml.kernel.org/r/20181005131750.GA5366@zn.tnic
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/rcar-dmac.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 19c7433e83097..f7ca57125ac7c 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -200,6 +200,7 @@ struct rcar_dmac {
- 	struct dma_device engine;
- 	struct device *dev;
- 	void __iomem *iomem;
-+	struct device_dma_parameters parms;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 8fec1585ac7ab..ce147c0e76f0d 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2671,8 +2671,7 @@ config OLPC
  
- 	unsigned int n_channels;
- 	struct rcar_dmac_chan *channels;
-@@ -1764,6 +1765,8 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ config OLPC_XO1_PM
+ 	bool "OLPC XO-1 Power Management"
+-	depends on OLPC && MFD_CS5535 && PM_SLEEP
+-	select MFD_CORE
++	depends on OLPC && MFD_CS5535=y && PM_SLEEP
+ 	---help---
+ 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
  
- 	dmac->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, dmac);
-+	dmac->dev->dma_parms = &dmac->parms;
-+	dma_set_max_seg_size(dmac->dev, RCAR_DMATCR_MASK);
- 	dma_set_mask_and_coherent(dmac->dev, DMA_BIT_MASK(40));
- 
- 	ret = rcar_dmac_parse_of(&pdev->dev, dmac);
 -- 
 2.20.1
 
