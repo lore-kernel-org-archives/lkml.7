@@ -2,101 +2,98 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DD7C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CFAC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733E5222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:26:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="doPKvu1g"
+	by mail.kernel.org (Postfix) with ESMTP id 11BBC222CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKMB0T (ORCPT
+        id S1727208AbfKMB1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:26:19 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44262 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfKMB0T (ORCPT
+        Tue, 12 Nov 2019 20:27:05 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38684 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfKMB1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:26:19 -0500
-Received: by mail-oi1-f196.google.com with SMTP id s71so250302oih.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 17:26:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d0MB/SSMpogQj4Fcl4IC+pxpUwq0gyFs7A/amSO1m4Y=;
-        b=doPKvu1gZNpcuqwOmCORE1idu0dAD0+ZV4ybOrLIR70xlU/Ld+eQ7FHZDb7gjt5NSd
-         uISrpZzkm2+LjEtMuDDLkKlB7O2X18chqvg8BtH28z3+X12qZdHaQHtuQushixLAzJg7
-         t983ph1Tvk4oDHv2V/w4UkB4XE4huboN+gnSOdLM32WdvXQhALzflaDwdfqPOs4q1FDx
-         KHTaYVXq5pc5+JMyRNtd4GCn8D2IdH6SpPmHk2S+B8emEa5gIX6d6TAhG7Nj1WNaSqx/
-         ZxFw0h3C4SOkt6WE3U5FxbkudR4vKN1cP2Z3YTQ4vcdCMRuvF/2j35Cwczb+P1sv6s+B
-         KzQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d0MB/SSMpogQj4Fcl4IC+pxpUwq0gyFs7A/amSO1m4Y=;
-        b=rSxv3HQ1kBKvkK/wFPJZmvhb0apImdUWWWzfupgigWxYq2DlfL4tFjO43zXucuqmxB
-         Z4vqy485de/6RYIuv/FXsOlvIYlFCgQCXZFH2n0ddScbAisMePVf//n6XoJo+K9dN3od
-         w+D2JNDuyvwdr8tMqSx73G0o79FenXntnYNRnRmcwsnggPGczaNM6KsSu48kRae+E5wh
-         Mn5ZAfqSNJRWZXKmNjnuWKDGrsuENDqgkfdhvE4Pt+32oLMuAT8girkaJ0hYmsNNLHUJ
-         /nCxQLuX7tZ//sgv5h1jbrBO8FMUs9NbeiVhm8AI7hUxbXmdGwSqTWgRWisSZ5NHmTDi
-         MS0g==
-X-Gm-Message-State: APjAAAUbXdFj944qkAPYVoMMgiFR2lcoIO6mF3yKqh398tcwPZy6FDGv
-        ZTUIBfVtGs8BO57ylQ+C9VcSsvrCKPW6kRRiMx1uAw==
-X-Google-Smtp-Source: APXvYqxe6zvqvkMBezUGqzKAEYSTwQ/sNKuj6ffZfvcWwiO9AOk1SDdrnEGOgdcqBDW/SJNVakQKutXfNYK60w6drc8=
-X-Received: by 2002:aca:ead7:: with SMTP id i206mr499780oih.0.1573608378184;
- Tue, 12 Nov 2019 17:26:18 -0800 (PST)
-MIME-Version: 1.0
-References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157309901655.1582359.18126990555058555754.stgit@dwillia2-desk3.amr.corp.intel.com>
- <87h839tpo9.fsf@linux.ibm.com>
-In-Reply-To: <87h839tpo9.fsf@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Nov 2019 17:26:07 -0800
-Message-ID: <CAPcyv4gTRiZuA8A7cDxCZtHJv=LZMjd=tVgq35gbc0K8BUDHsA@mail.gmail.com>
-Subject: Re: [PATCH 04/16] libnvdimm: Move nd_numa_attribute_group to device_type
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        Tue, 12 Nov 2019 20:27:04 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUhOU-0006xS-Cx; Wed, 13 Nov 2019 01:24:26 +0000
+Date:   Wed, 13 Nov 2019 01:24:26 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 2/9] namei: LOOKUP_NO_MAGICLINKS: block magic-link
+ resolution
+Message-ID: <20191113012426.GY26530@ZenIV.linux.org.uk>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-3-cyphar@cyphar.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105090553.6350-3-cyphar@cyphar.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 1:23 AM Aneesh Kumar K.V
-<aneesh.kumar@linux.ibm.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > A 'struct device_type' instance can carry default attributes for the
-> > device. Use this facility to remove the export of
-> > nd_numa_attribute_group and put the responsibility on the core rather
-> > than leaf implementations to define this attribute.
-> >
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> > Cc: Vishal Verma <vishal.l.verma@intel.com>
-> > Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
->
-> can we also expose target_node in a similar way? This allows application
-> to better understand the node locality of the SCM device.
+On Tue, Nov 05, 2019 at 08:05:46PM +1100, Aleksa Sarai wrote:
+> @@ -1078,6 +1079,10 @@ const char *get_link(struct nameidata *nd)
+>  		} else {
+>  			res = get(dentry, inode, &last->done);
+>  		}
+> +		if (nd->flags & LOOKUP_MAGICLINK_JUMPED) {
+> +			if (unlikely(nd->flags & LOOKUP_NO_MAGICLINKS))
+> +				return ERR_PTR(-ELOOP);
+> +		}
 
-It is already exported for device-dax instances. See
-DEVICE_ATTR_RO(target_node) in drivers/dax/bus.c. I did not see a use
-case for it to be exported for other nvdimm device types.
+Minor nit - the first check probably wants unlikely() more than the
+second one; it's probably noise anyway, but most of the symlinks
+traversed are not going to be procfs ones, so you get test + branch
+taken most of the time.
+
+OTOH, that just might compile into
+	fetch nd->flags
+	and with LOOKUP_MAGICLINK_JUMPED | LOOKUP_NO_MAGICLINKS
+	compare with the same constant
+	unlikely branch when equal
+
+Anyway, that's no more than a minor nit and can be dealt with later (if
+at all)
