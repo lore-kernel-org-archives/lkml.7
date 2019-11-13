@@ -4,116 +4,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4F8C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD496C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F9A206EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76AF2206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfKMUR7 (ORCPT
+        id S1726598AbfKMUTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:17:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49038 "EHLO mail.kernel.org"
+        Wed, 13 Nov 2019 15:19:17 -0500
+Received: from smtp.gentoo.org ([140.211.166.183]:33820 "EHLO smtp.gentoo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfKMUR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:17:59 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726179AbfKMUTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:19:17 -0500
+Received: from grubbs.orbis-terrarum.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54792206E6;
-        Wed, 13 Nov 2019 20:17:58 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 15:17:55 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
-        <oleg@redhat.com>, <jack@suse.cz>, <linux-kernel@vger.kernel.org>,
-        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>,
-        <chenxiang66@hisilicon.com>, <xiexiuqi@huawei.com>
-Subject: Re: [PATCH] debugfs: fix potential infinite loop in
- debugfs_remove_recursive
-Message-ID: <20191113151755.7125e914@gandalf.local.home>
-In-Reply-To: <1572528884-67565-1-git-send-email-yukuai3@huawei.com>
-References: <1572528884-67565-1-git-send-email-yukuai3@huawei.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by smtp.gentoo.org (Postfix) with ESMTPS id 7604934CDB9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 20:19:15 +0000 (UTC)
+Received: (qmail 24118 invoked by uid 10000); 13 Nov 2019 20:19:07 -0000
+Date:   Wed, 13 Nov 2019 20:19:07 +0000
+From:   "Robin H. Johnson" <robbat2@gentoo.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Drew DeVault <sir@cmpwn.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        " Rafael J. Wysocki" <rafael@kernel.org>,
+        ~sircmpwn/public-inbox@lists.sr.ht, robbat2@gentoo.org
+Subject: Re: [PATCH v2] firmware loader: log path to loaded firmwares
+Message-ID: <robbat2-20191113T195158-869302266Z@orbis-terrarum.net>
+References: <20191103180646.34880-1-sir@cmpwn.com>
+ <20191113005628.GT11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rPF8rPXpDlNr1aSW"
+Content-Disposition: inline
+In-Reply-To: <20191113005628.GT11244@42.do-not-panic.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 21:34:44 +0800
-yu kuai <yukuai3@huawei.com> wrote:
 
-> debugfs_remove_recursive uses list_empty to judge weather a dentry has
-> any subdentry or not. This can lead to infinite loop when any subdir is in
-> use.
-> 
-> The problem was discoverd by the following steps in the console.
-> 1. use debugfs_create_dir to create a dir and multiple subdirs(insmod);
-> 2. cd to the subdir with depth not less than 2;
-> 3. call debugfs_remove_recursive(rmmod).
-> 
-> After removing the subdir, the infinite loop is triggered bucause
+--rPF8rPXpDlNr1aSW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  s/bucause/because/
+On Wed, Nov 13, 2019 at 12:56:28AM +0000, Luis Chamberlain wrote:
+> On Sun, Nov 03, 2019 at 01:06:46PM -0500, Drew DeVault wrote:
+> >=20
+> > This is useful for users who are trying to identify the firmwares in use
+> > on their system.
+> >=20
+> > Signed-off-by: Drew DeVault <sir@cmpwn.com>
+> > ---
+> > v2 uses dev_dbg instead of printk(KERN_INFO)
+> >=20
+> >  drivers/base/firmware_loader/main.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmwar=
+e_loader/main.c
+> > index bf44c79beae9..2537da43a572 100644
+> > --- a/drivers/base/firmware_loader/main.c
+> > +++ b/drivers/base/firmware_loader/main.c
+> > @@ -504,6 +504,7 @@ fw_get_filesystem_firmware(struct device *device, s=
+truct fw_priv *fw_priv,
+> >  					 path);
+> >  			continue;
+> >  		}
+> > +		dev_dbg(device, "Loading firmware from %s\n", path);
+>=20
+> Because this is dev_dbg() I'm willing to consider it, so that its not
+> always enabled. However its not in the right place, the code path you
+> are addressing is only for direct filesystem lookups. If that fails
+> some systems do a fallback call out to userspace. To cover both cases,
+> you want it at the end of _request_firmware() on the success path. Can
+> you send a new patch?
+As the author of a separate patch that predates Drew's patch (originally
+in July, with a later version sent to the list last week):
+https://pastebin.com/Tf09x3ed (v1)
+https://lkml.org/lkml/2019/11/7/800 (v2)
 
-> debugfs_remove_recursive uses list_empty to judge if the current dir
-> doesn't have any subdentry, if so, remove the current dir and which
-> will never happen.
-> 
-> Fix the problem by using simple_empty instead of list_empty.
-> 
-> Fixes: 776164c1faac ('debugfs: debugfs_remove_recursive() must not rely on list_empty(d_subdirs)')
-> Reported-by: chenxiang66@hisilicon.com
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->  fs/debugfs/inode.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-> index 7b975db..42b28acc 100644
-> --- a/fs/debugfs/inode.c
-> +++ b/fs/debugfs/inode.c
-> @@ -773,8 +773,10 @@ void debugfs_remove_recursive(struct dentry *dentry)
->  		if (!simple_positive(child))
->  			continue;
->  
-> -		/* perhaps simple_empty(child) makes more sense */
-> -		if (!list_empty(&child->d_subdirs)) {
-> +		/* use simple_empty to prevent infinite loop when any
-> +		 * subdentry of child is in use
-> +		 */
+This already uses the _request_firmware path to fire after the firmware
+was successfully loaded. The commit message is also specific that it's
+to cover early boot situations, before UEVENT can be logged.
 
-Nit, multi-line comments should be of the form:
+dev_dbg means that the loglevel must have been set to debug BEFORE the
+firmware load took place, but this means either setting system-wide
+debug spam or requiring debugfs, which is annoying for boot stuff (not
+impossible, just annoying).
 
-	/*
-	 * comment line 1
-	 * comment line 2
-	 */
+I have two uses cases overall:
+- log so you know exactly when it's loaded successfully (great if
+  loading a firmware causes your system to lock up a few seconds later)
+- at some point in the future, being able to query what firmware was
+  loaded in the past, and esp. exactly what version/data was in that
+  firmware file.
 
-Not
+--=20
+Robin Hugh Johnson
+Gentoo Linux: Dev, Infra Lead, Foundation Treasurer
+E-Mail   : robbat2@gentoo.org
+GnuPG FP : 11ACBA4F 4778E3F6 E4EDF38E B27B944E 34884E85
+GnuPG FP : 7D0B3CEB E9B85B1F 825BCECF EE05E6F6 A48F6136
 
-	/* comment line 1
-	 * comment line 2
-	 */
+--rPF8rPXpDlNr1aSW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It's known that the networking folks like that method, but it's not
-acceptable anywhere outside of networking.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+Comment: Robbat2 @ Orbis-Terrarum Networks - The text below is a digital signature. If it doesn't make any sense to you, ignore it.
 
-> +		if (!simple_empty(child)) {
+iQKTBAABCgB9FiEEveu2pS8Vb98xaNkRGTlfI8WIJsQFAl3MZTlfFIAAAAAALgAo
+aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldEJE
+RUJCNkE1MkYxNTZGREYzMTY4RDkxMTE5Mzk1RjIzQzU4ODI2QzQACgkQGTlfI8WI
+JsSwNg//XS4T7SmC0xiblewKz/No+63tlObI8ZHVxPz0Pud6g2Jew1yXKg3cDvaX
+P8bZwznqQUB4XrogsLKItf+tc4e+UsLHy+TNg891oPkcPv39aGcq/u695PaYy6AX
+bMMK6C/q3L4wzXG46h0OZ75FXpGFuVWn7xrEConkVCjXF0AZ99Pk7UVcXCpTEsUG
+Tc2vquofoqosUbc2MScfuCwNUvecgJB8RTqA8hrmTppgjgqoIxAUs3b9FLfzJAa0
+bgOAmvQiYCe/Vj2iMfekY28jUQ0KCYh67c28R5ruQF83XsfXvDUasCuzr3P5c2bE
+lWEDed2LGjqhc7gf1rG0HHoxMIw5vIQ0n8k7iRd+dEdFLsoIf5EGRQO6yCnTKWC9
+JHfY0spuvyLygJHfc9rql8AveXhgvE7tFFQvKKdEXtKrXfkbw6UGp8/oTigKWFw8
+ovRhAv2NTDcub3U7Q1A4gY8/CvR8vX9fnEV0kYCEt63fCX7aTov03RHrEvC5fK4t
+RAEfQ2zLQEMETqT4wTLp/dGvnO1F7YkP2cV+eZJig32OWdM+qhZ3M4XqMMwvfhbb
+JdY9w5Z/TibMCCfhQ5HBVMihURvtZ+k3MtMc2vTAjNW8HaoKk5L2k4qYYrJwk2tb
+/ZSyLEO6geBnzVmcgx4txdz28uJQbj9gzvEuZE7xazkjAV6MHrU=
+=tbEk
+-----END PGP SIGNATURE-----
 
-Have you tried this with lockdep enabled? I'm thinking that you might
-get a splat with holding parent->d_lock and simple_empty(child) taking
-the child->d_lock.
-
--- Steve
-
-
->  			spin_unlock(&parent->d_lock);
->  			inode_unlock(d_inode(parent));
->  			parent = child;
-
+--rPF8rPXpDlNr1aSW--
