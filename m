@@ -2,108 +2,103 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6470BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83A6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD3F222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C/6sf+uZ"
+	by mail.kernel.org (Postfix) with ESMTP id BBE52222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573611428;
+	bh=PP0VoN0gfOnQZCCZJ3I7rIYd7iS6ObVjGVuvpnxLw1A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PWC9yGaHygvjCT9H2GqCDT3mbF2yW6R5TcoOlNeDGkzyHHjIwDlT3nB3tvEuMBH6q
+	 EmxwVhwejsrJ0y5N4OLdg0DZIFfnnJ+Jjk9YUKkTsTxKsbjUR57KdoVsE1U/v3UxmZ
+	 xXoySeh5eCjDJqLwA9WYWqpMAhg1fPZtaGi+5L8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfKMCRA (ORCPT
+        id S1729412AbfKMB4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:17:00 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17146 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728471AbfKMCQ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:16:57 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcb67610000>; Tue, 12 Nov 2019 18:16:01 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 12 Nov 2019 18:16:57 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 18:16:57 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
- 2019 02:16:56 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 13 Nov 2019 02:16:56 +0000
-Received: from henryl-tu10x.nvidia.com (Not Verified[10.19.109.97]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dcb67970000>; Tue, 12 Nov 2019 18:16:56 -0800
-From:   Henry Lin <henryl@nvidia.com>
-CC:     Henry Lin <henryl@nvidia.com>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] usb-audio: not submit urb for stopped endpoint
-Date:   Wed, 13 Nov 2019 10:14:19 +0800
-Message-ID: <20191113021420.13377-1-henryl@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191112065108.7766-1-henryl@nvidia.com>
-References: <20191112065108.7766-1-henryl@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 12 Nov 2019 20:56:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729306AbfKMBzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:53 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89E442246D;
+        Wed, 13 Nov 2019 01:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573610153;
+        bh=PP0VoN0gfOnQZCCZJ3I7rIYd7iS6ObVjGVuvpnxLw1A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zFLrbfK1aIfLQHmQkSpWLIn/X4SB/lWmpnRfp18hK9rJfZhi+zhTZbe6pI0R9r8WL
+         jAhXltmWavyfSEP/Uc3vIhryccgpjXWMkHqea4i63je/le0B/bMaPTSYiZaeoaKLZP
+         Igaz4w3elOLn4xr6i/Pbdr16+BsKhKqfY+cbToZ8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 197/209] mac80211: minstrel: fix using short preamble CCK rates on HT clients
+Date:   Tue, 12 Nov 2019 20:50:13 -0500
+Message-Id: <20191113015025.9685-197-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
+References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573611361; bh=Tujpg7WZBoOThKGX8MEAml/VB3Yc83jertZP/WdKXl0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=C/6sf+uZj2gOMh/+HER/DbH5WOlnwdrXdu1S2kYhz3Kqc89ZAAQhoOb5k85XqhhvC
-         zWY60Wd/cdyrsszASUdpJmdmOJSLpmnCE0HOHB6Ld1KH2aa40KJPP+kqE/9dgPOy4M
-         S3B0nML7ZS27bkJ0DiQjuH0X+ohSrp6o5a/aOScVdxj5xK4NMzlFpOdliYYVriki45
-         pMn76QfDjqIX+6NGPq5rlRl69ZjxGym+QgaAoslIKGQAK6zrDvr44DA311pJqXoPQc
-         I3iyVcxdgyj0hRlIq0JD7pk+NawUf0zX1SsrG/rsrXCN5+KCPP3kXCwn8/4eACPeZ8
-         XMwUJvgDueUEQ==
-To:     unlisted-recipients:; (no To-header on input)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While output urb's snd_complete_urb() is executing, calling
-prepare_outbound_urb() may cause endpoint stopped before
-prepare_outbound_urb() returns and result in next urb submitted
-to stopped endpoint. usb-audio driver cannot re-use it afterwards as
-the urb is still hold by usb stack.
+From: Felix Fietkau <nbd@nbd.name>
 
-This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
-to let snd_complete_urb() know the endpoint already stopped and does not
-submit next urb. Below kind of error will be fixed:
+[ Upstream commit 37439f2d6e43ae79e22be9be159f0af157468f82 ]
 
-[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
-[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
+mi->supported[MINSTREL_CCK_GROUP] needs to be updated
+short preamble rates need to be marked as supported regardless of
+whether it's currently enabled. Its state can change at any time without
+a rate_update call.
 
-Signed-off-by: Henry Lin <henryl@nvidia.com>
+Fixes: 782dda00ab8e ("mac80211: minstrel_ht: move short preamble check out of get_rate")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/endpoint.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/mac80211/rc80211_minstrel_ht.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
-index a2ab8e8d3a93..4a9a2f6ef5a4 100644
---- a/sound/usb/endpoint.c
-+++ b/sound/usb/endpoint.c
-@@ -388,6 +388,9 @@ static void snd_complete_urb(struct urb *urb)
- 		}
+diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
+index 67ebdeaffbbc8..ae1a180d2eee3 100644
+--- a/net/mac80211/rc80211_minstrel_ht.c
++++ b/net/mac80211/rc80211_minstrel_ht.c
+@@ -1132,7 +1132,6 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
+ 	struct ieee80211_mcs_info *mcs = &sta->ht_cap.mcs;
+ 	u16 sta_cap = sta->ht_cap.cap;
+ 	struct ieee80211_sta_vht_cap *vht_cap = &sta->vht_cap;
+-	struct sta_info *sinfo = container_of(sta, struct sta_info, sta);
+ 	int use_vht;
+ 	int n_supported = 0;
+ 	int ack_dur;
+@@ -1258,8 +1257,7 @@ minstrel_ht_update_caps(void *priv, struct ieee80211_supported_band *sband,
+ 	if (!n_supported)
+ 		goto use_legacy;
  
- 		prepare_outbound_urb(ep, ctx);
-+		/* can be stopped during prepare callback */
-+		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
-+			goto exit_clear;
- 	} else {
- 		retire_inbound_urb(ep, ctx);
- 		/* can be stopped during retire callback */
+-	if (test_sta_flag(sinfo, WLAN_STA_SHORT_PREAMBLE))
+-		mi->cck_supported_short |= mi->cck_supported_short << 4;
++	mi->supported[MINSTREL_CCK_GROUP] |= mi->cck_supported_short << 4;
+ 
+ 	/* create an initial rate table with the lowest supported rates */
+ 	minstrel_ht_update_stats(mp, mi);
 -- 
-2.17.1
+2.20.1
 
