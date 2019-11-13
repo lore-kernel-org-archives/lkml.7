@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F5EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4868C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49634222C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBA7222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4LjTSfE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/0dR930"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfKMGid (ORCPT
+        id S1727171AbfKMGjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:38:33 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43387 "EHLO
+        Wed, 13 Nov 2019 01:39:00 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38173 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfKMGic (ORCPT
+        with ESMTP id S1725858AbfKMGjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:38:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id l24so716232pgh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 22:38:31 -0800 (PST)
+        Wed, 13 Nov 2019 01:39:00 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 15so736484pgh.5;
+        Tue, 12 Nov 2019 22:39:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=yXikumjy+JcdsMguaz7purxBZ6df2n0Pz7z+WJDAYNc=;
-        b=P4LjTSfEMQHW293vKti2IkTAd0W1xhJ+X+xNzCRKIoBrvjSkWTETRgGVIn3naIzkO4
-         awJ4PynJ4LBaOuqbL8WcWi7FrkYtgm40DkT81Q5u7IwerC58SO/R1MOulDzw+bxrGCJZ
-         63JgQ18IdCrfEHnBvIPjW697A9d3LgzR0DxuTCMAir0bzBl2ODkybx14IRNwKb8QlIZ2
-         j+0nnm8gXfNDl726+IFSGX8rynqlvGFCrLgXJtz0tNjrbedEZEW11X7KFJKccbZyNe0L
-         c25ZUldKo/ZIRF5jhmNZNFAR40tloz432S5uEUeiHmugoctaL09i1z+yD8Uo1org2IHo
-         LmIg==
+        bh=tB9AYDSxsTqJPT8wcekDci2iu2m/7gu/sjqNAn149fQ=;
+        b=C/0dR930MA1kbc8j6GjGGV6Ufam4ZkttBfD6R4Eajv5UCZ3Kw7cyAmA5Og8ODHCmsI
+         IR7sMdsvrc8zQNYaOOTWF3U4NHZODC3pwHWm3UjoBF1LiMvWLSihuI3podvLQsBqXeeC
+         tWj4icZZ9pjdw/LROvjaNVfyZmysruFhv711j3OPSglzMUdhhYJVzvLywXaZRynJJX5F
+         SwY3mq/ZASlY745JENj7y2O00afbNjQuC7JAxQPVHNlRWBnYrnJr4k3GTMznAisTLTyX
+         EDmfbgxeyuUruw+aXGr1NKv01afC6NWTyq0yynmGHm5X7j+9UgMcr3s6deoDw5kVeJLV
+         s5wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=yXikumjy+JcdsMguaz7purxBZ6df2n0Pz7z+WJDAYNc=;
-        b=nxaSXdXtQ2Q2fw8yaCVfqXlRdPPetgYY5PtHtGCxuIETzXv7BxjwvEZB6ifm6QQ7IJ
-         qQFxIH0GyRi91qmLf3Iabu/rtYbJvBl2kEft2wlvpNsCVCOQt/2Td4+wRJIzIPnLxV8e
-         guVbhN9QkKtYQNgEAk9zvrSGbxUKfvuy5CZF8hqq3L4RFW6A5UNhCqrNUwgXtqcoupXP
-         GomZLDNoTe9cv3kdaxedAIbggjyApynbwn2kUEL5HSZOSbQYSLY1rcFi323xhb4Wrd+D
-         m3kU60kwGTksteI+/LYklbwzdCFYP+/AYoP08vkECzuNiVT8SAs7+uDHde+guIsiZJKa
-         GRGg==
-X-Gm-Message-State: APjAAAXBwMcoU0UWmctfCHjVV85opde8oS47ZY2XUiFTZ51Ez/nl/DHq
-        tRQbrv4DMPkRb2uaVxfhnH69XO05vYs=
-X-Google-Smtp-Source: APXvYqyHpZwVMfJcRsEvVNWM5VOmGVUEh2pf9ITlcZ7UQkokZ9oXJ/IexYowtmg5g+BHBj3FliZiIQ==
-X-Received: by 2002:a65:49c7:: with SMTP id t7mr1835081pgs.431.1573627111642;
-        Tue, 12 Nov 2019 22:38:31 -0800 (PST)
+        bh=tB9AYDSxsTqJPT8wcekDci2iu2m/7gu/sjqNAn149fQ=;
+        b=czSQnSMu0ZUNjx1ycMaVZNGRVRsGwYIrayHLbFs6k5DZ+4/9xxmbZ3nDv73vF6U3C+
+         k756WySViBKvmh/84ZXktSDK6MgLLwBo8Mecebb+Q06Pvcz3rAzT8rGyCNcHsxtNe19+
+         7b4q5o+aU1tCS7QpjCqfKQWNao6d/1ut9pGB5Kk2gS1uHpXBv8Os6QIR2NrXfaaINbM1
+         Damm1/JZjId6C3Hys9ZJK/I/s0dFESNmoz8TtqR0NUFVroMUzcx7y27LkdZkLdMg/wHs
+         DRuoZH1Qj8VXgSJ1UEjsyyXFWjUKaXMvyR+5mVupatxofC3si9FJFzj+YZD6csqrYq2G
+         27wA==
+X-Gm-Message-State: APjAAAWTOZSi6Ca2XA6j6cRDkhOrQ9RjtJIy8DoFiTFXX4Ka44CS0irb
+        S2FNy1ZopvNi2Z5GfpRBUp8=
+X-Google-Smtp-Source: APXvYqz//JVWdR2pTawVDPImphXVJwA/A1GaAtCQXYt0nidQlO7y/R2lkHWHwMZOhW6hEZ6OjEyX8w==
+X-Received: by 2002:a62:ab17:: with SMTP id p23mr2418010pff.116.1573627139775;
+        Tue, 12 Nov 2019 22:38:59 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id n23sm1054844pff.137.2019.11.12.22.38.27
+        by smtp.gmail.com with ESMTPSA id y138sm1310868pfb.174.2019.11.12.22.38.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 22:38:31 -0800 (PST)
+        Tue, 12 Nov 2019 22:38:59 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+Cc:     Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] platform/chrome: cros_usbpd_logger: add missed destroy_workqueue in remove
-Date:   Wed, 13 Nov 2019 14:38:21 +0800
-Message-Id: <20191113063821.8896-1-hslester96@gmail.com>
+Subject: [PATCH] rsxx: add missed destroy_workqueue calls in remove
+Date:   Wed, 13 Nov 2019 14:38:47 +0800
+Message-Id: <20191113063847.8955-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,26 +74,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to destroy workqueue in remove.
-Add the missed call to fix it.
+The driver misses calling destroy_workqueue in remove like what is done
+when probe fails.
+Add the missed calls to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/platform/chrome/cros_usbpd_logger.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/rsxx/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/chrome/cros_usbpd_logger.c b/drivers/platform/chrome/cros_usbpd_logger.c
-index 2430e8b82810..374cdd1e868a 100644
---- a/drivers/platform/chrome/cros_usbpd_logger.c
-+++ b/drivers/platform/chrome/cros_usbpd_logger.c
-@@ -224,6 +224,7 @@ static int cros_usbpd_logger_remove(struct platform_device *pd)
- 	struct logger_data *logger = platform_get_drvdata(pd);
+diff --git a/drivers/block/rsxx/core.c b/drivers/block/rsxx/core.c
+index 76b73ddf8fd7..10f6368117d8 100644
+--- a/drivers/block/rsxx/core.c
++++ b/drivers/block/rsxx/core.c
+@@ -1000,8 +1000,10 @@ static void rsxx_pci_remove(struct pci_dev *dev)
  
- 	cancel_delayed_work_sync(&logger->log_work);
-+	destroy_workqueue(logger->log_workqueue);
+ 	cancel_work_sync(&card->event_work);
  
- 	return 0;
- }
++	destroy_workqueue(card->event_wq);
+ 	rsxx_destroy_dev(card);
+ 	rsxx_dma_destroy(card);
++	destroy_workqueue(card->creg_ctrl.creg_wq);
+ 
+ 	spin_lock_irqsave(&card->irq_lock, flags);
+ 	rsxx_disable_ier_and_isr(card, CR_INTR_ALL);
 -- 
 2.23.0
 
