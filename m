@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A906FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC19C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77AED2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB7121D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611900;
-	bh=uoV+vE689AiaK2/D+SicCSmXb2xPyJ1VTO5cJn4q3Pg=;
+	s=default; t=1573611903;
+	bh=NObG4ppKYgwiPwjuxGjJCTSDOQBfWncIECXrZIt8Aws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jMoFnWW9/3HikEX+bRnfwyCKYHYTpO7Gox6onQuPwpXKoNFAng/F2n31Xw5oCp1dL
-	 YOK4AteXKBgN0zeipsrQBvpGXLVR1KaWUGI5JvSUIbWOrtUc6C2Nxl5bbib/6Ky6i7
-	 Hc19IYkOkaLwmOxChp0/Xe2aDkuDY/pQc/f0eBkQ=
+	b=IGdoRfbzj8xbHlT5tW0gbtajj5XFoTBeQtwplyJiMclsXYw5wtD+GVoOB4jZ94iCO
+	 0/ma8f5ofx2ZW4KgCrGd/hsIV0epOawuQO4nNjn96zqAfijCy97/iPSyQaZeK5pfPp
+	 luymenIPqoEqIYM2rqiYR+wd+Z3tTm/IKcKFOEsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfKMBvu (ORCPT
+        id S1730149AbfKMCZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:51:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39942 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:25:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbfKMBvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:47 -0500
+        id S1727992AbfKMBvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61BBE222D3;
-        Wed, 13 Nov 2019 01:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80ECA204EC;
+        Wed, 13 Nov 2019 01:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609907;
-        bh=uoV+vE689AiaK2/D+SicCSmXb2xPyJ1VTO5cJn4q3Pg=;
+        s=default; t=1573609909;
+        bh=NObG4ppKYgwiPwjuxGjJCTSDOQBfWncIECXrZIt8Aws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNEc9sc1GhXdCumg2SRpiQY/lAZLcNj0T5cbtFo2ZJKYZLtv0uiWrxUVtH7NQHOst
-         pHlfpIDkU4SJNi8nv7irxupum+ChqhVwND+1R7lA8SCX+IT/GILu6Ngr15v/nKEf/s
-         rSXu4hJMoTRQEGy37jqNDD+loil5wrW4ax3gjMdo=
+        b=AsBHJC9TOV/0Gb+pTbnSrwRMFAwWEDp7wSBZd4hJ6oiI1VKwo8FjjJRKO1e8TUhGn
+         JLp1kogDrkFTnj80cMZLiyCGdmgr1lajHrAcDkTx3BbjyBHjZg5MNXXPiQbCm6hqdG
+         rs8iLj6q0zklqa4s2izhke5ZsZ/CC/iZkleePYJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 058/209] ARM: dts: at91: sama5d4_xplained: fix addressable nand flash size
-Date:   Tue, 12 Nov 2019 20:47:54 -0500
-Message-Id: <20191113015025.9685-58-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 060/209] ARM: dts: at91: sama5d2_ptc_ek: fix bootloader env offsets
+Date:   Tue, 12 Nov 2019 20:47:56 -0500
+Message-Id: <20191113015025.9685-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,31 +61,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-[ Upstream commit df90fc64367ffdb6f1b5c0f0c4940d44832b0174 ]
+[ Upstream commit f602b4871c5f7ac01d37d8b285ca947ba7613065 ]
 
-sama5d4_xplained comes with a 4Gb NAND flash. Increase the rootfs
-size to match this limit.
+The offsets for the bootloader environment and its redundant partition
+were inverted. Fix the addresses to match our nand flash map available at:
+
+http://www.at91.com/linux4sam/pub/Linux4SAM/SambaSubsections//demo_nandflash_map_lnx4sam5x.png
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91-sama5d4_xplained.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-index 4b7c762d5f223..7d554b9ab27fd 100644
---- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-@@ -252,7 +252,7 @@
- 
- 						rootfs@800000 {
- 							label = "rootfs";
--							reg = <0x800000 0x0f800000>;
-+							reg = <0x800000 0x1f800000>;
+diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+index 3b1baa8605a77..2214bfe7aa205 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+@@ -92,13 +92,13 @@
+ 							reg = <0x40000 0xc0000>;
  						};
- 					};
- 				};
+ 
+-						bootloaderenv@0x100000 {
+-							label = "bootloader env";
++						bootloaderenvred@0x100000 {
++							label = "bootloader env redundant";
+ 							reg = <0x100000 0x40000>;
+ 						};
+ 
+-						bootloaderenvred@0x140000 {
+-							label = "bootloader env redundant";
++						bootloaderenv@0x140000 {
++							label = "bootloader env";
+ 							reg = <0x140000 0x40000>;
+ 						};
+ 
 -- 
 2.20.1
 
