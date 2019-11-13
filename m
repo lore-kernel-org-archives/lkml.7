@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3991C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A906FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB642067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77AED2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611893;
-	bh=4NfQ9fxpNP+h0TZLuSv/Z7hVRrKUXXgL0ky5mqRXjFU=;
+	s=default; t=1573611900;
+	bh=uoV+vE689AiaK2/D+SicCSmXb2xPyJ1VTO5cJn4q3Pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CC9++p7cdJG0MIVDWusqyuI8oYBU6xO4Vs72wSsrXG6ynT5fj6W3OwW2nE6e0vGRd
-	 sdFDpRHl3poGzv3HuaRX0v5N3OyElJoHV5eNLTQ/YevmGbojw1oGK4VTLVlSm2+LtV
-	 dIaZcYk2bh+hOCuTyGJ88GBxkWG1MLewcE/kfsxw=
+	b=jMoFnWW9/3HikEX+bRnfwyCKYHYTpO7Gox6onQuPwpXKoNFAng/F2n31Xw5oCp1dL
+	 YOK4AteXKBgN0zeipsrQBvpGXLVR1KaWUGI5JvSUIbWOrtUc6C2Nxl5bbib/6Ky6i7
+	 Hc19IYkOkaLwmOxChp0/Xe2aDkuDY/pQc/f0eBkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbfKMCYx (ORCPT
+        id S1728020AbfKMBvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:24:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40146 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:51:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbfKMBvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:55 -0500
+        id S1727994AbfKMBvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91CA1222D3;
-        Wed, 13 Nov 2019 01:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61BBE222D3;
+        Wed, 13 Nov 2019 01:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609914;
-        bh=4NfQ9fxpNP+h0TZLuSv/Z7hVRrKUXXgL0ky5mqRXjFU=;
+        s=default; t=1573609907;
+        bh=uoV+vE689AiaK2/D+SicCSmXb2xPyJ1VTO5cJn4q3Pg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pJF1SqHKAAEdsYnxvkwXyHWQzb813BT/oA4euSH4sHMrZJXkI/Mb9whprhAO3jzRp
-         t5xL8C0PT+9QBaLou2R4SNE4VdnHy6iURfxPKmqGcnz0OnUIkmpfO9NAYV39eBjsH3
-         mpLQHoHpnygMGc9PcwRmgNwy7doYg3rmOONzXTp4=
+        b=UNEc9sc1GhXdCumg2SRpiQY/lAZLcNj0T5cbtFo2ZJKYZLtv0uiWrxUVtH7NQHOst
+         pHlfpIDkU4SJNi8nv7irxupum+ChqhVwND+1R7lA8SCX+IT/GILu6Ngr15v/nKEf/s
+         rSXu4hJMoTRQEGy37jqNDD+loil5wrW4ax3gjMdo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 063/209] tools: PCI: Fix compilation warnings
-Date:   Tue, 12 Nov 2019 20:47:59 -0500
-Message-Id: <20191113015025.9685-63-sashal@kernel.org>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 058/209] ARM: dts: at91: sama5d4_xplained: fix addressable nand flash size
+Date:   Tue, 12 Nov 2019 20:47:54 -0500
+Message-Id: <20191113015025.9685-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,75 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-[ Upstream commit fef31ecaaf2c5c54db85b35e893bf8abec96b93f ]
+[ Upstream commit df90fc64367ffdb6f1b5c0f0c4940d44832b0174 ]
 
-Current compilation produces the following warnings:
+sama5d4_xplained comes with a 4Gb NAND flash. Increase the rootfs
+size to match this limit.
 
-tools/pci/pcitest.c: In function 'run_test':
-tools/pci/pcitest.c:56:9: warning: unused variable 'time'
-[-Wunused-variable]
-  double time;
-         ^~~~
-tools/pci/pcitest.c:55:25: warning: unused variable 'end'
-[-Wunused-variable]
-  struct timespec start, end;
-                         ^~~
-tools/pci/pcitest.c:55:18: warning: unused variable 'start'
-[-Wunused-variable]
-  struct timespec start, end;
-                  ^~~~~
-tools/pci/pcitest.c:146:1: warning: control reaches end of non-void
-function [-Wreturn-type]
- }
- ^
-
-Fix them:
- - remove unused variables
- - change function return from int to void, since it's not used
-
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-[lorenzo.pieralisi@arm.com: rewrote the commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/pci/pcitest.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index af146bb03b4df..ec4d51f3308b8 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -23,7 +23,6 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <sys/ioctl.h>
--#include <time.h>
- #include <unistd.h>
+diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+index 4b7c762d5f223..7d554b9ab27fd 100644
+--- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+@@ -252,7 +252,7 @@
  
- #include <linux/pcitest.h>
-@@ -48,17 +47,15 @@ struct pci_test {
- 	unsigned long	size;
- };
- 
--static int run_test(struct pci_test *test)
-+static void run_test(struct pci_test *test)
- {
- 	long ret;
- 	int fd;
--	struct timespec start, end;
--	double time;
- 
- 	fd = open(test->device, O_RDWR);
- 	if (fd < 0) {
- 		perror("can't open PCI Endpoint Test device");
--		return fd;
-+		return;
- 	}
- 
- 	if (test->barnum >= 0 && test->barnum <= 5) {
+ 						rootfs@800000 {
+ 							label = "rootfs";
+-							reg = <0x800000 0x0f800000>;
++							reg = <0x800000 0x1f800000>;
+ 						};
+ 					};
+ 				};
 -- 
 2.20.1
 
