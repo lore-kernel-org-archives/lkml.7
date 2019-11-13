@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E09C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FCDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DB8222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB1E222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="f5dspnA+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="D3lCwSqQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfKMMZG (ORCPT
+        id S1727402AbfKMMZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:25:06 -0500
+        Wed, 13 Nov 2019 07:25:10 -0500
 Received: from mail-eopbgr140055.outbound.protection.outlook.com ([40.107.14.55]:43648
         "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727089AbfKMMZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 07:25:04 -0500
+        id S1727211AbfKMMZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 07:25:07 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e1OebdPVZPovdkXySKmAOqgundWJyXzhOcRm64Uk4h0hL3WO2rOJMgZbDsBjMTzTeq+S0CuUzlR+nf7uVvKC5n3UNomxEZ6puXV/wmuCkhc7GEd+mG/BIL8blC90NB2LNm4xC0G0d3HLTbVKMzT7UjcGhe6rjvomwV74wUtGiIh4H5VF16QWfo7LHZKgVp2QamoZX3MtB5CPcHARvWx2RaExGnVjZhUMLoGAjFV3XwQbBwdmBiFTXresiNsPyRiwO3369y+EdeRvylK9ik45LdsDFsxCsSmCCuuM89tD38XKZwq3dk3lAymtTsj0Nmqa6rj5o494KHr/tfeMBB0HjA==
+ b=JPqrVTqoWRwCk/+hwWC/HCXdi0l4sDJ+lJ/uKkcwEdNqIkr+YZq+Qxmp+eI40GHpD3BrzFNsY3WdnBAZigtBBlwaO+d4Bpcv/33q7XMNaDtnz4AzcCYyoeR8lO8DIBj67R7SFXh96eOHtMdbje69Y2e4lUljta0QbMh5SOhiw4bc+/z7WFCRmvPIZubOTwFCXVjMzzbC+qVFwqzEMNctxs6ftgoK4yPCxuOYYoPnVgQOPGw5XxPuvx+eL6M2CxnAYc684DNvQyMUfW6VA3aajGPyW8fHB8YxrmuIqBRYTjFCPNo3z5talVKZ+3KHEcqZk15K1wqSQySnL/d9sF8HQA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cYkqeuGjr9wYrGN5dDVfenme5Bs+Sb7EnpApwRwUb0M=;
- b=hzjYuoyXwRnskou/eBAYGhX/GzvwSCc3MJ3w/T7V1xqcbMnc+S38E7EyB1L7Zt/YXXR4IIQkyUHCINJk3vQ0C1QGRx7YhLb4liZtGZ44+joiTnM5cMyHCgyYumY/PR+Mu1U4+evVhn0Q+wT4c24yaKPe8YsKW63eX4eM9/8UMla4gPGooEyuKTlOLeOf7/469Gm88yQxspECQl+SCB7K/HUKsEq28yCoM5b7iep0OCqSEYMEsyv1dCVBVrXUF+Bytg+DxwEdBx4bmP0Qh1eSBe7A4/voGCZd9NiuY1Ip9H/1X8iBntyi18YvX0TZSgucxqptCHpFFqtUi9RyxRVUzg==
+ bh=P+vaRnofyPqmOegx40qWQhu07WoA/qgeBw2RKBJeH7E=;
+ b=Hr0YsjzHqTtHwPz5weMCJYWrkYwMES/9mjiG3adKu6JcrRWoqeMfInJtupLfIC2pifobmSPT/dMES1VssG4CpHXxk7Knyd9kAxvzE5rTRMH49cNahY5ZU8gTQYXH295TeFXlosh5bQYXAi/j6qU9k4pDBbzkwhSKCnJvLcxyle4WdAbX2J+6pncw5nCQTFA23bL4iKhdB4Q1AzWrWK+ST46wkHEBekvn6X6OMBGIzcG+yxSdiTA9x7mkTyvqAXWwCK4HBhEZww+r7NUNJGzv18BOLQxt8JcbLgjVpn45zVTJ/skt4OaS7XR7Czb5AVkiMd5H46NBC/EkEynzW/3jnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cYkqeuGjr9wYrGN5dDVfenme5Bs+Sb7EnpApwRwUb0M=;
- b=f5dspnA+dCNlD4BBNJNP9exLSS0Ll9cs5N9ifWC2XILrShlhuH+y6lb8CjSxY++v6c7gFiIs/Sdrb+tAnQ3Gt5Ba4RXOKqTHnmPhGvqEcvvpVu/p/5Qz1bY0YhdbQQs2LXRFklefTe9YO/FKx/gAQi2YBTRwJleNpFYtTVhVgm0=
+ bh=P+vaRnofyPqmOegx40qWQhu07WoA/qgeBw2RKBJeH7E=;
+ b=D3lCwSqQAb0wZsUIIkVekjWmORagiTx6m3dl/N6ELrcFI1R9Y6ntN3/MZ3IBCtEJJGmCs1JaK141DsRTGeus3uQhSgwz9yWbFY0Dwqc5y0kruDw6nOg0U4G86BwBaPrX0WcRxvUO+88/RYhN4XNDxcIhHEqUXxx4GO0ZbFTO1sQ=
 Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
  VI1PR04MB6142.eurprd04.prod.outlook.com (20.179.27.138) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.25; Wed, 13 Nov 2019 12:24:19 +0000
+ 15.20.2430.25; Wed, 13 Nov 2019 12:24:24 +0000
 Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
  ([fe80::71d2:55b3:810d:c75b]) by VI1PR04MB5134.eurprd04.prod.outlook.com
  ([fe80::71d2:55b3:810d:c75b%7]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
- 12:24:19 +0000
+ 12:24:24 +0000
 From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
 To:     "hch@lst.de" <hch@lst.de>,
         "robin.murphy@arm.com" <robin.murphy@arm.com>,
@@ -60,13 +60,12 @@ CC:     Leo Li <leoyang.li@nxp.com>,
         Madalin Bucur <madalin.bucur@nxp.com>,
         Camelia Alexandra Groza <camelia.groza@nxp.com>,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v3 1/4] dma-mapping: introduce new dma unmap and sync api
+Subject: [PATCH v3 4/4] dpaa2_eth: use new unmap and sync dma api variants
+Thread-Topic: [PATCH v3 4/4] dpaa2_eth: use new unmap and sync dma api
  variants
-Thread-Topic: [PATCH v3 1/4] dma-mapping: introduce new dma unmap and sync api
- variants
-Thread-Index: AQHVmh1FVruaxGPRC0WPLuJ8uvQXog==
-Date:   Wed, 13 Nov 2019 12:24:19 +0000
-Message-ID: <20191113122407.1171-2-laurentiu.tudor@nxp.com>
+Thread-Index: AQHVmh1JgfD4RpohtUqf48sTd7I87w==
+Date:   Wed, 13 Nov 2019 12:24:24 +0000
+Message-ID: <20191113122407.1171-5-laurentiu.tudor@nxp.com>
 References: <20191113122407.1171-1-laurentiu.tudor@nxp.com>
 In-Reply-To: <20191113122407.1171-1-laurentiu.tudor@nxp.com>
 Accept-Language: en-US
@@ -83,30 +82,30 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [89.37.124.34]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 877b6c57-c99c-4b33-81c6-08d768346813
+x-ms-office365-filtering-correlation-id: 6168649c-f078-487f-b96e-08d768346b5e
 x-ms-traffictypediagnostic: VI1PR04MB6142:|VI1PR04MB6142:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB61420FC8086434DC4C7D6719EC760@VI1PR04MB6142.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
+x-microsoft-antispam-prvs: <VI1PR04MB61421E49190338F9757E0D14EC760@VI1PR04MB6142.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
 x-forefront-prvs: 0220D4B98D
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(366004)(189003)(199004)(6486002)(66066001)(486006)(446003)(110136005)(86362001)(6436002)(44832011)(5660300002)(54906003)(2906002)(305945005)(476003)(14454004)(2201001)(6512007)(186003)(3846002)(11346002)(316002)(6116002)(66946007)(2616005)(7736002)(256004)(14444005)(66556008)(66446008)(99286004)(52116002)(76176011)(6636002)(36756003)(64756008)(25786009)(2501003)(386003)(71190400001)(6506007)(478600001)(1076003)(8936002)(71200400001)(26005)(50226002)(102836004)(81156014)(81166006)(4326008)(66476007)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6142;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: x845+H7+YZBFm/kN8BOCzSUG2qB62NISJ7zdWh8nIydsuVF96WZO1Mt8/OWpZdyVbCFygA3C0HLAwMckzSeMlYROUhNBezz0BW4kdn69kXs0IQXAJ4alhpXLhM/J7U39DMtKwPfaQ2aZn7TpdFyfCVB3MhW4tefl+nYReBEjTaCWA8/Nu0O3uiB3bYhfi5IqGHQLd5gZP9KyIErJvk0SGbIBL21P0jElEiTIueiqnCSuLhD0sxlnml403HZtLIFsM3IpL9XBMmdzCmccwjHU1n61AbUeVTLtacS+BxAFbizGZ5nVuS89AaMRVvEf6hHosfb6SBC1tqttEzzG94ekhB1XsPKrGLJhTvgEmvNURdsZ1TW4ToyCfGa8p6Ppy1rMK+0NUunP4/ME6wma0DMrtRo102RvjA2MPz18/hXLneeZsFa/1V9/IIzHFn3wogc8
+x-microsoft-antispam-message-info: BUCNPXAPdEJCJ+lPN70DLFOoCL+0oPDPKwNpHHJ90fBQLzfWOI5xieB29ekIsnUQKkVHX7lETKs2+rNRuoqW4rRih+rIKd0lBpTwdTu3W4yl4DjEKm3gca3mMBhO5LqY2x4Oo7aC9jbbLKY2U+FuUA8tIQ/+RV7+oyZUaTfxZM581e4bin1QANMjsdmHtDBUr0sGCXs9Y5PGEKLa8Iu7dS9EMIbmcBJ6pK78HpZeJFV+ApKh5rUWBNnbLA+3BMQe9uecm0oCuuKovqgLdEnVcqpXMcQs/iCuT8dhiC+cqSDyHL1/xjyMnIp4GUY/1wngRCa3Imq9gLZwgVRRJ7tRxBYD/djEzlRUEAVxwXJYtoj9ahNDuvBSEbUQxN5qbfwGUlrUnnWIfQ9t/ya80OcgvV96+IbN4VionMo0pZg85kP7DBQXfcM4m9QImL1Bd5kF
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4EC7A97EFE68D442962C66A49DBE335E@eurprd04.prod.outlook.com>
+Content-ID: <3D1B4AA2386E4A4192091C84DA8A635F@eurprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 877b6c57-c99c-4b33-81c6-08d768346813
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 12:24:19.6020
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6168649c-f078-487f-b96e-08d768346b5e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 12:24:24.8196
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b0EUCii+Tsvqr6r9dfqKv/eGpRzPl9dVaJ9E1l/kugH7iydcJq1i75JfEg9qFJJRvF7p2UxVx+MRFbdO5AfUaA==
+X-MS-Exchange-CrossTenant-userprincipalname: lGcX8Bne2FcSZSvqS7FIaELmFRcjHreqFBpRqNZcrStg+cXdUORURBEHvP/TAG0QliSoqnr1kmVtE5XwxaIPnQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -115,196 +114,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Introduce a few new dma unmap and sync variants that, on top of the
-original variants, return the virtual address corresponding to the
-input dma address. Additionally, provide an api that can be used to
-check at runtime if these variants are actually available.
-In order to implement them, a new dma map op is added and used:
-    void *get_virt_addr(dev, dma_handle);
-It does the actual conversion of an input dma address to the output
-virtual address.
+Convert this driver to usage of the newly introduced dma unmap and
+sync DMA APIs. This will get rid of the unsupported direct usage of
+iommu_iova_to_phys() API.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- include/linux/dma-mapping.h | 45 +++++++++++++++++++++++++++++++
- kernel/dma/mapping.c        | 53 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 98 insertions(+)
+ .../net/ethernet/freescale/dpaa2/dpaa2-eth.c  | 43 ++++++++-----------
+ .../net/ethernet/freescale/dpaa2/dpaa2-eth.h  |  1 -
+ 2 files changed, 18 insertions(+), 26 deletions(-)
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 4a1c4fca475a..0940bd75df8e 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -132,6 +132,7 @@ struct dma_map_ops {
- 	u64 (*get_required_mask)(struct device *dev);
- 	size_t (*max_mapping_size)(struct device *dev);
- 	unsigned long (*get_merge_boundary)(struct device *dev);
-+	void *(*get_virt_addr)(struct device *dev, dma_addr_t dma_handle);
- };
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net=
+/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 19379bae0144..6b941b753106 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -29,16 +29,6 @@ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_AUTHOR("Freescale Semiconductor, Inc");
+ MODULE_DESCRIPTION("Freescale DPAA2 Ethernet Driver");
 =20
- #define DMA_MAPPING_ERROR		(~(dma_addr_t)0)
-@@ -442,6 +443,13 @@ static inline int dma_mapping_error(struct device *dev=
-, dma_addr_t dma_addr)
- 	return 0;
+-static void *dpaa2_iova_to_virt(struct iommu_domain *domain,
+-				dma_addr_t iova_addr)
+-{
+-	phys_addr_t phys_addr;
+-
+-	phys_addr =3D domain ? iommu_iova_to_phys(domain, iova_addr) : iova_addr;
+-
+-	return phys_to_virt(phys_addr);
+-}
+-
+ static void validate_rx_csum(struct dpaa2_eth_priv *priv,
+ 			     u32 fd_status,
+ 			     struct sk_buff *skb)
+@@ -85,9 +75,9 @@ static void free_rx_fd(struct dpaa2_eth_priv *priv,
+ 	sgt =3D vaddr + dpaa2_fd_get_offset(fd);
+ 	for (i =3D 1; i < DPAA2_ETH_MAX_SG_ENTRIES; i++) {
+ 		addr =3D dpaa2_sg_get_addr(&sgt[i]);
+-		sg_vaddr =3D dpaa2_iova_to_virt(priv->iommu_domain, addr);
+-		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
+-			       DMA_BIDIRECTIONAL);
++		sg_vaddr =3D dma_unmap_single_desc(dev, addr,
++						 DPAA2_ETH_RX_BUF_SIZE,
++						 DMA_BIDIRECTIONAL);
+=20
+ 		free_pages((unsigned long)sg_vaddr, 0);
+ 		if (dpaa2_sg_is_final(&sgt[i]))
+@@ -143,9 +133,9 @@ static struct sk_buff *build_frag_skb(struct dpaa2_eth_=
+priv *priv,
+=20
+ 		/* Get the address and length from the S/G entry */
+ 		sg_addr =3D dpaa2_sg_get_addr(sge);
+-		sg_vaddr =3D dpaa2_iova_to_virt(priv->iommu_domain, sg_addr);
+-		dma_unmap_page(dev, sg_addr, DPAA2_ETH_RX_BUF_SIZE,
+-			       DMA_BIDIRECTIONAL);
++		sg_vaddr =3D dma_unmap_single_desc(dev, sg_addr,
++						 DPAA2_ETH_RX_BUF_SIZE,
++						 DMA_BIDIRECTIONAL);
+=20
+ 		sg_length =3D dpaa2_sg_get_len(sge);
+=20
+@@ -210,9 +200,9 @@ static void free_bufs(struct dpaa2_eth_priv *priv, u64 =
+*buf_array, int count)
+ 	int i;
+=20
+ 	for (i =3D 0; i < count; i++) {
+-		vaddr =3D dpaa2_iova_to_virt(priv->iommu_domain, buf_array[i]);
+-		dma_unmap_page(dev, buf_array[i], DPAA2_ETH_RX_BUF_SIZE,
+-			       DMA_BIDIRECTIONAL);
++		vaddr =3D dma_unmap_single_desc(dev, buf_array[i],
++					      DPAA2_ETH_RX_BUF_SIZE,
++					      DMA_BIDIRECTIONAL);
+ 		free_pages((unsigned long)vaddr, 0);
+ 	}
  }
+@@ -369,9 +359,8 @@ static void dpaa2_eth_rx(struct dpaa2_eth_priv *priv,
+ 	/* Tracing point */
+ 	trace_dpaa2_rx_fd(priv->net_dev, fd);
 =20
-+static inline bool dma_can_unmap_by_dma_addr(struct device *dev)
-+{
-+	const struct dma_map_ops *ops =3D get_dma_ops(dev);
-+
-+	return dma_is_direct(ops) || (ops && ops->get_virt_addr);
-+}
-+
- void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_han=
-dle,
- 		gfp_t flag, unsigned long attrs);
- void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
-@@ -458,6 +466,14 @@ int dma_get_sgtable_attrs(struct device *dev, struct s=
-g_table *sgt,
- int dma_mmap_attrs(struct device *dev, struct vm_area_struct *vma,
- 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
- 		unsigned long attrs);
-+void *dma_unmap_single_attrs_desc(struct device *dev, dma_addr_t addr,
-+				  size_t size, enum dma_data_direction dir,
-+				  unsigned long attrs);
-+struct page *
-+dma_unmap_page_attrs_desc(struct device *dev, dma_addr_t addr, size_t size=
-,
-+			  enum dma_data_direction dir, unsigned long attrs);
-+void *dma_sync_single_for_cpu_desc(struct device *dev, dma_addr_t addr,
-+				   size_t size, enum dma_data_direction dir);
- bool dma_can_mmap(struct device *dev);
- int dma_supported(struct device *dev, u64 mask);
- int dma_set_mask(struct device *dev, u64 mask);
-@@ -534,6 +550,27 @@ static inline void dmam_free_coherent(struct device *d=
-ev, size_t size,
- 		void *vaddr, dma_addr_t dma_handle)
- {
- }
-+
-+static inline void *
-+dma_unmap_single_attrs_desc(struct device *dev, dma_addr_t addr, size_t si=
-ze,
-+			    enum dma_data_direction dir, unsigned long attrs)
-+{
-+	return NULL;
-+}
-+
-+static inline struct page *
-+dma_unmap_page_attrs_desc(struct device *dev, dma_addr_t addr, size_t size=
-,
-+			  enum dma_data_direction dir, unsigned long attrs)
-+{
-+	return NULL;
-+}
-+
-+static inline void *
-+dma_sync_single_for_cpu_desc(struct device *dev, dma_addr_t addr, size_t s=
-ize,
-+			     enum dma_data_direction dir)
-+{
-+	return NULL;
-+}
- static inline void dma_cache_sync(struct device *dev, void *vaddr, size_t =
-size,
- 		enum dma_data_direction dir)
- {
-@@ -578,6 +615,11 @@ static inline unsigned long dma_get_merge_boundary(str=
-uct device *dev)
- {
- 	return 0;
- }
-+
-+static inline bool dma_can_unmap_by_dma_addr(struct device *dev)
-+{
-+	return false;
-+}
- #endif /* CONFIG_HAS_DMA */
+-	vaddr =3D dpaa2_iova_to_virt(priv->iommu_domain, addr);
+-	dma_sync_single_for_cpu(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
+-				DMA_BIDIRECTIONAL);
++	vaddr =3D dma_sync_single_for_cpu_desc(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
++					     DMA_BIDIRECTIONAL);
 =20
- static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *pt=
-r,
-@@ -610,10 +652,13 @@ static inline void dma_sync_single_range_for_device(s=
-truct device *dev,
+ 	fas =3D dpaa2_get_fas(vaddr, false);
+ 	prefetch(fas);
+@@ -682,7 +671,8 @@ static void free_tx_fd(const struct dpaa2_eth_priv *pri=
+v,
+ 	u32 fd_len =3D dpaa2_fd_get_len(fd);
 =20
- #define dma_map_single(d, a, s, r) dma_map_single_attrs(d, a, s, r, 0)
- #define dma_unmap_single(d, a, s, r) dma_unmap_single_attrs(d, a, s, r, 0)
-+#define dma_unmap_single_desc(d, a, s, r) \
-+		dma_unmap_single_attrs_desc(d, a, s, r, 0)
- #define dma_map_sg(d, s, n, r) dma_map_sg_attrs(d, s, n, r, 0)
- #define dma_unmap_sg(d, s, n, r) dma_unmap_sg_attrs(d, s, n, r, 0)
- #define dma_map_page(d, p, o, s, r) dma_map_page_attrs(d, p, o, s, r, 0)
- #define dma_unmap_page(d, a, s, r) dma_unmap_page_attrs(d, a, s, r, 0)
-+#define dma_unmap_page_desc(d, a, s, r) dma_unmap_page_attrs_desc(d, a, s,=
- r, 0)
- #define dma_get_sgtable(d, t, v, h, s) dma_get_sgtable_attrs(d, t, v, h, s=
-, 0)
- #define dma_mmap_coherent(d, v, c, h, s) dma_mmap_attrs(d, v, c, h, s, 0)
+ 	fd_addr =3D dpaa2_fd_get_addr(fd);
+-	buffer_start =3D dpaa2_iova_to_virt(priv->iommu_domain, fd_addr);
++	buffer_start =3D dma_sync_single_for_cpu_desc(dev, fd_addr, sizeof(*swa),
++						    DMA_BIDIRECTIONAL);
+ 	swa =3D (struct dpaa2_eth_swa *)buffer_start;
 =20
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index d9334f31a5af..2b6f245c9bb1 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -345,6 +345,59 @@ void dma_free_attrs(struct device *dev, size_t size, v=
-oid *cpu_addr,
- }
- EXPORT_SYMBOL(dma_free_attrs);
+ 	if (fd_format =3D=3D dpaa2_fd_single) {
+@@ -3435,6 +3425,11 @@ static int dpaa2_eth_probe(struct fsl_mc_device *dpn=
+i_dev)
 =20
-+struct page *
-+dma_unmap_page_attrs_desc(struct device *dev, dma_addr_t addr, size_t size=
-,
-+			  enum dma_data_direction dir, unsigned long attrs)
-+{
-+	const struct dma_map_ops *ops =3D get_dma_ops(dev);
-+	void *ptr =3D NULL;
+ 	dev =3D &dpni_dev->dev;
+=20
++	if (!dma_can_unmap_by_dma_addr(dev)) {
++		dev_err(dev, "required dma unmap/sync APIs not available\n");
++		return -ENOTSUPP;
++	}
 +
-+	if (dma_is_direct(ops))
-+		ptr =3D phys_to_virt(dma_to_phys(dev, addr));
-+	else if (ops && ops->get_virt_addr)
-+		ptr =3D ops->get_virt_addr(dev, addr);
-+
-+	dma_unmap_page_attrs(dev, addr, size, dir, attrs);
-+
-+	return ptr ? virt_to_page(ptr) : NULL;
-+}
-+EXPORT_SYMBOL_GPL(dma_unmap_page_attrs_desc);
-+
-+void *dma_unmap_single_attrs_desc(struct device *dev, dma_addr_t addr,
-+				  size_t size, enum dma_data_direction dir,
-+				  unsigned long attrs)
-+{
-+	const struct dma_map_ops *ops =3D get_dma_ops(dev);
-+	void *ptr =3D NULL;
-+
-+	if (dma_is_direct(ops))
-+		ptr =3D phys_to_virt(dma_to_phys(dev, addr));
-+	else if (ops && ops->get_virt_addr)
-+		ptr =3D ops->get_virt_addr(dev, addr);
-+
-+	dma_unmap_single_attrs(dev, addr, size, dir, attrs);
-+
-+	return ptr;
-+}
-+EXPORT_SYMBOL_GPL(dma_unmap_single_attrs_desc);
-+
-+void *dma_sync_single_for_cpu_desc(struct device *dev, dma_addr_t addr,
-+				   size_t size, enum dma_data_direction dir)
-+{
-+	const struct dma_map_ops *ops =3D get_dma_ops(dev);
-+	void *ptr =3D NULL;
-+
-+	if (dma_is_direct(ops))
-+		ptr =3D phys_to_virt(dma_to_phys(dev, addr));
-+	else if (ops && ops->get_virt_addr)
-+		ptr =3D ops->get_virt_addr(dev, addr);
-+
-+	dma_sync_single_for_cpu(dev, addr, size, dir);
-+
-+	return ptr;
-+}
-+EXPORT_SYMBOL_GPL(dma_sync_single_for_cpu_desc);
-+
- int dma_supported(struct device *dev, u64 mask)
- {
- 	const struct dma_map_ops *ops =3D get_dma_ops(dev);
+ 	/* Net device */
+ 	net_dev =3D alloc_etherdev_mq(sizeof(*priv), DPAA2_ETH_MAX_NETDEV_QUEUES)=
+;
+ 	if (!net_dev) {
+@@ -3448,8 +3443,6 @@ static int dpaa2_eth_probe(struct fsl_mc_device *dpni=
+_dev)
+ 	priv =3D netdev_priv(net_dev);
+ 	priv->net_dev =3D net_dev;
+=20
+-	priv->iommu_domain =3D iommu_get_domain_for_dev(dev);
+-
+ 	/* Obtain a MC portal */
+ 	err =3D fsl_mc_portal_allocate(dpni_dev, FSL_MC_IO_ATOMIC_CONTEXT_PORTAL,
+ 				     &priv->mc_io);
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h b/drivers/net=
+/ethernet/freescale/dpaa2/dpaa2-eth.h
+index 8a0e65b3267f..4e5183617ebd 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
+@@ -374,7 +374,6 @@ struct dpaa2_eth_priv {
+=20
+ 	struct fsl_mc_device *dpbp_dev;
+ 	u16 bpid;
+-	struct iommu_domain *iommu_domain;
+=20
+ 	bool tx_tstamp; /* Tx timestamping enabled */
+ 	bool rx_tstamp; /* Rx timestamping enabled */
 --=20
 2.17.1
 
