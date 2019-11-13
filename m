@@ -1,186 +1,114 @@
-Return-Path: <SRS0=c0G/=ZF=linuxdriverproject.org=driverdev-devel-bounces@kernel.org>
+Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C4BC43331
-	for <driverdev-devel@archiver.kernel.org>; Wed, 13 Nov 2019 08:04:04 +0000 (UTC)
-Received: from whitealder.osuosl.org (smtp1.osuosl.org [140.211.166.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 862F5214E0
-	for <driverdev-devel@archiver.kernel.org>; Wed, 13 Nov 2019 08:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42190C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:44:55 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 38D41206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NVSO4I6p"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 862F5214E0
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
-Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=driverdev-devel-bounces@linuxdriverproject.org
-Received: from localhost (localhost [127.0.0.1])
-	by whitealder.osuosl.org (Postfix) with ESMTP id 7D47187589;
-	Wed, 13 Nov 2019 08:04:03 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at osuosl.org
-Received: from whitealder.osuosl.org ([127.0.0.1])
-	by localhost (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id MCeQxRZUdOQw; Wed, 13 Nov 2019 08:04:01 +0000 (UTC)
-Received: from ash.osuosl.org (ash.osuosl.org [140.211.166.34])
-	by whitealder.osuosl.org (Postfix) with ESMTP id 9778287482;
-	Wed, 13 Nov 2019 08:04:01 +0000 (UTC)
-Received: from whitealder.osuosl.org (smtp1.osuosl.org [140.211.166.138])
- by ash.osuosl.org (Postfix) with ESMTP id 1CF571BF2B1
- for <devel@linuxdriverproject.org>; Wed, 13 Nov 2019 08:04:00 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
- by whitealder.osuosl.org (Postfix) with ESMTP id 16CC987482
- for <devel@linuxdriverproject.org>; Wed, 13 Nov 2019 08:04:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at osuosl.org
-Received: from whitealder.osuosl.org ([127.0.0.1])
- by localhost (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id mK5OLbHxRLpH for <devel@linuxdriverproject.org>;
- Wed, 13 Nov 2019 08:03:59 +0000 (UTC)
-X-Greylist: domain auto-whitelisted by SQLgrey-1.7.6
-Received: from us-smtp-delivery-1.mimecast.com (us-smtp-2.mimecast.com
- [207.211.31.81])
- by whitealder.osuosl.org (Postfix) with ESMTPS id 3B11985608
- for <devel@linuxdriverproject.org>; Wed, 13 Nov 2019 08:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
- s=mimecast20190719; t=1573632238;
- h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
- to:to:cc:cc:mime-version:mime-version:content-type:content-type:
- content-transfer-encoding:content-transfer-encoding:
- in-reply-to:in-reply-to:references:references;
- bh=aWcZWJtzdppcM76KohD37mlvGtsiTZ4jS7DFNLMCC7M=;
- b=NVSO4I6pztLVBGV7cNpmSLtvyvv0HoUM7FmlZb/NtwKM6sc2OkZpwjqWyfnKnYTt88SE5E
- T0rq1rN+1RZVBTYTQVlB1zD0+mnwlfRYgM97oIT/r4H/hcTV1HIVd51z4w760h4VA8tcPj
- FT6isbRsbAqX/AXCbHXfOs9ato/SPkc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-VWdF1_HpPkuft5ySB3As2g-1; Wed, 13 Nov 2019 03:03:56 -0500
-Received: by mail-wr1-f70.google.com with SMTP id y3so1126782wrm.12
- for <devel@linuxdriverproject.org>; Wed, 13 Nov 2019 00:03:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+9bkvC9"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726613AbfKMVoy (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 Nov 2019 16:44:54 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36800 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMVox (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 16:44:53 -0500
+Received: by mail-il1-f193.google.com with SMTP id s75so3253979ilc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 13:44:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZSLVM11pGBINfynHILkQr3Q7Agr06MqGgvwQD+nhlgc=;
+        b=m+9bkvC9Pxf9vNvByeufwcwPMm1n2llu1QW0B/DI0V0wv7oIZsi/2Q/TyuEaFqqsaB
+         46yZUboC8d6/pdTAHoeDOX0los6fZ8BJtJSUKZXQIL9gUGur61P8S8MA/Vr8cJAm0fPd
+         aqJa4K3cqf9gVePIz0utXW5rbw0rQYjsgp6+vaf8E+NALw8ZySG0T8ADVS7h1fyirWt8
+         h56DWugp7B3HFpsIvUQ32OV5N2qVctWgsjPa/XnDHki1U73aaFOBA2OKc0d6HxNccKPF
+         jH5cnzxE1AZaN66ejZGjysbUMpGHWOxEbDNKqEimrN8hQ9D3/Gx9C8Tu+ue7RDcs9rWA
+         7iPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20161025;
- h=x-gm-message-state:subject:to:cc:references:from:message-id:date
- :user-agent:mime-version:in-reply-to:content-language
- :content-transfer-encoding;
- bh=uO6TAe5CY3chuTGSu2TisEgi2TBlw5xURmLltnTdu2U=;
- b=DVVrc1o69TR4P+HqRKar7ZoPvol17Vc5MjO96fnk38iV6tEqhj4tzQ7ymqBAnHSXpr
- 2l6v8VF+eLTSQOVYTL2oqFbIwBKP/rEgI5CpduhgRwE+uhJrf1H+f/8IkNXjx9sADVwu
- 7MnQUun4LS/gmv26wu2yEC+HoU/ANZwtA6HGWO8/VbF0Zc9pjgFCFMjnbZdnhxes4asR
- gybphT2NL6TpvWM2P6fAJc9t3CrPfYznnBsa0Kr3UNbi9BeML4y2tvNqXFuS/b6nvyAk
- VRNbPhl0KhhmzYgE135ErhfK5Lvcvbo8rRs7n5kcOKSZING9OBW871JjoP1vLtK8OjYT
- XO6A==
-X-Gm-Message-State: APjAAAW4hO9c5eJjDMdY37jCce3cC9wfAooZomQrHOpk5qI4+vxi9DxF
- lXsJTzhNQXR5YcDriz3/BXwKzsHj32l/bE2waoQPzkz1VgrhECMiWK7Z2uVN2QfRRzBAGjLSQpf
- WxaeQ6R/fFOXJVw675Sle9ylh
-X-Received: by 2002:a7b:c055:: with SMTP id u21mr1522369wmc.55.1573632235400; 
- Wed, 13 Nov 2019 00:03:55 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxdVvtKiYmZt1fSzZA8kPfb3J2pg0i+JjNFD/a5EyFATv6YGKKR2tWjoIt78oPPlSoqWsctkg==
-X-Received: by 2002:a7b:c055:: with SMTP id u21mr1522332wmc.55.1573632234803; 
- Wed, 13 Nov 2019 00:03:54 -0800 (PST)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl.
- [84.106.84.65])
- by smtp.gmail.com with ESMTPSA id y6sm1887805wrr.19.2019.11.13.00.03.53
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Wed, 13 Nov 2019 00:03:54 -0800 (PST)
-Subject: Re: [PATCH] vboxsf: move out of staging to fs/
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20191110154303.GA2867499@kroah.com>
- <20191112063440.GA15951@infradead.org> <20191112065629.GA1242198@kroah.com>
- <20191112225427.GA1873491@kroah.com>
- <CAHk-=wiLZpyGyOcymND-Pk7_a_MXHZHJtsT9TryHmZBE7Babiw@mail.gmail.com>
-From: Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f7e11836-8f90-4ddf-1c81-4d49d35d91d6@redhat.com>
-Date: Wed, 13 Nov 2019 09:03:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZSLVM11pGBINfynHILkQr3Q7Agr06MqGgvwQD+nhlgc=;
+        b=ZzP3qpL2KNFDN3pMwV2DgW1g3aIHxUrIUHmOzEyrHPHjOldkye/TsTUR8MX+vwSx6s
+         5fAeTR08AQlxlPEaDqNaDONCBTgrzDFk999s53xLWEkuZdtbZUihuA1THORo6k6CuocP
+         H0lVmbePvNZUEdh4LauRqKX0CcWLbSjLbCC9fYb29lfDak/GFpzZq1V5FeyxlJuCXlYr
+         H5UckteSl43lH9oOJN3+Z04Ht6TaA0oVjhhtTN509+d8pFc+0qAQsLlgJnqSINTpoi9G
+         spCkwmKAzY6NuXUkYxg/9f5F4k/BkVOum4R+FDWaezsdShZGMOsTx64yyEheq97s9N3E
+         Bw8A==
+X-Gm-Message-State: APjAAAXdXFwR/DMxGU1JoyvCcSJf4CQP5gJPXiuhigfyb8d7Y1i9qcfN
+        tBGZCd5RsmenDXqSQhW2T84pTZekidcxIJtlvA==
+X-Google-Smtp-Source: APXvYqwbwmKbJ+T38L73R26GYObNwzOe09ajwHpO8oXk587naEbAqp+afVd5E89SyeF+vLXx2HM+e2sX8x8pxX2bwA0=
+X-Received: by 2002:a92:5d8d:: with SMTP id e13mr6740093ilg.32.1573681492571;
+ Wed, 13 Nov 2019 13:44:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiLZpyGyOcymND-Pk7_a_MXHZHJtsT9TryHmZBE7Babiw@mail.gmail.com>
-Content-Language: en-US
-X-MC-Unique: VWdF1_HpPkuft5ySB3As2g-1
-X-Mimecast-Spam-Score: 0
-X-BeenThere: driverdev-devel@linuxdriverproject.org
-X-Mailman-Version: 2.1.29
-Precedence: list
-List-Id: Linux Driver Project Developer List
- <driverdev-devel.linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>, 
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>, 
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Cc: Christoph Hellwig <hch@infradead.org>, devel@linuxdriverproject.org,
- David Howells <dhowells@redhat.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-Message-ID: <20191113080353.NGTyBT_mTu2By554iPa7Ly_UKsCpAty3y2I1zjvUZ7M@z>
+References: <20191113204240.767922595@linutronix.de> <20191113210103.911310593@linutronix.de>
+ <CAHk-=whNAEuNPU3Oy_-EpjOojpysWcCh4uqDgOt2RjBNx2xBSg@mail.gmail.com>
+In-Reply-To: <CAHk-=whNAEuNPU3Oy_-EpjOojpysWcCh4uqDgOt2RjBNx2xBSg@mail.gmail.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Wed, 13 Nov 2019 16:44:39 -0500
+Message-ID: <CAMzpN2h2=DRX=jmn4vDhgRCwYjH7Y0niCc9kn5DtX7yGpYbRKw@mail.gmail.com>
+Subject: Re: [patch V3 02/20] x86/process: Unify copy_thread_tls()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Nov 13, 2019 at 4:14 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, Nov 13, 2019 at 1:02 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > +int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+> > +                   unsigned long arg, struct task_struct *p, unsigned long tls)
+> ...
+> > +#ifdef CONFIG_X86_64
+> ..
+> > +#else
+> > +       /* Clear all status flags including IF and set fixed bit. */
+> > +       frame->flags = X86_EFLAGS_FIXED;
+> > +#endif
+>
+> Hmm. The unification I like, but it also shows these differences that
+> I don't remember the reason for.
+>
+> Remind me why __switch_to_asm() on 32-bit safes eflags, but we don't
+> do it on x86-64?
+>
+> The comment just talks about callee-saved registers, but flags isn't
+> callee-saved, so there's something else going on.
+>
+> This patch clearly doesn't change anything, I'm not complaining about
+> the patch at all. I'm just wondering about the odd difference that the
+> patch exposes.
 
-On 13-11-2019 00:12, Linus Torvalds wrote:
-> On Tue, Nov 12, 2019 at 2:54 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
->>
->> Christoph, this is what you mean, right?  If so, I'll send this to Linus
->> later this week, or he can grab it right from this patch :)
-> 
-> No.
-> 
-> I was unhappy about a staging driver being added in rc7, but I went
-> "whatever, it's Greg's garbage"
-> 
-> There is no way in hell I will take a new filesystem in rc8.
-> 
-> Would you take that into stable? No, you wouldn't. Then why is this
-> being upstreamed now.
-> 
-> Honestly, I think I'll just delete the whole thing, since it shouldn't
-> have gone in in the first place. This is not how we add new
-> filesystems.
+It's to prevent AC from leaking into the next task.  objtool can
+verify that 64-bit code doesn't schedule when AC is set, but it
+doesn't work on 32-bit.  We could probably just do a CLAC on switch
+and when it switches back to that task you would get an oops and it
+would get noticed.  It's likely though that the 64-bit coverage has
+fixed most of the places where this happened.
 
-I understand you being unhappy with this.
-
-The problem is that Al Viro, after an initial review around v2 or v3 of
-the patch, which I believe I have fully addressed, has been ignoring
-this patch / new fs for over a year now. I've pinged him repeatedly
-both via email and on irc, but with no luck.  I guess he simply is
-too busy with other stuff.
-
-I did ask other fs developers to review and have gotten reviews
-from David Howell and Christoph Hellwig. I've addressed all their
-review remarks and I've had reviews of the newer versions with
-just a few nitpicks remaining. I've also addressed those nitpicks.
-But I never got an Acked-by or Reviewed-by from either of them
-on any of the newer versions.
-
-I even talked to various people about this at plumbers, but
-I did not get any traction there either.
-
-On the advice of Christoph I've asked Andrew Morton to take this
-directly under fs/ instead, twice. When this all went no where I
-went the staging route, with the current result.
-
-So for 5.5, and assuming I can get David's and/or Christoph's
-Acked-by, is is ok if I send this directly to you?
-
-Regards,
-
-Hans
-
-p.s.
-
-Christoph, David, can I get your Acked-by for the latest
-version of the patch (v17) ?
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+--
+Brian Gerst
