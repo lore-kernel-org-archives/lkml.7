@@ -2,80 +2,99 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C74C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EEEC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F063020637
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA8120637
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:04:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="nXo4MPMi"
+	dkim=pass (1024-bit key) header.d=alertlogic.onmicrosoft.com header.i=@alertlogic.onmicrosoft.com header.b="LEuFzO9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfKMREF (ORCPT
+        id S1728669AbfKMRE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:04:05 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42059 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727284AbfKMREE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:04:04 -0500
-Received: by mail-lf1-f67.google.com with SMTP id z12so2558525lfj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:04:01 -0800 (PST)
+        Wed, 13 Nov 2019 12:04:29 -0500
+Received: from mail-eopbgr730090.outbound.protection.outlook.com ([40.107.73.90]:21376
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727001AbfKMRE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:04:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VN8qn0QYFeVKfmzUSlXUzSIjG+VcSaS3QO4QqZT6Z5DQU8rPLZv0uEHzyKr7YtbhVlSqJpmz+fi3+BVXApijh0buRTsJLA8W315mRRo7bya1Ku3mWOO0UTTbzgnp21sYlh959mdMqSyeK8X6jNdDxNHOfhTAjH0FtxJlL4hHUKWjPuSnjVSjR/Y9UdjAeKmWK/E90FmDd3nfDSv6nJMyAxMa9sfKpJgWtCvoi45s57++SYzXwlNB12aq1SaUD1gRUIMjn4aj6Gc3B8gLN6Yti/pNQ6eXMnBZVvIQmBEtzIOBshd4HCxB4Xumc48WtfjDH3avAwnmEoFtI61HNRxkoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tf3OC2zISoJw0lCOGaei0Pe4md8B6jtyM5EKCXRvwXs=;
+ b=dLPehNL0l2Xf/345EhE7EdU7LeDq1cEzs2P6RSzytUTYMWtPIs0Kt8i4SZBSMQBPkxUbM6I49mnZ6uy/shwlREk9qMyTG5dmA8fH1cwIbjvuFxA01+ND/Bp5dsOfyjQjlAzjQT+hqbbHJRmlTYZvA3SryPuPb4/srVhrONSuNuk53figRoE46CEyjUmOJQd4WErjMvKCx/cHpvYgwd1Nt4s958wx/9D3w2Erh9CDEZqOxL1yWgQGxMSeDimNtSX5yzSQ47q3lP9DdnExuVIXr8JP1SYuRK5dwaW1G67kWO/8yWSLMr/pbE8PLL2fANC25c4480+49/Y3vZixxKqkXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=alertlogic.com; dmarc=pass action=none
+ header.from=alertlogic.com; dkim=pass header.d=alertlogic.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Ue0ID/EjSuwhaD2YneyBx29WXL6CWZKuZ5z+LHgXpJg=;
-        b=nXo4MPMimiDbNQH6nt9QKyqzlNtrRIxXJBcHxAUys+WwtJroFlI/L45jpHvsebk6XF
-         yOVY0/9kLoGlVYf2flnhoHHeNyUFee3GjnAoSxriM+YnqVd0i0IY3M9SXY79y0Qc5bl+
-         4bfO7Y1K3AKuISea0tNmmUeNfK+t1mAYI7X4fgEJEnlpnS5RmLScLYiQ/eav1LzK4a5f
-         utqsyoDqvxdMaPjNlTFrBMbtYPm3xllqkJmFKnchP/HIH9INUcw3rJh0JlJMMPw0iE7O
-         9k9a44l8NUvpiJnAzBgrAqxPKFIeEBWDlVxe5LwCKINSMopuOgMBmeBsSfyDXFpf9OkD
-         6wZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Ue0ID/EjSuwhaD2YneyBx29WXL6CWZKuZ5z+LHgXpJg=;
-        b=qbQY1iYGlJoqq9KqHD1fA1ethzVHwoSrQ9RTZe/gVg1buTu4Vw0FamLvc6tJw8WSoF
-         0QBj31aYPzm3K71zwZXMaARwwgC3HFSfhprU5SqiRdKsP1qig5hez9fzBts9+5HbnQ4f
-         9eX5CNsWIJJCQIFt/BH7aTD1sFSHMhgQ5N1DIkv6R6e1dfh3Tmhfdxv+dw6JEKK0rvcT
-         n11SrmUcv+uoU30QqBJ6/iem0IgdIRlUS0Z61NzspgvTBQFFLONo49V0A92iy4Z0Bg5B
-         WFheOFgnbEsKcn1rEPRlx4QUGSApYwKsdXHxOSxbOfiL93dsIe0dB7VKDFTIOQtIi4DA
-         5nIA==
-X-Gm-Message-State: APjAAAVcz7xGH79Tx4tNLAm+bENJyLEwuXFqk0K5eRXrJXz/d/5r+gmG
-        Hs3I7h6xgSUtyJaTi8eEyNv+sg==
-X-Google-Smtp-Source: APXvYqwckKbihNytza45QZsltEB/MDJqnRgjYzMjFCZ0dtdDbXhtUUZWPablqNPawdiu3JdQfr+hNA==
-X-Received: by 2002:a19:bec5:: with SMTP id o188mr3518166lff.140.1573664640846;
-        Wed, 13 Nov 2019 09:04:00 -0800 (PST)
-Received: from ?IPv6:2a00:1370:812c:3592:78e6:4794:4f9c:243a? ([2a00:1370:812c:3592:78e6:4794:4f9c:243a])
-        by smtp.gmail.com with ESMTPSA id g21sm1202642ljh.2.2019.11.13.09.03.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 09:04:00 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [Y2038] [PATCH 13/16] hfs/hfsplus: use 64-bit inode timestamps
-From:   Viacheslav Dubeyko <slava@dubeyko.com>
-In-Reply-To: <CAK8P3a1Bvdb4Xn1Aqfnxnn24HPb6FXxAAVwq8ypO31AqoR1hBw@mail.gmail.com>
-Date:   Wed, 13 Nov 2019 20:03:56 +0300
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        =?utf-8?B?IkVybmVzdG8gQS4gRmVybsOhbmRleiI=?= 
-        <ernesto.mnd.fernandez@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
+ d=alertlogic.onmicrosoft.com; s=selector2-alertlogic-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tf3OC2zISoJw0lCOGaei0Pe4md8B6jtyM5EKCXRvwXs=;
+ b=LEuFzO9lo42WLVkfBiMhI2wBVeEVMPZK7Z/kquID2R4M6Er+XqMdlpagDQPlqQb/nM4ZwG3ilxs+53ck2HueS+TjAA2cL9JGauppJQkv3fecZdkL2UviIuU1k3pVDMq+3paVZj2GcVYYTspW8DNmwgis7I3YEpMDcON4S3yQCgE=
+Received: from BYAPR20MB2726.namprd20.prod.outlook.com (20.178.238.150) by
+ BYAPR20MB2664.namprd20.prod.outlook.com (20.178.238.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Wed, 13 Nov 2019 17:03:45 +0000
+Received: from BYAPR20MB2726.namprd20.prod.outlook.com
+ ([fe80::b1ef:70a1:4100:26a4]) by BYAPR20MB2726.namprd20.prod.outlook.com
+ ([fe80::b1ef:70a1:4100:26a4%3]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
+ 17:03:44 +0000
+From:   "Harris, Robert" <robert.harris@alertlogic.com>
+To:     Mikael Pettersson <mikpelinux@gmail.com>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Harris, Robert" <robert.harris@alertlogic.com>
+Subject: Re: Help requested: futex(..., FUTEX_WAIT_PRIVATE, ...) returns EPERM
+Thread-Topic: Help requested: futex(..., FUTEX_WAIT_PRIVATE, ...) returns
+ EPERM
+Thread-Index: AQHVmYBWfg0+aL4WQEeFFOC3OWpiUqeJGdEAgAA7yYA=
+Date:   Wed, 13 Nov 2019 17:03:44 +0000
+Message-ID: <B5EC0909-54CE-47D6-8930-8C9CFC243180@alertlogic.com>
+References: <E0332978-739B-4546-9C3F-975216C349D2@alertlogic.com>
+ <CAM43=SP-CTHWdMCJwioUiEVSNnh-AgZj7YEK1i08TXHk3oCbLQ@mail.gmail.com>
+In-Reply-To: <CAM43=SP-CTHWdMCJwioUiEVSNnh-AgZj7YEK1i08TXHk3oCbLQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=robert.harris@alertlogic.com; 
+x-originating-ip: [165.225.81.101]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5d148f9b-0b47-4f16-12fa-08d7685b7153
+x-ms-traffictypediagnostic: BYAPR20MB2664:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR20MB2664CD25DFB3413AC4D8170E94760@BYAPR20MB2664.namprd20.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(376002)(366004)(39850400004)(199004)(189003)(8936002)(6246003)(1411001)(81166006)(66476007)(316002)(66946007)(3846002)(229853002)(99286004)(76116006)(66446008)(64756008)(8676002)(91956017)(6116002)(54906003)(107886003)(33656002)(81156014)(2906002)(66556008)(6436002)(5660300002)(6486002)(71200400001)(6512007)(478600001)(14454004)(6916009)(66066001)(4326008)(53546011)(2616005)(256004)(5024004)(14444005)(25786009)(86362001)(11346002)(446003)(36756003)(4001150100001)(486006)(305945005)(476003)(7736002)(55236004)(186003)(102836004)(6506007)(26005)(76176011)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR20MB2664;H:BYAPR20MB2726.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: alertlogic.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Okz9hTpUzHA4O0TAtAqgrCn6SqeI9nWXsccoGbiS3LtnR+ysxS0Rs/dsLmiuItBv9zHdBa46/g5KZ6ZKqAPJloWPCWg1LfqxxNLtDZPfTPpG1NKeVMJbK9g68apnTsq0KdSXJRrAPQQ+634zx7vjT7QuRKXyLywJlQgHa8pP970cNragvMMcTmpfIs0XtCcscwwQc+DjHzox8ID/tc+SVyVoLR/paC7w5bLs/HmKO0S4kz+hFtxahGsReA1FCjHqyZ3eqtiA9/15jgIHeAuTTWIEAz+ILY17Ey7k2W9WXXaOIff4RuyLj3tAD5P2my3U+YbvySpQ1GGLbNQrhPpefxHvqACYJ/yXz62XME6gm1Vqn6J5SG8KSjg69H6PVsFEg7bvig9ka+JgJlmdQewe2dtm537/14zlquCe8FjxpuU43xGNA1iNf13PQwoxZqOn
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <44DAA7D80C967C44BD812C265C9D12AE@namprd20.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <09B5EC34-DE6B-4017-A842-7983E7874F98@dubeyko.com>
-References: <20191108213257.3097633-1-arnd@arndb.de>
- <20191108213257.3097633-14-arnd@arndb.de>
- <2520E708-4636-4CA8-B953-0F46F8E7454A@dubeyko.com>
- <CAK8P3a1Bvdb4Xn1Aqfnxnn24HPb6FXxAAVwq8ypO31AqoR1hBw@mail.gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-X-Mailer: Apple Mail (2.3601.0.10)
+MIME-Version: 1.0
+X-OriginatorOrg: alertlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d148f9b-0b47-4f16-12fa-08d7685b7153
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 17:03:44.5368
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 04151827-cb2a-4231-9c24-1ef5ffc408eb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tWVgwPrYFwNcYZ/m2Sco9Waxx2vkrXSPO3MuWvnfDTPOW5saXGFF9I+7pCUrY1eONKVvN5d8EjLeNipE2Al7U1fjmMAbFBnOT4tV0p0T+Qk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR20MB2664
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -83,117 +102,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Nov 13, 2019, at 11:06 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->=20
-> On Wed, Nov 13, 2019 at 7:00 AM Viacheslav Dubeyko <slava@dubeyko.com> =
-wrote:
->>> On Nov 9, 2019, at 12:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->>> * There are two time systems.  Both are based on seconds since
->>> * a particular time/date.
->>> - *   Unix:   unsigned lil-endian since 00:00 GMT, Jan. 1, 1970
->>> + *   Unix:   signed little-endian since 00:00 GMT, Jan. 1, 1970
->>> *    mac:    unsigned big-endian since 00:00 GMT, Jan. 1, 1904
->>> *
->>> + * HFS implementations are highly inconsistent, this one matches =
-the
->>> + * traditional behavior of 64-bit Linux, giving the most useful
->>> + * time range between 1970 and 2106, by treating any on-disk =
-timestamp
->>> + * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
->>> */
->>> -#define __hfs_u_to_mtime(sec)        cpu_to_be32(sec + 2082844800U =
-- sys_tz.tz_minuteswest * 60)
->>> -#define __hfs_m_to_utime(sec)        (be32_to_cpu(sec) - =
-2082844800U  + sys_tz.tz_minuteswest * 60)
->>=20
->> I believe it makes sense to introduce some constant instead of =
-hardcoded value (2082844800U and 60).
->> It will be easier to understand the code without necessity to take a =
-look into the comments.
->> What do you think?
->=20
-> Every other user of sys_tz.tz_minuteswest uses a plain '60', I think =
-that one
-> is easy enough to understand from context. Naming the other constant
-> is a good idea, I've now folded the change below into my patch.
->=20
-> Thanks for the review!
->=20
->      Arnd
->=20
-> 8<-----
-> diff --git a/fs/hfs/hfs_fs.h b/fs/hfs/hfs_fs.h
-> index 26733051ee50..f71c384064c8 100644
-> --- a/fs/hfs/hfs_fs.h
-> +++ b/fs/hfs/hfs_fs.h
-> @@ -247,22 +247,24 @@ extern void hfs_mark_mdb_dirty(struct =
-super_block *sb);
->  *
->  * HFS implementations are highly inconsistent, this one matches the
->  * traditional behavior of 64-bit Linux, giving the most useful
->  * time range between 1970 and 2106, by treating any on-disk timestamp
-> - * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
-> + * under HFS_UTC_OFFSET (Jan 1 1970) as a time between 2040 and 2106.
->  */
-> +#define HFS_UTC_OFFSET 2082844800U
-> +
-> static inline time64_t __hfs_m_to_utime(__be32 mt)
-> {
-> -       time64_t ut =3D (u32)(be32_to_cpu(mt) - 2082844800U);
-> +       time64_t ut =3D (u32)(be32_to_cpu(mt) - HFS_UTC_OFFSET);
->=20
->        return ut + sys_tz.tz_minuteswest * 60;
-> }
->=20
-> static inline __be32 __hfs_u_to_mtime(time64_t ut)
-> {
->        ut -=3D sys_tz.tz_minuteswest * 60;
->=20
-> -       return cpu_to_be32(lower_32_bits(ut) + 2082844800U);
-> +       return cpu_to_be32(lower_32_bits(ut) + HFS_UTC_OFFSET);
-> }
-> #define HFS_I(inode)   (container_of(inode, struct hfs_inode_info, =
-vfs_inode))
-> #define HFS_SB(sb)     ((struct hfs_sb_info *)(sb)->s_fs_info)
->=20
-> diff --git a/fs/hfsplus/hfsplus_fs.h b/fs/hfsplus/hfsplus_fs.h
-> index 22d0a22c41a3..3b03fff68543 100644
-> --- a/fs/hfsplus/hfsplus_fs.h
-> +++ b/fs/hfsplus/hfsplus_fs.h
-> @@ -538,20 +538,22 @@ int hfsplus_read_wrapper(struct super_block =
-*sb);
->  *
->  * HFS+ implementations are highly inconsistent, this one matches the
->  * traditional behavior of 64-bit Linux, giving the most useful
->  * time range between 1970 and 2106, by treating any on-disk timestamp
-> - * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
-> + * under HFSPLUS_UTC_OFFSET (Jan 1 1970) as a time between 2040 and =
-2106.
->  */
-> +#define HFSPLUS_UTC_OFFSET 2082844800U
-> +
-> static inline time64_t __hfsp_mt2ut(__be32 mt)
-> {
-> -       time64_t ut =3D (u32)(be32_to_cpu(mt) - 2082844800U);
-> +       time64_t ut =3D (u32)(be32_to_cpu(mt) - HFSPLUS_UTC_OFFSET);
->=20
->        return ut;
-> }
->=20
-> static inline __be32 __hfsp_ut2mt(time64_t ut)
-> {
-> -       return cpu_to_be32(lower_32_bits(ut) + 2082844800U);
-> +       return cpu_to_be32(lower_32_bits(ut) + HFSPLUS_UTC_OFFSET);
-> }
->=20
-> /* compatibility */
-> #define hfsp_mt2ut(t)          (struct timespec64){ .tv_sec =3D =
-__hfsp_mt2ut(t) }
+> On 13 Nov 2019, at 13:29, Mikael Pettersson <mikpelinux@gmail.com> wrote:
+>
+> On Tue, Nov 12, 2019 at 6:43 PM Harris, Robert
+> <robert.harris@alertlogic.com> wrote:
+>>
+>> I am investigating an issue on 4.9.184 in which futex() returns EPERM
+>> intermittently for
+>>
+>> futex(uaddr, FUTEX_WAIT_PRIVATE, val, &timeout, NULL, 0)
+>>
+>> The failure affects an application in an AWS lambda;  traditional
+>> debugging approaches vary from difficult to impossible.  I cannot
+>> reproduce the problem at will, instrument the kernel, install a new
+>> kernel or get an application core dump.
+>>
+>> Understanding the circumstances under which EPERM can be returned for
+>> FUTEX_WAIT_PRIVATE would be useful but it is not a documented failure
+>> mode.  I have spent some time looking through futex.c but have not
+>> found anything yet.  I would be grateful for a hint from someone more
+>> knowledgeable.
+>
+>
+> I just wanted to add that a colleague of mine reported the exact same
+> issue to me two days ago: a highly threaded application (the Erlang
+> VM) running in AWS lambda, futex wait calls occasionally failing with
+> EPERM.  I don't have more specifics than that, I've asked for kernel
+> version and the exact parameters in the failed futex call.
 
-Looks good for me. I like the patch.
+Thanks, that's a great data point.  One of my outstanding questions had
+been "why does this happen to only us?"
 
-Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
+When I look at the timings I can say with some confidence that the
+problem stopped for us minutes after
 
-Thanks,
-Vyacheslav Dubeyko.
+2017 on 2019-10-23 in us-east-1
+2030 on 2019-10-24 in eu-west-1
+1817 on 2019-10-25 in us-west-2
 
+(all times UTC).  I've logged a ticket with Amazon to find out what
+changed.
+
+Robert
+Confidentiality Notice | This email and any included attachments may be pri=
+vileged, confidential and/or otherwise protected from disclosure. Access to=
+ this email by anyone other than the intended recipient is unauthorized. If=
+ you believe you have received this email in error, please contact the send=
+er immediately and delete all copies. If you are not the intended recipient=
+, you are notified that disclosing, copying, distributing or taking any act=
+ion in reliance on the contents of this information is strictly prohibited.
