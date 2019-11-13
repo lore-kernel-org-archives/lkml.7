@@ -2,467 +2,337 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED34FC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1677BC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F2A2245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AB922459
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fLRGbGdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbfKMNkq (ORCPT
+        id S1727521AbfKMNlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:40:46 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40722 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727001AbfKMNka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:40:30 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 13D7A91CD0A95D82E916;
-        Wed, 13 Nov 2019 21:40:24 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 13 Nov 2019 21:40:15 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <ming.lei@redhat.com>,
-        <hare@suse.com>, <bvanassche@acm.org>, <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
-Date:   Wed, 13 Nov 2019 21:36:47 +0800
-Message-ID: <1573652209-163505-4-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
-References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+        Wed, 13 Nov 2019 08:41:51 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40389 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfKMNlu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:41:50 -0500
+Received: by mail-lf1-f67.google.com with SMTP id j26so1992111lfh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:41:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7VCmbEVddaGiCCPH6BV+lZcmBJTHDXU7QLX9bBBFD+o=;
+        b=fLRGbGddTVjrMg7NvQKf2dOxVkisty4DDw/FMCI9gPqU66vAZlxSbO4xoEKpbyONE9
+         4P/kSYntUDOiM16n2T6v+yx7mJMvQnLPjg1jU1sNO4dy7CdNpkvQ5h6Cn7PLwhYb3WM1
+         zxCB+5oVkDxLum4MK7tzFw1yVjAf8pgXSMMvaeE5lYX49msnwbnzm1FF0AKqucq/v+wK
+         cb5vn4/ed67OB84VqK1U+g3rCl/41VBZFU92VxfQYzSsZMPrbDKB16AvDELxEwxpyoXA
+         18NTiENwdpPVk8oj8z6hlHMejbAniWoqgPyJ+sV4sMSa7WWhbmsxrfESfR4UGdSr+14l
+         k8rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=7VCmbEVddaGiCCPH6BV+lZcmBJTHDXU7QLX9bBBFD+o=;
+        b=Mts5IougloxD54e5D2rbZ9s/t9bxkUPsfTWP8dBSs2cq1BUKrQKmCFQ3iShbVAHB/X
+         zjgH3IUz4fp/m48InZu53ivi2FHQEVehUT6CdaekNeFWInWVcCFCv5si7H7qlCb+9sva
+         PHeA1cj9U3ixevzhLy3SqiD4RW3LMGASooopqUu5tz5WnMI9u+JEf9p1JZ5lDYiMB9Kr
+         a3hwFUK1oj/UFIPNtfzHobmQkJAGxO3k7wHgosf0FypPxzjRDZUrva/l2cvAlQe/ieVm
+         26ZK5H1mmpeqtJYyuSZcMid5WNNOzGUmM/Tzf2wrVqEBU9yBLTM4aVFQBZYObS0UN8Dt
+         vQqQ==
+X-Gm-Message-State: APjAAAVRMkTligrJ7ZVvTDEP2uUR4mu8GXj3DuZYhR1Y6+9GS2Ltj6SG
+        MJsszY/8GyTXAj/ZOI6bQn8sWQ==
+X-Google-Smtp-Source: APXvYqxVMqq98NlHyqRGjR6gNOmNfE6nWSJ5oK3cqMKxY5IDDe5Vz08ABJHvBR9aN/e+9Lyz61hnyw==
+X-Received: by 2002:ac2:51b5:: with SMTP id f21mr2728379lfk.159.1573652507050;
+        Wed, 13 Nov 2019 05:41:47 -0800 (PST)
+Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
+        by smtp.gmail.com with ESMTPSA id n133sm1147966lfd.88.2019.11.13.05.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 05:41:46 -0800 (PST)
+Date:   Wed, 13 Nov 2019 15:41:44 +0200
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Po Liu <po.liu@nxp.com>
+Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Subject: Re: [EXT] Re: [v2,net-next, 1/2] enetc: Configure the Time-Aware
+ Scheduler via tc-taprio offload
+Message-ID: <20191113134142.GA2508@khorivan>
+Mail-Followup-To: Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+References: <20191111042715.13444-2-Po.Liu@nxp.com>
+ <20191112082823.28998-1-Po.Liu@nxp.com>
+ <20191112210958.GB1833@khorivan>
+ <VE1PR04MB6496EB580B65AFDA43DC1E9A92760@VE1PR04MB6496.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VE1PR04MB6496EB580B65AFDA43DC1E9A92760@VE1PR04MB6496.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some SCSI HBAs (such as HPSA, megaraid, mpt3sas, hisi_sas_v3 ..) support
-multiple reply queues with single hostwide tags.
+On Wed, Nov 13, 2019 at 03:45:08AM +0000, Po Liu wrote:
+>Hi Ivan,
+>
+>> -----Original Message-----
+>> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> Sent: 2019年11月13日 5:10
+>> To: Po Liu <po.liu@nxp.com>
+>> Cc: Claudiu Manoil <claudiu.manoil@nxp.com>; davem@davemloft.net; linux-
+>> kernel@vger.kernel.org; netdev@vger.kernel.org; vinicius.gomes@intel.com;
+>> Vladimir Oltean <vladimir.oltean@nxp.com>; Alexandru Marginean
+>> <alexandru.marginean@nxp.com>; Xiaoliang Yang
+>> <xiaoliang.yang_1@nxp.com>; Roy Zang <roy.zang@nxp.com>; Mingkai Hu
+>> <mingkai.hu@nxp.com>; Jerry Huang <jerry.huang@nxp.com>; Leo Li
+>> <leoyang.li@nxp.com>
+>> Subject: [EXT] Re: [v2,net-next, 1/2] enetc: Configure the Time-Aware Scheduler
+>> via tc-taprio offload
+>>
+>> Caution: EXT Email
+>>
+>> Hello,
+>>
+>> On Tue, Nov 12, 2019 at 08:42:49AM +0000, Po Liu wrote:
+>> >ENETC supports in hardware for time-based egress shaping according to
+>> >IEEE 802.1Qbv. This patch implement the Qbv enablement by the hardware
+>> >offload method qdisc tc-taprio method.
+>> >Also update cbdr writeback to up level since control bd ring may
+>> >writeback data to control bd ring.
+>> >
+>> >Signed-off-by: Po Liu <Po.Liu@nxp.com>
+>> >Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+>> >Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+>> >---
+>> >changes:
+>> >- introduce a local define CONFIG_FSL_ENETC_QOS to fix the various
+>> >  configurations will result in link errors.
+>> >  Since the CONFIG_NET_SCH_TAPRIO depends on many Qos configs. Not
+>> >  to use it directly in driver. Add it to CONFIG_FSL_ENETC_QOS depends
+>> >  on list, so only CONFIG_NET_SCH_TAPRIO enabled, user can enable this
+>> >  tsn feature, or else, return not support.
+>> >
+>> > drivers/net/ethernet/freescale/enetc/Kconfig  |  10 ++
+>> > drivers/net/ethernet/freescale/enetc/Makefile |   1 +
+>> > drivers/net/ethernet/freescale/enetc/enetc.c  |  19 ++-
+>> > drivers/net/ethernet/freescale/enetc/enetc.h  |   7 +
+>> > .../net/ethernet/freescale/enetc/enetc_cbdr.c |   5 +-
+>> > .../net/ethernet/freescale/enetc/enetc_hw.h   | 150 ++++++++++++++++--
+>> > .../net/ethernet/freescale/enetc/enetc_qos.c  | 130 +++++++++++++++
+>> > 7 files changed, 300 insertions(+), 22 deletions(-) create mode 100644
+>> > drivers/net/ethernet/freescale/enetc/enetc_qos.c
+>> >
+>>
+>> [...]
+>>
+>> >
+>> >@@ -1483,6 +1479,19 @@ int enetc_setup_tc(struct net_device *ndev, enum
+>> tc_setup_type type,
+>> >       return 0;
+>> > }
+>> >
+>> >+int enetc_setup_tc(struct net_device *ndev, enum tc_setup_type type,
+>> >+                 void *type_data)
+>> >+{
+>> >+      switch (type) {
+>> >+      case TC_SETUP_QDISC_MQPRIO:
+>> >+              return enetc_setup_tc_mqprio(ndev, type_data);
+>> Sorry didn't see v2, so i duplicate my question here:
+>>
+>> This patch is for taprio offload, I see that mqprio is related and is part of taprio
+>> offload configuration. But taprio offload has own mqprio settings.
+>> The taprio mqprio part is not offloaded with TC_SETUP_QDISC_MQPRIO.
+>>
+>> So, a combination of mqprio and tario qdiscs used.
+>> Could you please share the commands were used for your setup?
+>>
+>
+>Example command:
+>tc qdisc replace dev eth0 parent root handle 100  taprio num_tc 8 map 0 1 2 3 4 5 6 7 queues 1@0 1@1 1@2 1@3 1@4 1@5 1@6 1@7 base-time 01 sched-entry S 02 300000 flags 0x2
 
-In addition, these drivers want to use interrupt assignment in
-pci_alloc_irq_vectors(PCI_IRQ_AFFINITY). However, as discussed in [0],
-CPU hotplug may cause in-flight IO completion to not be serviced when an
-interrupt is shutdown.
+So, the TC_SETUP_QDISC_MQPRIO is really not required here, and mqprio qdisc is
+not used. Then why is it here, should be placed in separate patch at least.
 
-To solve that problem, Ming's patchset to drain hctx's should ensure no
-IOs are missed in-flight [1].
+But even the comb mqprio qdisc and taprio qdisc are used together then taprio
+requires hw offload also. I'm Ok to add it later to taprio, and I'm asking
+about it because I need it also, what ever way it could be added.
 
-However, to take advantage of that patchset, we need to map the HBA HW
-queues to blk mq hctx's; to do that, we need to expose the HBA HW queues.
+Not clear how you combined mqprio qdisc and taprio now to get it working
+From this command:
 
-In making that transition, the per-SCSI command request tags are no
-longer unique per Scsi host - they are just unique per hctx. As such, the
-HBA LLDD would have to generate this tag internally, which has a certain
-performance overhead.
+tc qdisc replace dev eth0 parent root handle 100  taprio num_tc 8 map 0 1 2 3 4 
+5 6 7 queues 1@0 1@1 1@2 1@3 1@4 1@5 1@6 1@7 base-time 01 sched-entry S 02 
+300000 flags 0x2
 
-However another problem is that blk mq assumes the host may accept
-(Scsi_host.can_queue * #hw queue) commands. In [2], we removed the Scsi
-host busy counter, which would stop the LLDD being sent more than
-.can_queue commands; however, we should still ensure that the block layer
-does not issue more than .can_queue commands to the Scsi host.
+I can conclude that some default h/w mapping (one to one) were used and no need
+to use mqprio qdisc, the command above is enough.
 
-To solve this problem, introduce a shared tags per blk_mq_tag_set, which
-may be requested when allocating the tagset.
+Is it true?
+Then move it to spearate patch please as it's not taprio related yet.
 
-New flag BLK_MQ_F_TAG_HCTX_SHARED should be set when requesting the
-tagset.
+>
+>> And couple interesting questions about all of this:
+>> - The taprio qdisc has to have mqprio settings, but if it's done with mqprio then
+>> it just skipped (by reading tc class num).
+>> - If no separate mqprio qdisc configuration then mqprio conf from taprio is set,
+>> who should restore tc mappings when taprio qdisc is unloaded?
+>> Maybe there is reason to implement TC_SETUP_QDISC_MQPRIO offload in
+>> taprio since it's required feature?
+>
 
-This is based on work originally from Ming Lei in [3].
+[...]
 
-[0] https://lore.kernel.org/linux-block/alpine.DEB.2.21.1904051331270.1802@nanos.tec.linutronix.de/
-[1] https://lore.kernel.org/linux-block/20191014015043.25029-1-ming.lei@redhat.com/
-[2] https://lore.kernel.org/linux-scsi/20191025065855.6309-1-ming.lei@redhat.com/
-[3] https://lore.kernel.org/linux-block/20190531022801.10003-1-ming.lei@redhat.com/
+>>
+>> >+
+>> >+      /* Configure the (administrative) gate control list using the
+>> >+       * control BD descriptor.
+>> >+       */
+>> >+      gcl_config = &cbd.gcl_conf;
+>> >+
+>> >+      data_size = sizeof(struct tgs_gcl_data) + gcl_len *
+>> >+ sizeof(struct gce);
+>> >+
+>> >+      gcl_data = kzalloc(data_size, __GFP_DMA | GFP_KERNEL);
+>> >+      if (!gcl_data)
+>> >+              return -ENOMEM;
+>> >+
+>> >+      gce = (struct gce *)(gcl_data + 1);
+>> >+
+>> >+      /* Since no initial state config in taprio, set gates open as default.
+>> >+       */
+>> tc-taprio and IEEE Qbv allows to change configuration in flight, so that oper
+>> state is active till new admin start time. So, here comment says it does initial
+>> state config, if in-flight feature is not supported then error has to be returned
+>> instead of silently rewriting configuration. But if it can be implemented then
+>> state should be remembered/verified in order to not brake oper configuration?
+>
+>I think this is ok as per standard. Also see this comment in
+>net/sched/sch_taprio.c:
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- block/blk-core.c       |  1 +
- block/blk-flush.c      |  2 +
- block/blk-mq-debugfs.c |  2 +-
- block/blk-mq-tag.c     | 85 ++++++++++++++++++++++++++++++++++++++++++
- block/blk-mq-tag.h     |  1 +
- block/blk-mq.c         | 61 +++++++++++++++++++++++++-----
- block/blk-mq.h         |  9 +++++
- include/linux/blk-mq.h |  3 ++
- include/linux/blkdev.h |  1 +
- 9 files changed, 155 insertions(+), 10 deletions(-)
+From the code above (duplicate for convenience):
+      if (admin_conf->enable) {
+              enetc_wr(&priv->si->hw,
+                       ENETC_QBV_PTGCR_OFFSET,
+                       temp & (~ENETC_QBV_TGE));
+              usleep_range(10, 20);
+              enetc_wr(&priv->si->hw,
+                       ENETC_QBV_PTGCR_OFFSET,
+                       temp | ENETC_QBV_TGE);
+      } else {
+              enetc_wr(&priv->si->hw,
+                       ENETC_QBV_PTGCR_OFFSET,
+                       temp & (~ENETC_QBV_TGE));
+              return 0;
+      }
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d5e668ec751b..79eb8983ed45 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -116,6 +116,7 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
- 	INIT_HLIST_NODE(&rq->hash);
- 	RB_CLEAR_NODE(&rq->rb_node);
- 	rq->tag = -1;
-+	rq->shared_tag = -1;
- 	rq->internal_tag = -1;
- 	rq->start_time_ns = ktime_get_ns();
- 	rq->part = NULL;
-diff --git a/block/blk-flush.c b/block/blk-flush.c
-index 1eec9cbe5a0a..b9ad9a5978f5 100644
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -228,6 +228,7 @@ static void flush_end_io(struct request *flush_rq, blk_status_t error)
- 	if (!q->elevator) {
- 		blk_mq_tag_set_rq(hctx, flush_rq->tag, fq->orig_rq);
- 		flush_rq->tag = -1;
-+		flush_rq->shared_tag = -1;
- 	} else {
- 		blk_mq_put_driver_tag(flush_rq);
- 		flush_rq->internal_tag = -1;
-@@ -309,6 +310,7 @@ static void blk_kick_flush(struct request_queue *q, struct blk_flush_queue *fq,
- 	if (!q->elevator) {
- 		fq->orig_rq = first_rq;
- 		flush_rq->tag = first_rq->tag;
-+		flush_rq->shared_tag = first_rq->shared_tag;
- 		blk_mq_tag_set_rq(flush_rq->mq_hctx, first_rq->tag, flush_rq);
- 	} else {
- 		flush_rq->internal_tag = first_rq->internal_tag;
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index 33a40ae1d60f..dc90c42aeb9a 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -339,7 +339,7 @@ int __blk_mq_debugfs_rq_show(struct seq_file *m, struct request *rq)
- 	blk_flags_show(m, (__force unsigned int)rq->rq_flags, rqf_name,
- 		       ARRAY_SIZE(rqf_name));
- 	seq_printf(m, ", .state=%s", blk_mq_rq_state_name(blk_mq_rq_state(rq)));
--	seq_printf(m, ", .tag=%d, .internal_tag=%d", rq->tag,
-+	seq_printf(m, ", .tag=%d, .shared_tag=%d, .internal_tag=%d", rq->tag, rq->shared_tag,
- 		   rq->internal_tag);
- 	if (mq_ops->show_rq)
- 		mq_ops->show_rq(m, rq);
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index d7aa23c82dbf..0a6c8a6b05dd 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -191,6 +191,91 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
- 	return tag + tag_offset;
- }
+I see that's not true, as Simon noted, you have same command:
 
-+ /* We could factor this out */
-+unsigned int blk_mq_get_shared_tag(struct blk_mq_alloc_data *data)
-+{
-+	struct blk_mq_tags *tags = blk_mq_shared_tags_from_data(data);
-+	struct sbitmap_queue *bt;
-+	struct sbq_wait_state *ws;
-+	DEFINE_SBQ_WAIT(wait);
-+	unsigned int tag_offset;
-+	int tag;
-+
-+	if (data->flags & BLK_MQ_REQ_RESERVED) {
-+		if (unlikely(!tags->nr_reserved_tags)) {
-+			WARN_ON_ONCE(1);
-+			return BLK_MQ_TAG_FAIL;
-+		}
-+		bt = &tags->breserved_tags;
-+		tag_offset = 0;
-+	} else {
-+		bt = &tags->bitmap_tags;
-+		tag_offset = tags->nr_reserved_tags;
-+	}
-+
-+	tag = __blk_mq_get_tag(data, bt);
-+	if (tag != -1)
-+		goto found_tag;
-+
-+	if (data->flags & BLK_MQ_REQ_NOWAIT)
-+		return BLK_MQ_TAG_FAIL;
-+
-+	ws = bt_wait_ptr(bt, data->hctx);
-+	do {
-+		struct sbitmap_queue *bt_prev;
-+
-+		/*
-+		 * We're out of tags on this hardware queue, kick any
-+		 * pending IO submits before going to sleep waiting for
-+		 * some to complete.
-+		 */
-+		blk_mq_run_hw_queues(data->q, false);
-+
-+		/*
-+		 * Retry tag allocation after running the hardware queue,
-+		 * as running the queue may also have found completions.
-+		 */
-+		tag = __blk_mq_get_tag(data, bt);
-+		if (tag != -1)
-+			break;
-+
-+		sbitmap_prepare_to_wait(bt, ws, &wait, TASK_UNINTERRUPTIBLE);
-+
-+		tag = __blk_mq_get_tag(data, bt);
-+		if (tag != -1)
-+			break;
-+
-+
-+		bt_prev = bt;
-+		io_schedule();
-+
-+		sbitmap_finish_wait(bt, ws, &wait);
-+
-+		data->ctx = blk_mq_get_ctx(data->q);
-+		data->hctx = blk_mq_map_queue(data->q, data->cmd_flags,
-+						data->ctx);
-+		tags = blk_mq_tags_from_data(data);
-+		if (data->flags & BLK_MQ_REQ_RESERVED)
-+			bt = &tags->breserved_tags;
-+		else
-+			bt = &tags->bitmap_tags;
-+
-+		/*
-+		 * If destination hw queue is changed, fake wake up on
-+		 * previous queue for compensating the wake up miss, so
-+		 * other allocations on previous queue won't be starved.
-+		 */
-+		if (bt != bt_prev)
-+			sbitmap_queue_wake_up(bt_prev);
-+
-+		ws = bt_wait_ptr(bt, data->hctx);
-+	} while (1);
-+
-+	sbitmap_finish_wait(bt, ws, &wait);
-+
-+found_tag:
-+	return tag + tag_offset;
-+}
-+
- void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx,
- 		    unsigned int tag)
- {
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index 88b85daa4976..82ff8faa70f7 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -26,6 +26,7 @@ extern struct blk_mq_tags *blk_mq_init_tags(unsigned int nr_tags, unsigned int r
- extern void blk_mq_free_tags(struct blk_mq_tags *tags);
- 
- extern unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data);
-+extern unsigned int blk_mq_get_shared_tag(struct blk_mq_alloc_data *data);
- extern void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx, unsigned int tag);
- extern bool blk_mq_has_free_tags(struct blk_mq_tags *tags);
- extern int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 6b39cf0efdcd..792eae37dc44 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -292,7 +292,7 @@ static inline bool blk_mq_need_time_stamp(struct request *rq)
- }
- 
- static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
--		unsigned int tag, unsigned int op, u64 alloc_time_ns)
-+		unsigned int tag, unsigned int shared_tag, unsigned int op, u64 alloc_time_ns)
- {
- 	struct blk_mq_tags *tags = blk_mq_tags_from_data(data);
- 	struct request *rq = tags->static_rqs[tag];
-@@ -300,6 +300,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 
- 	if (data->flags & BLK_MQ_REQ_INTERNAL) {
- 		rq->tag = -1;
-+		rq->shared_tag = -1;
- 		rq->internal_tag = tag;
- 	} else {
- 		if (data->hctx->flags & BLK_MQ_F_TAG_QUEUE_SHARED) {
-@@ -307,6 +308,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 			atomic_inc(&data->hctx->nr_active);
- 		}
- 		rq->tag = tag;
-+		rq->shared_tag = shared_tag;
- 		rq->internal_tag = -1;
- 		data->hctx->tags->rqs[rq->tag] = rq;
- 	}
-@@ -359,7 +361,7 @@ static struct request *blk_mq_get_request(struct request_queue *q,
- {
- 	struct elevator_queue *e = q->elevator;
- 	struct request *rq;
--	unsigned int tag;
-+	unsigned int tag, shared_tag = BLK_MQ_TAG_FAIL;
- 	bool clear_ctx_on_error = false;
- 	u64 alloc_time_ns = 0;
- 
-@@ -396,15 +398,17 @@ static struct request *blk_mq_get_request(struct request_queue *q,
- 		blk_mq_tag_busy(data->hctx);
- 	}
- 
--	tag = blk_mq_get_tag(data);
--	if (tag == BLK_MQ_TAG_FAIL) {
--		if (clear_ctx_on_error)
--			data->ctx = NULL;
--		blk_queue_exit(q);
--		return NULL;
-+	if (data->hctx->shared_tags) {
-+		shared_tag = blk_mq_get_shared_tag(data);
-+		if (shared_tag == BLK_MQ_TAG_FAIL)
-+			goto err_shared_tag;
- 	}
- 
--	rq = blk_mq_rq_ctx_init(data, tag, data->cmd_flags, alloc_time_ns);
-+	tag = blk_mq_get_tag(data);
-+	if (tag == BLK_MQ_TAG_FAIL)
-+		goto err_tag;
-+
-+	rq = blk_mq_rq_ctx_init(data, tag, shared_tag, data->cmd_flags, alloc_time_ns);
- 	if (!op_is_flush(data->cmd_flags)) {
- 		rq->elv.icq = NULL;
- 		if (e && e->type->ops.prepare_request) {
-@@ -417,6 +421,15 @@ static struct request *blk_mq_get_request(struct request_queue *q,
- 	}
- 	data->hctx->queued++;
- 	return rq;
-+
-+err_tag:
-+	if (shared_tag != BLK_MQ_TAG_FAIL)
-+		blk_mq_put_tag(data->hctx->shared_tags, data->ctx, shared_tag);
-+err_shared_tag:
-+	if (clear_ctx_on_error)
-+		data->ctx = NULL;
-+	blk_queue_exit(q);
-+	return NULL;
- }
- 
- struct request *blk_mq_alloc_request(struct request_queue *q, unsigned int op,
-@@ -498,6 +511,8 @@ static void __blk_mq_free_request(struct request *rq)
- 
- 	blk_pm_mark_last_busy(rq);
- 	rq->mq_hctx = NULL;
-+	if (rq->shared_tag != -1)
-+		blk_mq_put_tag(hctx->shared_tags, ctx, rq->shared_tag);
- 	if (rq->tag != -1)
- 		blk_mq_put_tag(hctx->tags, ctx, rq->tag);
- 	if (sched_tag != -1)
-@@ -1070,6 +1085,14 @@ bool blk_mq_get_driver_tag(struct request *rq)
- 		data.flags |= BLK_MQ_REQ_RESERVED;
- 
- 	shared = blk_mq_tag_busy(data.hctx);
-+	if (rq && rq->mq_hctx && rq->mq_hctx->shared_tags) {
-+		rq->shared_tag = blk_mq_get_shared_tag(&data);
-+		if (rq->shared_tag == BLK_MQ_TAG_FAIL) {
-+			blk_mq_put_tag(rq->mq_hctx->tags, rq->mq_ctx, rq->tag);
-+			rq->tag = -1;
-+			goto done;
-+		}
-+	}
- 	rq->tag = blk_mq_get_tag(&data);
- 	if (rq->tag >= 0) {
- 		if (shared) {
-@@ -1077,6 +1100,9 @@ bool blk_mq_get_driver_tag(struct request *rq)
- 			atomic_inc(&data.hctx->nr_active);
- 		}
- 		data.hctx->tags->rqs[rq->tag] = rq;
-+	} else if (rq->shared_tag >= 0) {
-+		blk_mq_put_tag(rq->mq_hctx->tags, rq->mq_ctx, rq->tag);
-+		rq->shared_tag = -1;
- 	}
- 
- done:
-@@ -2317,6 +2343,7 @@ static int blk_mq_init_hctx(struct request_queue *q,
- 	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
- 
- 	hctx->tags = set->tags[hctx_idx];
-+	hctx->shared_tags = set->shared_tags;
- 
- 	if (set->ops->init_hctx &&
- 	    set->ops->init_hctx(hctx, set->driver_data, hctx_idx))
-@@ -3100,6 +3127,22 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 	if (ret)
- 		goto out_free_mq_map;
- 
-+	if (set->flags & BLK_MQ_F_TAG_HCTX_SHARED) {
-+		int node = blk_mq_hw_queue_to_node(&set->map[HCTX_TYPE_DEFAULT], 0);
-+		int alloc_policy = BLK_MQ_FLAG_TO_ALLOC_POLICY(set->flags);
-+
-+		if (node == NUMA_NO_NODE)
-+			node = set->numa_node;
-+
-+		set->shared_tags = blk_mq_init_tags(set->queue_depth,
-+						    set->reserved_tags,
-+						    node, alloc_policy);
-+		if (!set->shared_tags) {
-+			ret = -ENOMEM;
-+			goto out_free_mq_map;
-+		}
-+	}
-+
- 	mutex_init(&set->tag_list_lock);
- 	INIT_LIST_HEAD(&set->tag_list);
- 
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index 78d38b5f2793..c328d335de7d 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -174,6 +174,14 @@ static inline struct blk_mq_tags *blk_mq_tags_from_data(struct blk_mq_alloc_data
- 	return data->hctx->tags;
- }
- 
-+static inline struct blk_mq_tags *blk_mq_shared_tags_from_data(struct blk_mq_alloc_data *data)
-+{
-+	if (data->flags & BLK_MQ_REQ_INTERNAL)
-+		return data->hctx->sched_tags;
-+
-+	return data->hctx->shared_tags;
-+}
-+
- static inline bool blk_mq_hctx_stopped(struct blk_mq_hw_ctx *hctx)
- {
- 	return test_bit(BLK_MQ_S_STOPPED, &hctx->state);
-@@ -210,6 +218,7 @@ static inline void __blk_mq_put_driver_tag(struct blk_mq_hw_ctx *hctx,
- {
- 	blk_mq_put_tag(hctx->tags, rq->mq_ctx, rq->tag);
- 	rq->tag = -1;
-+	rq->shared_tag = -1;
- 
- 	if (rq->rq_flags & RQF_MQ_INFLIGHT) {
- 		rq->rq_flags &= ~RQF_MQ_INFLIGHT;
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 147185394a25..d3b402bd01a9 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -46,6 +46,7 @@ struct blk_mq_hw_ctx {
- 	atomic_t		wait_index;
- 
- 	struct blk_mq_tags	*tags;
-+	struct blk_mq_tags	*shared_tags;
- 	struct blk_mq_tags	*sched_tags;
- 
- 	unsigned long		queued;
-@@ -109,6 +110,7 @@ struct blk_mq_tag_set {
- 	unsigned int		flags;		/* BLK_MQ_F_* */
- 	void			*driver_data;
- 
-+	struct blk_mq_tags	*shared_tags;
- 	struct blk_mq_tags	**tags;
- 
- 	struct mutex		tag_list_lock;
-@@ -226,6 +228,7 @@ struct blk_mq_ops {
- enum {
- 	BLK_MQ_F_SHOULD_MERGE	= 1 << 0,
- 	BLK_MQ_F_TAG_QUEUE_SHARED	= 1 << 1,
-+	BLK_MQ_F_TAG_HCTX_SHARED	= 1 << 2,
- 	BLK_MQ_F_BLOCKING	= 1 << 5,
- 	BLK_MQ_F_NO_SCHED	= 1 << 6,
- 	BLK_MQ_F_ALLOC_POLICY_START_BIT = 8,
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index f3ea78b0c91c..a4caa6407b3a 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -138,6 +138,7 @@ struct request {
- 	req_flags_t rq_flags;
- 
- 	int tag;
-+	int shared_tag;
- 	int internal_tag;
- 
- 	/* the following two fields are internal, NEVER access directly */
+enetc_wr(&priv->si->hw, ENETC_QBV_PTGCR_OFFSET, temp & (~ENETC_QBV_TGE));
+
+before enabling and for disabling. I guess it's stop command, that is disable
+qbv. So, before enabling new configuration with enetc_setup_tc(), the tario is
+inited|cleared|reseted|rebooted|defaulted|offed but not updated. It means no
+in-flight capabilities or they are ignored.
+
+JFI, it's possible to do first time:
+
+tc qdisc replace dev eth0 parent root handle 100  taprio num_tc 8 map 0 1 2 3 4 
+5 6 7 queues 1@0 1@1 1@2 1@3 1@4 1@5 1@6 1@7 base-time 01 sched-entry S 02 
+300000 flags 0x2
+
+and then:
+
+tc qdisc replace dev eth0 parent root handle 100  taprio base-time 01 
+sched-entry S 02 200000 flags 0x2
+
+Do it many times, but w/o mqprio configuration.
+
+So, this function must return error if it cannot be done, as above commands
+suppose that configuration can be updated in runtime, that is, set ADMIN cycle
+while OPER cycle is still active for some time and not broken like it's done
+now. If it can be achieved then no need to do
+enetc_wr(&priv->si->hw, ENETC_QBV_PTGCR_OFFSET, temp & (~ENETC_QBV_TGE));
+when admin_conf->enable.
+
+So or return error, or do it appropriately.
+
+>
+>	/* Until the schedule starts, all the queues are open */
+>I would change the comment.
+>
+>> >+      gcl_config->atc = 0xff;
+>> >+      gcl_config->acl_len = cpu_to_le16(gcl_len);
+>>
+>> Ok, this is maximum number of schedules.
+>> According to tc-taprio it's possible to set cycle period more then schedules
+>> actually can consume. If cycle time is more, then last gate's state can be kept
+>> till the end of cycle. But if last schedule has it's own interval set then gates
+>> should be closed till the end of cycle or no? if it has to be closed, then one more
+>> endl schedule should be present closing gates at the end of list for the rest cycle
+>> time. Can be implemented in h/w but just to be sure, how it's done in h/w?
+>>
+>There is already check the list len in up code.
+>if (admin_conf->num_entries > enetc_get_max_gcl_len(&priv->si->hw))
+>	return -EINVAL;
+>gcl_len = admin_conf->num_entries;
+
+I mean +1 schedule to finalize the cycle with closed gates if last schedule
+has provided time interval. If I set couple schedules, with intervals, and cycle
+time more then those schedules consume, then I suppose the gates closed for the
+rest time of cycle, probably.
+
+Example:
+
+sched1 ----> shced2 ----> time w/o scheds -> cycle end
+gate 1       gate 2       no gates
+
+But if shced2 is last one then gate 2 is opened till the end of cycle.
+So, to close gate one more shched is needed with closed gates to finalize it.
+Or it's supposed that gate2 is opened till the end of cycle,
+How is it in you case. Or this is can be provided by configuration from tc?
+
+It's question not statement. Just though. Anyway i'll verify later it can be
+done with tc and how it's done in sw version, just interesting how your h/w
+works.
+
+>
+>> >+
+>> >+      if (!admin_conf->base_time) {
+>> >+              gcl_data->btl =
+>> >+                      cpu_to_le32(enetc_rd(&priv->si->hw, ENETC_SICTR0));
+>> >+              gcl_data->bth =
+>> >+                      cpu_to_le32(enetc_rd(&priv->si->hw, ENETC_SICTR1));
+
+[...]
+
 -- 
-2.17.1
-
+Regards,
+Ivan Khoronzhuk
