@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C55C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B09C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31B721783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3792D21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611249;
-	bh=HBHtmJu5V/blqrrfin0uViVbx9hl+U8z088qsdK+aUc=;
+	s=default; t=1573611254;
+	bh=M1E2zeGQOllJsdnBB7tV0tpZO9EA7JfKu/yCiqqWZV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMsZvNeWO6ESSqumQkJidEzIvk92raJ5cituR9CCDY1OwkDgofyg3ozpbSCuhi5Xr
-	 KPhGj4v7vbmZdoy+rT2wPzQ66jtrgJfk0G3113AMCdxPd4aMJAVX7sGJHlqt2nzFyK
-	 Q0rNTUdneY7Su/f3ZuVdSh6XbV8wi+Gr9k0IAMkw=
+	b=CcH3Tr7wwqD8ZAfHiSObKZVOQjTBufrgud9UIBH6Q1YiC2dbjStlrBGFMQIW7OK0X
+	 CMv7KGBIvNub1a3/+mN/LKY+PVstU8gGrWTm49t2iaO468ds1NTfqp3uc/If+7qgt6
+	 ehxYWmk+MKgxhSwzPCs86n9mgojuxstUHLOcoqew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbfKMCOI (ORCPT
+        id S1729754AbfKMB5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:14:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50578 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:57:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbfKMB5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:23 -0500
+        id S1729730AbfKMB5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1753E2245C;
-        Wed, 13 Nov 2019 01:57:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A14B2053B;
+        Wed, 13 Nov 2019 01:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610242;
-        bh=HBHtmJu5V/blqrrfin0uViVbx9hl+U8z088qsdK+aUc=;
+        s=default; t=1573610238;
+        bh=M1E2zeGQOllJsdnBB7tV0tpZO9EA7JfKu/yCiqqWZV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qj9bzx+9LQTZto+891B9w+FeoGOvl37bLjalvr0FTvZzs55mFg3baFOEg4diIyf41
-         A9lbesQDYWSH7pL19aAc+DUrJ1tdgGKsCMNPyYiWeoMsff0ZQO3xdMlg4WiAs+TitS
-         nj49cloQPbAXJy7xvmQh/eF9D5KElwYlvg9BUal0=
+        b=NMbOLD6k4Lj2IHPRL5ickHbdPwKOMeQktUEB+nEhPzAjVNFNaZk8On2/m3IKXaeoM
+         X3US8BGgEGa8lNUxvpgFezriRb0QSR4JX33GaT3sT8iMqv0CWUzqFEQ2hPxKOrfbpi
+         ndFy895PJejCVq4Obch0IOO8h86EHXLna4zkCEDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Radoslaw Tyl <radoslawx.tyl@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 042/115] ixgbe: Fix ixgbe TX hangs with XDP_TX beyond queue limit
-Date:   Tue, 12 Nov 2019 20:55:09 -0500
-Message-Id: <20191113015622.11592-42-sashal@kernel.org>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 038/115] tools: PCI: Fix compilation warnings
+Date:   Tue, 12 Nov 2019 20:55:05 -0500
+Message-Id: <20191113015622.11592-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -61,48 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
-[ Upstream commit 8d7179b1e2d64b3493c0114916486fe92e6109a9 ]
+[ Upstream commit fef31ecaaf2c5c54db85b35e893bf8abec96b93f ]
 
-We have Tx hang when number Tx and XDP queues are more than 64.
-In XDP always is MTQC == 0x0 (64TxQs). We need more space for Tx queues.
+Current compilation produces the following warnings:
 
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+tools/pci/pcitest.c: In function 'run_test':
+tools/pci/pcitest.c:56:9: warning: unused variable 'time'
+[-Wunused-variable]
+  double time;
+         ^~~~
+tools/pci/pcitest.c:55:25: warning: unused variable 'end'
+[-Wunused-variable]
+  struct timespec start, end;
+                         ^~~
+tools/pci/pcitest.c:55:18: warning: unused variable 'start'
+[-Wunused-variable]
+  struct timespec start, end;
+                  ^~~~~
+tools/pci/pcitest.c:146:1: warning: control reaches end of non-void
+function [-Wreturn-type]
+ }
+ ^
+
+Fix them:
+ - remove unused variables
+ - change function return from int to void, since it's not used
+
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+[lorenzo.pieralisi@arm.com: rewrote the commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ tools/pci/pcitest.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 01c120d656c54..d1472727ef882 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -3490,12 +3490,18 @@ static void ixgbe_setup_mtqc(struct ixgbe_adapter *adapter)
- 		else
- 			mtqc |= IXGBE_MTQC_64VF;
- 	} else {
--		if (tcs > 4)
-+		if (tcs > 4) {
- 			mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_8TC_8TQ;
--		else if (tcs > 1)
-+		} else if (tcs > 1) {
- 			mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_4TC_4TQ;
--		else
--			mtqc = IXGBE_MTQC_64Q_1PB;
-+		} else {
-+			u8 max_txq = adapter->num_tx_queues +
-+				adapter->num_xdp_queues;
-+			if (max_txq > 63)
-+				mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_4TC_4TQ;
-+			else
-+				mtqc = IXGBE_MTQC_64Q_1PB;
-+		}
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index 9074b477bff0f..8ca1c62bc06db 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -23,7 +23,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/ioctl.h>
+-#include <time.h>
+ #include <unistd.h>
+ 
+ #include <linux/pcitest.h>
+@@ -43,17 +42,15 @@ struct pci_test {
+ 	unsigned long	size;
+ };
+ 
+-static int run_test(struct pci_test *test)
++static void run_test(struct pci_test *test)
+ {
+ 	long ret;
+ 	int fd;
+-	struct timespec start, end;
+-	double time;
+ 
+ 	fd = open(test->device, O_RDWR);
+ 	if (fd < 0) {
+ 		perror("can't open PCI Endpoint Test device");
+-		return fd;
++		return;
  	}
  
- 	IXGBE_WRITE_REG(hw, IXGBE_MTQC, mtqc);
+ 	if (test->barnum >= 0 && test->barnum <= 5) {
 -- 
 2.20.1
 
