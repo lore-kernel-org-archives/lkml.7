@@ -2,95 +2,96 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49875C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A0FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219C621A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F60A204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QTdX0++v"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aFbml+xE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfKMDJJ (ORCPT
+        id S1727389AbfKMDLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 22:09:09 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:45796 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727153AbfKMDJJ (ORCPT
+        Tue, 12 Nov 2019 22:11:07 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33561 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbfKMDLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 22:09:09 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD34FXO093145;
-        Wed, 13 Nov 2019 03:07:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=kQPUHp28mZSCANckys01a+OkgTW2WIhmzat0lXN2ydI=;
- b=QTdX0++vkHxdowb+G3vMnYMi1zQYfmwHAG6U5Hc42SUm8IoxeehnsMCn1LDQZ3yGJ1IF
- zsoafoK0xaeka5tlc8fQHRUkBp2TzYJ49pd7nhsMe3EM5othCRl8bvMQoSCyFrBaoR+8
- tImNuungObSWb1QqRhzhmblXH7n/chy0f4XD+yO5kpLRjx/XT6lVg2uHL5YwHfI80NnX
- 6jPc3rBGdYNGIOuqEzlz2gnk8Q8lv1KQxdzsqhvCVQ5Tn9JF616vQb8Q+CltWkTtrMl1
- Cd8kHEE5/tO/oCFxaS6FN6pfR/fVsprMVBYGjEtTdIbjl85i5Pbo8+f2TZgQFlbuypJo gw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2w5ndq95sa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 03:07:12 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD34DWq170512;
-        Wed, 13 Nov 2019 03:07:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2w7vbc1hmr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 03:07:11 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAD37AFL029187;
-        Wed, 13 Nov 2019 03:07:10 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Nov 2019 19:07:09 -0800
-To:     Johan Hovold <johan@kernel.org>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] scsi: nsp_cs: MODULE_LICENSE clean up and compile test
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191105085609.2338-1-johan@kernel.org>
-Date:   Tue, 12 Nov 2019 22:07:07 -0500
-In-Reply-To: <20191105085609.2338-1-johan@kernel.org> (Johan Hovold's message
-        of "Tue, 5 Nov 2019 09:56:07 +0100")
-Message-ID: <yq1pnhwpj8k.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 12 Nov 2019 22:11:06 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay6so444972plb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 19:11:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sWZ8UzAkmxA1TAREML/yWr8V/ErFe78gOEVCjRO2y50=;
+        b=aFbml+xEPqzFTppazdrW9+EGIhJYoLtsB9COq1t0eFNJOZA55aCbyJoZp5klGvtSw9
+         CRSaqDpl1aIVcONOZGB2Eoslo6hkToL06F4Tpv2rEahCNq0QZWk7sYnww7nBs37Rcqd5
+         FN6wzMBtvNVojMFkYwcg96ZTuUzXLiMA1Fme4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sWZ8UzAkmxA1TAREML/yWr8V/ErFe78gOEVCjRO2y50=;
+        b=Wfr3F5Eomswvv0FJWXlwTo+E80zMkjG8tGXkvHG+Mra+QnYUz7F/26TKGc1o5+K6yD
+         f1r2urRWdKGfEL6O30x5kCNC9CBUNAimg3qWNG45BA2Uo7NYns0c8hm17t0vYlN4Vf1f
+         kcx2qThCIRD3zfn0tBZjbt3+PJ5VeUh30PQUXcnacG3mJR5Ohq3HRed+R/Y6YX3UOg7b
+         IYUrWviKR15NMuWNHqVteoO0cPOvCOcLLvCo8QRsxUZHd7ckjMtMOJUy/+Bhigkp+TPo
+         /vcDUZEdfQixhAdAVa69jF74OnHNIda3h7Htjzf1tDmTlOvZdjnVANTapPY2FrL4ESm0
+         NPgA==
+X-Gm-Message-State: APjAAAXk5gSuki8fwxtsb6+dtlqH2h8qJykld6fXp/LF3jglGHzteGNL
+        o8o70AkIqSFwttVDzfWWj8jc02RZE34=
+X-Google-Smtp-Source: APXvYqzsdY/p6xM3cq1mxKAeyxBVbv9Va64SmFk0TJxCWwXaIFOsfVubhs6SZZPw5ZYLTRMzbFEFGA==
+X-Received: by 2002:a17:902:b48d:: with SMTP id y13mr1274188plr.290.1573614665827;
+        Tue, 12 Nov 2019 19:11:05 -0800 (PST)
+Received: from localhost ([2620:15c:202:201:1b1f:9c69:179b:de9a])
+        by smtp.gmail.com with ESMTPSA id q26sm404984pgk.60.2019.11.12.19.11.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2019 19:11:05 -0800 (PST)
+From:   Jon Flatley <jflat@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     bleung@chromium.org, groeck@chromium.org, sre@kernel.org,
+        jflat@chromium.org
+Subject: [PATCH 0/3] ChromeOS EC USB-C Connector Class
+Date:   Tue, 12 Nov 2019 19:10:41 -0800
+Message-Id: <20191113031044.136232-1-jflat@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=946
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911130025
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911130025
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch set adds a basic implementation of the USB-C connector class for
+devices using the ChromeOS EC. On ACPI devices an additional ACPI driver is
+necessary to receive USB-C PD host events from the PD EC device "GOOG0003".
+Incidentally, this ACPI driver adds notifications for events that
+cros-usbpd-charger has been missing, so fix that while we're at it.
 
-Johan,
+Jon Flatley (3):
+  platform: chrome: Add cros-ec-usbpd-notify driver
+  power: supply: cros-ec-usbpd-charger: Fix host events
+  platform: chrome: Added cros-ec-typec driver
 
-> We had two drivers in the tree needlessly checking whether
-> MODULE_LICENSE was defined, this fixes the second one.
-
-Applied to 5.5/scsi-queue, thanks!
+ drivers/mfd/cros_ec_dev.c                     |   7 +-
+ drivers/platform/chrome/Kconfig               |  20 +
+ drivers/platform/chrome/Makefile              |   2 +
+ drivers/platform/chrome/cros_ec_typec.c       | 457 ++++++++++++++++++
+ .../platform/chrome/cros_ec_usbpd_notify.c    | 156 ++++++
+ drivers/power/supply/Kconfig                  |   2 +-
+ drivers/power/supply/cros_usbpd-charger.c     |  45 +-
+ .../platform_data/cros_ec_usbpd_notify.h      |  40 ++
+ 8 files changed, 696 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_typec.c
+ create mode 100644 drivers/platform/chrome/cros_ec_usbpd_notify.c
+ create mode 100644 include/linux/platform_data/cros_ec_usbpd_notify.h
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.24.0.432.g9d3f5f5b63-goog
+
