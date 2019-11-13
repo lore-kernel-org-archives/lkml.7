@@ -2,196 +2,302 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7693C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBFDC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0210206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573682402;
-	bh=WJMcVhY1GRl9bHtJmySR2PoqA3DDvGqxHpJbXzI4OYg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tlEi/SMkT4TQjuIFTUVQY0L0TQnpwlPeVDc06sH0D2QGeO8vozMNJ+1RN9jMHBDgc
-	 po54+4hLM9v7ZgGCPWVpV1crnICdPspEEOIasLNg0Uy178lMBbvB5RbNxnEcH7Jej/
-	 ifF3OP2anjSaCjY3qck+QkXWuHPdhYkQS0CK9O7Q=
+	by mail.kernel.org (Postfix) with ESMTP id 5A62A206F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JM5duNQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfKMWAA (ORCPT
+        id S1727128AbfKMWAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:00:00 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43584 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfKMWAA (ORCPT
+        Wed, 13 Nov 2019 17:00:20 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35441 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfKMWAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 17:00:00 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l20so3274441oie.10;
-        Wed, 13 Nov 2019 13:59:58 -0800 (PST)
+        Wed, 13 Nov 2019 17:00:19 -0500
+Received: by mail-oi1-f196.google.com with SMTP id n16so3318096oig.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 14:00:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=324rHVZhrTFcjdK8aV5SZ9IVxxPo74njd/OitSvPfwI=;
+        b=JM5duNQKWOnxFmjkav9HZXH/NjP8V3EFjvRScM8H1ENfRZFMJcqKXGsOH5QH1/XkbY
+         vCD0sAE5s56t2TslzFPlVDg58PWwtwFXGXAxBMG0tsTexLa7QMLwyOZ0Gso6auFVso3Q
+         /H11R89hS1mPF9jLodhzUGt5k/XEVyO/tLKGjex6PPX1In+qTXV0N/dfIMdhxv6uG2sh
+         BZYlUR9Q3NRtsqyHW81yXHskK+nAMUQ+QwspdWneea1zKsQSEwoQhoG8lU1c4/okZPhW
+         9NJ0U93AQ6wir2C/KYTbbzItcaYUlbUWKJBV/qu+CRPugyKbqUjxjl/m3RkevX8fGpp7
+         vvSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NVTAbnfUlPnBx7RdvKTWW6/dcTysSXTAMT9PhFN67xc=;
-        b=F+duNKpfPYya/+pUyRdcCaTgSQkzXy0dkxLS6ynwG6yjCXu9bJ0+TKAxOi+S10eVZc
-         Lo3PAwjanvtnAcTq/fOZvDDUcxIKrmF5/e0adAxFHGzJy/8K16AvzBltamVgQUW7Hfon
-         HIMTcf/FO4vYm8fIQNxCUrk1sRRKAJO7nkXrKIZ2YGk0DQi5DQXoX1DZonvJpm9NTL5w
-         JGzKABr03iGLSHLUk1paS2V7gdQ+6aVEQPu0GtdcB/I+uC5RpZjQqJG44TGRNgm7jVef
-         uaKp4LTAoXDg1b+BoOl7E1wkHBL1P3OjMu1oGWCHtQatKiQxqxLrxGecNS4pjokxwe4N
-         dDwA==
-X-Gm-Message-State: APjAAAV8rJyJ/RmpXFmcc1U69gBT5EZIbSzS+n8jS8GUdSLPgb3+zME+
-        HIQqNu4lM/pAnRbYuMuh6vz1gKpt6Ok1PAIjTAI=
-X-Google-Smtp-Source: APXvYqzFTZrgpuyN0PvxPJ3n9WHGSw+9M7YWstNbP6CU6LxPlGspXQFkzp1E4iSlXIUr2JgoHxJ0twMdQooFIATVRrU=
-X-Received: by 2002:aca:c753:: with SMTP id x80mr673314oif.115.1573682398432;
- Wed, 13 Nov 2019 13:59:58 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=324rHVZhrTFcjdK8aV5SZ9IVxxPo74njd/OitSvPfwI=;
+        b=YgKtpCDLRWmLBhwVMtj21A4wvmU2F5u4uhuQEi7rjBuRq8U9EJJnwNyawCDFiXEMhM
+         U8ntVdMfMkPqxptp0Siz9qn4IW9Xm84V6G11P2NOyc4pmEa2J7wuDfUAycnj3FJVinFN
+         1GNDFYdhbESu83uvwQgr8an/Jccy/0IRiVGSKlaIMG0UIDBhyGrX256aQDqA1HnyW6QQ
+         f+Nm+8Tvfusa/NjTT4ZYjGcrfHzdSxFBGjWxtxsb9wlTm4VYW4OPWGW95QvoT0LikVa1
+         MN69cIG9+hgvnFJXFJzN7ZZgI5917+EuBtOaM2vnugRR94q5QrDA/XppTumUkBgSsKd9
+         Xjmw==
+X-Gm-Message-State: APjAAAXwKoLIE2zAN4bN9kIKG3BgYlReiwqxm52oktJHzUDwJtWu0JUn
+        Wl2z+KtgmONksIRE9R5XIfPYa4c9hW+GIA+aSky0Qg==
+X-Google-Smtp-Source: APXvYqwVpp6U8sqm3YkFplAWvkGjJy2mawgDrQR8Ysx5PquK9pjlYrXYZlj6N+IM0+gIhTrJsrUtjBK/sbd+UEVubTA=
+X-Received: by 2002:aca:3d84:: with SMTP id k126mr726052oia.70.1573682418131;
+ Wed, 13 Nov 2019 14:00:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20191113185419.13305-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20191113185419.13305-1-daniel.lezcano@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 13 Nov 2019 22:59:47 +0100
-Message-ID: <CAJZ5v0hs5nJmWLY2Ox_0hg3tVipoJRS3uhQr=Wv5MPgGLyP+Ow@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/3] cpuidle: Replace use_deepest_state flag by use_latency
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com> <20191113042710.3997854-5-jhubbard@nvidia.com>
+ <CAPcyv4gGu=G-c1czSAYJ3joTYS_ZYOJ6i9umKzCQEFzpwZMiiA@mail.gmail.com>
+In-Reply-To: <CAPcyv4gGu=G-c1czSAYJ3joTYS_ZYOJ6i9umKzCQEFzpwZMiiA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Nov 2019 14:00:06 -0800
+Message-ID: <CAPcyv4hr64b-k4j7ZY796+k-+Dy11REMcvPJ+QjTsyJ3vSdfKg@mail.gmail.com>
+Subject: Re: [PATCH v4 04/23] mm: devmap: refactor 1-based refcounting for
+ ZONE_DEVICE pages
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 7:54 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On Wed, Nov 13, 2019 at 11:23 AM Dan Williams <dan.j.williams@intel.com> wr=
+ote:
 >
-> We want to specify a latency constraint when choosing an idle state at
-> play_idle time. Instead of duplicating the information in the
-> structure or propagate the latency in the call stack, change the
-> use_deepest_state by use_latency to introduce this constraint.
+> On Tue, Nov 12, 2019 at 8:27 PM John Hubbard <jhubbard@nvidia.com> wrote:
+> >
+> > An upcoming patch changes and complicates the refcounting and
+> > especially the "put page" aspects of it. In order to keep
+> > everything clean, refactor the devmap page release routines:
+> >
+> > * Rename put_devmap_managed_page() to page_is_devmap_managed(),
+> >   and limit the functionality to "read only": return a bool,
+> >   with no side effects.
+> >
+> > * Add a new routine, put_devmap_managed_page(), to handle checking
+> >   what kind of page it is, and what kind of refcount handling it
+> >   requires.
+> >
+> > * Rename __put_devmap_managed_page() to free_devmap_managed_page(),
+> >   and limit the functionality to unconditionally freeing a devmap
+> >   page.
+> >
+> > This is originally based on a separate patch by Ira Weiny, which
+> > applied to an early version of the put_user_page() experiments.
+> > Since then, J=C3=A9r=C3=B4me Glisse suggested the refactoring described=
+ above.
+> >
+> > Suggested-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> > ---
+> >  include/linux/mm.h | 27 ++++++++++++++++---
+> >  mm/memremap.c      | 67 ++++++++++++++++++++--------------------------
+> >  2 files changed, 53 insertions(+), 41 deletions(-)
+> >
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index a2adf95b3f9c..96228376139c 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -967,9 +967,10 @@ static inline bool is_zone_device_page(const struc=
+t page *page)
+> >  #endif
+> >
+> >  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> > -void __put_devmap_managed_page(struct page *page);
+> > +void free_devmap_managed_page(struct page *page);
+> >  DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
+> > -static inline bool put_devmap_managed_page(struct page *page)
+> > +
+> > +static inline bool page_is_devmap_managed(struct page *page)
+> >  {
+> >         if (!static_branch_unlikely(&devmap_managed_key))
+> >                 return false;
+> > @@ -978,7 +979,6 @@ static inline bool put_devmap_managed_page(struct p=
+age *page)
+> >         switch (page->pgmap->type) {
+> >         case MEMORY_DEVICE_PRIVATE:
+> >         case MEMORY_DEVICE_FS_DAX:
+> > -               __put_devmap_managed_page(page);
+> >                 return true;
+> >         default:
+> >                 break;
+> > @@ -986,6 +986,27 @@ static inline bool put_devmap_managed_page(struct =
+page *page)
+> >         return false;
+> >  }
+> >
+> > +static inline bool put_devmap_managed_page(struct page *page)
+> > +{
+> > +       bool is_devmap =3D page_is_devmap_managed(page);
+> > +
+> > +       if (is_devmap) {
+> > +               int count =3D page_ref_dec_return(page);
+> > +
+> > +               /*
+> > +                * devmap page refcounts are 1-based, rather than 0-bas=
+ed: if
+> > +                * refcount is 1, then the page is free and the refcoun=
+t is
+> > +                * stable because nobody holds a reference on the page.
+> > +                */
+> > +               if (count =3D=3D 1)
+> > +                       free_devmap_managed_page(page);
+> > +               else if (!count)
+> > +                       __put_page(page);
+> > +       }
+> > +
+> > +       return is_devmap;
+> > +}
+> > +
+> >  #else /* CONFIG_DEV_PAGEMAP_OPS */
+> >  static inline bool put_devmap_managed_page(struct page *page)
+> >  {
+> > diff --git a/mm/memremap.c b/mm/memremap.c
+> > index 03ccbdfeb697..bc7e2a27d025 100644
+> > --- a/mm/memremap.c
+> > +++ b/mm/memremap.c
+> > @@ -410,48 +410,39 @@ struct dev_pagemap *get_dev_pagemap(unsigned long=
+ pfn,
+> >  EXPORT_SYMBOL_GPL(get_dev_pagemap);
+> >
+> >  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> > -void __put_devmap_managed_page(struct page *page)
+> > +void free_devmap_managed_page(struct page *page)
+> >  {
+> > -       int count =3D page_ref_dec_return(page);
+> > +       /* Clear Active bit in case of parallel mark_page_accessed */
+> > +       __ClearPageActive(page);
+> > +       __ClearPageWaiters(page);
+> > +
+> > +       mem_cgroup_uncharge(page);
 >
-> A zero latency constraint means "do not use the deepest idle state
-> path" as the 'use_deepest_state' boolean was used in the
-> cpuidle_idle_call.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/cpuidle/cpuidle.c | 6 +++---
->  include/linux/cpuidle.h   | 6 +++---
->  kernel/sched/idle.c       | 6 +++---
->  3 files changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index 44ae39f2b47a..f68a6c9e8482 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -100,19 +100,19 @@ static int find_deepest_state(struct cpuidle_driver *drv,
->
->  /**
->   * cpuidle_use_deepest_state - Set/clear governor override flag.
-> - * @enable: New value of the flag.
-> + * @latency: A latency constraint
+> Ugh, when did all this HMM specific manipulation sneak into the
+> generic ZONE_DEVICE path? It used to be gated by pgmap type with its
+> own put_zone_device_private_page(). For example it's certainly
+> unnecessary and might be broken (would need to check) to call
+> mem_cgroup_uncharge() on a DAX page. ZONE_DEVICE users are not a
+> monolith and the HMM use case leaks pages into code paths that DAX
+> explicitly avoids.
 
-I would call this latency_limit.
+It's been this way for a while and I did not react previously,
+apologies for that. I think __ClearPageActive, __ClearPageWaiters, and
+mem_cgroup_uncharge, belong behind a device-private conditional. The
+history here is:
 
-Maybe even latency_limit_ns (or us, whatever is more suitable), to
-make it clear which unit of time is used here.
+Move some, but not all HMM specifics to hmm_devmem_free():
+    2fa147bdbf67 mm, dev_pagemap: Do not clear ->mapping on final put
 
->   *
->   * Set/unset the current CPU to use the deepest idle state (override governors
->   * going forward if set).
+Remove the clearing of mapping since no upstream consumers needed it:
+    b7a523109fb5 mm: don't clear ->mapping in hmm_devmem_free
 
-I would update the comment too, something like:
+Add it back in once an upstream consumer arrived:
+    7ab0ad0e74f8 mm/hmm: fix ZONE_DEVICE anon page mapping reuse
 
-"Set/unset the current CPU to use the deepest idle state with the exit
-latency within @latency_limit"
+We're now almost entirely free of ->page_free callbacks except for
+that weird nouveau case, can that FIXME in nouveau_dmem_page_free()
+also result in killing the ->page_free() callback altogether? In the
+meantime I'm proposing a cleanup like this:
 
->   */
-> -void cpuidle_use_deepest_state(bool enable)
-> +void cpuidle_use_latency(unsigned int latency)
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index ad8e4df1282b..4eae441f86c9 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -337,13 +337,7 @@ static void pmem_release_disk(void *__pmem)
+        put_disk(pmem->disk);
+ }
 
-I wouldn't change the name of the function (because why really?).
+-static void pmem_pagemap_page_free(struct page *page)
+-{
+-       wake_up_var(&page->_refcount);
+-}
+-
+ static const struct dev_pagemap_ops fsdax_pagemap_ops =3D {
+-       .page_free              =3D pmem_pagemap_page_free,
+        .kill                   =3D pmem_pagemap_kill,
+        .cleanup                =3D pmem_pagemap_cleanup,
+ };
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 03ccbdfeb697..157edb8f7cf8 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -419,12 +419,6 @@ void __put_devmap_managed_page(struct page *page)
+         * holds a reference on the page.
+         */
+        if (count =3D=3D 1) {
+-               /* Clear Active bit in case of parallel mark_page_accessed =
+*/
+-               __ClearPageActive(page);
+-               __ClearPageWaiters(page);
+-
+-               mem_cgroup_uncharge(page);
+-
+                /*
+                 * When a device_private page is freed, the page->mapping f=
+ield
+                 * may still contain a (stale) mapping value. For example, =
+the
+@@ -446,10 +440,17 @@ void __put_devmap_managed_page(struct page *page)
+                 * handled differently or not done at all, so there is no n=
+eed
+                 * to clear page->mapping.
+                 */
+-               if (is_device_private_page(page))
+-                       page->mapping =3D NULL;
++               if (is_device_private_page(page)) {
++                       /* Clear Active bit in case of parallel
+mark_page_accessed */
++                       __ClearPageActive(page);
++                       __ClearPageWaiters(page);
 
->  {
->         struct cpuidle_device *dev;
->
->         preempt_disable();
->         dev = cpuidle_get_device();
->         if (dev)
-> -               dev->use_deepest_state = enable;
-> +               dev->use_latency = latency;
->         preempt_enable();
->  }
->
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index d23a3b1ddcf6..32018704f4ea 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -83,8 +83,8 @@ struct cpuidle_driver_kobj;
->  struct cpuidle_device {
->         unsigned int            registered:1;
->         unsigned int            enabled:1;
-> -       unsigned int            use_deepest_state:1;
->         unsigned int            poll_time_limit:1;
-> +       unsigned int            use_latency;
-
-And maybe call this forced_idle_latency_limit or similar?
-
-The idea being that when it is set, idle is forced (i.e. no
-governors), but there is a latency limit for the state to use.
-
->         unsigned int            cpu;
->         ktime_t                 next_hrtimer;
->
-> @@ -210,7 +210,7 @@ extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->                                       struct cpuidle_device *dev);
->  extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->                                 struct cpuidle_device *dev);
-> -extern void cpuidle_use_deepest_state(bool enable);
-> +extern void cpuidle_use_latency(unsigned int latency);
->  #else
->  static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->                                              struct cpuidle_device *dev)
-> @@ -218,7 +218,7 @@ static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->  static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->                                        struct cpuidle_device *dev)
->  {return -ENODEV; }
-> -static inline void cpuidle_use_deepest_state(bool enable)
-> +static inline void cpuidle_use_latency(unsigned int latency)
->  {
->  }
->  #endif
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index 8dad5aa600ea..00e064d3dfe1 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -165,7 +165,7 @@ static void cpuidle_idle_call(void)
->          * until a proper wakeup interrupt happens.
->          */
->
-> -       if (idle_should_enter_s2idle() || dev->use_deepest_state) {
-> +       if (idle_should_enter_s2idle() || dev->use_latency) {
->                 if (idle_should_enter_s2idle()) {
->                         rcu_idle_enter();
->
-> @@ -328,7 +328,7 @@ void play_idle(unsigned long duration_us)
->         rcu_sleep_check();
->         preempt_disable();
->         current->flags |= PF_IDLE;
-> -       cpuidle_use_deepest_state(true);
-> +       cpuidle_use_latency(1);
->
->         it.done = 0;
->         hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> @@ -339,7 +339,7 @@ void play_idle(unsigned long duration_us)
->         while (!READ_ONCE(it.done))
->                 do_idle();
->
-> -       cpuidle_use_deepest_state(false);
-> +       cpuidle_use_latency(0);
->         current->flags &= ~PF_IDLE;
->
->         preempt_fold_need_resched();
-> --
+-               page->pgmap->ops->page_free(page);
++                       mem_cgroup_uncharge(page);
++
++                       page->mapping =3D NULL;
++                       page->pgmap->ops->page_free(page);
++               } else
++                       wake_up_var(&page->_refcount);
+        } else if (!count)
+                __put_page(page);
+ }
