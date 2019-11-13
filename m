@@ -2,98 +2,97 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9ADC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BBEC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF5F2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612124;
-	bh=Fu6r4iI/EH3NR5exTinCBhqZXfwVnxkpV+/zjpYld+Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWvQDEhMgieq74KIBxapux8n8QLno7rcwEgLDw+QTKAcHIeuZX/4wj3e8HnFyxvYj
-	 UvsR6JyVWq/jZkA0Gm+iS3KyksYZ7NCG9oKursLVCPJT9bl1b5kN7CmNFrqmk2AdaB
-	 a7erj8WG85kdcr5PnZXWYefjbLTiLEYpr0QYxjEI=
+	by mail.kernel.org (Postfix) with ESMTP id 862AB2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbfKMC2n (ORCPT
+        id S1727921AbfKMC3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:28:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727153AbfKMBu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:29 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B61232245C;
-        Wed, 13 Nov 2019 01:50:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609829;
-        bh=Fu6r4iI/EH3NR5exTinCBhqZXfwVnxkpV+/zjpYld+Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3uWU0eSUbAnQfFjF+BLLz3nTwmTBZgb7E5lGApA5ILH7JU2O0NHj2tX9sopKhMV1
-         sPpDlMJ3Yf0CfrTSEcF802LXryfKU4GvXJvWqno6OLTk+3LNrQk45fej1FmYDKOGDT
-         M8QAZwsdOxB54K/93sJDp9tRDiy3v8N/BKzHhYwY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 003/209] ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
-Date:   Tue, 12 Nov 2019 20:46:59 -0500
-Message-Id: <20191113015025.9685-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
-References: <20191113015025.9685-1-sashal@kernel.org>
+        Tue, 12 Nov 2019 21:29:44 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39700 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfKMC3n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:29:43 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUiP4-0000ox-FH; Wed, 13 Nov 2019 02:29:06 +0000
+Date:   Wed, 13 Nov 2019 02:29:06 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 7/9] open: introduce openat2(2) syscall
+Message-ID: <20191113022906.GD26530@ZenIV.linux.org.uk>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-8-cyphar@cyphar.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105090553.6350-8-cyphar@cyphar.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+On Tue, Nov 05, 2019 at 08:05:51PM +1100, Aleksa Sarai wrote:
+  
+> +/*
+> + * Arguments for how openat2(2) should open the target path. If @resolve is
+> + * zero, then openat2(2) operates very similarly to openat(2).
+> + *
+> + * However, unlike openat(2), unknown bits in @flags result in -EINVAL rather
+> + * than being silently ignored. @mode must be zero unless one of {O_CREAT,
+> + * O_TMPFILE} are set, and @upgrade_mask must be zero unless O_PATH is set.
+> + *
+> + * @flags: O_* flags.
+> + * @mode: O_CREAT/O_TMPFILE file mode.
+> + * @upgrade_mask: UPGRADE_* flags (to restrict O_PATH re-opening).
 
-[ Upstream commit b830526f304764753fcb8b4a563a94080e982a6c ]
+???
 
-Add ti,syscon-unaligned-access property to PCIe RC nodes to set
-appropriate bits in CTRL_CORE_SMA_SW_7 register to enable workaround for
-errata i870.
-
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/dra7.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 2cb45ddd2ae3b..fc50d6a8e51ab 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -336,6 +336,7 @@
- 						<0 0 0 2 &pcie1_intc 2>,
- 						<0 0 0 3 &pcie1_intc 3>,
- 						<0 0 0 4 &pcie1_intc 4>;
-+				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
- 				status = "disabled";
- 				pcie1_intc: interrupt-controller {
- 					interrupt-controller;
-@@ -387,6 +388,7 @@
- 						<0 0 0 2 &pcie2_intc 2>,
- 						<0 0 0 3 &pcie2_intc 3>,
- 						<0 0 0 4 &pcie2_intc 4>;
-+				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
- 				pcie2_intc: interrupt-controller {
- 					interrupt-controller;
- 					#address-cells = <0>;
--- 
-2.20.1
-
+> + * @resolve: RESOLVE_* flags.
+> + */
+> +struct open_how {
+> +	__aligned_u64 flags;
+> +	__u16 mode;
+> +	__u16 __padding[3]; /* must be zeroed */
+> +	__aligned_u64 resolve;
+> +};
