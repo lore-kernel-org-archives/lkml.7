@@ -2,125 +2,146 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC3CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FE7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602AC222C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D1B222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:09:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="E5F+Gu5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfKMJJG (ORCPT
+        id S1727357AbfKMJJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:09:06 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43685 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbfKMJJF (ORCPT
+        Wed, 13 Nov 2019 04:09:12 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:2683 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfKMJJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:09:05 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUoe7-0000TC-92; Wed, 13 Nov 2019 10:09:03 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUoe6-0002mQ-73; Wed, 13 Nov 2019 10:09:02 +0100
-Date:   Wed, 13 Nov 2019 10:09:02 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     "thorsten.scherer@eckelmann.de" <thorsten.scherer@eckelmann.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 40/62] gpio: gpio-siox: Use new GPIO_LINE_DIRECTION
-Message-ID: <20191113090902.dev6yxyxvbf6bupm@pengutronix.de>
-References: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
- <91a796dd2811b58f4be30875f5ef644f0e43f241.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
- <20191111072715.GB4117@ws067.eckelmann.group>
- <e38b59d9c8bcf81bbd49fed2d9d17350d4dc4866.camel@fi.rohmeurope.com>
- <20191111104252.5ixcb2tpnj6n5e6t@pengutronix.de>
- <20191113084637.GA23872@localhost.localdomain>
+        Wed, 13 Nov 2019 04:09:10 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcbc8350000>; Wed, 13 Nov 2019 01:09:09 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 13 Nov 2019 01:09:09 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 13 Nov 2019 01:09:09 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 09:09:09 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 Nov 2019 09:09:09 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dcbc8310001>; Wed, 13 Nov 2019 01:09:08 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <kishon@ti.com>, <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH 2/4] PCI: endpoint: Add notification for core init completion
+Date:   Wed, 13 Nov 2019 14:38:49 +0530
+Message-ID: <20191113090851.26345-3-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191113090851.26345-1-vidyas@nvidia.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191113084637.GA23872@localhost.localdomain>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573636149; bh=9U6u+odfldnbQptdUxvIfB0A/9BF5Luwy6niejQ8RZU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=E5F+Gu5UddwAPwEUAMkbFNBaMOtk4AlmXaEo7SJHwmMjyXkTQe9YTvDoxkT/bt+No
+         4ex2GD2tDuLnuzTwxiBS1rWQ3T6HXcdcNprStfEX0XGu4Zney1QoTapnYB0MwQcqiC
+         szHRYzggZub3Dl9U7A/JCiNJnOYZbw+MXwlFp5vCILYR52PJUbK36yEz5AxAitpDfo
+         nZKBfIb8k2xezfQK/FnypWbPF+Hrst0U3dk1bNZauryZTcXj2u9Iehtl3db9/K6jrO
+         Jw6Lhlo+KbvULL8Jvpe7yrTpW/lACZTU86FklLP+f9iUrrQBn2DnhQGe6vx9LwKfcc
+         TG+4r/gXS4U8Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 10:46:37AM +0200, Matti Vaittinen wrote:
-> On Mon, Nov 11, 2019 at 11:42:52AM +0100, Uwe Kleine-König wrote:
-> > Hello Matti,
-> > 
-> > On Mon, Nov 11, 2019 at 07:43:50AM +0000, Vaittinen, Matti wrote:
-> > > On Mon, 2019-11-11 at 08:27 +0100, Thorsten Scherer wrote:
-> > > > Hello,
-> > > > 
-> > > > On Tue, Nov 05, 2019 at 12:30:58PM +0200, Matti Vaittinen wrote:
-> > > > > It's hard for occasional GPIO code reader/writer to know if values
-> > > > > 0/1
-> > > > > equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-> > > > > GPIO_LINE_DIRECTION_OUT to help them out.
-> > > > > 
-> > > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > > 
-> > > > for SIOX gpio:
-> > > > 
-> > > > Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
-> > > > 
-> > > > > Patches are compile-tested only. I have no HW to really test
-> > > > > them.  Thus
-> > > > > I'd appreciate carefull review. This work is mainly about
-> > > > > converting
-> > > > > zeros and ones to the new defines but it wouldn't be first time I
-> > > > > get it wrong in one of the patches
-> > > > > :)                                                   
-> > > > 
-> > > > Applied the patch(es) and tested them with SIOX device
-> > > > 
-> > > > Tested-by: Thorsten Scherer <t.scherer@eckelmann.de>
-> > > 
-> > > Big thanks! It's _really_ nice that someone takes the time to do the
-> > > testing! Highly appreciated! :]
-> > 
-> > without wanting to devalue Thorsten's testing, I think testing your
-> > series can be trivially done without a runtime check as your patches
-> > won't change the compiled result. So just compile once without the patch
-> > and once with and compare the results. If they are bit-by-bit identical
-> > everything is fine.
-> 
-> Right again Uwe. This is correct for most of the modules - assuming
-> there's no __LINE__ or time related macros used. Few of the modules did
-> get actual changes though.
+Add support to send notifications to EPF from EPC once the core
+registers initialization is complete.
 
-So as you did this research, I think it's worth pointing this out in the
-commit log. Either something like:
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ drivers/pci/endpoint/pci-epc-core.c | 19 ++++++++++++++++++-
+ include/linux/pci-epc.h             |  1 +
+ include/linux/pci-epf.h             |  5 +++++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
-	There are no changes in the compile result.
-
-or
-
-	This results in changes to the compiled module because ...
-
-(and probably ... is worth fixing).
-
-Best regards
-Uwe
-
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 2f6436599fcb..fcc3f7fb19c0 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -542,10 +542,27 @@ void pci_epc_linkup(struct pci_epc *epc)
+ 	if (!epc || IS_ERR(epc))
+ 		return;
+ 
+-	atomic_notifier_call_chain(&epc->notifier, 0, NULL);
++	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_linkup);
+ 
++/**
++ * pci_epc_init_notify() - Notify the EPF device that EPC device's core
++ *			   initialization is completed.
++ * @epc: the EPC device whose core initialization is completeds
++ *
++ * Invoke to Notify the EPF device that the EPC device's initialization
++ * is completed.
++ */
++void pci_epc_init_notify(struct pci_epc *epc)
++{
++	if (!epc || IS_ERR(epc))
++		return;
++
++	atomic_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
++}
++EXPORT_SYMBOL_GPL(pci_epc_init_notify);
++
+ /**
+  * pci_epc_destroy() - destroy the EPC device
+  * @epc: the EPC device that has to be destroyed
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 241e6a6f39fb..c670543e42f9 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -160,6 +160,7 @@ void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc);
+ void pci_epc_destroy(struct pci_epc *epc);
+ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf);
+ void pci_epc_linkup(struct pci_epc *epc);
++void pci_epc_init_notify(struct pci_epc *epc);
+ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf);
+ int pci_epc_write_header(struct pci_epc *epc, u8 func_no,
+ 			 struct pci_epf_header *hdr);
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index 4993f7f6439b..3cb65ac1648c 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -15,6 +15,11 @@
+ 
+ struct pci_epf;
+ 
++enum pci_notify_event {
++	CORE_INIT,
++	LINK_UP,
++};
++
+ enum pci_barno {
+ 	BAR_0,
+ 	BAR_1,
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.17.1
+
