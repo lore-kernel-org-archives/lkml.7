@@ -2,215 +2,143 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5205C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25259C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDE3206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:35:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mz29wxCL"
+	by mail.kernel.org (Postfix) with ESMTP id 5D91D206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbfKMSfO (ORCPT
+        id S1728434AbfKMSi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:35:14 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:39870 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbfKMSfK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:35:10 -0500
-Received: by mail-yb1-f196.google.com with SMTP id q18so1353871ybq.6;
-        Wed, 13 Nov 2019 10:35:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XDi/ntprkg3QynLzmnS5etARNN2x0LlcxJAfofHbmvI=;
-        b=mz29wxCLbj5XV0esYlUTXfCBkGNYAf+abaKCz/Gnsro+dGcvQ/eXD5L+c0Pt4Wtofl
-         ZvLUcI5ltaBf5gxBl3IuzlsJsWpL9DErj1FG+vqINIY1pwAePwtQXhDLVr1Wof9iABuI
-         /AmgK1E4UQyyQZElYH4eDFo3nXYO1OUoQjBC4J3o0Ye2eqx7FuBbvLKyzpKHOda4qVv9
-         VBnfKYhRRKliNkwhu3JDXdKdvFLOZ9Tp6baKF+6V/gwDmGbF7FmE1AYMlIpXKz3579Y2
-         kH/sK9AqI6gwlhUnnMKHBt9T2Cxt/HVNlXTGJjrjMgVQyjLDebY7kZNziz/sq7HA7lUU
-         uVUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XDi/ntprkg3QynLzmnS5etARNN2x0LlcxJAfofHbmvI=;
-        b=DG+qHCui4mVRTpuJ6asGv/Uedz3bD6QjNnzQK+prqyRQJs7KqEA4H0bksczdtx71ef
-         GjUZc26oQD3+2aMc/Kbs4D9l8RSp0H5OtkzA0lLD0QSAiB59y9cL1I49HXJ8so5wsxJ7
-         4QCHdLzMUMmRZOsXSG/6bCYl0E2svFHOAB/OvZ7u7YEtvV6AEPK5YTaGxyg31a4AGWUh
-         jSXA4aCp5DOdoiuRqb8yEoEZb/C/YSpaMWrt0XqdSszjIi52LXqRWskCuha2ArBtmvQY
-         DoZPNd3MUtG6+o8qib8wF6J6QR5G6cMnGTqOeX/LccWVf263i799QH7E7j0SIRuNVlHv
-         X0Zw==
-X-Gm-Message-State: APjAAAWMPDFLoq3oD5CfJE5kVzysT2Vd7FXcypmRhNgZbCDcnnOBXX/7
-        c1CRqao2+IxIDTC9Kfsf8Cd2JY2gCZ+SN86M1Hk=
-X-Google-Smtp-Source: APXvYqxjaYBZBav2D3uP0xrSXLsQH8FhA7HHnTMnS+eyI3XQFNy+cNCBTl+Jzpx51zpV//vkajjdZIdYfUFDPBFhccg=
-X-Received: by 2002:a25:6649:: with SMTP id z9mr3375513ybm.132.1573670108633;
- Wed, 13 Nov 2019 10:35:08 -0800 (PST)
+        Wed, 13 Nov 2019 13:38:26 -0500
+Received: from mga03.intel.com ([134.134.136.65]:57924 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727538AbfKMSiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:38:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 10:38:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,301,1569308400"; 
+   d="scan'208";a="207879666"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga006.jf.intel.com with ESMTP; 13 Nov 2019 10:38:23 -0800
+Date:   Wed, 13 Nov 2019 10:38:23 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 03/23] mm/gup: move try_get_compound_head() to top,
+ fix minor issues
+Message-ID: <20191113183822.GC12699@iweiny-DESK2.sc.intel.com>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com>
+ <20191113042710.3997854-4-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20191113175746.110933-1-colin.king@canonical.com>
-In-Reply-To: <20191113175746.110933-1-colin.king@canonical.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 13 Nov 2019 20:34:57 +0200
-Message-ID: <CAOQ4uxiV06H9s8WMso6A1A7mhdvQ_AuWM0n71VoGYTdryi8KNA@mail.gmail.com>
-Subject: Re: [PATCH][V3] ovl: fix lookup failure on multi lower squashfs
-To:     Colin King <colin.king@canonical.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113042710.3997854-4-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 7:57 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Amir Goldstein <amir73il@gmail.com>
->
-> In the past, overlayfs required that lower fs have non null
-> uuid in order to support nfs export and decode copy up origin file handles.
->
-> Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
-> lower fs") relaxed this requirement for nfs export support, as long
-> as uuid (even if null) is unique among all lower fs.
->
-> However, said commit unintentionally also relaxed the non null uuid
-> requirement for decoding copy up origin file handles, regardless of
-> the unique uuid requirement.
->
-> Amend this mistake by disabling decoding of copy up origin file handle
-> from lower fs with a conflicting uuid.
->
-> We still encode copy up origin file handles from those fs, because
-> file handles like those already exist in the wild and because they
-> might provide useful information in the future.
->
-> [Colin Ian King] fixed the case of index=off,nfs_export=off
->
-> Reported-by: Colin Ian King <colin.king@canonical.com>
-> Link: https://lore.kernel.org/lkml/20191106234301.283006-1-colin.king@canonical.com/
-> Fixes: 9df085f3c9a2 ("ovl: relax requirement for non null uuid ...")
-> Cc: stable@vger.kernel.org # v4.20+
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> Tested-by: Colin Ian King <colin.king@canonical.com>
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>`
+On Tue, Nov 12, 2019 at 08:26:50PM -0800, John Hubbard wrote:
+> An upcoming patch uses try_get_compound_head() more widely,
+> so move it to the top of gup.c.
+> 
+> Also fix a tiny spelling error and a checkpatch.pl warning.
+> 
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+
+Simple enough...
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
 > ---
->
-> V3: fix the following check:
->   -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
->   +       if (!ofs->config.nfs_export && !ofs->upper_mnt)
->
-> Add the index=off,nfs_export=off comment in the commit message
->
-> ---
->  fs/overlayfs/namei.c     |  8 ++++++++
->  fs/overlayfs/ovl_entry.h |  2 ++
->  fs/overlayfs/super.c     | 15 +++++++++++----
->  3 files changed, 21 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-> index e9717c2f7d45..f47c591402d7 100644
-> --- a/fs/overlayfs/namei.c
-> +++ b/fs/overlayfs/namei.c
-> @@ -325,6 +325,14 @@ int ovl_check_origin_fh(struct ovl_fs *ofs, struct ovl_fh *fh, bool connected,
->         int i;
->
->         for (i = 0; i < ofs->numlower; i++) {
-> +               /*
-> +                * If lower fs uuid is not unique among lower fs we cannot match
-> +                * fh->uuid to layer.
-> +                */
-> +               if (ofs->lower_layers[i].fsid &&
-> +                   ofs->lower_layers[i].fs->bad_uuid)
-> +                       continue;
-> +
->                 origin = ovl_decode_real_fh(fh, ofs->lower_layers[i].mnt,
->                                             connected);
->                 if (origin)
-> diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
-> index a8279280e88d..28348c44ea5b 100644
-> --- a/fs/overlayfs/ovl_entry.h
-> +++ b/fs/overlayfs/ovl_entry.h
-> @@ -22,6 +22,8 @@ struct ovl_config {
->  struct ovl_sb {
->         struct super_block *sb;
->         dev_t pseudo_dev;
-> +       /* Unusable (conflicting) uuid */
-> +       bool bad_uuid;
+>  mm/gup.c | 29 +++++++++++++++--------------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 199da99e8ffc..933524de6249 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -29,6 +29,21 @@ struct follow_page_context {
+>  	unsigned int page_mask;
 >  };
->
->  struct ovl_layer {
-> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-> index afbcb116a7f1..e53d399ce0af 100644
-> --- a/fs/overlayfs/super.c
-> +++ b/fs/overlayfs/super.c
-> @@ -1255,7 +1255,7 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
->  {
->         unsigned int i;
->
-> -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
-> +       if (!ofs->config.nfs_export && !ofs->upper_mnt)
->                 return true;
->
->         for (i = 0; i < ofs->numlowerfs; i++) {
-> @@ -1263,9 +1263,13 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
->                  * We use uuid to associate an overlay lower file handle with a
->                  * lower layer, so we can accept lower fs with null uuid as long
->                  * as all lower layers with null uuid are on the same fs.
-> +                * if we detect multiple lower fs with the same uuid, we
-> +                * disable lower file handle decoding on all of them.
->                  */
-> -               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid))
-> +               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid)) {
-> +                       ofs->lower_fs[i].bad_uuid = true;
->                         return false;
-> +               }
->         }
->         return true;
+>  
+> +/*
+> + * Return the compound head page with ref appropriately incremented,
+> + * or NULL if that failed.
+> + */
+> +static inline struct page *try_get_compound_head(struct page *page, int refs)
+> +{
+> +	struct page *head = compound_head(page);
+> +
+> +	if (WARN_ON_ONCE(page_ref_count(head) < 0))
+> +		return NULL;
+> +	if (unlikely(!page_cache_add_speculative(head, refs)))
+> +		return NULL;
+> +	return head;
+> +}
+> +
+>  /**
+>   * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned pages
+>   * @pages:  array of pages to be maybe marked dirty, and definitely released.
+> @@ -1793,20 +1808,6 @@ static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
+>  	}
 >  }
-> @@ -1277,6 +1281,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
->         unsigned int i;
->         dev_t dev;
->         int err;
-> +       bool bad_uuid = false;
->
->         /* fsid 0 is reserved for upper fs even with non upper overlay */
->         if (ofs->upper_mnt && ofs->upper_mnt->mnt_sb == sb)
-> @@ -1287,10 +1292,11 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
->                         return i + 1;
->         }
->
-> -       if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
-> +       if (ofs->upper_mnt && !ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
-
-Sorry I wasn't clear.
-Miklos is right. the test ofs->upper_mnt here is bogus because
-nfs_export could be enabled without upper.
-The change you made in v3 to ovl_lower_uuid_ok() should be enough.
-
-> +               bad_uuid = true;
->                 ofs->config.index = false;
->                 ofs->config.nfs_export = false;
-> -               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', falling back to index=off,nfs_export=off.\n",
-> +               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', enforcing index=off,nfs_export=off.\n",
->                         uuid_is_null(&sb->s_uuid) ? "null" : "conflicting",
->                         path->dentry);
->         }
-> @@ -1303,6 +1309,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
->
->         ofs->lower_fs[ofs->numlowerfs].sb = sb;
->         ofs->lower_fs[ofs->numlowerfs].pseudo_dev = dev;
-> +       ofs->lower_fs[ofs->numlowerfs].bad_uuid = bad_uuid;
->         ofs->numlowerfs++;
->
->         return ofs->numlowerfs;
-> --
-> 2.20.1
->
+>  
+> -/*
+> - * Return the compund head page with ref appropriately incremented,
+> - * or NULL if that failed.
+> - */
+> -static inline struct page *try_get_compound_head(struct page *page, int refs)
+> -{
+> -	struct page *head = compound_head(page);
+> -	if (WARN_ON_ONCE(page_ref_count(head) < 0))
+> -		return NULL;
+> -	if (unlikely(!page_cache_add_speculative(head, refs)))
+> -		return NULL;
+> -	return head;
+> -}
+> -
+>  #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
+>  static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+>  			 unsigned int flags, struct page **pages, int *nr)
+> -- 
+> 2.24.0
+> 
