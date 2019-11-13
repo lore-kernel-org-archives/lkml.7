@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B6EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAFFC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF4121D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9AE21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611534;
-	bh=ZhaejBiZlZmk0+HgH9Jh1GY+ficYYpHrDSmFxd6848E=;
+	s=default; t=1573611539;
+	bh=84uaRIPv5X8QlnjzO78ZiN4sPge0T8QMfyyMtrZ2xiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EWEeZB2DPbInTrJ6r2WKy5g11/UllcjLmWguPqMltEu3a+VjdOR8zO92AIbfEaSbt
-	 bjXlQXgncJG04pi5OVmB2BOLNFl5M705wSFVHIpBpuHz42SXWO1h36mcg2fUjtuWXX
-	 +fdtjoZ28Ps9zmUyDaYayAmKiX16JFS1O4HDvz3I=
+	b=VORsqAVJEpiKkmf7Lqd+T5NhlchJnMgHpTDxbYjGXVNCXDH87VQl2dQjbB/w9f1Rg
+	 TQLmRD6As+Q2EQSdwjocVdzYViLiUHRViwpXPOE7Wm64nfI+mGaRPYP6dklv55Dz3p
+	 f9dfGq/sVkwfrLxGxwnC33WzY9y176WaGtl3VtlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfKMCSx (ORCPT
+        id S1729130AbfKMBzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:18:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729144AbfKMBzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:32 -0500
+        id S1728176AbfKMBzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8634620674;
-        Wed, 13 Nov 2019 01:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7C21222D3;
+        Wed, 13 Nov 2019 01:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610132;
-        bh=ZhaejBiZlZmk0+HgH9Jh1GY+ficYYpHrDSmFxd6848E=;
+        s=default; t=1573610120;
+        bh=84uaRIPv5X8QlnjzO78ZiN4sPge0T8QMfyyMtrZ2xiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ydqmGvdCvF8nbVNkEuDo01Bol3hEkE8e+36FOvmAehtV7tNx/EVSCBG0VsSwg1SHG
-         VGytAbb9LtfwZ/5fDYKITFlfdA3NorRO7p+xn6YKuRDwYiZbc2XzYZcqOb4pfiSL8G
-         7TZSpdb8rY6dxSugAgg60cjQHmmrSOEfL4rCKHno=
+        b=Q5wJmubxEpB+tNULJnuEZ4FCvsQOZJKKzxGsYvN2IMHiWokj7CY1NXKaqRMNn3q7V
+         0KpDTyYOVJfugSw35bN4oswOJUzQhc3ecW6DIn5wDp8Xtoi9SnDyClGexIpXnUXv3D
+         N8x0H+WvfcETweo6iYlhyHl2BcUzhmSZjErgBUcI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trent Piepho <tpiepho@impinj.com>,
-        =?UTF-8?q?Jan=20Kundr=C3=83=C2=A1t?= <jan.kundrat@cesnet.cz>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 182/209] spi: spidev: Fix OF tree warning logic
-Date:   Tue, 12 Nov 2019 20:49:58 -0500
-Message-Id: <20191113015025.9685-182-sashal@kernel.org>
+Cc:     Zhoujie Wu <zjwu@marvell.com>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@cnexlabs.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 175/209] lightnvm: pblk: consider max hw sectors supported for max_write_pgs
+Date:   Tue, 12 Nov 2019 20:49:51 -0500
+Message-Id: <20191113015025.9685-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -62,50 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trent Piepho <tpiepho@impinj.com>
+From: Zhoujie Wu <zjwu@marvell.com>
 
-[ Upstream commit 605b3bec73cbd74b4ac937b580cd0b47d1300484 ]
+[ Upstream commit 8a57fc3823d08edb1661a06d9e0a8c2365ac561e ]
 
-spidev will make a big fuss if a device tree node binds a device by
-using "spidev" as the node's compatible property.
+When do GC, the number of read/write sectors are determined
+by max_write_pgs(see gc_rq preparation in pblk_gc_line_prepare_ws).
 
-However, the logic for this isn't looking for "spidev" in the
-compatible, but rather checking that the device is NOT compatible with
-spidev's list of devices.
+Due to max_write_pgs doesn't consider max hw sectors
+supported by nvme controller(128K), which leads to GC
+tries to read 64 * 4K in one command, and see below error
+caused by pblk_bio_map_addr in function pblk_submit_read_gc.
 
-This causes a false positive if a device not named "rohm,dh2228fv", etc.
-binds to spidev, even if a means other than putting "spidev" in the
-device tree was used.  E.g., the sysfs driver_override attribute.
+[ 2923.005376] pblk: could not add page to bio
+[ 2923.005377] pblk: could not allocate GC bio (18446744073709551604)
 
-Signed-off-by: Trent Piepho <tpiepho@impinj.com>
-Reviewed-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
-Tested-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Zhoujie Wu <zjwu@marvell.com>
+Reviewed-by: Javier González <javier@cnexlabs.com>
+Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/lightnvm/pblk-init.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index cda10719d1d1b..c5fe08bc34a0a 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -724,11 +724,9 @@ static int spidev_probe(struct spi_device *spi)
- 	 * compatible string, it is a Linux implementation thing
- 	 * rather than a description of the hardware.
- 	 */
--	if (spi->dev.of_node && !of_match_device(spidev_dt_ids, &spi->dev)) {
--		dev_err(&spi->dev, "buggy DT: spidev listed directly in DT\n");
--		WARN_ON(spi->dev.of_node &&
--			!of_match_device(spidev_dt_ids, &spi->dev));
--	}
-+	WARN(spi->dev.of_node &&
-+	     of_device_is_compatible(spi->dev.of_node, "spidev"),
-+	     "%pOF: buggy DT: spidev listed directly in DT\n", spi->dev.of_node);
+diff --git a/drivers/lightnvm/pblk-init.c b/drivers/lightnvm/pblk-init.c
+index 91fd2b291db91..88b632787abd6 100644
+--- a/drivers/lightnvm/pblk-init.c
++++ b/drivers/lightnvm/pblk-init.c
+@@ -375,6 +375,8 @@ static int pblk_core_init(struct pblk *pblk)
+ 	pblk->min_write_pgs = geo->ws_opt;
+ 	max_write_ppas = pblk->min_write_pgs * geo->all_luns;
+ 	pblk->max_write_pgs = min_t(int, max_write_ppas, NVM_MAX_VLBA);
++	pblk->max_write_pgs = min_t(int, pblk->max_write_pgs,
++		queue_max_hw_sectors(dev->q) / (geo->csecs >> SECTOR_SHIFT));
+ 	pblk_set_sec_per_write(pblk, pblk->min_write_pgs);
  
- 	spidev_probe_acpi(spi);
- 
+ 	if (pblk->max_write_pgs > PBLK_MAX_REQ_ADDRS) {
 -- 
 2.20.1
 
