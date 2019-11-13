@@ -2,154 +2,102 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB586C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43D1C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06CF206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF97206F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573682924;
-	bh=hJvZnv2p+LOhT4SJwtIm2R4nRbbpa24OpGdi6o4g5n0=;
+	s=default; t=1573683029;
+	bh=tpUrEsltff8WpmsbUvxUefhH+njQsK1DW06jfDDhLcs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i58gCqadMwfAt7PxSSW5MtyFPUu1KA/s60K6E4xCN22koNi8GVe3SNcMuB/RR9qZt
-	 xKEsplL66KJof/Mn1M/o6laJik1t00fpluikyxz5ez3I4ADw6VINxCB7O/xV2VVSTf
-	 vYTKiZrTYt6+Rv7pC9LvqfUMmJFrPoEUUw1e4rEQ=
+	b=hn0MB0T+bkI8fbG5W06px/mIzqhufHNqWeMqhYomkBO3YhaJ/zO2Xsccs+Xs3CEvu
+	 AeNCRmh7VKYfBlfj6AF7p87hSnhi1F77fLGXDxx2bt0Ay7rromK8g9xZmXNkLYnnC6
+	 uKlJDRGVW0wHxC4yA5J/KTdCjlZ9ZP8e1Ws+zWFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfKMWIm (ORCPT
+        id S1726597AbfKMWK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:08:42 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45815 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfKMWIm (ORCPT
+        Wed, 13 Nov 2019 17:10:27 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39632 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfKMWK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 17:08:42 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 14so3294352oir.12;
-        Wed, 13 Nov 2019 14:08:41 -0800 (PST)
+        Wed, 13 Nov 2019 17:10:27 -0500
+Received: by mail-lj1-f196.google.com with SMTP id p18so4361308ljc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 14:10:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i1zMQg9x2+quU7c6dj26l16dpASxnQWLZmydmUaC3KM=;
+        b=GjdF9KRD29TPy51zlv+jHE6g1MGXU72w8Fz2FjC59HVEdkEXOFsEkYQxHadVwMFOR8
+         ZdLXM30tUP6XNNIyPWNpPAn8oYNEE57ryb6Zfh+ymwEyNaxyN594mDcbgIJF0cqOJ/Aq
+         Hw0QZWR7LcRPglxFbogYFzPP0c04ARjV0oNaU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CfLfWzCvWjnUrBVWFkt46gehHaJKbKq1rxN/hjJdf4I=;
-        b=aKVFPOT+Ss9nXOSfMY3vSih2NyD1GBorgF7JsFBEeOGa8NkXpIx+NEd6ek5CaxT/o/
-         dxIaLpuwQGZ48v4grmISVKc8N9W59aDSDFerH/KW3tztUQqyPUhLWocfgjyF/r6In8j8
-         o0YJwW7tSzWMKlN4ZhMptaQmuQrs8LPNjONAqYy+id3HJkZM5WTAlK0wHSmo5carKrlI
-         tkeuk4B+tG+h6QU8gMYLXL9FyyagrEo+jcgxbRNPkR1Ut0wsCmOIVMWbAicWS2f6j5XE
-         DfqaguNj6MxS5yPWHrnGeLtMMAoMwgHJC6OXGoivsX48m56I3LzJe1xrIwAdTfLnS3tE
-         3QuQ==
-X-Gm-Message-State: APjAAAXcjsIPImJWg1tTiLSE36OrgYVu31kCYQ7aAaenrxm5f6ITAFWv
-        F+sVbLvulbFqwANZq5F79xi4skaIqZ59wVo9NFc=
-X-Google-Smtp-Source: APXvYqyB68Y4oQi9MF7eS/SkDk6oN8v5rDRu6919DWuCZFba7fXminPfsRrTPArVEMkjypxuDoeE2AqpMCf36blHHyE=
-X-Received: by 2002:aca:530c:: with SMTP id h12mr842120oib.110.1573682920995;
- Wed, 13 Nov 2019 14:08:40 -0800 (PST)
+        bh=i1zMQg9x2+quU7c6dj26l16dpASxnQWLZmydmUaC3KM=;
+        b=n7X5B74zTRRuszNd2EkTiwPMEMhP6EBU2lpyYvN93jVc6gr+SXHPfrlPXzE9NkR/Jd
+         ck5kznDf+h03CFFJWp+rJuNsUurTXIXYp5WUh1Rk/KAwsRxs368los+6/prmRpqv87X7
+         Q6LvabEzAMVeYklG9oivhEtaY6n+k7nxku5FxzLBkTgdMABBwDWpwuMIGL6ZXdEed2ix
+         dD6MWnVbb1p1mIkhonD/w2Y4hOCE9Y/TC0fCmoZ0aFSnBUNsWdAbvHn8BJa6201qm874
+         6xHEnMXQQUwKacbPWrZ80fQpL0azU1t2/U6z9ltiFzLQq1ph8n4JSbanxie8je6AEVHA
+         fzOQ==
+X-Gm-Message-State: APjAAAUO3zzAy6xCoct/WYIHUGEHVc10eleJTlZIm+HmmnQkDl665DwH
+        +09jVUpbbN4H5Xab7GPgmfRvqoGdidk=
+X-Google-Smtp-Source: APXvYqw6iZHKqI7DBExVO1WYorN+kfCIvD1KZBN6qZwga+fX7GTH06+oJkV5tMaEdYIL3Ae0gPAGHw==
+X-Received: by 2002:a2e:898d:: with SMTP id c13mr4252191lji.54.1573683024070;
+        Wed, 13 Nov 2019 14:10:24 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id t8sm1539521lfl.51.2019.11.13.14.10.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Nov 2019 14:10:22 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id n5so4339611ljc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 14:10:22 -0800 (PST)
+X-Received: by 2002:a2e:8809:: with SMTP id x9mr4163916ljh.82.1573683022288;
+ Wed, 13 Nov 2019 14:10:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20191113185419.13305-1-daniel.lezcano@linaro.org> <20191113185419.13305-2-daniel.lezcano@linaro.org>
-In-Reply-To: <20191113185419.13305-2-daniel.lezcano@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 13 Nov 2019 23:08:30 +0100
-Message-ID: <CAJZ5v0gjJFuUUaFD9g8H4WH0rx-xax_ArKmiJwarTt26_C-ACg@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/3] sched: idle: Add a latency parameter to the
- play_idle function
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20191113204240.767922595@linutronix.de> <20191113210103.911310593@linutronix.de>
+ <CAHk-=whNAEuNPU3Oy_-EpjOojpysWcCh4uqDgOt2RjBNx2xBSg@mail.gmail.com> <alpine.DEB.2.21.1911132237410.2507@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1911132237410.2507@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 13 Nov 2019 14:10:06 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgjnqBneDpDoYBOtGE-+hV_-nUEGC6O71DwyCy9zD6RKQ@mail.gmail.com>
+Message-ID: <CAHk-=wgjnqBneDpDoYBOtGE-+hV_-nUEGC6O71DwyCy9zD6RKQ@mail.gmail.com>
+Subject: Re: [patch V3 02/20] x86/process: Unify copy_thread_tls()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 7:54 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On Wed, Nov 13, 2019 at 1:41 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> By default the play_idle() function leads to the deepest idle state
-> selection which is not necessarily the state we are interested in when
-> forcing the CPU to go to idle.
+> See commit: 64604d54d311 ("sched/x86_64: Don't save flags on context switch")
 >
-> Add a latency parameter to the play_idle() function, so the caller can
-> use the constraint to allow a shallower state.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/powercap/idle_inject.c           | 2 +-
->  drivers/thermal/intel/intel_powerclamp.c | 2 +-
->  include/linux/cpu.h                      | 2 +-
->  kernel/sched/idle.c                      | 4 ++--
->  4 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
-> index cd1270614cc6..6f2bfb172e61 100644
-> --- a/drivers/powercap/idle_inject.c
-> +++ b/drivers/powercap/idle_inject.c
-> @@ -138,7 +138,7 @@ static void idle_inject_fn(unsigned int cpu)
->          */
->         iit->should_run = 0;
->
-> -       play_idle(READ_ONCE(ii_dev->idle_duration_us));
-> +       play_idle(READ_ONCE(ii_dev->idle_duration_us), UINT_MAX);
->  }
->
->  /**
-> diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
-> index 53216dcbe173..dd1330d59176 100644
-> --- a/drivers/thermal/intel/intel_powerclamp.c
-> +++ b/drivers/thermal/intel/intel_powerclamp.c
-> @@ -430,7 +430,7 @@ static void clamp_idle_injection_func(struct kthread_work *work)
->         if (should_skip)
->                 goto balance;
->
-> -       play_idle(jiffies_to_usecs(w_data->duration_jiffies));
-> +       play_idle(jiffies_to_usecs(w_data->duration_jiffies), UINT_MAX);
->
->  balance:
->         if (clamping && w_data->clamping && cpu_online(w_data->cpu))
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index d0633ebdaa9c..241f558af17a 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -179,7 +179,7 @@ void arch_cpu_idle_dead(void);
->  int cpu_report_state(int cpu);
->  int cpu_check_up_prepare(int cpu);
->  void cpu_set_state_online(int cpu);
-> -void play_idle(unsigned long duration_us);
-> +void play_idle(unsigned long duration_us, unsigned int latency);
->
->  #ifdef CONFIG_HOTPLUG_CPU
->  bool cpu_wait_death(unsigned int cpu, int seconds);
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index 00e064d3dfe1..56a8b9d35cb9 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -311,7 +311,7 @@ static enum hrtimer_restart idle_inject_timer_fn(struct hrtimer *timer)
->         return HRTIMER_NORESTART;
->  }
->
-> -void play_idle(unsigned long duration_us)
-> +void play_idle(unsigned long duration_us, unsigned int latency)
+> We need "only" make objtool support 32bit :)
 
-I'd rather rename this to something like play_idle_precise() and
-redefine play_idle() as a single-argument wrapper around it.
+Duh, I knew that.
 
-Maybe also change the first arg to ns while at it (and keep us in play_idle())?
+Maybe just a comment in the structure and/or the __switch_to_asm() so
+that next time I forget I won't look like such a tool.
 
->  {
->         struct idle_timer it;
->
-> @@ -328,7 +328,7 @@ void play_idle(unsigned long duration_us)
->         rcu_sleep_check();
->         preempt_disable();
->         current->flags |= PF_IDLE;
-> -       cpuidle_use_latency(1);
-> +       cpuidle_use_latency(latency);
->
->         it.done = 0;
->         hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> --
-> 2.17.1
->
+The "Save callee-saved registers" comment we have now in the 32-bit
+__switch_to_asm() really is misleading and incorrect wrt the pushfl.
+
+            Linus
