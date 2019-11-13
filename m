@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA596C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FD6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9AE222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1840021783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610941;
-	bh=LweHk9SyP1/gFilCOzPMPDtIyP9pgPKCmKGKDqvX6ms=;
+	s=default; t=1573610946;
+	bh=JZdrSf66McTwmVPyGVXRXf/zpqf72r7V9/3MkaYOAbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SKrvxrZwM7979+TdPK90quK0t7HJz0TGRvtuX2cAq49c8exIbzDJDbj2MmWA+R0h5
-	 13MVkHVwIg9CeGGezZ4ZyIKdb7gJsJhBiMv5PmF2iQ8YVx+c2xnphxeM7ZJveFEV7S
-	 PM9xIBJEDq0Q1o/rA5r6cOYfrJ7Wz0bLXFwjAY9I=
+	b=h45wY+C7Pu6vVfyRRFUti0h7Vi5iXin7N14xUf6dWjdA+XYqI1FCJLakHV+zE8Xl3
+	 uuoV3ls7nm6Pb41+hVTApI6CH5qopwvdCfaY8PzdpCI8tiydbq+Hygdq1uyhUNGxzg
+	 oVsxUpJvbSvWImz2d55K1PADUxq8qf51GKjKdwJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbfKMB7u (ORCPT
+        id S1729576AbfKMCJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:59:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54480 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:09:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730319AbfKMB7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:59:44 -0500
+        id S1729407AbfKMB7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:59:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94F7E222CF;
-        Wed, 13 Nov 2019 01:59:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E453222CF;
+        Wed, 13 Nov 2019 01:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610384;
-        bh=LweHk9SyP1/gFilCOzPMPDtIyP9pgPKCmKGKDqvX6ms=;
+        s=default; t=1573610387;
+        bh=JZdrSf66McTwmVPyGVXRXf/zpqf72r7V9/3MkaYOAbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bzcnGnSOurDHV6seeM322rq2YMUvKGApg5n4tiIxxvpO+Pqc9qcZjJk9aS3eiu/JU
-         pspXxRpupjtVNVRDGFJ66yDiwLB1fTlAlCBFS3uLKlNPIlJFwJbP1itwBDTT61+sz2
-         7A+afuxxjGLN84zIMs4loUmHfyWx4nFmlLiBm9k8=
+        b=TxR/OFpCDoy53maRjsUukBnMd8txkRj6hZ4aOBqhKKVD01D28y/Y0M4hsuIpjfLl7
+         BCjK/dLsIfZdpCj/8wIF7rbiXeAge5SdTjbI3KC11QqxfIPThvFHnDvYr7uHMCw1nT
+         LHguDND+MhR/V1OySLNRVDNqB+ZkEaqBfpnFQYIo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Punit Agrawal <punit.agrawal@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 07/68] arm64/numa: Report correct memblock range for the dummy node
-Date:   Tue, 12 Nov 2019 20:58:31 -0500
-Message-Id: <20191113015932.12655-7-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/68] ata: ahci_brcm: Allow using driver or DSL SoCs
+Date:   Tue, 12 Nov 2019 20:58:34 -0500
+Message-Id: <20191113015932.12655-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -60,37 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 77cfe950901e5c13aca2df6437a05f39dd9a929b ]
+[ Upstream commit 7fb44929cb0e5cdcde143e1ca3ca57b5b8247db0 ]
 
-The dummy node ID is marked into all memory ranges on the system. So the
-dummy node really extends the entire memblock.memory. Hence report correct
-extent information for the dummy node using memblock range helper functions
-instead of the range [0LLU, PFN_PHYS(max_pfn) - 1)].
+The Broadcom STB AHCI controller is the same as the one found on DSL
+SoCs, so we will utilize the same driver on these systems as well.
 
-Fixes: 1a2db30034 ("arm64, numa: Add NUMA support for arm64 platforms")
-Acked-by: Punit Agrawal <punit.agrawal@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/numa.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 4b32168cf91a0..b1e42bad69ac3 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -424,7 +424,7 @@ static int __init dummy_numa_init(void)
- 	if (numa_off)
- 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
- 	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
--		0LLU, PFN_PHYS(max_pfn) - 1);
-+		memblock_start_of_DRAM(), memblock_end_of_DRAM() - 1);
+diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+index 5d16fc4fa46c7..a8d4f4b5a77eb 100644
+--- a/drivers/ata/Kconfig
++++ b/drivers/ata/Kconfig
+@@ -100,7 +100,8 @@ config SATA_AHCI_PLATFORM
  
- 	for_each_memblock(memory, mblk) {
- 		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
+ config AHCI_BRCM
+ 	tristate "Broadcom AHCI SATA support"
+-	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP
++	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP || \
++		   ARCH_BCM_63XX
+ 	help
+ 	  This option enables support for the AHCI SATA3 controller found on
+ 	  Broadcom SoC's.
 -- 
 2.20.1
 
