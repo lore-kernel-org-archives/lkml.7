@@ -2,53 +2,54 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF79C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9881C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB64222CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A97E21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611233;
-	bh=kYRv6X1JijuFRXp3cEKnjfaokBgri1XdSpNc8t1YNv4=;
+	s=default; t=1573611241;
+	bh=iUAeOmTC6KKyCJsPjqadlOssi2y1HjidqPkef2RGGfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kz5kc5LgQbw1IES1QTWqRFxAC7ZnAvOdCoN43XqY6kjZKhnenWVSYUkdECOqK9je5
-	 qPSMVdCkTVDRcoFEJjtXZnBLmCCDk6rqt2ONKUulFnbDBs+B1/BCu1NpkV4zRGdq0I
-	 BvOHi8yGZGGb7IMfIy4fsFyPvxZQBFhv9cfplqSM=
+	b=PBwjSW4gXaSvS1jSG2lQdkwh/mChkpQQKlrYwj/k++kCKQ0JuK2DBCcyW3wBji9ul
+	 3NxamKKzsXi3NwjIjRuY31gBa4UFSknXeNr5dX4wlcDl0NkJfJruGXxmOlad8H8rGl
+	 rm4x7wshOruIMPRB0U3XX+Q4Uj0IK7vgRvLu9d/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfKMB52 (ORCPT
+        id S1729784AbfKMB5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:57:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:57:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbfKMB5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:24 -0500
+        id S1728398AbfKMB5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E738222D3;
-        Wed, 13 Nov 2019 01:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9EAC2246A;
+        Wed, 13 Nov 2019 01:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610244;
-        bh=kYRv6X1JijuFRXp3cEKnjfaokBgri1XdSpNc8t1YNv4=;
+        s=default; t=1573610240;
+        bh=iUAeOmTC6KKyCJsPjqadlOssi2y1HjidqPkef2RGGfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4bJMZED7tfQUe5OM23CpHBIhd6RgsU4i1LGw6HbUZAhW54oZvCTOX5GkYIxGryVy
-         cGz5EcJy2Nna19j8zVCgqFXZMKSmjY0a2H4Yi2dIPJZ8pLPwHGSpWp3Z+K+RyARzM2
-         SoPe0Vhe0+xzkTAR9ysQmluTEopCMmVN3EkNLpxs=
+        b=QHE/g97sdTaW0q7NHMakvzkGQozTX0wUHtP8w2FPtot6aHYr8H/iHK3WJPfYkzSUP
+         R9wzSkvdQrBRiQrhGh5f2SWt7dVNaaki4W48lyzoNNaNqsjIvz5K+IddWUqhMzWTro
+         8NkCh15GaiFqmdKQQAdN5ijNFIRr1JY7uI6FRIgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 043/115] i40e: Use proper enum in i40e_ndo_set_vf_link_state
-Date:   Tue, 12 Nov 2019 20:55:10 -0500
-Message-Id: <20191113015622.11592-43-sashal@kernel.org>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 040/115] clocksource/drivers/sh_cmt: Fix clocksource width for 32-bit machines
+Date:   Tue, 12 Nov 2019 20:55:07 -0500
+Message-Id: <20191113015622.11592-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -61,47 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit 43ade6ad18416b8fd5bb3c9e9789faa666527eec ]
+[ Upstream commit 37e7742c55ba856eaec7e35673ee370f36eb17f3 ]
 
-Clang warns when one enumerated type is converted implicitly to another.
+The driver seems to abuse *unsigned long* not only for the (32-bit)
+register values but also for the 'sh_cmt_channel::total_cycles' which
+needs to always be 64-bit -- as a result, the clocksource's mask is
+needlessly clamped down to 32-bits on the 32-bit machines...
 
-drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:4214:42: warning:
-implicit conversion from enumeration type 'enum i40e_aq_link_speed' to
-different enumeration type 'enum virtchnl_link_speed'
-      [-Wenum-conversion]
-                pfe.event_data.link_event.link_speed = I40E_LINK_SPEED_40GB;
-                                                     ~ ^~~~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-Use the proper enum from virtchnl_link_speed, which has the same value
-as I40E_LINK_SPEED_40GB, VIRTCHNL_LINK_SPEED_40GB. This appears to be
-missed by commit ff3f4cc267f6 ("virtchnl: finish conversion to virtchnl
-interface").
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/81
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 19bdc9d061bc ("clocksource: sh_cmt clocksource support")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clocksource/sh_cmt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index bdb7523216000..ea42240ddace7 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -3191,7 +3191,7 @@ int i40e_ndo_set_vf_link_state(struct net_device *netdev, int vf_id, int link)
- 		vf->link_forced = true;
- 		vf->link_up = true;
- 		pfe.event_data.link_event.link_status = true;
--		pfe.event_data.link_event.link_speed = I40E_LINK_SPEED_40GB;
-+		pfe.event_data.link_event.link_speed = VIRTCHNL_LINK_SPEED_40GB;
- 		break;
- 	case IFLA_VF_LINK_STATE_DISABLE:
- 		vf->link_forced = true;
+diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
+index 560541f53c8d9..3cd62f7c33e30 100644
+--- a/drivers/clocksource/sh_cmt.c
++++ b/drivers/clocksource/sh_cmt.c
+@@ -105,7 +105,7 @@ struct sh_cmt_channel {
+ 	raw_spinlock_t lock;
+ 	struct clock_event_device ced;
+ 	struct clocksource cs;
+-	unsigned long total_cycles;
++	u64 total_cycles;
+ 	bool cs_enabled;
+ };
+ 
+@@ -607,8 +607,8 @@ static u64 sh_cmt_clocksource_read(struct clocksource *cs)
+ {
+ 	struct sh_cmt_channel *ch = cs_to_sh_cmt(cs);
+ 	unsigned long flags;
+-	unsigned long value;
+ 	u32 has_wrapped;
++	u64 value;
+ 	u32 raw;
+ 
+ 	raw_spin_lock_irqsave(&ch->lock, flags);
+@@ -682,7 +682,7 @@ static int sh_cmt_register_clocksource(struct sh_cmt_channel *ch,
+ 	cs->disable = sh_cmt_clocksource_disable;
+ 	cs->suspend = sh_cmt_clocksource_suspend;
+ 	cs->resume = sh_cmt_clocksource_resume;
+-	cs->mask = CLOCKSOURCE_MASK(sizeof(unsigned long) * 8);
++	cs->mask = CLOCKSOURCE_MASK(sizeof(u64) * 8);
+ 	cs->flags = CLOCK_SOURCE_IS_CONTINUOUS;
+ 
+ 	dev_info(&ch->cmt->pdev->dev, "ch%u: used as clock source\n",
 -- 
 2.20.1
 
