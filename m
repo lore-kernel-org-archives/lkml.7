@@ -2,63 +2,123 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC194C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1090EC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1D821D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E794721D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfKMHKT (ORCPT
+        id S1726363AbfKMHLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:10:19 -0500
-Received: from a4.isbfbf.cn ([23.228.73.175]:3421 "HELO zoosbook.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1725858AbfKMHKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:10:19 -0500
-Received: from unknown (HELO smtp-server1.cfdenselr.com) (Tue, 12 Nov 2019 18:09:05 -0500)
-        by qrx.quickslick.com with QMQP; Tue, 12 Nov 2019 18:09:05 -0500
-Received: from unknown (HELO webmail.halftomorrow.com) (Tue, 12 Nov 2019 18:01:06 -0500)
-        by smtp4.cyberemailings.com with ASMTP; Tue, 12 Nov 2019 18:01:06 -0500
-Received: from mx.reskind.net ([204.103.178.152]) by snmp.otwaloow.com with SMTP; Tue, 12 Nov 2019 17:46:46 -0500
-Message-ID: <0CD3EE06.1C1E5B70@zoosbook.com>
-Date:   Tue, 12 Nov 2019 17:39:59 -0500
-Reply-To: "zoosbook.com" <admin@zoosbook.com>
-From:   "zoosbook.com" <admin@zoosbook.com>
-User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.1.9) Gecko/20100317 Thunderbird/3.0.4
-X-Accept-Language: en-us
+        Wed, 13 Nov 2019 02:11:00 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40106 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfKMHLA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 02:11:00 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q2so1303187ljg.7;
+        Tue, 12 Nov 2019 23:10:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=4KMLVvREWKxLr4LB9g5/Vm1S14nk0c09BGMXFpgNmeg=;
+        b=niv7NGzemgYMr+K4qrKX5JPqn3sjTw0sl6bNPd3PZcJVFtY3UQMaIgQb5aPih/68n8
+         KYObdkkwY9eTDrg5K+7hhrxmuFubSSWSOspvs3Ky/m7Iu9tHhw0+sWcDmqKiMZ9fNT4t
+         sRIvAcA2qMOdpBtQsx1yq/DryyNlUcrUF116XOX5f9lp/umPAFdFnXBXTC3DWUvAveZX
+         3dj9vSaDhA6UjTtoMLsz7ij+V+ONHbes3fmJJnopb6jrMrLzpdH3eFHqsb3RJeoZTJ8S
+         a+CwR4qTFxhhqaOkk5pHthSJZg0SqLbpR3ba5crTanGfi61CcxkIlV7BaY/cK0g6qce1
+         iznA==
+X-Gm-Message-State: APjAAAWWWpk+KEoI/azIMt7CWdKIWY/KAzMERrBqa7ivJTVdK30s44Fb
+        Alr/rZgDpM/MOp8sbnxtGco=
+X-Google-Smtp-Source: APXvYqz0xPpVNHucYfZn/+JYHKGQXEeMbz2uUSTgoYfXe7nklrIXUyDRr45bgpXaEWLlaO66RANVzA==
+X-Received: by 2002:a2e:9149:: with SMTP id q9mr1403625ljg.49.1573629058069;
+        Tue, 12 Nov 2019 23:10:58 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id d17sm519689lja.27.2019.11.12.23.10.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 23:10:57 -0800 (PST)
+Date:   Wed, 13 Nov 2019 09:10:45 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] pinctrl: rza1: remove unnecessary static inline
+ function
+Message-ID: <20191113071045.GA22110@localhost.localdomain>
 MIME-Version: 1.0
-To:     <linux-kernel@vger.kernel.org>
-Cc:     <linux-msdos@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <linux-smp@vger.kernel.org>
-Subject: FREE Bestiality Social Network
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, 
+Having static inline oneliner does not benefit too mucg when it is
+only called from another oneliner function. Remove some of the
+'onion'. This simplifies also the coming usage of the gpiolib
+defines. We can do conversion from chip bits to gpiolib direction
+defines as last step in the get_direction callback. Drivers can
+use chip specific values in driver internal functions and do
+conversion only once.
 
-Bestiality Social Networking Platform. With pictures, videos and friend
-about bestiality and zoophilia porn. 
-Here you can meet and talk with people that love zoo sex.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
 
-Register for a free account with us today
-https://www.zoosbook.com/register
+Changes since v1: Subject fixed as pointed out by Geert.
 
-Let your animalic thoughts get alive.
+ drivers/pinctrl/pinctrl-rza1.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-Help us build a good reputation, remember all that we offer is free, be
-fair to us
-https://www.trustpilot.com/review/zoosbook.com
+diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
+index 017fc6b3e27e..215db220d795 100644
+--- a/drivers/pinctrl/pinctrl-rza1.c
++++ b/drivers/pinctrl/pinctrl-rza1.c
+@@ -617,12 +617,6 @@ static void rza1_pin_reset(struct rza1_port *port, unsigned int pin)
+ 	spin_unlock_irqrestore(&port->lock, irqflags);
+ }
+ 
+-static inline int rza1_pin_get_direction(struct rza1_port *port,
+-					 unsigned int pin)
+-{
+-	return !!rza1_get_bit(port, RZA1_PM_REG, pin);
+-}
+-
+ /**
+  * rza1_pin_set_direction() - set I/O direction on a pin in port mode
+  *
+@@ -783,7 +777,7 @@ static int rza1_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+ {
+ 	struct rza1_port *port = gpiochip_get_data(chip);
+ 
+-	return rza1_pin_get_direction(port, gpio);
++	return !!rza1_get_bit(port, RZA1_PM_REG, gpio);
+ }
+ 
+ static int rza1_gpio_direction_input(struct gpio_chip *chip,
+
+base-commit: 70d97e099bb426ecb3ad4bf31e88dbf2ef4b2e4c
+-- 
+2.21.0
 
 
-See you inside
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
