@@ -2,135 +2,151 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E8FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B967CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8AFE206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCz3DVS1"
+	by mail.kernel.org (Postfix) with ESMTP id 98F81222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKMGGJ (ORCPT
+        id S1726120AbfKMGIz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:06:09 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42762 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfKMGGJ (ORCPT
+        Wed, 13 Nov 2019 01:08:55 -0500
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:38411 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfKMGIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:06:09 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b16so626131otk.9;
-        Tue, 12 Nov 2019 22:06:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+QE4XASVIkmqkoyLlQVR4J5C2c9+Lx6ndpeyktLyfQ4=;
-        b=lCz3DVS1lKfCY3SgtsEmnOyb1HlRJkV7+nVxdYnV9S5uP4Fr/Tas3Oby6qOwCrwGgm
-         Tf68KOT++FEB5Kd87D28wQobDdgloCNl64XlY9Ul/ZfC5r36CPanTDfs8aPkznCtsTP6
-         zz5zdAjtDLITq3YUs11NC04xvkHVg9UJhS8jqWAU48cm9Y5QffDHC0rwOhVK0GqnZ0x9
-         Y+AlJzvDZPga+ZP1kPM/2/P5hEhl/Kam3iVCgkI2KWaG0Sy+XdtSHHpC+Jc08gNM8SnO
-         R845UtaN01sashkJcXhWtCR7PUiG1kFlUZ87Ig2TR1zqKQiJHccCz2Uvza67zKuK5MGD
-         mGGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+QE4XASVIkmqkoyLlQVR4J5C2c9+Lx6ndpeyktLyfQ4=;
-        b=qILnAwXiQmR1Mgm3B/ouTpW3rMsaalTDHpuTFT2ZdQH95B06sNX0nanVAdM/6Pa8jq
-         baVEVs+UM1JRyMmwtUYjE0X1/AziYJA+Ax/MRNLr1BzNuGJDt8baSoPB64GDpWHpZB/t
-         27RZfnwUHHwqUxOR0LlaJ6T7519n5I4r+9EesqyHwlF8r/yVnGLOx2+MQfeFDyHvzvcv
-         ZpgRiXf///WAzu042AibFUPPVJXUsba1pdhu4s2DbuRXNtgjVsjRyRHm0QijmeM5bund
-         7F/MzCXwmjkYsG6agUP/8KKgiGEEIpZ6P5eGY6FPWOzEv+6jRmF+LWU2KdCq2SfCvrrU
-         zq1A==
-X-Gm-Message-State: APjAAAVtd0SAspZOELqDGMHaS7xrjSCq5gGarn4c2U9IgiKUHzkG7PnT
-        JN7WCwP1fHyqCD6JJJubTQbzUEMxYfNoyBj+meE=
-X-Google-Smtp-Source: APXvYqxBDUdPjaUK+N/uVjGsJ7h4rObhrYujlUDtL9QfRRobxCFg8lPuVY9m6xx6GKQc3Ri4xxgaiMuL50mIJRCHfS0=
-X-Received: by 2002:a9d:590f:: with SMTP id t15mr1238056oth.118.1573625168434;
- Tue, 12 Nov 2019 22:06:08 -0800 (PST)
+        Wed, 13 Nov 2019 01:08:55 -0500
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id xAD68XOF026408
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 13 Nov 2019 15:08:33 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id xAD68Xib010372;
+        Wed, 13 Nov 2019 15:08:33 +0900
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id xAD64PCr013961;
+        Wed, 13 Nov 2019 15:08:33 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.149] [10.38.151.149]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-711271; Wed, 13 Nov 2019 15:02:04 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC21GP.gisp.nec.co.jp ([10.38.151.149]) with mapi id 14.03.0439.000; Wed,
+ 13 Nov 2019 15:02:03 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 01/16] mm,hwpoison: cleanup unused PageHuge()
+ check
+Thread-Topic: [RFC PATCH v2 01/16] mm,hwpoison: cleanup unused PageHuge()
+ check
+Thread-Index: AQHVhPYzQyNwsIsv3k6BqLdb1qTKQ6dfsyIAgARmlwCAIu1QAIABJ+YA
+Date:   Wed, 13 Nov 2019 06:02:03 +0000
+Message-ID: <20191113060202.GA3503@hori.linux.bs1.fc.nec.co.jp>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20191017142123.24245-2-osalvador@suse.de>
+ <20191018114832.GK5017@dhcp22.suse.cz>
+ <20191021070046.GA8782@hori.linux.bs1.fc.nec.co.jp>
+ <87d0dxs2ql.fsf@linux.ibm.com>
+In-Reply-To: <87d0dxs2ql.fsf@linux.ibm.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.150]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <6EE8F565F6E5FB42A7EDC191D45757AC@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
- <4418c734-68e1-edaf-c939-f24d041acf2e@redhat.com> <CANRm+CzK_h2E9XWFipkNpAALLCBcM2vrUkdBpumwmT9AP09hfA@mail.gmail.com>
-In-Reply-To: <CANRm+CzK_h2E9XWFipkNpAALLCBcM2vrUkdBpumwmT9AP09hfA@mail.gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 13 Nov 2019 14:05:59 +0800
-Message-ID: <CANRm+CzLvyWswEX1UDnESSLHO5xt2wPciL6b=TTr-ua7yKZSTA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 09:33, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> On Tue, 12 Nov 2019 at 05:59, Paolo Bonzini <pbonzini@redhat.com> wrote:
+On Tue, Nov 12, 2019 at 05:52:58PM +0530, Aneesh Kumar K.V wrote:
+> Naoya Horiguchi <n-horiguchi@ah.jp.nec.com> writes:
+> 
+> > On Fri, Oct 18, 2019 at 01:48:32PM +0200, Michal Hocko wrote:
+> >> On Thu 17-10-19 16:21:08, Oscar Salvador wrote:
+> >> > From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> >> > 
+> >> > Drop the PageHuge check since memory_failure forks into memory_failure_hugetlb()
+> >> > for hugetlb pages.
+> >> > 
+> >> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> >> > Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> >> 
+> >> s-o-b chain is reversed.
+> >> 
+> >> The code is a bit confusing. Doesn't this check aim for THP?
 > >
-> > On 09/11/19 08:05, Wanpeng Li wrote:
-> > > From: Wanpeng Li <wanpengli@tencent.com>
-> > >
-> > > This patch tries to optimize x2apic physical destination mode, fixed delivery
-> > > mode single target IPI by delivering IPI to receiver immediately after sender
-> > > writes ICR vmexit to avoid various checks when possible.
-> > >
-> > > Testing on Xeon Skylake server:
-> > >
-> > > The virtual IPI latency from sender send to receiver receive reduces more than
-> > > 330+ cpu cycles.
-> > >
-> > > Running hackbench(reschedule ipi) in the guest, the avg handle time of MSR_WRITE
-> > > caused vmexit reduces more than 1000+ cpu cycles:
-> > >
-> > > Before patch:
-> > >
-> > >   VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
-> > > MSR_WRITE    5417390    90.01%    16.31%      0.69us    159.60us    1.08us
-> > >
-> > > After patch:
-> > >
-> > >   VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
-> > > MSR_WRITE    6726109    90.73%    62.18%      0.48us    191.27us    0.58us
-> >
-> > Do you have retpolines enabled?  The bulk of the speedup might come just
-> > from the indirect jump.
->
-> Adding 'mitigations=off' to the host grub parameter:
->
-> Before patch:
->
->     VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
-> MSR_WRITE    2681713    92.98%    77.52%      0.38us     18.54us
-> 0.73us ( +-   0.02% )
->
-> After patch:
->
->     VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
-> MSR_WRITE    2953447    92.48%    62.47%      0.30us     59.09us
-> 0.40us ( +-   0.02% )
->
-> Actually, this is not the first attempt to add shortcut for MSR writes
-> which performance sensitive, the other effort is tscdeadline timer
-> from Isaku Yamahata, https://patchwork.kernel.org/cover/10541035/ ,
-> ICR and TSCDEADLINE MSR writes cause the main MSR write vmexits in our
-> product observation, multicast IPIs are not as common as unicast IPI
-> like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc. As far as
-> I know, something similar to this patch has already been deployed in
-> some cloud companies private kvm fork.
+> > No, PageHuge() is false for thp, so this if branch is just dead code.
+> 
+> memory_failure()
+> {
+> 
+> 	if (PageTransHuge(hpage)) {
+> 		lock_page(p);
+> 		if (!PageAnon(p) || unlikely(split_huge_page(p))) {
+> 			unlock_page(p);
+> 			if (!PageAnon(p))
+> 				pr_err("Memory failure: %#lx: non anonymous thp\n",
+> 					pfn);
+> 			else
+> 				pr_err("Memory failure: %#lx: thp split failed\n",
+> 					pfn);
+> 			if (TestClearPageHWPoison(p))
+> 				num_poisoned_pages_dec();
+> 			put_hwpoison_page(p);
+> 			return -EBUSY;
+> 		}
+> 		unlock_page(p);
+> 		VM_BUG_ON_PAGE(!page_count(p), p);
+> 		hpage = compound_head(p);
+> 	}
+> 
+> }
+> 
+> Do we need that hpage = compund_head(p) conversion there? We should just
+> be able to say hpage = p, or even better after this change use p
+> directly instead of hpage in the code following?
 
-Hi Paolo,
+Thanks for the comment, the target page never be in compound_page
+(without races leading to MF_MSG_DIFFERENT_COMPOUND path), so hpage
+shouldn't be used afterward.  We also have obsolete comment, so
+I feel like the following changes:
 
-Do you think I should continue for this?
+  diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+  index 392ac277b17d..c9df0f183d6c 100644
+  --- a/mm/memory-failure.c
+  +++ b/mm/memory-failure.c
+  @@ -1319,7 +1319,6 @@ int memory_failure(unsigned long pfn, int flags)
+   		}
+   		unlock_page(p);
+   		VM_BUG_ON_PAGE(!page_count(p), p);
+  -		hpage = compound_head(p);
+   	}
+   
+   	/*
+  @@ -1391,11 +1390,8 @@ int memory_failure(unsigned long pfn, int flags)
+   	/*
+   	 * Now take care of user space mappings.
+   	 * Abort on fail: __delete_from_page_cache() assumes unmapped page.
+  -	 *
+  -	 * When the raw error page is thp tail page, hpage points to the raw
+  -	 * page after thp split.
+   	 */
+  -	if (!hwpoison_user_mappings(p, pfn, flags, &hpage)) {
+  +	if (!hwpoison_user_mappings(p, pfn, flags, &p)) {
+   		action_result(pfn, MF_MSG_UNMAP_FAILED, MF_IGNORED);
+   		res = -EBUSY;
+   		goto out;
 
-    Wanpeng
+Thanks,
+Naoya Horiguchi
