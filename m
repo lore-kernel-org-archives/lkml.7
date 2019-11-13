@@ -2,119 +2,144 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6729C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18018C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E79421A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtGPr4de"
+	by mail.kernel.org (Postfix) with ESMTP id ECA7E214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfKMIxN (ORCPT
+        id S1727109AbfKMIyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:53:13 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43244 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfKMIxN (ORCPT
+        Wed, 13 Nov 2019 03:54:05 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52943 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfKMIyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:53:13 -0500
-Received: by mail-ed1-f65.google.com with SMTP id w6so1132807edx.10;
-        Wed, 13 Nov 2019 00:53:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FoGUhCm680vi47F9sLMQ0q9Kc3J8GAzDERB8/9i6vVc=;
-        b=qtGPr4deSvpj4x5RdL3rFC9hggsBvUCn3D1O/3RCasj5aZAkjQfQc+cLAtGCIcqkzr
-         9dOSLucAlT1qPlWNmwYlMUROvs7fwBrQWajVzwyJWStgLgOop6xp0feotm8nSZBWuZYP
-         zvquUzyTAKcU7MTb3/4NnR0UegmrXtFpsX4UAizHxuBksORhYx2VT2fr7jTbsMCrlsLX
-         S2d/rXfcnpNqNExuRMV2ue9ts+/5EuX4L0H3dgQH+DwXSr/Vr5RkcGrnSI9V9hPe/mKU
-         R7KMAUmXgH0QPqasr2STMBdem4ENOS3bMv5AoA+AS6mFfb7E5B0I6/brwesnnbVjwePJ
-         K5VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FoGUhCm680vi47F9sLMQ0q9Kc3J8GAzDERB8/9i6vVc=;
-        b=I0VW04v5eNokITRcCIKqg8Kli1I/HsiJr54TjHa9AGfDWK7YosMaugwZ2ZUmFGCdGX
-         apd00p/AbeSrcO+QCzG7y3WSEgOcS2TvRMq4hMv+ZqSzn2QEAuuV1AcvNmrg1xbuKk9n
-         5HVzyx7AYMZS3dWHIzgDAjTu78cj4gMWsQVoDNFPT+k9o88HB3So5NUIJWGm0or/4kAA
-         1d2REBxUO4V0uHnTef0ionG1QOCd+GoG7zHHzFxU3m/kPhNZ2e7jWshws9LQjsNW+pQ2
-         7QPnkjvUufHFzWm2GTXXIimC+93uRSrFbVqgvKF6OviawnBG2UAyyLLUKo5qADMknHsF
-         E7rQ==
-X-Gm-Message-State: APjAAAW2rIhgShgsyS32CS+k7s9Mmv4Gbo4U3RJXn7cCLq9SIta2yYZn
-        D9p14tX1s9xS/wprJNXI3JfAyUJ3609yPRu1gDGSnJcIc+E=
-X-Google-Smtp-Source: APXvYqykbAeNxkhzfCInuS/D+NDlZqpUkdVeXncWYZmM8rbwyrXFupsbFgKOj5++g3YsPMTdta71N511lfV3auXd9RA=
-X-Received: by 2002:a17:906:a388:: with SMTP id k8mr1553484ejz.223.1573635191206;
- Wed, 13 Nov 2019 00:53:11 -0800 (PST)
+        Wed, 13 Nov 2019 03:54:04 -0500
+X-Originating-IP: 93.34.114.233
+Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 30C766000E;
+        Wed, 13 Nov 2019 08:53:57 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 09:55:58 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/2] pinctrl: rza1: remove unnecerssary static inline
+ function
+Message-ID: <20191113085558.l6rde7xug3paoojf@uno.localdomain>
+References: <20191112141748.GA22061@localhost.localdomain>
 MIME-Version: 1.0
-References: <20191113063656.8713-1-hslester96@gmail.com> <20191113082315.GP13374@dtor-ws>
-In-Reply-To: <20191113082315.GP13374@dtor-ws>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Wed, 13 Nov 2019 16:52:59 +0800
-Message-ID: <CANhBUQ3CaRm1SjO4DJOSHpodUpJrHstzD5MYk13vo=EEigDEYA@mail.gmail.com>
-Subject: Re: [PATCH] Input: synaptics-rmi4 - add missed operations in remove
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bwknto7takkwphs5"
+Content-Disposition: inline
+In-Reply-To: <20191112141748.GA22061@localhost.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 4:23 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Wed, Nov 13, 2019 at 02:36:56PM +0800, Chuhong Yuan wrote:
-> > The driver forgets to deal with work and workqueue in remove like what
-> > is done when probe fails.
-> > Add the missed operations to fix it.
->
-> Is it really possible for the work to still be pending when fully
-> registered device is properly unregistered? I thought we'd wait for
-> successful data acquisition in rmi_f54_buffer_queue() before unregister
-> can complete.
->
 
-In fact, I am not familiar with the mechanism here...
-I have checked other drivers with video_unregister_device and found none of
-them deals with work in remove.
-Therefore, I think your opinion should be right and we only need to deal with
-the workqueue.
+--bwknto7takkwphs5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Regards,
-Chuhong
+Hi Matti,
 
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> >  drivers/input/rmi4/rmi_f54.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/input/rmi4/rmi_f54.c b/drivers/input/rmi4/rmi_f54.c
-> > index 710b02595486..2c0cde5c775c 100644
-> > --- a/drivers/input/rmi4/rmi_f54.c
-> > +++ b/drivers/input/rmi4/rmi_f54.c
-> > @@ -730,6 +730,9 @@ static void rmi_f54_remove(struct rmi_function *fn)
-> >
-> >       video_unregister_device(&f54->vdev);
-> >       v4l2_device_unregister(&f54->v4l2);
-> > +     cancel_delayed_work_sync(&f54->work);
-> > +     flush_workqueue(f54->workqueue);
-> > +     destroy_workqueue(f54->workqueue);
-> >  }
-> >
-> >  struct rmi_function_handler rmi_f54_handler = {
-> > --
-> > 2.23.0
-> >
+On Tue, Nov 12, 2019 at 04:17:48PM +0200, Matti Vaittinen wrote:
+> Having static inline oneliner does not benefit too much when it is
+> only called from another oneliner function. Remove some of the
+> 'onion'. This simplifies also the coming usage of the gpiolib
+> defines. We can do conversion from chip bits to gpiolib direction
+> defines as last step in the get_direction callback. Drivers can
+> use chip specific values in driver internal functions and do
+> conversion only once.
+
+I assume your: "[PATCH 2/2] pinctrl: Use new GPIO_LINE_DIRECTION"
+supersedes this one, am I right ?
+
+Thanks
+  j
+
 >
-> Thanks.
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  drivers/pinctrl/pinctrl-rza1.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
+> index 017fc6b3e27e..215db220d795 100644
+> --- a/drivers/pinctrl/pinctrl-rza1.c
+> +++ b/drivers/pinctrl/pinctrl-rza1.c
+> @@ -617,12 +617,6 @@ static void rza1_pin_reset(struct rza1_port *port, unsigned int pin)
+>  	spin_unlock_irqrestore(&port->lock, irqflags);
+>  }
+>
+> -static inline int rza1_pin_get_direction(struct rza1_port *port,
+> -					 unsigned int pin)
+> -{
+> -	return !!rza1_get_bit(port, RZA1_PM_REG, pin);
+> -}
+> -
+>  /**
+>   * rza1_pin_set_direction() - set I/O direction on a pin in port mode
+>   *
+> @@ -783,7 +777,7 @@ static int rza1_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+>  {
+>  	struct rza1_port *port = gpiochip_get_data(chip);
+>
+> -	return rza1_pin_get_direction(port, gpio);
+> +	return !!rza1_get_bit(port, RZA1_PM_REG, gpio);
+>  }
+>
+>  static int rza1_gpio_direction_input(struct gpio_chip *chip,
+>
+> base-commit: 70d97e099bb426ecb3ad4bf31e88dbf2ef4b2e4c
+> --
+> 2.21.0
+>
 >
 > --
-> Dmitry
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+>
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =]
+
+--bwknto7takkwphs5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3LxR4ACgkQcjQGjxah
+Vjzu3A//VcmxB+zLrhFkIPEXStslWNxWBzlOPrVt1zEIGbpxgVBin7IaP30h4gml
+GrPxtZom3KkKbzbIYlS5syNycjxUT3NjYs2Yur4DBnAhvkoxrFLfprhjjX0fL170
+18RZJoH74NJYsjiDzbRRJQfN6JSNVgJ0XFCyLmQKhBA5K7UC4BT2hSvsLzzQ0neJ
+jXhtQ+VKayIDQ/lUArvoABE7V6wX+F4app7eZ+xkSPq1ptUByob6mr9wV7WMONNh
+qBd+U/+nV8ywD3qUWwDt//77FGZYbXM/mdKf3moYnvD8BYTaIA0l4MRoYuAh0bKg
+SLimFdCoBznxP4syuhiil5aDYhY21fK3XymjbBnoKHw3SlmJn2488eOdiDy1ErCy
+dT258CLPbO6YyI1aNxyZyIlWhWlavkM5/FvS4R+IUIJzJiT177gSWD2uTX0i8kd4
+3GIF63YcoUaJjNDGMRMla4tbDOgee3mdssRWDEynQlmYu3AV6krBF0tkRU8JaIaE
+l0kSRUPo6bxWsH+HFhNrXMGP3JSrfU26cR7t+V9intAxWaGmteXZV2ph1CjeMW8e
+gsa0GSGjvm5aEganXEi1pXoHD+5Fg34/6UHY7XYYQXkaFl7f92Cmkoc4EomfWkAR
+kpwLSvI76WXbaP6bKEH7FqWAyUcHEIzrBMqIWYBKx90aHEWiRAs=
+=SZJk
+-----END PGP SIGNATURE-----
+
+--bwknto7takkwphs5--
