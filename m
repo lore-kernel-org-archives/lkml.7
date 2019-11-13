@@ -2,90 +2,139 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F7EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80160C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDB4222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D52222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H/fmVXpH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bP02yBDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfKMNtv (ORCPT
+        id S1727550AbfKMNvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:49:51 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35934 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbfKMNtt (ORCPT
+        Wed, 13 Nov 2019 08:51:17 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20459 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726957AbfKMNvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:49:49 -0500
-Received: by mail-lf1-f66.google.com with SMTP id m6so2020469lfl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:49:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vy52t4FQzUJl7MVUo8BlNINCjNunGWRfRGrKR4TBf7s=;
-        b=H/fmVXpHY/Bz3Zm3tJMqNv+AwRbpI/Zdj1npokpo1y0SxsWgZjJZnvJrrRC8kmjyF/
-         Ipmvra71qU83rRRC6Zf68jUmOzBcSx9OE4TbXtwGoWuGsNNRcFSmls8L4Ikb9DQ0gbVa
-         bIERJQIfZQrW26RWuowHjLM1w7GcY1aEehUkrnKgOPc0mQmyCxtJxKMuz8ugn6lSgiSO
-         Hv4IN4Sd8TJjiufkEb0EReSwfMXDqhEP6nhCXcfAgql/5dFvrnHc+J1zyyWc0Ky1+fCQ
-         +noraUwssI0RFzdcPnNsMRe6cGAgYpAKJ/w8HgkkkHSaNPT+qtFoEaIeh3t945mNFQay
-         vyIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vy52t4FQzUJl7MVUo8BlNINCjNunGWRfRGrKR4TBf7s=;
-        b=HbxzxeyPBJ9SlNYkBysCKHB5733qYhhNmDzMzvValbPBc6AlgUcs6d03e3jWH/LCzI
-         vt5nk4LoG/XBlc6Yv6nXn0lzcul9KGboF36RreThgxEvKzvnos1dAsd9vOQwv/FpI+FA
-         BAw25qM7jhS70l8btaKMtlj0K1f116mLRnjx1tCV/5V7iF2VYjD7EZMl/rgyKjrTxjCU
-         leX9WOPClpYb7jweoAJelgqRM7hIrlIp/DGFtTH94tRgVAVRxeX8IeejhndIGYAS/TyU
-         6f59qoKSftFSsvuE8HBMemdWoPUE+j/8QTu5q8ILrAZjX2hfqkjdvSCzjRRE8qiA85Wv
-         ggeQ==
-X-Gm-Message-State: APjAAAUCgEJtOvCtqjxnDvvv9yEvkPubSw3uMu2RMQdY0Mh1rWRopYMR
-        MjkBl2zPXakyWBhGmQ5RIXmYJo4rUOwQiVFzk+Ch8g==
-X-Google-Smtp-Source: APXvYqxTHXdzhopP2ypRF0d0fSJw9rDupVGAE6bShbQVd9KMnkQr9bDucRfPSMwvlJeNx+bIQwFND5x8xx9CugRiZao=
-X-Received: by 2002:ac2:5a07:: with SMTP id q7mr2668883lfn.86.1573652987493;
- Wed, 13 Nov 2019 05:49:47 -0800 (PST)
+        Wed, 13 Nov 2019 08:51:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573653075;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I49FNaB31Xym/1989jEGjQsxSSpOY1GJbdRrHOQtTFg=;
+        b=bP02yBDH14GS59BXMp8LtszkANtMw6qTuB6j1+QRifAgRCA2vdSvTRjU6P3HOrfGiUHrU0
+        +Q4SzZ0/wPH6OmpM4oRergH1tNvBf4b8fWaiaZgtM11R76AngizLjNslTYr1RcgeI/Fnyu
+        /BOGQgXvBbAjodb2hnF6rwYHEaWriE8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-jlrzj_9NMJ-s1OhMBC6-uw-1; Wed, 13 Nov 2019 08:51:12 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DC91B4144;
+        Wed, 13 Nov 2019 13:51:10 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 91ED84D9E1;
+        Wed, 13 Nov 2019 13:51:09 +0000 (UTC)
+Subject: Re: [PATCH 1/1] kernel/module.c: wakeup processes in module_wq on
+ module unload
+To:     Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Jessica Yu <jeyu@kernel.org>, Barret Rhoden <brho@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-kernel@vger.kernel.org, David Arcari <darcari@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+References: <20191113092950.15556-1-khorenko@virtuozzo.com>
+ <20191113092950.15556-2-khorenko@virtuozzo.com>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <1b047b83-e6cd-9c56-9c55-a2ef6a3e16f5@redhat.com>
+Date:   Wed, 13 Nov 2019 08:51:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20191014184320.GA161094@dtor-ws>
-In-Reply-To: <20191014184320.GA161094@dtor-ws>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 13 Nov 2019 14:49:36 +0100
-Message-ID: <CACRpkdYwinMT71se1WqmGii=qHH1s-JUOigs37EV+ywZ4aiYSA@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191113092950.15556-2-khorenko@virtuozzo.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: jlrzj_9NMJ-s1OhMBC6-uw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 8:43 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
 
-> Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-> the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), but
-> works with arbitrary firmware node.
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-I applied this with some ACKs to the GPIO devel branch for v5.5.
+On 11/13/19 4:29 AM, Konstantin Khorenko wrote:
+> Fix the race between load and unload a kernel module.
+>=20
+> sys_delete_module()
+>  try_stop_module()
+>   mod->state =3D _GOING
+> =09=09=09=09=09add_unformed_module()
+> =09=09=09=09=09 old =3D find_module_all()
+> =09=09=09=09=09 (old->state =3D=3D _GOING =3D>
+> =09=09=09=09=09  wait_event_interruptible())
+>=20
+> =09=09=09=09=09 During pre-condition
+> =09=09=09=09=09 finished_loading() rets 0
+> =09=09=09=09=09 schedule()
+> =09=09=09=09=09 (never gets waken up later)
+>  free_module()
+>   mod->state =3D _UNFORMED
+>    list_del_rcu(&mod->list)
+>    (dels mod from "modules" list)
+>=20
+> return
+>=20
+> The race above leads to modprobe hanging forever on loading
+> a module.
+>=20
+> Error paths on loading module call wake_up_all(&module_wq) after
+> freeing module, so let's do the same on straight module unload.
+>=20
+> Fixes: 6e6de3dee51a ("kernel/module.c: Only return -EEXIST
+> for modules that have finished loading")
+>=20
+> Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+> ---
+>  kernel/module.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/kernel/module.c b/kernel/module.c
+> index ff2d7359a418..cb09a5f37a5f 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -1033,6 +1033,8 @@ SYSCALL_DEFINE2(delete_module, const char __user *,=
+ name_user,
+>  =09strlcpy(last_unloaded_module, mod->name, sizeof(last_unloaded_module)=
+);
+> =20
+>  =09free_module(mod);
+> +=09/* someone could wait for the module in add_unformed_module() */
+> +=09wake_up_all(&module_wq);
 
-Yours,
-Linus Walleij
+free_module() acts on that *this* module so it makes sense to include the
+wake_up_all(&module_wq) call in delete_module.  IIRC I did try a module loa=
+d &
+unload stress test but it looks like my testing wasn't hard enough :(
+
+In any case,
+
+Reviewed-by: Prarit Bhargava <prarit@redhat.com>
+
+P.
+
+>  =09return 0;
+>  out:
+>  =09mutex_unlock(&module_mutex);
+>=20
+
