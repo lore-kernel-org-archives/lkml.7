@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669BCC17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F35C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366B62246D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650B12246D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609895;
-	bh=FK6rddTPTwK/CMpUf7Wy6HlR4JUMAdjtf1wQY9MQNek=;
+	s=default; t=1573609899;
+	bh=OpXDIx5xOYY97zeVa/FNBxT/29iZH3I1AKxSms1pfW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k88gVv61236QhelLcejUyZYkKvL43fRL4QHdqGeW3D2KGWYsyvbs6ZO7zw2Hzq8P8
-	 eXw98KClGTu+lEJ0GlR+ysVoFQA3Pi5FKlI7BQgTDly+wlRJw89dm5cH4F0Rofa+Se
-	 NcB8uWYQa4prjqd/8N2/OWB0YoRZzyrNSYkyWzqs=
+	b=pTTaJ1Vxhheg2SG4Vhuojr5r049kVH+vZBozqCg26bSl5HJR+Q03V1WL10zsEeQKv
+	 fuiZcJGkW+zWRxCR2TtYlchxjAoEiE2SGtroNDcwKThX7e5RfJAQDU5kd3OQYdTLpE
+	 1lP1+doLjizwmmi3WxtKWtqXj3oPks13akHJ5JMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfKMBve (ORCPT
+        id S1727939AbfKMBvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:51:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39382 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:51:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbfKMBvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:32 -0500
+        id S1727904AbfKMBvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 300A12246A;
-        Wed, 13 Nov 2019 01:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F21B422470;
+        Wed, 13 Nov 2019 01:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609891;
-        bh=FK6rddTPTwK/CMpUf7Wy6HlR4JUMAdjtf1wQY9MQNek=;
+        s=default; t=1573609895;
+        bh=OpXDIx5xOYY97zeVa/FNBxT/29iZH3I1AKxSms1pfW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jV73X+KhYA+AslQT/jB71taClsrbvY7ZdCJ5CC0UBf4BbByGfd8bAYeo0CyzLN7Ql
-         E5TkWUMNtZYCq/zWEgTp3aqXh9+nhTWmubQcaCSDDwFQs5JiRMnK6/0h/Rkv1MHL1e
-         nWuuY0+00AtG93L81Ky05SYldOpSvoC6z3Yt/gzc=
+        b=kQQN30IX0DSAHnBchsug33lSvHn9jL4DC8LZcNlHXO4DPTh5R85t9/MHtzzAoYn4a
+         5V/cRPdorAr16kw0CPFF8kglXDFIe/AWKf5Lor9UQszLt/zkPbzzNKiKtsisUBSl8V
+         YfMigkPMpNmhGnj0CsC5QxBo4LO6/2IlgsBO5DMk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 049/209] clk: keystone: Enable TISCI clocks if K3_ARCH
-Date:   Tue, 12 Nov 2019 20:47:45 -0500
-Message-Id: <20191113015025.9685-49-sashal@kernel.org>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 051/209] x86/PCI: Apply VMD's AERSID fixup generically
+Date:   Tue, 12 Nov 2019 20:47:47 -0500
+Message-Id: <20191113015025.9685-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,47 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishanth Menon <nm@ti.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit 2f149e6e14bcb5e581e49307b54aafcd6f74a74f ]
+[ Upstream commit 4f475e8e0a6d4f5d430350d1f74f7e4899fb1692 ]
 
-K3_ARCH uses TISCI for clocks as well. Enable the same
-for the driver support.
+A root port Device ID changed between simulation and production.  Rather
+than match Device IDs which may not be future-proof if left unmaintained,
+match all root ports which exist in a VMD domain.
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/Makefile         | 1 +
- drivers/clk/keystone/Kconfig | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/pci/fixup.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index a84c5573cabea..ed344eb717cc4 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -73,6 +73,7 @@ obj-$(CONFIG_ARCH_HISI)			+= hisilicon/
- obj-y					+= imgtec/
- obj-$(CONFIG_ARCH_MXC)			+= imx/
- obj-$(CONFIG_MACH_INGENIC)		+= ingenic/
-+obj-$(CONFIG_ARCH_K3)			+= keystone/
- obj-$(CONFIG_ARCH_KEYSTONE)		+= keystone/
- obj-$(CONFIG_MACH_LOONGSON32)		+= loongson1/
- obj-y					+= mediatek/
-diff --git a/drivers/clk/keystone/Kconfig b/drivers/clk/keystone/Kconfig
-index 7e9f0176578a6..b04927d06cd10 100644
---- a/drivers/clk/keystone/Kconfig
-+++ b/drivers/clk/keystone/Kconfig
-@@ -7,7 +7,7 @@ config COMMON_CLK_KEYSTONE
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index bd372e8965571..527e69b120025 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -629,17 +629,11 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x8c10, quirk_apple_mbp_poweroff);
+ static void quirk_no_aersid(struct pci_dev *pdev)
+ {
+ 	/* VMD Domain */
+-	if (is_vmd(pdev->bus))
++	if (is_vmd(pdev->bus) && pci_is_root_bus(pdev->bus))
+ 		pdev->bus->bus_flags |= PCI_BUS_FLAGS_NO_AERSID;
+ }
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2030, quirk_no_aersid);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2031, quirk_no_aersid);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2032, quirk_no_aersid);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2033, quirk_no_aersid);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x334a, quirk_no_aersid);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x334b, quirk_no_aersid);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x334c, quirk_no_aersid);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x334d, quirk_no_aersid);
++DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
++			      PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid);
  
- config TI_SCI_CLK
- 	tristate "TI System Control Interface clock drivers"
--	depends on (ARCH_KEYSTONE || COMPILE_TEST) && OF
-+	depends on (ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST) && OF
- 	depends on TI_SCI_PROTOCOL
- 	default ARCH_KEYSTONE
- 	---help---
+ static void quirk_intel_th_dnv(struct pci_dev *dev)
+ {
 -- 
 2.20.1
 
