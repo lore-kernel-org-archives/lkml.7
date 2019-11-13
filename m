@@ -2,191 +2,114 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79FAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9BFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A441F222C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFA0222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nkxXB5V+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Nr5Mnjmb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AIBnTVIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfKMKbR (ORCPT
+        id S1727514AbfKMKcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:31:17 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:42886 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfKMKbR (ORCPT
+        Wed, 13 Nov 2019 05:32:11 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:39006 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfKMKcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:31:17 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 77E306043F; Wed, 13 Nov 2019 10:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573641076;
-        bh=/66u/Suwke1zMwFS5nxwNNZ4s1ARpfkENpmO/QNhmqc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nkxXB5V+fcmm//QLuYk23f31tl5cztvvmF98MUePWjsPmlmMukL8jbcJ2zbT2hHC+
-         YYH9fCYQI+o+5kkxknyrM6I/NATjFTlSnN/OoyPVRef/xj0Hh0QCeF62KFvYZvBYli
-         n1ufw3bZVyfGABnpYvkqFHwCYGER6l+KDesTx2G4=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D3A160592;
-        Wed, 13 Nov 2019 10:31:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573641074;
-        bh=/66u/Suwke1zMwFS5nxwNNZ4s1ARpfkENpmO/QNhmqc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Nr5MnjmbZ5sAfMwxAqXAepG0Es1g8ocLUj/anOxjmBb5lZxdQDdhAFyjmJDcFwJ9E
-         HNpWSGu/noC7Tut/mKqQLFn4bETwV0P3sh2JeVO7/QSvsRO4/y8lHu1cILolmJadIq
-         vOB70Rs3CFL0UxxSxdvmWPfvaFHvCTbDYVvQ7kv8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D3A160592
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: Fix deadlock in f2fs_gc() context during atomic files handling
-Date:   Wed, 13 Nov 2019 16:01:03 +0530
-Message-Id: <1573641063-21232-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 13 Nov 2019 05:32:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6kTYcY6cpyy5llPwJ7N/vU69PHHlS2avthqvOc/6Zi8=; b=AIBnTVIWDXTQwFEx88OnyedhR
+        IT7vFNnd6U5b0NBNkjKbK1TYzlbPBJP2sjqTfcD/njKYUoZ81kAbrA1r9D5Wmfu4B29WijtJb/e01
+        i+JyhnAF0mH04TbKC/u+v+ZOLBOn+WllY8roxOFz+CDZlsiFKUGOyVEfoWJvRhwHrAeqSa3A+OIov
+        lM7uIBp5CO/1FVyflkFTnK82XyjlrWf16yYbTCD4hMHdnXRl4/kaeYpsYGI/SqywT00le0QeURH9e
+        PP6AUgHP0CFMRos13UMF9Rg56kVoh1zgOBUlqHUxo1ryUMJV6p8iPQadNDJfNCzEFRir7zHPkpR+Y
+        BXMoMGHWA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:34912)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iUpwJ-0003We-59; Wed, 13 Nov 2019 10:31:55 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iUpwF-0002NO-2l; Wed, 13 Nov 2019 10:31:51 +0000
+Date:   Wed, 13 Nov 2019 10:31:51 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Will Deacon <will@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Vincent Whitchurch <rabinv@axis.com>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>
+Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
+ hazard
+Message-ID: <20191113103150.GL25745@shell.armlinux.org.uk>
+References: <20191112130244.16630-1-vincent.whitchurch@axis.com>
+ <20191112160855.GA22025@arrakis.emea.arm.com>
+ <20191112180034.GB19889@willie-the-truck>
+ <20191112182249.GB22025@arrakis.emea.arm.com>
+ <CAHk-=wg4vi27mnMVgZ-rzcEdDAjTXrY1Jyz3+=5STcY0bw4-jQ@mail.gmail.com>
+ <20191113102357.GA25875@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113102357.GA25875@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FS got stuck in the below stack when the storage is almost
-full/dirty condition (when FG_GC is being done).
+On Wed, Nov 13, 2019 at 10:23:58AM +0000, Will Deacon wrote:
+> On Tue, Nov 12, 2019 at 10:39:01AM -0800, Linus Torvalds wrote:
+> > On Tue, Nov 12, 2019 at 10:22 AM Catalin Marinas
+> > <catalin.marinas@arm.com> wrote:
+> > >
+> > > OK, so this includes changing test_bit() to perform a READ_ONCE.
+> > 
+> > That's not going to happen.
+> 
+> Ok, I'll stick my neck out here, but if test_bit() is being used to read
+> a bitmap that is being concurrently modified (e.g. by set_bit() which boils
+> down to atomic_long_or()), then why isn't READ_ONCE() required? Right now,
+> test_bit takes a 'const volatile unsigned long *addr' argument, so I don't
+> see that you'll get a change in codegen except on alpha and, with this
+> erratum, arm32.
 
-schedule_timeout
-io_schedule_timeout
-congestion_wait
-f2fs_drop_inmem_pages_all
-f2fs_gc
-f2fs_balance_fs
-__write_node_page
-f2fs_fsync_node_pages
-f2fs_do_sync_file
-f2fs_ioctl
+I'm not entirely clear what you're suggesting, so I'll just pick the
+scenario that I think you're talking about - but I'm not sure it's the
+one you're intending.
 
-The root cause for this issue is there is a potential infinite loop
-in f2fs_drop_inmem_pages_all() for the case where gc_failure is true
-and when there an inode whose i_gc_failures[GC_FAILURE_ATOMIC] is
-not set. Fix this by keeping track of the total atomic files
-currently opened and using that to exit from this condition.
+Using test_bit() in one thread and set_bit() on the same bit in another
+thread without locking is going to be racy by definition.  It's entirely
+possible for:
 
-Fix-suggested-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
----
-v2:
-- change fix as per Chao's suggestion
-- decrement sbi->atomic_files protected under sbi->inode_lock[ATOMIC_FILE] and
-  only when atomic flag is cleared for the first time, otherwise, the count
-  goes to an invalid/high value as f2fs_drop_inmem_pages() can be called from
-  two contexts at the same time.
+	Thread 1			Thread 2
+	bit = test_bit(...);
+					set_bit(...);
+	/* use bit */
 
- fs/f2fs/f2fs.h    |  1 +
- fs/f2fs/file.c    |  1 +
- fs/f2fs/segment.c | 21 +++++++++++++++------
- 3 files changed, 17 insertions(+), 6 deletions(-)
+and here, bit == 0 but the bit has been set by thread 2.  Use of the
+result from test_bit() is inherently a non-atomic operation.
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index c681f51..e04a665 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1297,6 +1297,7 @@ struct f2fs_sb_info {
- 	unsigned int gc_mode;			/* current GC state */
- 	unsigned int next_victim_seg[2];	/* next segment in victim section */
- 	/* for skip statistic */
-+	unsigned int atomic_files;              /* # of opened atomic file */
- 	unsigned long long skipped_atomic_files[2];	/* FG_GC and BG_GC */
- 	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
- 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index f6c038e..22c4949 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1919,6 +1919,7 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
- 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
- 	if (list_empty(&fi->inmem_ilist))
- 		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
-+	sbi->atomic_files++;
- 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
- 
- 	/* add inode in inmem_list first and set atomic_file */
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index da830fc..0b7a33b 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -288,6 +288,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
- 	struct list_head *head = &sbi->inode_list[ATOMIC_FILE];
- 	struct inode *inode;
- 	struct f2fs_inode_info *fi;
-+	unsigned int count = sbi->atomic_files;
-+	unsigned int looped = 0;
- next:
- 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
- 	if (list_empty(head)) {
-@@ -296,22 +298,26 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
- 	}
- 	fi = list_first_entry(head, struct f2fs_inode_info, inmem_ilist);
- 	inode = igrab(&fi->vfs_inode);
-+	if (inode)
-+		list_move_tail(&fi->inmem_ilist, head);
- 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
- 
- 	if (inode) {
- 		if (gc_failure) {
--			if (fi->i_gc_failures[GC_FAILURE_ATOMIC])
--				goto drop;
--			goto skip;
-+			if (!fi->i_gc_failures[GC_FAILURE_ATOMIC])
-+				goto skip;
- 		}
--drop:
- 		set_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
- 		f2fs_drop_inmem_pages(inode);
-+skip:
- 		iput(inode);
- 	}
--skip:
- 	congestion_wait(BLK_RW_ASYNC, HZ/50);
- 	cond_resched();
-+	if (gc_failure) {
-+		if (++looped >= count)
-+			return;
-+	}
- 	goto next;
- }
- 
-@@ -327,13 +333,16 @@ void f2fs_drop_inmem_pages(struct inode *inode)
- 		mutex_unlock(&fi->inmem_lock);
- 	}
- 
--	clear_inode_flag(inode, FI_ATOMIC_FILE);
- 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
- 	stat_dec_atomic_write(inode);
- 
- 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
- 	if (!list_empty(&fi->inmem_ilist))
- 		list_del_init(&fi->inmem_ilist);
-+	if (f2fs_is_atomic_file(inode)) {
-+		clear_inode_flag(inode, FI_ATOMIC_FILE);
-+		sbi->atomic_files--;
-+	}
- 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
- }
- 
+This is why we have test_and_set_bit() and friends that atomically test
+that a bit is clear before setting it.  Where this is especially
+important is for some filesystems, as they use test_and_xxx_bit() to
+manage their allocation bitmaps.
+
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
