@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E663C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0623C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7B22245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09922246D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610455;
-	bh=fI/sHNHGSc0l4/Uf78vJqDg2ySHPHwPPg75JGYqJpZw=;
+	s=default; t=1573610457;
+	bh=v+4pQGo/I7nxwe9L5O6HDe2QI3LAi2JQhYkUo3M+ikI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lhlM/bsrndLSjJ3rEmwPjhZdsHtTbZP7z5c52EOEK5C1HLHKsfgRlijysZtD0K7Y3
-	 n7Gbj1DWSPgPM9GcNtTc+L4vGTJJrhdtbTcxTSOsohxCQE4HHpM/D4jE+yIxCnk5/v
-	 c0luR7wKVVPpJnRKoQVs6D0cE2DWsa4htYvYiHLQ=
+	b=KQHg11wYim6zYELye13zHZhCxi7W68xF911KNWJbv+gZP/104hMeu+eYWdf8ElGfT
+	 nntE55yIrRiiy9nLSb5qL8AGoVZAFJYdfwYOkEli9ho6hATdJQc2wDIGeYkdbNFE8j
+	 CMy4uiqpNEYhD05Cr4P6mxMoLE8hqkBBIw42iqgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfKMCAx (ORCPT
+        id S1729629AbfKMCA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:00:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56112 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:00:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730546AbfKMCAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:42 -0500
+        id S1730561AbfKMCAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6039422467;
-        Wed, 13 Nov 2019 02:00:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF418222CF;
+        Wed, 13 Nov 2019 02:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610442;
-        bh=fI/sHNHGSc0l4/Uf78vJqDg2ySHPHwPPg75JGYqJpZw=;
+        s=default; t=1573610444;
+        bh=v+4pQGo/I7nxwe9L5O6HDe2QI3LAi2JQhYkUo3M+ikI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iYz6/4/qekmxPZs9dmo/Kq3xueLeGNKCBwSb5edmLfvx0xVyWsZfFFO3G5Q/dwTpX
-         weCwOH+mEk2/iGVY8+IWHNVAzSp3DVFzSzuVxVb3Y3o2q7ZNukgLF0TQXAsxFTUohi
-         e09bueMyECXJUmBMl/bA9RfNasSnvHoXs26Mo9pk=
+        b=CVyksQjPA+VsiuTDyJ46eY5PA8a4LkL7DFiVMaDKj33YbKYGYs2AizykYH6N49j0t
+         0MDAzSAvYBDppct0pQuavWZXkeEO6iECWRtcvR1sSAT8iHQOkLgFDgrF7zRs5CGx5K
+         Xc4LmMy9UE1P84+wAZRHjJE2RW/2euieAhf8pTCk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Kepplinger <martink@posteo.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 39/68] Input: st1232 - set INPUT_PROP_DIRECT property
-Date:   Tue, 12 Nov 2019 20:59:03 -0500
-Message-Id: <20191113015932.12655-39-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Lubomir Rintel <lkundrak@v3.sk>,
+        x86@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 41/68] x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
+Date:   Tue, 12 Nov 2019 20:59:05 -0500
+Message-Id: <20191113015932.12655-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -59,31 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Kepplinger <martink@posteo.de>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 20bbb312079494a406c10c90932e3c80837c9d94 ]
+[ Upstream commit fa112cf1e8bc693d5a666b1c479a2859c8b6e0f1 ]
 
-This is how userspace checks for touchscreen devices most reliably.
+When building a 32-bit config which has the above MFD item as module
+but OLPC_XO1_PM is enabled =y - which is bool, btw - the kernel fails
+building with:
 
-Signed-off-by: Martin Kepplinger <martink@posteo.de>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_remove':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:159: undefined reference to `mfd_cell_disable'
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_probe':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:133: undefined reference to `mfd_cell_enable'
+  make: *** [Makefile:1030: vmlinux] Error 1
+
+Force MFD_CS5535 to y if OLPC_XO1_PM is enabled.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Lubomir Rintel <lkundrak@v3.sk>
+Cc: x86@kernel.org
+Link: http://lkml.kernel.org/r/20181005131750.GA5366@zn.tnic
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/st1232.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
-index e943678ce54cd..f1c574d6be17f 100644
---- a/drivers/input/touchscreen/st1232.c
-+++ b/drivers/input/touchscreen/st1232.c
-@@ -203,6 +203,7 @@ static int st1232_ts_probe(struct i2c_client *client,
- 	input_dev->id.bustype = BUS_I2C;
- 	input_dev->dev.parent = &client->dev;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index e0055b4302d65..a8d25ff451405 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2569,8 +2569,7 @@ config OLPC
  
-+	__set_bit(INPUT_PROP_DIRECT, input_dev->propbit);
- 	__set_bit(EV_SYN, input_dev->evbit);
- 	__set_bit(EV_KEY, input_dev->evbit);
- 	__set_bit(EV_ABS, input_dev->evbit);
+ config OLPC_XO1_PM
+ 	bool "OLPC XO-1 Power Management"
+-	depends on OLPC && MFD_CS5535 && PM_SLEEP
+-	select MFD_CORE
++	depends on OLPC && MFD_CS5535=y && PM_SLEEP
+ 	---help---
+ 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
+ 
 -- 
 2.20.1
 
