@@ -2,137 +2,82 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BCDC43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F446C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D1D206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66E8206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WB6tjTaI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="O/8ZMvCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfKMT0E (ORCPT
+        id S1727180AbfKMT0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:26:04 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55733 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfKMT0D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:26:03 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so3216127wmb.5;
-        Wed, 13 Nov 2019 11:26:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eJks9EMjmgWp8wZx+kLzfc16SG/mFPriDGfSeGmYPKg=;
-        b=WB6tjTaIP2JoResHDKgFXt1N+ObwsAn73Hc0YKf7QlYuffJRlsk67Zmp1Zo8mCjyyW
-         SEpXM4H+YSTmqPVE57A9lfbRLK48xJV/dbGWbKFr5Ki94DT7OEiJ+k5NUMzRz5h5iW2R
-         /3vg9DaCBC2xG/llimZkknnlv8xb9FKQAyAn6uIT0EGGJPvzlJ5ksc1uNoeO92+q/nxx
-         A8aiRR0WmwNuCREr7PzZvsfYdq1JmrLRrQEvKJqphwiYMQvhSYlMTJpjc90/+nCzMCXX
-         +OscUG4FVn8XCrW2rNSjy9Vbgs3BjUGa7AY9Cz3fbJxCE1wlw0qMcPjUNX0IaSFOrkJY
-         WF7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eJks9EMjmgWp8wZx+kLzfc16SG/mFPriDGfSeGmYPKg=;
-        b=WXnFoupalaCr3MUQ99juaefuqfB3MuCgZE0Q7UYjcVMZQcMS32x625rSTCMZzNcVjK
-         oVY3X7AX/rdAVAlx5KQOCHjko1g8KAxAtolTTt0TnEEv5DPPT3ruiTi2NCLu89+5+EUu
-         UMKPme96BjpOqZcn+rdD0V02VM35nghj07FlzatV/PfGWJ4X+RL/NtOw3pjH0HaCnNcr
-         103XPgL6fODVSlDHUcsf/OA8Ie6sg6or9DTJvPsBFXpKipC881j60ipX+ZbyynTiawKS
-         G5z3+0MXPRvJxqvjiE2OJMoKtVhKLK3fjLqzYib9NWXw7igRz2nRkLAFoVgCLk26iYQE
-         Py4A==
-X-Gm-Message-State: APjAAAX6l7y5wB4tHfVHB+l+xIjJXOaNH5YU0AsqFkb/q7SZUNUyMDDg
-        id+xLuWGhuv9fE63pXhqvoCalca/d2gq1HOom/M=
-X-Google-Smtp-Source: APXvYqyfg9Z7FZ27gYaCUT8OP1K/853AXCJJ6Bc+DrJlBjUKCn7VCUopN9J24WeCv3cBMDEMrcoINLa7LPnzLpgUzjQ=
-X-Received: by 2002:a1c:720b:: with SMTP id n11mr3942813wmc.60.1573673161167;
- Wed, 13 Nov 2019 11:26:01 -0800 (PST)
+        Wed, 13 Nov 2019 14:26:37 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:44420 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfKMT0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 14:26:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wryp9jGGVuImtf+976fNyBccolmYyzey/YrHktJaiVI=; b=O/8ZMvCU84EUDuGhqEK6xz7Hgd
+        Aft5QSY1fJuN37QnylH4SD0n/xaflJz9+o9+HlujKjQg/X+3FlCFDl56ni0YB5rAG4xhy2bqvrfvP
+        V1PN52aB9LdcKle6B+e1SIUJdxGQTL0fY/q7n9MjnVrQu5D19wdB525O2lc0O/PH5Ez8=;
+Received: from p200300ccff08d9001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff08:d900:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iUyHi-0003Z7-My; Wed, 13 Nov 2019 20:26:34 +0100
+Date:   Wed, 13 Nov 2019 20:26:33 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org, phh@phh.me,
+        b.galvani@gmail.com, stefan@agner.ch
+Subject: Re: [PATCH] regulator: rn5t618: fix rc5t619 ldo10 enable
+Message-ID: <20191113202633.66a91d96@aktux>
+In-Reply-To: <20191113183211.GB4402@sirena.co.uk>
+References: <20191113182643.23885-1-andreas@kemnade.info>
+        <20191113183211.GB4402@sirena.co.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191105151353.6522-1-andrew.smirnov@gmail.com>
- <DB7PR04MB4620E3087C59A26B865DEE988B790@DB7PR04MB4620.eurprd04.prod.outlook.com>
- <CAHQ1cqH5hstMwbO1vqOkZ3GVe-j5a+c3TX-yosq-TvuFFxPkHQ@mail.gmail.com> <VI1PR0402MB34851C1681F8A18341A8971098760@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB34851C1681F8A18341A8971098760@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Wed, 13 Nov 2019 11:25:50 -0800
-Message-ID: <CAHQ1cqFPmJ7AR3ftTyCy4DiE0YQgspPBnp+EQLPOwxXo6tTcYg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] CAAM JR lifecycle
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     Vakul Garg <vakul.garg@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 10:57 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->
-> On 11/6/2019 5:19 PM, Andrey Smirnov wrote:
-> > On Tue, Nov 5, 2019 at 11:27 PM Vakul Garg <vakul.garg@nxp.com> wrote:
-> >>
-> >>
-> >>
-> >>> -----Original Message-----
-> >>> From: linux-crypto-owner@vger.kernel.org <linux-crypto-
-> >>> owner@vger.kernel.org> On Behalf Of Andrey Smirnov
-> >>> Sent: Tuesday, November 5, 2019 8:44 PM
-> >>> To: linux-crypto@vger.kernel.org
-> >>> Cc: Andrey Smirnov <andrew.smirnov@gmail.com>; Chris Healy
-> >>> <cphealy@gmail.com>; Lucas Stach <l.stach@pengutronix.de>; Horia Geanta
-> >>> <horia.geanta@nxp.com>; Herbert Xu <herbert@gondor.apana.org.au>;
-> >>> Iuliana Prodan <iuliana.prodan@nxp.com>; dl-linux-imx <linux-
-> >>> imx@nxp.com>; linux-kernel@vger.kernel.org
-> >>> Subject: [PATCH 0/5] CAAM JR lifecycle
-> >>>
-> >>> Everyone:
-> >>>
-> >>> This series is a different approach to addressing the issues brought up in
-> >>> [discussion]. This time the proposition is to get away from creating per-JR
-> >>> platfrom device, move all of the underlying code into caam.ko and disable
-> >>> manual binding/unbinding of the CAAM device via sysfs. Note that this series
-> >>> is a rough cut intented to gauge if this approach could be acceptable for
-> >>> upstreaming.
-> >>>
-> >>> Thanks,
-> >>> Andrey Smirnov
-> >>>
-> >>> [discussion] lore.kernel.org/lkml/20190904023515.7107-13-
-> >>> andrew.smirnov@gmail.com
-> >>>
-> >>> Andrey Smirnov (5):
-> >>>   crypto: caam - use static initialization
-> >>>   crypto: caam - introduce caam_jr_cbk
-> >>>   crypto: caam - convert JR API to use struct caam_drv_private_jr
-> >>>   crypto: caam - do not create a platform devices for JRs
-> >>>   crypto: caam - disable CAAM's bind/unbind attributes
-> >>>
-> >>
-> >> To access caam jobrings from DPDK (user space drivers), we unbind job-ring's platform device from the kernel.
-> >> What would be the alternate way to enable job ring drivers in user space?
-> >>
-> >
-> > Wouldn't either building your kernel with
-> > CONFIG_CRYPTO_DEV_FSL_CAAM_JR=n (this series doesn't handle that right
-> > currently due to being a rough cut) or disabling specific/all JRs via
-> > DT accomplish the same goal?
-> >
-> It's not a 1:1 match, the ability to move a ring to user space / VM etc.
-> *dynamically* goes away.
->
+Hi,
 
-Wouldn't it be possible to do that dynamically using DT overlays? That
-is "modprobe -r caam; <apply overlay>; modprobe caam"?
+On Wed, 13 Nov 2019 18:32:11 +0000
+Mark Brown <broonie@kernel.org> wrote:
 
-Thanks,
-Andrey Smirnov
+> On Wed, Nov 13, 2019 at 07:26:43PM +0100, Andreas Kemnade wrote:
+> > LDO9 and LDO10 were listed with the same enable bits.
+> > That looks insane and there are no provisions in the code for handling such
+> > a special case. Also other out-of-tree drivers use a separate bit to
+> > enable it.  
+> 
+> This definitely looks like a bug but without a datasheet or testing it's
+> worrying guessing at the register bit to use for the enable for the
+> second LDO...
+
+I am hoping for a Tested-By: from the one who has submitted the patch
+for the regulator. 
+
+Well, it is not just guessing, it is there in the url I referenced. But
+I would of course prefer a better source. At first I wanted to spread
+my findings.
+I am not pushing anyone to accept it without Tested-By/Reviewed-Bys.
+What is a good way to avoid people bumping into this bug?
+Maybe I can find the right C on the board to check.
+
+Regards,
+Andreas
