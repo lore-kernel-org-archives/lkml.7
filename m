@@ -2,109 +2,111 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00193C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEEDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3C72245C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843A7204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfKMCu4 (ORCPT
+        id S1727364AbfKMCx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:50:56 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:47956 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727170AbfKMCuy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:50:54 -0500
-Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xAD2orO6025271
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 21:50:53 -0500
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xAD2oms6010608
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 21:50:53 -0500
-Received: by mail-qk1-f200.google.com with SMTP id m189so581509qkc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 18:50:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8QTCb+WFX3FpJ3fVztSaFH+rTvdtPtL4YNVcXp9Kn7s=;
-        b=KCGNkxPYKSAnzNPBG4ZsVxm8v71tHTYqSgOfYtCnC1IRqtln/pazrA/L59rQU7sZvn
-         wCOtHtDdODvsGGYmvTWnJFGYIdZSa07CiChdsvTllSnJZftHd7huEIS2P1txq2qBWJA9
-         CyJIJBjIDio2oqliJe5XE5hXoAfpITYSvzrqjVP73SNzrEplq/Ehy/KUR5waxg8JMXbf
-         nXNdFnV0lQ4h254WLpxIPvbZn7x20FoD+i1A5UqwYTtFvGjTaK3B0k8kNlc2jkJtD7hi
-         bdi/VxYUtZ+CTddxE7LS6FjP2Pd3Ik3wqV+EpIGdPyTPFm4ioSkG5Llz/o3YGpFn3Ks4
-         oI3w==
-X-Gm-Message-State: APjAAAVhH27mQSPRXfKKq2zKZEgrteaG9yGBkqCYp3D//f6gIKlY1I86
-        Gn1QMpsWvoAlFIJwl0tmVJH3o5uqN1lAPGnCumyaroGsAaA/e6SuuxKFYR0qPsmuJpqd5MiwodB
-        itgzvPQBq9mvFUg38JphX8ooL2GFvjyo7vFk=
-X-Received: by 2002:a37:c44b:: with SMTP id h11mr646984qkm.234.1573613448301;
-        Tue, 12 Nov 2019 18:50:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyWCFwzxoLiz+DgZpL/3YHBFIyVsL+YXuOhgpxf7giev41idLzl1WPF245u/f3hwaBto4LWkw==
-X-Received: by 2002:a37:c44b:: with SMTP id h11mr646972qkm.234.1573613448001;
-        Tue, 12 Nov 2019 18:50:48 -0800 (PST)
-Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id j71sm319265qke.90.2019.11.12.18.50.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 18:50:47 -0800 (PST)
-From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: exfat: convert WARN to a pr_info
-Date:   Tue, 12 Nov 2019 21:50:34 -0500
-Message-Id: <20191113025035.186051-1-valdis.kletnieks@vt.edu>
-X-Mailer: git-send-email 2.24.0
+        Tue, 12 Nov 2019 21:53:27 -0500
+Received: from mga14.intel.com ([192.55.52.115]:13897 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbfKMCx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:53:27 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 18:53:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,298,1569308400"; 
+   d="scan'208";a="229611856"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Nov 2019 18:53:23 -0800
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v5 02/10] iommu/vt-d: Use per-device dma_ops
+To:     Christoph Hellwig <hch@lst.de>
+References: <20190725031717.32317-1-baolu.lu@linux.intel.com>
+ <20190725031717.32317-3-baolu.lu@linux.intel.com>
+ <20190725054413.GC24527@lst.de>
+ <bc831f88-5b19-7531-00aa-a7577dd5c1ac@linux.intel.com>
+ <20190725114348.GA30957@lst.de>
+ <a098359a-0f89-6028-68df-9f83718df256@linux.intel.com>
+ <20191112071640.GA3343@lst.de>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <0885617e-8390-6d18-987f-40d49f9f563e@linux.intel.com>
+Date:   Wed, 13 Nov 2019 10:50:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191112071640.GA3343@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot took a nosedive because it runs with panic_on_warn set. And
-it's quite correct, it shouldn't have been a WARN in the first place.
-Other locations just use a pr_info(), so do that here too.
+Hi Christoph,
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Reported-by: syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com
-Fixes: c48c9f7ff32b ("staging: exfat: add exfat filesystem code to staging")
----
- drivers/staging/exfat/exfat_blkdev.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 11/12/19 3:16 PM, Christoph Hellwig wrote:
+> On Fri, Jul 26, 2019 at 09:56:51AM +0800, Lu Baolu wrote:
+>> I think current code doesn't do the right thing. The user asks the iommu
+>> driver to use identity domain for a device, but the driver force it back
+>> to DMA domain because of the device address capability.
+>>
+>>> expensive.  I don't think that this change is a good idea, and even if
+>>> we decide that this is a good idea after all that should be done in a
+>>> separate prep patch that explains the rationale.
+>>
+>> Yes. Make sense.
+> 
+> Now that the bounce code has landed it might be good time to revisit
+> this patch in isolation and with a better explanation.
+> 
 
-diff --git a/drivers/staging/exfat/exfat_blkdev.c b/drivers/staging/exfat/exfat_blkdev.c
-index 7bcd98b13109..8204720b2bf2 100644
---- a/drivers/staging/exfat/exfat_blkdev.c
-+++ b/drivers/staging/exfat/exfat_blkdev.c
-@@ -59,8 +59,8 @@ int exfat_bdev_read(struct super_block *sb, sector_t secno, struct buffer_head *
- 	if (*bh)
- 		return 0;
- 
--	WARN(!p_fs->dev_ejected,
--	     "[EXFAT] No bh, device seems wrong or to be ejected.\n");
-+	if (p_fs->dev_ejected)
-+		pr_info("[EXFAT] No bh, device seems wrong or to be ejected.\n");
- 
- 	return -EIO;
- }
-@@ -112,8 +112,8 @@ int exfat_bdev_write(struct super_block *sb, sector_t secno, struct buffer_head
- 	return 0;
- 
- no_bh:
--	WARN(!p_fs->dev_ejected,
--	     "[EXFAT] No bh, device seems wrong or to be ejected.\n");
-+	if (p_fs->dev_ejected)
-+		pr_info("[EXFAT] No bh, device seems wrong or to be ejected.\n");
- 
- 	return -EIO;
- }
--- 
-2.24.0
+Yes. Thanks for bringing this up.
 
+Currently, this is a block issue for using per-device dma ops in Intel
+IOMMU driver. Hence block this driver from using the generic iommu dma
+ops.
+
+I'd like to align Intel IOMMU driver with other vendors. Use iommu dma
+ops for devices which have been selected to go through iommu. And use
+direct dma ops if selected to by pass.
+
+One concern of this propose is that for devices with limited address
+capability, shall we force it to use iommu or alternatively use swiotlb
+if user decides to let it by pass iommu.
+
+I understand that using swiotlb will cause some overhead due to the
+bounced buffer, but Intel IOMMU is default on hence any users who use a
+default kernel won't suffer this. We only need to document this so that
+users understand this overhead when they decide to let such devices by
+pass iommu. This is common to all vendor iommu drivers as far as I can
+see.
+
+Best regards,
+baolu
