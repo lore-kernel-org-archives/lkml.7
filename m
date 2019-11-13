@@ -2,306 +2,175 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0AEC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429BDC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED6B206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9B2206F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:38:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umNxMXgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfKMUiW (ORCPT
+        id S1727016AbfKMUiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:38:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfKMUiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:38:21 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23B9A206D7;
-        Wed, 13 Nov 2019 20:38:19 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 15:38:16 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Ioannis Ilkos <ilkos@google.com>,
-        minchan@google.com, primiano@google.com, fmayer@google.com,
-        hjd@google.com, joaodias@google.com, joelaf@google.com,
-        lalitm@google.com, rslawik@google.com, sspatil@google.com,
-        timmurray@google.com, Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>, Petr Mladek <pmladek@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] rss_stat: Add support to detect RSS updates of external
- mm
-Message-ID: <20191113153816.14b95acd@gandalf.local.home>
-In-Reply-To: <20191106024452.81923-1-joel@joelfernandes.org>
-References: <20191106024452.81923-1-joel@joelfernandes.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 13 Nov 2019 15:38:51 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44183 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMUiu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:38:50 -0500
+Received: by mail-io1-f66.google.com with SMTP id j20so4073877ioo.11;
+        Wed, 13 Nov 2019 12:38:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YxcRlNzcBiAlNudn6kLat8m1vGtNWaR0Jl7FMyM2EN0=;
+        b=umNxMXgm8tIXimc6Ozqie+Gdq82fKd0dw3loWE9SmGvZAEvk9fJbiRnYW0NFTikUTG
+         AOjEZDGuo6/TiRCPGgN68PH+TcYITjdsx3AcWZn/LTfuYDGh47Dlm2+jNYfaOHz1B+rn
+         lh+5DE24bJugrp5ewgePSfZ2sFYuUCjLtxeJHa9LmOFcHA0/FvWGTw5rPGKb6YRTOiNT
+         6F6uV/lMfmyuYvJ0HkxxSGTZfT4TADggleQ578z3uQzjueYa2Y9mRQ+pzkA4N2QCvCT1
+         0JXRsA3pCFDDhBzpFcxtVHFmHbHddlGxGyo//LyBa6rA3QYAa49hiNhO/Ef7HakKmvBC
+         tReA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YxcRlNzcBiAlNudn6kLat8m1vGtNWaR0Jl7FMyM2EN0=;
+        b=GVHMqLJrSVzpKfc5cIimfhn6FdoCqjiUev6OHGhNRDyYJ2liZrfgBWhSTTpOKQ6L7C
+         ge2I+rdDeBh3vJNOeeXBeGlr63W4UkqPYp31IFgf1zTSIr1Ug45oQXB6xJodCbphxDRr
+         0zPUZFYpaYSz3QPk4COTq7BvEViH2JTqYf5r+rhaO9TwGdhprrXpm2ovHbqmGFQ99pc7
+         kycInqWYStqb2pRZTpoksXPHnHKuFpYzguWku1MIInmc3JRywx6jxgdNTYPclzuBbYsu
+         Y+lcnJZ8z25FBNuyTKlQUz41jnY9bZ3albhtJoa0mMjaUVg+Uzg+uu3LV7OEc1GP9g+i
+         dSdw==
+X-Gm-Message-State: APjAAAVlQ+Q5uh3WwbVzNLqepXtvf8wYW3jR10CNrL7p482V2I+C+FoY
+        LDItD01V/SeqjNY+lM3yZn580+NeCjuqtRxfUXiTVuQU
+X-Google-Smtp-Source: APXvYqxRL9CM16SQPo7Zeq+ZHRXSjENb/hONgI8YRT826tl7bxT8C4vPD8W2YsYzu1nrCI82QHmInaBKQRJzcwW/y60=
+X-Received: by 2002:a5d:8789:: with SMTP id f9mr5317745ion.237.1573677528331;
+ Wed, 13 Nov 2019 12:38:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <156950767876.30879.17024491763471689960.stgit@warthog.procyon.org.uk>
+ <f34aaf61-955a-7867-ef93-f22d3d8732c3@cogentembedded.com>
+In-Reply-To: <f34aaf61-955a-7867-ef93-f22d3d8732c3@cogentembedded.com>
+From:   Han Xu <xhnjupt@gmail.com>
+Date:   Wed, 13 Nov 2019 14:38:37 -0600
+Message-ID: <CA+EcR22=7F7X-9qYXb94dAp6w0_3FoKJPMRhFht+VWgKonoing@mail.gmail.com>
+Subject: Re: [PATCH] jffs2: Fix mounting under new mount API
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-fsdevel@vger.kernel.org,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tested the JFFS2 on 5.4 kernel as the instruction said, still got some
+errors, any ideas?
 
-/me coming late to the party.
+Without the patch,
 
+root@imx8mmevk:~# cat /proc/mtd
+dev:    size   erasesize  name
+mtd0: 00400000 00020000 "mtdram test device"
+mtd1: 04000000 00020000 "5d120000.spi"
+root@imx8mmevk:~# mtd_debug info /dev/mtd0
+mtd.type = MTD_RAM
+mtd.flags = MTD_CAP_RAM
+mtd.size = 4194304 (4M)
+mtd.erasesize = 131072 (128K)
+mtd.writesize = 1
+mtd.oobsize = 0
+regions = 0
 
-On Tue,  5 Nov 2019 21:44:51 -0500
-"Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+root@imx8mmevk:~# flash_erase /dev/mtd0 0 0
+Erasing 128 Kibyte @ 3e0000 -- 100 % complete
+root@imx8mmevk:~# mount -t jffs2 /dev/mtdblock0 test_dir/
+mount: /home/root/test_dir: wrong fs type, bad option, bad superblock
+on /dev/mtdblock0, missing codepage or helper program, or other error.
 
-> When a process updates the RSS of a different process, the rss_stat
-> tracepoint appears in the context of the process doing the update. This
-> can confuse userspace that the RSS of process doing the update is
-> updated, while in reality a different process's RSS was updated.
-> 
-> This issue happens in reclaim paths such as with direct reclaim or
-> background reclaim.
-> 
-> This patch adds more information to the tracepoint about whether the mm
-> being updated belongs to the current process's context (curr field). We
-> also include a hash of the mm pointer so that the process who the mm
-> belongs to can be uniquely identified (mm_id field).
-> 
-> Also vsprintf.c is refactored a bit to allow reuse of hashing code.
-> 
-> Reported-by: Ioannis Ilkos <ilkos@google.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> ---
-> Based on top of the commit in linux-next:
-> 8342d836dc7c ("mm: emit tracepoint when RSS changes")
-> 
-> Google Bug: 140711541
-> 
-> Cc: minchan@google.com
-> Cc: primiano@google.com
-> Cc: ilkos@google.com
-> Cc: fmayer@google.com
-> Cc: hjd@google.com
-> Cc: joaodias@google.com
-> Cc: joelaf@google.com
-> Cc: lalitm@google.com
-> Cc: rslawik@google.com
-> Cc: sspatil@google.com
-> Cc: timmurray@google.com
-> 
->  include/linux/mm.h          |  8 ++++----
->  include/linux/string.h      |  2 ++
->  include/trace/events/kmem.h | 32 +++++++++++++++++++++++++++++---
->  lib/vsprintf.c              | 36 +++++++++++++++++++++++++-----------
->  mm/memory.c                 |  4 ++--
->  5 files changed, 62 insertions(+), 20 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 31d8cfb3d988..bfbe65ccffa3 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -1643,27 +1643,27 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
->  	return (unsigned long)val;
->  }
->  
-> -void mm_trace_rss_stat(int member, long count);
-> +void mm_trace_rss_stat(struct mm_struct *mm, int member, long count);
->  
->  static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
->  {
->  	long count = atomic_long_add_return(value, &mm->rss_stat.count[member]);
->  
-> -	mm_trace_rss_stat(member, count);
-> +	mm_trace_rss_stat(mm, member, count);
->  }
->  
->  static inline void inc_mm_counter(struct mm_struct *mm, int member)
->  {
->  	long count = atomic_long_inc_return(&mm->rss_stat.count[member]);
->  
-> -	mm_trace_rss_stat(member, count);
-> +	mm_trace_rss_stat(mm, member, count);
->  }
->  
->  static inline void dec_mm_counter(struct mm_struct *mm, int member)
->  {
->  	long count = atomic_long_dec_return(&mm->rss_stat.count[member]);
->  
-> -	mm_trace_rss_stat(member, count);
-> +	mm_trace_rss_stat(mm, member, count);
->  }
->  
->  /* Optimized variant when page is already known not to be PageAnon */
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index f516cec5277c..6b0e950701d0 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -261,6 +261,8 @@ int bprintf(u32 *bin_buf, size_t size, const char *fmt, ...) __printf(3, 4);
->  extern ssize_t memory_read_from_buffer(void *to, size_t count, loff_t *ppos,
->  				       const void *from, size_t available);
->  
-> +int ptr_to_hashval(const void *ptr, unsigned long *hashval_out);
-> +
->  /**
->   * strstarts - does @str start with @prefix?
->   * @str: string to examine
-> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-> index 5a0666bfcf85..ad7e642bd497 100644
-> --- a/include/trace/events/kmem.h
-> +++ b/include/trace/events/kmem.h
-> @@ -316,24 +316,50 @@ TRACE_EVENT(mm_page_alloc_extfrag,
->  		__entry->change_ownership)
->  );
->  
-> +/*
-> + * Required for uniquely and securely identifying mm in rss_stat tracepoint.
-> + */
-> +#ifndef __PTR_TO_HASHVAL
-> +static unsigned int __maybe_unused mm_ptr_to_hash(const void *ptr)
-> +{
-> +	int ret;
-> +	unsigned long hashval;
-> +
-> +	ret = ptr_to_hashval(ptr, &hashval);
-> +	if (ret)
-> +		return 0;
-> +
-> +	/* The hashed value is only 32-bit */
-> +	return (unsigned int)hashval;
-> +}
-> +#define __PTR_TO_HASHVAL
-> +#endif
-> +
->  TRACE_EVENT(rss_stat,
->  
-> -	TP_PROTO(int member,
-> +	TP_PROTO(struct mm_struct *mm,
-> +		int member,
->  		long count),
->  
-> -	TP_ARGS(member, count),
-> +	TP_ARGS(mm, member, count),
->  
->  	TP_STRUCT__entry(
-> +		__field(unsigned int, mm_id)
-> +		__field(unsigned int, curr)
->  		__field(int, member)
->  		__field(long, size)
->  	),
->  
->  	TP_fast_assign(
-> +		__entry->mm_id = mm_ptr_to_hash(mm);
-> +		__entry->curr = !!(current->mm == mm);
->  		__entry->member = member;
->  		__entry->size = (count << PAGE_SHIFT);
->  	),
->  
-> -	TP_printk("member=%d size=%ldB",
-> +	TP_printk("mm_id=%u curr=%d member=%d size=%ldB",
-> +		__entry->mm_id,
-> +		__entry->curr,
->  		__entry->member,
->  		__entry->size)
->  	);
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index dee8fc467fcf..401baaac1813 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -761,11 +761,34 @@ static int __init initialize_ptr_random(void)
->  early_initcall(initialize_ptr_random);
->  
->  /* Maps a pointer to a 32 bit unique identifier. */
-> +int ptr_to_hashval(const void *ptr, unsigned long *hashval_out)
-> +{
-> +	const char *str = sizeof(ptr) == 8 ? "(____ptrval____)" : "(ptrval)";
-> +	unsigned long hashval;
-> +
-> +	if (static_branch_unlikely(&not_filled_random_ptr_key))
-> +		return -EAGAIN;
-> +
-> +#ifdef CONFIG_64BIT
-> +	hashval = (unsigned long)siphash_1u64((u64)ptr, &ptr_key);
-> +	/*
-> +	 * Mask off the first 32 bits, this makes explicit that we have
-> +	 * modified the address (and 32 bits is plenty for a unique ID).
-> +	 */
-> +	hashval = hashval & 0xffffffff;
-> +#else
-> +	hashval = (unsigned long)siphash_1u32((u32)ptr, &ptr_key);
-> +#endif
-> +	*hashval_out = hashval;
-> +	return 0;
-> +}
-> +
->  static char *ptr_to_id(char *buf, char *end, const void *ptr,
->  		       struct printf_spec spec)
->  {
->  	const char *str = sizeof(ptr) == 8 ? "(____ptrval____)" : "(ptrval)";
->  	unsigned long hashval;
-> +	int ret;
->  
->  	/* When debugging early boot use non-cryptographically secure hash. */
->  	if (unlikely(debug_boot_weak_hash)) {
-> @@ -773,22 +796,13 @@ static char *ptr_to_id(char *buf, char *end, const void *ptr,
->  		return pointer_string(buf, end, (const void *)hashval, spec);
->  	}
->  
-> -	if (static_branch_unlikely(&not_filled_random_ptr_key)) {
-> +	ret = ptr_to_hashval(ptr, &hashval);
-> +	if (ret) {
+With the patch,
 
-This is a hot path (used in trace_printk()), and you just turned a
-static_branch into a function call.
+root@imx8mmevk:~# cat /proc/mtd
+dev:    size   erasesize  name
+mtd0: 00400000 00020000 "mtdram test device"
+mtd1: 04000000 00020000 "5d120000.spi"
+root@imx8mmevk:~# mtd_debug info /dev/mtd0
+mtd.type = MTD_RAM
+mtd.flags = MTD_CAP_RAM
+mtd.size = 4194304 (4M)
+mtd.erasesize = 131072 (128K)
+mtd.writesize = 1
+mtd.oobsize = 0
+regions = 0
 
-Can we make a __ptr_to_hashval() static inline, and have
-ptr_to_hashval() call that, but use the static inline here, where the
-static_branch gets called directly here?
+root@imx8mmevk:~# flash_erase /dev/mtd0 0 0
+Erasing 128 Kibyte @ 3e0000 -- 100 % complete
+root@imx8mmevk:~# mount -t jffs2 /dev/mtdblock0 test_dir/
+root@imx8mmevk:~# mount
+/dev/mtdblock0 on /home/root/test_dir type jffs2 (rw,relatime)
 
--- Steve
+BUT, it's not writable.
+
+root@imx8mmevk:~# cp test_file test_dir/
+cp: error writing 'test_dir/test_file': Invalid argument
+
+root@imx8mmevk:~# dd if=/dev/urandom of=test_dir/test_file bs=1k count=1
+dd: error writing 'test_dir/test_file': Invalid argument
+1+0 records in
+0+0 records out
+0 bytes copied, 0.000855156 s, 0.0 kB/s
 
 
->  		spec.field_width = 2 * sizeof(ptr);
->  		/* string length must be less than default_width */
->  		return error_string(buf, end, str, spec);
->  	}
->  
-> -#ifdef CONFIG_64BIT
-> -	hashval = (unsigned long)siphash_1u64((u64)ptr, &ptr_key);
-> -	/*
-> -	 * Mask off the first 32 bits, this makes explicit that we have
-> -	 * modified the address (and 32 bits is plenty for a unique ID).
-> -	 */
-> -	hashval = hashval & 0xffffffff;
-> -#else
-> -	hashval = (unsigned long)siphash_1u32((u32)ptr, &ptr_key);
-> -#endif
->  	return pointer_string(buf, end, (const void *)hashval, spec);
->  }
->  
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 7596d625ebd1..d3c9784e6dc1 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -154,9 +154,9 @@ static int __init init_zero_pfn(void)
->  }
->  core_initcall(init_zero_pfn);
->  
-> -void mm_trace_rss_stat(int member, long count)
-> +void mm_trace_rss_stat(struct mm_struct *mm, int member, long count)
->  {
-> -	trace_rss_stat(member, count);
-> +	trace_rss_stat(mm, member, count);
->  }
->  
->  #if defined(SPLIT_RSS_COUNTING)
+On Fri, Sep 27, 2019 at 3:38 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>
+> Hello!
+>
+> On 26.09.2019 17:21, David Howells wrote:
+>
+> > The mounting of jffs2 is broken due to the changes from the new mount API
+> > because it specifies a "source" operation, but then doesn't actually
+> > process it.  But because it specified it, it doesn't return -ENOPARAM and
+>
+>     What specified what? Too many "it"'s to figure that out. :-)
+>
+> > the caller doesn't process it either and the source gets lost.
+> >
+> > Fix this by simply removing the source parameter from jffs2 and letting the
+> > VFS deal with it in the default manner.
+> >
+> > To test it, enable CONFIG_MTD_MTDRAM and allow the default size and erase
+> > block size parameters, then try and mount the /dev/mtdblock<N> file that
+> > that creates as jffs2.  No need to initialise it.
+>
+>     One "that" should be enough. :-)
+>
+> > Fixes: ec10a24f10c8 ("vfs: Convert jffs2 to use the new mount API")
+> > Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > cc: David Woodhouse <dwmw2@infradead.org>
+> > cc: Richard Weinberger <richard@nod.at>
+> > cc: linux-mtd@lists.infradead.org
+> [...]
+>
+> MBR, Sergei
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
+
+
+-- 
+Sincerely,
+
+Han XU
