@@ -2,177 +2,209 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8D4C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF1EC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC6C206E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66868206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:23:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DjXXtou5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfKMRXK (ORCPT
+        id S1728503AbfKMRXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:23:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:56052 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfKMRXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:23:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 572517A7;
-        Wed, 13 Nov 2019 09:23:06 -0800 (PST)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 034EC3F534;
-        Wed, 13 Nov 2019 09:23:04 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH v3 3/3] arm64: Workaround for Cortex-A55 erratum 1530923
-Date:   Wed, 13 Nov 2019 17:22:52 +0000
-Message-Id: <20191113172252.12610-4-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113172252.12610-1-steven.price@arm.com>
-References: <20191113172252.12610-1-steven.price@arm.com>
+        Wed, 13 Nov 2019 12:23:11 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:15948 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728386AbfKMRXJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:23:09 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xADHMYWW009672;
+        Wed, 13 Nov 2019 18:23:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=gQYoTQG5x5Nt7hF2x9JYIrwYK1lAubn5br5bBBG7WEM=;
+ b=DjXXtou5sX7vL2U4kNuUxEIvQdE5CAeW6Go7mcHo0L3OV9AfSy4I/DFe13XICIZZNRhP
+ Gwjj5x+HmwqZ1WN6o907yxlZ8bba8wf2R5ycb1RVX/ebIsZo+NigoAK/e0uv84aXC1+/
+ c1lJEmOdp1pbAsDncbi03om+A3cGEKrMC1fSwgJjno+UVgOx0t93ibHT1SMG0kH+Rm0s
+ 0/tTqJ/wjp0WYmzljTZbl2MUfAPcfge+3ZaEYcC8XwCCUpt1GpgYm3/AVj/Ob1sKMUXh
+ L4vcb96lwHVjldTWsTjtE6gd3lj6/FIQIlWOSrtGYrs8EgP4hxlCVJY1eQ2Jnb0TpU1u gg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w7psf9hha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Nov 2019 18:23:02 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 62C6610002A;
+        Wed, 13 Nov 2019 18:23:01 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5446B2BA7CB;
+        Wed, 13 Nov 2019 18:23:01 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov 2019 18:23:00
+ +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+CC:     <arnaud.pouliquen@st.com>, Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v2] rpmsg: core: add API to get MTU
+Date:   Wed, 13 Nov 2019 18:22:49 +0100
+Message-ID: <20191113172249.32412-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-13_04:2019-11-13,2019-11-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cortex-A55 erratum 1530923 allows TLB entries to be allocated as a
-result of a speculative AT instruction. This may happen in the middle of
-a guest world switch while the relevant VMSA configuration is in an
-inconsistent state, leading to erroneous content being allocated into
-TLBs.
+Return the rpmsg buffer MTU for sending message, so rpmsg users
+can split a long message in several sub rpmsg buffers.
 
-The same workaround as is used for Cortex-A76 erratum 1165522
-(WORKAROUND_SPECULATIVE_AT_NVE) can be used here. Note that this
-mandates the use of VHE on affected parts.
-
-Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 ---
- Documentation/arm64/silicon-errata.rst |  2 ++
- arch/arm64/Kconfig                     | 13 +++++++++++++
- arch/arm64/include/asm/kvm_hyp.h       |  4 ++--
- arch/arm64/kernel/cpu_errata.c         |  6 +++++-
- arch/arm64/kvm/hyp/switch.c            |  4 ++--
- arch/arm64/kvm/hyp/tlb.c               |  4 ++--
- 6 files changed, 26 insertions(+), 7 deletions(-)
+ V1 to V2
 
-diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
-index 899a72570282..b40cb3e0634e 100644
---- a/Documentation/arm64/silicon-errata.rst
-+++ b/Documentation/arm64/silicon-errata.rst
-@@ -88,6 +88,8 @@ stable kernels.
- +----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A76      | #1463225        | ARM64_ERRATUM_1463225       |
- +----------------+-----------------+-----------------+-----------------------------+
-+| ARM            | Cortex-A55      | #1530923        | ARM64_ERRATUM_1530923       |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Neoverse-N1     | #1188873,1418040| ARM64_ERRATUM_1418040       |
- +----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Neoverse-N1     | #1349291        | N/A                         |
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index defb68e45387..d2dd72c19560 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -532,6 +532,19 @@ config ARM64_ERRATUM_1165522
+  V1 patch:https://lore.kernel.org/patchwork/patch/1124684/
+  - Change patch title,
+  - as not solution today to support MTU on GLINK make ops optional,
+    RPMsg client API returns -ENOTSUPP in this case,
+  - suppress smd and glink patches.
+---
+ drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+ drivers/rpmsg/rpmsg_internal.h   |  2 ++
+ drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+ include/linux/rpmsg.h            | 10 ++++++++++
+ 4 files changed, 43 insertions(+)
+
+diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+index e330ec4dfc33..a6ef54c4779a 100644
+--- a/drivers/rpmsg/rpmsg_core.c
++++ b/drivers/rpmsg/rpmsg_core.c
+@@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+ }
+ EXPORT_SYMBOL(rpmsg_trysend_offchannel);
  
- 	  If unsure, say Y.
- 
-+config ARM64_ERRATUM_1530923
-+	bool "Cortex-A55: Speculative AT instruction using out-of-context translation regime could cause subsequent request to generate an incorrect translation"
-+	default y
-+	select ARM64_WORKAROUND_SPECULATIVE_AT
-+	help
-+	  This option adds a workaround for ARM Cortex-A55 erratum 1530923.
++/**
++ * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
++ * @ept: the rpmsg endpoint
++ *
++ * This function returns maximum buffer size available for a single message.
++ *
++ * Return: the maximum transmission size on success and an appropriate error
++ * value on failure.
++ */
 +
-+	  Affected Cortex-A55 cores (r0p0, r0p1, r1p0, r2p0) could end-up with
-+	  corrupted TLBs by speculating an AT instruction during a guest
-+	  context switch.
++ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
++{
++	if (WARN_ON(!ept))
++		return -EINVAL;
++	if (!ept->ops->get_mtu)
++		return -ENOTSUPP;
 +
-+	  If unsure, say Y.
++	return ept->ops->get_mtu(ept);
++}
++EXPORT_SYMBOL(rpmsg_get_mtu);
 +
- config ARM64_ERRATUM_1286807
- 	bool "Cortex-A76: Modification of the translation table for a virtual address might lead to read-after-read ordering violation"
- 	default y
-diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-index 167a161dd596..a3a6a2ba9a63 100644
---- a/arch/arm64/include/asm/kvm_hyp.h
-+++ b/arch/arm64/include/asm/kvm_hyp.h
-@@ -91,8 +91,8 @@ static __always_inline void __hyp_text __load_guest_stage2(struct kvm *kvm)
- 	write_sysreg(kvm_get_vttbr(kvm), vttbr_el2);
- 
- 	/*
--	 * ARM erratum 1165522 requires the actual execution of the above
--	 * before we can switch to the EL1/EL0 translation regime used by
-+	 * ARM errata 1165522 and 1530923 require the actual execution of the
-+	 * above before we can switch to the EL1/EL0 translation regime used by
- 	 * the guest.
- 	 */
- 	asm(ALTERNATIVE("nop", "isb", ARM64_WORKAROUND_SPECULATIVE_AT_VHE));
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index c7f1f5398a44..c01e20317394 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -749,6 +749,10 @@ static const struct midr_range erratum_speculative_at_vhe_list[] = {
- #ifdef CONFIG_ARM64_ERRATUM_1165522
- 	/* Cortex A76 r0p0 to r2p0 */
- 	MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 2, 0),
-+#endif
-+#ifdef CONFIG_ARM64_ERRATUM_1530923
-+	/* Cortex A55 r0p0 to r2p0 */
-+	MIDR_RANGE(MIDR_CORTEX_A55, 0, 0, 2, 0),
- #endif
- 	{},
+ /*
+  * match an rpmsg channel with a channel info struct.
+  * this is used to make sure we're not creating rpmsg devices for channels
+diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+index 3fc83cd50e98..0e56e046f5c6 100644
+--- a/drivers/rpmsg/rpmsg_internal.h
++++ b/drivers/rpmsg/rpmsg_internal.h
+@@ -47,6 +47,7 @@ struct rpmsg_device_ops {
+  * @trysendto:		see @rpmsg_trysendto(), optional
+  * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
+  * @poll:		see @rpmsg_poll(), optional
++ * @get_mtu:		see @get_mpu(), optional
+  *
+  * Indirection table for the operations that a rpmsg backend should implement.
+  * In addition to @destroy_ept, the backend must at least implement @send and
+@@ -66,6 +67,7 @@ struct rpmsg_endpoint_ops {
+ 			     void *data, int len);
+ 	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
+ 			     poll_table *wait);
++	ssize_t (*get_mtu)(struct rpmsg_endpoint *ept);
  };
-@@ -880,7 +884,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- #endif
- #ifdef CONFIG_ARM64_WORKAROUND_SPECULATIVE_AT_VHE
- 	{
--		.desc = "ARM erratum 1165522",
-+		.desc = "ARM errata 1165522, 1530923",
- 		.capability = ARM64_WORKAROUND_SPECULATIVE_AT_VHE,
- 		ERRATA_MIDR_RANGE_LIST(erratum_speculative_at_vhe_list),
- 	},
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index 0fc824bdf258..eae08ba82e95 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -158,8 +158,8 @@ static void deactivate_traps_vhe(void)
- 	write_sysreg(HCR_HOST_VHE_FLAGS, hcr_el2);
  
- 	/*
--	 * ARM erratum 1165522 requires the actual execution of the above
--	 * before we can switch to the EL2/EL0 translation regime used by
-+	 * ARM errata 1165522 and 1530923 require the actual execution of the
-+	 * above before we can switch to the EL2/EL0 translation regime used by
- 	 * the host.
- 	 */
- 	asm(ALTERNATIVE("nop", "isb", ARM64_WORKAROUND_SPECULATIVE_AT_VHE));
-diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
-index ff4e73c9bafc..92f560e3e1aa 100644
---- a/arch/arm64/kvm/hyp/tlb.c
-+++ b/arch/arm64/kvm/hyp/tlb.c
-@@ -25,8 +25,8 @@ static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm,
+ int rpmsg_register_device(struct rpmsg_device *rpdev);
+diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+index 376ebbf880d6..6e48fdf24555 100644
+--- a/drivers/rpmsg/virtio_rpmsg_bus.c
++++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+@@ -175,6 +175,7 @@ static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
+ 				  int len, u32 dst);
+ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+ 					   u32 dst, void *data, int len);
++static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept);
  
- 	if (cpus_have_const_cap(ARM64_WORKAROUND_SPECULATIVE_AT_VHE)) {
- 		/*
--		 * For CPUs that are affected by ARM erratum 1165522, we
--		 * cannot trust stage-1 to be in a correct state at that
-+		 * For CPUs that are affected by ARM errata 1165522 or 1530923,
-+		 * we cannot trust stage-1 to be in a correct state at that
- 		 * point. Since we do not want to force a full load of the
- 		 * vcpu state, we prevent the EL1 page-table walker to
- 		 * allocate new TLBs. This is done by setting the EPD bits
+ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+ 	.destroy_ept = virtio_rpmsg_destroy_ept,
+@@ -184,6 +185,7 @@ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+ 	.trysend = virtio_rpmsg_trysend,
+ 	.trysendto = virtio_rpmsg_trysendto,
+ 	.trysend_offchannel = virtio_rpmsg_trysend_offchannel,
++	.get_mtu = virtio_rpmsg_get_mtu,
+ };
+ 
+ /**
+@@ -699,6 +701,14 @@ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+ 	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
+ }
+ 
++static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept)
++{
++	struct rpmsg_device *rpdev = ept->rpdev;
++	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
++
++	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
++}
++
+ static int rpmsg_recv_single(struct virtproc_info *vrp, struct device *dev,
+ 			     struct rpmsg_hdr *msg, unsigned int len)
+ {
+diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+index 9fe156d1c018..88d7892ca93d 100644
+--- a/include/linux/rpmsg.h
++++ b/include/linux/rpmsg.h
+@@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+ __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
+ 			poll_table *wait);
+ 
++ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
++
+ #else
+ 
+ static inline int register_rpmsg_device(struct rpmsg_device *dev)
+@@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
+ 	return 0;
+ }
+ 
++static inline ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
++{
++	/* This shouldn't be possible */
++	WARN_ON(1);
++
++	return -ENXIO;
++}
++
+ #endif /* IS_ENABLED(CONFIG_RPMSG) */
+ 
+ /* use a macro to avoid include chaining to get THIS_MODULE */
 -- 
-2.20.1
+2.17.1
 
