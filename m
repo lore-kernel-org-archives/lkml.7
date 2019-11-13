@@ -2,166 +2,239 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FBDC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A664C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B906021A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF90F21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:00:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="my0U+qCL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfKMI7I (ORCPT
+        id S1726995AbfKMJAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:59:08 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37505 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfKMI7I (ORCPT
+        Wed, 13 Nov 2019 04:00:01 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40146 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfKMJAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:59:08 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUoUN-0007cV-DA; Wed, 13 Nov 2019 09:58:59 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUoUM-00024y-9q; Wed, 13 Nov 2019 09:58:58 +0100
-Date:   Wed, 13 Nov 2019 09:58:58 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v4 4/7] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20191113085858.76rad3vpszknu4cp@pengutronix.de>
-References: <20191108084517.21617-1-peron.clem@gmail.com>
- <20191108084517.21617-5-peron.clem@gmail.com>
+        Wed, 13 Nov 2019 04:00:01 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z16so1044277qkg.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 01:00:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zriSzR1A7PY8VkXg8BzENfmEpX+OltCL/F/xWpeuul4=;
+        b=my0U+qCLomIt6E1rAcdLE1Id6S8BuETSIIYtZIcmh2johk6LY+sQR3OjPubPjNOZQ8
+         6NQNnX9pWKlZ9SNfJx5VIdEc09EjWpcwRbHBiPDehzm8+sJMUnGQ74CAgqKMhdkC/VH4
+         b1XyxWzrZDwZ3bRb95XyDevdiw+hY/azHEjwrCyWCCuwB1vT2kWfJyP39J6X9zDbTJ+s
+         CYquB2V7jcS3H3bMbcuOynmxubakIWY2jmDQ+nt1XaAS4CB5W/aCDQFC1jMbCliAN/ZG
+         07AFzKV3bl6HOxccM/iSQ8WklrCXO932AMgXydPNhtOyLKIA29nq16WU2NALw4A/rO+I
+         ck+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zriSzR1A7PY8VkXg8BzENfmEpX+OltCL/F/xWpeuul4=;
+        b=AX/cFSbqDqCDcUrK1BcgpxBuRHBecjAP2VXvjNUJbewU1VwijcHinmFggfvP6NC65J
+         UXz6Mv/cH/A+yyrAPyV2StGw47M9dlJddY6/tOPRRltn9ieABTezmMOgohNomCPupbZV
+         49L7JTQJ9lFwDZRfLqE8HxaBv9qpdtyweK8tKVwz7/C6y99j376XJahWzi95xeDFgqEz
+         cDIJFi1R/dYBi6QmCKE6LoaeB6PvTVtoixfx9KikDyfujHXfOKJqTVh6an84xl1nprpQ
+         RF61rt9qeIuC2U0DeJ4YAd9mSE4uqFJGdbQK+7fQnSOU2iwVMVQKaXG92+WUsjFQzWkF
+         J4Lw==
+X-Gm-Message-State: APjAAAVKqHuxvvFncoWDRf/bd42d8VODz8jzDoiaUfZRfrdScL5RkdcK
+        oZ6NsUpf0jNMCwNV+5FtErSSYvDrmuX9jZ38jmWz+Q==
+X-Google-Smtp-Source: APXvYqwsCmN6s9RnJjvaofrXiIJk06TaVDlS+MgGGZe8uV9Y2XokAVivNi+UmgCV28MIMFtKMGxwIn9ktjfr5qd7u6s=
+X-Received: by 2002:ae9:e885:: with SMTP id a127mr1321564qkg.427.1573635599889;
+ Wed, 13 Nov 2019 00:59:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191108084517.21617-5-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20191017124159.13869-1-benjamin.gaignard@st.com>
+ <63f96a2f-78c0-21ae-781b-e52068f57103@st.com> <6597f899-f049-02dc-de59-07a0f23a88b8@st.com>
+ <d0c1af15-a647-8d80-81c9-fc07b926856c@roeck-us.net>
+In-Reply-To: <d0c1af15-a647-8d80-81c9-fc07b926856c@roeck-us.net>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Wed, 13 Nov 2019 09:59:48 +0100
+Message-ID: <CA+M3ks633VNnc9UPDVq9w68pc3EPcff69UxvsggfUvtRCUJwVw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: watchdog: Convert stm32 watchdog bindings to json-schema
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 09:45:14AM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> PWM core has an option to bypass whole logic and output unchanged source
-> clock as PWM output. This is achieved by enabling bypass bit.
-> 
-> Note that when bypass is enabled, no other setting has any meaning, not
-> even enable bit.
-> 
-> This mode of operation is needed to achieve high enough frequency to
-> serve as clock source for AC200 chip which is integrated into same
-> package as H6 SoC.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 44 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index a10022d6c0fd..9cc928ab47bc 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -3,6 +3,10 @@
->   * Driver for Allwinner sun4i Pulse Width Modulation Controller
->   *
->   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> + *
-> + * Limitations:
-> + * - When outputing the source clock directly, the PWM logic will be bypassed
-> + *   and the currently running period is not guaranteed to be completed
->   */
->  
->  #include <linux/bitops.h>
-> @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
->  
->  struct sun4i_pwm_data {
->  	bool has_prescaler_bypass;
-> +	bool has_direct_mod_clk_output;
->  	unsigned int npwm;
->  };
->  
-> @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
->  
->  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
->  
-> +	/*
-> +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
-> +	 * bit is set, no other setting has any meaning. Even more, experiment
-> +	 * proved that also enable bit is ignored in this case.
-> +	 */
-> +	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> +	    sun4i_pwm->data->has_direct_mod_clk_output) {
-> +		state->period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate);
-> +		state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
+Le jeu. 17 oct. 2019 =C3=A0 15:31, Guenter Roeck <linux@roeck-us.net> a =C3=
+=A9crit :
+>
+> On 10/17/19 6:17 AM, Benjamin GAIGNARD wrote:
+> >
+> > On 10/17/19 3:06 PM, Alexandre Torgue wrote:
+> >> Hi Benjamin
+> >>
+> >> On 10/17/19 2:41 PM, Benjamin Gaignard wrote:
+> >>> Convert the STM32 watchdog binding to DT schema format using json-sch=
+ema
+> >>>
+> >>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >>> ---
+> >>>    .../devicetree/bindings/watchdog/st,stm32-iwdg.txt | 26 ----------=
+-
+> >>>    .../bindings/watchdog/st,stm32-iwdg.yaml           | 54
+> >>> ++++++++++++++++++++++
+> >>>    2 files changed, 54 insertions(+), 26 deletions(-)
+> >>>    delete mode 100644
+> >>> Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> >>>    create mode 100644
+> >>> Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
+> >>>
+> >>> diff --git
+> >>> a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> >>> b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> >>> deleted file mode 100644
+> >>> index d8f4430b0a13..000000000000
+> >>> --- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> >>> +++ /dev/null
+> >>> @@ -1,26 +0,0 @@
+> >>> -STM32 Independent WatchDoG (IWDG)
+> >>> ----------------------------------
+> >>> -
+> >>> -Required properties:
+> >>> -- compatible: Should be either:
+> >>> -  - "st,stm32-iwdg"
+> >>> -  - "st,stm32mp1-iwdg"
+> >>> -- reg: Physical base address and length of the registers set for the
+> >>> device
+> >>> -- clocks: Reference to the clock entry lsi. Additional pclk clock en=
+try
+> >>> -  is required only for st,stm32mp1-iwdg.
+> >>> -- clock-names: Name of the clocks used.
+> >>> -  "lsi" for st,stm32-iwdg
+> >>> -  "lsi", "pclk" for st,stm32mp1-iwdg
+> >>> -
+> >>> -Optional Properties:
+> >>> -- timeout-sec: Watchdog timeout value in seconds.
+> >>> -
+> >>> -Example:
+> >>> -
+> >>> -iwdg: watchdog@40003000 {
+> >>> -    compatible =3D "st,stm32-iwdg";
+> >>> -    reg =3D <0x40003000 0x400>;
+> >>> -    clocks =3D <&clk_lsi>;
+> >>> -    clock-names =3D "lsi";
+> >>> -    timeout-sec =3D <32>;
+> >>> -};
+> >>> diff --git
+> >>> a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
+> >>> b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
+> >>> new file mode 100644
+> >>> index 000000000000..edec96d53e6b
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
+> >>> @@ -0,0 +1,54 @@
+> >>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>> +%YAML 1.2
+> >>> +---
+> >>> +$id: http://devicetree.org/schemas/watchdog/st,stm32-iwdg.yaml#
+> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>> +
+> >>> +title: STMicroelectronics STM32 Independent WatchDoG (IWDG) bindings
+> >>> +
+> >>> +maintainers:
+> >>> +  - Yannick Fertre <yannick.fertre@st.com>
+> >>
+> >> Yannick is still working on this driver ?
+> >
+> > That is a good question.
+> >
+> > Rob, can we use the STM32 dedicated mailing list address for this
+> > mainteners field ?
+> >
+> > maintainers:
+> >
+> > - linux STM32 <linux-stm32@st-md-mailman.stormreply.com>
+> >
+>
+>
+> I'd rather wonder who is going to maintain this secondary distributed
+> maintainers list, but I guess that is a different question.
+>
 
-I first thought you're losing precision here by reusing state->period
-here, but with a divisor of 2 everything is fine.
+Gentle ping to reviewers on this patch.
 
-> +		state->polarity = PWM_POLARITY_NORMAL;
-> +		state->enabled = true;
-> +		return;
-> +	}
-> +
->  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
->  	    sun4i_pwm->data->has_prescaler_bypass)
->  		prescaler = 1;
-> @@ -204,6 +223,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
->  	struct pwm_state cstate;
->  	u32 ctrl;
-> +	bool bypass = false;
->  	int ret;
->  	unsigned int delay_us;
->  	unsigned long now;
-> @@ -218,9 +238,24 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  		}
->  	}
->  
-> +	/*
-> +	 * Although it would make much more sense to check for bypass in
-> +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
+Thanks,
+Benjamin
 
-I don't understand this reasoning. sun4i_pwm_calculate knows about
-.enabled and also sun4i_pwm->data->has_direct_mod_clk_output. Maybe just
-add a bool *bypass as parameter and move the logic there?
-
-> +	 */
-> +	if (state->enabled) {
-> +		u32 clk_rate = clk_get_rate(sun4i_pwm->clk);
-> +		bypass = (state->period * clk_rate >= NSEC_PER_SEC) &&
-> +			 (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
-> +			 (state->duty_cycle * clk_rate * 2 >= NSEC_PER_SEC);
-> +	}
-> +
-
-This looks right now.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> Guenter
+>
+> > Regards,
+> >
+> > Benjamin
+> >
+> >>
+> >>> +
+> >>> +allOf:
+> >>> +  - $ref: "watchdog.yaml#"
+> >>> +
+> >>> +properties:
+> >>> +  compatible:
+> >>> +    enum:
+> >>> +      - st,stm32-iwdg
+> >>> +      - st,stm32mp1-iwdg
+> >>> +
+> >>> +  reg:
+> >>> +    maxItems: 1
+> >>> +
+> >>> +  clocks:
+> >>> +    items:
+> >>> +      - description: Low speed clock
+> >>> +      - description: Optional peripheral clock
+> >>> +    minItems: 1
+> >>> +    maxItems: 2
+> >>> +
+> >>> +  clock-names:
+> >>> +    items:
+> >>> +      enums: [ lsi, pclk ]
+> >>> +    minItems: 1
+> >>> +    maxItems: 2
+> >>> +
+> >>> +required:
+> >>> +  - compatible
+> >>> +  - reg
+> >>> +  - clocks
+> >>> +  - clock-names
+> >>> +
+> >>> +examples:
+> >>> +  - |
+> >>> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> >>> +    watchdog@5a002000 {
+> >>> +      compatible =3D "st,stm32mp1-iwdg";
+> >>> +      reg =3D <0x5a002000 0x400>;
+> >>> +      clocks =3D <&rcc IWDG2>, <&rcc CK_LSI>;
+> >>> +      clock-names =3D "pclk", "lsi";
+> >>> +      timeout-sec =3D <32>;
+> >>> +    };
+> >>> +
+> >>> +...
+> >> >
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
