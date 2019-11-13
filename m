@@ -2,92 +2,145 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E91C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DEAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16989206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00272206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:22:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FDyysCgp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n1t9MMHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKMUVi (ORCPT
+        id S1727121AbfKMUWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:21:38 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48506 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfKMUVg (ORCPT
+        Wed, 13 Nov 2019 15:22:38 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3801 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbfKMUWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:21:36 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id DD93320B4901;
-        Wed, 13 Nov 2019 12:21:35 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DD93320B4901
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573676496;
-        bh=I1Mu3IDPJM1nVT/FAj7Eop98xKiNpHueYyROLn+JtY8=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=FDyysCgpCSLIzjLEawSdItTK0d6jAoV7kUCnvbf6SvkW9KXwnKHmpHL3Nv14ZZtcM
-         aJtgBRqlWgy02GW8TU4xzGwuP61rn4fqkKZFuTADqOh3WgEBIvJIfQx7oTus9FXsBn
-         55p8y97k/vEzvC4vMtEUjvBB3OW7mz2FOtN2W9MU=
-Subject: Re: [PATCH v6 1/3] IMA: Add KEY_CHECK func to measure keys
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191113184658.2862-1-nramas@linux.microsoft.com>
- <20191113184658.2862-2-nramas@linux.microsoft.com>
- <1573676066.4843.18.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <320826aa-f744-f2ae-8693-a6ce9461d886@linux.microsoft.com>
-Date:   Wed, 13 Nov 2019 12:21:56 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 13 Nov 2019 15:22:37 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcc660b0000>; Wed, 13 Nov 2019 12:22:35 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 13 Nov 2019 12:22:36 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 13 Nov 2019 12:22:36 -0800
+Received: from [10.2.160.107] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 20:22:35 +0000
+Subject: Re: [PATCH v4 08/23] vfio, mm: fix get_user_pages_remote() and
+ FOLL_LONGTERM
+To:     Ira Weiny <ira.weiny@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com>
+ <20191113042710.3997854-9-jhubbard@nvidia.com>
+ <20191113130202.GA26068@ziepe.ca>
+ <20191113191705.GE12947@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <290ba4aa-247e-6570-9eff-ccf2087e1120@nvidia.com>
+Date:   Wed, 13 Nov 2019 12:19:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1573676066.4843.18.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191113191705.GE12947@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573676555; bh=FW0krwPwWqciO/Z2LS4wGz5Cikl4rg4mIFXWQ1mXpqU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=n1t9MMHier43EuFZpftpwQVDKG8oSo9TdOvV+OMzrOIN0Kprv6dkR4Jpu6/PqCqXm
+         /jCxLMJDxPPXF7oklQ45MeW/Fl3jyAJJ4cfyLvk1YJ3ZXQloakTUN/6QsjTZ2e8wLd
+         Vi5ItQz0+ykvg9G6LEUGgX0gLMaFmq2awJU2Kk5qVpihlMSAmAuGK9LjnFEEtlsHOE
+         JOaWrzJR8vtoHRO1QeIa0YnKmF32io8xAGlhrbiuGj5eUhM/rh5jJ0AdTIvnBhqGbA
+         tSsPrYCj4XsKBHj/d5S4XMsaWdBoBg5n+7WnTPKexUFAUitbBsugmf2TNoS/6cs3Dr
+         dZibHSHNj0z1Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/2019 12:14 PM, Mimi Zohar wrote:
-
->> @@ -655,6 +655,13 @@ void process_buffer_measurement(const void *buf, int size,
->>   	int action = 0;
->>   	u32 secid;
->>   
->> +	/*
->> +	 * If IMA is not yet initialized or IMA policy is empty
->> +	 * then there is no need to measure.
->> +	 */
->> +	if (!ima_policy_flag)
->> +		return;
->> +
+On 11/13/19 11:17 AM, Ira Weiny wrote:
+...
+>>> @@ -348,33 +347,13 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>>>   		flags |= FOLL_WRITE;
+>>>   
+>>>   	down_read(&mm->mmap_sem);
+>>> -	if (mm == current->mm) {
+>>> -		ret = get_user_pages(vaddr, 1, flags | FOLL_LONGTERM, page,
+>>> -				     vmas);
+>>> -	} else {
+>>> -		ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags, page,
+>>> -					    vmas, NULL);
+>>> -		/*
+>>> -		 * The lifetime of a vaddr_get_pfn() page pin is
+>>> -		 * userspace-controlled. In the fs-dax case this could
+>>> -		 * lead to indefinite stalls in filesystem operations.
+>>> -		 * Disallow attempts to pin fs-dax pages via this
+>>> -		 * interface.
+>>> -		 */
+>>> -		if (ret > 0 && vma_is_fsdax(vmas[0])) {
+>>> -			ret = -EOPNOTSUPP;
+>>> -			put_page(page[0]);
+>>> -		}
+>>> -	}
+>>> -	up_read(&mm->mmap_sem);
+>>> -
+>>> +	ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
+>>> +				    page, NULL, NULL);
+>>>   	if (ret == 1) {
+>>>   		*pfn = page_to_pfn(page[0]);
+>>>   		return 0;
+>>
+>> Mind the return with the lock held this needs some goto unwind
 > 
-> This addition has nothing to do with defining a new IMA hook and
-> should be a separate patch.  This can be posted independently of this
-> patch set.
+> Ah yea...  retract my reviewed by...  :-(
 > 
-> Mimi
 
-I'll move this change to a different patch,
-but it has to be either part of this patch set or the above change alone 
-needs to be taken before this patch set for the following reason:
+ooops, embarrassed that I missed that, good catch. Will repost with it fixed.
 
-The IMA hook gets called early in the boot process (for example, when 
-builtin_trusted_keys are added). If the above check is not there, 
-ima_get_action() is called and causes kernel panic (since IMA is not yet 
-initialized).
+
 
 thanks,
-  -lakshmi
-
+-- 
+John Hubbard
+NVIDIA
 
