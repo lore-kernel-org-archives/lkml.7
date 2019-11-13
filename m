@@ -2,139 +2,112 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618A7C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0563C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E88206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573674934;
-	bh=+xX4T292kmZPyjMt+ZzYlLxnM6bEpvKK3p+NvavvN0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kuE7LJv2g0GGVdBXvUyvLOs97cvEf9IOKZNJX30XTUIBsiN21Pqf3a7MrKrtw9/G3
-	 lNaHge2Xc38axa+yKkypQ1q+4C48wWntH7tjyfd1XGh5wtp8WDTZMCcY1I5/89nJ3o
-	 QUKCbdASfd5S2DZQD5HcVauWX0D6aC+OPcQeS0kY=
+	by mail.kernel.org (Postfix) with ESMTP id 46A93206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBSfG6I/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfKMTzd (ORCPT
+        id S1726291AbfKMT6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:55:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfKMTzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:55:32 -0500
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D989206E1;
-        Wed, 13 Nov 2019 19:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573674932;
-        bh=+xX4T292kmZPyjMt+ZzYlLxnM6bEpvKK3p+NvavvN0k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Azpy8mErVREYVRWovo3eozNIltWgJcIC5YxDopltuq44onMyzJgGEadjNQI9KHmPy
-         2pRznMLAHamRApspgu6qWIJ7V4jLJBQbBid+7FNy/F366JeIIwev2krbtIGRpmPkAb
-         uY7Vpnwoq/i1hPDUky3WFScLdvA0Wrui55BNOPdM=
-Date:   Wed, 13 Nov 2019 11:55:30 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v5 8/8] crypto, x86/sha: Eliminate casts on asm
- implementations
-Message-ID: <20191113195529.GD221701@gmail.com>
-Mail-Followup-To: Kees Cook <keescook@chromium.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-References: <20191113182516.13545-1-keescook@chromium.org>
- <20191113182516.13545-9-keescook@chromium.org>
+        Wed, 13 Nov 2019 14:58:15 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38867 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfKMT6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 14:58:15 -0500
+Received: by mail-pl1-f193.google.com with SMTP id w8so1507970plq.5;
+        Wed, 13 Nov 2019 11:58:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=gISrUJSSGENPSYg0FzwrhO2Nvy2MYNgI0VQirzmff5I=;
+        b=kBSfG6I/08byu4W8xTnGVIvc3sVxIpiX37mKEksKf2EBtpAj+TPckk+eQPW86+Z1Z8
+         vxs59+0DsaZ+Z+0T709ACEth4GhYdkO2Sycql0TVsbC9cA8E3Cjl+Rt9YA28OACxF11c
+         fhEDdfnt7Kl52KW+gFm67OslZ9oQabc2byemD+TnAJvD3GijS79xL0GZi2pbRpCsruPg
+         Q3+Vrc876YUDUK07c1AlbhkjY62Gmrj/wzYvYj69U/6ap1inSNIPyi3hFxZ+9gTiLq72
+         OiTXKpiM+P8HpygOE7ZSEeXrYovhBrqAN2I8nf/t0zvAsjVrO5lOalMmeRqdKX15HNrz
+         O5Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=gISrUJSSGENPSYg0FzwrhO2Nvy2MYNgI0VQirzmff5I=;
+        b=V+kTw9pK0wfpGqoRDQ7sx/SHKVR49iqjehGKfGfFcjXz0FbwvAiNtLkGJMZQCFp32H
+         Uc+N0m+be5KHcp5jWoY+5XIh2yuUH4FdXJCgtYzLlfboj7V/voDE21SflmnVy4kQmyrO
+         IyzYYJ9UaUybuViDK8pcnZu0LWCgAb70tF3dsdBI81b4uSQZgtChl4fxDbBpcWLJKasM
+         TijxQOwC/iyvPrU8UgST0kBSEGbasn/XRSigo7Zu0//Qv0Cec5ky7B/HftxddnPiOc73
+         RlQmQIJn4mHi7Wx6hrebPbNqULH//1EqCMNQW8Zf0hlq9H3EgbGAxxxNrEPKSlsDDras
+         Rlaw==
+X-Gm-Message-State: APjAAAXSpx8ZoxC0508AULlWErgfTKIQWCN/m0RsUzMXAwJXenabbyys
+        oXcZsMwkiOObb5H592AS51D4GehB
+X-Google-Smtp-Source: APXvYqxUcT44/H/jHCiIeSm9wjFHihUIqgWpImQgGDPRlXdWg35beSHPJUOAIMLOERSUlNeyaHXQHg==
+X-Received: by 2002:a17:902:6a82:: with SMTP id n2mr5744755plk.5.1573675092580;
+        Wed, 13 Nov 2019 11:58:12 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id j11sm3275304pgk.3.2019.11.13.11.58.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 11:58:12 -0800 (PST)
+Date:   Wed, 13 Nov 2019 11:58:09 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.4-rc7
+Message-ID: <20191113195809.GA4263@dtor-ws>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191113182516.13545-9-keescook@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 10:25:16AM -0800, Kees Cook wrote:
-> In order to avoid CFI function prototype mismatches, this removes the
-> casts on assembly implementations of sha1/256/512 accelerators. The
-> safety checks from BUILD_BUG_ON() remain.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/crypto/sha1_ssse3_glue.c   | 61 ++++++++++++-----------------
->  arch/x86/crypto/sha256_ssse3_glue.c | 31 +++++++--------
->  arch/x86/crypto/sha512_ssse3_glue.c | 28 ++++++-------
->  3 files changed, 50 insertions(+), 70 deletions(-)
-> 
-> diff --git a/arch/x86/crypto/sha1_ssse3_glue.c b/arch/x86/crypto/sha1_ssse3_glue.c
-> index 639d4c2fd6a8..a151d899f37a 100644
-> --- a/arch/x86/crypto/sha1_ssse3_glue.c
-> +++ b/arch/x86/crypto/sha1_ssse3_glue.c
-> @@ -27,11 +27,8 @@
->  #include <crypto/sha1_base.h>
->  #include <asm/simd.h>
->  
-> -typedef void (sha1_transform_fn)(u32 *digest, const char *data,
-> -				unsigned int rounds);
-> -
->  static int sha1_update(struct shash_desc *desc, const u8 *data,
-> -			     unsigned int len, sha1_transform_fn *sha1_xform)
-> +			     unsigned int len, sha1_block_fn *sha1_xform)
->  {
->  	struct sha1_state *sctx = shash_desc_ctx(desc);
->  
-> @@ -39,48 +36,44 @@ static int sha1_update(struct shash_desc *desc, const u8 *data,
->  	    (sctx->count % SHA1_BLOCK_SIZE) + len < SHA1_BLOCK_SIZE)
->  		return crypto_sha1_update(desc, data, len);
->  
-> -	/* make sure casting to sha1_block_fn() is safe */
-> +	/* make sure sha1_block_fn() use in generic routines is safe */
->  	BUILD_BUG_ON(offsetof(struct sha1_state, state) != 0);
+Hi Linus,
 
-This update to the comment makes no sense, since sha1_block_fn() is obviously
-safe in the helpers, and this says nothing about the assembly functions.
-Instead this should say something like:
+Please pull from:
 
-	/*
-	 * Make sure that struct sha1_state begins directly with the 160-bit
-	 * SHA1 internal state, as this is what the assembly functions expect.
-	 */
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
-Likewise for SHA-256 and SHA-512, except for those it would be a 256-bit and
-512-bit internal state respectively.
+to receive updates for the input subsystem. You will get fixes to
+Synaptics RMI4 driver and fix for use after free in error path handling
+of Cypress TTSP driver.
 
-> -asmlinkage void sha1_transform_ssse3(u32 *digest, const char *data,
-> -				     unsigned int rounds);
-> +asmlinkage void sha1_transform_ssse3(struct sha1_state *digest,
-> +				     u8 const *data, int rounds);
+Changelog:
+---------
 
-'u8 const' is unconventional.  Please use 'const u8' instead.
+Andrew Duggan (3):
+      Input: synaptics-rmi4 - disable the relative position IRQ in the F12 driver
+      Input: synaptics-rmi4 - do not consume more data than we have (F11, F12)
+      Input: synaptics-rmi4 - remove unused result_bits mask
 
-Also, this function prototype is also given in a comment in the corresponding
-assembly file.  Can you please update that too, and also leave a comment in the
-assembly file like "struct sha1_state is assumed to begin with u32 state[5]."?
+Lucas Stach (2):
+      Input: synaptics-rmi4 - fix video buffer size
+      Input: synaptics-rmi4 - clear IRQ enables for F54
 
-Likewise for all the other SHA-1, and SHA-256, and SHA-512 assembly functions,
-except it would be u32 state[8] for SHA-256 and u64 state[8] for SHA-512.
+Pan Bian (1):
+      Input: cyttsp4_core - fix use after free bug
 
-- Eric
+Diffstat:
+--------
+
+ drivers/input/rmi4/rmi_f11.c             |  9 +++------
+ drivers/input/rmi4/rmi_f12.c             | 32 ++++++++++++++++++++++++++++----
+ drivers/input/rmi4/rmi_f54.c             |  4 ++--
+ drivers/input/touchscreen/cyttsp4_core.c |  7 -------
+ 4 files changed, 33 insertions(+), 19 deletions(-)
+
+Thanks.
+
+
+-- 
+Dmitry
