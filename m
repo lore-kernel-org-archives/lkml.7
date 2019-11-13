@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985AEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B2FC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F821206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBC4222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610527;
-	bh=l51evxqU8zJCOrGtKLHrLz9etFFXDJe12qIraGCuN0U=;
+	s=default; t=1573610528;
+	bh=GAknvF9Xra1VDxZSBLEx+eB5pfkKd1dvyjA3FwvGZAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2r94litTcOZzTIx1q8RbQqjolxk1dYCPyRzBKiml2t660158uhrUMOA4m/3YNNtpF
-	 iONxD8yAG30l2phheA3GIgyp8y7IWIHZVSUaR5vZ7YdHwi38IvmVqQ1t2O54wxjc1M
-	 nTULnrNrJalQPunM3/ddvQsInZjeSgHPCVExkCEM=
+	b=isz/wYV878DB5a8fOzYmiSOrBlYQR0x4Hus64TTvoXd5IQ8PIkde6mWmiwe0trEPV
+	 /9N103kekvynjTx0NUffWlWKDZCmFEoXayX4+cd5nodG3tL4WnwZsQ7bvF/mD2BrAr
+	 R6NDPnyAkNqDiJsvJYafNvcLzdNds1RMMyTmDQ8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbfKMCCF (ORCPT
+        id S1730958AbfKMCCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:02:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58308 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:02:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730003AbfKMCCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:03 -0500
+        id S1730003AbfKMCCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDFAD20674;
-        Wed, 13 Nov 2019 02:02:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C95D21783;
+        Wed, 13 Nov 2019 02:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610521;
-        bh=l51evxqU8zJCOrGtKLHrLz9etFFXDJe12qIraGCuN0U=;
+        s=default; t=1573610525;
+        bh=GAknvF9Xra1VDxZSBLEx+eB5pfkKd1dvyjA3FwvGZAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M+GK5ppL8zswQdRQHHRmgPUs1MuMby4YnrLM4lUts4N089Tftwihv7Q4h9YA/xInV
-         AaaRObA3XKz33be77Sh/R7r8f7Qi+6V1Ux5P3BTHd8DyvYTsi0m5KdzBo7bUrKoCgY
-         LKreoyS6NkdtnZ5CUMYypNybjexSsAQEIyNul7pA=
+        b=zHj8fkUXLpzHzqV9GQpNwJX/DXq/G+ep1zKthOpsHmZ5v5a5JezpIbf5F84Z1yTua
+         BfLmc5GYVgRvCdUcUtBC6GekfhdxBbdLTzs5nHSUKvcD/mKFIG/bnRIxfsbE0Q6y+n
+         2epAhbto+nHDPQyF9UxgFSQ0hMTfYd0jKzoWOan8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 19/48] ata: ep93xx: Use proper enums for directions
-Date:   Tue, 12 Nov 2019 21:01:02 -0500
-Message-Id: <20191113020131.13356-19-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 22/48] USB: serial: cypress_m8: fix interrupt-out transfer length
+Date:   Tue, 12 Nov 2019 21:01:05 -0500
+Message-Id: <20191113020131.13356-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -60,87 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 6adde4a36f1b6a562a1057fbb1065007851050e7 ]
+[ Upstream commit 56445eef55cb5904096fed7a73cf87b755dfffc7 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+Fix interrupt-out transfer length which was being set to the
+transfer-buffer length rather than the size of the outgoing packet.
 
-drivers/ata/pata_ep93xx.c:662:36: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        drv_data->dma_rx_data.direction = DMA_FROM_DEVICE;
-                                        ~ ^~~~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:670:36: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        drv_data->dma_tx_data.direction = DMA_TO_DEVICE;
-                                        ~ ^~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:681:19: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        conf.direction = DMA_FROM_DEVICE;
-                       ~ ^~~~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:692:19: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        conf.direction = DMA_TO_DEVICE;
-                       ~ ^~~~~~~~~~~~~
+Note that no slab data was leaked as the whole transfer buffer is always
+cleared before each transfer.
 
-Use the equivalent valued enums from the expected type so that Clang no
-longer warns about a conversion.
-
-DMA_TO_DEVICE = DMA_MEM_TO_DEV = 1
-DMA_FROM_DEVICE = DMA_DEV_TO_MEM = 2
-
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 9aa8dae7b1fa ("cypress_m8: use usb_fill_int_urb where appropriate")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/pata_ep93xx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/serial/cypress_m8.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/pata_ep93xx.c b/drivers/ata/pata_ep93xx.c
-index bd6b089c67a3a..634c814cbeda4 100644
---- a/drivers/ata/pata_ep93xx.c
-+++ b/drivers/ata/pata_ep93xx.c
-@@ -659,7 +659,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 	 * start of new transfer.
- 	 */
- 	drv_data->dma_rx_data.port = EP93XX_DMA_IDE;
--	drv_data->dma_rx_data.direction = DMA_FROM_DEVICE;
-+	drv_data->dma_rx_data.direction = DMA_DEV_TO_MEM;
- 	drv_data->dma_rx_data.name = "ep93xx-pata-rx";
- 	drv_data->dma_rx_channel = dma_request_channel(mask,
- 		ep93xx_pata_dma_filter, &drv_data->dma_rx_data);
-@@ -667,7 +667,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 		return;
+diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
+index 244acb1299a95..e92cd1eceefa2 100644
+--- a/drivers/usb/serial/cypress_m8.c
++++ b/drivers/usb/serial/cypress_m8.c
+@@ -773,7 +773,7 @@ static void cypress_send(struct usb_serial_port *port)
  
- 	drv_data->dma_tx_data.port = EP93XX_DMA_IDE;
--	drv_data->dma_tx_data.direction = DMA_TO_DEVICE;
-+	drv_data->dma_tx_data.direction = DMA_MEM_TO_DEV;
- 	drv_data->dma_tx_data.name = "ep93xx-pata-tx";
- 	drv_data->dma_tx_channel = dma_request_channel(mask,
- 		ep93xx_pata_dma_filter, &drv_data->dma_tx_data);
-@@ -678,7 +678,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 
- 	/* Configure receive channel direction and source address */
- 	memset(&conf, 0, sizeof(conf));
--	conf.direction = DMA_FROM_DEVICE;
-+	conf.direction = DMA_DEV_TO_MEM;
- 	conf.src_addr = drv_data->udma_in_phys;
- 	conf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	if (dmaengine_slave_config(drv_data->dma_rx_channel, &conf)) {
-@@ -689,7 +689,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 
- 	/* Configure transmit channel direction and destination address */
- 	memset(&conf, 0, sizeof(conf));
--	conf.direction = DMA_TO_DEVICE;
-+	conf.direction = DMA_MEM_TO_DEV;
- 	conf.dst_addr = drv_data->udma_out_phys;
- 	conf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	if (dmaengine_slave_config(drv_data->dma_tx_channel, &conf)) {
+ 	usb_fill_int_urb(port->interrupt_out_urb, port->serial->dev,
+ 		usb_sndintpipe(port->serial->dev, port->interrupt_out_endpointAddress),
+-		port->interrupt_out_buffer, port->interrupt_out_size,
++		port->interrupt_out_buffer, actual_size,
+ 		cypress_write_int_callback, port, priv->write_urb_interval);
+ 	result = usb_submit_urb(port->interrupt_out_urb, GFP_ATOMIC);
+ 	if (result) {
 -- 
 2.20.1
 
