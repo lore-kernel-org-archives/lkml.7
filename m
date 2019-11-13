@@ -2,179 +2,100 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBFCC17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E79FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA0321783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611302;
-	bh=Suk00SgfBhbrNb/3ynvFXyR8ZpUSM4dQi1HdmAwqQ+4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYZeTeX2fovApP0rWOr0hdjODFPXa97sUn37wxjWbQ05kpwNw4DFi3Qi3KbBxdfqO
-	 FkOWkY3do3FsTK/8EULdmZPsJe1cAUQMnXtskSqk31cpMF9tDtxn0AOdrV6u41jP8s
-	 Z9veJnmgWHVSZ1RTkA5qXd2zcilSYPj5Y1WEKb3E=
+	by mail.kernel.org (Postfix) with ESMTP id 662EB21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LjpMbbhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbfKMCPB (ORCPT
+        id S1730590AbfKMCPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:15:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728645AbfKMB5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C58C222D4;
-        Wed, 13 Nov 2019 01:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610222;
-        bh=Suk00SgfBhbrNb/3ynvFXyR8ZpUSM4dQi1HdmAwqQ+4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W43LY7aaSswr7v8WT37vWBUMYQNavlCDPEnFbUdr53uBDZwB/5a6JvIBKUMJtMNBr
-         dvm1nqrV8y7hs0UpbgZKCvvYx8tfeeBgqYyFPsoz6Ii46hk527YwJJSJuO0gVQsaGV
-         A5jocQNSSVmsEMkSXkN7PWwQOBy9vQ5r3+2xG+Rs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 027/115] sunrpc: Fix connect metrics
-Date:   Tue, 12 Nov 2019 20:54:54 -0500
-Message-Id: <20191113015622.11592-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
-References: <20191113015622.11592-1-sashal@kernel.org>
+        Tue, 12 Nov 2019 21:15:07 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:54550 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727840AbfKMCO7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:14:59 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD2EG8f062341;
+        Wed, 13 Nov 2019 02:14:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=5+sd2HaueY26dn+rgJI+YCERp7oCIRvfIJ/MF+t4KsY=;
+ b=LjpMbbhyF3ErFyyXfQctAaayPzt+DwBn8DGBpTj8ZGUvS6now9Eq89ZL3lbUqOMNYrJD
+ p6xqnATUhdW86bUQV35HaAc8s+AaHV3HgDnxXk8rqcNTLh++dEDIRv/ULGmCSU5qQf7M
+ mckgf/cIjGISRyf33iZrd5CyT+ixZlu/Y0mz0O1CkZ4g/cxmEgYCeAIHDEuPLj9uNDLJ
+ XIssxhOMxV2K4BHGM+3Pbn5HCRMPWPLSKB4Tr7EW6T3xHw4kQUT9e/RY181x/nA/+Tg6
+ v/8Y1WjN6JYrynqJs0jPHOLCn5fcpF6tKHWwWSnrlrGExYA+MgDHUdEAuu3IBRhHiNXU zg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2w5mvtrypx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 02:14:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD2EPIb176522;
+        Wed, 13 Nov 2019 02:14:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2w7khmesb7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 02:14:42 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAD2EQcd029499;
+        Wed, 13 Nov 2019 02:14:27 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Nov 2019 18:14:26 -0800
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Janek Kotas <jank@cadence.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH v3 0/2] scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191108164857.11466-1-vigneshr@ti.com>
+Date:   Tue, 12 Nov 2019 21:14:22 -0500
+In-Reply-To: <20191108164857.11466-1-vigneshr@ti.com> (Vignesh Raghavendra's
+        message of "Fri, 8 Nov 2019 22:18:55 +0530")
+Message-ID: <yq1o8xgr08x.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=783
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911130016
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=855 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911130016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 3968a8a5310404c2f0b9e4d9f28cab13a12bc4fd ]
+Vignesh,
 
-For TCP, the logic in xprt_connect_status is currently never invoked
-to record a successful connection. Commit 2a4919919a97 ("SUNRPC:
-Return EAGAIN instead of ENOTCONN when waking up xprt->pending")
-changed the way TCP xprt's are awoken after a connect succeeds.
+> This series add DT bindings and driver for TI wrapper for Cadence UFS
+> IP that is present on TI's J721e SoC
 
-Instead, change connection-oriented transports to bump connect_count
-and compute connect_time the moment that XPRT_CONNECTED is set.
+Applied to 5.5/scsi-queue, thanks!
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/xprt.c               | 14 ++++----------
- net/sunrpc/xprtrdma/transport.c |  6 +++++-
- net/sunrpc/xprtsock.c           | 10 ++++++----
- 3 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index d0282cc88b145..b852c34bb6373 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -795,17 +795,11 @@ void xprt_connect(struct rpc_task *task)
- 
- static void xprt_connect_status(struct rpc_task *task)
- {
--	struct rpc_xprt	*xprt = task->tk_rqstp->rq_xprt;
--
--	if (task->tk_status == 0) {
--		xprt->stat.connect_count++;
--		xprt->stat.connect_time += (long)jiffies - xprt->stat.connect_start;
-+	switch (task->tk_status) {
-+	case 0:
- 		dprintk("RPC: %5u xprt_connect_status: connection established\n",
- 				task->tk_pid);
--		return;
--	}
--
--	switch (task->tk_status) {
-+		break;
- 	case -ECONNREFUSED:
- 	case -ECONNRESET:
- 	case -ECONNABORTED:
-@@ -822,7 +816,7 @@ static void xprt_connect_status(struct rpc_task *task)
- 	default:
- 		dprintk("RPC: %5u xprt_connect_status: error %d connecting to "
- 				"server %s\n", task->tk_pid, -task->tk_status,
--				xprt->servername);
-+				task->tk_rqstp->rq_xprt->servername);
- 		task->tk_status = -EIO;
- 	}
- }
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 8cf5ccfe180d3..b1b40a1be8c57 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -238,8 +238,12 @@ rpcrdma_connect_worker(struct work_struct *work)
- 	if (++xprt->connect_cookie == 0)	/* maintain a reserved value */
- 		++xprt->connect_cookie;
- 	if (ep->rep_connected > 0) {
--		if (!xprt_test_and_set_connected(xprt))
-+		if (!xprt_test_and_set_connected(xprt)) {
-+			xprt->stat.connect_count++;
-+			xprt->stat.connect_time += (long)jiffies -
-+						   xprt->stat.connect_start;
- 			xprt_wake_pending_tasks(xprt, 0);
-+		}
- 	} else {
- 		if (xprt_test_and_clear_connected(xprt))
- 			xprt_wake_pending_tasks(xprt, -ENOTCONN);
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 05a58cc1b0cdb..a42871a59f3b9 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1592,6 +1592,9 @@ static void xs_tcp_state_change(struct sock *sk)
- 			clear_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
- 			xprt_clear_connecting(xprt);
- 
-+			xprt->stat.connect_count++;
-+			xprt->stat.connect_time += (long)jiffies -
-+						   xprt->stat.connect_start;
- 			xprt_wake_pending_tasks(xprt, -EAGAIN);
- 		}
- 		spin_unlock(&xprt->transport_lock);
-@@ -2008,8 +2011,6 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
- 	}
- 
- 	/* Tell the socket layer to start connecting... */
--	xprt->stat.connect_count++;
--	xprt->stat.connect_start = jiffies;
- 	return kernel_connect(sock, xs_addr(xprt), xprt->addrlen, 0);
- }
- 
-@@ -2041,6 +2042,9 @@ static int xs_local_setup_socket(struct sock_xprt *transport)
- 	case 0:
- 		dprintk("RPC:       xprt %p connected to %s\n",
- 				xprt, xprt->address_strings[RPC_DISPLAY_ADDR]);
-+		xprt->stat.connect_count++;
-+		xprt->stat.connect_time += (long)jiffies -
-+					   xprt->stat.connect_start;
- 		xprt_set_connected(xprt);
- 	case -ENOBUFS:
- 		break;
-@@ -2361,8 +2365,6 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
- 	xs_set_memalloc(xprt);
- 
- 	/* Tell the socket layer to start connecting... */
--	xprt->stat.connect_count++;
--	xprt->stat.connect_start = jiffies;
- 	set_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
- 	ret = kernel_connect(sock, xs_addr(xprt), xprt->addrlen, O_NONBLOCK);
- 	switch (ret) {
 -- 
-2.20.1
-
+Martin K. Petersen	Oracle Linux Engineering
