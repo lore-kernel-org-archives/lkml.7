@@ -2,72 +2,113 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF14BC43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F036C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BBB206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573686103;
-	bh=jgBO/LU5wdjKU5yJf38VII0VsPC1KmmUxj7hMklZEvk=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=inxOBfM5oc9OLQ38dpWqUwyUDRyknno8u5N1v3PmyItrSYK2818hlNQcju/Eosirf
-	 CAthR70mCgyDQFDDNLFXHIw9UpjPOi3GFAUBrVOCXJeMTqr4CKh2z2qWz3MTfM+iP2
-	 5Q5JDTaDAMHTUbDb0jIYJeaW6GGfzz/3iu+fbfZ0=
+	by mail.kernel.org (Postfix) with ESMTP id 13236206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:02:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJsHtAOW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKMXBl (ORCPT
+        id S1726599AbfKMXCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 18:01:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfKMXBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 18:01:41 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 Nov 2019 18:02:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46840 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726303AbfKMXCA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 18:02:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573686119;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jhvq/7L4CZ926SBn146xoHM4iaITra2Z+/5GmzTdYcE=;
+        b=DJsHtAOWRncdK0lLalXO/UBto7UO+3z4sEzZ5ewyuGJBoFWkkp5uEiZSy80sINhkJTdYsx
+        QuSbrqbcAHOuU9a7DWPQeT5lXaTr1BiJYGq/BEYGTcXMx4GNXyS85Ln5pPfhrfTXdTfl4e
+        wLNtzOsjrcvKXEriETWcpLIK0CEJuGs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-117-NMLHO3wPOZCehLy3t-Rx9g-1; Wed, 13 Nov 2019 18:01:56 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B770F206F0;
-        Wed, 13 Nov 2019 23:01:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573686101;
-        bh=jgBO/LU5wdjKU5yJf38VII0VsPC1KmmUxj7hMklZEvk=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=KZtq2rsSd4M4+U37B1A6tidJf1ptCyUmtn7FoRz1IkRCyW/gj6p6AqrGA4M+QDqjA
-         O1Mh365RhLNmy1ftQNyT/guMTFfd7gGHdVcqQebnqQ7zjeZll1Iywl3N5geE1+F3ft
-         lhpN0ATdiwE3c4kK0VKHv0u/N33Mf+QnRp//zxuA=
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1AD73107ACC5;
+        Wed, 13 Nov 2019 23:01:55 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-24.phx2.redhat.com [10.3.112.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CC531001B28;
+        Wed, 13 Nov 2019 23:01:53 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 81BCB11E8; Wed, 13 Nov 2019 21:01:49 -0200 (BRST)
+Date:   Wed, 13 Nov 2019 21:01:49 -0200
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Hewenliang <hewenliang4@huawei.com>, tstoyanov@vmware.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linfeilong@huawei.com
+Subject: Re: [PATCH] tools lib traceevent: Fix memory leakage in
+ copy_filter_type
+Message-ID: <20191113230149.GA8999@redhat.com>
+References: <20191025082312.62690-1-hewenliang4@huawei.com>
+ <20191113144626.44ad5418@gandalf.local.home>
+ <20191113203710.GC3078@redhat.com>
+ <20191113154044.5b591bf8@gandalf.local.home>
 MIME-Version: 1.0
+In-Reply-To: <20191113154044.5b591bf8@gandalf.local.home>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: NMLHO3wPOZCehLy3t-Rx9g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191026194420.11918-1-robert.jarzmik@free.fr>
-References: <20191026194420.11918-1-robert.jarzmik@free.fr>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: pxa: fix one of the pxa RTC clocks
-User-Agent: alot/0.8.1
-Date:   Wed, 13 Nov 2019 15:01:39 -0800
-Message-Id: <20191113230141.B770F206F0@mail.kernel.org>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Robert Jarzmik (2019-10-26 12:44:20)
-> The pxa27x platforms have a single IP with 2 drivers, sa1100-rtc and
-> rtc-pxa drivers.
+Em Wed, Nov 13, 2019 at 03:40:44PM -0500, Steven Rostedt escreveu:
+> On Wed, 13 Nov 2019 18:37:10 -0200
+> Arnaldo Carvalho de Melo <acme@redhat.com> wrote:
 >=20
-> A previous patch fixed the sa1100-rtc case, but the pxa-rtc wasn't
-> fixed. This patch completes the previous one.
+> > Em Wed, Nov 13, 2019 at 02:46:26PM -0500, Steven Rostedt escreveu:
+> > > On Fri, 25 Oct 2019 04:23:12 -0400
+> > > Hewenliang <hewenliang4@huawei.com> wrote:
+> > >  =20
+> > > > It is necessary to free the memory that we have allocated
+> > > > when error occurs.
+> > > >=20
+> > > > Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_f=
+ilter_type()")
+> > > > Signed-off-by: Hewenliang <hewenliang4@huawei.com> =20
+> > >=20
+> > > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > >=20
+> > > Arnaldo, =20
+> >=20
+> > sure
 >=20
-> Fixes: 8b6d10345e16 ("clk: pxa: add missing pxa27x clocks for Irda and sa=
-1100-rtc")
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> ---
+> I found an issue with it (if you didn't see the next email).
+>=20
+> Please don't take it.
+=20
 
-Applied to clk-next
+ok.
+
+> Thanks!
+>=20
+> -- Steve
+>=20
+> > =20
+> > > Can you take this?
+> > >=20
+> > > -- Steve
+> >
 
