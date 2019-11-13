@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F69C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B1FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 725262067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DD8206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612056;
-	bh=AEtDSUfzNPB28aSBo8EKAVaPf9x3Xe/TBaAanT8qY4s=;
+	s=default; t=1573612060;
+	bh=iOCWkkQyNZ9HFAZK0cqFlOadkurC8YTumm+nF+4sP6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+1ZugEw5OcV40+zbosCqnnrmBGZYLgrelPRpgayVwY5yyRRoDEeHmRCpYQ5tcxTW
-	 +HCsyBHNepjdNX+eOUjBFLY1yRtDVqPD9QfRe7PwPQKSD6kQ8cJEZ/fnkP4FMYbGH+
-	 PLHrQyXMdEC8ssgdhtRDsofq0a+jIPGa1l5zZIJg=
+	b=fSqJO26VidS8jE7OHRsZiB+SPvp6cczb5d3yP332PT8M2Qv6N0eEpbDJNh1eBh3Te
+	 3ntkpTT95R9VjgiAi1BXjpCgsXW8dgQecVaBA4FIoW2KjArw3w+cRjNYcjq92y9wkJ
+	 MYsqTX+EqtdgSTMiBmTzeIUZ4zKXGUnhLz9oWX9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfKMBuw (ORCPT
+        id S1728624AbfKMC1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:50:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37564 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:27:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfKMBun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:43 -0500
+        id S1727531AbfKMBuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C38122467;
-        Wed, 13 Nov 2019 01:50:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 622D3222CA;
+        Wed, 13 Nov 2019 01:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609842;
-        bh=AEtDSUfzNPB28aSBo8EKAVaPf9x3Xe/TBaAanT8qY4s=;
+        s=default; t=1573609851;
+        bh=iOCWkkQyNZ9HFAZK0cqFlOadkurC8YTumm+nF+4sP6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AcCCCl+cd3uTSAJ4KjXlaVrD6bB+qim/jjEMrAVQAnE4wXwkm54UYjmjdd1oGZlTm
-         MSGizWi8wdusEL7X0qYBRQpcPNdFc6xEuQhRKHFMZm4y8Wvktlblux1ZaRMuPsl29y
-         Psbcat5UFn4p/Y7PwJEpft/d0vVDGwW3MBioVLTU=
+        b=dgCGl2tWDcxJ96EYTVJn/bPazGO/v2QBK27aEOibBrYvkTMcJw2Efj7TYMyof2JfL
+         hdmi/1kSnd8dBzUZeanO7r2LIt3zs+Lp1sYwOgfwPRYY001yypZM6PDo8uCv51drT+
+         9VyQRTOBk+GZfhaEbeEz447oZmYHyylU4J93Ti5Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 014/209] ACPI / LPSS: Resume BYT/CHT I2C controllers from resume_noirq
-Date:   Tue, 12 Nov 2019 20:47:10 -0500
-Message-Id: <20191113015025.9685-14-sashal@kernel.org>
+Cc:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 022/209] iommu/arm-smmu-v3: Fix unexpected CMD_SYNC timeout
+Date:   Tue, 12 Nov 2019 20:47:18 -0500
+Message-Id: <20191113015025.9685-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,154 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
 
-[ Upstream commit 48402cee6889fb3fce58e95fea1471626286dc63 ]
+[ Upstream commit 0f02477d16980938a84aba8688a4e3a303306116 ]
 
-On some Cherry Trail systems the GPU ACPI fwnode has power-resources which
-point to the PMIC, which is connected over a LPSS I2C controller.
+The condition break condition of:
 
-We add a device-link to make sure that the I2C controller is resumed before
-the GPU is. But the pci-core changes the power-state of PCI devices from
-D3 to D0 at noirq time (to restore the PCI config registers) and before
-this commit we were bringing up the I2C controllers from a resume_early
-handler which runs later. More specifically the pm-core will first run
-all resume_noirq handlers in order and then all resume_early handlers.
+	(int)(VAL - sync_idx) >= 0
 
-So we must not only make sure that the handlers are run in the right order,
-but also that the resume of the I2C controller is done at noirq time.
+in the __arm_smmu_sync_poll_msi() polling loop requires that sync_idx
+must be increased monotonically according to the sequence of the CMDs in
+the cmdq.
 
-The behavior before this commit, resuming the I2C controller from a
-resume_early handler leads to the following errors:
+However, since the msidata is populated using atomic_inc_return_relaxed()
+before taking the command-queue spinlock, then the following scenario
+can occur:
 
- i2c_designware 808622C1:06: controller timed out
- ACPI Error: AE_ERROR, Returned by Handler for [UserDefinedRegion]
- ACPI Error: Method parse/execution failed \_SB.P18W._ON, AE_ERROR
- video LNXVIDEO:00: Failed to change power state to D0
+CPU0			CPU1
+msidata=0
+			msidata=1
+			insert cmd1
+insert cmd0
+			smmu execute cmd1
+smmu execute cmd0
+			poll timeout, because msidata=1 is overridden by
+			cmd0, that means VAL=0, sync_idx=1.
 
-This commit changes the acpi_lpss.c code to resume the BYT/CHT I2C
-controllers at resume_noirq time fixing this.
+This is not a functional problem, since the caller will eventually either
+timeout or exit due to another CMD_SYNC, however it's clearly not what
+the code is supposed to be doing. Fix it, by incrementing the sequence
+count with the command-queue lock held, allowing us to drop the atomic
+operations altogether.
 
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+[will: dropped the specialised cmd building routine for now]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_lpss.c | 61 +++++++++++++++++++++++++++++++++++++---
- 1 file changed, 57 insertions(+), 4 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index 924b9f089e79f..c47bc6c7f4b91 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -84,6 +84,7 @@ struct lpss_device_desc {
- 	size_t prv_size_override;
- 	struct property_entry *properties;
- 	void (*setup)(struct lpss_private_data *pdata);
-+	bool resume_from_noirq;
- };
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 40fbf20d69e5a..2ab7100bcff12 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -567,7 +567,7 @@ struct arm_smmu_device {
  
- static const struct lpss_device_desc lpss_dma_desc = {
-@@ -275,12 +276,14 @@ static const struct lpss_device_desc byt_i2c_dev_desc = {
- 	.flags = LPSS_CLK | LPSS_SAVE_CTX,
- 	.prv_offset = 0x800,
- 	.setup = byt_i2c_setup,
-+	.resume_from_noirq = true,
- };
+ 	int				gerr_irq;
+ 	int				combined_irq;
+-	atomic_t			sync_nr;
++	u32				sync_nr;
  
- static const struct lpss_device_desc bsw_i2c_dev_desc = {
- 	.flags = LPSS_CLK | LPSS_SAVE_CTX | LPSS_NO_D3_DELAY,
- 	.prv_offset = 0x800,
- 	.setup = byt_i2c_setup,
-+	.resume_from_noirq = true,
- };
+ 	unsigned long			ias; /* IPA */
+ 	unsigned long			oas; /* PA */
+@@ -964,14 +964,13 @@ static int __arm_smmu_cmdq_issue_sync_msi(struct arm_smmu_device *smmu)
+ 	struct arm_smmu_cmdq_ent ent = {
+ 		.opcode = CMDQ_OP_CMD_SYNC,
+ 		.sync	= {
+-			.msidata = atomic_inc_return_relaxed(&smmu->sync_nr),
+ 			.msiaddr = virt_to_phys(&smmu->sync_count),
+ 		},
+ 	};
  
- static const struct lpss_device_desc bsw_spi_dev_desc = {
-@@ -1013,7 +1016,7 @@ static int acpi_lpss_resume(struct device *dev)
- }
+-	arm_smmu_cmdq_build_cmd(cmd, &ent);
+-
+ 	spin_lock_irqsave(&smmu->cmdq.lock, flags);
++	ent.sync.msidata = ++smmu->sync_nr;
++	arm_smmu_cmdq_build_cmd(cmd, &ent);
+ 	arm_smmu_cmdq_insert_cmd(smmu, cmd);
+ 	spin_unlock_irqrestore(&smmu->cmdq.lock, flags);
  
- #ifdef CONFIG_PM_SLEEP
--static int acpi_lpss_suspend_late(struct device *dev)
-+static int acpi_lpss_do_suspend_late(struct device *dev)
+@@ -2196,7 +2195,6 @@ static int arm_smmu_init_structures(struct arm_smmu_device *smmu)
  {
  	int ret;
  
-@@ -1024,12 +1027,62 @@ static int acpi_lpss_suspend_late(struct device *dev)
- 	return ret ? ret : acpi_lpss_suspend(dev, device_may_wakeup(dev));
- }
- 
--static int acpi_lpss_resume_early(struct device *dev)
-+static int acpi_lpss_suspend_late(struct device *dev)
-+{
-+	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-+
-+	if (pdata->dev_desc->resume_from_noirq)
-+		return 0;
-+
-+	return acpi_lpss_do_suspend_late(dev);
-+}
-+
-+static int acpi_lpss_suspend_noirq(struct device *dev)
-+{
-+	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-+	int ret;
-+
-+	if (pdata->dev_desc->resume_from_noirq) {
-+		ret = acpi_lpss_do_suspend_late(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return acpi_subsys_suspend_noirq(dev);
-+}
-+
-+static int acpi_lpss_do_resume_early(struct device *dev)
- {
- 	int ret = acpi_lpss_resume(dev);
- 
- 	return ret ? ret : pm_generic_resume_early(dev);
- }
-+
-+static int acpi_lpss_resume_early(struct device *dev)
-+{
-+	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-+
-+	if (pdata->dev_desc->resume_from_noirq)
-+		return 0;
-+
-+	return acpi_lpss_do_resume_early(dev);
-+}
-+
-+static int acpi_lpss_resume_noirq(struct device *dev)
-+{
-+	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-+	int ret;
-+
-+	ret = acpi_subsys_resume_noirq(dev);
-+	if (ret)
-+		return ret;
-+
-+	if (!dev_pm_may_skip_resume(dev) && pdata->dev_desc->resume_from_noirq)
-+		ret = acpi_lpss_do_resume_early(dev);
-+
-+	return ret;
-+}
-+
- #endif /* CONFIG_PM_SLEEP */
- 
- static int acpi_lpss_runtime_suspend(struct device *dev)
-@@ -1059,8 +1112,8 @@ static struct dev_pm_domain acpi_lpss_pm_domain = {
- 		.complete = acpi_subsys_complete,
- 		.suspend = acpi_subsys_suspend,
- 		.suspend_late = acpi_lpss_suspend_late,
--		.suspend_noirq = acpi_subsys_suspend_noirq,
--		.resume_noirq = acpi_subsys_resume_noirq,
-+		.suspend_noirq = acpi_lpss_suspend_noirq,
-+		.resume_noirq = acpi_lpss_resume_noirq,
- 		.resume_early = acpi_lpss_resume_early,
- 		.freeze = acpi_subsys_freeze,
- 		.freeze_late = acpi_subsys_freeze_late,
+-	atomic_set(&smmu->sync_nr, 0);
+ 	ret = arm_smmu_init_queues(smmu);
+ 	if (ret)
+ 		return ret;
 -- 
 2.20.1
 
