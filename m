@@ -2,2096 +2,829 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EB1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370DFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0C322459
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34A121D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a10kHzN2"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="SJZsX3bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfKMHSo (ORCPT
+        id S1727097AbfKMHTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:18:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43504 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfKMHSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:18:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vvyAnjxX0rbQFk6MPPRaSmX4IYb9xJfa9RX8dt8RD1Y=; b=a10kHzN2nvOnPudTmKHglvxb1C
-        8mZ8y1Ts0zsQc0Y/1aRqbaBkjYIY+7wn3wZY4LV3E0T2itEoGXN5flAhCrdObnvZUrBmsrLGKUToL
-        qemM1WAXz+0BS9uAJWWcZUNtvrsl48gUALV6DzelVC68OthsVGfujggxc6fXedcroPv/rmpcVKLy4
-        8KEb4hmFU+1s6/DPJJa/BRBlZ8x0dQ6XAs463G5re8B+OX8GcbqKtqQAq3OkETJfHRXpwE6rYIuys
-        3szZi4s2zGwvtwEHydfa+JA0bDoa1ZtIvRlAq1ufwbUYPa1bkDW6ZlZq+ovd/VAxQYgfmVrgHflJw
-        WJbddG4A==;
-Received: from [2001:4bb8:180:3806:c70:4a89:bc61:5] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUmvI-0008B5-M6; Wed, 13 Nov 2019 07:18:41 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Muli Ben-Yehuda <mulix@mulix.org>, Jon Mason <jdmason@kudzu.us>,
-        x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [PATCH 1/3] x86: Remove the calgary IOMMU driver
-Date:   Wed, 13 Nov 2019 08:18:34 +0100
-Message-Id: <20191113071836.21041-2-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113071836.21041-1-hch@lst.de>
-References: <20191113071836.21041-1-hch@lst.de>
+        Wed, 13 Nov 2019 02:19:38 -0500
+Received: from mail-eopbgr750057.outbound.protection.outlook.com ([40.107.75.57]:54791
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726074AbfKMHTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 02:19:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ced1s0YISSi9Ypzwy/GJGtDvvCs2bKQxG1IdtRiiNDyZkdqxAg3f1umK88YM5rzmcXCQDQ5iRdR9PxGzKShBTk3psblWk6Rb8TMII4jpsJm4P5wBajvLUUkqpu145bKN9g1wox0ypInzC55wVvuruvwmg8lNVrGqUdTdn5O07rXEXj+5ZzpDEZTc8h6mx2s5zYzIJlBI3Yo1qREReRo1pYG3AOotJN9BW3KVrdZkeEl8mdSC5ja/KTZ/OKAzI5YshEhvKO3cU8dFkn117HBIjyT2lH0oPpValwf1wbMxq+nV7vId1j1nC5rKH+pyoRpRf9Amnb1vXbqur4Fx1zKiMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EMEk7D7bUWS5B9VjKITeeBSxp1iauoOcPgB8EANZXbU=;
+ b=CU1OaWIuDSusIUikLRYVBe/HfRFhczer8GHgUcqrq9/L5/kWKVv/YuJznlQ2dmRXhLfhtuY0i7L26gZwdxHfkp3fyhj/4fFZb4ZNHhWTXEA2Su55/Ykm3HrkNJ3xeLp6v3V7/cSvHbVScjzNNpPIrDlePXEGs9wrtoTb7J9hmgjRVZzK5JwfwopqpwSRuLvJsF8/3ioHy/XfUaDavZpDyghgNa2h0smAbvai+LeXGz61YMAxGAaBWZs59zAFhi8z5o1PEN0qZYLS7sDv6WOGn5sDXbZs5guMvFQfJb33ICv4DyMf5lB2rCtI/Jb1Etc8dt1OYau2/bilSscrTXaQAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EMEk7D7bUWS5B9VjKITeeBSxp1iauoOcPgB8EANZXbU=;
+ b=SJZsX3bo6C9yBCQJRHDLFSMnRs9kIkYn4AljGaz67HjcUMCAXgaw32YkPLIMgib6pOxqqJ3uhYMe5JlgMdc1faMGIC+8ndY7OATGbwnGC/2GvJwu880rgXCQnNoyarC7U0Qn4wgg+CUW+RWJbgbnjhtX8UvvCv0pbaxKry4p4SI=
+Received: from BN6PR1201CA0023.namprd12.prod.outlook.com
+ (2603:10b6:405:4c::33) by MWHPR12MB1262.namprd12.prod.outlook.com
+ (2603:10b6:300:12::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.23; Wed, 13 Nov
+ 2019 07:15:41 +0000
+Received: from BN8NAM11FT027.eop-nam11.prod.protection.outlook.com
+ (2a01:111:f400:7eae::209) by BN6PR1201CA0023.outlook.office365.com
+ (2603:10b6:405:4c::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2451.22 via Frontend
+ Transport; Wed, 13 Nov 2019 07:15:40 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB02.amd.com (165.204.84.17) by
+ BN8NAM11FT027.mail.protection.outlook.com (10.13.177.96) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.2451.23 via Frontend Transport; Wed, 13 Nov 2019 07:15:40 +0000
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 13 Nov
+ 2019 01:15:40 -0600
+Received: from vishnu-All-Series.amd.com (10.180.168.240) by
+ SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
+ via Frontend Transport; Wed, 13 Nov 2019 01:15:30 -0600
+From:   Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
+        <Akshu.Agrawal@amd.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        "Alex Deucher" <alexander.deucher@amd.com>,
+        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Sanju R Mehta <sanju.mehta@amd.com>,
+        "open list" <linux-kernel@vger.kernel.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>
+Subject: [RESEND PATCH v5 2/6] ASoC: amd: Refactoring of DAI from DMA driver
+Date:   Wed, 13 Nov 2019 12:44:05 +0530
+Message-ID: <1573629249-13272-3-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573629249-13272-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+References: <1573629249-13272-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(1496009)(346002)(396003)(39860400002)(376002)(136003)(428003)(199004)(189003)(81166006)(81156014)(8936002)(8676002)(50226002)(5660300002)(16586007)(47776003)(51416003)(7696005)(76176011)(36756003)(50466002)(316002)(14444005)(86362001)(109986005)(356004)(6666004)(186003)(30864003)(305945005)(1671002)(486006)(2616005)(446003)(11346002)(53416004)(476003)(2906002)(426003)(336012)(26005)(4326008)(478600001)(54906003)(126002)(70586007)(48376002)(70206006)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1262;H:SATLEXMB02.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 56623fc4-3ed1-4809-fbac-08d768094a43
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1262:|MWHPR12MB1262:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB12625AB25EE43B6CC79688AAE7760@MWHPR12MB1262.namprd12.prod.outlook.com>
+X-MS-Exchange-Transport-Forked: True
+X-MS-Oob-TLC-OOBClassifiers: OLM:82;
+X-Forefront-PRVS: 0220D4B98D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UlYeOKfLEmwNUrosfR6VYOr6VZ7p28CjOIZQO64OPOLIO/t3mkNJTmMq91rBCSpjV5HCbw/P9IDZ74t+5Inl+f9gLT0RwtVqwIU98EfwCDmBYBLVPpDmGumGgw2R4pTwzI4Xya18TXOjUOGwp2uEMhqQhRV/x8Hu9YkzAC8GNE9gFbNzYpUQzwuw0FME0zm5PDUEf1jqdzCK7ZMu10OCZnLM74r+rNY18IoLRh77WxIjwCRek+XpC/MfXdR5hL0omHPS7fclICz+/0NNVb/Ns4iRBk4NENvUjnB2e7dRzGFxy/STsZw686uzcBGALmqRb05Q04jYccXpScXPJR8YDV59BHp4eEm9NAHMWEGz9lD1OKK3EeKk1E9zwbULsqRyhMIUxCQ1rSQLxp3Hez1f6+WR+92KuEzI9mnwk2LpWKduLEP5o18UzhnTJZzw16dW
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2019 07:15:40.5737
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56623fc4-3ed1-4809-fbac-08d768094a43
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1262
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The calgary IOMMU was only used on high-end IBM systems in the early
-x86_64 age and has no known users left.  Remove it to avoid having to
-touch it for pending changes to the DMA API.
+Asoc: PCM DMA driver should only have dma ops.
+So Removed all DAI related functionality.Refactoring
+the PCM DMA diver code.Added new file containing only DAI ops.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
 ---
- MAINTAINERS                       |   10 -
- arch/x86/Kconfig                  |   30 -
- arch/x86/configs/x86_64_defconfig |    1 -
- arch/x86/include/asm/calgary.h    |   57 --
- arch/x86/include/asm/pci_64.h     |   14 -
- arch/x86/include/asm/tce.h        |   35 -
- arch/x86/kernel/Makefile          |    1 -
- arch/x86/kernel/pci-calgary_64.c  | 1586 -----------------------------
- arch/x86/kernel/pci-dma.c         |    6 -
- arch/x86/kernel/tce_64.c          |  177 ----
- 10 files changed, 1917 deletions(-)
- delete mode 100644 arch/x86/include/asm/calgary.h
- delete mode 100644 arch/x86/include/asm/tce.h
- delete mode 100644 arch/x86/kernel/pci-calgary_64.c
- delete mode 100644 arch/x86/kernel/tce_64.c
+ sound/soc/amd/raven/Makefile        |   2 +
+ sound/soc/amd/raven/acp3x-i2s.c     | 272 ++++++++++++++++++++++++++++++++++++
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 251 +++++----------------------------
+ sound/soc/amd/raven/acp3x.h         |  42 ++++++
+ 4 files changed, 348 insertions(+), 219 deletions(-)
+ create mode 100644 sound/soc/amd/raven/acp3x-i2s.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index eb19fad370d7..778e8dee3e9d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3627,16 +3627,6 @@ L:	cake@lists.bufferbloat.net (moderated for non-subscribers)
- S:	Maintained
- F:	net/sched/sch_cake.c
+diff --git a/sound/soc/amd/raven/Makefile b/sound/soc/amd/raven/Makefile
+index 108d1ac..8eef292 100644
+--- a/sound/soc/amd/raven/Makefile
++++ b/sound/soc/amd/raven/Makefile
+@@ -1,6 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ # Raven Ridge platform Support
+ snd-pci-acp3x-objs	:= pci-acp3x.o
++snd-acp3x-i2s-objs	:= acp3x-i2s.o
+ snd-acp3x-pcm-dma-objs	:= acp3x-pcm-dma.o
+ obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-pci-acp3x.o
++obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-acp3x-i2s.o
+ obj-$(CONFIG_SND_SOC_AMD_ACP3x)	 += snd-acp3x-pcm-dma.o
+diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
+new file mode 100644
+index 0000000..0f27abc
+--- /dev/null
++++ b/sound/soc/amd/raven/acp3x-i2s.c
+@@ -0,0 +1,272 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// AMD ALSA SoC PCM Driver
++//
++//Copyright 2016 Advanced Micro Devices, Inc.
++
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/pm_runtime.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/soc-dai.h>
++#include <linux/dma-mapping.h>
++
++#include "acp3x.h"
++
++#define DRV_NAME "acp3x-i2s"
++
++static int acp3x_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
++{
++
++	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
++
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++
++	case SND_SOC_DAIFMT_I2S:
++		adata->tdm_mode = false;
++		break;
++	case SND_SOC_DAIFMT_DSP_A:
++		adata->tdm_mode = true;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int acp3x_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
++		u32 rx_mask, int slots, int slot_width)
++{
++	u32 val;
++	u16 slot_len;
++
++	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
++
++	/* These values are as per Hardware Spec */
++
++	switch (slot_width) {
++	case SLOT_WIDTH_8:
++		slot_len = 8;
++		break;
++	case SLOT_WIDTH_16:
++		slot_len = 16;
++		break;
++	case SLOT_WIDTH_24:
++		slot_len = 24;
++		break;
++	case SLOT_WIDTH_32:
++		slot_len = 0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
++	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_ITER);
++	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
++	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_IRER);
++
++	val = (FRM_LEN | (slots << 15) | (slot_len << 18));
++	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_TXFRMT);
++	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_RXFRMT);
++
++	adata->tdm_fmt = val;
++	return 0;
++}
++
++static int acp3x_i2s_hwparams(struct snd_pcm_substream *substream,
++		struct snd_pcm_hw_params *params,
++		struct snd_soc_dai *dai)
++{
++	u32 val = 0;
++	struct i2s_stream_instance *rtd = substream->runtime->private_data;
++
++	switch (params_format(params)) {
++	case SNDRV_PCM_FORMAT_U8:
++	case SNDRV_PCM_FORMAT_S8:
++		rtd->xfer_resolution = 0x0;
++		break;
++	case SNDRV_PCM_FORMAT_S16_LE:
++		rtd->xfer_resolution = 0x02;
++		break;
++	case SNDRV_PCM_FORMAT_S24_LE:
++		rtd->xfer_resolution = 0x04;
++		break;
++	case SNDRV_PCM_FORMAT_S32_LE:
++		rtd->xfer_resolution = 0x05;
++		break;
++	default:
++		return -EINVAL;
++	}
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
++		val = val | (rtd->xfer_resolution  << 3);
++		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
++	} else {
++		val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
++		val = val | (rtd->xfer_resolution  << 3);
++		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
++	}
++	return 0;
++}
++
++static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
++		int cmd, struct snd_soc_dai *dai)
++{
++	int ret = 0;
++	struct i2s_stream_instance *rtd = substream->runtime->private_data;
++	u32 val, period_bytes;
++
++	period_bytes = frames_to_bytes(substream->runtime,
++			substream->runtime->period_size);
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++	case SNDRV_PCM_TRIGGER_RESUME:
++	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		rtd->bytescount = acp_get_byte_count(rtd,
++						substream->stream);
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++			rv_writel(period_bytes, rtd->acp3x_base +
++					mmACP_BT_TX_INTR_WATERMARK_SIZE);
++			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
++			val = val | BIT(0);
++			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
++		} else {
++			rv_writel(period_bytes, rtd->acp3x_base +
++					mmACP_BT_RX_INTR_WATERMARK_SIZE);
++			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
++			val = val | BIT(0);
++			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
++		}
++		rv_writel(1, rtd->acp3x_base + mmACP_BTTDM_IER);
++		break;
++	case SNDRV_PCM_TRIGGER_STOP:
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
++			val = val & ~BIT(0);
++			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
++		} else {
++			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
++			val = val & ~BIT(0);
++			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
++		}
++		rv_writel(0, rtd->acp3x_base + mmACP_BTTDM_IER);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++	return ret;
++}
++
++static struct snd_soc_dai_ops acp3x_i2s_dai_ops = {
++	.hw_params = acp3x_i2s_hwparams,
++	.trigger   = acp3x_i2s_trigger,
++	.set_fmt = acp3x_i2s_set_fmt,
++	.set_tdm_slot = acp3x_i2s_set_tdm_slot,
++};
++
++static const struct snd_soc_component_driver acp3x_dai_component = {
++	.name           = "acp3x-i2s",
++};
++
++static struct snd_soc_dai_driver acp3x_i2s_dai = {
++	.playback = {
++		.rates = SNDRV_PCM_RATE_8000_96000,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
++			SNDRV_PCM_FMTBIT_U8 |
++			SNDRV_PCM_FMTBIT_S24_LE |
++			SNDRV_PCM_FMTBIT_S32_LE,
++		.channels_min = 2,
++		.channels_max = 8,
++
++		.rate_min = 8000,
++		.rate_max = 96000,
++	},
++	.capture = {
++		.rates = SNDRV_PCM_RATE_8000_48000,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
++			SNDRV_PCM_FMTBIT_U8 |
++			SNDRV_PCM_FMTBIT_S24_LE |
++			SNDRV_PCM_FMTBIT_S32_LE,
++		.channels_min = 2,
++		.channels_max = 2,
++		.rate_min = 8000,
++		.rate_max = 48000,
++	},
++	.ops = &acp3x_i2s_dai_ops,
++};
++
++
++static int acp3x_dai_probe(struct platform_device *pdev)
++{
++	int status;
++	struct resource *res;
++	struct i2s_dev_data *adata;
++
++	adata = devm_kzalloc(&pdev->dev, sizeof(struct i2s_dev_data),
++			GFP_KERNEL);
++	if (!adata)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "IORESOURCE_MEM FAILED\n");
++		goto err;
++	}
++
++	adata->acp3x_base = devm_ioremap(&pdev->dev, res->start,
++			resource_size(res));
++	if (IS_ERR(adata->acp3x_base))
++		return PTR_ERR(adata->acp3x_base);
++
++	adata->i2s_irq = res->start;
++	dev_set_drvdata(&pdev->dev, adata);
++	status = devm_snd_soc_register_component(&pdev->dev,
++			&acp3x_dai_component,
++			&acp3x_i2s_dai, 1);
++	if (status) {
++		dev_err(&pdev->dev, "Fail to register acp i2s dai\n");
++		goto dev_err;
++	}
++	pm_runtime_set_autosuspend_delay(&pdev->dev, 10000);
++	pm_runtime_use_autosuspend(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++	return 0;
++err:
++	kfree(adata);
++	return -ENOMEM;
++dev_err:
++	kfree(adata->acp3x_base);
++	kfree(adata);
++	kfree(res);
++	return -ENODEV;
++}
++
++static int acp3x_dai_remove(struct platform_device *pdev)
++{
++	pm_runtime_disable(&pdev->dev);
++	return 0;
++}
++static struct platform_driver acp3x_dai_driver = {
++	.probe = acp3x_dai_probe,
++	.remove = acp3x_dai_remove,
++	.driver = {
++		.name = "acp3x_i2s_playcap",
++	},
++};
++
++module_platform_driver(acp3x_dai_driver);
++
++MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
++MODULE_DESCRIPTION("AMD ACP 3.x PCM Driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:" DRV_NAME);
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 60709e3..8db2812 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -18,24 +18,6 @@
  
--CALGARY x86-64 IOMMU
--M:	Muli Ben-Yehuda <mulix@mulix.org>
--M:	Jon Mason <jdmason@kudzu.us>
--L:	iommu@lists.linux-foundation.org
--S:	Maintained
--F:	arch/x86/kernel/pci-calgary_64.c
--F:	arch/x86/kernel/tce_64.c
--F:	arch/x86/include/asm/calgary.h
--F:	arch/x86/include/asm/tce.h
--
- CAN NETWORK DRIVERS
- M:	Wolfgang Grandegger <wg@grandegger.com>
- M:	Marc Kleine-Budde <mkl@pengutronix.de>
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d6e1faa28c58..4d27bdc85bf2 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -932,36 +932,6 @@ config GART_IOMMU
+ #define DRV_NAME "acp3x-i2s-audio"
  
- 	  If unsure, say Y.
+-struct i2s_dev_data {
+-	bool tdm_mode;
+-	unsigned int i2s_irq;
+-	u32 tdm_fmt;
+-	void __iomem *acp3x_base;
+-	struct snd_pcm_substream *play_stream;
+-	struct snd_pcm_substream *capture_stream;
+-};
+-
+-struct i2s_stream_instance {
+-	u16 num_pages;
+-	u16 channels;
+-	u32 xfer_resolution;
+-	u64 bytescount;
+-	dma_addr_t dma_addr;
+-	void __iomem *acp3x_base;
+-};
+-
+ static const struct snd_pcm_hardware acp3x_pcm_hardware_playback = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED |
+ 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+@@ -280,6 +262,9 @@ static int acp3x_dma_open(struct snd_soc_component *component,
+ {
+ 	int ret = 0;
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct snd_soc_pcm_runtime *prtd = substream->private_data;
++
++	component = snd_soc_rtdcom_lookup(prtd, DRV_NAME);
+ 	struct i2s_dev_data *adata = dev_get_drvdata(component->dev);
+ 	struct i2s_stream_instance *i2s_data = kzalloc(sizeof(struct i2s_stream_instance),
+ 						       GFP_KERNEL);
+@@ -312,23 +297,6 @@ static int acp3x_dma_open(struct snd_soc_component *component,
+ 	return 0;
+ }
  
--config CALGARY_IOMMU
--	bool "IBM Calgary IOMMU support"
--	select IOMMU_HELPER
--	select SWIOTLB
--	depends on X86_64 && PCI
--	---help---
--	  Support for hardware IOMMUs in IBM's xSeries x366 and x460
--	  systems. Needed to run systems with more than 3GB of memory
--	  properly with 32-bit PCI devices that do not support DAC
--	  (Double Address Cycle). Calgary also supports bus level
--	  isolation, where all DMAs pass through the IOMMU.  This
--	  prevents them from going anywhere except their intended
--	  destination. This catches hard-to-find kernel bugs and
--	  mis-behaving drivers and devices that do not use the DMA-API
--	  properly to set up their DMA buffers.  The IOMMU can be
--	  turned off at boot time with the iommu=off parameter.
--	  Normally the kernel will make the right choice by itself.
--	  If unsure, say Y.
--
--config CALGARY_IOMMU_ENABLED_BY_DEFAULT
--	def_bool y
--	prompt "Should Calgary be enabled by default?"
--	depends on CALGARY_IOMMU
--	---help---
--	  Should Calgary be enabled by default? if you choose 'y', Calgary
--	  will be used (if it exists). If you choose 'n', Calgary will not be
--	  used even if it exists. If you choose 'n' and would like to use
--	  Calgary anyway, pass 'iommu=calgary' on the kernel command line.
--	  If unsure, say Y.
--
- config MAXSMP
- 	bool "Enable Maximum number of SMP Processors and NUMA Nodes"
- 	depends on X86_64 && SMP && DEBUG_KERNEL
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
-index d0a5ffeae8df..0b9654c7a05c 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -25,7 +25,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_FORCE_UNLOAD=y
- CONFIG_SMP=y
--CONFIG_CALGARY_IOMMU=y
- CONFIG_NR_CPUS=64
- CONFIG_SCHED_SMT=y
- CONFIG_PREEMPT_VOLUNTARY=y
-diff --git a/arch/x86/include/asm/calgary.h b/arch/x86/include/asm/calgary.h
-deleted file mode 100644
-index facd374a1bf7..000000000000
---- a/arch/x86/include/asm/calgary.h
-+++ /dev/null
-@@ -1,57 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Derived from include/asm-powerpc/iommu.h
-- *
-- * Copyright IBM Corporation, 2006-2007
-- *
-- * Author: Jon Mason <jdmason@us.ibm.com>
-- * Author: Muli Ben-Yehuda <muli@il.ibm.com>
-- */
--
--#ifndef _ASM_X86_CALGARY_H
--#define _ASM_X86_CALGARY_H
--
--#include <linux/spinlock.h>
--#include <linux/device.h>
--#include <linux/dma-mapping.h>
--#include <linux/timer.h>
--#include <asm/types.h>
--
--struct iommu_table {
--	const struct cal_chipset_ops *chip_ops; /* chipset specific funcs */
--	unsigned long  it_base;      /* mapped address of tce table */
--	unsigned long  it_hint;      /* Hint for next alloc */
--	unsigned long *it_map;       /* A simple allocation bitmap for now */
--	void __iomem  *bbar;         /* Bridge BAR */
--	u64	       tar_val;      /* Table Address Register */
--	struct timer_list watchdog_timer;
--	spinlock_t     it_lock;      /* Protects it_map */
--	unsigned int   it_size;      /* Size of iommu table in entries */
--	unsigned char  it_busno;     /* Bus number this table belongs to */
--};
--
--struct cal_chipset_ops {
--	void (*handle_quirks)(struct iommu_table *tbl, struct pci_dev *dev);
--	void (*tce_cache_blast)(struct iommu_table *tbl);
--	void (*dump_error_regs)(struct iommu_table *tbl);
--};
--
--#define TCE_TABLE_SIZE_UNSPECIFIED	~0
--#define TCE_TABLE_SIZE_64K		0
--#define TCE_TABLE_SIZE_128K		1
--#define TCE_TABLE_SIZE_256K		2
--#define TCE_TABLE_SIZE_512K		3
--#define TCE_TABLE_SIZE_1M		4
--#define TCE_TABLE_SIZE_2M		5
--#define TCE_TABLE_SIZE_4M		6
--#define TCE_TABLE_SIZE_8M		7
--
--extern int use_calgary;
--
--#ifdef CONFIG_CALGARY_IOMMU
--extern int detect_calgary(void);
--#else
--static inline int detect_calgary(void) { return -ENODEV; }
--#endif
--
--#endif /* _ASM_X86_CALGARY_H */
-diff --git a/arch/x86/include/asm/pci_64.h b/arch/x86/include/asm/pci_64.h
-index f5411de0ae11..4e1aef506aa5 100644
---- a/arch/x86/include/asm/pci_64.h
-+++ b/arch/x86/include/asm/pci_64.h
-@@ -4,20 +4,6 @@
- 
- #ifdef __KERNEL__
- 
--#ifdef CONFIG_CALGARY_IOMMU
--static inline void *pci_iommu(struct pci_bus *bus)
+-static u64 acp_get_byte_count(struct i2s_stream_instance *rtd, int direction)
 -{
--	struct pci_sysdata *sd = bus->sysdata;
--	return sd->iommu;
--}
--
--static inline void set_pci_iommu(struct pci_bus *bus, void *val)
--{
--	struct pci_sysdata *sd = bus->sysdata;
--	sd->iommu = val;
--}
--#endif /* CONFIG_CALGARY_IOMMU */
--
- extern int (*pci_config_read)(int seg, int bus, int dev, int fn,
- 			      int reg, int len, u32 *value);
- extern int (*pci_config_write)(int seg, int bus, int dev, int fn,
-diff --git a/arch/x86/include/asm/tce.h b/arch/x86/include/asm/tce.h
-deleted file mode 100644
-index 6ed2deacf1d0..000000000000
---- a/arch/x86/include/asm/tce.h
-+++ /dev/null
-@@ -1,35 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * This file is derived from asm-powerpc/tce.h.
-- *
-- * Copyright (C) IBM Corporation, 2006
-- *
-- * Author: Muli Ben-Yehuda <muli@il.ibm.com>
-- * Author: Jon Mason <jdmason@us.ibm.com>
-- */
--
--#ifndef _ASM_X86_TCE_H
--#define _ASM_X86_TCE_H
--
--extern unsigned int specified_table_size;
--struct iommu_table;
--
--#define TCE_ENTRY_SIZE   8   /* in bytes */
--
--#define TCE_READ_SHIFT   0
--#define TCE_WRITE_SHIFT  1
--#define TCE_HUBID_SHIFT  2   /* unused */
--#define TCE_RSVD_SHIFT   8   /* unused */
--#define TCE_RPN_SHIFT    12
--#define TCE_UNUSED_SHIFT 48  /* unused */
--
--#define TCE_RPN_MASK     0x0000fffffffff000ULL
--
--extern void tce_build(struct iommu_table *tbl, unsigned long index,
--		      unsigned int npages, unsigned long uaddr, int direction);
--extern void tce_free(struct iommu_table *tbl, long index, unsigned int npages);
--extern void * __init alloc_tce_table(void);
--extern void __init free_tce_table(void *tbl);
--extern int __init build_tce_table(struct pci_dev *dev, void __iomem *bbar);
--
--#endif /* _ASM_X86_TCE_H */
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3578ad248bc9..1167a46e2a30 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -146,7 +146,6 @@ ifeq ($(CONFIG_X86_64),y)
- 	obj-$(CONFIG_AUDIT)		+= audit_64.o
- 
- 	obj-$(CONFIG_GART_IOMMU)	+= amd_gart_64.o aperture_64.o
--	obj-$(CONFIG_CALGARY_IOMMU)	+= pci-calgary_64.o tce_64.o
- 
- 	obj-$(CONFIG_MMCONF_FAM10H)	+= mmconf-fam10h_64.o
- 	obj-y				+= vsmp_64.o
-diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
-deleted file mode 100644
-index 23fdec030c37..000000000000
---- a/arch/x86/kernel/pci-calgary_64.c
-+++ /dev/null
-@@ -1,1586 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Derived from arch/powerpc/kernel/iommu.c
-- *
-- * Copyright IBM Corporation, 2006-2007
-- * Copyright (C) 2006  Jon Mason <jdmason@kudzu.us>
-- *
-- * Author: Jon Mason <jdmason@kudzu.us>
-- * Author: Muli Ben-Yehuda <muli@il.ibm.com>
--
-- */
--
--#define pr_fmt(fmt) "Calgary: " fmt
--
--#include <linux/kernel.h>
--#include <linux/init.h>
--#include <linux/types.h>
--#include <linux/slab.h>
--#include <linux/mm.h>
--#include <linux/spinlock.h>
--#include <linux/string.h>
--#include <linux/crash_dump.h>
--#include <linux/dma-mapping.h>
--#include <linux/dma-direct.h>
--#include <linux/bitmap.h>
--#include <linux/pci_ids.h>
--#include <linux/pci.h>
--#include <linux/delay.h>
--#include <linux/scatterlist.h>
--#include <linux/iommu-helper.h>
--
--#include <asm/iommu.h>
--#include <asm/calgary.h>
--#include <asm/tce.h>
--#include <asm/pci-direct.h>
--#include <asm/dma.h>
--#include <asm/rio.h>
--#include <asm/bios_ebda.h>
--#include <asm/x86_init.h>
--#include <asm/iommu_table.h>
--
--#ifdef CONFIG_CALGARY_IOMMU_ENABLED_BY_DEFAULT
--int use_calgary __read_mostly = 1;
--#else
--int use_calgary __read_mostly = 0;
--#endif /* CONFIG_CALGARY_DEFAULT_ENABLED */
--
--#define PCI_DEVICE_ID_IBM_CALGARY 0x02a1
--#define PCI_DEVICE_ID_IBM_CALIOC2 0x0308
--
--/* register offsets inside the host bridge space */
--#define CALGARY_CONFIG_REG	0x0108
--#define PHB_CSR_OFFSET		0x0110 /* Channel Status */
--#define PHB_PLSSR_OFFSET	0x0120
--#define PHB_CONFIG_RW_OFFSET	0x0160
--#define PHB_IOBASE_BAR_LOW	0x0170
--#define PHB_IOBASE_BAR_HIGH	0x0180
--#define PHB_MEM_1_LOW		0x0190
--#define PHB_MEM_1_HIGH		0x01A0
--#define PHB_IO_ADDR_SIZE	0x01B0
--#define PHB_MEM_1_SIZE		0x01C0
--#define PHB_MEM_ST_OFFSET	0x01D0
--#define PHB_AER_OFFSET		0x0200
--#define PHB_CONFIG_0_HIGH	0x0220
--#define PHB_CONFIG_0_LOW	0x0230
--#define PHB_CONFIG_0_END	0x0240
--#define PHB_MEM_2_LOW		0x02B0
--#define PHB_MEM_2_HIGH		0x02C0
--#define PHB_MEM_2_SIZE_HIGH	0x02D0
--#define PHB_MEM_2_SIZE_LOW	0x02E0
--#define PHB_DOSHOLE_OFFSET	0x08E0
--
--/* CalIOC2 specific */
--#define PHB_SAVIOR_L2		0x0DB0
--#define PHB_PAGE_MIG_CTRL	0x0DA8
--#define PHB_PAGE_MIG_DEBUG	0x0DA0
--#define PHB_ROOT_COMPLEX_STATUS 0x0CB0
--
--/* PHB_CONFIG_RW */
--#define PHB_TCE_ENABLE		0x20000000
--#define PHB_SLOT_DISABLE	0x1C000000
--#define PHB_DAC_DISABLE		0x01000000
--#define PHB_MEM2_ENABLE		0x00400000
--#define PHB_MCSR_ENABLE		0x00100000
--/* TAR (Table Address Register) */
--#define TAR_SW_BITS		0x0000ffffffff800fUL
--#define TAR_VALID		0x0000000000000008UL
--/* CSR (Channel/DMA Status Register) */
--#define CSR_AGENT_MASK		0xffe0ffff
--/* CCR (Calgary Configuration Register) */
--#define CCR_2SEC_TIMEOUT	0x000000000000000EUL
--/* PMCR/PMDR (Page Migration Control/Debug Registers */
--#define PMR_SOFTSTOP		0x80000000
--#define PMR_SOFTSTOPFAULT	0x40000000
--#define PMR_HARDSTOP		0x20000000
--
--/*
-- * The maximum PHB bus number.
-- * x3950M2 (rare): 8 chassis, 48 PHBs per chassis = 384
-- * x3950M2: 4 chassis, 48 PHBs per chassis        = 192
-- * x3950 (PCIE): 8 chassis, 32 PHBs per chassis   = 256
-- * x3950 (PCIX): 8 chassis, 16 PHBs per chassis   = 128
-- */
--#define MAX_PHB_BUS_NUM		256
--
--#define PHBS_PER_CALGARY	  4
--
--/* register offsets in Calgary's internal register space */
--static const unsigned long tar_offsets[] = {
--	0x0580 /* TAR0 */,
--	0x0588 /* TAR1 */,
--	0x0590 /* TAR2 */,
--	0x0598 /* TAR3 */
--};
--
--static const unsigned long split_queue_offsets[] = {
--	0x4870 /* SPLIT QUEUE 0 */,
--	0x5870 /* SPLIT QUEUE 1 */,
--	0x6870 /* SPLIT QUEUE 2 */,
--	0x7870 /* SPLIT QUEUE 3 */
--};
--
--static const unsigned long phb_offsets[] = {
--	0x8000 /* PHB0 */,
--	0x9000 /* PHB1 */,
--	0xA000 /* PHB2 */,
--	0xB000 /* PHB3 */
--};
--
--/* PHB debug registers */
--
--static const unsigned long phb_debug_offsets[] = {
--	0x4000	/* PHB 0 DEBUG */,
--	0x5000	/* PHB 1 DEBUG */,
--	0x6000	/* PHB 2 DEBUG */,
--	0x7000	/* PHB 3 DEBUG */
--};
--
--/*
-- * STUFF register for each debug PHB,
-- * byte 1 = start bus number, byte 2 = end bus number
-- */
--
--#define PHB_DEBUG_STUFF_OFFSET	0x0020
--
--unsigned int specified_table_size = TCE_TABLE_SIZE_UNSPECIFIED;
--static int translate_empty_slots __read_mostly = 0;
--static int calgary_detected __read_mostly = 0;
--
--static struct rio_table_hdr	*rio_table_hdr __initdata;
--static struct scal_detail	*scal_devs[MAX_NUMNODES] __initdata;
--static struct rio_detail	*rio_devs[MAX_NUMNODES * 4] __initdata;
--
--struct calgary_bus_info {
--	void *tce_space;
--	unsigned char translation_disabled;
--	signed char phbid;
--	void __iomem *bbar;
--};
--
--static void calgary_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev);
--static void calgary_tce_cache_blast(struct iommu_table *tbl);
--static void calgary_dump_error_regs(struct iommu_table *tbl);
--static void calioc2_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev);
--static void calioc2_tce_cache_blast(struct iommu_table *tbl);
--static void calioc2_dump_error_regs(struct iommu_table *tbl);
--static void calgary_init_bitmap_from_tce_table(struct iommu_table *tbl);
--static void get_tce_space_from_tar(void);
--
--static const struct cal_chipset_ops calgary_chip_ops = {
--	.handle_quirks = calgary_handle_quirks,
--	.tce_cache_blast = calgary_tce_cache_blast,
--	.dump_error_regs = calgary_dump_error_regs
--};
--
--static const struct cal_chipset_ops calioc2_chip_ops = {
--	.handle_quirks = calioc2_handle_quirks,
--	.tce_cache_blast = calioc2_tce_cache_blast,
--	.dump_error_regs = calioc2_dump_error_regs
--};
--
--static struct calgary_bus_info bus_info[MAX_PHB_BUS_NUM] = { { NULL, 0, 0 }, };
--
--static inline int translation_enabled(struct iommu_table *tbl)
--{
--	/* only PHBs with translation enabled have an IOMMU table */
--	return (tbl != NULL);
--}
--
--static void iommu_range_reserve(struct iommu_table *tbl,
--	unsigned long start_addr, unsigned int npages)
--{
--	unsigned long index;
--	unsigned long end;
--	unsigned long flags;
--
--	index = start_addr >> PAGE_SHIFT;
--
--	/* bail out if we're asked to reserve a region we don't cover */
--	if (index >= tbl->it_size)
--		return;
--
--	end = index + npages;
--	if (end > tbl->it_size) /* don't go off the table */
--		end = tbl->it_size;
--
--	spin_lock_irqsave(&tbl->it_lock, flags);
--
--	bitmap_set(tbl->it_map, index, npages);
--
--	spin_unlock_irqrestore(&tbl->it_lock, flags);
--}
--
--static unsigned long iommu_range_alloc(struct device *dev,
--				       struct iommu_table *tbl,
--				       unsigned int npages)
--{
--	unsigned long flags;
--	unsigned long offset;
--	unsigned long boundary_size;
--
--	boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
--			      PAGE_SIZE) >> PAGE_SHIFT;
--
--	BUG_ON(npages == 0);
--
--	spin_lock_irqsave(&tbl->it_lock, flags);
--
--	offset = iommu_area_alloc(tbl->it_map, tbl->it_size, tbl->it_hint,
--				  npages, 0, boundary_size, 0);
--	if (offset == ~0UL) {
--		tbl->chip_ops->tce_cache_blast(tbl);
--
--		offset = iommu_area_alloc(tbl->it_map, tbl->it_size, 0,
--					  npages, 0, boundary_size, 0);
--		if (offset == ~0UL) {
--			pr_warn("IOMMU full\n");
--			spin_unlock_irqrestore(&tbl->it_lock, flags);
--			if (panic_on_overflow)
--				panic("Calgary: fix the allocator.\n");
--			else
--				return DMA_MAPPING_ERROR;
--		}
--	}
--
--	tbl->it_hint = offset + npages;
--	BUG_ON(tbl->it_hint > tbl->it_size);
--
--	spin_unlock_irqrestore(&tbl->it_lock, flags);
--
--	return offset;
--}
--
--static dma_addr_t iommu_alloc(struct device *dev, struct iommu_table *tbl,
--			      void *vaddr, unsigned int npages, int direction)
--{
--	unsigned long entry;
--	dma_addr_t ret;
--
--	entry = iommu_range_alloc(dev, tbl, npages);
--	if (unlikely(entry == DMA_MAPPING_ERROR)) {
--		pr_warn("failed to allocate %u pages in iommu %p\n",
--			npages, tbl);
--		return DMA_MAPPING_ERROR;
--	}
--
--	/* set the return dma address */
--	ret = (entry << PAGE_SHIFT) | ((unsigned long)vaddr & ~PAGE_MASK);
--
--	/* put the TCEs in the HW table */
--	tce_build(tbl, entry, npages, (unsigned long)vaddr & PAGE_MASK,
--		  direction);
--	return ret;
--}
--
--static void iommu_free(struct iommu_table *tbl, dma_addr_t dma_addr,
--	unsigned int npages)
--{
--	unsigned long entry;
--	unsigned long flags;
--
--	/* were we called with bad_dma_address? */
--	if (unlikely(dma_addr == DMA_MAPPING_ERROR)) {
--		WARN(1, KERN_ERR "Calgary: driver tried unmapping bad DMA "
--		       "address 0x%Lx\n", dma_addr);
--		return;
--	}
--
--	entry = dma_addr >> PAGE_SHIFT;
--
--	BUG_ON(entry + npages > tbl->it_size);
--
--	tce_free(tbl, entry, npages);
--
--	spin_lock_irqsave(&tbl->it_lock, flags);
--
--	bitmap_clear(tbl->it_map, entry, npages);
--
--	spin_unlock_irqrestore(&tbl->it_lock, flags);
--}
--
--static inline struct iommu_table *find_iommu_table(struct device *dev)
--{
--	struct pci_dev *pdev;
--	struct pci_bus *pbus;
--	struct iommu_table *tbl;
--
--	pdev = to_pci_dev(dev);
--
--	/* search up the device tree for an iommu */
--	pbus = pdev->bus;
--	do {
--		tbl = pci_iommu(pbus);
--		if (tbl && tbl->it_busno == pbus->number)
--			break;
--		tbl = NULL;
--		pbus = pbus->parent;
--	} while (pbus);
--
--	BUG_ON(tbl && (tbl->it_busno != pbus->number));
--
--	return tbl;
--}
--
--static void calgary_unmap_sg(struct device *dev, struct scatterlist *sglist,
--			     int nelems,enum dma_data_direction dir,
--			     unsigned long attrs)
--{
--	struct iommu_table *tbl = find_iommu_table(dev);
--	struct scatterlist *s;
--	int i;
--
--	if (!translation_enabled(tbl))
--		return;
--
--	for_each_sg(sglist, s, nelems, i) {
--		unsigned int npages;
--		dma_addr_t dma = s->dma_address;
--		unsigned int dmalen = s->dma_length;
--
--		if (dmalen == 0)
--			break;
--
--		npages = iommu_num_pages(dma, dmalen, PAGE_SIZE);
--		iommu_free(tbl, dma, npages);
--	}
--}
--
--static int calgary_map_sg(struct device *dev, struct scatterlist *sg,
--			  int nelems, enum dma_data_direction dir,
--			  unsigned long attrs)
--{
--	struct iommu_table *tbl = find_iommu_table(dev);
--	struct scatterlist *s;
--	unsigned long vaddr;
--	unsigned int npages;
--	unsigned long entry;
--	int i;
--
--	for_each_sg(sg, s, nelems, i) {
--		BUG_ON(!sg_page(s));
--
--		vaddr = (unsigned long) sg_virt(s);
--		npages = iommu_num_pages(vaddr, s->length, PAGE_SIZE);
--
--		entry = iommu_range_alloc(dev, tbl, npages);
--		if (entry == DMA_MAPPING_ERROR) {
--			/* makes sure unmap knows to stop */
--			s->dma_length = 0;
--			goto error;
--		}
--
--		s->dma_address = (entry << PAGE_SHIFT) | s->offset;
--
--		/* insert into HW table */
--		tce_build(tbl, entry, npages, vaddr & PAGE_MASK, dir);
--
--		s->dma_length = s->length;
--	}
--
--	return nelems;
--error:
--	calgary_unmap_sg(dev, sg, nelems, dir, 0);
--	for_each_sg(sg, s, nelems, i) {
--		sg->dma_address = DMA_MAPPING_ERROR;
--		sg->dma_length = 0;
--	}
--	return 0;
--}
--
--static dma_addr_t calgary_map_page(struct device *dev, struct page *page,
--				   unsigned long offset, size_t size,
--				   enum dma_data_direction dir,
--				   unsigned long attrs)
--{
--	void *vaddr = page_address(page) + offset;
--	unsigned long uaddr;
--	unsigned int npages;
--	struct iommu_table *tbl = find_iommu_table(dev);
--
--	uaddr = (unsigned long)vaddr;
--	npages = iommu_num_pages(uaddr, size, PAGE_SIZE);
--
--	return iommu_alloc(dev, tbl, vaddr, npages, dir);
--}
--
--static void calgary_unmap_page(struct device *dev, dma_addr_t dma_addr,
--			       size_t size, enum dma_data_direction dir,
--			       unsigned long attrs)
--{
--	struct iommu_table *tbl = find_iommu_table(dev);
--	unsigned int npages;
--
--	npages = iommu_num_pages(dma_addr, size, PAGE_SIZE);
--	iommu_free(tbl, dma_addr, npages);
--}
--
--static void* calgary_alloc_coherent(struct device *dev, size_t size,
--	dma_addr_t *dma_handle, gfp_t flag, unsigned long attrs)
--{
--	void *ret = NULL;
--	dma_addr_t mapping;
--	unsigned int npages, order;
--	struct iommu_table *tbl = find_iommu_table(dev);
--
--	size = PAGE_ALIGN(size); /* size rounded up to full pages */
--	npages = size >> PAGE_SHIFT;
--	order = get_order(size);
--
--	/* alloc enough pages (and possibly more) */
--	ret = (void *)__get_free_pages(flag, order);
--	if (!ret)
--		goto error;
--	memset(ret, 0, size);
--
--	/* set up tces to cover the allocated range */
--	mapping = iommu_alloc(dev, tbl, ret, npages, DMA_BIDIRECTIONAL);
--	if (mapping == DMA_MAPPING_ERROR)
--		goto free;
--	*dma_handle = mapping;
--	return ret;
--free:
--	free_pages((unsigned long)ret, get_order(size));
--	ret = NULL;
--error:
--	return ret;
--}
--
--static void calgary_free_coherent(struct device *dev, size_t size,
--				  void *vaddr, dma_addr_t dma_handle,
--				  unsigned long attrs)
--{
--	unsigned int npages;
--	struct iommu_table *tbl = find_iommu_table(dev);
--
--	size = PAGE_ALIGN(size);
--	npages = size >> PAGE_SHIFT;
--
--	iommu_free(tbl, dma_handle, npages);
--	free_pages((unsigned long)vaddr, get_order(size));
--}
--
--static const struct dma_map_ops calgary_dma_ops = {
--	.alloc = calgary_alloc_coherent,
--	.free = calgary_free_coherent,
--	.map_sg = calgary_map_sg,
--	.unmap_sg = calgary_unmap_sg,
--	.map_page = calgary_map_page,
--	.unmap_page = calgary_unmap_page,
--	.dma_supported = dma_direct_supported,
--	.mmap = dma_common_mmap,
--	.get_sgtable = dma_common_get_sgtable,
--};
--
--static inline void __iomem * busno_to_bbar(unsigned char num)
--{
--	return bus_info[num].bbar;
--}
--
--static inline int busno_to_phbid(unsigned char num)
--{
--	return bus_info[num].phbid;
--}
--
--static inline unsigned long split_queue_offset(unsigned char num)
--{
--	size_t idx = busno_to_phbid(num);
--
--	return split_queue_offsets[idx];
--}
--
--static inline unsigned long tar_offset(unsigned char num)
--{
--	size_t idx = busno_to_phbid(num);
--
--	return tar_offsets[idx];
--}
--
--static inline unsigned long phb_offset(unsigned char num)
--{
--	size_t idx = busno_to_phbid(num);
--
--	return phb_offsets[idx];
--}
--
--static inline void __iomem* calgary_reg(void __iomem *bar, unsigned long offset)
--{
--	unsigned long target = ((unsigned long)bar) | offset;
--	return (void __iomem*)target;
--}
--
--static inline int is_calioc2(unsigned short device)
--{
--	return (device == PCI_DEVICE_ID_IBM_CALIOC2);
--}
--
--static inline int is_calgary(unsigned short device)
--{
--	return (device == PCI_DEVICE_ID_IBM_CALGARY);
--}
--
--static inline int is_cal_pci_dev(unsigned short device)
--{
--	return (is_calgary(device) || is_calioc2(device));
--}
--
--static void calgary_tce_cache_blast(struct iommu_table *tbl)
--{
--	u64 val;
--	u32 aer;
--	int i = 0;
--	void __iomem *bbar = tbl->bbar;
--	void __iomem *target;
--
--	/* disable arbitration on the bus */
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_AER_OFFSET);
--	aer = readl(target);
--	writel(0, target);
--
--	/* read plssr to ensure it got there */
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_PLSSR_OFFSET);
--	val = readl(target);
--
--	/* poll split queues until all DMA activity is done */
--	target = calgary_reg(bbar, split_queue_offset(tbl->it_busno));
--	do {
--		val = readq(target);
--		i++;
--	} while ((val & 0xff) != 0xff && i < 100);
--	if (i == 100)
--		pr_warn("PCI bus not quiesced, continuing anyway\n");
--
--	/* invalidate TCE cache */
--	target = calgary_reg(bbar, tar_offset(tbl->it_busno));
--	writeq(tbl->tar_val, target);
--
--	/* enable arbitration */
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_AER_OFFSET);
--	writel(aer, target);
--	(void)readl(target); /* flush */
--}
--
--static void calioc2_tce_cache_blast(struct iommu_table *tbl)
--{
--	void __iomem *bbar = tbl->bbar;
--	void __iomem *target;
--	u64 val64;
--	u32 val;
--	int i = 0;
--	int count = 1;
--	unsigned char bus = tbl->it_busno;
--
--begin:
--	printk(KERN_DEBUG "Calgary: CalIOC2 bus 0x%x entering tce cache blast "
--	       "sequence - count %d\n", bus, count);
--
--	/* 1. using the Page Migration Control reg set SoftStop */
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "1a. read 0x%x [LE] from %p\n", val, target);
--	val |= PMR_SOFTSTOP;
--	printk(KERN_DEBUG "1b. writing 0x%x [LE] to %p\n", val, target);
--	writel(cpu_to_be32(val), target);
--
--	/* 2. poll split queues until all DMA activity is done */
--	printk(KERN_DEBUG "2a. starting to poll split queues\n");
--	target = calgary_reg(bbar, split_queue_offset(bus));
--	do {
--		val64 = readq(target);
--		i++;
--	} while ((val64 & 0xff) != 0xff && i < 100);
--	if (i == 100)
--		pr_warn("CalIOC2: PCI bus not quiesced, continuing anyway\n");
--
--	/* 3. poll Page Migration DEBUG for SoftStopFault */
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_DEBUG);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "3. read 0x%x [LE] from %p\n", val, target);
--
--	/* 4. if SoftStopFault - goto (1) */
--	if (val & PMR_SOFTSTOPFAULT) {
--		if (++count < 100)
--			goto begin;
--		else {
--			pr_warn("CalIOC2: too many SoftStopFaults, aborting TCE cache flush sequence!\n");
--			return; /* pray for the best */
--		}
--	}
--
--	/* 5. Slam into HardStop by reading PHB_PAGE_MIG_CTRL */
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	printk(KERN_DEBUG "5a. slamming into HardStop by reading %p\n", target);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "5b. read 0x%x [LE] from %p\n", val, target);
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_DEBUG);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "5c. read 0x%x [LE] from %p (debug)\n", val, target);
--
--	/* 6. invalidate TCE cache */
--	printk(KERN_DEBUG "6. invalidating TCE cache\n");
--	target = calgary_reg(bbar, tar_offset(bus));
--	writeq(tbl->tar_val, target);
--
--	/* 7. Re-read PMCR */
--	printk(KERN_DEBUG "7a. Re-reading PMCR\n");
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "7b. read 0x%x [LE] from %p\n", val, target);
--
--	/* 8. Remove HardStop */
--	printk(KERN_DEBUG "8a. removing HardStop from PMCR\n");
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	val = 0;
--	printk(KERN_DEBUG "8b. writing 0x%x [LE] to %p\n", val, target);
--	writel(cpu_to_be32(val), target);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "8c. read 0x%x [LE] from %p\n", val, target);
--}
--
--static void __init calgary_reserve_mem_region(struct pci_dev *dev, u64 start,
--	u64 limit)
--{
--	unsigned int numpages;
--
--	limit = limit | 0xfffff;
--	limit++;
--
--	numpages = ((limit - start) >> PAGE_SHIFT);
--	iommu_range_reserve(pci_iommu(dev->bus), start, numpages);
--}
--
--static void __init calgary_reserve_peripheral_mem_1(struct pci_dev *dev)
--{
--	void __iomem *target;
--	u64 low, high, sizelow;
--	u64 start, limit;
--	struct iommu_table *tbl = pci_iommu(dev->bus);
--	unsigned char busnum = dev->bus->number;
--	void __iomem *bbar = tbl->bbar;
--
--	/* peripheral MEM_1 region */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_LOW);
--	low = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_HIGH);
--	high = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_SIZE);
--	sizelow = be32_to_cpu(readl(target));
--
--	start = (high << 32) | low;
--	limit = sizelow;
--
--	calgary_reserve_mem_region(dev, start, limit);
--}
--
--static void __init calgary_reserve_peripheral_mem_2(struct pci_dev *dev)
--{
--	void __iomem *target;
--	u32 val32;
--	u64 low, high, sizelow, sizehigh;
--	u64 start, limit;
--	struct iommu_table *tbl = pci_iommu(dev->bus);
--	unsigned char busnum = dev->bus->number;
--	void __iomem *bbar = tbl->bbar;
--
--	/* is it enabled? */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
--	if (!(val32 & PHB_MEM2_ENABLE))
--		return;
--
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_LOW);
--	low = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_HIGH);
--	high = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_SIZE_LOW);
--	sizelow = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_SIZE_HIGH);
--	sizehigh = be32_to_cpu(readl(target));
--
--	start = (high << 32) | low;
--	limit = (sizehigh << 32) | sizelow;
--
--	calgary_reserve_mem_region(dev, start, limit);
--}
--
--/*
-- * some regions of the IO address space do not get translated, so we
-- * must not give devices IO addresses in those regions. The regions
-- * are the 640KB-1MB region and the two PCI peripheral memory holes.
-- * Reserve all of them in the IOMMU bitmap to avoid giving them out
-- * later.
-- */
--static void __init calgary_reserve_regions(struct pci_dev *dev)
--{
--	unsigned int npages;
--	u64 start;
--	struct iommu_table *tbl = pci_iommu(dev->bus);
--
--	/* avoid the BIOS/VGA first 640KB-1MB region */
--	/* for CalIOC2 - avoid the entire first MB */
--	if (is_calgary(dev->device)) {
--		start = (640 * 1024);
--		npages = ((1024 - 640) * 1024) >> PAGE_SHIFT;
--	} else { /* calioc2 */
--		start = 0;
--		npages = (1 * 1024 * 1024) >> PAGE_SHIFT;
--	}
--	iommu_range_reserve(tbl, start, npages);
--
--	/* reserve the two PCI peripheral memory regions in IO space */
--	calgary_reserve_peripheral_mem_1(dev);
--	calgary_reserve_peripheral_mem_2(dev);
--}
--
--static int __init calgary_setup_tar(struct pci_dev *dev, void __iomem *bbar)
--{
--	u64 val64;
--	u64 table_phys;
--	void __iomem *target;
--	int ret;
--	struct iommu_table *tbl;
--
--	/* build TCE tables for each PHB */
--	ret = build_tce_table(dev, bbar);
--	if (ret)
--		return ret;
--
--	tbl = pci_iommu(dev->bus);
--	tbl->it_base = (unsigned long)bus_info[dev->bus->number].tce_space;
--
--	if (is_kdump_kernel())
--		calgary_init_bitmap_from_tce_table(tbl);
--	else
--		tce_free(tbl, 0, tbl->it_size);
--
--	if (is_calgary(dev->device))
--		tbl->chip_ops = &calgary_chip_ops;
--	else if (is_calioc2(dev->device))
--		tbl->chip_ops = &calioc2_chip_ops;
--	else
--		BUG();
--
--	calgary_reserve_regions(dev);
--
--	/* set TARs for each PHB */
--	target = calgary_reg(bbar, tar_offset(dev->bus->number));
--	val64 = be64_to_cpu(readq(target));
--
--	/* zero out all TAR bits under sw control */
--	val64 &= ~TAR_SW_BITS;
--	table_phys = (u64)__pa(tbl->it_base);
--
--	val64 |= table_phys;
--
--	BUG_ON(specified_table_size > TCE_TABLE_SIZE_8M);
--	val64 |= (u64) specified_table_size;
--
--	tbl->tar_val = cpu_to_be64(val64);
--
--	writeq(tbl->tar_val, target);
--	readq(target); /* flush */
--
--	return 0;
--}
--
--static void __init calgary_free_bus(struct pci_dev *dev)
--{
--	u64 val64;
--	struct iommu_table *tbl = pci_iommu(dev->bus);
--	void __iomem *target;
--	unsigned int bitmapsz;
--
--	target = calgary_reg(tbl->bbar, tar_offset(dev->bus->number));
--	val64 = be64_to_cpu(readq(target));
--	val64 &= ~TAR_SW_BITS;
--	writeq(cpu_to_be64(val64), target);
--	readq(target); /* flush */
--
--	bitmapsz = tbl->it_size / BITS_PER_BYTE;
--	free_pages((unsigned long)tbl->it_map, get_order(bitmapsz));
--	tbl->it_map = NULL;
--
--	kfree(tbl);
--	
--	set_pci_iommu(dev->bus, NULL);
--
--	/* Can't free bootmem allocated memory after system is up :-( */
--	bus_info[dev->bus->number].tce_space = NULL;
--}
--
--static void calgary_dump_error_regs(struct iommu_table *tbl)
--{
--	void __iomem *bbar = tbl->bbar;
--	void __iomem *target;
--	u32 csr, plssr;
--
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_CSR_OFFSET);
--	csr = be32_to_cpu(readl(target));
--
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_PLSSR_OFFSET);
--	plssr = be32_to_cpu(readl(target));
--
--	/* If no error, the agent ID in the CSR is not valid */
--	pr_emerg("DMA error on Calgary PHB 0x%x, 0x%08x@CSR 0x%08x@PLSSR\n",
--		 tbl->it_busno, csr, plssr);
--}
--
--static void calioc2_dump_error_regs(struct iommu_table *tbl)
--{
--	void __iomem *bbar = tbl->bbar;
--	u32 csr, csmr, plssr, mck, rcstat;
--	void __iomem *target;
--	unsigned long phboff = phb_offset(tbl->it_busno);
--	unsigned long erroff;
--	u32 errregs[7];
--	int i;
--
--	/* dump CSR */
--	target = calgary_reg(bbar, phboff | PHB_CSR_OFFSET);
--	csr = be32_to_cpu(readl(target));
--	/* dump PLSSR */
--	target = calgary_reg(bbar, phboff | PHB_PLSSR_OFFSET);
--	plssr = be32_to_cpu(readl(target));
--	/* dump CSMR */
--	target = calgary_reg(bbar, phboff | 0x290);
--	csmr = be32_to_cpu(readl(target));
--	/* dump mck */
--	target = calgary_reg(bbar, phboff | 0x800);
--	mck = be32_to_cpu(readl(target));
--
--	pr_emerg("DMA error on CalIOC2 PHB 0x%x\n", tbl->it_busno);
--
--	pr_emerg("0x%08x@CSR 0x%08x@PLSSR 0x%08x@CSMR 0x%08x@MCK\n",
--		 csr, plssr, csmr, mck);
--
--	/* dump rest of error regs */
--	pr_emerg("");
--	for (i = 0; i < ARRAY_SIZE(errregs); i++) {
--		/* err regs are at 0x810 - 0x870 */
--		erroff = (0x810 + (i * 0x10));
--		target = calgary_reg(bbar, phboff | erroff);
--		errregs[i] = be32_to_cpu(readl(target));
--		pr_cont("0x%08x@0x%lx ", errregs[i], erroff);
--	}
--	pr_cont("\n");
--
--	/* root complex status */
--	target = calgary_reg(bbar, phboff | PHB_ROOT_COMPLEX_STATUS);
--	rcstat = be32_to_cpu(readl(target));
--	printk(KERN_EMERG "Calgary: 0x%08x@0x%x\n", rcstat,
--	       PHB_ROOT_COMPLEX_STATUS);
--}
--
--static void calgary_watchdog(struct timer_list *t)
--{
--	struct iommu_table *tbl = from_timer(tbl, t, watchdog_timer);
--	void __iomem *bbar = tbl->bbar;
--	u32 val32;
--	void __iomem *target;
--
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_CSR_OFFSET);
--	val32 = be32_to_cpu(readl(target));
--
--	/* If no error, the agent ID in the CSR is not valid */
--	if (val32 & CSR_AGENT_MASK) {
--		tbl->chip_ops->dump_error_regs(tbl);
--
--		/* reset error */
--		writel(0, target);
--
--		/* Disable bus that caused the error */
--		target = calgary_reg(bbar, phb_offset(tbl->it_busno) |
--				     PHB_CONFIG_RW_OFFSET);
--		val32 = be32_to_cpu(readl(target));
--		val32 |= PHB_SLOT_DISABLE;
--		writel(cpu_to_be32(val32), target);
--		readl(target); /* flush */
+-	u64 byte_count;
+-
+-	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
+-		byte_count = rv_readl(rtd->acp3x_base +
+-				      mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
+-		byte_count |= rv_readl(rtd->acp3x_base +
+-				       mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
 -	} else {
--		/* Reset the timer */
--		mod_timer(&tbl->watchdog_timer, jiffies + 2 * HZ);
+-		byte_count = rv_readl(rtd->acp3x_base +
+-				      mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
+-		byte_count |= rv_readl(rtd->acp3x_base +
+-				       mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
 -	}
+-	return byte_count;
 -}
--
--static void __init calgary_set_split_completion_timeout(void __iomem *bbar,
--	unsigned char busnum, unsigned long timeout)
+ 
+ static int acp3x_dma_hw_params(struct snd_soc_component *component,
+ 			       struct snd_pcm_substream *substream,
+@@ -380,6 +348,7 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_soc_component *component,
+ static int acp3x_dma_new(struct snd_soc_component *component,
+ 			 struct snd_soc_pcm_runtime *rtd)
+ {
++	component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
+ 	struct device *parent = component->dev->parent;
+ 	snd_pcm_lib_preallocate_pages_for_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
+ 					      parent, MIN_BUFFER, MAX_BUFFER);
+@@ -402,7 +371,9 @@ static int acp3x_dma_mmap(struct snd_soc_component *component,
+ static int acp3x_dma_close(struct snd_soc_component *component,
+ 			   struct snd_pcm_substream *substream)
+ {
++	struct snd_soc_pcm_runtime *prtd = substream->private_data;
+ 	struct i2s_stream_instance *rtd = substream->runtime->private_data;
++	component = snd_soc_rtdcom_lookup(prtd, DRV_NAME);
+ 	struct i2s_dev_data *adata = dev_get_drvdata(component->dev);
+ 
+ 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+@@ -419,182 +390,6 @@ static int acp3x_dma_close(struct snd_soc_component *component,
+ 	return 0;
+ }
+ 
+-static int acp3x_dai_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 -{
--	u64 val64;
--	void __iomem *target;
--	unsigned int phb_shift = ~0; /* silence gcc */
--	u64 mask;
 -
--	switch (busno_to_phbid(busnum)) {
--	case 0: phb_shift = (63 - 19);
+-	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
+-
+-	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+-	case SND_SOC_DAIFMT_I2S:
+-		adata->tdm_mode = false;
 -		break;
--	case 1: phb_shift = (63 - 23);
--		break;
--	case 2: phb_shift = (63 - 27);
--		break;
--	case 3: phb_shift = (63 - 35);
+-	case SND_SOC_DAIFMT_DSP_A:
+-		adata->tdm_mode = true;
 -		break;
 -	default:
--		BUG_ON(busno_to_phbid(busnum));
--	}
--
--	target = calgary_reg(bbar, CALGARY_CONFIG_REG);
--	val64 = be64_to_cpu(readq(target));
--
--	/* zero out this PHB's timer bits */
--	mask = ~(0xFUL << phb_shift);
--	val64 &= mask;
--	val64 |= (timeout << phb_shift);
--	writeq(cpu_to_be64(val64), target);
--	readq(target); /* flush */
--}
--
--static void __init calioc2_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev)
--{
--	unsigned char busnum = dev->bus->number;
--	void __iomem *bbar = tbl->bbar;
--	void __iomem *target;
--	u32 val;
--
--	/*
--	 * CalIOC2 designers recommend setting bit 8 in 0xnDB0 to 1
--	 */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_SAVIOR_L2);
--	val = cpu_to_be32(readl(target));
--	val |= 0x00800000;
--	writel(cpu_to_be32(val), target);
--}
--
--static void __init calgary_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev)
--{
--	unsigned char busnum = dev->bus->number;
--
--	/*
--	 * Give split completion a longer timeout on bus 1 for aic94xx
--	 * http://bugzilla.kernel.org/show_bug.cgi?id=7180
--	 */
--	if (is_calgary(dev->device) && (busnum == 1))
--		calgary_set_split_completion_timeout(tbl->bbar, busnum,
--						     CCR_2SEC_TIMEOUT);
--}
--
--static void __init calgary_enable_translation(struct pci_dev *dev)
--{
--	u32 val32;
--	unsigned char busnum;
--	void __iomem *target;
--	void __iomem *bbar;
--	struct iommu_table *tbl;
--
--	busnum = dev->bus->number;
--	tbl = pci_iommu(dev->bus);
--	bbar = tbl->bbar;
--
--	/* enable TCE in PHB Config Register */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
--	val32 |= PHB_TCE_ENABLE | PHB_DAC_DISABLE | PHB_MCSR_ENABLE;
--
--	printk(KERN_INFO "Calgary: enabling translation on %s PHB %#x\n",
--	       (dev->device == PCI_DEVICE_ID_IBM_CALGARY) ?
--	       "Calgary" : "CalIOC2", busnum);
--	printk(KERN_INFO "Calgary: errant DMAs will now be prevented on this "
--	       "bus.\n");
--
--	writel(cpu_to_be32(val32), target);
--	readl(target); /* flush */
--
--	timer_setup(&tbl->watchdog_timer, calgary_watchdog, 0);
--	mod_timer(&tbl->watchdog_timer, jiffies);
--}
--
--static void __init calgary_disable_translation(struct pci_dev *dev)
--{
--	u32 val32;
--	unsigned char busnum;
--	void __iomem *target;
--	void __iomem *bbar;
--	struct iommu_table *tbl;
--
--	busnum = dev->bus->number;
--	tbl = pci_iommu(dev->bus);
--	bbar = tbl->bbar;
--
--	/* disable TCE in PHB Config Register */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
--	val32 &= ~(PHB_TCE_ENABLE | PHB_DAC_DISABLE | PHB_MCSR_ENABLE);
--
--	printk(KERN_INFO "Calgary: disabling translation on PHB %#x!\n", busnum);
--	writel(cpu_to_be32(val32), target);
--	readl(target); /* flush */
--
--	del_timer_sync(&tbl->watchdog_timer);
--}
--
--static void __init calgary_init_one_nontraslated(struct pci_dev *dev)
--{
--	pci_dev_get(dev);
--	set_pci_iommu(dev->bus, NULL);
--
--	/* is the device behind a bridge? */
--	if (dev->bus->parent)
--		dev->bus->parent->self = dev;
--	else
--		dev->bus->self = dev;
--}
--
--static int __init calgary_init_one(struct pci_dev *dev)
--{
--	void __iomem *bbar;
--	struct iommu_table *tbl;
--	int ret;
--
--	bbar = busno_to_bbar(dev->bus->number);
--	ret = calgary_setup_tar(dev, bbar);
--	if (ret)
--		goto done;
--
--	pci_dev_get(dev);
--
--	if (dev->bus->parent) {
--		if (dev->bus->parent->self)
--			printk(KERN_WARNING "Calgary: IEEEE, dev %p has "
--			       "bus->parent->self!\n", dev);
--		dev->bus->parent->self = dev;
--	} else
--		dev->bus->self = dev;
--
--	tbl = pci_iommu(dev->bus);
--	tbl->chip_ops->handle_quirks(tbl, dev);
--
--	calgary_enable_translation(dev);
--
--	return 0;
--
--done:
--	return ret;
--}
--
--static int __init calgary_locate_bbars(void)
--{
--	int ret;
--	int rioidx, phb, bus;
--	void __iomem *bbar;
--	void __iomem *target;
--	unsigned long offset;
--	u8 start_bus, end_bus;
--	u32 val;
--
--	ret = -ENODATA;
--	for (rioidx = 0; rioidx < rio_table_hdr->num_rio_dev; rioidx++) {
--		struct rio_detail *rio = rio_devs[rioidx];
--
--		if ((rio->type != COMPAT_CALGARY) && (rio->type != ALT_CALGARY))
--			continue;
--
--		/* map entire 1MB of Calgary config space */
--		bbar = ioremap_nocache(rio->BBAR, 1024 * 1024);
--		if (!bbar)
--			goto error;
--
--		for (phb = 0; phb < PHBS_PER_CALGARY; phb++) {
--			offset = phb_debug_offsets[phb] | PHB_DEBUG_STUFF_OFFSET;
--			target = calgary_reg(bbar, offset);
--
--			val = be32_to_cpu(readl(target));
--
--			start_bus = (u8)((val & 0x00FF0000) >> 16);
--			end_bus = (u8)((val & 0x0000FF00) >> 8);
--
--			if (end_bus) {
--				for (bus = start_bus; bus <= end_bus; bus++) {
--					bus_info[bus].bbar = bbar;
--					bus_info[bus].phbid = phb;
--				}
--			} else {
--				bus_info[start_bus].bbar = bbar;
--				bus_info[start_bus].phbid = phb;
--			}
--		}
+-		return -EINVAL;
 -	}
 -
 -	return 0;
--
--error:
--	/* scan bus_info and iounmap any bbars we previously ioremap'd */
--	for (bus = 0; bus < ARRAY_SIZE(bus_info); bus++)
--		if (bus_info[bus].bbar)
--			iounmap(bus_info[bus].bbar);
--
--	return ret;
 -}
 -
--static int __init calgary_init(void)
+-static int acp3x_dai_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
+-				  u32 rx_mask, int slots, int slot_width)
 -{
--	int ret;
--	struct pci_dev *dev = NULL;
--	struct calgary_bus_info *info;
+-	u32 val = 0;
+-	u16 slot_len;
 -
--	ret = calgary_locate_bbars();
--	if (ret)
--		return ret;
+-	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
 -
--	/* Purely for kdump kernel case */
--	if (is_kdump_kernel())
--		get_tce_space_from_tar();
--
--	do {
--		dev = pci_get_device(PCI_VENDOR_ID_IBM, PCI_ANY_ID, dev);
--		if (!dev)
--			break;
--		if (!is_cal_pci_dev(dev->device))
--			continue;
--
--		info = &bus_info[dev->bus->number];
--		if (info->translation_disabled) {
--			calgary_init_one_nontraslated(dev);
--			continue;
--		}
--
--		if (!info->tce_space && !translate_empty_slots)
--			continue;
--
--		ret = calgary_init_one(dev);
--		if (ret)
--			goto error;
--	} while (1);
--
--	dev = NULL;
--	for_each_pci_dev(dev) {
--		struct iommu_table *tbl;
--
--		tbl = find_iommu_table(&dev->dev);
--
--		if (translation_enabled(tbl))
--			dev->dev.dma_ops = &calgary_dma_ops;
--	}
--
--	return ret;
--
--error:
--	do {
--		dev = pci_get_device(PCI_VENDOR_ID_IBM, PCI_ANY_ID, dev);
--		if (!dev)
--			break;
--		if (!is_cal_pci_dev(dev->device))
--			continue;
--
--		info = &bus_info[dev->bus->number];
--		if (info->translation_disabled) {
--			pci_dev_put(dev);
--			continue;
--		}
--		if (!info->tce_space && !translate_empty_slots)
--			continue;
--
--		calgary_disable_translation(dev);
--		calgary_free_bus(dev);
--		pci_dev_put(dev); /* Undo calgary_init_one()'s pci_dev_get() */
--		dev->dev.dma_ops = NULL;
--	} while (1);
--
--	return ret;
--}
--
--static inline int __init determine_tce_table_size(void)
--{
--	int ret;
--
--	if (specified_table_size != TCE_TABLE_SIZE_UNSPECIFIED)
--		return specified_table_size;
--
--	if (is_kdump_kernel() && saved_max_pfn) {
--		/*
--		 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
--		 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
--		 * larger table size has twice as many entries, so shift the
--		 * max ram address by 13 to divide by 8K and then look at the
--		 * order of the result to choose between 0-7.
--		 */
--		ret = get_order((saved_max_pfn * PAGE_SIZE) >> 13);
--		if (ret > TCE_TABLE_SIZE_8M)
--			ret = TCE_TABLE_SIZE_8M;
--	} else {
--		/*
--		 * Use 8M by default (suggested by Muli) if it's not
--		 * kdump kernel and saved_max_pfn isn't set.
--		 */
--		ret = TCE_TABLE_SIZE_8M;
--	}
--
--	return ret;
--}
--
--static int __init build_detail_arrays(void)
--{
--	unsigned long ptr;
--	unsigned numnodes, i;
--	int scal_detail_size, rio_detail_size;
--
--	numnodes = rio_table_hdr->num_scal_dev;
--	if (numnodes > MAX_NUMNODES){
--		printk(KERN_WARNING
--			"Calgary: MAX_NUMNODES too low! Defined as %d, "
--			"but system has %d nodes.\n",
--			MAX_NUMNODES, numnodes);
--		return -ENODEV;
--	}
--
--	switch (rio_table_hdr->version){
--	case 2:
--		scal_detail_size = 11;
--		rio_detail_size = 13;
+-	switch (slot_width) {
+-	case SLOT_WIDTH_8:
+-		slot_len = 8;
 -		break;
--	case 3:
--		scal_detail_size = 12;
--		rio_detail_size = 15;
+-	case SLOT_WIDTH_16:
+-		slot_len = 16;
+-		break;
+-	case SLOT_WIDTH_24:
+-		slot_len = 24;
+-		break;
+-	case SLOT_WIDTH_32:
+-		slot_len = 0;
 -		break;
 -	default:
--		printk(KERN_WARNING
--		       "Calgary: Invalid Rio Grande Table Version: %d\n",
--		       rio_table_hdr->version);
--		return -EPROTO;
+-		return -EINVAL;
 -	}
 -
--	ptr = ((unsigned long)rio_table_hdr) + 3;
--	for (i = 0; i < numnodes; i++, ptr += scal_detail_size)
--		scal_devs[i] = (struct scal_detail *)ptr;
+-	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
+-	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_ITER);
+-	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
+-	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_IRER);
 -
--	for (i = 0; i < rio_table_hdr->num_rio_dev;
--		    i++, ptr += rio_detail_size)
--		rio_devs[i] = (struct rio_detail *)ptr;
+-	val = (FRM_LEN | (slots << 15) | (slot_len << 18));
+-	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_TXFRMT);
+-	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_RXFRMT);
+-
+-	adata->tdm_fmt = val;
+-	return 0;
+-}
+-
+-static int acp3x_dai_i2s_hwparams(struct snd_pcm_substream *substream,
+-				  struct snd_pcm_hw_params *params,
+-				  struct snd_soc_dai *dai)
+-{
+-	u32 val = 0;
+-	struct i2s_stream_instance *rtd = substream->runtime->private_data;
+-
+-	switch (params_format(params)) {
+-	case SNDRV_PCM_FORMAT_U8:
+-	case SNDRV_PCM_FORMAT_S8:
+-		rtd->xfer_resolution = 0x0;
+-		break;
+-	case SNDRV_PCM_FORMAT_S16_LE:
+-		rtd->xfer_resolution = 0x02;
+-		break;
+-	case SNDRV_PCM_FORMAT_S24_LE:
+-		rtd->xfer_resolution = 0x04;
+-		break;
+-	case SNDRV_PCM_FORMAT_S32_LE:
+-		rtd->xfer_resolution = 0x05;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-	val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
+-	val = val | (rtd->xfer_resolution  << 3);
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
+-	else
+-		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
 -
 -	return 0;
 -}
 -
--static int __init calgary_bus_has_devices(int bus, unsigned short pci_dev)
+-static int acp3x_dai_i2s_trigger(struct snd_pcm_substream *substream,
+-				 int cmd, struct snd_soc_dai *dai)
 -{
--	int dev;
--	u32 val;
+-	int ret = 0;
+-	struct i2s_stream_instance *rtd = substream->runtime->private_data;
+-	u32 val, period_bytes;
 -
--	if (pci_dev == PCI_DEVICE_ID_IBM_CALIOC2) {
--		/*
--		 * FIXME: properly scan for devices across the
--		 * PCI-to-PCI bridge on every CalIOC2 port.
--		 */
--		return 1;
--	}
--
--	for (dev = 1; dev < 8; dev++) {
--		val = read_pci_config(bus, dev, 0, 0);
--		if (val != 0xffffffff)
--			break;
--	}
--	return (val != 0xffffffff);
--}
--
--/*
-- * calgary_init_bitmap_from_tce_table():
-- * Function for kdump case. In the second/kdump kernel initialize
-- * the bitmap based on the tce table entries obtained from first kernel
-- */
--static void calgary_init_bitmap_from_tce_table(struct iommu_table *tbl)
--{
--	u64 *tp;
--	unsigned int index;
--	tp = ((u64 *)tbl->it_base);
--	for (index = 0 ; index < tbl->it_size; index++) {
--		if (*tp != 0x0)
--			set_bit(index, tbl->it_map);
--		tp++;
--	}
--}
--
--/*
-- * get_tce_space_from_tar():
-- * Function for kdump case. Get the tce tables from first kernel
-- * by reading the contents of the base address register of calgary iommu
-- */
--static void __init get_tce_space_from_tar(void)
--{
--	int bus;
--	void __iomem *target;
--	unsigned long tce_space;
--
--	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
--		struct calgary_bus_info *info = &bus_info[bus];
--		unsigned short pci_device;
--		u32 val;
--
--		val = read_pci_config(bus, 0, 0, 0);
--		pci_device = (val & 0xFFFF0000) >> 16;
--
--		if (!is_cal_pci_dev(pci_device))
--			continue;
--		if (info->translation_disabled)
--			continue;
--
--		if (calgary_bus_has_devices(bus, pci_device) ||
--						translate_empty_slots) {
--			target = calgary_reg(bus_info[bus].bbar,
--						tar_offset(bus));
--			tce_space = be64_to_cpu(readq(target));
--			tce_space = tce_space & TAR_SW_BITS;
--
--			tce_space = tce_space & (~specified_table_size);
--			info->tce_space = (u64 *)__va(tce_space);
+-	period_bytes = frames_to_bytes(substream->runtime,
+-				       substream->runtime->period_size);
+-	switch (cmd) {
+-	case SNDRV_PCM_TRIGGER_START:
+-	case SNDRV_PCM_TRIGGER_RESUME:
+-	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+-		rtd->bytescount = acp_get_byte_count(rtd, substream->stream);
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			rv_writel(period_bytes, rtd->acp3x_base +
+-				  mmACP_BT_TX_INTR_WATERMARK_SIZE);
+-			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
+-			val = val | BIT(0);
+-			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
+-		} else {
+-			rv_writel(period_bytes, rtd->acp3x_base +
+-				  mmACP_BT_RX_INTR_WATERMARK_SIZE);
+-			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
+-			val = val | BIT(0);
+-			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
 -		}
--	}
--	return;
--}
--
--static int __init calgary_iommu_init(void)
--{
--	int ret;
--
--	/* ok, we're trying to use Calgary - let's roll */
--	printk(KERN_INFO "PCI-DMA: Using Calgary IOMMU\n");
--
--	ret = calgary_init();
--	if (ret) {
--		printk(KERN_ERR "PCI-DMA: Calgary init failed %d, "
--		       "falling back to no_iommu\n", ret);
--		return ret;
--	}
--
--	return 0;
--}
--
--int __init detect_calgary(void)
--{
--	int bus;
--	void *tbl;
--	int calgary_found = 0;
--	unsigned long ptr;
--	unsigned int offset, prev_offset;
--	int ret;
--
--	/*
--	 * if the user specified iommu=off or iommu=soft or we found
--	 * another HW IOMMU already, bail out.
--	 */
--	if (no_iommu || iommu_detected)
--		return -ENODEV;
--
--	if (!use_calgary)
--		return -ENODEV;
--
--	if (!early_pci_allowed())
--		return -ENODEV;
--
--	printk(KERN_DEBUG "Calgary: detecting Calgary via BIOS EBDA area\n");
--
--	ptr = (unsigned long)phys_to_virt(get_bios_ebda());
--
--	rio_table_hdr = NULL;
--	prev_offset = 0;
--	offset = 0x180;
--	/*
--	 * The next offset is stored in the 1st word.
--	 * Only parse up until the offset increases:
--	 */
--	while (offset > prev_offset) {
--		/* The block id is stored in the 2nd word */
--		if (*((unsigned short *)(ptr + offset + 2)) == 0x4752){
--			/* set the pointer past the offset & block id */
--			rio_table_hdr = (struct rio_table_hdr *)(ptr + offset + 4);
--			break;
+-		rv_writel(1, rtd->acp3x_base + mmACP_BTTDM_IER);
+-		break;
+-	case SNDRV_PCM_TRIGGER_STOP:
+-	case SNDRV_PCM_TRIGGER_SUSPEND:
+-	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
+-			val = val & ~BIT(0);
+-			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
+-		} else {
+-			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
+-			val = val & ~BIT(0);
+-			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
 -		}
--		prev_offset = offset;
--		offset = *((unsigned short *)(ptr + offset));
--	}
--	if (!rio_table_hdr) {
--		printk(KERN_DEBUG "Calgary: Unable to locate Rio Grande table "
--		       "in EBDA - bailing!\n");
--		return -ENODEV;
+-		rv_writel(0, rtd->acp3x_base + mmACP_BTTDM_IER);
+-		break;
+-	default:
+-		ret = -EINVAL;
+-		break;
 -	}
 -
--	ret = build_detail_arrays();
--	if (ret) {
--		printk(KERN_DEBUG "Calgary: build_detail_arrays ret %d\n", ret);
+-	return ret;
+-}
+-
+-static struct snd_soc_dai_ops acp3x_dai_i2s_ops = {
+-	.hw_params = acp3x_dai_i2s_hwparams,
+-	.trigger   = acp3x_dai_i2s_trigger,
+-	.set_fmt = acp3x_dai_i2s_set_fmt,
+-	.set_tdm_slot = acp3x_dai_set_tdm_slot,
+-};
+-
+-static struct snd_soc_dai_driver acp3x_i2s_dai_driver = {
+-	.playback = {
+-		.rates = SNDRV_PCM_RATE_8000_96000,
+-		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
+-					SNDRV_PCM_FMTBIT_U8 |
+-					SNDRV_PCM_FMTBIT_S24_LE |
+-					SNDRV_PCM_FMTBIT_S32_LE,
+-		.channels_min = 2,
+-		.channels_max = 8,
+-
+-		.rate_min = 8000,
+-		.rate_max = 96000,
+-	},
+-	.capture = {
+-		.rates = SNDRV_PCM_RATE_8000_48000,
+-		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
+-					SNDRV_PCM_FMTBIT_U8 |
+-					SNDRV_PCM_FMTBIT_S24_LE |
+-					SNDRV_PCM_FMTBIT_S32_LE,
+-		.channels_min = 2,
+-		.channels_max = 2,
+-		.rate_min = 8000,
+-		.rate_max = 48000,
+-	},
+-	.ops = &acp3x_dai_i2s_ops,
+-};
+-
+ static const struct snd_soc_component_driver acp3x_i2s_component = {
+ 	.name		= DRV_NAME,
+ 	.open		= acp3x_dma_open,
+@@ -628,31 +423,31 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+ 
+ 	adata = devm_kzalloc(&pdev->dev, sizeof(*adata), GFP_KERNEL);
+ 	if (!adata)
 -		return -ENOMEM;
--	}
--
--	specified_table_size = determine_tce_table_size();
--
--	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
--		struct calgary_bus_info *info = &bus_info[bus];
--		unsigned short pci_device;
--		u32 val;
--
--		val = read_pci_config(bus, 0, 0, 0);
--		pci_device = (val & 0xFFFF0000) >> 16;
--
--		if (!is_cal_pci_dev(pci_device))
--			continue;
--
--		if (info->translation_disabled)
--			continue;
--
--		if (calgary_bus_has_devices(bus, pci_device) ||
--		    translate_empty_slots) {
--			/*
--			 * If it is kdump kernel, find and use tce tables
--			 * from first kernel, else allocate tce tables here
--			 */
--			if (!is_kdump_kernel()) {
--				tbl = alloc_tce_table();
--				if (!tbl)
--					goto cleanup;
--				info->tce_space = tbl;
--			}
--			calgary_found = 1;
--		}
--	}
--
--	printk(KERN_DEBUG "Calgary: finished detection, Calgary %s\n",
--	       calgary_found ? "found" : "not found");
--
--	if (calgary_found) {
--		iommu_detected = 1;
--		calgary_detected = 1;
--		printk(KERN_INFO "PCI-DMA: Calgary IOMMU detected.\n");
--		printk(KERN_INFO "PCI-DMA: Calgary TCE table spec is %d\n",
--		       specified_table_size);
--
--		x86_init.iommu.iommu_init = calgary_iommu_init;
--	}
--	return calgary_found;
--
--cleanup:
--	for (--bus; bus >= 0; --bus) {
--		struct calgary_bus_info *info = &bus_info[bus];
--
--		if (info->tce_space)
--			free_tce_table(info->tce_space);
--	}
--	return -ENOMEM;
--}
--
--static int __init calgary_parse_options(char *p)
--{
--	unsigned int bridge;
--	unsigned long val;
--	size_t len;
--	ssize_t ret;
--
--	while (*p) {
--		if (!strncmp(p, "64k", 3))
--			specified_table_size = TCE_TABLE_SIZE_64K;
--		else if (!strncmp(p, "128k", 4))
--			specified_table_size = TCE_TABLE_SIZE_128K;
--		else if (!strncmp(p, "256k", 4))
--			specified_table_size = TCE_TABLE_SIZE_256K;
--		else if (!strncmp(p, "512k", 4))
--			specified_table_size = TCE_TABLE_SIZE_512K;
--		else if (!strncmp(p, "1M", 2))
--			specified_table_size = TCE_TABLE_SIZE_1M;
--		else if (!strncmp(p, "2M", 2))
--			specified_table_size = TCE_TABLE_SIZE_2M;
--		else if (!strncmp(p, "4M", 2))
--			specified_table_size = TCE_TABLE_SIZE_4M;
--		else if (!strncmp(p, "8M", 2))
--			specified_table_size = TCE_TABLE_SIZE_8M;
--
--		len = strlen("translate_empty_slots");
--		if (!strncmp(p, "translate_empty_slots", len))
--			translate_empty_slots = 1;
--
--		len = strlen("disable");
--		if (!strncmp(p, "disable", len)) {
--			p += len;
--			if (*p == '=')
--				++p;
--			if (*p == '\0')
--				break;
--			ret = kstrtoul(p, 0, &val);
--			if (ret)
--				break;
--
--			bridge = val;
--			if (bridge < MAX_PHB_BUS_NUM) {
--				printk(KERN_INFO "Calgary: disabling "
--				       "translation for PHB %#x\n", bridge);
--				bus_info[bridge].translation_disabled = 1;
--			}
--		}
--
--		p = strpbrk(p, ",");
--		if (!p)
--			break;
--
--		p++; /* skip ',' */
--	}
--	return 1;
--}
--__setup("calgary=", calgary_parse_options);
--
--static void __init calgary_fixup_one_tce_space(struct pci_dev *dev)
--{
--	struct iommu_table *tbl;
--	unsigned int npages;
--	int i;
--
--	tbl = pci_iommu(dev->bus);
--
--	for (i = 0; i < 4; i++) {
--		struct resource *r = &dev->resource[PCI_BRIDGE_RESOURCES + i];
--
--		/* Don't give out TCEs that map MEM resources */
--		if (!(r->flags & IORESOURCE_MEM))
--			continue;
--
--		/* 0-based? we reserve the whole 1st MB anyway */
--		if (!r->start)
--			continue;
--
--		/* cover the whole region */
--		npages = resource_size(r) >> PAGE_SHIFT;
--		npages++;
--
--		iommu_range_reserve(tbl, r->start, npages);
--	}
--}
--
--static int __init calgary_fixup_tce_spaces(void)
--{
--	struct pci_dev *dev = NULL;
--	struct calgary_bus_info *info;
--
--	if (no_iommu || swiotlb || !calgary_detected)
++		goto err;
+ 
+ 	adata->acp3x_base = devm_ioremap(&pdev->dev, res->start,
+ 					 resource_size(res));
++	if (!adata->acp3x_base)
++		goto base_err;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+ 	if (!res) {
+ 		dev_err(&pdev->dev, "IORESOURCE_IRQ FAILED\n");
 -		return -ENODEV;
--
--	printk(KERN_DEBUG "Calgary: fixing up tce spaces\n");
--
--	do {
--		dev = pci_get_device(PCI_VENDOR_ID_IBM, PCI_ANY_ID, dev);
--		if (!dev)
--			break;
--		if (!is_cal_pci_dev(dev->device))
--			continue;
--
--		info = &bus_info[dev->bus->number];
--		if (info->translation_disabled)
--			continue;
--
--		if (!info->tce_space)
--			continue;
--
--		calgary_fixup_one_tce_space(dev);
--
--	} while (1);
--
--	return 0;
--}
--
--/*
-- * We need to be call after pcibios_assign_resources (fs_initcall level)
-- * and before device_initcall.
-- */
--rootfs_initcall(calgary_fixup_tce_spaces);
--
--IOMMU_INIT_POST(detect_calgary);
-diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-index fa4352dce491..57de2ebff7e2 100644
---- a/arch/x86/kernel/pci-dma.c
-+++ b/arch/x86/kernel/pci-dma.c
-@@ -12,7 +12,6 @@
- #include <asm/dma.h>
- #include <asm/iommu.h>
- #include <asm/gart.h>
--#include <asm/calgary.h>
- #include <asm/x86_init.h>
- #include <asm/iommu_table.h>
++		goto io_irq;
+ 	}
  
-@@ -112,11 +111,6 @@ static __init int iommu_setup(char *p)
+ 	adata->i2s_irq = res->start;
+-	adata->play_stream = NULL;
+-	adata->capture_stream = NULL;
  
- 		gart_parse_options(p);
+ 	dev_set_drvdata(&pdev->dev, adata);
+ 	/* Initialize ACP */
+ 	status = acp3x_init(adata->acp3x_base);
+ 	if (status)
+-		return -ENODEV;
++		goto io_irq;
+ 	status = devm_snd_soc_register_component(&pdev->dev,
+ 						 &acp3x_i2s_component,
+-						 &acp3x_i2s_dai_driver, 1);
++						 NULL, 0);
+ 	if (status) {
+-		dev_err(&pdev->dev, "Fail to register acp i2s dai\n");
++		dev_err(&pdev->dev, "Fail to register acp i2s component\n");
+ 		goto dev_err;
+ 	}
+ 	status = devm_request_irq(&pdev->dev, adata->i2s_irq, i2s_irq_handler,
+@@ -666,7 +461,24 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 	return 0;
++
++err:
++	kfree(res);
++	return -ENOMEM;
++base_err:
++	kfree(res);
++	kfree(adata);
++	return -ENOMEM;
++io_irq:
++	kfree(res);
++	kfree(adata->acp3x_base);
++	kfree(adata);
++	return -ENOMEM;
++
+ dev_err:
++	kfree(res);
++	kfree(adata->acp3x_base);
++	kfree(adata);
+ 	status = acp3x_deinit(adata->acp3x_base);
+ 	if (status)
+ 		dev_err(&pdev->dev, "ACP de-init failed\n");
+@@ -774,13 +586,14 @@ static struct platform_driver acp3x_dma_driver = {
+ 	.probe = acp3x_audio_probe,
+ 	.remove = acp3x_audio_remove,
+ 	.driver = {
+-		.name = "acp3x_rv_i2s",
++		.name = "acp3x_rv_i2s_dma",
+ 		.pm = &acp3x_pm_ops,
+ 	},
+ };
  
--#ifdef CONFIG_CALGARY_IOMMU
--		if (!strncmp(p, "calgary", 7))
--			use_calgary = 1;
--#endif /* CONFIG_CALGARY_IOMMU */
--
- 		p += strcspn(p, ",");
- 		if (*p == ',')
- 			++p;
-diff --git a/arch/x86/kernel/tce_64.c b/arch/x86/kernel/tce_64.c
-deleted file mode 100644
-index 6384be751eff..000000000000
---- a/arch/x86/kernel/tce_64.c
-+++ /dev/null
-@@ -1,177 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * This file manages the translation entries for the IBM Calgary IOMMU.
-- *
-- * Derived from arch/powerpc/platforms/pseries/iommu.c
-- *
-- * Copyright (C) IBM Corporation, 2006
-- *
-- * Author: Jon Mason <jdmason@us.ibm.com>
-- * Author: Muli Ben-Yehuda <muli@il.ibm.com>
-- */
--
--#include <linux/types.h>
--#include <linux/slab.h>
--#include <linux/mm.h>
--#include <linux/spinlock.h>
--#include <linux/string.h>
--#include <linux/pci.h>
--#include <linux/dma-mapping.h>
--#include <linux/memblock.h>
--#include <asm/tce.h>
--#include <asm/calgary.h>
--#include <asm/proto.h>
--#include <asm/cacheflush.h>
--
--/* flush a tce at 'tceaddr' to main memory */
--static inline void flush_tce(void* tceaddr)
--{
--	/* a single tce can't cross a cache line */
--	if (boot_cpu_has(X86_FEATURE_CLFLUSH))
--		clflush(tceaddr);
--	else
--		wbinvd();
--}
--
--void tce_build(struct iommu_table *tbl, unsigned long index,
--	unsigned int npages, unsigned long uaddr, int direction)
--{
--	u64* tp;
--	u64 t;
--	u64 rpn;
--
--	t = (1 << TCE_READ_SHIFT);
--	if (direction != DMA_TO_DEVICE)
--		t |= (1 << TCE_WRITE_SHIFT);
--
--	tp = ((u64*)tbl->it_base) + index;
--
--	while (npages--) {
--		rpn = (virt_to_bus((void*)uaddr)) >> PAGE_SHIFT;
--		t &= ~TCE_RPN_MASK;
--		t |= (rpn << TCE_RPN_SHIFT);
--
--		*tp = cpu_to_be64(t);
--		flush_tce(tp);
--
--		uaddr += PAGE_SIZE;
--		tp++;
--	}
--}
--
--void tce_free(struct iommu_table *tbl, long index, unsigned int npages)
--{
--	u64* tp;
--
--	tp  = ((u64*)tbl->it_base) + index;
--
--	while (npages--) {
--		*tp = cpu_to_be64(0);
--		flush_tce(tp);
--		tp++;
--	}
--}
--
--static inline unsigned int table_size_to_number_of_entries(unsigned char size)
--{
--	/*
--	 * size is the order of the table, 0-7
--	 * smallest table is 8K entries, so shift result by 13 to
--	 * multiply by 8K
--	 */
--	return (1 << size) << 13;
--}
--
--static int tce_table_setparms(struct pci_dev *dev, struct iommu_table *tbl)
--{
--	unsigned int bitmapsz;
--	unsigned long bmppages;
--	int ret;
--
--	tbl->it_busno = dev->bus->number;
--
--	/* set the tce table size - measured in entries */
--	tbl->it_size = table_size_to_number_of_entries(specified_table_size);
--
--	/*
--	 * number of bytes needed for the bitmap size in number of
--	 * entries; we need one bit per entry
--	 */
--	bitmapsz = tbl->it_size / BITS_PER_BYTE;
--	bmppages = __get_free_pages(GFP_KERNEL, get_order(bitmapsz));
--	if (!bmppages) {
--		printk(KERN_ERR "Calgary: cannot allocate bitmap\n");
--		ret = -ENOMEM;
--		goto done;
--	}
--
--	tbl->it_map = (unsigned long*)bmppages;
--
--	memset(tbl->it_map, 0, bitmapsz);
--
--	tbl->it_hint = 0;
--
--	spin_lock_init(&tbl->it_lock);
--
--	return 0;
--
--done:
--	return ret;
--}
--
--int __init build_tce_table(struct pci_dev *dev, void __iomem *bbar)
--{
--	struct iommu_table *tbl;
--	int ret;
--
--	if (pci_iommu(dev->bus)) {
--		printk(KERN_ERR "Calgary: dev %p has sysdata->iommu %p\n",
--		       dev, pci_iommu(dev->bus));
--		BUG();
--	}
--
--	tbl = kzalloc(sizeof(struct iommu_table), GFP_KERNEL);
--	if (!tbl) {
--		printk(KERN_ERR "Calgary: error allocating iommu_table\n");
--		ret = -ENOMEM;
--		goto done;
--	}
--
--	ret = tce_table_setparms(dev, tbl);
--	if (ret)
--		goto free_tbl;
--
--	tbl->bbar = bbar;
--
--	set_pci_iommu(dev->bus, tbl);
--
--	return 0;
--
--free_tbl:
--	kfree(tbl);
--done:
--	return ret;
--}
--
--void * __init alloc_tce_table(void)
--{
--	unsigned int size;
--
--	size = table_size_to_number_of_entries(specified_table_size);
--	size *= TCE_ENTRY_SIZE;
--
--	return memblock_alloc_low(size, size);
--}
--
--void __init free_tce_table(void *tbl)
--{
--	unsigned int size;
--
--	if (!tbl)
--		return;
--
--	size = table_size_to_number_of_entries(specified_table_size);
--	size *= TCE_ENTRY_SIZE;
--
--	memblock_free(__pa(tbl), size);
--}
+ module_platform_driver(acp3x_dma_driver);
+ 
++MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
+ MODULE_AUTHOR("Maruthi.Bayyavarapu@amd.com");
+ MODULE_AUTHOR("Vijendar.Mukunda@amd.com");
+ MODULE_DESCRIPTION("AMD ACP 3.x PCM Driver");
+diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
+index 2f15fe1..72c1a23 100644
+--- a/sound/soc/amd/raven/acp3x.h
++++ b/sound/soc/amd/raven/acp3x.h
+@@ -51,6 +51,29 @@
+ #define SLOT_WIDTH_24 0x18
+ #define SLOT_WIDTH_32 0x20
+ 
++struct acp3x_platform_info {
++	u16 play_i2s_instance;
++	u16 cap_i2s_instance;
++	u16 capture_channel;
++};
++
++struct i2s_dev_data {
++	bool tdm_mode;
++	unsigned int i2s_irq;
++	u32 tdm_fmt;
++	void __iomem *acp3x_base;
++	struct snd_pcm_substream *play_stream;
++	struct snd_pcm_substream *capture_stream;
++};
++
++struct i2s_stream_instance {
++	u16 num_pages;
++	u16 channels;
++	u32 xfer_resolution;
++	u64 bytescount;
++	dma_addr_t dma_addr;
++	void __iomem *acp3x_base;
++};
+ 
+ static inline u32 rv_readl(void __iomem *base_addr)
+ {
+@@ -61,3 +84,22 @@ static inline void rv_writel(u32 val, void __iomem *base_addr)
+ {
+ 	writel(val, base_addr - ACP3x_PHY_BASE_ADDRESS);
+ }
++
++static inline u64 acp_get_byte_count(struct i2s_stream_instance *rtd,
++							int direction)
++{
++	u64 byte_count;
++
++	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
++		byte_count = rv_readl(rtd->acp3x_base +
++				mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
++		byte_count |= rv_readl(rtd->acp3x_base +
++				mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
++	} else {
++		byte_count = rv_readl(rtd->acp3x_base +
++				mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
++		byte_count |= rv_readl(rtd->acp3x_base +
++				mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
++	}
++	return byte_count;
++}
 -- 
-2.20.1
+2.7.4
 
