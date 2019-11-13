@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA37C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2478420674
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B6321783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610736;
-	bh=ALh12Gpv7eiDoaE549mHqziBmLDB9dSGT1knFGu6PwQ=;
+	s=default; t=1573610750;
+	bh=sVtcO+U1juXAv6eN2pXeaR+Df+VAxnRnido9Jj2MtyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkRvzDtWS8bw/2cWKh0Qql5ccKViTf/6uCN7Z6x14Ztjv/tfIVkxh2Kk8n37HkecL
-	 ZhW5/iTrFsZU/mgfBcBJBsgWjJTUM5gcV8c+z4a8naJMciLPBNKfuIoE1FtVcadsIv
-	 1Q3FyTlyqI0mLPf/yqZ9feSmEMuv1hzBvdwesAx4=
+	b=RVze1tgIqwORb1UcjR2xVgtIqC4z0WLDOLhCid4J9376xk2/YmYil8Rr9wFgUHeoU
+	 E5ArAorYsEvktNcmY2j/mMfpFTuQu1mw1Sjd6+ob90ETHVUcohFUrHzzDJO4eQ9IpJ
+	 7YgCM4nKtVpjzIZjUpKJlUGti8wTAzYFfFvEDI6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbfKMCFf (ORCPT
+        id S1730604AbfKMCFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:05:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57714 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:05:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727904AbfKMCBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:39 -0500
+        id S1730754AbfKMCB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:01:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43A2722470;
-        Wed, 13 Nov 2019 02:01:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A351C2247F;
+        Wed, 13 Nov 2019 02:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610498;
-        bh=ALh12Gpv7eiDoaE549mHqziBmLDB9dSGT1knFGu6PwQ=;
+        s=default; t=1573610487;
+        bh=sVtcO+U1juXAv6eN2pXeaR+Df+VAxnRnido9Jj2MtyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EFbKr78cCCAKZc7LeewLCI4CoJFLggswxX8uERdbvL6HOKP5lKFAA8sKyIMJYrsPY
-         0d9+YDI944tnrao8ba1MUH6LKpv0QcOpGUKc8XKB+jW0cz3oDd3yLUeQYswDwGxkOU
-         79GpMc6zssH9B8XixrPicTIMf3v2N7IAwAb5+xzs=
+        b=Kx4fivb9d/iUh4xwxZaUId03ADa9IGgjRQDy+goZPv8DmH5GLN9TVPj6qNg7kD6vw
+         fpNbRkZ63jtAVHM+37ADLZx6j0gdOCvw2NlmYGni35RHjs8tmQNiB3bGckSFSsF/vM
+         1Bg6W+tU6hBMopsOP2c6iIXrbsdIT+P0VvuqWZZs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Greear <greearb@candelatech.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/48] ath10k: fix vdev-start timeout on error
-Date:   Tue, 12 Nov 2019 21:00:48 -0500
-Message-Id: <20191113020131.13356-5-sashal@kernel.org>
+Cc:     Huibin Hong <huibin.hong@rock-chips.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 67/68] spi: rockchip: initialize dma_slave_config properly
+Date:   Tue, 12 Nov 2019 20:59:31 -0500
+Message-Id: <20191113015932.12655-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
-References: <20191113020131.13356-1-sashal@kernel.org>
+In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
+References: <20191113015932.12655-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,115 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Greear <greearb@candelatech.com>
+From: Huibin Hong <huibin.hong@rock-chips.com>
 
-[ Upstream commit 833fd34d743c728afe6d127ef7bee67e7d9199a8 ]
+[ Upstream commit dd8fd2cbc73f8650f651da71fc61a6e4f30c1566 ]
 
-The vdev-start-response message should cause the
-completion to fire, even in the error case.  Otherwise,
-the user still gets no useful information and everything
-is blocked until the timeout period.
+The rxconf and txconf structs are allocated on the
+stack, so make sure we zero them before filling out
+the relevant fields.
 
-Add some warning text to print out the invalid status
-code to aid debugging, and propagate failure code.
-
-Signed-off-by: Ben Greear <greearb@candelatech.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/core.h |  1 +
- drivers/net/wireless/ath/ath10k/mac.c  |  2 +-
- drivers/net/wireless/ath/ath10k/wmi.c  | 19 ++++++++++++++++---
- drivers/net/wireless/ath/ath10k/wmi.h  |  8 +++++++-
- 4 files changed, 25 insertions(+), 5 deletions(-)
+ drivers/spi/spi-rockchip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 257836a0cfbc0..a7fab3b0a443f 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -755,6 +755,7 @@ struct ath10k {
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 0f89c2169c244..3a94f465e8e05 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -443,6 +443,9 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs)
+ 	struct dma_slave_config rxconf, txconf;
+ 	struct dma_async_tx_descriptor *rxdesc, *txdesc;
  
- 	struct completion install_key_done;
- 
-+	int last_wmi_vdev_start_status;
- 	struct completion vdev_setup_done;
- 
- 	struct workqueue_struct *workqueue;
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 5a0138c1c0455..7fbf2abcfc433 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -850,7 +850,7 @@ static inline int ath10k_vdev_setup_sync(struct ath10k *ar)
- 	if (time_left == 0)
- 		return -ETIMEDOUT;
- 
--	return 0;
-+	return ar->last_wmi_vdev_start_status;
- }
- 
- static int ath10k_monitor_vdev_start(struct ath10k *ar, int vdev_id)
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index b867875aa6e66..af3052c54583b 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -2944,18 +2944,31 @@ void ath10k_wmi_event_vdev_start_resp(struct ath10k *ar, struct sk_buff *skb)
- {
- 	struct wmi_vdev_start_ev_arg arg = {};
- 	int ret;
-+	u32 status;
- 
- 	ath10k_dbg(ar, ATH10K_DBG_WMI, "WMI_VDEV_START_RESP_EVENTID\n");
- 
-+	ar->last_wmi_vdev_start_status = 0;
++	memset(&rxconf, 0, sizeof(rxconf));
++	memset(&txconf, 0, sizeof(txconf));
 +
- 	ret = ath10k_wmi_pull_vdev_start(ar, skb, &arg);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to parse vdev start event: %d\n", ret);
--		return;
-+		ar->last_wmi_vdev_start_status = ret;
-+		goto out;
- 	}
- 
--	if (WARN_ON(__le32_to_cpu(arg.status)))
--		return;
-+	status = __le32_to_cpu(arg.status);
-+	if (WARN_ON_ONCE(status)) {
-+		ath10k_warn(ar, "vdev-start-response reports status error: %d (%s)\n",
-+			    status, (status == WMI_VDEV_START_CHAN_INVALID) ?
-+			    "chan-invalid" : "unknown");
-+		/* Setup is done one way or another though, so we should still
-+		 * do the completion, so don't return here.
-+		 */
-+		ar->last_wmi_vdev_start_status = -EINVAL;
-+	}
- 
-+out:
- 	complete(&ar->vdev_setup_done);
- }
- 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
-index a8b2553e8988a..66148a82ad25a 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi.h
-@@ -5969,11 +5969,17 @@ struct wmi_ch_info_ev_arg {
- 	__le32 rx_frame_count;
- };
- 
-+/* From 10.4 firmware, not sure all have the same values. */
-+enum wmi_vdev_start_status {
-+	WMI_VDEV_START_OK = 0,
-+	WMI_VDEV_START_CHAN_INVALID,
-+};
-+
- struct wmi_vdev_start_ev_arg {
- 	__le32 vdev_id;
- 	__le32 req_id;
- 	__le32 resp_type; /* %WMI_VDEV_RESP_ */
--	__le32 status;
-+	__le32 status; /* See wmi_vdev_start_status enum above */
- };
- 
- struct wmi_peer_kick_ev_arg {
+ 	spin_lock_irqsave(&rs->lock, flags);
+ 	rs->state &= ~RXBUSY;
+ 	rs->state &= ~TXBUSY;
 -- 
 2.20.1
 
