@@ -2,232 +2,120 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4324AC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155DCC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09423214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4032222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:20:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="wJkmsfJf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw70PeBZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfKMINJ (ORCPT
+        id S1726350AbfKMIUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:13:09 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3332 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725966AbfKMINJ (ORCPT
+        Wed, 13 Nov 2019 03:20:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53701 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725993AbfKMIUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:13:09 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAD87lLu022604;
-        Wed, 13 Nov 2019 03:10:53 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2w7prju0gn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Nov 2019 03:10:53 -0500
-Received: from m0167089.ppops.net (m0167089.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xAD8AOwL024758;
-        Wed, 13 Nov 2019 03:10:52 -0500
-Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2052.outbound.protection.outlook.com [104.47.45.52])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2w7prju0gj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Nov 2019 03:10:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mNe5PsgLzVWBBQl1ZLInI9yDR/AOabCvh+VwFBfCU+5e50KC5WmPKSRecY6GU2sTDNw772fsTcaHifah2ezW6bmNVYzv06KS7yYWaYTuLMmVomjvosHylmP+G2cf2N32jMzL6m8E3RvPoDGSwE6o+xHyl9Il7rKo4j2cIK7lAjuQkdLxTMcf2aJA47ulmKCI/ji0ivDtYle2vIDOregXdREne1xcmqBT+5iEr5j00LhglXAuzQ38QXDVo8n2Mw82CfOVq4jH+TCBGSJhrALegcrCA/zXxxb8nseSycI4ildJm4ixxIpFuDf73Ls87OoEmw7wZBWtf1zAW3N1u270qQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TGDsyqn79GkHKoxSrCavDr1Pv4hkyRtjCfl83OOcR0g=;
- b=nW8fo4N3Vy+uecPvEfsX4GCY3YMsfvPkwA1s88g1ZYAlh1FIgiqmSK1XHyQYkvh70nHAGf6SHfkv/pAYWqtiYybLWk52Ug9nW+BmMPcOHvcC0wsjoKrpH0V1cENoCGGf7MB3nMAon9BH0uBc9jIdr0TRs/jVOHltZmHwkZlxJhUjzI2xC03x13FJ7x4+/YPY1cAX1CGIy6u4+4prjgDMJ8unhqPgGtz+iVDJZneveL7a0SumpYzt/QLBqhMnh+DW1fB1jBjINO0luMGVIrT6AdfnKHmrKpSEUYwfqVbzioiM3EJZWbq11dvNhsFajOoetOgiCeAW7fyMEpPb6VT1dA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TGDsyqn79GkHKoxSrCavDr1Pv4hkyRtjCfl83OOcR0g=;
- b=wJkmsfJfEnvxyWXZH3IGGUxuZ9VJkV3El91V/t1w2EkVPuiSJzliOy3n57twyPBtmMgZUjAUFx4FsrYFH1lWyJmraFtkiEXUjgw51/aJnwkbaLFzlbfEtaMp6U43TCWGcpcL6vS/5hP957ABq9z1HOG7rbVKgvm3PWx1lPAlaEw=
-Received: from BY5PR03MB4965.namprd03.prod.outlook.com (52.133.249.215) by
- BY5PR03MB5316.namprd03.prod.outlook.com (10.186.132.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Wed, 13 Nov 2019 08:10:51 +0000
-Received: from BY5PR03MB4965.namprd03.prod.outlook.com
- ([fe80::c437:442b:4a7b:8121]) by BY5PR03MB4965.namprd03.prod.outlook.com
- ([fe80::c437:442b:4a7b:8121%4]) with mapi id 15.20.2451.018; Wed, 13 Nov 2019
- 08:10:51 +0000
-From:   "Hennerich, Michael" <Michael.Hennerich@analog.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>
-CC:     "Bia, Beniamin" <Beniamin.Bia@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "biabeniamin@outlook.com" <biabeniamin@outlook.com>,
-        Jean Delvare <jdelvare@suse.com>
-Subject: RE: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
- Power Monitor driver
-Thread-Topic: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
- Power Monitor driver
-Thread-Index: AQHVmW7fc5smHJ/4gUWJS2j2jDw7xKeHzPmAgAALEgCAAOankA==
-Date:   Wed, 13 Nov 2019 08:10:50 +0000
-Message-ID: <BY5PR03MB4965158557D9AEA20A48F95F8E760@BY5PR03MB4965.namprd03.prod.outlook.com>
-References: <20191112153552.27431-1-beniamin.bia@analog.com>
- <20191112173757.0000075b@huawei.com> <20191112181734.GA30127@roeck-us.net>
-In-Reply-To: <20191112181734.GA30127@roeck-us.net>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcbWhlbm5lcmlc?=
- =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
- =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy0xOTNiNzBjYi0wNWVkLTExZWEtOGY5YS00ODg5?=
- =?us-ascii?Q?ZTc3Y2RkZWZcYW1lLXRlc3RcMTkzYjcwY2QtMDVlZC0xMWVhLThmOWEtNDg4?=
- =?us-ascii?Q?OWU3N2NkZGVmYm9keS50eHQiIHN6PSIyOTk3IiB0PSIxMzIxODEwNjI0ODg4?=
- =?us-ascii?Q?MTQ0OTMiIGg9Ii9nQmlJWEcySlVkbTIxclhQMDJKaGk2RzNyZz0iIGlkPSIi?=
- =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUt3QkFB?=
- =?us-ascii?Q?Q2Q4NjNiK1puVkFiNUwrT1FBWGU4d3ZrdjQ1QUJkN3pBQ0FBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQUE4QVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFRQUJBQUFBWWVqd1pRQUFBQUFBQUFBQUFBQUFBSjRBQUFCaEFHUUFh?=
- =?us-ascii?Q?UUJmQUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QUc4QWFnQmxBR01BZEFCekFG?=
- =?us-ascii?Q?OEFkQUJwQUdVQWNnQXhBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR0VBWkFCcEFGOEFjd0JsQUdNQWRR?=
- =?us-ascii?Q?QnlBR1VBWHdCd0FISUFid0JxQUdVQVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURJ?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
- =?us-ascii?Q?QUFBQUE9Ii8+PC9tZXRhPg=3D=3D?=
-x-dg-rorf: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e405abf5-b796-4b5f-a311-08d76810ff6a
-x-ms-traffictypediagnostic: BY5PR03MB5316:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR03MB5316A5B89ABB5C21A9B8BF718E760@BY5PR03MB5316.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(346002)(136003)(396003)(189003)(199004)(13464003)(81166006)(66556008)(7696005)(66946007)(476003)(2906002)(76116006)(81156014)(64756008)(8676002)(966005)(7416002)(25786009)(6506007)(256004)(33656002)(478600001)(53546011)(446003)(66476007)(14454004)(14444005)(52536014)(66446008)(8936002)(45080400002)(76176011)(486006)(102836004)(5660300002)(55016002)(186003)(11346002)(71190400001)(99286004)(74316002)(316002)(9686003)(6306002)(26005)(86362001)(305945005)(110136005)(7736002)(229853002)(6116002)(54906003)(4326008)(71200400001)(6246003)(66066001)(3846002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR03MB5316;H:BY5PR03MB4965.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TQxzSdSVy+dtFvJWy3S0sVddO0U+lo304c4SzjG4wBapnhOndaOe41OFTvgNyzqoNR0B56fKehP925WQRpclExVHQ9hg5S2w+UHm9fYD2Oth2BVgWp2xrVlGtXCsv2fY+udxC/UgZCAcrV+w0fkxOpoCdXoupL0CLxGeKI/zjRtgWuiqXMA+iIYo9JzK07T3e1MLGYIMh5S9eAoz7vuCaGHT2AvkXpsCO0CJEiULIyEOVjv2AHK3Md/TGEE98KQ13R5vEGrc9161jWso71bdNh015DOV56VWmuZeIqqaDo5txay0lVzKXXbynjGLcUw0N6obrAU73m7slpSc3gQa2lVZQqNAukI62XfPE7NSzB5N1esrnDbnYRb0sUQZ10HSnUmGmtLcWlFO2iOZ3kpBPOSIkDxJAV4+1Cbla/Zth1F9kjWLLjm+DASqcOnQ6/BQBrU9MaSjyEmjXA5FQAwmg6gdLnogRIned6uv9nlIw7c=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 Nov 2019 03:20:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573633244;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=whJvieYSPZF3C0Ev7gvfZK1XEQG2EzzzHM80XB6g75A=;
+        b=Bw70PeBZgNnnFEiAg4WDTsvZhpIoN4+p2i0WVtiArVYx2v8nBe2iMB4068sdE+jP/U8VKb
+        56Wp8lNYsn+mwjR9fgqSkia92wCgMOcy0KH2KUi3/66AJqh3PokHhvn8+y42qM2p2kxWWz
+        XKxY1JnOcpiv8vDBmQM6DsVoG7qeO0M=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-Fr5eHIqnOe2nmmy_8AnaUQ-1; Wed, 13 Nov 2019 03:20:43 -0500
+Received: by mail-wr1-f70.google.com with SMTP id m17so1137405wrb.20
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 00:20:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gRJtnCq+CKt1kPsmHkXPWnEtQz9JufgD24IWcr8duAg=;
+        b=HKQoW7aTUBrOkd1i1+yZGA6CPnn4gBaLdp4XQeh7YrBUsu9uw83ppBeuJK1VVanfUU
+         ojrll3zAZGaIu43Li3tu/02pwPDEFeXFqx8xER4sKfcNrSlhsiyO4D1AE7IGysFLBnai
+         Rn8ANMhJvRco5dhkdvyQPUoV6CiiJrCYdOja5eSJgfUKQTTH2q4i+J6m3CnhzOgAOIvA
+         NXCgGpbeNWA5loPp5fhCcEVHqMvDbMNKKbU0rlKGSZou4ZTBccJRPfqw3uNlbiHt9Bw1
+         iOahiHtPhMmFMwep9aRk9q2JTeiYRWEST6qmwU0Ooo+QLiNkMoVgnZfcWEoy+ssmvVi7
+         wmLg==
+X-Gm-Message-State: APjAAAXQnxsiIOhlucTi+7m5MgMsz4oEOtW8zudKdrjy5VLTcPyGEzIs
+        ec0OKsKWGDQbM/UDsQguNBVIEbxZkRYzgWWfywpPg9aif21+sJmtn3bLD6+OQI26ZenvVv4XBCw
+        CEi0iUW4gJZO4P4l2Ij6TMXYk
+X-Received: by 2002:a5d:4986:: with SMTP id r6mr1507905wrq.307.1573633241983;
+        Wed, 13 Nov 2019 00:20:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyvuhfthJLiZbIf7ASFW0EJey9TeYZbP3dIAq7chny/myshfoEZhQsu6Zyv9TB2AwA4sR/anA==
+X-Received: by 2002:a5d:4986:: with SMTP id r6mr1507868wrq.307.1573633241635;
+        Wed, 13 Nov 2019 00:20:41 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:8c9d:1a6f:4730:367c? ([2001:b07:6468:f312:8c9d:1a6f:4730:367c])
+        by smtp.gmail.com with ESMTPSA id 19sm2670309wrc.47.2019.11.13.00.20.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Nov 2019 00:20:41 -0800 (PST)
+Subject: Re: [PATCH] KVM: X86: Reset the three MSR list number variables to 0
+ in kvm_init_msr_list()
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Chenyi Qiang <chenyi.qiang@intel.com>
+References: <20191113011521.32255-1-xiaoyao.li@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <02a71740-a98d-622e-ee3e-705fe707c772@redhat.com>
+Date:   Wed, 13 Nov 2019 09:20:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e405abf5-b796-4b5f-a311-08d76810ff6a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 08:10:50.8147
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vEY7TtDtrgJ+Xy5zw1RB5HrPcCSGt26HvhBygUS79lIkMAeiTIK09vwCzXmPTM7aQGtALGB+QG+8RsdBq/QNKK3EwgkO/zmUQTu/gmZjwO8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5316
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-13_01:2019-11-13,2019-11-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 clxscore=1011 spamscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911130074
+In-Reply-To: <20191113011521.32255-1-xiaoyao.li@intel.com>
+Content-Language: en-US
+X-MC-Unique: Fr5eHIqnOe2nmmy_8AnaUQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> Sent: Dienstag, 12. November 2019 20:18
-> To: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Bia, Beniamin <Beniamin.Bia@analog.com>; jic23@kernel.org;
-> lars@metafoo.de; Hennerich, Michael <Michael.Hennerich@analog.com>;
-> pmeerw@pmeerw.net; gregkh@linuxfoundation.org; linux-
-> iio@vger.kernel.org; devel@driverdev.osuosl.org; linux-
-> kernel@vger.kernel.org; mark.rutland@arm.com; robh+dt@kernel.org;
-> devicetree@vger.kernel.org; paulmck@linux.ibm.com;
-> mchehab+samsung@kernel.org; linus.walleij@linaro.org;
-> nicolas.ferre@microchip.com; biabeniamin@outlook.com; Jean Delvare
-> <jdelvare@suse.com>
-> Subject: Re: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
-> Power Monitor driver
+On 13/11/19 02:15, Xiaoyao Li wrote:
+> When applying commit 7a5ee6edb42e ("KVM: X86: Fix initialization of MSR
+> lists"), it forgot to reset the three MSR lists number varialbes to 0
+> while removing the useless conditionals.
 >=20
-> On Tue, Nov 12, 2019 at 05:37:57PM +0000, Jonathan Cameron wrote:
-> > On Tue, 12 Nov 2019 17:35:50 +0200
-> > Beniamin Bia <beniamin.bia@analog.com> wrote:
-> >
-> > > From: Michael Hennerich <michael.hennerich@analog.com>
-> > >
-> > > ADM1177 is a Hot Swap Controller and Digital Power Monitor with Soft
-> > > Start Pin.
-> > >
-> > > Datasheet:
-> > > Link:
-> > > https://www.analog.com/media/en/technical-documentation/data-
-> sheets/
-> > > ADM1177.pdf
-> > >
-> > > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> > > Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
-> > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> >
-> > Hi Beniamin,
-> >
-> > A couple immediate thoughts.
-> >
-> > 1. That cc list has some rather non obvious people on it.  Unless somet=
-hing
-> >    fairly surprising is going on, probably better to cut it back a bit.
-> >
-> > 2. Why IIO?  Not entirely obvious to me.  From first glance this is def=
-initely
-> >    doing hardware monitoring.  If there is a reason there should be a c=
-lear
-> >    statement here on why.
-> >
+> Fixes: 7a5ee6edb42e (KVM: X86: Fix initialization of MSR lists)
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >=20
-> I don't see why this is implemented as iio driver. I think it should be
-> implemented as hardware monitoring driver.
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 8c8a5e20ea06..9368b0e6bf21 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5102,6 +5102,10 @@ static void kvm_init_msr_list(void)
+> =20
+>  =09perf_get_x86_pmu_capability(&x86_pmu);
+> =20
+> +=09num_msrs_to_save =3D 0;
+> +=09num_emulated_msrs =3D 0;
+> +=09num_msr_based_features =3D 0;
+> +
+>  =09for (i =3D 0; i < ARRAY_SIZE(msrs_to_save_all); i++) {
+>  =09=09if (rdmsr_safe(msrs_to_save_all[i], &dummy[0], &dummy[1]) < 0)
+>  =09=09=09continue;
+>=20
 
-Totally agree that this driver could have been implemented as HWMON driver.
-Well we use this device as USB supply monitor on our embedded portably kits=
-, to detect low VBUS or excess current draw.=20
+Ouch.  Sorry.
 
-ADALM-PLUTO and ADALM2000:
-https://www.analog.com/en/design-center/evaluation-hardware-and-software/ev=
-aluation-boards-kits/adalm-pluto.html
-
-https://www.analog.com/en/design-center/evaluation-hardware-and-software/ev=
-aluation-boards-kits/ADALM2000.html
-
-The only connectivity to the host PC is via IIO/libiio USB Gadget FS and Et=
-hernet backends.
-
-We recommend people to read the IIO attributes whenever they report an issu=
-e.
-Unless libiio supports directly HWMON or HWMON adds an IIO bridge we would =
-prefer this driver being exposed as IIO device, since HWMON users still can=
- use the IIO/HWMON bridge.
-
--Michael
+Paolo
 
