@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F4CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBEEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970AE204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2EC222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609997;
-	bh=cIE1zYKfcZTQBUxrXx9F25efKOGTmGUOS7M5KGSXFuE=;
+	s=default; t=1573610001;
+	bh=EnyyH4Gnn0E8+qOWwE4uOz6+S+a2zftDJp8SNn1mVxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P1EZ7aXC267ayDXXElXpe+m1T/Sf27BpdhEREPgKjm2WNJwsIqPAAG+bYE1TPbTM/
-	 8QIDfdqkBrBPY55OfDW5p0y3zSJo//IQrWlTMcfDdeJkfIXomE9vsBE4Kcvcj3ifey
-	 1r+ztCKgjtS5Wn+1dO2xFaKjTAM3wvgtW/fLFSEc=
+	b=JBwaDV4Ku4/ND3vF+SEfk6VVymvhd7fKlPakrGPKsFbjltjycmmx2dw1Y0B+wgGO+
+	 yB/QlTIMJXR4I7Hqh5MIntrOfonKQGDC4iKA9AdK78kkiYcDOR1tUfwcEuHPpzM+1q
+	 Q/46CyX0OMmgv12afItRXTwXYpRlHhANxbblnLjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfKMBxQ (ORCPT
+        id S1728543AbfKMBxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:53:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:53:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728480AbfKMBxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:07 -0500
+        id S1727514AbfKMBxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E481B204EC;
-        Wed, 13 Nov 2019 01:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14A5204EC;
+        Wed, 13 Nov 2019 01:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609986;
-        bh=cIE1zYKfcZTQBUxrXx9F25efKOGTmGUOS7M5KGSXFuE=;
+        s=default; t=1573609996;
+        bh=EnyyH4Gnn0E8+qOWwE4uOz6+S+a2zftDJp8SNn1mVxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwwACDB4Hy+LsKMkACb9oJQ2Skteyr0ibCEDEMM27XNDBLkVA8n/MDDth17yJCQMG
-         d51X7OBcpUoOrggUS5kX3iS1Bq5p9uibq14Svc+MbyeMNmPypFb7O+Xq26XoKwr2sk
-         iin0jdSabqlg3e1mHYjZjMKKvd8Vig7grlck/Ei0=
+        b=mDL9yU4sXXa255wRJDubc9+QCKYY5VJrC3G570bUO9WHZ7v01HFgsfQpufoDMJryJ
+         jK//iPrrmsRRTw6uGw5B29PcQ2hRbIMBu3j4Hxz2x7pie8VuTVhXv+v+wzjloYz+oP
+         MMp4nblWejqfG4/DJ/4g6t2+PADFasCugRtGb9n0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 103/209] qtnfmac: pass sgi rate info flag to wireless core
-Date:   Tue, 12 Nov 2019 20:48:39 -0500
-Message-Id: <20191113015025.9685-103-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 105/209] qtnfmac: drop error reports for out-of-bounds key indexes
+Date:   Tue, 12 Nov 2019 20:48:41 -0500
+Message-Id: <20191113015025.9685-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -62,33 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit d5657b709e2a92a0e581109010765d1d485580df ]
+[ Upstream commit 35da3fe63b8647ce3cc52fccdf186a60710815fb ]
 
-SGI should be passed to wireless core as a part of rate structure.
-Otherwise wireless core performs incorrect rate calculation when
-SGI is enabled in hardware but not reported to host.
+On disconnect wireless core attempts to remove all the supported keys.
+Following cfg80211_ops conventions, firmware returns -ENOENT code
+for the out-of-bound key indexes. This is a normal behavior,
+so no need to report errors for this case.
 
 Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/quantenna/qtnfmac/commands.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/quantenna/qtnfmac/cfg80211.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/commands.c b/drivers/net/wireless/quantenna/qtnfmac/commands.c
-index ae9e773005339..7fe22bb53bfc4 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/commands.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/commands.c
-@@ -544,6 +544,9 @@ qtnf_sta_info_parse_rate(struct rate_info *rate_dst,
- 		rate_dst->flags |= RATE_INFO_FLAGS_MCS;
- 	else if (rate_src->flags & QLINK_STA_INFO_RATE_FLAG_VHT_MCS)
- 		rate_dst->flags |= RATE_INFO_FLAGS_VHT_MCS;
-+
-+	if (rate_src->flags & QLINK_STA_INFO_RATE_FLAG_SHORT_GI)
-+		rate_dst->flags |= RATE_INFO_FLAGS_SHORT_GI;
- }
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
+index 05b93f301ca08..ff8a46c9595e1 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
+@@ -521,9 +521,16 @@ static int qtnf_del_key(struct wiphy *wiphy, struct net_device *dev,
+ 	int ret;
  
- static void
+ 	ret = qtnf_cmd_send_del_key(vif, key_index, pairwise, mac_addr);
+-	if (ret)
+-		pr_err("VIF%u.%u: failed to delete key: idx=%u pw=%u\n",
+-		       vif->mac->macid, vif->vifid, key_index, pairwise);
++	if (ret) {
++		if (ret == -ENOENT) {
++			pr_debug("VIF%u.%u: key index %d out of bounds\n",
++				 vif->mac->macid, vif->vifid, key_index);
++		} else {
++			pr_err("VIF%u.%u: failed to delete key: idx=%u pw=%u\n",
++			       vif->mac->macid, vif->vifid,
++			       key_index, pairwise);
++		}
++	}
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
