@@ -2,78 +2,98 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24D5C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEE1C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0350E206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4A9206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OsCPK9MB"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="bb6122LJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfKMTW0 (ORCPT
+        id S1727032AbfKMTXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:22:26 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40795 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfKMTW0 (ORCPT
+        Wed, 13 Nov 2019 14:23:32 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33750 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfKMTXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:22:26 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i10so3709412wrs.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 11:22:23 -0800 (PST)
+        Wed, 13 Nov 2019 14:23:32 -0500
+Received: by mail-oi1-f195.google.com with SMTP id m193so2882465oig.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 11:23:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=qkdacaVdhS5V1JI0trEPqYF0NgGr5+r4W2AqnZo0b/g=;
-        b=OsCPK9MBTPx/N1epP5ySwSXv8jXL9MBO2c6cgnFpGnQDrK4O9vJ4hYcWPMpOqMi5kS
-         dNfvRjXyF0fJZMMczbekLSUUcDb9/XQL/y7urvRITxFB2vBreT4wHncx5ZNYi+Wne56q
-         EvmYeZQ/WsChHCIqDsczY9KJ9vXp4p6/LHGs/CYJwPQLnZe7tux5ptPGNJY5pCna1Fwj
-         3tyiFklfcNtEdJPhbd68gpiQtv/JQxa94pfL6cE7KfHVyd9dgJzB/jqaIP/2qsUqbwxx
-         48FnxoP7P3GKjLRcKQpnhEclVI8NKS0k3hbCrBrlRX6ohiLmzgvFaV04iKxyDmje9gyp
-         aSwQ==
+        bh=4HKVOkxUXCqQFAssnrt5HN+d13KJzjRJ1pFFkgydGzo=;
+        b=bb6122LJyN4TYG5IK7mHh5xygfwPeVWP6I4JnFmlEb2IzPnSXePzt9c7h6VlwCNKNf
+         6iTeoCZ+WCekF2UjJKYypJ3VDkp2bZI1sBd8OZia/73qpNgBlVpDNRkT98ztqaV4Pdpl
+         ZVL0JboDgCGP8I4MHVFtdYs0p8UDQrSyipyLboTogqOsqYbQVAZcsnUwAJG32rUPMPmj
+         ssxQ90TSW2CRqTDYyVFKczonUtqdX4nXBKSakXhSzcp3X5BqgSICBAOxp0Q1Cy1lQWwq
+         g444805boKvN2nKVTBF8Zd13UMFnq8mUuIPok109u72I0derPDbhoGvKrYVRikRhE4Pc
+         Y6hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qkdacaVdhS5V1JI0trEPqYF0NgGr5+r4W2AqnZo0b/g=;
-        b=EKvzI7vQBrYTt6N74zx6Xe+No6bG8M/I+Pe14H7q2jvIuYW0UEgesS7ZnNTrrbO/gh
-         d5MQtJL5XvxgAI9Qe3PU02Pr6lfG4crjW/DOu1kShPOj3C7S6Bw82AOhsXT0GOs1OsaK
-         PsjICWLF+5yfIhtAEM9yKyKsAxhfyeLE0kPWY6THEwmJhpPoMTjlsl6X04GkzXAeYSnl
-         ysThkVIzj5n3kTDcQHLXzGsjicoyORVTwERxKOavXQDDhjsn8sbtjP/dx+Br0tIxGzLk
-         FDbj5w9AjrVN6iCyTjm58BvCnWVjMVJrPapfPfn94lbPi8KRBGMj7l62+36CZBG4UC7o
-         As6w==
-X-Gm-Message-State: APjAAAV0U0PVPufg4753vEE6wHzOeNf2v8vjPjdM4gC/M6bvnwpnSi+x
-        419gbqFwIsMhFZRJyDY+RvKK3LwfXwkVRSwsszU=
-X-Google-Smtp-Source: APXvYqyp9pkH+51iCa/hlQVEjIKtehxcBLsZVD0syYP6jy5OdSJfhR9kxXpI8hyUHS3wAiZs5PfUT1Wur+FcA2lhWwg=
-X-Received: by 2002:adf:f010:: with SMTP id j16mr4582598wro.206.1573672942308;
- Wed, 13 Nov 2019 11:22:22 -0800 (PST)
+        bh=4HKVOkxUXCqQFAssnrt5HN+d13KJzjRJ1pFFkgydGzo=;
+        b=fGescc4zD+MjlgVPfvkRBOzlSxgCTDLFrBqJ501VO3EdqvR/nb4/5dfMqng5DiM8TW
+         Hk2pB+F3qlojhSZa22KxLAXIV9U7HP1RvXMoWulLA807eX9DaIXC4p1CaQYwMBZC6dyV
+         peWTfEiQXzYXFUPZbFifA619btMOrijrrA1Uq93dKddWjI5rLNTT3z5lOkUrob44uC9T
+         Wb/nhlopcsTdcwhgV/bAB3HWkESESEsbNNq+ZY55Hn5Xizdk/9jKexn4yNRxTDauckOw
+         aM966PYpCxLgsbIZxA0MNSZW4J+BVxuNu1jGU4mkR7FF5sqAdrS1JlCeKlJ1kMWANmMG
+         U++g==
+X-Gm-Message-State: APjAAAVrKd3kj7iJDZtVDRjtg0WshQvNwleYr2DBs7ReHPCgW5Gvom4N
+        Y+fddPA+YbZQUEHmTb6a4tx67p4iAdNCGfAkltGyMQ==
+X-Google-Smtp-Source: APXvYqw/J/xJikM9Sn2uJoSKIkSXprx6L2hjLUq/51PEKKOZdQDk8LIwVzxcWXUccXtFtayP/c8+SilHtOvsl5tzGrQ=
+X-Received: by 2002:aca:ea57:: with SMTP id i84mr174326oih.73.1573673011067;
+ Wed, 13 Nov 2019 11:23:31 -0800 (PST)
 MIME-Version: 1.0
-References: <1573649074-72589-1-git-send-email-yukuai3@huawei.com>
- <1573649074-72589-2-git-send-email-yukuai3@huawei.com> <ac4566662a04e0c25039df7ed30789d0792885cd.camel@perches.com>
-In-Reply-To: <ac4566662a04e0c25039df7ed30789d0792885cd.camel@perches.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 13 Nov 2019 14:22:10 -0500
-Message-ID: <CADnq5_Pwc9U03+1=tKs2hxKVdqfwXOc14XRD=yeJCsc4=5NJtw@mail.gmail.com>
-Subject: Re: [PATCH 1/7] drm/amdgpu: remove set but not used variable
- 'mc_shared_chmap' from 'gfx_v6_0.c' and 'gfx_v7_0.c'
-To:     Joe Perches <joe@perches.com>
-Cc:     yu kuai <yukuai3@huawei.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Rex Zhu <Rex.Zhu@amd.com>,
-        "Quan, Evan" <evan.quan@amd.com>, zhengbin <zhengbin13@huawei.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+References: <20191113042710.3997854-1-jhubbard@nvidia.com> <20191113042710.3997854-5-jhubbard@nvidia.com>
+In-Reply-To: <20191113042710.3997854-5-jhubbard@nvidia.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Nov 2019 11:23:19 -0800
+Message-ID: <CAPcyv4gGu=G-c1czSAYJ3joTYS_ZYOJ6i9umKzCQEFzpwZMiiA@mail.gmail.com>
+Subject: Re: [PATCH v4 04/23] mm: devmap: refactor 1-based refcounting for
+ ZONE_DEVICE pages
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
         Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, yi.zhang@huawei.com
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,57 +101,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:56 AM Joe Perches <joe@perches.com> wrote:
+On Tue, Nov 12, 2019 at 8:27 PM John Hubbard <jhubbard@nvidia.com> wrote:
 >
-> On Wed, 2019-11-13 at 20:44 +0800, yu kuai wrote:
-> > Fixes gcc '-Wunused-but-set-variable' warning:
-> >
-> > drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c: In function
-> > =E2=80=98gfx_v6_0_constants_init=E2=80=99:
-> > drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c:1579:6: warning: variable
-> > =E2=80=98mc_shared_chmap=E2=80=99 set but not used [-Wunused-but-set-va=
-riable]
-> []
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c b/drivers/gpu/drm/am=
-d/amdgpu/gfx_v6_0.c
-> []
-> > @@ -1678,7 +1678,6 @@ static void gfx_v6_0_constants_init(struct amdgpu=
-_device *adev)
-> >
-> >       WREG32(mmBIF_FB_EN, BIF_FB_EN__FB_READ_EN_MASK | BIF_FB_EN__FB_WR=
-ITE_EN_MASK);
-> >
-> > -     mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
+> An upcoming patch changes and complicates the refcounting and
+> especially the "put page" aspects of it. In order to keep
+> everything clean, refactor the devmap page release routines:
 >
-> I do not know the hardware but frequently hardware like
-> this has read ordering requirements and various registers
-> can not be read in a random order.
+> * Rename put_devmap_managed_page() to page_is_devmap_managed(),
+>   and limit the functionality to "read only": return a bool,
+>   with no side effects.
 >
-> Does removing this read have no effect on the hardware?
+> * Add a new routine, put_devmap_managed_page(), to handle checking
+>   what kind of page it is, and what kind of refcount handling it
+>   requires.
+>
+> * Rename __put_devmap_managed_page() to free_devmap_managed_page(),
+>   and limit the functionality to unconditionally freeing a devmap
+>   page.
+>
+> This is originally based on a separate patch by Ira Weiny, which
+> applied to an early version of the put_user_page() experiments.
+> Since then, J=C3=A9r=C3=B4me Glisse suggested the refactoring described a=
+bove.
+>
+> Suggested-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  include/linux/mm.h | 27 ++++++++++++++++---
+>  mm/memremap.c      | 67 ++++++++++++++++++++--------------------------
+>  2 files changed, 53 insertions(+), 41 deletions(-)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index a2adf95b3f9c..96228376139c 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -967,9 +967,10 @@ static inline bool is_zone_device_page(const struct =
+page *page)
+>  #endif
+>
+>  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> -void __put_devmap_managed_page(struct page *page);
+> +void free_devmap_managed_page(struct page *page);
+>  DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
+> -static inline bool put_devmap_managed_page(struct page *page)
+> +
+> +static inline bool page_is_devmap_managed(struct page *page)
+>  {
+>         if (!static_branch_unlikely(&devmap_managed_key))
+>                 return false;
+> @@ -978,7 +979,6 @@ static inline bool put_devmap_managed_page(struct pag=
+e *page)
+>         switch (page->pgmap->type) {
+>         case MEMORY_DEVICE_PRIVATE:
+>         case MEMORY_DEVICE_FS_DAX:
+> -               __put_devmap_managed_page(page);
+>                 return true;
+>         default:
+>                 break;
+> @@ -986,6 +986,27 @@ static inline bool put_devmap_managed_page(struct pa=
+ge *page)
+>         return false;
+>  }
+>
+> +static inline bool put_devmap_managed_page(struct page *page)
+> +{
+> +       bool is_devmap =3D page_is_devmap_managed(page);
+> +
+> +       if (is_devmap) {
+> +               int count =3D page_ref_dec_return(page);
+> +
+> +               /*
+> +                * devmap page refcounts are 1-based, rather than 0-based=
+: if
+> +                * refcount is 1, then the page is free and the refcount =
+is
+> +                * stable because nobody holds a reference on the page.
+> +                */
+> +               if (count =3D=3D 1)
+> +                       free_devmap_managed_page(page);
+> +               else if (!count)
+> +                       __put_page(page);
+> +       }
+> +
+> +       return is_devmap;
+> +}
+> +
+>  #else /* CONFIG_DEV_PAGEMAP_OPS */
+>  static inline bool put_devmap_managed_page(struct page *page)
+>  {
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 03ccbdfeb697..bc7e2a27d025 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -410,48 +410,39 @@ struct dev_pagemap *get_dev_pagemap(unsigned long p=
+fn,
+>  EXPORT_SYMBOL_GPL(get_dev_pagemap);
+>
+>  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> -void __put_devmap_managed_page(struct page *page)
+> +void free_devmap_managed_page(struct page *page)
+>  {
+> -       int count =3D page_ref_dec_return(page);
+> +       /* Clear Active bit in case of parallel mark_page_accessed */
+> +       __ClearPageActive(page);
+> +       __ClearPageWaiters(page);
+> +
+> +       mem_cgroup_uncharge(page);
 
-There is no dependency.  It's safe.  Same thing below.
-
-Alex
-
->
-> >       adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
-> >       mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c b/drivers/gpu/drm/am=
-d/amdgpu/gfx_v7_0.c
-> []
-> > @@ -4336,7 +4336,6 @@ static void gfx_v7_0_gpu_early_init(struct amdgpu=
-_device *adev)
-> >               break;
-> >       }
-> >
-> > -     mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
-> >       adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
-> >       mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
->
-> Same question.
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Ugh, when did all this HMM specific manipulation sneak into the
+generic ZONE_DEVICE path? It used to be gated by pgmap type with its
+own put_zone_device_private_page(). For example it's certainly
+unnecessary and might be broken (would need to check) to call
+mem_cgroup_uncharge() on a DAX page. ZONE_DEVICE users are not a
+monolith and the HMM use case leaks pages into code paths that DAX
+explicitly avoids.
