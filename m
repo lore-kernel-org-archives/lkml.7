@@ -2,126 +2,555 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B99C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E83C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E44222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB34D21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:36:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgQvW1rY"
+	dkim=pass (1024-bit key) header.d=indeed.com header.i=@indeed.com header.b="N1NRvazo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfKMHap (ORCPT
+        id S1726256AbfKMHgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:30:45 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42076 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfKMHao (ORCPT
+        Wed, 13 Nov 2019 02:36:12 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33974 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfKMHgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:30:44 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j12so692578plt.9;
-        Tue, 12 Nov 2019 23:30:44 -0800 (PST)
+        Wed, 13 Nov 2019 02:36:12 -0500
+Received: by mail-io1-f66.google.com with SMTP id q83so1471312iod.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 23:36:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=GnSXj7wbOxCwDVVSqPJHVgWQMahBnkDDsOVZqkoPHfw=;
-        b=YgQvW1rYs43N9tt+FrafUjoLcqiOXKM3ivn01JzvOkrqRRDCGR4nKEBvfz+i3ABoAn
-         EZHF6aQA29o4OeBz+csG0K/4VU24c3f14BM3gCKp9VkXwSzqWAo8tosSN2D6Q0+eKmWO
-         eYonWlpWzeshvRJOiwnEe05jh3KNvxDS5j6b5F5+w78VT/BDv77IK/GH4UG88JLmdwN1
-         s/KTVccPpLxZg2KTRpkgj5cabF579+EGODiOp6GdDmeyzH7DQIdQMy9tWHNw3qhTJ6v+
-         mPPHHSQyMFxr4dz/GaiM3lGX8Xmk92hvpRLP31Dhw7NPfht/bz/e2o+0YiYYmpO6R9Ix
-         QFiw==
+        d=indeed.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=77wK0iy2ZvKlRd6iSBsLhNnRfk+rLxBdVAa7QMb2iWY=;
+        b=N1NRvazowbvc9MWAWJORUP3zBO8lIIGPBU+z73LD+PAhTLudCRJSHCYZdUewvMGi+c
+         yQl9ps8HvT7BqizZUVaHDzwTTOJQzJcJNnsD4Hg2qpP8LLbuLPGKRQ4TwiX9BxAWl8tX
+         pePv5T7NZ+fhdWjXxLV+uggGXOi12u1wLY7xQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=GnSXj7wbOxCwDVVSqPJHVgWQMahBnkDDsOVZqkoPHfw=;
-        b=qq0C5okjhCl4+6rQJ/Z7gTJhHkUQBDzxBid9eTjx1kcY/+ZG7Sgof19n1SUt4WuQ0y
-         vT9lY7GLeJZmOKXfqcTf6VjAs5GQKh6WbStkVcNkhEcmSjdZGT1h43SNpC0nkOPtUdJH
-         NLRY9jNMs6nExeSOqlF9yVqpkCtlahftpSc2rknARDKYaqPtY469+Pu311mnNf6bsZuQ
-         3oNLP58OzXPmZMhwBDSDQnETlpvMZmRm/hCU0nPLpNMAaAPIUxpMr26bdahuvOnwkaF3
-         i5RvqBchBI9z6YXCyvLFwzntuVKRY0vVW8WWzzB9O4Idwz3Q+a6WddZTYMkCn5PdHpR4
-         DIwQ==
-X-Gm-Message-State: APjAAAUTiJpfP1SHaJ5KYaUasRpbL3Eg+CZhI0cYHB1xKzkftiD2qvaF
-        hVUxFyP6+t/yZVXkFJRQJXs=
-X-Google-Smtp-Source: APXvYqyggFF3SArQPwr6oi9Nn5mVEY51JDuGeFs6A8hWrChD23Cxw98xuKIpAScywnA/KAr0bD5MCA==
-X-Received: by 2002:a17:902:6ac9:: with SMTP id i9mr2261051plt.218.1573630243614;
-        Tue, 12 Nov 2019 23:30:43 -0800 (PST)
-Received: from localhost.localdomain ([2402:3a80:166c:698d:7a64:6a4b:9d08:b425])
-        by smtp.gmail.com with ESMTPSA id q12sm2095770pgl.23.2019.11.12.23.30.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 23:30:43 -0800 (PST)
-Message-ID: <97b1695ebcbd2dd5ce8c117af0232ad6a1fee20f.camel@gmail.com>
-Subject: Re: [PATCH][RESEND] docs: filesystems: sysfs: convert sysfs.txt to
- reST
-From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        christian@brauner.io, neilb@suse.com, willy@infradead.org,
-        tobin@kernel.org, stefanha@redhat.com, hofrat@osadl.org,
-        gregkh@linuxfoundation.org, jeffrey.t.kirsher@intel.com,
-        linux-doc@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Wed, 13 Nov 2019 13:00:36 +0530
-In-Reply-To: <20191112100454.3b41f3af@lwn.net>
-References: <20191105071846.GA28727@localhost.localdomain>
-         <20191107120455.29a4c155@lwn.net>
-         <cd9dbb3704d0a39a161c3e4df8fcd9f84bbc5b03.camel@gmail.com>
-         <20191112100454.3b41f3af@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=77wK0iy2ZvKlRd6iSBsLhNnRfk+rLxBdVAa7QMb2iWY=;
+        b=uUnHm0rwSbDd17C+Nh1uICLJK3eCiGTQCgeGa8j0XWhodm72yCG8QOlJAVwWKGZpg5
+         kZ0MTjQ9IYA5W5OI5D/HPGfYTREG4NikGisoCloNwbwMAzTcvWoiIDOuQ0AXIMISUVeV
+         1K4kuiBFK54wsEzLmbvTgG+cKDMFVm9H9/g34OcbaNm3TeI52uTDJq/7OOa7R/0ZiF30
+         KiPKUNhdzMAExVSCdLRsvh7rVnRCDULidhcOjhv2ZcPcd8quA1xT00fMz4ndCMZ1aD+r
+         cRn8iXMuFFMz6aPsbGTQT3eTenT7H+QTC0yp8AWHX+aQ1XtvP7Hwn11VEYfDRhbmTcdn
+         WTiA==
+X-Gm-Message-State: APjAAAULkPR6KCwouW9+JZjU+Mvx7frafSiLsfh7PB44s9YXtza4ETdz
+        eU8gD6RqXQBCAPmYmBlSSCSoJllSKwK+CB7p1aaNVg==
+X-Google-Smtp-Source: APXvYqw1SdeNvi3pjR6xhfS0J+DnT8yPlsxyJS0I+mQvBInCevTgtyH3WKKiRVOexWLrr3wnOneGXjRFstXh3WSWNRg=
+X-Received: by 2002:a5d:870e:: with SMTP id u14mr2140194iom.108.1573630568289;
+ Tue, 12 Nov 2019 23:36:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <157312875706.707.12248531434112979828.stgit@buzz>
+In-Reply-To: <157312875706.707.12248531434112979828.stgit@buzz>
+From:   Dave Chiluk <chiluk+linux@indeed.com>
+Date:   Wed, 13 Nov 2019 01:35:42 -0600
+Message-ID: <CAC=E7cXaSya6YxqhuiLsNy1B9jdZ=7DwTgkJ9fXQ9LauLpjhSg@mail.gmail.com>
+Subject: Re: [PATCH RFC] sched/fair: add burst to cgroup cpu bandwidth controller
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ben Segall <bsegall@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        cgroups@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-12 at 10:04 -0700, Jonathan Corbet wrote:
-> On Sat, 09 Nov 2019 18:36:16 +0530
-> Jaskaran Singh <jaskaransingh7654321@gmail.com> wrote:
-> 
-> > > At a bare minimum, an effort like this needs to put a big
-> > > flashing
-> > > warning
-> > > at the top of the file.  But it would be soooooo much better to
-> > > actually
-> > > update the content as well.
-> > > 
-> > > The best way to do that would be to annotate the source with
-> > > proper
-> > > kerneldoc comments, then pull them into the documentation rather
-> > > than
-> > > repeating the information here.  Is there any chance you might be
-> > > up
-> > > for
-> > > taking on a task like this?
-> > >   
-> > 
-> > Sure! I'll send the documentation patch(es) followed by a v2 for
-> > this
-> > patch.
-> 
-> Great.  As an alternative, if you like, redo the current patch with
-> the
-> other suggested fixes and a "this is obsolete" warning at the
-> top.  Then,
-> after the subsequent improvements land, that warning can eventually
-> be
-> removed again.
-> 
-> Thanks,
-> 
-> jon
+I was going to write this exact patch, but you beat me to it.  I like
+that it's sequestered into a separate setting.  This would be very
+useful for interactive applications that have cfs bandwidth control
+enabled *(cough* kubernetes).  Are you planning on submitting the
+plumbing for this feature back into docker/containerd/lxc/other
+container orchestrators?
 
-Hopefully I can get the kernel-doc comments right. If not, I'll go with
-the alternative :)
+Also this is very similar in desired behavior to a patchset submitted
+by Cong Wang https://lore.kernel.org/patchwork/patch/907450/
+.Although, I like this implementation better due to it's simplicity.
+I guess a lot of the simplification comes from not having to deal with
+the expiration logic.
 
-Cheers,
-Jaskaran.
+Additional comments inlined.  Documentation edits, and my preference
+for a full burst bank on setting.
 
+Otherwise looks good to me.
++ Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
+
+I also tested this with my simple test application I use for
+validating runtime accuracy https://github.com/indeedeng/fibtest.  And
+everything looks reasonable here.  I'll try to do a bit more testing
+but so far I'm happy.  Hopefully Ben will give a +1 to this as well.
+
+Thanks!
+
+On Thu, Nov 7, 2019 at 6:12 AM Konstantin Khlebnikov
+<khlebnikov@yandex-team.ru> wrote:
+>
+> Currently CFS bandwidth controller assigns cpu.cfs_quota_us runtime into
+> global pool every cpu.cfs_period_us. All unused runtime is expired.
+>
+> Since commit de53fd7aedb1 ("sched/fair: Fix low cpu usage with high
+> throttling by removing expiration of cpu-local slices") slice assigned
+> to cpu does not expire. This allows to serve tiny bursts (upto 1ms),
+> but this runtime pool is cpu-bound and not transferred between cpus.
+>
+> Setup for interactive workload with irregular cpu consumption have to set
+> quota according to relatively short spikes of cpu usage. This eliminates
+> possibility of control for average cpu usage. Increasing period and quota
+> proportionally for getting bigger runtime chunks is not an option because
+> if even bigger spike deplete global pool then execution will stuck until
+> end of period and next refill.
+>
+> This patch adds limited accumulation of unused runtime from past periods.
+> Accumulated runtime does not expire. It stays in global pool and could
+> be used by any cpu. Average cpu usage stays limited with quota / period,
+> but spiky workload could use more cpu power for a short period of time.
+>
+> Size of pool for burst runtime is set in attribute cpu.cfs_burst_us.
+> Default is 0, which reflects current behavior.
+>
+> Statistics for used bust runtime is shown in cpu.stat as "burst_time".
+>
+> Example setup:
+> cpu.cfs_period_us = 100ms
+> cpu.cfs_quota_us = 200ms
+> cpu.cfs_burst_us = 300ms
+>
+> Average cpu usage stays limited with 2 cpus (quota / period), but cgroup
+> could accumulate runtime (burst) and for 100ms could utilize up to 5 cpus
+> (quota / period + burst / 100ms), or 3 cpus for 300ms, an so on.
+>
+> Implementation is simple. All logic is in __refill_cfs_bandwidth_runtime().
+> The rest changes are interface for cgroup and cgroup2.
+>
+> For cgroup2 burst is set as third number in attribute cpu.max:
+> cpu.max = $QUOTA $PERIOD $BURST
+>
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> ---
+>  Documentation/admin-guide/cgroup-v2.rst |   15 +++--
+>  Documentation/scheduler/sched-bwc.rst   |    8 ++-
+>  kernel/sched/core.c                     |   88 +++++++++++++++++++++++++------
+>  kernel/sched/fair.c                     |   34 ++++++++++--
+>  kernel/sched/sched.h                    |    4 +
+>  5 files changed, 119 insertions(+), 30 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index 5361ebec3361..8c3cc3d882ba 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -981,11 +981,12 @@ All time durations are in microseconds.
+>         - user_usec
+>         - system_usec
+>
+> -       and the following three when the controller is enabled:
+> +       and the following four when the controller is enabled:
+>
+>         - nr_periods
+>         - nr_throttled
+>         - throttled_usec
+> +       - burst_usec
+>
+>    cpu.weight
+>         A read-write single value file which exists on non-root
+> @@ -1006,16 +1007,18 @@ All time durations are in microseconds.
+>         the closest approximation of the current weight.
+>
+>    cpu.max
+> -       A read-write two value file which exists on non-root cgroups.
+> -       The default is "max 100000".
+> +       A read-write 1..3 values file which exists on non-root cgroups.
+> +       The default is "max 100000 0".
+>
+>         The maximum bandwidth limit.  It's in the following format::
+>
+> -         $MAX $PERIOD
+> +         $MAX $PERIOD $BURST
+>
+>         which indicates that the group may consume upto $MAX in each
+> -       $PERIOD duration.  "max" for $MAX indicates no limit.  If only
+> -       one number is written, $MAX is updated.
+> +       $PERIOD duration and accumulates upto $BURST time for bursts.
+> +
+> +       "max" for $MAX indicates no limit.
+> +       If only one number is written, $MAX is updated.
+>
+>    cpu.pressure
+>         A read-only nested-key file which exists on non-root cgroups.
+> diff --git a/Documentation/scheduler/sched-bwc.rst b/Documentation/scheduler/sched-bwc.rst
+> index 9801d6b284b1..5f1cac7b2d44 100644
+> --- a/Documentation/scheduler/sched-bwc.rst
+> +++ b/Documentation/scheduler/sched-bwc.rst
+> @@ -27,12 +27,14 @@ Quota and period are managed within the cpu subsystem via cgroupfs.
+>
+>  cpu.cfs_quota_us: the total available run-time within a period (in microseconds)
+>  cpu.cfs_period_us: the length of a period (in microseconds)
+> +cpu.cfs_burst_us: the maxumum size of burst run-time pool (in microseconds)
+
+maxumum -> maximum
+
+>  cpu.stat: exports throttling statistics [explained further below]
+>
+>  The default values are::
+>
+>         cpu.cfs_period_us=100ms
+> -       cpu.cfs_quota=-1
+> +       cpu.cfs_quota_us=-1
+> +       cpu.cfs_burst_us=0
+>
+>  A value of -1 for cpu.cfs_quota_us indicates that the group does not have any
+>  bandwidth restriction in place, such a group is described as an unconstrained
+> @@ -51,6 +53,9 @@ and return the group to an unconstrained state once more.
+>  Any updates to a group's bandwidth specification will result in it becoming
+>  unthrottled if it is in a constrained state.
+>
+> +Writing positive value into cpu.cfs_burst_us allows to allcumulate unused
+> +run-time (upto this value) and use it later in addition to assigned quota.
+Writing positive value into cpu.cfs_burst_us allows unused quota to
+accumulate up to this value and be used later in addition to assigned
+quota.
+
+> +
+>  System wide settings
+>  --------------------
+>  For efficiency run-time is transferred between the global pool and CPU local
+> @@ -75,6 +80,7 @@ cpu.stat:
+>  - nr_throttled: Number of times the group has been throttled/limited.
+>  - throttled_time: The total time duration (in nanoseconds) for which entities
+>    of the group have been throttled.
+> +- burst_time: The total running time consumed from burst pool.
+>
+>  This interface is read-only.
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index dd05a378631a..010b79c45200 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -7354,7 +7354,8 @@ static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
+>
+>  static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
+>
+> -static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
+> +static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota,
+> +                               u64 burst)
+>  {
+>         int i, ret = 0, runtime_enabled, runtime_was_enabled;
+>         struct cfs_bandwidth *cfs_b = &tg->cfs_bandwidth;
+> @@ -7399,12 +7400,13 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
+>         raw_spin_lock_irq(&cfs_b->lock);
+>         cfs_b->period = ns_to_ktime(period);
+>         cfs_b->quota = quota;
+> -
+> -       __refill_cfs_bandwidth_runtime(cfs_b);
+> +       cfs_b->burst = burst;
+
++ cfs_b->burst_runtime = burst;
+I think we should default to a full burst bank.  After all, during
+startup applications very likely to need additional CPU.  This is a
+regular pain point for our applications..  By providing burst bank
+early we help to mitigate slow start-up times for cpu limited
+applications.
+
+>
+>         /* Restart the period timer (if active) to handle new period expiry: */
+> -       if (runtime_enabled)
+> +       if (runtime_enabled) {
+> +               __refill_cfs_bandwidth_runtime(cfs_b);
+>                 start_cfs_bandwidth(cfs_b);
+> +       }
+>
+>         raw_spin_unlock_irq(&cfs_b->lock);
+>
+> @@ -7432,9 +7434,10 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
+>
+>  static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
+>  {
+> -       u64 quota, period;
+> +       u64 quota, period, burst;
+>
+>         period = ktime_to_ns(tg->cfs_bandwidth.period);
+> +       burst = tg->cfs_bandwidth.burst;
+>         if (cfs_quota_us < 0)
+>                 quota = RUNTIME_INF;
+>         else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
+> @@ -7442,7 +7445,7 @@ static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
+>         else
+>                 return -EINVAL;
+>
+> -       return tg_set_cfs_bandwidth(tg, period, quota);
+> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
+>  }
+>
+>  static long tg_get_cfs_quota(struct task_group *tg)
+> @@ -7460,15 +7463,16 @@ static long tg_get_cfs_quota(struct task_group *tg)
+>
+>  static int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
+>  {
+> -       u64 quota, period;
+> +       u64 quota, period, burst;
+>
+>         if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
+>                 return -EINVAL;
+>
+>         period = (u64)cfs_period_us * NSEC_PER_USEC;
+>         quota = tg->cfs_bandwidth.quota;
+> +       burst = tg->cfs_bandwidth.burst;
+>
+> -       return tg_set_cfs_bandwidth(tg, period, quota);
+> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
+>  }
+>
+>  static long tg_get_cfs_period(struct task_group *tg)
+> @@ -7481,6 +7485,28 @@ static long tg_get_cfs_period(struct task_group *tg)
+>         return cfs_period_us;
+>  }
+>
+> +static long tg_get_cfs_burst(struct task_group *tg)
+> +{
+> +       u64 cfs_burst_us = tg->cfs_bandwidth.burst;
+> +
+> +       do_div(cfs_burst_us, NSEC_PER_USEC);
+> +       return cfs_burst_us;
+> +}
+> +
+> +static int tg_set_cfs_burst(struct task_group *tg, long cfs_burst_us)
+> +{
+> +       u64 quota, period, burst;
+> +
+> +       if ((u64)cfs_burst_us > U64_MAX / NSEC_PER_USEC)
+> +               return -EINVAL;
+> +
+> +       period = ktime_to_ns(tg->cfs_bandwidth.period);
+> +       quota = tg->cfs_bandwidth.quota;
+> +       burst = (u64)cfs_burst_us * NSEC_PER_USEC;
+> +
+> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
+> +}
+> +
+>  static s64 cpu_cfs_quota_read_s64(struct cgroup_subsys_state *css,
+>                                   struct cftype *cft)
+>  {
+> @@ -7505,6 +7531,18 @@ static int cpu_cfs_period_write_u64(struct cgroup_subsys_state *css,
+>         return tg_set_cfs_period(css_tg(css), cfs_period_us);
+>  }
+>
+> +static u64 cpu_cfs_burst_read_u64(struct cgroup_subsys_state *css,
+> +                                 struct cftype *cft)
+> +{
+> +       return tg_get_cfs_burst(css_tg(css));
+> +}
+> +
+> +static int cpu_cfs_burst_write_u64(struct cgroup_subsys_state *css,
+> +                                  struct cftype *cftype, u64 cfs_burst_us)
+> +{
+> +       return tg_set_cfs_burst(css_tg(css), cfs_burst_us);
+> +}
+> +
+>  struct cfs_schedulable_data {
+>         struct task_group *tg;
+>         u64 period, quota;
+> @@ -7596,6 +7634,7 @@ static int cpu_cfs_stat_show(struct seq_file *sf, void *v)
+>         seq_printf(sf, "nr_periods %d\n", cfs_b->nr_periods);
+>         seq_printf(sf, "nr_throttled %d\n", cfs_b->nr_throttled);
+>         seq_printf(sf, "throttled_time %llu\n", cfs_b->throttled_time);
+> +       seq_printf(sf, "burst_time %llu\n", cfs_b->burst_time);
+>
+>         if (schedstat_enabled() && tg != &root_task_group) {
+>                 u64 ws = 0;
+> @@ -7657,6 +7696,11 @@ static struct cftype cpu_legacy_files[] = {
+>                 .read_u64 = cpu_cfs_period_read_u64,
+>                 .write_u64 = cpu_cfs_period_write_u64,
+>         },
+> +       {
+> +               .name = "cfs_burst_us",
+> +               .read_u64 = cpu_cfs_burst_read_u64,
+> +               .write_u64 = cpu_cfs_burst_write_u64,
+> +       },
+>         {
+>                 .name = "stat",
+>                 .seq_show = cpu_cfs_stat_show,
+> @@ -7699,15 +7743,20 @@ static int cpu_extra_stat_show(struct seq_file *sf,
+>                 struct task_group *tg = css_tg(css);
+>                 struct cfs_bandwidth *cfs_b = &tg->cfs_bandwidth;
+>                 u64 throttled_usec;
+> +               u64 burst_usec;
+>
+>                 throttled_usec = cfs_b->throttled_time;
+>                 do_div(throttled_usec, NSEC_PER_USEC);
+>
+> +               burst_usec = cfs_b->burst_time;
+> +               do_div(burst_usec, NSEC_PER_USEC);
+> +
+>                 seq_printf(sf, "nr_periods %d\n"
+>                            "nr_throttled %d\n"
+> -                          "throttled_usec %llu\n",
+> +                          "throttled_usec %llu\n"
+> +                          "burst_usec %llu\n",
+>                            cfs_b->nr_periods, cfs_b->nr_throttled,
+> -                          throttled_usec);
+> +                          throttled_usec, burst_usec);
+>         }
+>  #endif
+>         return 0;
+> @@ -7777,26 +7826,29 @@ static int cpu_weight_nice_write_s64(struct cgroup_subsys_state *css,
+>  #endif
+>
+>  static void __maybe_unused cpu_period_quota_print(struct seq_file *sf,
+> -                                                 long period, long quota)
+> +                                                 long period, long quota,
+> +                                                 long burst)
+>  {
+>         if (quota < 0)
+>                 seq_puts(sf, "max");
+>         else
+>                 seq_printf(sf, "%ld", quota);
+>
+> -       seq_printf(sf, " %ld\n", period);
+> +       seq_printf(sf, " %ld %ld\n", period, burst);
+>  }
+>
+>  /* caller should put the current value in *@periodp before calling */
+>  static int __maybe_unused cpu_period_quota_parse(char *buf,
+> -                                                u64 *periodp, u64 *quotap)
+> +                                                u64 *periodp, u64 *quotap,
+> +                                                s64 *burstp)
+>  {
+>         char tok[21];   /* U64_MAX */
+>
+> -       if (sscanf(buf, "%20s %llu", tok, periodp) < 1)
+> +       if (sscanf(buf, "%20s %llu %llu", tok, periodp, burstp) < 1)
+>                 return -EINVAL;
+>
+>         *periodp *= NSEC_PER_USEC;
+> +       *burstp *= NSEC_PER_USEC;
+>
+>         if (sscanf(tok, "%llu", quotap))
+>                 *quotap *= NSEC_PER_USEC;
+> @@ -7813,7 +7865,8 @@ static int cpu_max_show(struct seq_file *sf, void *v)
+>  {
+>         struct task_group *tg = css_tg(seq_css(sf));
+>
+> -       cpu_period_quota_print(sf, tg_get_cfs_period(tg), tg_get_cfs_quota(tg));
+> +       cpu_period_quota_print(sf, tg_get_cfs_period(tg), tg_get_cfs_quota(tg),
+> +                              tg_get_cfs_burst(tg));
+>         return 0;
+>  }
+>
+> @@ -7822,12 +7875,13 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
+>  {
+>         struct task_group *tg = css_tg(of_css(of));
+>         u64 period = tg_get_cfs_period(tg);
+> +       s64 burst = tg_get_cfs_burst(tg);
+>         u64 quota;
+>         int ret;
+>
+> -       ret = cpu_period_quota_parse(buf, &period, &quota);
+> +       ret = cpu_period_quota_parse(buf, &period, &quota, &burst);
+>         if (!ret)
+> -               ret = tg_set_cfs_bandwidth(tg, period, quota);
+> +               ret = tg_set_cfs_bandwidth(tg, period, quota, burst);
+>         return ret ?: nbytes;
+>  }
+>  #endif
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 682a754ea3e1..26b8dac67c79 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4353,16 +4353,26 @@ static inline u64 sched_cfs_bandwidth_slice(void)
+>  }
+>
+>  /*
+> - * Replenish runtime according to assigned quota. We use sched_clock_cpu
+> - * directly instead of rq->clock to avoid adding additional synchronization
+> - * around rq->lock.
+> + * Replenish runtime according to assigned quota.
+> + * Called only if quota != RUNTIME_INF.
+>   *
+>   * requires cfs_b->lock
+>   */
+>  void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
+>  {
+> -       if (cfs_b->quota != RUNTIME_INF)
+> -               cfs_b->runtime = cfs_b->quota;
+> +       u64 runtime = cfs_b->runtime;
+> +
+> +       /*
+> +        * Preserve past runtime up to burst size. If remaining runtime lower
+> +        * than previous burst runtime then account delta as used burst time.
+> +        */
+> +       if (runtime > cfs_b->burst)
+> +               runtime = cfs_b->burst;
+> +       else if (runtime < cfs_b->burst_runtime)
+> +               cfs_b->burst_time += cfs_b->burst_runtime - runtime;
+> +
+> +       cfs_b->burst_runtime = runtime;
+> +       cfs_b->runtime = runtime + cfs_b->quota;
+>  }
+>
+>  static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+> @@ -4968,6 +4978,9 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+>         cfs_b->runtime = 0;
+>         cfs_b->quota = RUNTIME_INF;
+>         cfs_b->period = ns_to_ktime(default_cfs_period());
+> +       cfs_b->burst = 0;
+> +       cfs_b->burst_runtime = 0;
+> +       cfs_b->burst_time = 0;
+>
+>         INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
+>         hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
+> @@ -4986,14 +4999,23 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+>
+>  void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+>  {
+> +       u64 overrun;
+> +
+>         lockdep_assert_held(&cfs_b->lock);
+>
+>         if (cfs_b->period_active)
+>                 return;
+>
+>         cfs_b->period_active = 1;
+> -       hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
+> +       overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
+>         hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
+> +
+> +       /*
+> +        * Refill runtime for periods of inactivity and current.
+> +        * __refill_cfs_bandwidth_runtime() will cut excess.
+> +        */
+> +       cfs_b->runtime += cfs_b->quota * overrun;
+> +       __refill_cfs_bandwidth_runtime(cfs_b);
+>  }
+>
+>  static void destroy_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 0db2c1b3361e..eaecd7298f80 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -344,10 +344,14 @@ struct cfs_bandwidth {
+>         struct hrtimer          slack_timer;
+>         struct list_head        throttled_cfs_rq;
+>
+> +       u64                     burst;
+> +       u64                     burst_runtime;
+> +
+>         /* Statistics: */
+>         int                     nr_periods;
+>         int                     nr_throttled;
+>         u64                     throttled_time;
+> +       u64                     burst_time;
+>  #endif
+>  };
+>
+>
