@@ -2,151 +2,121 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B967CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19848C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F81222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE8C21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:14:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hJ6RPPBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfKMGIz convert rfc822-to-8bit (ORCPT
+        id S1726162AbfKMGOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:08:55 -0500
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:38411 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfKMGIz (ORCPT
+        Wed, 13 Nov 2019 01:14:17 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34549 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfKMGOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:08:55 -0500
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id xAD68XOF026408
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 13 Nov 2019 15:08:33 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id xAD68Xib010372;
-        Wed, 13 Nov 2019 15:08:33 +0900
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id xAD64PCr013961;
-        Wed, 13 Nov 2019 15:08:33 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.149] [10.38.151.149]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-711271; Wed, 13 Nov 2019 15:02:04 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC21GP.gisp.nec.co.jp ([10.38.151.149]) with mapi id 14.03.0439.000; Wed,
- 13 Nov 2019 15:02:03 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 01/16] mm,hwpoison: cleanup unused PageHuge()
- check
-Thread-Topic: [RFC PATCH v2 01/16] mm,hwpoison: cleanup unused PageHuge()
- check
-Thread-Index: AQHVhPYzQyNwsIsv3k6BqLdb1qTKQ6dfsyIAgARmlwCAIu1QAIABJ+YA
-Date:   Wed, 13 Nov 2019 06:02:03 +0000
-Message-ID: <20191113060202.GA3503@hori.linux.bs1.fc.nec.co.jp>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-2-osalvador@suse.de>
- <20191018114832.GK5017@dhcp22.suse.cz>
- <20191021070046.GA8782@hori.linux.bs1.fc.nec.co.jp>
- <87d0dxs2ql.fsf@linux.ibm.com>
-In-Reply-To: <87d0dxs2ql.fsf@linux.ibm.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <6EE8F565F6E5FB42A7EDC191D45757AC@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Wed, 13 Nov 2019 01:14:17 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 5so669337otk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 22:14:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u8/eBOEFYWm/dQgNr/pNtbBC73p9IYMi5gGkpqo2SI4=;
+        b=hJ6RPPBE1NoZf0/QVupYvy9OSDziN9tXHIJgPesa3XQzwUekMxqHmy4ywWzJ7olyYn
+         S25aiGORN3SKrmbL/zg3J82nKwwPyIlH7PmQWbCLsU8YVru2546iAwoNbriXDphYCHP3
+         MpbJ6zeFfdnFYRNFEWoBo/jpLeE7M5vPyoMOZssjrCd54wlf2SAg74J9p7QSN2Rc3HbZ
+         dxBhLBVLxCENTG/wdo2QS9QsWhp6iAHjPsEyxbnLxnN4Zf7etAvI1IsZWkGfHlLFA659
+         krN85FOxSocMTjuEy7YL4rUwZsNs9tYal7YQEvS3BOcZKt5J7hBKVU3FLEUJVZFKERpY
+         75eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u8/eBOEFYWm/dQgNr/pNtbBC73p9IYMi5gGkpqo2SI4=;
+        b=M/Iylq7cvZqlBFHKWmxllm/n4oMagQhV0a0lXUVyl2guM3OhKO+cOcqLAYAhSJM9Xz
+         eTx8g6EnO6eHG3CKAd38AmF+uW0zCRXgFZIaOb3AB4QyS1dEL/nWGuDr8LnlhWO6L23R
+         rDKVj1MrmK+MYWVbsEu5GxW9a/ISWfHS7sX4qnuNjw5BTecIdNYS2nJ+Z6aH8e1zYOFg
+         sL33LYWUWZYdRvnzhVKbPZ/dNCrEKk61JPlflFyYLcqQMnZgH45ydjSaCE91JPjJ7bx1
+         5VBHj9YQUaAkjEMw+X4sXD3vu/JXko418lRVYunQThahkeCzjxv+85lSD3NClrcHTXJn
+         yW7Q==
+X-Gm-Message-State: APjAAAXBbkgZg0ZJqUooUACfxmN/CuQlc31P9r7I2ApYlfrOdB2p83ep
+        BKgYu9ztdtLtaGYL5OKOfWIHdxtJ8sMe2/SbrBUSCw==
+X-Google-Smtp-Source: APXvYqydyDDmkM3Pb1e2pPbf9fbI2BGEVuN/kDhx0lcoQbUla4YO7+zpV4A7M6u65IKIch5dF7aZebIgX7kFjMgndhw=
+X-Received: by 2002:a05:6830:1b70:: with SMTP id d16mr1213448ote.71.1573625656497;
+ Tue, 12 Nov 2019 22:14:16 -0800 (PST)
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157309901655.1582359.18126990555058555754.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <87h839tpo9.fsf@linux.ibm.com> <CAPcyv4gTRiZuA8A7cDxCZtHJv=LZMjd=tVgq35gbc0K8BUDHsA@mail.gmail.com>
+ <738e328b-9a9b-b297-8379-f0d72d06c5c9@linux.ibm.com>
+In-Reply-To: <738e328b-9a9b-b297-8379-f0d72d06c5c9@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 12 Nov 2019 22:14:04 -0800
+Message-ID: <CAPcyv4iB1r7FAYEm_+vtj_BGS1k6Cu_2xG7tH9O601zrk2wNXw@mail.gmail.com>
+Subject: Re: [PATCH 04/16] libnvdimm: Move nd_numa_attribute_group to device_type
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 05:52:58PM +0530, Aneesh Kumar K.V wrote:
-> Naoya Horiguchi <n-horiguchi@ah.jp.nec.com> writes:
-> 
-> > On Fri, Oct 18, 2019 at 01:48:32PM +0200, Michal Hocko wrote:
-> >> On Thu 17-10-19 16:21:08, Oscar Salvador wrote:
-> >> > From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> >> > 
-> >> > Drop the PageHuge check since memory_failure forks into memory_failure_hugetlb()
-> >> > for hugetlb pages.
-> >> > 
-> >> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> >> > Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> >> 
-> >> s-o-b chain is reversed.
-> >> 
-> >> The code is a bit confusing. Doesn't this check aim for THP?
+On Tue, Nov 12, 2019 at 10:02 PM Aneesh Kumar K.V
+<aneesh.kumar@linux.ibm.com> wrote:
+>
+> On 11/13/19 6:56 AM, Dan Williams wrote:
+> > On Tue, Nov 12, 2019 at 1:23 AM Aneesh Kumar K.V
+> > <aneesh.kumar@linux.ibm.com> wrote:
+> >>
+> >> Dan Williams <dan.j.williams@intel.com> writes:
+> >>
+> >>> A 'struct device_type' instance can carry default attributes for the
+> >>> device. Use this facility to remove the export of
+> >>> nd_numa_attribute_group and put the responsibility on the core rather
+> >>> than leaf implementations to define this attribute.
+> >>>
+> >>> Cc: Ira Weiny <ira.weiny@intel.com>
+> >>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> >>> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> >>> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> >>> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> >>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> >>
+> >>
+> >> can we also expose target_node in a similar way? This allows application
+> >> to better understand the node locality of the SCM device.
 > >
-> > No, PageHuge() is false for thp, so this if branch is just dead code.
-> 
-> memory_failure()
-> {
-> 
-> 	if (PageTransHuge(hpage)) {
-> 		lock_page(p);
-> 		if (!PageAnon(p) || unlikely(split_huge_page(p))) {
-> 			unlock_page(p);
-> 			if (!PageAnon(p))
-> 				pr_err("Memory failure: %#lx: non anonymous thp\n",
-> 					pfn);
-> 			else
-> 				pr_err("Memory failure: %#lx: thp split failed\n",
-> 					pfn);
-> 			if (TestClearPageHWPoison(p))
-> 				num_poisoned_pages_dec();
-> 			put_hwpoison_page(p);
-> 			return -EBUSY;
-> 		}
-> 		unlock_page(p);
-> 		VM_BUG_ON_PAGE(!page_count(p), p);
-> 		hpage = compound_head(p);
-> 	}
-> 
-> }
-> 
-> Do we need that hpage = compund_head(p) conversion there? We should just
-> be able to say hpage = p, or even better after this change use p
-> directly instead of hpage in the code following?
+> > It is already exported for device-dax instances. See
+> > DEVICE_ATTR_RO(target_node) in drivers/dax/bus.c. I did not see a use
+> > case for it to be exported for other nvdimm device types.
+> >
+>
+> some applications do want to access the fsdax namspace as different
+> mount points based on numa affinity. If can differentiate the two
+> regions with different target_node and same numa_node, that will help
+> them better isolate these mounts.
 
-Thanks for the comment, the target page never be in compound_page
-(without races leading to MF_MSG_DIFFERENT_COMPOUND path), so hpage
-shouldn't be used afterward.  We also have obsolete comment, so
-I feel like the following changes:
+Can you be more explicit than "some", and what's the impact if the
+kernel continues with the status quo and does not export this data?
+I'm trying to come up with the justification to include into the
+changelog that adds that information.
 
-  diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-  index 392ac277b17d..c9df0f183d6c 100644
-  --- a/mm/memory-failure.c
-  +++ b/mm/memory-failure.c
-  @@ -1319,7 +1319,6 @@ int memory_failure(unsigned long pfn, int flags)
-   		}
-   		unlock_page(p);
-   		VM_BUG_ON_PAGE(!page_count(p), p);
-  -		hpage = compound_head(p);
-   	}
-   
-   	/*
-  @@ -1391,11 +1390,8 @@ int memory_failure(unsigned long pfn, int flags)
-   	/*
-   	 * Now take care of user space mappings.
-   	 * Abort on fail: __delete_from_page_cache() assumes unmapped page.
-  -	 *
-  -	 * When the raw error page is thp tail page, hpage points to the raw
-  -	 * page after thp split.
-   	 */
-  -	if (!hwpoison_user_mappings(p, pfn, flags, &hpage)) {
-  +	if (!hwpoison_user_mappings(p, pfn, flags, &p)) {
-   		action_result(pfn, MF_MSG_UNMAP_FAILED, MF_IGNORED);
-   		res = -EBUSY;
-   		goto out;
-
-Thanks,
-Naoya Horiguchi
+At least on the pmem platforms I am working with the pmem ranges with
+different target nodes also appear on different numa nodes so there is
+no incremental benefit for target node there.
