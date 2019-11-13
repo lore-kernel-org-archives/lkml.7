@@ -2,202 +2,120 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D30C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A496207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBciHYu8"
+	by mail.kernel.org (Postfix) with ESMTP id 98366207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfKMN51 (ORCPT
+        id S1727699AbfKMN5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:57:27 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43684 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfKMN5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:57:25 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y23so2650792ljh.10;
-        Wed, 13 Nov 2019 05:57:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dd8DkIORvL+QLs2iRz7r6c4ippkrhOFQgZqGhUsz2UE=;
-        b=TBciHYu83sbNwzrT0mMqbTW5AsBPWo1eiSOqa5j2rrvnri8JL7coLoP6S2kaGHxHDY
-         YhFJBZP4KwCWTHlBMevYYG3vy3fdakdQw9IMYJtqWrp8IZ4loJNaukR4I7lvtaDN78hn
-         WQk3vPyurU+mjZ4QUFifjKp9kA8vKYe8+UMx290A/gfhWLvrPiVPAoxPhAitd3NwslMe
-         9hvFlrfIj/nHLlPXd8Lkib/7B/sfEb6RHi4cQj9dVIagzpTreiPuF2i043KQlL/xwceO
-         v0bMtRSHwZofnJOCHiefoVylpMJYhe3WX2SL4/tHwka3M8NAAMzpDeQUfPpW2pgg1IAe
-         2Pzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dd8DkIORvL+QLs2iRz7r6c4ippkrhOFQgZqGhUsz2UE=;
-        b=Y+SfqVN1G5RrezeJL9HE96S7gzCyMyrWtCgwjTNEzGZICOlOrAruQisvl8JDuRZ2IQ
-         H1/1bkCI0/TWFfV+mvnWu3hzOgsExH2dGCq0I+9QyBEPpyCI01wAftgxSDDNxWZ+hYK0
-         71IzkVlbM8IFqIzX95935NfNECdZ2KfB+PgSwGrsB7iOywYDNz8FCinbIAbEXJSWtl7I
-         nLa+pdvb+RQ1SaW2zn8XzaGwxLwWWop7NiaJ5uYbWyCf6dKkpQe8wau80grvYvRpIGd2
-         I84b/r4Evf3cglg1CSzv5UjYSLLwCv2SWm5AnbowCXxvRPBt8gk1aAnMardxJfhOifRe
-         IR/Q==
-X-Gm-Message-State: APjAAAW8f24t/FWGGUuKDUxh87CzHJChBEcURCk5akC0LYvJZiPuxFJc
-        A4Ncabh1/a/JNP2dcjy4GPcpgmGb
-X-Google-Smtp-Source: APXvYqx2gyFRCOmE2W7LIkKtVfA8HVDq3+zaGrzUjMUttqo8xiM5aMN/5IxKLMsnrcUluee3YibkyQ==
-X-Received: by 2002:a05:651c:1127:: with SMTP id e7mr2669748ljo.70.1573653442641;
-        Wed, 13 Nov 2019 05:57:22 -0800 (PST)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id n8sm1093579lfe.31.2019.11.13.05.57.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 05:57:21 -0800 (PST)
-Subject: Re: [PATCH v2 17/17] ARM: dts: tegra30: cardhu-a04: Add CPU Operating
- Performance Points
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191024221416.14197-1-digetx@gmail.com>
- <20191024221416.14197-18-digetx@gmail.com>
- <be6deeff-4294-c945-1539-57ec28b4c895@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8974f1a8-72bb-4413-d2b5-057853696fb4@gmail.com>
-Date:   Wed, 13 Nov 2019 16:57:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 13 Nov 2019 08:57:31 -0500
+Received: from mga11.intel.com ([192.55.52.93]:50077 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfKMN53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:57:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 05:57:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
+   d="scan'208";a="194675312"
+Received: from rcao-mobl3.ccr.corp.intel.com (HELO [10.249.174.53]) ([10.249.174.53])
+  by orsmga007.jf.intel.com with ESMTP; 13 Nov 2019 05:57:25 -0800
+Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, Keith Busch <keith.busch@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linuxarm <linuxarm@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+ <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
+ <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
+ <20191113094742.00000dc4@huawei.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
+Date:   Wed, 13 Nov 2019 21:57:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <be6deeff-4294-c945-1539-57ec28b4c895@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191113094742.00000dc4@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jon,
-
-13.11.2019 09:52, Jon Hunter пишет:
+On 11/13/2019 5:47 PM, Jonathan Cameron wrote:
+> On Tue, 12 Nov 2019 09:55:17 -0800
+> Dan Williams <dan.j.williams@intel.com> wrote:
 > 
-> On 24/10/2019 23:14, Dmitry Osipenko wrote:
->> Utilize common Tegra30 CPU OPP table. CPU DVFS is available now on
->> cardhu-a04.
+>> [ add Tao Xu ]
 >>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  arch/arm/boot/dts/tegra30-cardhu-a04.dts | 24 ++++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
+>> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
+>> <Jonathan.Cameron@huawei.com> wrote:
+>>>
+>>> Generic Initiators are a new ACPI concept that allows for the
+>>> description of proximity domains that contain a device which
+>>> performs memory access (such as a network card) but neither
+>>> host CPU nor Memory.
+>>>
+>>> This patch has the parsing code and provides the infrastructure
+>>> for an architecture to associate these new domains with their
+>>> nearest memory processing node.
 >>
->> diff --git a/arch/arm/boot/dts/tegra30-cardhu-a04.dts b/arch/arm/boot/dts/tegra30-cardhu-a04.dts
->> index 0d71925d4f0b..9234988624ec 100644
->> --- a/arch/arm/boot/dts/tegra30-cardhu-a04.dts
->> +++ b/arch/arm/boot/dts/tegra30-cardhu-a04.dts
->> @@ -2,6 +2,8 @@
->>  /dts-v1/;
->>  
->>  #include "tegra30-cardhu.dtsi"
->> +#include "tegra30-cpu-opp.dtsi"
->> +#include "tegra30-cpu-opp-microvolt.dtsi"
->>  
->>  /* This dts file support the cardhu A04 and later versions of board */
->>  
->> @@ -127,4 +129,26 @@
->>  			nvidia,tegra-core-regulator;
->>  		};
->>  	};
->> +
->> +	cpus {
->> +		cpu0: cpu@0 {
->> +			cpu-supply = <&vddctrl_reg>;
->> +			operating-points-v2 = <&cpu0_opp_table>;
->> +		};
->> +
->> +		cpu@1 {
->> +			cpu-supply = <&vddctrl_reg>;
->> +			operating-points-v2 = <&cpu0_opp_table>;
->> +		};
->> +
->> +		cpu@2 {
->> +			cpu-supply = <&vddctrl_reg>;
->> +			operating-points-v2 = <&cpu0_opp_table>;
->> +		};
->> +
->> +		cpu@3 {
->> +			cpu-supply = <&vddctrl_reg>;
->> +			operating-points-v2 = <&cpu0_opp_table>;
->> +		};
->> +	};
->>  };
+>> Thanks for this Jonathan. May I ask how this was tested? Tao has been
+>> working on qemu support for HMAT [1]. I have not checked if it already
+>> supports generic initiator entries, but it would be helpful to include
+>> an example of how the kernel sees these configurations in practice.
+>>
+>> [1]: http://patchwork.ozlabs.org/cover/1096737/
 > 
-> Sorry for not testing this sooner, but this is generating the
-> following WARNING on boot ...
+> Tested against qemu with SRAT and SLIT table overrides from an
+> initrd to actually create the node and give it distances
+> (those all turn up correctly in the normal places).  DSDT override
+> used to move an emulated network card into the GI numa node.  That
+> currently requires the PCI patch referred to in the cover letter.
+> On arm64 tested both on qemu and real hardware (overrides on tables
+> even for real hardware as I can't persuade our BIOS team to implement
+> Generic Initiators until an OS is actually using them.)
 > 
-> [    2.916019] ------------[ cut here ]------------
-> [    2.920669] WARNING: CPU: 2 PID: 1 at /dvs/git/dirty/git-master_l4t-upstream/kernel/drivers/opp/of.c:688 _of_add_opp_table_v2.part.2+0x45c/0x4d4
-> [    2.933713] Modules linked in:
-> [    2.936785] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc7-next-20191112-gfc6d6db1df2c #1
-> [    2.945403] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-> [    2.951706] [<c0112924>] (unwind_backtrace) from [<c010c9d0>] (show_stack+0x10/0x14)
-> [    2.959467] [<c010c9d0>] (show_stack) from [<c0aa4494>] (dump_stack+0xc0/0xd4)
-> [    2.966707] [<c0aa4494>] (dump_stack) from [<c0124750>] (__warn+0xe0/0xf8)
-> [    2.973593] [<c0124750>] (__warn) from [<c0124818>] (warn_slowpath_fmt+0xb0/0xb8)
-> [    2.981090] [<c0124818>] (warn_slowpath_fmt) from [<c0754be0>] (_of_add_opp_table_v2.part.2+0x45c/0x4d4)
-> [    2.990583] [<c0754be0>] (_of_add_opp_table_v2.part.2) from [<c0754c98>] (dev_pm_opp_of_add_table+0x40/0x15c)
-> [    3.000508] [<c0754c98>] (dev_pm_opp_of_add_table) from [<c0754de8>] (dev_pm_opp_of_cpumask_add_table+0x34/0xb4)
-> [    3.010704] [<c0754de8>] (dev_pm_opp_of_cpumask_add_table) from [<c075b058>] (cpufreq_init+0xf8/0x2cc)
-> [    3.020024] [<c075b058>] (cpufreq_init) from [<c0758758>] (cpufreq_online+0x260/0x824)
-> [    3.027953] [<c0758758>] (cpufreq_online) from [<c0758d98>] (cpufreq_add_dev+0x6c/0x78)
-> [    3.035976] [<c0758d98>] (cpufreq_add_dev) from [<c05b3188>] (subsys_interface_register+0xa0/0xec)
-> [    3.044951] [<c05b3188>] (subsys_interface_register) from [<c07574d4>] (cpufreq_register_driver+0x14c/0x20c)
-> [    3.054792] [<c07574d4>] (cpufreq_register_driver) from [<c075aee0>] (dt_cpufreq_probe+0x94/0x114)
-> [    3.063771] [<c075aee0>] (dt_cpufreq_probe) from [<c05b6a88>] (platform_drv_probe+0x48/0x98)
-> [    3.072225] [<c05b6a88>] (platform_drv_probe) from [<c05b4a38>] (really_probe+0x234/0x34c)
-> [    3.080502] [<c05b4a38>] (really_probe) from [<c05b4cc8>] (driver_probe_device+0x60/0x168)
-> [    3.088780] [<c05b4cc8>] (driver_probe_device) from [<c05b4f78>] (device_driver_attach+0x58/0x60)
-> [    3.097664] [<c05b4f78>] (device_driver_attach) from [<c05b5000>] (__driver_attach+0x80/0xbc)
-> [    3.106200] [<c05b5000>] (__driver_attach) from [<c05b2db0>] (bus_for_each_dev+0x74/0xb4)
-> [    3.114389] [<c05b2db0>] (bus_for_each_dev) from [<c05b3da4>] (bus_add_driver+0x164/0x1e8)
-> [    3.122666] [<c05b3da4>] (bus_add_driver) from [<c05b5b54>] (driver_register+0x7c/0x114)
-> [    3.130774] [<c05b5b54>] (driver_register) from [<c010306c>] (do_one_initcall+0x54/0x2a8)
-> [    3.138974] [<c010306c>] (do_one_initcall) from [<c0f01040>] (kernel_init_freeable+0x14c/0x1e8)
-> [    3.147695] [<c0f01040>] (kernel_init_freeable) from [<c0abbe88>] (kernel_init+0x8/0x10c)
-> [    3.155887] [<c0abbe88>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> [    3.163462] Exception stack(0xef0c9fb0 to 0xef0c9ff8)
-> [    3.168519] 9fa0:                                     00000000 00000000 00000000 00000000
-> [    3.176706] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    3.184893] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [    3.191695] ---[ end trace a7dc36f7a4ddbdb2 ]---
-> [    3.197855] ------------[ cut here ]------------
+> Main real requirement is memory allocations then occur from one of
+> the nodes at the minimal distance when you are do a devm_ allocation
+> from a device assigned. Also need to be able to query the distances
+> to allow load balancing etc.  All that works as expected.
 > 
-> Let me know if you can take a look at this.
+> It only has a fairly tangential connection to HMAT in that HMAT
+> can provide information on GI nodes.  Given HMAT code is quite happy
+> with memoryless nodes anyway it should work.  QEMU doesn't currently
+> have support to create GI SRAT entries let alone HMAT using them.
+> 
+> Whilst I could look at adding such support to QEMU, it's not
+> exactly high priority to emulate something we can test easily
+> by overriding the tables before the kernel reads them.
+> 
+> I'll look at how hard it is to build an HMAT tables for my test
+> configs based on the ones I used to test your HMAT patches a while
+> back.  Should be easy if tedious.
+> 
+> Jonathan
+> 
+Indeed, HMAT can support Generic Initiator, but as far as I know, QEMU 
+only can emulate a node with cpu and memory, or memory-only. Even if we 
+assign a node with cpu only, qemu will raise error. Considering 
+compatibility, there are lots of work to do for QEMU if we change NUMA 
+or SRAT table.
 
-The warning happens because Cardhu now has CPU OPPs in the device-tree,
-but supported_hw isn't set for the OPPs and thus the count of available
-OPPs is 0.
-
-This is expected to happen because patch "cpufreq: tegra20: Use generic
-cpufreq-dt driver (Tegra30 supported now)" isn't applied yet.
-
-It is possible to factor out the blacklisting of Tegra SoCs in
-cpufreq_dt_platdev_init() into a separate patch and request backporting
-of that change in order to avoid the warning noise for older kernel
-versions + newer device-tree. Please let me know if you think that it's
-worth to do the separation.
