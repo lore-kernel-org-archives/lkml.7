@@ -2,126 +2,208 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80652C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52DEC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585F0206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="TNrmQ+4W";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oSz+h7Mk"
+	by mail.kernel.org (Postfix) with ESMTP id A8AA5222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfKMGEh (ORCPT
+        id S1726473AbfKMGFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:04:37 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:58191 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725843AbfKMGEg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:04:36 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id DB74121CBA;
-        Wed, 13 Nov 2019 01:04:35 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 13 Nov 2019 01:04:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
-        9r9EiXvYeN2EElgNuXBLIhpNeYkB8erZDxNPQNTTby0=; b=TNrmQ+4WZezgTWgt
-        vZ5zVaJEndpuvsr5evLuoQCFwSYIlBo6K3w3RlX4IjjI5/9RDsqnVVkKsaNsrL2V
-        c/Q1jqUx3fz46MHc7W+7Fh/jE9aqAeixPSSG7kBk0/xwEjGGSbn1tC47rjX+Yi4v
-        jR6Xd8sxUFzWotHHiUnPOWbiBL4KRoxJ+TBjQISxWxH7Cd+9FwxQxuCPxuvqjJl5
-        hhC+8NHbzk+c0CePJYww6rd5bU4UeamN2BsBBAuY6ZMMHWmSkAAMGrjjipFftNsX
-        mph1vDUZ2c/uO8e6klD9TkXN/p64TrweqBIAiZreilA/7N6X351KCuqeCF0qOyR0
-        U2liBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=9r9EiXvYeN2EElgNuXBLIhpNeYkB8erZDxNPQNTTb
-        y0=; b=oSz+h7Mk0RvhRZ71acwH4MujEVtDn1LYgmcFQUKVh4/RadvtZt8/vdyim
-        eAnUewSwvisOOSImZi0AuJz6zEp8f2Fv6DL+36j0qtATh76MRgEWbdNGv9IIqYPr
-        RP7/2UEYCGqH9yhvrb5jssNKxO3YnsrvWWL30qqic1h4TPJok/iegJgrC0zBAY03
-        v7+inKm54OaMnBE5cSvX1XI724mAUy52bU8wxHJGBYfWc3JjJvNyjiHa9XetibzH
-        zUdTtZkdVfkViBQvipTQaxzIQXxnPTR5CSaac5Hcjpgr/NLqlSG0XERV8+ABDrmi
-        aae3n7+6QEaiiRTFWgVbDWLAULNJw==
-X-ME-Sender: <xms:8pzLXQEWUHn-OIQ7YjA7jgBxuB-dYsjiXYpbhpo39xyxuF6xUQHjqA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeftddgledvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucffohhmrghinhepkhhmsh
-    hgrdguvghvpdhgihhthhhusgdrtghomhenucfkphepuddukedrvddtkedrudekledrudek
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvthenuc
-    evlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:8pzLXVVCgqLEJIHwCq7rhWN7bjsID9Sg0H3FUFnmZ21x64HXTwYoVg>
-    <xmx:8pzLXcXsLZi_WjuAOSFgwgmxxNtj2j00hRv8fIbx-u2GV4YMNmSiVA>
-    <xmx:8pzLXTKullwiLTjxrrqahIjED2MHJbzSsZTfwBmCflynhqj_AyVCag>
-    <xmx:85zLXYXSu3GoWXxnLrtiSDhARFSSWsgwh4jLPukCmzJAGt4pl4-DYA>
-Received: from mickey.themaw.net (unknown [118.208.189.18])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 42395306005E;
-        Wed, 13 Nov 2019 01:04:30 -0500 (EST)
-Message-ID: <e38bc7a8505571bbb750fc0198ec85c892ac7b3a.camel@themaw.net>
-Subject: Re: [LTP] [xfs] 73e5fff98b: kmsg.dev/zero:Can't_open_blockdev
-From:   Ian Kent <raven@themaw.net>
-To:     Christoph Hellwig <hch@lst.de>, Jan Stancek <jstancek@redhat.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
-        lkp@lists.01.org, ltp@lists.linux.it,
-        DavidHowells <dhowells@redhat.com>,
-        AlViro <viro@ZenIV.linux.org.uk>
-Date:   Wed, 13 Nov 2019 14:04:27 +0800
-In-Reply-To: <5f758be455bb8f761d028ea078b3e2a618dfd4b1.camel@themaw.net>
-References: <20191111010022.GH29418@shao2-debian>
-         <3fb8b1b04dd7808b45caf5262ee629c09c71e0b6.camel@themaw.net>
-         <1108442397.11662343.1573560143066.JavaMail.zimbra@redhat.com>
-         <20191112120818.GA8858@lst.de>
-         <5f758be455bb8f761d028ea078b3e2a618dfd4b1.camel@themaw.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 13 Nov 2019 01:05:48 -0500
+Received: from mga06.intel.com ([134.134.136.31]:28500 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbfKMGFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 01:05:48 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 22:05:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,299,1569308400"; 
+   d="scan'208";a="287782908"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 12 Nov 2019 22:05:46 -0800
+Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
+        by linux.intel.com (Postfix) with ESMTP id C79F9580372;
+        Tue, 12 Nov 2019 22:05:44 -0800 (PST)
+Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
+References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+ <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+ <20191112191432.GA19579@bogus>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <5ee8920d-582e-176f-6681-79c0122274fb@linux.intel.com>
+Date:   Wed, 13 Nov 2019 14:05:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191112191432.GA19579@bogus>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-13 at 09:13 +0800, Ian Kent wrote:
-> Adding Al and David to the CC, hopefully that will draw their
-> attention to this a bit sooner.
-> 
-> On Tue, 2019-11-12 at 13:08 +0100, Christoph Hellwig wrote:
-> > On Tue, Nov 12, 2019 at 07:02:23AM -0500, Jan Stancek wrote:
-> > > https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/fs_fill/fs_fill.c
-> > > 
-> > > Setup of that test is trying different file system types, and it
-> > > looks
-> > > at errno code of "mount -t $fs /dev/zero /mnt/$fs".
-> > > 
-> > > Test still PASSes. This report appears to be only about extra
-> > > message in dmesg,
-> > > which wasn't there before:
-> > > 
-> > > # mount -t xfs /dev/zero /mnt/xfs
-> 
-> Assuming that is what is being done ...
 
-Arrrh, of course, a difference between get_tree_bdev() and
-mount_bdev() is that get_tree_bdev() prints this message when
-blkdev_get_by_path() fails whereas mount_bdev() doesn't.
+Hi Rob,
 
-Both however do return an error in this case so the behaviour
-is the same.
+Thanks for feedback.
 
-So I'm calling this not a problem with the subject patch.
+On 13/11/2019 3:14 AM, Rob Herring wrote:
+> On Mon, Nov 11, 2019 at 06:11:30PM +0800, Rahul Tanwar wrote:
+>> Add dt bindings document for pinmux & GPIO controller driver of
+>> Intel Lightning Mountain SoC.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>  .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 98 ++++++++++++++++++++++
+>>  1 file changed, 98 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+>> new file mode 100644
+>> index 000000000000..d54a3bda1f4f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+>> @@ -0,0 +1,98 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+> For new bindings:
+>
+> # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 
-What needs to be done to resolve this in ltp I don't know?
+Well noted.
 
-Ian
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
+>> +
+>> +maintainers:
+>> +  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> +
+>> +description: |
+>> +  Pinmux & GPIO controller controls pin multiplexing & configuration including
+>> +  GPIO function selection & GPIO attributes configuration.
+>> +
+>> +  Please refer to [1] for details of the common pinctrl bindings used by the
+>> +  client devices.
+>> +
+>> +  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-pinctrl
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +# Client device subnode's properties
+>> +patternProperties:
+>> +  '-pins$':
+>> +    type: object
+>> +    description:
+>> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+>> +      Client device subnodes use below standard properties.
+>> +
+>> +    properties:
+>> +      function:
+>> +        $ref: /schemas/types.yaml#/definitions/string
+>> +        description:
+>> +          A string containing the name of the function to mux to the group.
+> Possible strings should be listed out here.
+
+Possible number of strings here is a huge number. I agree that it makes
+sense to list out the possible strings here but when the possible strings
+are huge, can we just omit specifying all of the strings ? I see many
+examples here where they only specify the string in examples.
+
+>> +
+>> +      groups:
+>> +        $ref: /schemas/types.yaml#/definitions/string-array
+>> +        description:
+>> +          An array of strings identifying the list of groups.
+> Possible strings should be listed out here.
+
+Same point for groups. Too many strings to list out here.
+
+>> +
+>> +      pins:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +        description:
+>> +          List of pins to select with this function.
+>> +
+>> +      pinmux:
+>> +        description: The applicable mux group.
+>> +        allOf:
+>> +          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
+>> +
+>> +      bias-pull-up:
+>> +        type: boolean
+>> +      bias-pull-down:
+>> +        type: boolean
+>> +      drive-strength:
+>> +        type: boolean
+> Not a boolean. Need to define possible values.
+
+Agree. My mistake. Will fix it on v7.
+
+>> +      slew-rate:
+>> +        type: boolean
+> Not a boolean. Need to define possible values.
+
+In our case, 0 here means slow slew & 1 means fast slew. There are no other
+possible values. Probably, i can add it in description while keeping data
+type as boolean.
+
+>> +      drive-open-drain:
+>> +        type: boolean
+>> +      output-enable:
+>> +        type: boolean
+>> +
+>> +    required:
+>> +      - function
+>> +      - groups
+> For the -pins nodes too:
+>
+>        additionalProperties: false
+
+Well noted.
+
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  # Pinmux controller node
+>> +  - |
+>> +    pinctrl: pinctrl@e2880000 {
+>> +          compatible = "intel,lgm-pinctrl";
+>> +          reg = <0xe2880000 0x100000>;
+>> +
+>> +          # Client device subnode
+>> +          uart0-pins: uart0 {
+> This fails 'make dt_binding_check'. Please fix and run that.
+
+Will run & fix it in v7. Thanks.
+
+Regards,
+Rahul
+
 
