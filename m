@@ -2,103 +2,85 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71234C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB3DC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2EB206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78BF206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STfRnUb5"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="I5W72ILq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfKMTu3 (ORCPT
+        id S1726516AbfKMTvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:50:29 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35268 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfKMTu2 (ORCPT
+        Wed, 13 Nov 2019 14:51:17 -0500
+Received: from mail-il1-f177.google.com ([209.85.166.177]:36561 "EHLO
+        mail-il1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfKMTvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:50:28 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q22so2024482pgk.2;
-        Wed, 13 Nov 2019 11:50:28 -0800 (PST)
+        Wed, 13 Nov 2019 14:51:16 -0500
+Received: by mail-il1-f177.google.com with SMTP id s75so2939790ilc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 11:51:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BFoRUmVGuqfT8D907Uc8h7RLulbYqimY28gR6tuKhsw=;
-        b=STfRnUb5HQzoMpwJTkSiSPorz5xOTt8hyuLlhaoKkTg+O44qxcE1vmvZMhAYZEvBKG
-         jR6l5klwJAb2UEDyzhCDIhEm1ZO/T+wqXxDeaac86LCWt40PMi5VQ8aC1j8X067ln14a
-         orgIvc9Ym+gAg9W3ZkzLLS/WdZeD/XTQEDg4YBlqM9b3JUQiJEzVsD9LbnHQg9+2i4bs
-         8z+7Yi6HYJAf2xZtx2KU/SpEI7NnJq79k2UZwju7YiVJBzwA3/vLULB24xa7GbRpnDeM
-         ewMyZt/FMdv4DaR/DItD892Ey2qCtHfgtX/49fejw8Vv107Cj4TYa76li9PKd6htlAEI
-         GFSw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ef1f/PdCcKzFdmtEAurRHSiBIp69Vea7tsZwHU00GvQ=;
+        b=I5W72ILq7hyu89Z/dlDetrs/gEtASA3i8vwvHBwNFY4h8AJDoyn2wuYwXfUyI64VAO
+         ORJrP4Kp6ySoHO9Iwitau/q9pP3HAOib5Yvi2SCDzS2LKK0Gx9jFdLBtsRwDzdq5svFI
+         YXTEC53jWG3Bv9zp7UnvovIJUOUir6FXd7iSNVjCzW6l/U/ypGLBeww58RLW7SoOWK5E
+         hsKNTzNznULhFlVDucl9xm6/VgauSy9q5LB1ckBG1q6B4l9+CznxhF/A+HyL6mgI8A4J
+         18Z0qwZkJNnrqlmugjZ8wwxudP0JYxMGFmarjVk7Mp56QkfhBOxKv4jbAK1Om2avrMGI
+         ET6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BFoRUmVGuqfT8D907Uc8h7RLulbYqimY28gR6tuKhsw=;
-        b=obO1sSGwnHDQfFMcAzD3wdWkp4taJY/yrN9r+ze/5kT1r6fCyLUyDCUGPR/gOnrOty
-         PqyTE2G2GDWH4MqFOu7ssiK5AHqq+3+YlX9UwKvkTEIOL61teIsTLGfBUcPSJUQhupEF
-         73HtIk02i0Tycr+9Z+KXSoVTUHbzwmaA6x9GznFNwcEVFpoiIktGw8TyBKttpPTOaVtR
-         dIBnU2B4ELVDdVsc5q0O1Njla2KQuOurR5zLWoOjPNyrWLgwyQjOy4V92LXKuBuHIIh+
-         +nSgznn9j3wvw4hwQNPFn7D48Qiv5M1M1Oz/gWLWF3tMbZbvDzXyEKO0aXRB62naFgPy
-         j11w==
-X-Gm-Message-State: APjAAAWSWXuQTyAJmsspRyUcf320rJ/SU0kHT0S78ADUpDB6PQ/A0iN8
-        fEdwS2oNFjS8BhNgf1nsvTyXIiFX
-X-Google-Smtp-Source: APXvYqyDcTlfFfZhm7DnVu+YXm2FzNnTSWG9/naSvT8E52WFWjnPC9VUxoRRXnsHn+jyY6ZRJv5UTw==
-X-Received: by 2002:a63:7c10:: with SMTP id x16mr5640672pgc.176.1573674627887;
-        Wed, 13 Nov 2019 11:50:27 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id j5sm3875541pfe.100.2019.11.13.11.50.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 11:50:27 -0800 (PST)
-Date:   Wed, 13 Nov 2019 11:50:25 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Input: synaptics-rmi4 - add missed operations in remove
-Message-ID: <20191113195025.GR13374@dtor-ws>
-References: <20191113063656.8713-1-hslester96@gmail.com>
- <20191113082315.GP13374@dtor-ws>
- <CANhBUQ3CaRm1SjO4DJOSHpodUpJrHstzD5MYk13vo=EEigDEYA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ef1f/PdCcKzFdmtEAurRHSiBIp69Vea7tsZwHU00GvQ=;
+        b=lwGrDqxzJHmLUX0GFLB1Wpp3x74HFtwd0lSD4Xew3LkGjb3cdC/Nhjfi+rxDAgWLt4
+         XnvWndvgOK/ENpBxlQ4GK4G/zYWgSv72xrrUnLEzFK/8VVuNjRSRgfQTSE2dZGe41SPm
+         nQnSi+fQeBjRpt6kHEBL9HHahiYfWOIgBTFO70kUXGnSCoPUrGCdZmWlexo8G3LOjKDJ
+         N7doRhcWxRbnffSKqyQYH/d4d83fmbRBU3hzfTn5zpOiqC0HfgrkNVeMuGAO1nvM+PjM
+         e9xh+MOTa1Swvk5W93SkDJ6xGSHETFDkFFMZwB7IsPlK0TcbF52S4MH+X+5RWipl893P
+         sbEw==
+X-Gm-Message-State: APjAAAX553OeJJJOqNgu5jZfDONSeeWPRlmx6AKNobD+bFoHASLt0WWJ
+        wYX5rEvOwR5xKsntiPx6fJG8ZarOkv8=
+X-Google-Smtp-Source: APXvYqzCQgYFZqroQI2tVwbNNw1V4/Sb+rbJqPRVd83F1uKeb6xzpf/drlH1jtgSSp6EyhQbiCUGWA==
+X-Received: by 2002:a92:d746:: with SMTP id e6mr5810296ilq.111.1573674674654;
+        Wed, 13 Nov 2019 11:51:14 -0800 (PST)
+Received: from [192.168.1.163] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id a11sm422678ilb.72.2019.11.13.11.51.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 11:51:13 -0800 (PST)
+Subject: Re: [PATCH 0/2] blk-mq/sbitmap: Delete some unused functions
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1573666042-176756-1-git-send-email-john.garry@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d2a1502d-5af3-cfaf-f4c3-a8cffffc5aed@kernel.dk>
+Date:   Wed, 13 Nov 2019 12:51:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANhBUQ3CaRm1SjO4DJOSHpodUpJrHstzD5MYk13vo=EEigDEYA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1573666042-176756-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 04:52:59PM +0800, Chuhong Yuan wrote:
-> On Wed, Nov 13, 2019 at 4:23 PM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > On Wed, Nov 13, 2019 at 02:36:56PM +0800, Chuhong Yuan wrote:
-> > > The driver forgets to deal with work and workqueue in remove like what
-> > > is done when probe fails.
-> > > Add the missed operations to fix it.
-> >
-> > Is it really possible for the work to still be pending when fully
-> > registered device is properly unregistered? I thought we'd wait for
-> > successful data acquisition in rmi_f54_buffer_queue() before unregister
-> > can complete.
-> >
-> 
-> In fact, I am not familiar with the mechanism here...
-> I have checked other drivers with video_unregister_device and found none of
-> them deals with work in remove.
-> Therefore, I think your opinion should be right and we only need to deal with
-> the workqueue.
+On 11/13/19 10:27 AM, John Garry wrote:
+> Function blk_mq_can_queue() never seemed to ever have been referenced, so
+> delete it and any other now-unused callees.
 
-OK, please send the updated patch then.
-
-Thanks!
+Great, I like killing dead code. Applied for 5.5, thanks.
 
 -- 
-Dmitry
+Jens Axboe
+
