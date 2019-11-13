@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A369C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE1FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E132053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DB62053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611659;
-	bh=CRRHNqPWZVBDH3wUrp+1VH0/eHLL/17msIBzpwJ4APY=;
+	s=default; t=1573611662;
+	bh=6yz8go43iHC+AAKEOPUoDNtqcwOpSfLcYushubWE3K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MuZAnJp4bHu9D/nARBhjfamA6V/V5V5ABvs7oMcJN4yXk7mUNOsDyB91UaOq/k9p8
-	 KK07v6YGz5nt39w6uG3dibG/UfEH5g0RHJ1vNIq55rf8xMQWNiTXvjjVAvrgb4IWhh
-	 pumA9GdW/G26Jp8b1HKhXovXJT3LXl8XM0Xl2NRA=
+	b=yEWrpsuQjks7B6iiNOo25KcX8SfRBn22eKljVcWP7qLloDNGMbWVnapNxFAGjLsHR
+	 MXxBm2AIlHrppsabXlS+njs20dU18tyg9f6V/x8IEqcTV9Fmfs71ZGmSfH1ltb8wrt
+	 Ts/QHXxdu8BG0p23a5Vg+tki62S7UYid3FS567UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbfKMCU4 (ORCPT
+        id S1728769AbfKMByJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:20:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:54:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbfKMByM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:54:12 -0500
+        id S1728716AbfKMByG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:54:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1885D222CF;
-        Wed, 13 Nov 2019 01:54:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CBBE20674;
+        Wed, 13 Nov 2019 01:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610051;
-        bh=CRRHNqPWZVBDH3wUrp+1VH0/eHLL/17msIBzpwJ4APY=;
+        s=default; t=1573610045;
+        bh=6yz8go43iHC+AAKEOPUoDNtqcwOpSfLcYushubWE3K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xESTH2HK6FUFXrAm/KxG/rhIJUmnOBqj4c0ch4mSRG2m2A274JDIit25yDlr7uHdd
-         l0NdlqZDMcLFa+wTZBSUG36XvjEvFnYQNTwvmwry/wbvGcx3o4cX5vXaErNEh4jl4U
-         VOlzp6GUKc2gBHNj4LbUAa/1DFD16Vd+km1bp2tw=
+        b=Z/cM0X+XqwGxUutEiXS3KtDBVgfCOil15+dRwqI/bQ+rXNmO5ZaTzndKeiRyoCxz2
+         npT6BAq3i3PmKzUiU9rLknR0lUUH3upnkh+5ctyiDgPDWuidtCr24t6/2FHtsdqade
+         tqfVte7TNo5g3EQTFsITrO98a+Vxn7p2XsDRMtEw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 138/209] mmc: tmio: Fix SCC error detection
-Date:   Tue, 12 Nov 2019 20:49:14 -0500
-Message-Id: <20191113015025.9685-138-sashal@kernel.org>
+Cc:     Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 134/209] iwlwifi: mvm: don't send keys when entering D3
+Date:   Tue, 12 Nov 2019 20:49:10 -0500
+Message-Id: <20191113015025.9685-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,39 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit b85fb0a1c8aeaaa40d08945d51a6656b512173f0 ]
+[ Upstream commit 8c7fd6a365eb5b2647b2c01918730d0a485b9f85 ]
 
-SDR104, HS200 and HS400 need to check for SCC error. If SCC error is
-detected, retuning is necessary.
+In the past, we needed to program the keys when entering D3. This was
+since we replaced the image. However, now that there is a single
+image, this is no longer needed.  Note that RSC is sent separately in
+a new command.  This solves issues with newer devices that support PN
+offload. Since driver re-sent the keys, the PN got zeroed and the
+receiver dropped the next packets, until PN caught up again.
 
-Signed-off-by: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
-[Niklas: update commit message]
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/tmio_mmc_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
-index 7d13ca9ea5347..94c43c3d3ae58 100644
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -926,8 +926,8 @@ static void tmio_mmc_finish_request(struct tmio_mmc_host *host)
- 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
- 		tmio_mmc_abort_dma(host);
- 
--	if (host->check_scc_error)
--		host->check_scc_error(host);
-+	if (host->check_scc_error && host->check_scc_error(host))
-+		mrq->cmd->error = -EILSEQ;
- 
- 	/* If SET_BLOCK_COUNT, continue with main command */
- 	if (host->mrq && !mrq->cmd->error) {
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index 79bdae9948228..868cb1195a74b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -731,8 +731,10 @@ int iwl_mvm_wowlan_config_key_params(struct iwl_mvm *mvm,
+ {
+ 	struct iwl_wowlan_kek_kck_material_cmd kek_kck_cmd = {};
+ 	struct iwl_wowlan_tkip_params_cmd tkip_cmd = {};
++	bool unified = fw_has_capa(&mvm->fw->ucode_capa,
++				   IWL_UCODE_TLV_CAPA_CNSLDTD_D3_D0_IMG);
+ 	struct wowlan_key_data key_data = {
+-		.configure_keys = !d0i3,
++		.configure_keys = !d0i3 && !unified,
+ 		.use_rsc_tsc = false,
+ 		.tkip = &tkip_cmd,
+ 		.use_tkip = false,
 -- 
 2.20.1
 
