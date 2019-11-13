@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEA1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F24C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A74B22469
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04782245A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610293;
-	bh=xd9MmByD4kgF02UVppLESgoSj9OQHcqjVex2lFwXvoI=;
+	s=default; t=1573610295;
+	bh=PterWFPnUPkV9UOQb8yiRvykr89TFGx0cLH8pyMYIdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0DNdDPUOhoMFftgeRmqJY9PYjRrNvMdcjtrXUAJvNKqyw1KPwljMbzHy+W9yGmvIA
-	 cpahkH5094Iy+tu43AO9oy+UrDyhFX/O7QIhvQr8yw2okYTyJ20Q6WbCDRIvxUyoOF
-	 A2Ga0rXw3Guq648p073ZUUT2Rg+pxm0yiQC613p0=
+	b=dg7RsEa2sjGFP+sIlV+Vg81XMZ5VAFA9iYs7PmHwhBT+pBvk2P5VGrvLj7KbKXpDL
+	 jC2xHSjch1+Osou68rcdLCRzYaPrIvgaIT4+l3yd06K1QdVIy18sQVEKZgey3bE+61
+	 Y7mphvXMvc9dFy+uc2PTtI2wFiDEFHSBFbhjHkuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbfKMB6M (ORCPT
+        id S1729984AbfKMB6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:58:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51636 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:58:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729940AbfKMB6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:05 -0500
+        id S1729960AbfKMB6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74200222D3;
-        Wed, 13 Nov 2019 01:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 419C5222D4;
+        Wed, 13 Nov 2019 01:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610285;
-        bh=xd9MmByD4kgF02UVppLESgoSj9OQHcqjVex2lFwXvoI=;
+        s=default; t=1573610290;
+        bh=PterWFPnUPkV9UOQb8yiRvykr89TFGx0cLH8pyMYIdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DT2CaiDuuKNuxXx7s62+FakCPZMprTPX7bWJgYNitiQAqSBv1+L+mWyC/zPCBsOJ7
-         zSSQkReJ5k5CMqsGZv13Sf5YY12ZuHxX1nQcv7njSynLPWfcJE2zr35XcDKUASbsOH
-         ov3b+vr9Q9pH5ZI6HscEnhe/uk3q894ocnyCMCeg=
+        b=czsW0R/Tr57DpW8kQpn209PxjgF80Da+x/AB7YjkMGttPt7cXMBhUZxuLq7JSvVln
+         zcU/1C1lTPByLJLVNG23dq59+yqb9hdXETj5bI/8Wwg8KUECjE50mVTUazncRcWI33
+         86OqnVf27bRPptbp4ePGYoz7ZZccu0L9s5eJOK0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 062/115] qtnfmac: drop error reports for out-of-bounds key indexes
-Date:   Tue, 12 Nov 2019 20:55:29 -0500
-Message-Id: <20191113015622.11592-62-sashal@kernel.org>
+Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 066/115] NFSv4.x: fix lock recovery during delegation recall
+Date:   Tue, 12 Nov 2019 20:55:33 -0500
+Message-Id: <20191113015622.11592-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -60,46 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit 35da3fe63b8647ce3cc52fccdf186a60710815fb ]
+[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
 
-On disconnect wireless core attempts to remove all the supported keys.
-Following cfg80211_ops conventions, firmware returns -ENOENT code
-for the out-of-bound key indexes. This is a normal behavior,
-so no need to report errors for this case.
+Running "./nfstest_delegation --runtest recall26" uncovers that
+client doesn't recover the lock when we have an appending open,
+where the initial open got a write delegation.
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Instead of checking for the passed in open context against
+the file lock's open context. Check that the state is the same.
+
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/quantenna/qtnfmac/cfg80211.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ fs/nfs/delegation.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-index a450bc6bc7745..d02f68792ce41 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
-@@ -509,9 +509,16 @@ static int qtnf_del_key(struct wiphy *wiphy, struct net_device *dev,
- 	int ret;
- 
- 	ret = qtnf_cmd_send_del_key(vif, key_index, pairwise, mac_addr);
--	if (ret)
--		pr_err("VIF%u.%u: failed to delete key: idx=%u pw=%u\n",
--		       vif->mac->macid, vif->vifid, key_index, pairwise);
-+	if (ret) {
-+		if (ret == -ENOENT) {
-+			pr_debug("VIF%u.%u: key index %d out of bounds\n",
-+				 vif->mac->macid, vif->vifid, key_index);
-+		} else {
-+			pr_err("VIF%u.%u: failed to delete key: idx=%u pw=%u\n",
-+			       vif->mac->macid, vif->vifid,
-+			       key_index, pairwise);
-+		}
-+	}
- 
- 	return ret;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 606dd3871f66b..17acad7d13160 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -91,7 +91,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
+ 	return nfs4_do_check_delegation(inode, flags, false);
  }
+ 
+-static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
++static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
+ {
+ 	struct inode *inode = state->inode;
+ 	struct file_lock *fl;
+@@ -106,7 +106,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
+ 	spin_lock(&flctx->flc_lock);
+ restart:
+ 	list_for_each_entry(fl, list, fl_list) {
+-		if (nfs_file_open_context(fl->fl_file) != ctx)
++		if (nfs_file_open_context(fl->fl_file)->state != state)
+ 			continue;
+ 		spin_unlock(&flctx->flc_lock);
+ 		status = nfs4_lock_delegation_recall(fl, state, stateid);
+@@ -153,7 +153,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
+ 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
+ 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
+ 		if (!err)
+-			err = nfs_delegation_claim_locks(ctx, state, stateid);
++			err = nfs_delegation_claim_locks(state, stateid);
+ 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
+ 			err = -EAGAIN;
+ 		mutex_unlock(&sp->so_delegreturn_mutex);
 -- 
 2.20.1
 
