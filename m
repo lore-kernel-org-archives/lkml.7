@@ -2,236 +2,213 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D33C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A029DC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC2420409
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:06:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IJIqQghh"
+	by mail.kernel.org (Postfix) with ESMTP id 834AC206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:06:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573664819;
+	bh=3pA/KHI5sE+m79lcOcQ98rIbIxyybLCXDOI9joKhQfs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gcEu1g0QMK+uXXvfAtenYkUVkOs4zPVQNBeQGeO1/+SmPzcEy0rXL98GZPq+ZqHd9
+	 uBKNqhBRYz4PrjABZGdABnljfaW12AIvtDZcQxZfDm2wW+USAzFHYbvZeMHMwHaCju
+	 rvh6gpmTKVnTy++gX3x0w5RwJF8ckdqudWtOQVKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfKMRGj (ORCPT
+        id S1728705AbfKMRG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:06:39 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43288 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbfKMRGi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:06:38 -0500
-Received: by mail-lf1-f66.google.com with SMTP id q5so2559526lfo.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:06:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YUGF3lpYgO9cloOjHxsuyc+u/ViuA1RPV0SW81a51p8=;
-        b=IJIqQghhZIc7LcLbEwUqf+yG40VtSG/n49YzgeYHcf7KyekEWWFTOKEzfYKUOJc2jD
-         R7uC2QjEtNMsARz9qly8kXRt/ZZiKRZFB09TEfOFHt9IlEoDrn52FFpP6VBbDbG9D4a2
-         LHO+SENLr3b6C5+rQHvAChig7eek+mhi5Fuems3u5+qAA9QYHjXC7WS4epoVrrna/Bji
-         ub9W1mOHkfoJRHXEXleUZSJ5esJCOc553K2wOH6JCmTNsuXdMZsTUuGRkmR++BotgCiZ
-         mJVuZY4wwnl2YPBV/LCzRTxSgHTWzoVPnmN126pvhdlBgRGYTDbpG4QZfMuBl4rQYPod
-         T/Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YUGF3lpYgO9cloOjHxsuyc+u/ViuA1RPV0SW81a51p8=;
-        b=As34QZ2+D1hYAr/lABbTTMhfUwho7gXyLRCBmaayEOPnhK05NLKmqMBJf8U6Dqd2Bk
-         6+nCW0qTV7sY8Fyf/okaSptq+0N01ktZD4FX2kKCIBmQ5sGdPqj4UU/HWBQzU9sONyTz
-         02ZEbJqY258xjNcfpBpA3zaO6CCjFCxL8aAMmghv0dVkP9o1h+lbj2eI22/NXFYcdbpZ
-         bMS/CPGNQ2tyOR2FnCT2Rrtj7O0zjeVBE5KEPohlzjcuwcs0X31Q+nS8A8ne+EnK47v8
-         7YNWBnGz+SrJGVW/ajLa8yzgbZfeFxoeWBvyZYvE0CdUj6LWkuhnGhfeiecVkzfWeHt9
-         J+8Q==
-X-Gm-Message-State: APjAAAX3wC+tf23XPa/dJuhLgCagHa9yZZqERzSYsKfGCq6/8cIOXKpR
-        CpGg73vPP7WEeTSYUnBMtxW4pglI6pg1GdJuennypQ==
-X-Google-Smtp-Source: APXvYqzC+Vh388YW3kxl3FCM93yogKwNCSplmHzAV1zL26+ogaBhxbpWxYMKbiKJu8VyczKRX/qX4SBexvsxIKmXtP4=
-X-Received: by 2002:ac2:5a07:: with SMTP id q7mr3268410lfn.86.1573664796067;
- Wed, 13 Nov 2019 09:06:36 -0800 (PST)
+        Wed, 13 Nov 2019 12:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727638AbfKMRG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:06:59 -0500
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30DCB206D9;
+        Wed, 13 Nov 2019 17:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573664817;
+        bh=3pA/KHI5sE+m79lcOcQ98rIbIxyybLCXDOI9joKhQfs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TwOWVIvSoknGvfV8g68WQy7A/iminy0BlIzADGjPqtO1Wy1PopzGyTjMWGo2UpuPM
+         TmbRo1ddgr08OXsgScXLTJZm3P5bLeFm7O32ywjUErxrEelMmpfSUUFMP+nK6X2uif
+         I8SQPZP3KOwo2gSIb2hB/R9g7ZcEK5w1uwOSy4Eg=
+Received: by mail-qk1-f171.google.com with SMTP id e2so2386357qkn.5;
+        Wed, 13 Nov 2019 09:06:58 -0800 (PST)
+X-Gm-Message-State: APjAAAVkYNLmGOdLwtjxADfDqE9uMU6ay53VbYXg/23x+gR5R9F6qfgd
+        q8NmJ7xyd18ivHuNKFIfDrAep9Ky7j99CvxlzA==
+X-Google-Smtp-Source: APXvYqzRlmF9TeJ9hDMYOQGNIdfY5VhEdyxfYQraKHmCjaj33WSKpBhDL2bHJvGdOc3QzkjC5v8NL/rqmH6i8piI88A=
+X-Received: by 2002:a37:4904:: with SMTP id w4mr3196213qka.119.1573664817154;
+ Wed, 13 Nov 2019 09:06:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20191030114530.872-1-peter.ujfalusi@ti.com> <CACRpkdbw9MVrQMSgVMenSqAOiti1pAy4d2LvWY-ssx9dhzWEcw@mail.gmail.com>
- <8bd0f286-dc54-72a6-0aaf-2dc7b9972883@ti.com>
-In-Reply-To: <8bd0f286-dc54-72a6-0aaf-2dc7b9972883@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 13 Nov 2019 18:06:23 +0100
-Message-ID: <CACRpkdZ-qf3OKAxsoj+36V_N6Y_gFte1LHM+66OqekXBAWxsVA@mail.gmail.com>
-Subject: Re: [RFC 0/2] gpio: Support for shared GPIO lines on boards
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Grant Likely <glikely@secretlab.ca>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
+ <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
+ <20191112193942.GA27334@bogus> <20191113145159.vw7icflfve7dnefm@smtp.gmail.com>
+In-Reply-To: <20191113145159.vw7icflfve7dnefm@smtp.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 13 Nov 2019 11:06:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJY6YMC2ba4DNFnsq=XESOoUTDA6Q+Y7gutMT0VN--DNw@mail.gmail.com>
+Message-ID: <CAL_JsqJY6YMC2ba4DNFnsq=XESOoUTDA6Q+Y7gutMT0VN--DNw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 12:20 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-
-> To start with I would let GPIO core to allow requesting the same GPIO
-> line by multiple consumers all the time.
-
-It already allows that with GPIOD_FLAGS_BIT_NONEXCLUSIVE.
-
-> If the flags for the gpio_request does not contain
-> GPIOD_FLAGS_BIT_NONEXCLUSIVE (probably we can have another define for
-> BIT(4) as GPIOD_FLAGS_BIT_MIGHT_BE_SHARED?) then print with dev_warn()
-> to get the attention of the developer that all users of the shared GPIO
-> line must be checked and change the current dev_info() to dev_dbg() when
-> the flag is provided.
-
-We already have that. Unless all users request it with the same
-GPIOD_FLAGS_BIT_NONEXCLUSIVE they will simply fail,
-it is an excellent warning since it creates a strict semantic
-requirement for all participating consumer to explicitly specify
-if they want to share a line.
-
-Adding a GPIOD_FLAGS_BIT_MIGHT_BE_SHARED with some
-soft semantics sort of allowing deviant nonstrict behavior seems
-like a real bad idea to me, it will likely create all kind of ambiguities
-we cannot foresee.
-
-> When the consumer drivers are checked (and modified if needed) that they
-> behave OK in this situation we can snap the
-> GPIOD_FLAGS_BIT_MIGHT_BE_SHARED to silence the warning.
-
-I have burnt myself a bit on "let's poke in this transitional
-thing that I promise to remove later" and that later never
-happens so I'd say don't do that.
-
-> gpiod_deassert() would be equivalent to Philipp's
-> gpiod_politely_suggest_value()
-
-I don't intuitively understand the semantics of these calls.
-Consider Rusty Russells API design manifesto:
-http://sweng.the-davies.net/Home/rustys-api-design-manifesto
-
-> Not sure how the core would refcount things, but to align with what Rob
-> was saying about the misleading API naming:
-> gpiod_set_value(priv->en_gpio, 1/0) against the DT's
-> GPIO_ACTIVE_HIGH/LOW of the line's active state we might want to have:
-> gpiod_assert(priv->en_gpio);
-> gpiod_deassert(priv->en_gpio);
-
-This is what gpiod_set_value() already does today in a way
-just name
-gpiod_set_value() -> gpio_set_asserted() and change
-the second argument to a bool named "asserted".
-
-It seems like a totally different and entirely syntactic problem
-separate from the reset business you're trying to solve?
-
-We had this discussion before this week and yeah, if we
-historically named the logical levels on the line "asserted"
-and "deasserted" everywhere it would be great.
-
-It is up to someone driving the change and changing it
-everywhere in that case. Preferably with a semantic
-coccinelle patch or sed script since it is purely
-syntactic, then plan where and when to
-run that. Then do that first, wait a kernel cycle and scoop up
-any fallout and leftovers and then start the next thing.
-
-> Basically assert would set the level to the active state defined by the
-> DT.
-
-Or ACPI. Or machine descriptor tables. I suppose.
-Doing APIs becomes generic, the suggestion I had
-above was more like doing something like detecting
-a shared line *specifically* for device tree and nothing
-else and handle it in gpiolib-of.c but maybe that is not
-possible.
-
-> Gradually drivers can be moved to this API pair from gpiod_set_value()
-> when it makes sense.
-
-The problem I have right now as subsystem maintainer is people
-starting things like that and never finishing them.
-
-If you wanna do this I suggest a fix it everywhere in one swift stroke
-approach with broad buy-in from everyone-approach or fail totally.
-We have too many in-transit API changes.
-
-> The current gpiod_set_* would operate like as it is right now by not
-> asking politely a level, whatever it is.
+On Wed, Nov 13, 2019 at 8:52 AM Marcelo Schmitt
+<marcelo.schmitt1@gmail.com> wrote:
 >
-> Hrm, probably both gpiod_assert() and gpiod_deassert() should be polite
-> when asking for level change?
-
-These APIs really need names that can be understood right off
-and they should be compile-time optional (a Kconfig option) so
-that drivers that really need them can select to have them
-explicitly.
-
-> If all consumers of the shared line is using gpiod_assert/deassert, then
-> the core should 'protect' the raw level of the gpiod_assert() calls.
+> Hi Rob,
 >
-> At the end we will see drivers converted to assert/deassert API when a
-> developer faces issues that they use shared GPIO line on a board.
+> Thanks for reviewing the binding doc again.
+> Aparently, this patch was added to Greg KH's staging tree.
+> What is the right procedure in this case? Should I send a v5 patchset or
+> just send a patch for this doc?
 
-> Another thing is that currently gpio core does not have refcounting and
-> most of the client drivers treat it like that.
+You need to do an incremental patch. Greg doesn't rebase.
 
-Notably all the drivers specifying GPIOD_FLAGS_BIT_NONEXCLUSIVE
-does not treat it like that and that is why they specify that
-flag. All regulators, I think.
+> In any case, I still have some doubts about the maximum constraint of
+> the channel property. Comments inline.
+>
+>
+> Thanks
+>
+> Marcelo
+>
+> On 11/12, Rob Herring wrote:
+> > On Fri, Nov 08, 2019 at 10:56:09AM -0300, Marcelo Schmitt wrote:
+> > > Add a devicetree schema for AD7292 monitor and control system.
+> > >
+> > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > > ---
+> > > Changelog V3 -> V4:
+> > > - updated SPDX identifier to GPL-2.0-only
+> > > - changed maxitems constraint on channel property
+> > >
+> > >  .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
+> > >  MAINTAINERS                                   |   7 ++
+> > >  2 files changed, 111 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > > new file mode 100644
+> > > index 000000000000..b68be3aaf587
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > > @@ -0,0 +1,104 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only
+> >
+> > Sigh, I gave you the exact line to use:
+> >
+> > # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >
+> > I've said to dual license with (GPL-2.0-only OR BSD-2-Clause) and people
+> > think I mean to pick one. So now I just give the whole line. I don't
+> > know how to be clearer.
+>
+> I thought I could use just GPL-2.0 since the driver code is GPL-2.0.
+> Anyway, I'll use the above line to specify the dt-binding license.
+>
+> >
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Analog Devices AD7292 10-Bit Monitor and Control System
+> > > +
+> > > +maintainers:
+> > > +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > > +
+> > > +description: |
+> > > +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
+> > > +  Temperature Sensor, and GPIOs
+> > > +
+> > > +  Specifications about the part can be found at:
+> > > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - adi,ad7292
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  vref-supply:
+> > > +    description: |
+> > > +      The regulator supply for ADC and DAC reference voltage.
+> > > +
+> > > +  spi-cpha: true
+> > > +
+> > > +  '#address-cells':
+> > > +    const: 1
+> > > +
+> > > +  '#size-cells':
+> > > +    const: 0
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - spi-cpha
+> > > +
+> > > +patternProperties:
+> > > +  "^channel@[0-7]$":
+> > > +    type: object
+> > > +    description: |
+> > > +      Represents the external channels which are connected to the ADC.
+> > > +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> > > +
+> > > +    properties:
+> > > +      reg:
+> > > +        description: |
+> > > +          The channel number. It can have up to 8 channels numbered from 0 to 7.
+> > > +        items:
+> > > +          maximum: 7
+> >
+> > Not what I said either. A slight but important difference in that you
+> > are missing a '-' to make 'items' a list rather than a schema/dict.
+> >
+> > Update dt-schema. This should give a warning now.
+>
+> I'm confused, I don't know how to make this doc the way you want.
+> I pulled the updates from the master branch of dt-schema repo and
+> reinstalled it.
+> Then I tried
+>         items:
+>           - maximum: 7
+> I've tried
+>         - items:
+>             maximum: 7
+> I also tried
+>         - items:
+>           maximum: 7
+> all gave me parsing errors when processing the ad7292 schema with
+> 'make dt_binding_check' and also with 'make -k dt_binding_check'.
+> Am I using the right branch? Should I pull from a branch other than the
+> master?
 
-> It is perfectly fine to
-> gpiod_get(priv->en_gpio,1);
-> gpiod_get(priv->en_gpio,1);
-> gpiod_get(priv->en_gpio,1);
-> gpiod_get(priv->en_gpio,0);
+Sorry, my fault there. The meta-schema requires 'minimum' if you give
+'maximum'. So:
 
-I guess you mean gpiod_set()
+        items:
+          - minimum: 0
+            maximum: 7
 
-> at the last call the GPIO value is going to be set to 0 no matter if it
-> was set to 1 three times prior, but I guess this can be worked out when
-> the driver(s) are converted to assert/deassert.
+The error message was less than useful, but I think I have a fix for that too.
 
-I don't understand why that would not be allowed?
-
-Again I guess not really related to the original problem,
-so if you want to work on that it can be done in isolation.
-
-To the overall question of a refcounting GPIO API:
-
-OK to add a new API like that I would say first convert the
-regulators to use them so we have a strong buy-in from a
-subsystem that already does this. That way we can get rid of
-the existing GPIOD_FLAGS_BIT_NONEXCLUSIVE and pull
-the handling of shared GPIO lines into gpiolib using these
-new APIs.
-
-I'm all for this.
-
-But the general usability needs to be proven.
-It is not a very huge task:
- git grep BIT_NONEXCLUSIVE |wc -l
-24
-
-24 occurrences in the whole kernel.
-
-If the suggested API doesn't fit regulators as well it is dead
-in the water. Then the usecase is likely specific to resets,
-and what you would need to do is rather improve the
-available semantics in the reset subsystem.
-
-So begin with creating a way to pull the shared handling of
-regulators into gpiolib with these clearly cut semantics
-delete the NONEXCLUSIVE thing and then when you are
-done with that exploit the same
-infrastructure for GPIO reset.
-
-Yours,
-Linus Walleij
+Rob
