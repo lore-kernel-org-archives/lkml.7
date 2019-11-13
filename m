@@ -2,101 +2,114 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAB4C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA8EC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB89206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:57:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8mPkt1Z"
+	by mail.kernel.org (Postfix) with ESMTP id 8ACE220659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfKMU5F (ORCPT
+        id S1726480AbfKMVA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:57:05 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33233 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfKMU5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:57:05 -0500
-Received: by mail-qt1-f194.google.com with SMTP id y39so4222989qty.0;
-        Wed, 13 Nov 2019 12:57:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Kzg+cr/dhrJgO1piPaEyuVjoZZjMZrA15PeHen3UdLk=;
-        b=X8mPkt1ZPwhWdTiBFBZIdxjOQBH5ouQPaS7ooGnrnQyOJcHvgWpdTF25RTTSiBmSeI
-         VQvje+ClweqXmuLAJydKPlXEmovxHyfJKADlzpJ3yI0gAwdsePObf27dl9woJhiqZB3y
-         bRHDKNqPCbESjmqDXRM4ovcBCqTAbHACj4SEfhMWaByeHMhRaLvHuh3QTRkUONdBxaML
-         7Wui6zRaOXqphBoI61ggiZLixp3aQDxnIvAElonuD3SnOGcRzSR4qXq4Lcj+71K/ePLN
-         TUm3EfONQYXAIidpZkdvwxE5TXx++6BWhvAfVVeq+sBp7xu68Amfu+y+9JBH8aU/V894
-         i3yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Kzg+cr/dhrJgO1piPaEyuVjoZZjMZrA15PeHen3UdLk=;
-        b=LFHePliU4pJ+OSkK6P6MTFVj+W4hyfTq1Wcmt/W5kmpnUsOZuU0IAN2Gp7X2kq/ZZq
-         rujE44OHM2y0u/pSWdHeQ8YRBi0wAcNQwT6ewUCIvCOuhGd0/mOrVtyAzIvcInbY8BG9
-         kDSGTQpOOU1R7gx/pWkU4cyYOy1VU3VcMnEajKp1WcO5YLD9CCArfyd18+SuDPb0dahT
-         Q9ktWGzvJWVTeo26kGqZPz72U18LyQ2Cid7r2pX22tz1rQxXy88C6u1PwQqETY+HVhmE
-         ol+F7qh2SvgIT/7RgcN/Ff+5yTe5F2bFGLPiHFd8aHfGu4ztKmvm8Fys/uxrP3iw6B7F
-         Z6Dg==
-X-Gm-Message-State: APjAAAUnUGM8puxZWDxHPtaqC4BQjt28dkYgdtEAdCbxHJwHgeTx2unJ
-        NX/dtOcCRpJgN9gZOcHE6A==
-X-Google-Smtp-Source: APXvYqyGN52CkIGaKAaKnnTB25qDeA9XucxkFiqpm2S8rSpOIT+/ghaPhsN08FgFQpf7dKL3NIbjdw==
-X-Received: by 2002:aed:3282:: with SMTP id z2mr4932353qtd.221.1573678624271;
-        Wed, 13 Nov 2019 12:57:04 -0800 (PST)
-Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id h12sm1500140qkh.123.2019.11.13.12.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 12:57:03 -0800 (PST)
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org,
-        HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH] efi: sanity check in case memermap() at efi_mem_reserve_persistent() returns NULL
-Date:   Wed, 13 Nov 2019 15:56:30 -0500
-Message-Id: <20191113205630.28434-1-msys.mizuma@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 Nov 2019 16:00:26 -0500
+Received: from sandeen.net ([63.231.237.45]:40684 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbfKMVAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 16:00:25 -0500
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 6689A2A83;
+        Wed, 13 Nov 2019 14:59:06 -0600 (CST)
+Subject: Re: [PATCH 00/13] add the latest exfat driver
+To:     Namjae Jeon <namjae.jeon@samsung.com>, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com
+References: <CGME20191113082216epcas1p2e712c23c9524e04be624ccc822b59bf0@epcas1p2.samsung.com>
+ <20191113081800.7672-1-namjae.jeon@samsung.com>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
+ nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
+ WL05ODFQ2cemDhx5uLghHEeOxuGj+1AI+kh/FCzMedHc6k87Yu2ZuaWF+Gh1W2ix6hikRJmQ
+ vj5BEeAx7xKkyBhzdbNIbbjV/iGi9b26B/dNcyd5w2My2gxMtxaiP7q5b6GM2rsQklHP8FtW
+ ZiYO7jsg/qIppR1C6Zr5jK1GQlMUIclYFeBbKggJ9mSwXJH7MIftilGQ8KDvNuV5AbkronGC
+ sEEHj2khs7GfVv4pmUUHf1MRIvV0x3WJkpmhuZaYg8AdJlyGKgp+TQ7B+wCjNTdVqMI1vDk2
+ BS6Rg851ay7AypbCPx2w4d8jIkQEgNjACHVDU89PNKAjScK1aTnW+HNUqg9BliCvuX5g4z2j
+ gJBs57loTWAGe2Ve3cMy3VoQ40Wt3yKK0Eno8jfgzgb48wyycINZgnseMRhxc2c8hd51tftK
+ LKhPj4c7uqjnBjrgOVaVBupGUmvLiePlnW56zJZ51BR5igWnILeOJ1ZIcf7KsaHyE6B1mG+X
+ dmYtjDhjf3NAcoBWJuj8euxMB6TcQN2MrSXy5wSKaw40evooGwARAQABtCVFcmljIFIuIFNh
+ bmRlZW4gPHNhbmRlZW5Ac2FuZGVlbi5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgAUCUzMzbAIZAQAKCRAgrhaS4T3e4Fr7D/wO+fenqVvHjq21SCjDCrt8HdVj
+ aJ28B1SqSU2toxyg5I160GllAxEHpLFGdbFAhQfBtnmlY9eMjwmJb0sCIrkrB6XNPSPA/B2B
+ UPISh0z2odJv35/euJF71qIFgWzp2czJHkHWwVZaZpMWWNvsLIroXoR+uA9c2V1hQFVAJZyk
+ EE4xzfm1+oVtjIC12B9tTCuS00pY3AUy21yzNowT6SSk7HAzmtG/PJ/uSB5wEkwldB6jVs2A
+ sjOg1wMwVvh/JHilsQg4HSmDfObmZj1d0RWlMWcUE7csRnCE0ZWBMp/ttTn+oosioGa09HAS
+ 9jAnauznmYg43oQ5Akd8iQRxz5I58F/+JsdKvWiyrPDfYZtFS+UIgWD7x+mHBZ53Qjazszox
+ gjwO9ehZpwUQxBm4I0lPDAKw3HJA+GwwiubTSlq5PS3P7QoCjaV8llH1bNFZMz2o8wPANiDx
+ 5FHgpRVgwLHakoCU1Gc+LXHXBzDXt7Cj02WYHdFzMm2hXaslRdhNGowLo1SXZFXa41KGTlNe
+ 4di53y9CK5ynV0z+YUa+5LR6RdHrHtgywdKnjeWdqhoVpsWIeORtwWGX8evNOiKJ7j0RsHha
+ WrePTubr5nuYTDsQqgc2r4aBIOpeSRR2brlT/UE3wGgy9LY78L4EwPR0MzzecfE1Ws60iSqw
+ Pu3vhb7h3bkCDQROsffUARAA0DrUifTrXQzqxO8aiQOC5p9Tz25Np/Tfpv1rofOwL8VPBMvJ
+ X4P5l1V2yd70MZRUVgjmCydEyxLJ6G2YyHO2IZTEajUY0Up+b3ErOpLpZwhvgWatjifpj6bB
+ SKuDXeThqFdkphF5kAmgfVAIkan5SxWK3+S0V2F/oxstIViBhMhDwI6XsRlnVBoLLYcEilxA
+ 2FlRUS7MOZGmRJkRtdGD5koVZSM6xVZQSmfEBaYQ/WJBGJQdPy94nnlAVn3lH3+N7pXvNUuC
+ GV+t4YUt3tLcRuIpYBCOWlc7bpgeCps5Xa0dIZgJ8Louu6OBJ5vVXjPxTlkFdT0S0/uerCG5
+ 1u8p6sGRLnUeAUGkQfIUqGUjW2rHaXgWNvzOV6i3tf9YaiXKl3avFaNW1kKBs0T5M1cnlWZU
+ Utl6k04lz5OjoNY9J/bGyV3DSlkblXRMK87iLYQSrcV6cFz9PRl4vW1LGff3xRQHngeN5fPx
+ ze8X5NE3hb+SSwyMSEqJxhVTXJVfQWWW0dQxP7HNwqmOWYF/6m+1gK/Y2gY3jAQnsWTru4RV
+ TZGnKwEPmOCpSUvsTRXsVHgsWJ70qd0yOSjWuiv4b8vmD3+QFgyvCBxPMdP3xsxN5etheLMO
+ gRwWpLn6yNFq/xtgs+ECgG+gR78yXQyA7iCs5tFs2OrMqV5juSMGmn0kxJUAEQEAAYkCHwQY
+ AQIACQUCTrH31AIbDAAKCRAgrhaS4T3e4BKwD/0ZOOmUNOZCSOLAMjZx3mtYtjYgfUNKi0ki
+ YPveGoRWTqbis8UitPtNrG4XxgzLOijSdOEzQwkdOIp/QnZhGNssMejCnsluK0GQd+RkFVWN
+ mcQT78hBeGcnEMAXZKq7bkIKzvc06GFmkMbX/gAl6DiNGv0UNAX+5FYh+ucCJZSyAp3sA+9/
+ LKjxnTedX0aygXA6rkpX0Y0FvN/9dfm47+LGq7WAqBOyYTU3E6/+Z72bZoG/cG7ANLxcPool
+ LOrU43oqFnD8QwcN56y4VfFj3/jDF2MX3xu4v2OjglVjMEYHTCxP3mpxesGHuqOit/FR+mF0
+ MP9JGfj6x+bj/9JMBtCW1bY/aPeMdPGTJvXjGtOVYblGZrSjXRn5++Uuy36CvkcrjuziSDG+
+ JEexGxczWwN4mrOQWhMT5Jyb+18CO+CWxJfHaYXiLEW7dI1AynL4jjn4W0MSiXpWDUw+fsBO
+ Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
+ m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
+ fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
+Message-ID: <69d00c12-7b8a-1d47-0c18-58323f7ca60b@sandeen.net>
+Date:   Wed, 13 Nov 2019 15:00:23 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191113081800.7672-1-namjae.jeon@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+On 11/13/19 2:17 AM, Namjae Jeon wrote:
+> This adds the latest Samsung exfat driver to fs/exfat. This is an
+> implementation of the Microsoft exFAT specification. Previous versions
+> of this shipped with millions of Android phones, an a random previous
+> snaphot has been merged in drivers/staging/.
+> 
+> Compared to the sdfat driver shipped on the phones the following changes
+> have been made:
+> 
+>  - the support for vfat has been removed as that is already supported
+>    by fs/fat
+>  - driver has been renamed to exfat
+>  - the code has been refactored and clean up to fully integrate into
+>    the upstream Linux version and follow the Linux coding style
+>  - metadata operations like create, lookup and readdir have been further
+>    optimized
+>  - various major and minor bugs have been fixed
+> 
+> We plan to treat this version as the future upstream for the code base
+> once merged, and all new features and bug fixes will go upstream first.
 
-System may crash as NULL pointer dereference in case memremap()
-at efi_mem_reserve_persistent() returns NULL.
+Apologies if I should know this already, but where are the userspace tools
+for exfat located?
 
-Add a sanity check to avoid that.
-
-Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Reported-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- drivers/firmware/efi/efi.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 07812d697..1d5ae7b95 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -1036,6 +1036,8 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
- 	/* first try to find a slot in an existing linked list entry */
- 	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
- 		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
-+		if (!rsv)
-+			return -ENOMEM;
- 		index = atomic_fetch_add_unless(&rsv->count, 1, rsv->size);
- 		if (index < rsv->size) {
- 			rsv->entry[index].base = addr;
--- 
-2.21.0
-
+Thanks,
+-Eric
