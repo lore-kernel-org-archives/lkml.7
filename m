@@ -2,91 +2,138 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92E8C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CD0C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B601C206E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CCD206E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkrDY2Mo"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bs4Ay0Sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfKMSN6 (ORCPT
+        id S1728230AbfKMSTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:13:58 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45851 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfKMSN6 (ORCPT
+        Wed, 13 Nov 2019 13:19:19 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:46030 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfKMSTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:13:58 -0500
-Received: by mail-pf1-f194.google.com with SMTP id z4so2164466pfn.12;
-        Wed, 13 Nov 2019 10:13:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Qt+wiKiu+ReQhJJjXbF+KMsmYJf80ApOlk+bZGeFKTc=;
-        b=XkrDY2MoftE3aIk9kSWJVdiwEJX1C0WdUO4WoArntcfH8VKFaoq8wTCAPDfjA95e94
-         tvHIjZCIe2RbvevDmaVAdM8uZFXnkKApOTbEQskJi/MUOz+HKyC6FWI156P3HpPnmoAA
-         zzXOBKfTzWxOPs1hRvodqTShZFbpB1h/PaW1tnYl7ieSJk1GkPpJVRk7M4cNxypERohn
-         tbdgHtd5CQ2eOSw0XKAgDk13OQN4utVnfmSEGLR3/aOFKhRrYu3Lda2xuzS/7FPqm+VD
-         a3gV8DVcgpiDiyyng9gjjOKPgmg41woM8lmaCgEhI7CzFEXkxj2M7XnMqvoUctTP6s+o
-         rypg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qt+wiKiu+ReQhJJjXbF+KMsmYJf80ApOlk+bZGeFKTc=;
-        b=VXfke2OMHcHpQPuFLZholzog94FbwaopdTJ5mntRLze2anhYdr/QzgHj0QghfLZ5pG
-         mMZlfutS1chO5nE8FykOKttHEauLlrgOyPmi3FdCX4la63/I5fJZy9iojWUz3hKy0Nc4
-         q+cU6/BlonK8+ahxkV8nrXLgX5DQTPls1m0h4bQyIJfnfceLIpkCoD5lT5/G+hLzRsC7
-         T/M2IhLVsYcZzphvuYfl7o0iYl1BkPlUc1DUcsDKP/1Mj6DsSUvcN28v8Uv0wr8ErCv/
-         V7WMde//xYUq/iLtwuRNYt3xCJB/RR6yX9MVgr9a1CoFxUGBjdO5L2zpFqAICl5EB0cH
-         UW5A==
-X-Gm-Message-State: APjAAAX4nXVb50RM5WgjkPI4hnIgmFuTbrqdE19rnoqlBXLeUaYrIwwd
-        lFkWJxeg3JU+xaP5mOl51qlyg7Qd
-X-Google-Smtp-Source: APXvYqwqti63K193EV6HigXkeOshcX3DBUF3TPvbgS/coFk+n8X3EYmqrVOs7VIpkmtlEd6uTroMqA==
-X-Received: by 2002:a62:fcd2:: with SMTP id e201mr921574pfh.52.1573668837485;
-        Wed, 13 Nov 2019 10:13:57 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 6sm3651248pfy.43.2019.11.13.10.13.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Nov 2019 10:13:56 -0800 (PST)
-Date:   Wed, 13 Nov 2019 10:13:54 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Subject: Re: [PATCH 3.16 00/25] 3.16.77-rc1 review
-Message-ID: <20191113181354.GA19912@roeck-us.net>
-References: <lsq.1573602477.548403712@decadent.org.uk>
+        Wed, 13 Nov 2019 13:19:18 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xADI97jv110780;
+        Wed, 13 Nov 2019 18:19:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=QqPLR23WbtLLmBLv1Y/qMpibvkpOaVLJ71YqnsOGErk=;
+ b=Bs4Ay0SbJRQz44r+iYu8kbiAT0IpoBiCDnukqLvyTDw784iMccDyO/YGpH1zYxz9r4T2
+ AvkMQDevx/10faleSSYf/eenNzt6qfkS0IkpKXTR5RRluFTDDZt5SORDZsed+M0JtoFA
+ f1N2Dpz4rvd2L70vpso4VLdPRXP2Ozt5S3a5rsjzvhB/8CmrQ0awcsWiNYZ28XduWeyC
+ F279alDiCS/WyWkG/dzO0j318w7eIz6+G9iGUHdoUDigTLDGZ8ZBiw8OtdqaXAICdnN8
+ 344t3/foyIUJ92MkZBauI0YAAxPMG8Kw0k7vKyGcIiyI5wItzJN70lnRfaAT/5J5LkhM uQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2w5mvtxckr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 18:19:15 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xADIDebh006778;
+        Wed, 13 Nov 2019 18:19:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2w7vbdatdr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 18:19:14 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xADIJEFd002374;
+        Wed, 13 Nov 2019 18:19:14 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 13 Nov 2019 10:19:13 -0800
+Date:   Wed, 13 Nov 2019 21:19:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Cc:     gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 8/9] staging: exfat: Collapse redundant return code
+ translations
+Message-ID: <20191113181904.GD3284@kadam>
+References: <20191112021000.42091-1-Valdis.Kletnieks@vt.edu>
+ <20191112021000.42091-9-Valdis.Kletnieks@vt.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <lsq.1573602477.548403712@decadent.org.uk>
+In-Reply-To: <20191112021000.42091-9-Valdis.Kletnieks@vt.edu>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9440 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911130157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9440 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911130157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:47:57PM +0000, Ben Hutchings wrote:
-> This is the start of the stable review cycle for the 3.16.77 release.
-> There are 25 patches in this series, which will be posted as responses
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Nov 11, 2019 at 09:09:56PM -0500, Valdis Kletnieks wrote:
+> Now that we no longer use odd internal return codes, we can
+> heave the translation code over the side, and just pass the
+> error code back up the call chain.
 > 
-> Responses should be made by Fri Nov 15 00:00:00 UTC 2019.
-> Anything received after that time might be too late.
+> Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+> ---
+>  drivers/staging/exfat/exfat_super.c | 92 +++++------------------------
+>  1 file changed, 14 insertions(+), 78 deletions(-)
 > 
+> diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+> index 5d538593b5f6..a97a61a60517 100644
+> --- a/drivers/staging/exfat/exfat_super.c
+> +++ b/drivers/staging/exfat/exfat_super.c
+> @@ -650,7 +650,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
+>  	struct uni_name_t uni_name;
+>  	struct super_block *sb = inode->i_sb;
+>  	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+> -	int ret;
+> +	int ret = 0;
 
-Build results:
-	total: 136 pass: 136 fail: 0
-Qemu test results:
-	total: 229 pass: 229 fail: 0
+Why are you adding this initializer?  It just disables static analysis
+warnings about uninitialized variables and it creates a static analysis
+warning about unused assignments.
 
-Guenter
+>  
+>  	/* check the validity of pointer parameters */
+>  	if (!fid || !path || (*path == '\0'))
+
+[ snip ]
+
+> @@ -3161,12 +3102,7 @@ static int exfat_bmap(struct inode *inode, sector_t sector, sector_t *phys,
+>  
+>  	err = ffsMapCluster(inode, clu_offset, &cluster);
+>  
+> -	if (err) {
+> -		if (err == -ENOSPC)
+> -			return -ENOSPC;
+> -		else
+> -			return -EIO;
+> -	} else if (cluster != CLUSTER_32(~0)) {
+> +	if (!err && (cluster != CLUSTER_32(~0))) {
+>  		*phys = START_SECTOR(cluster) + sec_offset;
+>  		*mapped_blocks = p_fs->sectors_per_clu - sec_offset;
+>  	}
+
+
+If ffsMapCluster() fails then we return success now.  Is that
+intentional?
+
+regards,
+dan carpener
+
