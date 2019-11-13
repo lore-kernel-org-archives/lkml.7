@@ -2,97 +2,157 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2693CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD9FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86EC20643
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED1B206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hf1Z5gez"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Sgh8xQ9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfKMXWu (ORCPT
+        id S1727059AbfKMXZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 18:22:50 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35061 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfKMXWu (ORCPT
+        Wed, 13 Nov 2019 18:25:27 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:2241 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfKMXZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 18:22:50 -0500
-Received: by mail-pl1-f194.google.com with SMTP id s10so1744731plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:22:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PnC2EnZ/9yWW959Hh/k8Fx1oMGg10XdljJMPZj6JnUY=;
-        b=Hf1Z5gez82r+oTd6ydC+ZjLQx1uQl/epkoQZOi2UWsUxtnC7vz6UbgVzXACvVguET8
-         B1r439ENlYw3ydKrZCF7LY3jQwp5xwpYB71unyWWJ4w630L+BZ/3X7WheMhfVi572N/4
-         yw7GZbzAXep8sNhNt2fNGHAOeRJ7vEDZ8dAXt4j4xlCbUDTJH52frakbBd+RZ4E67JmH
-         jv8zcL+wUIQP9wDH/Q323MQnDsjklM8emprm1gBjYMADfrolCEr7JYdlJPz1M8eK6mQJ
-         YEbodCDy9QsAUuo8eRXoU4oDr+I6FZgvOyW4RiKVW97hdxqx5ipxHC2B6U7SdpaR76XR
-         3sAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PnC2EnZ/9yWW959Hh/k8Fx1oMGg10XdljJMPZj6JnUY=;
-        b=gFlPCoobT1ZOhu+y5y9bbwKK6g66DR1fWnGigCbwlE0ITM3CZL7GMCIbSt5LlAaY5x
-         Nd19BNEf4Jlo9rSP5+qRBlLjTTTtrweWWAOCN9OTJ5Sd+j3bDeEKiqTERqxrFsJUdkvO
-         s10AcOZm5a5szhLBmC5LFAVE66he6ReMIWlFZo5oqdu50RT5DWyuoExY5vpzCPuEhitF
-         oPuavThsbzIPm5GRuxEky3tkukTDB+uJl0U7+ao6S0/3KAs/yRbsRMC90Qg6kdi1IXIE
-         hGbPEN+5l/NR/9LWTwDoFavGjRyoJlHvsTfiiYX7DiPVDbFIa3wWpr6F2b844wM6rUA+
-         prdg==
-X-Gm-Message-State: APjAAAX8RElN+ReLthq0jGPCNKXRQd/f8KqcERvVPDiTfM2fftUt9uu0
-        /u8Kk5RRVMaAkiMEzRjbLoepJg==
-X-Google-Smtp-Source: APXvYqwkCHtk+kWBYG2xS1z0RatDyIgpKCCiE9mnyxr59SsymXOXeGmdTvY41JCjZ3co01GD2gLLCw==
-X-Received: by 2002:a17:902:d901:: with SMTP id c1mr6362694plz.93.1573687369645;
-        Wed, 13 Nov 2019 15:22:49 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 12sm4427369pfv.92.2019.11.13.15.22.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 15:22:48 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
-Date:   Wed, 13 Nov 2019 15:22:45 -0800
-Message-Id: <20191113232245.4039932-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Wed, 13 Nov 2019 18:25:26 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcc90a80004>; Wed, 13 Nov 2019 15:24:24 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 13 Nov 2019 15:25:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 13 Nov 2019 15:25:20 -0800
+Received: from [10.2.160.107] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 23:25:19 +0000
+Subject: Re: [PATCH v4 09/23] mm/gup: introduce pin_user_pages*() and FOLL_PIN
+To:     Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com>
+ <20191113042710.3997854-10-jhubbard@nvidia.com>
+ <20191113104308.GE6367@quack2.suse.cz>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <3850aa22-6f03-bd2b-024f-5736c4461199@nvidia.com>
+Date:   Wed, 13 Nov 2019 15:22:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191113104308.GE6367@quack2.suse.cz>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573687464; bh=1TmaF+0LQcsFxIIl+yPUdlXgPu3Pw2KrYq1UfrZmOD8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Sgh8xQ9PPxEDYPCTK8yOmdqruurqzstpkQQJWGvT1ZuKvcNIm+LQ3r9aXrqQ9mszQ
+         Bu049858Sw2Icc5D17nHXFv2uQsdcr4xPrIX8xdiYxeSGVqbXJlpqaWLWE4t3jzM99
+         VuF91a2IBcxPvt3YPz/EF6VJnVwIt20m+YRBQJGScCmijzBCG+FdMVkUIYoHIR7z6o
+         jEChHIr4nyoheDQl2TBz15vaUAtG/VbXtnMxK3XkWyGpUbFva3/BqFu3QAkjswSCIq
+         sTwbFrrL1y3TY1TtnjqKRKFpvyNb5gHvpkqf+On66KeiFfk826TpWgO2QQef8bajR8
+         NyLLnJaaEwbcQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WiFi firmware used on db845c implements the 8bit host-capability
-message, so enable the quirk for this.
+On 11/13/19 2:43 AM, Jan Kara wrote:
+...
+> How does FOLL_PIN result in grabbing (at least normal, for now) page reference?
+> I didn't find that anywhere in this patch but it is a prerequisite to
+> converting any user to pin_user_pages() interface, right?
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 12f5f14ada5c..7ec7b90ab83e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -625,6 +625,8 @@
- 	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
- 	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
- 	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+
-+	qcom,snoc-host-cap-8bit-quirk;
- };
- 
- /* PINCTRL - additions to nodes defined in sdm845.dtsi */
+ohhh, I messed up on this intermediate patch: it doesn't quite stand alone as
+it should, as you noticed. To correct this, I can do one of the following:
+
+a) move the new pin*() routines into the later patch 16 ("mm/gup:
+track FOLL_PIN pages"), or
+
+b) do a temporary thing here, such as setting FOLL_GET and adding a TODO,
+within the pin*() implementations. And this switching it over to FOLL_PIN
+in patch 16.
+
+I'm thinking (a) is less error-prone, so I'm going with that unless someone
+points out that that is stupid. :)
+
+
+...
+> I was somewhat wondering about the number of functions you add here. So we
+> have:> 
+> pin_user_pages()
+> pin_user_pages_fast()
+> pin_user_pages_remote()
+> 
+> and then longterm variants:
+> 
+> pin_longterm_pages()
+> pin_longterm_pages_fast()
+> pin_longterm_pages_remote()
+> 
+> and obviously we have gup like:
+> get_user_pages()
+> get_user_pages_fast()
+> get_user_pages_remote()
+> ... and some other gup variants ...
+> 
+> I think we really should have pin_* vs get_* variants as they are very
+> different in terms of guarantees and after conversion, any use of get_*
+> variant in non-mm code should be closely scrutinized. OTOH pin_longterm_*
+> don't look *that* useful to me and just using pin_* instead with
+> FOLL_LONGTERM flag would look OK to me and somewhat reduce the number of
+> functions which is already large enough? What do people think? I don't feel
+> too strongly about this but wanted to bring this up.
+> 
+> 								Honza
+
+Sounds just right to me, and I see that Dan and Ira also like it.
+So I'll proceed with that.
+
+thanks,
 -- 
-2.23.0
-
+John Hubbard
+NVIDIA
