@@ -3,70 +3,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B5EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA846C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C3320818
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF5720818
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfKMJr7 (ORCPT
+        id S1727695AbfKMJsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:47:59 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57618 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727445AbfKMJr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:47:58 -0500
-Received: from [109.168.11.45] (port=55110 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1iUpFj-001uIA-Ox; Wed, 13 Nov 2019 10:47:55 +0100
-Subject: Re: [PATCH v3 3/3] i2c: smbus: switch from loops to memcpy
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-iio@vger.kernel.orgi, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
- <20191112203132.163306-4-dmitry.torokhov@gmail.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <320567eb-00f5-2228-c507-317131b4af74@lucaceresoli.net>
-Date:   Wed, 13 Nov 2019 10:47:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 04:48:03 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43040 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727674AbfKMJsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 04:48:00 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6CD6BC08E7C566C8E8DB;
+        Wed, 13 Nov 2019 17:47:57 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
+ 17:47:49 +0800
+Date:   Wed, 13 Nov 2019 09:47:42 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Linux MM <linux-mm@kvack.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, "Keith Busch" <keith.busch@intel.com>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linuxarm <linuxarm@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tao Xu <tao3.xu@intel.com>
+Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
+Message-ID: <20191113094742.00000dc4@huawei.com>
+In-Reply-To: <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+        <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
+        <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20191112203132.163306-4-dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+On Tue, 12 Nov 2019 09:55:17 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-On 12/11/19 21:31, Dmitry Torokhov wrote:
-> When copying memory from one buffer to another, instead of open-coding
-> loops with byte-by-byte copies let's use memcpy() which might be a bit
-> faster and makes intent more clear.
+> [ add Tao Xu ]
+> 
+> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > Generic Initiators are a new ACPI concept that allows for the
+> > description of proximity domains that contain a device which
+> > performs memory access (such as a network card) but neither
+> > host CPU nor Memory.
+> >
+> > This patch has the parsing code and provides the infrastructure
+> > for an architecture to associate these new domains with their
+> > nearest memory processing node.  
+> 
+> Thanks for this Jonathan. May I ask how this was tested? Tao has been
+> working on qemu support for HMAT [1]. I have not checked if it already
+> supports generic initiator entries, but it would be helpful to include
+> an example of how the kernel sees these configurations in practice.
+> 
+> [1]: http://patchwork.ozlabs.org/cover/1096737/
 
-Good idea!
+Tested against qemu with SRAT and SLIT table overrides from an
+initrd to actually create the node and give it distances
+(those all turn up correctly in the normal places).  DSDT override
+used to move an emulated network card into the GI numa node.  That
+currently requires the PCI patch referred to in the cover letter.
+On arm64 tested both on qemu and real hardware (overrides on tables
+even for real hardware as I can't persuade our BIOS team to implement
+Generic Initiators until an OS is actually using them.)
 
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+Main real requirement is memory allocations then occur from one of
+the nodes at the minimal distance when you are do a devm_ allocation
+from a device assigned. Also need to be able to query the distances
+to allow load balancing etc.  All that works as expected.
 
--- 
-Luca
+It only has a fairly tangential connection to HMAT in that HMAT
+can provide information on GI nodes.  Given HMAT code is quite happy
+with memoryless nodes anyway it should work.  QEMU doesn't currently
+have support to create GI SRAT entries let alone HMAT using them.
+
+Whilst I could look at adding such support to QEMU, it's not
+exactly high priority to emulate something we can test easily
+by overriding the tables before the kernel reads them.
+
+I'll look at how hard it is to build an HMAT tables for my test
+configs based on the ones I used to test your HMAT patches a while
+back.  Should be easy if tedious.
+
+Jonathan
+
+
+ 
+
