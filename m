@@ -2,86 +2,169 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBC5C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A75C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07235206EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA1D206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:03:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOJotr2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfKMSBD (ORCPT
+        id S1728259AbfKMSDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:01:03 -0500
-Received: from sauhun.de ([88.99.104.3]:59180 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbfKMSBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:01:02 -0500
-Received: from localhost (p54B337BB.dip0.t-ipconnect.de [84.179.55.187])
-        by pokefinder.org (Postfix) with ESMTPSA id 6D8812C040C;
-        Wed, 13 Nov 2019 19:01:00 +0100 (CET)
-Date:   Wed, 13 Nov 2019 19:00:57 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: max9611: Fix too short conversion time delay
-Message-ID: <20191113180057.GA2764@ninjato>
-References: <20191113092133.23723-1-geert+renesas@glider.be>
+        Wed, 13 Nov 2019 13:03:10 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43053 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfKMSDJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:03:09 -0500
+Received: by mail-il1-f194.google.com with SMTP id r9so2619071ilq.10;
+        Wed, 13 Nov 2019 10:03:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nkMxg4bs0DY+fIenh6frbtx62cRKfHn1vX+M8COZOOM=;
+        b=ZOJotr2theprfi37s1ZEIS5HHCaeL01Ab4HU5FUqizNaVMrYRTk4el/33r/GtMwgJx
+         gP9lK+Uj7/CPHrRUlpL34TEYUIqnW/WZ91lxe8yxHXCY7GPimgK5aaJVySsPdS5WP3Q9
+         MoPnQCkLJBQfX8K65SYN32vyf5T3XvKQ/iUxOeTRzOdo5lhvfot79VRaWgJfSVRsbAjY
+         6b93BTjyxUXfnT38ACpOPQSLCoQvPJBxcIAetT4unDApSPQSVWbNIG1UlWP1GBQn8fdN
+         f65KaOmfq+5w4Ao8GkocnWjJeAP98sXWLtoI5S1rsWMV469MzVHghhMcP0Jt6MxbHDbM
+         fkiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nkMxg4bs0DY+fIenh6frbtx62cRKfHn1vX+M8COZOOM=;
+        b=V/sKGFYQsBWnNbepsp6NpqM0VKBk0eB4VWKl76j2W5/TkOc0wrtwFN3bDVbdb0F3QY
+         Bn/RgJpTM60o+57s2UkECN/Xhsop2UwVXG9NsIhJJqelTkNyh6qDsvikx0WRccV19NGQ
+         SeLMN/A4OjQ3SVqntszssSIMclnnB+Cxv5jWudBErabu6xUDw450Ho39TV6D3I+N70+F
+         crICZ7iTQDK46XsDrdvRm+mOVBTHnmjzki7K7txWxunA2TsyCbu/aZKw9kPZmMBgir3E
+         DvY0t6VLuppuPHNUCoYvIXxV7XodHEh3lsLcNLAvKl6/toG1i+CQW9ikdsmG96x+fv7L
+         fe+A==
+X-Gm-Message-State: APjAAAUlV1anpTLXNVsCWGTexTqu7gEGglwSWWKKnlu2eYvlsEc7oPdk
+        aFszjKYcrzTlVk3iKA7FcoKDhamuZ+rrE0GsI4I=
+X-Google-Smtp-Source: APXvYqwv3ffUNkAkeZW/JhON9obx0IFBdDOnyhASnVKWZt22SwhgbxtOrGqRpWEjNjq1r4lCXRxECbyDTjz5rKC0CEo=
+X-Received: by 2002:a05:6e02:c91:: with SMTP id b17mr5199609ile.33.1573668188735;
+ Wed, 13 Nov 2019 10:03:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Content-Disposition: inline
-In-Reply-To: <20191113092133.23723-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191109004033.1496871-1-bjorn.andersson@linaro.org>
+ <20191109004033.1496871-2-bjorn.andersson@linaro.org> <CAOCk7NrkpwyuZnq7C3CgLDBHoCXM=SMxvt_iv+nQzS9atT3B9A@mail.gmail.com>
+In-Reply-To: <CAOCk7NrkpwyuZnq7C3CgLDBHoCXM=SMxvt_iv+nQzS9atT3B9A@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 13 Nov 2019 11:02:57 -0700
+Message-ID: <CAOCk7Nq4MgZ1ai6vu+hq3H8qu7P924JCsy1_ru7=5MCF2Z2nwg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] remoteproc: qcom_q6v5_mss: Don't reassign mpss
+ region on shutdown
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 10:01 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> On Fri, Nov 8, 2019 at 5:40 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > Trying to reclaim mpss memory while the mba is not running causes the
+> > system to crash on devices with security fuses blown, so leave it
+> > assigned to the remote on shutdown and recover it on a subsequent boot.
+> >
+> > Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+> Stuff still works on the laptop, and I don't hit the access violation
+> with the crash dump scenario on the mtp.
+>
+> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Actually, nack that.  See comment below.
 
+>
+> > ---
+> >
+> > Changes since v1:
+> > - Assign memory back to Linux in coredump case
+> >
+> >  drivers/remoteproc/qcom_q6v5_mss.c | 20 ++++++++++----------
+> >  1 file changed, 10 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> > index de919f2e8b94..efab574b2e12 100644
+> > --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> > +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> > @@ -875,11 +875,6 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
+> >                 writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+> >         }
+> >
+> > -       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+> > -                                     false, qproc->mpss_phys,
+> > -                                     qproc->mpss_size);
+> > -       WARN_ON(ret);
+> > -
+> >         q6v5_reset_assert(qproc);
+> >
+> >         q6v5_clk_disable(qproc->dev, qproc->reset_clks,
+> > @@ -969,6 +964,10 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+> >                         max_addr = ALIGN(phdr->p_paddr + phdr->p_memsz, SZ_4K);
+> >         }
+> >
+> > +       /* Try to reset ownership back to Linux */
+> > +       q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
+> > +                               qproc->mpss_phys, qproc->mpss_size);
+> > +
+> >         mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
+> >         qproc->mpss_reloc = mpss_reloc;
+> >         /* Load firmware segments */
+> > @@ -1058,9 +1057,14 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+> >         void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+> >
+> >         /* Unlock mba before copying segments */
+> > -       if (!qproc->dump_mba_loaded)
+> > +       if (!qproc->dump_mba_loaded) {
+> >                 ret = q6v5_mba_load(qproc);
+> >
+> > +               /* Try to reset ownership back to Linux */
+> > +               q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
+> > +                                       qproc->mpss_phys, qproc->mpss_size);
 
-> According to the datasheet, the typical ADC conversion time is 2 ms, but
-> no minimum or maximum values are provided.
+If the load fails, we can't pull the memory otherwise we'll hit the
+access violation (serror).  I happened to see this on a production
+device, where I think the load fails because crashdumps are not
+enabled.
 
-That sentence makes me want to increase the delay to 4ms.
-
-Maybe we can ask someone at Analog in parallel? I recently found this
-patch from an Analog developer in my inbox "[RESEND PATCH] drm: bridge:
-adv7511: Fix low refresh rate register for ADV7533/5" Or do you guys
-know a better contact?
-
-
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3MRNUACgkQFA3kzBSg
-KbYvLA//QC2khOniuIXDDEiySNx0++QypYnYPbaNT1FsIp8gPDnwhbhC/WAf/3qY
-6Nbb3lWwkcILTs8seOJ2VBKLGYM97cFU0dFCv/YJiU2l/JAftQ5ZKwtnkaxBjyVX
-KA4CId2zw4c9pGgBXhFdqBazd4gDThNtGgLVz1adactW7+7eU3PWFKv6HXxXM2W4
-Rs1tjtYEmFRA5TVn8n5Rozn//chlgoYKPTCEv1igdW87U/AeLh4zrZY5Y3qDjSLg
-Pp43uiOZa1bZ9+3KQw8bSbV1T64fxhzQGE4ARUb0OQym5LhL4ARjHUYY/HBHU5CH
-0U7RHGoA3rowtSI7t8wn9Y71MeZB6kbXdJhdHL1OyTJkqxKLFm4wxJYAKdOsHRfk
-U1vqvrmODrwz51yoCxzXGum9OV2bDnc1K2fESWAvJe2oNAJGbDJgDIsP1J+nFbqn
-CCugzMdpPIH0vFrqmZCSKHd1588o4YdNL+LiP+eRGqzPFPFJhpkdP5ABI6qEg5sL
-dQPUbA21wQFYF1Lvmxz06/oRVJ9lpjJiGKRQtpjuju4Zk7x7TAw+DE0KdioVuyDn
-bKhIew+2Dq6fLY143Ulk6I5xJ4stfdjX5kEKoOyf29xvI0pZDwL3VmysN/dGU+bd
-xpYu3BkMP4VhQwvlKOe4OAlzTbb8y+V9EJabXgSfJi3ZDO9rM0Y=
-=W4r0
------END PGP SIGNATURE-----
-
---7AUc2qLy4jB3hD7Z--
+> > +       }
+> > +
+> >         if (!ptr || ret)
+> >                 memset(dest, 0xff, segment->size);
+> >         else
+> > @@ -1111,10 +1115,6 @@ static int q6v5_start(struct rproc *rproc)
+> >         return 0;
+> >
+> >  reclaim_mpss:
+> > -       xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+> > -                                               false, qproc->mpss_phys,
+> > -                                               qproc->mpss_size);
+> > -       WARN_ON(xfermemop_ret);
+> >         q6v5_mba_reclaim(qproc);
+> >
+> >         return ret;
+> > --
+> > 2.23.0
+> >
