@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F9BC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD22C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40B422469
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203CB2246D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610191;
-	bh=3fgoESSl24pJY6dtVKBg2Cby1Rhx2UzBqyVeIH3dIMg=;
+	s=default; t=1573610196;
+	bh=LAacLFUZ6peFqOHVPLbtujVYQS0liVSdAa/0Z18JY+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IZj2mLxhVaO0XsBrVroiseKJhBqJxF6EcsEbj3tgiU/s7S8oiP5qFPGj/iVl3s3ye
-	 5u11q+ELhkvATqLZYFbLgBp4E6ZchMaxns466kzxZgwkXwWKmHxS9zVZZM7ORfxwYY
-	 rCi9r3ZmZm0s/LzBkmn4MB8PV6S5sTdBJDeF5TAc=
+	b=LZpFONXBuduJ7OTrYLQWXMDR0RWq8FWW7C5DNoRhim/THxifEvo1xCHSO4Uja2i0o
+	 rwTeV16YIFMG3Xl7CFh2geio49ISDzgtW4xx0M/xM82o/cQblIo0pelERjkhCH6asB
+	 F7XMktCcSb7kl+xSFnddcy43ecnySvrSdAOXE18A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfKMB4a (ORCPT
+        id S1729526AbfKMB4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbfKMB42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:28 -0500
+        id S1728400AbfKMB4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DCCA2245D;
-        Wed, 13 Nov 2019 01:56:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38FF92245C;
+        Wed, 13 Nov 2019 01:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610188;
-        bh=3fgoESSl24pJY6dtVKBg2Cby1Rhx2UzBqyVeIH3dIMg=;
+        s=default; t=1573610191;
+        bh=LAacLFUZ6peFqOHVPLbtujVYQS0liVSdAa/0Z18JY+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xr/lHOp5hEhu17NCdXNTGZ1Nt51pvMrjvf+/yzROhxZpCH3VryLLnbQlrfGd5LIc2
-         NTxhbDfvkIZwTG7VHpTxPyb+36mLAxcesl0Vme/X3XM48fdWATeH6RsYWQHIvAoxFC
-         e/FYjVpYrNPEYxLzb2zcsky09pe5X2KDgof8HdUw=
+        b=a8jgC5Gmqpr7vT3GHqaOlB+SIPzKq1yHuZ/86J8PAZMe/8OwTGRn7xFiE4XrdNG77
+         sK1oqEW482st85/6YHCxqQbbTn9BjHNczi7ILrmyndGKH54IUPvxxzE/OU0kUntzc7
+         2X/5vbYERpVuW1CEUczIt6CguVevur85euc3XPuA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 004/115] ARM: dts: omap5: enable OTG role for DWC3 controller
-Date:   Tue, 12 Nov 2019 20:54:31 -0500
-Message-Id: <20191113015622.11592-4-sashal@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 005/115] net: hns3: Fix for netdev not up problem when setting mtu
+Date:   Tue, 12 Nov 2019 20:54:32 -0500
+Message-Id: <20191113015622.11592-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -61,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit 656c1a65ab555ee5c7cd0d6aee8ab82ca3c1795f ]
+[ Upstream commit 93d8daf460183871a965dae339839d9e35d44309 ]
 
-Since SMPS10 and OTG cable detection extcon are described here, and
-work to enable OTG power when an OTG cable is plugged in, we can
-define OTG mode in the controller (which is disabled by default in
-omap5.dtsi).
+Currently hns3_nic_change_mtu will try to down the netdev before
+setting mtu, and it does not up the netdev when the setting fails,
+which causes netdev not up problem.
 
-Tested on OMAP5EVM and Pyra.
+This patch fixes it by not returning when the setting fails.
 
-Suggested-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: a8e8b7ff3517 ("net: hns3: Add support to change MTU in HNS3 hardware")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap5-board-common.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hns3_enet.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-index 7824b2631cb6b..f65343f8e1d69 100644
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -694,6 +694,10 @@
- 	vbus-supply = <&smps10_out1_reg>;
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hns3_enet.c
+index 69726908e72c4..5483cb23c08a3 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hns3_enet.c
+@@ -1307,13 +1307,11 @@ static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
+ 	}
  
-+&dwc3 {
-+	dr_mode = "otg";
-+};
-+
- &mcspi1 {
+ 	ret = h->ae_algo->ops->set_mtu(h, new_mtu);
+-	if (ret) {
++	if (ret)
+ 		netdev_err(netdev, "failed to change MTU in hardware %d\n",
+ 			   ret);
+-		return ret;
+-	}
+-
+-	netdev->mtu = new_mtu;
++	else
++		netdev->mtu = new_mtu;
  
- };
+ 	/* if the netdev was running earlier, bring it up again */
+ 	if (if_running && hns3_nic_net_open(netdev))
 -- 
 2.20.1
 
