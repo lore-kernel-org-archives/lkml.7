@@ -2,130 +2,131 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51808C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05801C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE0F206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61897206E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dc0/f4Pg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ozjH8/ZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfKMTfI (ORCPT
+        id S1726564AbfKMTiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:35:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47454 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726449AbfKMTfH (ORCPT
+        Wed, 13 Nov 2019 14:38:00 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40095 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfKMTiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:35:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573673706;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=txS1khq9ZKNA0GR2yPgniZL1Ij4hIU/9SqdOMLLoMc8=;
-        b=dc0/f4PgdTHbkuEFCD0ORZ9jbXjyFx9MTL0ogjc2KXc1977xpPLn3jkgwIJQPNIgpPbKdY
-        hcX/VRljpKDuYQ57LiPPW166qoOYhwPLDyHvDQqat3aJnH1lMBCeOw0H3EVkwSPM7AX7u9
-        1Ww/J0QugbyOaiTVwkY/VtkBxKJ7EXo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-lC8gbxsdMjGnpukZrfE3Dw-1; Wed, 13 Nov 2019 14:35:05 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1AE638029AF;
-        Wed, 13 Nov 2019 19:35:03 +0000 (UTC)
-Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A2FE426E48;
-        Wed, 13 Nov 2019 19:34:58 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] x86/speculation: Fix incorrect MDS/TAA mitigation status
-Date:   Wed, 13 Nov 2019 14:33:50 -0500
-Message-Id: <20191113193350.24511-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: lC8gbxsdMjGnpukZrfE3Dw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 Nov 2019 14:38:00 -0500
+Received: by mail-io1-f67.google.com with SMTP id p6so3897025iod.7;
+        Wed, 13 Nov 2019 11:37:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qzwujp8rTgTl9+3sAbPrswzrZfz1gfQWPbEg9+4F518=;
+        b=ozjH8/ZUfQ2cn2Shup6m3S6r23+l600p3IQKlEwI/WV41WNVyzYTOXRhSmhi9cSaU8
+         8C2MfrQNRoEBF2iuxNSsfOWM3FrWzd/0BYYi/DNbr+VvXJ1loO6FOwer0u3b+nTzmYfN
+         cliWX/v+W+IB14U2s4Jd+EktLLph+ba1wDP2kT9ZB0l4q/A6EnDfmrqkp24SO8IyCkUH
+         Hay6Eq4pLvDpOWl2x8BoFpXSIRSrwuVREz7SUaJy3YsUMRQAZvHjSu+1uV8lbr9vOh6U
+         /y+NHQpCoGFhBM4eYxEAM/4H51tXI6O2acTKYOG4YhFF728sXGpqWkMgW5uFQ4tWv2nM
+         jkzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qzwujp8rTgTl9+3sAbPrswzrZfz1gfQWPbEg9+4F518=;
+        b=HDpXz1H4MbZ1fIK+6x/RyX0gb5dGUCiCSg1xpA3TgnZbZFLGcmh1LI84JvdXqABAY4
+         /pYcKC9xcSoQz2tQ1yM03fbnVr2rRv79mUZsXCypAfR7eifakB/GqNpt60GE1pel61mY
+         XO67lAfRB2XG40pISOGBDqOsmMqzfw4pgARsvU9LK+vwpBaCUNnl6OpcPPiVpwyZVtKf
+         MjkUgV4RASxTaGyf3YvyYH5Uvhc36bOhv1xS4NwnExETKUtFv+YZsOfWFl4kVVv6hdGD
+         vM0UJtJ4S51z3zfDQkFp21BXm/zkPDgvJNFvL2qZ8XtQMIwFRIHtI82LRdX+SNNDqyEf
+         xMXg==
+X-Gm-Message-State: APjAAAUtV+Kb13FDEWyVoJi8KXH8y9xeBh9ZMNKatNdziLs8K+ss5lPD
+        IESYRVFQlXr8fygvAFenNU3M2VTGVvRPYuB5KCQ=
+X-Google-Smtp-Source: APXvYqxni+hm9YE3cMiiBsq+tA2kd4YY3cEWlU1jikSd8uLb3c2eNIA4I/pha8dG2m3lQDNH4a37yhjSSHETvVXpYtI=
+X-Received: by 2002:a02:9a02:: with SMTP id b2mr2194449jal.15.1573673877724;
+ Wed, 13 Nov 2019 11:37:57 -0800 (PST)
+MIME-Version: 1.0
+References: <1565903072-3948-1-git-send-email-wenwen@cs.uga.edu> <20191113192821.GA3441686@builder>
+In-Reply-To: <20191113192821.GA3441686@builder>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 13 Nov 2019 12:37:46 -0700
+Message-ID: <CAOCk7NpoQ_JEQj61BvU4HLzxSOQtxUuB-nyrXRKQTxjZ7infbQ@mail.gmail.com>
+Subject: Re: [PATCH] ath10k: add cleanup in ath10k_sta_state()
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER" 
+        <ath10k@lists.infradead.org>,
+        "open list:NETWORKING DRIVERS (WIRELESS)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        govinds@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For MDS vulnerable processors with TSX support, enabling either MDS
-or TAA mitigations will enable the use of VERW to flush internal
-processor buffers at the right code path. IOW, they are either both
-mitigated or both not mitigated. However, if the command line options
-are inconsistent, the vulnerabilites sysfs files may not report the
-mitigation status correctly.
+On Wed, Nov 13, 2019 at 12:28 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 15 Aug 14:04 PDT 2019, Wenwen Wang wrote:
+>
+> > If 'sta->tdls' is false, no cleanup is executed, leading to memory/resource
+> > leaks, e.g., 'arsta->tx_stats'. To fix this issue, perform cleanup before
+> > go to the 'exit' label.
+> >
+>
+> Unfortunately this patch consistently crashes all my msm8998, sdm845 and
+> qcs404 devices (running ath10k_snoc).  Upon trying to join a network the
+> WiFi firmware crashes with the following:
+>
+> [  124.315286] wlan0: authenticate with 70:3a:cb:4d:34:f3
+> [  124.334051] wlan0: send auth to 70:3a:cb:4d:34:f3 (try 1/3)
+> [  124.338828] wlan0: authenticated
+> [  124.342470] wlan0: associate with 70:3a:cb:4d:34:f3 (try 1/3)
+> [  124.347223] wlan0: RX AssocResp from 70:3a:cb:4d:34:f3 (capab=0x1011 status=0 aid=2)
+> [  124.402535] qcom-q6v5-mss 4080000.remoteproc: fatal error received: err_qdi.c:456:EF:wlan_process:1:cmnos_thread.c:3900:Asserted in wlan_vdev.c:_wlan_vdev_up:3219
+>
+> Can we please revert it for v5.5?
 
-For example, with only the "mds=3Doff" option:
+I observe the same, and concur with this request.
 
-  vulnerabilities/mds:Vulnerable; SMT vulnerable
-  vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vulner=
-able
-
-The mds vulnerabilities file has wrong status in this case.
-
-Change taa_select_mitigation() to sync up the two mitigation status
-and have them turned off if both "mds=3Doff" and "tsx_async_abort=3Doff"
-are present.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- arch/x86/kernel/cpu/bugs.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 4c7b0fa15a19..418d41c1fd0d 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -304,8 +304,12 @@ static void __init taa_select_mitigation(void)
- =09=09return;
- =09}
-=20
--=09/* TAA mitigation is turned off on the cmdline (tsx_async_abort=3Doff) =
-*/
--=09if (taa_mitigation =3D=3D TAA_MITIGATION_OFF)
-+=09/*
-+=09 * TAA mitigation via VERW is turned off if both
-+=09 * tsx_async_abort=3Doff and mds=3Doff are specified.
-+=09 */
-+=09if (taa_mitigation =3D=3D TAA_MITIGATION_OFF &&
-+=09    mds_mitigation =3D=3D MDS_MITIGATION_OFF)
- =09=09goto out;
-=20
- =09if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
-@@ -339,6 +343,15 @@ static void __init taa_select_mitigation(void)
- =09if (taa_nosmt || cpu_mitigations_auto_nosmt())
- =09=09cpu_smt_disable(false);
-=20
-+=09/*
-+=09 * Update MDS mitigation, if necessary, as the mds_user_clear is
-+=09 * now enabled for TAA mitigation.
-+=09 */
-+=09if (mds_mitigation =3D=3D MDS_MITIGATION_OFF &&
-+=09    boot_cpu_has_bug(X86_BUG_MDS)) {
-+=09=09mds_mitigation =3D MDS_MITIGATION_FULL;
-+=09=09mds_select_mitigation();
-+=09}
- out:
- =09pr_info("%s\n", taa_strings[taa_mitigation]);
- }
---=20
-2.18.1
-
+>
+> Regards,
+> Bjorn
+>
+> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> > ---
+> >  drivers/net/wireless/ath/ath10k/mac.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+> > index 0606416..f99e6d2 100644
+> > --- a/drivers/net/wireless/ath/ath10k/mac.c
+> > +++ b/drivers/net/wireless/ath/ath10k/mac.c
+> > @@ -6548,8 +6548,12 @@ static int ath10k_sta_state(struct ieee80211_hw *hw,
+> >
+> >               spin_unlock_bh(&ar->data_lock);
+> >
+> > -             if (!sta->tdls)
+> > +             if (!sta->tdls) {
+> > +                     ath10k_peer_delete(ar, arvif->vdev_id, sta->addr);
+> > +                     ath10k_mac_dec_num_stations(arvif, sta);
+> > +                     kfree(arsta->tx_stats);
+> >                       goto exit;
+> > +             }
+> >
+> >               ret = ath10k_wmi_update_fw_tdls_state(ar, arvif->vdev_id,
+> >                                                     WMI_TDLS_ENABLE_ACTIVE);
+> > --
+> > 2.7.4
+> >
