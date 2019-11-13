@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8F2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4E6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D47622470
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CDA322470
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610496;
-	bh=9F6Vd0N2Rp9mGrRG17vl7CI3YR5ww4wOLB1wiwB7COA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TkQxu2TZ2RmnQNTHXebeUjX7EwiQoMmfCV2vq7h9pSvRVivaAsbUPNUPAl0Ii1k+b
-	 32+h44HH2fd1udtLzAQp/h4rQYIi+VJnceKOfscbEhzNHRG01+S1LhZqpdx9Z/YYBO
-	 oGKzH5hFheQTa4jV/g0ab1k0R7tcSao1NSML9qps=
+	s=default; t=1573610501;
+	bh=wDWDDJS2rf7yjYyHmrkVoMrlXKdLWNQWajkwfNRD3zQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pWFoQSkpFl5KwoPNo6PtyFtlZ0Y8b2vsOOBf9HvzZXz0PkZxH4ZYyBZl4Dm/xrnfh
+	 yOQyr4yWk9DJlQVGknlKyejk20bymYEpH8EQOK5ctjwcm+4T5A6/uTS3Bx5N3F7A0Y
+	 7up+F+0p+d3JYrWk/SprMk8kKcrUyqm7rtnGaX1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfKMCBf (ORCPT
+        id S1730808AbfKMCBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:01:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57568 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:01:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbfKMCBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:33 -0500
+        id S1728571AbfKMCBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:01:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A885022469;
-        Wed, 13 Nov 2019 02:01:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0621222474;
+        Wed, 13 Nov 2019 02:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610493;
-        bh=9F6Vd0N2Rp9mGrRG17vl7CI3YR5ww4wOLB1wiwB7COA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pVNqF+VH5DGcte5gDHZPuK4r5osC7+fOF6OIgoJz3JZLcEgjTJzIM9QZKtgRRk/1K
-         x+Cb6dBENCoateU8vaRvwXZH04drheAhra+Hh6ZcJ7nJkAvMGCSJHdplpluQkRmCc1
-         SzxZFH50QqDh6qridQ0vjv8AniWJMNDcE7gaFsSc=
+        s=default; t=1573610495;
+        bh=wDWDDJS2rf7yjYyHmrkVoMrlXKdLWNQWajkwfNRD3zQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r3g5BJOUNePo375ZXC3ezfC5JgcA+TLrMA0QYXyLNt6G6HyOz2uagxTUYKpxhuIzY
+         6EEnbxl/2vyOpFA2EkZs42+KR2Zeilbd1VvwTYODc5tAh2netSUUxE6JhA3EyeHT+B
+         jWHSov+yR1bidurOxZ260lmEv0G7WuAPnpqp7Q/E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        dev@openvswitch.org
-Subject: [PATCH AUTOSEL 4.4 01/48] net: ovs: fix return type of ndo_start_xmit function
-Date:   Tue, 12 Nov 2019 21:00:44 -0500
-Message-Id: <20191113020131.13356-1-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.4 03/48] f2fs: return correct errno in f2fs_gc
+Date:   Tue, 12 Nov 2019 21:00:46 -0500
+Message-Id: <20191113020131.13356-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
+References: <20191113020131.13356-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,47 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit eddf11e18dff0e8671e06ce54e64cfc843303ab9 ]
+[ Upstream commit 61f7725aa148ee870436a29d3a24d5c00ab7e9af ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+This fixes overriding error number in f2fs_gc.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/openvswitch/vport-internal_dev.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/f2fs/gc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/openvswitch/vport-internal_dev.c b/net/openvswitch/vport-internal_dev.c
-index ec76398a792fb..12ec61b259b9f 100644
---- a/net/openvswitch/vport-internal_dev.c
-+++ b/net/openvswitch/vport-internal_dev.c
-@@ -44,7 +44,8 @@ static struct internal_dev *internal_dev_priv(struct net_device *netdev)
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 928b9e046d8a8..de32dfaaa492d 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -880,7 +880,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync)
+ 
+ 	put_gc_inode(&gc_list);
+ 
+-	if (sync)
++	if (sync && !ret)
+ 		ret = sec_freed ? 0 : -EAGAIN;
+ 	return ret;
  }
- 
- /* Called with rcu_read_lock_bh. */
--static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
-+static netdev_tx_t
-+internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	int len, err;
- 
-@@ -63,7 +64,7 @@ static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
- 	} else {
- 		netdev->stats.tx_errors++;
- 	}
--	return 0;
-+	return NETDEV_TX_OK;
- }
- 
- static int internal_dev_open(struct net_device *netdev)
 -- 
 2.20.1
 
