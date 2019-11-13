@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4150FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0464DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA3420674
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7065206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610592;
-	bh=1hd1YxdqOSmo/ZPMrdo8EiQzXs7O4BTVZC1l95ZHnf8=;
+	s=default; t=1573610600;
+	bh=vDofj9IkIexFVFAAsghe3/B5jKYu3m6/UQbcgCHo0LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BlFkOBNGhfHOXUt8PT8GYlNIbh/tXE5bl+eceJt2T6k3+ppSlLK9c+mNg8+GKxE5Z
-	 sN66fAPM3UjU0S1Y9/FsJk8U7/vUx1OrLXz75u9RBhC55eavuSsDJalyzEDxTT6yZK
-	 LIdGpT0rLWtSDkPrhKgfMtG+DNzDI5/VM59vyJvI=
+	b=0B1nV6kqVvtr5lFip4tXhAR4ol248OR5ifGcklET1RfwC3ER/6H0Z9Gf2KiUrMhgn
+	 k4ToyPQvOycknY26+mwmY9Od6sLvuz7/hDAm0NCZcAPGKCiPB3oin3RBUWdBWkLgt3
+	 WuQHTtMa9yC8uSf0Sx/EEF/TZYLJ2hOGyNvgG984=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfKMCDK (ORCPT
+        id S1731078AbfKMCDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:03:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:03:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731078AbfKMCCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:49 -0500
+        id S1731073AbfKMCCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F77320674;
-        Wed, 13 Nov 2019 02:02:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52B5A206B6;
+        Wed, 13 Nov 2019 02:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610569;
-        bh=1hd1YxdqOSmo/ZPMrdo8EiQzXs7O4BTVZC1l95ZHnf8=;
+        s=default; t=1573610567;
+        bh=vDofj9IkIexFVFAAsghe3/B5jKYu3m6/UQbcgCHo0LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WFFw3HLity9zsdqOHfa0t7NwGr70zUjfD9ZD3hdvlJudwV83iNJKPBgLhUBNxft34
-         kW2PKnvaE9FoAJiyWRT6B3idw1tVfVOBfqzOnhlXj+fSGsfqDhT70dpZxulQNo+EkL
-         9+ePwTuaH/CEyHiPzZ0Sgl3FTsIJLK4jPN8jLp+g=
+        b=j+xJPvahVYKmI6PPZOl7zQY3fQ69KbRM8C91QF2MHcIZ6UcXuaA7jQOvRqTk1AkVX
+         8uY7LNb/qsrPWXOD04zmVzm4sAwbdPwTjozajoHpEDM7vdOLXXX2lYoEB2npSPWAcP
+         sr6/O5d+6T7+/fFuDLxDoaza726WwPkFZBfOa9nQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 46/48] mac80211: minstrel: fix CCK rate group streams value
-Date:   Tue, 12 Nov 2019 21:01:29 -0500
-Message-Id: <20191113020131.13356-46-sashal@kernel.org>
+Cc:     Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 44/48] ARM: 8802/1: Call syscall_trace_exit even when system call skipped
+Date:   Tue, 12 Nov 2019 21:01:27 -0500
+Message-Id: <20191113020131.13356-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -60,32 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
 
-[ Upstream commit 80df9be67c44cb636bbc92caeddad8caf334c53c ]
+[ Upstream commit f18aef742c8fbd68e280dff0a63ba0ca6ee8ad85 ]
 
-Fixes a harmless underflow issue when CCK rates are actively being used
+On at least x86 and ARM64, and as documented in the ptrace man page
+a skipped system call will still cause a syscall exit ptrace stop.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Previous to this commit 32-bit ARM did not, resulting in strace
+being confused when seccomp skips system calls.
+
+This change also impacts programs that use ptrace to skip system calls.
+
+Fixes: ad75b51459ae ("ARM: 7579/1: arch/allow a scno of -1 to not cause a SIGILL")
+Signed-off-by: Timothy E Baldwin <T.E.Baldwin99@members.leeds.ac.uk>
+Signed-off-by: Eugene Syromyatnikov <evgsyr@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Kees Cook <keescook@chromium.org>
+Tested-by: Eugene Syromyatnikov <evgsyr@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/kernel/entry-common.S | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index 239ed6e92b89d..ff3b28e7dbce8 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -128,7 +128,7 @@
+diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
+index 30a7228eaceba..a1c31ed354344 100644
+--- a/arch/arm/kernel/entry-common.S
++++ b/arch/arm/kernel/entry-common.S
+@@ -269,16 +269,15 @@ __sys_trace:
+ 	cmp	scno, #-1			@ skip the syscall?
+ 	bne	2b
+ 	add	sp, sp, #S_OFF			@ restore stack
+-	b	ret_slow_syscall
  
- #define CCK_GROUP					\
- 	[MINSTREL_CCK_GROUP] = {			\
--		.streams = 0,				\
-+		.streams = 1,				\
- 		.flags = 0,				\
- 		.duration = {				\
- 			CCK_DURATION_LIST(false),	\
+-__sys_trace_return:
+-	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
++__sys_trace_return_nosave:
++	enable_irq_notrace
+ 	mov	r0, sp
+ 	bl	syscall_trace_exit
+ 	b	ret_slow_syscall
+ 
+-__sys_trace_return_nosave:
+-	enable_irq_notrace
++__sys_trace_return:
++	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
+ 	mov	r0, sp
+ 	bl	syscall_trace_exit
+ 	b	ret_slow_syscall
 -- 
 2.20.1
 
