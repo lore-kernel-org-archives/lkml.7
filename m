@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E11C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB078C17448
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F62D21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BF021D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611381;
-	bh=gZnYs58YiVe5TChW7bml8wRKh6KmwgwD+XgFFTEa1qk=;
+	s=default; t=1573611391;
+	bh=H4FtUxAgb8VUgFh06eAzC1WMy5cEloH2ZAE49aqsZR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P7v/6TVJRfBDBHL+3N5DrBCd/HSmJHvUK5CA25s4ihpyZxTn7N2oJISHcGeNy2xuA
-	 v7EpPKBMuotgzsBMPleMMQ79KPy78Uy7FGI150yQ/Tmv+9TVSAkbR2LW8ssLgAcr5L
-	 toKQCVaZCFR0z7BZYlvXq96SAPjakGwM5gdbPa1s=
+	b=DDkJMDSYx8cvvh4c4SqYNhZlEw1gZl7Tt3CayIBno1BRZf8Oa4gEZNQbK80MNCVik
+	 vEmb+tsgSb3M1djN0qow1/u30DUrVyYhsK35abbR7KSFKmpQNQT+GwyV9ZdJPvX6Fs
+	 3bY0Z6eV1J/ds+QKa/qu3Wl7lJu0LQZeyz8UkxYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbfKMCQT (ORCPT
+        id S1729495AbfKMB43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:16:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729539AbfKMB4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:37 -0500
+        id S1729465AbfKMB40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F732245A;
-        Wed, 13 Nov 2019 01:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1283D222D4;
+        Wed, 13 Nov 2019 01:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610196;
-        bh=gZnYs58YiVe5TChW7bml8wRKh6KmwgwD+XgFFTEa1qk=;
+        s=default; t=1573610185;
+        bh=H4FtUxAgb8VUgFh06eAzC1WMy5cEloH2ZAE49aqsZR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qbg5xJFc4p2cUe/WAHxmj3wKuL9VaT9b7wz59uUQzvqLlkQ8BYSbkx4o9VCM6kPgk
-         UvMYp6khjkkKaqnRV/xbFHxqoJF/RWXlXI16QjAp7aV0UC8dsULANMVRDPFsLFTm70
-         Y7S9NP6OFIvz23A1ckTDuNnimzMOXY/atizqmtWA=
+        b=V28np0netUby84/QT82iP8ZlZoMkJ8hghta9tkIDILqhaBGm5E2602c7SJ0yw2u4T
+         su30i0XktpfIeygHxZ7kVzv17kQV2s0LvTer4JuvvPovHk2w7ANcpsYgVuOp+hd8G7
+         0KygEX+/c4J0xkzDViUf6QQY5gXNy0ZIbYZyLifw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.14 010/115] iommu/io-pgtable-arm: Fix race handling in split_blk_unmap()
-Date:   Tue, 12 Nov 2019 20:54:37 -0500
-Message-Id: <20191113015622.11592-10-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Wei Liu <wei.liu2@citrix.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 002/115] net: xen-netback: fix return type of ndo_start_xmit function
+Date:   Tue, 12 Nov 2019 20:54:29 -0500
+Message-Id: <20191113015622.11592-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -60,56 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 85c7a0f1ef624ef58173ef52ea77780257bdfe04 ]
+[ Upstream commit a9ca7f17c6d240e269a24cbcd76abf9a940309dd ]
 
-In removing the pagetable-wide lock, we gained the possibility of the
-vanishingly unlikely case where we have a race between two concurrent
-unmappers splitting the same block entry. The logic to handle this is
-fairly straightforward - whoever loses the race frees their partial
-next-level table and instead dereferences the winner's newly-installed
-entry in order to fall back to a regular unmap, which intentionally
-echoes the pre-existing case of recursively splitting a 1GB block down
-to 4KB pages by installing a full table of 2MB blocks first.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-Unfortunately, the chump who implemented that logic failed to update the
-condition check for that fallback, meaning that if said race occurs at
-the last level (where the loser's unmap_idx is valid) then the unmap
-won't actually happen. Fix that to properly account for both the race
-and recursive cases.
+Found by coccinelle.
 
-Fixes: 2c3d273eabe8 ("iommu/io-pgtable-arm: Support lockless operation")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-[will: re-jig control flow to avoid duplicate cmpxchg test]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Wei Liu <wei.liu2@citrix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/xen-netback/interface.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index e8018a308868e..17a9225283dd1 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -551,13 +551,12 @@ static int arm_lpae_split_blk_unmap(struct arm_lpae_io_pgtable *data,
- 			return 0;
- 
- 		tablep = iopte_deref(pte, data);
-+	} else if (unmap_idx >= 0) {
-+		io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
-+		return size;
- 	}
- 
--	if (unmap_idx < 0)
--		return __arm_lpae_unmap(data, iova, size, lvl, tablep);
--
--	io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
--	return size;
-+	return __arm_lpae_unmap(data, iova, size, lvl, tablep);
+diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
+index 2641e76d03d9d..b5fa910b47b70 100644
+--- a/drivers/net/xen-netback/interface.c
++++ b/drivers/net/xen-netback/interface.c
+@@ -172,7 +172,8 @@ static u16 xenvif_select_queue(struct net_device *dev, struct sk_buff *skb,
+ 	return vif->hash.mapping[skb_get_hash_raw(skb) % size];
  }
  
- static int __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
+-static int xenvif_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++xenvif_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct xenvif *vif = netdev_priv(dev);
+ 	struct xenvif_queue *queue = NULL;
 -- 
 2.20.1
 
