@@ -2,120 +2,179 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D30C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33966C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98366207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06513207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfKMN5b (ORCPT
+        id S1727722AbfKMN5q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:57:31 -0500
-Received: from mga11.intel.com ([192.55.52.93]:50077 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbfKMN53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:57:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 05:57:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
-   d="scan'208";a="194675312"
-Received: from rcao-mobl3.ccr.corp.intel.com (HELO [10.249.174.53]) ([10.249.174.53])
-  by orsmga007.jf.intel.com with ESMTP; 13 Nov 2019 05:57:25 -0800
-Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>, Keith Busch <keith.busch@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linuxarm <linuxarm@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
- <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
- <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
- <20191113094742.00000dc4@huawei.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
-Date:   Wed, 13 Nov 2019 21:57:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191113094742.00000dc4@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 13 Nov 2019 08:57:46 -0500
+Received: from mail-oln040092254024.outbound.protection.outlook.com ([40.92.254.24]:6128
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726186AbfKMN5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:57:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bR/sFBPtoKMDRXbbcxUE5hjcx+/n3ZHPASE5qM+6Ef4LT1fkchs0eSFvmxLhbLSrMeH4FmiDNSBh4P1k6uqKMQSsz/2F/9h71rC2J3E7p77gmyjuD0c+WvsZb1HIPDWttu9sCkuG8lHX3usRmKAWf9dbUFniXle3Rem628nzjNTeLiLF6pdkqSNGsXV1RN7aZhGqwc8O+NzIgYvbn7EkVQn67z4WtJdxdLyTzHLLlIGENlAxtKSf+jfcUat7cT4j1CYOGm1+6uAWCNZoKNXaB85EnY/mA22etZ+EF0cAfGRacTpWMwIHJuWSv7863Kh44SGvtiNyPv5As/cWalYJhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=drYE0EXlvyEI4lTc6ApKMIRqPYnAsiQdhwzfiE+t+3A=;
+ b=a4M0/0iRibjLByN24rvtyxq+VMNpDi8TVDdZpW9uZLYFTfQRCrp1lSYBuAAd6Ru7GmhuHXvCq26Of/dJ0UEfa17fa8dIcv9UgCWf7lW8woxjlNp7xbjnIn2x0QEol+St0PDD7Rfpfk7maMxwuTi57M94muPzSu8fkht9yjU0wHdjcVqCgKRsz36QqFSBHXPRgufD0jCFPhOTF3q4LtvmLydekK6jGdrjASwmaTAIicv95VkPa/mnH5Lc6XoHgVtmf5xEeDvNqJjiXAOQdReX5846m6uEKKDBRjpp8hwzhm3b8qrGc61vH1LpaCM9P9GK/o7tfoFDhjucPLH921BS/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT035.eop-APC01.prod.protection.outlook.com
+ (10.152.252.51) by PU1APC01HT145.eop-APC01.prod.protection.outlook.com
+ (10.152.252.201) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2430.22; Wed, 13 Nov
+ 2019 13:57:40 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
+ PU1APC01FT035.mail.protection.outlook.com (10.152.252.214) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2451.23 via Frontend Transport; Wed, 13 Nov 2019 13:57:40 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
+ 13:57:40 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v10 4/4] PCI: Allow extend_bridge_window() to shrink resource
+ if necessary
+Thread-Topic: [PATCH v10 4/4] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Thread-Index: AQHVmipQD6IVIo4CH06tgrNCofJKQg==
+Date:   Wed, 13 Nov 2019 13:57:40 +0000
+Message-ID: <PS2P216MB07558A279BA82EA1DD6F3FED80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYXPR01CA0130.ausprd01.prod.outlook.com
+ (2603:10c6:0:30::15) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:1c::13)
+x-incomingtopheadermarker: OriginalChecksum:2ABEA560384B9B8FA2C66A623A4AC663329D72E94F3165E6B0C775BFE77F0E9F;UpperCasedChecksum:8DEEF3DFAC532FDC985BB551507388ACFBF31E0E16B48B16A04DA223256426E4;SizeAsReceived:7669;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [857o3DCpeyidSAsZzlX1z2g/1tU3e7DQeax4aJM5YZTzVahGoAkJzpPRsTkRxMyCSLBtjfSRXTE=]
+x-microsoft-original-message-id: <20191113135731.GA3234@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 0a16115a-1f72-4898-a492-08d768417294
+x-ms-exchange-slblob-mailprops: gjx25WM8ZNUUcF99Xf9jcIZVmoSE4UEuKZKzQN6lc/weducocDDqrcTNFmsYlRbfbtBJSXIFSm9XfzRo/ht9eb4Ksk05TLiiv78d6J7YOTDEVRMImaa+W8MU+JIWLo3ll6TdvNr7f68jQDOzDpAjt6F0y5rI4YWmHHPKbB+UUYMFeFu+5iWxv+RQuujM8ANRpEWud6lRw9wqmUcdlYoBCXTpVFLytjFC8Dy3bH/3mAMskqREDusJYb965bkcdZp/m5X5ZEOiU4Wuvmfrcim8UyXD6pg5pqqFWdbbhDVqMpIfk0vovt95G4BPqGctXSiAiWrsFOuM1LLIL69dIdAkQ4/riZnGKVDwXJTAuSNuE45CZpjHYfEw4fj27b5exwtUKCmQFtT6OtLeSNB2ezRcMg3WBH5s3E/ggzvl1S33Zhi9+92dIn5bFCvnsNjgkFOQolgfe+FRfQMVCghXkPsoBrqDahZfS3XVEZ/qb25k+YSQ4RlDwge1RrHRH/llV4y7Ugh0UCf+/k5+nb4xsiq1ww6miPdwfhDEnbZUxfPBou72yjTQiIXui0qpCQAFjvwt63QEtG8ypsNt/KdiBbHo37WzzihqHKN2CmQnFv3yMkYaVNkBtqR64abupK5NTgP/MxqPNCbVBsEtys7FOj77WPZ9fdV2/je+RYV8B+2uEbdBKwsH2X7JSrA9zhGDztRat02/rITZKBmMHdWwmfJmM1mfnZzxReYh4KoyWPA0wbE=
+x-ms-traffictypediagnostic: PU1APC01HT145:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m/HraAPjtAiWBNBz+OX7DGwBIQZ+4LLjrc7BXbZ1w1KVYqIEbYlChUbr0DIETgP5YlEDvYvnOuVvB1m6Mdz0ubWplZZwG1WoBdYJy/xmcsuVMJRc53Cs3ds8mUa9KUa+yXcQTYNPSfHgt4uwGR1z2Sf+n6bEK/trqFc7Q7sX4xuoXquNW13TK86HwFflLzfi
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C2EE9ACC98D66C40B7C875114B3FDF46@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a16115a-1f72-4898-a492-08d768417294
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 13:57:40.3510
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/2019 5:47 PM, Jonathan Cameron wrote:
-> On Tue, 12 Nov 2019 09:55:17 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> 
->> [ add Tao Xu ]
->>
->> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
->> <Jonathan.Cameron@huawei.com> wrote:
->>>
->>> Generic Initiators are a new ACPI concept that allows for the
->>> description of proximity domains that contain a device which
->>> performs memory access (such as a network card) but neither
->>> host CPU nor Memory.
->>>
->>> This patch has the parsing code and provides the infrastructure
->>> for an architecture to associate these new domains with their
->>> nearest memory processing node.
->>
->> Thanks for this Jonathan. May I ask how this was tested? Tao has been
->> working on qemu support for HMAT [1]. I have not checked if it already
->> supports generic initiator entries, but it would be helpful to include
->> an example of how the kernel sees these configurations in practice.
->>
->> [1]: http://patchwork.ozlabs.org/cover/1096737/
-> 
-> Tested against qemu with SRAT and SLIT table overrides from an
-> initrd to actually create the node and give it distances
-> (those all turn up correctly in the normal places).  DSDT override
-> used to move an emulated network card into the GI numa node.  That
-> currently requires the PCI patch referred to in the cover letter.
-> On arm64 tested both on qemu and real hardware (overrides on tables
-> even for real hardware as I can't persuade our BIOS team to implement
-> Generic Initiators until an OS is actually using them.)
-> 
-> Main real requirement is memory allocations then occur from one of
-> the nodes at the minimal distance when you are do a devm_ allocation
-> from a device assigned. Also need to be able to query the distances
-> to allow load balancing etc.  All that works as expected.
-> 
-> It only has a fairly tangential connection to HMAT in that HMAT
-> can provide information on GI nodes.  Given HMAT code is quite happy
-> with memoryless nodes anyway it should work.  QEMU doesn't currently
-> have support to create GI SRAT entries let alone HMAT using them.
-> 
-> Whilst I could look at adding such support to QEMU, it's not
-> exactly high priority to emulate something we can test easily
-> by overriding the tables before the kernel reads them.
-> 
-> I'll look at how hard it is to build an HMAT tables for my test
-> configs based on the ones I used to test your HMAT patches a while
-> back.  Should be easy if tedious.
-> 
-> Jonathan
-> 
-Indeed, HMAT can support Generic Initiator, but as far as I know, QEMU 
-only can emulate a node with cpu and memory, or memory-only. Even if we 
-assign a node with cpu only, qemu will raise error. Considering 
-compatibility, there are lots of work to do for QEMU if we change NUMA 
-or SRAT table.
+Remove checks for resource size in extend_bridge_window(). This is
+necessary to allow the pci_bus_distribute_available_resources() to
+function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
+allocate resources. Because the kernel parameter sets the size of all
+hotplug bridges to be the same, there are problems when nested hotplug
+bridges are encountered. Fitting a downstream hotplug bridge with size X
+and normal bridges with non-zero size Y into parent hotplug bridge with
+size X is impossible, and hence the downstream hotplug bridge needs to
+shrink to fit into its parent.
+
+Add check for if bridge is extended or shrunken and adjust pci_dbg to
+reflect this.
+
+Reset the resource if its new size is zero (if we have run out of a
+bridge window resource) to prevent the PCI resource assignment code from
+attempting to assign a zero-sized resource.
+
+Rename extend_bridge_window() to adjust_bridge_window() to reflect the
+fact that the window can now shrink.
+
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index d83c55169..6b64bf909 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1814,22 +1814,29 @@ void __init pci_assign_unassigned_resources(void)
+ 	}
+ }
+ 
+-static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
++static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
+ 				 struct list_head *add_list,
+ 				 resource_size_t new_size)
+ {
+-	resource_size_t add_size;
++	resource_size_t add_size, size = resource_size(res);
+ 
+ 	if (res->parent)
+ 		return;
+ 
+-	if (resource_size(res) >= new_size)
+-		return;
++	if (new_size > size) {
++		add_size = new_size - size;
++		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
++			&add_size);
++	} else if (new_size < size) {
++		add_size = size - new_size;
++		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
++			&add_size);
++	}
+ 
+-	add_size = new_size - resource_size(res);
+-	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
+ 	res->end = res->start + new_size - 1;
+ 	remove_from_list(add_list, res);
++	if (!new_size)
++		reset_resource(res);
+ }
+ 
+ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+@@ -1865,9 +1872,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	 * Update the resources to fill as much remaining resource space in the
+ 	 * parent bridge as possible, while considering alignment.
+ 	 */
+-	extend_bridge_window(bridge, io_res, add_list, resource_size(&io));
+-	extend_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
+-	extend_bridge_window(bridge, mmio_pref_res, add_list,
++	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
++	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
++	adjust_bridge_window(bridge, mmio_pref_res, add_list,
+ 			     resource_size(&mmio_pref));
+ 
+ 	/*
+-- 
+2.23.0
 
