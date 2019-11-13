@@ -2,117 +2,284 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41255C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384EAC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BFC2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610815;
-	bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zTQDXD4lBmRr9Q1ooRbcS9EDjgtjIhUBMpjkB+EivF0mEXaotjGQTU0BDzynH6WQP
-	 FC0ZTEBjXTAQP0JBwbjHeDxcvVJpKzFyaACLZtX4sWb30KPp9qJrLFIVjJ0zNTfDqa
-	 76gqVlHOx4/qbppiWZYnMfHi2BGcYG1Zqlo6ffAc=
+	by mail.kernel.org (Postfix) with ESMTP id F20672084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p5WKOfhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbfKMCGt (ORCPT
+        id S1730823AbfKMCG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:06:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfKMCBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:06 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07CCB2247B;
-        Wed, 13 Nov 2019 02:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610465;
-        bh=julWjBlCYWiwOVW4slF5Jvmglxdu1fcIEx8uEPF98IM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ObDn8rqLneBkJYBleh0/jwlMK17Yo3wPp0F3usIh1vGfLL0v778Aalv4FunyvXE7d
-         /wP0/djAx7p7nhAdXjGTBWJQT3P4QJGqIPkrBZacVlSv4vHPFqxIJkq2uBTBmZJTbq
-         UkiXPTdTwLiS/uo3WoAIemTDzFT4deRhGiazq95k=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 52/68] backlight: lm3639: Unconditionally call led_classdev_unregister
-Date:   Tue, 12 Nov 2019 20:59:16 -0500
-Message-Id: <20191113015932.12655-52-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
-References: <20191113015932.12655-1-sashal@kernel.org>
+        Tue, 12 Nov 2019 21:06:57 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44740 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730661AbfKMCGx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:06:53 -0500
+Received: by mail-ot1-f67.google.com with SMTP id c19so234630otr.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 18:06:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zUtTOHWyzSDWIPjsJHW06pPTn0x6obzqOHI2G8rBav8=;
+        b=p5WKOfhT7tef8IC18WnzUALrBl9hQZaiVDsRNwsGQjxoNha7Sidx8wSmmdENne847R
+         MzNjXemAvHlmfOLbXtCtbTlOurhnh1FQKdKkop4bB2Ayj5SmYnOCoMR1FLDKC7wDpl9K
+         d7OLu0FxrFYfiptb1CxjZY5i5nmYPXpHHe9/qBBgUnLvdeLJlHHFaioB2RHqubwaWGBz
+         JefH5lLZHXW3Pkfxq5TTJz7vj8fJLtqRdpyYzbD/ZLHRtJTADhsNuwnRwV3nwl1eD4xu
+         GR5hcoIjbBIzKpNZdznoNPMgI4CGiEudqOScWPz6auOKdOr7TxBkk8wJ9b1HM8BKPR6V
+         KKGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zUtTOHWyzSDWIPjsJHW06pPTn0x6obzqOHI2G8rBav8=;
+        b=ILLo2DSzT0y/oQtbKfFB6gy4qOazJRDce+z62cpFm6QnNBv+hikmEVHRZM5/oenOWt
+         GMqT+cj4VnBsoKE2vN/ex/yEBJ99rhgVZH+n6MqxnsCljReXRz5Po2knueYGfVGgxt60
+         wSdJOlNPWrVJt5ilH3AoNCUn+rj7g7jXbzzan6McU4WK8RVPoZtDGBwQqBh4dgmhdcgn
+         yKJm0sLY6sBnpYdROs11UrbhDRijwhkVNGBzJHMNNg0S415AR5rKRw7Dnn+iQQjHSSGm
+         dwHI1hKe7KSRaomYwXMHjhqKBzgz8FZqQSZaGR2w8mtuBOqt73ZgnzVzjRhUGpTHHJfS
+         oPQw==
+X-Gm-Message-State: APjAAAX06dROlRwLIMWZfHeeGFCtRd1TR6pGm8r6dMn4zhNMdJ/fO2UU
+        Do3klVwDmRYShyLkNCkqnLV4O4+Tc4pngyUuizM/uQ==
+X-Google-Smtp-Source: APXvYqyf/VGQXRwljsfYoE2jmqrxKH5PWyny4Vylqk7rqWMLzNckEKp9OtI2Yp5CXKFhjEJSufddU83l+b68QoiqBpo=
+X-Received: by 2002:a05:6830:1d71:: with SMTP id l17mr528996oti.236.1573610810836;
+ Tue, 12 Nov 2019 18:06:50 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20191028220027.251605-1-saravanak@google.com> <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com>
+ <CAGETcx-X938BxBeqYD8m8Wrx-hRaXk6EEeR4szh34CS5Sv7EgA@mail.gmail.com> <6671524.6K7l14UQst@kreacher>
+In-Reply-To: <6671524.6K7l14UQst@kreacher>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 12 Nov 2019 18:06:14 -0800
+Message-ID: <CAGETcx9G6aH2Eu9ss-RzH4oaBq-mM-EtdjYReKtba86k2KL8+A@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
+ differentiate errors
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+On Thu, Nov 7, 2019 at 4:35 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Wednesday, November 6, 2019 1:00:18 AM CET Saravana Kannan wrote:
+> > On Tue, Nov 5, 2019 at 3:07 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Tue, Nov 5, 2019 at 11:52 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > >
+> > > > Hi Rafael,
+> > > >
+> > > > Thanks for the review.
+> > > >
+> > > > On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > > > >
+> > > > > On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
+> > > > > > When add_links() still has suppliers that it needs to link to in the
+> > > > > > future, this patch allows it to differentiate between suppliers that are
+> > > > > > needed for probing vs suppliers that are needed for sync_state()
+> > > > > > correctness.
+> > > > >
+> > > > > I guess you mean that it will return different error codes in the different
+> > > > > cases.
+> > > >
+> > > > Yes.
+> > > >
+> > > > >
+> > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > > > ---
+> > > > > >  drivers/base/core.c    | 12 ++++++++----
+> > > > > >  include/linux/fwnode.h | 13 +++++++++----
+> > > > > >  2 files changed, 17 insertions(+), 8 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > > > > index 48cd43a91ce6..e6d3e6d485da 100644
+> > > > > > --- a/drivers/base/core.c
+> > > > > > +++ b/drivers/base/core.c
+> > > > > > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
+> > > > > >       struct device *parent;
+> > > > > >       struct kobject *kobj;
+> > > > > >       struct class_interface *class_intf;
+> > > > > > -     int error = -EINVAL;
+> > > > > > +     int error = -EINVAL, fw_ret;
+> > > > > >       struct kobject *glue_dir = NULL;
+> > > > > >
+> > > > > >       dev = get_device(dev);
+> > > > > > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
+> > > > > >        */
+> > > > > >       device_link_add_missing_supplier_links();
+> > > > > >
+> > > > > > -     if (fwnode_has_op(dev->fwnode, add_links)
+> > > > > > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
+> > > > > > -             device_link_wait_for_mandatory_supplier(dev, true);
+> > > > > > +     if (fwnode_has_op(dev->fwnode, add_links)) {
+> > > > >
+> > > > > fw_ret can be defined here and I'd just call it "ret".
+> > > >
+> > > > I thought that style of variable declaration is frowned up in the
+> > > > kernel coding style.
+> > >
+> > > Well, I'm not aware of that. :-)
+> >
+> > I've definitely seen such comments before. So I'll leave fw_ret as is.
+> > If you and Greg both want to change it to the way you mentioned, I'm
+> > happy to do it.
+>
+> If this has been committed the way it is, there's not so much of a difference,
+> but I generally like variables to not be seen out of the scope in which they
+> are used, as that allows bugs to be caught at compile time sometimes.
 
-[ Upstream commit 7cea645ae9c5a54aa7904fddb2cdf250acd63a6c ]
+Ok, I don't have a strong preference either way. My understanding is
+that Greg doesn't like declaring variables "in the middle". So I'm
+going to leave it as is unless I'm corrected.
 
-Clang warns that the address of a pointer will always evaluated as true
-in a boolean context.
+>
+> > > > >
+> > > > > > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+> > > > > > +             if (fw_ret == -ENODEV)
+> > > > > > +                     device_link_wait_for_mandatory_supplier(dev);
+> > > > > > +             else if (fw_ret)
+> > > > > > +                     device_link_wait_for_optional_supplier(dev);
+> > > > > > +     }
+> > > > > >
+> > > > > >       bus_probe_device(dev);
+> > > > > >       if (parent)
+> > > > > > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> > > > > > index 25bb81f8ded8..a19134eae5a5 100644
+> > > > > > --- a/include/linux/fwnode.h
+> > > > > > +++ b/include/linux/fwnode.h
+> > > > > > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
+> > > > > >   *           available suppliers.
+> > > > > >   *
+> > > > > >   *           Return 0 if device links have been successfully created to all
+> > > > > > - *           the suppliers of this device or if the supplier information is
+> > > > > > - *           not known. Return an error if and only if the supplier
+> > > > > > - *           information is known but some of the suppliers are not yet
+> > > > > > - *           available to create device links to.
+> > > > > > + *           the suppliers this device needs to create device links to or if
+> > > > > > + *           the supplier information is not known.
+> > > > >
+> > > > > "the known suppliers of this device or if the supplier information is not known."
+> > > >
+> > > > "suppliers it needs to create device links to" is a subset of known
+> > > > suppliers. There's no requirement that fw needs to create links to ALL
+> > > > known suppliers. Just a minor distinction.
+> > >
+> > > That depends on what exactly you mean by "known suppliers".  The
+> > > suppliers that are not listed by the firmware are not known at this
+> > > point.
+> >
+> > Ok, I'll rephrase my comment:
+> > "suppliers it needs to create device links to" is a subset of listed
+> > suppliers. There's no requirement that fw needs to create links to ALL
+> > listed suppliers. For example, I can't think of any reason for
+> > sync_state() to be necessary for an interrupt controller driver.
+>
+> A sync_state() may not be, but it may be a good idea to create device links
+> to the controller device from all devices that rely on it, so as to ensure
+> the right system suspend/resume ordering if nothing else.
 
-drivers/video/backlight/lm3639_bl.c:403:14: warning: address of
-'pchip->cdev_torch' will always evaluate to 'true'
-[-Wpointer-bool-conversion]
-        if (&pchip->cdev_torch)
-        ~~   ~~~~~~~^~~~~~~~~~
-drivers/video/backlight/lm3639_bl.c:405:14: warning: address of
-'pchip->cdev_flash' will always evaluate to 'true'
-[-Wpointer-bool-conversion]
-        if (&pchip->cdev_flash)
-        ~~   ~~~~~~~^~~~~~~~~~
-2 warnings generated.
+True. Frameworks are starting to add device links when consumers make
+calls to "get()" the resource. But if firmware can add it ahead of
+time, it doesn't hurt I suppose and it'll also cover for frameworks
+without device links support yet.
 
-These statements have been present since 2012, introduced by
-commit 0f59858d5119 ("backlight: add new lm3639 backlight
-driver"). Given that they have been called unconditionally since
-then presumably without any issues, removing the always true if
-statements to fix the warnings without any real world changes.
+> > So, fw doesn't need to create device links from consumer to interrupt
+> > supplier. So I'm being more explicit and saying "the suppliers this
+> > device needs to create device links to" instead of "the listed
+> > suppliers of this device".
+>
+> This gives me the feeling of splitting hairs to be honest. :-)
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/119
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/video/backlight/lm3639_bl.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Maybe, but it's coming from a point of goodwill :) I just want to
+capture the intent as narrowly and accurately as possible.
 
-diff --git a/drivers/video/backlight/lm3639_bl.c b/drivers/video/backlight/lm3639_bl.c
-index cd50df5807ead..086611c7bc03c 100644
---- a/drivers/video/backlight/lm3639_bl.c
-+++ b/drivers/video/backlight/lm3639_bl.c
-@@ -400,10 +400,8 @@ static int lm3639_remove(struct i2c_client *client)
- 
- 	regmap_write(pchip->regmap, REG_ENABLE, 0x00);
- 
--	if (&pchip->cdev_torch)
--		led_classdev_unregister(&pchip->cdev_torch);
--	if (&pchip->cdev_flash)
--		led_classdev_unregister(&pchip->cdev_flash);
-+	led_classdev_unregister(&pchip->cdev_torch);
-+	led_classdev_unregister(&pchip->cdev_flash);
- 	if (pchip->bled)
- 		device_remove_file(&(pchip->bled->dev), &dev_attr_bled_mode);
- 	return 0;
--- 
-2.20.1
+> In fact, the FW indicates to the OS that there are some dependencies (either
+> hard or soft) between devices and adding device links is a way to act on that
+> information.
+>
+> The "device link" notion is not actually defined at the FW level.  What it
+> knows about is a "probe dependency" or an "ordering constraint" which then
+> is represented by a device link at the OS level.
 
+And you've convinced me why it doesn't have to be as narrow as I intended.
+
+> > Long story short, I wrote the comment this way intentionally and
+> > changing it to what you suggest makes it inaccurate IMHO. But I'm open
+> > to other wording suggestions to improve the clarity of this comment.
+>
+> My point basically is that the way you phrased it may lead to some confusion
+> (regardless of whether or not it is intentional).
+
+Ok, I think we are on the same page now. I'll send an update soon.
+
+>
+> > >
+> > > > > > + *
+> > > > > > + *           Return -ENODEV if and only if the suppliers needed for probing
+> > > > > > + *           the device are not yet available to create device links to.
+> > > > >
+> > > > > It would be more precise to say something like this:
+> > > > >
+> > > > > "Return -ENODEV if an attempt to create a device link to one of the device's
+> > > > > suppliers needed for probing it fails."
+> > > >
+> > > > "attempt to create a device link to one of the device's suppliers
+> > > > needed for probing it fails" to me means device_link_add() fails.
+> > > > But I'm trying to say that it should return an error if the struct
+> > > > device isn't even there yet.
+> > >
+> > > OK, so it should be something like "if the supplier device has not
+> > > been registered yet".
+> > >
+> > > My point is that "not yet available" is kind of ambiguous.
+> >
+> > Agree, the latest suggestion sounds better.
+> >
+> > > > > > + *
+> > > > > > + *           Return -EAGAIN if there are suppliers that need to be linked to
+> > > > > > + *           that are not yet available but none of those suppliers are
+> > > > > > + *           necessary for probing this device.
+> > > > >
+> > > > > "Return -EAGAIN if attempts to create device links to some of the device's
+> > > > > suppliers have failed, but those suppliers are not necessary for probing the
+> > > > > device."
+> > > >
+> > > > Same comment as before. The distinction I'm making here is that
+> > > > -EAGAIN is needed when the struct device itself isn't there.
+> > > >
+> > > > Btw, Greg already pulled these into driver-core-next. Let me know if
+> > > > you want me to send a delta patch to fix any of these comments.
+> > >
+> > > Well, it's a Greg's call if he has taken the patches, but it also
+> > > depends on you (if you agree with the comments, it would be prudent to
+> > > send updates).
+> >
+> > I don't mind sending updates at all. Just trying to make sure I follow
+> > the maintainers' preference in case they don't want trivial (because
+> > my current ones aren't terrible :)) comment update patches.
+>
+> If it can be improved, then improve it.  Worst case you can hear from the
+> maintainers that they don't agree with the proposed changes.
+
+Eh, I've been yelled at a couple of times for sending patches too soon
+or too many. So just playing it safe.
+
+-Saravana
