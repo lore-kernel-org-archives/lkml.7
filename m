@@ -2,154 +2,106 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364ECC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8160FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A783222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A40222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:54:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Ymv9OKzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfKMHxP (ORCPT
+        id S1726957AbfKMHym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:53:15 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35941 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfKMHxO (ORCPT
+        Wed, 13 Nov 2019 02:54:42 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:41877 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfKMHyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:53:14 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mol@pengutronix.de>)
-        id 1iUnSf-0000Lh-S7; Wed, 13 Nov 2019 08:53:09 +0100
-Received: from mol by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mol@pengutronix.de>)
-        id 1iUnSe-0000Km-An; Wed, 13 Nov 2019 08:53:08 +0100
-Date:   Wed, 13 Nov 2019 08:53:08 +0100
-From:   Michael Olbrich <m.olbrich@pengutronix.de>
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 2/2] usb: dwc3: gadget: restart the transfer if a isoc
- request is queued too late
-Message-ID: <20191113075308.qwwgpg7kpfcyjxau@pengutronix.de>
-Mail-Followup-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-References: <20191111152645.13792-1-m.olbrich@pengutronix.de>
- <20191111152645.13792-3-m.olbrich@pengutronix.de>
- <45ce4107-7c52-48d2-90d1-dfe835024063@synopsys.com>
+        Wed, 13 Nov 2019 02:54:41 -0500
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id xAD7sHL7006673;
+        Wed, 13 Nov 2019 16:54:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xAD7sHL7006673
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573631658;
+        bh=9fiH9bvw8H7RO9dv79xl9+Q9OlMLcBXx3Oz2oKfIJao=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ymv9OKzCzMUrDRF+Wn3SD01MChzuysHvmsFOitoQP/Ea00IP+KyyEFyG/Ib+++mCl
+         rdn4LWAQ74t6TcAEw1ArAI9wa0pnigjZsZatN+Eh6EL3FGPi/dPgWTkkRXQKDdJe0y
+         f9Wljfvy3OXpKVRUd+csoVCYI6xta8QRAlG7BGyPu8nkw4yyUjyUqotvd64UMfz7I0
+         u4MhxjdCL8bQ/UmVLo3fk+avxxPkPCE2Eiqie33xjDhxaHaTIRCrYokB5cfZAodXql
+         61vdZle7KtJUIJftuy5B3LcaflXBdyDdUHHzO+zw/lJ4S6qgt4qlDIulOnJlsB9fz3
+         Xq02vy0SXLIhg==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id q21so760538vsg.3;
+        Tue, 12 Nov 2019 23:54:17 -0800 (PST)
+X-Gm-Message-State: APjAAAU3eTOiUYQhevJ/UUw9A3ecVoiqjt2nqk1rguE74Gm48jSIhg4V
+        voX2XqQvUNY+srTVucvReM3OwgNbhlAmCjr97ec=
+X-Google-Smtp-Source: APXvYqzFDCIx64eXzgZHHZvzce/JT7538765oDtHhVnN1MGrBKUVL68GK8zhGP8UXayxYTIkhDViw9m8btElx6qhKyc=
+X-Received: by 2002:a67:d31b:: with SMTP id a27mr1083694vsj.215.1573631656052;
+ Tue, 12 Nov 2019 23:54:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45ce4107-7c52-48d2-90d1-dfe835024063@synopsys.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:41:53 up 128 days, 13:52, 130 users,  load average: 0.06, 0.12,
- 0.11
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mol@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com> <20191112123125.GD17835@willie-the-truck>
+ <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+ <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net> <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
+ <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com> <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
+ <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com>
+In-Reply-To: <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 13 Nov 2019 16:53:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
+Message-ID: <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
+Subject: Re: Question about "asm/rwonce.h: No such file or directory"
+To:     Xiao Yang <ice_yangxiao@163.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 03:55:01AM +0000, Thinh Nguyen wrote:
-> Michael Olbrich wrote:
-> > Currently, most gadget drivers handle isoc transfers on a best effort
-> > bases: If the request queue runs empty, then there will simply be gaps in
-> > the isoc data stream.
+On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+>
+> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
+> > Sorry, I really do not understand what you are doing.
 > >
-> > The UVC gadget depends on this behaviour. It simply provides new requests
-> > when video frames are available and assumes that they are sent as soon as
-> > possible.
-> >
-> > The dwc3 gadget currently works differently: It assumes that there is a
-> > contiguous stream of requests without any gaps. If a request is too late,
-> > then it is dropped by the hardware.
-> > For the UVC gadget this means that a live stream stops after the first
-> > frame because all following requests are late.
-> 
-> Can you explain little more how UVC gadget fails?
-> dwc3 controller expects a steady stream of data otherwise it will result 
-> in missed_isoc status, and it should be fine as long as new requests are 
-> queued. The controller doesn't just drop the request unless there's some 
-> other failure.
+> > include/linux/compiler.h is only for kernel-space.
+> > Shrug if a user-land program includes it.
+>
+> Hi Masahiro,
+>
+> For building tools/bpf, it is good to fix the compiler error by Daniel's
+> patch(i.e. use linux/filter from linux header).
+>
+> linux/compiler.h may be used by other code in kernel.  Is it possible to
+> trigger the same error when the other code
+>
+> including linux/compiler.h is built? Is this kind of code able to find
+> the location of <asm/rwonce.h>?
 
-UVC (with a live stream) does not fill the complete bandwidth of an
-isochronous endpoint. Let's assume for the example that one video frame
-fills 3 requests. Because it is a live stream, there will be a gap between
-video frames. This is unavoidable, especially for compressed video. So the
-UVC gadget will have requests for the frame numbers 1 2 3 5 6 7 9 10 11 13 14
-15 and so on.
-The dwc3 hardware tries to send those with frame numbers 1 2 3 4 5 6 7 8 9
-10 11 12. So except for the fist few requests, all are late and result in a
-missed_isoc. I tried to just ignore the missed_isoc but that did not work
-for me. I only received the first frame at the other end.
-Maybe I missing something here, i don't have access to the hardware
-documentation, so I can only guess from the existing driver.
 
-Regards,
-Michael
+<asm/rwonce.h> is also kernel-only header.
 
-> > This patch changes the behaviour of the dwc3 gadget driver to match the
-> > expectations. If a request arrives too late, then the transfer will be
-> > restart to create the needed gap.
-> >
-> > A request is late if:
-> > 1. There are currently no requests queued in the hardware
-> > 2. The current frame number provided by DSTS does not match the frame
-> >     number returned by the last transfer.
-> >
-> > If this happens transfers are stopped. The following XferNotReady provides
-> > the new correct frame number and restarts the transfer.
-> >
-> > Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
-> > ---
-> >   drivers/usb/dwc3/gadget.c | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> > index ac4673d91939..eb7f09929f28 100644
-> > --- a/drivers/usb/dwc3/gadget.c
-> > +++ b/drivers/usb/dwc3/gadget.c
-> > @@ -1473,6 +1473,14 @@ static int __dwc3_gadget_ep_queue(struct dwc3_ep *dep, struct dwc3_request *req)
-> >   				return __dwc3_gadget_start_isoc(dep);
-> >   			}
-> >   		}
-> > +		if ((dep->flags & DWC3_EP_TRANSFER_STARTED) &&
-> > +		    list_empty(&dep->started_list) &&
-> > +		    ((dep->frame_number & 0x3fff) !=
-> > +		    __dwc3_gadget_get_frame(dwc))) {
-> > +			dwc3_stop_active_transfer(dep, true, true);
-> > +			dep->flags = DWC3_EP_ENABLED;
-> > +			return 0;
-> > +		}
-> >   	}
-> >   
-> >   	return __dwc3_gadget_kick_transfer(dep, false);
-> 
-> BR,
-> Thinh
-> 
+The kernel code can find <asm/rwonce.h>, but user-land code cannot.
+
+
+
+
+> Best Regards,
+>
+> Xiao Yang
+>
+>
+
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best Regards
+Masahiro Yamada
