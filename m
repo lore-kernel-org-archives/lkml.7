@@ -2,212 +2,115 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2E7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604B0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF37222CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zrv3Y0pa"
+	by mail.kernel.org (Postfix) with ESMTP id 39F04207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfKMNww (ORCPT
+        id S1727388AbfKMNze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:52:52 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33490 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727536AbfKMNwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:52:51 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w9so2482950wrr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:52:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TRSUK0G723bpvyeCvufO8ci+CtgHDJUd3CuID3y6wMI=;
-        b=zrv3Y0pasZ/2e0T00aZYXOvxU26Sl+l2FaytzxpMv6IDqdCg0E9/HgCGz0vZcowzjN
-         fOJULF0hgZm5LavTh66vqi0aKmtL4XZvJEO3jpxmlRd72dj7tW9P41763iPFqLkPV+6u
-         z58C0jKJmR7Z8MYj0EnsGguxgVia301X/benzAhkTEBs7wu22E4cK0muKwLXxrfkCm1E
-         5DR8Y8fENPEMDMmWWLNkIababCzH1z4y7oyFPZCRa8OE0kVkgZuofMdBW9rdEK/6D+m6
-         N/EL+ADAcx2BOeYlhun75c0F0tNz7lxiEq45vTPH9NaP7XrCuC79Vx1KHoipP+lucAAu
-         XRwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TRSUK0G723bpvyeCvufO8ci+CtgHDJUd3CuID3y6wMI=;
-        b=jT8tf7MIe0+y2ha1wXgts5wsx1IvGPRxGK88HouVz4g4ws1nbQjQfvbnHVwiozCi98
-         BX6IRC7OugMBLY0O2JBtD9Ug+wEiO3bjqLgoQbOwQAr87qnBfGSmfwYhjz6CC9kxpmPG
-         MapG64dCZuevs0+XIR9u0mPqv6xMGwWxx8ZA+6sEVf8Ua1LFJN9qfcS23ryWNGe1Agm8
-         2ord1aYKyc2AU+WHbVLK7q9pGQkGvmkomdwMz+7FZWYOI78EBDSASCQbxu4f78Q+EzzH
-         SbxQ3kt/2H3qbPBn89nPaW01N6s1faNUfaSRhqz4bijFkoVECdLBlCWjpFbw6ZxF1zp7
-         52Eg==
-X-Gm-Message-State: APjAAAW50CgivRHppP4w1iOtyKtTGD9FSCENxgoY+FWrOzDZzpkHy8XI
-        0toxl2oy7gAJxTFQic7WHh1NIw==
-X-Google-Smtp-Source: APXvYqxfNQIU8IceAKVMRAZXAaTSGZ18ShF9wDh2LssOqvtNQD91gzj5/ZOJ4WJ0Z1Y7JGZv40LE9g==
-X-Received: by 2002:adf:d083:: with SMTP id y3mr2838979wrh.53.1573653167206;
-        Wed, 13 Nov 2019 05:52:47 -0800 (PST)
-Received: from nbvalente.mat.unimo.it (nbvalente.mat.unimo.it. [155.185.5.181])
-        by smtp.gmail.com with ESMTPSA id v128sm2973798wmb.14.2019.11.13.05.52.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 05:52:46 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH BUGFIX] block, bfq: deschedule empty bfq_queues not
- referred by any process
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <bb393dcaa426786e0963cf0e70f0b062@natalenko.name>
-Date:   Wed, 13 Nov 2019 14:52:45 +0100
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, bfq-iosched@googlegroups.com,
-        Chris Evich <cevich@redhat.com>,
-        Patrick Dung <patdung100@gmail.com>,
-        Thorsten Schubert <tschubert@bafh.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2FB3736A-693E-44B9-9D1F-39AE0D016644@linaro.org>
-References: <20191112074856.40433-1-paolo.valente@linaro.org>
- <bb393dcaa426786e0963cf0e70f0b062@natalenko.name>
-To:     Oleksandr Natalenko <oleksandr@natalenko.name>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Wed, 13 Nov 2019 08:55:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:52874 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfKMNze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:55:34 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B0747A7;
+        Wed, 13 Nov 2019 05:55:33 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEAEE3F6C4;
+        Wed, 13 Nov 2019 05:55:31 -0800 (PST)
+Subject: Re: [QUESTION] Hung task warning while running syzkaller test
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Zhihao Cheng <chengzhihao1@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, peterz@infradead.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        patrick.bellasi@arm.com, tglx@linutronix.de
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+References: <0d7aa66d-d2b9-775c-56b3-543d132fdb84@huawei.com>
+ <1693d19e-56c7-9d6f-8e80-10fe82101cff@arm.com>
+ <aa5d0f35-e707-f5e3-251e-f940c0b0232b@huawei.com>
+ <4ca01869-7997-cfce-edce-e75337d3a6fa@arm.com>
+ <abba880d-cfa6-3485-7831-9998db290396@huawei.com>
+ <d7e9f62e-d7a6-50ec-6fb5-76ad136506df@arm.com>
+ <4453942d-c4f2-bbbe-64a9-4313c0fccfbf@huawei.com>
+ <6d78bdbc-e4f8-7ff7-8445-c9dc07b0614a@arm.com>
+Message-ID: <de1782a5-6933-5580-3ed2-bd7429e3af8e@arm.com>
+Date:   Wed, 13 Nov 2019 13:55:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <6d78bdbc-e4f8-7ff7-8445-c9dc07b0614a@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 31/10/2019 01:36, Valentin Schneider wrote:
+> On 29/10/2019 03:25, Zhihao Cheng wrote:
+>> I don't know much about the freezer mechanism of CGroup, but I tried it. I turned off all the CGroup related config options and reproduced the hung task on a fresh busybox-made root file system. I added rootfs in attachment. So, I guess hung task has nothing to do with CGroup(freezer).
+>>
+> 
+> That's good to know, thanks for digging some more. I'm on the move ATM but if
+> I find some time I'll try to stare some more at the C reproducer.
+> 
 
+After fumbling a bit I managed to generate the same C code from your
+syzkaller reproducer with:
 
-> Il giorno 13 nov 2019, alle ore 13:57, Oleksandr Natalenko =
-<oleksandr@natalenko.name> ha scritto:
->=20
-> Hi.
->=20
-> On 12.11.2019 08:48, Paolo Valente wrote:
->> Since commit 3726112ec731 ("block, bfq: re-schedule empty queues if
->> they deserve I/O plugging"), to prevent the service guarantees of a
->> bfq_queue from being violated, the bfq_queue may be left busy, i.e.,
->> scheduled for service, even if empty (see comments in
->> __bfq_bfqq_expire() for details). But, if no process will send
->> requests to the bfq_queue any longer, then there is no point in
->> keeping the bfq_queue scheduled for service.
->> In addition, keeping the bfq_queue scheduled for service, but with no
->> process reference any longer, may cause the bfq_queue to be freed =
-when
->> descheduled from service. But this is assumed to never happen, and
->> causes a UAF if it happens. This, in turn, caused crashes [1, 2].
->> This commit fixes this issue by descheduling an empty bfq_queue when
->> it remains with not process reference.
->> [1] https://bugzilla.redhat.com/show_bug.cgi?id=3D1767539
->> [2] https://bugzilla.kernel.org/show_bug.cgi?id=3D205447
->> Fixes: 3726112ec731 ("block, bfq: re-schedule empty queues if they
->> deserve I/O plugging")
->> Reported-by: Chris Evich <cevich@redhat.com>
->> Reported-by: Patrick Dung <patdung100@gmail.com>
->> Reported-by: Thorsten Schubert <tschubert@bafh.org>
->> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
->> ---
->> block/bfq-iosched.c | 31 +++++++++++++++++++++++++------
->> 1 file changed, 25 insertions(+), 6 deletions(-)
->> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
->> index 0319d6339822..ba68627f7740 100644
->> --- a/block/bfq-iosched.c
->> +++ b/block/bfq-iosched.c
->> @@ -2713,6 +2713,27 @@ static void bfq_bfqq_save_state(struct =
-bfq_queue *bfqq)
->> 	}
->> }
->> +
->> +static
->> +void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue =
-*bfqq)
->> +{
->> +	/*
->> +	 * To prevent bfqq's service guarantees from being violated,
->> +	 * bfqq may be left busy, i.e., queued for service, even if
->> +	 * empty (see comments in __bfq_bfqq_expire() for
->> +	 * details). But, if no process will send requests to bfqq any
->> +	 * longer, then there is no point in keeping bfqq queued for
->> +	 * service. In addition, keeping bfqq queued for service, but
->> +	 * with no process ref any longer, may have caused bfqq to be
->> +	 * freed when dequeued from service. But this is assumed to
->> +	 * never happen.
->> +	 */
->> +	if (bfq_bfqq_busy(bfqq) && RB_EMPTY_ROOT(&bfqq->sort_list))
->> +		bfq_del_bfqq_busy(bfqd, bfqq, false);
->> +
->> +	bfq_put_queue(bfqq);
->> +}
->> +
->> static void
->> bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
->> 		struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
->> @@ -2783,8 +2804,7 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct
->> bfq_io_cq *bic,
->> 	 */
->> 	new_bfqq->pid =3D -1;
->> 	bfqq->bic =3D NULL;
->> -	/* release process reference to bfqq */
->> -	bfq_put_queue(bfqq);
->> +	bfq_release_process_ref(bfqd, bfqq);
->> }
->> static bool bfq_allow_bio_merge(struct request_queue *q, struct =
-request *rq,
->> @@ -4899,7 +4919,7 @@ static void bfq_exit_bfqq(struct bfq_data =
-*bfqd,
->> struct bfq_queue *bfqq)
->> 	bfq_put_cooperator(bfqq);
->> -	bfq_put_queue(bfqq); /* release process reference */
->> +	bfq_release_process_ref(bfqd, bfqq);
->> }
->> static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
->> @@ -5001,8 +5021,7 @@ static void bfq_check_ioprio_change(struct
->> bfq_io_cq *bic, struct bio *bio)
->> 	bfqq =3D bic_to_bfqq(bic, false);
->> 	if (bfqq) {
->> -		/* release process reference on this queue */
->> -		bfq_put_queue(bfqq);
->> +		bfq_release_process_ref(bfqd, bfqq);
->> 		bfqq =3D bfq_get_queue(bfqd, bio, BLK_RW_ASYNC, bic);
->> 		bic_set_bfqq(bic, bfqq, false);
->> 	}
->> @@ -5963,7 +5982,7 @@ bfq_split_bfqq(struct bfq_io_cq *bic, struct
->> bfq_queue *bfqq)
->> 	bfq_put_cooperator(bfqq);
->> -	bfq_put_queue(bfqq);
->> +	bfq_release_process_ref(bfqq->bfqd, bfqq);
->> 	return NULL;
->> }
->=20
-> I'm not sure if I see things right, but this commit along with v5.3.11 =
-kernel causes almost all boots to hang (for instance, on mounting the =
-FS). Once the scheduler is changed to something else than BFQ (I set the =
-I/O scheduler early via udev rule), multiple reboots go just fine.
->=20
+  $ syz-prog2c -tmpdir -sandbox none -repeat -1 -segv -threaded -collide -enable close_fds -prog repro
 
-If you switch back to bfq after the boot, can you still reproduce the =
-hang?
+And now I realize the actual "juicy bits" (i.e. what I get without all of
+above optional arguments) is straight up asm written to some mmap'd region
+that is then executed. It does seem to start up with a syscall, but there's
+tons more instructions that follow:
 
-> Is this commit also applicable to 5.3 kernels?
+  4007b8:	f2 aa                	repnz stos %al,%es:(%rdi)
+  4007ba:	98                   	cwtl   
+  4007bb:	44 13 e8             	adc    %eax,%r13d
+  4007be:	0f 05                	syscall 
+  <~200 more insns>
 
-It is.
+Figuring out what is in %eax and %r13d is another indirection layer,
+the execution being preceded by
 
-Thanks,
-Paolo
+  asm volatile("" ::"r"(0l), "r"(1l), "r"(2l), "r"(3l), "r"(4l), "r"(5l),
+	       "r"(6l), "r"(7l), "r"(8l), "r"(9l), "r"(10l), "r"(11l), "r"(12l),
+	       "r"(13l));
 
-> Or I'm testing a dumb thing?
->=20
+I have no idea which registers are supposed to be picked here (I would
+assume it is implementation defined?), so through objdump it goes:
 
+  400631:	b8 00 00 00 00       	mov    $0x0,%eax
+  400636:	ba 01 00 00 00       	mov    $0x1,%edx
+  40063b:	b9 02 00 00 00       	mov    $0x2,%ecx
+  400640:	be 03 00 00 00       	mov    $0x3,%esi
+  400645:	bf 04 00 00 00       	mov    $0x4,%edi
+  40064a:	41 b8 05 00 00 00    	mov    $0x5,%r8d
+  400650:	41 b9 06 00 00 00    	mov    $0x6,%r9d
+  400656:	41 ba 07 00 00 00    	mov    $0x7,%r10d
+  40065c:	41 bb 08 00 00 00    	mov    $0x8,%r11d
+  400662:	bb 09 00 00 00       	mov    $0x9,%ebx
+  400667:	41 bc 0a 00 00 00    	mov    $0xa,%r12d
+  40066d:	41 bd 0b 00 00 00    	mov    $0xb,%r13d
+  400673:	41 be 0c 00 00 00    	mov    $0xc,%r14d
+  400679:	41 bf 0d 00 00 00    	mov    $0xd,%r15d
 
+So that should be syscall 11 (munmap for x86_64 IIUC). And it still doesn't
+tell me what the thing is actually doing.
 
-> Thanks.
->=20
-> --=20
->  Oleksandr Natalenko (post-factum)
-
+Interestingly running that on an x86_64 box gives me a segfault. Running
+the version with all of the right syz-prog2c arguments just hangs on
+wait4() (I let it run overnight). I suppose I'll have to rely on execprog
+to run the thing, but I have to grumble about running stuff I have no idea
+what it does.
