@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A92C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B093FC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBE821783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBAB206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610711;
-	bh=Embar7vqklFB3d4ql639GIaXNxv9S0DkcaLHSsQDqCY=;
+	s=default; t=1573610715;
+	bh=uxxm2wLEUgiQS5Hy+cXBEGA8D64YhyjFzfss5q81di0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pi03cpOhNbVX6bq4FyFrlLn9RIEH8vEBB3ZEBcZ1clLbPNuhbX/w3fSj+lyn/P5tf
-	 HsmhMeE26pSE0Ra5Z5Ihh1fC31md0J87Rywp0JgObGXie6XU7O9A45H/OL/8w3lMKx
-	 9m9sP2M5Y2CE354LeFwlIiNRZ+OSNv75+oi3unMA=
+	b=MxlbrFp7707ux9NwW2iseRf4Gp8AZYx/laGOrUUAyRLeuaxhwSHdCrr3mOkm3kIb1
+	 986/SK9DBzmptcVaUz7eyR9BIGl5x+SkwT7xs/IlZFiQMia2QdO3dEiAPBkKqj0/e+
+	 VyDfPkNrwimWEvZBPFqN5RJ0wsATF7suj3BXlkEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbfKMCFJ (ORCPT
+        id S1730852AbfKMCBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57942 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:01:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730863AbfKMCBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:47 -0500
+        id S1730807AbfKMCBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:01:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08F382247F;
-        Wed, 13 Nov 2019 02:01:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 779B722490;
+        Wed, 13 Nov 2019 02:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610506;
-        bh=Embar7vqklFB3d4ql639GIaXNxv9S0DkcaLHSsQDqCY=;
+        s=default; t=1573610499;
+        bh=uxxm2wLEUgiQS5Hy+cXBEGA8D64YhyjFzfss5q81di0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ailNMAszeMFNOoH+786xty1+miDfO0sr/g00fLcJbuvDTMT2cKGAk/tmCkHlJ8sPI
-         SvN2L6f8G4GqDE4pDbMaP1troqPYhTWb7220kBYLpfijrAPJ0CuGpd77BLxMvYq5qe
-         qU/W8AZ71QB2ThUVHqcmddcGzRyKJKJ0aGEftatM=
+        b=dk5XdHtgSbWNzPlcXK2FB5NA6L35kECo5jMTTgPekgz0EzZ4PtrAuZPVZ9wHjHqbx
+         6bo0jVag4tKrfb7teK0mWGdk798sAqKS7/Hc/ga6Td8m9hqwybZqOnGJojo+qlDhaa
+         nZcIbsZp6nxIj/xT+QwjVvHQ+QrGQVRk2xDF8erE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 10/48] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
-Date:   Tue, 12 Nov 2019 21:00:53 -0500
-Message-Id: <20191113020131.13356-10-sashal@kernel.org>
+Cc:     Simon Wunderlich <sw@simonwunderlich.de>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/48] ath9k: fix reporting calculated new FFT upper max
+Date:   Tue, 12 Nov 2019 21:00:49 -0500
+Message-Id: <20191113020131.13356-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -60,43 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Simon Wunderlich <sw@simonwunderlich.de>
 
-[ Upstream commit 5e621f5d538985f010035c6f3e28c22829d36db1 ]
+[ Upstream commit 4fb5837ac2bd46a85620b297002c704e9958f64d ]
 
-Clang warns when implicitly converting from one enumerated type to
-another. Avoid this by using the equivalent value from the expected
-type.
+Since the debug print code is outside of the loop, it shouldn't use the loop
+iterator anymore but instead print the found maximum index.
 
-drivers/dma/timb_dma.c:548:27: warning: implicit conversion from
-enumeration type 'enum dma_transfer_direction' to different enumeration
-type 'enum dma_data_direction' [-Wenum-conversion]
-                td_desc->desc_list_len, DMA_MEM_TO_DEV);
-                                        ^~~~~~~~~~~~~~
-1 warning generated.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: Nick Kossifidis <mickflemm@gmail.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/timb_dma.c | 2 +-
+ drivers/net/wireless/ath/ath9k/common-spectral.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
-index 559cd4073698c..cf741187c9bb6 100644
---- a/drivers/dma/timb_dma.c
-+++ b/drivers/dma/timb_dma.c
-@@ -552,7 +552,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,
- 	}
+diff --git a/drivers/net/wireless/ath/ath9k/common-spectral.c b/drivers/net/wireless/ath/ath9k/common-spectral.c
+index 03945731eb65a..ec805fe6dddbb 100644
+--- a/drivers/net/wireless/ath/ath9k/common-spectral.c
++++ b/drivers/net/wireless/ath/ath9k/common-spectral.c
+@@ -411,7 +411,7 @@ ath_cmn_process_ht20_40_fft(struct ath_rx_status *rs,
  
- 	dma_sync_single_for_device(chan2dmadev(chan), td_desc->txd.phys,
--		td_desc->desc_list_len, DMA_MEM_TO_DEV);
-+		td_desc->desc_list_len, DMA_TO_DEVICE);
- 
- 	return &td_desc->txd;
- }
+ 		ath_dbg(common, SPECTRAL_SCAN,
+ 			"Calculated new upper max 0x%X at %i\n",
+-			tmp_mag, i);
++			tmp_mag, fft_sample_40.upper_max_index);
+ 	} else
+ 	for (i = dc_pos; i < SPECTRAL_HT20_40_NUM_BINS; i++) {
+ 		if (fft_sample_40.data[i] == (upper_mag >> max_exp))
 -- 
 2.20.1
 
