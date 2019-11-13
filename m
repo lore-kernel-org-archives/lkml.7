@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4798C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C55C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84C6821D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31B721783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611244;
-	bh=QWSRruHkNzMwdE+fRAukk16JA8IKf2GjVzAyMYnhh0s=;
+	s=default; t=1573611249;
+	bh=HBHtmJu5V/blqrrfin0uViVbx9hl+U8z088qsdK+aUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ws77Tp6j7LPxoNyGoVRkmXAP2oDRwaHHYw2Rw+S8pAkrbrApl41vXXflttKVOmvkX
-	 GWedkGwAEJ2xhOjezaHUeD9zkD5uuhl2RXP9Wj7C8RYTJ+je0WhcrBF+LJetQ62nUO
-	 ojjz/Mk5U0F7zUIbnXtTv/9m8V8p60liK/JCSvV8=
+	b=wMsZvNeWO6ESSqumQkJidEzIvk92raJ5cituR9CCDY1OwkDgofyg3ozpbSCuhi5Xr
+	 KPhGj4v7vbmZdoy+rT2wPzQ66jtrgJfk0G3113AMCdxPd4aMJAVX7sGJHlqt2nzFyK
+	 Q0rNTUdneY7Su/f3ZuVdSh6XbV8wi+Gr9k0IAMkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfKMB5Y (ORCPT
+        id S1730492AbfKMCOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:57:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50472 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:14:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbfKMB5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:20 -0500
+        id S1729760AbfKMB5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F9F2222D3;
-        Wed, 13 Nov 2019 01:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1753E2245C;
+        Wed, 13 Nov 2019 01:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610239;
-        bh=QWSRruHkNzMwdE+fRAukk16JA8IKf2GjVzAyMYnhh0s=;
+        s=default; t=1573610242;
+        bh=HBHtmJu5V/blqrrfin0uViVbx9hl+U8z088qsdK+aUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jIpf0z85uv2NyFqT5zFngP4dnXMxLJdgAPB5mSeJ3LA7mriev1NC2BDCR63Y1Lzao
-         Umw/HOcUKRFR+fl6c6V/Sx1QiluVD4oY/6OFQQ0CV4GY+POu4FK1vN//tyEQ44okX2
-         aTEPD+i/nMoHPv11gPtJQiuvNZ6AIonj4zbXf5Bw=
+        b=Qj9bzx+9LQTZto+891B9w+FeoGOvl37bLjalvr0FTvZzs55mFg3baFOEg4diIyf41
+         A9lbesQDYWSH7pL19aAc+DUrJ1tdgGKsCMNPyYiWeoMsff0ZQO3xdMlg4WiAs+TitS
+         nj49cloQPbAXJy7xvmQh/eF9D5KElwYlvg9BUal0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 039/115] clocksource/drivers/sh_cmt: Fixup for 64-bit machines
-Date:   Tue, 12 Nov 2019 20:55:06 -0500
-Message-Id: <20191113015622.11592-39-sashal@kernel.org>
+Cc:     Radoslaw Tyl <radoslawx.tyl@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 042/115] ixgbe: Fix ixgbe TX hangs with XDP_TX beyond queue limit
+Date:   Tue, 12 Nov 2019 20:55:09 -0500
+Message-Id: <20191113015622.11592-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -60,208 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit 22627c6f3ed3d9d0df13eec3c831b08f8186c38e ]
+[ Upstream commit 8d7179b1e2d64b3493c0114916486fe92e6109a9 ]
 
-When trying to use CMT for clockevents on R-Car gen3 SoCs, I noticed
-that 'max_delta_ns' for the broadcast timer (CMT) was shown as 1000 in
-/proc/timer_list. It turned out that when calculating it, the driver did
-1 << 32 (causing what I think was undefined behavior) resulting in a zero
-delta, later clamped to 1000 by cev_delta2ns(). The root cause turned out
-to be that the driver abused *unsigned long* for the CMT register values
-(which are 16/32-bit), so that the calculation of 'ch->max_match_value'
-in sh_cmt_setup_channel() used the wrong branch. Using more proper 'u32'
-instead fixed 'max_delta_ns' and even fixed the switching an active
-clocksource to CMT (which caused the system to turn non-interactive
-before).
+We have Tx hang when number Tx and XDP queues are more than 64.
+In XDP always is MTQC == 0x0 (64TxQs). We need more space for Tx queues.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/sh_cmt.c | 72 +++++++++++++++++-------------------
- 1 file changed, 33 insertions(+), 39 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
-index e09e8bf0bb9bf..560541f53c8d9 100644
---- a/drivers/clocksource/sh_cmt.c
-+++ b/drivers/clocksource/sh_cmt.c
-@@ -75,18 +75,17 @@ struct sh_cmt_info {
- 	enum sh_cmt_model model;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 01c120d656c54..d1472727ef882 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -3490,12 +3490,18 @@ static void ixgbe_setup_mtqc(struct ixgbe_adapter *adapter)
+ 		else
+ 			mtqc |= IXGBE_MTQC_64VF;
+ 	} else {
+-		if (tcs > 4)
++		if (tcs > 4) {
+ 			mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_8TC_8TQ;
+-		else if (tcs > 1)
++		} else if (tcs > 1) {
+ 			mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_4TC_4TQ;
+-		else
+-			mtqc = IXGBE_MTQC_64Q_1PB;
++		} else {
++			u8 max_txq = adapter->num_tx_queues +
++				adapter->num_xdp_queues;
++			if (max_txq > 63)
++				mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_4TC_4TQ;
++			else
++				mtqc = IXGBE_MTQC_64Q_1PB;
++		}
+ 	}
  
- 	unsigned long width; /* 16 or 32 bit version of hardware block */
--	unsigned long overflow_bit;
--	unsigned long clear_bits;
-+	u32 overflow_bit;
-+	u32 clear_bits;
- 
- 	/* callbacks for CMSTR and CMCSR access */
--	unsigned long (*read_control)(void __iomem *base, unsigned long offs);
-+	u32 (*read_control)(void __iomem *base, unsigned long offs);
- 	void (*write_control)(void __iomem *base, unsigned long offs,
--			      unsigned long value);
-+			      u32 value);
- 
- 	/* callbacks for CMCNT and CMCOR access */
--	unsigned long (*read_count)(void __iomem *base, unsigned long offs);
--	void (*write_count)(void __iomem *base, unsigned long offs,
--			    unsigned long value);
-+	u32 (*read_count)(void __iomem *base, unsigned long offs);
-+	void (*write_count)(void __iomem *base, unsigned long offs, u32 value);
- };
- 
- struct sh_cmt_channel {
-@@ -100,9 +99,9 @@ struct sh_cmt_channel {
- 
- 	unsigned int timer_bit;
- 	unsigned long flags;
--	unsigned long match_value;
--	unsigned long next_match_value;
--	unsigned long max_match_value;
-+	u32 match_value;
-+	u32 next_match_value;
-+	u32 max_match_value;
- 	raw_spinlock_t lock;
- 	struct clock_event_device ced;
- 	struct clocksource cs;
-@@ -157,24 +156,22 @@ struct sh_cmt_device {
- #define SH_CMT32_CMCSR_CKS_RCLK1	(7 << 0)
- #define SH_CMT32_CMCSR_CKS_MASK		(7 << 0)
- 
--static unsigned long sh_cmt_read16(void __iomem *base, unsigned long offs)
-+static u32 sh_cmt_read16(void __iomem *base, unsigned long offs)
- {
- 	return ioread16(base + (offs << 1));
- }
- 
--static unsigned long sh_cmt_read32(void __iomem *base, unsigned long offs)
-+static u32 sh_cmt_read32(void __iomem *base, unsigned long offs)
- {
- 	return ioread32(base + (offs << 2));
- }
- 
--static void sh_cmt_write16(void __iomem *base, unsigned long offs,
--			   unsigned long value)
-+static void sh_cmt_write16(void __iomem *base, unsigned long offs, u32 value)
- {
- 	iowrite16(value, base + (offs << 1));
- }
- 
--static void sh_cmt_write32(void __iomem *base, unsigned long offs,
--			   unsigned long value)
-+static void sh_cmt_write32(void __iomem *base, unsigned long offs, u32 value)
- {
- 	iowrite32(value, base + (offs << 2));
- }
-@@ -236,7 +233,7 @@ static const struct sh_cmt_info sh_cmt_info[] = {
- #define CMCNT 1 /* channel register */
- #define CMCOR 2 /* channel register */
- 
--static inline unsigned long sh_cmt_read_cmstr(struct sh_cmt_channel *ch)
-+static inline u32 sh_cmt_read_cmstr(struct sh_cmt_channel *ch)
- {
- 	if (ch->iostart)
- 		return ch->cmt->info->read_control(ch->iostart, 0);
-@@ -244,8 +241,7 @@ static inline unsigned long sh_cmt_read_cmstr(struct sh_cmt_channel *ch)
- 		return ch->cmt->info->read_control(ch->cmt->mapbase, 0);
- }
- 
--static inline void sh_cmt_write_cmstr(struct sh_cmt_channel *ch,
--				      unsigned long value)
-+static inline void sh_cmt_write_cmstr(struct sh_cmt_channel *ch, u32 value)
- {
- 	if (ch->iostart)
- 		ch->cmt->info->write_control(ch->iostart, 0, value);
-@@ -253,39 +249,35 @@ static inline void sh_cmt_write_cmstr(struct sh_cmt_channel *ch,
- 		ch->cmt->info->write_control(ch->cmt->mapbase, 0, value);
- }
- 
--static inline unsigned long sh_cmt_read_cmcsr(struct sh_cmt_channel *ch)
-+static inline u32 sh_cmt_read_cmcsr(struct sh_cmt_channel *ch)
- {
- 	return ch->cmt->info->read_control(ch->ioctrl, CMCSR);
- }
- 
--static inline void sh_cmt_write_cmcsr(struct sh_cmt_channel *ch,
--				      unsigned long value)
-+static inline void sh_cmt_write_cmcsr(struct sh_cmt_channel *ch, u32 value)
- {
- 	ch->cmt->info->write_control(ch->ioctrl, CMCSR, value);
- }
- 
--static inline unsigned long sh_cmt_read_cmcnt(struct sh_cmt_channel *ch)
-+static inline u32 sh_cmt_read_cmcnt(struct sh_cmt_channel *ch)
- {
- 	return ch->cmt->info->read_count(ch->ioctrl, CMCNT);
- }
- 
--static inline void sh_cmt_write_cmcnt(struct sh_cmt_channel *ch,
--				      unsigned long value)
-+static inline void sh_cmt_write_cmcnt(struct sh_cmt_channel *ch, u32 value)
- {
- 	ch->cmt->info->write_count(ch->ioctrl, CMCNT, value);
- }
- 
--static inline void sh_cmt_write_cmcor(struct sh_cmt_channel *ch,
--				      unsigned long value)
-+static inline void sh_cmt_write_cmcor(struct sh_cmt_channel *ch, u32 value)
- {
- 	ch->cmt->info->write_count(ch->ioctrl, CMCOR, value);
- }
- 
--static unsigned long sh_cmt_get_counter(struct sh_cmt_channel *ch,
--					int *has_wrapped)
-+static u32 sh_cmt_get_counter(struct sh_cmt_channel *ch, u32 *has_wrapped)
- {
--	unsigned long v1, v2, v3;
--	int o1, o2;
-+	u32 v1, v2, v3;
-+	u32 o1, o2;
- 
- 	o1 = sh_cmt_read_cmcsr(ch) & ch->cmt->info->overflow_bit;
- 
-@@ -305,7 +297,8 @@ static unsigned long sh_cmt_get_counter(struct sh_cmt_channel *ch,
- 
- static void sh_cmt_start_stop_ch(struct sh_cmt_channel *ch, int start)
- {
--	unsigned long flags, value;
-+	unsigned long flags;
-+	u32 value;
- 
- 	/* start stop register shared by multiple timer channels */
- 	raw_spin_lock_irqsave(&ch->cmt->lock, flags);
-@@ -412,11 +405,11 @@ static void sh_cmt_disable(struct sh_cmt_channel *ch)
- static void sh_cmt_clock_event_program_verify(struct sh_cmt_channel *ch,
- 					      int absolute)
- {
--	unsigned long new_match;
--	unsigned long value = ch->next_match_value;
--	unsigned long delay = 0;
--	unsigned long now = 0;
--	int has_wrapped;
-+	u32 value = ch->next_match_value;
-+	u32 new_match;
-+	u32 delay = 0;
-+	u32 now = 0;
-+	u32 has_wrapped;
- 
- 	now = sh_cmt_get_counter(ch, &has_wrapped);
- 	ch->flags |= FLAG_REPROGRAM; /* force reprogram */
-@@ -613,9 +606,10 @@ static struct sh_cmt_channel *cs_to_sh_cmt(struct clocksource *cs)
- static u64 sh_cmt_clocksource_read(struct clocksource *cs)
- {
- 	struct sh_cmt_channel *ch = cs_to_sh_cmt(cs);
--	unsigned long flags, raw;
-+	unsigned long flags;
- 	unsigned long value;
--	int has_wrapped;
-+	u32 has_wrapped;
-+	u32 raw;
- 
- 	raw_spin_lock_irqsave(&ch->lock, flags);
- 	value = ch->total_cycles;
+ 	IXGBE_WRITE_REG(hw, IXGBE_MTQC, mtqc);
 -- 
 2.20.1
 
