@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14279C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE16C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC236222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9E1222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611549;
-	bh=m5hJaHVZrLSf1mJK7b9kB9bQlJxzbNzPsHf/khSsGYc=;
+	s=default; t=1573611558;
+	bh=m1A12Zj/jy/JTBMwyfGQv0k10etCIufpYcn/+2wqQ04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nsygb6wIBe5jUnUpScxhO9/1LVyb/S7s60+ZCu7VJJC/ravjcIGyzyadm0wPa+DUK
-	 BKWBopjpzUAjju23ASwNSDSfeR2tsqXOBCz/Jd8GBZ0CmHqfmoe3/8K0tGAl+6CTx0
-	 xfI66WKpb7s/tqBkRB/9tPkqeKLK+TwILJJ4XHDk=
+	b=eXO+r/Kfeaey6FI08XsMx+kaE6IZo7IbtvAJ3x+c1Z7oNkJcHos+4EDiuFyQ54cr4
+	 RmktnjxWVvsCeB497PcuCdSs9tDulOuit5N6NIfYlxl+lQKKBOxL4pbefKfucNGW7L
+	 M/ItZp03epZUJ+8ezKp1BmNGSzbCc3XVTS7hFq90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfKMBz2 (ORCPT
+        id S1728222AbfKMBzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46868 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728192AbfKMBzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:20 -0500
+        id S1729036AbfKMBzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7C522459;
-        Wed, 13 Nov 2019 01:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B602922459;
+        Wed, 13 Nov 2019 01:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610119;
-        bh=m5hJaHVZrLSf1mJK7b9kB9bQlJxzbNzPsHf/khSsGYc=;
+        s=default; t=1573610113;
+        bh=m1A12Zj/jy/JTBMwyfGQv0k10etCIufpYcn/+2wqQ04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tknK1Y175UjN4Bp6DkunMod6WVv5KmGe/ZCsxGjoSr5HlXjvZWupQtAntXc0VM3/w
-         PynHgwI5KApOh8nZaoVsIqXyQEtJXNmSFlsoVQzEK1cAPF5NBcF/1vC5bXic1gcTsB
-         CFf3DOFKca/aS0dTDu4kn4NLlpf1hWYWO4Q+PrHM=
+        b=lMsnraZ0aE5AYqIWj+hVLAQPb1cCL70OthNcQe49ikOpnvfojR2/YO9cmOgk2atXH
+         CDX7VwtJP0WYrQ2eJwmBPST0wvXBGlfoxevFzeKH13qT9vyS8K6ezdB6DxT9l00Gmq
+         4w0VAe5YJEboAdZzJ9isZx3dX1UkmMUICc4APr6c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+Cc:     =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@cnexlabs.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 174/209] lightnvm: pblk: fix error handling of pblk_lines_init()
-Date:   Tue, 12 Nov 2019 20:49:50 -0500
-Message-Id: <20191113015025.9685-174-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 169/209] lightnvm: pblk: fix incorrect min_write_pgs
+Date:   Tue, 12 Nov 2019 20:49:45 -0500
+Message-Id: <20191113015025.9685-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -62,37 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Matias Bjørling <mb@lightnvm.io>
 
-[ Upstream commit a70985f83c625a5eaf618be81621e5e4521a66c6 ]
+[ Upstream commit 8bbd45d02a118cbefdf4e1a6274bd965a6aa3c59 ]
 
-In the too many bad blocks error handling case, we should release all
-the allocated resources, otherwise it will cause memory leak.
+The calculation of pblk->min_write_pgs should only use the optimal
+write size attribute provided by the drive, it does not correlate to
+the memory page size of the system, which can be smaller or larger
+than the LBA size reported.
 
-Fixes: 2deeefc02dff ("lightnvm: pblk: fail gracefully on line alloc. failure")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
 Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+Reviewed-by: Javier González <javier@cnexlabs.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/lightnvm/pblk-init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/lightnvm/pblk-init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/lightnvm/pblk-init.c b/drivers/lightnvm/pblk-init.c
-index dc32274881b2f..91fd2b291db91 100644
+index 537e98f2b24a2..145922589b0c6 100644
 --- a/drivers/lightnvm/pblk-init.c
 +++ b/drivers/lightnvm/pblk-init.c
-@@ -1084,7 +1084,8 @@ static int pblk_lines_init(struct pblk *pblk)
+@@ -371,7 +371,7 @@ static int pblk_core_init(struct pblk *pblk)
+ 	atomic64_set(&pblk->nr_flush, 0);
+ 	pblk->nr_flush_rst = 0;
  
- 	if (!nr_free_chks) {
- 		pblk_err(pblk, "too many bad blocks prevent for sane instance\n");
--		return -EINTR;
-+		ret = -EINTR;
-+		goto fail_free_lines;
- 	}
- 
- 	pblk_set_provision(pblk, nr_free_chks);
+-	pblk->min_write_pgs = geo->ws_opt * (geo->csecs / PAGE_SIZE);
++	pblk->min_write_pgs = geo->ws_opt;
+ 	max_write_ppas = pblk->min_write_pgs * geo->all_luns;
+ 	pblk->max_write_pgs = min_t(int, max_write_ppas, NVM_MAX_VLBA);
+ 	pblk_set_sec_per_write(pblk, pblk->min_write_pgs);
 -- 
 2.20.1
 
