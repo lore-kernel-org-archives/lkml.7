@@ -1,155 +1,120 @@
-Return-Path: <SRS0=9xw0=ZF=vger.kernel.org=linux-m68k-owner@kernel.org>
+Return-Path: <SRS0=c0G/=ZF=linuxdriverproject.org=driverdev-devel-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F18CC43331
-	for <linux-m68k@archiver.kernel.org>; Wed, 13 Nov 2019 03:56:14 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC74222C9
-	for <linux-m68k@archiver.kernel.org>; Wed, 13 Nov 2019 03:56:14 +0000 (UTC)
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfKMD4O (ORCPT <rfc822;linux-m68k@archiver.kernel.org>);
-        Tue, 12 Nov 2019 22:56:14 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:39342 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727625AbfKMD4N (ORCPT
-        <rfc822;linux-m68k@lists.linux-m68k.org>);
-        Tue, 12 Nov 2019 22:56:13 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47CW4V73MqzQlBG;
-        Wed, 13 Nov 2019 04:56:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id ovfePb6AeJGC; Wed, 13 Nov 2019 04:56:05 +0100 (CET)
-Date:   Wed, 13 Nov 2019 14:55:42 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 5/9] namei: LOOKUP_IN_ROOT: chroot-like scoped
- resolution
-Message-ID: <20191113035542.3ckc7oudahn3xtnj@yavin.dot.cyphar.com>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-6-cyphar@cyphar.com>
- <20191113020307.GB26530@ZenIV.linux.org.uk>
- <20191113024414.wlmvtjstpnkxa36n@yavin.dot.cyphar.com>
- <20191113025941.GE26530@ZenIV.linux.org.uk>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB49C43331
+	for <driverdev-devel@archiver.kernel.org>; Wed, 13 Nov 2019 05:33:26 +0000 (UTC)
+Received: from whitealder.osuosl.org (smtp1.osuosl.org [140.211.166.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id C3500222D0
+	for <driverdev-devel@archiver.kernel.org>; Wed, 13 Nov 2019 05:33:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="x2fJUqoO"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org C3500222D0
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=driverdev-devel-bounces@linuxdriverproject.org
+Received: from localhost (localhost [127.0.0.1])
+	by whitealder.osuosl.org (Postfix) with ESMTP id 7B0BB86E69;
+	Wed, 13 Nov 2019 05:33:26 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at osuosl.org
+Received: from whitealder.osuosl.org ([127.0.0.1])
+	by localhost (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 6lSTavFYqBlq; Wed, 13 Nov 2019 05:33:24 +0000 (UTC)
+Received: from ash.osuosl.org (ash.osuosl.org [140.211.166.34])
+	by whitealder.osuosl.org (Postfix) with ESMTP id 8900B86FB1;
+	Wed, 13 Nov 2019 05:33:24 +0000 (UTC)
+Received: from fraxinus.osuosl.org (smtp4.osuosl.org [140.211.166.137])
+ by ash.osuosl.org (Postfix) with ESMTP id 6C4691BF3CD
+ for <devel@linuxdriverproject.org>; Wed, 13 Nov 2019 05:33:23 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+ by fraxinus.osuosl.org (Postfix) with ESMTP id 612F385EF1
+ for <devel@linuxdriverproject.org>; Wed, 13 Nov 2019 05:33:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at osuosl.org
+Received: from fraxinus.osuosl.org ([127.0.0.1])
+ by localhost (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id xf9HHm7a7TPY for <devel@linuxdriverproject.org>;
+ Wed, 13 Nov 2019 05:33:22 +0000 (UTC)
+X-Greylist: from auto-whitelisted by SQLgrey-1.7.6
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+ by fraxinus.osuosl.org (Postfix) with ESMTPS id CCAF285EC1
+ for <devel@linuxdriverproject.org>; Wed, 13 Nov 2019 05:33:22 +0000 (UTC)
+Received: from localhost (unknown [8.46.76.96])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mail.kernel.org (Postfix) with ESMTPSA id 22471222D0;
+ Wed, 13 Nov 2019 05:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=default; t=1573623202;
+ bh=cmVkkx8IxTndhMOx7kQdQT7/VHpxz5FOgRZiosp5KpE=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=x2fJUqoO6VCixekEkHmJiIDqmihNDm8EoYrKvk2KUevLEJ+GYIbx4rscedW6dW5qP
+ 8lfUs16NrIa1E8BGUief6py52rQmkjXwYwL0tV2E2cHqoQ7HEZT9XuECd2L4eYrv4Q
+ MKrvNYM4kDXILdrhtNUsunpdBnwTk1KEgR7eoz2k=
+Date: Wed, 13 Nov 2019 06:33:11 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] vboxsf: move out of staging to fs/
+Message-ID: <20191113053311.GB2036664@kroah.com>
+References: <20191110154303.GA2867499@kroah.com>
+ <20191112063440.GA15951@infradead.org>
+ <20191112065629.GA1242198@kroah.com>
+ <20191112225427.GA1873491@kroah.com>
+ <CAHk-=wiLZpyGyOcymND-Pk7_a_MXHZHJtsT9TryHmZBE7Babiw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="j4f7d32jpyqpzflk"
 Content-Disposition: inline
-In-Reply-To: <20191113025941.GE26530@ZenIV.linux.org.uk>
-Sender: linux-m68k-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-m68k.vger.kernel.org>
-X-Mailing-List: linux-m68k@vger.kernel.org
-Message-ID: <20191113035542.TrTqcU4fxZQgNSHNpKuOx-uLPnYBMAf1YAg95qSB4q4@z>
+In-Reply-To: <CAHk-=wiLZpyGyOcymND-Pk7_a_MXHZHJtsT9TryHmZBE7Babiw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-BeenThere: driverdev-devel@linuxdriverproject.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Linux Driver Project Developer List
+ <driverdev-devel.linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>, 
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>, 
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Cc: Christoph Hellwig <hch@infradead.org>, Hans de Goede <hdegoede@redhat.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ devel@linuxdriverproject.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Message-ID: <20191113053311.EichQa_1Rgc7BkuWeDlzFNq72U2Qw9y8fQmoqicu0NY@z>
 
+On Tue, Nov 12, 2019 at 03:12:53PM -0800, Linus Torvalds wrote:
+> On Tue, Nov 12, 2019 at 2:54 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > Christoph, this is what you mean, right?  If so, I'll send this to Linus
+> > later this week, or he can grab it right from this patch :)
+> 
+> No.
+> 
+> I was unhappy about a staging driver being added in rc7, but I went
+> "whatever, it's Greg's garbage"
+> 
+> There is no way in hell I will take a new filesystem in rc8.
+> 
+> Would you take that into stable? No, you wouldn't. Then why is this
+> being upstreamed now.
+> 
+> Honestly, I think I'll just delete the whole thing, since it shouldn't
+> have gone in in the first place. This is not how we add new
+> filesystems.
 
---j4f7d32jpyqpzflk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fair enough, sorry for the noise.
 
-On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Wed, Nov 13, 2019 at 01:44:14PM +1100, Aleksa Sarai wrote:
-> > On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > > On Tue, Nov 05, 2019 at 08:05:49PM +1100, Aleksa Sarai wrote:
-> > >=20
-> > > > @@ -2277,12 +2277,20 @@ static const char *path_init(struct nameida=
-ta *nd, unsigned flags)
-> > > > =20
-> > > >  	nd->m_seq =3D read_seqbegin(&mount_lock);
-> > > > =20
-> > > > -	/* Figure out the starting path and root (if needed). */
-> > > > -	if (*s =3D=3D '/') {
-> > > > +	/* Absolute pathname -- fetch the root. */
-> > > > +	if (flags & LOOKUP_IN_ROOT) {
-> > > > +		/* With LOOKUP_IN_ROOT, act as a relative path. */
-> > > > +		while (*s =3D=3D '/')
-> > > > +			s++;
-> > >=20
-> > > Er...  Why bother skipping slashes?  I mean, not only link_path_walk()
-> > > will skip them just fine, you are actually risking breakage in this:
-> > >                 if (*s && unlikely(!d_can_lookup(dentry))) {
-> > >                         fdput(f);
-> > >                         return ERR_PTR(-ENOTDIR);
-> > >                 }
-> > > which is downstream from there with you patch, AFAICS.
-> >=20
-> > I switched to stripping the slashes at your suggestion a few revisions
-> > ago[1], and had (wrongly) assumed we needed to handle "/" somehow in
-> > path_init(). But you're quite right about link_path_walk() -- and I'd be
-> > more than happy to drop it.
->=20
-> That, IIRC, was about untangling the weirdness around multiple calls of
-> dirfd_path_init() and basically went "we might want just strip the slashes
-> in case of that flag very early in the entire thing, so that later the
-> normal logics for absolute/relative would DTRT".
-
-Ah okay, I'd misunderstood the point you were making in that thread.
-
-> Since your check is right next to checking for absolute pathnames (and
-> not in the very beginning of path_init()), we might as well turn the
-> check for absolute pathname into *s =3D=3D '/' && !(flags &
-> LOOKUP_IN_ROOT) and be done with that.
-
-Yup, agreed.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---j4f7d32jpyqpzflk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXct+uwAKCRCdlLljIbnQ
-EpaMAQCKfJalyFfg/QA8aH/wuTwb0JmHpxt9HKverNfj5BncXAEA8J+s2/4xFPcn
-vy6IqraafPiOMkqsiqA03ofQ3tR8tQ4=
-=Qq3t
------END PGP SIGNATURE-----
-
---j4f7d32jpyqpzflk--
+greg k-h
+_______________________________________________
+devel mailing list
+devel@linuxdriverproject.org
+http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
