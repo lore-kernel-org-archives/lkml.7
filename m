@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08265C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB61C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C698F2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC0A21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611522;
-	bh=+E19Huy+AE+P6Kn7PRtmtBXtIXdaMq31874qfiMh7I0=;
+	s=default; t=1573611525;
+	bh=EYGUwQYilh4pekqnanWVL0ztc04HiI88xFpbAfHhJyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ctBoBbSETbcMMFB4KbJL5Hp3qMNvbzVLphiHND/2e+YZGdmMwzOv3pwwJRSEnmyU0
-	 o3I3grhHdzaafGtfdF1ESKxahAbYw6SxYl5Ea7ItFzjPbWISxFfUpFlTvxkhHnq+Zk
-	 mDY1QsC6K4Zr9bSRSzCxq9q8OKo+ergR7ZtJIYxo=
+	b=1m3aysspr7ZHypPJajMfp1I94U30Ivg/MxVwMdl2xnpsB51den6KoIt5xjuDrTiTD
+	 FK1INgeVrxvOc+jfm1KqzJpAT2kGuSiE6jg7Nzqjtd4B0dtECLBmOdOhoZuOVDQWVC
+	 QpLsM+wxSj9UuPmrQ86NOOZL0k0c21+dkrBea+Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbfKMCSl (ORCPT
+        id S1729169AbfKMBzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:18:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47290 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729175AbfKMBzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:37 -0500
+        id S1729119AbfKMBz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65B542245A;
-        Wed, 13 Nov 2019 01:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F0722470;
+        Wed, 13 Nov 2019 01:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610137;
-        bh=+E19Huy+AE+P6Kn7PRtmtBXtIXdaMq31874qfiMh7I0=;
+        s=default; t=1573610129;
+        bh=EYGUwQYilh4pekqnanWVL0ztc04HiI88xFpbAfHhJyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1cIgwI5kP/3tEpdy5Tf6jXRF4Kl7Jd6L35lAmBXgEC2ibw/tOMm6HyJ90nc/Mq9IH
-         ijeCUB1EoiXsZ9ZG8DzIYHAFuX3MwSNvAC3qoHA7vFgjINUQB0goiSPRgoq+KBgXzA
-         onS4EHrjzY7uRZSnXMJH5aKiqQ8iml0eD5oHu6WQ=
+        b=SlGhVcLxHQNAjPQpHGBSi4u1KQYLT33gxNHoB3B39tUBGT2uQjFQHeUo7zlBc2KYd
+         /aH5pRJm/L+RBM8u+HQDr8FFqcXnDgBftxt8SoBleQfeWq2zWCPzo7BYP8+s7nlP19
+         5MOh5N7wNzNMLZLeCFLTAi3Nm9VBnQSRgDRFAH0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
-Subject: [PATCH AUTOSEL 4.19 185/209] orangefs: rate limit the client not running info message
-Date:   Tue, 12 Nov 2019 20:50:01 -0500
-Message-Id: <20191113015025.9685-185-sashal@kernel.org>
+Cc:     Marek Vasut <marex@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 179/209] gpio: syscon: Fix possible NULL ptr usage
+Date:   Tue, 12 Nov 2019 20:49:55 -0500
+Message-Id: <20191113015025.9685-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,38 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 2978d873471005577e7b68a528b4f256a529b030 ]
+[ Upstream commit 70728c29465bc4bfa7a8c14304771eab77e923c7 ]
 
-Currently accessing various /sys/fs/orangefs files will spam the
-kernel log with the following info message when the client is not
-running:
+The priv->data->set can be NULL while flags contains GPIO_SYSCON_FEAT_OUT
+and chip->set is valid pointer. This happens in case the controller uses
+the default GPIO setter. Always use chip->set to access the setter to avoid
+possible NULL pointer dereferencing.
 
-[  491.489284] sysfs_service_op_show: Client not running :-5:
-
-Rate limit this info message to make it less spammy.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/orangefs-sysfs.c | 2 +-
+ drivers/gpio/gpio-syscon.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/orangefs/orangefs-sysfs.c b/fs/orangefs/orangefs-sysfs.c
-index dd28079f518c0..19739aaee6755 100644
---- a/fs/orangefs/orangefs-sysfs.c
-+++ b/fs/orangefs/orangefs-sysfs.c
-@@ -323,7 +323,7 @@ static ssize_t sysfs_service_op_show(struct kobject *kobj,
- 	/* Can't do a service_operation if the client is not running... */
- 	rc = is_daemon_in_service();
- 	if (rc) {
--		pr_info("%s: Client not running :%d:\n",
-+		pr_info_ratelimited("%s: Client not running :%d:\n",
- 			__func__,
- 			is_daemon_in_service());
- 		goto out;
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 87c18a5445137..7f3da34c78746 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -122,7 +122,7 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
+ 				   BIT(offs % SYSCON_REG_BITS));
+ 	}
+ 
+-	priv->data->set(chip, offset, val);
++	chip->set(chip, offset, val);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
