@@ -2,73 +2,100 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC259C17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9760CC17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D13222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F051222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGFxbyyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfKMGfW (ORCPT
+        id S1726386AbfKMGhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:35:22 -0500
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:36249 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfKMGfW (ORCPT
+        Wed, 13 Nov 2019 01:37:15 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44636 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfKMGhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:35:22 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id F002B3000D92B;
-        Wed, 13 Nov 2019 07:35:19 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id BCF3C30C9DD; Wed, 13 Nov 2019 07:35:19 +0100 (CET)
-Date:   Wed, 13 Nov 2019 07:35:19 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PCI: pciehp: Prevent deadlock on disconnect
-Message-ID: <20191113063519.ivv2ehejxonkfufe@wunner.de>
-References: <20191029170022.57528-2-mika.westerberg@linux.intel.com>
- <20191113031752.GA227753@google.com>
+        Wed, 13 Nov 2019 01:37:14 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q26so926793pfn.11;
+        Tue, 12 Nov 2019 22:37:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=voR8XQk2CC3vnccynDlGH9xxP2Lq83CWSGXGxEUwD7A=;
+        b=cGFxbyyj/3qQrrutSScWLNTMv2UWUdyZFsXeqM/6A6Mg946RO5J2bi1MlMZoMrT3Bf
+         6qtgs86jdQJhBWbD6xRRC5wP6EhhdAHEuxFpVGYoDGUAsYyVRzHfhmQoovkWvoixBGFw
+         +ZzMJaNiaYElvD2w+B5TzR72Qg/Ai8G6757j6/12nONbLqlcK8wz1pINfnblKqDA7Gi8
+         WfN0fUk94Vz7aEZCfgZ389kWf+lGw0az+4IRjRr2Tfi1cumDkA2EHCDaZMgtVyBxIrmf
+         Iu+Fys2/7i0UWjIxiq9NAQEZ52sTn8JGBKhaz93/fHPgEGblUfUc9a9J/rVVWv9KJ/Lu
+         xOqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=voR8XQk2CC3vnccynDlGH9xxP2Lq83CWSGXGxEUwD7A=;
+        b=dTp8CPJpMHPSJ96Puj7+DRO27V6Ffg4X54f7C1DT6UmKXSABxorf8i5nh31hJti1nm
+         CaTpjeSLt2CPkzl3P1VDnEmS51h14KcRuft31dWkoQ4vi9os6TGNzeuGg3AZjE2881ra
+         cSkI5Csj4Mrav4HZTz5Up8SpT+bsmp0hulWwWAgR9hNMMGQPZiMX5dgRBNa+rIOQ4jCo
+         KhgfVnh/lmnoIS2RxkwwtkD2Gs4ZXGsyg09w2Mw6OLeMCEVdPXbIRgqml4qhokQ2Zi3K
+         4fBEuNGuk4kdEhKMQjCt6x/r4/fwrzAWR+OsydwfrUJ18kEJMyQHhh3BPEsqPReQp7o+
+         bUbg==
+X-Gm-Message-State: APjAAAUWzCgfjj1wb6kAkYSTtVsiIW/Jy1Um3rDB1rMM3o0LXzA/JeN8
+        xcAMc9Uzt6FVVTRp/UoW1JU=
+X-Google-Smtp-Source: APXvYqzyZdy2Y11hisqEHnoMiavn/ffHFdr/fBWi7fBCfeAcMFAqb9Cfh+4fMY/o1m5PE6veSJM5OA==
+X-Received: by 2002:a63:c60f:: with SMTP id w15mr1842093pgg.33.1573627034238;
+        Tue, 12 Nov 2019 22:37:14 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id o7sm1531920pjo.7.2019.11.12.22.37.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 22:37:13 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] Input: synaptics-rmi4 - add missed operations in remove
+Date:   Wed, 13 Nov 2019 14:36:56 +0800
+Message-Id: <20191113063656.8713-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113031752.GA227753@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 09:17:52PM -0600, Bjorn Helgaas wrote:
-> On Tue, Oct 29, 2019 at 08:00:22PM +0300, Mika Westerberg wrote:
-> > parent PCIe downstream port, who got the hot-remove event, starts
-> > removing devices below it taking pci_lock_rescan_remove() lock. When the
-> > child PCIe port is runtime resumed it calls pciehp_check_presence()
-> > which ends up calling pciehp_card_present() and pciehp_check_link_active().
-> 
-> Oh, I see, pciehp_resume() calls pciehp_check_presence(), which
-> schedules the IRQ thread via pciehp_request().  So does this deadlock
-> only happen if the port(s) have been runtime suspended?
+The driver forgets to deal with work and workqueue in remove like what
+is done when probe fails.
+Add the missed operations to fix it.
 
-No, there is a multitude of situations when the deadlock may occur and
-this is just one of them.  See my comment on v1 of this patch:
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/input/rmi4/rmi_f54.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-https://patchwork.ozlabs.org/patch/1117870/#2230798
+diff --git a/drivers/input/rmi4/rmi_f54.c b/drivers/input/rmi4/rmi_f54.c
+index 710b02595486..2c0cde5c775c 100644
+--- a/drivers/input/rmi4/rmi_f54.c
++++ b/drivers/input/rmi4/rmi_f54.c
+@@ -730,6 +730,9 @@ static void rmi_f54_remove(struct rmi_function *fn)
+ 
+ 	video_unregister_device(&f54->vdev);
+ 	v4l2_device_unregister(&f54->v4l2);
++	cancel_delayed_work_sync(&f54->work);
++	flush_workqueue(f54->workqueue);
++	destroy_workqueue(f54->workqueue);
+ }
+ 
+ struct rmi_function_handler rmi_f54_handler = {
+-- 
+2.23.0
 
-Thanks,
-
-Lukas
