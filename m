@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF6AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75429C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A3B21783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD7D21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610545;
-	bh=G71dYcUGEdS7ZLcmHwZte93OgREUPEZEcNL/Z8Rc4BA=;
+	s=default; t=1573610548;
+	bh=oFxvNZ1hbHppCSTLDNl26gqmoZhX77aU+CZX6kpqLm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nquXUUThdPBq0E8YgVJco5QBA3mbG/w2dp7ZENuHEMV0V8xujX7k4cPkFXCyghdbB
-	 SIrh08GuQFXjiESOuRJFhQs/So23bUsdsZ23wNGSAi8fp/U/wvkFGSweOBFACCfNx1
-	 MLVSNQ9YsweIZYrC94NyD/maBqNmIpirz3TfqF+I=
+	b=CP9WX56veh1uMSjo0jROR74/UF0sR7xVXXPEOcbnf6wBOAaRLput4kroZ/gyHNs/b
+	 a3EFIOllFUNTXxdIJYF4GLcTOB6P+hLamMepfiU0Xn/Enx/uCGJg5DabHRx97BKJ4B
+	 VLKIxi5sCtjBfMoXKtG8qENH8ZbAHEcuBHne9EfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbfKMCCY (ORCPT
+        id S1731025AbfKMCC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:02:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:02:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730994AbfKMCCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:19 -0500
+        id S1730991AbfKMCCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFE0D21783;
-        Wed, 13 Nov 2019 02:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39D9422469;
+        Wed, 13 Nov 2019 02:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610539;
-        bh=G71dYcUGEdS7ZLcmHwZte93OgREUPEZEcNL/Z8Rc4BA=;
+        s=default; t=1573610542;
+        bh=oFxvNZ1hbHppCSTLDNl26gqmoZhX77aU+CZX6kpqLm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KtjhIhuR7vg0cVlNAZ2N1FDRsmg8zr2wFKVJkSqOG2xbLjRdq+5u3UHKfCTfT8YOp
-         oeMm2duKNaaTO7oHcQvPeV6GXGCYxUECSkkg8CKm/U4Rzcl4FC39n11DlWRuFbe/Nz
-         IIAa5js/yb/XWeoGfjQcHvhriEEfeI42GYkCcER8=
+        b=EM9aOGeJWgr38N2iofatDlgC/SbKbwd81eSSRBh1eGnYKbs3b569Q1FhvrQdh5aCO
+         UnMgbC/wmMc8DwMFdL/Ynirnbtj7OIqwYjpDicc7IKj7tFH4jHrici4xsMa5yKZFef
+         0aaTgRzVAaYTAa2+45TLdghsI3HjpH9iPwcyjyBc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Lubomir Rintel <lkundrak@v3.sk>,
-        x86@kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 28/48] x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
-Date:   Tue, 12 Nov 2019 21:01:11 -0500
-Message-Id: <20191113020131.13356-28-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 31/48] ACPI / SBS: Fix rare oops when removing modules
+Date:   Tue, 12 Nov 2019 21:01:14 -0500
+Message-Id: <20191113020131.13356-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,45 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Ronald Tschalär <ronald@innovation.ch>
 
-[ Upstream commit fa112cf1e8bc693d5a666b1c479a2859c8b6e0f1 ]
+[ Upstream commit 757c968c442397f1249bb775a7c8c03842e3e0c7 ]
 
-When building a 32-bit config which has the above MFD item as module
-but OLPC_XO1_PM is enabled =y - which is bool, btw - the kernel fails
-building with:
+There was a small race when removing the sbshc module where
+smbus_alarm() had queued acpi_smbus_callback() for deferred execution
+but it hadn't been run yet, so that when it did run hc had been freed
+and the module unloaded, resulting in an invalid paging request.
 
-  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_remove':
-  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:159: undefined reference to `mfd_cell_disable'
-  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_probe':
-  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:133: undefined reference to `mfd_cell_enable'
-  make: *** [Makefile:1030: vmlinux] Error 1
+A similar race existed when removing the sbs module with regards to
+acpi_sbs_callback() (which is called from acpi_smbus_callback()).
 
-Force MFD_CS5535 to y if OLPC_XO1_PM is enabled.
+We therefore need to ensure no callbacks are pending or executing before
+the cleanups are done and the modules are removed.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Lubomir Rintel <lkundrak@v3.sk>
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/20181005131750.GA5366@zn.tnic
+Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/acpi/osl.c   | 1 +
+ drivers/acpi/sbshc.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 4d1262cf630c5..e9b19156fb628 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2481,8 +2481,7 @@ config OLPC
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index a000ecb995e66..e59f50576f2ae 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -1186,6 +1186,7 @@ void acpi_os_wait_events_complete(void)
+ 	flush_workqueue(kacpid_wq);
+ 	flush_workqueue(kacpi_notify_wq);
+ }
++EXPORT_SYMBOL(acpi_os_wait_events_complete);
  
- config OLPC_XO1_PM
- 	bool "OLPC XO-1 Power Management"
--	depends on OLPC && MFD_CS5535 && PM_SLEEP
--	select MFD_CORE
-+	depends on OLPC && MFD_CS5535=y && PM_SLEEP
- 	---help---
- 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
+ struct acpi_hp_work {
+ 	struct work_struct work;
+diff --git a/drivers/acpi/sbshc.c b/drivers/acpi/sbshc.c
+index 7a3431018e0ab..5008ead4609a4 100644
+--- a/drivers/acpi/sbshc.c
++++ b/drivers/acpi/sbshc.c
+@@ -196,6 +196,7 @@ int acpi_smbus_unregister_callback(struct acpi_smb_hc *hc)
+ 	hc->callback = NULL;
+ 	hc->context = NULL;
+ 	mutex_unlock(&hc->lock);
++	acpi_os_wait_events_complete();
+ 	return 0;
+ }
  
+@@ -292,6 +293,7 @@ static int acpi_smbus_hc_remove(struct acpi_device *device)
+ 
+ 	hc = acpi_driver_data(device);
+ 	acpi_ec_remove_query_handler(hc->ec, hc->query_bit);
++	acpi_os_wait_events_complete();
+ 	kfree(hc);
+ 	device->driver_data = NULL;
+ 	return 0;
 -- 
 2.20.1
 
