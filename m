@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A875C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB25C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B01122480
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B2722470
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610162;
-	bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
+	s=default; t=1573610167;
+	bh=Sdmu46wqyOZ8xb4qgKmubdm8/s9CbLdUeDfQxVPweYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwRnTwqxdcYsxvfqZ5G+4+pD1QfLgJ+5dxdYZ1yOEaVM+eSDlN37ctPHcarOuB2gA
-	 smSHJs7Bdy0vYfUy/Yt4PxPHUSK2GtYWnyvWnGnH+F9YwmS+yfjJxitEdZMrubT2sc
-	 MAbo1RHhP0d9ts4dDH0NZFI9XNUWhp/llk3lPNWI=
+	b=1R2eDDjQR6PEw7r7fZvQECdDdULiIBl2osd+DW3HkMRiWmMl4+SkNIsQ/a9XPL+uB
+	 09Zpy6v6V4/oVKgEtCzcndw7fyVMHfg+F617ki4tUTrFr1emdzALmlkrdauF9Y/hgU
+	 VgiNaWetp7hvMF6ixgPRzXGX9r1sVVT7GmXOLh+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbfKMB4A (ORCPT
+        id S1729378AbfKMB4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47546 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbfKMBzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:45 -0500
+        id S1729274AbfKMBzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E6FB222D3;
-        Wed, 13 Nov 2019 01:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14FC92245D;
+        Wed, 13 Nov 2019 01:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610145;
-        bh=km4X5vKqo7Inc5aIAMHNteD9crBieiW9GgVbiAH/MyE=;
+        s=default; t=1573610150;
+        bh=Sdmu46wqyOZ8xb4qgKmubdm8/s9CbLdUeDfQxVPweYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7XYO3vCq1jVG7HGpq0CSUICmZYJRKNeoiKX7OAim5kfqNmu+TI068ybYdRchASS5
-         nuf+d9raoDB6rDCm0/Lzj96ZQmDQwKbM/UKsOHXEQ3ga56ilW7TTaxhKC4daFNgtL3
-         70ZiJVJeh4wmx9h/bfUcCQBb9Zx1IAC3gPr9GDm4=
+        b=RjpLJpytF9KrOA/Mk6ykd5SsbXjWyUQn+9tMUSvkmu1UmcWZSbj3NgkMbqnyeYzLa
+         o+K2GzsFZvCMTp62Xqrs14xeKCY/ZGZu/di9zP/bHKcdit92Ftitig8c0G139HXuQK
+         me9ZZU6u1RTAvdIWIFweicg7iB0Phjd0HpXq/eFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 191/209] hwmon: (ina3221) Fix INA3221_CONFIG_MODE macros
-Date:   Tue, 12 Nov 2019 20:50:07 -0500
-Message-Id: <20191113015025.9685-191-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 195/209] netfilter: nft_compat: do not dump private area
+Date:   Tue, 12 Nov 2019 20:50:11 -0500
+Message-Id: <20191113015025.9685-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,41 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolin Chen <nicoleotsuka@gmail.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 791ebc9d34e9d212fc03742c31654b017d385926 ]
+[ Upstream commit d701d8117200399d85e63a737d2e4e897932f3b6 ]
 
-The three INA3221_CONFIG_MODE macros are not correctly defined here.
-The MODE3-1 bits are located at BIT 2-0 according to the datasheet.
+Zero pad private area, otherwise we expose private kernel pointer to
+userspace. This patch also zeroes the tail area after the ->matchsize
+and ->targetsize that results from XT_ALIGN().
 
-So this patch just fixes them by shifting all of them with a correct
-offset. However, this isn't a crital bug fix as the driver does not
-use any of them at this point.
-
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: 0ca743a55991 ("netfilter: nf_tables: add compatibility layer for x_tables")
+Reported-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/ina3221.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nft_compat.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
-index e6b49500c52ae..8c9555313fc3d 100644
---- a/drivers/hwmon/ina3221.c
-+++ b/drivers/hwmon/ina3221.c
-@@ -38,9 +38,9 @@
- #define INA3221_WARN3			0x0c
- #define INA3221_MASK_ENABLE		0x0f
+diff --git a/net/netfilter/nft_compat.c b/net/netfilter/nft_compat.c
+index 1245e02239d90..469f9da5073bf 100644
+--- a/net/netfilter/nft_compat.c
++++ b/net/netfilter/nft_compat.c
+@@ -269,6 +269,24 @@ nft_target_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
+ 	kfree(expr->ops);
+ }
  
--#define INA3221_CONFIG_MODE_SHUNT	BIT(1)
--#define INA3221_CONFIG_MODE_BUS		BIT(2)
--#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(3)
-+#define INA3221_CONFIG_MODE_SHUNT	BIT(0)
-+#define INA3221_CONFIG_MODE_BUS		BIT(1)
-+#define INA3221_CONFIG_MODE_CONTINUOUS	BIT(2)
++static int nft_extension_dump_info(struct sk_buff *skb, int attr,
++				   const void *info,
++				   unsigned int size, unsigned int user_size)
++{
++	unsigned int info_size, aligned_size = XT_ALIGN(size);
++	struct nlattr *nla;
++
++	nla = nla_reserve(skb, attr, aligned_size);
++	if (!nla)
++		return -1;
++
++	info_size = user_size ? : size;
++	memcpy(nla_data(nla), info, info_size);
++	memset(nla_data(nla) + info_size, 0, aligned_size - info_size);
++
++	return 0;
++}
++
+ static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
+ {
+ 	const struct xt_target *target = expr->ops->data;
+@@ -276,7 +294,8 @@ static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
  
- #define INA3221_RSHUNT_DEFAULT		10000
+ 	if (nla_put_string(skb, NFTA_TARGET_NAME, target->name) ||
+ 	    nla_put_be32(skb, NFTA_TARGET_REV, htonl(target->revision)) ||
+-	    nla_put(skb, NFTA_TARGET_INFO, XT_ALIGN(target->targetsize), info))
++	    nft_extension_dump_info(skb, NFTA_TARGET_INFO, info,
++				    target->targetsize, target->usersize))
+ 		goto nla_put_failure;
  
+ 	return 0;
+@@ -504,7 +523,8 @@ static int __nft_match_dump(struct sk_buff *skb, const struct nft_expr *expr,
+ 
+ 	if (nla_put_string(skb, NFTA_MATCH_NAME, match->name) ||
+ 	    nla_put_be32(skb, NFTA_MATCH_REV, htonl(match->revision)) ||
+-	    nla_put(skb, NFTA_MATCH_INFO, XT_ALIGN(match->matchsize), info))
++	    nft_extension_dump_info(skb, NFTA_MATCH_INFO, info,
++				    match->matchsize, match->usersize))
+ 		goto nla_put_failure;
+ 
+ 	return 0;
 -- 
 2.20.1
 
