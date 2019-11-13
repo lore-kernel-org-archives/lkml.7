@@ -2,172 +2,169 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DE2C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D472C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8256B222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009BA222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:57:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nlN0BeiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfKMOyQ (ORCPT
+        id S1727737AbfKMO5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:54:16 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:25714 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727680AbfKMOyP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:54:15 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 13 Nov 2019 20:24:11 +0530
-IronPort-SDR: nfwpYCTyb7jxhcWPk9Ne0HbimTn/ODm9c8uNO+x6e3J3vbaHqZukz4/HwYpt9DKetcVEWNOpz7
- Dkl9dC467EA5myn3hqhpNN3cj0kPqonoros1JDbNqPuKtLkyJY1wW6+KoY3nan53T1TWM7nR3c
- V3uRDvl9YtxMMQtP4RTsgrwEgYobNSuUWAVwzQXeYjglfM0JtBpxxMA42Rxvpdijs1rmk7hAck
- pQRLuAKqxd9kzhPJPFIgQG4EEWyHsSpT5xJR3q04wFVKK94IJcivXtB/Dkj+4UCal19ySk7g79
- Yq9nLb/2SU60+FOCeLdhU21T
-Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 13 Nov 2019 20:23:55 +0530
-Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id 288D4496F; Wed, 13 Nov 2019 20:23:54 +0530 (IST)
-From:   Pradeep P V K <ppvk@codeaurora.org>
-To:     stummala@codeaurora.org, sayalil@codeaurora.org,
-        rampraka@codeaurora.org, vbadigan@codeaurora.org, axboe@kernel.dk,
-        paolo.valente@linaro.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pradeep P V K <ppvk@codeaurora.org>
-Subject: [PATCH v1] block, bfq: set default slice_idle to zero for SSDs
-Date:   Wed, 13 Nov 2019 20:23:20 +0530
-Message-Id: <1573656800-14815-1-git-send-email-ppvk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 13 Nov 2019 09:57:30 -0500
+Received: from m12-16.163.com ([220.181.12.16]:33746 "EHLO m12-16.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbfKMO53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 09:57:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=uc1xN
+        RSd2FCSdwQexfZJOgLv9+uaE7IUvg/ZBRWyIW0=; b=nlN0BeiMB/Yds/bEZDxvY
+        XrJX+b1F9/gQ/FVUEh6GSZJaFxQvRFc8FiqgPaRWl/LPm2SbgjcXhyoa5VelJcpd
+        I2YluspN7uebLQgEape++5EtVZUjFRbsIKdLTI/X/z0r976nfH2rvVtyuebBF/LM
+        ZsBHxlnFZ+lni+xdCpc9JM=
+Received: from [192.168.0.10] (unknown [183.210.50.120])
+        by smtp12 (Coremail) with SMTP id EMCowACX0gRiGcxdP++PAQ--.1725S2;
+        Wed, 13 Nov 2019 22:55:31 +0800 (CST)
+Subject: Re: Question about "asm/rwonce.h: No such file or directory"
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com>
+ <20191112123125.GD17835@willie-the-truck>
+ <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+ <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net>
+ <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
+ <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com>
+ <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
+ <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com>
+ <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
+ <50602386-68b1-be38-a022-0bcf9df6a54e@163.com>
+ <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
+From:   Xiao Yang <ice_yangxiao@163.com>
+Message-ID: <bdbe9e04-4da0-64b2-ab0c-ae739d8fd7ac@163.com>
+Date:   Wed, 13 Nov 2019 22:55:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID: EMCowACX0gRiGcxdP++PAQ--.1725S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAF48CF4xtryxKr4UKw18Grg_yoW5Zr1fpa
+        s3G3W3JF4UX3WUArnrtr18Zry8tw48G3WjqryUWry0qryvyF1xJwsFgr48GFy0qry8tF1U
+        ArW7K34agr1UXr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bjE__UUUUU=
+X-Originating-IP: [183.210.50.120]
+X-CM-SenderInfo: 5lfhs5xdqj5xldr6il2tof0z/1tbiFgNsXlWBkhPalwAAs-
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With default 8ms as a slice idle time, we seen few time bounded
-applications(sensors) on v4.19 kernel are getting timedout during
-multimedia tests (audio, video playbacks etc) with Reboots and
-leading to crash. The timeout configured for these applications
-(sensors) are 20sec.
+On 11/13/19 4:54 PM, Masahiro Yamada wrote:
+> On Wed, Nov 13, 2019 at 5:36 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+>> On 11/13/19 3:53 PM, Masahiro Yamada wrote:
+>>> On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+>>>> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
+>>>>> Sorry, I really do not understand what you are doing.
+>>>>>
+>>>>> include/linux/compiler.h is only for kernel-space.
+>>>>> Shrug if a user-land program includes it.
+>>>> Hi Masahiro,
+>>>>
+>>>> For building tools/bpf, it is good to fix the compiler error by Daniel's
+>>>> patch(i.e. use linux/filter from linux header).
+>>>>
+>>>> linux/compiler.h may be used by other code in kernel.  Is it possible to
+>>>> trigger the same error when the other code
+>>>>
+>>>> including linux/compiler.h is built? Is this kind of code able to find
+>>>> the location of <asm/rwonce.h>?
+>>> <asm/rwonce.h> is also kernel-only header.
+>>>
+>>> The kernel code can find <asm/rwonce.h>, but user-land code cannot.
+>> Hi Masahiro,
+>>
+>> Sorry, I am not familar with it.
+>>
+>> Thanks a lot for your explanation and I have seen the LINUXINCLUDE
+>> variable in Makefile.
+>>
+>> I will try to send a patch as Daniel suggested.
+>>
+>> Best Regards,
+>>
+>> Xiao Yang
+>>
+> Hmm, digging into the git history,
+> this include path was added by the following commit:
+>
+>
+> commit d7475de58575c904818efa369c82e88c6648ce2e
+> Author: Kamal Mostafa <kamal@canonical.com>
+> Date:   Wed Nov 11 14:24:27 2015 -0800
+>
+>      tools/net: Use include/uapi with __EXPORTED_HEADERS__
+>
+>      Use the local uapi headers to keep in sync with "recently" added #define's
+>      (e.g. SKF_AD_VLAN_TPID).  Refactored CFLAGS, and bpf_asm doesn't need -I.
+>
+>      Fixes: 3f356385e8a4 ("filter: bpf_asm: add minimal bpf asm tool")
+>      Signed-off-by: Kamal Mostafa <kamal@canonical.com>
+>      Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+>      Signed-off-by: David S. Miller <davem@davemloft.net>
+>
+>
+>
+> I am not sure how big a deal it is,
+> but it could be a problem on old distros??
+>
+Hi Daniel, Masahiro
 
-In crash dumps, we seen few synchronous requests from sensors/other
-applications were in their bfq_queues for more than 12-20sec.
 
-Idling due to anticipation of future near-by IO requests and wait on
-completion of submitted requests, will effect in choosing the next
-bfq-queue and its scheduling. There by it effecting some time bounded
-applications.
+Could we include the linux/filter.h generated by "make headers_install" 
+as a higher priority?
 
-After making the slice idle to zero, we didn't seen any crash during
-our 72hrs of testing and also it increases the IO throughput.
+(PS: According to above commit, just ensure that tools/bpf keeps in sync 
+with new linux header as far as possible).
 
-Following FIO benchmark results were taken on a local SSD run:
+and then use the linux/filter.h in system if kernel doesn't provide 
+linux/filter.h by "make headers_install".
 
-RandomReads that were taken on v4.19 kernel:
+--------------------------------------------------------------------------------------------------------------------
 
- Idling   iops    avg-lat(us)    stddev       bw
- ----------------------------------------------------
- On       4136    1189.07        17221.65    16.9MB/s
- Off      7246     670.11        1054.76     29.7MB/s
+diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
+index 5d1995fd369c..1e0c768132af 100644
+--- a/tools/bpf/Makefile
++++ b/tools/bpf/Makefile
+@@ -10,7 +10,7 @@ MAKE = make
+  INSTALL ?= install
 
-    fio --name=temp --size=5G --time_based --ioengine=sync \
-	--randrepeat=0 --direct=1 --invalidate=1 --verify=0 \
-	--verify_fatal=0 --rw=randread --blocksize=4k \
-	--group_reporting=1 --directory=/data --runtime=10 \
-	--iodepth=64 --numjobs=5
+  CFLAGS += -Wall -O2
+-CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi 
+-I$(srctree)/include
++CFLAGS += -I$(srctree)/usr/include
 
-Following code changes were made based on [1],[2] and [3].
+  # This will work when bpf is built in tools env. where srctree
+  # isn't set and when invoked from selftests build, where srctree
 
-[1] https://lkml.org/lkml/2018/11/1/1285
-[2] Commit 41c0126b3f22 ("block: Make CFQ default to IOPS mode on
-    SSDs")
-[3] Commit 0bb979472a74 ("cfq-iosched: fix the setting of IOPS mode on
-    SSDs")
+---------------------------------------------------------------------------------------------------------------------
 
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
----
- Documentation/block/bfq-iosched.rst |  7 ++++---
- block/bfq-iosched.c                 | 13 +++++++++++++
- block/elevator.c                    |  2 ++
- include/linux/elevator.h            |  1 +
- 4 files changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/block/bfq-iosched.rst b/Documentation/block/bfq-iosched.rst
-index 0d237d4..244f4ca 100644
---- a/Documentation/block/bfq-iosched.rst
-+++ b/Documentation/block/bfq-iosched.rst
-@@ -329,9 +329,10 @@ slice_idle
- 
- This parameter specifies how long BFQ should idle for next I/O
- request, when certain sync BFQ queues become empty. By default
--slice_idle is a non-zero value. Idling has a double purpose: boosting
--throughput and making sure that the desired throughput distribution is
--respected (see the description of how BFQ works, and, if needed, the
-+slice_idle is a non-zero value for rotational devices.
-+Idling has a double purpose: boosting throughput and making
-+sure that the desired throughput distribution is respected
-+(see the description of how BFQ works, and, if needed, the
- papers referred there).
- 
- As for throughput, idling can be very helpful on highly seeky media
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 0319d63..9c994d1 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -6514,6 +6514,18 @@ static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
- 	return -ENOMEM;
- }
- 
-+static void bfq_registered_queue(struct request_queue *q)
-+{
-+	struct elevator_queue *e = q->elevator;
-+	struct bfq_data *bfqd = e->elevator_data;
-+
-+	/*
-+	 * Default to IOPS mode with no idling for SSDs
-+	 */
-+	if (blk_queue_nonrot(q))
-+		bfqd->bfq_slice_idle = 0;
-+}
-+
- static void bfq_slab_kill(void)
- {
- 	kmem_cache_destroy(bfq_pool);
-@@ -6761,6 +6773,7 @@ static ssize_t bfq_low_latency_store(struct elevator_queue *e,
- 		.init_hctx		= bfq_init_hctx,
- 		.init_sched		= bfq_init_queue,
- 		.exit_sched		= bfq_exit_queue,
-+		.elevator_registered_fn = bfq_registered_queue,
- 	},
- 
- 	.icq_size =		sizeof(struct bfq_io_cq),
-diff --git a/block/elevator.c b/block/elevator.c
-index 076ba73..b882d25 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -504,6 +504,8 @@ int elv_register_queue(struct request_queue *q, bool uevent)
- 			kobject_uevent(&e->kobj, KOBJ_ADD);
- 
- 		e->registered = 1;
-+		if (e->type->ops.elevator_registered_fn)
-+			e->type->ops.elevator_registered_fn(q);
- 	}
- 	return error;
- }
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index 901bda3..23dcc35 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -50,6 +50,7 @@ struct elevator_mq_ops {
- 	struct request *(*next_request)(struct request_queue *, struct request *);
- 	void (*init_icq)(struct io_cq *);
- 	void (*exit_icq)(struct io_cq *);
-+	void (*elevator_registered_fn)(struct request_queue *q);
- };
- 
- #define ELV_NAME_MAX	(16)
--- 
-1.9.1
+Best Regards,
+
+Xiao Yang
+
+>
 
