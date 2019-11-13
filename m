@@ -2,555 +2,497 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E83C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD863C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB34D21A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD3C222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:38:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=indeed.com header.i=@indeed.com header.b="N1NRvazo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pT4+OQNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfKMHgM (ORCPT
+        id S1726590AbfKMHi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:36:12 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33974 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfKMHgM (ORCPT
+        Wed, 13 Nov 2019 02:38:29 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40690 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfKMHi2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:36:12 -0500
-Received: by mail-io1-f66.google.com with SMTP id q83so1471312iod.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 23:36:10 -0800 (PST)
+        Wed, 13 Nov 2019 02:38:28 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 15so832957pgt.7;
+        Tue, 12 Nov 2019 23:38:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=indeed.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=77wK0iy2ZvKlRd6iSBsLhNnRfk+rLxBdVAa7QMb2iWY=;
-        b=N1NRvazowbvc9MWAWJORUP3zBO8lIIGPBU+z73LD+PAhTLudCRJSHCYZdUewvMGi+c
-         yQl9ps8HvT7BqizZUVaHDzwTTOJQzJcJNnsD4Hg2qpP8LLbuLPGKRQ4TwiX9BxAWl8tX
-         pePv5T7NZ+fhdWjXxLV+uggGXOi12u1wLY7xQ=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=nIHaoKAlC11rJNcOmL5yon82xc3Ukj3+S88sDAGGNko=;
+        b=pT4+OQNluULQaaN0lUI2ZCkNVmvKE4baHhMLECEJDenT1nVl+CHxexT2W7BBiPK9g5
+         0A8JonunfKnb15zhuX4nixCEovVHHeyeGRmspgd4HYXH10KNC3svxY9cpuuBkJ/9mng8
+         QdR5j/IqfHKJCYYFJyiMiIeVCOvZiRIxd3g+Q2FStjWlNfhaf2TaUsD66cz15z0njUCc
+         Nko4Btew1kwHwqXWbKzErgtBIvFSEuzxFiBAknTAXs76eCamBkZpN4QqSEo/NC869Xep
+         Bib1sCQOjWTz8hbP+DJtosCFN68fXftXZpCQbKIrPO8l4bYQwmwcf7DanbCc+r8kwZqx
+         N0MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=77wK0iy2ZvKlRd6iSBsLhNnRfk+rLxBdVAa7QMb2iWY=;
-        b=uUnHm0rwSbDd17C+Nh1uICLJK3eCiGTQCgeGa8j0XWhodm72yCG8QOlJAVwWKGZpg5
-         kZ0MTjQ9IYA5W5OI5D/HPGfYTREG4NikGisoCloNwbwMAzTcvWoiIDOuQ0AXIMISUVeV
-         1K4kuiBFK54wsEzLmbvTgG+cKDMFVm9H9/g34OcbaNm3TeI52uTDJq/7OOa7R/0ZiF30
-         KiPKUNhdzMAExVSCdLRsvh7rVnRCDULidhcOjhv2ZcPcd8quA1xT00fMz4ndCMZ1aD+r
-         cRn8iXMuFFMz6aPsbGTQT3eTenT7H+QTC0yp8AWHX+aQ1XtvP7Hwn11VEYfDRhbmTcdn
-         WTiA==
-X-Gm-Message-State: APjAAAULkPR6KCwouW9+JZjU+Mvx7frafSiLsfh7PB44s9YXtza4ETdz
-        eU8gD6RqXQBCAPmYmBlSSCSoJllSKwK+CB7p1aaNVg==
-X-Google-Smtp-Source: APXvYqw1SdeNvi3pjR6xhfS0J+DnT8yPlsxyJS0I+mQvBInCevTgtyH3WKKiRVOexWLrr3wnOneGXjRFstXh3WSWNRg=
-X-Received: by 2002:a5d:870e:: with SMTP id u14mr2140194iom.108.1573630568289;
- Tue, 12 Nov 2019 23:36:08 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nIHaoKAlC11rJNcOmL5yon82xc3Ukj3+S88sDAGGNko=;
+        b=m7kYR+cYhIexvaOB9Pvg7ldfAJdBjSsboAxt14dlb5nOEj7lcPp+ozxeJhASaEqPL5
+         QruWFxUBKvAa6o1+lA9pbC8/2s6evmOAOprrvgX+OhF7HfZ2aUtFaIWPDRYQ2J8+2ElX
+         QjQ0LZVYQ3rSRk8ywl79A/GpdG17RHu88+5BGMsmNTvZPEs0utVbGHq78wZJyouRg5aD
+         vQg/ro1xQbwFxbiwLF4oBQCX9VK3wM85UOkNf+w1pHTzBae0ffz35PAiqsNrIvqU+v1C
+         SF+dBWQOIQQAlvnSE8sJQm9Q/lPXj/2kufMkmSJzzIRV4XwcznwBcdLAGOZayM3zpGaQ
+         3GyA==
+X-Gm-Message-State: APjAAAUzYQ+PP9+Jy99n579hvpViNjdtWuG043RMdX2pUKQHdABsTQc/
+        RIX2o2YKt+bsZGLK21bAD0A=
+X-Google-Smtp-Source: APXvYqxLQb4Iidbd7xb8xrNsyJBmXmm0J/ctOCtoaxMrjnC1ZeRIUTjFVkhLgNT9Onm3OC5z5hbyJQ==
+X-Received: by 2002:a17:90a:3d01:: with SMTP id h1mr3003450pjc.15.1573630707451;
+        Tue, 12 Nov 2019 23:38:27 -0800 (PST)
+Received: from localhost ([2402:3a80:166c:698d:7a64:6a4b:9d08:b425])
+        by smtp.gmail.com with ESMTPSA id q41sm1528498pja.20.2019.11.12.23.38.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 23:38:27 -0800 (PST)
+Date:   Wed, 13 Nov 2019 13:08:22 +0530
+From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
+To:     corbet@lwn.net
+Cc:     raven@themaw.net, akpm@linux-foundation.org,
+        jaskaransingh7654321@gmail.com, mchehab+samsung@kernel.org,
+        christian@brauner.io, neilb@suse.com, mszeredi@redhat.com,
+        willy@infradead.org, stefanha@redhat.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [RFC PATCH] docs: filesystems: convert autofs.txt to reST
+Message-ID: <20191113073822.GA31926@localhost.localdomain>
 MIME-Version: 1.0
-References: <157312875706.707.12248531434112979828.stgit@buzz>
-In-Reply-To: <157312875706.707.12248531434112979828.stgit@buzz>
-From:   Dave Chiluk <chiluk+linux@indeed.com>
-Date:   Wed, 13 Nov 2019 01:35:42 -0600
-Message-ID: <CAC=E7cXaSya6YxqhuiLsNy1B9jdZ=7DwTgkJ9fXQ9LauLpjhSg@mail.gmail.com>
-Subject: Re: [PATCH RFC] sched/fair: add burst to cgroup cpu bandwidth controller
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Segall <bsegall@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        cgroups@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I was going to write this exact patch, but you beat me to it.  I like
-that it's sequestered into a separate setting.  This would be very
-useful for interactive applications that have cfs bandwidth control
-enabled *(cough* kubernetes).  Are you planning on submitting the
-plumbing for this feature back into docker/containerd/lxc/other
-container orchestrators?
+This patch converts autofs.txt to reST.
 
-Also this is very similar in desired behavior to a patchset submitted
-by Cong Wang https://lore.kernel.org/patchwork/patch/907450/
-.Although, I like this implementation better due to it's simplicity.
-I guess a lot of the simplification comes from not having to deal with
-the expiration logic.
+ - Most of the changes pertain to reST formatting.
+ - Some of the code snippets are updated to reflect current source.
+ - A definition of the autofs packet header has been added in the chapter
+	"Communicating with autofs: the event pipe".
+ - An indentation of an 8 space tab has been added wherever suitable, so
+   as to maintain consistency.
+ - Removed indentation of the description of the ioctls which are similar
+   to the AUTOFS_IOC ioctls, as it does not come out quite right in HTML.
 
-Additional comments inlined.  Documentation edits, and my preference
-for a full burst bank on setting.
+Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
+---
+ .../filesystems/{autofs.txt => autofs.rst}    | 258 ++++++++++--------
+ Documentation/filesystems/index.rst           |   1 +
+ 2 files changed, 140 insertions(+), 119 deletions(-)
+ rename Documentation/filesystems/{autofs.txt => autofs.rst} (77%)
 
-Otherwise looks good to me.
-+ Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
+diff --git a/Documentation/filesystems/autofs.txt b/Documentation/filesystems/autofs.rst
+similarity index 77%
+rename from Documentation/filesystems/autofs.txt
+rename to Documentation/filesystems/autofs.rst
+index 3af38c7fd26d..a130cba76f07 100644
+--- a/Documentation/filesystems/autofs.txt
++++ b/Documentation/filesystems/autofs.rst
+@@ -1,12 +1,9 @@
+-<head>
+-<style> p { max-width:50em} ol, ul {max-width: 40em}</style>
+-</head>
+-
++=====================
+ autofs - how it works
+ =====================
+ 
+ Purpose
+--------
++=======
+ 
+ The goal of autofs is to provide on-demand mounting and race free
+ automatic unmounting of various other filesystems.  This provides two
+@@ -28,7 +25,7 @@ key advantages:
+    first accessed a name.
+ 
+ Context
+--------
++=======
+ 
+ The "autofs" filesystem module is only one part of an autofs system.
+ There also needs to be a user-space program which looks up names
+@@ -43,7 +40,7 @@ filesystem type.  Several "autofs" filesystems can be mounted and they
+ can each be managed separately, or all managed by the same daemon.
+ 
+ Content
+--------
++=======
+ 
+ An autofs filesystem can contain 3 sorts of objects: directories,
+ symbolic links and mount traps.  Mount traps are directories with
+@@ -52,7 +49,7 @@ extra properties as described in the next section.
+ Objects can only be created by the automount daemon: symlinks are
+ created with a regular `symlink` system call, while directories and
+ mount traps are created with `mkdir`.  The determination of whether a
+-directory should be a mount trap or not is quite _ad hoc_, largely for
++directory should be a mount trap or not is quite _ad hoc\_, largely for
+ historical reasons, and is determined in part by the
+ *direct*/*indirect*/*offset* mount options, and the *maxproto* mount option.
+ 
+@@ -80,7 +77,7 @@ where in the tree they are (root, top level, or lower), the *maxproto*,
+ and whether the mount was *indirect* or not.
+ 
+ Mount Traps
+----------------
++===============
+ 
+ A core element of the implementation of autofs is the Mount Traps
+ which are provided by the Linux VFS.  Any directory provided by a
+@@ -201,7 +198,7 @@ initiated or is being considered, otherwise it returns 0.
+ 
+ 
+ Mountpoint expiry
+------------------
++=================
+ 
+ The VFS has a mechanism for automatically expiring unused mounts,
+ much as it can expire any unused dentry information from the dcache.
+@@ -301,7 +298,7 @@ completed (together with removing any directories that might have been
+ necessary), or has been aborted.
+ 
+ Communicating with autofs: detecting the daemon
+------------------------------------------------
++===============================================
+ 
+ There are several forms of communication between the automount daemon
+ and the filesystem.  As we have already seen, the daemon can create and
+@@ -317,33 +314,39 @@ If the daemon ever has to be stopped and restarted a new pgid can be
+ provided through an ioctl as will be described below.
+ 
+ Communicating with autofs: the event pipe
+------------------------------------------
++=========================================
+ 
+ When an autofs filesystem is mounted, the 'write' end of a pipe must
+ be passed using the 'fd=' mount option.  autofs will write
+ notification messages to this pipe for the daemon to respond to.
+-For version 5, the format of the message is:
+-
+-        struct autofs_v5_packet {
+-                int proto_version;                /* Protocol version */
+-                int type;                        /* Type of packet */
+-                autofs_wqt_t wait_queue_token;
+-                __u32 dev;
+-                __u64 ino;
+-                __u32 uid;
+-                __u32 gid;
+-                __u32 pid;
+-                __u32 tgid;
+-                __u32 len;
+-                char name[NAME_MAX+1];
++For version 5, the format of the message is: ::
++
++	struct autofs_v5_packet {
++		struct autofs_packet_hdr hdr;
++		autofs_wqt_t wait_queue_token;
++		__u32 dev;
++		__u64 ino;
++		__u32 uid;
++		__u32 gid;
++		__u32 pid;
++		__u32 tgid;
++		__u32 len;
++		char name[NAME_MAX+1];
+         };
+ 
+-where the type is one of
++And the format of the header is: ::
++
++	struct autofs_packet_hdr {
++		int proto_version;		/* Protocol version */
++		int type;			/* Type of packet */
++	};
+ 
+-        autofs_ptype_missing_indirect
+-        autofs_ptype_expire_indirect
+-        autofs_ptype_missing_direct
+-        autofs_ptype_expire_direct
++where the type is one of ::
++
++	autofs_ptype_missing_indirect
++	autofs_ptype_expire_indirect
++	autofs_ptype_missing_direct
++	autofs_ptype_expire_direct
+ 
+ so messages can indicate that a name is missing (something tried to
+ access it but it isn't there) or that it has been selected for expiry.
+@@ -360,7 +363,7 @@ acknowledged using one of the ioctls below with the relevant
+ `wait_queue_token`.
+ 
+ Communicating with autofs: root directory ioctls
+-------------------------------------------------
++================================================
+ 
+ The root directory of an autofs filesystem will respond to a number of
+ ioctls.  The process issuing the ioctl must have the CAP_SYS_ADMIN
+@@ -368,58 +371,66 @@ capability, or must be the automount daemon.
+ 
+ The available ioctl commands are:
+ 
+-- **AUTOFS_IOC_READY**: a notification has been handled.  The argument
+-    to the ioctl command is the "wait_queue_token" number
+-    corresponding to the notification being acknowledged.
+-- **AUTOFS_IOC_FAIL**: similar to above, but indicates failure with
+-    the error code `ENOENT`.
+-- **AUTOFS_IOC_CATATONIC**: Causes the autofs to enter "catatonic"
+-    mode meaning that it stops sending notifications to the daemon.
+-    This mode is also entered if a write to the pipe fails.
+-- **AUTOFS_IOC_PROTOVER**:  This returns the protocol version in use.
+-- **AUTOFS_IOC_PROTOSUBVER**: Returns the protocol sub-version which
+-    is really a version number for the implementation.
+-- **AUTOFS_IOC_SETTIMEOUT**:  This passes a pointer to an unsigned
+-    long.  The value is used to set the timeout for expiry, and
+-    the current timeout value is stored back through the pointer.
+-- **AUTOFS_IOC_ASKUMOUNT**:  Returns, in the pointed-to `int`, 1 if
+-    the filesystem could be unmounted.  This is only a hint as
+-    the situation could change at any instant.  This call can be
+-    used to avoid a more expensive full unmount attempt.
+-- **AUTOFS_IOC_EXPIRE**: as described above, this asks if there is
+-    anything suitable to expire.  A pointer to a packet:
+-
+-        struct autofs_packet_expire_multi {
+-                int proto_version;              /* Protocol version */
+-                int type;                       /* Type of packet */
+-                autofs_wqt_t wait_queue_token;
+-                int len;
+-                char name[NAME_MAX+1];
+-        };
++- **AUTOFS_IOC_READY**:
++	a notification has been handled.  The argument
++	to the ioctl command is the "wait_queue_token" number
++	corresponding to the notification being acknowledged.
++- **AUTOFS_IOC_FAIL**:
++	similar to above, but indicates failure with
++	the error code `ENOENT`.
++- **AUTOFS_IOC_CATATONIC**:
++	Causes the autofs to enter "catatonic"
++	mode meaning that it stops sending notifications to the daemon.
++	This mode is also entered if a write to the pipe fails.
++- **AUTOFS_IOC_PROTOVER**:
++	This returns the protocol version in use.
++- **AUTOFS_IOC_PROTOSUBVER**:
++	Returns the protocol sub-version which
++	is really a version number for the implementation.
++- **AUTOFS_IOC_SETTIMEOUT**:
++	This passes a pointer to an unsigned
++	long.  The value is used to set the timeout for expiry, and
++	the current timeout value is stored back through the pointer.
++- **AUTOFS_IOC_ASKUMOUNT**:
++	Returns, in the pointed-to `int`, 1 if
++	the filesystem could be unmounted.  This is only a hint as
++	the situation could change at any instant.  This call can be
++	used to avoid a more expensive full unmount attempt.
++- **AUTOFS_IOC_EXPIRE**:
++	as described above, this asks if there is
++	anything suitable to expire.  A pointer to a packet: ::
++
++		struct autofs_packet_expire_multi {
++			struct autofs_packet_hdr hdr;
++			autofs_wqt_t wait_queue_token;
++			int len;
++			char name[NAME_MAX+1];
++		};
+ 
+-     is required.  This is filled in with the name of something
+-     that can be unmounted or removed.  If nothing can be expired,
+-     `errno` is set to `EAGAIN`.  Even though a `wait_queue_token`
+-     is present in the structure, no "wait queue" is established
+-     and no acknowledgment is needed.
+-- **AUTOFS_IOC_EXPIRE_MULTI**:  This is similar to
+-     **AUTOFS_IOC_EXPIRE** except that it causes notification to be
+-     sent to the daemon, and it blocks until the daemon acknowledges.
+-     The argument is an integer which can contain two different flags.
++	is required.  This is filled in with the name of something
++	that can be unmounted or removed.  If nothing can be expired,
++	`errno` is set to `EAGAIN`.  Even though a `wait_queue_token`
++	is present in the structure, no "wait queue" is established
++	and no acknowledgment is needed.
++- **AUTOFS_IOC_EXPIRE_MULTI**:
++	This is similar to
++	**AUTOFS_IOC_EXPIRE** except that it causes notification to be
++	sent to the daemon, and it blocks until the daemon acknowledges.
++	The argument is an integer which can contain two different flags.
+ 
+-     **AUTOFS_EXP_IMMEDIATE** causes `last_used` time to be ignored
+-     and objects are expired if the are not in use.
++	**AUTOFS_EXP_IMMEDIATE** causes `last_used` time to be ignored
++	and objects are expired if the are not in use.
+ 
+-     **AUTOFS_EXP_FORCED** causes the in use status to be ignored
+-     and objects are expired ieven if they are in use. This assumes
+-     that the daemon has requested this because it is capable of
+-     performing the umount.
++	**AUTOFS_EXP_FORCED** causes the in use status to be ignored
++	and objects are expired ieven if they are in use. This assumes
++	that the daemon has requested this because it is capable of
++	performing the umount.
+ 
+-     **AUTOFS_EXP_LEAVES** will select a leaf rather than a top-level
+-     name to expire.  This is only safe when *maxproto* is 4.
++	**AUTOFS_EXP_LEAVES** will select a leaf rather than a top-level
++	name to expire.  This is only safe when *maxproto* is 4.
+ 
+ Communicating with autofs: char-device ioctls
+----------------------------------------------
++=============================================
+ 
+ It is not always possible to open the root of an autofs filesystem,
+ particularly a *direct* mounted filesystem.  If the automount daemon
+@@ -429,9 +440,9 @@ need there is a "miscellaneous" character device (major 10, minor 235)
+ which can be used to communicate directly with the autofs filesystem.
+ It requires CAP_SYS_ADMIN for access.
+ 
+-The `ioctl`s that can be used on this device are described in a separate
++The `ioctl`\s that can be used on this device are described in a separate
+ document `autofs-mount-control.txt`, and are summarised briefly here.
+-Each ioctl is passed a pointer to an `autofs_dev_ioctl` structure:
++Each ioctl is passed a pointer to an `autofs_dev_ioctl` structure: ::
+ 
+         struct autofs_dev_ioctl {
+                 __u32 ver_major;
+@@ -469,41 +480,50 @@ that the kernel module can support.
+ 
+ Commands are:
+ 
+-- **AUTOFS_DEV_IOCTL_VERSION_CMD**: does nothing, except validate and
+-    set version numbers.
+-- **AUTOFS_DEV_IOCTL_OPENMOUNT_CMD**: return an open file descriptor
+-    on the root of an autofs filesystem.  The filesystem is identified
+-    by name and device number, which is stored in `openmount.devid`.
+-    Device numbers for existing filesystems can be found in
+-    `/proc/self/mountinfo`.
+-- **AUTOFS_DEV_IOCTL_CLOSEMOUNT_CMD**: same as `close(ioctlfd)`.
+-- **AUTOFS_DEV_IOCTL_SETPIPEFD_CMD**: if the filesystem is in
+-    catatonic mode, this can provide the write end of a new pipe
+-    in `setpipefd.pipefd` to re-establish communication with a daemon.
+-    The process group of the calling process is used to identify the
+-    daemon.
+-- **AUTOFS_DEV_IOCTL_REQUESTER_CMD**: `path` should be a
+-    name within the filesystem that has been auto-mounted on.
+-    On successful return, `requester.uid` and `requester.gid` will be
+-    the UID and GID of the process which triggered that mount.
+-- **AUTOFS_DEV_IOCTL_ISMOUNTPOINT_CMD**: Check if path is a
+-    mountpoint of a particular type - see separate documentation for
+-    details.
+-- **AUTOFS_DEV_IOCTL_PROTOVER_CMD**:
+-- **AUTOFS_DEV_IOCTL_PROTOSUBVER_CMD**:
+-- **AUTOFS_DEV_IOCTL_READY_CMD**:
+-- **AUTOFS_DEV_IOCTL_FAIL_CMD**:
+-- **AUTOFS_DEV_IOCTL_CATATONIC_CMD**:
+-- **AUTOFS_DEV_IOCTL_TIMEOUT_CMD**:
+-- **AUTOFS_DEV_IOCTL_EXPIRE_CMD**:
+-- **AUTOFS_DEV_IOCTL_ASKUMOUNT_CMD**:  These all have the same
+-    function as the similarly named **AUTOFS_IOC** ioctls, except
+-    that **FAIL** can be given an explicit error number in `fail.status`
+-    instead of assuming `ENOENT`, and this **EXPIRE** command
+-    corresponds to **AUTOFS_IOC_EXPIRE_MULTI**.
++- **AUTOFS_DEV_IOCTL_VERSION_CMD**:
++	does nothing, except validate and
++	set version numbers.
++- **AUTOFS_DEV_IOCTL_OPENMOUNT_CMD**:
++	return an open file descriptor
++	on the root of an autofs filesystem.  The filesystem is identified
++	by name and device number, which is stored in `openmount.devid`.
++	Device numbers for existing filesystems can be found in
++	`/proc/self/mountinfo`.
++- **AUTOFS_DEV_IOCTL_CLOSEMOUNT_CMD**:
++	same as `close(ioctlfd)`.
++- **AUTOFS_DEV_IOCTL_SETPIPEFD_CMD**:
++	if the filesystem is in
++	catatonic mode, this can provide the write end of a new pipe
++	in `setpipefd.pipefd` to re-establish communication with a daemon.
++	The process group of the calling process is used to identify the
++	daemon.
++- **AUTOFS_DEV_IOCTL_REQUESTER_CMD**:
++	`path` should be a
++	name within the filesystem that has been auto-mounted on.
++	On successful return, `requester.uid` and `requester.gid` will be
++	the UID and GID of the process which triggered that mount.
++- **AUTOFS_DEV_IOCTL_ISMOUNTPOINT_CMD**:
++	Check if path is a
++	mountpoint of a particular type - see separate documentation for
++	details.
++
++- **AUTOFS_DEV_IOCTL_PROTOVER_CMD**
++- **AUTOFS_DEV_IOCTL_PROTOSUBVER_CMD**
++- **AUTOFS_DEV_IOCTL_READY_CMD**
++- **AUTOFS_DEV_IOCTL_FAIL_CMD**
++- **AUTOFS_DEV_IOCTL_CATATONIC_CMD**
++- **AUTOFS_DEV_IOCTL_TIMEOUT_CMD**
++- **AUTOFS_DEV_IOCTL_EXPIRE_CMD**
++- **AUTOFS_DEV_IOCTL_ASKUMOUNT_CMD**
++
++These all have the same
++function as the similarly named **AUTOFS_IOC** ioctls, except
++that **FAIL** can be given an explicit error number in `fail.status`
++instead of assuming `ENOENT`, and this **EXPIRE** command
++corresponds to **AUTOFS_IOC_EXPIRE_MULTI**.
+ 
+ Catatonic mode
+---------------
++==============
+ 
+ As mentioned, an autofs mount can enter "catatonic" mode.  This
+ happens if a write to the notification pipe fails, or if it is
+@@ -527,7 +547,7 @@ Catatonic mode can only be left via the
+ **AUTOFS_DEV_IOCTL_OPENMOUNT_CMD** ioctl on the `/dev/autofs`.
+ 
+ The "ignore" mount option
+--------------------------
++=========================
+ 
+ The "ignore" mount option can be used to provide a generic indicator
+ to applications that the mount entry should be ignored when displaying
+@@ -542,18 +562,18 @@ This is intended to be used by user space programs to exclude autofs
+ mounts from consideration when reading the mounts list.
+ 
+ autofs, name spaces, and shared mounts
+---------------------------------------
++======================================
+ 
+ With bind mounts and name spaces it is possible for an autofs
+ filesystem to appear at multiple places in one or more filesystem
+ name spaces.  For this to work sensibly, the autofs filesystem should
+-always be mounted "shared". e.g.
++always be mounted "shared". e.g. ::
+ 
+-> `mount --make-shared /autofs/mount/point`
++	mount --make-shared /autofs/mount/point
+ 
+ The automount daemon is only able to manage a single mount location for
+ an autofs filesystem and if mounts on that are not 'shared', other
+ locations will not behave as expected.  In particular access to those
+-other locations will likely result in the `ELOOP` error
++other locations will likely result in the `ELOOP` error ::
+ 
+-> Too many levels of symbolic links
++	Too many levels of symbolic links
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 2c3a9f761205..ad6315a48d14 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -46,4 +46,5 @@ Documentation for filesystem implementations.
+ .. toctree::
+    :maxdepth: 2
+ 
++   autofs
+    virtiofs
+-- 
+2.21.0
 
-I also tested this with my simple test application I use for
-validating runtime accuracy https://github.com/indeedeng/fibtest.  And
-everything looks reasonable here.  I'll try to do a bit more testing
-but so far I'm happy.  Hopefully Ben will give a +1 to this as well.
-
-Thanks!
-
-On Thu, Nov 7, 2019 at 6:12 AM Konstantin Khlebnikov
-<khlebnikov@yandex-team.ru> wrote:
->
-> Currently CFS bandwidth controller assigns cpu.cfs_quota_us runtime into
-> global pool every cpu.cfs_period_us. All unused runtime is expired.
->
-> Since commit de53fd7aedb1 ("sched/fair: Fix low cpu usage with high
-> throttling by removing expiration of cpu-local slices") slice assigned
-> to cpu does not expire. This allows to serve tiny bursts (upto 1ms),
-> but this runtime pool is cpu-bound and not transferred between cpus.
->
-> Setup for interactive workload with irregular cpu consumption have to set
-> quota according to relatively short spikes of cpu usage. This eliminates
-> possibility of control for average cpu usage. Increasing period and quota
-> proportionally for getting bigger runtime chunks is not an option because
-> if even bigger spike deplete global pool then execution will stuck until
-> end of period and next refill.
->
-> This patch adds limited accumulation of unused runtime from past periods.
-> Accumulated runtime does not expire. It stays in global pool and could
-> be used by any cpu. Average cpu usage stays limited with quota / period,
-> but spiky workload could use more cpu power for a short period of time.
->
-> Size of pool for burst runtime is set in attribute cpu.cfs_burst_us.
-> Default is 0, which reflects current behavior.
->
-> Statistics for used bust runtime is shown in cpu.stat as "burst_time".
->
-> Example setup:
-> cpu.cfs_period_us = 100ms
-> cpu.cfs_quota_us = 200ms
-> cpu.cfs_burst_us = 300ms
->
-> Average cpu usage stays limited with 2 cpus (quota / period), but cgroup
-> could accumulate runtime (burst) and for 100ms could utilize up to 5 cpus
-> (quota / period + burst / 100ms), or 3 cpus for 300ms, an so on.
->
-> Implementation is simple. All logic is in __refill_cfs_bandwidth_runtime().
-> The rest changes are interface for cgroup and cgroup2.
->
-> For cgroup2 burst is set as third number in attribute cpu.max:
-> cpu.max = $QUOTA $PERIOD $BURST
->
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> ---
->  Documentation/admin-guide/cgroup-v2.rst |   15 +++--
->  Documentation/scheduler/sched-bwc.rst   |    8 ++-
->  kernel/sched/core.c                     |   88 +++++++++++++++++++++++++------
->  kernel/sched/fair.c                     |   34 ++++++++++--
->  kernel/sched/sched.h                    |    4 +
->  5 files changed, 119 insertions(+), 30 deletions(-)
->
-> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-> index 5361ebec3361..8c3cc3d882ba 100644
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -981,11 +981,12 @@ All time durations are in microseconds.
->         - user_usec
->         - system_usec
->
-> -       and the following three when the controller is enabled:
-> +       and the following four when the controller is enabled:
->
->         - nr_periods
->         - nr_throttled
->         - throttled_usec
-> +       - burst_usec
->
->    cpu.weight
->         A read-write single value file which exists on non-root
-> @@ -1006,16 +1007,18 @@ All time durations are in microseconds.
->         the closest approximation of the current weight.
->
->    cpu.max
-> -       A read-write two value file which exists on non-root cgroups.
-> -       The default is "max 100000".
-> +       A read-write 1..3 values file which exists on non-root cgroups.
-> +       The default is "max 100000 0".
->
->         The maximum bandwidth limit.  It's in the following format::
->
-> -         $MAX $PERIOD
-> +         $MAX $PERIOD $BURST
->
->         which indicates that the group may consume upto $MAX in each
-> -       $PERIOD duration.  "max" for $MAX indicates no limit.  If only
-> -       one number is written, $MAX is updated.
-> +       $PERIOD duration and accumulates upto $BURST time for bursts.
-> +
-> +       "max" for $MAX indicates no limit.
-> +       If only one number is written, $MAX is updated.
->
->    cpu.pressure
->         A read-only nested-key file which exists on non-root cgroups.
-> diff --git a/Documentation/scheduler/sched-bwc.rst b/Documentation/scheduler/sched-bwc.rst
-> index 9801d6b284b1..5f1cac7b2d44 100644
-> --- a/Documentation/scheduler/sched-bwc.rst
-> +++ b/Documentation/scheduler/sched-bwc.rst
-> @@ -27,12 +27,14 @@ Quota and period are managed within the cpu subsystem via cgroupfs.
->
->  cpu.cfs_quota_us: the total available run-time within a period (in microseconds)
->  cpu.cfs_period_us: the length of a period (in microseconds)
-> +cpu.cfs_burst_us: the maxumum size of burst run-time pool (in microseconds)
-
-maxumum -> maximum
-
->  cpu.stat: exports throttling statistics [explained further below]
->
->  The default values are::
->
->         cpu.cfs_period_us=100ms
-> -       cpu.cfs_quota=-1
-> +       cpu.cfs_quota_us=-1
-> +       cpu.cfs_burst_us=0
->
->  A value of -1 for cpu.cfs_quota_us indicates that the group does not have any
->  bandwidth restriction in place, such a group is described as an unconstrained
-> @@ -51,6 +53,9 @@ and return the group to an unconstrained state once more.
->  Any updates to a group's bandwidth specification will result in it becoming
->  unthrottled if it is in a constrained state.
->
-> +Writing positive value into cpu.cfs_burst_us allows to allcumulate unused
-> +run-time (upto this value) and use it later in addition to assigned quota.
-Writing positive value into cpu.cfs_burst_us allows unused quota to
-accumulate up to this value and be used later in addition to assigned
-quota.
-
-> +
->  System wide settings
->  --------------------
->  For efficiency run-time is transferred between the global pool and CPU local
-> @@ -75,6 +80,7 @@ cpu.stat:
->  - nr_throttled: Number of times the group has been throttled/limited.
->  - throttled_time: The total time duration (in nanoseconds) for which entities
->    of the group have been throttled.
-> +- burst_time: The total running time consumed from burst pool.
->
->  This interface is read-only.
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index dd05a378631a..010b79c45200 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -7354,7 +7354,8 @@ static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
->
->  static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
->
-> -static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
-> +static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota,
-> +                               u64 burst)
->  {
->         int i, ret = 0, runtime_enabled, runtime_was_enabled;
->         struct cfs_bandwidth *cfs_b = &tg->cfs_bandwidth;
-> @@ -7399,12 +7400,13 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
->         raw_spin_lock_irq(&cfs_b->lock);
->         cfs_b->period = ns_to_ktime(period);
->         cfs_b->quota = quota;
-> -
-> -       __refill_cfs_bandwidth_runtime(cfs_b);
-> +       cfs_b->burst = burst;
-
-+ cfs_b->burst_runtime = burst;
-I think we should default to a full burst bank.  After all, during
-startup applications very likely to need additional CPU.  This is a
-regular pain point for our applications..  By providing burst bank
-early we help to mitigate slow start-up times for cpu limited
-applications.
-
->
->         /* Restart the period timer (if active) to handle new period expiry: */
-> -       if (runtime_enabled)
-> +       if (runtime_enabled) {
-> +               __refill_cfs_bandwidth_runtime(cfs_b);
->                 start_cfs_bandwidth(cfs_b);
-> +       }
->
->         raw_spin_unlock_irq(&cfs_b->lock);
->
-> @@ -7432,9 +7434,10 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
->
->  static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
->  {
-> -       u64 quota, period;
-> +       u64 quota, period, burst;
->
->         period = ktime_to_ns(tg->cfs_bandwidth.period);
-> +       burst = tg->cfs_bandwidth.burst;
->         if (cfs_quota_us < 0)
->                 quota = RUNTIME_INF;
->         else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
-> @@ -7442,7 +7445,7 @@ static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
->         else
->                 return -EINVAL;
->
-> -       return tg_set_cfs_bandwidth(tg, period, quota);
-> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
->  }
->
->  static long tg_get_cfs_quota(struct task_group *tg)
-> @@ -7460,15 +7463,16 @@ static long tg_get_cfs_quota(struct task_group *tg)
->
->  static int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
->  {
-> -       u64 quota, period;
-> +       u64 quota, period, burst;
->
->         if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
->                 return -EINVAL;
->
->         period = (u64)cfs_period_us * NSEC_PER_USEC;
->         quota = tg->cfs_bandwidth.quota;
-> +       burst = tg->cfs_bandwidth.burst;
->
-> -       return tg_set_cfs_bandwidth(tg, period, quota);
-> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
->  }
->
->  static long tg_get_cfs_period(struct task_group *tg)
-> @@ -7481,6 +7485,28 @@ static long tg_get_cfs_period(struct task_group *tg)
->         return cfs_period_us;
->  }
->
-> +static long tg_get_cfs_burst(struct task_group *tg)
-> +{
-> +       u64 cfs_burst_us = tg->cfs_bandwidth.burst;
-> +
-> +       do_div(cfs_burst_us, NSEC_PER_USEC);
-> +       return cfs_burst_us;
-> +}
-> +
-> +static int tg_set_cfs_burst(struct task_group *tg, long cfs_burst_us)
-> +{
-> +       u64 quota, period, burst;
-> +
-> +       if ((u64)cfs_burst_us > U64_MAX / NSEC_PER_USEC)
-> +               return -EINVAL;
-> +
-> +       period = ktime_to_ns(tg->cfs_bandwidth.period);
-> +       quota = tg->cfs_bandwidth.quota;
-> +       burst = (u64)cfs_burst_us * NSEC_PER_USEC;
-> +
-> +       return tg_set_cfs_bandwidth(tg, period, quota, burst);
-> +}
-> +
->  static s64 cpu_cfs_quota_read_s64(struct cgroup_subsys_state *css,
->                                   struct cftype *cft)
->  {
-> @@ -7505,6 +7531,18 @@ static int cpu_cfs_period_write_u64(struct cgroup_subsys_state *css,
->         return tg_set_cfs_period(css_tg(css), cfs_period_us);
->  }
->
-> +static u64 cpu_cfs_burst_read_u64(struct cgroup_subsys_state *css,
-> +                                 struct cftype *cft)
-> +{
-> +       return tg_get_cfs_burst(css_tg(css));
-> +}
-> +
-> +static int cpu_cfs_burst_write_u64(struct cgroup_subsys_state *css,
-> +                                  struct cftype *cftype, u64 cfs_burst_us)
-> +{
-> +       return tg_set_cfs_burst(css_tg(css), cfs_burst_us);
-> +}
-> +
->  struct cfs_schedulable_data {
->         struct task_group *tg;
->         u64 period, quota;
-> @@ -7596,6 +7634,7 @@ static int cpu_cfs_stat_show(struct seq_file *sf, void *v)
->         seq_printf(sf, "nr_periods %d\n", cfs_b->nr_periods);
->         seq_printf(sf, "nr_throttled %d\n", cfs_b->nr_throttled);
->         seq_printf(sf, "throttled_time %llu\n", cfs_b->throttled_time);
-> +       seq_printf(sf, "burst_time %llu\n", cfs_b->burst_time);
->
->         if (schedstat_enabled() && tg != &root_task_group) {
->                 u64 ws = 0;
-> @@ -7657,6 +7696,11 @@ static struct cftype cpu_legacy_files[] = {
->                 .read_u64 = cpu_cfs_period_read_u64,
->                 .write_u64 = cpu_cfs_period_write_u64,
->         },
-> +       {
-> +               .name = "cfs_burst_us",
-> +               .read_u64 = cpu_cfs_burst_read_u64,
-> +               .write_u64 = cpu_cfs_burst_write_u64,
-> +       },
->         {
->                 .name = "stat",
->                 .seq_show = cpu_cfs_stat_show,
-> @@ -7699,15 +7743,20 @@ static int cpu_extra_stat_show(struct seq_file *sf,
->                 struct task_group *tg = css_tg(css);
->                 struct cfs_bandwidth *cfs_b = &tg->cfs_bandwidth;
->                 u64 throttled_usec;
-> +               u64 burst_usec;
->
->                 throttled_usec = cfs_b->throttled_time;
->                 do_div(throttled_usec, NSEC_PER_USEC);
->
-> +               burst_usec = cfs_b->burst_time;
-> +               do_div(burst_usec, NSEC_PER_USEC);
-> +
->                 seq_printf(sf, "nr_periods %d\n"
->                            "nr_throttled %d\n"
-> -                          "throttled_usec %llu\n",
-> +                          "throttled_usec %llu\n"
-> +                          "burst_usec %llu\n",
->                            cfs_b->nr_periods, cfs_b->nr_throttled,
-> -                          throttled_usec);
-> +                          throttled_usec, burst_usec);
->         }
->  #endif
->         return 0;
-> @@ -7777,26 +7826,29 @@ static int cpu_weight_nice_write_s64(struct cgroup_subsys_state *css,
->  #endif
->
->  static void __maybe_unused cpu_period_quota_print(struct seq_file *sf,
-> -                                                 long period, long quota)
-> +                                                 long period, long quota,
-> +                                                 long burst)
->  {
->         if (quota < 0)
->                 seq_puts(sf, "max");
->         else
->                 seq_printf(sf, "%ld", quota);
->
-> -       seq_printf(sf, " %ld\n", period);
-> +       seq_printf(sf, " %ld %ld\n", period, burst);
->  }
->
->  /* caller should put the current value in *@periodp before calling */
->  static int __maybe_unused cpu_period_quota_parse(char *buf,
-> -                                                u64 *periodp, u64 *quotap)
-> +                                                u64 *periodp, u64 *quotap,
-> +                                                s64 *burstp)
->  {
->         char tok[21];   /* U64_MAX */
->
-> -       if (sscanf(buf, "%20s %llu", tok, periodp) < 1)
-> +       if (sscanf(buf, "%20s %llu %llu", tok, periodp, burstp) < 1)
->                 return -EINVAL;
->
->         *periodp *= NSEC_PER_USEC;
-> +       *burstp *= NSEC_PER_USEC;
->
->         if (sscanf(tok, "%llu", quotap))
->                 *quotap *= NSEC_PER_USEC;
-> @@ -7813,7 +7865,8 @@ static int cpu_max_show(struct seq_file *sf, void *v)
->  {
->         struct task_group *tg = css_tg(seq_css(sf));
->
-> -       cpu_period_quota_print(sf, tg_get_cfs_period(tg), tg_get_cfs_quota(tg));
-> +       cpu_period_quota_print(sf, tg_get_cfs_period(tg), tg_get_cfs_quota(tg),
-> +                              tg_get_cfs_burst(tg));
->         return 0;
->  }
->
-> @@ -7822,12 +7875,13 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
->  {
->         struct task_group *tg = css_tg(of_css(of));
->         u64 period = tg_get_cfs_period(tg);
-> +       s64 burst = tg_get_cfs_burst(tg);
->         u64 quota;
->         int ret;
->
-> -       ret = cpu_period_quota_parse(buf, &period, &quota);
-> +       ret = cpu_period_quota_parse(buf, &period, &quota, &burst);
->         if (!ret)
-> -               ret = tg_set_cfs_bandwidth(tg, period, quota);
-> +               ret = tg_set_cfs_bandwidth(tg, period, quota, burst);
->         return ret ?: nbytes;
->  }
->  #endif
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 682a754ea3e1..26b8dac67c79 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4353,16 +4353,26 @@ static inline u64 sched_cfs_bandwidth_slice(void)
->  }
->
->  /*
-> - * Replenish runtime according to assigned quota. We use sched_clock_cpu
-> - * directly instead of rq->clock to avoid adding additional synchronization
-> - * around rq->lock.
-> + * Replenish runtime according to assigned quota.
-> + * Called only if quota != RUNTIME_INF.
->   *
->   * requires cfs_b->lock
->   */
->  void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
->  {
-> -       if (cfs_b->quota != RUNTIME_INF)
-> -               cfs_b->runtime = cfs_b->quota;
-> +       u64 runtime = cfs_b->runtime;
-> +
-> +       /*
-> +        * Preserve past runtime up to burst size. If remaining runtime lower
-> +        * than previous burst runtime then account delta as used burst time.
-> +        */
-> +       if (runtime > cfs_b->burst)
-> +               runtime = cfs_b->burst;
-> +       else if (runtime < cfs_b->burst_runtime)
-> +               cfs_b->burst_time += cfs_b->burst_runtime - runtime;
-> +
-> +       cfs_b->burst_runtime = runtime;
-> +       cfs_b->runtime = runtime + cfs_b->quota;
->  }
->
->  static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
-> @@ -4968,6 +4978,9 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
->         cfs_b->runtime = 0;
->         cfs_b->quota = RUNTIME_INF;
->         cfs_b->period = ns_to_ktime(default_cfs_period());
-> +       cfs_b->burst = 0;
-> +       cfs_b->burst_runtime = 0;
-> +       cfs_b->burst_time = 0;
->
->         INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
->         hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
-> @@ -4986,14 +4999,23 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
->
->  void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
->  {
-> +       u64 overrun;
-> +
->         lockdep_assert_held(&cfs_b->lock);
->
->         if (cfs_b->period_active)
->                 return;
->
->         cfs_b->period_active = 1;
-> -       hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
-> +       overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
->         hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
-> +
-> +       /*
-> +        * Refill runtime for periods of inactivity and current.
-> +        * __refill_cfs_bandwidth_runtime() will cut excess.
-> +        */
-> +       cfs_b->runtime += cfs_b->quota * overrun;
-> +       __refill_cfs_bandwidth_runtime(cfs_b);
->  }
->
->  static void destroy_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 0db2c1b3361e..eaecd7298f80 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -344,10 +344,14 @@ struct cfs_bandwidth {
->         struct hrtimer          slack_timer;
->         struct list_head        throttled_cfs_rq;
->
-> +       u64                     burst;
-> +       u64                     burst_runtime;
-> +
->         /* Statistics: */
->         int                     nr_periods;
->         int                     nr_throttled;
->         u64                     throttled_time;
-> +       u64                     burst_time;
->  #endif
->  };
->
->
