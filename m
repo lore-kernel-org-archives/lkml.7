@@ -2,98 +2,98 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A0FC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C567FC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C582245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D100222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GhR8/TA8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MsuCvWRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKMJIo (ORCPT
+        id S1727164AbfKMJI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:08:44 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43178 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfKMJIo (ORCPT
+        Wed, 13 Nov 2019 04:08:59 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14414 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfKMJI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:08:44 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAD98YBY110423;
-        Wed, 13 Nov 2019 03:08:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573636114;
-        bh=L5yB4sXWEphH1kS7OcR6nTpRGX5u3VDhE7QxjQRUxHE=;
-        h=From:To:CC:Subject:Date;
-        b=GhR8/TA859CcTnzUuhfN9dTXPmy3KXv1W/ZOobZE5qndfQgLlqh+E0IvcwnFwy2Me
-         4bQ5Qag9PEda47sL1JDzukOdiic8zchmkLBtablkO5ahaeKeFl96giy6VV0ilQNUS6
-         zFDsmDqN+m6tHqlR6l4I47MmvkiTyBWDkbEkv4zw=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD98Ykh006184;
-        Wed, 13 Nov 2019 03:08:34 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 03:08:16 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 03:08:15 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD98V6k008708;
-        Wed, 13 Nov 2019 03:08:32 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
-CC:     <vkoul@kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] crypto: qce/dma - Use dma_request_chan() directly for channel request
-Date:   Wed, 13 Nov 2019 11:09:47 +0200
-Message-ID: <20191113090947.28499-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 13 Nov 2019 04:08:59 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcbc82d0000>; Wed, 13 Nov 2019 01:09:01 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 13 Nov 2019 01:08:58 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 13 Nov 2019 01:08:58 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 09:08:58 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 Nov 2019 09:08:58 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dcbc8260003>; Wed, 13 Nov 2019 01:08:58 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <kishon@ti.com>, <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH 0/4] Add support to defer core initialization
+Date:   Wed, 13 Nov 2019 14:38:47 +0530
+Message-ID: <20191113090851.26345-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573636141; bh=oD8oTA0a2UX+17Bvup9RvEqjWuCUJIivzQuwAOx+Ltk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=MsuCvWRjzkoA4bHynJjGaktkx/znYP/HyYvbCYtqF9Cys/vqmkswufI4OrC6edVJ/
+         YAgSIPFaDGgJuv8QAjaB0mqAFBvD79pKYxnmldEUKZ0TtXQsvQAZWL5ckvfgPlJOVJ
+         Zkph0V7y41wugPQ5J8gXdg9Fbleu29RmP9Hs6PRxuAPt0MtgxszViYyOxJoUoFI4Ss
+         3saeJQfzxkxXUSEBbm3H0/iXuA8+vvyDNtsz52gZIP8F5F6QCqgAkCCSpKwPbfPBZU
+         s9z/andb1hRYrWVH2UDmyuowyZ/Y3VV1ML4TVXqis/aQbQZbl1bRJHuaFgDqPok8Qi
+         5v0Dju27rcorQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel_reason() is:
-#define dma_request_slave_channel_reason(dev, name) \
-	dma_request_chan(dev, name)
+EPC/DesignWare core endpoint subsystems assume that the core registers are
+available always for SW to initialize. But, that may not be the case always.
+For example, Tegra194 hardware has the core running on a clock that is derived
+from reference clock that is coming into the endpoint system from host.
+Hence core is made available asynchronously based on when host system is going
+for enumeration of devices. To accommodate this kind of hardwares, support is
+required to defer the core initialization until the respective platform driver
+informs the EPC/DWC endpoint sub-systems that the core is indeed available for
+initiaization. This patch series is attempting to add precisely that.
+This series is based on Kishon's patch that adds notification mechanism
+support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/crypto/qce/dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Vidya Sagar (4):
+  PCI: dwc: Add new feature to skip core initialization
+  PCI: endpoint: Add notification for core init completion
+  PCI: dwc: Add API to notify core initialization completion
+  PCI: pci-epf-test: Add support to defer core initialization
 
-diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
-index 0984a719144d..40a59214d2e1 100644
---- a/drivers/crypto/qce/dma.c
-+++ b/drivers/crypto/qce/dma.c
-@@ -12,11 +12,11 @@ int qce_dma_request(struct device *dev, struct qce_dma_data *dma)
- {
- 	int ret;
- 
--	dma->txchan = dma_request_slave_channel_reason(dev, "tx");
-+	dma->txchan = dma_request_chan(dev, "tx");
- 	if (IS_ERR(dma->txchan))
- 		return PTR_ERR(dma->txchan);
- 
--	dma->rxchan = dma_request_slave_channel_reason(dev, "rx");
-+	dma->rxchan = dma_request_chan(dev, "rx");
- 	if (IS_ERR(dma->rxchan)) {
- 		ret = PTR_ERR(dma->rxchan);
- 		goto error_rx;
+ .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+ drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
+ drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+ include/linux/pci-epc.h                       |   2 +
+ include/linux/pci-epf.h                       |   5 +
+ 6 files changed, 164 insertions(+), 66 deletions(-)
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
 
