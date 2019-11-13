@@ -2,117 +2,103 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1A1C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2E2C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B673E2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0725721A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwbkzzmF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QW5UZ5vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfKMAGj (ORCPT
+        id S1727049AbfKMAGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:06:39 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45866 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKMAGj (ORCPT
+        Tue, 12 Nov 2019 19:06:55 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10750 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKMAGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:06:39 -0500
-Received: by mail-pf1-f195.google.com with SMTP id z4so250983pfn.12;
-        Tue, 12 Nov 2019 16:06:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qxixb8eOG9f0Waj85Ii66sBcrPEL1SwYM8/OBShmzIU=;
-        b=GwbkzzmFd/3KSzse4oSzV8spTmS1Hq9MSJ+MjSnZA+AyJwybaLEigvuHFIEfbiXS6d
-         4+JC3LJHQDNqaajASUJnO1Wh8OxVOD/XO4MCWVkbGFCQIT7yI8nSIHGUX9NNWmiXLOpQ
-         x1E3HuSPQU5I02PNA4Ljijlq2jYzndkSPc4wTal6/uxy/vUphPQIu+RNEgVdNRhPdJFp
-         UMrT5zav/9u1Ad/hyZOdqet3bZQLmSaXoKjKzrC3Z+vvaj9Ztv1OpNcI6TBFgismEQbH
-         D3n0QrVc6HbfkwIa+xnASGfiH/p7C47ueeJMXISnDok9va38S99za/nX9YNPE/INcKvh
-         oJcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qxixb8eOG9f0Waj85Ii66sBcrPEL1SwYM8/OBShmzIU=;
-        b=dyaP+rD7nB285rDe4pV3Z2c2nBJeR3Ec3m0JBgSQVuetgPSd59Bnvpib0clet8RM3i
-         WRCD5kEBoApGS/6NL+ATRXxKN87v8xP5Tj3JzK0hAnWlb8W4ZuoDfRMrWRtZVGsdU5i0
-         djtXEFvPw1QUiPo/DFG7IspNf9Z9hmt1JCw+fzlvraUnUNlpM0NoEGIpdupI8V8xx3nf
-         oWisXj5Q2cgdEP5p38mXm4x1RE588Cr6KaQ97aBr/KlXwfZr5lZuK/a7oVm9DcQLduIg
-         uk0BnkyX2juzSLCNg/s5qqvJNxd2TCLSh/moriptZYz2mPuRH+r1erSlrUQmsfrGYg6O
-         ++WQ==
-X-Gm-Message-State: APjAAAX/Fctsv7pi5XW6N379wtG8oILnHTZtVXzMyqbQ251Z6/KioTo6
-        h5HNiRNLhprPGSAfomQ5IEw=
-X-Google-Smtp-Source: APXvYqzPPCvZ/xeRcjC/56Xf4OuAS5ZOLvFyuBmwGEvMsuUJyT1ESrXu5+7loQBU2itfymvDEWQ3RQ==
-X-Received: by 2002:aa7:9f89:: with SMTP id z9mr755874pfr.123.1573603598329;
-        Tue, 12 Nov 2019 16:06:38 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id z10sm131918pgg.39.2019.11.12.16.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 16:06:37 -0800 (PST)
-Date:   Tue, 12 Nov 2019 16:06:35 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] Input: ili210x - do not retrieve/print chip
- firmware version
-Message-ID: <20191113000635.GH13374@dtor-ws>
-References: <20191112164429.11225-1-TheSven73@gmail.com>
- <20191112233421.eh44mv6ji2tk6ki2@earth.universe>
+        Tue, 12 Nov 2019 19:06:55 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcb48e70000>; Tue, 12 Nov 2019 16:05:59 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 16:06:54 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 16:06:54 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 00:06:54 +0000
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 00:06:54 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 Nov 2019 00:06:54 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dcb491e0001>; Tue, 12 Nov 2019 16:06:54 -0800
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH] mm/debug: PageAnon() is true for PageKsm() pages
+Date:   Tue, 12 Nov 2019 16:06:51 -0800
+Message-ID: <20191113000651.20677-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112233421.eh44mv6ji2tk6ki2@earth.universe>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573603559; bh=/wOVdRHSsqeIyfwUzfQw6fH/HHReWgDJ07fiGrrlSU0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=QW5UZ5vxpjFz9atav5kX9c9+UyPG525LYT+G5Wz4q3+G5kxkZrDJOxQ/a3PVIJ0OJ
+         IxK7aOZD8qlXZonGpeXWc6aidXd+DnvD422Rc5dsKYi7mfL17QUyXQ2WhmSOY5FOkJ
+         XbREHVfeG5u80+U6ssxTODbcUFuQtXwOb4TcvfygE/JT3qaUfbpxIsw1bTkveRPAfL
+         yvxWGT7fVQCmV2vz488FCHkwsxqU4gRoWQuTMTN7ORqVUojLc0EijQUlngWVL6LJWJ
+         FfjayWo1gdGlJ3f1K9EgUD0VBlz9Jgch538SVTEuziDeeBHimJ4QOP7ZTRb0T13rc1
+         zGJBvh4L/c53Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 12:34:21AM +0100, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Tue, Nov 12, 2019 at 11:44:27AM -0500, Sven Van Asbroeck wrote:
-> > The driver's method to retrieve the firmware version on ili2117/
-> > ili2118 chip flavours is incorrect. The firmware version register
-> > address and layout are wrong.
-> > 
-> > The firmware version is not actually used anywhere inside or
-> > outside this driver. There is a dev_dbg() print, but that is
-> > only visible when the developer explicitly compiles in debug
-> > support.
-> > 
-> > Don't make the code more complicated to preserve a feature that
-> > no-one is using. Remove all code associated with chip firmware
-> > version.
-> > 
-> > Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
-> > Cc: Marek Vasut <marex@denx.de>
-> > Cc: Adam Ford <aford173@gmail.com>
-> > Cc: <linux-kernel@vger.kernel.org>
-> > Cc: linux-input@vger.kernel.org
-> > Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
-> > Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> > ---
-> 
-> The firmware version check does one relevant thing: It tests
-> the I2C communication, which tends to be useful for board
-> bringup and development boards (which often allow to disconnect
-> (touch-)screens).
+PageAnon() and PageKsm() use the low two bits of the page->mapping pointer
+to indicate the page type. PageAnon() only checks the LSB while PageKsm()
+checks the least significant 2 bits are equal to 3. Therefore, PageAnon()
+is true for KSM pages.
+__dump_page() incorrectly will never print "ksm" because it checks
+PageAnon() first. Fix this by checking PageKsm() first.
 
-If/when this is needed I propose we add a separate "lite" xfer check,
-similar to what elants_i2c and many other drivers are doing.
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ mm/debug.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks.
+diff --git a/mm/debug.c b/mm/debug.c
+index 772d4cf0691f..0461df1207cb 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -77,10 +77,10 @@ void __dump_page(struct page *page, const char *reason)
+ 		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
+ 			page, page_ref_count(page), mapcount,
+ 			page->mapping, page_to_pgoff(page));
+-	if (PageAnon(page))
+-		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
+-	else if (PageKsm(page))
++	if (PageKsm(page))
+ 		pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
++	else if (PageAnon(page))
++		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
+ 	else if (mapping) {
+ 		if (mapping->host && mapping->host->i_dentry.first) {
+ 			struct dentry *dentry;
+--=20
+2.20.1
 
--- 
-Dmitry
