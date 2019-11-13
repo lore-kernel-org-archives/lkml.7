@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1278C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522B9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F422245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DACE222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610271;
-	bh=cps95J12ZBs95Tga0IarAZLjU6eKhhQzMyHwqKsN98Q=;
+	s=default; t=1573610277;
+	bh=HHLg1L839bpQ+0BPLItkpmpRnGaLblgxjCk0OyZxXNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hYd4hPLr3IXwKJYEpzRVMIpupz1+uhNlGvgAD/66nGodobUeTSMOniQL8KHKRIhQQ
-	 y4qCo4PrQpQy9TFAGt3V45cBTNqiMJfIndPTDeNbC8NRyuZOOC0YA+5J7A/6P7E1PN
-	 dZBqhsrf0PD6PR7uAN1Px2dxrtnlHWFb62hhzvDA=
+	b=wL+ciVbfXcroYTjlvCnPo+x7PN1TAVTNboKndLe45eJYZ79nHNNrNdpOxN0NPhlf3
+	 xymx5gH8yxBFTwtMf9lNBHhPUHu2qd1mp7XjJLksATbCLeEYFnI7QP5MqIubN4+IWm
+	 fqOdHBKALk1Qwf2eg192z8MzLBQYqTayG54SfC9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbfKMB5u (ORCPT
+        id S1729907AbfKMB5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:57:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51158 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:57:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728795AbfKMB5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:44 -0500
+        id S1729890AbfKMB5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 410A22245C;
-        Wed, 13 Nov 2019 01:57:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBF712245C;
+        Wed, 13 Nov 2019 01:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610263;
-        bh=cps95J12ZBs95Tga0IarAZLjU6eKhhQzMyHwqKsN98Q=;
+        s=default; t=1573610270;
+        bh=HHLg1L839bpQ+0BPLItkpmpRnGaLblgxjCk0OyZxXNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVprY+VXfPD7XOshl1Xd4+LtF2Ur+tVgGTfsLUdH4sn+Hp8Mvh37unRM6cfGSOhuu
-         NwNeQ3NABOjd8n+xJnU0OX+4nFGJ/4/TwXRn2vHd7I/WywIyTw9q/7m+95RAIJ7LGA
-         UGR16jTxOygqM64KxVmFyShxa8KWLkIkqP/mlbio=
+        b=pSa5fIjWcS4dHKOi0T8NopBr48aDR8t8uekYQUy9ZJZzkA0c6jvY9xixyEpvYFIeZ
+         pdGbWjvby10gUTu26cThVZAHECySSuB9fVi0yWcOA+ER9w4hOmpXQuia63HEqKChTZ
+         wxuXNbuGp7SDxZdsh6UG1D/NnrnHsUyTG7gOtTl0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Pobega <mpobega@neverware.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 054/115] ALSA: hda/sigmatel - Disable automute for Elo VuPoint
-Date:   Tue, 12 Nov 2019 20:55:21 -0500
-Message-Id: <20191113015622.11592-54-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 058/115] cpu/SMT: State SMT is disabled even with nosmt and without "=force"
+Date:   Tue, 12 Nov 2019 20:55:25 -0500
+Message-Id: <20191113015622.11592-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -58,83 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Pobega <mpobega@neverware.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit d153135e93a50cdb6f1b52e238909e9965b56056 ]
+[ Upstream commit d0e7d14455d41163126afecd0fcce935463cc512 ]
 
-The Elo VuPoint 15MX has two headphone jacks of which neither work by
-default. Disabling automute allows ALSA to work normally with the
-speakers & left headphone jack.
+When booting with "nosmt=force" a message is issued into dmesg to
+confirm that SMT has been force-disabled but such a message is not
+issued when only "nosmt" is on the kernel command line.
 
-Future pin configuration changes may be required in the future to get
-the right headphone jack working in tandem.
+Fix that.
 
-Signed-off-by: Michael Pobega <mpobega@neverware.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20181004172227.10094-1-bp@alien8.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_sigmatel.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ kernel/cpu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index 63d15b545b333..7cd147411b22d 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -77,6 +77,7 @@ enum {
- 	STAC_DELL_M6_BOTH,
- 	STAC_DELL_EQ,
- 	STAC_ALIENWARE_M17X,
-+	STAC_ELO_VUPOINT_15MX,
- 	STAC_92HD89XX_HP_FRONT_JACK,
- 	STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK,
- 	STAC_92HD73XX_ASUS_MOBO,
-@@ -1897,6 +1898,18 @@ static void stac92hd73xx_fixup_no_jd(struct hda_codec *codec,
- 		codec->no_jack_detect = 1;
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index d768e15bef83b..39ed368767f1f 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -376,6 +376,7 @@ void __init cpu_smt_disable(bool force)
+ 		pr_info("SMT: Force disabled\n");
+ 		cpu_smt_control = CPU_SMT_FORCE_DISABLED;
+ 	} else {
++		pr_info("SMT: disabled\n");
+ 		cpu_smt_control = CPU_SMT_DISABLED;
+ 	}
  }
- 
-+
-+static void stac92hd73xx_disable_automute(struct hda_codec *codec,
-+				     const struct hda_fixup *fix, int action)
-+{
-+	struct sigmatel_spec *spec = codec->spec;
-+
-+	if (action != HDA_FIXUP_ACT_PRE_PROBE)
-+		return;
-+
-+	spec->gen.suppress_auto_mute = 1;
-+}
-+
- static const struct hda_fixup stac92hd73xx_fixups[] = {
- 	[STAC_92HD73XX_REF] = {
- 		.type = HDA_FIXUP_FUNC,
-@@ -1922,6 +1935,10 @@ static const struct hda_fixup stac92hd73xx_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = stac92hd73xx_fixup_alienware_m17x,
- 	},
-+	[STAC_ELO_VUPOINT_15MX] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = stac92hd73xx_disable_automute,
-+	},
- 	[STAC_92HD73XX_INTEL] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = intel_dg45id_pin_configs,
-@@ -1960,6 +1977,7 @@ static const struct hda_model_fixup stac92hd73xx_models[] = {
- 	{ .id = STAC_DELL_M6_BOTH, .name = "dell-m6" },
- 	{ .id = STAC_DELL_EQ, .name = "dell-eq" },
- 	{ .id = STAC_ALIENWARE_M17X, .name = "alienware" },
-+	{ .id = STAC_ELO_VUPOINT_15MX, .name = "elo-vupoint-15mx" },
- 	{ .id = STAC_92HD73XX_ASUS_MOBO, .name = "asus-mobo" },
- 	{}
- };
-@@ -2009,6 +2027,8 @@ static const struct snd_pci_quirk stac92hd73xx_fixup_tbl[] = {
- 		      "Alienware M17x", STAC_ALIENWARE_M17X),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_DELL, 0x0490,
- 		      "Alienware M17x R3", STAC_DELL_EQ),
-+	SND_PCI_QUIRK(0x1059, 0x1011,
-+		      "ELO VuPoint 15MX", STAC_ELO_VUPOINT_15MX),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x1927,
- 				"HP Z1 G2", STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK),
- 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x2b17,
 -- 
 2.20.1
 
