@@ -2,142 +2,244 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E82C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61535C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E9221872
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA9C21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfKMArN (ORCPT
+        id S1727181AbfKMAt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:47:13 -0500
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:17516 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfKMArM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:47:12 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47CQtM1PgvzKm9q;
-        Wed, 13 Nov 2019 01:47:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id rfbcH-n--HBG; Wed, 13 Nov 2019 01:47:00 +0100 (CET)
-Date:   Wed, 13 Nov 2019 11:46:34 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 0/9] open: introduce openat2(2) syscall
-Message-ID: <20191113004634.tz7geloshltkafwj@yavin.dot.cyphar.com>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191111132404.y523iqicbn6fivx5@yavin.dot.cyphar.com>
- <201911121457.7D02692@keescook>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7ndczamgwxls6q65"
-Content-Disposition: inline
-In-Reply-To: <201911121457.7D02692@keescook>
+        Tue, 12 Nov 2019 19:49:27 -0500
+Received: from mga03.intel.com ([134.134.136.65]:40344 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfKMAt0 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:49:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 16:49:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,298,1569308400"; 
+   d="scan'208";a="229587800"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Nov 2019 16:49:23 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v1 1/2] perf util: Move block tui function to ui browsers
+Date:   Wed, 13 Nov 2019 08:48:51 +0800
+Message-Id: <20191113004852.21265-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It would be nice if we could jump to the assembler/source view
+(like the normal perf report) from total cycles view.
 
---7ndczamgwxls6q65
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch moves the block_hists_tui_browse from block-info.c
+to ui/browsers/hists.c in order to reuse some browser codes
+(i.e do_annotate) for implementing new annotation view.
 
-On 2019-11-12, Kees Cook <keescook@chromium.org> wrote:
-> On Tue, Nov 12, 2019 at 12:24:04AM +1100, Aleksa Sarai wrote:
-> > On 2019-11-05, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > > This patchset is being developed here:
-> > >   <https://github.com/cyphar/linux/tree/openat2/master>
-> > >=20
-> > > Patch changelog:
-> > >  v15:
-> > >   * Fix code style for LOOKUP_IN_ROOT handling in path_init(). [Linus=
- Torvalds]
-> > >   * Split out patches for each individual LOOKUP flag.
-> > >   * Reword commit messages to give more background information about =
-the
-> > >     series, as well as mention the semantics of each flag in more det=
-ail.
-> > > [...]
-> >=20
-> > Ping -- this patch hasn't been touched for a week. Thanks.
->=20
-> If I've been following correctly, everyone is happy with this series.
-> (i.e. Linus's comment appear to have been addressed.)
->=20
-> Perhaps the next question is should this go via a pull request by you to
-> Linus directly during the v5.5 merge window, via akpm, via akpm, via
-> Christian, or some other path? Besides Linus, it's not been clear who
-> should "claim" this series. :)
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/ui/browsers/hists.c | 55 ++++++++++++++++++++++++++++
+ tools/perf/util/block-info.c   | 65 +---------------------------------
+ tools/perf/util/hist.h         | 12 +++++++
+ 3 files changed, 68 insertions(+), 64 deletions(-)
 
-Given the namei changes, I wanted to avoid stepping on Al's toes. Though
-he did review the series a few versions ago, the discussion didn't focus
-on the openat2(2) semantics (which have also changed since then). I'm
-not sure whether to interpret the silence to mean he's satisfied with
-things as they are, or if he hasn't had more time to look at the series.
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 334afc2139e7..04301303c246 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3448,3 +3448,58 @@ int perf_evlist__tui_browse_hists(struct evlist *evlist, const char *help,
+ 					       warn_lost_event,
+ 					       annotation_opts);
+ }
++
++static int block_hists_browser__title(struct hist_browser *browser, char *bf,
++				      size_t size)
++{
++	struct hists *hists = evsel__hists(browser->block_evsel);
++	const char *evname = perf_evsel__name(browser->block_evsel);
++	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
++	int ret;
++
++	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
++	if (evname)
++		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
++
++	return 0;
++}
++
++int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
++			   float min_percent)
++{
++	struct hists *hists = &bh->block_hists;
++	struct hist_browser *browser;
++	int key = -1;
++	static const char help[] =
++	" q             Quit \n";
++
++	browser = hist_browser__new(hists);
++	if (!browser)
++		return -1;
++
++	browser->block_evsel = evsel;
++	browser->title = block_hists_browser__title;
++	browser->min_pcnt = min_percent;
++
++	/* reset abort key so that it can get Ctrl-C as a key */
++	SLang_reset_tty();
++	SLang_init_tty(0, 0, 0);
++
++	while (1) {
++		key = hist_browser__run(browser, "? - help", true);
++
++		switch (key) {
++		case 'q':
++			goto out;
++		case '?':
++			ui_browser__help_window(&browser->b, help);
++			break;
++		default:
++			break;
++		}
++	}
++
++out:
++	hist_browser__delete(browser);
++	return 0;
++}
+diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+index 9abc201ebe63..5887f8f9149f 100644
+--- a/tools/perf/util/block-info.c
++++ b/tools/perf/util/block-info.c
+@@ -10,6 +10,7 @@
+ #include "map.h"
+ #include "srcline.h"
+ #include "evlist.h"
++#include "hist.h"
+ #include "ui/browsers/hists.h"
+ 
+ static struct block_header_column {
+@@ -439,70 +440,6 @@ struct block_report *block_info__create_report(struct evlist *evlist,
+ 	return block_reports;
+ }
+ 
+-#ifdef HAVE_SLANG_SUPPORT
+-static int block_hists_browser__title(struct hist_browser *browser, char *bf,
+-				      size_t size)
+-{
+-	struct hists *hists = evsel__hists(browser->block_evsel);
+-	const char *evname = perf_evsel__name(browser->block_evsel);
+-	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
+-	int ret;
+-
+-	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
+-	if (evname)
+-		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
+-
+-	return 0;
+-}
+-
+-static int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+-				  float min_percent)
+-{
+-	struct hists *hists = &bh->block_hists;
+-	struct hist_browser *browser;
+-	int key = -1;
+-	static const char help[] =
+-	" q             Quit \n";
+-
+-	browser = hist_browser__new(hists);
+-	if (!browser)
+-		return -1;
+-
+-	browser->block_evsel = evsel;
+-	browser->title = block_hists_browser__title;
+-	browser->min_pcnt = min_percent;
+-
+-	/* reset abort key so that it can get Ctrl-C as a key */
+-	SLang_reset_tty();
+-	SLang_init_tty(0, 0, 0);
+-
+-	while (1) {
+-		key = hist_browser__run(browser, "? - help", true);
+-
+-		switch (key) {
+-		case 'q':
+-			goto out;
+-		case '?':
+-			ui_browser__help_window(&browser->b, help);
+-			break;
+-		default:
+-			break;
+-		}
+-	}
+-
+-out:
+-	hist_browser__delete(browser);
+-	return 0;
+-}
+-#else
+-static int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
+-				  struct evsel *evsel __maybe_unused,
+-				  float min_percent __maybe_unused)
+-{
+-	return 0;
+-}
+-#endif
+-
+ int report__browse_block_hists(struct block_hist *bh, float min_percent,
+ 			       struct evsel *evsel)
+ {
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 4d87c7b4c1b2..e8b3122a30a7 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -449,6 +449,8 @@ enum rstype {
+ 	A_SOURCE
+ };
+ 
++struct block_hist;
++
+ #ifdef HAVE_SLANG_SUPPORT
+ #include "../ui/keysyms.h"
+ void attr_to_script(char *buf, struct perf_event_attr *attr);
+@@ -474,6 +476,9 @@ void run_script(char *cmd);
+ int res_sample_browse(struct res_sample *res_samples, int num_res,
+ 		      struct evsel *evsel, enum rstype rstype);
+ void res_sample_init(void);
++
++int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
++			   float min_percent);
+ #else
+ static inline
+ int perf_evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
+@@ -518,6 +523,13 @@ static inline int res_sample_browse(struct res_sample *res_samples __maybe_unuse
+ 
+ static inline void res_sample_init(void) {}
+ 
++int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
++			   struct evsel *evsel __maybe_unused,
++			   float min_percent __maybe_unused)
++{
++	return 0;
++}
++
+ #define K_LEFT  -1000
+ #define K_RIGHT -2000
+ #define K_SWITCH_INPUT_DATA -3000
+-- 
+2.17.1
 
-As for which tree it should be routed to, I don't mind -- Christian is
-the most straight-forward choice (but if Al wants to route it, that's
-fine with me too).
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---7ndczamgwxls6q65
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXctSZgAKCRCdlLljIbnQ
-Ej+PAP0UBMczq8p/OLMeyIryF0EfQ+noWktKHkfgvrRf7bKN7AEAiW1OItA5gtV4
-HiJnADyDHQw1h7livSSrD2X7HKS2BAA=
-=yOzJ
------END PGP SIGNATURE-----
-
---7ndczamgwxls6q65--
