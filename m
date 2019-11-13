@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24B9C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1511DC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7C02084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F1C2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611493;
-	bh=UOl0yxohjGVB5kn0B0kvKXhbib289mdwk/+Id492Zgo=;
+	s=default; t=1573611500;
+	bh=FFuKDouo1rf8UsWPhO0vImXh4I1do/bn4P75rop+b8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkObCcqOZRkRGpc7S8MTzo93WWngfWAzyHoWRVl45+TdHaTfa7gTQi/YnwsmwpU7S
-	 rRrfVQV+46/MMUlybkKNN1/ytMMoraN2krcplL2pDVtNkijui0ITnWmQ5Yd+VNY6r+
-	 KPGMweD1/DaIfzi8ibZZcuc4bhFT5isHbqI0Aeak=
+	b=ygDXLWD5thkh0odC0V3TK7Zb6DViiUXyJD8CBEgbGgq5ovCnMruHqcLwfcCdqS8VK
+	 GucTGE7frYUO0Ve3tKP4DyG4dPd1b8NnntQw+IPDrnTHn+j5R7PzyQmIOiYImIjxzE
+	 xMpm59ByL6Y76yBPwp0dZecrB+X+rpNAhg7A76iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbfKMCSM (ORCPT
+        id S1729258AbfKMBzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:18:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729264AbfKMBzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:50 -0500
+        id S1729215AbfKMBzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E822247D;
-        Wed, 13 Nov 2019 01:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4344022468;
+        Wed, 13 Nov 2019 01:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610149;
-        bh=UOl0yxohjGVB5kn0B0kvKXhbib289mdwk/+Id492Zgo=;
+        s=default; t=1573610142;
+        bh=FFuKDouo1rf8UsWPhO0vImXh4I1do/bn4P75rop+b8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AO4fSVfrdxw/o3ms0W7AS739XhpAXG80qJzaUqvnMDFHtnd+Xvf/rwFFz+shT5wb
-         wlKzJDvqBsTDJOpwF0Gc9L7lDlkBO09izYuIOpbGToayzBOMMVoOaDf7fCTd/0/QVS
-         ctQ2b3w78RO5n2CpsqS5j+d+6PHxbVTqmJdhCO1A=
+        b=UrEN91JweZYH0rkigjPdjMeiRSB+7XkmD5tH/RdXijlyKEHSQBSYtIcX1Wdp83Tl/
+         4fffia7TZdOV29LtwPDw+txGsYkOGhztNij/uBayYHawDHNyvsgS6kNEsosKKJSuLo
+         rD/tOD8WiQJowtsRLNz3HmGvNMXiwtH9V119tsEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 194/209] net: sched: avoid writing on noop_qdisc
-Date:   Tue, 12 Nov 2019 20:50:10 -0500
-Message-Id: <20191113015025.9685-194-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Guglielmo Fanini <g.fanini@gmail.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 188/209] hwmon: (k10temp) Support all Family 15h Model 6xh and Model 7xh processors
+Date:   Tue, 12 Nov 2019 20:50:04 -0500
+Message-Id: <20191113015025.9685-188-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,56 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit f98ebd47fd0da1717267ce1583a105d8cc29a16a ]
+[ Upstream commit 53dfa0088edd2e2793afa21488532b12eb2dae48 ]
 
-While noop_qdisc.gso_skb and noop_qdisc.skb_bad_txq are not used
-in other places, it seems not correct to overwrite their fields
-in dev_init_scheduler_queue().
+BIOS developer guides refer to Family 15h Models 60h-6fh and Family 15h
+Models 70h-7fh. So far the driver only checked for Models 60h and 70h.
+However, there are now processors with other model numbers in the same
+families. Example is A10-9620P family 15h model 65h. Follow the developer
+guides and mask the lower 4 bit of the model number to determine the
+registers to use for reading temperatures and temperature limits.
 
-noop_qdisc is essentially a shared and read-only object, even if
-it is not marked as const because of some implementation detail.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Guglielmo Fanini <g.fanini@gmail.com>
+Cc: Guglielmo Fanini <g.fanini@gmail.com>
+Acked-by: Clemens Ladisch <clemens@ladisch.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_generic.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/hwmon/k10temp.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 30e32df5f84a7..8a4d01e427a22 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -577,6 +577,18 @@ struct Qdisc noop_qdisc = {
- 	.dev_queue	=	&noop_netdev_queue,
- 	.running	=	SEQCNT_ZERO(noop_qdisc.running),
- 	.busylock	=	__SPIN_LOCK_UNLOCKED(noop_qdisc.busylock),
-+	.gso_skb = {
-+		.next = (struct sk_buff *)&noop_qdisc.gso_skb,
-+		.prev = (struct sk_buff *)&noop_qdisc.gso_skb,
-+		.qlen = 0,
-+		.lock = __SPIN_LOCK_UNLOCKED(noop_qdisc.gso_skb.lock),
-+	},
-+	.skb_bad_txq = {
-+		.next = (struct sk_buff *)&noop_qdisc.skb_bad_txq,
-+		.prev = (struct sk_buff *)&noop_qdisc.skb_bad_txq,
-+		.qlen = 0,
-+		.lock = __SPIN_LOCK_UNLOCKED(noop_qdisc.skb_bad_txq.lock),
-+	},
- };
- EXPORT_SYMBOL(noop_qdisc);
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index bb15d7816a294..2cef0c37ff6fe 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -325,8 +325,9 @@ static int k10temp_probe(struct pci_dev *pdev,
  
-@@ -1253,8 +1265,6 @@ static void dev_init_scheduler_queue(struct net_device *dev,
+ 	data->pdev = pdev;
  
- 	rcu_assign_pointer(dev_queue->qdisc, qdisc);
- 	dev_queue->qdisc_sleeping = qdisc;
--	__skb_queue_head_init(&qdisc->gso_skb);
--	__skb_queue_head_init(&qdisc->skb_bad_txq);
- }
- 
- void dev_init_scheduler(struct net_device *dev)
+-	if (boot_cpu_data.x86 == 0x15 && (boot_cpu_data.x86_model == 0x60 ||
+-					  boot_cpu_data.x86_model == 0x70)) {
++	if (boot_cpu_data.x86 == 0x15 &&
++	    ((boot_cpu_data.x86_model & 0xf0) == 0x60 ||
++	     (boot_cpu_data.x86_model & 0xf0) == 0x70)) {
+ 		data->read_htcreg = read_htcreg_nb_f15;
+ 		data->read_tempreg = read_tempreg_nb_f15;
+ 	} else if (boot_cpu_data.x86 == 0x17) {
 -- 
 2.20.1
 
