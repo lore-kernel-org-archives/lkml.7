@@ -2,105 +2,75 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E371C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732D4C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542BC222C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:38:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLcgQJ+J"
+	by mail.kernel.org (Postfix) with ESMTP id 46742222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKMGiO (ORCPT
+        id S1727089AbfKMGi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:38:14 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41431 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfKMGiN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:38:13 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d29so635380plj.8;
-        Tue, 12 Nov 2019 22:38:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WLiRoMZ+yFPRoCGfEsARIdmeJYcG3ERIAnLJLg5wK0c=;
-        b=vLcgQJ+JfOET6Dta9ztvWBh0hP4Cvr+nOgR+PA2feR3CwMaC2+AIzyBPquzj52BCM8
-         lFNvfz9iTm8qFQpxeoC7Nx94ccNNkrr+DrI+1yO/xHkntkc9x+Nj5ff1qotZIzVfMb1s
-         GNTTTENoiPoqV3sGuVVlTqHEzZn2haNvvdc7EwFBcW5dp5i9HPyP1stTgrabZPiIvuky
-         UV1kMOG8l6INymR34RtSe2zvGGoawgrr/Ryu/wECWhVOoRz2ya3mn9V5P9S6yniylKRN
-         4Xm0rN6ZA2FEo0cy1XFaY/TuybMrTCVdfWCI3wZ6L7qm1jbpv87SkGIWND3mdEWSPv6v
-         0A/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WLiRoMZ+yFPRoCGfEsARIdmeJYcG3ERIAnLJLg5wK0c=;
-        b=qlkxa5Q8g2PcnyPgCZQOINr7eG2XTJoiqLYzQg8InR7mbC7iMgFcR2p7bc0JAR9zmA
-         AeFsSu/QKKCyzd/dp809HEAAzUMBQDbcapSMMk9wfpKuQKs0YH4p0/ZZc7VxURdVox13
-         hikeYh6++cDQlUiOhT8RCM2ieXWqW37IoLOG79kfJDwj2UGYjiOKrMW1pyOwe+N1gMI9
-         gUDvyPY60W0OropSjNmBT2Wg1JOmhvpvl6tfDZAAuzuCbPED5SYqRuiXdEDJSbs/OoG7
-         lav6P35zCfEGLMN7GL19y/R8lJDjFDo1sC09wzq7v5kFiCdLSH7gPx/pve1mYjqIWz6M
-         l8DQ==
-X-Gm-Message-State: APjAAAW6qra1HCoYrqt5SE1goitSfxflq80kuhkmHJaeF3DxP8kKFdSw
-        hLANa57rNxIsZQ+H40kuO2c=
-X-Google-Smtp-Source: APXvYqxkwHt/TJTAEncicU6ZqxguK637g6oSnIkIAbEXKBP7Wn/waVVv7YtupAcPuqTYaTM/YHI2cg==
-X-Received: by 2002:a17:902:aa95:: with SMTP id d21mr2041503plr.182.1573627093320;
-        Tue, 12 Nov 2019 22:38:13 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id r13sm1290060pfg.3.2019.11.12.22.38.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 22:38:12 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] media: platform: mtk-mdp: add missed destroy_workqueue in remove
-Date:   Wed, 13 Nov 2019 14:37:59 +0800
-Message-Id: <20191113063759.8838-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 13 Nov 2019 01:38:27 -0500
+Received: from david.siemens.de ([192.35.17.14]:46587 "EHLO david.siemens.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbfKMGi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 01:38:26 -0500
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id xAD6cF7e031765
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 07:38:15 +0100
+Received: from [167.87.41.29] ([167.87.41.29])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id xAD6cEwY008709;
+        Wed, 13 Nov 2019 07:38:15 +0100
+Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+Cc:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
+Date:   Wed, 13 Nov 2019 07:38:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver misses destroying wdt_wq when remove like what is done when
-probe fails.
-Add the missed calls like what is done to job_wq to fix it.
+On 12.11.19 22:21, Paolo Bonzini wrote:
+> CVE-2018-12207 is a microarchitectural implementation issue
+> that could allow an unprivileged local attacker to cause system wide
+> denial-of-service condition.
+> 
+> Privileged software may change the page size (ex. 4KB, 2MB, 1GB) in the
+> paging structures, without following such paging structure changes with
+> invalidation of the TLB entries corresponding to the changed pages. In
+> this case, the attacker could invoke instruction fetch, which will result
+> in the processor hitting multiple TLB entries, reporting a machine check
+> error exception, and ultimately hanging the system.
+> 
+> The attached patches mitigate the vulnerability by making huge pages
+> non-executable. The processor will not be able to execute an instruction
+> residing in a large page (ie. 2MB, 1GB, etc.) without causing a trap into
+> the host kernel/hypervisor; KVM will then break the large page into 4KB
+> pages and gives executable permission to 4KB pages.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 3 +++
- 1 file changed, 3 insertions(+)
+When reading MCE, error code 0150h, ie. SRAR, I was wondering if that 
+couldn't simply be handled by the host. But I suppose the symptom of 
+that erratum is not "just" regular recoverable MCE, rather 
+sometimes/always an unrecoverable CPU state, despite the error code, right?
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-index c1e29a46ae69..aeaed2cf4458 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-@@ -229,6 +229,9 @@ static int mtk_mdp_remove(struct platform_device *pdev)
- 	mtk_mdp_unregister_m2m_device(mdp);
- 	v4l2_device_unregister(&mdp->v4l2_dev);
- 
-+	flush_workqueue(mdp->wdt_wq);
-+	destroy_workqueue(mdp->wdt_wq);
-+
- 	flush_workqueue(mdp->job_wq);
- 	destroy_workqueue(mdp->job_wq);
- 
+Jan
+
 -- 
-2.23.0
-
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
