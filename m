@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE958C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3EAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C1F2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1862067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612103;
-	bh=m8ERbeqrZ/eUAIPtFx7NLl7oDl1dzP+VpC0SU6Jihsg=;
+	s=default; t=1573612110;
+	bh=AZovaWb7kUE5S+uJuZWRgFGbFjGvS0V6bJLQ2mcQLZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBJnmUk7nNGGy1giWBqj1esL0G7+PF4DHJYf7FDZfYRocr4+v95RnsNXwsJ8ZQEqX
-	 W5ipAYepmThWXbs5Tnz2Gev+Vd8PR/hffCh575DqfKsBHLUpTqfG9pw9YBDNx4GhME
-	 hoDmTsTKT73WZeSo7rHKeh8hHZN/iTkmgAd+RVLc=
+	b=yy4ZmfnG+oGO2SyfJrNTmJfu0fRizgYR+5HDtiFf+oL58GhNeiBczpBsWab3vgkTN
+	 uK2FcwcdAS20Er6drsDTffQs5PRFJco6t/gsTyAQkTiAXN2EnFFVxY2VW/POW1J6Zw
+	 onrDya7r0NSRS8fXY0jC2MziDe656JyZjKsY9vXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfKMC2W (ORCPT
+        id S1728446AbfKMC23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:28:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37408 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:28:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727384AbfKMBuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:39 -0500
+        id S1727402AbfKMBue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4D02245B;
-        Wed, 13 Nov 2019 01:50:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 881FB22467;
+        Wed, 13 Nov 2019 01:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609839;
-        bh=m8ERbeqrZ/eUAIPtFx7NLl7oDl1dzP+VpC0SU6Jihsg=;
+        s=default; t=1573609834;
+        bh=AZovaWb7kUE5S+uJuZWRgFGbFjGvS0V6bJLQ2mcQLZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iBsde14r/XdMBjLe5dk8+vmRBILgg60AIHFJw4d5xxxRxCPfboL9UxZ0lzqKY114A
-         r3dcQUtF4wV1Lcp+/RvV+h+AJvFsGtDiX8zzpUaHY8xKDH8S0KSORxIQxM9qAN7vIu
-         q44qfJQT2LMEs9SMgv2C3dYSSoh8/wnT/J3n7wOE=
+        b=vw5fMwkWlz/5xf+e5QmWpePE/fJ9XcaE+M0rMeWqExexnLrR+rAwz87eXMTEm1aV1
+         7AX3czyPi2vUa41Wv7o/mPeU012Ayf8UZ2fqFxayrYnPtlc4t3POuFRVFr6lAa/fw0
+         83PUU3Tcer7XTWYYtt4uRe6kmGZUMb/fkR2vcAAY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yifeng Sun <pkusunyifeng@gmail.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        dev@openvswitch.org
-Subject: [PATCH AUTOSEL 4.19 011/209] openvswitch: Use correct reply values in datapath and vport ops
-Date:   Tue, 12 Nov 2019 20:47:07 -0500
-Message-Id: <20191113015025.9685-11-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 007/209] f2fs: return correct errno in f2fs_gc
+Date:   Tue, 12 Nov 2019 20:47:03 -0500
+Message-Id: <20191113015025.9685-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,114 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Sun <pkusunyifeng@gmail.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit 804fe108fc92e591ddfe9447e7fb4691ed16daee ]
+[ Upstream commit 61f7725aa148ee870436a29d3a24d5c00ab7e9af ]
 
-This patch fixes the bug that all datapath and vport ops are returning
-wrong values (OVS_FLOW_CMD_NEW or OVS_DP_CMD_NEW) in their replies.
+This fixes overriding error number in f2fs_gc.
 
-Signed-off-by: Yifeng Sun <pkusunyifeng@gmail.com>
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/openvswitch/datapath.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ fs/f2fs/gc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
-index 8e396c7c83894..66c726595a95d 100644
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -1182,14 +1182,14 @@ static int ovs_flow_cmd_set(struct sk_buff *skb, struct genl_info *info)
- 						       ovs_header->dp_ifindex,
- 						       reply, info->snd_portid,
- 						       info->snd_seq, 0,
--						       OVS_FLOW_CMD_NEW,
-+						       OVS_FLOW_CMD_SET,
- 						       ufid_flags);
- 			BUG_ON(error < 0);
- 		}
- 	} else {
- 		/* Could not alloc without acts before locking. */
- 		reply = ovs_flow_cmd_build_info(flow, ovs_header->dp_ifindex,
--						info, OVS_FLOW_CMD_NEW, false,
-+						info, OVS_FLOW_CMD_SET, false,
- 						ufid_flags);
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index dd29a49143f54..8c4cb1eee10a6 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1244,7 +1244,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
  
- 		if (IS_ERR(reply)) {
-@@ -1265,7 +1265,7 @@ static int ovs_flow_cmd_get(struct sk_buff *skb, struct genl_info *info)
- 	}
+ 	put_gc_inode(&gc_list);
  
- 	reply = ovs_flow_cmd_build_info(flow, ovs_header->dp_ifindex, info,
--					OVS_FLOW_CMD_NEW, true, ufid_flags);
-+					OVS_FLOW_CMD_GET, true, ufid_flags);
- 	if (IS_ERR(reply)) {
- 		err = PTR_ERR(reply);
- 		goto unlock;
-@@ -1389,7 +1389,7 @@ static int ovs_flow_cmd_dump(struct sk_buff *skb, struct netlink_callback *cb)
- 		if (ovs_flow_cmd_fill_info(flow, ovs_header->dp_ifindex, skb,
- 					   NETLINK_CB(cb->skb).portid,
- 					   cb->nlh->nlmsg_seq, NLM_F_MULTI,
--					   OVS_FLOW_CMD_NEW, ufid_flags) < 0)
-+					   OVS_FLOW_CMD_GET, ufid_flags) < 0)
- 			break;
- 
- 		cb->args[0] = bucket;
-@@ -1730,7 +1730,7 @@ static int ovs_dp_cmd_set(struct sk_buff *skb, struct genl_info *info)
- 	ovs_dp_change(dp, info->attrs);
- 
- 	err = ovs_dp_cmd_fill_info(dp, reply, info->snd_portid,
--				   info->snd_seq, 0, OVS_DP_CMD_NEW);
-+				   info->snd_seq, 0, OVS_DP_CMD_SET);
- 	BUG_ON(err < 0);
- 
- 	ovs_unlock();
-@@ -1761,7 +1761,7 @@ static int ovs_dp_cmd_get(struct sk_buff *skb, struct genl_info *info)
- 		goto err_unlock_free;
- 	}
- 	err = ovs_dp_cmd_fill_info(dp, reply, info->snd_portid,
--				   info->snd_seq, 0, OVS_DP_CMD_NEW);
-+				   info->snd_seq, 0, OVS_DP_CMD_GET);
- 	BUG_ON(err < 0);
- 	ovs_unlock();
- 
-@@ -1785,7 +1785,7 @@ static int ovs_dp_cmd_dump(struct sk_buff *skb, struct netlink_callback *cb)
- 		if (i >= skip &&
- 		    ovs_dp_cmd_fill_info(dp, skb, NETLINK_CB(cb->skb).portid,
- 					 cb->nlh->nlmsg_seq, NLM_F_MULTI,
--					 OVS_DP_CMD_NEW) < 0)
-+					 OVS_DP_CMD_GET) < 0)
- 			break;
- 		i++;
- 	}
-@@ -2101,7 +2101,7 @@ static int ovs_vport_cmd_set(struct sk_buff *skb, struct genl_info *info)
- 
- 	err = ovs_vport_cmd_fill_info(vport, reply, genl_info_net(info),
- 				      info->snd_portid, info->snd_seq, 0,
--				      OVS_VPORT_CMD_NEW);
-+				      OVS_VPORT_CMD_SET);
- 	BUG_ON(err < 0);
- 
- 	ovs_unlock();
-@@ -2182,7 +2182,7 @@ static int ovs_vport_cmd_get(struct sk_buff *skb, struct genl_info *info)
- 		goto exit_unlock_free;
- 	err = ovs_vport_cmd_fill_info(vport, reply, genl_info_net(info),
- 				      info->snd_portid, info->snd_seq, 0,
--				      OVS_VPORT_CMD_NEW);
-+				      OVS_VPORT_CMD_GET);
- 	BUG_ON(err < 0);
- 	rcu_read_unlock();
- 
-@@ -2218,7 +2218,7 @@ static int ovs_vport_cmd_dump(struct sk_buff *skb, struct netlink_callback *cb)
- 						    NETLINK_CB(cb->skb).portid,
- 						    cb->nlh->nlmsg_seq,
- 						    NLM_F_MULTI,
--						    OVS_VPORT_CMD_NEW) < 0)
-+						    OVS_VPORT_CMD_GET) < 0)
- 				goto out;
- 
- 			j++;
+-	if (sync)
++	if (sync && !ret)
+ 		ret = sec_freed ? 0 : -EAGAIN;
+ 	return ret;
+ }
 -- 
 2.20.1
 
