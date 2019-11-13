@@ -2,100 +2,98 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E79FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF2DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662EB21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LjpMbbhy"
+	by mail.kernel.org (Postfix) with ESMTP id 3CD3621D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573611315;
+	bh=65esZw1aId9cAb4fmPQLAQBAEwuFCvYbnG/uf8OmSco=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bMPeNcRyOkUN6IdzrJkoLDxa/hXG+FKgf/luw258I0Xy67UKRBpM18gli/5dlTzbv
+	 vIdcc7TQ931pYAnt3Y1Q/F6YE7cKuwvMZJmyP9cigVkxdrifZ/aM5sGz5Wq1cZXxaU
+	 HkxExYNpj3/vLUJNetKRbETzsSo4dVYDeiAtNaww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfKMCPH (ORCPT
+        id S1730050AbfKMCPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:15:07 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:54550 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbfKMCO7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:14:59 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD2EG8f062341;
-        Wed, 13 Nov 2019 02:14:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=5+sd2HaueY26dn+rgJI+YCERp7oCIRvfIJ/MF+t4KsY=;
- b=LjpMbbhyF3ErFyyXfQctAaayPzt+DwBn8DGBpTj8ZGUvS6now9Eq89ZL3lbUqOMNYrJD
- p6xqnATUhdW86bUQV35HaAc8s+AaHV3HgDnxXk8rqcNTLh++dEDIRv/ULGmCSU5qQf7M
- mckgf/cIjGISRyf33iZrd5CyT+ixZlu/Y0mz0O1CkZ4g/cxmEgYCeAIHDEuPLj9uNDLJ
- XIssxhOMxV2K4BHGM+3Pbn5HCRMPWPLSKB4Tr7EW6T3xHw4kQUT9e/RY181x/nA/+Tg6
- v/8Y1WjN6JYrynqJs0jPHOLCn5fcpF6tKHWwWSnrlrGExYA+MgDHUdEAuu3IBRhHiNXU zg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w5mvtrypx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 02:14:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD2EPIb176522;
-        Wed, 13 Nov 2019 02:14:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2w7khmesb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 02:14:42 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAD2EQcd029499;
-        Wed, 13 Nov 2019 02:14:27 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Nov 2019 18:14:26 -0800
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Janek Kotas <jank@cadence.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH v3 0/2] scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191108164857.11466-1-vigneshr@ti.com>
-Date:   Tue, 12 Nov 2019 21:14:22 -0500
-In-Reply-To: <20191108164857.11466-1-vigneshr@ti.com> (Vignesh Raghavendra's
-        message of "Fri, 8 Nov 2019 22:18:55 +0530")
-Message-ID: <yq1o8xgr08x.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 12 Nov 2019 21:15:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728043AbfKMB47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:59 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8EAC22470;
+        Wed, 13 Nov 2019 01:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573610218;
+        bh=65esZw1aId9cAb4fmPQLAQBAEwuFCvYbnG/uf8OmSco=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nYIRSaKaeVXCYTmMwl1gQg+c2z8vv6sJHDFv5DOBVS/9y8mL11ccSeDToJn5R1aYj
+         XwPveki0BP2Nl6+qq/XrUjR5WMDTO/LL8Re18d1vuF7Un/8LbJ8yqBXDKiJdKFJGt8
+         5TKx/E1wm6kjXZXfpgMoU+0+z/ciKlW0EP4R1mMg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Lukas Czerner <lczerner@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 025/115] ext4: fix build error when DX_DEBUG is defined
+Date:   Tue, 12 Nov 2019 20:54:52 -0500
+Message-Id: <20191113015622.11592-25-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
+References: <20191113015622.11592-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=783
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911130016
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=855 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911130016
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
 
-Vignesh,
+[ Upstream commit 799578ab16e86b074c184ec5abbda0bc698c7b0b ]
 
-> This series add DT bindings and driver for TI wrapper for Cadence UFS
-> IP that is present on TI's J721e SoC
+Enabling DX_DEBUG triggers the build error below.  info is an attribute
+of  the dxroot structure.
 
-Applied to 5.5/scsi-queue, thanks!
+linux/fs/ext4/namei.c:2264:12: error: ‘info’
+undeclared (first use in this function); did you mean ‘insl’?
+	   	  info->indirect_levels));
 
+Fixes: e08ac99fa2a2 ("ext4: add largedir feature")
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ext4/namei.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index 162e853dc5d65..212b01861d941 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2293,7 +2293,7 @@ static int ext4_dx_add_entry(handle_t *handle, struct ext4_filename *fname,
+ 			dxroot->info.indirect_levels += 1;
+ 			dxtrace(printk(KERN_DEBUG
+ 				       "Creating %d level index...\n",
+-				       info->indirect_levels));
++				       dxroot->info.indirect_levels));
+ 			err = ext4_handle_dirty_dx_node(handle, dir, frame->bh);
+ 			if (err)
+ 				goto journal_error;
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.20.1
+
