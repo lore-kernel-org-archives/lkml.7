@@ -2,114 +2,202 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0ACC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A21CC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F42206E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641BB206E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEZwRf7b"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fs57GyBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbfKMSLF (ORCPT
+        id S1728236AbfKMSMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:11:05 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37860 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfKMSLE (ORCPT
+        Wed, 13 Nov 2019 13:12:44 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54678 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfKMSMn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:11:04 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z24so1862427pgu.4;
-        Wed, 13 Nov 2019 10:11:02 -0800 (PST)
+        Wed, 13 Nov 2019 13:12:43 -0500
+Received: by mail-wm1-f66.google.com with SMTP id z26so3008859wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:12:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=tGvQd5G0SntDT8HkYM+TSejmQNivNQ7SWZ4INNCNjjw=;
-        b=EEZwRf7busU0um8mSGmdA1Nl6LjcjETlyx6ouiZkotB+x2genOAnVYJpzhoxCvc0+T
-         2u0LgB9O901AeWkBQ64kvQTVi1szA/cINnCP/9F1jQifiQWWOKh7XySjcpiBXTwJA2GC
-         esovxJBtuN7S95Hz5rmaiK4Lxozaz65Nh6t33RxH0Qf/IspnL0lu/BJrjrAycOz/J3Bg
-         gh+0ut6ua2dMAj325DKLi0vUb3fN02M+TSRt9x70E253TJ47Q3Hr9KrHT6wDIrzJTvgg
-         R9HtOdjDX/7xJJtD2Fq84E50OC/c8S3eyDtHXfiegOin60MkfI/ve/4sEHPMGG1UaBDN
-         dVNg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ki25gnbpyN00Iv5cdTY8OhdgRYpiq6GuA0iUi2qS8JY=;
+        b=Fs57GyBC4KqL9mwZ7pz4er+6yTwZnzeC3f6ecarogyGItcOt761IC74Ow/Fy4yemVK
+         RUqp9/aQEupFLjbQgv1Is7jI9ME2ZM1Urs3WpBzkHiD8m8wVSpaj4qR2HT8NktQ9aIDh
+         83PGyCiMELKFkPAAJ4oKSoHJYw+BxXeDVZHwA+/1F1FsDEdMj437l2T1zBZvMvvheHvL
+         fdLJ8urtUQhsyRrrfXAVw/DhaY2VeUzbmsUBTotErPCNPW/7n17mK4ajJuqRCwV0CKYj
+         W+Zp1BcViOgwN1fFLrhobVuOpXFZhmczbXyYlTzP7butXBzzN7km9hK2nXnGXCXaobqM
+         5tig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=tGvQd5G0SntDT8HkYM+TSejmQNivNQ7SWZ4INNCNjjw=;
-        b=LvNBSv36+k6GXoVACKSOrVk4YE0KHXxZJYLfSBD4MHw7ly6perGOczjVNAZIKk7L2r
-         X+gNCN8Xmmppv7+PeRgmF190l4cyjruQkm+IezpR0wft2IMGto8GjpTslcUguul53zLe
-         PmyNfWB6DT9t/PwmSmqg7RTOEGURybujY8DneGyIRc4+RNcFnFuhLRQZXhHDL6o5QBb+
-         okRLfKrdslGfATdmVJxYTdKc7eRQqndm6U+TgAR8JeMhhvYyMw3qlRqHM7768QmOHzYc
-         Abwz62fIlxxjKx38f4dQFtW7P2rTQLNKqHPkrtqJ/OSH1CYUnaDDi1vQnSM6IuMN2zOH
-         V/Bg==
-X-Gm-Message-State: APjAAAWwB3EOiVaOE0RrVnPdqeCFkkXX4IsvElXtVuiInukPtLjX1CEt
-        holtUz3/aWXQwWm9dUZMrZkh48ZvWIs=
-X-Google-Smtp-Source: APXvYqzNBXBcf0glrFbmi2UZpMekxq9W1smDcK0LKBPS+yMxOpPtUAWSzrnyZRukyAXMThapoLY+nw==
-X-Received: by 2002:a63:154e:: with SMTP id 14mr5127316pgv.182.1573668661869;
-        Wed, 13 Nov 2019 10:11:01 -0800 (PST)
-Received: from [10.2.144.69] ([66.170.99.2])
-        by smtp.gmail.com with ESMTPSA id q185sm4877110pfc.153.2019.11.13.10.11.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 10:11:01 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
-Date:   Wed, 13 Nov 2019 10:10:59 -0800
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DEF550EE-F476-48FB-A226-66D34503CF70@gmail.com>
-References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3601.0.10)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ki25gnbpyN00Iv5cdTY8OhdgRYpiq6GuA0iUi2qS8JY=;
+        b=eBxYaVGXFp0Ftm3d4pYWp0bOT/U9HuXD2cfbxWkJQbps0H/cRb8DlEnAP8xA/3tzPI
+         0Dy9anAImnv88WHWmsOdxTFeFqN7d+sKxKCwwPpLKbBn1tZ+cq2vr8hPmI+Dx2ZTQ6bF
+         p7hnXzyQSf7uYS0hcf2z+UDuvblypj/hl/KXeyYZZOiQzFFMOboC5w/EMuaOQO9vu937
+         iVrNb/R1Ab+NM4NddSWCa3kdlaVQLDRphisit0/ywdQyiYv3EI7AHTsU2vDe30vth8ld
+         goUFODpEl+Y5yk/q9DffW6V1JPAKpPKVxFbHVCapui7WtpQfbNbfl7EfCHHDfw8GLAJ4
+         9WJg==
+X-Gm-Message-State: APjAAAVhgEEH+V3UYBEkpyuB0QogffOolLlfDGsAcMdtNMFq7EFNRGPQ
+        1R3L+CKuDA89EMnwlBTH1lsw3OiYCjREmFPxVkjggQ==
+X-Google-Smtp-Source: APXvYqyS2MWVz9Gjs48JrwIYbsO/Nl6/uoy1ID+PXy7Cl0PgKvCG4CClUBfmff8XpKrw/24ncJDArH9Sw7hQb50yikE=
+X-Received: by 2002:a05:600c:295:: with SMTP id 21mr3864373wmk.43.1573668760287;
+ Wed, 13 Nov 2019 10:12:40 -0800 (PST)
+MIME-Version: 1.0
+References: <20191113012746.52804-1-brendanhiggins@google.com>
+In-Reply-To: <20191113012746.52804-1-brendanhiggins@google.com>
+From:   David Gow <davidgow@google.com>
+Date:   Wed, 13 Nov 2019 10:12:28 -0800
+Message-ID: <CABVgOS=3AXS1=rpGyNiNYu8hU+t=gQG9JongHXir=76ENnrnnA@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v1] Documentation: kunit: add
+ documentation for kunit_tool
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Shuah Khan <shuah@kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-doc@vger.kernel.org,
+        corbet@lwn.net, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 5:28 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> Add documentation for the Python script used to build, run, and collect
+> results from the kernel known as kunit_tool. kunit_tool
+> (tools/testing/kunit/kunit.py) was already added in previous commits.
+>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  Documentation/dev-tools/kunit/index.rst      |  1 +
+>  Documentation/dev-tools/kunit/kunit-tool.rst | 57 ++++++++++++++++++++
+>  Documentation/dev-tools/kunit/start.rst      |  3 ++
+>  3 files changed, 61 insertions(+)
+>  create mode 100644 Documentation/dev-tools/kunit/kunit-tool.rst
+>
+> diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
+> index 26ffb46bdf99d..c60d760a0eed1 100644
+> --- a/Documentation/dev-tools/kunit/index.rst
+> +++ b/Documentation/dev-tools/kunit/index.rst
+> @@ -9,6 +9,7 @@ KUnit - Unit Testing for the Linux Kernel
+>
+>         start
+>         usage
+> +       kunit-tool
+>         api/index
+>         faq
+>
+> diff --git a/Documentation/dev-tools/kunit/kunit-tool.rst b/Documentation/dev-tools/kunit/kunit-tool.rst
+> new file mode 100644
+> index 0000000000000..aa1a93649a45a
+> --- /dev/null
+> +++ b/Documentation/dev-tools/kunit/kunit-tool.rst
+> @@ -0,0 +1,57 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=================
+> +kunit_tool How-To
+> +=================
+> +
+> +What is kunit_tool?
+> +===================
+> +
+> +kunit_tool is a set of scripts that aid in building the Linux kernel as UML
+> +(`User Mode Linux <http://user-mode-linux.sourceforge.net/old/>`_), running
+> +KUnit tests, parsing the test results and displaying them in a user friendly
+> +manner.
 
-> On Nov 12, 2019, at 1:21 PM, Paolo Bonzini <pbonzini@redhat.com> =
-wrote:
->=20
-> CVE-2018-12207 is a microarchitectural implementation issue
-> that could allow an unprivileged local attacker to cause system wide
-> denial-of-service condition.
->=20
-> Privileged software may change the page size (ex. 4KB, 2MB, 1GB) in =
-the
-> paging structures, without following such paging structure changes =
-with
-> invalidation of the TLB entries corresponding to the changed pages. In
-> this case, the attacker could invoke instruction fetch, which will =
-result
-> in the processor hitting multiple TLB entries, reporting a machine =
-check
-> error exception, and ultimately hanging the system.
->=20
-> The attached patches mitigate the vulnerability by making huge pages
-> non-executable. The processor will not be able to execute an =
-instruction
-> residing in a large page (ie. 2MB, 1GB, etc.) without causing a trap =
-into
-> the host kernel/hypervisor; KVM will then break the large page into =
-4KB
-> pages and gives executable permission to 4KB pages.
+Calling this a "set of scripts" is a bit confusing, as the only script
+described is tools/testing/kunit/kunit.py, which isn't mentioned in
+this section.
 
-It sounds that this mitigation will trigger the =E2=80=9Cpage =
-fracturing=E2=80=9D problem
-I once encountered [1], causing frequent full TLB flushes when invlpg
-runs. I wonder if VMs would benefit in performance from changing
-/sys/kernel/debug/x86/tlb_single_page_flush_ceiling to zero.
+Also, it may be worth linking to the new version of the UML website
+(even if the old one has more content).
 
-On a different note - I am not sure I fully understand the exact =
-scenario.
-Any chance of getting a kvm-unit-test for this case?
+> +
+> +What is a kunitconfig?
+> +======================
+> +
+> +It's just a defconfig that kunit_tool looks for in the base directory.
+> +kunit_tool uses it to generate a .config as you might expect. In addition, it
+> +verifies that the generated .config contains the CONFIG options in the
+> +kunitconfig; the reason it does this is so that it is easy to be sure that a
+> +CONFIG that enables a test actually ends up in the .config.
+> +
+> +How do I use kunit_tool?
+> +=================================
+> +
+> +If a kunitconfig is present at the root directory, all you have to do is:
+> +
+> +.. code-block:: bash
+> +
+> +       ./tools/testing/kunit/kunit.py run
+> +
+> +However, you most likely want to use it with the following options:
+> +
+> +.. code-block:: bash
+> +
+> +       ./tools/testing/kunit/kunit.py run --timeout=30 --jobs=8
+> +
+> +- ``--timeout`` sets a maximum amount of time to allow tests to run.
+> +- ``--jobs`` sets the number of threads to use to build the kernel.
+> +
 
-[1] https://patchwork.kernel.org/patch/9099311/=
+Not directly an issue with the documentation, but this does raise the
+question of why we don't have better defaults. Alternatively, maybe
+this doc could suggest --jobs=`nproc` or similar?
+
+> +If you just want to use the defconfig that ships with the kernel, you can
+> +append the ``--defconfig`` flag as well:
+> +
+> +.. code-block:: bash
+> +
+> +       ./tools/testing/kunit/kunit.py run --timeout=30 --jobs=8 --defconfig
+> +
+> +.. note::
+> +       This command is particularly helpful for getting started because it
+> +       just works. No kunitconfig needs to be present.
+> +
+
+Should we use this in the getting started section below, then?
+Particularly since we're already going over kunitconfigs there
+separately.
+
+> +For a list of all the flags supported by kunit_tool, you can run:
+> +
+> +.. code-block:: bash
+> +
+
+Do you think it's worth documenting the remaining two (--build_dir and
+--raw_output) here too?
+
+> +       ./tools/testing/kunit/kunit.py run --help
+> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+> index aeeddfafeea20..1535c4394cfa2 100644
+> --- a/Documentation/dev-tools/kunit/start.rst
+> +++ b/Documentation/dev-tools/kunit/start.rst
+> @@ -21,6 +21,9 @@ The wrapper can be run with:
+>
+>     ./tools/testing/kunit/kunit.py run
+>
+> +For more information on this wrapper (also called kunit_tool) checkout the
+> +:doc:`kunit-tool` page.
+> +
+>  Creating a kunitconfig
+>  ======================
+>  The Python script is a thin wrapper around Kbuild as such, it needs to be
+> --
+> 2.24.0.432.g9d3f5f5b63-goog
+>
