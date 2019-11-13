@@ -2,154 +2,172 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2622DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DE2C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED277222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElBQypso"
+	by mail.kernel.org (Postfix) with ESMTP id 8256B222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbfKMOyL (ORCPT
+        id S1727934AbfKMOyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:54:11 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42419 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727680AbfKMOyL (ORCPT
+        Wed, 13 Nov 2019 09:54:16 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:25714 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727680AbfKMOyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:54:11 -0500
-Received: by mail-qk1-f195.google.com with SMTP id m4so1921168qke.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 06:54:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DBoe09OL4Q7+mtWCD3ILbSfWzN8kQ9HR3nnRkBx9D44=;
-        b=ElBQypsonHVrG2c1mTajKm9lYM0q0irKmR1aFy3QR7OPIRJhI+V5rSKJcWMvYxFars
-         3KKj0Gk5+Mz0l9QvmartapeEm5BxWJA44BHewXWklqsCDWZ4bfyQeewZJuUXXANQ/7mQ
-         AmEIc9jxon/p91MkL2msWciiQ+sVksWmlGLx5kqtewwqd9AtA2IbVsr3ijXJ852eCSGq
-         sZp/tnsVukZrvRQFGw3gNUg5LfsiqpjxrUw7Nw2/EJoq+2Eu6NjJtKhekiD7qZlXf62v
-         SolP6T44lAXwqJBRSbBbVV0hAGlZ+TEoQbbnqP9GWm7i+NJ9LnPxR/oeaahvtD2ekayn
-         wexQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DBoe09OL4Q7+mtWCD3ILbSfWzN8kQ9HR3nnRkBx9D44=;
-        b=eohsM//yoXKOsyCBLfggl1Jy+FjqGi6yzLDBDx8rT+NbYYFAOdE0ZnvwCPvG+BIuQF
-         PviglIJqowMvG7zSlObWKbgIUJgtnJy5we/LaznXmkaV3M68crWTTqHvktFztfq2czA4
-         /Yqjm9P1vRxc77ehVBDVBwAWJ3WPnNRUe2tXTiETSBCiUB73QayoFrxODar7aswDO+ju
-         uZVygx6oYvlHfB51kHBROa4T2r+BR5TJ4jG1+ssb1aSaLtHNuAU4ZDdRwQ3BjyXZRnTP
-         RsfZqnZkISY94zvRXEzKlRAVPb+Toq0tvY3IAlFpCI4CUkbR4t48WMe1+VHdGg1cVBhu
-         H2fA==
-X-Gm-Message-State: APjAAAXP0Zs0TQ0Va7kpFGMCUmVuRD22DLtHwPMgKiz8waI+TchnXGax
-        Ng5GXNfRJFapo7cFZAeDgjDPaOAtXKzMHQ==
-X-Google-Smtp-Source: APXvYqyMJNQ3DkOysGJk0hVwPjC2w2OLIL/9mMKoOYIqrI0YH42rET+BA/AtbQlwLHeNXvIgj4V1YA==
-X-Received: by 2002:a05:620a:12c3:: with SMTP id e3mr2350924qkl.14.1573656850640;
-        Wed, 13 Nov 2019 06:54:10 -0800 (PST)
-Received: from gmail.com ([184.75.212.4])
-        by smtp.gmail.com with ESMTPSA id 134sm606412qkn.24.2019.11.13.06.54.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 06:54:10 -0800 (PST)
-Date:   Wed, 13 Nov 2019 09:54:08 -0500
-From:   "Javier F. Arias" <jarias.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH V3 4/4] staging: rtl8723bs: Rename variable
-Message-ID: <f201ce3e421420e6c7b76440f62e8bcfc449967a.1573656487.git.jarias.linux@gmail.com>
-References: <1d47d745c077cc808bf0c09d2ee40e3c03d34b06.1573656487.git.jarias.linux@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d47d745c077cc808bf0c09d2ee40e3c03d34b06.1573656487.git.jarias.linux@gmail.com>
+        Wed, 13 Nov 2019 09:54:15 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 13 Nov 2019 20:24:11 +0530
+IronPort-SDR: nfwpYCTyb7jxhcWPk9Ne0HbimTn/ODm9c8uNO+x6e3J3vbaHqZukz4/HwYpt9DKetcVEWNOpz7
+ Dkl9dC467EA5myn3hqhpNN3cj0kPqonoros1JDbNqPuKtLkyJY1wW6+KoY3nan53T1TWM7nR3c
+ V3uRDvl9YtxMMQtP4RTsgrwEgYobNSuUWAVwzQXeYjglfM0JtBpxxMA42Rxvpdijs1rmk7hAck
+ pQRLuAKqxd9kzhPJPFIgQG4EEWyHsSpT5xJR3q04wFVKK94IJcivXtB/Dkj+4UCal19ySk7g79
+ Yq9nLb/2SU60+FOCeLdhU21T
+Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 13 Nov 2019 20:23:55 +0530
+Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
+        id 288D4496F; Wed, 13 Nov 2019 20:23:54 +0530 (IST)
+From:   Pradeep P V K <ppvk@codeaurora.org>
+To:     stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, vbadigan@codeaurora.org, axboe@kernel.dk,
+        paolo.valente@linaro.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pradeep P V K <ppvk@codeaurora.org>
+Subject: [PATCH v1] block, bfq: set default slice_idle to zero for SSDs
+Date:   Wed, 13 Nov 2019 20:23:20 +0530
+Message-Id: <1573656800-14815-1-git-send-email-ppvk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renames a variable name previously defined in all caps.
+With default 8ms as a slice idle time, we seen few time bounded
+applications(sensors) on v4.19 kernel are getting timedout during
+multimedia tests (audio, video playbacks etc) with Reboots and
+leading to crash. The timeout configured for these applications
+(sensors) are 20sec.
 
-Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
+In crash dumps, we seen few synchronous requests from sensors/other
+applications were in their bfq_queues for more than 12-20sec.
+
+Idling due to anticipation of future near-by IO requests and wait on
+completion of submitted requests, will effect in choosing the next
+bfq-queue and its scheduling. There by it effecting some time bounded
+applications.
+
+After making the slice idle to zero, we didn't seen any crash during
+our 72hrs of testing and also it increases the IO throughput.
+
+Following FIO benchmark results were taken on a local SSD run:
+
+RandomReads that were taken on v4.19 kernel:
+
+ Idling   iops    avg-lat(us)    stddev       bw
+ ----------------------------------------------------
+ On       4136    1189.07        17221.65    16.9MB/s
+ Off      7246     670.11        1054.76     29.7MB/s
+
+    fio --name=temp --size=5G --time_based --ioengine=sync \
+	--randrepeat=0 --direct=1 --invalidate=1 --verify=0 \
+	--verify_fatal=0 --rw=randread --blocksize=4k \
+	--group_reporting=1 --directory=/data --runtime=10 \
+	--iodepth=64 --numjobs=5
+
+Following code changes were made based on [1],[2] and [3].
+
+[1] https://lkml.org/lkml/2018/11/1/1285
+[2] Commit 41c0126b3f22 ("block: Make CFQ default to IOPS mode on
+    SSDs")
+[3] Commit 0bb979472a74 ("cfq-iosched: fix the setting of IOPS mode on
+    SSDs")
+
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
 ---
-Changes in V3:
-        - No changes.
-Changes in V2:
-        - No changes.
+ Documentation/block/bfq-iosched.rst |  7 ++++---
+ block/bfq-iosched.c                 | 13 +++++++++++++
+ block/elevator.c                    |  2 ++
+ include/linux/elevator.h            |  1 +
+ 4 files changed, 20 insertions(+), 3 deletions(-)
 
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 24 +++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 5856c6e34922..72d3bfe1aa42 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -1242,7 +1242,7 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit
- 	struct sta_info 	*psta = NULL;
- 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
- 	s32 bmcst = IS_MCAST(pattrib->ra);
--	u8 *BIP_AAD = NULL;
-+	u8 *bip_aad = NULL;
- 	u8 *MGMT_body = NULL;
+diff --git a/Documentation/block/bfq-iosched.rst b/Documentation/block/bfq-iosched.rst
+index 0d237d4..244f4ca 100644
+--- a/Documentation/block/bfq-iosched.rst
++++ b/Documentation/block/bfq-iosched.rst
+@@ -329,9 +329,10 @@ slice_idle
  
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-@@ -1254,10 +1254,10 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit
- 	pwlanhdr = (struct ieee80211_hdr *)pframe;
+ This parameter specifies how long BFQ should idle for next I/O
+ request, when certain sync BFQ queues become empty. By default
+-slice_idle is a non-zero value. Idling has a double purpose: boosting
+-throughput and making sure that the desired throughput distribution is
+-respected (see the description of how BFQ works, and, if needed, the
++slice_idle is a non-zero value for rotational devices.
++Idling has a double purpose: boosting throughput and making
++sure that the desired throughput distribution is respected
++(see the description of how BFQ works, and, if needed, the
+ papers referred there).
  
- 	ori_len = BIP_AAD_SIZE+pattrib->pktlen;
--	tmp_buf = BIP_AAD = rtw_zmalloc(ori_len);
-+	tmp_buf = bip_aad = rtw_zmalloc(ori_len);
- 	subtype = GetFrameSubType(pframe); /* bit(7)~bit(2) */
- 
--	if (!BIP_AAD)
-+	if (!bip_aad)
- 		return _FAIL;
- 
- 	spin_lock_bh(&padapter->security_key_mutex);
-@@ -1300,17 +1300,17 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit
- 		frame_body_len = pattrib->pktlen - sizeof(struct ieee80211_hdr_3addr);
- 
- 		/* conscruct AAD, copy frame control field */
--		memcpy(BIP_AAD, &pwlanhdr->frame_control, 2);
--		ClearRetry(BIP_AAD);
--		ClearPwrMgt(BIP_AAD);
--		ClearMData(BIP_AAD);
-+		memcpy(bip_aad, &pwlanhdr->frame_control, 2);
-+		ClearRetry(bip_aad);
-+		ClearPwrMgt(bip_aad);
-+		ClearMData(bip_aad);
- 		/* conscruct AAD, copy address 1 to address 3 */
--		memcpy(BIP_AAD+2, pwlanhdr->addr1, 18);
-+		memcpy(bip_aad+2, pwlanhdr->addr1, 18);
- 		/* copy management fram body */
--		memcpy(BIP_AAD+BIP_AAD_SIZE, MGMT_body, frame_body_len);
-+		memcpy(bip_aad+BIP_AAD_SIZE, MGMT_body, frame_body_len);
- 		/* calculate mic */
- 		if (omac1_aes_128(padapter->securitypriv.dot11wBIPKey[padapter->securitypriv.dot11wBIPKeyid].skey
--			, BIP_AAD, BIP_AAD_SIZE+frame_body_len, mic))
-+			, bip_aad, BIP_AAD_SIZE+frame_body_len, mic))
- 			goto xmitframe_coalesce_fail;
- 
- 		/* copy right BIP mic value, total is 128bits, we use the 0~63 bits */
-@@ -1390,12 +1390,12 @@ s32 rtw_mgmt_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit
- 
- xmitframe_coalesce_success:
- 	spin_unlock_bh(&padapter->security_key_mutex);
--	kfree(BIP_AAD);
-+	kfree(bip_aad);
- 	return _SUCCESS;
- 
- xmitframe_coalesce_fail:
- 	spin_unlock_bh(&padapter->security_key_mutex);
--	kfree(BIP_AAD);
-+	kfree(bip_aad);
- 	return _FAIL;
+ As for throughput, idling can be very helpful on highly seeky media
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 0319d63..9c994d1 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -6514,6 +6514,18 @@ static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
+ 	return -ENOMEM;
  }
  
++static void bfq_registered_queue(struct request_queue *q)
++{
++	struct elevator_queue *e = q->elevator;
++	struct bfq_data *bfqd = e->elevator_data;
++
++	/*
++	 * Default to IOPS mode with no idling for SSDs
++	 */
++	if (blk_queue_nonrot(q))
++		bfqd->bfq_slice_idle = 0;
++}
++
+ static void bfq_slab_kill(void)
+ {
+ 	kmem_cache_destroy(bfq_pool);
+@@ -6761,6 +6773,7 @@ static ssize_t bfq_low_latency_store(struct elevator_queue *e,
+ 		.init_hctx		= bfq_init_hctx,
+ 		.init_sched		= bfq_init_queue,
+ 		.exit_sched		= bfq_exit_queue,
++		.elevator_registered_fn = bfq_registered_queue,
+ 	},
+ 
+ 	.icq_size =		sizeof(struct bfq_io_cq),
+diff --git a/block/elevator.c b/block/elevator.c
+index 076ba73..b882d25 100644
+--- a/block/elevator.c
++++ b/block/elevator.c
+@@ -504,6 +504,8 @@ int elv_register_queue(struct request_queue *q, bool uevent)
+ 			kobject_uevent(&e->kobj, KOBJ_ADD);
+ 
+ 		e->registered = 1;
++		if (e->type->ops.elevator_registered_fn)
++			e->type->ops.elevator_registered_fn(q);
+ 	}
+ 	return error;
+ }
+diff --git a/include/linux/elevator.h b/include/linux/elevator.h
+index 901bda3..23dcc35 100644
+--- a/include/linux/elevator.h
++++ b/include/linux/elevator.h
+@@ -50,6 +50,7 @@ struct elevator_mq_ops {
+ 	struct request *(*next_request)(struct request_queue *, struct request *);
+ 	void (*init_icq)(struct io_cq *);
+ 	void (*exit_icq)(struct io_cq *);
++	void (*elevator_registered_fn)(struct request_queue *q);
+ };
+ 
+ #define ELV_NAME_MAX	(16)
 -- 
-2.20.1
+1.9.1
 
