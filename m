@@ -2,451 +2,171 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF69DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B4CC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AE8206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:43:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n02KhW/x"
+	by mail.kernel.org (Postfix) with ESMTP id C4BB5206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKMRnz (ORCPT
+        id S1727362AbfKMRtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:43:55 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39269 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfKMRnz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:43:55 -0500
-Received: by mail-qt1-f193.google.com with SMTP id t8so3493586qtc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:43:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=lnjyNQiO62QOBtXYC5tXfbr5EhFaW+9j1VquHV11/S4=;
-        b=n02KhW/x/7Uh91hZC6jzWGIpRcn3lnXcLGhqY897m3AC2bxyl+Aw20p586ZswkKnSW
-         EdbhWOc4tmeZsEAiDPw9Vg/4wgyLIGeAB5Atn7MgD+Z1WiJlgq9WEJa+X+N7iuD37KzN
-         1E6I5TNU/qNYl8ZGPV8KZttAWnYOINQDebbB/i5qnjHrJ/nzfTnmWSa4V0orgswtx91p
-         Fvbp3Uoe82aBQSGTCAeJpBbu6d4wCwayXh4+kE2vQjztwS05HPSyS5keqUHKeB28yV1r
-         UAtVkfAuxXfJHM2UJiIGy/9WBYiCsVtpr3oux//rD+pnXDL5eMTi41CeTtwxMgcAjWBg
-         MdgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=lnjyNQiO62QOBtXYC5tXfbr5EhFaW+9j1VquHV11/S4=;
-        b=OJ1G5ISHnRPQyEUxdSIG/J1zMwXXgw0WZ4JwZ6NPoI+zi3OY4KFT0lxtdN+QofNXmM
-         /KpwHekDxYIjt0rDPzUagCfRLbEY1pNHKqv9sNgmjCKpzvOZTgdYZ9NOkJw8tfFZAL4A
-         6TIUE2VlpXCFyBbYB78QSQuA4Lem5WSlURnnZK51dSWxXeujvOHNsg1Rec5Lm6E9vOvU
-         8ND5wp1ymitRnAsejiDaxXnsr50vNLvjoXDg874ZC4Rv0WyrgLb6lawfGWkpcCFYBlAM
-         hO0q9nb+jvip9Oqnt+fpOqQQ+P31FoOYxV9UOlnuAn7pSjISWRA+8itnYXRHo3rOamWp
-         lmHQ==
-X-Gm-Message-State: APjAAAVeoaDIBJDzCul8nqIxrFjteEsXLd/GNMyYvtRF3JmsWtDZuKz+
-        agOQnC9jFOEhtWfwqONBgtw=
-X-Google-Smtp-Source: APXvYqxGDaAZ41J6aX+qA5Bgc0gX3iAuysF9ud6WuWqPZfM/JbiRU1orICfA2zE6EaW9Io6SxdO34Q==
-X-Received: by 2002:ac8:1975:: with SMTP id g50mr3979342qtk.268.1573667032386;
-        Wed, 13 Nov 2019 09:43:52 -0800 (PST)
-Received: from gmail.com ([184.75.212.4])
-        by smtp.gmail.com with ESMTPSA id i75sm1349655qke.22.2019.11.13.09.43.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 09:43:51 -0800 (PST)
-Date:   Wed, 13 Nov 2019 12:43:48 -0500
-From:   "Javier F. Arias" <jarias.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: exfat: Fix CamelCase in function names
-Message-ID: <20191113174348.oxek47hs7rxruisr@gmail.com>
+        Wed, 13 Nov 2019 12:49:06 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41490 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727176AbfKMRtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:49:06 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0E36FCA2DD50C4DA1289;
+        Thu, 14 Nov 2019 01:49:03 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 01:48:53 +0800
+Date:   Wed, 13 Nov 2019 17:48:45 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Tao Xu <tao3.xu@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, "Keith Busch" <keith.busch@intel.com>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linuxarm <linuxarm@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
+Message-ID: <20191113174845.000009d3@huawei.com>
+In-Reply-To: <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+        <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
+        <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
+        <20191113094742.00000dc4@huawei.com>
+        <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes CamelCase in function names with the ffs prefix.
-Issue found by checkpatch.
+On Wed, 13 Nov 2019 21:57:24 +0800
+Tao Xu <tao3.xu@intel.com> wrote:
 
-Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
----
- drivers/staging/exfat/exfat_super.c | 84 ++++++++++++++---------------
- 1 file changed, 42 insertions(+), 42 deletions(-)
+> On 11/13/2019 5:47 PM, Jonathan Cameron wrote:
+> > On Tue, 12 Nov 2019 09:55:17 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >   
+> >> [ add Tao Xu ]
+> >>
+> >> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
+> >> <Jonathan.Cameron@huawei.com> wrote:  
+> >>>
+> >>> Generic Initiators are a new ACPI concept that allows for the
+> >>> description of proximity domains that contain a device which
+> >>> performs memory access (such as a network card) but neither
+> >>> host CPU nor Memory.
+> >>>
+> >>> This patch has the parsing code and provides the infrastructure
+> >>> for an architecture to associate these new domains with their
+> >>> nearest memory processing node.  
+> >>
+> >> Thanks for this Jonathan. May I ask how this was tested? Tao has been
+> >> working on qemu support for HMAT [1]. I have not checked if it already
+> >> supports generic initiator entries, but it would be helpful to include
+> >> an example of how the kernel sees these configurations in practice.
+> >>
+> >> [1]: http://patchwork.ozlabs.org/cover/1096737/  
+> > 
+> > Tested against qemu with SRAT and SLIT table overrides from an
+> > initrd to actually create the node and give it distances
+> > (those all turn up correctly in the normal places).  DSDT override
+> > used to move an emulated network card into the GI numa node.  That
+> > currently requires the PCI patch referred to in the cover letter.
+> > On arm64 tested both on qemu and real hardware (overrides on tables
+> > even for real hardware as I can't persuade our BIOS team to implement
+> > Generic Initiators until an OS is actually using them.)
+> > 
+> > Main real requirement is memory allocations then occur from one of
+> > the nodes at the minimal distance when you are do a devm_ allocation
+> > from a device assigned. Also need to be able to query the distances
+> > to allow load balancing etc.  All that works as expected.
+> > 
+> > It only has a fairly tangential connection to HMAT in that HMAT
+> > can provide information on GI nodes.  Given HMAT code is quite happy
+> > with memoryless nodes anyway it should work.  QEMU doesn't currently
+> > have support to create GI SRAT entries let alone HMAT using them.
+> > 
+> > Whilst I could look at adding such support to QEMU, it's not
+> > exactly high priority to emulate something we can test easily
+> > by overriding the tables before the kernel reads them.
+> > 
+> > I'll look at how hard it is to build an HMAT tables for my test
+> > configs based on the ones I used to test your HMAT patches a while
+> > back.  Should be easy if tedious.
+> > 
+> > Jonathan
+> >   
+> Indeed, HMAT can support Generic Initiator, but as far as I know, QEMU 
+> only can emulate a node with cpu and memory, or memory-only. Even if we 
+> assign a node with cpu only, qemu will raise error. Considering 
+> compatibility, there are lots of work to do for QEMU if we change NUMA 
+> or SRAT table.
+> 
 
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 23002aefc964..a6bbf0d7d378 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -343,7 +343,7 @@ static inline void exfat_save_attr(struct inode *inode, u32 attr)
- 		EXFAT_I(inode)->fid.attr = attr & (ATTR_RWMASK | ATTR_READONLY);
- }
- 
--static int ffsMountVol(struct super_block *sb)
-+static int ffs_mount_vol(struct super_block *sb)
- {
- 	int i, ret;
- 	struct pbr_sector_t *p_pbr;
-@@ -439,7 +439,7 @@ static int ffsMountVol(struct super_block *sb)
- 	return ret;
- }
- 
--static int ffsUmountVol(struct super_block *sb)
-+static int fss_umount_vol(struct super_block *sb)
- {
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 	int err = 0;
-@@ -479,7 +479,7 @@ static int ffsUmountVol(struct super_block *sb)
- 	return err;
- }
- 
--static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
-+static int ffs_get_vol_info(struct super_block *sb, struct vol_info_t *info)
- {
- 	int err = 0;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -509,7 +509,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
- 	return err;
- }
- 
--static int ffsSyncVol(struct super_block *sb, bool do_sync)
-+static int ffs_sync_vol(struct super_block *sb, bool do_sync)
- {
- 	int err = 0;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -534,7 +534,7 @@ static int ffsSyncVol(struct super_block *sb, bool do_sync)
- /*  File Operation Functions                                            */
- /*----------------------------------------------------------------------*/
- 
--static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
-+static int ffs_lookup_file(struct inode *inode, char *path, struct file_id_t *fid)
- {
- 	int ret, dentry, num_entries;
- 	struct chain_t dir;
-@@ -621,7 +621,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
- 	return ret;
- }
- 
--static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
-+static int ffs_create_file(struct inode *inode, char *path, u8 mode,
- 			 struct file_id_t *fid)
- {
- 	struct chain_t dir;
-@@ -662,7 +662,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
- 	return ret;
- }
- 
--static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
-+static int ffs_read_file(struct inode *inode, struct file_id_t *fid, void *buffer,
- 		       u64 count, u64 *rcount)
- {
- 	s32 offset, sec_offset, clu_offset;
-@@ -788,7 +788,7 @@ static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
- 	return ret;
- }
- 
--static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
-+static int ffs_write_file(struct inode *inode, struct file_id_t *fid,
- 			void *buffer, u64 count, u64 *wcount)
- {
- 	bool modified = false;
-@@ -1031,7 +1031,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
- 	return ret;
- }
- 
--static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
-+static int ffs_truncate_file(struct inode *inode, u64 old_size, u64 new_size)
- {
- 	s32 num_clusters;
- 	u32 last_clu = CLUSTER_32(0);
-@@ -1167,7 +1167,7 @@ static void update_parent_info(struct file_id_t *fid,
- 	}
- }
- 
--static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
-+static int ffs_move_file(struct inode *old_parent_inode, struct file_id_t *fid,
- 		       struct inode *new_parent_inode, struct dentry *new_dentry)
- {
- 	s32 ret;
-@@ -1296,7 +1296,7 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
- 	return ret;
- }
- 
--static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
-+static int ffs_remove_file(struct inode *inode, struct file_id_t *fid)
- {
- 	s32 dentry;
- 	int ret = 0;
-@@ -1360,7 +1360,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
- 
- #if 0
- /* Not currently wired up */
--static int ffsSetAttr(struct inode *inode, u32 attr)
-+static int ffs_set_attr(struct inode *inode, u32 attr)
- {
- 	u32 type;
- 	int ret = 0;
-@@ -1435,7 +1435,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
- }
- #endif
- 
--static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
-+static int ffs_read_stat(struct inode *inode, struct dir_entry_t *info)
- {
- 	s32 count;
- 	int ret = 0;
-@@ -1565,7 +1565,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 	return ret;
- }
- 
--static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
-+static int ffs_write_stat(struct inode *inode, struct dir_entry_t *info)
- {
- 	int ret = 0;
- 	struct timestamp_t tm;
-@@ -1638,7 +1638,7 @@ static int ffsWriteStat(struct inode *inode, struct dir_entry_t *info)
- 	return ret;
- }
- 
--static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
-+static int ffs_map_cluster(struct inode *inode, s32 clu_offset, u32 *clu)
- {
- 	s32 num_clusters, num_alloced;
- 	bool modified = false;
-@@ -1778,7 +1778,7 @@ static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
- /*  Directory Operation Functions                                       */
- /*----------------------------------------------------------------------*/
- 
--static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
-+static int ffs_create_dir(struct inode *inode, char *path, struct file_id_t *fid)
- {
- 	int ret = 0;
- 	struct chain_t dir;
-@@ -1818,7 +1818,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
- 	return ret;
- }
- 
--static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
-+static int ffs_read_dir(struct inode *inode, struct dir_entry_t *dir_entry)
- {
- 	int i, dentry, clu_offset;
- 	int ret = 0;
-@@ -2005,7 +2005,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
- 	return ret;
- }
- 
--static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
-+static int ffs_remove_dir(struct inode *inode, struct file_id_t *fid)
- {
- 	s32 dentry;
- 	int ret = 0;
-@@ -2114,7 +2114,7 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
- 	EXFAT_I(inode)->fid.size = i_size_read(inode);
- 	EXFAT_I(inode)->fid.rwoffset = cpos >> DENTRY_SIZE_BITS;
- 
--	err = ffsReadDir(inode, &de);
-+	err = ffs_read_dir(inode, &de);
- 	if (err) {
- 		/* at least we tried to read a sector
- 		 * move cpos to next sector position (should be aligned)
-@@ -2235,7 +2235,7 @@ static int exfat_create(struct inode *dir, struct dentry *dentry, umode_t mode,
- 
- 	pr_debug("%s entered\n", __func__);
- 
--	err = ffsCreateFile(dir, (u8 *)dentry->d_name.name, FM_REGULAR, &fid);
-+	err = ffs_create_file(dir, (u8 *)dentry->d_name.name, FM_REGULAR, &fid);
- 	if (err)
- 		goto out;
- 
-@@ -2282,7 +2282,7 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
- 	if (qname->len == 0)
- 		return -ENOENT;
- 
--	err = ffsLookupFile(dir, (u8 *)qname->name, fid);
-+	err = ffs_lookup_file(dir, (u8 *)qname->name, fid);
- 	if (err)
- 		return -ENOENT;
- 
-@@ -2332,7 +2332,7 @@ static struct dentry *exfat_lookup(struct inode *dir, struct dentry *dentry,
- 			err = -ENOMEM;
- 			goto error;
- 		}
--		ffsReadFile(dir, &fid, EXFAT_I(inode)->target,
-+		ffs_read_file(dir, &fid, EXFAT_I(inode)->target,
- 			    i_size_read(inode), &ret);
- 		*(EXFAT_I(inode)->target + i_size_read(inode)) = '\0';
- 	}
-@@ -2402,7 +2402,7 @@ static int exfat_unlink(struct inode *dir, struct dentry *dentry)
- 
- 	EXFAT_I(inode)->fid.size = i_size_read(inode);
- 
--	err = ffsRemoveFile(dir, &(EXFAT_I(inode)->fid));
-+	err = ffs_remove_file(dir, &(EXFAT_I(inode)->fid));
- 	if (err)
- 		goto out;
- 
-@@ -2444,15 +2444,15 @@ static int exfat_symlink(struct inode *dir, struct dentry *dentry,
- 
- 	pr_debug("%s entered\n", __func__);
- 
--	err = ffsCreateFile(dir, (u8 *)dentry->d_name.name, FM_SYMLINK, &fid);
-+	err = ffs_create_file(dir, (u8 *)dentry->d_name.name, FM_SYMLINK, &fid);
- 	if (err)
- 		goto out;
- 
- 
--	err = ffsWriteFile(dir, &fid, (char *)target, len, &ret);
-+	err = ffs_write_file(dir, &fid, (char *)target, len, &ret);
- 
- 	if (err) {
--		ffsRemoveFile(dir, &fid);
-+		ffs_remove_file(dir, &fid);
- 		goto out;
- 	}
- 
-@@ -2508,7 +2508,7 @@ static int exfat_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
- 
- 	pr_debug("%s entered\n", __func__);
- 
--	err = ffsCreateDir(dir, (u8 *)dentry->d_name.name, &fid);
-+	err = ffs_create_dir(dir, (u8 *)dentry->d_name.name, &fid);
- 	if (err)
- 		goto out;
- 
-@@ -2559,7 +2559,7 @@ static int exfat_rmdir(struct inode *dir, struct dentry *dentry)
- 
- 	EXFAT_I(inode)->fid.size = i_size_read(inode);
- 
--	err = ffsRemoveDir(dir, &(EXFAT_I(inode)->fid));
-+	err = ffs_remove_dir(dir, &(EXFAT_I(inode)->fid));
- 	if (err)
- 		goto out;
- 
-@@ -2608,7 +2608,7 @@ static int exfat_rename(struct inode *old_dir, struct dentry *old_dentry,
- 
- 	EXFAT_I(old_inode)->fid.size = i_size_read(old_inode);
- 
--	err = ffsMoveFile(old_dir, &(EXFAT_I(old_inode)->fid), new_dir,
-+	err = ffs_move_file(old_dir, &(EXFAT_I(old_inode)->fid), new_dir,
- 			  new_dentry);
- 	if (err)
- 		goto out;
-@@ -2766,7 +2766,7 @@ static void exfat_truncate(struct inode *inode, loff_t old_size)
- 	if (EXFAT_I(inode)->fid.start_clu == 0)
- 		goto out;
- 
--	err = ffsTruncateFile(inode, old_size, i_size_read(inode));
-+	err = ffs_truncate_file(inode, old_size, i_size_read(inode));
- 	if (err)
- 		goto out;
- 
-@@ -2902,7 +2902,7 @@ static int exfat_file_release(struct inode *inode, struct file *filp)
- 	struct super_block *sb = inode->i_sb;
- 
- 	EXFAT_I(inode)->fid.size = i_size_read(inode);
--	ffsSyncVol(sb, false);
-+	ffs_sync_vol(sb, false);
- 	return 0;
- }
- 
-@@ -2957,7 +2957,7 @@ static int exfat_bmap(struct inode *inode, sector_t sector, sector_t *phys,
- 
- 	EXFAT_I(inode)->fid.size = i_size_read(inode);
- 
--	err = ffsMapCluster(inode, clu_offset, &cluster);
-+	err = ffs_map_cluster(inode, clu_offset, &cluster);
- 
- 	if (!err && (cluster != CLUSTER_32(~0))) {
- 		*phys = START_SECTOR(cluster) + sec_offset;
-@@ -3150,7 +3150,7 @@ static int exfat_fill_inode(struct inode *inode, struct file_id_t *fid)
- 
- 	memcpy(&(EXFAT_I(inode)->fid), fid, sizeof(struct file_id_t));
- 
--	ffsReadStat(inode, &info);
-+	ffs_read_stat(inode, &info);
- 
- 	EXFAT_I(inode)->i_pos = 0;
- 	EXFAT_I(inode)->target = NULL;
-@@ -3266,7 +3266,7 @@ static int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
- 	exfat_time_unix2fat(&inode->i_ctime, &info.CreateTimestamp);
- 	exfat_time_unix2fat(&inode->i_atime, &info.AccessTimestamp);
- 
--	ffsWriteStat(inode, &info);
-+	ffs_write_stat(inode, &info);
- 
- 	return 0;
- }
-@@ -3304,7 +3304,7 @@ static void exfat_put_super(struct super_block *sb)
- 	if (__is_sb_dirty(sb))
- 		exfat_write_super(sb);
- 
--	ffsUmountVol(sb);
-+	fss_umount_vol(sb);
- 
- 	sb->s_fs_info = NULL;
- 	exfat_free_super(sbi);
-@@ -3317,7 +3317,7 @@ static void exfat_write_super(struct super_block *sb)
- 	__set_sb_clean(sb);
- 
- 	if (!sb_rdonly(sb))
--		ffsSyncVol(sb, true);
-+		ffs_sync_vol(sb, true);
- 
- 	__unlock_super(sb);
- }
-@@ -3329,7 +3329,7 @@ static int exfat_sync_fs(struct super_block *sb, int wait)
- 	if (__is_sb_dirty(sb)) {
- 		__lock_super(sb);
- 		__set_sb_clean(sb);
--		err = ffsSyncVol(sb, true);
-+		err = ffs_sync_vol(sb, true);
- 		__unlock_super(sb);
- 	}
- 
-@@ -3344,7 +3344,7 @@ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
- 	struct vol_info_t info;
- 
- 	if (p_fs->used_clusters == UINT_MAX) {
--		if (ffsGetVolInfo(sb, &info) == -EIO)
-+		if (ffs_get_vol_info(sb, &info) == -EIO)
- 			return -EIO;
- 
- 	} else {
-@@ -3646,7 +3646,7 @@ static int exfat_read_root(struct inode *inode)
- 
- 	EXFAT_I(inode)->target = NULL;
- 
--	ffsReadStat(inode, &info);
-+	ffs_read_stat(inode, &info);
- 
- 	inode->i_uid = sbi->options.fs_uid;
- 	inode->i_gid = sbi->options.fs_gid;
-@@ -3713,10 +3713,10 @@ static int exfat_fill_super(struct super_block *sb, void *data, int silent)
- 	sb_min_blocksize(sb, 512);
- 	sb->s_maxbytes = 0x7fffffffffffffffLL;    /* maximum file size */
- 
--	ret = ffsMountVol(sb);
-+	ret = ffs_mount_vol(sb);
- 	if (ret) {
- 		if (!silent)
--			pr_err("[EXFAT] ffsMountVol failed\n");
-+			pr_err("[EXFAT] ffs_mount_vol failed\n");
- 
- 		goto out_fail;
- 	}
-@@ -3756,7 +3756,7 @@ static int exfat_fill_super(struct super_block *sb, void *data, int silent)
- 	return 0;
- 
- out_fail2:
--	ffsUmountVol(sb);
-+	fss_umount_vol(sb);
- out_fail:
- 	if (root_inode)
- 		iput(root_inode);
--- 
-2.20.1
+I faked up a quick HMAT table.
+
+Used a configuration with 3x CPU and memory nodes, 1x memory only node
+and 1x GI node.  Two test cases, one where the GI initiator is further than
+the CPU containing nodes from the memory only node (realistic case for
+existing hardware). That behaves as expected and there are no
+/sys/node/bus/nodeX/access0 entries for the GI node
++ appropriate ones for the memory only node as normal.
+
+The other case is more interesting we have the memory only node nearer
+to the GI node than to any of the CPUs.  In that case for x86 at least
+the HMAT code is happy to put an access0 directory GI in the GI node
+with empty access0/initiators and the memory node under access0/targets
+
+The memory only node is node4 and the GI node node3.
+
+So relevant dirs under /sys/bus/nodes/devices
+
+node3/access0/initators/ Empty
+node3/access0/targets/node4
+
+node4/access0/initators/[node3 read_bandwidth write_bandwith etc]
+node4/access0/targets/ Empty
+
+So the result current (I think - the HMAT interface still confuses
+me :) is that a GI node is treated like a CPU node.  This might mean
+there is no useful information available if you want to figure out
+which CPU containing node is nearest to Memory when the GI node is
+nearer still.
+
+Is this a problem?  I'm not sure...  
+
+If we don't want to include GI nodes then we can possibly
+use the node_state(N_CPU, x) method to check before considering
+them, or I guess parse SRAT to extract that info directly. 
+
+I tried this and it seems to work so can add patch doing this
+next version if we think this is the 'right' thing to do.
+
+So what do you think 'should' happen? 
+
+Jonathan
+
+
+
+
+
 
