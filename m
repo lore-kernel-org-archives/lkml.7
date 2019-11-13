@@ -2,136 +2,166 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA28C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FBDC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02BC0214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:55:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="c9rgbgPj"
+	by mail.kernel.org (Postfix) with ESMTP id B906021A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKMIzM (ORCPT
+        id S1727181AbfKMI7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:55:12 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:40465 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfKMIzM (ORCPT
+        Wed, 13 Nov 2019 03:59:08 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37505 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfKMI7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:55:12 -0500
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id xAD8sw0x010874;
-        Wed, 13 Nov 2019 17:54:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xAD8sw0x010874
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573635299;
-        bh=49PDDQD/ue4Zb18aoWupvO71syxxVqQlzugNNXWXyuE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=c9rgbgPjooG/pyLS1VftU9lKNrTrGgLBOA5vCtxCcexKm7MOM3V7DVJLBWt/ac76u
-         D//vz4KYzmrE/9I8AwIuj4vpOcPoB0qGQA/fBlmgjkz7vAdyBVO29ecfvtzBM2j5Dc
-         LzUuqKbi3BJg2XGuTf6VsOPTn/PQTi9ZkH1VceWBBLo6Eyi4g6ZchstDHPP7xV/NZf
-         Q6NQHnCh8XHY8sVFrIzKPjOuwPMqFjPrz5NOgjpX37Ez2iD+IPok0EbO+TjTYetvEp
-         6snKFvzeKze0ZIfmKOOoz1H2cTrXNXX4jdbQXtwN3KwJH1Kj6jN0oP6O9kGc5emtSM
-         qFXwAVd5uFQTw==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id u6so849144vsp.4;
-        Wed, 13 Nov 2019 00:54:58 -0800 (PST)
-X-Gm-Message-State: APjAAAXAhM5Liw/pzpAiLCaEuHN2TLSgaPBwImgHaL7ZvnZUZFUZ5AwZ
-        7pSrWNusMTpoHqv9tCYd+uvLqWAfNKuNSnEB9RQ=
-X-Google-Smtp-Source: APXvYqx6DUkYDV8ZVWSi8B9AQeo8+uox1PuYDjZmjZQ+KLmakGfYqVeoEP3k28Lz93Bf7IzvoILCAkyXaS8qNwjUdBg=
-X-Received: by 2002:a05:6102:726:: with SMTP id u6mr515745vsg.179.1573635297488;
- Wed, 13 Nov 2019 00:54:57 -0800 (PST)
+        Wed, 13 Nov 2019 03:59:08 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iUoUN-0007cV-DA; Wed, 13 Nov 2019 09:58:59 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iUoUM-00024y-9q; Wed, 13 Nov 2019 09:58:58 +0100
+Date:   Wed, 13 Nov 2019 09:58:58 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v4 4/7] pwm: sun4i: Add support to output source clock
+ directly
+Message-ID: <20191113085858.76rad3vpszknu4cp@pengutronix.de>
+References: <20191108084517.21617-1-peron.clem@gmail.com>
+ <20191108084517.21617-5-peron.clem@gmail.com>
 MIME-Version: 1.0
-References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com> <20191112123125.GD17835@willie-the-truck>
- <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
- <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net> <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
- <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com> <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
- <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com> <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
- <50602386-68b1-be38-a022-0bcf9df6a54e@163.com>
-In-Reply-To: <50602386-68b1-be38-a022-0bcf9df6a54e@163.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 13 Nov 2019 17:54:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
-Message-ID: <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
-Subject: Re: Question about "asm/rwonce.h: No such file or directory"
-To:     Xiao Yang <ice_yangxiao@163.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191108084517.21617-5-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 5:36 PM Xiao Yang <ice_yangxiao@163.com> wrote:
->
-> On 11/13/19 3:53 PM, Masahiro Yamada wrote:
-> > On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
-> >> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
-> >>> Sorry, I really do not understand what you are doing.
-> >>>
-> >>> include/linux/compiler.h is only for kernel-space.
-> >>> Shrug if a user-land program includes it.
-> >> Hi Masahiro,
-> >>
-> >> For building tools/bpf, it is good to fix the compiler error by Daniel's
-> >> patch(i.e. use linux/filter from linux header).
-> >>
-> >> linux/compiler.h may be used by other code in kernel.  Is it possible to
-> >> trigger the same error when the other code
-> >>
-> >> including linux/compiler.h is built? Is this kind of code able to find
-> >> the location of <asm/rwonce.h>?
-> >
-> > <asm/rwonce.h> is also kernel-only header.
-> >
-> > The kernel code can find <asm/rwonce.h>, but user-land code cannot.
->
-> Hi Masahiro,
->
-> Sorry, I am not familar with it.
->
-> Thanks a lot for your explanation and I have seen the LINUXINCLUDE
-> variable in Makefile.
->
-> I will try to send a patch as Daniel suggested.
->
-> Best Regards,
->
-> Xiao Yang
->
+On Fri, Nov 08, 2019 at 09:45:14AM +0100, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> PWM core has an option to bypass whole logic and output unchanged source
+> clock as PWM output. This is achieved by enabling bypass bit.
+> 
+> Note that when bypass is enabled, no other setting has any meaning, not
+> even enable bit.
+> 
+> This mode of operation is needed to achieve high enough frequency to
+> serve as clock source for AC200 chip which is integrated into same
+> package as H6 SoC.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 44 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index a10022d6c0fd..9cc928ab47bc 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -3,6 +3,10 @@
+>   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+>   *
+>   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> + *
+> + * Limitations:
+> + * - When outputing the source clock directly, the PWM logic will be bypassed
+> + *   and the currently running period is not guaranteed to be completed
+>   */
+>  
+>  #include <linux/bitops.h>
+> @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
+>  
+>  struct sun4i_pwm_data {
+>  	bool has_prescaler_bypass;
+> +	bool has_direct_mod_clk_output;
+>  	unsigned int npwm;
+>  };
+>  
+> @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+>  
+>  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+>  
+> +	/*
+> +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
+> +	 * bit is set, no other setting has any meaning. Even more, experiment
+> +	 * proved that also enable bit is ignored in this case.
+> +	 */
+> +	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> +	    sun4i_pwm->data->has_direct_mod_clk_output) {
+> +		state->period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate);
+> +		state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
 
-Hmm, digging into the git history,
-this include path was added by the following commit:
+I first thought you're losing precision here by reusing state->period
+here, but with a divisor of 2 everything is fine.
 
+> +		state->polarity = PWM_POLARITY_NORMAL;
+> +		state->enabled = true;
+> +		return;
+> +	}
+> +
+>  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+>  	    sun4i_pwm->data->has_prescaler_bypass)
+>  		prescaler = 1;
+> @@ -204,6 +223,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+>  	struct pwm_state cstate;
+>  	u32 ctrl;
+> +	bool bypass = false;
+>  	int ret;
+>  	unsigned int delay_us;
+>  	unsigned long now;
+> @@ -218,9 +238,24 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * Although it would make much more sense to check for bypass in
+> +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
 
-commit d7475de58575c904818efa369c82e88c6648ce2e
-Author: Kamal Mostafa <kamal@canonical.com>
-Date:   Wed Nov 11 14:24:27 2015 -0800
+I don't understand this reasoning. sun4i_pwm_calculate knows about
+.enabled and also sun4i_pwm->data->has_direct_mod_clk_output. Maybe just
+add a bool *bypass as parameter and move the logic there?
 
-    tools/net: Use include/uapi with __EXPORTED_HEADERS__
+> +	 */
+> +	if (state->enabled) {
+> +		u32 clk_rate = clk_get_rate(sun4i_pwm->clk);
+> +		bypass = (state->period * clk_rate >= NSEC_PER_SEC) &&
+> +			 (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
+> +			 (state->duty_cycle * clk_rate * 2 >= NSEC_PER_SEC);
+> +	}
+> +
 
-    Use the local uapi headers to keep in sync with "recently" added #define's
-    (e.g. SKF_AD_VLAN_TPID).  Refactored CFLAGS, and bpf_asm doesn't need -I.
+This looks right now.
 
-    Fixes: 3f356385e8a4 ("filter: bpf_asm: add minimal bpf asm tool")
-    Signed-off-by: Kamal Mostafa <kamal@canonical.com>
-    Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
-
-
-
-I am not sure how big a deal it is,
-but it could be a problem on old distros??
-
-
+Best regards
+Uwe
 
 -- 
-Best Regards
-Masahiro Yamada
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
