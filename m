@@ -2,263 +2,131 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3E7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8D1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8988222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95794207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWmr4oCG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MzAhovt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKMHy7 (ORCPT
+        id S1726270AbfKMIA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:54:59 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41686 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfKMHy7 (ORCPT
+        Wed, 13 Nov 2019 03:00:59 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33711 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725966AbfKMIA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:54:59 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p26so1080382pfq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 23:54:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=j+Rmv2QRAZYFyDr3XTcc91Xq1BkHJOJyHUbLmK3uyjE=;
-        b=EWmr4oCGTUOzMqW+1jc0P2r19e+QrgsqyHNH3sqJz3QEt2Nn4gyszV+2UbYNbW2Hqh
-         ZfC34ffwyvUNDR/38Joc8hmLiT+nG5kUfd59xhl5Byy7ngaRJeGeJ+PeHquftjgCzqFx
-         t4aTze0EbaRne2ZCvRnRG8W7s7pxdrzPy8N76fFwXW7XOL9FFEInM6LDg/vwKIilfgce
-         eV5lbec7qowiV+ctD0ElsJO5hinA9N+pt+8VVgdKExeeHoiLLEjGROXuAv04ButTv7F3
-         IcTAMudoieosMS/a5RhSNgK0xU3mT20glY4lYp1jhyFPChvNqh7OiZIw1vVmbv3n66AZ
-         S8HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=j+Rmv2QRAZYFyDr3XTcc91Xq1BkHJOJyHUbLmK3uyjE=;
-        b=HWog5fRTsP5JWMFQll4ZFmPr+63DSA2tMrKIatwk241SLYd9r3+COZvszZfnE6zFsR
-         RNaLcOxAKhZZsfv6/ibACnqQV/Q5C4Tcyp58YI1LreZU52Jvb8F1bIqztZVgGYQ/BwaY
-         zPaoUBzbNB0inwsPzQ/LdmWXoNvAw/NKb3+gV/xlE96jqFu3IYkMhaKLbMb/i4oLMRDH
-         61baLePefT3kKvpUMp7/e92fnIjQvyfA5fcjSV+fPwEicMIqAoOXEhcNCptIhbzBBwW9
-         YrMsWki3oYLYF5A2QWVYdpDkhY/vssHdxeh/i+J7ZmbSQbN4uJlWCzGPGRUvkak8qvOC
-         LDpg==
-X-Gm-Message-State: APjAAAX9GSeI/72aTohPzv8sfAwXpsE/4xhnRx3lWuxOqXkoBvA/pRLZ
-        /ipMTxRPzptpFlm2AQ0F9H8=
-X-Google-Smtp-Source: APXvYqxqoxY0is1FxRiQlDqKpd0kAw3py/0rUml68SyOdW1Ib8vHlnVyRyOp8PzvsRWhhjby3kzqqg==
-X-Received: by 2002:a62:e81a:: with SMTP id c26mr2743341pfi.246.1573631698055;
-        Tue, 12 Nov 2019 23:54:58 -0800 (PST)
-Received: from cnn ([2402:3a80:45d:2426:a502:3b3e:c9a:ed61])
-        by smtp.gmail.com with ESMTPSA id j4sm2901584pjf.25.2019.11.12.23.54.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 23:54:57 -0800 (PST)
-Date:   Wed, 13 Nov 2019 13:24:53 +0530
-From:   manikandan-e <manikandan.hcl.ers.epl@gmail.com>
-To:     joel@jms.id.au
-Cc:     linux-kernel@vger.kernel.org, andrew@aj.id.au, manikandan.e@hcl.com
-Subject: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20191113075452.GA12657@cnn>
+        Wed, 13 Nov 2019 03:00:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573632057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CMk5IBNgQTUKXm1UH2KRTJi2cKWC2WnWXM6M0NEqON4=;
+        b=MzAhovt2G9YZSZ4XyffpYNPH7JlP+a4cFlsASdV0KMV7v9dmcjvmT1rireMSLTzoN5aI5M
+        4IjFOSEJRMqZi4GBTQuy8dGcFCnKU0dPEhCr2cqbVQqOR8y4zuMmPWat+3zYkR6wqw10Gg
+        U/zC+B9DQqd0LNbWhBwMbjYL7fdwCwM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-332-DZfi_6wuNua0lcrnQv12BA-1; Wed, 13 Nov 2019 03:00:54 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C5D118B5F6A;
+        Wed, 13 Nov 2019 08:00:52 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-116-198.phx2.redhat.com [10.3.116.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 42F5C5D9E5;
+        Wed, 13 Nov 2019 08:00:52 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] tpm: move TPM_CHIP_FLAG_HAVE_TIMEOUTS check
+Date:   Wed, 13 Nov 2019 01:00:02 -0700
+Message-Id: <20191113080002.14932-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: DZfi_6wuNua0lcrnQv12BA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Yosemite V2 is a facebook multi-node server
-platform that host four OCP server. The BMC
-in the Yosemite V2 platorm based on AST2500 SoC.
+Since tpm1_get_timeouts and tpm2_get_timeouts are now called directly
+by the auto startup code in addition to being called by
+tpm_get_timeouts, push the flag check down into the individual
+functions to avoid going through them again if they've already set the
+TPM_CHIP_FLAG_HAVE_TIMEOUTS flag.
 
-This patch adds linux device tree entry related to
-Yosemite V2 specific devices connected to BMC SoC.
-
-Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Fixes: d4a317563207 ("tpm: move tpm 1.x selftest code from tpm-interface.c =
+tpm1-cmd.c")
+Fixes: 9db7fe187c54 ("tpm: factor out tpm_startup function")
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
 ---
- .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 168 +++++++++++++++++++++
- 1 file changed, 168 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+ drivers/char/tpm/tpm-interface.c | 3 ---
+ drivers/char/tpm/tpm1-cmd.c      | 3 +++
+ drivers/char/tpm/tpm2-cmd.c      | 3 +++
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-new file mode 100644
-index 0000000..ab6ff7f
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Facebook Inc.
-+// Author:
-+/dts-v1/;
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interf=
+ace.c
+index d7a3888ad80f..3c9e14981ce6 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -237,9 +237,6 @@ EXPORT_SYMBOL_GPL(tpm_transmit_cmd);
+=20
+ int tpm_get_timeouts(struct tpm_chip *chip)
+ {
+-=09if (chip->flags & TPM_CHIP_FLAG_HAVE_TIMEOUTS)
+-=09=09return 0;
+-
+ =09if (chip->flags & TPM_CHIP_FLAG_TPM2)
+ =09=09return tpm2_get_timeouts(chip);
+ =09else
+diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+index 149e953ca369..5330b32d1469 100644
+--- a/drivers/char/tpm/tpm1-cmd.c
++++ b/drivers/char/tpm/tpm1-cmd.c
+@@ -345,6 +345,9 @@ int tpm1_get_timeouts(struct tpm_chip *chip)
+ =09unsigned long timeout_old[4], timeout_chip[4], timeout_eff[4];
+ =09ssize_t rc;
+=20
++=09if (chip->flags & TPM_CHIP_FLAG_HAVE_TIMEOUTS)
++=09=09return 0;
 +
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
+ =09rc =3D tpm1_getcap(chip, TPM_CAP_PROP_TIS_TIMEOUT, &cap, NULL,
+ =09=09=09 sizeof(cap.timeout));
+ =09if (rc =3D=3D TPM_ERR_INVALID_POSTINIT) {
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index ba9acae83bff..55d96be86ed8 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -38,6 +38,9 @@ static struct tpm2_hash tpm2_hash_map[] =3D {
+=20
+ int tpm2_get_timeouts(struct tpm_chip *chip)
+ {
++=09if (chip->flags & TPM_CHIP_FLAG_HAVE_TIMEOUTS)
++=09=09return 0;
 +
-+/ {
-+	model = "Facebook Yosemitev2 BMC";
-+	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial0 = &uart1;
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	iio-hwmon {
-+		// VOLATAGE SENSOR
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-+		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-+		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-+		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
-+
-+&lpc_snoop {
-+	status = "okay";
-+	snoop-ports = <0x80>;
-+};
-+
-+&lpc_ctrl {
-+	// Enable lpc clock
-+	status = "okay";
-+};
-+
-+&vuart {
-+	// VUART Host Console
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	// Host Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default>;
-+};
-+
-+&uart2 {
-+	// SoL Host Console
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	// SoL BMC Console
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&adc {
-+	status = "okay";
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+	//FRU EEPROM
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+	tmp421@4e {
-+	//INLET TEMP
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	//OUTLET TEMP
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+	//HSC
-+	adm1278@40 {
-+		compatible = "adi,adm1278";
-+		reg = <0x40>;
-+	};
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+	//MEZZ_TEMP_SENSOR
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+	//MEZZ_FRU
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&pwm_tacho {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+};
--- 
-2.7.4
+ =09/* Fixed timeouts for TPM2 */
+ =09chip->timeout_a =3D msecs_to_jiffies(TPM2_TIMEOUT_A);
+ =09chip->timeout_b =3D msecs_to_jiffies(TPM2_TIMEOUT_B);
+--=20
+2.24.0
 
