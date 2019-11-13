@@ -2,227 +2,134 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001F1C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECC6C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0008206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573680413;
-	bh=bgV1O5g9LLoPihFegEunaUwwG9gF8igLppRyWdIE/Ms=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ih7IAhj+mBGZbyW2M8V5TAOXdzpjF9c3YzyoGJ068ilv/fNXTUx3YyIm0WY+mvoVZ
-	 vLw+6oj3eFG2SL0wFWHCQXXG/YLI8L/eI4OdD6gJ9NEfrQF+/5MjIIREg1XNu8Xf2x
-	 ozyr93RpFZ4u1hRU85cs9UzWs8SHvuEfa029cXFU=
+	by mail.kernel.org (Postfix) with ESMTP id 7271C206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LAn02cio"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKMV0w (ORCPT
+        id S1727122AbfKMV0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:26:52 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33800 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfKMV0v (ORCPT
+        Wed, 13 Nov 2019 16:26:55 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35184 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMV0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:26:51 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l202so3244151oig.1;
-        Wed, 13 Nov 2019 13:26:50 -0800 (PST)
+        Wed, 13 Nov 2019 16:26:53 -0500
+Received: by mail-oi1-f194.google.com with SMTP id n16so3232106oig.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 13:26:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GXkcX2JCtyKHHo0cyAglaiWGhE2YBu5/DI/DhPu01Ow=;
+        b=LAn02cio2MfDiRJwrNq18V3/ueYXDq6XkkbOMC9mIKr8Og4Hg9ge7OM8DRKJiQIHL/
+         bumdQzTlMxUhgjy/QBL0GW8zIJWFFWxIPImeU8EQmjwRcrbRTPhEisRh05HJxEKvRxjC
+         HXLhoZ41YrOyPC/YB0HfY5kWYQVTDJ2bVWmEz4D4meNck4DWvbST6A9fRbgoliBURU0t
+         1W6rzDHt/Ofaa8L8fEoROHquPzJWNvWoBk7M28H4w4pFQIMmaoT7SelSj1/E13G2DdLg
+         xGekDE5Vk1TeqpDeVVjIfYZJoJPFdS+FFh77Z2AUOJ0WB/YrzFEL6pmPSYxIFqQHQjt1
+         3AIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ulm3TO78QEzNGSejaw7/WsSdRu/n1BBBFr2ZBtO2aiA=;
-        b=Fmslr2aiYv8DiciTmRJSVU5IM8PiZ3GWEk2e3UDafKaIaxAp0AQ39+rczZojJMflKs
-         xnyRNO/WaMIvlJutpX+GRKkY8XmCcqnpd3zdzJw4LHmXxX/260uri3N54ycWf/JH0xfT
-         kKsbpxadiJiAb7GAGt1BR4q80j1Ya/DX+rEwbzTGGWcB+gXdff77r0ySFn7/BV/wF+nf
-         icFkpb8doWbkd94CrTNTV1GLMr9aCywoxlJf6ifnHMeDMmYdUjKkTLB9ljkzZvHZuwa8
-         J58pawU9/F/vAbrHTH/De1ukFkhFzJ2/7QbxZ6VgBEL1BFo0PesWsLW4Jwyc3Dkh+p+M
-         cs0w==
-X-Gm-Message-State: APjAAAUaNYak3IENuAXeHs+8SHiQSF3bvodlZhArmCFqfV7SxLS3Ew5Z
-        h8l+hvLrHOz+UAAC1W0AlE3II2UC99dVLx2796A=
-X-Google-Smtp-Source: APXvYqzBXbGOlS1Alwf55kEy55iqC7gLiVlimSASw9RmOY6WEwXBmwt6ERSXr5v0yU1vm5CKBpn+3IDSFDOMUzdB9Eo=
-X-Received: by 2002:aca:1101:: with SMTP id 1mr639681oir.103.1573680410014;
- Wed, 13 Nov 2019 13:26:50 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GXkcX2JCtyKHHo0cyAglaiWGhE2YBu5/DI/DhPu01Ow=;
+        b=kIgOpWi/jqAi0XdhxXzgJ4oQILs8BWYtPoasEyAjmlmlKggvSQlfnk+m2OOSOwVrFZ
+         cmFsI4Fj4+7lW+SNq/PztOsGBDXcG/8rXVedp8P5d3C6BL62XjcwrK1gapUalC/QpSl9
+         aM1WRQ/gfSdzer4PTrC/GKQq6NUbpLPKZdpAGPgTLuwKhOaL162tfV6n6n30RnRkG3Kv
+         LV+2ozmpnfP/ypmjvccQwOjKMHBmT1p5xXkrKTbhp3CdwtpykECWXX1tDqm/5nQl4zGr
+         71OQ6uyErW1jaIQ1FpRg4UltvwnWL3vv/qPrDASViDoG+Vhj/zP0HpQKEm1DTxVTorP/
+         GFsg==
+X-Gm-Message-State: APjAAAXMRNWXSCawLgRY2mdA//fY5w4NxXHGBYlLuGDSaRZFFKYoD0mF
+        HQjero+N6fAbkXqeAgtZGC5I0oqrn3Lic71Xy0zgeQ==
+X-Google-Smtp-Source: APXvYqyDjhelVNRtH2Dd05TmcchN1KTJcyS9q6Qq71HSgmwdkipeSp+OhTiPzV+812M0dS2nt+KFP1CXO1g6gIoBsTo=
+X-Received: by 2002:aca:55c1:: with SMTP id j184mr653822oib.105.1573680412830;
+ Wed, 13 Nov 2019 13:26:52 -0800 (PST)
 MIME-Version: 1.0
-References: <1573676461-7990-1-git-send-email-vincent.guittot@linaro.org>
-In-Reply-To: <1573676461-7990-1-git-send-email-vincent.guittot@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 13 Nov 2019 22:26:36 +0100
-Message-ID: <CAJZ5v0iM7v6QPKcGNoNqL-PitpOL41byOw_CZGAqhcJkvA1jXA@mail.gmail.com>
-Subject: Re: [PATCH v3] sched/freq: move call to cpufreq_update_util
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, sargun@sargun.me,
-        Tejun Heo <tj@kernel.org>, Xie XiuQi <xiexiuqi@huawei.com>,
-        xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+References: <CAPcyv4gpN8kbh1i6jCDdC2OP41G3C2+7YD4rYz-3HaD_pufvyg@mail.gmail.com>
+ <3E71366A-9232-46BB-8261-3FCB2300C80A@redhat.com>
+In-Reply-To: <3E71366A-9232-46BB-8261-3FCB2300C80A@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Nov 2019 13:26:42 -0800
+Message-ID: <CAPcyv4hw58eYJdb4ifvwX8m1E-AMyF5COmjEppz7px6vaB5cRA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Oscar Salvador <osalvador@suse.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 9:21 PM Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
+On Wed, Nov 13, 2019 at 1:22 PM David Hildenbrand <david@redhat.com> wrote:
 >
-> update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> which might be inefficient when cpufreq driver has rate limitation.
 >
-> When a task is attached on a CPU, we have call path:
 >
-> update_load_avg()
->   update_cfs_rq_load_avg()
->     cfs_rq_util_change -- > trig frequency update
->   attach_entity_load_avg()
->     cfs_rq_util_change -- > trig frequency update
+> > Am 13.11.2019 um 22:12 schrieb Dan Williams <dan.j.williams@intel.com>:
+> >
+> > =EF=BB=BFOn Wed, Nov 13, 2019 at 12:40 PM David Hildenbrand <david@redh=
+at.com> wrote:
+> > [..]
+> >>>>>> I'm still struggling to understand the motivation of distinguishin=
+g
+> >>>>>> "active" as something distinct from "online". As long as the "onli=
+ne"
+> >>>>>> granularity is improved from sections down to subsections then mos=
+t
+> >>>>>> code paths are good to go. The others can use get_devpagemap() to
+> >>>>>> check for ZONE_DEVICE in a race free manner as they currently do.
+> >>>>>
+> >>>>> I thought we wanted to unify access if we don=E2=80=99t really care=
+ about the zone as in most pfn walkers - E.g., for zone shrinking.
+> >>>>
+> >>>> Agree, when the zone does not matter, which is most cases, then
+> >>>> pfn_online() and pfn_valid() are sufficient.
+> >>
+> >> Oh, and just to clarify why I proposed pfn_active(): The issue right n=
+ow is that a PFN that is valid but not online could be offline memory (memm=
+ap not initialized) or ZONE_DEVICE. That=E2=80=98s why I wanted to have a w=
+ay to detect if a memmap was initialized, independent of the zone. That=E2=
+=80=98s important for generic PFN walkers.
+> >
+> > That's what I was debating with Toshiki [1], whether there is a real
+> > example of needing to distinguish ZONE_DEVICE from offline memory in a
+> > pfn walker. The proposed use case in this patch set of being able to
+> > set hwpoison on ZONE_DEVICE pages does not seem like a good idea to
+> > me. My suspicion is that this is a common theme and others are looking
+> > to do these types page manipulations that only make sense for online
+> > memory. If that is the case then treating ZONE_DEVICE as offline seems
+> > the right direction.
 >
-> The 1st frequency update will not take into account the utilization of the
-> newly attached task and the 2nd one might be discard because of rate
-> limitation of the cpufreq driver.
+> Right. At least it would be nice to have for zone shrinking - not sure ab=
+out the other walkers. We would have to special-case ZONE_DEVICE handling t=
+here.
 >
-> update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> and update_load_avg() so we can move the call to
-> cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
-> interesting to notice that update_load_avg() already calls directly
-> cfs_rq_util_change() for !SMP case.
->
-> This changes will also ensure that cpufreq_update_util() is called even
-> when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-> irq, rt or dl pelt signals.
->
-> Reported-by: Doug Smythies <dsmythies@telus.net>
-> Fixes: 039ae8bcf7a5 ("sched/fair: Fix O(nr_cgroups) in the load balancing path")
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Looks reasonable to me:
+I think that's ok... It's already zone aware code whereas pfn walkers
+are zone unaware and should stay that way if at all possible.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> But as I said, a subsection map for online memory is a good start, especi=
+ally to fix pfn_to_online_page(). Also, I think this might be a very good t=
+hing to have for Oscars memmap-on-memory work (I have a plan in my head I c=
+an discuss with Oscar once he has time to work on that again).
 
-> ---
->
-> changes for v3:
-> - fix typo
-> - test the decay of root cfs_rq even for !CONFIG_FAIR_GROUP_SCHED case
->
->  kernel/sched/fair.c | 39 ++++++++++++++++++++++++++-------------
->  1 file changed, 26 insertions(+), 13 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 69a81a5..0a8f4ea 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -3504,9 +3504,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
->         cfs_rq->load_last_update_time_copy = sa->last_update_time;
->  #endif
->
-> -       if (decayed)
-> -               cfs_rq_util_change(cfs_rq, 0);
-> -
->         return decayed;
->  }
->
-> @@ -3616,8 +3613,12 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->                 attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
->                 update_tg_load_avg(cfs_rq, 0);
->
-> -       } else if (decayed && (flags & UPDATE_TG))
-> -               update_tg_load_avg(cfs_rq, 0);
-> +       } else if (decayed) {
-> +               cfs_rq_util_change(cfs_rq, 0);
-> +
-> +               if (flags & UPDATE_TG)
-> +                       update_tg_load_avg(cfs_rq, 0);
-> +       }
->  }
->
->  #ifndef CONFIG_64BIT
-> @@ -7543,6 +7544,7 @@ static void update_blocked_averages(int cpu)
->         const struct sched_class *curr_class;
->         struct rq_flags rf;
->         bool done = true;
-> +       int decayed;
->
->         rq_lock_irqsave(rq, &rf);
->         update_rq_clock(rq);
-> @@ -7552,9 +7554,9 @@ static void update_blocked_averages(int cpu)
->          * that RT, DL and IRQ signals have been updated before updating CFS.
->          */
->         curr_class = rq->curr->sched_class;
-> -       update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> -       update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> -       update_irq_load_avg(rq, 0);
-> +       decayed = update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> +       decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> +       decayed |= update_irq_load_avg(rq, 0);
->
->         /* Don't need periodic decay once load/util_avg are null */
->         if (others_have_blocked(rq))
-> @@ -7567,9 +7569,13 @@ static void update_blocked_averages(int cpu)
->         for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
->                 struct sched_entity *se;
->
-> -               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
-> +               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
->                         update_tg_load_avg(cfs_rq, 0);
->
-> +                       if (cfs_rq == &rq->cfs)
-> +                               decayed = 1;
-> +               }
-> +
->                 /* Propagate pending load changes to the parent, if any: */
->                 se = cfs_rq->tg->se[cpu];
->                 if (se && !skip_blocked_update(se))
-> @@ -7588,6 +7594,9 @@ static void update_blocked_averages(int cpu)
->         }
->
->         update_blocked_load_status(rq, !done);
-> +
-> +       if (decayed)
-> +               cpufreq_update_util(rq, 0);
->         rq_unlock_irqrestore(rq, &rf);
->  }
->
-> @@ -7644,6 +7653,7 @@ static inline void update_blocked_averages(int cpu)
->         struct cfs_rq *cfs_rq = &rq->cfs;
->         const struct sched_class *curr_class;
->         struct rq_flags rf;
-> +       int decayed;
->
->         rq_lock_irqsave(rq, &rf);
->         update_rq_clock(rq);
-> @@ -7653,13 +7663,16 @@ static inline void update_blocked_averages(int cpu)
->          * that RT, DL and IRQ signals have been updated before updating CFS.
->          */
->         curr_class = rq->curr->sched_class;
-> -       update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> -       update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> -       update_irq_load_avg(rq, 0);
-> +       decayed = update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> +       decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> +       decayed |= update_irq_load_avg(rq, 0);
->
-> -       update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-> +       decayed |= update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
->
->         update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
-> +
-> +       if (decayed)
-> +               cpufreq_update_util(rq, 0);
->         rq_unlock_irqrestore(rq, &rf);
->  }
->
-> --
-> 2.7.4
->
+Ok, I'll keep an eye out.
