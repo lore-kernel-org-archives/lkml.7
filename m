@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8D4C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05521C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB815222CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E6822459
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609845;
-	bh=IeNKQvy9juCc7xi7oxqa/oqAhGZngI0NECDQy/pOYzg=;
+	s=default; t=1573609847;
+	bh=k/E09qlg5WbWzD5y3S56CsH3IsM+FqSjlRE1M9ZNK4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m5uQGHw33BBDfTtI162kyvzA96AKQwD2AcnRPjfaCFdrZKzNxBokL48nHP2e35qA4
-	 DPftOTo89p2SwAGt+OVELSYF5vCOqOUEC6Ukljzuu+ZjsSxREz5bv+kma8Alzik3hu
-	 UfVoR5h7OCOivMo3a91X5NdVpIKBaiUA3WLMA0tg=
+	b=capUlzwWXPH8IWk5q7fOFgU4WYO9CvYMcLNE3q91y+o56hgOeLsGwNJoda1lOkAj6
+	 lXylsE/BpxWXmdbFtA9E3lX0lX7rOuu5aj/SB6Se3E7bovn1ITKt2WwPblgzctCL61
+	 VLsJyrnuj7QrvFLsneEv2/JBlpuN4KIonz3t6/Eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfKMBuo (ORCPT
+        id S1727504AbfKMBuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:50:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37350 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:50:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfKMBug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:36 -0500
+        id S1727411AbfKMBuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8E4722466;
-        Wed, 13 Nov 2019 01:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA942245B;
+        Wed, 13 Nov 2019 01:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609836;
-        bh=IeNKQvy9juCc7xi7oxqa/oqAhGZngI0NECDQy/pOYzg=;
+        s=default; t=1573609835;
+        bh=k/E09qlg5WbWzD5y3S56CsH3IsM+FqSjlRE1M9ZNK4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=md8gjvMxJkusqgQa9IwF3QRATn36g4MEy7Lqg1kwuKK9nSI4hrAc/e+fl3fZnKwAq
-         M5VlI6021jFumqk08+hhICsXLDikiJFNWBBoj2/KwOebogHB3TSvjf+qQvb5eW3iJ2
-         9ZM6zN26CoDwr5gt2WZHac1ETBX9sy7UUF1LG9+o=
+        b=DRYuJJvR0+8DjPjLlllxnVw1LDwPkenMoI+R9JYkEENuzUC4gb0XogZ4bYlvSAM+1
+         smqjw9hxoTkr/EiaHVJJLcbtiaiHtxaaaApy++fxGm5Y8nAo7V7ZFsRGFJCqX2D3k4
+         KAZNWv9xZMdJfOjms2If/205s/NeoyaFld/OtvJE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>,
+Cc:     Philipp Rossak <embed3d@gmail.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 009/209] ARM: dts: sun8i: h3: bpi-m2-plus: Fix address for external RGMII Ethernet PHY
-Date:   Tue, 12 Nov 2019 20:47:05 -0500
-Message-Id: <20191113015025.9685-9-sashal@kernel.org>
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 008/209] ARM: dts: sun8i: h3-h5: ir register size should be the whole memory block
+Date:   Tue, 12 Nov 2019 20:47:04 -0500
+Message-Id: <20191113015025.9685-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,35 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Philipp Rossak <embed3d@gmail.com>
 
-[ Upstream commit db9fd9d13e30fc67737ac9893a82e6b095e85a64 ]
+[ Upstream commit 6c700289a3e84d5d3f2a95cf27732a7f7fce105b ]
 
-The external RTL8211E RGMII Ethernet PHY is configured via external
-resistors to use the address 0x1. The 0x0 address is a broadcast address
-for this family of PHYs, and should not be used explicitly.
+The size of the register should be the size of the whole memory block,
+not just the registers, that are needed.
 
-Fixes: 8c7ba536e709 ("ARM: sun8i: bananapi-m2-plus: Enable dwmac-sun8i")
-Fixes: 4904337fe34f ("ARM: dts: sunxi: Restore EMAC changes (boards)")
+Signed-off-by: Philipp Rossak <embed3d@gmail.com>
 Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-index 30540dc8e0c5f..bdda0d99128e5 100644
---- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-@@ -140,7 +140,7 @@
- &external_mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
--		reg = <0>;
-+		reg = <1>;
- 	};
- };
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index fc6131315c47f..4b1530ebe4272 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -816,7 +816,7 @@
+ 			clock-names = "apb", "ir";
+ 			resets = <&r_ccu RST_APB0_IR>;
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-			reg = <0x01f02000 0x40>;
++			reg = <0x01f02000 0x400>;
+ 			status = "disabled";
+ 		};
  
 -- 
 2.20.1
