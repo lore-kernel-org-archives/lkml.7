@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE1FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16400C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DB62053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B39222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611662;
-	bh=6yz8go43iHC+AAKEOPUoDNtqcwOpSfLcYushubWE3K4=;
+	s=default; t=1573611669;
+	bh=seh6PmXvSTkNpVGMUR2DlyeDVyJ5I38GlRYzKWTGXiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yEWrpsuQjks7B6iiNOo25KcX8SfRBn22eKljVcWP7qLloDNGMbWVnapNxFAGjLsHR
-	 MXxBm2AIlHrppsabXlS+njs20dU18tyg9f6V/x8IEqcTV9Fmfs71ZGmSfH1ltb8wrt
-	 Ts/QHXxdu8BG0p23a5Vg+tki62S7UYid3FS567UE=
+	b=W89/+fs/O6K8nfS/Ck8SjlcMaWRkndDLwl+DNdKh43nqWAq17Mw5ZiMx1d50Uq4PA
+	 p9EXENCvDpLcrcxwJ/rx1XuAx2hdC4T/+gSkBNpIu4pvq2cs7J44CnBs629bk9jEMb
+	 isZDE9/3AqCnLlbWg8v1fgGOzetoHdgJI8GTh3O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfKMByJ (ORCPT
+        id S1730052AbfKMCVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:54:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44452 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:21:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbfKMByG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:54:06 -0500
+        id S1727935AbfKMByI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:54:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CBBE20674;
-        Wed, 13 Nov 2019 01:54:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E85222CD;
+        Wed, 13 Nov 2019 01:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610045;
-        bh=6yz8go43iHC+AAKEOPUoDNtqcwOpSfLcYushubWE3K4=;
+        s=default; t=1573610047;
+        bh=seh6PmXvSTkNpVGMUR2DlyeDVyJ5I38GlRYzKWTGXiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/cM0X+XqwGxUutEiXS3KtDBVgfCOil15+dRwqI/bQ+rXNmO5ZaTzndKeiRyoCxz2
-         npT6BAq3i3PmKzUiU9rLknR0lUUH3upnkh+5ctyiDgPDWuidtCr24t6/2FHtsdqade
-         tqfVte7TNo5g3EQTFsITrO98a+Vxn7p2XsDRMtEw=
+        b=tNTQnJAdprWe3WgsAAUyrABxhg4t0YvYma9tyjkU66TPWKjrzP2x/NG8SoIHzHC3A
+         R4NFaoKHx6BKqn2S5WJAx5VKDoO0M1LcREyJzO2KfDC0J1dr6+FLBz7/qtkjd0O/on
+         5Cw6nYwTh6sDYAfeGo2JQJ2xzB7MvXfp2KIE/G8I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 134/209] iwlwifi: mvm: don't send keys when entering D3
-Date:   Tue, 12 Nov 2019 20:49:10 -0500
-Message-Id: <20191113015025.9685-134-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 135/209] xsk: proper AF_XDP socket teardown ordering
+Date:   Tue, 12 Nov 2019 20:49:11 -0500
+Message-Id: <20191113015025.9685-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,40 +63,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Björn Töpel <bjorn.topel@intel.com>
 
-[ Upstream commit 8c7fd6a365eb5b2647b2c01918730d0a485b9f85 ]
+[ Upstream commit 541d7fdd7694560404c502f64298a90ffe017e6b ]
 
-In the past, we needed to program the keys when entering D3. This was
-since we replaced the image. However, now that there is a single
-image, this is no longer needed.  Note that RSC is sent separately in
-a new command.  This solves issues with newer devices that support PN
-offload. Since driver re-sent the keys, the PN got zeroed and the
-receiver dropped the next packets, until PN caught up again.
+The AF_XDP socket struct can exist in three different, implicit
+states: setup, bound and released. Setup is prior the socket has been
+bound to a device. Bound is when the socket is active for receive and
+send. Released is when the process/userspace side of the socket is
+released, but the sock object is still lingering, e.g. when there is a
+reference to the socket in an XSKMAP after process termination.
 
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+The Rx fast-path code uses the "dev" member of struct xdp_sock to
+check whether a socket is bound or relased, and the Tx code uses the
+struct xdp_umem "xsk_list" member in conjunction with "dev" to
+determine the state of a socket.
+
+However, the transition from bound to released did not tear the socket
+down in correct order.
+
+On the Rx side "dev" was cleared after synchronize_net() making the
+synchronization useless. On the Tx side, the internal queues were
+destroyed prior removing them from the "xsk_list".
+
+This commit corrects the cleanup order, and by doing so
+xdp_del_sk_umem() can be simplified and one synchronize_net() can be
+removed.
+
+Fixes: 965a99098443 ("xsk: add support for bind for Rx")
+Fixes: ac98d8aab61b ("xsk: wire upp Tx zero-copy functions")
+Reported-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/xdp/xdp_umem.c | 11 +++--------
+ net/xdp/xsk.c      | 13 ++++++++-----
+ 2 files changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-index 79bdae9948228..868cb1195a74b 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-@@ -731,8 +731,10 @@ int iwl_mvm_wowlan_config_key_params(struct iwl_mvm *mvm,
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 8cab91c482ff5..d9117ab035f7c 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -32,14 +32,9 @@ void xdp_del_sk_umem(struct xdp_umem *umem, struct xdp_sock *xs)
  {
- 	struct iwl_wowlan_kek_kck_material_cmd kek_kck_cmd = {};
- 	struct iwl_wowlan_tkip_params_cmd tkip_cmd = {};
-+	bool unified = fw_has_capa(&mvm->fw->ucode_capa,
-+				   IWL_UCODE_TLV_CAPA_CNSLDTD_D3_D0_IMG);
- 	struct wowlan_key_data key_data = {
--		.configure_keys = !d0i3,
-+		.configure_keys = !d0i3 && !unified,
- 		.use_rsc_tsc = false,
- 		.tkip = &tkip_cmd,
- 		.use_tkip = false,
+ 	unsigned long flags;
+ 
+-	if (xs->dev) {
+-		spin_lock_irqsave(&umem->xsk_list_lock, flags);
+-		list_del_rcu(&xs->list);
+-		spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
+-
+-		if (umem->zc)
+-			synchronize_net();
+-	}
++	spin_lock_irqsave(&umem->xsk_list_lock, flags);
++	list_del_rcu(&xs->list);
++	spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
+ }
+ 
+ int xdp_umem_query(struct net_device *dev, u16 queue_id)
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index 661504042d304..ff15207036dc5 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -343,12 +343,18 @@ static int xsk_release(struct socket *sock)
+ 	local_bh_enable();
+ 
+ 	if (xs->dev) {
++		struct net_device *dev = xs->dev;
++
+ 		/* Wait for driver to stop using the xdp socket. */
+-		synchronize_net();
+-		dev_put(xs->dev);
++		xdp_del_sk_umem(xs->umem, xs);
+ 		xs->dev = NULL;
++		synchronize_net();
++		dev_put(dev);
+ 	}
+ 
++	xskq_destroy(xs->rx);
++	xskq_destroy(xs->tx);
++
+ 	sock_orphan(sk);
+ 	sock->sk = NULL;
+ 
+@@ -707,9 +713,6 @@ static void xsk_destruct(struct sock *sk)
+ 	if (!sock_flag(sk, SOCK_DEAD))
+ 		return;
+ 
+-	xskq_destroy(xs->rx);
+-	xskq_destroy(xs->tx);
+-	xdp_del_sk_umem(xs->umem, xs);
+ 	xdp_put_umem(xs->umem);
+ 
+ 	sk_refcnt_debug_dec(sk);
 -- 
 2.20.1
 
