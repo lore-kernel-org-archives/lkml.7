@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9400EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81824C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9BD222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F04222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610119;
-	bh=7gw2hzPD+NzEGUoM3K2TyQAxcHH4cIB6feJwbfAhmAQ=;
+	s=default; t=1573610124;
+	bh=m+qnqZ/ShNKNjyAacelus/FWNvJ3XrIxXhEmoCmrUqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzd5YC2Nx7t3+lnLIrxAq0HrvsIWUwdo9oAjjoOXYLsexdjr+qsGM1MZ7yqhb9keB
-	 ezzrgiLUZoQdwzDG7BolaAwBx/iweY/5RAArix6Jc9vOomUjORSiJGBrFA38M6f+2v
-	 oKZq4Cy+AiXL1lwO9JjOIXn54v5BAAFzjtbvJ9bw=
+	b=Zr7bIX/n2ck9zQyyWxSJJhm6GzKN54jugKT+bfbWWB5wJ6M/jHBoALzaCOhQ+4mvI
+	 gMe12CCv+hxdO5rkqG2a7RoifELaazdes8YjW2XEz8+7I2kiKgfSJAcYv5J0Uh1tWn
+	 um8c40nyIShhPjQHk4y9VA97/8M3rshlU2dIEOfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfKMBzS (ORCPT
+        id S1729088AbfKMBzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46652 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbfKMBzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:12 -0500
+        id S1729044AbfKMBzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8248E22470;
-        Wed, 13 Nov 2019 01:55:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D75E1204EC;
+        Wed, 13 Nov 2019 01:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610112;
-        bh=7gw2hzPD+NzEGUoM3K2TyQAxcHH4cIB6feJwbfAhmAQ=;
+        s=default; t=1573610114;
+        bh=m+qnqZ/ShNKNjyAacelus/FWNvJ3XrIxXhEmoCmrUqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmz0wMIJ6BRZNGXPcOkb3VHMDRh7kMkKUMagGoUmj+FyM4EGhCECuYLsItrCaeUo3
-         el1Ogm0I1dIkaGWdQ/73GtBLFCqK/+SW4YnedHoaTkPpNQ6aVfuYiCuOC1oaP4921C
-         UZp0Ag9Meo20lPnm6JokjJ17OooJX/T6sbLEZ9IU=
+        b=B+e9yssiEYnxhV3kdElLVgJepNY2+BAaF/J5vZzIbvey3vbfA71Ru0ldA0zSM1RWQ
+         9KDumg4H1Px3qvrXuMvEkRv4u2H6TZAVudhV6jFm0M7OL1mD8gPdNr/iOJl1bmHIzt
+         ncojSaGNqfka+fFUaJ6gDV4Pq+X7TPQk3JFnNDEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+Cc:     =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
         =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@cnexlabs.com>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 168/209] lightnvm: pblk: fix rqd.error return value in pblk_blk_erase_sync
-Date:   Tue, 12 Nov 2019 20:49:44 -0500
-Message-Id: <20191113015025.9685-168-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 170/209] lightnvm: pblk: guarantee emeta on line close
+Date:   Tue, 12 Nov 2019 20:49:46 -0500
+Message-Id: <20191113015025.9685-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -62,67 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matias Bjørling <mb@lightnvm.io>
+From: Javier González <javier@javigon.com>
 
-[ Upstream commit 4b5d56edb8fc565c5db029aecaea598eadfba7f6 ]
+[ Upstream commit 9cc85bc761f83da41935cdd6edcdb7c122bc90bf ]
 
-rqd.error is masked by the return value of pblk_submit_io_sync.
-The rqd structure is then passed on to the end_io function, which
-assumes that any error should lead to a chunk being marked
-offline/bad. Since the pblk_submit_io_sync can fail before the
-command is issued to the device, the error value maybe not correspond
-to a media failure, leading to chunks being immaturely retired.
+If a line is recovered from open chunks, the memory structures for
+emeta have not necessarily been properly set on line initialization.
+When closing a line, make sure that emeta is consistent so that the line
+can be recovered on the fast path on next reboot.
 
-Also, the pblk_blk_erase_sync function prints an error message in case
-the erase fails. Since the caller prints an error message by itself,
-remove the error message in this function.
+Also, remove a couple of empty lines at the end of the function.
 
+Signed-off-by: Javier González <javier@cnexlabs.com>
 Signed-off-by: Matias Bjørling <mb@lightnvm.io>
-Reviewed-by: Javier González <javier@cnexlabs.com>
-Reviewed-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/lightnvm/pblk-core.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ drivers/lightnvm/pblk-core.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
-index 80710c62ac293..fd322565fb0f9 100644
+index fd322565fb0f9..8dce31dbf2cbc 100644
 --- a/drivers/lightnvm/pblk-core.c
 +++ b/drivers/lightnvm/pblk-core.c
-@@ -893,10 +893,8 @@ static void pblk_setup_e_rq(struct pblk *pblk, struct nvm_rq *rqd,
+@@ -1773,6 +1773,17 @@ void pblk_line_close_meta(struct pblk *pblk, struct pblk_line *line)
+ 	wa->pad = cpu_to_le64(atomic64_read(&pblk->pad_wa));
+ 	wa->gc = cpu_to_le64(atomic64_read(&pblk->gc_wa));
  
- static int pblk_blk_erase_sync(struct pblk *pblk, struct ppa_addr ppa)
- {
--	struct nvm_rq rqd;
--	int ret = 0;
--
--	memset(&rqd, 0, sizeof(struct nvm_rq));
-+	struct nvm_rq rqd = {NULL};
-+	int ret;
++	if (le32_to_cpu(emeta_buf->header.identifier) != PBLK_MAGIC) {
++		emeta_buf->header.identifier = cpu_to_le32(PBLK_MAGIC);
++		memcpy(emeta_buf->header.uuid, pblk->instance_uuid, 16);
++		emeta_buf->header.id = cpu_to_le32(line->id);
++		emeta_buf->header.type = cpu_to_le16(line->type);
++		emeta_buf->header.version_major = EMETA_VERSION_MAJOR;
++		emeta_buf->header.version_minor = EMETA_VERSION_MINOR;
++		emeta_buf->header.crc = cpu_to_le32(
++			pblk_calc_meta_header_crc(pblk, &emeta_buf->header));
++	}
++
+ 	emeta_buf->nr_valid_lbas = cpu_to_le64(line->nr_valid_lbas);
+ 	emeta_buf->crc = cpu_to_le32(pblk_calc_emeta_crc(pblk, emeta_buf));
  
- 	pblk_setup_e_rq(pblk, &rqd, ppa);
+@@ -1790,8 +1801,6 @@ void pblk_line_close_meta(struct pblk *pblk, struct pblk_line *line)
+ 	spin_unlock(&l_mg->close_lock);
  
-@@ -904,19 +902,6 @@ static int pblk_blk_erase_sync(struct pblk *pblk, struct ppa_addr ppa)
- 	 * with writes. Thus, there is no need to take the LUN semaphore.
- 	 */
- 	ret = pblk_submit_io_sync(pblk, &rqd);
--	if (ret) {
--		struct nvm_tgt_dev *dev = pblk->dev;
--		struct nvm_geo *geo = &dev->geo;
+ 	pblk_line_should_sync_meta(pblk);
 -
--		pblk_err(pblk, "could not sync erase line:%d,blk:%d\n",
--					pblk_ppa_to_line(ppa),
--					pblk_ppa_to_pos(geo, ppa));
 -
--		rqd.error = ret;
--		goto out;
--	}
--
--out:
- 	rqd.private = pblk;
- 	__pblk_end_io_erase(pblk, &rqd);
+ }
  
+ static void pblk_save_lba_list(struct pblk *pblk, struct pblk_line *line)
 -- 
 2.20.1
 
