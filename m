@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFCBC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FC6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156D3222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D330122459
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610028;
-	bh=ZMIpm2eGoF1gz+prN8Rj5RSMJQK+YlymFSmMKKZXimg=;
+	s=default; t=1573610032;
+	bh=4wa0y7siKNPCymmJxLw0kfiWr913Znmfw02HWPsD7t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2baxjHDcQRjPGds7JZnwQpjSVaGbSArBm+SBKTr+gAtr9Zn2Gdgp9+iuk7xHId80G
-	 42OGt8FhnzEcTndEsoYdyHiMP/Q2K5HOVuMWSchpq/HoSaBp4rUSn/79ALk2TzH8i7
-	 1uNT/4Uh5aoBfyNvbCZN4ag2QIidQDJm2FawbH08=
+	b=lm5Rmt2MvLEHAyQaQs4qPuM+Pf+Axp+1cNq2cQdVHBBwPahRRelm2KimW7p6lSjO7
+	 JkVQXx4fAMnoqCzFhFvzkGsXQ7GnkO/0J3LYbsyE6fRQ8uWf59xbzZCGa9/0742XYk
+	 rcnCZ7xw8rU88oMSMRX4lFx+ABuZcwH725bwfx0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfKMBxq (ORCPT
+        id S1728689AbfKMBxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:53:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43368 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:53:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728608AbfKMBxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:35 -0500
+        id S1728638AbfKMBxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94DB32245C;
-        Wed, 13 Nov 2019 01:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BBE122468;
+        Wed, 13 Nov 2019 01:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610014;
-        bh=ZMIpm2eGoF1gz+prN8Rj5RSMJQK+YlymFSmMKKZXimg=;
+        s=default; t=1573610019;
+        bh=4wa0y7siKNPCymmJxLw0kfiWr913Znmfw02HWPsD7t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A1qUoaXMmn2gGh81d06JuSEIal686YXWxsT7dj6D3TT+9gqHiW+QKT5Bs7Qlu4oaO
-         ZFSpPUTrDSCVkvCPGGpmMgtPFhrHHOBMmBgUJX4nQYB/YTffRpsogDwSYdG3kSOrQj
-         R2xTSAP5FqYNpsmA1sH5WHo24ilUFqQQbi+TB/sE=
+        b=rtBwTg5b0g7Wda0brAiIHxPxBvW3kjABPlkpYhtVbMmGqBclCEKqLYnsKi/MY4HC7
+         fU7JfX1v8eMZQAFg0jC/i17amjI88+7yS32lbRgsznA3KygY5WBcDvPAl/wfAtNYsN
+         NYrfh7sX4DsRHGgzfhbgxL7F3FQIr4Qp0Rl2pN+Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 118/209] i2c: tegra: use core to detect 'no zero length' quirk
-Date:   Tue, 12 Nov 2019 20:48:54 -0500
-Message-Id: <20191113015025.9685-118-sashal@kernel.org>
+Cc:     Julian Sax <jsbc@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 121/209] Input: silead - try firmware reload after unsuccessful resume
+Date:   Tue, 12 Nov 2019 20:48:57 -0500
+Message-Id: <20191113015025.9685-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,42 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Julian Sax <jsbc@gmx.de>
 
-[ Upstream commit c96c0f2683804b710531e7b754dcd02b5ded6d4a ]
+[ Upstream commit dde27443211062e841806feaf690674b7c3a599f ]
 
-And don't reimplement in the driver.
+A certain silead controller (Chip ID: 0x56810000) loses its firmware
+after suspend, causing the resume to fail. This patch tries to load
+the firmware, should a resume error occur and retries the resuming.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-tegra.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/input/touchscreen/silead.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index ef13b6ce9d8de..47d196c026ba6 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -684,9 +684,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index e5c3b066bd2a1..06f0eb04a8fd4 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -558,20 +558,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
+ static int __maybe_unused silead_ts_resume(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
++	bool second_try = false;
+ 	int error, status;
  
- 	tegra_i2c_flush_fifos(i2c_dev);
+ 	silead_ts_set_power(client, SILEAD_POWER_ON);
  
--	if (msg->len == 0)
--		return -EINVAL;
--
- 	i2c_dev->msg_buf = msg->buf;
- 	i2c_dev->msg_buf_remaining = msg->len;
- 	i2c_dev->msg_err = I2C_ERR_NONE;
-@@ -831,6 +828,7 @@ static const struct i2c_algorithm tegra_i2c_algo = {
++ retry:
+ 	error = silead_ts_reset(client);
+ 	if (error)
+ 		return error;
  
- /* payload size is only 12 bit */
- static const struct i2c_adapter_quirks tegra_i2c_quirks = {
-+	.flags = I2C_AQ_NO_ZERO_LEN,
- 	.max_read_len = 4096,
- 	.max_write_len = 4096 - 12,
- };
++	if (second_try) {
++		error = silead_ts_load_fw(client);
++		if (error)
++			return error;
++	}
++
+ 	error = silead_ts_startup(client);
+ 	if (error)
+ 		return error;
+ 
+ 	status = silead_ts_get_status(client);
+ 	if (status != SILEAD_STATUS_OK) {
++		if (!second_try) {
++			second_try = true;
++			dev_dbg(dev, "Reloading firmware after unsuccessful resume\n");
++			goto retry;
++		}
+ 		dev_err(dev, "Resume error, status: 0x%02x\n", status);
+ 		return -ENODEV;
+ 	}
 -- 
 2.20.1
 
