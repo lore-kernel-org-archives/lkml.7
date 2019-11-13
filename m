@@ -2,106 +2,90 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C1AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070F5C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93D5222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573652022;
-	bh=EWykvcYY7821/q/gX4uP4Em4Z7oUrqFXoCp7moWQlLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IhMgU1/0CJuRxw36OTuUFZLByxdx4kTsbWO9aiSSQQoBeep8F4AKM3cniwMkUWmcd
-	 g+WKdkbFKsKpXOB3gOmXsBQkCbgeOhb+2cS+idWzo03SuoSRN7MoMCMxPXMpsF9NKv
-	 FsDRhnf4L1FWnOjcAz81UK65nRbeuWoUb3YTMUts=
+	by mail.kernel.org (Postfix) with ESMTP id DE99E222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfKMNdl (ORCPT
+        id S1727409AbfKMNej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:33:41 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35848 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfKMNdl (ORCPT
+        Wed, 13 Nov 2019 08:34:39 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39137 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfKMNej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:33:41 -0500
-Received: by mail-ot1-f68.google.com with SMTP id f10so1607630oto.3;
-        Wed, 13 Nov 2019 05:33:39 -0800 (PST)
+        Wed, 13 Nov 2019 08:34:39 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w24so1113492otk.6;
+        Wed, 13 Nov 2019 05:34:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JMGlC8/pif+jB1W9f7yADN5pub681PWuOZ+nengKGCU=;
-        b=Qr0ycIfWrnd1ks/W+lyYxxeqoxdTAsyK0QGm91lIBqgDFIbGyxBQUKLkJokB7kqv2i
-         74KkIUk5XJzWE0oYa3zhXx7HsFwVnimXSfJOsWUWTqx4naxfqSh20v9giThqoPXIazPx
-         nHSYi00nQ5/xRc15KUxC3BgGbrM/vDZuCXf0uwTk3tTCU9bA1lLjlFRWZWOBpD4g75cR
-         JYMegTN1CcOc8euP4zINJtxhM9TpJae+HG3FU/dyqR4Wxx5fbBkRjfmLV2wsV3+E0NUp
-         ZOcQiRizXOU17R+97u9QOMAv1Tk8IceLGCbCfc/FPTHrMfeU2CyM2Xqi1b3g3NRRlel/
-         K0XQ==
-X-Gm-Message-State: APjAAAXTnC4iCD++3kzuOt7FlHZQN6fVf5SgHzUS5KzWjT8RwJBcyHrL
-        K4LKe7Puokel2bTljoTxtg==
-X-Google-Smtp-Source: APXvYqxD6IWsewO9TdJ3bFTU+gY51WG3vNByXca8SVZxroh1OIj61piRW22xnKzAJ5FMxoSywmWh5A==
-X-Received: by 2002:a05:6830:1f4b:: with SMTP id u11mr2802561oth.60.1573652018588;
-        Wed, 13 Nov 2019 05:33:38 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u204sm685118oig.35.2019.11.13.05.33.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 05:33:37 -0800 (PST)
-Date:   Wed, 13 Nov 2019 07:33:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org, letux-kernel@openphoenux.org,
-        linux-mmc@vger.kernel.org, kernel@pyra-handheld.com,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 01/12] Documentation: dt: wireless: update wl1251 for
- sdio
-Message-ID: <20191113133337.GA3987@bogus>
-References: <cover.1573122644.git.hns@goldelico.com>
- <17b12e91c878dcb74160e3df5f88bc8a9e3f7fce.1573122644.git.hns@goldelico.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2BUGmK0Tlnu9PkcroMtQbN3ebq9HP8EWdnAg1PeQPpI=;
+        b=uTeP6Zo+zjbGze48oXU8IaUBVFMlPjBCtg/g/fpTqiW8JcC0Y8dCDtOHgz34vCAUDY
+         Z/Jc66pVYOqBRXDxap0/2MFmpsrZHUbEPr9p8oaRigKOVySDzPK03WpyO+T1Uwnqnr0c
+         4GM8q9F0csV9eLEjoA6sVYDy3rJ7RFtz+CdFotv8KsW87Pz5HVIN0vDUP7FUabT4Vvmi
+         8qtXePFmoIezZIWp2v6cuMWMgXCXnd6SXQOduTMcj7aELegM7ykNB8dB+yaE4eAYhl1S
+         gsCX/MbjSC9bwCUckrKX0SbuiBd5WNiF5/46EHQNB6HgzJMvG/fiSL1oq8e3IFSJIP2w
+         YRtQ==
+X-Gm-Message-State: APjAAAX8leOcVfzIELaBbghJuRv6zAeUNb1Vmpz3u2PS+/oE4kraiCXK
+        +bIT4QccVlg951N17fUq5fJiN8fvk+7TBTW/6Kk=
+X-Google-Smtp-Source: APXvYqwi7Xw2lfi4sIU7wx1mg128Apj/k00opOCJ9UHzzco7XRYdpN6ucxcgQ3ELDbknwAcBlsN8r36/qkmcXICISpY=
+X-Received: by 2002:a9d:5511:: with SMTP id l17mr3161151oth.145.1573652078174;
+ Wed, 13 Nov 2019 05:34:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17b12e91c878dcb74160e3df5f88bc8a9e3f7fce.1573122644.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191113100556.15616-1-jacopo+renesas@jmondi.org> <20191113100556.15616-3-jacopo+renesas@jmondi.org>
+In-Reply-To: <20191113100556.15616-3-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 13 Nov 2019 14:34:27 +0100
+Message-ID: <CAMuHMdWAvFfL5gWZVkfan=o2pRygxCKaNwCf=7AbiPJS1r8nAA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/7] dt-bindings: display, renesas,du: Document cmms property
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  7 Nov 2019 11:30:34 +0100, "H. Nikolaus Schaller" wrote:
-> The standard method for sdio devices connected to
-> an sdio interface is to define them as a child node
-> like we can see with wlcore.
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Acked-by: Kalle Valo <kvalo@codeaurora.org>
-> ---
->  .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
+Hi Jacopo,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sorry for spoiling your v7 ;-)
+
+On Wed, Nov 13, 2019 at 11:04 AM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Document the newly added 'cmms' property which accepts a list of phandle
+
+renesas,cmms
+
+> and channel index pairs that point to the CMM units available for each
+> Display Unit output video channel.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
