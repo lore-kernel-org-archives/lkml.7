@@ -2,198 +2,241 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E69C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5E6C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA364222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:13:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pU86+m86"
+	by mail.kernel.org (Postfix) with ESMTP id BEF84222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573618537;
+	bh=DO5rtGO4iP4IdH3MJiD2NGV3p8T1hmUTC9FqWF8DS+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S5uylsW/OIvn3bl6htyDnNsejW8sSmz2fPn0YucLJSUC7pTziJFVmOMxG1FbauOvo
+	 GkEzLNs1jmIcT1VfZqJY2loSakHPiSgJwRNnlFYQVjHJjeP6wIcsAUvnrfQ7t0R2Jj
+	 Oy+cvhTBK6vEdGn4AYWdKCW5aHJNsKMsz4YespR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfKMEN1 (ORCPT
+        id S1727265AbfKMEPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 23:13:27 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:40657 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbfKMEN1 (ORCPT
+        Tue, 12 Nov 2019 23:15:36 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35707 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfKMEPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 23:13:27 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191113041324epoutp02f9ae2ac44ec86db8a4c39d0f95045231~WnZn8U0ER2653526535epoutp02s
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 04:13:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191113041324epoutp02f9ae2ac44ec86db8a4c39d0f95045231~WnZn8U0ER2653526535epoutp02s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573618404;
-        bh=mJFA/njgmP4obhVAaTLVxm27YK22M38R7AAIgIdwODE=;
-        h=Date:From:Reply-To:To:CC:Subject:In-Reply-To:References:From;
-        b=pU86+m866MOt67BrCGH4n2oGel0AQuVz8It5Qdu6OKxG6/HezxJK8AHOJ2d9sCYQA
-         9fUF59gVHOQSNNij9NjdFv9HG1JeKKYBOBWLMa4ZU4Q4zyJ5Ol/+NcTmfAlhQzcB0n
-         T10iNBIGAIxhm5xuK9mxk1c7T8PRjcGoRGbPXp8A=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191113041324epcas1p4fed4f63a3c2c8f2eb1aca61bb4446daf~WnZnm0RY30892708927epcas1p4j;
-        Wed, 13 Nov 2019 04:13:24 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47CWSJ2YxPzMqYkc; Wed, 13 Nov
-        2019 04:13:20 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1F.C6.04135.0E28BCD5; Wed, 13 Nov 2019 13:13:20 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191113041319epcas1p3869db73a60fe98be01c5c65149a709c9~WnZjXSql-0607606076epcas1p3Y;
-        Wed, 13 Nov 2019 04:13:19 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191113041319epsmtrp2d208b704cd4fe15d818169d1abc89a39~WnZjWqNuv1978319783epsmtrp2g;
-        Wed, 13 Nov 2019 04:13:19 +0000 (GMT)
-X-AuditID: b6c32a36-7e3ff70000001027-08-5dcb82e0ca3f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5B.CC.25663.FD28BCD5; Wed, 13 Nov 2019 13:13:19 +0900 (KST)
-Received: from [10.113.221.222] (unknown [10.113.221.222]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191113041319epsmtip251dbdd65ca070b8cdd09d837cdcbca9e~WnZjFf1qx1180111801epsmtip2Y;
-        Wed, 13 Nov 2019 04:13:19 +0000 (GMT)
-Message-ID: <5DCB8380.3070304@samsung.com>
-Date:   Wed, 13 Nov 2019 13:16:00 +0900
-From:   Seung-Woo Kim <sw0312.kim@samsung.com>
-Reply-To: sw0312.kim@samsung.com
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:16.0) Gecko/20121011
-        Thunderbird/16.0.1
+        Tue, 12 Nov 2019 23:15:36 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z6so478140otb.2;
+        Tue, 12 Nov 2019 20:15:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fu3Y/4lCeDSudNWi+wvYdwt8kDwqIxhy6RedI/4rb48=;
+        b=I0kEQgPZzvbMz3kEE2r6A6XpCNlpBFKHOCcwuFO7y38oZkWBQnWBfzKGWQVscdnvPD
+         Wx94zwVO2teY/zniBbr+oNhUxWu66HQ90fX7V2vhbPn9QWRALsuzoyNSYJBb41Igi3N0
+         6t6Mf0PwxuhnHL6xcwLqO/2dJ+p7IeUVeug0uwzoLcIgMMz5oasdE0JBDLeZfd70LPSx
+         lxFih57Y7e0v3ZPjpxzmou8fxP7856lal3acVql6EJze0Um3aPhhJEqDLZfNDrAaQFc3
+         gKCrRWYS2yKaSXSuZKLSj7dNzOkwX7U3ljEEJHY9Ez4D0fhb0PkTVVXZaA7gcisBp6oY
+         DTBA==
+X-Gm-Message-State: APjAAAWEpwURm34coqfWGN1ClL5cwTUgyllxx/dvVmely23MpZGS0Pss
+        fIWSaO3sHvEFZljdabxcNw==
+X-Google-Smtp-Source: APXvYqxbN5/QlD1YTfwus6CP4J23kgOsBx8dLDfsU2Js+cOxTe7uQW9y/ENAShKBJ4fIZy7N6jInJw==
+X-Received: by 2002:a9d:a63:: with SMTP id 90mr1061108otg.346.1573618534975;
+        Tue, 12 Nov 2019 20:15:34 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o14sm295660oie.24.2019.11.12.20.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 20:15:34 -0800 (PST)
+Date:   Tue, 12 Nov 2019 22:15:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: pci: add bindings for brcmstb's PCIe
+ device
+Message-ID: <20191113041533.GA25497@bogus>
+References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
+ <20191106214527.18736-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-To:     Mark Rutland <mark.rutland@arm.com>
-CC:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, sungguk.na@samsung.com
-Subject: Re: [PATCH] arm64: perf: Report arm pc registers for compat perf
-In-Reply-To: <20191112094037.GA32269@lakrids.cambridge.arm.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMJsWRmVeSWpSXmKPExsWy7bCmvu6DptOxBrv3C1i8X9bDaLHp8TVW
-        i8u75rBZLL1+kclix7yDjBYtd0wd2DzWzFvD6LFpVSebx+Yl9R59W1YxenzeJBfAGpVtk5Ga
-        mJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQO0X0mhLDGnFCgU
-        kFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYFmgV5yYW1yal66XnJ9rZWhgYGQKVJiQndGy/BRL
-        wQSxin/bnzM3MB4T7GLk5JAQMJH40nibtYuRi0NIYAejxII706GcT4wSu/+vZYZwvjFK/L6/
-        kAWmZdaBz1CJvYwSl7feY4Rw3jNKzFu9GKyKV0BL4vqh5WA2i4CqxPuWbewgNpuAjsT+Jb9Z
-        QWwhAQWJC1tnsIHYogJhEjMO9jNC9ApKnJz5BKxXREBdomfXFxaQBcwCXYwSa9+/ZgJJCAt4
-        Smzt3gNWxClgLzHl7CSwOLOAvETz1tlg50kI3GaTuDX7PzvE3S4Sbe9mQ9nCEq+Ob4GypSQ+
-        v9vLBmFXS2yf8JMdormDUaKnvRHqaWOJ/UsnA23gANqgKbF+lz5EWFFi5++5jBCL+STefe1h
-        BSmREOCV6GgTgihRkdh5dBIbRFhKYtaGYIiwh8Syg0tYJzAqzkLy8iwkH8xC2LWAkXkVo1hq
-        QXFuemqxYYERchRvYgQnSC2zHYyLzvkcYhTgYFTi4ZVYeCpWiDWxrLgy9xCjBAezkgjvjooT
-        sUK8KYmVValF+fFFpTmpxYcYTYGxM5FZSjQ5H5i880riDU2NjI2NLUwMzUwNDZXEeR2XL40V
-        EkhPLEnNTk0tSC2C6WPi4JRqYFw6b3PteetrPysT4vJYpnD0F8rnKNsrfCnfyuXU2/z9HZ/Y
-        x1NXMrL+yv8x350/USBBNVyhvca+uyBIxu/6kf2y69c289+PP7ZOtTrviaLLzSrPzrzSlYYd
-        P5p/XeuYEL50839x5myFj6H89QLRkicCPl2x9vo/473dljNXm6ewHpnzus0tV4mlOCPRUIu5
-        qDgRAIQzAsOmAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsWy7bCSvO79ptOxBh+7ZC3eL+thtNj0+Bqr
-        xeVdc9gsll6/yGSxY95BRouWO6YObB5r5q1h9Ni0qpPNY/OSeo++LasYPT5vkgtgjeKySUnN
-        ySxLLdK3S+DKaFl+iqVggljFv+3PmRsYjwl2MXJySAiYSMw68Jm5i5GLQ0hgN6PEibVTmCAS
-        UhJzv21n7GLkALKFJQ4fLoaoecso8eDdTUaQGl4BLYnrh5azgNgsAqoS71u2sYPYbAI6EvuX
-        /GYFsYUEFCQubJ3BBmKLCoRI/Pp4hRWiV1Di5MwnYL0iAuoSPbu+sIAsYBboZpSY3/IVLCEs
-        4CmxtXsPC8Tm04wSV6dtAOvmFLCXmHJ2EhPIdcxA3evnCYGEmQXkJZq3zmaewCg0C8mOWQhV
-        s5BULWBkXsUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERwPWlo7GE+ciD/EKMDBqMTD
-        e2DeqVgh1sSy4srcQ4wSHMxKIrw7Kk7ECvGmJFZWpRblxxeV5qQWH2KU5mBREueVzz8WKSSQ
-        nliSmp2aWpBaBJNl4uCUamBMarrl/utGAGO/cm/+RGFWsdeLNa58r652ZOnK7yuRfipgGFJp
-        /0yTmd1UROt32sKA8wee7dovw8tUsTaUU0zJ4AWvzzluITmN94LWWhPvq3iaHXt5+p370X7l
-        07q6EzsivP6ExaZXdczS2HHgs8jNJeVhJiYhn7J3JMc63968U9xkkeVvcyWW4oxEQy3mouJE
-        AEKcHMyDAgAA
-X-CMS-MailID: 20191113041319epcas1p3869db73a60fe98be01c5c65149a709c9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d
-References: <CGME20191112005902epcas1p2d9dfa6a29f2c57669b1c1eb58517016d@epcas1p2.samsung.com>
-        <1573520501-29195-1-git-send-email-sw0312.kim@samsung.com>
-        <20191112094037.GA32269@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106214527.18736-2-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark Rutland,
-
-On 2019년 11월 12일 18:40, Mark Rutland wrote:
-> On Tue, Nov 12, 2019 at 10:01:41AM +0900, Seung-Woo Kim wrote:
->> If perf is built as arm 32-bit, it only reads 15 registers as arm
->> 32-bit register map and this breaks dwarf call-chain in compat
->> perf because pc register information is not filled.
->> Report arm pc registers for 32-bit compat perf.
->>
->> Without this, arm 32-bit perf dwarf call-graph shows below
->> verbose message:
->>   unwind: reg 15, val 0
->>   unwind: reg 13, val ffbc6360
->>   unwind: no map for 0
->>
->> Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
->> ---
->>  arch/arm64/kernel/perf_regs.c |    2 ++
->>  1 files changed, 2 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
->> index 0bbac61..d4172e7 100644
->> --- a/arch/arm64/kernel/perf_regs.c
->> +++ b/arch/arm64/kernel/perf_regs.c
->> @@ -24,6 +24,8 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
->>  			return regs->compat_sp;
->>  		if ((u32)idx == PERF_REG_ARM64_LR)
->>  			return regs->compat_lr;
->> +		if ((u32)idx == 15) /* PERF_REG_ARM_PC */
->> +			return regs->pc;
->>  	}
+On Wed, Nov 06, 2019 at 10:45:23PM +0100, Nicolas Saenz Julienne wrote:
+> From: Jim Quinlan <james.quinlan@broadcom.com>
 > 
-> This doesn't look quite right to me, since perf_regs_value() is
-> consuming the arm64 index for all other registers (e.g. the LR, in the
-> patch context).
+> The DT bindings description of the brcmstb PCIe device is described.
+> This node can only be used for now on the Raspberry Pi 4.
 > 
-> i.e. this is designed for a native arm64 caller, and the fixup allows it
-> to view a compat task's registers as-if it were native.
+> This was based on Jim's original submission[1], converted to yaml and
+> adapted to the RPi4 case.
 > 
-> How does this work for a native arm64 perf invocation with a compat
-> task? I assume it consumers regs->pc, and works as expected?
-
-In native arm64 perf, compat task registers are set as arm64 register
-map, and sp, lr, and pc are set properly. But compat_sp is from regs[13]
-and compat_lr is from regs[14], so same register values are set for
-regs[13]/egs->sp and regs[14]/regs->lr. With this change, it sets
-regs[15] same with regs->pc, but the register is not use at least for
-arm 32-bit compat binary callchain, so no issue as far as I understood
-and tested.
-
+> [1] https://patchwork.kernel.org/patch/10605937/
 > 
-> I suspect we need separate native and compat forms of this function, but
-> then it's not entirely clear how this should work -- how does this work
-> for a compat perf analysing a native arm64 binary?
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 116 ++++++++++++++++++
+>  1 file changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
 
-I didn't expect native arm64 binary callchain is possible to get from
-arm 32-bit perf.
+I'm working on a common PCI host schema that should cut down some of the 
+standard props.
 
-In my test with 32-bit compat perf, it sets perf
-event->attr.sample_regs_user as 0xffff, which is matched with 32-bit
-arm, but in arm64 perf part, it cannot be accessed. If there is way to
-check it, it is possible to set difference register form. Anyway, in the
-case, native arm64 register map is still not fully reported to 32-bit
-compat perf.
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> new file mode 100644
+> index 000000000000..0b81c26f8568
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -0,0 +1,116 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
+Dual license new bindings please:
 
-Thanks,
-- Seung-Woo Kim
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Brcmstb PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> +
+> +properties:
+> +  compatible:
+> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: PCIe host controller
+> +      - description: builtin MSI controller
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: pcie
+> +      - const: msi
+> +
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-map-mask: true
+> +
+> +  interrupt-map: true
+
+4 entries?
+
+You'll need to bracket <> each entry in the example and dts.
+
+> +
+> +  ranges: true
+
+How many entries?
+
+> +
+> +  dma-ranges: true
+
+How many entries?
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: sw_pcie
+> +
+> +  msi-controller:
+> +    description: Identifies the node as an MSI controller.
+> +    type: boolean
+> +
+> +  msi-parent:
+> +    description: MSI controller the device is capable of using.
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  linux,pci-domain:
+> +    description: PCI domain ID. Should be unique for each host controller.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  brcm,enable-ssc:
+> +    description: Indicates usage of spread-spectrum clocking.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - "#interrupt-cells"
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - ranges
+> +  - dma-ranges
+> +  - linux,pci-domain
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    scb {
+> +            #address-cells = <2>;
+> +            #size-cells = <1>;
+> +            pcie0: pcie@7d500000 {
+> +                    compatible = "brcm,bcm2711-pcie";
+> +                    reg = <0x0 0x7d500000 0x9310>;
+> +                    #address-cells = <3>;
+> +                    #size-cells = <2>;
+> +                    #interrupt-cells = <1>;
+> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "pcie", "msi";
+> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+> +                    msi-parent = <&pcie0>;
+> +                    msi-controller;
+> +                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+> +                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
+> +                    linux,pci-domain = <0>;
+> +                    brcm,enable-ssc;
+> +            };
+> +    };
+> -- 
+> 2.23.0
 > 
-> Thanks,
-> Mark.
-> 
-> 
-
--- 
-Seung-Woo Kim
-Samsung Research
---
-
