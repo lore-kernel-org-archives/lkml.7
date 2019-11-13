@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3146EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E6EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19B921783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A595021783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611167;
-	bh=Vp7x52tWRWgDfeFgld4Gwk0u6iwjQtfSbiDkxb/zxYs=;
+	s=default; t=1573611172;
+	bh=mBWSYqzntZrRXyv64akBAkmmXnttEMUiQhS1mPu6nLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=voOHkUVOJqrHWaN/2bsPyHTNoq2krADW0gYyM9NSN8XoDh4+kryraHYRorFWoKhZk
-	 vOSFk76F0i+qG51dqx08Xf06RXWSP9gi6sauGsNutoDBjSvDUTIzwmX5XM99jBc6Nl
-	 qM1lPUZu96Fb8lHHqV3pPj4Cq+TvSS/SwskqaRJs=
+	b=IfxaYeHhIA6erYRRXd57zv9eMQBGkiG0yV2/p9ZUmWLU9DYaxH9nQW+pOtUhA7MqS
+	 iKEz5sXH7U6ERKHDXmOp4RSkNksR0LgBT8Pgl/B69cwscWeiNwzq39TIcrjBTG4OwY
+	 fPTKO/pR8FUhwi3mB1l9th9Wr2gIh6oh5ZGweqOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbfKMCMp (ORCPT
+        id S1730361AbfKMCMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:12:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:12:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729953AbfKMB6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:10 -0500
+        id S1729877AbfKMB6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 325F8222D3;
-        Wed, 13 Nov 2019 01:58:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7ED222469;
+        Wed, 13 Nov 2019 01:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610289;
-        bh=Vp7x52tWRWgDfeFgld4Gwk0u6iwjQtfSbiDkxb/zxYs=;
+        s=default; t=1573610287;
+        bh=mBWSYqzntZrRXyv64akBAkmmXnttEMUiQhS1mPu6nLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nyUDzTsVoFb1Z8Hw556ddpsgyPB/kdYhGVdT3UTNpkhSRnZWHd9VkNZ2UphzubvtF
-         uNUTDKk1gGHN1m+m7l214wRdACSxjAHJBRC2zCOxx2NwjV4t1t3xpsu5i6nKm+r5YU
-         KeBl6sG6TGSHd/JlRnRINS/6el+GnpIsHnwpTwYo=
+        b=MHQFd/rtLLZEnub21a//nLXqjNIG72/YNTOsCzvKcEaFJSR8Fpeu+BlcvBp0A0Bsi
+         U97cdimEFj+tQFRrrmebOfZCo1QCjaIcqVEcu9+VSMuTf1KBblCGWT2mj8gBuF6GEo
+         aa5O/hhhAlDbxwtx98lJf8xs5LmJ2y/pey28M5ZM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 065/115] i2c: brcmstb: Allow enabling the driver on DSL SoCs
-Date:   Tue, 12 Nov 2019 20:55:32 -0500
-Message-Id: <20191113015622.11592-65-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 064/115] clk: samsung: Use clk_hw API for calling clk framework from clk notifiers
+Date:   Tue, 12 Nov 2019 20:55:31 -0500
+Message-Id: <20191113015622.11592-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,42 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit e1eba2ea54a2de0e4c58d87270d25706bb77b844 ]
+[ Upstream commit 1da220e3a5d22fccda0bc8542997abc1d1741268 ]
 
-ARCH_BCM_63XX which is used by ARM-based DSL SoCs from Broadcom uses the
-same controller, make it possible to select the STB driver and update
-the Kconfig and help text a bit.
+clk_notifier_register() documentation states, that the provided notifier
+callbacks associated with the notifier must not re-enter into the clk
+framework by calling any top-level clk APIs. Fix this by replacing
+clk_get_rate() calls with clk_hw_get_rate(), which is safe in this
+context.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <snawrocki@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/Kconfig | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/clk/samsung/clk-cpu.c | 6 +++---
+ drivers/clk/samsung/clk-cpu.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 45a3f3ca29b38..b72a25585d52b 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -429,12 +429,13 @@ config I2C_BCM_KONA
- 	  If you do not need KONA I2C interface, say N.
+diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
+index 6686e8ba61f9f..82f023f29a61f 100644
+--- a/drivers/clk/samsung/clk-cpu.c
++++ b/drivers/clk/samsung/clk-cpu.c
+@@ -152,7 +152,7 @@ static int exynos_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
+ 			struct exynos_cpuclk *cpuclk, void __iomem *base)
+ {
+ 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
+-	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
++	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
+ 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
+ 	unsigned long div0, div1 = 0, mux_reg;
+ 	unsigned long flags;
+@@ -280,7 +280,7 @@ static int exynos5433_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
+ 			struct exynos_cpuclk *cpuclk, void __iomem *base)
+ {
+ 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
+-	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
++	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
+ 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
+ 	unsigned long div0, div1 = 0, mux_reg;
+ 	unsigned long flags;
+@@ -432,7 +432,7 @@ int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
+ 	else
+ 		cpuclk->clk_nb.notifier_call = exynos_cpuclk_notifier_cb;
  
- config I2C_BRCMSTB
--	tristate "BRCM Settop I2C controller"
--	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
-+	tristate "BRCM Settop/DSL I2C controller"
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_63XX || \
-+		   COMPILE_TEST
- 	default y
- 	help
- 	  If you say yes to this option, support will be included for the
--	  I2C interface on the Broadcom Settop SoCs.
-+	  I2C interface on the Broadcom Settop/DSL SoCs.
- 
- 	  If you do not need I2C interface, say N.
- 
+-	cpuclk->alt_parent = __clk_lookup(alt_parent);
++	cpuclk->alt_parent = __clk_get_hw(__clk_lookup(alt_parent));
+ 	if (!cpuclk->alt_parent) {
+ 		pr_err("%s: could not lookup alternate parent %s\n",
+ 				__func__, alt_parent);
+diff --git a/drivers/clk/samsung/clk-cpu.h b/drivers/clk/samsung/clk-cpu.h
+index d4b6b517fe1b4..bd38c6aa38970 100644
+--- a/drivers/clk/samsung/clk-cpu.h
++++ b/drivers/clk/samsung/clk-cpu.h
+@@ -49,7 +49,7 @@ struct exynos_cpuclk_cfg_data {
+  */
+ struct exynos_cpuclk {
+ 	struct clk_hw				hw;
+-	struct clk				*alt_parent;
++	struct clk_hw				*alt_parent;
+ 	void __iomem				*ctrl_base;
+ 	spinlock_t				*lock;
+ 	const struct exynos_cpuclk_cfg_data	*cfg;
 -- 
 2.20.1
 
