@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B347C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825FEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A79621783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3F321783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611086;
-	bh=SGlEMGtMG096loXgaMD0JkGrovumKL9ByZfXDWAIQkg=;
+	s=default; t=1573611091;
+	bh=7ZCL7NcTxYsKgq1kH/R/h8GRcaWqaQ0rSb8KFEgYlJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1KbG9EXMdFaQTTx1lFWcbOFgKHWhAgIRmV0RzuCT2sb5SXN57TbbxdfM5VfQUeFf
-	 x0Kzl4UzBHEHUvKjhsk121o0cL192WoYIggd3TkwipwtG+gQATwsroYqkktMQApLex
-	 zOx+6DmkQMqLjsAy+kKqlZ7Uf0v3keFrCUwFz934=
+	b=JjgHTKO3uALGRDP8exvRA9N3aEDw8s49wUQqVFc9Fj1y3aikX1VXllK/Rsz8yL1HH
+	 0A3+wfGhPpY2fWgOf2faSt2RJOyEqIrOJYOyfZubDlAJ65v6L82WxN6z6aJ2cgSxzx
+	 EQI1C5s6LWhgbw7T16xrTJHuqOyH99xA+KEQXtYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730534AbfKMCLZ (ORCPT
+        id S1730105AbfKMB6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:11:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52816 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:58:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbfKMB6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:49 -0500
+        id S1730070AbfKMB6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A67B32053B;
-        Wed, 13 Nov 2019 01:58:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE042222D3;
+        Wed, 13 Nov 2019 01:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610328;
-        bh=SGlEMGtMG096loXgaMD0JkGrovumKL9ByZfXDWAIQkg=;
+        s=default; t=1573610318;
+        bh=7ZCL7NcTxYsKgq1kH/R/h8GRcaWqaQ0rSb8KFEgYlJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UbQSqM5bcs0h9vN7LsyOBs6J+fHmquRML/5UEV2YEP10E7V8kSWCxdDM8ExVtiGvB
-         2DSrMM1z/2v3YUpVSoc9GQOBbg4WVcO4uCNW0snPQJOV7mMAwfC+i62X9VvgkIbzmT
-         aMYrUB3eQ+LCUm9vMy2RS9fIzDJaDonvDiUqAEts=
+        b=NW9njXjrZNSvcg1XEtI/QmcqN1cRR145NYOZESEwsOyrPT0V0CixVx9MxFqPMoT9c
+         U9/YcmhGlNAvXK+7b9IVFiuIr7xWNXaR4WPGOCRdbis+2sbfuxD5kxQtxbbwn0Ur3g
+         AVYOK8+zgOMLgnclJi0VgnXU3rNiR7LnfqpFB9Zo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 087/115] s390/kasan: avoid vdso instrumentation
-Date:   Tue, 12 Nov 2019 20:55:54 -0500
-Message-Id: <20191113015622.11592-87-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Peter Malone <peter.malone@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 082/115] fbdev: sbuslib: use checked version of put_user()
+Date:   Tue, 12 Nov 2019 20:55:49 -0500
+Message-Id: <20191113015622.11592-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,54 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 348498458505e202df41b6b9a78da448d39298b7 ]
+[ Upstream commit d8bad911e5e55e228d59c0606ff7e6b8131ca7bf ]
 
-vdso is mapped into user space processes, which won't have kasan
-shodow mapped.
+I'm not sure why the code assumes that only the first put_user() needs
+an access_ok() check.  I have made all the put_user() and get_user()
+calls checked.
 
-Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Mathieu Malaterre <malat@debian.org>
+Cc: Peter Malone <peter.malone@gmail.com>,
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vdso32/Makefile | 3 ++-
- arch/s390/kernel/vdso64/Makefile | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/sbuslib.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
-index 101cadabfc89e..6d87f800b4f2c 100644
---- a/arch/s390/kernel/vdso32/Makefile
-+++ b/arch/s390/kernel/vdso32/Makefile
-@@ -25,9 +25,10 @@ obj-y += vdso32_wrapper.o
- extra-y += vdso32.lds
- CPPFLAGS_vdso32.lds += -P -C -U$(ARCH)
+diff --git a/drivers/video/fbdev/sbuslib.c b/drivers/video/fbdev/sbuslib.c
+index a436d44f1b7fb..90c51330969c2 100644
+--- a/drivers/video/fbdev/sbuslib.c
++++ b/drivers/video/fbdev/sbuslib.c
+@@ -106,11 +106,11 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		struct fbtype __user *f = (struct fbtype __user *) arg;
  
--# Disable gcov profiling and ubsan for VDSO code
-+# Disable gcov profiling, ubsan and kasan for VDSO code
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
+ 		if (put_user(type, &f->fb_type) ||
+-		    __put_user(info->var.yres, &f->fb_height) ||
+-		    __put_user(info->var.xres, &f->fb_width) ||
+-		    __put_user(fb_depth, &f->fb_depth) ||
+-		    __put_user(0, &f->fb_cmsize) ||
+-		    __put_user(fb_size, &f->fb_cmsize))
++		    put_user(info->var.yres, &f->fb_height) ||
++		    put_user(info->var.xres, &f->fb_width) ||
++		    put_user(fb_depth, &f->fb_depth) ||
++		    put_user(0, &f->fb_cmsize) ||
++		    put_user(fb_size, &f->fb_cmsize))
+ 			return -EFAULT;
+ 		return 0;
+ 	}
+@@ -125,10 +125,10 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		unsigned int index, count, i;
  
- # Force dependency (incbin is bad)
- $(obj)/vdso32_wrapper.o : $(obj)/vdso32.so
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index 36bbafcf4a770..4bc166b8c0cbd 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -25,9 +25,10 @@ obj-y += vdso64_wrapper.o
- extra-y += vdso64.lds
- CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
+ 		if (get_user(index, &c->index) ||
+-		    __get_user(count, &c->count) ||
+-		    __get_user(ured, &c->red) ||
+-		    __get_user(ugreen, &c->green) ||
+-		    __get_user(ublue, &c->blue))
++		    get_user(count, &c->count) ||
++		    get_user(ured, &c->red) ||
++		    get_user(ugreen, &c->green) ||
++		    get_user(ublue, &c->blue))
+ 			return -EFAULT;
  
--# Disable gcov profiling and ubsan for VDSO code
-+# Disable gcov profiling, ubsan and kasan for VDSO code
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
+ 		cmap.len = 1;
+@@ -165,10 +165,10 @@ int sbusfb_ioctl_helper(unsigned long cmd, unsigned long arg,
+ 		u8 red, green, blue;
  
- # Force dependency (incbin is bad)
- $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+ 		if (get_user(index, &c->index) ||
+-		    __get_user(count, &c->count) ||
+-		    __get_user(ured, &c->red) ||
+-		    __get_user(ugreen, &c->green) ||
+-		    __get_user(ublue, &c->blue))
++		    get_user(count, &c->count) ||
++		    get_user(ured, &c->red) ||
++		    get_user(ugreen, &c->green) ||
++		    get_user(ublue, &c->blue))
+ 			return -EFAULT;
+ 
+ 		if (index + count > cmap->len)
 -- 
 2.20.1
 
