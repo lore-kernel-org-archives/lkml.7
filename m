@@ -2,110 +2,137 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32071C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BCDC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80567206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D1D206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:26:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WB6tjTaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfKMTZC (ORCPT
+        id S1727151AbfKMT0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:25:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfKMTZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:25:02 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41358206D5;
-        Wed, 13 Nov 2019 19:25:02 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 14:24:59 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Hassan Naveed <hnaveed@wavecomp.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Burton <pburton@wavecomp.com>
-Subject: Re: [PATCH] TRACING: FTRACE: Use xarray structure for ftrace
- syscalls
-Message-ID: <20191113142459.402b3241@gandalf.local.home>
-In-Reply-To: <20191022174551.2fcc85fd@gandalf.local.home>
-References: <20191022182303.14829-1-hnaveed@wavecomp.com>
-        <20191022155104.29b062a5@gandalf.local.home>
-        <20191022174551.2fcc85fd@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 13 Nov 2019 14:26:04 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55733 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfKMT0D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 14:26:03 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b11so3216127wmb.5;
+        Wed, 13 Nov 2019 11:26:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eJks9EMjmgWp8wZx+kLzfc16SG/mFPriDGfSeGmYPKg=;
+        b=WB6tjTaIP2JoResHDKgFXt1N+ObwsAn73Hc0YKf7QlYuffJRlsk67Zmp1Zo8mCjyyW
+         SEpXM4H+YSTmqPVE57A9lfbRLK48xJV/dbGWbKFr5Ki94DT7OEiJ+k5NUMzRz5h5iW2R
+         /3vg9DaCBC2xG/llimZkknnlv8xb9FKQAyAn6uIT0EGGJPvzlJ5ksc1uNoeO92+q/nxx
+         A8aiRR0WmwNuCREr7PzZvsfYdq1JmrLRrQEvKJqphwiYMQvhSYlMTJpjc90/+nCzMCXX
+         +OscUG4FVn8XCrW2rNSjy9Vbgs3BjUGa7AY9Cz3fbJxCE1wlw0qMcPjUNX0IaSFOrkJY
+         WF7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eJks9EMjmgWp8wZx+kLzfc16SG/mFPriDGfSeGmYPKg=;
+        b=WXnFoupalaCr3MUQ99juaefuqfB3MuCgZE0Q7UYjcVMZQcMS32x625rSTCMZzNcVjK
+         oVY3X7AX/rdAVAlx5KQOCHjko1g8KAxAtolTTt0TnEEv5DPPT3ruiTi2NCLu89+5+EUu
+         UMKPme96BjpOqZcn+rdD0V02VM35nghj07FlzatV/PfGWJ4X+RL/NtOw3pjH0HaCnNcr
+         103XPgL6fODVSlDHUcsf/OA8Ie6sg6or9DTJvPsBFXpKipC881j60ipX+ZbyynTiawKS
+         G5z3+0MXPRvJxqvjiE2OJMoKtVhKLK3fjLqzYib9NWXw7igRz2nRkLAFoVgCLk26iYQE
+         Py4A==
+X-Gm-Message-State: APjAAAX6l7y5wB4tHfVHB+l+xIjJXOaNH5YU0AsqFkb/q7SZUNUyMDDg
+        id+xLuWGhuv9fE63pXhqvoCalca/d2gq1HOom/M=
+X-Google-Smtp-Source: APXvYqyfg9Z7FZ27gYaCUT8OP1K/853AXCJJ6Bc+DrJlBjUKCn7VCUopN9J24WeCv3cBMDEMrcoINLa7LPnzLpgUzjQ=
+X-Received: by 2002:a1c:720b:: with SMTP id n11mr3942813wmc.60.1573673161167;
+ Wed, 13 Nov 2019 11:26:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191105151353.6522-1-andrew.smirnov@gmail.com>
+ <DB7PR04MB4620E3087C59A26B865DEE988B790@DB7PR04MB4620.eurprd04.prod.outlook.com>
+ <CAHQ1cqH5hstMwbO1vqOkZ3GVe-j5a+c3TX-yosq-TvuFFxPkHQ@mail.gmail.com> <VI1PR0402MB34851C1681F8A18341A8971098760@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB34851C1681F8A18341A8971098760@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Wed, 13 Nov 2019 11:25:50 -0800
+Message-ID: <CAHQ1cqFPmJ7AR3ftTyCy4DiE0YQgspPBnp+EQLPOwxXo6tTcYg@mail.gmail.com>
+Subject: Re: [PATCH 0/5] CAAM JR lifecycle
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     Vakul Garg <vakul.garg@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 13, 2019 at 10:57 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 11/6/2019 5:19 PM, Andrey Smirnov wrote:
+> > On Tue, Nov 5, 2019 at 11:27 PM Vakul Garg <vakul.garg@nxp.com> wrote:
+> >>
+> >>
+> >>
+> >>> -----Original Message-----
+> >>> From: linux-crypto-owner@vger.kernel.org <linux-crypto-
+> >>> owner@vger.kernel.org> On Behalf Of Andrey Smirnov
+> >>> Sent: Tuesday, November 5, 2019 8:44 PM
+> >>> To: linux-crypto@vger.kernel.org
+> >>> Cc: Andrey Smirnov <andrew.smirnov@gmail.com>; Chris Healy
+> >>> <cphealy@gmail.com>; Lucas Stach <l.stach@pengutronix.de>; Horia Geanta
+> >>> <horia.geanta@nxp.com>; Herbert Xu <herbert@gondor.apana.org.au>;
+> >>> Iuliana Prodan <iuliana.prodan@nxp.com>; dl-linux-imx <linux-
+> >>> imx@nxp.com>; linux-kernel@vger.kernel.org
+> >>> Subject: [PATCH 0/5] CAAM JR lifecycle
+> >>>
+> >>> Everyone:
+> >>>
+> >>> This series is a different approach to addressing the issues brought up in
+> >>> [discussion]. This time the proposition is to get away from creating per-JR
+> >>> platfrom device, move all of the underlying code into caam.ko and disable
+> >>> manual binding/unbinding of the CAAM device via sysfs. Note that this series
+> >>> is a rough cut intented to gauge if this approach could be acceptable for
+> >>> upstreaming.
+> >>>
+> >>> Thanks,
+> >>> Andrey Smirnov
+> >>>
+> >>> [discussion] lore.kernel.org/lkml/20190904023515.7107-13-
+> >>> andrew.smirnov@gmail.com
+> >>>
+> >>> Andrey Smirnov (5):
+> >>>   crypto: caam - use static initialization
+> >>>   crypto: caam - introduce caam_jr_cbk
+> >>>   crypto: caam - convert JR API to use struct caam_drv_private_jr
+> >>>   crypto: caam - do not create a platform devices for JRs
+> >>>   crypto: caam - disable CAAM's bind/unbind attributes
+> >>>
+> >>
+> >> To access caam jobrings from DPDK (user space drivers), we unbind job-ring's platform device from the kernel.
+> >> What would be the alternate way to enable job ring drivers in user space?
+> >>
+> >
+> > Wouldn't either building your kernel with
+> > CONFIG_CRYPTO_DEV_FSL_CAAM_JR=n (this series doesn't handle that right
+> > currently due to being a rough cut) or disabling specific/all JRs via
+> > DT accomplish the same goal?
+> >
+> It's not a 1:1 match, the ability to move a ring to user space / VM etc.
+> *dynamically* goes away.
+>
 
-ping?
+Wouldn't it be possible to do that dynamically using DT overlays? That
+is "modprobe -r caam; <apply overlay>; modprobe caam"?
 
--- Steve
-
-
-On Tue, 22 Oct 2019 17:45:51 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 22 Oct 2019 15:51:04 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > >  static struct syscall_metadata *syscall_nr_to_meta(int nr)
-> > >  {
-> > > -	if (!syscalls_metadata || nr >= NR_syscalls || nr < 0)
-> > > -		return NULL;
-> > > -
-> > > -	return syscalls_metadata[nr];
-> > > +	return xa_load(&syscalls_metadata, (unsigned long)nr);
-> > >  }
-> > >    
-> 
-> There appears to be a slight overhead to this for archs that do not
-> have a sparse syscall array. I wonder if we should make this only
-> applicable for archs (via adding a HAVE_SPARSE_SYSCALL_NR define and
-> checking against it). Then if an arch doesn't have a sparse array of
-> system calls, it uses a normal lookup, but for archs that do, it can
-> define this for this type of lookup.
-> 
-> There's not much to this patch, so it wouldn't be too difficult to
-> support both methods.
-> 
-> Without this patch I ran:
-> 
-> # trace-cmd start -e syscalls
-> # /work/c/hackbench 50
-> Time: 15.702
-> # /work/c/hackbench 50
-> Time: 15.932
-> # /work/c/hackbench 50
-> Time: 15.893
-> # /work/c/hackbench 50
-> Time: 16.038
-> # /work/c/hackbench 50
-> Time: 15.429
-> 
-> 
-> With the patch it had:
-> 
-> # trace-cmd start -e syscalls
-> # /work/c/hackbench 50
-> Time: 16.582
-> # /work/c/hackbench 50
-> Time: 15.972
-> # /work/c/hackbench 50
-> Time: 16.078
-> # /work/c/hackbench 50
-> Time: 16.133
-> # /work/c/hackbench 50
-> Time: 16.263
-> 
-> -- Steve
-
+Thanks,
+Andrey Smirnov
