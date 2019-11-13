@@ -2,81 +2,75 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C5BC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA1EC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05433222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7E5222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfKMKyU (ORCPT
+        id S1727645AbfKMK4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:54:20 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38800 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726340AbfKMKyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:54:19 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 25B3A627E2CF131B800A;
-        Wed, 13 Nov 2019 18:54:17 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
- 18:54:09 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
-        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>,
-        <qperret@google.com>, <viresh.kumar@linaro.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] thermal: power_allocator: Fix Kconfig warning
-Date:   Wed, 13 Nov 2019 18:53:13 +0800
-Message-ID: <20191113105313.41616-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20191112152801.GA247051@google.com>
-References: <20191112152801.GA247051@google.com>
+        Wed, 13 Nov 2019 05:56:22 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55415 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKMK4W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:56:22 -0500
+Received: from 79.184.253.153.ipv4.supernova.orange.pl (79.184.253.153) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 84cabe2e8f322837; Wed, 13 Nov 2019 11:56:19 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lenb@kernel.org, Cao jin <caoj.fnst@cn.fujitsu.com>
+Subject: Re: [PATCH] ACPI: OSI: Shoot duplicate word
+Date:   Wed, 13 Nov 2019 11:56:19 +0100
+Message-ID: <1893397.DovUig9K4z@kreacher>
+In-Reply-To: <20191105101501.3291-1-ruansy.fnst@cn.fujitsu.com>
+References: <20191105101501.3291-1-ruansy.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When do randbuiding, we got this:
+On Tuesday, November 5, 2019 11:15:01 AM CET Shiyang Ruan wrote:
+> From: Cao jin <caoj.fnst@cn.fujitsu.com>
+> 
+> "this" is duplicated.
+> 
+> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+> ---
+>  drivers/acpi/osi.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/osi.c b/drivers/acpi/osi.c
+> index bec0bebc7f52..9f6853809138 100644
+> --- a/drivers/acpi/osi.c
+> +++ b/drivers/acpi/osi.c
+> @@ -473,9 +473,9 @@ static const struct dmi_system_id acpi_osi_dmi_table[] __initconst = {
+>  	 */
+>  
+>  	/*
+> -	 * Without this this EEEpc exports a non working WMI interface, with
+> -	 * this it exports a working "good old" eeepc_laptop interface, fixing
+> -	 * both brightness control, and rfkill not working.
+> +	 * Without this EEEpc exports a non working WMI interface, with
+> +	 * this it exports a working "good old" eeepc_laptop interface,
+> +	 * fixing both brightness control, and rfkill not working.
+>  	 */
+>  	{
+>  	.callback = dmi_enable_osi_linux,
+> 
 
-WARNING: unmet direct dependencies detected for THERMAL_GOV_POWER_ALLOCATOR
-  Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
-  Selected by [y]:
-  - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
+Applying as 5.5 material, thanks!
 
-Make THERMAL_DEFAULT_GOV_POWER_ALLOCATOR depend on
-THERMAL_DEFAULT_GOV_POWER_ALLOCATOR to fix this warning.
 
-Suggested-by: Quentin Perret <qperret@google.com>
-Fixes: a4e893e802e6 ("thermal: cpu_cooling: Migrate to using the EM framework")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/thermal/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 59b79fc..79b2786 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -108,7 +108,7 @@ config THERMAL_DEFAULT_GOV_USER_SPACE
- 
- config THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
- 	bool "power_allocator"
--	select THERMAL_GOV_POWER_ALLOCATOR
-+	depends on THERMAL_GOV_POWER_ALLOCATOR
- 	help
- 	  Select this if you want to control temperature based on
- 	  system and device power allocation. This governor can only
--- 
-2.7.4
 
 
