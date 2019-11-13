@@ -2,109 +2,124 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72C2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2948C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C04E206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1D121A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="JzkEBA51"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QOZye08E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKMAiE (ORCPT
+        id S1727053AbfKMAkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:38:04 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:9568 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfKMAiD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:38:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573605481;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=odJ7n5ZEnkLtRoB5zC5Ulu/wysvbhjc5UXNa+NovNYM=;
-        b=JzkEBA51bxZIc034cc9Ag0QRwE4/0IKyT6/CRkoM3TDJ78KPpafdrmeRp3h5374LLp
-        Lhlc4fL2W5Onv+8TAlcUsdpqCqtQzNPZctxxt14m1OZQrt/JJjbFgWK2gnKOjNWS1g+c
-        JzZKT+I4AV0tqoOsVAFYlpIPiLG01r0iMqc3FkZQtr5umE6sEtZii0IkJ4mNALE2KWJ2
-        7LGnhuKICUh1B/bb/cYzUL0O7wAf0eTBYs/qiYs5nqCKQOIzyffLaRh8NRSzrlMYSfO1
-        XC1XEdCSO4o2HyEqC4Pw86NJJW+4MvDHEXVwIuc5B9vDP3FksahJotVZ28ELQjJWNgl1
-        +PIA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmwdNLqV/Nz7PsNPEA=="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id N09a57vAD0aOACK
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 13 Nov 2019 01:36:24 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     "Alexander E. Patrakov" <patrakov@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v24 11/12] LRNG - add SP800-90B compliant health tests
-Date:   Wed, 13 Nov 2019 01:36:22 +0100
-Message-ID: <9152597.fJySsU3eCD@positron.chronox.de>
-In-Reply-To: <556c89ae-4272-970d-1644-cb77dc3c7946@gmail.com>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <3385183.Cb3iLDTLdO@positron.chronox.de> <556c89ae-4272-970d-1644-cb77dc3c7946@gmail.com>
+        Tue, 12 Nov 2019 19:40:41 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52255 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfKMAkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:40:41 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CQkr1WLgz9sPh;
+        Wed, 13 Nov 2019 11:40:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573605637;
+        bh=zGB2x+uOiISDFNlvQBfSFlh+hinWcZ+bX2WnqS9eN/s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QOZye08E4DLQdE/1wDa4pOlovdLZGHrmxdKO7KfoHhdbrCW0pqagyPbYvZfxDZb4x
+         4V7Nr7a6M5YTAwOOCCbOrZzEZn8A5nv/mg3I1UAZOeV0if8jQcc87RGwZxOdh61TmH
+         hqovx91m9xZ3LEFFP1/tRaTPsnOuaf9sla0TE83OKAy+cGL1loYWmVpys59HL0FhIO
+         6w5ersLHqSL556YiuDKbh+o94zGhwSlYu3DoSRr9GjKhRLPF5ID2nI27BSe/3TvU/P
+         MIFfYuYchwHx6xD+nQsQ7O8y/CBbczPcu8/fKLGFgejp2SQtjRd6KGAeVRPlDkkyU3
+         TLAD7veaDxB6g==
+Date:   Wed, 13 Nov 2019 11:40:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jon Bloomfield <jon.bloomfield@intel.com>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: linux-next: manual merge of the drm tree with Linus' tree
+Message-ID: <20191113114034.3332d688@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; boundary="Sig_/gOUalc+A2t=HKgB0T6_S/nq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 12. November 2019, 20:58:32 CET schrieb Alexander E. Patrakov:
+--Sig_/gOUalc+A2t=HKgB0T6_S/nq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alexander,
- 
-> > +config LRNG_HEALTH_TESTS
-> > +	bool "Enable noise source online health tests"
-> > +	help
-> > +	  The online health tests validate the noise source at
-> > +	  runtime for fatal errors. These tests include SP800-90B
-> > +	  compliant tests which are invoked if the system is booted
-> > +	  with fips=1. In case of fatal errors during active
-> > +	  SP800-90B tests, the issue is logged and the noise
-> > +	  data is discarded. These tests are required for full
-> > +	  compliance with SP800-90B.
-> 
-> How have you tested that these tests work at runtime? Maybe add some
-> code under a new CONFIG item that depends on CONFIG_BROKEN that
-> deliberately botches the RNG and triggers failures?
+Hi all,
 
+Today's linux-next merge of the drm tree got a conflict in:
 
-I am unable to find sensible information about CONFIG_BROKEN in the recent 
-kernel tree. 
+  drivers/gpu/drm/i915/gem/i915_gem_context.c
 
-Do you happen to have a pointer on how that option is to be used?
+between commit:
 
-Thanks a lot
+  f8c08d8faee5 ("drm/i915/cmdparser: Add support for backward jumps")
 
-Ciao
-Stephan
+from Linus' tree and commit:
 
+  a4e7ccdac38e ("drm/i915: Move context management under GEM")
 
+from the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/gem/i915_gem_context.c
+index e41fd94ae5a9,de6e55af82cf..000000000000
+--- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+@@@ -443,9 -527,10 +529,13 @@@ __create_context(struct drm_i915_privat
+  	for (i =3D 0; i < ARRAY_SIZE(ctx->hang_timestamp); i++)
+  		ctx->hang_timestamp[i] =3D jiffies - CONTEXT_FAST_HANG_JIFFIES;
+ =20
+ +	ctx->jump_whitelist =3D NULL;
+ +	ctx->jump_whitelist_cmds =3D 0;
+ +
++ 	spin_lock(&i915->gem.contexts.lock);
++ 	list_add_tail(&ctx->link, &i915->gem.contexts.list);
++ 	spin_unlock(&i915->gem.contexts.lock);
++=20
+  	return ctx;
+ =20
+  err_free:
+
+--Sig_/gOUalc+A2t=HKgB0T6_S/nq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LUQIACgkQAVBC80lX
+0GybQQf8CjfWsd4l/CLD3ydwD6MgdMFfg2fzHEoMVGD9rdzzUWrCMHcckA4BUYe+
+H0dF42iBBJJklIKeF4bA+R1ZuQx4wxGZJySBLmddAS6RJieyPnu+ztXbmeDrMEss
+RPc3nmNHN9ZkelMRBksUWDNRgMrmXqMgrECsFk5utQOphr41dV7ZFVcLbVAq2yuq
+Up7v36R0OivLnISQnpRvstW+TkgPDuoZ9e6zHGI4uAgbgJA1Rwa6HObkRQ9xko8w
+wcEscnH1Bcp2bAbcG4jTCJNrUY4ILYEskHTb5UJE9LmJtqo3WcJJ4xoSRvdf9A21
+Q5MUZBnhrdlMtOBbLqIGdVpaNKu71Q==
+=X9cU
+-----END PGP SIGNATURE-----
+
+--Sig_/gOUalc+A2t=HKgB0T6_S/nq--
