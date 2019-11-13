@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFF8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4AAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF8620674
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FEAD22459
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610563;
-	bh=JdrTXh+ixgefAJIjHzB9L7T40uj7SjS+wb8WCtZ8x34=;
+	s=default; t=1573610567;
+	bh=3TcSAr33we8foAM+TykaFSMPb/1j0mn/8NsdaqDzg88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zfT7VuXUGpvGWq0IZf7DjDjveeOoA00R3dLPFWcMCUeFdN27sVMmZH45k4OaRzxjv
-	 TdFVnDOuE8vhNBSGN9c9TQ7AZDkmh0PXCGhibgcdY7IN5C7bNEvYjd1yJLg0XveFuw
-	 9xoRa7JhcnJZIc6f2sKkYDIsFcw4jFAKi4dqDpfA=
+	b=IDGH9bPwAiQ4ZyZZFAAG1c9GlQbZgzC28s6nlQlIULYfwYDYKy36pEWXkrW6wDI8M
+	 vkfFWKjrezE81iVatP0zUyPghm3mVWTYsaFFkqyWbV2jXXn//o512uAqI5U+LEMBXD
+	 xRx999IguFj9nUKZHoWdF7b8cBl+bqmG7zIdxc9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbfKMCCm (ORCPT
+        id S1730192AbfKMCCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:02:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59190 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:02:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731035AbfKMCCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:32 -0500
+        id S1731041AbfKMCCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52357204EC;
-        Wed, 13 Nov 2019 02:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B89EB2246F;
+        Wed, 13 Nov 2019 02:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610552;
-        bh=JdrTXh+ixgefAJIjHzB9L7T40uj7SjS+wb8WCtZ8x34=;
+        s=default; t=1573610554;
+        bh=3TcSAr33we8foAM+TykaFSMPb/1j0mn/8NsdaqDzg88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ni4YZxlwU1oUPKzkaS8b3i8nu1+kVr2D6UQFqU8Icyp06SjNdnRKhXIttc21E+Qng
-         Celjxynpsro+MifHLktpY4H6SXLvQwWWqFSG9fc5K21XwT/IjDc3aCgJ1eV3mLBYGh
-         etTpcVXY3bsCxxupBsDrw9MQpUFXyycqMeqSiU74=
+        b=m1dsgrwuRMnGffgj19Tbi4bs2fAtxOZurxutWhyZ6vU9cDImyYLhBUUUuXI2XeAQX
+         nPV8xzjwO48MnNB98Y5x7u33E9NzEu7wwLnQjmpkHLK9vhl3r8SRWiu34mYgIWn8+M
+         2px8h3KGBgtj7RECTIG+RpGcIXURREenuTnGs7Rw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Lianbo Jiang <lijiang@redhat.com>,
-        x86@kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 35/48] proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
-Date:   Tue, 12 Nov 2019 21:01:18 -0500
-Message-Id: <20191113020131.13356-35-sashal@kernel.org>
+Cc:     He Zhe <zhe.he@windriver.com>, rostedt@goodmis.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 37/48] printk: Give error on attempt to set log buffer length to over 2G
+Date:   Tue, 12 Nov 2019 21:01:20 -0500
+Message-Id: <20191113020131.13356-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -59,47 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: He Zhe <zhe.he@windriver.com>
 
-[ Upstream commit cf089611f4c446285046fcd426d90c18f37d2905 ]
+[ Upstream commit e6fe3e5b7d16e8f146a4ae7fe481bc6e97acde1e ]
 
-Lianbo reported a build error with a particular 32-bit config, see Link
-below for details.
+The current printk() is ready to handle log buffer size up to 2G.
+Give an explicit error for users who want to use larger log buffer.
 
-Provide a weak copy_oldmem_page_encrypted() function which architectures
-can override, in the same manner other functionality in that file is
-supplied.
+Also fix printk formatting to show the 2G as a positive number.
 
-Reported-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: x86@kernel.org
-Link: http://lkml.kernel.org/r/710b9d95-2f70-eadf-c4a1-c3dc80ee4ebb@redhat.com
+Link: http://lkml.kernel.org/r/20181008135916.gg4kkmoki5bgtco5@pathway.suse.cz
+Cc: rostedt@goodmis.org
+Cc: linux-kernel@vger.kernel.org
+Suggested-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+[pmladek: Fixed to the really safe limit 2GB.]
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/vmcore.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/printk/printk.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 4e61388ec03d2..08143139b65a7 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -164,6 +164,16 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 	return remap_pfn_range(vma, from, pfn, size, prot);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 5a1b2a914b4e5..699c18c9d7633 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -279,6 +279,7 @@ static u32 clear_idx;
+ #define LOG_ALIGN __alignof__(struct printk_log)
+ #endif
+ #define __LOG_BUF_LEN (1 << CONFIG_LOG_BUF_SHIFT)
++#define LOG_BUF_LEN_MAX (u32)(1 << 31)
+ static char __log_buf[__LOG_BUF_LEN] __aligned(LOG_ALIGN);
+ static char *log_buf = __log_buf;
+ static u32 log_buf_len = __LOG_BUF_LEN;
+@@ -870,18 +871,23 @@ void log_buf_kexec_setup(void)
+ static unsigned long __initdata new_log_buf_len;
+ 
+ /* we practice scaling the ring buffer by powers of 2 */
+-static void __init log_buf_len_update(unsigned size)
++static void __init log_buf_len_update(u64 size)
+ {
++	if (size > (u64)LOG_BUF_LEN_MAX) {
++		size = (u64)LOG_BUF_LEN_MAX;
++		pr_err("log_buf over 2G is not supported.\n");
++	}
++
+ 	if (size)
+ 		size = roundup_pow_of_two(size);
+ 	if (size > log_buf_len)
+-		new_log_buf_len = size;
++		new_log_buf_len = (unsigned long)size;
  }
  
-+/*
-+ * Architectures which support memory encryption override this.
-+ */
-+ssize_t __weak
-+copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
-+			   unsigned long offset, int userbuf)
-+{
-+	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
-+}
-+
- /*
-  * Copy to either kernel or user space
-  */
+ /* save requested log_buf_len since it's too early to process it */
+ static int __init log_buf_len_setup(char *str)
+ {
+-	unsigned int size;
++	u64 size;
+ 
+ 	if (!str)
+ 		return -EINVAL;
+@@ -951,7 +957,7 @@ void __init setup_log_buf(int early)
+ 	}
+ 
+ 	if (unlikely(!new_log_buf)) {
+-		pr_err("log_buf_len: %ld bytes not available\n",
++		pr_err("log_buf_len: %lu bytes not available\n",
+ 			new_log_buf_len);
+ 		return;
+ 	}
+@@ -964,8 +970,8 @@ void __init setup_log_buf(int early)
+ 	memcpy(log_buf, __log_buf, __LOG_BUF_LEN);
+ 	raw_spin_unlock_irqrestore(&logbuf_lock, flags);
+ 
+-	pr_info("log_buf_len: %d bytes\n", log_buf_len);
+-	pr_info("early log buf free: %d(%d%%)\n",
++	pr_info("log_buf_len: %u bytes\n", log_buf_len);
++	pr_info("early log buf free: %u(%u%%)\n",
+ 		free, (free * 100) / __LOG_BUF_LEN);
+ }
+ 
 -- 
 2.20.1
 
