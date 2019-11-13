@@ -2,162 +2,112 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2478AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28548C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9D7214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7C4214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kia/RTbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfKMIHQ (ORCPT
+        id S1726960AbfKMIIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:07:16 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:36913 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKMIHQ (ORCPT
+        Wed, 13 Nov 2019 03:08:17 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36806 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfKMIIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:07:16 -0500
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N3K9E-1hm9TM31rW-010OG7; Wed, 13 Nov 2019 09:07:14 +0100
-Received: by mail-qk1-f171.google.com with SMTP id e2so960534qkn.5;
-        Wed, 13 Nov 2019 00:07:14 -0800 (PST)
-X-Gm-Message-State: APjAAAW243KPS1ttHSNpjAyRUJfbsWiMTiXGF7eIKXYJexnOBbJThUMR
-        WVpOB38Judr7ThcaPV5ZxvtOqWbLn6eislwB3+I=
-X-Google-Smtp-Source: APXvYqy/5+knIMq8SxgXUSdJeP+oZ4qutM2G54ElJDh+6Wmp59aE9mrihg2W3rybdtUrJ90Tgup09KKBFVP+pL9nX4A=
-X-Received: by 2002:a37:44d:: with SMTP id 74mr1356520qke.3.1573632433479;
- Wed, 13 Nov 2019 00:07:13 -0800 (PST)
+        Wed, 13 Nov 2019 03:08:17 -0500
+Received: by mail-pl1-f194.google.com with SMTP id d7so744100pls.3;
+        Wed, 13 Nov 2019 00:08:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=r/fMeIkVi21iCxbzdp/QtDTjojD14k6gpd4DZsn8Mfc=;
+        b=Kia/RTbdDuikn8K2sIqQ13gm0tv6sDP07tY29CBKsGwKy97BoJsg7Fisv59LRmWi9S
+         yBfqQxyHlQVknQDMTzD6ZEhXqWzVJV5j7u0jrvYH41wTM10AvlxQc7iF479JoRpX9oy8
+         0GZmrsb1tFYDlx0adGQfM4UkXqjIwnim+zWbpcvmP/ZL0SGxHRY+B31QAemUXBOOwLdu
+         dJtKJzR0vxeZGDzirMjmYGj4KArYJnHurFwX4KCzTj9H1jJPVBTkcmGyQkiAfrFyfAk3
+         9d2nB/cSrsOjLt+32yllLHfrXLs9BaDHiJFMMxmhkxnJVPapOhq1OQh7xeh73a6GKdtS
+         cDtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=r/fMeIkVi21iCxbzdp/QtDTjojD14k6gpd4DZsn8Mfc=;
+        b=lYWvIL2MP/2oaBHRnxsFUFDV6fu3JW0MaGgK2gCl7klZhVPQcYnqGtZqWJdthey5XH
+         FiNqb6IkdVHwjyeAll//+P0ZJYRW3Mp6dZCGnuJEBNrdh2BTKd/cYfpqgiARei7vcw3h
+         Vtio2+uaQk/5H6cLmpTKvXNgMIsoSdsjzviTtYfmkhDn3pRaJUDzELsBZPgT75yHYKoW
+         vDdRxtg/S4koeWqF6FgjeoMy3j5QkE/ozvAhMDGPQUnN6kDCqnr+CDoCejFu9LCtmqqf
+         FDRfT3kS45lJwzOcc6lk9MGW9RHZSIZVFgTbhpFmzbrevBUcZuOGbCwbR2APx/ZGDngU
+         sQDQ==
+X-Gm-Message-State: APjAAAVU9QBgIm4DlTM2KiAdU22ex71Q1WooDCTRZq1RlMVWvBZpDQrR
+        VzdUQkzEKod7UBU+dQzxGRo=
+X-Google-Smtp-Source: APXvYqzlqfNgUOQUFtgA1SgTzDdplApu1eiVfos7BMyyaBnYSfBaHTGR9AWA/+byAysIo48izLxjYA==
+X-Received: by 2002:a17:902:4c:: with SMTP id 70mr2315305pla.4.1573632496113;
+        Wed, 13 Nov 2019 00:08:16 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id em16sm1417281pjb.21.2019.11.13.00.08.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 00:08:15 -0800 (PST)
+Date:   Wed, 13 Nov 2019 00:08:13 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
+Message-ID: <20191113080813.GO13374@dtor-ws>
+References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
+ <20191108042225.45391-2-dmitry.torokhov@gmail.com>
+ <87woc4s1xg.fsf@miraculix.mork.no>
 MIME-Version: 1.0
-References: <20191108213257.3097633-1-arnd@arndb.de> <20191108213257.3097633-14-arnd@arndb.de>
- <2520E708-4636-4CA8-B953-0F46F8E7454A@dubeyko.com>
-In-Reply-To: <2520E708-4636-4CA8-B953-0F46F8E7454A@dubeyko.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 13 Nov 2019 09:06:57 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1Bvdb4Xn1Aqfnxnn24HPb6FXxAAVwq8ypO31AqoR1hBw@mail.gmail.com>
-Message-ID: <CAK8P3a1Bvdb4Xn1Aqfnxnn24HPb6FXxAAVwq8ypO31AqoR1hBw@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH 13/16] hfs/hfsplus: use 64-bit inode timestamps
-To:     Viacheslav Dubeyko <slava@dubeyko.com>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        =?UTF-8?Q?Ernesto_A=2E_Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:d1yoZnx3cuZgujn6Y70WA+TE8zJ+43yzUhwPYsW72XZsslDYl3s
- SSjgsKIIXO+LXcgtxOoVpTKyzf5vPi4KV2UVECpvC6Bq/BTUqnwTkr7ZVoddv8f34WR8xv3
- ITedgdaMSvARRj2jWOc1DfEaxTzB8+mhHgu1GFkhYaavFrvDL3WiyOsrY+d6MihJ5rZB69V
- UMLekNLubKlLHPGNVks5A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lxc8dwWyuQA=:MbJBnHgVZWCtnGAwO/noXJ
- Elt+SyDlCG34LDeqKB3b9MlPQ3xVpSSGO2XOd9XHCc4nbhsHC038QtorEN5GTzi/QqPonZ0Fv
- h0ZrgN38OPtAyQLupIOg9+6rj6hb7vl5r6pK15vJ15kLV+13UcBHysZCzRiayokDp7ka93K/n
- RdWxdbxY3QP9VMG9cMiT7YZLntolGPI5gtS78I4lztNHnsbuFmNjEc0rx5rAGBa3qR7qrtRBT
- 9vxmHzTTpLZ9tycUrMq8L41oKBI8AXdFZVACOr5QRAFaKXjPTc7OQZrt2JFzRdQHRAxQANHYd
- dhDAJf68BbVLkjM3F5T79XTlf9vN/TvP+yEtrpXAV+pvV7RuShIg8TsDRQOuNZqWmB+WDbkOr
- 2ZjCfG7bej+sPn4m94+yoX0Sg/nTSe60YCImEX75O0eUcrMJbhwcRw4tjVzLCPX07Yp3XGlIt
- N/OW3LFLt0Xdf6gMgHOxvDb5s9h182so9M6xZEldqBoehgLcRb52COIlvPslz6pxH0xd/agl2
- Z51hBihe2edKRxsxbltOl9OfCfP2u4QY1tk73UHE6G782LI7nKhfRcc5JhuaJZUO5nj4YYK0M
- a4EtEFakwGluVkUUEMMM0wTaheTGLuEyWEy9S83C38GOqGhm7yhhFMmbXyxsqURhu944XwxUR
- PpOONHwntE4g0/krKfq0xjlEdTJS6rlr+JDoVek1YSpE63ZzXwJVHJQikruP0scD21d0OAyr2
- nXuNVgdpxIKweLOTlcWGQDsHJP1RvTaW6CQAbrCcvOWeFmez2QVeYrogRo76IRDQ6gYHjB1fF
- x4uh1lpaTDpLD/Eoh+SiPNHI1+ukesgqREUox2tIgiV1d7K8pkIPiE5sA68oMGco6Qol5k/9x
- 2oTf0sWh5bsGqBrbQMbg==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87woc4s1xg.fsf@miraculix.mork.no>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 7:00 AM Viacheslav Dubeyko <slava@dubeyko.com> wrote:
-> > On Nov 9, 2019, at 12:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >  * There are two time systems.  Both are based on seconds since
-> >  * a particular time/date.
-> > - *   Unix:   unsigned lil-endian since 00:00 GMT, Jan. 1, 1970
-> > + *   Unix:   signed little-endian since 00:00 GMT, Jan. 1, 1970
-> >  *    mac:    unsigned big-endian since 00:00 GMT, Jan. 1, 1904
-> >  *
-> > + * HFS implementations are highly inconsistent, this one matches the
-> > + * traditional behavior of 64-bit Linux, giving the most useful
-> > + * time range between 1970 and 2106, by treating any on-disk timestamp
-> > + * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
-> >  */
-> > -#define __hfs_u_to_mtime(sec)        cpu_to_be32(sec + 2082844800U - sys_tz.tz_minuteswest * 60)
-> > -#define __hfs_m_to_utime(sec)        (be32_to_cpu(sec) - 2082844800U  + sys_tz.tz_minuteswest * 60)
->
-> I believe it makes sense to introduce some constant instead of hardcoded value (2082844800U and 60).
-> It will be easier to understand the code without necessity to take a look into the comments.
-> What do you think?
+On Wed, Nov 13, 2019 at 07:52:43AM +0100, Bjørn Mork wrote:
+> Dmitry Torokhov <dmitry.torokhov@gmail.com> writes:
+> 
+> > We do not need a special flag to know if we are dealing with an array,
+> > as we can get that data from ratio between element length and the data
+> > size, however we do need a flag to know whether the data is stored
+> > directly inside property_entry or separately.
+> 
+> Doesn't a non-null prop->pointer tell you this?
 
-Every other user of sys_tz.tz_minuteswest uses a plain '60', I think that one
-is easy enough to understand from context. Naming the other constant
-is a good idea, I've now folded the change below into my patch.
+No it does not because pointer is a part of a union.
 
-Thanks for the review!
+> 
+> And inverting the flag is unnecessarily risky IMHO. An all-zero prop
+> might now result in dereferencing a NULL prop->pointer instead of using
+> the empty prop->value.  Now I haven't looked at the code to see if this
+> is a real problem.  But I believe it's better not having to do that
+> anyway...
 
-      Arnd
+All-zero property is a terminator and thus we will not dereference
+anything.
 
-8<-----
-diff --git a/fs/hfs/hfs_fs.h b/fs/hfs/hfs_fs.h
-index 26733051ee50..f71c384064c8 100644
---- a/fs/hfs/hfs_fs.h
-+++ b/fs/hfs/hfs_fs.h
-@@ -247,22 +247,24 @@ extern void hfs_mark_mdb_dirty(struct super_block *sb);
-  *
-  * HFS implementations are highly inconsistent, this one matches the
-  * traditional behavior of 64-bit Linux, giving the most useful
-  * time range between 1970 and 2106, by treating any on-disk timestamp
-- * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
-+ * under HFS_UTC_OFFSET (Jan 1 1970) as a time between 2040 and 2106.
-  */
-+#define HFS_UTC_OFFSET 2082844800U
-+
- static inline time64_t __hfs_m_to_utime(__be32 mt)
- {
--       time64_t ut = (u32)(be32_to_cpu(mt) - 2082844800U);
-+       time64_t ut = (u32)(be32_to_cpu(mt) - HFS_UTC_OFFSET);
+Thanks.
 
-        return ut + sys_tz.tz_minuteswest * 60;
- }
-
- static inline __be32 __hfs_u_to_mtime(time64_t ut)
- {
-        ut -= sys_tz.tz_minuteswest * 60;
-
--       return cpu_to_be32(lower_32_bits(ut) + 2082844800U);
-+       return cpu_to_be32(lower_32_bits(ut) + HFS_UTC_OFFSET);
- }
- #define HFS_I(inode)   (container_of(inode, struct hfs_inode_info, vfs_inode))
- #define HFS_SB(sb)     ((struct hfs_sb_info *)(sb)->s_fs_info)
-
-diff --git a/fs/hfsplus/hfsplus_fs.h b/fs/hfsplus/hfsplus_fs.h
-index 22d0a22c41a3..3b03fff68543 100644
---- a/fs/hfsplus/hfsplus_fs.h
-+++ b/fs/hfsplus/hfsplus_fs.h
-@@ -538,20 +538,22 @@ int hfsplus_read_wrapper(struct super_block *sb);
-  *
-  * HFS+ implementations are highly inconsistent, this one matches the
-  * traditional behavior of 64-bit Linux, giving the most useful
-  * time range between 1970 and 2106, by treating any on-disk timestamp
-- * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
-+ * under HFSPLUS_UTC_OFFSET (Jan 1 1970) as a time between 2040 and 2106.
-  */
-+#define HFSPLUS_UTC_OFFSET 2082844800U
-+
- static inline time64_t __hfsp_mt2ut(__be32 mt)
- {
--       time64_t ut = (u32)(be32_to_cpu(mt) - 2082844800U);
-+       time64_t ut = (u32)(be32_to_cpu(mt) - HFSPLUS_UTC_OFFSET);
-
-        return ut;
- }
-
- static inline __be32 __hfsp_ut2mt(time64_t ut)
- {
--       return cpu_to_be32(lower_32_bits(ut) + 2082844800U);
-+       return cpu_to_be32(lower_32_bits(ut) + HFSPLUS_UTC_OFFSET);
- }
-
- /* compatibility */
- #define hfsp_mt2ut(t)          (struct timespec64){ .tv_sec = __hfsp_mt2ut(t) }
+-- 
+Dmitry
