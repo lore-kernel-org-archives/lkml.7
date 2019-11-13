@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AD4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8F0C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91ED222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7282E21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611942;
-	bh=/fJ3JwL9yOylSX2pobd1DuKQQvxvmJdnycp9EphWstk=;
+	s=default; t=1573611949;
+	bh=5JyN2FgPWBh3qL6a7cuhWgCk96f+uI8zA/DJLjhhlq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ORJq/H90KKx1TpSO3EgvkicZ3+E/7jaAaLbweqUMrSLVAOIS1XIwpF6IehDIHCDdq
-	 9KIJDeRXEGapxOuIEqC9TzjtRyixCRro1XiJClvuQtKEIfZvqEFkryNea1n2TyV/2U
-	 TmVjVTUqH396GkTer0dAEYbO7RRgmSBzr8tHqqK0=
+	b=rttDQOAzxs12dIJpygUZVxL4Ddqrn6P7h/6ygQ2kfQLmXFgrO8NKTcaQWYISJwuU6
+	 IQj+K+Ns0rsUQrYjH7Xjthl8nj1sSFlQuIvBVQ252GzWe5JBZTIQuQyX6qalOwYeEL
+	 vvyO6UZuHRdfjTvxLyklxMlLJIVcabycFuIyZN3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbfKMCZl (ORCPT
+        id S1727869AbfKMCZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:25:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39352 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:25:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbfKMBvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:31 -0500
+        id S1727866AbfKMBva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 044AD22466;
-        Wed, 13 Nov 2019 01:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A54822467;
+        Wed, 13 Nov 2019 01:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609890;
-        bh=/fJ3JwL9yOylSX2pobd1DuKQQvxvmJdnycp9EphWstk=;
+        s=default; t=1573609889;
+        bh=5JyN2FgPWBh3qL6a7cuhWgCk96f+uI8zA/DJLjhhlq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pb4NJVJLblcJ1901nUDn6Ba7DRCliTTmiS9PaQ8QrU5d2RD0ISjJee8c1UH+Lrj8H
-         cynJ1IoW4Pew81JHaNrMSyD/BsV1fzkcJ3gHbpB56iW9+zHF2HEFbiqSL2dPaFnVbE
-         LR/SWzvHpzN8zhYsqyWKXMvE0X6aIqpCAZ2IuWfo=
+        b=E+ylVhxz2Mbzz3Y+hyPEfdqKPaRbec2RJKED8vceiU4Jk/sgWPJ3NFSpQK57cngyd
+         8duGA0Wa3+sW/A3zawX4ppp0uudsiTzL+zy6FiHCUIRLSN15LGbdgmnMXf1YQ0cIf0
+         /RnAgmHcYTYkq2NJ9anfRZymJqEey+vsLnI35/BU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 048/209] ext4: fix build error when DX_DEBUG is defined
-Date:   Tue, 12 Nov 2019 20:47:44 -0500
-Message-Id: <20191113015025.9685-48-sashal@kernel.org>
+Cc:     Keyon Jie <yang.jie@linux.intel.com>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 047/209] ALSA: hda: Fix mismatch for register mask and value in ext controller.
+Date:   Tue, 12 Nov 2019 20:47:43 -0500
+Message-Id: <20191113015025.9685-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,39 +58,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
+From: Keyon Jie <yang.jie@linux.intel.com>
 
-[ Upstream commit 799578ab16e86b074c184ec5abbda0bc698c7b0b ]
+[ Upstream commit c32bf867cb6721d6ea04044d33f19c8bd81280c1 ]
 
-Enabling DX_DEBUG triggers the build error below.  info is an attribute
-of  the dxroot structure.
+E.g. for snd_hdac_ext_bus_link_power_up(), we should set mask to be
+AZX_MLCTL_SPA(it was 0), and AZX_MLCTL_SPA as value to power up it,
+here correct it and several similar mismatches.
 
-linux/fs/ext4/namei.c:2264:12: error: ‘info’
-undeclared (first use in this function); did you mean ‘insl’?
-	   	  info->indirect_levels));
-
-Fixes: e08ac99fa2a2 ("ext4: add largedir feature")
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Keyon Jie <yang.jie@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/namei.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/hda/ext/hdac_ext_controller.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index 61dc1b0e4465d..badbb8b4f0f17 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2284,7 +2284,7 @@ static int ext4_dx_add_entry(handle_t *handle, struct ext4_filename *fname,
- 			dxroot->info.indirect_levels += 1;
- 			dxtrace(printk(KERN_DEBUG
- 				       "Creating %d level index...\n",
--				       info->indirect_levels));
-+				       dxroot->info.indirect_levels));
- 			err = ext4_handle_dirty_dx_node(handle, dir, frame->bh);
- 			if (err)
- 				goto journal_error;
+diff --git a/sound/hda/ext/hdac_ext_controller.c b/sound/hda/ext/hdac_ext_controller.c
+index 5bc4a1d587d4f..60cb00fd0c693 100644
+--- a/sound/hda/ext/hdac_ext_controller.c
++++ b/sound/hda/ext/hdac_ext_controller.c
+@@ -48,9 +48,11 @@ void snd_hdac_ext_bus_ppcap_enable(struct hdac_bus *bus, bool enable)
+ 	}
+ 
+ 	if (enable)
+-		snd_hdac_updatel(bus->ppcap, AZX_REG_PP_PPCTL, 0, AZX_PPCTL_GPROCEN);
++		snd_hdac_updatel(bus->ppcap, AZX_REG_PP_PPCTL,
++				 AZX_PPCTL_GPROCEN, AZX_PPCTL_GPROCEN);
+ 	else
+-		snd_hdac_updatel(bus->ppcap, AZX_REG_PP_PPCTL, AZX_PPCTL_GPROCEN, 0);
++		snd_hdac_updatel(bus->ppcap, AZX_REG_PP_PPCTL,
++				 AZX_PPCTL_GPROCEN, 0);
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_ppcap_enable);
+ 
+@@ -68,9 +70,11 @@ void snd_hdac_ext_bus_ppcap_int_enable(struct hdac_bus *bus, bool enable)
+ 	}
+ 
+ 	if (enable)
+-		snd_hdac_updatel(bus->ppcap, AZX_REG_PP_PPCTL, 0, AZX_PPCTL_PIE);
++		snd_hdac_updatel(bus->ppcap, AZX_REG_PP_PPCTL,
++				 AZX_PPCTL_PIE, AZX_PPCTL_PIE);
+ 	else
+-		snd_hdac_updatel(bus->ppcap, AZX_REG_PP_PPCTL, AZX_PPCTL_PIE, 0);
++		snd_hdac_updatel(bus->ppcap, AZX_REG_PP_PPCTL,
++				 AZX_PPCTL_PIE, 0);
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_ppcap_int_enable);
+ 
+@@ -194,7 +198,8 @@ static int check_hdac_link_power_active(struct hdac_ext_link *link, bool enable)
+  */
+ int snd_hdac_ext_bus_link_power_up(struct hdac_ext_link *link)
+ {
+-	snd_hdac_updatel(link->ml_addr, AZX_REG_ML_LCTL, 0, AZX_MLCTL_SPA);
++	snd_hdac_updatel(link->ml_addr, AZX_REG_ML_LCTL,
++			 AZX_MLCTL_SPA, AZX_MLCTL_SPA);
+ 
+ 	return check_hdac_link_power_active(link, true);
+ }
+@@ -222,8 +227,8 @@ int snd_hdac_ext_bus_link_power_up_all(struct hdac_bus *bus)
+ 	int ret;
+ 
+ 	list_for_each_entry(hlink, &bus->hlink_list, list) {
+-		snd_hdac_updatel(hlink->ml_addr,
+-				AZX_REG_ML_LCTL, 0, AZX_MLCTL_SPA);
++		snd_hdac_updatel(hlink->ml_addr, AZX_REG_ML_LCTL,
++				 AZX_MLCTL_SPA, AZX_MLCTL_SPA);
+ 		ret = check_hdac_link_power_active(hlink, true);
+ 		if (ret < 0)
+ 			return ret;
+@@ -243,7 +248,8 @@ int snd_hdac_ext_bus_link_power_down_all(struct hdac_bus *bus)
+ 	int ret;
+ 
+ 	list_for_each_entry(hlink, &bus->hlink_list, list) {
+-		snd_hdac_updatel(hlink->ml_addr, AZX_REG_ML_LCTL, AZX_MLCTL_SPA, 0);
++		snd_hdac_updatel(hlink->ml_addr, AZX_REG_ML_LCTL,
++				 AZX_MLCTL_SPA, 0);
+ 		ret = check_hdac_link_power_active(hlink, false);
+ 		if (ret < 0)
+ 			return ret;
 -- 
 2.20.1
 
