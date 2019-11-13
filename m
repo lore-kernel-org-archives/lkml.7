@@ -2,189 +2,114 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538DEC432C3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C91C47410
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997C922B47
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:49:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Kdarmmaq"
+	by mail.kernel.org (Postfix) with ESMTP id 645AE22CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfKMPtK (ORCPT
+        id S1727953AbfKMPtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:49:10 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:63799 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfKMPtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:49:09 -0500
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id xADFmwnb002467;
-        Thu, 14 Nov 2019 00:48:59 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xADFmwnb002467
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573660139;
-        bh=CcAfDSAaYzEWcA0ZdifDtl9WFUZGV+BlO+HnJ4m+CTo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KdarmmaqVcPRiM4rzpyYW/UCbDKEK1xV/Fu7S5zIq2tzQi5JFrINNOn05UNI9AHVk
-         nCbw7JfAmIA+v38rMrAZVAvnHv7+cotGk9/JQhGKQmc5bC+FJ81/r7yziL1twfoFKt
-         WPdfFxK8fKhqA6A4qGNPmBpSBRF1IPQqImSnlJU71grmsdhm6bDX1t12tTKTaKzXAY
-         llm245s+35gxNMPEkLQosF4KpHe6TW+2YAzlMvg8zAu5Oveullu89Sjf1wM8tuFDdE
-         1KIGp/1aysHIz4/Gqs21s9XqdQ5dtWnNvaB4aVgjq3UkBzs5BkBqUxo5FCJ9l7Nxj+
-         6mta704fnRE8w==
-X-Nifty-SrcIP: [209.85.221.173]
-Received: by mail-vk1-f173.google.com with SMTP id k19so665184vke.10;
-        Wed, 13 Nov 2019 07:48:59 -0800 (PST)
-X-Gm-Message-State: APjAAAU+l1ivZ9LvLPeCyT+L0Bi986ElqHTQCsK2xU5x+N4zoRFzU2xi
-        7iWGQCcN5PV1c39U27SWWY5ocdWmjm26OQA1Bew=
-X-Google-Smtp-Source: APXvYqwYYDKd9djzyye5Jm5AqqD9t+0TNx8j9BxmVW1XcUt8qojsZGzIv9lhdsYGW3wi/7kP8ffMJLcX+hp9rK2M4CI=
-X-Received: by 2002:a1f:4192:: with SMTP id o140mr1994739vka.26.1573660137863;
- Wed, 13 Nov 2019 07:48:57 -0800 (PST)
+        Wed, 13 Nov 2019 10:49:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbfKMPtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:49:49 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B8222B4B;
+        Wed, 13 Nov 2019 15:49:47 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 10:49:45 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Michal Simek <monstr@monstr.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>, linux-mips@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 01/50] kallsyms/printk: Add loglvl to print_ip_sym()
+Message-ID: <20191113104945.604e34d2@gandalf.local.home>
+In-Reply-To: <20191106030542.868541-2-dima@arista.com>
+References: <20191106030542.868541-1-dima@arista.com>
+        <20191106030542.868541-2-dima@arista.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com> <20191112123125.GD17835@willie-the-truck>
- <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
- <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net> <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
- <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com> <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
- <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com> <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
- <50602386-68b1-be38-a022-0bcf9df6a54e@163.com> <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
- <bdbe9e04-4da0-64b2-ab0c-ae739d8fd7ac@163.com>
-In-Reply-To: <bdbe9e04-4da0-64b2-ab0c-ae739d8fd7ac@163.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 14 Nov 2019 00:48:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATpJDVG+mF9J7n9_WQ2rT0U1fh7pFeAJLkQjF=J8jCSrg@mail.gmail.com>
-Message-ID: <CAK7LNATpJDVG+mF9J7n9_WQ2rT0U1fh7pFeAJLkQjF=J8jCSrg@mail.gmail.com>
-Subject: Re: Question about "asm/rwonce.h: No such file or directory"
-To:     Xiao Yang <ice_yangxiao@163.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:57 PM Xiao Yang <ice_yangxiao@163.com> wrote:
->
-> On 11/13/19 4:54 PM, Masahiro Yamada wrote:
-> > On Wed, Nov 13, 2019 at 5:36 PM Xiao Yang <ice_yangxiao@163.com> wrote:
-> >> On 11/13/19 3:53 PM, Masahiro Yamada wrote:
-> >>> On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
-> >>>> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
-> >>>>> Sorry, I really do not understand what you are doing.
-> >>>>>
-> >>>>> include/linux/compiler.h is only for kernel-space.
-> >>>>> Shrug if a user-land program includes it.
-> >>>> Hi Masahiro,
-> >>>>
-> >>>> For building tools/bpf, it is good to fix the compiler error by Daniel's
-> >>>> patch(i.e. use linux/filter from linux header).
-> >>>>
-> >>>> linux/compiler.h may be used by other code in kernel.  Is it possible to
-> >>>> trigger the same error when the other code
-> >>>>
-> >>>> including linux/compiler.h is built? Is this kind of code able to find
-> >>>> the location of <asm/rwonce.h>?
-> >>> <asm/rwonce.h> is also kernel-only header.
-> >>>
-> >>> The kernel code can find <asm/rwonce.h>, but user-land code cannot.
-> >> Hi Masahiro,
-> >>
-> >> Sorry, I am not familar with it.
-> >>
-> >> Thanks a lot for your explanation and I have seen the LINUXINCLUDE
-> >> variable in Makefile.
-> >>
-> >> I will try to send a patch as Daniel suggested.
-> >>
-> >> Best Regards,
-> >>
-> >> Xiao Yang
-> >>
-> > Hmm, digging into the git history,
-> > this include path was added by the following commit:
-> >
-> >
-> > commit d7475de58575c904818efa369c82e88c6648ce2e
-> > Author: Kamal Mostafa <kamal@canonical.com>
-> > Date:   Wed Nov 11 14:24:27 2015 -0800
-> >
-> >      tools/net: Use include/uapi with __EXPORTED_HEADERS__
-> >
-> >      Use the local uapi headers to keep in sync with "recently" added #define's
-> >      (e.g. SKF_AD_VLAN_TPID).  Refactored CFLAGS, and bpf_asm doesn't need -I.
-> >
-> >      Fixes: 3f356385e8a4 ("filter: bpf_asm: add minimal bpf asm tool")
-> >      Signed-off-by: Kamal Mostafa <kamal@canonical.com>
-> >      Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-> >      Signed-off-by: David S. Miller <davem@davemloft.net>
-> >
-> >
-> >
-> > I am not sure how big a deal it is,
-> > but it could be a problem on old distros??
-> >
-> Hi Daniel, Masahiro
->
->
-> Could we include the linux/filter.h generated by "make headers_install"
-> as a higher priority?
->
-> (PS: According to above commit, just ensure that tools/bpf keeps in sync
-> with new linux header as far as possible).
->
-> and then use the linux/filter.h in system if kernel doesn't provide
-> linux/filter.h by "make headers_install".
->
-> --------------------------------------------------------------------------------------------------------------------
->
-> diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-> index 5d1995fd369c..1e0c768132af 100644
-> --- a/tools/bpf/Makefile
-> +++ b/tools/bpf/Makefile
-> @@ -10,7 +10,7 @@ MAKE = make
->   INSTALL ?= install
->
->   CFLAGS += -Wall -O2
-> -CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi
-> -I$(srctree)/include
-> +CFLAGS += -I$(srctree)/usr/include
+On Wed,  6 Nov 2019 03:04:52 +0000
+Dmitry Safonov <dima@arista.com> wrote:
 
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -2002,12 +2002,12 @@ void ftrace_bug(int failed, struct dyn_ftrace *rec)
+>  	case -EFAULT:
+>  		FTRACE_WARN_ON_ONCE(1);
+>  		pr_info("ftrace faulted on modifying ");
 
-Probably, this does not work for O= build.
+Hmm, I wonder if I should change that from info to something more
+important, as this is important information for debugging. But this has
+nothing to do with this patch set.
 
-And, you also need to run 'make headers' somewhere
-because usr/include does not contain any header in a clean state.
+> -		print_ip_sym(ip);
+> +		print_ip_sym(KERN_INFO, ip);
 
-Be careful, people always tend to break out-of-tree build.
-I recommend to double, triple check it.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-(I believe this is a horrible design mistake
-of the tools build system.)
+-- Steve
 
+>  		break;
+>  	case -EINVAL:
+>  		FTRACE_WARN_ON_ONCE(1);
+>  		pr_info("ftrace failed to modify ");
+> -		print_ip_sym(ip);
+> +		print_ip_sym(KERN_INFO, ip);
+>  		print_ip_ins(" actual:   ", (unsigned char *)ip);
+>  		pr_cont("\n");
+>  		if (ftrace_expected) {
+> @@ -2018,12 +2018,12 @@ void ftrace_bug(int failed, struct dyn_ftrace *rec)
+>  	case -EPERM:
+>  		FTRACE_WARN_ON_ONCE(1);
+>  		pr_info("ftrace faulted on writing ");
+> -		print_ip_sym(ip);
+> +		print_ip_sym(KERN_INFO, ip);
+>  		break;
+>  	default:
+>  		FTRACE_WARN_ON_ONCE(1);
+>  		pr_info("ftrace faulted on unknown error ");
+> -		print_ip_sym(ip);
+> +		print_ip_sym(KERN_INFO, ip);
+>  	}
+>  	print_bug_type();
+>  	if (rec) {
 
-
-
->   # This will work when bpf is built in tools env. where srctree
->   # isn't set and when invoked from selftests build, where srctree
->
-> ---------------------------------------------------------------------------------------------------------------------
->
->
-> Best Regards,
->
-> Xiao Yang
->
-> >
->
-
-
--- 
-Best Regards
-Masahiro Yamada
