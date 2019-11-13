@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAF3C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D785CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37AC222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C28F21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611689;
-	bh=j1xtx9yjAgRktUtejvRwP+MnUo+B8NrgqFSuVJrAbdw=;
+	s=default; t=1573611694;
+	bh=O9BZEa+lLR5bwZmlseIeh3+YuqfpBsd14SJ2ClPgozA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S7DTp4ZdyatYegJXOYqupX8RULFwXNelbPwDMzpEo4475pjPb7daXfi8xidm5OV53
-	 6Hn6He5q29CuZtamuKyodWA107eRzTdULFNtnCKdw/iIz70KbFaHppaf24HPm1sWPC
-	 +WUN5duAjWRBw7vmIW1D8DkntjQRDBH4l5u4REZ0=
+	b=w7A6We57vZJlAWSx4kiuQEYRRdp6IT4GSNIZ8QqPMpwTPczGpwriyrs7OvGiFSxIX
+	 DJcLfEPS4mhzNnTMTgFzYID3ft6yNWa0lTvymfBTssYJntZkBzOIQd1ej0OIjXQqCu
+	 jjGiEilvuij6x+4X1Z78q97K1aJrfo33qKaUntcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfKMBx5 (ORCPT
+        id S1728708AbfKMCVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:53:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:21:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfKMBxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:44 -0500
+        id S1728715AbfKMBx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82062222D3;
-        Wed, 13 Nov 2019 01:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C30D222CD;
+        Wed, 13 Nov 2019 01:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610023;
-        bh=j1xtx9yjAgRktUtejvRwP+MnUo+B8NrgqFSuVJrAbdw=;
+        s=default; t=1573610036;
+        bh=O9BZEa+lLR5bwZmlseIeh3+YuqfpBsd14SJ2ClPgozA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e+kOh8iElHlaNSAc/FSBbT4fvsRwcnb3WKbOk9UIEDL6BRFDr2KhYBMDsRaGT3ndh
-         Bi2fiZcPKWnWQoBEBmVCa0qm7O4/ezsB64zFqCePCrYbl6ot/qKSGq/B1hsR6Rg78C
-         /mZrpHVCaMD7d14s+3bqhxmOX891TWDHHIMg630Q=
+        b=TCK9Vopcrepn1iPOCYiQAgfKTLXaWj0bBFjuqQx0tFN47mXSbOSlVMWZqGsBeEFQJ
+         y22H2ww7gYSy0hEDhdF4fRPxRs5rQ9DNWhg6R0Yn89M5MRxC7bQj5vTujQpsmbwpCo
+         qLGhlhC3M8jpET39hJzbJInPCVzSAGTD0M+ih/KU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian Shen <shenjian15@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 123/209] net: hns3: Fix for rx vlan id handle to support Rev 0x21 hardware
-Date:   Tue, 12 Nov 2019 20:48:59 -0500
-Message-Id: <20191113015025.9685-123-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Lubomir Rintel <lkundrak@v3.sk>,
+        x86@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 128/209] x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
+Date:   Tue, 12 Nov 2019 20:49:04 -0500
+Message-Id: <20191113015025.9685-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,92 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 701a6d6ac78c76083ddb7c6581fdbedd95093e11 ]
+[ Upstream commit fa112cf1e8bc693d5a666b1c479a2859c8b6e0f1 ]
 
-In revision 0x20, we use vlan id != 0 to check whether a vlan tag
-has been offloaded, so vlan id 0 is not supported.
+When building a 32-bit config which has the above MFD item as module
+but OLPC_XO1_PM is enabled =y - which is bool, btw - the kernel fails
+building with:
 
-In revision 0x21, rx buffer descriptor adds two bits to indicate
-whether one or more vlan tags have been offloaded, so vlan id 0
-is valid now.
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_remove':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:159: undefined reference to `mfd_cell_disable'
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_probe':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:133: undefined reference to `mfd_cell_enable'
+  make: *** [Makefile:1030: vmlinux] Error 1
 
-This patch seperates the handle for vlan id 0, add vlan id 0 support
-for revision 0x21.
+Force MFD_CS5535 to y if OLPC_XO1_PM is enabled.
 
-Fixes: 5b5455a9ed5a ("net: hns3: Add STRP_TAGP field support for hardware revision 0x21")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Lubomir Rintel <lkundrak@v3.sk>
+Cc: x86@kernel.org
+Link: http://lkml.kernel.org/r/20181005131750.GA5366@zn.tnic
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 30 ++++++++-----------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+ arch/x86/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 15030df574a8b..e11a7de20b8f4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2124,18 +2124,18 @@ static void hns3_rx_skb(struct hns3_enet_ring *ring, struct sk_buff *skb)
- 	napi_gro_receive(&ring->tqp_vector->napi, skb);
- }
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index e76d16ac27764..d7bcc9f702bea 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2726,8 +2726,7 @@ config OLPC
  
--static u16 hns3_parse_vlan_tag(struct hns3_enet_ring *ring,
--			       struct hns3_desc *desc, u32 l234info)
-+static bool hns3_parse_vlan_tag(struct hns3_enet_ring *ring,
-+				struct hns3_desc *desc, u32 l234info,
-+				u16 *vlan_tag)
- {
- 	struct pci_dev *pdev = ring->tqp->handle->pdev;
--	u16 vlan_tag;
+ config OLPC_XO1_PM
+ 	bool "OLPC XO-1 Power Management"
+-	depends on OLPC && MFD_CS5535 && PM_SLEEP
+-	select MFD_CORE
++	depends on OLPC && MFD_CS5535=y && PM_SLEEP
+ 	---help---
+ 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
  
- 	if (pdev->revision == 0x20) {
--		vlan_tag = le16_to_cpu(desc->rx.ot_vlan_tag);
--		if (!(vlan_tag & VLAN_VID_MASK))
--			vlan_tag = le16_to_cpu(desc->rx.vlan_tag);
-+		*vlan_tag = le16_to_cpu(desc->rx.ot_vlan_tag);
-+		if (!(*vlan_tag & VLAN_VID_MASK))
-+			*vlan_tag = le16_to_cpu(desc->rx.vlan_tag);
- 
--		return vlan_tag;
-+		return (*vlan_tag != 0);
- 	}
- 
- #define HNS3_STRP_OUTER_VLAN	0x1
-@@ -2144,17 +2144,14 @@ static u16 hns3_parse_vlan_tag(struct hns3_enet_ring *ring,
- 	switch (hnae3_get_field(l234info, HNS3_RXD_STRP_TAGP_M,
- 				HNS3_RXD_STRP_TAGP_S)) {
- 	case HNS3_STRP_OUTER_VLAN:
--		vlan_tag = le16_to_cpu(desc->rx.ot_vlan_tag);
--		break;
-+		*vlan_tag = le16_to_cpu(desc->rx.ot_vlan_tag);
-+		return true;
- 	case HNS3_STRP_INNER_VLAN:
--		vlan_tag = le16_to_cpu(desc->rx.vlan_tag);
--		break;
-+		*vlan_tag = le16_to_cpu(desc->rx.vlan_tag);
-+		return true;
- 	default:
--		vlan_tag = 0;
--		break;
-+		return false;
- 	}
--
--	return vlan_tag;
- }
- 
- static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
-@@ -2256,8 +2253,7 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
- 	if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX) {
- 		u16 vlan_tag;
- 
--		vlan_tag = hns3_parse_vlan_tag(ring, desc, l234info);
--		if (vlan_tag & VLAN_VID_MASK)
-+		if (hns3_parse_vlan_tag(ring, desc, l234info, &vlan_tag))
- 			__vlan_hwaccel_put_tag(skb,
- 					       htons(ETH_P_8021Q),
- 					       vlan_tag);
 -- 
 2.20.1
 
