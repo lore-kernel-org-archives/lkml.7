@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1FBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A019FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E0921783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7694720659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610803;
-	bh=jIJzKKrRiPN4sYSrKyogbBy6hg42/byJJuVxrEWKYyQ=;
+	s=default; t=1573610808;
+	bh=znLn9LJ2/eO4Ye50gjLxQYVnp33OeM+DWzZHWQSYY7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qed0DkhAtAnOgaujOPDU9mOHWvOXFnRXGsU39cJfUUI5ytQegeczElR73uXMuio7z
-	 Eo3fpjlN48b7brpTqxlwP/yOyUOj+YkuDyCFsLhc/cs7+Ji/LNnPzsXALCyQhuQT0H
-	 Spm6dGUvBTnOeD/SwE/itukDrFPJYNHfFzcQ7Pcs=
+	b=il/s0FLHQwaEuk2YerYThJP2OUFgdz94WH4jB8yCISlyJFyQjaWwGVGJPrSzt44Jp
+	 5ihs9RfpF/XR/PVmgWMoafhwreuR6ow0NaENn+rbck/YtVPH0o5U72y/ek/+nkZXE0
+	 4S1URQ+uAXju8CxRbMZSIyJHoGn7975Nhfv69YWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbfKMCGm (ORCPT
+        id S1730634AbfKMCBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:06:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56898 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:01:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730450AbfKMCBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:09 -0500
+        id S1730578AbfKMCAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 693032247D;
-        Wed, 13 Nov 2019 02:01:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A2BC22470;
+        Wed, 13 Nov 2019 02:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610469;
-        bh=jIJzKKrRiPN4sYSrKyogbBy6hg42/byJJuVxrEWKYyQ=;
+        s=default; t=1573610448;
+        bh=znLn9LJ2/eO4Ye50gjLxQYVnp33OeM+DWzZHWQSYY7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IF0SPhifzPA6lNr4tkzqyEUaXatW9Nf1osHqyblu30BPpe2wV/Sqb/oguv319vzuj
-         GyAXatODgGoX+2R1tGrc9FwmrIUdzs2gARtgsq/UmKtvBSJ9L/fZayG7eoOppQxUUf
-         AjSL09eEfvwwnakHbHMw44PSgufNyw3wNNjKu0yg=
+        b=x2CQBAKTco4T9t65q02WLthZYaIRVuw6LC6IMjpx8XZcH9VVjwNiUGse+gOqWAHzs
+         vCkgMIaRUOrVEhciiykqbquLvDrXuvZ/sp4lerDOaOwoUXTVVfDVNfo/20lcV6thUP
+         1NVDbqaB1rVtlVUUgwV6ULJlXCrF4iYcBKrUCCn0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wang6495@umn.edu>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 55/68] media: isif: fix a NULL pointer dereference bug
-Date:   Tue, 12 Nov 2019 20:59:19 -0500
-Message-Id: <20191113015932.12655-55-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 44/68] ACPI / SBS: Fix rare oops when removing modules
+Date:   Tue, 12 Nov 2019 20:59:08 -0500
+Message-Id: <20191113015932.12655-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,47 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Ronald Tschalär <ronald@innovation.ch>
 
-[ Upstream commit a26ac6c1bed951b2066cc4b2257facd919e35c0b ]
+[ Upstream commit 757c968c442397f1249bb775a7c8c03842e3e0c7 ]
 
-In isif_probe(), there is a while loop to get the ISIF base address and
-linearization table0 and table1 address. In the loop body, the function
-platform_get_resource() is called to get the resource. If
-platform_get_resource() returns NULL, the loop is terminated and the
-execution goes to 'fail_nobase_res'. Suppose the loop is terminated at the
-first iteration because platform_get_resource() returns NULL and the
-execution goes to 'fail_nobase_res'. Given that there is another while loop
-at 'fail_nobase_res' and i equals to 0, one iteration of the second while
-loop will be executed. However, the second while loop does not check the
-return value of platform_get_resource(). This can cause a NULL pointer
-dereference bug if the return value is a NULL pointer.
+There was a small race when removing the sbshc module where
+smbus_alarm() had queued acpi_smbus_callback() for deferred execution
+but it hadn't been run yet, so that when it did run hc had been freed
+and the module unloaded, resulting in an invalid paging request.
 
-This patch avoids the above issue by adding a check in the second while
-loop after the call to platform_get_resource().
+A similar race existed when removing the sbs module with regards to
+acpi_sbs_callback() (which is called from acpi_smbus_callback()).
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+We therefore need to ensure no callbacks are pending or executing before
+the cleanups are done and the modules are removed.
+
+Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/isif.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/acpi/osl.c   | 1 +
+ drivers/acpi/sbshc.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
-index 99faea2e84c6b..78e37cf3470f2 100644
---- a/drivers/media/platform/davinci/isif.c
-+++ b/drivers/media/platform/davinci/isif.c
-@@ -1106,7 +1106,8 @@ static int isif_probe(struct platform_device *pdev)
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 416953a425109..b9fade7a3bcf4 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -1126,6 +1126,7 @@ void acpi_os_wait_events_complete(void)
+ 	flush_workqueue(kacpid_wq);
+ 	flush_workqueue(kacpi_notify_wq);
+ }
++EXPORT_SYMBOL(acpi_os_wait_events_complete);
  
- 	while (i >= 0) {
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
--		release_mem_region(res->start, resource_size(res));
-+		if (res)
-+			release_mem_region(res->start, resource_size(res));
- 		i--;
- 	}
- 	vpfe_unregister_ccdc_device(&isif_hw_dev);
+ struct acpi_hp_work {
+ 	struct work_struct work;
+diff --git a/drivers/acpi/sbshc.c b/drivers/acpi/sbshc.c
+index 7a3431018e0ab..5008ead4609a4 100644
+--- a/drivers/acpi/sbshc.c
++++ b/drivers/acpi/sbshc.c
+@@ -196,6 +196,7 @@ int acpi_smbus_unregister_callback(struct acpi_smb_hc *hc)
+ 	hc->callback = NULL;
+ 	hc->context = NULL;
+ 	mutex_unlock(&hc->lock);
++	acpi_os_wait_events_complete();
+ 	return 0;
+ }
+ 
+@@ -292,6 +293,7 @@ static int acpi_smbus_hc_remove(struct acpi_device *device)
+ 
+ 	hc = acpi_driver_data(device);
+ 	acpi_ec_remove_query_handler(hc->ec, hc->query_bit);
++	acpi_os_wait_events_complete();
+ 	kfree(hc);
+ 	device->driver_data = NULL;
+ 	return 0;
 -- 
 2.20.1
 
