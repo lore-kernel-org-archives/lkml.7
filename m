@@ -2,155 +2,110 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBC5C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF76C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764C7206F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CEB20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BM9BKnM9"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Tb4SBglw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfKMSvp (ORCPT
+        id S1727926AbfKMSy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:51:45 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35975 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727582AbfKMSvo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:51:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573671103;
+        Wed, 13 Nov 2019 13:54:28 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:35512 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727216AbfKMSy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:54:27 -0500
+Received: from zn.tnic (p200300EC2F0FA700E9EFB2260700430D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:a700:e9ef:b226:700:430d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EDD1A1EC02C1;
+        Wed, 13 Nov 2019 19:54:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573671266;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jPirtsbQkWucUwnMuKe8VCWe61zXQyhvRowbxeAY5IA=;
-        b=BM9BKnM9/10+stAYlXfWyGycH2Lnz0gzaNF7Ro7m1Rij0T2ETMugiVKP2cVcL08zLy4Shy
-        CVvNBIIUzM97kjanVrkhCHm+sWNlhymhz5ixt5mwaDOByryZzUd0yDVIs5406vzyZILS2t
-        xnI4q0A4TDfnvgJ7IaQOOHbCSZbUp1c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-EwpZNYwXM5GafFpVyFCr0g-1; Wed, 13 Nov 2019 13:51:40 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B658D18A07C2;
-        Wed, 13 Nov 2019 18:51:38 +0000 (UTC)
-Received: from [10.36.116.48] (ovpn-116-48.ams2.redhat.com [10.36.116.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BAFC5DA70;
-        Wed, 13 Nov 2019 18:51:27 +0000 (UTC)
-Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-References: <20191108000855.25209-1-t-fukasawa@vx.jp.nec.com>
- <20191108000855.25209-3-t-fukasawa@vx.jp.nec.com>
- <CAPcyv4h+++k1VTB2xKWHXjC4LC0N=nvDUMcdbGAsDBmwMob5dw@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <163d1d41-19c1-d8cf-6c1c-eec226c34ac1@redhat.com>
-Date:   Wed, 13 Nov 2019 19:51:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=fKB2AuyJAPcFgKm9JK8f4US/BxjyKR1akqFbBmoGVJY=;
+        b=Tb4SBglwTALtQ49MfkqDXXuYebN7qrtTVw0CSjdBQ0cVIOpYhLhCI6hokl6Xdmb+WTlT7J
+        2zK790PGCc+lFSy8HUPO4SPFo60ei3vNHm4SoUN+B5LJ8uKMiSqrIj4R/j56NH5uhud2pY
+        PXLkUuAiIS9ABRqLD8xPUEmWjDkDUF4=
+Date:   Wed, 13 Nov 2019 19:54:20 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     rubini@gnudd.com, hch@infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] x86/PCI: sta2x11: use default DMA address
+ translation
+Message-ID: <20191113185420.GC1647@zn.tnic>
+References: <20191107150646.13485-1-nsaenzjulienne@suse.de>
+ <20191107150646.13485-3-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4h+++k1VTB2xKWHXjC4LC0N=nvDUMcdbGAsDBmwMob5dw@mail.gmail.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: EwpZNYwXM5GafFpVyFCr0g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191107150646.13485-3-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.11.19 20:13, Dan Williams wrote:
-> On Thu, Nov 7, 2019 at 4:15 PM Toshiki Fukasawa
-> <t-fukasawa@vx.jp.nec.com> wrote:
->>
->> Currently, there is no way to identify pfn on ZONE_DEVICE.
->> Identifying pfn on system memory can be done by using a
->> section-level flag. On the other hand, identifying pfn on
->> ZONE_DEVICE requires a subsection-level flag since ZONE_DEVICE
->> can be created in units of subsections.
->>
->> This patch introduces a new bitmap subsection_dev_map so that
->> we can identify pfn on ZONE_DEVICE.
->>
->> Also, subsection_dev_map is used to prove that struct pages
->> included in the subsection have been initialized since it is
->> set after memmap_init_zone_device(). We can avoid accessing
->> pages currently being initialized by checking subsection_dev_map.
->>
->> Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
->> ---
->>   include/linux/mmzone.h | 19 +++++++++++++++++++
->>   mm/memremap.c          |  2 ++
->>   mm/sparse.c            | 32 ++++++++++++++++++++++++++++++++
->>   3 files changed, 53 insertions(+)
->>
->> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->> index bda2028..11376c4 100644
->> --- a/include/linux/mmzone.h
->> +++ b/include/linux/mmzone.h
->> @@ -1174,11 +1174,17 @@ static inline unsigned long section_nr_to_pfn(un=
-signed long sec)
->>
->>   struct mem_section_usage {
->>          DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
->> +#ifdef CONFIG_ZONE_DEVICE
->> +       DECLARE_BITMAP(subsection_dev_map, SUBSECTIONS_PER_SECTION);
->> +#endif
->=20
-> Hi Toshiki,
->=20
-> There is currently an effort to remove the PageReserved() flag as some
-> code is using that to detect ZONE_DEVICE. In reviewing those patches
-> we realized that what many code paths want is to detect online memory.
-> So instead of a subsection_dev_map add a subsection_online_map. That
-> way pfn_to_online_page() can reliably avoid ZONE_DEVICE ranges. I
-> otherwise question the use case for pfn_walkers to return pages for
-> ZONE_DEVICE pages, I think the skip behavior when pfn_to_online_page()
-> =3D=3D false is the right behavior.
+On Thu, Nov 07, 2019 at 04:06:45PM +0100, Nicolas Saenz Julienne wrote:
+> The devices found behind this PCIe chip have unusual DMA mapping
+> constraints as there is an AMBA interconnect placed in between them and
+> the different PCI endpoints. The offset between physical memory
+> addresses and AMBA's view is provided by reading a PCI config register,
+> which is saved and used whenever DMA mapping is needed.
+> 
+> It turns out that this DMA setup can be represented by properly setting
+> 'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
+> enable fixup. And ultimately allows us to get rid of this device's
+> custom DMA functions.
+> 
+> Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() is
+> moved to avoid warnings whenever CONFIG_PM is not enabled.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> ---
+> 
+> Changed since v1:
+>   - use variable to avoid recalculating AMBA's max address
+>   - remove x86's dma-direct.h as it's not longer needed
+> 
+>  arch/x86/Kconfig                  |   1 -
+>  arch/x86/include/asm/device.h     |   3 -
+>  arch/x86/include/asm/dma-direct.h |   9 --
+>  arch/x86/pci/sta2x11-fixup.c      | 135 ++++++------------------------
+>  4 files changed, 26 insertions(+), 122 deletions(-)
+>  delete mode 100644 arch/x86/include/asm/dma-direct.h
 
-To be more precise, I recommended an subsection_active_map, to indicate=20
-which memmaps were fully initialized and can safely be touched (e.g., to=20
-read the zone/nid). This map would also be set when the devmem memmaps=20
-were initialized (race between adding memory/growing the section and=20
-initializing the memmap).
+Ok, I have only 2/2 in my mbox so in the future, when sending a whole
+set, make sure you Cc everybody on all the patches so that people can
+see the whole thing.
 
-See
+Then, I went and read back all the discussion about this cleanup and
+how it is hard to test it because it is not in PCs but in automotive
+installations...
 
-https://lkml.org/lkml/2019/10/10/87
+Long story, short, I like patches with negative diffstats :) so I could
+take it through tip unless Christoph has different plans for this.
 
-and
+Thx.
 
-https://www.spinics.net/lists/linux-driver-devel/msg130012.html
+-- 
+Regards/Gruss,
+    Boris.
 
-I dislike a map that is specific to ZONE_DEVICE or (currently)=20
-!ZONE_DEVICE. I rather want an indication "this memmap is safe to=20
-touch". As discussed along the mentioned threads, we can combine this=20
-later with RCU to handle some races that are currently possible.
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+https://people.kernel.org/tglx/notes-about-netiquette
