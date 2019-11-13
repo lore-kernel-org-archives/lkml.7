@@ -2,103 +2,126 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0659C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2522AC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14CF6206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83504206E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573673525;
+	bh=p2R66Qr9Knh83ZMoA5/z+qkNmGkrzoOC39Y7a8H0i/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J0I05LCEuyRkSwnCpuU2bwBtTOD6H+tr4beCbyTlQ17vROlJNULxP5XlvWuFC8vEa
+	 7YnyXqW9CnHjhNeISiGsDpatle70A3rz2WiB4puFWHS9eE4dA6jzf/AnJCLUmlfyLs
+	 RhWi/ZSoFhz6Q8MlWdT+aotaMWt5CGA1JtK3Hgvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfKMTaf (ORCPT
+        id S1726120AbfKMTcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:30:35 -0500
-Received: from mga06.intel.com ([134.134.136.31]:58143 "EHLO mga06.intel.com"
+        Wed, 13 Nov 2019 14:32:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbfKMTaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:30:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 11:30:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,301,1569308400"; 
-   d="scan'208";a="214379277"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Nov 2019 11:30:33 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86/mmu: Take slots_lock when using kvm_mmu_zap_all_fast()
-Date:   Wed, 13 Nov 2019 11:30:32 -0800
-Message-Id: <20191113193032.12912-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
+        id S1726066AbfKMTcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 14:32:03 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE1A206D7;
+        Wed, 13 Nov 2019 19:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573673522;
+        bh=p2R66Qr9Knh83ZMoA5/z+qkNmGkrzoOC39Y7a8H0i/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UEDj8O7AW9YYX8AsRmg107HuLbl3JLS4aW01z3Il0AZN+l09sb8H5pXI6iPgsShx7
+         yoK4b/zx7oa1t4wVtRNyObfMP913nO9LHxHEHCuZAjEtnJ6T48DKR6E7mbk0sATbab
+         4VbqvHwWYLqguOMzMbQEMHBZBrjTN1F8e8GqJdso=
+Date:   Wed, 13 Nov 2019 11:32:00 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v5 6/8] crypto: x86/aesni: Remove glue function macro
+ usage
+Message-ID: <20191113193159.GA221701@gmail.com>
+Mail-Followup-To: Kees Cook <keescook@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+References: <20191113182516.13545-1-keescook@chromium.org>
+ <20191113182516.13545-7-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113182516.13545-7-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acquire the per-VM slots_lock when zapping all shadow pages as part of
-toggling nx_huge_pages.  The fast zap algorithm relies on exclusivity
-(via slots_lock) to identify obsolete vs. valid shadow pages, e.g. it
-uses a single bit for its generation number.  Holding slots_lock also
-obviates the need to acquire a read lock on the VM's srcu.
+On Wed, Nov 13, 2019 at 10:25:14AM -0800, Kees Cook wrote:
+> In order to remove the callsite function casts, regularize the function
+> prototypes for helpers to avoid triggering Control-Flow Integrity checks
+> during indirect function calls. Where needed, to avoid changes to
+> pointer math, u8 pointers are internally cast back to u128 pointers.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/x86/crypto/aesni-intel_glue.c | 45 +++++++++++++-----------------
+>  1 file changed, 19 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/x86/crypto/aesni-intel_glue.c b/arch/x86/crypto/aesni-intel_glue.c
+> index 3e707e81afdb..f47afa5ae8ca 100644
+> --- a/arch/x86/crypto/aesni-intel_glue.c
+> +++ b/arch/x86/crypto/aesni-intel_glue.c
+> @@ -83,10 +83,8 @@ struct gcm_context_data {
+>  
+>  asmlinkage int aesni_set_key(struct crypto_aes_ctx *ctx, const u8 *in_key,
+>  			     unsigned int key_len);
+> -asmlinkage void aesni_enc(struct crypto_aes_ctx *ctx, u8 *out,
+> -			  const u8 *in);
+> -asmlinkage void aesni_dec(struct crypto_aes_ctx *ctx, u8 *out,
+> -			  const u8 *in);
+> +asmlinkage void aesni_enc(void *ctx, u8 *out, const u8 *in);
+> +asmlinkage void aesni_dec(void *ctx, u8 *out, const u8 *in);
+>  asmlinkage void aesni_ecb_enc(struct crypto_aes_ctx *ctx, u8 *out,
+>  			      const u8 *in, unsigned int len);
+>  asmlinkage void aesni_ecb_dec(struct crypto_aes_ctx *ctx, u8 *out,
+> @@ -107,7 +105,7 @@ asmlinkage void aesni_ctr_enc(struct crypto_aes_ctx *ctx, u8 *out,
+>  			      const u8 *in, unsigned int len, u8 *iv);
+>  
+>  asmlinkage void aesni_xts_crypt8(struct crypto_aes_ctx *ctx, u8 *out,
+> -				 const u8 *in, bool enc, u8 *iv);
+> +				 const u8 *in, bool enc, le128 *iv);
 
-Failing to take slots_lock when toggling nx_huge_pages allows multiple
-instances of kvm_mmu_zap_all_fast() to run concurrently, as the other
-user, KVM_SET_USER_MEMORY_REGION, does not take the global kvm_lock.
-Concurrent fast zap instances causes obsolete shadow pages to be
-incorrectly identified as valid due to the single bit generation number
-wrapping, which results in stale shadow pages being left in KVM's MMU
-and leads to all sorts of undesirable behavior.
+These functions in aesni-intel_asm.S have comments that show the function
+prototypes.  Can you please keep them in sync?
 
-The bug is easily confirmed by running with CONFIG_PROVE_LOCKING and
-toggling nx_huge_pages via its module param.
+> -static void aesni_xts_tweak(void *ctx, u8 *out, const u8 *in)
+> +static void aesni_xts_enc(void *ctx, u8 *dst, const u8 *src, le128 *iv)
+>  {
+> -	aesni_enc(ctx, out, in);
+> +	glue_xts_crypt_128bit_one(ctx, (u128 *)dst, (const u128 *)src, iv,
+> +				  aesni_enc);
+>  }
 
-Note, the fast zap algorithm could use a 64-bit generation instead of
-relying on exclusivity for correctness, but all callers except the
-recently added set_nx_huge_pages() need to hold slots_lock anyways.
-Given that toggling nx_huge_pages is by no means a fast path, force it
-to conform to the current approach instead of reworking the algorithm to
-support concurrent calls.
+For the src and dst, how about making glue_xts_crypt_128bit_one() take u8
+instead of u128?  That would avoid having to add these u8 => u128 casts to all
+10 callers of glue_xts_crypt_128bit_one().
 
-Fixes: b8e8c8303ff28 ("kvm: mmu: ITLB_MULTIHIT mitigation")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index cf718fa23dff..2ce9da58611e 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -6285,14 +6285,13 @@ static int set_nx_huge_pages(const char *val, const struct kernel_param *kp)
- 
- 	if (new_val != old_val) {
- 		struct kvm *kvm;
--		int idx;
- 
- 		mutex_lock(&kvm_lock);
- 
- 		list_for_each_entry(kvm, &vm_list, vm_list) {
--			idx = srcu_read_lock(&kvm->srcu);
-+			mutex_lock(&kvm->slots_lock);
- 			kvm_mmu_zap_all_fast(kvm);
--			srcu_read_unlock(&kvm->srcu, idx);
-+			mutex_unlock(&kvm->slots_lock);
- 
- 			wake_up_process(kvm->arch.nx_lpage_recovery_thread);
- 		}
--- 
-2.24.0
-
+- Eric
