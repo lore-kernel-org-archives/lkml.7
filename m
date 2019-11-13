@@ -2,90 +2,129 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927F0C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF16C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766D02245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36D121A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:11:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQ3XKwp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfKMPKj (ORCPT
+        id S1727984AbfKMPLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:10:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42064 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727743AbfKMPKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:10:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 59C90B2DB;
-        Wed, 13 Nov 2019 15:10:37 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 16:10:36 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Steven Rostedt <rostedt@goodmis.org>
-cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 00/10] ftrace: Add register_ftrace_direct()
-In-Reply-To: <20191108212834.594904349@goodmis.org>
-Message-ID: <alpine.LSU.2.21.1911131604170.18679@pobox.suse.cz>
-References: <20191108212834.594904349@goodmis.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 13 Nov 2019 10:11:55 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46147 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727550AbfKMPLy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:11:54 -0500
+Received: by mail-il1-f195.google.com with SMTP id q1so2072361ile.13;
+        Wed, 13 Nov 2019 07:11:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Oet7iN8luRIwm2cG0enPN1WO0bfm28VO//v3gW2hBng=;
+        b=GQ3XKwp2AaghEayclfUYMtj06s+kNJ3pPo2qy6o3BVVu+8If5uf39XUbSZkODmmU33
+         WDeAJ8hMYpRvi0cUuO/9lrc5XrrtCMRY0onKyQX+VhaWxmTI+Lz9TJj1GRzi3MxLdt04
+         tekoOYGqFXTHSJzb8/GuwS7hRrbPZtwG2eVfgxdjpZDVr/iJ7aDlFDftc6szgU1vzaZZ
+         WeINd1UMXpiaoHmo3QdKl8f0o0Ow/3SUmeyIp8xIT1lRCsIZfWVSQ879lYWJ+YbUDZFI
+         II3F90tO59YT4Nw3DJh9VTEt4ev51KZP3sH1tQ8GQslbwz1aAb4/uPva7x6OjUoSOp5j
+         K0/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Oet7iN8luRIwm2cG0enPN1WO0bfm28VO//v3gW2hBng=;
+        b=Em66xhI7iZmT7T/LPeWqOybGO8xX7y921lsnGQIplIt7UXDqLcwhSWXWW3A2PFTdDp
+         NdI07XtacRO9E02E1F671F71fgkCBB4QY4MPOgrMNPttUqk0+YcSKRU7o6zHKI11lEKQ
+         0Y/2wERkDV137dSeG1E6PylhdAo+gx1HWHE2KkKJUlpGwa8kVZXTWvrCiuYdLE7Ohq+d
+         Q7UDdGk88mjfNQAf0s+iSemnK3E9kF4Qh8UlO3pSIupl52kDkYgDjWoMaT5hXOFjQa5N
+         bTP547L7khkGVIUqu1guJ+eMTjQ1qoYsX6pz5c+RV4iCrHpVCnm/MjYgkTt6Y8vjCaGW
+         Itmg==
+X-Gm-Message-State: APjAAAUwwKznI1dOHVP9MtBLPCI29yxtfKU9x8i4EDTN7qdEFeRJ69gN
+        fW+pAlV0H4DH0Bp/pSySPEkt8KcwS0s1I0a28NaNIA==
+X-Google-Smtp-Source: APXvYqzJ6RcpW1AKYY64DcFg31Q3abj110+k7vsmWtJerlFCp+aLmBxLTxWeV9e9dqahFbq36N/70b0ruDZgONRDz9Y=
+X-Received: by 2002:a92:831d:: with SMTP id f29mr4564735ild.263.1573657912726;
+ Wed, 13 Nov 2019 07:11:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191106231650.1580-1-jeffrey.l.hugo@gmail.com>
+ <20191112084225.casuncbo7z54vu4g@netronome.com> <CAOCk7NpNgtTSus2KtBMe=jGLFyBumVfRVxKxtHoEDUEt2-6tqQ@mail.gmail.com>
+ <87d0dws79m.fsf@kamboji.qca.qualcomm.com>
+In-Reply-To: <87d0dws79m.fsf@kamboji.qca.qualcomm.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 13 Nov 2019 08:11:41 -0700
+Message-ID: <CAOCk7NpGm7jLH-z9CdJaYAGkg_WuiBxtxgwby+BJef=asFbavw@mail.gmail.com>
+Subject: Re: [PATCH] ath10k: Fix qmi init error handling
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Simon Horman <simon.horman@netronome.com>, davem@davemloft.net,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Nov 2019, Steven Rostedt wrote:
+On Tue, Nov 12, 2019 at 9:57 PM Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+> Jeffrey Hugo <jeffrey.l.hugo@gmail.com> writes:
+>
+> > On Tue, Nov 12, 2019 at 1:42 AM Simon Horman <simon.horman@netronome.com> wrote:
+> >>
+> >> On Wed, Nov 06, 2019 at 03:16:50PM -0800, Jeffrey Hugo wrote:
+> >> > When ath10k_qmi_init() fails, the error handling does not free the irq
+> >> > resources, which causes an issue if we EPROBE_DEFER as we'll attempt to
+> >> > (re-)register irqs which are already registered.
+> >> >
+> >> > Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
+> >> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> >> > ---
+> >> >  drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
+> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >> >
+> >> > diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+> >> > index fc15a0037f0e..f2a0b7aaad3b 100644
+> >> > --- a/drivers/net/wireless/ath/ath10k/snoc.c
+> >> > +++ b/drivers/net/wireless/ath/ath10k/snoc.c
+> >> > @@ -1729,7 +1729,7 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
+> >> >       ret = ath10k_qmi_init(ar, msa_size);
+> >> >       if (ret) {
+> >> >               ath10k_warn(ar, "failed to register wlfw qmi client: %d\n", ret);
+> >> > -             goto err_core_destroy;
+> >> > +             goto err_free_irq;
+> >> >       }
+> >>
+> >> From a casual examination of the code this seems like a step in the right
+> >> direction. But does this error path also need to call ath10k_hw_power_off() ?
+> >
+> > It probably should.  I don't see any fatal errors from the step being
+> > skipped, although it might silence some regulator warnings about being
+> > left on.  Unlikely to be observed by most folks as I was initing the
+> > driver pretty early to debug some things.  Looks like Kalle already
+> > picked up this patch though, so I guess your suggestion would need to
+> > be a follow up.
+>
+> Actually it's only in the pending branch, which means that the patch can
+> be changed or a new version can be submitted:
 
-> 
-> Alexei mentioned that he would like a way to access the ftrace fentry
-> code to jump directly to a custom eBPF trampoline instead of using
-> ftrace regs caller, as he said it would be faster.
-> 
-> I proposed a new register_ftrace_direct() function that would allow
-> this to happen and still work with the ftrace infrastructure. I posted
-> a proof of concept patch here:
-> 
->  https://lore.kernel.org/r/20191023122307.756b4978@gandalf.local.home
-> 
-> This patch series is a more complete version, and the start of the
-> actual implementation. I haven't run it through my full test suite but
-> it passes my smoke tests and some other custom tests I built.
-> 
-> I also realized that I need to make the sample modules depend on X86_64
-> as it has inlined assembly in it that requires that dependency.
-> 
-> This is based on 5.4-rc6 plus the permanent patches that prevent
-> a ftrace_ops from being disabled by /proc/sys/kernel/ftrace_enabled
-> 
-> Below is the tree that contains this code.
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-> ftrace/direct
-> 
-> Head SHA1: 9492654d091cb90a487ca669c58f802fa99bcd6f
-> 
-> Enjoy,
-> 
-> -- Steve
+Thats an interesting flow.  Ok.
 
-So I tried to run the selftests and ran into the same timeout issue we had 
-with live patching :/
-
-See http://lkml.kernel.org/r/20191025115041.23186-1-mbenes@suse.cz for a possible solution.
-
-Miroslav
+>
+> https://wireless.wiki.kernel.org/en/users/drivers/ath10k/submittingpatches#patch_flow
+>
+> The easiest way to check the state of a wireless patch is from
+> patchwork:
+>
+> https://patchwork.kernel.org/patch/11231325/
+>
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#checking_state_of_patches_from_patchwork
+>
+> --
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
