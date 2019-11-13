@@ -2,148 +2,114 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40D5C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3899C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25D0206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:09:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hOW+RDIN"
+	by mail.kernel.org (Postfix) with ESMTP id D90FC206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:12:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573665129;
+	bh=kdtwDODNLE4YWiNVPQry0buhIpkJQq9tKqW/8U/Aylo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jCGpyzzU2jkUP8tY1fdDcXEgCM3R4gT/o6HfiEeTnpFmfHMSwfyjZOuICp+ZcoPK6
+	 n7wbBmeXLoJWukpMaoFd7fYEZVmxOKukKUksFfb340f72AlTnQm4NgL2OH6UKYsQMr
+	 GfFhRBrk1qgEWRL0uDLF2UuJCYgIwkegcQaajCRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbfKMRJt (ORCPT
+        id S1728220AbfKMRMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:09:49 -0500
-Received: from mout.web.de ([212.227.17.12]:45209 "EHLO mout.web.de"
+        Wed, 13 Nov 2019 12:12:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfKMRJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:09:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573664975;
-        bh=TbXQOl2DJCjg0tQYK7vyqi8tMf/qRCiawErn4PM7zTE=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=hOW+RDINVtvMcnOV+1A4GA2PwDuT/IxOb5csbnEZkr+JWw5lq8IocJ4rmjWCLlYh/
-         FrYXOePoIGRJOVnNKF+GiR80VdPrUaZgi6TzObchjoD5qxyQ1TwlHXWjr3AwMCXK1t
-         P/6YMqa5boB3xthvMPMtktKjVm4xoUKyldn+/9wM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.131.127.42]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MhUbO-1iILDJ17Pm-00Mcds; Wed, 13
- Nov 2019 18:09:35 +0100
-Subject: Re: [v4] s390/pkey: Fix memory leak in error case by using
- memdup_user() rather than open coding
-To:     linux-s390@vger.kernel.org,
-        =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
+        id S1726105AbfKMRMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:12:08 -0500
+Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1653D206D9;
+        Wed, 13 Nov 2019 17:12:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573665126;
+        bh=kdtwDODNLE4YWiNVPQry0buhIpkJQq9tKqW/8U/Aylo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GYsSB3XJk2D3uObJ6kucsTytOJuFkfiicfpmrlr/4whLQZH2zdEClf6kJ0kv8g8yu
+         bHUlEAKZcDP4Dd8p1PaJUd15D1QyzkssyCjaVN8CDlOCPGo1DwvD/GxMGoAT2567Z8
+         gNlanMwRLkYByIAmPRdj2Y/DeE5raG4PhP9GeYCA=
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Joe Perches <joe@perches.com>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
- <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
- <deb7893f-3cfe-18fc-3feb-b26b290bf3c6@web.de>
- <833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com>
- <1b65bc81-f47a-eefa-f1f4-d5af6a1809c0@web.de>
- <733b29df-207e-a165-ee80-46be8720c0c4@de.ibm.com>
- <8f98f9fc-57df-5993-44b5-5ea4c0de7ef9@web.de>
- <c0df9cc8-c41a-1e5d-811c-1ff045c13fcc@de.ibm.com>
- <61244676-8ac1-20af-ed94-99e19c1f95d5@web.de>
- <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
- <aca044e8-e4b2-eda8-d724-b08772a44ed9@web.de>
- <0c47ee47-35a0-65ee-4da1-e1745f882947@de.ibm.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <52593fb9-cfc4-e444-6657-aff6c622607d@web.de>
-Date:   Wed, 13 Nov 2019 18:09:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Frederic Weisbecker <frederic@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        kernel test robot <rong.a.chen@intel.com>
+Subject: [PATCH] irq_work: Fix IRQ_WORK_BUZY bit clearing
+Date:   Wed, 13 Nov 2019 18:12:01 +0100
+Message-Id: <20191113171201.14032-1-frederic@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <0c47ee47-35a0-65ee-4da1-e1745f882947@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:ME5xkgC5yOHpNij0d+x40tT/vh5JC03iLWsIMrjgCrMY/0QIiE+
- ktCheJC3chI8lum7qgjoE1C37zQblTWFynnUHjdR7tW6/UNiFqsrGPa083Uwh2akU5QuHGS
- LCO6H687s+AAg9HfPrFbyD8uUfRFHzyAxRpaycuebHVJkGuXxRwkwvevQgAtF6wF9M7hXGh
- m+lfIViytQWNa+UNSfVZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AfcU2xkBKMY=:D7wweDxYg8F5Ka5T4+EADM
- Lv+SiKoEnPOqHYwfhFTYLMwNbHUQqN+pBkqNib2KbKJm5FFG2A6BOkxCxwvPgtpBOL7ufJ+7c
- oB7UGsw8N/BUNLiVfq1jUMdWTBjO7ydGD1DrX8u5Hhv02sfOx+Cgj2uRHsiNR/RJqWY+erOR1
- NrhGy3+WGoJJ7s8yK3NKsj7meN/odMkR9r2aZkWyibnJfAShQ9OvuVI94SB/3VgiLSNgK0IQk
- wIduPLZVZ1sxDYz1znWIyTvmPRHbIKw/rFODLq0mm7r2WbH54CqB5ErTpTOAvUfScr4JjhW7q
- gWYeZn6Qlzuy5CAEV4YGp+oVg41cxGMqLcLJE3wFQEO5gR1FY3Baw3wb5SC4ugeV0JGoa90af
- 2t+i719xkKMYjim1fYzp9uSmfAvhYwM7BbAm+t1n34OPwFLDQs1FDbpkh+mcuf/6FWWFrKG6p
- wMDPhKviDmu7ON4+cj/qhpStZSuW77/arcr5G9+2rbPUFf0MDAKq34aRir5QcAUb1OMyqZgVZ
- MWH3Qo+7lOhYLCxcHNVh/cZTwrQYYZk+C5Zz4SYVZg9XHCgdhvjYY44Ncderky/KNTCPEXpwJ
- LPMoc/O5R32uRT3MlgXChOjKdLEUzAwHBtwXtu2oAF06CHmq3BPe1cgbPIGGd96QFe5hSjhoL
- x+qme/N/G5xY9HdqIUalmgvpFzsiylxJqb9hGo4yW7LLkqz6dgCg1v2NUzhlHV7Fmxc0oQqj1
- 2P6QeEC6yq2foBnGHrOi5XByvPFsmAcT2HknHXYiXz1MDN9SbBQPZhMld4T5Nu87OzJVjE2b1
- zF1CeRcOdRsb1hd1C0EJqF2eSg5USyW+Uv+O+RrsByuY4c4pu8vpAyglHL3O592zfYoNtKjNf
- D038V380sgwk8fI8Jpn0l3KBa8XdpjugIxzSZrHFRwK12qtqyotT1x8uLuw4k2lBAVb8fwZ0F
- lrG7WtB0u2DmN/x1RHjmHXH12RdQj49UcvYWGurRvOTFaf4doy+ASSEo/ioBVYMaUxwN67BKZ
- +lBAFQL5TKqSScGbp64jgQg7Qc7yVIWXA5middp7FcpGb0tZCw3iE0khWzn1glNfaESNGD78t
- xMPaBs+erbJeDz9um0MBSbPSrrjGgnoGvc4jTZayxd48tigA4yt28O7rzZW24vRKXpekxJDm8
- 40t9Q1BOhrTpuP4N/UCSqSKU8eJQjtn0pxGhVYFPauPaehU9UErUGf3sykh7Xpw+SkUQE2ywL
- oGPF08d8tjcmvGaPeEX0O5QXfKeDGNkP3konsRy50+M/4SrWPj6XNiEkDIIE=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> applied. [...]
+While attempting to clear the buzy bit at the end of a work execution,
+atomic_cmpxchg() expects the value of the flags with the pending bit
+cleared as the old value. However we are passing by mistake the value of
+the flags before we actually cleared the pending bit.
 
-I find it interesting how the commit message was changed once more.
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=8b57e7c852fc58a62e668a83c0fa8d9246131803
-("s390/pkey: use memdup_user() to simplify code")
+As a result, clearing the buzy bit fails and irq_work_sync() may stall:
 
-Regards,
-Markus
+	watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [blktrace:4948]
+	CPU: 0 PID: 4948 Comm: blktrace Not tainted 5.4.0-rc7-00003-gfeb4a51323bab #1
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+	RIP: 0010:irq_work_sync+0x4/0x10
+	Call Trace:
+	  relay_close_buf+0x19/0x50
+	  relay_close+0x64/0x100
+	  blk_trace_free+0x1f/0x50
+	  __blk_trace_remove+0x1e/0x30
+	  blk_trace_ioctl+0x11b/0x140
+	  blkdev_ioctl+0x6c1/0xa40
+	  block_ioctl+0x39/0x40
+	  do_vfs_ioctl+0xa5/0x700
+	  ksys_ioctl+0x70/0x80
+	  __x64_sys_ioctl+0x16/0x20
+	  do_syscall_64+0x5b/0x1d0
+	  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+So clear the appropriate bit before passing the old flags to cmpxchg().
+
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
+Fixes: feb4a51323ba ("irq_work: Slightly simplify IRQ_WORK_PENDING clearing")
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Paul E . McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/irq_work.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index 49c53f80a13a..828cc30774bc 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -158,6 +158,7 @@ static void irq_work_run_list(struct llist_head *list)
+ 		 * Clear the BUSY bit and return to the free state if
+ 		 * no-one else claimed it meanwhile.
+ 		 */
++		flags &= ~IRQ_WORK_PENDING;
+ 		(void)atomic_cmpxchg(&work->flags, flags, flags & ~IRQ_WORK_BUSY);
+ 	}
+ }
+-- 
+2.23.0
+
