@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D15C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEBFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5092921A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FB1222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612026;
-	bh=X2bHHl2RcPZJlk2yD2hIgmtodJF2T9sbh3u768snjnI=;
+	s=default; t=1573612032;
+	bh=MHLTiLMo6OoNuIgCw9aGwbaQZgICcAPVVuPD8MIH+yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/vXD6E6AN/prUUll8UTxPoKE0jmsMSKEoFtDisNnhDuevvX0tTEfB0VW2l3X3piw
-	 mzmHa2btPxXBhu0ugVbQpd7DKWuIF6JMUUQFndddpkdtarILbQTpLkdMiHc61JPrmM
-	 0SvlyKqgrtYQXM0aDU/dWSD334LghhRHM+j0xuag=
+	b=m1BTSfpRyOiKuBj+U4wXWu5jDiV0nBAp5w+dwsXLNAx8ohcfgmcWTFusExF4A2gc/
+	 bPGJfVrh+AIF7Pxy4nBJN+zMQJgH8JtJySy2T0ysvL1mlLO2ElDG5ujzRmMglSKICq
+	 HY0oAaxRS8h5KwWC0BYYY7VC1cy+qihv6wuqVMwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfKMBvF (ORCPT
+        id S1727809AbfKMC1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:51:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38054 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:27:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727568AbfKMBu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:56 -0500
+        id S1727646AbfKMBvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50EEF222D3;
-        Wed, 13 Nov 2019 01:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE5D3222D4;
+        Wed, 13 Nov 2019 01:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609856;
-        bh=X2bHHl2RcPZJlk2yD2hIgmtodJF2T9sbh3u768snjnI=;
+        s=default; t=1573609863;
+        bh=MHLTiLMo6OoNuIgCw9aGwbaQZgICcAPVVuPD8MIH+yM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HxGYF7N6T823ix//K5F9tGTv4aDkysfaux11/o5U1bisnASR2Hx1lVGwCwA0y9oa3
-         8fRX8liRYrUuqJdbSaXgKJiW6iCIyFsiMWdO4LwkSu0i0b1i6FjBkmdmjqum/Yo4n/
-         RMPoKHoRGQBRsDhjxRolWrW0E7Zq7emr2tYeDfUs=
+        b=w51SzIWOTSYK75Nx9lZ0s5RiUmHFRQbhmxjKvO41kNm6L25CiwZqoBSOj+qTuL7Nt
+         w+u6exc4QHpQVZKOAPRQ+GJ9qAbx/mD+fNrG07ruy/kMyljsjtsm27nZ5t94Iln6WP
+         O3FecwVJcRD/ZGEHjhiDr1ugGUQxu9eUuHWNuZ1E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Punit Agrawal <punit.agrawal@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 024/209] arm64/numa: Report correct memblock range for the dummy node
-Date:   Tue, 12 Nov 2019 20:47:20 -0500
-Message-Id: <20191113015025.9685-24-sashal@kernel.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 029/209] PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.
+Date:   Tue, 12 Nov 2019 20:47:25 -0500
+Message-Id: <20191113015025.9685-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,37 +60,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 77cfe950901e5c13aca2df6437a05f39dd9a929b ]
+[ Upstream commit 23c7b54ca1cd1797ef39169ab85e6d46f1c2d061 ]
 
-The dummy node ID is marked into all memory ranges on the system. So the
-dummy node really extends the entire memblock.memory. Hence report correct
-extent information for the dummy node using memblock range helper functions
-instead of the range [0LLU, PFN_PHYS(max_pfn) - 1)].
+When the devfreq driver and the governor driver are built as modules,
+the call to devfreq_add_device() or governor_store() fails because the
+governor driver is not loaded at the time the devfreq driver loads. The
+devfreq driver has a build dependency on the governor but also should
+have a runtime dependency. We need to make sure that the governor driver
+is loaded before the devfreq driver.
 
-Fixes: 1a2db30034 ("arm64, numa: Add NUMA support for arm64 platforms")
-Acked-by: Punit Agrawal <punit.agrawal@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+This patch fixes this bug by adding a try_then_request_governor()
+function. First tries to find the governor, and then, if it is not found,
+it requests the module and tries again.
+
+Fixes: 1b5c1be2c88e (PM / devfreq: map devfreq drivers to governor using name)
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/numa.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/devfreq/devfreq.c | 53 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 49 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 146c04ceaa514..54529b4ed5130 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -432,7 +432,7 @@ static int __init dummy_numa_init(void)
- 	if (numa_off)
- 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
- 	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
--		0LLU, PFN_PHYS(max_pfn) - 1);
-+		memblock_start_of_DRAM(), memblock_end_of_DRAM() - 1);
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 4c49bb1330b52..62ead442a8721 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -11,6 +11,7 @@
+  */
  
- 	for_each_memblock(memory, mblk) {
- 		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
+ #include <linux/kernel.h>
++#include <linux/kmod.h>
+ #include <linux/sched.h>
+ #include <linux/errno.h>
+ #include <linux/err.h>
+@@ -221,6 +222,49 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
+ 	return ERR_PTR(-ENODEV);
+ }
+ 
++/**
++ * try_then_request_governor() - Try to find the governor and request the
++ *                               module if is not found.
++ * @name:	name of the governor
++ *
++ * Search the list of devfreq governors and request the module and try again
++ * if is not found. This can happen when both drivers (the governor driver
++ * and the driver that call devfreq_add_device) are built as modules.
++ * devfreq_list_lock should be held by the caller. Returns the matched
++ * governor's pointer.
++ */
++static struct devfreq_governor *try_then_request_governor(const char *name)
++{
++	struct devfreq_governor *governor;
++	int err = 0;
++
++	if (IS_ERR_OR_NULL(name)) {
++		pr_err("DEVFREQ: %s: Invalid parameters\n", __func__);
++		return ERR_PTR(-EINVAL);
++	}
++	WARN(!mutex_is_locked(&devfreq_list_lock),
++	     "devfreq_list_lock must be locked.");
++
++	governor = find_devfreq_governor(name);
++	if (IS_ERR(governor)) {
++		mutex_unlock(&devfreq_list_lock);
++
++		if (!strncmp(name, DEVFREQ_GOV_SIMPLE_ONDEMAND,
++			     DEVFREQ_NAME_LEN))
++			err = request_module("governor_%s", "simpleondemand");
++		else
++			err = request_module("governor_%s", name);
++		/* Restore previous state before return */
++		mutex_lock(&devfreq_list_lock);
++		if (err)
++			return NULL;
++
++		governor = find_devfreq_governor(name);
++	}
++
++	return governor;
++}
++
+ static int devfreq_notify_transition(struct devfreq *devfreq,
+ 		struct devfreq_freqs *freqs, unsigned int state)
+ {
+@@ -646,9 +690,8 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	mutex_unlock(&devfreq->lock);
+ 
+ 	mutex_lock(&devfreq_list_lock);
+-	list_add(&devfreq->node, &devfreq_list);
+ 
+-	governor = find_devfreq_governor(devfreq->governor_name);
++	governor = try_then_request_governor(devfreq->governor_name);
+ 	if (IS_ERR(governor)) {
+ 		dev_err(dev, "%s: Unable to find governor for the device\n",
+ 			__func__);
+@@ -664,12 +707,14 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 			__func__);
+ 		goto err_init;
+ 	}
++
++	list_add(&devfreq->node, &devfreq_list);
++
+ 	mutex_unlock(&devfreq_list_lock);
+ 
+ 	return devfreq;
+ 
+ err_init:
+-	list_del(&devfreq->node);
+ 	mutex_unlock(&devfreq_list_lock);
+ 
+ 	device_unregister(&devfreq->dev);
+@@ -991,7 +1036,7 @@ static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&devfreq_list_lock);
+-	governor = find_devfreq_governor(str_governor);
++	governor = try_then_request_governor(str_governor);
+ 	if (IS_ERR(governor)) {
+ 		ret = PTR_ERR(governor);
+ 		goto out;
 -- 
 2.20.1
 
