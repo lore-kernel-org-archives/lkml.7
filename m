@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DE9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF34C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70354206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1698B222CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610532;
-	bh=BfsY3M/4bqCtzOYH+rqzQMH+VaQOEdNiiE1gHRZMQnU=;
+	s=default; t=1573610541;
+	bh=x//JVYHQ0COcKM6/JgBuXGLK9QcQhuUoh6LRbs9bhKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPgKje9YMHKg29B/TfXJ5dZwQd/S2lN043Xn7S+w+rS5rJLEWh8lYAWThrvmr7gxd
-	 2o+pE3F82Zm+P4IPgY8GREE98QbD32fmWaCnYN43BPxWWJuvWxnIQQWkKI5EwZTw9Y
-	 SrjT8foO/yiwnr4lv6PI+9BNbPLK3rO1EYNv/Q8s=
+	b=YcF2pO3NMZfynfa1Sv6/RUQn7miIme/oA2UBoOOFpBnXqOWFI6Ds7kIlkDN3DcEEK
+	 mlpy1tXSQcVAcVcpxhHlcNz9d7NWeS9GB+nxY/pOsHG4M6ReOvr/4SrmH7nduorPut
+	 Vq3Q8C3fzhoSO69qmBUGdDt9qt6EDFAs2OI+RS3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbfKMCCL (ORCPT
+        id S1729838AbfKMCCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:02:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58518 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:02:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730003AbfKMCCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:09 -0500
+        id S1728476AbfKMCCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B31A8206B6;
-        Wed, 13 Nov 2019 02:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E630020674;
+        Wed, 13 Nov 2019 02:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610528;
-        bh=BfsY3M/4bqCtzOYH+rqzQMH+VaQOEdNiiE1gHRZMQnU=;
+        s=default; t=1573610533;
+        bh=x//JVYHQ0COcKM6/JgBuXGLK9QcQhuUoh6LRbs9bhKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uCM1y+QwsS4Ep0NlAmZbcljpGvja4Vl0l4JmQXE+YyhH0g0MJvgZR7lKjjIthgCvu
-         popRuI0DgWJXtHM4onCIeWn9ZglgTASH0h/h9VA6e032aGWIFRwpUF2Z119MzhaVHj
-         qpdNWB2h4wEAR3AqUmvtBigMvkDw4KXzQlZJf75o=
+        b=UKsh6n6AqAErSlC8e+xaJXIKPCfJ9JNAoBV/graFc/CstsmCjwMQmt0P3M7K5D6yE
+         wqA4Mjb6HmZg7R5LC7WpquSkkLHFoiIwf6WeXqEzk0IHaW3G9v71Y+EK9u7qK6vr6p
+         4ELE7NTxqbMLC+FCHUVkq3GtrcbaxKCqWU8CfsaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 23/48] mtd: physmap_of: Release resources on error
-Date:   Tue, 12 Nov 2019 21:01:06 -0500
-Message-Id: <20191113020131.13356-23-sashal@kernel.org>
+Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 25/48] NFSv4.x: fix lock recovery during delegation recall
+Date:   Tue, 12 Nov 2019 21:01:08 -0500
+Message-Id: <20191113020131.13356-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -59,86 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit ef0de747f7ad179c7698a5b0e28db05f18ecbf57 ]
+[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
 
-During probe, if there was an error the memory region and the memory
-map were not properly released.This can lead a system unusable if
-deferred probe is in use.
+Running "./nfstest_delegation --runtest recall26" uncovers that
+client doesn't recover the lock when we have an appending open,
+where the initial open got a write delegation.
 
-Replace mem_request and map with devm_ioremap_resource
+Instead of checking for the passed in open context against
+the file lock's open context. Check that the state is the same.
 
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/maps/physmap_of.c | 27 +++++----------------------
- 1 file changed, 5 insertions(+), 22 deletions(-)
+ fs/nfs/delegation.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
-index e46b4e9836668..77e7542fa8e42 100644
---- a/drivers/mtd/maps/physmap_of.c
-+++ b/drivers/mtd/maps/physmap_of.c
-@@ -28,7 +28,6 @@
- struct of_flash_list {
- 	struct mtd_info *mtd;
- 	struct map_info map;
--	struct resource *res;
- };
- 
- struct of_flash {
-@@ -53,18 +52,10 @@ static int of_flash_remove(struct platform_device *dev)
- 			mtd_concat_destroy(info->cmtd);
- 	}
- 
--	for (i = 0; i < info->list_size; i++) {
-+	for (i = 0; i < info->list_size; i++)
- 		if (info->list[i].mtd)
- 			map_destroy(info->list[i].mtd);
- 
--		if (info->list[i].map.virt)
--			iounmap(info->list[i].map.virt);
--
--		if (info->list[i].res) {
--			release_resource(info->list[i].res);
--			kfree(info->list[i].res);
--		}
--	}
- 	return 0;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 7af5eeabc80e1..ee51e6f6c5d6e 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -91,7 +91,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
+ 	return nfs4_do_check_delegation(inode, flags, false);
  }
  
-@@ -223,10 +214,11 @@ static int of_flash_probe(struct platform_device *dev)
- 
- 		err = -EBUSY;
- 		res_size = resource_size(&res);
--		info->list[i].res = request_mem_region(res.start, res_size,
--						       dev_name(&dev->dev));
--		if (!info->list[i].res)
-+		info->list[i].map.virt = devm_ioremap_resource(&dev->dev, &res);
-+		if (IS_ERR(info->list[i].map.virt)) {
-+			err = PTR_ERR(info->list[i].map.virt);
- 			goto err_out;
-+		}
- 
- 		err = -ENXIO;
- 		width = of_get_property(dp, "bank-width", NULL);
-@@ -242,15 +234,6 @@ static int of_flash_probe(struct platform_device *dev)
- 		info->list[i].map.bankwidth = be32_to_cpup(width);
- 		info->list[i].map.device_node = dp;
- 
--		err = -ENOMEM;
--		info->list[i].map.virt = ioremap(info->list[i].map.phys,
--						 info->list[i].map.size);
--		if (!info->list[i].map.virt) {
--			dev_err(&dev->dev, "Failed to ioremap() flash"
--				" region\n");
--			goto err_out;
--		}
--
- 		simple_map_init(&info->list[i].map);
- 
- 		/*
+-static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
++static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
+ {
+ 	struct inode *inode = state->inode;
+ 	struct file_lock *fl;
+@@ -106,7 +106,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
+ 	spin_lock(&flctx->flc_lock);
+ restart:
+ 	list_for_each_entry(fl, list, fl_list) {
+-		if (nfs_file_open_context(fl->fl_file) != ctx)
++		if (nfs_file_open_context(fl->fl_file)->state != state)
+ 			continue;
+ 		spin_unlock(&flctx->flc_lock);
+ 		status = nfs4_lock_delegation_recall(fl, state, stateid);
+@@ -153,7 +153,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
+ 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
+ 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
+ 		if (!err)
+-			err = nfs_delegation_claim_locks(ctx, state, stateid);
++			err = nfs_delegation_claim_locks(state, stateid);
+ 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
+ 			err = -EAGAIN;
+ 		mutex_unlock(&sp->so_delegreturn_mutex);
 -- 
 2.20.1
 
