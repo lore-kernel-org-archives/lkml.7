@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEBFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EF8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3FB1222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63CC2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612032;
-	bh=MHLTiLMo6OoNuIgCw9aGwbaQZgICcAPVVuPD8MIH+yM=;
+	s=default; t=1573612043;
+	bh=I3ZLCnIDcjBuO+pE/ZPwAvwz5deLJv3WIzNphLQ4FDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m1BTSfpRyOiKuBj+U4wXWu5jDiV0nBAp5w+dwsXLNAx8ohcfgmcWTFusExF4A2gc/
-	 bPGJfVrh+AIF7Pxy4nBJN+zMQJgH8JtJySy2T0ysvL1mlLO2ElDG5ujzRmMglSKICq
-	 HY0oAaxRS8h5KwWC0BYYY7VC1cy+qihv6wuqVMwI=
+	b=fv3QsCApM4KgImubxirk2oHSA6AbXZWV6dDtmwY2S8S/O7DbUO/KoCVYESC8xvCmZ
+	 j+EJJooLE2ulJKUQYNu8bmKbHL05Ajin8LtJP56Au3Nf/o9iBmZblUhJiKCCirETje
+	 Gm6lYU6pOqZ9N3dExUhp/iRCpyirKskHuy69YgEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbfKMC1L (ORCPT
+        id S1727603AbfKMBvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:27:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:51:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfKMBvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:04 -0500
+        id S1727522AbfKMBuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE5D3222D4;
-        Wed, 13 Nov 2019 01:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58CDF22466;
+        Wed, 13 Nov 2019 01:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609863;
-        bh=MHLTiLMo6OoNuIgCw9aGwbaQZgICcAPVVuPD8MIH+yM=;
+        s=default; t=1573609850;
+        bh=I3ZLCnIDcjBuO+pE/ZPwAvwz5deLJv3WIzNphLQ4FDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w51SzIWOTSYK75Nx9lZ0s5RiUmHFRQbhmxjKvO41kNm6L25CiwZqoBSOj+qTuL7Nt
-         w+u6exc4QHpQVZKOAPRQ+GJ9qAbx/mD+fNrG07ruy/kMyljsjtsm27nZ5t94Iln6WP
-         O3FecwVJcRD/ZGEHjhiDr1ugGUQxu9eUuHWNuZ1E=
+        b=qmz8FHqA7pWushjdnAS2MizU9JmTDQh8wdOjK1cjo2w+JtbFhAkUKp8ahetnMPqeW
+         fqhx8B2bG3OUYn7KAseFhtUaQ2PYEoKtQWKHytslwDSKH27brliV8LBHvlGlPxzFoz
+         JU8hmFH10+yvyKJrdHN2YKOJy0XvJWAA3K4Uyhao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 029/209] PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.
-Date:   Tue, 12 Nov 2019 20:47:25 -0500
-Message-Id: <20191113015025.9685-29-sashal@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 021/209] iommu/io-pgtable-arm: Fix race handling in split_blk_unmap()
+Date:   Tue, 12 Nov 2019 20:47:17 -0500
+Message-Id: <20191113015025.9685-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,128 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 23c7b54ca1cd1797ef39169ab85e6d46f1c2d061 ]
+[ Upstream commit 85c7a0f1ef624ef58173ef52ea77780257bdfe04 ]
 
-When the devfreq driver and the governor driver are built as modules,
-the call to devfreq_add_device() or governor_store() fails because the
-governor driver is not loaded at the time the devfreq driver loads. The
-devfreq driver has a build dependency on the governor but also should
-have a runtime dependency. We need to make sure that the governor driver
-is loaded before the devfreq driver.
+In removing the pagetable-wide lock, we gained the possibility of the
+vanishingly unlikely case where we have a race between two concurrent
+unmappers splitting the same block entry. The logic to handle this is
+fairly straightforward - whoever loses the race frees their partial
+next-level table and instead dereferences the winner's newly-installed
+entry in order to fall back to a regular unmap, which intentionally
+echoes the pre-existing case of recursively splitting a 1GB block down
+to 4KB pages by installing a full table of 2MB blocks first.
 
-This patch fixes this bug by adding a try_then_request_governor()
-function. First tries to find the governor, and then, if it is not found,
-it requests the module and tries again.
+Unfortunately, the chump who implemented that logic failed to update the
+condition check for that fallback, meaning that if said race occurs at
+the last level (where the loser's unmap_idx is valid) then the unmap
+won't actually happen. Fix that to properly account for both the race
+and recursive cases.
 
-Fixes: 1b5c1be2c88e (PM / devfreq: map devfreq drivers to governor using name)
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Fixes: 2c3d273eabe8 ("iommu/io-pgtable-arm: Support lockless operation")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+[will: re-jig control flow to avoid duplicate cmpxchg test]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 53 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 49 insertions(+), 4 deletions(-)
+ drivers/iommu/io-pgtable-arm.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 4c49bb1330b52..62ead442a8721 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -11,6 +11,7 @@
-  */
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index 88641b4560bc8..2f79efd16a052 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -574,13 +574,12 @@ static size_t arm_lpae_split_blk_unmap(struct arm_lpae_io_pgtable *data,
+ 			return 0;
  
- #include <linux/kernel.h>
-+#include <linux/kmod.h>
- #include <linux/sched.h>
- #include <linux/errno.h>
- #include <linux/err.h>
-@@ -221,6 +222,49 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
- 	return ERR_PTR(-ENODEV);
+ 		tablep = iopte_deref(pte, data);
++	} else if (unmap_idx >= 0) {
++		io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
++		return size;
+ 	}
+ 
+-	if (unmap_idx < 0)
+-		return __arm_lpae_unmap(data, iova, size, lvl, tablep);
+-
+-	io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
+-	return size;
++	return __arm_lpae_unmap(data, iova, size, lvl, tablep);
  }
  
-+/**
-+ * try_then_request_governor() - Try to find the governor and request the
-+ *                               module if is not found.
-+ * @name:	name of the governor
-+ *
-+ * Search the list of devfreq governors and request the module and try again
-+ * if is not found. This can happen when both drivers (the governor driver
-+ * and the driver that call devfreq_add_device) are built as modules.
-+ * devfreq_list_lock should be held by the caller. Returns the matched
-+ * governor's pointer.
-+ */
-+static struct devfreq_governor *try_then_request_governor(const char *name)
-+{
-+	struct devfreq_governor *governor;
-+	int err = 0;
-+
-+	if (IS_ERR_OR_NULL(name)) {
-+		pr_err("DEVFREQ: %s: Invalid parameters\n", __func__);
-+		return ERR_PTR(-EINVAL);
-+	}
-+	WARN(!mutex_is_locked(&devfreq_list_lock),
-+	     "devfreq_list_lock must be locked.");
-+
-+	governor = find_devfreq_governor(name);
-+	if (IS_ERR(governor)) {
-+		mutex_unlock(&devfreq_list_lock);
-+
-+		if (!strncmp(name, DEVFREQ_GOV_SIMPLE_ONDEMAND,
-+			     DEVFREQ_NAME_LEN))
-+			err = request_module("governor_%s", "simpleondemand");
-+		else
-+			err = request_module("governor_%s", name);
-+		/* Restore previous state before return */
-+		mutex_lock(&devfreq_list_lock);
-+		if (err)
-+			return NULL;
-+
-+		governor = find_devfreq_governor(name);
-+	}
-+
-+	return governor;
-+}
-+
- static int devfreq_notify_transition(struct devfreq *devfreq,
- 		struct devfreq_freqs *freqs, unsigned int state)
- {
-@@ -646,9 +690,8 @@ struct devfreq *devfreq_add_device(struct device *dev,
- 	mutex_unlock(&devfreq->lock);
- 
- 	mutex_lock(&devfreq_list_lock);
--	list_add(&devfreq->node, &devfreq_list);
- 
--	governor = find_devfreq_governor(devfreq->governor_name);
-+	governor = try_then_request_governor(devfreq->governor_name);
- 	if (IS_ERR(governor)) {
- 		dev_err(dev, "%s: Unable to find governor for the device\n",
- 			__func__);
-@@ -664,12 +707,14 @@ struct devfreq *devfreq_add_device(struct device *dev,
- 			__func__);
- 		goto err_init;
- 	}
-+
-+	list_add(&devfreq->node, &devfreq_list);
-+
- 	mutex_unlock(&devfreq_list_lock);
- 
- 	return devfreq;
- 
- err_init:
--	list_del(&devfreq->node);
- 	mutex_unlock(&devfreq_list_lock);
- 
- 	device_unregister(&devfreq->dev);
-@@ -991,7 +1036,7 @@ static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
- 		return -EINVAL;
- 
- 	mutex_lock(&devfreq_list_lock);
--	governor = find_devfreq_governor(str_governor);
-+	governor = try_then_request_governor(str_governor);
- 	if (IS_ERR(governor)) {
- 		ret = PTR_ERR(governor);
- 		goto out;
+ static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
 -- 
 2.20.1
 
