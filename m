@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D62AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C11C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6636E222CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB4B2246F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610127;
-	bh=I/hN7bioODU5zQWOx0AH4pWxYq6n0Y2wxs/LWEPYvns=;
+	s=default; t=1573610140;
+	bh=B9AoKmD1xmcv4P7KtG1+SP2sJt/qlkpf6OAJSMxaA8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hluYsd3CH3F+R+7sI0FUyRaloD5vVIO/JCxtTZRggCFJVGfhWHUTmwIMh9xXoc1Ys
-	 4PHZLEzjVMGMBRei/ew/0GtYba4YMOm+Ynv+VW9w5QS8Tzu8//aMPsoJ3mlscLcAHJ
-	 rz0Wqr1tmunmUXy7faTdRAW+JF1rm8JkB//oR73U=
+	b=i/akwdAt9d0jhwOIG6EYmtCN52IlzkMuBxSYWO1EG6skhS2BENcuZrU6wmo+rOAlt
+	 SUR50p48bI7fnzeTA8RhkBnBwX0r73EkqwpsN+X/VZFM80Pb+nWnql5+Qb5034e3n8
+	 mbxckC5ET6qzgsmYczbgokfHRIs8Qn+hWs0ImXkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfKMBz0 (ORCPT
+        id S1729196AbfKMBzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46790 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbfKMBzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:17 -0500
+        id S1729125AbfKMBzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C70204EC;
-        Wed, 13 Nov 2019 01:55:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C8672245A;
+        Wed, 13 Nov 2019 01:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610117;
-        bh=I/hN7bioODU5zQWOx0AH4pWxYq6n0Y2wxs/LWEPYvns=;
+        s=default; t=1573610131;
+        bh=B9AoKmD1xmcv4P7KtG1+SP2sJt/qlkpf6OAJSMxaA8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=js7SRVYBpotuyGpXgiE/BVxpcpD9ngdcX9oEV0PcG7TfONC7GWlSlps4jT9BbHX1x
-         a1Mjzld0+ax/kpdw2hTu9oKG6ZbtOTi2/ZK1XsIAmg/oO+kQxBULPrZQRQBPMOcz5n
-         0K6ZTpgOcl8ehDZp5wgQzomS4JBXqy9geem82Jxs=
+        b=iD6t2O3Ja1pf6aTHu8Y00fmvsikbd7xeoS9lQ+YHzvpT/qBb8aGVga2bElEf+WaYD
+         w5KLVXm2N6pRYXiCBb/QUnb2ZAIRXnRLidY6Uxx+vhHedQoCnF0CxtHQbZ8mPjToJY
+         fbt99eLNCg4HTYtST/AvKKOfU3+lTyfDFLyitBMQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@cnexlabs.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 172/209] lightnvm: pblk: guarantee mw_cunits on read buffer
-Date:   Tue, 12 Nov 2019 20:49:48 -0500
-Message-Id: <20191113015025.9685-172-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 181/209] pinctrl: gemini: Mask and set properly
+Date:   Tue, 12 Nov 2019 20:49:57 -0500
+Message-Id: <20191113015025.9685-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,50 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javier González <javier@javigon.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit d672d92d9c433c365fd6cdb4da1c02562b5f1178 ]
+[ Upstream commit d17f477c5bc6b4a5dd9f51ae263870da132a8e89 ]
 
-OCSSD 2.0 defines the amount of data that the host must buffer per chunk
-to guarantee reads through the geometry field mw_cunits. This value is
-the base that pblk uses to determine the size of its read buffer.
-Currently, this size is set to be the closes power-of-2 to mw_cunits
-times the number of parallel units available to the pblk instance for
-each open line (currently one). When an entry (4KB) is put in the
-buffer, the L2P table points to it. As the buffer wraps up, the L2P is
-updated to point to addresses on the device, thus guaranteeing mw_cunits
-at a chunk level.
+The code was written under the assumption that the
+regmap_update_bits() would mask the bits in the mask and
+set the bits in the value.
 
-However, given that pblk cannot write to the device under ws_min
-(normally ws_opt), there might be a window in which the buffer starts
-wrapping up and updating L2P entries before the mw_cunits value in a
-chunk has been surpassed.
+It missed the points that it will not set bits in the value
+unless these are also masked in the mask. Set value bits
+that are not in the mask will simply be ignored.
 
-In order not to violate the mw_cunits constrain in this case, account
-for ws_opt on the read buffer creation.
-
-Signed-off-by: Javier González <javier@cnexlabs.com>
-Signed-off-by: Matias Bjørling <mb@lightnvm.io>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 06351d133dea ("pinctrl: add a Gemini SoC pin controller")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/lightnvm/pblk-init.c | 3 ++-
+ drivers/pinctrl/pinctrl-gemini.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/lightnvm/pblk-init.c b/drivers/lightnvm/pblk-init.c
-index 145922589b0c6..dc32274881b2f 100644
---- a/drivers/lightnvm/pblk-init.c
-+++ b/drivers/lightnvm/pblk-init.c
-@@ -181,7 +181,8 @@ static int pblk_rwb_init(struct pblk *pblk)
- 	unsigned int power_size, power_seg_sz;
- 	int pgs_in_buffer;
+diff --git a/drivers/pinctrl/pinctrl-gemini.c b/drivers/pinctrl/pinctrl-gemini.c
+index fa7d998e1d5a8..1e484a36ff07e 100644
+--- a/drivers/pinctrl/pinctrl-gemini.c
++++ b/drivers/pinctrl/pinctrl-gemini.c
+@@ -2184,7 +2184,8 @@ static int gemini_pmx_set_mux(struct pinctrl_dev *pctldev,
+ 		 func->name, grp->name);
  
--	pgs_in_buffer = max(geo->mw_cunits, geo->ws_opt) * geo->all_luns;
-+	pgs_in_buffer = (max(geo->mw_cunits, geo->ws_opt) + geo->ws_opt)
-+								* geo->all_luns;
+ 	regmap_read(pmx->map, GLOBAL_MISC_CTRL, &before);
+-	regmap_update_bits(pmx->map, GLOBAL_MISC_CTRL, grp->mask,
++	regmap_update_bits(pmx->map, GLOBAL_MISC_CTRL,
++			   grp->mask | grp->value,
+ 			   grp->value);
+ 	regmap_read(pmx->map, GLOBAL_MISC_CTRL, &after);
  
- 	if (write_buffer_size && (write_buffer_size > pgs_in_buffer))
- 		buffer_size = write_buffer_size;
 -- 
 2.20.1
 
