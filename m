@@ -2,220 +2,122 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4578EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D19C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D52222469
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573655506;
-	bh=sFAK/lXQzc1rSSIs573NkQjUMflCzZ8fJg39hw+x8RI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=g5CjDngTbNAFPbwBqLALWvM4Dsg/vs9Iu1v/MpzHaixfTwQjc3865PXK8boeWWGN+
-	 fd6KH+wCF3SNcV3TxCf8MK/3pdLmB6Z4oZzHRElQNCHuPmMELj5IDp67XV6Sey6cuW
-	 cohp4K1tIVbe320n3YbX/SNP1mbqAdqq1SlDtAYw=
+	by mail.kernel.org (Postfix) with ESMTP id A625322467
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfKMObp (ORCPT
+        id S1727645AbfKMOdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:31:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfKMObo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:31:44 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E458222CD;
-        Wed, 13 Nov 2019 14:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573655503;
-        bh=sFAK/lXQzc1rSSIs573NkQjUMflCzZ8fJg39hw+x8RI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Hl5LhmpQvx3OdbPBooPO2bt2Sh6yz62kDCRxeLduZ2tF7NbB77gICTOmIrEJhuzJK
-         qgAcTNu9YTMKWn6isUhQe8OOrLruHTVWWtAE43M+++J8B1PS5n5bMmVm39LibM6VRi
-         vj2rc4wVaENgi1n3wn/7fNk6b4UCtx+JpMHVkxXE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 09E5E35227FC; Wed, 13 Nov 2019 06:31:41 -0800 (PST)
-Date:   Wed, 13 Nov 2019 06:31:41 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
-        alexei.starovoitov@gmail.com, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH -v5 12/17] x86/kprobes: Fix ordering
-Message-ID: <20191113143140.GD2865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191111131252.921588318@infradead.org>
- <20191111132458.162172862@infradead.org>
+        Wed, 13 Nov 2019 09:33:03 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:60981 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727423AbfKMOdD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 09:33:03 -0500
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M2ep5-1iSQj42oM3-004Fql for <linux-kernel@vger.kernel.org>; Wed, 13 Nov
+ 2019 15:33:01 +0100
+Received: by mail-qt1-f177.google.com with SMTP id g50so2784185qtb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 06:33:01 -0800 (PST)
+X-Gm-Message-State: APjAAAUeOrh/x1ZdPEHEpTpmZ1GyOCYI6a54Q7CUcBQcVNMSB7ApbtXI
+        oecx94FUW7zXcFJx7wYStJLHU3l6l1BJ3cTl4SE=
+X-Google-Smtp-Source: APXvYqz+NQ3szRq7ultpigH8h2DRxd7RVxK5NJkwffgwZnkBYVjsay5MymzE3H4vFL1qe/jNlYuVA1/LMaohhg43P3E=
+X-Received: by 2002:ac8:2e57:: with SMTP id s23mr2862709qta.204.1573655580605;
+ Wed, 13 Nov 2019 06:33:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111132458.162172862@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191112151642.680072-1-arnd@arndb.de> <s5hk1847rvm.wl-tiwai@suse.de>
+In-Reply-To: <s5hk1847rvm.wl-tiwai@suse.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 13 Nov 2019 15:32:44 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2TMEUhzxH7RKvAW9STk33KrbCriUaQawOMffoFC6UTQw@mail.gmail.com>
+Message-ID: <CAK8P3a2TMEUhzxH7RKvAW9STk33KrbCriUaQawOMffoFC6UTQw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/8] Fix year 2038 issue for sound subsystem
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:qwRt3oLZdIBKV6GulKVqVXE3qKnOQkaP/imQuEIOK8q/InHpeg5
+ PRhT2Dn61unSfy9cFkOaHsN/YmTbaft/zv33zlHNIxmUuDT0E19ucy8YMHIi9oNAe39GM3n
+ tdAeWfUHyyjskC6S0w6pjaCF6feJRFQu9rlEL8fYy6681KWdNhuu5u0LMwxdwYvrCWaMygX
+ 2kLbV4jkEoeiRGw0tjCVQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:prl9kaqppwE=:atvZwNTQP/OxBJQTgiZsj1
+ 79qp+pl9vhguXmzRtEhFGtMr7nEONZ1KpWWN4JmG5AUPzWjYysyjA7r8uGgF4T/fbaqypJBpf
+ u0gbYIFkgec/EUrqLH3LMG0sP80jnr0t1+GwCZYkSN4oESvjZZStHI4xem2Vl1hssLDAiyTt3
+ FCXaBdMU6Ew4R2o55Q0znQmfaAnJb4O73btMqL0m9o+Ht2bD95FmLYDs0EggTcnVCrLh7xyp4
+ gZu2BNvUE8TJTJa0T14eUZxADd9pTZapL4IcXVUh2Je6BMDVrGRhjfIRDeI/LoOEruezD9GoV
+ kxLg0XlMcgSEjnnPKozO9f/UeFd1Gfu25wHcpU2sMzJFwf6MgTqaR+8Zu2/0by5qZKvqMb/tN
+ 0cMsKmHHUbhMumPc/gMD4Z3S/zfH5cAeAKHVKhvINba8fPZVrVfQHxZf8omuUdgn25DH1Ta41
+ SDx9eXYKW1NDdtTHDF4bD/DfeByPpO5y4n9NGlcHe3cSDtO4splr/HvF7m1Gnmkgr2hVM60Vb
+ xBitMaEP2Ej3uO9uLYemUr2+jrV7ExGhhghq5eA3phwpWCy/TF2I61NTUxFxoFrKEX87fbQAF
+ HW5PsiL3Jkd/mo7EKpXg7iZrBg7ne6QygzSQzcklvMmQdOjClNYAehDHpC2lV5n/oMxmYDENv
+ upN3BngQfGVr9YcYkGCkWOUY2d4PsIFgW/bWetTcQ+thsvWJXX97t717xsHH5ncoEmyaxffdE
+ BzuMCvek3jPU3C1l5r3gRH7D7TdWPX9vjKByc2MYWJdsGny6lhUDdoXyHS+f0uGCAjmc0ng04
+ LVTiFNDL559YgbJ0HvxHO6j7DviWGqqSp80V5I3tYKDC1bt8yjRXiFJNGs0wqallXmK8daCFs
+ cnLzhI/gNTdIz27osrFw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 02:13:04PM +0100, Peter Zijlstra wrote:
-> Kprobes does something like:
-> 
-> register:
-> 	arch_arm_kprobe()
-> 	  text_poke(INT3)
->           /* guarantees nothing, INT3 will become visible at some point, maybe */
-> 
->         kprobe_optimizer()
-> 	  /* guarantees the bytes after INT3 are unused */
-> 	  syncrhonize_rcu_tasks();
-> 	  text_poke_bp(JMP32);
-> 	  /* implies IPI-sync, kprobe really is enabled */
-> 
-> 
-> unregister:
-> 	__disarm_kprobe()
-> 	  unoptimize_kprobe()
-> 	    text_poke_bp(INT3 + tail);
-> 	    /* implies IPI-sync, so tail is guaranteed visible */
->           arch_disarm_kprobe()
->             text_poke(old);
-> 	    /* guarantees nothing, old will maybe become visible */
-> 
-> 	synchronize_rcu()
-> 
->         free-stuff
-> 
-> Now the problem is that on register, the synchronize_rcu_tasks() does
-> not imply sufficient to guarantee all CPUs have already observed INT3
-> (although in practise this is exceedingly unlikely not to have
-> happened) (similar to how MEMBARRIER_CMD_PRIVATE_EXPEDITED does not
-> imply MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE).
-> 
-> Worse, even if it did, we'd have to do 2 synchronize calls to provide
-> the guarantee we're looking for, the first to ensure INT3 is visible,
-> the second to guarantee nobody is then still using the instruction
-> bytes after INT3.
-> 
-> Similar on unregister; the synchronize_rcu() between
-> __unregister_kprobe_top() and __unregister_kprobe_bottom() does not
-> guarantee all CPUs are free of the INT3 (and observe the old text).
-> 
-> Therefore, sprinkle some IPI-sync love around. This guarantees that
-> all CPUs agree on the text and RCU once again provides the required
-> guaranteed.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: hpa@zytor.com
-> Cc: paulmck@kernel.org
+On Tue, Nov 12, 2019 at 9:37 PM Takashi Iwai <tiwai@suse.de> wrote:
+> On Tue, 12 Nov 2019 16:16:34 +0100, Arnd Bergmann wrote:
+> > I would like to propose merging this into the alsa tree after
+> > the v5.5 merge window for inclusion into v5.6, to allow a good
+> > amount of testing, in particular for the header changes that
+> > may cause problems for user space applications.
+>
+> Agreed, it's still no urgent problem.
 
-With a phrase like "IPI-sync love" in the commit log...  ;-)
+I actually do think it's getting urgent, anything that touches
+the ABI must be done carefully and not rushed.
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+The urgency at the moment is that developers are starting to
+deploy systems with 64-bit time_t with musl-libc making this
+the default now, and 32-bit risc-v not offering 32-bit time_t at all.
 
-> Cc: mathieu.desnoyers@efficios.com
-> ---
->  arch/x86/include/asm/text-patching.h |    1 +
->  arch/x86/kernel/alternative.c        |   11 ++++++++---
->  arch/x86/kernel/kprobes/core.c       |    2 ++
->  arch/x86/kernel/kprobes/opt.c        |   12 ++++--------
->  4 files changed, 15 insertions(+), 11 deletions(-)
-> 
-> --- a/arch/x86/include/asm/text-patching.h
-> +++ b/arch/x86/include/asm/text-patching.h
-> @@ -42,6 +42,7 @@ extern void text_poke_early(void *addr,
->   * an inconsistent instruction while you patch.
->   */
->  extern void *text_poke(void *addr, const void *opcode, size_t len);
-> +extern void text_poke_sync(void);
->  extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
->  extern int poke_int3_handler(struct pt_regs *regs);
->  extern void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate);
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -936,6 +936,11 @@ static void do_sync_core(void *info)
->  	sync_core();
->  }
->  
-> +void text_poke_sync(void)
-> +{
-> +	on_each_cpu(do_sync_core, NULL, 1);
-> +}
-> +
->  struct text_poke_loc {
->  	s32 rel_addr; /* addr := _stext + rel_addr */
->  	s32 rel32;
-> @@ -1085,7 +1090,7 @@ static void text_poke_bp_batch(struct te
->  	for (i = 0; i < nr_entries; i++)
->  		text_poke(text_poke_addr(&tp[i]), &int3, sizeof(int3));
->  
-> -	on_each_cpu(do_sync_core, NULL, 1);
-> +	text_poke_sync();
->  
->  	/*
->  	 * Second step: update all but the first byte of the patched range.
-> @@ -1107,7 +1112,7 @@ static void text_poke_bp_batch(struct te
->  		 * not necessary and we'd be safe even without it. But
->  		 * better safe than sorry (plus there's not only Intel).
->  		 */
-> -		on_each_cpu(do_sync_core, NULL, 1);
-> +		text_poke_sync();
->  	}
->  
->  	/*
-> @@ -1123,7 +1128,7 @@ static void text_poke_bp_batch(struct te
->  	}
->  
->  	if (do_sync)
-> -		on_each_cpu(do_sync_core, NULL, 1);
-> +		text_poke_sync();
->  
->  	/*
->  	 * sync_core() implies an smp_mb() and orders this store against
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -502,11 +502,13 @@ int arch_prepare_kprobe(struct kprobe *p
->  void arch_arm_kprobe(struct kprobe *p)
->  {
->  	text_poke(p->addr, ((unsigned char []){INT3_INSN_OPCODE}), 1);
-> +	text_poke_sync();
->  }
->  
->  void arch_disarm_kprobe(struct kprobe *p)
->  {
->  	text_poke(p->addr, &p->opcode, 1);
-> +	text_poke_sync();
->  }
->  
->  void arch_remove_kprobe(struct kprobe *p)
-> --- a/arch/x86/kernel/kprobes/opt.c
-> +++ b/arch/x86/kernel/kprobes/opt.c
-> @@ -444,14 +444,10 @@ void arch_optimize_kprobes(struct list_h
->  /* Replace a relative jump with a breakpoint (int3).  */
->  void arch_unoptimize_kprobe(struct optimized_kprobe *op)
->  {
-> -	u8 insn_buff[JMP32_INSN_SIZE];
-> -
-> -	/* Set int3 to first byte for kprobes */
-> -	insn_buff[0] = INT3_INSN_OPCODE;
-> -	memcpy(insn_buff + 1, op->optinsn.copied_insn, DISP32_SIZE);
-> -
-> -	text_poke_bp(op->kp.addr, insn_buff, JMP32_INSN_SIZE,
-> -		     text_gen_insn(JMP32_INSN_OPCODE, op->kp.addr, op->optinsn.insn));
-> +	arch_arm_kprobe(&op->kp);
-> +	text_poke(op->kp.addr + INT3_INSN_SIZE,
-> +		  op->optinsn.copied_insn, DISP32_SIZE);
-> +	text_poke_sync();
->  }
->  
->  /*
-> 
-> 
+At the moment, this means that audio support is broken for
+them, and that needs to be fixed.
+
+The other reason why lots of people care about moving all user
+space to 64-bit time_t is that 32-bit hardware is slowly starting
+to become less common. We know there will still be many
+32-bit ARM systems operational in 2038, but most of them will
+be on (then) 10+ year old hardware, running even older software
+that already being worked on today. The longer it takes us to
+stop using 32-bit time_t in user space, the more systems will
+end up having to be thrown away rather than fixed.
+
+> So now taking a quick look through the series, I find this approach is
+> the way to go.  Although one might get a bit more optimization after
+> squeeze, it's already a good compromise between the readability and
+> the efficiency.
+
+Thanks!
+
+> A slight uncertain implementation is the timer tread stuff, especially
+> the conditional definition of SNDRV_TIMER_IOCTL_TREAD (IIRC, I already
+> complained it in the past, too).  But I have no other idea as well, so
+> unless someone else gives a better option, we can live with that.
+
+We had discussed alternatives for this one last time, and decided
+to go with the solution I posted here. The main alternative would
+be to change the 'timespec' in snd_timer_tread to a fixed-length
+structure based on two 'long' members. This would avoid the
+need to match the command with the time_t type, but the cost would
+be requiring CLOCK_MONOTONIC timestamps to avoid the
+overflow, and changing all application source code that requires
+the type to be compatible with 'timespec'.
+
+     Arnd
