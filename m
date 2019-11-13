@@ -2,123 +2,94 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ABAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99748C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C60D206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CB222470
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbfKMQvE (ORCPT
+        id S1727793AbfKMPg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:51:04 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:38646 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfKMQvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:51:02 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iUvr5-0004JU-OS; Wed, 13 Nov 2019 09:50:56 -0700
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Wed, 13 Nov 2019 10:36:27 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:41306 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726335AbfKMPg0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:36:26 -0500
+Received: (qmail 2521 invoked by uid 2102); 13 Nov 2019 10:36:25 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 13 Nov 2019 10:36:25 -0500
+Date:   Wed, 13 Nov 2019 10:36:25 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Peter Chen <peter.chen@nxp.com>
+cc:     Michael Olbrich <m.olbrich@pengutronix.de>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-References: <PS2P216MB075563AA6AD242AA666EDC6A80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <7f824f5f-ee0f-0591-9170-1433c0813857@deltatee.com>
-Date:   Wed, 13 Nov 2019 09:50:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Subject: Re: [PATCH] usb: gadget: composite: split spinlock to avoid recursion
+In-Reply-To: <20191113063414.GA30608@b29397-desktop>
+Message-ID: <Pine.LNX.4.44L0.1911131021460.1558-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <PS2P216MB075563AA6AD242AA666EDC6A80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: benh@kernel.crashing.org, corbet@lwn.net, mika.westerberg@linux.intel.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nicholas.johnson-opensource@outlook.com.au
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 13 Nov 2019, Peter Chen wrote:
 
+> On 19-11-12 10:33:18, Michael Olbrich wrote:
+> > 'delayed_status' and 'deactivations' are used completely independent but
+> > they share the same spinlock. This can result in spinlock recursion:
+> > 
+> > BUG: spinlock recursion on CPU#1, uvc-gadget/322
+> >  lock: 0xffffffc0570364e0, .magic: dead4ead, .owner: uvc-gadget/322, .owner_cpu: 1
+> > CPU: 1 PID: 322 Comm: uvc-gadget Tainted: G         C O      5.3.0-20190916-1+ #55
+> > Hardware name: XXXXX (DT)
+> > Call trace:
+> >  dump_backtrace+0x0/0x178
+> >  show_stack+0x24/0x30
+> >  dump_stack+0xc0/0x104
+> >  spin_dump+0x90/0xa0
+> >  do_raw_spin_lock+0xd8/0x108
+> >  _raw_spin_lock_irqsave+0x40/0x50
+> >  composite_disconnect+0x2c/0x80
+> >  usb_gadget_disconnect+0x84/0x150
+> >  usb_gadget_deactivate+0x64/0x120
+> >  usb_function_deactivate+0x70/0x80
+> >  uvc_function_disconnect+0x20/0x58
+> >  uvc_v4l2_release+0x34/0x90
+> >  v4l2_release+0xbc/0xf0
+> >  __fput+0xb0/0x218
+> >  ____fput+0x20/0x30
+> >  task_work_run+0xa0/0xd0
+> >  do_notify_resume+0x2f4/0x340
+> >  work_pending+0x8/0x14
+> > 
+> > Fix this by using separate spinlocks.
+> 
+> This issue may be introduced by 0a55187a1ec8c ("USB: gadget core: Issue
+> ->disconnect() callback from usb_gadget_disconnect()"), which adds
+> gadget's disconnect at usb_gadget_disconnect. Add Alan, if he is Ok
+> with your patch, you may cc to stable tree.
 
-On 2019-11-13 8:25 a.m., Nicholas Johnson wrote:
-> Currently, the kernel can sometimes assign the MMIO_PREF window
-> additional size into the MMIO window, resulting in extra MMIO additional
-> size, despite the MMIO_PREF additional size being assigned successfully
-> into the MMIO_PREF window.
-> 
-> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
-> fails. In the next pass, because MMIO_PREF is already assigned, the
-> attempt to assign MMIO_PREF returns an error code instead of success
-> (nothing more to do, already allocated). Hence, the size which is
-> actually allocated, but thought to have failed, is placed in the MMIO
-> window.
-> 
-> Example of problem (more context can be found in the bug report URL):
-> 
-> Mainline kernel:
-> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
-> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
-> 
-> Patched kernel:
-> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
-> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
-> 
-> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
-> with the same configuration, with a Ubuntu mainline kernel and a kernel
-> patched with this patch.
-> 
-> The bug results in the MMIO_PREF being added to the MMIO window, which
-> means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
-> the MMIO window will likely fail to be assigned altogether due to lack
-> of 32-bit address space.
-> 
-> Change find_free_bus_resource() to do the following:
-> - Return first unassigned resource of the correct type.
-> - If none of the above, return first assigned resource of the correct type.
-> - If none of the above, return NULL.
-> 
-> Returning an assigned resource of the correct type allows the caller to
-> distinguish between already assigned and no resource of the correct type.
-> 
-> Rename find_free_bus_resource to find_bus_resource_of_type().
-> 
-> Add checks in pbus_size_io() and pbus_size_mem() to return success if
-> resource returned from find_free_bus_resource() is already allocated.
-> 
-> This avoids pbus_size_io() and pbus_size_mem() returning error code to
-> __pci_bus_size_bridges() when a resource has been successfully assigned
-> in a previous pass. This fixes the existing behaviour where space for a
-> resource could be reserved multiple times in different parent bridge
-> windows.
-> 
-> Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
-> 
-> Reported-by: Kit Chow <kchow@gigaio.com>
-> Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+I wasn't aware of the dual usage of that lock in the composite core 
+(and 0a55187a1ec8c touches only the gadget core, not composite.c).
 
-You can add mine as well:
+In any case, I don't have a good feel for how the locking is supposed 
+to work in the composite core.  This is really something Felipe should 
+look at.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Would a better fix be to change usb_function_deactivate() so that it
+doesn't hold the lock while calling usb_gadget_deactivate()?  Maybe
+increment cdev->deactivations unconditionally before dropping the lock
+(for mutual exclusion) and then decrement it again if the call fails?
 
-Thanks,
+Alan Stern
 
-Logan
