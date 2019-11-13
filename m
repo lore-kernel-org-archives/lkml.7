@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF34C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF6AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1698B222CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A3B21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610541;
-	bh=x//JVYHQ0COcKM6/JgBuXGLK9QcQhuUoh6LRbs9bhKw=;
+	s=default; t=1573610545;
+	bh=G71dYcUGEdS7ZLcmHwZte93OgREUPEZEcNL/Z8Rc4BA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YcF2pO3NMZfynfa1Sv6/RUQn7miIme/oA2UBoOOFpBnXqOWFI6Ds7kIlkDN3DcEEK
-	 mlpy1tXSQcVAcVcpxhHlcNz9d7NWeS9GB+nxY/pOsHG4M6ReOvr/4SrmH7nduorPut
-	 Vq3Q8C3fzhoSO69qmBUGdDt9qt6EDFAs2OI+RS3s=
+	b=nquXUUThdPBq0E8YgVJco5QBA3mbG/w2dp7ZENuHEMV0V8xujX7k4cPkFXCyghdbB
+	 SIrh08GuQFXjiESOuRJFhQs/So23bUsdsZ23wNGSAi8fp/U/wvkFGSweOBFACCfNx1
+	 MLVSNQ9YsweIZYrC94NyD/maBqNmIpirz3TfqF+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbfKMCCU (ORCPT
+        id S1731017AbfKMCCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:02:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58702 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:02:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728476AbfKMCCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:14 -0500
+        id S1730994AbfKMCCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E630020674;
-        Wed, 13 Nov 2019 02:02:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE0D21783;
+        Wed, 13 Nov 2019 02:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610533;
-        bh=x//JVYHQ0COcKM6/JgBuXGLK9QcQhuUoh6LRbs9bhKw=;
+        s=default; t=1573610539;
+        bh=G71dYcUGEdS7ZLcmHwZte93OgREUPEZEcNL/Z8Rc4BA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UKsh6n6AqAErSlC8e+xaJXIKPCfJ9JNAoBV/graFc/CstsmCjwMQmt0P3M7K5D6yE
-         wqA4Mjb6HmZg7R5LC7WpquSkkLHFoiIwf6WeXqEzk0IHaW3G9v71Y+EK9u7qK6vr6p
-         4ELE7NTxqbMLC+FCHUVkq3GtrcbaxKCqWU8CfsaQ=
+        b=KtjhIhuR7vg0cVlNAZ2N1FDRsmg8zr2wFKVJkSqOG2xbLjRdq+5u3UHKfCTfT8YOp
+         oeMm2duKNaaTO7oHcQvPeV6GXGCYxUECSkkg8CKm/U4Rzcl4FC39n11DlWRuFbe/Nz
+         IIAa5js/yb/XWeoGfjQcHvhriEEfeI42GYkCcER8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 25/48] NFSv4.x: fix lock recovery during delegation recall
-Date:   Tue, 12 Nov 2019 21:01:08 -0500
-Message-Id: <20191113020131.13356-25-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Lubomir Rintel <lkundrak@v3.sk>,
+        x86@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 28/48] x86/olpc: Fix build error with CONFIG_MFD_CS5535=m
+Date:   Tue, 12 Nov 2019 21:01:11 -0500
+Message-Id: <20191113020131.13356-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -59,55 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
+[ Upstream commit fa112cf1e8bc693d5a666b1c479a2859c8b6e0f1 ]
 
-Running "./nfstest_delegation --runtest recall26" uncovers that
-client doesn't recover the lock when we have an appending open,
-where the initial open got a write delegation.
+When building a 32-bit config which has the above MFD item as module
+but OLPC_XO1_PM is enabled =y - which is bool, btw - the kernel fails
+building with:
 
-Instead of checking for the passed in open context against
-the file lock's open context. Check that the state is the same.
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_remove':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:159: undefined reference to `mfd_cell_disable'
+  ld: arch/x86/platform/olpc/olpc-xo1-pm.o: in function `xo1_pm_probe':
+  /home/boris/kernel/linux/arch/x86/platform/olpc/olpc-xo1-pm.c:133: undefined reference to `mfd_cell_enable'
+  make: *** [Makefile:1030: vmlinux] Error 1
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Force MFD_CS5535 to y if OLPC_XO1_PM is enabled.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Lubomir Rintel <lkundrak@v3.sk>
+Cc: x86@kernel.org
+Link: http://lkml.kernel.org/r/20181005131750.GA5366@zn.tnic
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 7af5eeabc80e1..ee51e6f6c5d6e 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -91,7 +91,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
- 	return nfs4_do_check_delegation(inode, flags, false);
- }
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4d1262cf630c5..e9b19156fb628 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2481,8 +2481,7 @@ config OLPC
  
--static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
-+static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
- {
- 	struct inode *inode = state->inode;
- 	struct file_lock *fl;
-@@ -106,7 +106,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
- 	spin_lock(&flctx->flc_lock);
- restart:
- 	list_for_each_entry(fl, list, fl_list) {
--		if (nfs_file_open_context(fl->fl_file) != ctx)
-+		if (nfs_file_open_context(fl->fl_file)->state != state)
- 			continue;
- 		spin_unlock(&flctx->flc_lock);
- 		status = nfs4_lock_delegation_recall(fl, state, stateid);
-@@ -153,7 +153,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
- 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
- 		err = nfs4_open_delegation_recall(ctx, state, stateid, type);
- 		if (!err)
--			err = nfs_delegation_claim_locks(ctx, state, stateid);
-+			err = nfs_delegation_claim_locks(state, stateid);
- 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
- 			err = -EAGAIN;
- 		mutex_unlock(&sp->so_delegreturn_mutex);
+ config OLPC_XO1_PM
+ 	bool "OLPC XO-1 Power Management"
+-	depends on OLPC && MFD_CS5535 && PM_SLEEP
+-	select MFD_CORE
++	depends on OLPC && MFD_CS5535=y && PM_SLEEP
+ 	---help---
+ 	  Add support for poweroff and suspend of the OLPC XO-1 laptop.
+ 
 -- 
 2.20.1
 
