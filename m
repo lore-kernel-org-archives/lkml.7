@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E71C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA30C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA90622473
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F152067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611961;
-	bh=dlyw4oCcyKNR2SNh/XhvBtQMONKlvoPuARJ9KYHE57U=;
+	s=default; t=1573611969;
+	bh=Er1C0v6WOPG9MdMVv1ytWpIZtgZTMmVtrfz1ICT1oRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yGD0T0NPuvakbGn3YmeEBKydS+ebHVsqXOP09AvAdqanZXkiRY0du7hmL9ZcTcSft
-	 JaZCwjqS8h6Ss0ymx2bmG0pLTF6ey01jrK9PuLNJYkuBWWAsIodD/C0AXSx1H9Ajqc
-	 vgT35lKvqKSUPFpTg9VguIFhuzlhFzlQW29h35kk=
+	b=G23USAwmQg6CoOSWswCFgKtJ6dfzxP7xtiy0be8GmvYOeIR1UyrhC5jwAhKVDlu71
+	 jMCiR6agYyQ7m0bg+948wPF+826G4O1RIXUpLF5kQ35QCqGpOnuFQlemzyEojT+JdI
+	 8ohtSf7N0JHeY0iQIwDUNru+nibrT2c7MzH5ThPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbfKMC0A (ORCPT
+        id S1728594AbfKMC0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:26:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39164 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:26:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727820AbfKMBv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:26 -0500
+        id S1727791AbfKMBvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25AE622466;
-        Wed, 13 Nov 2019 01:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C941A22473;
+        Wed, 13 Nov 2019 01:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609885;
-        bh=dlyw4oCcyKNR2SNh/XhvBtQMONKlvoPuARJ9KYHE57U=;
+        s=default; t=1573609881;
+        bh=Er1C0v6WOPG9MdMVv1ytWpIZtgZTMmVtrfz1ICT1oRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vwCsklwBwz5rEvQOMy3q89xZrDmWdP58zBTqxQ1g3x3Vg0meiyE5EzoxoEZFwFMQZ
-         qgp2sUBrLkPkuCY0f4IkWJBfPIA6mmE5EbV6f8C8wJkDHWQZJoqeYnxXcMaJq1LOA+
-         Nb25C+dskYTiQpAU30zlcCNvNCPtdmtDWT5c6k3Y=
+        b=sJf9y7iLqmM8mlWiz7glVo1iz6ick4u+Aldbgy6vV7JGs8YxLg3z+nGMSFOaSk6GV
+         SQyJbpPvde4dVBEUZ/eizgKQmDTLqoxkWTEU5DFXFXQMD9ZL2zUwtpYam8YDbMA5YG
+         i4gLG0oqXhDoJ9+/L94F0+7e622o6Zoa/huormV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 045/209] dmaengine: ep93xx: Return proper enum in ep93xx_dma_chan_direction
-Date:   Tue, 12 Nov 2019 20:47:41 -0500
-Message-Id: <20191113015025.9685-45-sashal@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 043/209] printk: Do not miss new messages when replaying the log
+Date:   Tue, 12 Nov 2019 20:47:39 -0500
+Message-Id: <20191113015025.9685-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,44 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Petr Mladek <pmladek@suse.com>
 
-[ Upstream commit 9524d6b265f9b2b9a61fceb2ee2ce1c2a83e39ca ]
+[ Upstream commit f92b070f2dc89a8ff1a0cc8b608e20abef894c7d ]
 
-Clang warns when implicitly converting from one enumerated type to
-another. Avoid this by using the equivalent value from the expected
-type.
+The variable "exclusive_console" is used to reply all existing messages
+on a newly registered console. It is cleared when all messages are out.
 
-In file included from drivers/dma/ep93xx_dma.c:30:
-./include/linux/platform_data/dma-ep93xx.h:88:10: warning: implicit
-conversion from enumeration type 'enum dma_data_direction' to different
-enumeration type 'enum dma_transfer_direction' [-Wenum-conversion]
-                return DMA_NONE;
-                ~~~~~~ ^~~~~~~~
-1 warning generated.
+The problem is that new messages might appear in the meantime. These
+are then visible only on the exclusive console.
 
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The obvious solution is to clear "exclusive_console" after we replay
+all messages that were already proceed before we started the reply.
+
+Reported-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Link: http://lkml.kernel.org/r/20180913123406.14378-1-pmladek@suse.com
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/platform_data/dma-ep93xx.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/printk/printk.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/platform_data/dma-ep93xx.h b/include/linux/platform_data/dma-ep93xx.h
-index f8f1f6b952a62..eb9805bb3fe8a 100644
---- a/include/linux/platform_data/dma-ep93xx.h
-+++ b/include/linux/platform_data/dma-ep93xx.h
-@@ -85,7 +85,7 @@ static inline enum dma_transfer_direction
- ep93xx_dma_chan_direction(struct dma_chan *chan)
- {
- 	if (!ep93xx_dma_chan_is_m2p(chan))
--		return DMA_NONE;
-+		return DMA_TRANS_NONE;
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index d0d03223b45b1..b627954061bb6 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -423,6 +423,7 @@ static u32 log_next_idx;
+ /* the next printk record to write to the console */
+ static u64 console_seq;
+ static u32 console_idx;
++static u64 exclusive_console_stop_seq;
  
- 	/* even channels are for TX, odd for RX */
- 	return (chan->chan_id % 2 == 0) ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
+ /* the next printk record to read after the last 'clear' command */
+ static u64 clear_seq;
+@@ -2014,6 +2015,7 @@ static u64 syslog_seq;
+ static u32 syslog_idx;
+ static u64 console_seq;
+ static u32 console_idx;
++static u64 exclusive_console_stop_seq;
+ static u64 log_first_seq;
+ static u32 log_first_idx;
+ static u64 log_next_seq;
+@@ -2381,6 +2383,12 @@ void console_unlock(void)
+ 			goto skip;
+ 		}
+ 
++		/* Output to all consoles once old messages replayed. */
++		if (unlikely(exclusive_console &&
++			     console_seq >= exclusive_console_stop_seq)) {
++			exclusive_console = NULL;
++		}
++
+ 		len += msg_print_text(msg,
+ 				console_msg_format & MSG_FORMAT_SYSLOG,
+ 				text + len,
+@@ -2423,10 +2431,6 @@ void console_unlock(void)
+ 
+ 	console_locked = 0;
+ 
+-	/* Release the exclusive_console once it is used */
+-	if (unlikely(exclusive_console))
+-		exclusive_console = NULL;
+-
+ 	raw_spin_unlock(&logbuf_lock);
+ 
+ 	up_console_sem();
+@@ -2711,6 +2715,7 @@ void register_console(struct console *newcon)
+ 		 * the already-registered consoles.
+ 		 */
+ 		exclusive_console = newcon;
++		exclusive_console_stop_seq = console_seq;
+ 	}
+ 	console_unlock();
+ 	console_sysfs_notify();
 -- 
 2.20.1
 
