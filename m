@@ -2,218 +2,723 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B1DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1B7C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85297206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB4C206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b9OZlhHS";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZwjNZAcB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MMdVqgil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKMRll (ORCPT
+        id S1727145AbfKMRm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:41:41 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:28468 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbfKMRll (ORCPT
+        Wed, 13 Nov 2019 12:42:58 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40795 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfKMRm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:41:41 -0500
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xADHeHdL007578;
-        Wed, 13 Nov 2019 09:40:58 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=7YmObVeuY77PzNixCgKN8HyL71xo4/rvuQtvFOB3jdc=;
- b=b9OZlhHSlCEF1aGqMMY5tLeICPM64KWtEaPnnysi+wrU4JnQcgSVYMwsVkO4nsTqYiAX
- 84k/a2B4iskHB7A1mBQ2MUvWhAhYIzIDOI/bHMAade7AAa1aQIV1gPz3CNX76fDJHGS8
- e4lAieHKDsTPNqsTc08m/42lGTPykZlNUqQ= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2w8n9s0dt4-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 13 Nov 2019 09:40:57 -0800
-Received: from ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) by
- ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 Nov 2019 09:40:56 -0800
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 13 Nov 2019 09:40:56 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U9TJahUAya1k6Urn/vGUrKyTdGCM6ZFnj35q6j25QNCNcRxTPdAVCBcIIGuQJ/BH+6ufKvX7L8hYVurMObeyA+Gyd4hzIRNLECTsOH5Cmf4h5wlkdshqgEel8OtHFpqh/grkvRCcipGDOZUSz7SklggYBx6bpMpK/h8e0o8sgfdfj7e/lzo5zer3tM+BAyW0U13U6UjF8Z1IxUC4ddY/I5XBX4KHRpnFaz13tRiJ6l3OxKy2Dk0axUHtBjKaGXAiKiGvh7voe/3oVKfoBqwMjZ4ISRf922RKTPTjUOxJ9IUeLuhpTolJxAHti8P3Msgozs9VhXmQ30MYbcoG/cx0hA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7YmObVeuY77PzNixCgKN8HyL71xo4/rvuQtvFOB3jdc=;
- b=kWUtS4J7kqYyk4JQxTqhipd5xCCp8wSEbF+e1WK8MVltCcVpmX4eiO+z5GqdAlqDkTb0SLyb6a/LEHOeHz7uguktU4gGwDU1J4CCOIBZZ2YHLKKMdbcfapL9a1bPgmdWIFaoaPN/SX1FF7PlZqrX/mTvg42+v6WA5jLHCBc2OYRM+5ANLdJ0ZWQysoh4nLfZSPa4wDII9p1iooX7GQat9FTPFPavPxLOsYYnuLr0f3o5fT6mmcQHIFX6KDvGnsNuSz06F0OnTStSj3VeKU4B26iUgLdMy9u4inw+Y/Y/7SEaXcfjwnoHAOXg50Q2kKRu05RbOrh15XYv9Q0TZNXyxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7YmObVeuY77PzNixCgKN8HyL71xo4/rvuQtvFOB3jdc=;
- b=ZwjNZAcBZG7p6E8HfJZpWjlDcHkgojOKew+/96Wzvy9tFasfJQyNEn9Eduq9hnC5+F1ya4kOGkKZwbK4BWnJjgO4ShOHlM3o0wgmzhZrPByh01n/il1NnjbUcZfw31HMYRfB4dn7VrTrY9uBvkDOol4NK967P9fWopnIrdDGoGg=
-Received: from BY5PR15MB3636.namprd15.prod.outlook.com (52.133.252.91) by
- BY5PR15MB3521.namprd15.prod.outlook.com (10.255.245.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.22; Wed, 13 Nov 2019 17:40:55 +0000
-Received: from BY5PR15MB3636.namprd15.prod.outlook.com
- ([fe80::71db:9d2a:500c:d92b]) by BY5PR15MB3636.namprd15.prod.outlook.com
- ([fe80::71db:9d2a:500c:d92b%4]) with mapi id 15.20.2430.027; Wed, 13 Nov 2019
- 17:40:55 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     "minyard@acm.org" <minyard@acm.org>,
-        Asmaa Mnebhi <Asmaa@mellanox.com>
-CC:     "cminyard@mvista.com" <cminyard@mvista.com>,
-        Sai Dasari <sdasari@fb.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>
-Subject: Re: [Openipmi-developer] [PATCH 2/2] drivers: ipmi: Modify max length
- of IPMB packet
-Thread-Topic: [Openipmi-developer] [PATCH 2/2] drivers: ipmi: Modify max
- length of IPMB packet
-Thread-Index: AQHVmQJeBnbge6VCjUulKeqNucSkKaeHfQWA///xaoCAAI9UAIAAGvMAgAAuLICAAJP9gA==
-Date:   Wed, 13 Nov 2019 17:40:55 +0000
-Message-ID: <C9D94D1B-A992-425E-826F-3BDA98E26999@fb.com>
-References: <20191112023610.3644314-1-vijaykhemka@fb.com>
- <20191112023610.3644314-2-vijaykhemka@fb.com>
- <20191112124845.GE2882@minyard.net>
- <7BC487D6-6ACA-46CE-A751-8367FEDEE647@fb.com>
- <20191112202932.GJ2882@minyard.net>
- <DB6PR0501MB27127CF534336BDEB5D005FFDA770@DB6PR0501MB2712.eurprd05.prod.outlook.com>
- <20191113005115.GK2882@minyard.net>
-In-Reply-To: <20191113005115.GK2882@minyard.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::63b]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9ef4f693-0fc1-4d66-01a9-08d76860a303
-x-ms-traffictypediagnostic: BY5PR15MB3521:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR15MB35215A5F086DFB941DBE983EDD760@BY5PR15MB3521.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(366004)(39860400002)(346002)(396003)(13464003)(189003)(199004)(33656002)(14454004)(86362001)(6486002)(478600001)(81166006)(6306002)(81156014)(76116006)(8676002)(6512007)(4326008)(66476007)(36756003)(6246003)(186003)(6436002)(966005)(99286004)(64756008)(66446008)(66946007)(66556008)(14444005)(102836004)(53546011)(6506007)(256004)(6116002)(71190400001)(71200400001)(5660300002)(11346002)(446003)(476003)(2616005)(46003)(486006)(2501003)(2906002)(54906003)(229853002)(8936002)(316002)(305945005)(7736002)(25786009)(76176011)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR15MB3521;H:BY5PR15MB3636.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: B4zYf7VTM4zbVv2uJ7HX2MKOo5IPV2bNGoRXz7dxERH03j7B7GZXHOtqjjTOW/LnZ6qGVWBgHEUAoumGSAh+zBsnr20hs3c1oqr9Y6e5egqKNyBZKJVmoNl5ih/W8n0oVA88umx7yKpquI7wlPvAOaHgBUhTJxQBUJCYXapm2roh5daWGU1bbdd50ydT5r3wplFZuLZxqFMeENl1BvoFjFzaQuH7bF+qAht2ex46um5BWIV84GNKoZ3xJU5LmZj/epvq0zobAz6u8H2fIWBkvOOc19weUkkdtc3SiYcBK6MHt4Jv1+7k4BfNTWvHbnKy3xyIVk/4aJrW6tg0seGxOc9w32bEES9tNFB0GBbCe+fUa6NVV6tjtS8qhpogq8G/kq1blP5wj2ekQGZ/uQb2IQgklx9B1I6tNuUKSCIfhaHfktgpvINKTtsG/9UIt6G+
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7685C4B590313B4FAE4F17A39880C86A@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ef4f693-0fc1-4d66-01a9-08d76860a303
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 17:40:55.6387
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I7FCi2+2QX2O6PUqxk73co3C65g/MZ1+lU0JiXR93uEfsLcpwTbevIukhd+MOvp8kzkcWEgWRIVUgBAzOYrhtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3521
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-13_04:2019-11-13,2019-11-13 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 mlxscore=0
- adultscore=0 impostorscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911130152
-X-FB-Internal: deliver
+        Wed, 13 Nov 2019 12:42:57 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f3so2985630wmc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:42:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=yX9W29PDPJOVCyk0rG/7dC/ID2EKF8iE1TznMRyojp8=;
+        b=MMdVqgilwVFZNPmfJ+/jPMOVAWhm3l2btPKN/v3sJMRJN0ypGVPGnRpim7CmPg4Yi+
+         IGUsB/0PX5cQGe0pAonlCHHt9a32EmeapuwSRD4zWN1uhqQS7L3xO5nV1qD6WCxzf05y
+         tRTXc+V6JZvYFCX1RXvDy7WT/qnaONunZVA+5chDzvbOjtg3rrCLcK1LLoE7Cb4QjAco
+         aeNIgavo5CdqxPWEUui4Nyc1QmpR0VKwjl0uWNlA+s9f0R88eX1rcuPLwvO0UPwa5EVv
+         idkbBfpGBTanoEqwjqq+wHG6nzAxSEQjHEqBY0PDx1c4pJSVVAROyoWMD/gFUETekGy7
+         gVaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=yX9W29PDPJOVCyk0rG/7dC/ID2EKF8iE1TznMRyojp8=;
+        b=D+Y+fPTb4UwGj2UCANF3vSFsdqJpg7lNo8z8BML/mqhwrffR8GNr7lYCny8TNmKKCN
+         zrjJe1zeEycSo1ikyg3sJzf3YzKbUzcg4nPYWFqNkzr+BEUC6Qow89wr1jtXKSOe+lqD
+         FhCtTUM3IQKmJjXe/uHvru4sOOmibyVMNYcTxzq14FC/yeJRzNzg8HaFBHqFHgd4PWxe
+         jxTGoFnOl8xtnpafBZ0erxXZuTLI3Nh8+fGgIxZJR78usSo60N+BdxCDnwATlTMlhP/C
+         PIpMfEy1hEd+DgHZZK2jaFO7CeRKVPQCcgXMUMoSN0PmKDlsTpxMlcR7AFspTn/Yhey+
+         +jZA==
+X-Gm-Message-State: APjAAAUdjUcorVxgl7Et+8hCCkH91HXBmmuNDfXDbwiXer7bUhjSErf5
+        ePueqORQaIHzMi/kTmouu+x5XTfoT70rXu1cYZeBBerTJXYwY98ITbOfhmRi7zU1ffIU3rOXk6h
+        XY5dNDoLvvy3xYCMK
+X-Google-Smtp-Source: APXvYqyFW2X9bgw3eA0oioB946BmOiqF0TGB808NMbqkSJ+lv+cZTmGNXdX/XkD7FZK7KQJut1HHLg==
+X-Received: by 2002:a05:600c:2103:: with SMTP id u3mr4179705wml.150.1573666972505;
+        Wed, 13 Nov 2019 09:42:52 -0800 (PST)
+Received: from [192.168.43.233] ([37.160.7.118])
+        by smtp.gmail.com with ESMTPSA id j7sm4121991wro.54.2019.11.13.09.42.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 09:42:51 -0800 (PST)
+From:   Paolo Valente <paolo.valente@linaro.org>
+Message-Id: <69B451DE-B04B-4E0E-9464-826C4A7619AD@linaro.org>
+Content-Type: multipart/mixed;
+        boundary="Apple-Mail=_FF99937C-1954-4AA8-87A1-DBC9DB1E100C"
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH BUGFIX] block, bfq: deschedule empty bfq_queues not
+ referred by any process
+Date:   Wed, 13 Nov 2019 18:42:49 +0100
+In-Reply-To: <5773ff54421ccf179ef57d96e19ef042@natalenko.name>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, Chris Evich <cevich@redhat.com>,
+        Patrick Dung <patdung100@gmail.com>,
+        Thorsten Schubert <tschubert@bafh.org>
+To:     Oleksandr Natalenko <oleksandr@natalenko.name>
+References: <20191112074856.40433-1-paolo.valente@linaro.org>
+ <bb393dcaa426786e0963cf0e70f0b062@natalenko.name>
+ <2FB3736A-693E-44B9-9D1F-39AE0D016644@linaro.org>
+ <65fc0bffbcb2296d121b3d5a79108e76@natalenko.name>
+ <5773ff54421ccf179ef57d96e19ef042@natalenko.name>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDExLzEyLzE5LCA0OjUxIFBNLCAiQ29yZXkgTWlueWFyZCIgPHRjbWlueWFyZEBn
-bWFpbC5jb20gb24gYmVoYWxmIG9mIG1pbnlhcmRAYWNtLm9yZz4gd3JvdGU6DQoNCiAgICBPbiBU
-dWUsIE5vdiAxMiwgMjAxOSBhdCAxMDowNjowMFBNICswMDAwLCBBc21hYSBNbmViaGkgd3JvdGU6
-DQogICAgPiBBbHNvLCBsZXQgbWUgY2xhcmlmeSBvbmUgdGhpbmcuIEl0IGRvZXNuJ3QgbWF0dGVy
-IGhvdyBiaWcgdGhlIHJlc3BvbnNlIGlzLiBJbiBteSB0ZXN0aW5nLCBJIGFsc28gaGFkIHNvbWUg
-cmVzcG9uc2VzIHRoYXQgYXJlIG92ZXIgMTI4IGJ5dGVzLCBhbmQgdGhpcyBkcml2ZXIgc3RpbGwg
-d29ya3MuIEl0IGlzIHRoZSB1c2VyIHNwYWNlIHByb2dyYW0gd2hpY2ggZGV0ZXJtaW5lcyB0aGUg
-bGFzdCBieXRlcyByZWNlaXZlZC4gVGhlIDEyOCBieXRlcyBpcyB0aGUgbWF4IG51bWJlciBvZiBi
-eXRlcyBoYW5kbGVkIGJ5IHlvdXIgaTJjL3NtYnVzIGRyaXZlciBhdCBlYWNoIGkyYyB0cmFuc2Fj
-dGlvbi4gTXkgaTJjIGRyaXZlciBjYW4gb25seSB0cmFuc21pdCAxMjggYnl0ZXMgYXQgYSB0aW1l
-LiBTbyBqdXN0IGxpa2UgQ29yZXkgcG9pbnRlZCBvdXQsIGl0IHdvdWxkIGJlIGJldHRlciB0byBw
-YXNzIHRoaXMgdGhyb3VnaCBBQ1BJL2RldmljZSB0cmVlLg0KICAgIA0KICAgIFllYWgsIEkgd291
-bGQgcmVhbGx5IHByZWZlciBkZXZpY2UgdHJlZS4gIFRoYXQncyB3aGF0IGl0J3MgZGVzaWduZWQg
-Zm9yLA0KICAgIHJlYWxseS4gIGlvY3RscyBhcmUgbm90IHJlYWxseSB3aGF0IHlvdSB3YW50IGZv
-ciB0aGlzLiAgc3lzZnMgaXMgYQ0KICAgIGJldHRlciBjaG9pY2UgYXMgYSBiYWNrdXAgZm9yIGRl
-dmljZSB0cmVlIChzbyB5b3UgY2FuIGNoYW5nZSBpdCBpZiBpdCdzDQogICAgd3JvbmcpLg0KDQpD
-b3JleS9Bc21hYSwgDQpPaywgSSB3aWxsIHBhc3MgdGhpcyBtYXggc2l6ZSB0aHJvdWdoIGRldmlj
-ZSB0cmVlIGFuZCBjaGFuZ2UgdGhpcyBwYXRjaC4gDQpJIGhhdmUgc2VudCBwYXRjaCBmb3IgaTJj
-IHRyYW5zZmVyIHVzaW5nIGlvY3RsLCBJIGhvcGUgdGhhdCBzaG91bGQgYmUgZmluZS4gDQpQbGVh
-c2UgcmV2aWV3IHRoYXQgdjIgcGF0Y2guDQogICAgDQogICAgLWNvcmV5DQogICAgDQogICAgPiAN
-CiAgICA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQogICAgPiBGcm9tOiBDb3JleSBNaW55
-YXJkIDx0Y21pbnlhcmRAZ21haWwuY29tPiBPbiBCZWhhbGYgT2YgQ29yZXkgTWlueWFyZA0KICAg
-ID4gU2VudDogVHVlc2RheSwgTm92ZW1iZXIgMTIsIDIwMTkgMzozMCBQTQ0KICAgID4gVG86IFZp
-amF5IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgID4gQ2M6IEFybmQgQmVyZ21hbm4g
-PGFybmRAYXJuZGIuZGU+OyBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRp
-b24ub3JnPjsgb3BlbmlwbWktZGV2ZWxvcGVyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZzsgY21pbnlhcmRAbXZpc3RhLmNvbTsgQXNtYWEgTW5lYmhp
-IDxBc21hYUBtZWxsYW5veC5jb20+OyBqb2VsQGptcy5pZC5hdTsgbGludXgtYXNwZWVkQGxpc3Rz
-Lm96bGFicy5vcmc7IFNhaSBEYXNhcmkgPHNkYXNhcmlAZmIuY29tPg0KICAgID4gU3ViamVjdDog
-UmU6IFtQQVRDSCAyLzJdIGRyaXZlcnM6IGlwbWk6IE1vZGlmeSBtYXggbGVuZ3RoIG9mIElQTUIg
-cGFja2V0DQogICAgPiANCiAgICA+IE9uIFR1ZSwgTm92IDEyLCAyMDE5IGF0IDA3OjU2OjM0UE0g
-KzAwMDAsIFZpamF5IEtoZW1rYSB3cm90ZToNCiAgICA+ID4gDQogICAgPiA+IA0KICAgID4gPiBP
-biAxMS8xMi8xOSwgNDo0OCBBTSwgIkNvcmV5IE1pbnlhcmQiIDx0Y21pbnlhcmRAZ21haWwuY29t
-IG9uIGJlaGFsZiBvZiBtaW55YXJkQGFjbS5vcmc+IHdyb3RlOg0KICAgID4gPiANCiAgICA+ID4g
-ICAgIE9uIE1vbiwgTm92IDExLCAyMDE5IGF0IDA2OjM2OjEwUE0gLTA4MDAsIFZpamF5IEtoZW1r
-YSB3cm90ZToNCiAgICA+ID4gICAgID4gQXMgcGVyIElQTUIgc3BlY2lmaWNhdGlvbiwgbWF4aW11
-bSBwYWNrZXQgc2l6ZSBzdXBwb3J0ZWQgaXMgMjU1LA0KICAgID4gPiAgICAgPiBtb2RpZmllZCBN
-YXggbGVuZ3RoIHRvIDI0MCBmcm9tIDEyOCB0byBhY2NvbW1vZGF0ZSBtb3JlIGRhdGEuDQogICAg
-PiA+ICAgICANCiAgICA+ID4gICAgIEkgY291bGRuJ3QgZmluZCB0aGlzIGluIHRoZSBJUE1CIHNw
-ZWNpZmljYXRpb24uDQogICAgPiA+ICAgICANCiAgICA+ID4gICAgIElJUkMsIHRoZSBtYXhpbXVt
-IG9uIEkyQyBpcyAzMiBieXRzLCBhbmQgdGFibGUgNi05IGluIHRoZSBJUE1JIHNwZWMsDQogICAg
-PiA+ICAgICB1bmRlciAiSVBNQiBPdXRwdXQiIHN0YXRlczogVGhlIElQTUIgc3RhbmRhcmQgbWVz
-c2FnZSBsZW5ndGggaXMNCiAgICA+ID4gICAgIHNwZWNpZmllZCBhcyAzMiBieXRlcywgbWF4aW11
-bSwgaW5jbHVkaW5nIHNsYXZlIGFkZHJlc3MuDQogICAgPiA+IA0KICAgID4gPiBXZSBhcmUgdXNp
-bmcgSVBNSSBPRU0gbWVzc2FnZXMgYW5kIG91ciByZXNwb25zZSBzaXplIGlzIGFyb3VuZCAxNTAg
-DQogICAgPiA+IGJ5dGVzIEZvciBzb21lIG9mIHJlc3BvbnNlcy4gVGhhdCdzIHdoeSBJIGhhZCBz
-ZXQgaXQgdG8gMjQwIGJ5dGVzLg0KICAgID4gDQogICAgPiBIbW0uICBXZWxsLCB0aGF0IGlzIGEg
-cHJldHR5IHNpZ25pZmljYW50IHZpb2xhdGlvbiBvZiB0aGUgc3BlYywgYnV0IHRoZXJlJ3Mgbm90
-aGluZyBoYXJkIGluIHRoZSBwcm90b2NvbCB0aGF0IHByb2hpYml0cyBpdCwgSSBndWVzcy4NCiAg
-ICA+IA0KICAgID4gSWYgQXNtYWEgaXMgb2sgd2l0aCB0aGlzLCBJJ20gb2sgd2l0aCBpdCwgdG9v
-Lg0KICAgID4gDQogICAgPiAtY29yZXkNCiAgICA+IA0KICAgID4gPiAgICAgDQogICAgPiA+ICAg
-ICBJJ20gbm90IHN1cmUgd2hlcmUgMTI4IGNhbWUgZnJvbSwgYnV0IG1heWJlIGl0IHNob3VsZCBi
-ZSByZWR1Y2VkIHRvIDMxLg0KICAgID4gPiAgICAgDQogICAgPiA+ICAgICAtY29yZXkNCiAgICA+
-ID4gICAgIA0KICAgID4gPiAgICAgPiANCiAgICA+ID4gICAgID4gU2lnbmVkLW9mZi1ieTogVmlq
-YXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+DQogICAgPiA+ICAgICA+IC0tLQ0KICAgID4g
-PiAgICAgPiAgZHJpdmVycy9jaGFyL2lwbWkvaXBtYl9kZXZfaW50LmMgfCAyICstDQogICAgPiA+
-ICAgICA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCiAg
-ICA+ID4gICAgID4gDQogICAgPiA+ICAgICA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2NoYXIvaXBt
-aS9pcG1iX2Rldl9pbnQuYyBiL2RyaXZlcnMvY2hhci9pcG1pL2lwbWJfZGV2X2ludC5jDQogICAg
-PiA+ICAgICA+IGluZGV4IDI0MTliOWE5MjhiMi4uN2Y5MTk4YmJjZTk2IDEwMDY0NA0KICAgID4g
-PiAgICAgPiAtLS0gYS9kcml2ZXJzL2NoYXIvaXBtaS9pcG1iX2Rldl9pbnQuYw0KICAgID4gPiAg
-ICAgPiArKysgYi9kcml2ZXJzL2NoYXIvaXBtaS9pcG1iX2Rldl9pbnQuYw0KICAgID4gPiAgICAg
-PiBAQCAtMTksNyArMTksNyBAQA0KICAgID4gPiAgICAgPiAgI2luY2x1ZGUgPGxpbnV4L3NwaW5s
-b2NrLmg+DQogICAgPiA+ICAgICA+ICAjaW5jbHVkZSA8bGludXgvd2FpdC5oPg0KICAgID4gPiAg
-ICAgPiAgDQogICAgPiA+ICAgICA+IC0jZGVmaW5lIE1BWF9NU0dfTEVOCQkxMjgNCiAgICA+ID4g
-ICAgID4gKyNkZWZpbmUgTUFYX01TR19MRU4JCTI0MA0KICAgID4gPiAgICAgPiAgI2RlZmluZSBJ
-UE1CX1JFUVVFU1RfTEVOX01JTgk3DQogICAgPiA+ICAgICA+ICAjZGVmaW5lIE5FVEZOX1JTUF9C
-SVRfTUFTSwkweDQNCiAgICA+ID4gICAgID4gICNkZWZpbmUgUkVRVUVTVF9RVUVVRV9NQVhfTEVO
-CTI1Ng0KICAgID4gPiAgICAgPiAtLSANCiAgICA+ID4gICAgID4gMi4xNy4xDQogICAgPiA+ICAg
-ICA+DQogICAgPiA+ICAgICANCiAgICA+ID4gDQogICAgPiANCiAgICA+IF9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQogICAgPiBPcGVuaXBtaS1kZXZlbG9w
-ZXIgbWFpbGluZyBsaXN0DQogICAgPiBPcGVuaXBtaS1kZXZlbG9wZXJAbGlzdHMuc291cmNlZm9y
-Z2UubmV0DQogICAgPiBodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9
-aHR0cHMtM0FfX2xpc3RzLnNvdXJjZWZvcmdlLm5ldF9saXN0c19saXN0aW5mb19vcGVuaXBtaS0y
-RGRldmVsb3BlciZkPUR3SURhUSZjPTVWRDBSVHRObFRoM3ljZDQxYjNNVXcmcj12OU1VMEtpOXBX
-blRYQ1d3akhQVmdwbkNSODB2WGtrY3JJYXFVN1VTbDVnJm09UUZPNUNsQWpaNUttZnVya2hrUnBR
-UXh4MzNoMFEzTlo5ZUZSYlIzdkd5ayZzPW1aVUl5aVZGMXRCWE8xdjdaaExXT1dfQndJRVJCVG95
-dGFWNFVMalhoa00mZT0gDQogICAgDQoNCg==
+
+--Apple-Mail=_FF99937C-1954-4AA8-87A1-DBC9DB1E100C
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
+
+
+
+> Il giorno 13 nov 2019, alle ore 16:01, Oleksandr Natalenko =
+<oleksandr@natalenko.name> ha scritto:
+>=20
+> On 13.11.2019 15:25, Oleksandr Natalenko wrote:
+>> I didn't try to switch schedulers, but what I see now is once the
+>> system is able to boot with BFQ, the I/O can still hang on I/O burst
+>> (which for me happens to happen during VM reboot).
+>> This may also not hang forever, but just slow down considerably. I've
+>> noticed this inside a KVM VM, not on a real HW.
+>=20
+> Possible call traces:
+
+Ok, you may have given me enough information, thank you very much.
+
+Could you please apply the attached (compressed) patch on top of my
+offending patch?  For review purposes, here is the simple change:
+
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2728,7 +2728,8 @@ void bfq_release_process_ref(struct bfq_data =
+*bfqd, struct bfq_queue *bfqq)
+         * freed when dequeued from service. But this is assumed to
+         * never happen.
+         */
+-       if (bfq_bfqq_busy(bfqq) && RB_EMPTY_ROOT(&bfqq->sort_list))
++       if (bfq_bfqq_busy(bfqq) && RB_EMPTY_ROOT(&bfqq->sort_list) &&
++           bfqq !=3D bfqd->in_service_queue)
+                bfq_del_bfqq_busy(bfqd, bfqq, false);
+=20
+        bfq_put_queue(bfqq);
+
+Crossing my fingers,
+Paolo
+
+
+--Apple-Mail=_FF99937C-1954-4AA8-87A1-DBC9DB1E100C
+Content-Disposition: attachment;
+	filename*0=0001-block-bfq-tentative-fix-for-deschedule-empty-bfq_que.patch.;
+	filename*1=gz
+Content-Type: application/x-gzip;
+	x-unix-mode=0644;
+	name="0001-block-bfq-tentative-fix-for-deschedule-empty-bfq_que.patch.gz"
+Content-Transfer-Encoding: base64
+
+H4sICJA/zF0AAzAwMDEtYmxvY2stYmZxLXRlbnRhdGl2ZS1maXgtZm9yLWRlc2NoZWR1bGUtZW1w
+dHktYmZxX3F1ZS5wYXRjaAClUl1v0zAUfZ5/xWUPVbs0ab7atBlMY8DEy9i0TSCEUOTY160hs1Pb
+KavEj8dJ9wDSeEBElpx77te55/rS6AcosOB1RpNVkrJ0wbI54lyssnS+YnWWz/NlkScrkQi40gru
+sIWkgDguhwNpHCfk0pcp4YbqRsNH2qByCC/b3ox2B/O8kYoaHWmzPiNvqcMSPiGfQpLBB73zVZIV
+JMsyK8r5HII4iWNy19XfkLkSvty8vn/z/ivUjWbfp1CLbQnOF6VO7hCEfAShDRxztGyDvGsQ8KF1
++z6w2nbYoSWgtAODAo1BDvUeqNpDazRDa48JuZNrhTzUQoT1/h8GCcOQHGjNfLNQ6oFBxOAnZBAE
+3pl4fp4Q21C17udNQSqLxkmt7DiYeAGAY4O9PQ4nhHApBIThWjqgs+cq18+hRCqOj1DTxXKRFqIo
+8jiKYrZIkzxfFYIx8IIu8rwn/HxdEgTBX2qfn0OYFulyWkAw3Evw0E5LPihsPH1qsXpS09tibJ3p
+mBvcnDoKJ/7PD/8bPOxlwLcTAkdwAsKgX82PDSqvyODmHvPP08u1kwwjuOgcuI204A+1tnvwEU4f
+shXu0MCGti2qaIBmJDySAsZ9t75NVXd2Px4awmgEtxfVu6ub+8/V7fX1/XjU4+GZ1cZVjbRuMiHB
+f2T7EJ8P/us98OJVf/PwTKrqaZqDAP3oR4NK2PzZhg/vfDsFQRuLk1MCPrSPbDt3yD2QOfUrBZJG
+aRwlhPwCv4imjs8DAAA=
+--Apple-Mail=_FF99937C-1954-4AA8-87A1-DBC9DB1E100C
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
+
+
+
+
+>=20
+> [  179.107123] sysrq: Show Blocked State
+> [  179.107127]   task                        PC stack   pid father
+> [  179.107157] systemd-journal D    0   268      1 0x00000120
+> [  179.107163] Call Trace:
+> [  179.107177]  ? __schedule+0x637/0x2af0
+> [  179.107184]  ? get_page_from_freelist+0x123d/0x2530
+> [  179.107560]  schedule+0x3e/0x140
+> [  179.107568]  schedule_timeout+0x354/0x4c0
+> [  179.107576]  __down+0x8a/0xe0
+> [  179.107583]  ? preempt_count_add+0x68/0xa0
+> [  179.107702]  ? xfs_buf_find.isra.0+0x447/0x730 [xfs]
+> [  179.107709]  down+0x3b/0x50
+> [  179.107795]  xfs_buf_lock+0x33/0x110 [xfs]
+> [  179.107885]  xfs_buf_find.isra.0+0x447/0x730 [xfs]
+> [  179.108035]  xfs_buf_get_map+0x4b/0x4d0 [xfs]
+> [  179.108115]  xfs_buf_read_map+0x28/0x180 [xfs]
+> [  179.108205]  xfs_trans_read_buf_map+0xaa/0x390 [xfs]
+> [  179.108274]  xfs_da_read_buf+0xf0/0x130 [xfs]
+> [  179.108345]  xfs_dir3_block_read+0x35/0x70 [xfs]
+> [  179.108423]  xfs_dir2_block_getdents+0xa7/0x280 [xfs]
+> [  179.108503]  xfs_readdir+0x113/0x1b0 [xfs]
+> [  179.108512]  iterate_dir+0x143/0x1a0
+> [  179.108517]  ksys_getdents64+0x9c/0x130
+> [  179.108522]  ? compat_filldir+0x180/0x180
+> [  179.108527]  __x64_sys_getdents64+0x16/0x20
+> [  179.108533]  do_syscall_64+0x4e/0x110
+> [  179.108540]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  179.108546] RIP: 0033:0x7f3311baee3b
+> [  179.108581] Code: Bad RIP value.
+> [  179.108584] RSP: 002b:00007ffc60a3d6d8 EFLAGS: 00000293 ORIG_RAX: =
+00000000000000d9
+> [  179.108588] RAX: ffffffffffffffda RBX: 000056021e9df880 RCX: =
+00007f3311baee3b
+> [  179.108590] RDX: 0000000000008000 RSI: 000056021e9df8b0 RDI: =
+000000000000001a
+> [  179.108592] RBP: 000056021e9df8b0 R08: 0000000000000030 R09: =
+00007f3311ca80e0
+> [  179.108594] R10: 0000000000000000 R11: 0000000000000293 R12: =
+ffffffffffffff80
+> [  179.108596] R13: 000056021e9df884 R14: 0000000000000000 R15: =
+00007ffc60a3e3f0
+> [  179.108611] mkinitcpio      D    0   375    374 0x00000084
+> [  179.108616] Call Trace:
+> [  179.108624]  ? __schedule+0x637/0x2af0
+> [  179.108643]  schedule+0x3e/0x140
+> [  179.108648]  schedule_timeout+0x354/0x4c0
+> [  179.108655]  __down+0x8a/0xe0
+> [  179.108661]  ? preempt_count_add+0x68/0xa0
+> [  179.108737]  ? xfs_buf_find.isra.0+0x447/0x730 [xfs]
+> [  179.108743]  down+0x3b/0x50
+> [  179.108820]  xfs_buf_lock+0x33/0x110 [xfs]
+> [  179.108913]  xfs_buf_find.isra.0+0x447/0x730 [xfs]
+> [  179.108992]  xfs_buf_get_map+0x4b/0x4d0 [xfs]
+> [  179.109000]  ? get_page_from_freelist+0x123d/0x2530
+> [  179.109077]  xfs_buf_read_map+0x28/0x180 [xfs]
+> [  179.109166]  xfs_trans_read_buf_map+0xaa/0x390 [xfs]
+> [  179.109239]  xfs_iread+0xaf/0x220 [xfs]
+> [  179.109322]  xfs_iget+0x2f1/0xb80 [xfs]
+> [  179.109391]  ? xfs_dir_lookup+0x1bb/0x210 [xfs]
+> [  179.109472]  xfs_lookup+0x104/0x140 [xfs]
+> [  179.109554]  xfs_vn_lookup+0x82/0xc0 [xfs]
+> [  179.109561]  __lookup_slow+0x90/0x190
+> [  179.109569]  path_lookupat.isra.0+0x322/0x610
+> [  179.109576]  filename_lookup+0xc2/0x1d0
+> [  179.109584]  __se_sys_newstat+0x6c/0x100
+> [  179.109593]  do_syscall_64+0x4e/0x110
+> [  179.109600]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  179.109604] RIP: 0033:0x7f8730e5b8da
+> [  179.109610] Code: Bad RIP value.
+> [  179.109612] RSP: 002b:00007ffe0505c378 EFLAGS: 00000246 ORIG_RAX: =
+0000000000000004
+> [  179.109616] RAX: ffffffffffffffda RBX: 000055e2f87bd900 RCX: =
+00007f8730e5b8da
+> [  179.109618] RDX: 00007ffe0505c3a0 RSI: 00007ffe0505c3a0 RDI: =
+000055e2f8800cc0
+> [  179.109620] RBP: 0000000000000000 R08: 0000000000000001 R09: =
+0000000000000004
+> [  179.109622] R10: 000055e2f8794f30 R11: 0000000000000246 R12: =
+0000000000000000
+> [  179.109623] R13: 000055e2f8800cc0 R14: 000055e2f71c57f4 R15: =
+000055e2f88123e0
+>=20
+> [   87.069140] sysrq: Show Blocked State
+> [   87.071749]   task                        PC stack   pid father
+> [   87.073827] kworker/u2:3    D    0   220      2 0x80004000
+> [   87.076330] Workqueue: writeback wb_workfn (flush-8:0)
+> [   87.078086] Call Trace:
+> [   87.079758]  ? __schedule+0x637/0x2af0
+> [   87.083061]  schedule+0x3e/0x140
+> [   87.084784]  io_schedule+0x41/0x70
+> [   87.086349]  blk_mq_get_tag+0x119/0x250
+> [   87.087503]  ? bfq_timeout_sync_show+0x30/0x30
+> [   87.090520]  ? wait_woken+0x70/0x70
+> [   87.093294]  blk_mq_get_request+0x30a/0x410
+> [   87.098519]  blk_mq_make_request+0x15d/0x6f0
+> [   87.101566]  generic_make_request+0xf2/0x370
+> [   87.103148]  submit_bio+0x5f/0x180
+> [   87.104538]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [   87.106010]  xfs_vm_writepages+0x73/0xa0 [xfs]
+> [   87.107256]  do_writepages+0x41/0x100
+> [   87.108514]  ? __switch_to_asm+0x34/0x70
+> [   87.110591]  ? __switch_to_asm+0x40/0x70
+> [   87.112706]  ? __switch_to_asm+0x34/0x70
+> [   87.114931]  ? __switch_to_asm+0x40/0x70
+> [   87.117285]  ? kvm_sched_clock_read+0x14/0x40
+> [   87.120036]  __writeback_single_inode+0x3d/0x3d0
+> [   87.122671]  ? psi_task_change+0x123/0x430
+> [   87.124950]  writeback_sb_inodes+0x20b/0x4a0
+> [   87.127536]  __writeback_inodes_wb+0x4c/0x140
+> [   87.131212]  wb_writeback+0x35c/0x410
+> [   87.133642]  ? set_worker_desc+0xc2/0xd0
+> [   87.136088]  ? soft_cursor+0x1a1/0x230
+> [   87.138433]  wb_workfn+0x46a/0x560
+> [   87.140383]  process_one_work+0x1e2/0x3b0
+> [   87.142659]  worker_thread+0x5c/0x480
+> [   87.145952]  kthread+0x131/0x170
+> [   87.149337]  ? rescuer_thread+0x4d0/0x4d0
+> [   87.152348]  ? kthread_park+0x80/0x80
+> [   87.155309]  ret_from_fork+0x35/0x40
+> [   87.158352] kworker/u2:4    D    0   223      2 0x80004000
+> [   87.164537] Workqueue: writeback wb_workfn (flush-8:0)
+> [   87.168819] Call Trace:
+> [   87.171101]  ? __schedule+0x637/0x2af0
+> [   87.174254]  ? ktime_get+0x3c/0x90
+> [   87.177114]  ? _raw_spin_unlock_irq+0x1d/0x30
+> [   87.180847]  ? bfq_insert_requests+0x6a/0x11a0
+> [   87.183894]  ? preempt_count_add+0x30/0xa0
+> [   87.187213]  schedule+0x3e/0x140
+> [   87.190310]  io_schedule+0x41/0x70
+> [   87.193559]  blk_mq_get_tag+0x119/0x250
+> [   87.197036]  ? wait_woken+0x70/0x70
+> [   87.200099]  blk_mq_get_request+0x30a/0x410
+> [   87.203252]  blk_mq_make_request+0x15d/0x6f0
+> [   87.206302]  generic_make_request+0xf2/0x370
+> [   87.209355]  ? __test_set_page_writeback+0xfe/0x310
+> [   87.213038]  submit_bio+0x5f/0x180
+> [   87.215431]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [   87.219264]  xfs_do_writepage+0x1c0/0x4f0 [xfs]
+> [   87.223744]  write_cache_pages+0x189/0x440
+> [   87.227220]  ? xfs_map_blocks+0x4c0/0x4c0 [xfs]
+> [   87.230743]  xfs_vm_writepages+0x62/0xa0 [xfs]
+> [   87.233752]  do_writepages+0x41/0x100
+> [   87.236396]  ? sched_clock_cpu+0x12/0x160
+> [   87.239905]  ? psi_task_change+0x123/0x430
+> [   87.242949]  __writeback_single_inode+0x3d/0x3d0
+> [   87.245812]  ? psi_task_change+0x123/0x430
+> [   87.248885]  writeback_sb_inodes+0x20b/0x4a0
+> [   87.253396]  __writeback_inodes_wb+0x4c/0x140
+> [   87.256836]  wb_writeback+0x35c/0x410
+> [   87.259635]  ? set_worker_desc+0xc2/0xd0
+> [   87.262496]  wb_workfn+0x46a/0x560
+> [   87.265226]  process_one_work+0x1e2/0x3b0
+> [   87.268241]  worker_thread+0x5c/0x480
+> [   87.270966]  kthread+0x131/0x170
+> [   87.273225]  ? rescuer_thread+0x4d0/0x4d0
+> [   87.276163]  ? kthread_park+0x80/0x80
+> [   87.279137]  ret_from_fork+0x35/0x40
+> [   87.282813] kworker/u2:5    D    0   224      2 0x80004000
+> [   87.286817] Workqueue: writeback wb_workfn (flush-8:0)
+> [   87.290770] Call Trace:
+> [   87.292773]  ? __schedule+0x637/0x2af0
+> [   87.295432]  schedule+0x3e/0x140
+> [   87.298187]  io_schedule+0x41/0x70
+> [   87.300723]  blk_mq_get_tag+0x119/0x250
+> [   87.303627]  ? wait_woken+0x70/0x70
+> [   87.306270]  blk_mq_get_request+0x30a/0x410
+> [   87.309216]  blk_mq_make_request+0x15d/0x6f0
+> [   87.313271]  generic_make_request+0xf2/0x370
+> [   87.317023]  submit_bio+0x5f/0x180
+> [   87.319899]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [   87.323501]  xfs_vm_writepages+0x73/0xa0 [xfs]
+> [   87.326520]  do_writepages+0x41/0x100
+> [   87.329696]  ? sched_clock_cpu+0x12/0x160
+> [   87.332555]  ? psi_task_change+0x123/0x430
+> [   87.335264]  __writeback_single_inode+0x3d/0x3d0
+> [   87.338447]  ? psi_task_change+0x123/0x430
+> [   87.341905]  writeback_sb_inodes+0x20b/0x4a0
+> [   87.345393]  __writeback_inodes_wb+0x4c/0x140
+> [   87.348837]  wb_writeback+0x35c/0x410
+> [   87.351496]  ? set_worker_desc+0xc2/0xd0
+> [   87.354137]  wb_workfn+0x46a/0x560
+> [   87.355742]  process_one_work+0x1e2/0x3b0
+> [   87.357278]  worker_thread+0x5c/0x480
+> [   87.359015]  kthread+0x131/0x170
+> [   87.360477]  ? rescuer_thread+0x4d0/0x4d0
+> [   87.362015]  ? kthread_park+0x80/0x80
+> [   87.363473]  ret_from_fork+0x35/0x40
+>=20
+> [  127.931979] sysrq: Show Blocked State
+> [  127.943816]   task                        PC stack   pid father
+> [  127.949588] kworker/u2:3    D    0   220      2 0x80004000
+> [  127.954562] Workqueue: writeback wb_workfn (flush-8:0)
+> [  127.971556] Call Trace:
+> [  127.973746]  ? __schedule+0x637/0x2af0
+> [  127.975441]  schedule+0x3e/0x140
+> [  127.977002]  io_schedule+0x41/0x70
+> [  127.978949]  blk_mq_get_tag+0x119/0x250
+> [  127.981525]  ? bfq_timeout_sync_show+0x30/0x30
+> [  127.983861]  ? wait_woken+0x70/0x70
+> [  127.985772]  blk_mq_get_request+0x30a/0x410
+> [  127.990451]  blk_mq_make_request+0x15d/0x6f0
+> [  127.994248]  generic_make_request+0xf2/0x370
+> [  127.997879]  submit_bio+0x5f/0x180
+> [  128.000832]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  128.004644]  xfs_vm_writepages+0x73/0xa0 [xfs]
+> [  128.008598]  do_writepages+0x41/0x100
+> [  128.011564]  ? __switch_to_asm+0x34/0x70
+> [  128.014527]  ? __switch_to_asm+0x40/0x70
+> [  128.017547]  ? __switch_to_asm+0x34/0x70
+> [  128.022455]  ? __switch_to_asm+0x40/0x70
+> [  128.025836]  ? kvm_sched_clock_read+0x14/0x40
+> [  128.029223]  __writeback_single_inode+0x3d/0x3d0
+> [  128.032533]  ? psi_task_change+0x123/0x430
+> [  128.036069]  writeback_sb_inodes+0x20b/0x4a0
+> [  128.039544]  __writeback_inodes_wb+0x4c/0x140
+> [  128.042947]  wb_writeback+0x35c/0x410
+> [  128.046167]  ? set_worker_desc+0xc2/0xd0
+> [  128.049393]  ? soft_cursor+0x1a1/0x230
+> [  128.053427]  wb_workfn+0x46a/0x560
+> [  128.056444]  process_one_work+0x1e2/0x3b0
+> [  128.059854]  worker_thread+0x5c/0x480
+> [  128.062617]  kthread+0x131/0x170
+> [  128.065320]  ? rescuer_thread+0x4d0/0x4d0
+> [  128.068475]  ? kthread_park+0x80/0x80
+> [  128.071626]  ret_from_fork+0x35/0x40
+> [  128.074413] kworker/u2:4    D    0   223      2 0x80004000
+> [  128.078421] Workqueue: writeback wb_workfn (flush-8:0)
+> [  128.083873] Call Trace:
+> [  128.086442]  ? __schedule+0x637/0x2af0
+> [  128.089844]  ? ktime_get+0x3c/0x90
+> [  128.092390]  ? _raw_spin_unlock_irq+0x1d/0x30
+> [  128.095769]  ? bfq_insert_requests+0x6a/0x11a0
+> [  128.099566]  ? preempt_count_add+0x30/0xa0
+> [  128.102368]  schedule+0x3e/0x140
+> [  128.104985]  io_schedule+0x41/0x70
+> [  128.107840]  blk_mq_get_tag+0x119/0x250
+> [  128.111122]  ? wait_woken+0x70/0x70
+> [  128.115268]  blk_mq_get_request+0x30a/0x410
+> [  128.118827]  blk_mq_make_request+0x15d/0x6f0
+> [  128.122513]  generic_make_request+0xf2/0x370
+> [  128.125688]  ? __test_set_page_writeback+0xfe/0x310
+> [  128.129481]  submit_bio+0x5f/0x180
+> [  128.132227]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  128.135979]  xfs_do_writepage+0x1c0/0x4f0 [xfs]
+> [  128.139147]  write_cache_pages+0x189/0x440
+> [  128.143406]  ? xfs_map_blocks+0x4c0/0x4c0 [xfs]
+> [  128.149176]  xfs_vm_writepages+0x62/0xa0 [xfs]
+> [  128.152721]  do_writepages+0x41/0x100
+> [  128.155683]  ? sched_clock_cpu+0x12/0x160
+> [  128.159142]  ? psi_task_change+0x123/0x430
+> [  128.162682]  __writeback_single_inode+0x3d/0x3d0
+> [  128.166272]  ? psi_task_change+0x123/0x430
+> [  128.169611]  writeback_sb_inodes+0x20b/0x4a0
+> [  128.174680]  __writeback_inodes_wb+0x4c/0x140
+> [  128.178400]  wb_writeback+0x35c/0x410
+> [  128.181249]  ? set_worker_desc+0xc2/0xd0
+> [  128.182963]  wb_workfn+0x46a/0x560
+> [  128.184508]  process_one_work+0x1e2/0x3b0
+> [  128.187977]  worker_thread+0x5c/0x480
+> [  128.191032]  kthread+0x131/0x170
+> [  128.194041]  ? rescuer_thread+0x4d0/0x4d0
+> [  128.197508]  ? kthread_park+0x80/0x80
+> [  128.200633]  ret_from_fork+0x35/0x40
+> [  128.204789] kworker/u2:5    D    0   224      2 0x80004000
+> [  128.209060] Workqueue: writeback wb_workfn (flush-8:0)
+> [  128.213110] Call Trace:
+> [  128.215323]  ? __schedule+0x637/0x2af0
+> [  128.219244]  schedule+0x3e/0x140
+> [  128.223320]  io_schedule+0x41/0x70
+> [  128.231005]  blk_mq_get_tag+0x119/0x250
+> [  128.237796]  ? wait_woken+0x70/0x70
+> [  128.241028]  blk_mq_get_request+0x30a/0x410
+> [  128.244530]  blk_mq_make_request+0x15d/0x6f0
+> [  128.248292]  generic_make_request+0xf2/0x370
+> [  128.251900]  submit_bio+0x5f/0x180
+> [  128.255073]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  128.259151]  xfs_vm_writepages+0x73/0xa0 [xfs]
+> [  128.262690]  do_writepages+0x41/0x100
+> [  128.267082]  ? sched_clock_cpu+0x12/0x160
+> [  128.270697]  ? psi_task_change+0x123/0x430
+> [  128.274259]  __writeback_single_inode+0x3d/0x3d0
+> [  128.278024]  ? psi_task_change+0x123/0x430
+> [  128.281327]  writeback_sb_inodes+0x20b/0x4a0
+> [  128.284777]  __writeback_inodes_wb+0x4c/0x140
+> [  128.288677]  wb_writeback+0x35c/0x410
+> [  128.291625]  ? set_worker_desc+0xc2/0xd0
+> [  128.296076]  wb_workfn+0x46a/0x560
+> [  128.299680]  process_one_work+0x1e2/0x3b0
+> [  128.303163]  worker_thread+0x5c/0x480
+> [  128.306144]  kthread+0x131/0x170
+> [  128.309172]  ? rescuer_thread+0x4d0/0x4d0
+> [  128.312615]  ? kthread_park+0x80/0x80
+> [  128.315576]  ret_from_fork+0x35/0x40
+> [  128.318582] xfsaild/sda2    D    0   244      2 0x80004000
+> [  128.322561] Call Trace:
+> [  128.326085]  ? __schedule+0x637/0x2af0
+> [  128.329795]  ? __bfq_deactivate_entity+0x19a/0x2b0
+> [  128.333728]  schedule+0x3e/0x140
+> [  128.336164]  io_schedule+0x41/0x70
+> [  128.339493]  blk_mq_get_tag+0x119/0x250
+> [  128.342546]  ? wait_woken+0x70/0x70
+> [  128.346479]  blk_mq_get_request+0x30a/0x410
+> [  128.351602]  blk_mq_make_request+0x15d/0x6f0
+> [  128.354611]  generic_make_request+0xf2/0x370
+> [  128.359399]  submit_bio+0x5f/0x180
+> [  128.363135]  _xfs_buf_ioapply+0x2b8/0x430 [xfs]
+> [  128.369007]  __xfs_buf_submit+0x82/0x1f0 [xfs]
+> [  128.376663]  xfs_buf_delwri_submit_buffers+0x109/0x260 [xfs]
+> [  128.379223]  ? xfsaild+0x3f0/0x8d0 [xfs]
+> [  128.382396]  xfsaild+0x3f0/0x8d0 [xfs]
+> [  128.384589]  kthread+0x131/0x170
+> [  128.387601]  ? xfs_trans_ail_cursor_clear+0x40/0x40 [xfs]
+> [  128.391164]  ? kthread_park+0x80/0x80
+> [  128.401195]  ret_from_fork+0x35/0x40
+>=20
+> [  234.904047] sysrq: Show Blocked State
+> [  234.908142]   task                        PC stack   pid father
+> [  234.911166] kworker/u2:3    D    0   220      2 0x80004000
+> [  234.915348] Workqueue: writeback wb_workfn (flush-8:0)
+> [  234.917924] Call Trace:
+> [  234.920610]  ? __schedule+0x637/0x2af0
+> [  234.924304]  schedule+0x3e/0x140
+> [  234.927397]  io_schedule+0x41/0x70
+> [  234.934576]  blk_mq_get_tag+0x119/0x250
+> [  234.940699]  ? bfq_timeout_sync_show+0x30/0x30
+> [  234.942674]  ? wait_woken+0x70/0x70
+> [  234.945013]  blk_mq_get_request+0x30a/0x410
+> [  234.946858]  blk_mq_make_request+0x15d/0x6f0
+> [  234.949202]  generic_make_request+0xf2/0x370
+> [  234.951035]  submit_bio+0x5f/0x180
+> [  234.952663]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  234.954829]  xfs_vm_writepages+0x73/0xa0 [xfs]
+> [  234.957084]  do_writepages+0x41/0x100
+> [  234.960939]  ? __switch_to_asm+0x34/0x70
+> [  234.963202]  ? __switch_to_asm+0x40/0x70
+> [  234.964921]  ? __switch_to_asm+0x34/0x70
+> [  234.967063]  ? __switch_to_asm+0x40/0x70
+> [  234.968989]  ? kvm_sched_clock_read+0x14/0x40
+> [  234.970810]  __writeback_single_inode+0x3d/0x3d0
+> [  234.972835]  ? psi_task_change+0x123/0x430
+> [  234.976112]  writeback_sb_inodes+0x20b/0x4a0
+> [  234.978133]  __writeback_inodes_wb+0x4c/0x140
+> [  234.979943]  wb_writeback+0x35c/0x410
+> [  234.981742]  ? set_worker_desc+0xc2/0xd0
+> [  234.983428]  ? soft_cursor+0x1a1/0x230
+> [  234.985088]  wb_workfn+0x46a/0x560
+> [  234.986629]  process_one_work+0x1e2/0x3b0
+> [  234.990135]  worker_thread+0x5c/0x480
+> [  234.991870]  kthread+0x131/0x170
+> [  234.993523]  ? rescuer_thread+0x4d0/0x4d0
+> [  234.995287]  ? kthread_park+0x80/0x80
+> [  234.996971]  ret_from_fork+0x35/0x40
+> [  234.998827] kworker/u2:4    D    0   223      2 0x80004000
+> [  235.001159] Workqueue: writeback wb_workfn (flush-8:0)
+> [  235.003167] Call Trace:
+> [  235.004605]  ? __schedule+0x637/0x2af0
+> [  235.006286]  ? ktime_get+0x3c/0x90
+> [  235.008191]  ? _raw_spin_unlock_irq+0x1d/0x30
+> [  235.010088]  ? bfq_insert_requests+0x6a/0x11a0
+> [  235.011891]  ? preempt_count_add+0x30/0xa0
+> [  235.013966]  schedule+0x3e/0x140
+> [  235.015705]  io_schedule+0x41/0x70
+> [  235.017234]  blk_mq_get_tag+0x119/0x250
+> [  235.022331]  ? wait_woken+0x70/0x70
+> [  235.027501]  blk_mq_get_request+0x30a/0x410
+> [  235.030930]  blk_mq_make_request+0x15d/0x6f0
+> [  235.034333]  generic_make_request+0xf2/0x370
+> [  235.038096]  ? __test_set_page_writeback+0xfe/0x310
+> [  235.042030]  submit_bio+0x5f/0x180
+> [  235.044645]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  235.047883]  xfs_do_writepage+0x1c0/0x4f0 [xfs]
+> [  235.053087]  write_cache_pages+0x189/0x440
+> [  235.056560]  ? xfs_map_blocks+0x4c0/0x4c0 [xfs]
+> [  235.060329]  xfs_vm_writepages+0x62/0xa0 [xfs]
+> [  235.064731]  do_writepages+0x41/0x100
+> [  235.067990]  ? sched_clock_cpu+0x12/0x160
+> [  235.071178]  ? psi_task_change+0x123/0x430
+> [  235.074144]  __writeback_single_inode+0x3d/0x3d0
+> [  235.078489]  ? psi_task_change+0x123/0x430
+> [  235.082597]  writeback_sb_inodes+0x20b/0x4a0
+> [  235.085988]  __writeback_inodes_wb+0x4c/0x140
+> [  235.089749]  wb_writeback+0x35c/0x410
+> [  235.092620]  ? set_worker_desc+0xc2/0xd0
+> [  235.096787]  wb_workfn+0x46a/0x560
+> [  235.099600]  process_one_work+0x1e2/0x3b0
+> [  235.103916]  worker_thread+0x5c/0x480
+> [  235.107162]  kthread+0x131/0x170
+> [  235.118469]  ? rescuer_thread+0x4d0/0x4d0
+> [  235.123893]  ? kthread_park+0x80/0x80
+> [  235.125617]  ret_from_fork+0x35/0x40
+> [  235.127317] kworker/u2:5    D    0   224      2 0x80004000
+> [  235.130068] Workqueue: writeback wb_workfn (flush-8:0)
+> [  235.132098] Call Trace:
+> [  235.133579]  ? __schedule+0x637/0x2af0
+> [  235.135252]  schedule+0x3e/0x140
+> [  235.136942]  io_schedule+0x41/0x70
+> [  235.138752]  blk_mq_get_tag+0x119/0x250
+> [  235.141176]  ? wait_woken+0x70/0x70
+> [  235.142816]  blk_mq_get_request+0x30a/0x410
+> [  235.144816]  blk_mq_make_request+0x15d/0x6f0
+> [  235.146681]  generic_make_request+0xf2/0x370
+> [  235.150292]  submit_bio+0x5f/0x180
+> [  235.153366]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  235.157466]  xfs_vm_writepages+0x73/0xa0 [xfs]
+> [  235.161099]  do_writepages+0x41/0x100
+> [  235.164213]  ? sched_clock_cpu+0x12/0x160
+> [  235.167558]  ? psi_task_change+0x123/0x430
+> [  235.174031]  __writeback_single_inode+0x3d/0x3d0
+> [  235.178426]  ? psi_task_change+0x123/0x430
+> [  235.183123]  writeback_sb_inodes+0x20b/0x4a0
+> [  235.199636]  __writeback_inodes_wb+0x4c/0x140
+> [  235.205597]  wb_writeback+0x35c/0x410
+> [  235.217907]  ? set_worker_desc+0xc2/0xd0
+> [  235.219695]  wb_workfn+0x46a/0x560
+> [  235.221599]  process_one_work+0x1e2/0x3b0
+> [  235.224343]  worker_thread+0x5c/0x480
+> [  235.225978]  kthread+0x131/0x170
+> [  235.228234]  ? rescuer_thread+0x4d0/0x4d0
+> [  235.229958]  ? kthread_park+0x80/0x80
+> [  235.231578]  ret_from_fork+0x35/0x40
+> [  235.233324] xfsaild/sda2    D    0   244      2 0x80004000
+> [  235.238349] Call Trace:
+> [  235.240383]  ? __schedule+0x637/0x2af0
+> [  235.242182]  ? __bfq_deactivate_entity+0x19a/0x2b0
+> [  235.248196]  schedule+0x3e/0x140
+> [  235.250080]  io_schedule+0x41/0x70
+> [  235.252931]  blk_mq_get_tag+0x119/0x250
+> [  235.254804]  ? wait_woken+0x70/0x70
+> [  235.256396]  blk_mq_get_request+0x30a/0x410
+> [  235.262031]  blk_mq_make_request+0x15d/0x6f0
+> [  235.271989]  generic_make_request+0xf2/0x370
+> [  235.275119]  submit_bio+0x5f/0x180
+> [  235.277055]  _xfs_buf_ioapply+0x2b8/0x430 [xfs]
+> [  235.279084]  __xfs_buf_submit+0x82/0x1f0 [xfs]
+> [  235.281404]  xfs_buf_delwri_submit_buffers+0x109/0x260 [xfs]
+> [  235.283550]  ? xfsaild+0x3f0/0x8d0 [xfs]
+> [  235.285351]  xfsaild+0x3f0/0x8d0 [xfs]
+> [  235.287060]  kthread+0x131/0x170
+> [  235.290535]  ? xfs_trans_ail_cursor_clear+0x40/0x40 [xfs]
+> [  235.292775]  ? kthread_park+0x80/0x80
+> [  235.296030]  ret_from_fork+0x35/0x40
+> [  246.488123] INFO: task kworker/u2:3:220 blocked for more than 122 =
+seconds.
+> [  246.595672]       Not tainted 5.3.0-pf7 #1
+> [  246.602133] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" =
+disables this message.
+> [  246.611323] kworker/u2:3    D    0   220      2 0x80004000
+> [  246.616858] Workqueue: writeback wb_workfn (flush-8:0)
+> [  246.623147] Call Trace:
+> [  246.625763]  ? __schedule+0x637/0x2af0
+> [  246.627530]  schedule+0x3e/0x140
+> [  246.629607]  io_schedule+0x41/0x70
+> [  246.631407]  blk_mq_get_tag+0x119/0x250
+> [  246.633226]  ? bfq_timeout_sync_show+0x30/0x30
+> [  246.635814]  ? wait_woken+0x70/0x70
+> [  246.643587]  blk_mq_get_request+0x30a/0x410
+> [  246.647362]  blk_mq_make_request+0x15d/0x6f0
+> [  246.654491]  generic_make_request+0xf2/0x370
+> [  246.656568]  submit_bio+0x5f/0x180
+> [  246.658388]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  246.660772]  xfs_vm_writepages+0x73/0xa0 [xfs]
+> [  246.663464]  do_writepages+0x41/0x100
+> [  246.665259]  ? __switch_to_asm+0x34/0x70
+> [  246.667069]  ? __switch_to_asm+0x40/0x70
+> [  246.669581]  ? __switch_to_asm+0x34/0x70
+> [  246.671963]  ? __switch_to_asm+0x40/0x70
+> [  246.674022]  ? kvm_sched_clock_read+0x14/0x40
+> [  246.679684]  __writeback_single_inode+0x3d/0x3d0
+> [  246.709238]  ? psi_task_change+0x123/0x430
+> [  246.711444]  writeback_sb_inodes+0x20b/0x4a0
+> [  246.714632]  __writeback_inodes_wb+0x4c/0x140
+> [  246.718981]  wb_writeback+0x35c/0x410
+> [  246.725222]  ? set_worker_desc+0xc2/0xd0
+> [  246.728123]  ? soft_cursor+0x1a1/0x230
+> [  246.744090]  wb_workfn+0x46a/0x560
+> [  246.750812]  process_one_work+0x1e2/0x3b0
+> [  246.760162]  worker_thread+0x5c/0x480
+> [  246.761914]  kthread+0x131/0x170
+> [  246.763468]  ? rescuer_thread+0x4d0/0x4d0
+> [  246.766006]  ? kthread_park+0x80/0x80
+> [  246.767865]  ret_from_fork+0x35/0x40
+> [  246.769640] INFO: task kworker/u2:4:223 blocked for more than 123 =
+seconds.
+> [  246.772517]       Not tainted 5.3.0-pf7 #1
+> [  246.775114] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" =
+disables this message.
+> [  246.779903] kworker/u2:4    D    0   223      2 0x80004000
+> [  246.784611] Workqueue: writeback wb_workfn (flush-8:0)
+> [  246.788280] Call Trace:
+> [  246.790041]  ? __schedule+0x637/0x2af0
+> [  246.796877]  ? ktime_get+0x3c/0x90
+> [  246.802957]  ? _raw_spin_unlock_irq+0x1d/0x30
+> [  246.807930]  ? bfq_insert_requests+0x6a/0x11a0
+> [  246.812064]  ? preempt_count_add+0x30/0xa0
+> [  246.819097]  schedule+0x3e/0x140
+> [  246.821859]  io_schedule+0x41/0x70
+> [  246.825235]  blk_mq_get_tag+0x119/0x250
+> [  246.828659]  ? wait_woken+0x70/0x70
+> [  246.836064]  blk_mq_get_request+0x30a/0x410
+> [  246.848237]  blk_mq_make_request+0x15d/0x6f0
+> [  246.857921]  generic_make_request+0xf2/0x370
+> [  246.861569]  ? __test_set_page_writeback+0xfe/0x310
+> [  246.865759]  submit_bio+0x5f/0x180
+> [  246.868518]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  246.874268]  xfs_do_writepage+0x1c0/0x4f0 [xfs]
+> [  246.878794]  write_cache_pages+0x189/0x440
+> [  246.882209]  ? xfs_map_blocks+0x4c0/0x4c0 [xfs]
+> [  246.884118]  xfs_vm_writepages+0x62/0xa0 [xfs]
+> [  246.886729]  do_writepages+0x41/0x100
+> [  246.888570]  ? sched_clock_cpu+0x12/0x160
+> [  246.890648]  ? psi_task_change+0x123/0x430
+> [  246.898729]  __writeback_single_inode+0x3d/0x3d0
+> [  246.907282]  ? psi_task_change+0x123/0x430
+> [  246.909678]  writeback_sb_inodes+0x20b/0x4a0
+> [  246.911499]  __writeback_inodes_wb+0x4c/0x140
+> [  246.913324]  wb_writeback+0x35c/0x410
+> [  246.916341]  ? set_worker_desc+0xc2/0xd0
+> [  246.919498]  wb_workfn+0x46a/0x560
+> [  246.922393]  process_one_work+0x1e2/0x3b0
+> [  246.925693]  worker_thread+0x5c/0x480
+> [  246.929221]  kthread+0x131/0x170
+> [  246.936731]  ? rescuer_thread+0x4d0/0x4d0
+> [  246.946022]  ? kthread_park+0x80/0x80
+> [  246.949593]  ret_from_fork+0x35/0x40
+> [  246.952716] INFO: task kworker/u2:5:224 blocked for more than 123 =
+seconds.
+> [  246.958132]       Not tainted 5.3.0-pf7 #1
+> [  246.961479] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" =
+disables this message.
+> [  246.968379] kworker/u2:5    D    0   224      2 0x80004000
+> [  246.981073] Workqueue: writeback wb_workfn (flush-8:0)
+> [  246.986238] Call Trace:
+> [  246.988832]  ? __schedule+0x637/0x2af0
+> [  246.992416]  schedule+0x3e/0x140
+> [  246.995232]  io_schedule+0x41/0x70
+> [  246.998399]  blk_mq_get_tag+0x119/0x250
+> [  247.001661]  ? wait_woken+0x70/0x70
+> [  247.006540]  blk_mq_get_request+0x30a/0x410
+> [  247.010153]  blk_mq_make_request+0x15d/0x6f0
+> [  247.020215]  generic_make_request+0xf2/0x370
+> [  247.024701]  submit_bio+0x5f/0x180
+> [  247.027620]  xfs_submit_ioend.isra.0+0x85/0x160 [xfs]
+> [  247.031863]  xfs_vm_writepages+0x73/0xa0 [xfs]
+> [  247.036968]  do_writepages+0x41/0x100
+> [  247.040347]  ? sched_clock_cpu+0x12/0x160
+> [  247.044046]  ? psi_task_change+0x123/0x430
+> [  247.047533]  __writeback_single_inode+0x3d/0x3d0
+> [  247.051963]  ? psi_task_change+0x123/0x430
+> [  247.063498]  writeback_sb_inodes+0x20b/0x4a0
+> [  247.068234]  __writeback_inodes_wb+0x4c/0x140
+> [  247.072366]  wb_writeback+0x35c/0x410
+> [  247.075423]  ? set_worker_desc+0xc2/0xd0
+> [  247.078859]  wb_workfn+0x46a/0x560
+> [  247.082140]  process_one_work+0x1e2/0x3b0
+> [  247.086447]  worker_thread+0x5c/0x480
+> [  247.089657]  kthread+0x131/0x170
+> [  247.101209]  ? rescuer_thread+0x4d0/0x4d0
+> [  247.105680]  ? kthread_park+0x80/0x80
+> [  247.109483]  ret_from_fork+0x35/0x40
+>=20
+> --=20
+>  Oleksandr Natalenko (post-factum)
+
+
+--Apple-Mail=_FF99937C-1954-4AA8-87A1-DBC9DB1E100C--
