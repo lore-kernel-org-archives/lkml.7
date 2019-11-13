@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78E6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D91C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80752245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B16121D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfKMKEe (ORCPT
+        id S1727675AbfKMKEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:04:34 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53069 "EHLO
+        Wed, 13 Nov 2019 05:04:40 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42455 "EHLO
         relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbfKMKEb (ORCPT
+        with ESMTP id S1726165AbfKMKE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:04:31 -0500
+        Wed, 13 Nov 2019 05:04:28 -0500
 X-Originating-IP: 93.34.114.233
 Received: from uno.lan (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 41675C0002;
-        Wed, 13 Nov 2019 10:04:27 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 0BBDAC0013;
+        Wed, 13 Nov 2019 10:04:24 +0000 (UTC)
 From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
 To:     laurent.pinchart@ideasonboard.com,
         kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
@@ -32,9 +32,9 @@ To:     laurent.pinchart@ideasonboard.com,
 Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, airlied@linux.ie,
         daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 7/7] drm: rcar-du: kms: Expand comment in vsps parsing routine
-Date:   Wed, 13 Nov 2019 11:05:56 +0100
-Message-Id: <20191113100556.15616-8-jacopo+renesas@jmondi.org>
+Subject: [PATCH v7 6/7] drm: rcar-du: crtc: Register GAMMA_LUT properties
+Date:   Wed, 13 Nov 2019 11:05:55 +0100
+Message-Id: <20191113100556.15616-7-jacopo+renesas@jmondi.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191113100556.15616-1-jacopo+renesas@jmondi.org>
 References: <20191113100556.15616-1-jacopo+renesas@jmondi.org>
@@ -45,34 +45,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expand comment in the 'vsps' parsing routine to specify the LIF
-channel index defaults to 0 in case the second cell of the property
-is not specified to remain compatible with older DT bindings.
+Enable the GAMMA_LUT KMS property using the framework helpers to
+register the property and set the associated gamma table maximum size.
 
 Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_du_kms.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-index 7c9fb5860e54..186422ac552b 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-@@ -587,7 +587,11 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+index 3f0f16946f42..e12ce9c8923b 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+@@ -1136,6 +1136,7 @@ static const struct drm_crtc_funcs crtc_funcs_gen3 = {
+ 	.set_crc_source = rcar_du_crtc_set_crc_source,
+ 	.verify_crc_source = rcar_du_crtc_verify_crc_source,
+ 	.get_crc_sources = rcar_du_crtc_get_crc_sources,
++	.gamma_set = drm_atomic_helper_legacy_gamma_set,
+ };
  
- 		vsps[j].crtcs_mask |= BIT(i);
- 
--		/* Store the VSP pointer and pipe index in the CRTC. */
-+		/*
-+		 * Store the VSP pointer and pipe index in the CRTC. If the
-+		 * second cell of the 'vsps' specifier isn't present, default
-+		 * to 0 to remain compatible with older DT bindings.
-+		 */
- 		rcdu->crtcs[i].vsp = &rcdu->vsps[j];
- 		rcdu->crtcs[i].vsp_pipe = cells >= 1 ? args.args[0] : 0;
+ /* -----------------------------------------------------------------------------
+@@ -1259,6 +1260,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+ 	if (rcdu->cmms[swindex]) {
+ 		rcrtc->cmm = rcdu->cmms[swindex];
+ 		rgrp->cmms_mask |= BIT(hwindex % 2);
++
++		drm_mode_crtc_set_gamma_size(crtc, CM2_LUT_SIZE);
++		drm_crtc_enable_color_mgmt(crtc, 0, false, CM2_LUT_SIZE);
  	}
+ 
+ 	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
 -- 
 2.23.0
 
