@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D9BC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081B3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB5272245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34462245A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609829;
-	bh=O8hnV0HjL6bpZAbFcTkXNiepzz3vCAUXgGlEN6H5cok=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KF5nsJHSSHP4AEWnZ0XxHp5/ZyBY3bDrhOa+AIg047s8AOMeh5Uj7w8707kHKqjk0
-	 Y2MS/fPp1Q3RbwE7TzV39vbMU40/WRKuoNgw+YGebdYrqIGpc43DICIcnAPHVdYXrS
-	 6wZS5J/ihYa7hfLdfZO94QyeL4c6CRYtpsypApnQ=
+	s=default; t=1573609835;
+	bh=gutRD8FjO+NOt2w15Y7GDagDA5jpzhXSAfDnjcZSmPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EPC3NMwwCS0m/dBqBoj7rkPut7NasL/o9I0kBpE5upNQj0XdKRVYuapgg/huLVmbN
+	 kGxW/8gHCTHsh63WpVerjI7w4veqH+Ne1b3FF35Fh/Bcs6JoX7igTxNm/xT12F3LuF
+	 rZIayVN9UZA5qQ/1tXLHrKlKtVLSx/HqPS5unurs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfKMBu2 (ORCPT
+        id S1727399AbfKMBue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:50:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:50:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727153AbfKMBu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:27 -0500
+        id S1727352AbfKMBuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EF95222D4;
-        Wed, 13 Nov 2019 01:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B58A222CE;
+        Wed, 13 Nov 2019 01:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609827;
-        bh=O8hnV0HjL6bpZAbFcTkXNiepzz3vCAUXgGlEN6H5cok=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LA30rk63hIorAblitrismbgjES8RQR1WQfw36UK7WJCLqKgpkNagh6sY3U/ur9D9W
-         zlfN+P6tSlfiCfvY8oDYbgIGn7j8waqLLtIo5FX2F0VV7a0n8jCHGMyr3OqjcsPjeE
-         iQHpU+Idqx4pvT60s9otMcBr5ZQE7w+zmt6k8Ik4=
+        s=default; t=1573609831;
+        bh=gutRD8FjO+NOt2w15Y7GDagDA5jpzhXSAfDnjcZSmPg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sQ5xLqjo3dKVP1GbQKH8z9x5SR9K4XVKiKVc4h2uxgBGzy5o4Kipt2e7yUktE6N34
+         /V3HgyFo+duxN2K/oBHrZ3JT153nGaO8asYehkwJ0A/w926dUZiXpnHZbt4GS/H3dF
+         57S6hLfq4PMzhG/99s9DFhpFWaqI5YZViDJk/osk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        dev@openvswitch.org
-Subject: [PATCH AUTOSEL 4.19 001/209] net: ovs: fix return type of ndo_start_xmit function
-Date:   Tue, 12 Nov 2019 20:46:57 -0500
-Message-Id: <20191113015025.9685-1-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 005/209] net: hns3: Fix for netdev not up problem when setting mtu
+Date:   Tue, 12 Nov 2019 20:47:01 -0500
+Message-Id: <20191113015025.9685-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
+References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,47 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit eddf11e18dff0e8671e06ce54e64cfc843303ab9 ]
+[ Upstream commit 93d8daf460183871a965dae339839d9e35d44309 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+Currently hns3_nic_change_mtu will try to down the netdev before
+setting mtu, and it does not up the netdev when the setting fails,
+which causes netdev not up problem.
 
-Found by coccinelle.
+This patch fixes it by not returning when the setting fails.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: a8e8b7ff3517 ("net: hns3: Add support to change MTU in HNS3 hardware")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/openvswitch/vport-internal_dev.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/net/openvswitch/vport-internal_dev.c b/net/openvswitch/vport-internal_dev.c
-index 5a304cfc84233..5993405c25c12 100644
---- a/net/openvswitch/vport-internal_dev.c
-+++ b/net/openvswitch/vport-internal_dev.c
-@@ -43,7 +43,8 @@ static struct internal_dev *internal_dev_priv(struct net_device *netdev)
- }
- 
- /* Called with rcu_read_lock_bh. */
--static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
-+static netdev_tx_t
-+internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	int len, err;
- 
-@@ -62,7 +63,7 @@ static int internal_dev_xmit(struct sk_buff *skb, struct net_device *netdev)
- 	} else {
- 		netdev->stats.tx_errors++;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 0ccfa6a845353..a5e3d38f18230 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1447,13 +1447,11 @@ static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
  	}
--	return 0;
-+	return NETDEV_TX_OK;
- }
  
- static int internal_dev_open(struct net_device *netdev)
+ 	ret = h->ae_algo->ops->set_mtu(h, new_mtu);
+-	if (ret) {
++	if (ret)
+ 		netdev_err(netdev, "failed to change MTU in hardware %d\n",
+ 			   ret);
+-		return ret;
+-	}
+-
+-	netdev->mtu = new_mtu;
++	else
++		netdev->mtu = new_mtu;
+ 
+ 	/* if the netdev was running earlier, bring it up again */
+ 	if (if_running && hns3_nic_net_open(netdev))
 -- 
 2.20.1
 
