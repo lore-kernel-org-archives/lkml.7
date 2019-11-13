@@ -2,114 +2,62 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E4C17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264F0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19F1222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:40:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KCaNTeJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 04DE1222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbfKMOk0 (ORCPT
+        id S1727729AbfKMOls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:40:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53116 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726957AbfKMOk0 (ORCPT
+        Wed, 13 Nov 2019 09:41:48 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:65221 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726982AbfKMOls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:40:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573656025;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zjCOT9P28nv8a4MBtngrDC5z35NTofmz5vBBPAPm6Zg=;
-        b=KCaNTeJJ7EnV8WBhfdoOoVziF3CooBjNsHLP02y8u0Jwgzi2xf9yYpm0ZYVMcthgvw9tzu
-        icD8NK6VSaM+VuUV2dYWLvoIMi2n/8NLMn5Plih5mUkDbc8C20VI9zRuRRqnOSYdl3ZWO8
-        PLbp6zG+rdJKSfadTxyYAQ3NdDGpWzk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-66-wZGniYHCNaWWRKsaHL3NSw-1; Wed, 13 Nov 2019 09:40:21 -0500
-X-MC-Unique: wZGniYHCNaWWRKsaHL3NSw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B61BD1804973;
-        Wed, 13 Nov 2019 14:40:20 +0000 (UTC)
-Received: from localhost (ovpn-117-166.ams2.redhat.com [10.36.117.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A6CD6106C;
-        Wed, 13 Nov 2019 14:40:20 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 14:40:18 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, virtualization@lists.linux-foundation.org,
-        miklos@szeredi.hu, dgilbert@redhat.com
-Subject: Re: [PATCH 0/3] virtiofs: Small Cleanups for 5.5
-Message-ID: <20191113144018.GC554680@stefanha-x1.localdomain>
-References: <20191030150719.29048-1-vgoyal@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <20191030150719.29048-1-vgoyal@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UPT3ojh+0CqEDtpF"
-Content-Disposition: inline
+        Wed, 13 Nov 2019 09:41:48 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=zhangliguang@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Ti-au6r_1573656095;
+Received: from localhost(mailfrom:zhangliguang@linux.alibaba.com fp:SMTPD_---0Ti-au6r_1573656095)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 13 Nov 2019 22:41:44 +0800
+From:   luanshi <zhangliguang@linux.alibaba.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        luanshi <zhangliguang@linux.alibaba.com>
+Subject: [PATCH] irq: fix kernel-doc notation
+Date:   Wed, 13 Nov 2019 22:41:33 +0800
+Message-Id: <1573656093-8643-1-git-send-email-zhangliguang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---UPT3ojh+0CqEDtpF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fix kernel-doc notation in kernel/irq/irqdesc.c.
 
-On Wed, Oct 30, 2019 at 11:07:16AM -0400, Vivek Goyal wrote:
-> Hi Miklos,
->=20
-> Here are few small cleanups for virtiofs for 5.5. I had received some
-> comments from Michael Tsirkin on original virtiofs patches and these
-> cleanups are result of these comments.
->=20
-> Thanks
-> Vivek
->=20
-> Vivek Goyal (3):
->   virtiofs: Use a common function to send forget
->   virtiofs: Do not send forget request "struct list_head" element
->   virtiofs: Use completions while waiting for queue to be drained
->=20
->  fs/fuse/virtio_fs.c | 204 ++++++++++++++++++++++----------------------
->  1 file changed, 103 insertions(+), 101 deletions(-)
->=20
-> --=20
-> 2.20.1
->=20
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+---
+ kernel/irq/irqdesc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There are typos in the commit descriptions but the code looks fine:
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---UPT3ojh+0CqEDtpF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3MFdIACgkQnKSrs4Gr
-c8gz9gf8C1ie4Xi0WRMLEPRPpIjZue0W+WRJNTMJheJ+0d2dyTylZl1EOFrRI9Mz
-tlQtH/MUeJ999e1bX14gngArSdq5yrBMmk2OVngHa9CoPJlJ7CAT8R0uJFa0ca1X
-6QWdtDLTlcyKJGGl75bFqwT32R/iReCoQuzXRdO0h/tKPykm6NDDFhJJPtDeO4GM
-F+4C+1faPh0nMUp7lSGwIAJ4pgKYGc3URDSJpHj8X0mouYDBnoHtVErX6dMnxyw2
-jKGthgQDd2Ynx7NYecWmD+qfSMiBa7JUWgFpAreyVxnzONAKKUqAxmVShzdRdNm8
-zBAVkR0zFJEJljlOj9jfknJxGlecIg==
-=traL
------END PGP SIGNATURE-----
-
---UPT3ojh+0CqEDtpF--
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 9be995f..5b8fdd6 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -750,7 +750,7 @@ void irq_free_descs(unsigned int from, unsigned int cnt)
+ EXPORT_SYMBOL_GPL(irq_free_descs);
+ 
+ /**
+- * irq_alloc_descs - allocate and initialize a range of irq descriptors
++ * __irq_alloc_descs - allocate and initialize a range of irq descriptors
+  * @irq:	Allocate for specific irq number if irq >= 0
+  * @from:	Start the search from this irq number
+  * @cnt:	Number of consecutive irqs to allocate.
+-- 
+1.8.3.1
 
