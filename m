@@ -2,120 +2,181 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155DCC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9240FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4032222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB53222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw70PeBZ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pz5nVvTP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfKMIUq (ORCPT
+        id S1727068AbfKMIWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:20:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53701 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725993AbfKMIUq (ORCPT
+        Wed, 13 Nov 2019 03:22:23 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:58046 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfKMIWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:20:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573633244;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=whJvieYSPZF3C0Ev7gvfZK1XEQG2EzzzHM80XB6g75A=;
-        b=Bw70PeBZgNnnFEiAg4WDTsvZhpIoN4+p2i0WVtiArVYx2v8nBe2iMB4068sdE+jP/U8VKb
-        56Wp8lNYsn+mwjR9fgqSkia92wCgMOcy0KH2KUi3/66AJqh3PokHhvn8+y42qM2p2kxWWz
-        XKxY1JnOcpiv8vDBmQM6DsVoG7qeO0M=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-112-Fr5eHIqnOe2nmmy_8AnaUQ-1; Wed, 13 Nov 2019 03:20:43 -0500
-Received: by mail-wr1-f70.google.com with SMTP id m17so1137405wrb.20
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 00:20:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gRJtnCq+CKt1kPsmHkXPWnEtQz9JufgD24IWcr8duAg=;
-        b=HKQoW7aTUBrOkd1i1+yZGA6CPnn4gBaLdp4XQeh7YrBUsu9uw83ppBeuJK1VVanfUU
-         ojrll3zAZGaIu43Li3tu/02pwPDEFeXFqx8xER4sKfcNrSlhsiyO4D1AE7IGysFLBnai
-         Rn8ANMhJvRco5dhkdvyQPUoV6CiiJrCYdOja5eSJgfUKQTTH2q4i+J6m3CnhzOgAOIvA
-         NXCgGpbeNWA5loPp5fhCcEVHqMvDbMNKKbU0rlKGSZou4ZTBccJRPfqw3uNlbiHt9Bw1
-         iOahiHtPhMmFMwep9aRk9q2JTeiYRWEST6qmwU0Ooo+QLiNkMoVgnZfcWEoy+ssmvVi7
-         wmLg==
-X-Gm-Message-State: APjAAAXQnxsiIOhlucTi+7m5MgMsz4oEOtW8zudKdrjy5VLTcPyGEzIs
-        ec0OKsKWGDQbM/UDsQguNBVIEbxZkRYzgWWfywpPg9aif21+sJmtn3bLD6+OQI26ZenvVv4XBCw
-        CEi0iUW4gJZO4P4l2Ij6TMXYk
-X-Received: by 2002:a5d:4986:: with SMTP id r6mr1507905wrq.307.1573633241983;
-        Wed, 13 Nov 2019 00:20:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyvuhfthJLiZbIf7ASFW0EJey9TeYZbP3dIAq7chny/myshfoEZhQsu6Zyv9TB2AwA4sR/anA==
-X-Received: by 2002:a5d:4986:: with SMTP id r6mr1507868wrq.307.1573633241635;
-        Wed, 13 Nov 2019 00:20:41 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:8c9d:1a6f:4730:367c? ([2001:b07:6468:f312:8c9d:1a6f:4730:367c])
-        by smtp.gmail.com with ESMTPSA id 19sm2670309wrc.47.2019.11.13.00.20.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 00:20:41 -0800 (PST)
-Subject: Re: [PATCH] KVM: X86: Reset the three MSR list number variables to 0
- in kvm_init_msr_list()
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Chenyi Qiang <chenyi.qiang@intel.com>
-References: <20191113011521.32255-1-xiaoyao.li@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <02a71740-a98d-622e-ee3e-705fe707c772@redhat.com>
-Date:   Wed, 13 Nov 2019 09:20:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191113011521.32255-1-xiaoyao.li@intel.com>
-Content-Language: en-US
-X-MC-Unique: Fr5eHIqnOe2nmmy_8AnaUQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 Nov 2019 03:22:21 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191113082218epoutp03d7a0219ba7c70a2d94f2dc31790ecd2f~Wqy78Whr-1718517185epoutp03C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:22:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191113082218epoutp03d7a0219ba7c70a2d94f2dc31790ecd2f~Wqy78Whr-1718517185epoutp03C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1573633338;
+        bh=W84qaLINlxuKD/L6tIHrVxSqsVUuJduu0RyQdXrP4co=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=pz5nVvTPgvZKjAq2Mr6TDGWBIlIsL2PWcMv9mAA1RmWoL3au7Vot7ufz3gyph6Ou9
+         XDVVyeb5Q2vU0TFwO3ud+yqiyV9WGeigYsykRnw04tv3/M+g6q65R7FmbaNuq3ZIjH
+         oy6kkwJlXc5QtK7oS13oYCFeHK2jnYXCz1jKWovw=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20191113082217epcas1p39e18bd023e892806290b249cebe383ba~Wqy7aZVXC0735307353epcas1p3i;
+        Wed, 13 Nov 2019 08:22:17 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47CczX2VC5zMqYkq; Wed, 13 Nov
+        2019 08:22:16 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AB.7B.04085.83DBBCD5; Wed, 13 Nov 2019 17:22:16 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191113082216epcas1p2e712c23c9524e04be624ccc822b59bf0~Wqy5-9Ka-0268802688epcas1p2G;
+        Wed, 13 Nov 2019 08:22:16 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191113082216epsmtrp2917024ce48da3490fcb55e6100b88a77~Wqy5-PRB82310523105epsmtrp2O;
+        Wed, 13 Nov 2019 08:22:16 +0000 (GMT)
+X-AuditID: b6c32a37-e19ff70000000ff5-67-5dcbbd389233
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        89.84.24756.73DBBCD5; Wed, 13 Nov 2019 17:22:15 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.103.87]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191113082215epsmtip100469ce1154ef352cced953209c3c358~Wqy5xT-Lb2834328343epsmtip1w;
+        Wed, 13 Nov 2019 08:22:15 +0000 (GMT)
+From:   Namjae Jeon <namjae.jeon@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH 00/13] add the latest exfat driver
+Date:   Wed, 13 Nov 2019 03:17:47 -0500
+Message-Id: <20191113081800.7672-1-namjae.jeon@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKKsWRmVeSWpSXmKPExsWy7bCmga7F3tOxBi/nC1o0L17PZrFy9VEm
+        i+t3bzFb7Nl7ksXi8q45bBY/ptdbbPl3hNXi0vsPLA4cHjtn3WX32D93DbvH7psNbB59W1Yx
+        enzeJOdxaPsbtgC2qBybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFsl
+        F58AXbfMHKB7lBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFhgYFesWJucWleel6
+        yfm5VoYGBkamQJUJORmPnx1nLlgoWrF7yly2BsYzAl2MnBwSAiYSp08uYO5i5OIQEtjBKNE8
+        9RcbhPOJUaJn+V4o5xujxKZbL9lhWi4+mswIkdjLKPG1awEbSAKs5fHx6C5GDg42AW2JP1tE
+        QcIiAvYSm2cfYAGpZxaYwyixo3cWI0hCWMBIYumh3cwgNouAqsTdW3NZQGxeAWuJ7v//WCCW
+        yUus3nAA7D4JgRlsEtO2XGSGSLhIzFj8CcoWlnh1fAvUdVISn9+BnM0BZFdLfNwPVdLBKPHi
+        uy2EbSxxc/0GVpASZgFNifW79CHCihI7f88FO41ZgE/i3dceVogpvBIdbUIQJaoSfZcOM0HY
+        0hJd7R+glnpIXDuxlBESCrESv/bcZpvAKDsLYcECRsZVjGKpBcW56anFhgXGyHG0iRGcxLTM
+        dzBuOOdziFGAg1GJh1di4alYIdbEsuLK3EOMEhzMSiK8OypOxArxpiRWVqUW5ccXleakFh9i
+        NAWG3URmKdHkfGCCzSuJNzQ1MjY2tjAxMzczNVYS53VcvjRWSCA9sSQ1OzW1ILUIpo+Jg1Oq
+        gXHun8MTGMwUV+SZuEwwuS16ItNuxr0v4e8k7R/q61vreOeut/Cwl+ALuXustSvyrVNQtbtA
+        1gVDq88a56v8jbXuxl4pYu6pcpmS3PFk8v73Cmsf79Hm4I3J/rBR9i/LhsjEOXExbziflPyY
+        wPulsXJrZ8SGvt/lv4/3GYseMcq70yv/hm2CmhJLcUaioRZzUXEiAIAzdGJ4AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCLMWRmVeSWpSXmKPExsWy7bCSnK753tOxBofemFg0L17PZrFy9VEm
+        i+t3bzFb7Nl7ksXi8q45bBY/ptdbbPl3hNXi0vsPLA4cHjtn3WX32D93DbvH7psNbB59W1Yx
+        enzeJOdxaPsbtgC2KC6blNSczLLUIn27BK6Mx8+OMxcsFK3YPWUuWwPjGYEuRk4OCQETiYuP
+        JjN2MXJxCAnsZpRoO3GfBSIhLXHsxBnmLkYOIFtY4vDhYoiaD4wSB7bcYAeJswloS/zZIgpS
+        LiLgKNG76zALSA2zwCJGiXcfJ7OCJIQFjCSWHtrNDGKzCKhK3L01F2w+r4C1RPf/f1C75CVW
+        bzjAPIGRZwEjwypGydSC4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjOCw0tLcwXh5SfwhRgEO
+        RiUeXomFp2KFWBPLiitzDzFKcDArifDuqDgRK8SbklhZlVqUH19UmpNafIhRmoNFSZz3ad6x
+        SCGB9MSS1OzU1ILUIpgsEwenVANjaMKbmfLVwl5Ga/Q9NivHzViwIVfVN0GHx/ZEd2jhktoL
+        zh95HqzYW3HPaOpXlx0ytoLZXxs+TI6bEOK5tjPyCdc999Pfv8wwaVGZbvx7foN6dqf1pqSJ
+        uRJF/FW/2c5P799/zFKn88KVzifqXKmHegPkHBNaDixpOl61OTJMLeXpJN66LSeUWIozEg21
+        mIuKEwHhdk16JwIAAA==
+X-CMS-MailID: 20191113082216epcas1p2e712c23c9524e04be624ccc822b59bf0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191113082216epcas1p2e712c23c9524e04be624ccc822b59bf0
+References: <CGME20191113082216epcas1p2e712c23c9524e04be624ccc822b59bf0@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/11/19 02:15, Xiaoyao Li wrote:
-> When applying commit 7a5ee6edb42e ("KVM: X86: Fix initialization of MSR
-> lists"), it forgot to reset the three MSR lists number varialbes to 0
-> while removing the useless conditionals.
->=20
-> Fixes: 7a5ee6edb42e (KVM: X86: Fix initialization of MSR lists)
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  arch/x86/kvm/x86.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 8c8a5e20ea06..9368b0e6bf21 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -5102,6 +5102,10 @@ static void kvm_init_msr_list(void)
-> =20
->  =09perf_get_x86_pmu_capability(&x86_pmu);
-> =20
-> +=09num_msrs_to_save =3D 0;
-> +=09num_emulated_msrs =3D 0;
-> +=09num_msr_based_features =3D 0;
-> +
->  =09for (i =3D 0; i < ARRAY_SIZE(msrs_to_save_all); i++) {
->  =09=09if (rdmsr_safe(msrs_to_save_all[i], &dummy[0], &dummy[1]) < 0)
->  =09=09=09continue;
->=20
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, an a random previous
+snaphot has been merged in drivers/staging/.
 
-Ouch.  Sorry.
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-Paolo
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
+
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
+
+Namjae Jeon (13):
+  exfat: add in-memory structure and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add exfat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  exfat: add exfat in fs/Kconfig and fs/Makefile
+  MAINTAINERS: add exfat filesystem
+
+ MAINTAINERS          |    7 +
+ fs/Kconfig           |    3 +-
+ fs/Makefile          |    1 +
+ fs/exfat/Kconfig     |   21 +
+ fs/exfat/Makefile    |    8 +
+ fs/exfat/balloc.c    |  267 ++++++++
+ fs/exfat/cache.c     |  325 +++++++++
+ fs/exfat/dir.c       | 1338 +++++++++++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h  |  533 +++++++++++++++
+ fs/exfat/exfat_raw.h |  190 ++++++
+ fs/exfat/fatent.c    |  475 ++++++++++++++
+ fs/exfat/file.c      |  346 ++++++++++
+ fs/exfat/inode.c     |  691 +++++++++++++++++++
+ fs/exfat/misc.c      |  247 +++++++
+ fs/exfat/namei.c     | 1492 ++++++++++++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c       |  817 +++++++++++++++++++++++
+ fs/exfat/super.c     |  752 +++++++++++++++++++++
+ 17 files changed, 7512 insertions(+), 1 deletion(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
+
+-- 
+2.17.1
 
