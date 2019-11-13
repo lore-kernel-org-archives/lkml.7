@@ -2,287 +2,102 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17244C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76236C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC01206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460E6222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:22:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d9Mks2c0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Tunb0nNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfKMDVy (ORCPT
+        id S1727665AbfKMDWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 22:21:54 -0500
-Received: from regular1.263xmail.com ([211.150.70.198]:48502 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfKMDVw (ORCPT
+        Tue, 12 Nov 2019 22:22:32 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:50278 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfKMDWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 22:21:52 -0500
-Received: from localhost (unknown [192.168.165.252])
-        by regular1.263xmail.com (Postfix) with ESMTP id 7A8752AD;
-        Wed, 13 Nov 2019 11:21:39 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [192.168.60.65] (unknown [103.29.142.67])
-        by smtp.263.net (postfix) whith ESMTP id P23561T140362385442560S1573615294290308_;
-        Wed, 13 Nov 2019 11:21:37 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <e71cf5987c7f79efdeaf657392ddab2c>
-X-RL-SENDER: kever.yang@rock-chips.com
-X-SENDER: yk@rock-chips.com
-X-LOGIN-NAME: kever.yang@rock-chips.com
-X-FST-TO: dianders@chromium.org
-X-SENDER-IP: 103.29.142.67
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     Soeren Moch <smoch@web.de>, linux-rockchip@lists.infradead.org,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Akash Gajjar <akash@openedev.com>,
-        Alexis Ballier <aballier@gentoo.org>,
-        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
-        Andy Yan <andyshrk@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Xie <nick@khadas.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dianders@chromium.org
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
- <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
- <1780044.CQmMckQ5VN@diego>
-From:   Kever Yang <kever.yang@rock-chips.com>
-Message-ID: <b752ba88-8931-0e03-a010-650129253afd@rock-chips.com>
-Date:   Wed, 13 Nov 2019 11:21:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 22:22:31 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6C24060DB8; Wed, 13 Nov 2019 03:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573615350;
+        bh=4wayBfbLSFoI1QIEZSOXbyJu7tjEw32G4bge2B7Aor0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=d9Mks2c03YiGBLg3XKvL7uU7l+FC6NlWUELP2M7ijzo2/JoqoC3tgfWIogPEBZyWF
+         mVnR/zdjQDiFSUrQPjFTpIouN+a7RgzDjR1iOYOBKdbHkze3oA403SnQ1ubk5lZNCG
+         ElWi+re6nNGJlXNNL4IzOIh71GcJTepkP+/njJl0=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 5E54660DD1;
+        Wed, 13 Nov 2019 03:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573615345;
+        bh=4wayBfbLSFoI1QIEZSOXbyJu7tjEw32G4bge2B7Aor0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Tunb0nNNrNywyXXECv+o87H5UAZVRvUM9+9vqlFRuo8BRDXOBP8M2wBERtZ9eykFF
+         XIOoVSfxVd0zYiRq/89hbKOze+DKb89eozLuzWP66xhxZUFEGS83HyPIsauPR9vlv5
+         Sbr7N5Ji3IMTls+SKPHs67nzXvga415PD9DbNUGc=
 MIME-Version: 1.0
-In-Reply-To: <1780044.CQmMckQ5VN@diego>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 Nov 2019 11:22:25 +0800
+From:   cang@codeaurora.org
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Can Guo <cang@codeaurora.org>
+Subject: Re: [PATCH v3 1/5] scsi: Adjust DBD setting in mode sense for caching
+ mode page per LLD
+In-Reply-To: <yq1tv78pjdz.fsf@oracle.com>
+References: <1572670898-750-1-git-send-email-cang@codeaurora.org>
+ <1572670898-750-2-git-send-email-cang@codeaurora.org>
+ <yq1tv78pjdz.fsf@oracle.com>
+Message-ID: <a7e85a27f08d571b6c70421784d6fd05@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heiko,
+On 2019-11-13 11:03, Martin K. Petersen wrote:
+> Can,
+> 
+>> Host sends MODE_SENSE_10 with caching mode page, to check if the
+>> device supports the cache feature.  UFS JEDEC standards require DBD
+>> field to be set to 1.
+> 
+> UFS requires DBD for all MODE SENSE(10) invocations, not just for
+> accessing the caching mode page. I think the flag name needs to reflect
+> this.
+> 
+> Also, I do not particularly like this being a scsi_host flag. All the
+> other flags we have in this department are per scsi_device.
+> 
+> My recommendation would be to add a set_dbd_for_ms flag to struct
+> scsi_device and then do:
+> 
+> 	sdev->set_dbd_for_ms = 1;
+> 
+> in ufshcd_slave_alloc() mirroring the existing:
+> 
+>         sdev->use_10_for_ms = 1;
+> 
+> This makes the MODE SENSE tweakery consistent.
+> 
+> Thanks!
 
-     Could you help to just pick the first patch and drop the other 2 
-patches?
+Hi Martin,
 
-     I think it's better to fix in the U-Boot first so that the 
-stability issue will be fixed,
+Thank you, good idea. I will make the change in your way.
 
-and the update in kernel dts is not so urgent for kernel driver actually 
-not setting
-
-this pwm regulator.
-
-     I want to add a patch for rk3399-roc-pc, since Markus Reichl 
-already send it,
-
-so it's OK for that board, and for rock960/Ficus, the vdd_log is removed 
-for stability
-
-issue, then we have to update U-Boot first before kernel can add the 
-vdd_log back.
-
-
-Thanks,
-
-- Kever
-
-On 2019/11/12 下午4:10, Heiko Stübner wrote:
-> Hi Kever,
->
-> Am Dienstag, 12. November 2019, 09:04:49 CET schrieb Kever Yang:
->> On 2019/11/11 下午4:42, Soeren Moch wrote:
->>> On 11.11.19 01:51, Kever Yang wrote:
->>>> Since there is no devfreq used for vdd_log, so the vdd_log(pwm regulator)
->>>> will be 'enable' with the dts node at a default PWM state with high or low
->>>> output. Both too high or too low for vdd_log is not good for the board,
->>>> add init voltage for driver to make the regulator get into a know output.
->>>>
->>>> Note that this will be used by U-Boot for init voltage output, and this
->>>> is very important for it may get system hang somewhere during system
->>>> boot up with regulator enable and without this init value.
->>> I think it's a good idea to include this setting in the main dts for the
->>> boards (not in u-boot specific additions as is done now). But there is
->>> (for some reason?) no documented binding for regulator-init-microvolt in
->>> linux.
->>
->> Ohh, I forgot the kernel driver does not support this property.
->>
->> @Heiko, can we add this 'regulator-init-microvolt' without driver
->> support but adding document for
->>
->> it at dt-binding?
-> In theory yes, but you would still need to get DT maintainers
-> and Mark Brown (regulator maintainer) involved before that.
->
-> Especially as this is a individual property you will need to have
-> a good excuse why you're not implementing it in the kernel as well.
->
-> And of course you will need to keep in mind that it might be
-> in the kernel in the future.
->
->
-> Heiko
->
->
->
->>
->> Thanks,
->>
->> - Kever
->>
->>> Regards,
->>> Soeren
->>>> CC: Elaine Zhang <zhangqing@rock-chips.com>
->>>> CC: Peter Robinson <pbrobinson@gmail.com>
->>>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
->>>> ---
->>>>
->>>>    arch/arm64/boot/dts/rockchip/rk3399-evb.dts          | 1 +
->>>>    arch/arm64/boot/dts/rockchip/rk3399-firefly.dts      | 1 +
->>>>    arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts   | 1 +
->>>>    arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi | 1 +
->>>>    arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts    | 1 +
->>>>    arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts     | 1 +
->>>>    arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts       | 1 +
->>>>    arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts    | 1 +
->>>>    arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi    | 1 +
->>>>    9 files changed, 9 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
->>>> index 77008dca45bc..fa241aeb11b0 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
->>>> @@ -65,6 +65,7 @@
->>>>    		regulator-name = "vdd_center";
->>>>    		regulator-min-microvolt = <800000>;
->>>>    		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		regulator-always-on;
->>>>    		regulator-boot-on;
->>>>    		status = "okay";
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
->>>> index 92de83dd4dbc..4e45269fcdff 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
->>>> @@ -208,6 +208,7 @@
->>>>    		regulator-boot-on;
->>>>    		regulator-min-microvolt = <430000>;
->>>>    		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		vin-supply = <&vcc_sys>;
->>>>    	};
->>>>    };
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
->>>> index c133e8d64b2a..692f3154edc3 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
->>>> @@ -100,6 +100,7 @@
->>>>    		regulator-name = "vdd_log";
->>>>    		regulator-min-microvolt = <800000>;
->>>>    		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		regulator-always-on;
->>>>    		regulator-boot-on;
->>>>    	};
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
->>>> index 4944d78a0a1c..c2ac80d99301 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
->>>> @@ -79,6 +79,7 @@
->>>>    		regulator-boot-on;
->>>>    		regulator-min-microvolt = <800000>;
->>>>    		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		vin-supply = <&vsys_3v3>;
->>>>    	};
->>>>
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts b/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
->>>> index 73be38a53796..c32abcc4ddc1 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
->>>> @@ -101,6 +101,7 @@
->>>>    		regulator-boot-on;
->>>>    		regulator-min-microvolt = <800000>;
->>>>    		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		vin-supply = <&vcc5v0_sys>;
->>>>    	};
->>>>    };
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
->>>> index 0541dfce924d..9d674c51f025 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
->>>> @@ -164,6 +164,7 @@
->>>>    		regulator-boot-on;
->>>>    		regulator-min-microvolt = <800000>;
->>>>    		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		vin-supply = <&vcc_sys>;
->>>>    	};
->>>>    };
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
->>>> index 19f7732d728c..7d856ce1d156 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
->>>> @@ -129,6 +129,7 @@
->>>>    		regulator-boot-on;
->>>>    		regulator-min-microvolt = <800000>;
->>>>    		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		vin-supply = <&vcc3v3_sys>;
->>>>    	};
->>>>    };
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
->>>> index e544deb61d28..8fbccbc8bf47 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
->>>> @@ -174,6 +174,7 @@
->>>>    		regulator-boot-on;
->>>>    		regulator-min-microvolt = <800000>;
->>>>    		regulator-max-microvolt = <1700000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		vin-supply = <&vcc5v0_sys>;
->>>>    	};
->>>>    };
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
->>>> index 1bc1579674e5..f8e2cb8c0624 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
->>>> @@ -133,6 +133,7 @@
->>>>    		regulator-boot-on;
->>>>    		regulator-min-microvolt = <800000>;
->>>>    		regulator-max-microvolt = <1400000>;
->>>> +		regulator-init-microvolt = <950000>;
->>>>    		vin-supply = <&vcc_sys>;
->>>>    	};
->>>>    };
->>
->>
->
->
->
-
-
+Best regards,
+Can Guo.
