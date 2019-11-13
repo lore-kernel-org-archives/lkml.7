@@ -2,100 +2,156 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174DDC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 05:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECE9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 05:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8EC122459
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 05:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573624066;
-	bh=CJjXEjxR2Mu7s5Ipuwyvj1rSxYqmnpVD6MbxLhm6Qgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zPccANb4r7jnyWn7+0ApayDXf1Ay3IPTxXvm3/yk43OdL1zwadhqXWTu+rWQ/FCeR
-	 VrtCBM6qgp28prQB4VUAb3ePagkdoPtDbHq99nDAWXy2wBT5KL51TBwwwv8MfozKP1
-	 xuEhdN4IlXV0maG+JcKXh6k2ejXqZzpv1QHawuW4=
+	by mail.kernel.org (Postfix) with ESMTP id 7BD9B21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 05:52:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="l5OJXQLa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfKMFrp (ORCPT
+        id S1726107AbfKMFwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 00:47:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
+        Wed, 13 Nov 2019 00:52:04 -0500
+Received: from m12-14.163.com ([220.181.12.14]:45254 "EHLO m12-14.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbfKMFrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 00:47:45 -0500
-Received: from localhost (unknown [8.46.76.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC2AC21783;
-        Wed, 13 Nov 2019 05:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573624064;
-        bh=CJjXEjxR2Mu7s5Ipuwyvj1rSxYqmnpVD6MbxLhm6Qgw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=crGR8zI7RAGHrsQJThSHLxCMeIZuYUsWxmisll1JKWsInGzPsdTzLt+lV88Tr+OIj
-         xdCHQkfIQGFSNdYubOhFDR4LKodNVx6M4qRPYQKJsTCy5EGBkX/e9KV6JqnV9RBJ4Z
-         WuP2s1p0kVVgjp8RTFOKgkB89ei1tMsicPxC9m0w=
-Date:   Wed, 13 Nov 2019 06:47:34 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc:     syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: convert WARN to a pr_info
-Message-ID: <20191113054734.GA2058890@kroah.com>
-References: <20191113025035.186051-1-valdis.kletnieks@vt.edu>
+        id S1725446AbfKMFwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 00:52:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=nSNBn
+        HfDuOGVTZsa1//WZd8rW2c2XliYAXWmMqzCFUw=; b=l5OJXQLa6t0qqIHUdG+rq
+        PNQKZnueyEMrlFabV/apN1D5AAAgN/05B6/q6Eyr5vPOJC29W0c6r6pzXamUl8pY
+        qiy4f8RAF1zacadyMlmIJX6ioyoWcUzPNgXho45pdhQmVcg5xxDONC4TGh37fZlr
+        /gvIw0slfUKduQxEC4/gKI=
+Received: from [192.168.1.133] (unknown [112.25.212.39])
+        by smtp10 (Coremail) with SMTP id DsCowACnr5_mmctdFEfFCg--.555S2;
+        Wed, 13 Nov 2019 13:51:35 +0800 (CST)
+Subject: Re: Question about "asm/rwonce.h: No such file or directory"
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com>
+ <20191112123125.GD17835@willie-the-truck>
+ <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+ <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net>
+ <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
+From:   Xiao Yang <ice_yangxiao@163.com>
+Message-ID: <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com>
+Date:   Wed, 13 Nov 2019 13:51:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113025035.186051-1-valdis.kletnieks@vt.edu>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: DsCowACnr5_mmctdFEfFCg--.555S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGw47AF45Jr43Kry3XF47Jwb_yoWrXr43pa
+        sxCF4xtF4UXFy5JrnFyw17Za4Utw4UKr1YgryUGry8ArnYvr13tr4xur1ruF9xXrWUJw1j
+        yrZrW3y7Ww1UAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bOSdkUUUUU=
+X-Originating-IP: [112.25.212.39]
+X-CM-SenderInfo: 5lfhs5xdqj5xldr6il2tof0z/xtbB0ghsXlUMSxvoNQAAs8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 09:50:34PM -0500, Valdis Kletnieks wrote:
-> syzbot took a nosedive because it runs with panic_on_warn set. And
-> it's quite correct, it shouldn't have been a WARN in the first place.
-> Other locations just use a pr_info(), so do that here too.
-> 
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> Reported-by: syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com
-> Fixes: c48c9f7ff32b ("staging: exfat: add exfat filesystem code to staging")
-> ---
->  drivers/staging/exfat/exfat_blkdev.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/exfat/exfat_blkdev.c b/drivers/staging/exfat/exfat_blkdev.c
-> index 7bcd98b13109..8204720b2bf2 100644
-> --- a/drivers/staging/exfat/exfat_blkdev.c
-> +++ b/drivers/staging/exfat/exfat_blkdev.c
-> @@ -59,8 +59,8 @@ int exfat_bdev_read(struct super_block *sb, sector_t secno, struct buffer_head *
->  	if (*bh)
->  		return 0;
->  
-> -	WARN(!p_fs->dev_ejected,
-> -	     "[EXFAT] No bh, device seems wrong or to be ejected.\n");
-> +	if (p_fs->dev_ejected)
-> +		pr_info("[EXFAT] No bh, device seems wrong or to be ejected.\n");
->  
->  	return -EIO;
->  }
-> @@ -112,8 +112,8 @@ int exfat_bdev_write(struct super_block *sb, sector_t secno, struct buffer_head
->  	return 0;
->  
->  no_bh:
-> -	WARN(!p_fs->dev_ejected,
-> -	     "[EXFAT] No bh, device seems wrong or to be ejected.\n");
-> +	if (p_fs->dev_ejected)
-> +		pr_info("[EXFAT] No bh, device seems wrong or to be ejected.\n");
+On 11/13/19 1:28 PM, Masahiro Yamada wrote:
+> On Wed, Nov 13, 2019 at 12:13 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>> On 11/12/19 1:50 PM, Masahiro Yamada wrote:
+>>> On Tue, Nov 12, 2019 at 9:31 PM Will Deacon <will@kernel.org> wrote:
+>>>> [+lkml, Masahiro, Alexei and Daniel]
+>>>>
+>>>> On Tue, Nov 12, 2019 at 04:56:39PM +0800, Xiao Yang wrote:
+>>>>> With your patch[1], I alway get the following error when building
+>>>>> tools/bpf:
+>>>> In case people want to reproduce this, my branch is here:
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=lto
+>>>>
+>>>>> ----------------------------------------------------------------------------------
+>>>>>
+>>>>> make -C tools/bpf/
+>>>>> make: Entering directory
+>>>>> '/usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/tools/bpf'
+>>>>>
+>>>>> Auto-detecting system features:
+>>>>> ... libbfd: [ on ]
+>>>>> ... disassembler-four-args: [ OFF ]
+>>>>>
+>>>>> CC bpf_jit_disasm.o
+>>>>> CC bpf_dbg.o
+>>>>> In file included from
+>>>>> /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/include/uapi/linux/filter.h:9:0,
+>>>>> from
+>>>>> /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/tools/bpf/bpf_dbg.c:41:
+>>>>> /usr/src/perf_selftests-x86_64-rhel-7.6-642a312d47ceb54603630d9d04f5052f3b46d9a3/include/linux/compiler.h:247:24:
+>>>>> fatal error: asm/rwonce.h: No such file or directory
+>>>>> #include <asm/rwonce.h>
+>>>>> ^
+>>>>> compilation terminated.
+>>>>> Makefile:61: recipe for target 'bpf_dbg.o' failed
+>>>>> make: *** [bpf_dbg.o] Error 1
+>>>>> make: *** Waiting for unfinished jobs....
+>>>>> make: Leaving directory
+>>>>>
+>>>>> ----------------------------------------------------------------------------------
+>>>>>
+>>>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/commit/?h=lto&id=642a312d47ceb54603630d9d04f5052f3b46d9a3
+>>>>>
+>>>>> It seems that include/linux/compiler.h cannot find the asm/rwonce.h because
+>>>>> tools/bpf/Makefile doesn't include arch/*/include/generated/asm/rwonce.h.
+>>>> The problem with referring to the generated files is that they don't exist
+>>>> unless you've configured the main source directory. The real problem here
+>>>> seems to be that tools/bpf/ refers directly to header files in the kernel
+>>>> sources without any understanding of kbuild, and therefore mandatory-y
+>>>> headers simply don't exist when it goes looking for them.
+>> Hmm, I am puzzled why that is. :/ I think there are two options, i) remove it
+>> from CFLAGS like below (at least this doesn't let the build fail in my case
+>> but requires linux headers to be installed) or ii) add a copy of filter.h to
+>> tools/include/uapi/linux/filter.h so the few tools can just reuse it. We do have
+>> bpf_common.h and bpf.h there already.
+>>
+>> diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
+>> index 5d1995fd369c..08dfd289174c 100644
+>> --- a/tools/bpf/Makefile
+>> +++ b/tools/bpf/Makefile
+>> @@ -10,7 +10,6 @@ MAKE = make
+>>    INSTALL ?= install
+>>
+>>    CFLAGS += -Wall -O2
+>> -CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi -I$(srctree)/include
+>>
+>>    # This will work when bpf is built in tools env. where srctree
+>>    # isn't set and when invoked from selftests build, where srctree
+>>
+>
+> I think this is the most sane fix
+> to include the linux/filter.h in the system.
+>
+> (probably, it is located in /usr/include/linux/filter.h)
 
-Shouldn't these all be pr_err() calls as something did go wrong.
+Hi Masahiro,
 
-thanks,
+Is it correct for include/linux/compiler.h to include <asm/rwonce.h>?
 
-greg k-h
+On x86_64 arch, asm/rwonce.h is generated in 
+./arch/x86/include/generated/ directory and compiler.h cannot find it.
+
+Best Regards,
+
+XIao Yang
+
+>
+>
+
