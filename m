@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA86EC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61531C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF652245C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBDE2245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610146;
-	bh=0KIFf+yZ8C/VuVjVmiu3e3orCWGVm8Ohdi7wNMRPvMw=;
+	s=default; t=1573610153;
+	bh=aAogisomJAHBocZEBIP1KMLQHK4sE4B/orKaVsSdVfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPzKaQrc93IC5flIMibOi1s/c72VdbBfeVVv/2kT4y6ZYHCvBinpUiWTk2ty6K4tu
-	 yYhhtgSeZKns2qQMhF4pRftsFS623HvWlFYuIcUNXvrYuFTszdRsXENpb7Pe0UciTk
-	 xQUfUb1BSJf/A2af7YMgW3l1AarTOFNkDUyXriQk=
+	b=ofNE5BTUbZwS9WovpQ8AiKT/Zj64vslxRpzUMkkLLMqbdHo1eTW4uiktHYM8s4vHb
+	 U0iF08EZWLGqWF+2MtAYRxVzosvjAzRkqH8vj6Vd6s7WF8oMZWmFi6PE7Dtys12Z9X
+	 s9o++DYfD55RovmpLyT/6YlT7L1xDOs+AwzxFIyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbfKMBzp (ORCPT
+        id S1728390AbfKMBzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47394 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:55:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbfKMBzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:41 -0500
+        id S1729224AbfKMBzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 070D622467;
-        Wed, 13 Nov 2019 01:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 696AE22470;
+        Wed, 13 Nov 2019 01:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610140;
-        bh=0KIFf+yZ8C/VuVjVmiu3e3orCWGVm8Ohdi7wNMRPvMw=;
+        s=default; t=1573610143;
+        bh=aAogisomJAHBocZEBIP1KMLQHK4sE4B/orKaVsSdVfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nH/4MsQP9iPsxr401Z0CGTsHrKNXAaaGuKuWkwT2WMJu5nJz9pievVHqKzmunT1U4
-         tboidR6AQ0xEMnfPaE/yH7TPaRb38F5jc1nk8cO1Ebwt99d4JKq+4ZjHtelGekYObx
-         Sm5QdH+PormihcK0KzNjb7dXXmTFZsZA9bvq9RQ0=
+        b=uQ2sOKTNxveslVe53O5CgPsuTFrIDy8G2IEl0g+rCqXoZWxDhHm8hFWzr9XZqTasb
+         Z9ezEfUAWiebcqXIYkK/a/RiBNlYG1Q1m0GvrAznGHlIcTwPxfRVSVwJTKhEUt9v2g
+         MIE1Ulyhu1BKA2l24ih28j/BDArHPDhUx5pqLD5o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Ching Huang <ching2048@areca.com.tw>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 187/209] scsi: arcmsr: clean up clang warning on extraneous parentheses
-Date:   Tue, 12 Nov 2019 20:50:03 -0500
-Message-Id: <20191113015025.9685-187-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 189/209] hwmon: (nct6775) Fix names of DIMM temperature sources
+Date:   Tue, 12 Nov 2019 20:50:05 -0500
+Message-Id: <20191113015025.9685-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,49 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit ca2ade24157693b4e533ccec69df00ef719d4aad ]
+[ Upstream commit 3be8c9d103534fadc72b3e174613f37aa19fa423 ]
 
-There are extraneous parantheses that are causing clang to produce a
-warning so remove these.
+For NCT6795D and NCT6796D, the DIMM temperature sources are named
+"Agent[01] Dimm [01]" per datasheet. Match names in datasheets to
+avoid confusion.
 
-Clean up 3 clang warnings:
-equality comparison with extraneous parentheses [-Wparentheses-equality]
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Ching Huang <ching2048@areca.com.tw>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arcmsr/arcmsr_hba.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/hwmon/nct6775.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/scsi/arcmsr/arcmsr_hba.c b/drivers/scsi/arcmsr/arcmsr_hba.c
-index 12316ef4c8931..c75d4695f9828 100644
---- a/drivers/scsi/arcmsr/arcmsr_hba.c
-+++ b/drivers/scsi/arcmsr/arcmsr_hba.c
-@@ -4135,9 +4135,9 @@ static void arcmsr_hardware_reset(struct AdapterControlBlock *acb)
- 		pci_read_config_byte(acb->pdev, i, &value[i]);
- 	}
- 	/* hardware reset signal */
--	if ((acb->dev_id == 0x1680)) {
-+	if (acb->dev_id == 0x1680) {
- 		writel(ARCMSR_ARC1680_BUS_RESET, &pmuA->reserved1[0]);
--	} else if ((acb->dev_id == 0x1880)) {
-+	} else if (acb->dev_id == 0x1880) {
- 		do {
- 			count++;
- 			writel(0xF, &pmuC->write_sequence);
-@@ -4161,7 +4161,7 @@ static void arcmsr_hardware_reset(struct AdapterControlBlock *acb)
- 		} while (((readl(&pmuE->host_diagnostic_3xxx) &
- 			ARCMSR_ARC1884_DiagWrite_ENABLE) == 0) && (count < 5));
- 		writel(ARCMSR_ARC188X_RESET_ADAPTER, &pmuE->host_diagnostic_3xxx);
--	} else if ((acb->dev_id == 0x1214)) {
-+	} else if (acb->dev_id == 0x1214) {
- 		writel(0x20, pmuD->reset_request);
- 	} else {
- 		pci_write_config_byte(acb->pdev, 0x84, 0x20);
+diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+index eba692cddbdee..559101a1c1367 100644
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -704,10 +704,10 @@ static const char *const nct6795_temp_label[] = {
+ 	"PCH_CHIP_TEMP",
+ 	"PCH_CPU_TEMP",
+ 	"PCH_MCH_TEMP",
+-	"PCH_DIM0_TEMP",
+-	"PCH_DIM1_TEMP",
+-	"PCH_DIM2_TEMP",
+-	"PCH_DIM3_TEMP",
++	"Agent0 Dimm0",
++	"Agent0 Dimm1",
++	"Agent1 Dimm0",
++	"Agent1 Dimm1",
+ 	"BYTE_TEMP0",
+ 	"BYTE_TEMP1",
+ 	"PECI Agent 0 Calibration",
+@@ -742,10 +742,10 @@ static const char *const nct6796_temp_label[] = {
+ 	"PCH_CHIP_TEMP",
+ 	"PCH_CPU_TEMP",
+ 	"PCH_MCH_TEMP",
+-	"PCH_DIM0_TEMP",
+-	"PCH_DIM1_TEMP",
+-	"PCH_DIM2_TEMP",
+-	"PCH_DIM3_TEMP",
++	"Agent0 Dimm0",
++	"Agent0 Dimm1",
++	"Agent1 Dimm0",
++	"Agent1 Dimm1",
+ 	"BYTE_TEMP0",
+ 	"BYTE_TEMP1",
+ 	"PECI Agent 0 Calibration",
 -- 
 2.20.1
 
