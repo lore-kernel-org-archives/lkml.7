@@ -2,95 +2,170 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DE5C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81952C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBB82246A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611907;
-	bh=zyZYw0nM4RFgVaebb4BmvAOIVPjPO6GvSiUzaPlDJ34=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eaaakt7WDkDdK6yTqZB+5J7vutBba4Q1V7/SGCx8BqnQ+r8/zslfHKKe7oyi3N1Ox
-	 wY8M5+PgEo9a8BkDuusKImTp8X1tdS8eSlsl0ukx25fN3PrLfDacRz8ClymwNuirYj
-	 X9MnkNPOtKzniMv+ln26F285f0RcxnxAo/eXMtok=
+	by mail.kernel.org (Postfix) with ESMTP id 4E5E82067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:25:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5zJXaoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbfKMBvt (ORCPT
+        id S1730247AbfKMCZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:51:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbfKMBvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:44 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6B3222D3;
-        Wed, 13 Nov 2019 01:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609903;
-        bh=zyZYw0nM4RFgVaebb4BmvAOIVPjPO6GvSiUzaPlDJ34=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6GznGTD8cYVF/UE8JZHRj6rdn4xrTERBvvRknnW+VXBOK/b4dG7EvMEZwGtz1RZA
-         +rFRA1b9jocj/br4JAmiNFzHF4jLf1wzBjws/WQLFyua3Ux6J5FRnCvjYU3mQvhPs6
-         NmIduVrksDD+SajkVdV2Tlv5dCXHjZBuquL5CJWg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 056/209] powerpc/pseries: Fix how we iterate over the DTL entries
-Date:   Tue, 12 Nov 2019 20:47:52 -0500
-Message-Id: <20191113015025.9685-56-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
-References: <20191113015025.9685-1-sashal@kernel.org>
+        Tue, 12 Nov 2019 21:25:08 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33206 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727723AbfKMCZG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:25:06 -0500
+Received: by mail-io1-f67.google.com with SMTP id j13so810150ioe.0;
+        Tue, 12 Nov 2019 18:25:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=67vt+2/hcnur/stdYuxW6KOlEarE4FFpvwMXouje6z0=;
+        b=C5zJXaoWqhirA5JCzRzQxV6NeESF2nnVYyWxW3GPmZgA3s9X0SjSG7oOgw7GKTeKd6
+         4UMme8ZH+Z5d040MLiivvMDkk7mV7Y4M2lyRmLy02gcoA8HavuwI81OkKq19KHVvuISM
+         hjpF56QT9rMyiN0DCZtYVVuUNz7msCut/xpm3zLFDL1WDZ8NFnvqwFVEoP9LDdYxl4HC
+         7v0eBMSBZ7Vt111I1M9fKgU4pcE60ZmLtIm6VPz9tIT3zYHjysYcSRbFSGiowSFh5AN3
+         CnyJ3cSirM+W+u0JslaNlQCyGu+b4dFHpV/7oHaHD036f2WdS3cVE3qnoFwCo7vW+1VH
+         9Mrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=67vt+2/hcnur/stdYuxW6KOlEarE4FFpvwMXouje6z0=;
+        b=HQKMcBq0T/O/1gWQTv8tE8zmv0TB1gyNACAArdnVzqyESW4FsIFo44+g3+cJpBYRnN
+         81pN8Ty5odZ/Xr65goevoQoRhXjMu9fVrY3YbuCqI/CZElwjJhXNMCLm7S6O6+K+SeP/
+         FZjQuOfpZESsG0fGYsOisMJMnsgo89vvHXQJ1/qmKJVkIQm8kwcfdEjW8M48tCAfdJt5
+         5MqBzgsR+NWHpNpSJb8nfCmp/R+QrF/oYKVR7jvyOVpgEXoWZaRgtrztM/CUHO85kz3Q
+         31a5ROspV3P62kFaxUEO0/DRd83cidyxiQoYdP9N33djomPSw8UihuL0VTJIUgJ81CdD
+         tWRA==
+X-Gm-Message-State: APjAAAV4eijhwgggWfsz/fFGyej1/BNO7QjS6UVoMzAepWZuaT+daUKz
+        9Gn2gn9EJ/h4pN6UxzA7H7lPipwdFPRk3R090iM=
+X-Google-Smtp-Source: APXvYqwuo2tTbYTMNeWbnMR8FQ9nl/VAo3S2+IdE0xI195BER3D+h0bQM0h+rgl2KyG1yFAZxh1xzwjq174E8KUeDCI=
+X-Received: by 2002:a6b:b987:: with SMTP id j129mr1093188iof.105.1573611904929;
+ Tue, 12 Nov 2019 18:25:04 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1573200932-384-1-git-send-email-cang@codeaurora.org> <1573200932-384-6-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1573200932-384-6-git-send-email-cang@codeaurora.org>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Wed, 13 Nov 2019 07:54:28 +0530
+Message-ID: <CAGOxZ502wp17UFEk67Qno9DQ0dFPfwMRTLNTCvOXibQDhOw4SA@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] scsi: ufs: Complete pending requests in host reset
+ and restore path
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Hi Can,
 
-[ Upstream commit 9258227e9dd1da8feddb07ad9702845546a581c9 ]
+On Fri, Nov 8, 2019 at 1:50 PM Can Guo <cang@codeaurora.org> wrote:
+>
+> In UFS host reset and restore path, before probe, we stop and start the
+> host controller once. After host controller is stopped, the pending
+> requests, if any, are cleared from the doorbell, but no completion IRQ
+> would be raised due to the hba is stopped.
+> These pending requests shall be completed along with the first NOP_OUT
+> command(as it is the first command which can raise a transfer completion
+> IRQ) sent during probe.
+> Since the OCSs of these pending requests are not SUCCESS(because they are
+> not yet literally finished), their UPIUs shall be dumped. When there are
+> multiple pending requests, the UPIU dump can be overwhelming and may lead
+> to stability issues because it is in atomic context.
+> Therefore, before probe, complete these pending requests right after host
+> controller is stopped.
+>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+Looks good, I hope this is tested on your platform.
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we look up dtl_idx in
-the lppaca to determine the number of entries in the buffer. Since
-lppaca is in big endian, we need to do an endian conversion before using
-this in our calculation to determine the number of entries in the
-buffer. Without this, we do not iterate over the existing entries in the
-DTL buffer properly.
+>  drivers/scsi/ufs/ufshcd.c | 20 +++++++-------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 5950a7c..4df4136 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -5404,8 +5404,8 @@ static void ufshcd_err_handler(struct work_struct *work)
+>
+>         /*
+>          * if host reset is required then skip clearing the pending
+> -        * transfers forcefully because they will automatically get
+> -        * cleared after link startup.
+> +        * transfers forcefully because they will get cleared during
+> +        * host reset and restore
+>          */
+>         if (needs_reset)
+>                 goto skip_pending_xfer_clear;
+> @@ -6333,9 +6333,13 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+>         int err;
+>         unsigned long flags;
+>
+> -       /* Reset the host controller */
+> +       /*
+> +        * Stop the host controller and complete the requests
+> +        * cleared by h/w
+> +        */
+>         spin_lock_irqsave(hba->host->host_lock, flags);
+>         ufshcd_hba_stop(hba, false);
+> +       ufshcd_complete_requests(hba);
+>         spin_unlock_irqrestore(hba->host->host_lock, flags);
+>
+>         /* scale up clocks to max frequency before full reinitialization */
+> @@ -6369,7 +6373,6 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+>  static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+>  {
+>         int err = 0;
+> -       unsigned long flags;
+>         int retries = MAX_HOST_RESET_RETRIES;
+>
+>         do {
+> @@ -6379,15 +6382,6 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+>                 err = ufshcd_host_reset_and_restore(hba);
+>         } while (err && --retries);
+>
+> -       /*
+> -        * After reset the door-bell might be cleared, complete
+> -        * outstanding requests in s/w here.
+> -        */
+> -       spin_lock_irqsave(hba->host->host_lock, flags);
+> -       ufshcd_transfer_req_compl(hba);
+> -       ufshcd_tmc_handler(hba);
+> -       spin_unlock_irqrestore(hba->host->host_lock, flags);
+> -
+>         return err;
+>  }
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
 
-Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/platforms/pseries/dtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index c762689e0eb33..ef6595153642e 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -184,7 +184,7 @@ static void dtl_stop(struct dtl *dtl)
- 
- static u64 dtl_current_index(struct dtl *dtl)
- {
--	return lppaca_of(dtl->cpu).dtl_idx;
-+	return be64_to_cpu(lppaca_of(dtl->cpu).dtl_idx);
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
- 
 -- 
-2.20.1
-
+Regards,
+Alim
