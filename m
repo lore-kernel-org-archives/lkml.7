@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF11DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE91C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DACC21783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F12206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611071;
-	bh=xkffcVnzZep407UHCvdiZ/+ZuoK++P160a1VYGYgzwo=;
+	s=default; t=1573611078;
+	bh=D9FF+PKLhEVyXZcKFFSveysZnUiYAUBTZCk1o2cEWVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pmB9fx4TrFypp3lNFCQNqTbrQUUp01iTobnvPYPyoZfot8MYnhfpP0cMTpYRD6m8o
-	 H5fcUX+JTsuBiYNvtrzXwPNUyHvFcjMKsdZ6ThzpVZ2SWfUNeGnuLW8dPD5L1W94iW
-	 55grnnKodo4+sqZu1l5T+Vb0Lz+0V/spioSfCBP0=
+	b=MbHa1IN0rBTQrlty0H+ycuC+SpaYoGdRbfdNWQD7p/pzj1J9uq9UMuyFFh747+i09
+	 IGzzpBhZUT4p9yXb1d8pp9DAToDIyL4vNJIZZ7u7+62B9NcSIRTkleq/IWEetHDB/2
+	 SCxXNzqGo02HKTB+kxYCQS5mwf6nZpIErvcP8QCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbfKMCLK (ORCPT
+        id S1729240AbfKMCLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:11:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53128 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:11:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730165AbfKMB67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:59 -0500
+        id S1730151AbfKMB6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DC8422474;
-        Wed, 13 Nov 2019 01:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76189222D3;
+        Wed, 13 Nov 2019 01:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610338;
-        bh=xkffcVnzZep407UHCvdiZ/+ZuoK++P160a1VYGYgzwo=;
+        s=default; t=1573610335;
+        bh=D9FF+PKLhEVyXZcKFFSveysZnUiYAUBTZCk1o2cEWVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Im+/18JHWASCuoAbnd52ShU54u3LkFImJNmIgITJONvWZLqflq8cAMwabDJNhTq33
-         Ei+yqNS2Bl7p/D89ttdvepjMCd3tLzcKlRh447MdMovTaIl7kZivr0UrWZGYYRxsFf
-         q+iPsecuMf1Rb7ztncg/PujDrJ1GiVuBe8bzyyuA=
+        b=sfY/juds/7c0rLT6rlHBzTUQFFlrS3g4T7XUIRYjAiAlnJ/SxwU2Lf+Fat+jQXd/t
+         sz7s/b+flLCpmawQ08FAKZqWK5Gh0tVU6kIgTQqc0m7Yb3jFfHWfEY31Cd9g0ysH54
+         EbalyJub8hGnEGMqqH1j/9XOj5L5bR9ZaOG/X2qM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
+Cc:     Wenwen Wang <wang6495@umn.edu>, Hans Verkuil <hverkuil@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 094/115] media: cx231xx: fix potential sign-extension overflow on large shift
-Date:   Tue, 12 Nov 2019 20:56:01 -0500
-Message-Id: <20191113015622.11592-94-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 092/115] media: isif: fix a NULL pointer dereference bug
+Date:   Tue, 12 Nov 2019 20:55:59 -0500
+Message-Id: <20191113015622.11592-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -60,41 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
+[ Upstream commit a26ac6c1bed951b2066cc4b2257facd919e35c0b ]
 
-Shifting the u8 value[3] by an int can lead to sign-extension
-overflow. For example, if value[3] is 0xff and the shift is 24 then it
-is promoted to int and then the top bit is sign-extended so that all
-upper 32 bits are set.  Fix this by casting value[3] to a u32 before
-the shift.
+In isif_probe(), there is a while loop to get the ISIF base address and
+linearization table0 and table1 address. In the loop body, the function
+platform_get_resource() is called to get the resource. If
+platform_get_resource() returns NULL, the loop is terminated and the
+execution goes to 'fail_nobase_res'. Suppose the loop is terminated at the
+first iteration because platform_get_resource() returns NULL and the
+execution goes to 'fail_nobase_res'. Given that there is another while loop
+at 'fail_nobase_res' and i equals to 0, one iteration of the second while
+loop will be executed. However, the second while loop does not check the
+return value of platform_get_resource(). This can cause a NULL pointer
+dereference bug if the return value is a NULL pointer.
 
-Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
+This patch avoids the above issue by adding a check in the second while
+loop after the call to platform_get_resource().
 
-Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
 Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/isif.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
-index 179b8481a870d..fd33c2e9327da 100644
---- a/drivers/media/usb/cx231xx/cx231xx-video.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-video.c
-@@ -1389,7 +1389,7 @@ int cx231xx_g_register(struct file *file, void *priv,
- 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
- 				(u16)reg->reg, value, 4);
- 		reg->val = value[0] | value[1] << 8 |
--			value[2] << 16 | value[3] << 24;
-+			value[2] << 16 | (u32)value[3] << 24;
- 		reg->size = 4;
- 		break;
- 	case 1:	/* AFE - read byte */
+diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
+index 5813b49391edb..90d0f13283ae9 100644
+--- a/drivers/media/platform/davinci/isif.c
++++ b/drivers/media/platform/davinci/isif.c
+@@ -1102,7 +1102,8 @@ static int isif_probe(struct platform_device *pdev)
+ 
+ 	while (i >= 0) {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+-		release_mem_region(res->start, resource_size(res));
++		if (res)
++			release_mem_region(res->start, resource_size(res));
+ 		i--;
+ 	}
+ 	vpfe_unregister_ccdc_device(&isif_hw_dev);
 -- 
 2.20.1
 
