@@ -2,103 +2,85 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2E2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BB7C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0725721A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QW5UZ5vx"
+	by mail.kernel.org (Postfix) with ESMTP id 6F86121A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573603720;
+	bh=KjzzTcYnHTbPiZHHU3oiNXK2IO0S++IshKJ56E3fWIM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lpNmt/BuLG/Mw7bTHUsSunNTETFqQ7zK+RIqfxWVGaagLXBB95psKg4mPqpEPczud
+	 KllFRPeY/y9McSSj597JNYFkOH0ZQ2xp2sLHc5jiGyyz0BpApVCl4rJtTR2WH1q3lx
+	 ziHPbtzPrh5FRMXizU4oCQpkm6Whwnj5Ip6dK4+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfKMAGz (ORCPT
+        id S1727112AbfKMAIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:06:55 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10750 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKMAGz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:06:55 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcb48e70000>; Tue, 12 Nov 2019 16:05:59 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 12 Nov 2019 16:06:54 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 12 Nov 2019 16:06:54 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
- 2019 00:06:54 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
- 2019 00:06:54 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 13 Nov 2019 00:06:54 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dcb491e0001>; Tue, 12 Nov 2019 16:06:54 -0800
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH] mm/debug: PageAnon() is true for PageKsm() pages
-Date:   Tue, 12 Nov 2019 16:06:51 -0800
-Message-ID: <20191113000651.20677-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573603559; bh=/wOVdRHSsqeIyfwUzfQw6fH/HHReWgDJ07fiGrrlSU0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=QW5UZ5vxpjFz9atav5kX9c9+UyPG525LYT+G5Wz4q3+G5kxkZrDJOxQ/a3PVIJ0OJ
-         IxK7aOZD8qlXZonGpeXWc6aidXd+DnvD422Rc5dsKYi7mfL17QUyXQ2WhmSOY5FOkJ
-         XbREHVfeG5u80+U6ssxTODbcUFuQtXwOb4TcvfygE/JT3qaUfbpxIsw1bTkveRPAfL
-         yvxWGT7fVQCmV2vz488FCHkwsxqU4gRoWQuTMTN7ORqVUojLc0EijQUlngWVL6LJWJ
-         FfjayWo1gdGlJ3f1K9EgUD0VBlz9Jgch538SVTEuziDeeBHimJ4QOP7ZTRb0T13rc1
-         zGJBvh4L/c53Q==
+        Tue, 12 Nov 2019 19:08:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726957AbfKMAIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:08:39 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 273AA2196E;
+        Wed, 13 Nov 2019 00:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573603718;
+        bh=KjzzTcYnHTbPiZHHU3oiNXK2IO0S++IshKJ56E3fWIM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LOiGsvx+c2husp91s1WCl9gljHVh7c5xjNQNDyeBqhxPkRhboXxQqmqoTBCQPqQZ1
+         V2L9yuouLTv+rFxK1urn3WJ2bX10DDbmxjicANXYOddYCrZUMzv4RI1uer5JQH180k
+         Lv+aNCMejDxus+4oUYACPPj8wFzi6MgoCQydwG18=
+Date:   Tue, 12 Nov 2019 16:08:35 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Shuah Khan <shuah@kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
+Message-Id: <20191112160835.9bfa58cf756683ddc8d470fd@linux-foundation.org>
+In-Reply-To: <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
+References: <20191104222141.5173-1-rcampbell@nvidia.com>
+        <20191104222141.5173-3-rcampbell@nvidia.com>
+        <20191112152521.GC12550@lst.de>
+        <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PageAnon() and PageKsm() use the low two bits of the page->mapping pointer
-to indicate the page type. PageAnon() only checks the LSB while PageKsm()
-checks the least significant 2 bits are equal to 3. Therefore, PageAnon()
-is true for KSM pages.
-__dump_page() incorrectly will never print "ksm" because it checks
-PageAnon() first. Fix this by checking PageKsm() first.
+On Tue, 12 Nov 2019 13:51:11 -0800 Ralph Campbell <rcampbell@nvidia.com> wrote:
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
- mm/debug.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> On 11/12/19 7:25 AM, Christoph Hellwig wrote:
+> > Shouldn't this go into mm/ instead? It certainly doesn't seem
+> > like a library.
+> 
+> I was following the convention for the other vm test kernel modules.
+> I see a couple of modules in mm/ but I don't have a personal
+> preference for where to place it.
+> 
+> Andrew, do you have a preference?
 
-diff --git a/mm/debug.c b/mm/debug.c
-index 772d4cf0691f..0461df1207cb 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -77,10 +77,10 @@ void __dump_page(struct page *page, const char *reason)
- 		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
- 			page, page_ref_count(page), mapcount,
- 			page->mapping, page_to_pgoff(page));
--	if (PageAnon(page))
--		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
--	else if (PageKsm(page))
-+	if (PageKsm(page))
- 		pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
-+	else if (PageAnon(page))
-+		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
- 	else if (mapping) {
- 		if (mapping->host && mapping->host->i_dentry.first) {
- 			struct dentry *dentry;
---=20
-2.20.1
+q:/usr/src/25> ls -l lib/test_*.c|wc 
+     33     297    2051
 
+lib/ is a somewhat strange place, but I'd use that for now.
+
+Presumably one day someone will (pointlessly) move these into
+lib/test-modules/.
+
+Then into lib/test-modules/mm/, etc..
