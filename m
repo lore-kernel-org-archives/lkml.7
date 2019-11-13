@@ -2,337 +2,189 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CD5C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538DEC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3242E2247B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997C922B47
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Kdarmmaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbfKMQYY convert rfc822-to-8bit (ORCPT
+        id S1727915AbfKMPtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:24:24 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2096 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726543AbfKMQYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:24:23 -0500
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 133FF8E869263F6F4978;
-        Wed, 13 Nov 2019 16:24:22 +0000 (GMT)
-Received: from lhreml708-chm.china.huawei.com (10.201.108.57) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 13 Nov 2019 16:24:11 +0000
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml708-chm.china.huawei.com (10.201.108.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 13 Nov 2019 16:24:11 +0000
-Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
- lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
- 15.01.1713.004; Wed, 13 Nov 2019 16:24:11 +0000
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Auger Eric <eric.auger@redhat.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-CC:     "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "vincent.stehle@arm.com" <vincent.stehle@arm.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "tina.zhang@intel.com" <tina.zhang@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@huawei.com>
-Subject: RE: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-Thread-Topic: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-Thread-Index: AQHVN/CfwyE8ogH9wk6QxsmMIq08eqeIHQ3QgAALuICAABiYUIAABvsAgAAPlwCAADsPwIAALk4AgAFKABA=
-Date:   Wed, 13 Nov 2019 16:24:10 +0000
-Message-ID: <76a0589469ff4cfba348f43feba81fe4@huawei.com>
-References: <20190711135625.20684-1-eric.auger@redhat.com>
- <f5b4b97b197d4bab8f3703eba2e966c4@huawei.com>
- <ebaded3e-8a5c-73dd-b3f7-7533a6e80146@redhat.com>
- <76d9dc0274414887b04e11b9b6bda257@huawei.com>
- <b0a9f107-2e89-1418-d6f4-3e6f5ac0b330@redhat.com>
- <9f0a9d341b01419eb566731339b3fbd2@huawei.com>
- <6e0faec9-5840-653e-cb43-86545a48e65d@redhat.com>
-In-Reply-To: <6e0faec9-5840-653e-cb43-86545a48e65d@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.227.237]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 13 Nov 2019 10:49:10 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:63799 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfKMPtJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:49:09 -0500
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id xADFmwnb002467;
+        Thu, 14 Nov 2019 00:48:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xADFmwnb002467
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573660139;
+        bh=CcAfDSAaYzEWcA0ZdifDtl9WFUZGV+BlO+HnJ4m+CTo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KdarmmaqVcPRiM4rzpyYW/UCbDKEK1xV/Fu7S5zIq2tzQi5JFrINNOn05UNI9AHVk
+         nCbw7JfAmIA+v38rMrAZVAvnHv7+cotGk9/JQhGKQmc5bC+FJ81/r7yziL1twfoFKt
+         WPdfFxK8fKhqA6A4qGNPmBpSBRF1IPQqImSnlJU71grmsdhm6bDX1t12tTKTaKzXAY
+         llm245s+35gxNMPEkLQosF4KpHe6TW+2YAzlMvg8zAu5Oveullu89Sjf1wM8tuFDdE
+         1KIGp/1aysHIz4/Gqs21s9XqdQ5dtWnNvaB4aVgjq3UkBzs5BkBqUxo5FCJ9l7Nxj+
+         6mta704fnRE8w==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id k19so665184vke.10;
+        Wed, 13 Nov 2019 07:48:59 -0800 (PST)
+X-Gm-Message-State: APjAAAU+l1ivZ9LvLPeCyT+L0Bi986ElqHTQCsK2xU5x+N4zoRFzU2xi
+        7iWGQCcN5PV1c39U27SWWY5ocdWmjm26OQA1Bew=
+X-Google-Smtp-Source: APXvYqwYYDKd9djzyye5Jm5AqqD9t+0TNx8j9BxmVW1XcUt8qojsZGzIv9lhdsYGW3wi/7kP8ffMJLcX+hp9rK2M4CI=
+X-Received: by 2002:a1f:4192:: with SMTP id o140mr1994739vka.26.1573660137863;
+ Wed, 13 Nov 2019 07:48:57 -0800 (PST)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com> <20191112123125.GD17835@willie-the-truck>
+ <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
+ <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net> <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
+ <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com> <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
+ <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com> <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
+ <50602386-68b1-be38-a022-0bcf9df6a54e@163.com> <CAK7LNAQ8h7zxhfndBqYRWXkaWVynH7GpBvDPLcVMZ1VEyUUX7A@mail.gmail.com>
+ <bdbe9e04-4da0-64b2-ab0c-ae739d8fd7ac@163.com>
+In-Reply-To: <bdbe9e04-4da0-64b2-ab0c-ae739d8fd7ac@163.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 14 Nov 2019 00:48:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATpJDVG+mF9J7n9_WQ2rT0U1fh7pFeAJLkQjF=J8jCSrg@mail.gmail.com>
+Message-ID: <CAK7LNATpJDVG+mF9J7n9_WQ2rT0U1fh7pFeAJLkQjF=J8jCSrg@mail.gmail.com>
+Subject: Re: Question about "asm/rwonce.h: No such file or directory"
+To:     Xiao Yang <ice_yangxiao@163.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
-
-> -----Original Message-----
-> From: Auger Eric [mailto:eric.auger@redhat.com]
-> Sent: 12 November 2019 20:35
-> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
-> eric.auger.pro@gmail.com; iommu@lists.linux-foundation.org;
-> linux-kernel@vger.kernel.org; kvm@vger.kernel.org;
-> kvmarm@lists.cs.columbia.edu; joro@8bytes.org;
-> alex.williamson@redhat.com; jacob.jun.pan@linux.intel.com;
-> yi.l.liu@intel.com; jean-philippe.brucker@arm.com; will.deacon@arm.com;
-> robin.murphy@arm.com
-> Cc: kevin.tian@intel.com; vincent.stehle@arm.com; ashok.raj@intel.com;
-> marc.zyngier@arm.com; tina.zhang@intel.com; Linuxarm
-> <linuxarm@huawei.com>; xuwei (O) <xuwei5@huawei.com>
-> Subject: Re: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-> 
-> Hi Shameer,
-> 
-
-[..]
-
-> >
-> > I just noted that CMDQ_OP_TLBI_NH_VA is missing the vmid filed which
-> seems
-> > to be the cause for single IOVA TLBI not working properly.
-> >
-> > I had this fix in arm-smmuv3.c,
-> >
-> > @@ -947,6 +947,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd,
-> struct arm_smmu_cmdq_ent *ent)
-> > 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
-> > 		break;
-> > 	case CMDQ_OP_TLBI_NH_VA:
-> > +		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
-> Damn, I did not see that! That's it. ASID invalidation fills this field
-> indeed. You may post an independent patch for that.
-
-Sure. Just did that.
-" iommu/arm-smmu-v3: Populate VMID field for CMDQ_OP_TLBI_NH_VA"
-
-> 		cmd[0] |=
-> FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
-> > 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
-> > 		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
-> >
-> >
-> > With this, your original qemu branch is working.
-> >
-> > root@ubuntu:~# iperf -c 10.202.225.185
-> > ------------------------------------------------------------
-> > Client connecting to 10.202.225.185, TCP port 5001 TCP window size: 85.0
-> KByte (default)
-> > ------------------------------------------------------------
-> > [  3] local 10.202.225.169 port 44894 connected with 10.202.225.185 port
-> 5001
-> > [ ID] Interval       Transfer     Bandwidth
-> > [  3]  0.0-10.0 sec  3.21 GBytes  2.76 Gbits/sec
-> >
-> > Could you please check this...
-> >
-> > I also have a rebase of your patches on top of 5.4-rc5. This has some
-> optimizations
-> > From Will such as batched TLBI inv. Please find it here,
-> >
-> > https://github.com/hisilicon/kernel-dev/tree/private-vSMMUv3-v9-v5.4-rc5
-> >
-> > This gives me a better performance with iperf,
-> >
-> > root@ubuntu:~# iperf -c 10.202.225.185
-> > ------------------------------------------------------------
-> > Client connecting to 10.202.225.185, TCP port 5001 TCP window size: 85.0
-> KByte (default)
-> > ------------------------------------------------------------
-> > [  3] local 10.202.225.169 port 55450 connected with 10.202.225.185 port
-> 5001
-> > [ ID] Interval       Transfer     Bandwidth
-> > [  3]  0.0-10.0 sec  4.91 GBytes  4.22 Gbits/sec root@ubuntu:~#
-> >
-> > If possible please check this branch as well.
-> 
-> To be honest I don't really know what to do with this work. Despite the
-> efforts, this has suffered from a lack of traction in the community. My
-> last attempt to explain the use cases, upon Will's request at Plumber,
-> has not received any comment (https://lkml.org/lkml/2019/9/20/104).
-> 
-> I think I will post a rebased version with your fix, as a matter to get
-> a clean snapshot.
-
-Thanks. That makes sense.
-
- If you think this work is useful for your projects,
-> please let it know on the ML.
-
-Right. While SVA use case is definitely the one we are very much interested, I will
-check within our team the priority for use case 1(native drivers in Guest) you
-mentioned in the above link. 
-
-Cheers,
-Shameer
-
-> Thank you again!
-> 
-> Eric
-> >
-> > Thanks,
-> > Shameer
-> >
-> >> Thanks,
-> >> Shameer
-> >>
-> >>
-> >>> Thanks
+On Wed, Nov 13, 2019 at 11:57 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+>
+> On 11/13/19 4:54 PM, Masahiro Yamada wrote:
+> > On Wed, Nov 13, 2019 at 5:36 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+> >> On 11/13/19 3:53 PM, Masahiro Yamada wrote:
+> >>> On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
+> >>>> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
+> >>>>> Sorry, I really do not understand what you are doing.
+> >>>>>
+> >>>>> include/linux/compiler.h is only for kernel-space.
+> >>>>> Shrug if a user-land program includes it.
+> >>>> Hi Masahiro,
+> >>>>
+> >>>> For building tools/bpf, it is good to fix the compiler error by Daniel's
+> >>>> patch(i.e. use linux/filter from linux header).
+> >>>>
+> >>>> linux/compiler.h may be used by other code in kernel.  Is it possible to
+> >>>> trigger the same error when the other code
+> >>>>
+> >>>> including linux/compiler.h is built? Is this kind of code able to find
+> >>>> the location of <asm/rwonce.h>?
+> >>> <asm/rwonce.h> is also kernel-only header.
 > >>>
-> >>> Eric
-> >>>>
-> >>>> Cheers,
-> >>>> Shameer
-> >>>>
-> >>>>> Thanks
-> >>>>>
-> >>>>> Eric
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>>>
-> >>>>>> Please let me know.
-> >>>>>>
-> >>>>>> Thanks,
-> >>>>>> Shameer
-> >>>>>>
-> >>>>>>> Best Regards
-> >>>>>>>
-> >>>>>>> Eric
-> >>>>>>>
-> >>>>>>> This series can be found at:
-> >>>>>>> https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
-> >>>>>>>
-> >>>>>>> It series includes Tina's patch steming from
-> >>>>>>> [1] "[RFC PATCH v2 1/3] vfio: Use capability chains to handle device
-> >>>>>>> specific irq" plus patches originally contributed by Yi.
-> >>>>>>>
-> >>>>>>> History:
-> >>>>>>>
-> >>>>>>> v8 -> v9:
-> >>>>>>> - introduce specific irq framework
-> >>>>>>> - single fault region
-> >>>>>>> - iommu_unregister_device_fault_handler failure case not handled
-> >>>>>>>   yet.
-> >>>>>>>
-> >>>>>>> v7 -> v8:
-> >>>>>>> - rebase on top of v5.2-rc1 and especially
-> >>>>>>>   8be39a1a04c1  iommu/arm-smmu-v3: Add a master->domain
-> >> pointer
-> >>>>>>> - dynamic alloc of s1_cfg/s2_cfg
-> >>>>>>> - __arm_smmu_tlb_inv_asid/s1_range_nosync
-> >>>>>>> - check there is no HW MSI regions
-> >>>>>>> - asid invalidation using pasid extended struct (change in the uapi)
-> >>>>>>> - add s1_live/s2_live checks
-> >>>>>>> - move check about support of nested stages in domain finalise
-> >>>>>>> - fixes in error reporting according to the discussion with Robin
-> >>>>>>> - reordered the patches to have first iommu/smmuv3 patches and
-> then
-> >>>>>>>   VFIO patches
-> >>>>>>>
-> >>>>>>> v6 -> v7:
-> >>>>>>> - removed device handle from bind/unbind_guest_msi
-> >>>>>>> - added "iommu/smmuv3: Nested mode single MSI doorbell per
-> domain
-> >>>>>>>   enforcement"
-> >>>>>>> - added few uapi comments as suggested by Jean, Jacop and Alex
-> >>>>>>>
-> >>>>>>> v5 -> v6:
-> >>>>>>> - Fix compilation issue when CONFIG_IOMMU_API is unset
-> >>>>>>>
-> >>>>>>> v4 -> v5:
-> >>>>>>> - fix bug reported by Vincent: fault handler unregistration now
-> happens
-> >> in
-> >>>>>>>   vfio_pci_release
-> >>>>>>> - IOMMU_FAULT_PERM_* moved outside of struct definition + small
-> >>>>>>>   uapi changes suggested by Kean-Philippe (except fetch_addr)
-> >>>>>>> - iommu: introduce device fault report API: removed the PRI part.
-> >>>>>>> - see individual logs for more details
-> >>>>>>> - reset the ste abort flag on detach
-> >>>>>>>
-> >>>>>>> v3 -> v4:
-> >>>>>>> - took into account Alex, jean-Philippe and Robin's comments on v3
-> >>>>>>> - rework of the smmuv3 driver integration
-> >>>>>>> - add tear down ops for msi binding and PASID table binding
-> >>>>>>> - fix S1 fault propagation
-> >>>>>>> - put fault reporting patches at the beginning of the series following
-> >>>>>>>   Jean-Philippe's request
-> >>>>>>> - update of the cache invalidate and fault API uapis
-> >>>>>>> - VFIO fault reporting rework with 2 separate regions and one
-> >> mmappable
-> >>>>>>>   segment for the fault queue
-> >>>>>>> - moved to PATCH
-> >>>>>>>
-> >>>>>>> v2 -> v3:
-> >>>>>>> - When registering the S1 MSI binding we now store the device
-> handle.
-> >>> This
-> >>>>>>>   addresses Robin's comment about discimination of devices
-> beonging
-> >>> to
-> >>>>>>>   different S1 groups and using different physical MSI doorbells.
-> >>>>>>> - Change the fault reporting API: use
-> >> VFIO_PCI_DMA_FAULT_IRQ_INDEX
-> >>> to
-> >>>>>>>   set the eventfd and expose the faults through an mmappable fault
-> >>> region
-> >>>>>>>
-> >>>>>>> v1 -> v2:
-> >>>>>>> - Added the fault reporting capability
-> >>>>>>> - asid properly passed on invalidation (fix assignment of multiple
-> >>>>>>>   devices)
-> >>>>>>> - see individual change logs for more info
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> Eric Auger (8):
-> >>>>>>>   vfio: VFIO_IOMMU_SET_MSI_BINDING
-> >>>>>>>   vfio/pci: Add VFIO_REGION_TYPE_NESTED region type
-> >>>>>>>   vfio/pci: Register an iommu fault handler
-> >>>>>>>   vfio/pci: Allow to mmap the fault queue
-> >>>>>>>   vfio: Add new IRQ for DMA fault reporting
-> >>>>>>>   vfio/pci: Add framework for custom interrupt indices
-> >>>>>>>   vfio/pci: Register and allow DMA FAULT IRQ signaling
-> >>>>>>>   vfio: Document nested stage control
-> >>>>>>>
-> >>>>>>> Liu, Yi L (2):
-> >>>>>>>   vfio: VFIO_IOMMU_SET_PASID_TABLE
-> >>>>>>>   vfio: VFIO_IOMMU_CACHE_INVALIDATE
-> >>>>>>>
-> >>>>>>> Tina Zhang (1):
-> >>>>>>>   vfio: Use capability chains to handle device specific irq
-> >>>>>>>
-> >>>>>>>  Documentation/vfio.txt              |  77 ++++++++
-> >>>>>>>  drivers/vfio/pci/vfio_pci.c         | 283
-> >>>>> ++++++++++++++++++++++++++--
-> >>>>>>>  drivers/vfio/pci/vfio_pci_intrs.c   |  62 ++++++
-> >>>>>>>  drivers/vfio/pci/vfio_pci_private.h |  24 +++
-> >>>>>>>  drivers/vfio/pci/vfio_pci_rdwr.c    |  45 +++++
-> >>>>>>>  drivers/vfio/vfio_iommu_type1.c     | 166 ++++++++++++++++
-> >>>>>>>  include/uapi/linux/vfio.h           | 109 ++++++++++-
-> >>>>>>>  7 files changed, 747 insertions(+), 19 deletions(-)
-> >>>>>>>
-> >>>>>>> --
-> >>>>>>> 2.20.1
-> >>>>>>>
-> >>>>>>> _______________________________________________
-> >>>>>>> kvmarm mailing list
-> >>>>>>> kvmarm@lists.cs.columbia.edu
-> >>>>>>> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
-> >>>>
+> >>> The kernel code can find <asm/rwonce.h>, but user-land code cannot.
+> >> Hi Masahiro,
+> >>
+> >> Sorry, I am not familar with it.
+> >>
+> >> Thanks a lot for your explanation and I have seen the LINUXINCLUDE
+> >> variable in Makefile.
+> >>
+> >> I will try to send a patch as Daniel suggested.
+> >>
+> >> Best Regards,
+> >>
+> >> Xiao Yang
+> >>
+> > Hmm, digging into the git history,
+> > this include path was added by the following commit:
 > >
+> >
+> > commit d7475de58575c904818efa369c82e88c6648ce2e
+> > Author: Kamal Mostafa <kamal@canonical.com>
+> > Date:   Wed Nov 11 14:24:27 2015 -0800
+> >
+> >      tools/net: Use include/uapi with __EXPORTED_HEADERS__
+> >
+> >      Use the local uapi headers to keep in sync with "recently" added #define's
+> >      (e.g. SKF_AD_VLAN_TPID).  Refactored CFLAGS, and bpf_asm doesn't need -I.
+> >
+> >      Fixes: 3f356385e8a4 ("filter: bpf_asm: add minimal bpf asm tool")
+> >      Signed-off-by: Kamal Mostafa <kamal@canonical.com>
+> >      Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+> >      Signed-off-by: David S. Miller <davem@davemloft.net>
+> >
+> >
+> >
+> > I am not sure how big a deal it is,
+> > but it could be a problem on old distros??
+> >
+> Hi Daniel, Masahiro
+>
+>
+> Could we include the linux/filter.h generated by "make headers_install"
+> as a higher priority?
+>
+> (PS: According to above commit, just ensure that tools/bpf keeps in sync
+> with new linux header as far as possible).
+>
+> and then use the linux/filter.h in system if kernel doesn't provide
+> linux/filter.h by "make headers_install".
+>
+> --------------------------------------------------------------------------------------------------------------------
+>
+> diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
+> index 5d1995fd369c..1e0c768132af 100644
+> --- a/tools/bpf/Makefile
+> +++ b/tools/bpf/Makefile
+> @@ -10,7 +10,7 @@ MAKE = make
+>   INSTALL ?= install
+>
+>   CFLAGS += -Wall -O2
+> -CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi
+> -I$(srctree)/include
+> +CFLAGS += -I$(srctree)/usr/include
 
+
+Probably, this does not work for O= build.
+
+And, you also need to run 'make headers' somewhere
+because usr/include does not contain any header in a clean state.
+
+Be careful, people always tend to break out-of-tree build.
+I recommend to double, triple check it.
+
+(I believe this is a horrible design mistake
+of the tools build system.)
+
+
+
+
+>   # This will work when bpf is built in tools env. where srctree
+>   # isn't set and when invoked from selftests build, where srctree
+>
+> ---------------------------------------------------------------------------------------------------------------------
+>
+>
+> Best Regards,
+>
+> Xiao Yang
+>
+> >
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
