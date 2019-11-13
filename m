@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1525C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8EBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E78121D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14763204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611401;
-	bh=t0LGKsLAIPhyIH2YHKRCrKEsmfB6YyBV3i4SCbgDs0E=;
+	s=default; t=1573611411;
+	bh=eO+zh+1hDJrf6kovEjttSsvpTV1BbphILcEKLCmqexY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1eyNFXA+uLhsap1QhQB7rwFKiP5H4/qHWVQ8mbdecuKKHhK0ekWEvg8Q9O+bKibsW
-	 5z/yuk6uKVL2R4AD9I1+cqJGRD35cvgLPwsLJ3+GHgfgCxTktDtM12SGmSenbhVvQm
-	 mwZgpzEcfqVPC4GHakNtmCw/JPl1X9tGTq6McGvw=
+	b=JE9K8IDQScPG/YnhaB5yrUAhngjJWQTtj+Ohl3B9okr1k2yWYUgLQsv1l+lIcSlzz
+	 o9FGJrBXz+OnLY36QWCCy1jVqfVePf5br5CAsboZAEiUIQ0cMqV91Db0lAHaLTFpct
+	 w7DiOpgTFseiru8smklxYA2Ssw99GXQAbEumCy+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbfKMCQk (ORCPT
+        id S1729446AbfKMB4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:16:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfKMB41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:27 -0500
+        id S1729307AbfKMB4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 362E52245C;
-        Wed, 13 Nov 2019 01:56:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13AFB222CF;
+        Wed, 13 Nov 2019 01:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610187;
-        bh=t0LGKsLAIPhyIH2YHKRCrKEsmfB6YyBV3i4SCbgDs0E=;
+        s=default; t=1573610161;
+        bh=eO+zh+1hDJrf6kovEjttSsvpTV1BbphILcEKLCmqexY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JfeUayxg1T72Nxabgp03UhBlY2d6feFqhJfVay7ycnCQHKt45qeImd0Sp0sj8nFe6
-         ECVnT85OmyDHv+Tw6eGosEiU1G91zWMWo0FgDgZFmo+Pa6cEuJfP+KGqDuk1rX+35Z
-         mrPS01GryQvwcYLNBcYUdWvvUxtAPpNmOmsAdmA4=
+        b=kQmw5lFI75CTde7M5OHUJ4vMBvBFR9+cRLJbanIXgWQOfl+Zt74vFKlsIEU/i1QJV
+         Dtm+Caq71lQQAyff7Nez4neYUOBvAmhkO9mvyEg4LzXaESqxHZc3FVG7iJx9g8iEK7
+         REs2aF2SR4mGtOfzD/hIigiQl2JUinmo4XAY5Jdk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 003/115] ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
-Date:   Tue, 12 Nov 2019 20:54:30 -0500
-Message-Id: <20191113015622.11592-3-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 204/209] ACPI / LPSS: Use acpi_lpss_* instead of acpi_subsys_* functions for hibernate
+Date:   Tue, 12 Nov 2019 20:50:20 -0500
+Message-Id: <20191113015025.9685-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
-References: <20191113015622.11592-1-sashal@kernel.org>
+In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
+References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,41 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit b830526f304764753fcb8b4a563a94080e982a6c ]
+[ Upstream commit c8afd03486c26accdda4846e5561aa3f8e862a9d ]
 
-Add ti,syscon-unaligned-access property to PCIe RC nodes to set
-appropriate bits in CTRL_CORE_SMA_SW_7 register to enable workaround for
-errata i870.
+Commit 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from
+resume_noirq") makes acpi_lpss_{suspend_late,resume_early}() bail early
+on BYT/CHT as resume_from_noirq is set.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+This means that on resume from hibernate dw_i2c_plat_resume() doesn't get
+called by the restore_early callback, acpi_lpss_resume_early(). Instead it
+should be called by the restore_noirq callback matching how things are done
+when resume_from_noirq is set and we are doing a regular resume.
+
+Change the restore_noirq callback to acpi_lpss_resume_noirq so that
+dw_i2c_plat_resume() gets properly called when resume_from_noirq is set
+and we are resuming from hibernate.
+
+Likewise also change the poweroff_noirq callback so that
+dw_i2c_plat_suspend gets called properly.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202139
+Fixes: 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from resume_noirq")
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra7.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/acpi/acpi_lpss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 0bf354024ef55..3af1aa7a3213d 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -314,6 +314,7 @@
- 						<0 0 0 2 &pcie1_intc 2>,
- 						<0 0 0 3 &pcie1_intc 3>,
- 						<0 0 0 4 &pcie1_intc 4>;
-+				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
- 				status = "disabled";
- 				pcie1_intc: interrupt-controller {
- 					interrupt-controller;
-@@ -367,6 +368,7 @@
- 						<0 0 0 2 &pcie2_intc 2>,
- 						<0 0 0 3 &pcie2_intc 3>,
- 						<0 0 0 4 &pcie2_intc 4>;
-+				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
- 				pcie2_intc: interrupt-controller {
- 					interrupt-controller;
- 					#address-cells = <0>;
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index c47bc6c7f4b91..a63285f9cbca1 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -1121,8 +1121,8 @@ static struct dev_pm_domain acpi_lpss_pm_domain = {
+ 		.thaw_noirq = acpi_subsys_thaw_noirq,
+ 		.poweroff = acpi_subsys_suspend,
+ 		.poweroff_late = acpi_lpss_suspend_late,
+-		.poweroff_noirq = acpi_subsys_suspend_noirq,
+-		.restore_noirq = acpi_subsys_resume_noirq,
++		.poweroff_noirq = acpi_lpss_suspend_noirq,
++		.restore_noirq = acpi_lpss_resume_noirq,
+ 		.restore_early = acpi_lpss_resume_early,
+ #endif
+ 		.runtime_suspend = acpi_lpss_runtime_suspend,
 -- 
 2.20.1
 
