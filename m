@@ -2,257 +2,237 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F008C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FFEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCD322466
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9508B222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WqhV48oI"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YTTW3dpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfKMMZP (ORCPT
+        id S1727447AbfKMMZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:25:15 -0500
-Received: from mail-eopbgr00075.outbound.protection.outlook.com ([40.107.0.75]:28093
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        Wed, 13 Nov 2019 07:25:19 -0500
+Received: from mail-eopbgr80071.outbound.protection.outlook.com ([40.107.8.71]:47362
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726449AbfKMMZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 07:25:05 -0500
+        id S1727427AbfKMMZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 07:25:18 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X4Ls8jjvOafFIR1QoyZmt7TQ0PKsVLZXALKdWWiBlK5tdMnT8Z/h6E7y88chILRU41hEOAfaSPBabHTfjr2jV0/VVU/fe2MtFATrZ2sRK2x9Ptpv78ttkN6fZKaKHFoHELk73BH67N53W32IshaBwe0pZzRONztt5OUCH8d40SmwBIOJZspImsnm/UjXPGTx9frMzVOq4jdlaZr7lLN1jRhR9iyRIkJpKnrQHfErmuTLSSfmuW1QXCmPFZ/FyHu7m62mzPSXQ6u7WS2tjo31y8Evh8DM3TAD9AhCWy0nhBCX6Z4ZwlMZJTq84U6s+GCvRXKCNR7ewpH4CgTPHiiJlw==
+ b=Qb9v0lnSuX7ly/JHz4Y/VCCHujtKD99qysKHOOk7x0WYiwL8ZVSsDkFFZ4oUpFkS6cCpMZI5UVpQ9EyURzenysQJcrk9i/n2ktPzA8Q4ljd/p7OYWiiAfEmGRul+ISEa2BWE9Mkpi4tbb+5e6zzh10p0Uc6HTcyfXoXhGi9LRvriPck+BsqXVYcCgvmMdTqghDSPgTKZqHdPnHHEh+JsEGppsV50x9y2K/86ceJSWT2rEwBY96w2XE4vkk1rHqoY3qJ8jV9NB0Sw/eMnfU7Yj2vWhPj6kXK22fWHGDG5DE4OUY9M7pxuf0JThtx1Lcp9OVZ+WL7199vM0qqtkByODA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SaagySirNNgd3CM8gwOIKutAoLS9kOCvrt+uOfm21rE=;
- b=fA0qIzZTfC/xh+BKdFSv2Uv4eEDfIPcUf79B/25d6DcYvVA9Mt18Fc0H+MVJa6vZBu+rY8Apj1KQaGO2Y66COoaaqqIogV6Vflqfw+7HhN6s7qrk7xOYPiilqS1ewD0qhfciL8z4GECTefXgPtGMHZ9yvCOAqx4tqj+7+UL8QPQqquBK4QnKFWcjnBbWlKNf6BPNYRPY/SfQFKu8iRTDTMAZJtG9HN4JLTt4at5M8+Rc3mpFwV2Lq78Q6p7UBeDfiqjazHj7AOeU3DsBYtc2OhjVnyMG2C1ccf70aeCG1IiZnESzwYChVz7mtCbeoS+YEAcT1mU8ROvZWMBjjJJVsg==
+ bh=gaKre0UKGUV6c1mHSzYN5TRobPztOjwZKpwPk93Jj1A=;
+ b=MU1XjwrpFirFWuckXdYTCpJlnc69xNn1NulFuqGgJYSWmtz0+87IMrwmgVCX8jE2S4PiiuDEmxaauM7b+5IfsZ6JjhqD9lgNjz8LE1HhGd8ENO5jjTTf2CDN4ml6CgBVLE6yGgqBuokcbmZJXKtSXdL4/Xshlm2UTYYZEWb/kbkamaEX7wUeX6hPjN242IOMfxvxXtvtUZVnGRC6HekN9Fuy1cgjZu2AJVELD2MfNhOke3qjxvaQeuMCbkW1JSfYdEVgv6x4Fw6Rb6TFGHrqOKZ/bqdq13TjGQCsOKR3W2H9AASSi58DvpyGrD8YJHfmL3whAtZKraJx1LHJmyahbw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SaagySirNNgd3CM8gwOIKutAoLS9kOCvrt+uOfm21rE=;
- b=WqhV48oI54V0fD5co6g9V+maXgeGSpo86MME7DGEiUTeFSjdimM7n8ZL/fqEzUUPE3AzTHVn/RQQ7/a1rxiSa9DrOSVNnG1wOXjGX9/bpYVFo/Fl3M/blQ7WcocHi2SkrZi5WtbQRotV99yZGLPSkQz9RfuxogMss4liRMA4y70=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
- VI1PR04MB6142.eurprd04.prod.outlook.com (20.179.27.138) with Microsoft SMTP
+ bh=gaKre0UKGUV6c1mHSzYN5TRobPztOjwZKpwPk93Jj1A=;
+ b=YTTW3dpyZ6zpo9lud/so2+uLXeAFYb2oXhXQ0HdmJ5o8l2IuXvIiBUmkzakBF24U35amW/eH1US4rCtdLk37k5tymZKQtNykJ9Hs1XxOG8NQWL4Mc3j8uVqh0RyDkNTH7RIRRrn8DnwcmZtLiTV16uh+Jft2vo3wERkVGK1MchA=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB4499.eurprd04.prod.outlook.com (52.135.151.22) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.25; Wed, 13 Nov 2019 12:24:23 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::71d2:55b3:810d:c75b]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::71d2:55b3:810d:c75b%7]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
- 12:24:23 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     "hch@lst.de" <hch@lst.de>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-CC:     Leo Li <leoyang.li@nxp.com>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v3 3/4] swiotlb: make new {unmap,sync}_desc dma apis work with
- swiotlb
-Thread-Topic: [PATCH v3 3/4] swiotlb: make new {unmap,sync}_desc dma apis work
- with swiotlb
-Thread-Index: AQHVmh1ItS8w1JFcTUSfhlzcd9FmWA==
-Date:   Wed, 13 Nov 2019 12:24:23 +0000
-Message-ID: <20191113122407.1171-4-laurentiu.tudor@nxp.com>
-References: <20191113122407.1171-1-laurentiu.tudor@nxp.com>
-In-Reply-To: <20191113122407.1171-1-laurentiu.tudor@nxp.com>
+ 15.20.2430.23; Wed, 13 Nov 2019 12:25:13 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde%7]) with mapi id 15.20.2430.027; Wed, 13 Nov 2019
+ 12:25:13 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: imx8-clock: Add ADMA clock ids
+Thread-Topic: [PATCH 1/3] dt-bindings: imx8-clock: Add ADMA clock ids
+Thread-Index: AQHVmh1lUtcvIOh5CU6AJDEM/1tcYw==
+Date:   Wed, 13 Nov 2019 12:25:13 +0000
+Message-ID: <1573647909-31081-1-git-send-email-abel.vesa@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR02CA0008.eurprd02.prod.outlook.com
- (2603:10a6:208:3e::21) To VI1PR04MB5134.eurprd04.prod.outlook.com
- (2603:10a6:803:5f::16)
-x-mailer: git-send-email 2.17.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
+x-clientproxiedby: AM0PR0402CA0014.eurprd04.prod.outlook.com
+ (2603:10a6:208:15::27) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
 x-originating-ip: [89.37.124.34]
+x-mailer: git-send-email 2.7.4
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4bbab7d3-d441-4608-e950-08d768346a77
-x-ms-traffictypediagnostic: VI1PR04MB6142:|VI1PR04MB6142:
+x-ms-office365-filtering-correlation-id: 799d458e-3196-4a59-decb-08d7683487fc
+x-ms-traffictypediagnostic: AM0PR04MB4499:|AM0PR04MB4499:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB6142AC7FD085C941CEAA6984EC760@VI1PR04MB6142.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-microsoft-antispam-prvs: <AM0PR04MB44990E7D41C70FB5ACE391E7F6760@AM0PR04MB4499.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1443;
 x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(366004)(189003)(199004)(6486002)(66066001)(486006)(446003)(110136005)(86362001)(6436002)(44832011)(5660300002)(54906003)(2906002)(305945005)(476003)(14454004)(2201001)(6512007)(186003)(3846002)(11346002)(316002)(6116002)(66946007)(2616005)(7736002)(256004)(66556008)(66446008)(99286004)(52116002)(76176011)(6636002)(36756003)(64756008)(25786009)(2501003)(386003)(71190400001)(6506007)(478600001)(1076003)(8936002)(71200400001)(26005)(50226002)(102836004)(81156014)(81166006)(4326008)(66476007)(8676002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6142;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(199004)(189003)(486006)(44832011)(2616005)(71200400001)(66446008)(66476007)(102836004)(86362001)(6506007)(386003)(71190400001)(64756008)(256004)(6512007)(476003)(66066001)(5660300002)(36756003)(66946007)(4326008)(66556008)(6636002)(6436002)(26005)(186003)(2906002)(7736002)(110136005)(8676002)(52116002)(99286004)(8936002)(316002)(478600001)(54906003)(14454004)(6116002)(3846002)(50226002)(25786009)(6486002)(305945005)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4499;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BjqF+6Q9gMBNFc4h93uOgrLdgvfN54nl+qh1hJdt4vjv7o3ewPX7dQ8j239OvX16kF57747tIKmePTx564nW90WyvOb8fs4ZEgoDnzgHnkYlaa9eOkJHL138wTa82szP9UFDjXg1CNDxIF8L1YCuVbGnzQ3yC4YwVAc/IHlYVKoOJiGAJxGw2LuE+E9wxEf78thftNsCptls9Z107T44MVnTq4olfIxluydELnIoUjKdxElXQPh5gHxAb4Eo36BQFPeDZ1gkbZxj1buSxZnGG/lAcZ5ZQX3SvvBzjnVafCnvkgLLKi8b6Po9VF6higv/D33DwJLXS/nNwHddUEbWhQ0hdkRzAGelsuFC0mSBhtmn0TohDDzz1bTKuX+k54cPTlqRsswwzx2TvGITqdYL/qAdnTiTC/c3AJonA4/8niXNrf9rAMs7UKpLAAsXRpmE
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3C5CD9B8D2FA7D4B959FF56039DFA957@eurprd04.prod.outlook.com>
+x-microsoft-antispam-message-info: 6ekcCsHY+lw3rzCwdNIlBjypUBjlt0c/bIJgO5TScimdKcciHTpvqItTHN1q9TIkwcUn36DnXzW/MK7n+hLmZg07DHMTHwNM1dewtqhmgJ2O2LDNAKXGUyqdA/Q6o1IndonJ5oCCbcYmWQgxU7uagRtGCBbZYmqFKbflRJ6npy+7pssBv2xwyqF/crTtkzJDFNq5zn/DCJhPUjuhVilcP1V1UgqzvReFY4ZIrw4EO7kNKsreme7FMe04kaEJ2gZw287VR5o26LEoz7foNxeUrEHGHdkr2mBjIASZe6jKL8s5ltkoV6hSRTyeRYBWBG9IlPQmkSeBbWkJtMxwGyzNW4foqtju2v6eYyPWjw1m31Vh7mRDL3rHz9vFxFCB9jzvstJwD9p7veIrsml/eIx9tu+iTuKZFJPTKA6ouEuPM5QCmrU8obxAyYufh0pKjWqU
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bbab7d3-d441-4608-e950-08d768346a77
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 12:24:23.2745
+X-MS-Exchange-CrossTenant-Network-Message-Id: 799d458e-3196-4a59-decb-08d7683487fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 12:25:13.1385
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EDYvSD5MQh+w2k41hT7jBhUah8R4ROmUK+jckc6OpWMOpYuMVpqyDuCvHXnhPflcZNAlckoZNtFaSkmSTv9B/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6142
+X-MS-Exchange-CrossTenant-userprincipalname: dWGyW3tM323gjhyci5Xu1iBTfiaPeVhwMc9jm+EdwOStPFVcZkhcZOkhiDmKQe7arWUAv/++p1GCFnLaeqXhVw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4499
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+According to the RM, the Audio and DMA (ADMA) subsystem is a collection
+of audio peripherals and some system modules.
+Add the ADMA specific clock ids to the dt-bindings clock file.
 
-Add a new swiotlb helper to retrieve the original physical
-address given a swiotlb physical address and use it in the new
-dma_unmap_single_attrs_desc(), dma_sync_single_for_cpu_desc() and
-dma_unmap_page_attrs_desc() APIs to make them work with swiotlb.
-
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- include/linux/swiotlb.h |  7 +++++++
- kernel/dma/mapping.c    | 43 ++++++++++++++++++++++++++++++++---------
- kernel/dma/swiotlb.c    |  8 ++++++++
- 3 files changed, 49 insertions(+), 9 deletions(-)
+ include/dt-bindings/clock/imx8-clock.h | 96 ++++++++++++++++++++++++++++++=
++++-
+ 1 file changed, 94 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index cde3dc18e21a..7a6883a71649 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -73,6 +73,8 @@ static inline bool is_swiotlb_buffer(phys_addr_t paddr)
- 	return paddr >=3D io_tlb_start && paddr < io_tlb_end;
- }
+diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/c=
+lock/imx8-clock.h
+index 673a8c6..6e0c752 100644
+--- a/include/dt-bindings/clock/imx8-clock.h
++++ b/include/dt-bindings/clock/imx8-clock.h
+@@ -131,7 +131,60 @@
+ #define IMX_ADMA_PWM_CLK				188
+ #define IMX_ADMA_LCD_CLK				189
 =20
-+phys_addr_t swiotlb_get_orig_phys(phys_addr_t tlb_addr);
+-#define IMX_SCU_CLK_END					190
++#define IMX_ADMA_AUD_PLL0				190
++#define IMX_ADMA_AUD_PLL1				191
 +
- bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_ad=
-dr,
- 		size_t size, enum dma_data_direction dir, unsigned long attrs);
- void __init swiotlb_exit(void);
-@@ -85,6 +87,11 @@ static inline bool is_swiotlb_buffer(phys_addr_t paddr)
- {
- 	return false;
- }
++#define IMX_ADMA_AUD_PLL_DIV_CLK0_CLK			192
++#define IMX_ADMA_AUD_PLL_DIV_CLK1_CLK			193
++#define IMX_ADMA_AUD_REC_CLK0_CLK			194
++#define IMX_ADMA_AUD_REC_CLK1_CLK			195
 +
-+static inline phys_addr_t swiotlb_get_orig_phys(phys_addr_t tlb_addr)
-+{
-+	return PHYS_ADDR_MAX;
-+}
- static inline bool swiotlb_map(struct device *dev, phys_addr_t *phys,
- 		dma_addr_t *dma_addr, size_t size, enum dma_data_direction dir,
- 		unsigned long attrs)
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 2b6f245c9bb1..1a2d02727271 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -14,6 +14,7 @@
- #include <linux/of_device.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-+#include <linux/swiotlb.h>
-=20
- /*
-  * Managed DMA API
-@@ -352,10 +353,18 @@ dma_unmap_page_attrs_desc(struct device *dev, dma_add=
-r_t addr, size_t size,
- 	const struct dma_map_ops *ops =3D get_dma_ops(dev);
- 	void *ptr =3D NULL;
-=20
--	if (dma_is_direct(ops))
--		ptr =3D phys_to_virt(dma_to_phys(dev, addr));
--	else if (ops && ops->get_virt_addr)
-+	if (dma_is_direct(ops)) {
-+		phys_addr_t phys =3D dma_to_phys(dev, addr);
++/* CM40 SS */
++#define IMX_CM40_IPG_CLK				196
++#define IMX_CM40_I2C_DIV				197
 +
-+		if (is_swiotlb_buffer(phys)) {
-+			phys =3D swiotlb_get_orig_phys(phys);
-+			ptr =3D phys =3D=3D PHYS_ADDR_MAX ? NULL : phys_to_virt(phys);
-+		} else {
-+			ptr =3D phys_to_virt(phys);
-+		}
-+	} else if (ops && ops->get_virt_addr) {
- 		ptr =3D ops->get_virt_addr(dev, addr);
-+	}
-=20
- 	dma_unmap_page_attrs(dev, addr, size, dir, attrs);
-=20
-@@ -370,10 +379,18 @@ void *dma_unmap_single_attrs_desc(struct device *dev,=
- dma_addr_t addr,
- 	const struct dma_map_ops *ops =3D get_dma_ops(dev);
- 	void *ptr =3D NULL;
-=20
--	if (dma_is_direct(ops))
--		ptr =3D phys_to_virt(dma_to_phys(dev, addr));
--	else if (ops && ops->get_virt_addr)
-+	if (dma_is_direct(ops)) {
-+		phys_addr_t phys =3D dma_to_phys(dev, addr);
++#define IMX_SCU_CLK_END					198
 +
-+		if (is_swiotlb_buffer(phys)) {
-+			phys =3D swiotlb_get_orig_phys(phys);
-+			ptr =3D phys =3D=3D PHYS_ADDR_MAX ? NULL : phys_to_virt(phys);
-+		} else {
-+			ptr =3D phys_to_virt(phys);
-+		}
-+	} else if (ops && ops->get_virt_addr) {
- 		ptr =3D ops->get_virt_addr(dev, addr);
-+	}
-=20
- 	dma_unmap_single_attrs(dev, addr, size, dir, attrs);
-=20
-@@ -387,10 +404,18 @@ void *dma_sync_single_for_cpu_desc(struct device *dev=
-, dma_addr_t addr,
- 	const struct dma_map_ops *ops =3D get_dma_ops(dev);
- 	void *ptr =3D NULL;
-=20
--	if (dma_is_direct(ops))
--		ptr =3D phys_to_virt(dma_to_phys(dev, addr));
--	else if (ops && ops->get_virt_addr)
-+	if (dma_is_direct(ops)) {
-+		phys_addr_t phys =3D dma_to_phys(dev, addr);
++#define IMX_ADMA_ACM_AUD_CLK0_SEL			0
++#define IMX_ADMA_ACM_AUD_CLK0_CLK			1
++#define IMX_ADMA_ACM_AUD_CLK1_SEL			2
++#define IMX_ADMA_ACM_AUD_CLK1_CLK			3
++#define IMX_ADMA_ACM_MCLKOUT0_SEL			4
++#define IMX_ADMA_ACM_MCLKOUT1_SEL			5
++#define IMX_ADMA_ACM_ESAI0_MCLK_SEL			6
++#define IMX_ADMA_ACM_GPT0_MUX_CLK_SEL			7
++#define IMX_ADMA_ACM_GPT1_MUX_CLK_SEL			8
++#define IMX_ADMA_ACM_GPT2_MUX_CLK_SEL			9
++#define IMX_ADMA_ACM_GPT3_MUX_CLK_SEL			10
++#define IMX_ADMA_ACM_GPT4_MUX_CLK_SEL			11
++#define IMX_ADMA_ACM_GPT5_MUX_CLK_SEL			12
++#define IMX_ADMA_ACM_SAI0_MCLK_SEL			13
++#define IMX_ADMA_ACM_SAI1_MCLK_SEL			14
++#define IMX_ADMA_ACM_SAI2_MCLK_SEL			15
++#define IMX_ADMA_ACM_SAI3_MCLK_SEL			16
++#define IMX_ADMA_ACM_SAI4_MCLK_SEL			17
++#define IMX_ADMA_ACM_SAI5_MCLK_SEL			18
++#define IMX_ADMA_ACM_SPDIF0_TX_CLK_SEL			19
++#define IMX_ADMA_ACM_MQS_TX_CLK_SEL			20
++#define IMX_ADMA_ACM_ASRC0_MUX_CLK_SEL			21
++#define IMX_ADMA_ACM_ASRC1_MUX_CLK_SEL			22
 +
-+		if (is_swiotlb_buffer(phys)) {
-+			phys =3D swiotlb_get_orig_phys(phys);
-+			ptr =3D phys =3D=3D PHYS_ADDR_MAX ? NULL : phys_to_virt(phys);
-+		} else {
-+			ptr =3D phys_to_virt(phys);
-+		}
-+	} else if (ops && ops->get_virt_addr) {
- 		ptr =3D ops->get_virt_addr(dev, addr);
-+	}
-=20
- 	dma_sync_single_for_cpu(dev, addr, size, dir);
-=20
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 673a2cdb2656..9b241cc0535b 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -701,6 +701,14 @@ bool is_swiotlb_active(void)
- 	return io_tlb_end !=3D 0;
- }
-=20
-+phys_addr_t swiotlb_get_orig_phys(phys_addr_t tlb_addr)
-+{
-+	int index =3D (tlb_addr - io_tlb_start) >> IO_TLB_SHIFT;
-+	phys_addr_t phys =3D io_tlb_orig_addr[index];
++#define IMX_ADMA_EXT_AUD_MCLK0				23
++#define IMX_ADMA_EXT_AUD_MCLK1				24
++#define IMX_ADMA_ESAI0_RX_CLK				25
++#define IMX_ADMA_ESAI0_RX_HF_CLK			26
++#define IMX_ADMA_ESAI0_TX_CLK				27
++#define IMX_ADMA_ESAI0_TX_HF_CLK			28
++#define IMX_ADMA_SPDIF0_RX				29
++#define IMX_ADMA_SAI0_RX_BCLK				30
++#define IMX_ADMA_SAI0_TX_BCLK				31
++#define IMX_ADMA_SAI1_RX_BCLK				32
++#define IMX_ADMA_SAI1_TX_BCLK				33
++#define IMX_ADMA_SAI2_RX_BCLK				34
++#define IMX_ADMA_SAI3_RX_BCLK				35
++#define IMX_ADMA_SAI4_RX_BCLK				36
 +
-+	return phys =3D=3D INVALID_PHYS_ADDR ? PHYS_ADDR_MAX : phys;
-+}
-+
- #ifdef CONFIG_DEBUG_FS
++#define IMX_ADMA_ACM_CLK_END				37
 =20
- static int __init swiotlb_create_debugfs(void)
+ /* LPCG clocks */
+=20
+@@ -287,7 +340,46 @@
+ #define IMX_ADMA_LPCG_DSP_IPG_CLK			42
+ #define IMX_ADMA_LPCG_DSP_CORE_CLK			43
+ #define IMX_ADMA_LPCG_OCRAM_IPG_CLK			44
++#define IMX_ADMA_LPCG_AMIX_IPG_CLK			45
++#define IMX_ADMA_LPCG_ESAI_0_IPG_CLK			46
++#define IMX_ADMA_LPCG_ESAI_0_EXTAL_CLK			47
++#define IMX_ADMA_LPCG_SAI_0_IPG_CLK			48
++#define IMX_ADMA_LPCG_SAI_0_MCLK			49
++#define IMX_ADMA_LPCG_SAI_1_IPG_CLK			50
++#define IMX_ADMA_LPCG_SAI_1_MCLK			51
++#define IMX_ADMA_LPCG_SAI_2_IPG_CLK			52
++#define IMX_ADMA_LPCG_SAI_2_MCLK			53
++#define IMX_ADMA_LPCG_SAI_3_IPG_CLK			54
++#define IMX_ADMA_LPCG_SAI_3_MCLK			55
++#define IMX_ADMA_LPCG_SAI_4_IPG_CLK			56
++#define IMX_ADMA_LPCG_SAI_4_MCLK			57
++#define IMX_ADMA_LPCG_SAI_5_IPG_CLK			58
++#define IMX_ADMA_LPCG_SAI_5_MCLK			59
++#define IMX_ADMA_LPCG_MQS_IPG_CLK			60
++#define IMX_ADMA_LPCG_MQS_MCLK				61
++#define IMX_ADMA_LPCG_GPT5_IPG_CLK			62
++#define IMX_ADMA_LPCG_GPT5_CLKIN			63
++#define IMX_ADMA_LPCG_GPT6_IPG_CLK			64
++#define IMX_ADMA_LPCG_GPT6_CLKIN			65
++#define IMX_ADMA_LPCG_GPT7_IPG_CLK			66
++#define IMX_ADMA_LPCG_GPT7_CLKIN			67
++#define IMX_ADMA_LPCG_GPT8_IPG_CLK			68
++#define IMX_ADMA_LPCG_GPT8_CLKIN			69
++#define IMX_ADMA_LPCG_GPT9_IPG_CLK			70
++#define IMX_ADMA_LPCG_GPT9_CLKIN			71
++#define IMX_ADMA_LPCG_GPT10_IPG_CLK			72
++#define IMX_ADMA_LPCG_GPT10_CLKIN			73
++#define IMX_ADMA_LPCG_MCLKOUT0				74
++#define IMX_ADMA_LPCG_MCLKOUT1				75
++#define IMX_ADMA_LPCG_SPDIF_0_TX_CLK			76
++#define IMX_ADMA_LPCG_SPDIF_0_GCLKW			77
++#define IMX_ADMA_LPCG_ASRC_0_IPG_CLK			79
++#define IMX_ADMA_LPCG_ASRC_1_IPG_CLK			80
++#define IMX_ADMA_LPCG_AUD_PLL_DIV_CLK0_CLK		81
++#define IMX_ADMA_LPCG_AUD_PLL_DIV_CLK1_CLK		82
++#define IMX_ADMA_LPCG_AUD_REC_CLK0_CLK			83
++#define IMX_ADMA_LPCG_AUD_REC_CLK1_CLK			84
+=20
+-#define IMX_ADMA_LPCG_CLK_END				45
++#define IMX_ADMA_LPCG_CLK_END				85
+=20
+ #endif /* __DT_BINDINGS_CLOCK_IMX_H */
 --=20
-2.17.1
+2.7.4
 
