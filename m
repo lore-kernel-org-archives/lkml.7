@@ -2,97 +2,132 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EC5C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B28AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B935F206CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4DD206CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573678216;
+	bh=Ql3fZa5rjGs7bJMRPqP+fBp7TGA4vnJttL2bmp5cfp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UABz5LyiQWiAek01SQBVEfuVeO0HCCpXdcV4qJDpD2Vm7Rq49ieHlfkFays2ibcRV
+	 u3Esxmp2JT4jMrNzJB+AZ8sOLxUETPp215O+zWDEBXf9ANck0EgXqYbe21548xLbub
+	 8DbHgmedntYOi8uQ9ZcOxxmtKyj/AMgXZ8J2mbDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKMUsf (ORCPT
+        id S1726521AbfKMUuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:48:35 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:40497 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfKMUsf (ORCPT
+        Wed, 13 Nov 2019 15:50:14 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46343 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMUuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:48:35 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MKc0o-1iA0o20C4a-00Kyzz for <linux-kernel@vger.kernel.org>; Wed, 13 Nov
- 2019 21:48:34 +0100
-Received: by mail-qk1-f174.google.com with SMTP id 71so3058489qkl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:48:33 -0800 (PST)
-X-Gm-Message-State: APjAAAVnwXqkTUfvYKl2A2QGdT/mxRp1vj+bWx5SoCUMA5lYvrr3KXt0
-        2p+LM6KhTOOd4cqU0CntakH5ukUaYCCqlK2Jgpw=
-X-Google-Smtp-Source: APXvYqx7UkBV/kC0is9Dpo8dDdWGF+Zki5016/BoG73dW6kFhspK8vxYn64om37wWSVD3T/yekPlGM3LvP76mG8ZG74=
-X-Received: by 2002:a37:4f13:: with SMTP id d19mr890459qkb.138.1573678112912;
- Wed, 13 Nov 2019 12:48:32 -0800 (PST)
+        Wed, 13 Nov 2019 15:50:13 -0500
+Received: by mail-pl1-f196.google.com with SMTP id l4so1550231plt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:50:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YgE8GLdWFRrNduFilK05nhw+7cZeX1cpxR2N/wuTFX4=;
+        b=m16O6WDgRnJblyl5k+V2Jt0QIK5SUhKRrn9iptcLY7x7fhv6lhM/HWlGKSGBkEuHbI
+         ZJL5etjrd/zDtlh2gWvXS6Npy4Zu3xzKj45S61gFzomFsxBXfDI1A1FgRpKFVLwk9WDg
+         OZEoPJfrI/4iqdk6A3zfgawR65bKmkdfSmNn6MrGgiafPC+LfZaPrPU5+OSo7RMnDRMD
+         RlNCLF7b2xIDXK6fztzP/deFJV/3zXiRyq32RVLmquUmaGvXFrKqZDM6WsTosbPbi5dl
+         7jx9tLAAMvq+MszUS5FLqf7a0Rz6lhelMuXG54iPwDwwL698Z7ewt6fwE7Ky6jfiv1cY
+         mXJA==
+X-Gm-Message-State: APjAAAXIvS+tWcmAOHLlrXk2k7Dtytpz8n8cMZv25KR+CXD744AJWWPs
+        BFuz3CqTc+O3ikbEKpmacf/ylm3d
+X-Google-Smtp-Source: APXvYqzcy4vcwh2whp5snayHmR1i0yy6l2QEz0WLFeJ7GQf6KN0AvGdbSJ7SaBEIKNMSk/rgwnXxqg==
+X-Received: by 2002:a17:902:24b:: with SMTP id 69mr5648838plc.203.1573678212948;
+        Wed, 13 Nov 2019 12:50:12 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id w62sm4464327pfb.15.2019.11.13.12.50.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 12:50:11 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id C065C403DC; Wed, 13 Nov 2019 20:50:10 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 20:50:10 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Robin H. Johnson" <robbat2@gentoo.org>
+Cc:     Drew DeVault <sir@cmpwn.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        " Rafael J. Wysocki" <rafael@kernel.org>,
+        ~sircmpwn/public-inbox@lists.sr.ht
+Subject: Re: [PATCH v2] firmware loader: log path to loaded firmwares
+Message-ID: <20191113205010.GY11244@42.do-not-panic.com>
+References: <20191103180646.34880-1-sir@cmpwn.com>
+ <20191113005628.GT11244@42.do-not-panic.com>
+ <robbat2-20191113T195158-869302266Z@orbis-terrarum.net>
 MIME-Version: 1.0
-References: <20191112151642.680072-1-arnd@arndb.de> <s5hk1847rvm.wl-tiwai@suse.de>
- <CAK8P3a2TMEUhzxH7RKvAW9STk33KrbCriUaQawOMffoFC6UTQw@mail.gmail.com>
- <s5hzhgzn304.wl-tiwai@suse.de> <CAK8P3a3n9hrb-qfAYW9=eYApSX=pkOK5p6iGe0T29-KqGuh0tg@mail.gmail.com>
- <s5hy2wjn1w2.wl-tiwai@suse.de> <CAK8P3a2+DgOBXS9MmPfvyyCUmqMB-pOx-qLjTV-VjDgStP6tww@mail.gmail.com>
- <s5h1rub7ih0.wl-tiwai@suse.de>
-In-Reply-To: <s5h1rub7ih0.wl-tiwai@suse.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 13 Nov 2019 21:48:16 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0zNKyauCpZKoXuAeFmpJ-LAY8XhzwhxhMNAJsdbYdKAA@mail.gmail.com>
-Message-ID: <CAK8P3a0zNKyauCpZKoXuAeFmpJ-LAY8XhzwhxhMNAJsdbYdKAA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/8] Fix year 2038 issue for sound subsystem
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:RsmOEuqQRrcLGDI3e8ncqYwU1tV8Yd/hm85UT5acOEKyOM13Vi3
- oAzOScpu6h/B0xVhSbj+QW48881gmJe2irSyGREWC5tLGR3sIg7+C7WpOBcbPZCsUiqhPsO
- yrka+kuUrQSsVe+LFWmYXle5nz83EQ6bpRbXu8ncNV4u5C2YTbRn2lmJZ8BXTm9PEyuFu0M
- g98RS0pMdeu7bXz5O6DeQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:x3+RCMhxqKs=:VCQuXMuWnG+CSWtIiTOCRX
- FC/HX/wVvxPU8ccKm7g4NWt5k0R6scggkp2QDdGl94BldGxg1g17GlNYqms/jaWswowuJn0L/
- q8FmK0kM0SU6hzlm1vZoPsyUrjuZruHNtHwx/IaQNnA5FCTqWzJuZc8R29gfb0SiPeM89oAv2
- h6aFjRC0GmU8bKRkalBcBcfZLG56MjgLmTWdLUI8AwJZOcUyM8bYjTTbApiAURGCh74AlyL8n
- PmomOkPsMoIa7L9A8fcBIJFiWbhaACkx+CfFAlnpE2/4PJ+e474mQ5o57fxjqoJR1yq61kl2O
- I96lgujG8N3lE21NJxha20y0GH3rGJvD5Yxnze8ubnGUD97kpXhzpMgnqsxZfXiL+K1/jiFAR
- Ce+NqfK0HQmHayetx3nwRN3fFjhRhZips0Cw8bchcdtFix9Jzh6DHDU4Ym6nzNl1RcxxJeBrH
- BcrgJtBqMXm4+2dy6k4+7yN1YFXP9HjQ7a8oeWq8dSB3fHEgpSlAAVQPkWuOcc5DNskl/pujS
- yw/4NXd/5fmZU4mqKyC6pmV0kQ6EhL+0skjaEBbUTk8acyWOBl0oDSWHjidJFbnG508YfTkXB
- V+KjfN/fVAhn4pDHUx6oP+XEYU+nOJ0E1wC2RctabKeU1pvhPuP7FnlSHDP9bAZfNg9kG2AwE
- McMvPSC6McxoilapMy+2HCGvsdR9ifXo5kp/3bxsEMHsmVpPbYJytsMq0IgCjSknuDO0DbKLE
- b+Danyd64OGqazd7QLbypUSEjclRFLDpT7Fctp/ykMIZkJWkOYJ6CUIIRVkGFeu32BnFWptGq
- 8TOi8J9mRt47N8CaV3tTltwvHnSqhnPh5Ui22O0dKwzD2GyCL4eMMx03wUBxEcsbPtNcx447k
- MXHxLeQjhmAoIDUoK5+Q==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
+Content-Disposition: inline
+In-Reply-To: <robbat2-20191113T195158-869302266Z@orbis-terrarum.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 7:13 PM Takashi Iwai <tiwai@suse.de> wrote:
-> On Wed, 13 Nov 2019 18:19:56 +0100, Arnd Bergmann wrote:
-> > On Wed, Nov 13, 2019 at 6:04 PM Takashi Iwai <tiwai@suse.de> wrote:
-> > > I don't mind much about that, so it's up to you -- we can fold this
-> > > change into the patch that actually adds or modifies the ioctl, too.
-> >
-> > I've added the patch below to the end of the series now, will repost
-> > the series  after no more comments come in for this version.
-> > Having a single patch to update the version seems better than updating
-> > it multiple times with each patch touching the ABI in this series.
->
-> I wasn't clear enough.  Each ALSA device API has a protocol version,
-> not only PCM, so we need updating SNDRV_RAWMIDI_VERSION and
-> SNDRV_TIMER_VERSION as well.
 
-Ok, I see. I've updated the patch to include all three, and adapted the
-changelog text. There are still multiple changes for the PCM interface,
-so this avoids having the version number change attached to half the
-code changes.
+--Kj7319i9nmIyA2yE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-     Arnd
+On Wed, Nov 13, 2019 at 08:19:07PM +0000, Robin H. Johnson wrote:
+> I have two uses cases overall:
+> - log so you know exactly when it's loaded successfully (great if
+>   loading a firmware causes your system to lock up a few seconds later)
+
+Then you can change the driver to confirm this, not impose every driver
+to do the same.
+
+> - at some point in the future, being able to query what firmware was
+>   loaded in the past, and esp. exactly what version/data was in that
+>   firmware file.
+
+Firmware data is opaque to the firmware loader, as such details to
+extract generic information about firmware details can only be done
+by the driver, which could decode the firmware information. Many
+drivers print these details themselves already, if they want it.
+
+A generic interface to let us query *all* devices and currently loaded
+firmware through the firmware loader would only be possible today for
+firmware which requests (the default) caching of firmware upon
+suspend/resume given that we keep the device / firmware name pair
+around prior to suspend. For those devices it could be possible to
+extend the firmware loader with a driver callback which can extract
+firmware details in a generic codified way. To support *all* drivers
+though, in a more clean way for this, a separate but similar list
+could be kept which enables one to do this. Such items would be
+torn down upon driver removal. But that would then be an opt-in
+new mechanism.
+
+  Luis
+
+--Kj7319i9nmIyA2yE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEENnNq2KuOejlQLZofziMdCjCSiKcFAl3MbHsACgkQziMdCjCS
+iKd3Nw//RxzcY2Mjyw2f+UtCBV8rIRfl5oyu4HTDDyy0DnCjL0zBQtWqIdTkP4oI
+jYd6QnYDRO929sBkagad6c5tWTKd9kup8cpyrpZsRZ/FtYoo/0QC/Jyww1pea2gJ
+J/aKwHpBti4lKTz5dwqWM5Vh2EVyMhQmNeMYQiXc03FhGDaFa6RRIjdkWsTQdfjK
+rIIj2dWiquzVwUadro4TfLPU2ZLd06vBwG7dO1FSd7IPlFMxslz+uyH2udND2NTf
+hEZXonNrgoDm6nfv8ZrQWRVQdb2efg5d2K5EAWS2HWz6dzemL7FFJaSxtKf9Gbsi
+c4cdpWGKBKsQmGSG7+Cylu2W0qQvYFzYlKVb37s8eozWPRfQPh0P9KY/QHqrPXtv
+avQe72l1uht70/LwBP7Q8BT1UqberV/waqqY5xLRjyntOkUnUbgyf3ztUMGZTvTj
+YlBVil3fpLzWtgIL527toPD+49ntQ1c0+sxryvlUg8LfWm4VxmT4aJKfIYMLIvbR
+49qy/ouUqmz4iL3h0KplqEVnVvTHRdbY4DZ0DOfcT2DRc4sCjqjKDJ0odrskuNDf
+rHnTqjU0QasgMOeIhXQLoiUK7wr1fWJZ4/JIet2sewi9UNPhEvPMtQLC7TzXppfF
+7fj2/ZxjdKh1Gxe+KDm2M0omMj4bqJJJMny4da+yftmBY7fzJqk=
+=sLKK
+-----END PGP SIGNATURE-----
+
+--Kj7319i9nmIyA2yE--
