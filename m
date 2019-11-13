@@ -2,119 +2,243 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69523C33C8C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E47C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8EC206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573670710;
-	bh=2mHktS8n2bykBf/7+ImIIlHIEX0Wb12mo7wQ2MjiLBk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g0tz2NN/eIcrizzi415DpbHYtazFAsP+BcxRusgi8gXUit+Ut2XWOuXBzNPnsj1h7
-	 SHRqUoAWnTSb0xCHukFwWT7ZD7iXjLiiXqOywdl1+XehyDzvEWhXgHd11ivSgya7K5
-	 /aRcQvEwuTFlyTt3UVTUWCp8DduQMqlUJN6fB+Pg=
+	by mail.kernel.org (Postfix) with ESMTP id 289D1206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="a7A+dcs4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbfKMSpI (ORCPT
+        id S1728389AbfKMSqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:45:08 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35021 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfKMSpI (ORCPT
+        Wed, 13 Nov 2019 13:46:02 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37306 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbfKMSqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:45:08 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q13so2242802pff.2;
-        Wed, 13 Nov 2019 10:45:07 -0800 (PST)
+        Wed, 13 Nov 2019 13:46:01 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d5so2554818otp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:46:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cT4Ynp7AABnbetkKbYtY9L84HJMiir4x9aUvgO3qIkA=;
+        b=a7A+dcs4qLyRwykFz5P8aF/5gHL9KK36xtIfXVr/kBk3uPlOEckoeys38y+nnoealE
+         xzZU97hBkbVqSDW3gJxcm8meBZzrkQaKb0fOpplJk89VtBOEN/d/rvjF/p1FfJJqTTXv
+         4RFlHCPjmONBQGpTT3WPud0MHuI1arLibsaS9qkCPzQA4NQZsJVxDT/hq2PSgxZUbK6j
+         hmavUnr3qxAC5dpB11ue+Kc8RjftT0go7LTB3CRWT06X6W6/Vr35u8YiRNHJv46YGe1d
+         7YKSAbhOh/ee5b8uqRA8DDWS3/IOwVUmAGMREeaTodHgoCOvb7Na9VVd6Z5oKT3OMDr8
+         TTJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ytOa/TRpYZHcXnwihJ6zpPIzYpkWSN253EE1mDAjXKo=;
-        b=sQyexlwAOOOOJjs6JytY1RmDs1L97RiDZ4+TprM0G9qxAsmXXJ/vdBH953oW7QdsDx
-         nCNQhPIy6ef6r+JRrQqFjaUYwxnXf8Dum7BAYt/z7spYKiqP1l8vIOQ40FpcAKiJ7RL4
-         /DU38NeMr6Q8p0nLWTzRk80RmpLfp55SvVHVRx/TwN92Bip/AD5XNVE1MV86gN3BJg17
-         uILcZ45cavMR9WAeTwbbedH2I+9dCNrcrXa0BLGhgLiUer6RF3/1ZfYK+0dPlAbgDqDx
-         xNwlWKSUf4vn4K4I6DDAhtkuOaLuG48ttn5w+ukMyUG76VgW6uxfdSLsWs/vRVulqF3f
-         313Q==
-X-Gm-Message-State: APjAAAWwZTnuWB4yOxVq/N5lKqLhof9JpeJP6Y6pcoAlkj9QJ5ndUIEX
-        XGlMa/wt/ZIQTH6fOkVbxTY=
-X-Google-Smtp-Source: APXvYqw6X5AwWUNGodgFhZ6+c75EuWASAsRsHY14mdl8no689akd+8+9HvchuIg7nCAOCno/VfHAOg==
-X-Received: by 2002:aa7:9d8b:: with SMTP id f11mr6212536pfq.20.1573670707173;
-        Wed, 13 Nov 2019 10:45:07 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 21sm4273627pfa.170.2019.11.13.10.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 10:45:06 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 68732403DC; Wed, 13 Nov 2019 18:45:05 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 18:45:05 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Juergen Gross <jgross@suse.com>,
-        Tuowen Zhao <ztuowen@gmail.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Roman Gilg <subdiff@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Luis R. Rodriguez" <mcgrof@suse.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] video: fbdev: atyfb: only use ioremap_uc() on i386 and
- ia64
-Message-ID: <20191113184505.GW11244@42.do-not-panic.com>
-References: <20191111192258.2234502-1-arnd@arndb.de>
- <20191112105507.GA7122@lst.de>
- <CAKMK7uEEz1n+zuTs29rbPHU74Dspaib=prpMge63L_-rUk_o4A@mail.gmail.com>
- <20191112140631.GA10922@lst.de>
- <CAKMK7uFaA607rOS6x_FWjXQ2+Qdm8dQ1dQ+Oi-9if_Qh_wHWPg@mail.gmail.com>
- <20191112222423.GO11244@42.do-not-panic.com>
- <20191113072708.GA3213@lst.de>
- <CAK8P3a3OpiWAep86tOiN1Fj2W7ud5hQ1OLTkBR8ueAKsMHk-dA@mail.gmail.com>
- <20191113093154.GB32742@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cT4Ynp7AABnbetkKbYtY9L84HJMiir4x9aUvgO3qIkA=;
+        b=gyzX8SDruSxIdOKS7HwFR338K2fTcvTfMznVywzB38w42xqAtSHtjgXTkPdK4/TGeH
+         zt1kkmmzoCpMtIDOZ4ZYvpiNEqEpQ5ZYQuouA9bdqoqZtFZ0cRPHVEZZiGynoNKw+zw6
+         wmkYMfy4kzX0l2MKRoPCv/1ElAcYaWdF5YkTw2ZzKuW6d7Am1SIf7Dq9mlbBm6WCOENf
+         QxDNKR45Dyx4VTpMSa/Xl7SdpiAG6sAvB9G05EFMI3ny/CJu2PwHTD6doJ5pI4tRCUKa
+         g6SFi4+nSFU6GSEJtiJqHwepToR1LGyVNkKwrjH2+hVb6DNt5XxTAEwilxDMU0kjFXHB
+         j9Aw==
+X-Gm-Message-State: APjAAAWscXzE2aVx3BUeUTTvDsfISAoZoRhHKi7a6shKxQ8Zt/iSzYrB
+        Zwa4v+NdzBxwXkHEgtr96fk0BHt2eztbxlmCiT6ucg==
+X-Google-Smtp-Source: APXvYqyPn+rDZrNle0VfTIMlvvY+/KynBCjFHBDHqyFwY/x5q0B2O33H3JfKZdicH8PxUo9GG3nCazg6kogrLq1IvZ4=
+X-Received: by 2002:a05:6830:1af7:: with SMTP id c23mr4066831otd.247.1573670761142;
+ Wed, 13 Nov 2019 10:46:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113093154.GB32742@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191113042710.3997854-1-jhubbard@nvidia.com> <20191113042710.3997854-10-jhubbard@nvidia.com>
+ <20191113104308.GE6367@quack2.suse.cz>
+In-Reply-To: <20191113104308.GE6367@quack2.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Nov 2019 10:45:49 -0800
+Message-ID: <CAPcyv4gJbmf9aRU_5_umiE7GvTWG1D+zkCMNxrU=LYn-n0arNA@mail.gmail.com>
+Subject: Re: [PATCH v4 09/23] mm/gup: introduce pin_user_pages*() and FOLL_PIN
+To:     Jan Kara <jack@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:31:54AM +0200, Andy Shevchenko wrote:
-> On Wed, Nov 13, 2019 at 08:38:15AM +0100, Arnd Bergmann wrote:
-> > On Wed, Nov 13, 2019 at 8:27 AM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > On Tue, Nov 12, 2019 at 10:24:23PM +0000, Luis Chamberlain wrote:
-> > > > I think this would be possible if we could flop ioremap_nocache() to UC
-> > > > instead of UC- on x86. Otherwise, I can't see how we can remove this by
-> > > > still not allowing direct MTRR calls.
-> > >
-> > > If everything goes well ioremap_nocache will be gone as of 5.5.
-> > 
-> > As ioremap_nocache() just an alias for ioremap(), I suppose the idea would
-> > then be to make x86 ioremap be UC instead of UC-, again matching what the
-> > other architectures do already.
-> 
-> I think it's right thing to do, i.e. assume that ioremap() always does strong
-> UC independently on MTRR settings.
+On Wed, Nov 13, 2019 at 2:43 AM Jan Kara <jack@suse.cz> wrote:
+>
+> On Tue 12-11-19 20:26:56, John Hubbard wrote:
+> > Introduce pin_user_pages*() variations of get_user_pages*() calls,
+> > and also pin_longterm_pages*() variations.
+> >
+> > These variants all set FOLL_PIN, which is also introduced, and
+> > thoroughly documented.
+> >
+> > The pin_longterm*() variants also set FOLL_LONGTERM, in addition
+> > to FOLL_PIN:
+> >
+> >     pin_user_pages()
+> >     pin_user_pages_remote()
+> >     pin_user_pages_fast()
+> >
+> >     pin_longterm_pages()
+> >     pin_longterm_pages_remote()
+> >     pin_longterm_pages_fast()
+> >
+> > All pages that are pinned via the above calls, must be unpinned via
+> > put_user_page().
+> >
+> > The underlying rules are:
+> >
+> > * These are gup-internal flags, so the call sites should not directly
+> > set FOLL_PIN nor FOLL_LONGTERM. That behavior is enforced with
+> > assertions, for the new FOLL_PIN flag. However, for the pre-existing
+> > FOLL_LONGTERM flag, which has some call sites that still directly
+> > set FOLL_LONGTERM, there is no assertion yet.
+> >
+> > * Call sites that want to indicate that they are going to do DirectIO
+> >   ("DIO") or something with similar characteristics, should call a
+> >   get_user_pages()-like wrapper call that sets FOLL_PIN. These wrappers
+> >   will:
+> >         * Start with "pin_user_pages" instead of "get_user_pages". That
+> >           makes it easy to find and audit the call sites.
+> >         * Set FOLL_PIN
+> >
+> > * For pages that are received via FOLL_PIN, those pages must be returne=
+d
+> >   via put_user_page().
+> >
+> > Thanks to Jan Kara and Vlastimil Babka for explaining the 4 cases
+> > in this documentation. (I've reworded it and expanded upon it.)
+> >
+> > Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>  # Documentation
+> > Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>
+> Thanks for the documentation. It looks great!
+>
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 83702b2e86c8..4409e84dff51 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -201,6 +201,10 @@ static struct page *follow_page_pte(struct vm_area=
+_struct *vma,
+> >       spinlock_t *ptl;
+> >       pte_t *ptep, pte;
+> >
+> > +     /* FOLL_GET and FOLL_PIN are mutually exclusive. */
+> > +     if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) =3D=3D
+> > +                      (FOLL_PIN | FOLL_GET)))
+> > +             return ERR_PTR(-EINVAL);
+> >  retry:
+> >       if (unlikely(pmd_bad(*pmd)))
+> >               return no_page_table(vma, flags);
+>
+> How does FOLL_PIN result in grabbing (at least normal, for now) page refe=
+rence?
+> I didn't find that anywhere in this patch but it is a prerequisite to
+> converting any user to pin_user_pages() interface, right?
+>
+> > +/**
+> > + * pin_user_pages_fast() - pin user pages in memory without taking loc=
+ks
+> > + *
+> > + * Nearly the same as get_user_pages_fast(), except that FOLL_PIN is s=
+et. See
+> > + * get_user_pages_fast() for documentation on the function arguments, =
+because
+> > + * the arguments here are identical.
+> > + *
+> > + * FOLL_PIN means that the pages must be released via put_user_page().=
+ Please
+> > + * see Documentation/vm/pin_user_pages.rst for further details.
+> > + *
+> > + * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_page=
+s.rst. It
+> > + * is NOT intended for Case 2 (RDMA: long-term pins).
+> > + */
+> > +int pin_user_pages_fast(unsigned long start, int nr_pages,
+> > +                     unsigned int gup_flags, struct page **pages)
+> > +{
+> > +     /* FOLL_GET and FOLL_PIN are mutually exclusive. */
+> > +     if (WARN_ON_ONCE(gup_flags & FOLL_GET))
+> > +             return -EINVAL;
+> > +
+> > +     gup_flags |=3D FOLL_PIN;
+> > +     return internal_get_user_pages_fast(start, nr_pages, gup_flags, p=
+ages);
+> > +}
+> > +EXPORT_SYMBOL_GPL(pin_user_pages_fast);
+>
+> I was somewhat wondering about the number of functions you add here. So w=
+e
+> have:
+>
+> pin_user_pages()
+> pin_user_pages_fast()
+> pin_user_pages_remote()
+>
+> and then longterm variants:
+>
+> pin_longterm_pages()
+> pin_longterm_pages_fast()
+> pin_longterm_pages_remote()
+>
+> and obviously we have gup like:
+> get_user_pages()
+> get_user_pages_fast()
+> get_user_pages_remote()
+> ... and some other gup variants ...
+>
+> I think we really should have pin_* vs get_* variants as they are very
+> different in terms of guarantees and after conversion, any use of get_*
+> variant in non-mm code should be closely scrutinized. OTOH pin_longterm_*
+> don't look *that* useful to me and just using pin_* instead with
+> FOLL_LONGTERM flag would look OK to me and somewhat reduce the number of
+> functions which is already large enough? What do people think? I don't fe=
+el
+> too strongly about this but wanted to bring this up.
 
-Agreed wholeheartedly. What are the blockers from making that happen? Do
-we have any left?
-
-  Luis
+I'd vote for FOLL_LONGTERM should obviate the need for
+{get,pin}_user_pages_longterm(). It's a property that is passed by the
+call site, not an internal flag.
