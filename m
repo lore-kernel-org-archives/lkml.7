@@ -2,103 +2,101 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B30C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAB4C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C66E206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB89206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:57:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kDVOZLq3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8mPkt1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfKMUww (ORCPT
+        id S1726393AbfKMU5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:52:52 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:59488 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfKMUwv (ORCPT
+        Wed, 13 Nov 2019 15:57:05 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33233 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMU5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:52:51 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CC9B520B4901;
-        Wed, 13 Nov 2019 12:52:50 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CC9B520B4901
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573678370;
-        bh=fgQhQUz164u1Ek8QLM0DOcyCkmeH/6O7UhOsdVDDB+I=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=kDVOZLq3aB9m+A9OGzmuvC75nfcZhD/sjDjmXVT/MCU6x0biY6SEaTrpEujP6xAwB
-         aYUHatP8kZVdB3hXXZeUhsqNKD5UunWJIDrPEQJJgQfuQW+xr4eG1ir0dlWIsMuWM9
-         4oVdLgWug+n41qHO++J6sNXAptLa43mYGILzmBIw=
-Subject: Re: [PATCH v6 2/3] IMA: Define an IMA hook to measure keys
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191113184658.2862-1-nramas@linux.microsoft.com>
- <20191113184658.2862-3-nramas@linux.microsoft.com>
- <1573675761.4843.13.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <8eba665e-637c-d341-c77d-4f2645d3b246@linux.microsoft.com>
-Date:   Wed, 13 Nov 2019 12:52:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1573675761.4843.13.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 13 Nov 2019 15:57:05 -0500
+Received: by mail-qt1-f194.google.com with SMTP id y39so4222989qty.0;
+        Wed, 13 Nov 2019 12:57:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Kzg+cr/dhrJgO1piPaEyuVjoZZjMZrA15PeHen3UdLk=;
+        b=X8mPkt1ZPwhWdTiBFBZIdxjOQBH5ouQPaS7ooGnrnQyOJcHvgWpdTF25RTTSiBmSeI
+         VQvje+ClweqXmuLAJydKPlXEmovxHyfJKADlzpJ3yI0gAwdsePObf27dl9woJhiqZB3y
+         bRHDKNqPCbESjmqDXRM4ovcBCqTAbHACj4SEfhMWaByeHMhRaLvHuh3QTRkUONdBxaML
+         7Wui6zRaOXqphBoI61ggiZLixp3aQDxnIvAElonuD3SnOGcRzSR4qXq4Lcj+71K/ePLN
+         TUm3EfONQYXAIidpZkdvwxE5TXx++6BWhvAfVVeq+sBp7xu68Amfu+y+9JBH8aU/V894
+         i3yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Kzg+cr/dhrJgO1piPaEyuVjoZZjMZrA15PeHen3UdLk=;
+        b=LFHePliU4pJ+OSkK6P6MTFVj+W4hyfTq1Wcmt/W5kmpnUsOZuU0IAN2Gp7X2kq/ZZq
+         rujE44OHM2y0u/pSWdHeQ8YRBi0wAcNQwT6ewUCIvCOuhGd0/mOrVtyAzIvcInbY8BG9
+         kDSGTQpOOU1R7gx/pWkU4cyYOy1VU3VcMnEajKp1WcO5YLD9CCArfyd18+SuDPb0dahT
+         Q9ktWGzvJWVTeo26kGqZPz72U18LyQ2Cid7r2pX22tz1rQxXy88C6u1PwQqETY+HVhmE
+         ol+F7qh2SvgIT/7RgcN/Ff+5yTe5F2bFGLPiHFd8aHfGu4ztKmvm8Fys/uxrP3iw6B7F
+         Z6Dg==
+X-Gm-Message-State: APjAAAUnUGM8puxZWDxHPtaqC4BQjt28dkYgdtEAdCbxHJwHgeTx2unJ
+        NX/dtOcCRpJgN9gZOcHE6A==
+X-Google-Smtp-Source: APXvYqyGN52CkIGaKAaKnnTB25qDeA9XucxkFiqpm2S8rSpOIT+/ghaPhsN08FgFQpf7dKL3NIbjdw==
+X-Received: by 2002:aed:3282:: with SMTP id z2mr4932353qtd.221.1573678624271;
+        Wed, 13 Nov 2019 12:57:04 -0800 (PST)
+Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id h12sm1500140qkh.123.2019.11.13.12.57.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 12:57:03 -0800 (PST)
+From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi@vger.kernel.org
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org,
+        HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Subject: [PATCH] efi: sanity check in case memermap() at efi_mem_reserve_persistent() returns NULL
+Date:   Wed, 13 Nov 2019 15:56:30 -0500
+Message-Id: <20191113205630.28434-1-msys.mizuma@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 12:09 PM, Mimi Zohar wrote:
->
-> All that is is needed is the key and public_key structures, which are
-> defined in include/linux/keys.h and include/crypto/public_key.h.  If
-> the keys subsystem is disabled, then the new IMA hook won't be called.
->   There's no need for a new Kconfig option or a new file.
-> 
-> Please move the hook to just after ima_kexec_cmdline().
-> 
-> Mimi
+From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Yes - IMA hook won't be called when KEYS subsystem is disabled.
+System may crash as NULL pointer dereference in case memremap()
+at efi_mem_reserve_persistent() returns NULL.
 
-But, build dependency is breaking since "struct key" is not defined 
-without CONFIG_KEYS.
+Add a sanity check to avoid that.
 
-Sasha was able to craft a .config that enabled IMA without enabling KEYS 
-and found the build break.
+Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Reported-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ drivers/firmware/efi/efi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Please see the build output he'd shared.
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 07812d697..1d5ae7b95 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -1036,6 +1036,8 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+ 	/* first try to find a slot in an existing linked list entry */
+ 	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
+ 		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
++		if (!rsv)
++			return -ENOMEM;
+ 		index = atomic_fetch_add_unless(&rsv->count, 1, rsv->size);
+ 		if (index < rsv->size) {
+ 			rsv->entry[index].base = addr;
+-- 
+2.21.0
 
-***********************************************************************
-
-In file included from security/integrity/ima/ima.h:25,
-                 from security/integrity/ima/ima_fs.c:26:
-./include/keys/asymmetric-type.h: In function ‘asymmetric_key_ids’:
-./include/keys/asymmetric-type.h:72:12: error: dereferencing pointer to 
-incomplete type ‘const struct key’
-  return key->payload.data[asym_key_ids];
-            ^~
-make[3]: *** [scripts/Makefile.build:266: 
-security/integrity/ima/ima_fs.o] Error 1
-make[3]: *** Waiting for unfinished jobs....
-In file included from security/integrity/ima/ima.h:25,
-                 from security/integrity/ima/ima_queue.c:22:
-./include/keys/asymmetric-type.h: In function ‘asymmetric_key_ids’:
-./include/keys/asymmetric-type.h:72:12: error: dereferencing pointer to 
-incomplete type ‘const struct key’
-  return key->payload.data[asym_key_ids];
-
-***********************************************************************
-
-thanks,
-  -lakshmi
