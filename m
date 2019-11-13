@@ -2,191 +2,227 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E6CC33C9C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78B2C47421
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7CD238BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:08:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AEeDQ/81"
+	by mail.kernel.org (Postfix) with ESMTP id 894082247F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfKMQId (ORCPT
+        id S1727945AbfKMPi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:08:33 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35867 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfKMQIc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:08:32 -0500
-Received: by mail-il1-f196.google.com with SMTP id s75so2277659ilc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:08:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=tINJyD9ZJqGUt5nhIHMTf94A9voyZOjcobv6ep2N/gs=;
-        b=AEeDQ/816exn8z/BuE7ICwR3vGqrExw7UD2JblL+xKAehiwVm9Smfcw1BCfdTT7eAf
-         SrmYPPR7eGhteJg7Aa9Xph2D1OrWoTtFZYUxe3HkCutuw5JNbKd3UcG/WrOF+uGKDVvN
-         spjjzRQc0ZEgCUlWXQiqCIX6fMnnWjAtM1UpDFCmjpXY/w8WDJV99Vu4r7XK2PiDUsLq
-         3j4SVpOtiBr7HWw9/ZvyFabXWiDw1Lp6EOZYJtMp8P5hKwti90kiSrXzEHfivB8Ech//
-         9y2n1ND95Y7qyKIRmbPzinVSkvz5S4YYdJ1/O0JsXVnOSTQm5FZ94EvBaY5fANocVVhf
-         /Bfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tINJyD9ZJqGUt5nhIHMTf94A9voyZOjcobv6ep2N/gs=;
-        b=ZRu/+XqB3dS8JdOCZ4UQc78XFnhQjJaio6eolIMDL5mRuslspqxpWbEKz1mrEKI2UD
-         w91WUuR/pLR0SeBPDTXg4rXFgooDmKSXWGsWGHYkAy5Eg/1zBYfzEvsKEJR45E/9rsMx
-         Kl9hlafSI+FJJ+sjrC1SYusBgkR9sA3TLLWL93PhhS89EnmWZMLvYRwzNQVDc0O7XFOr
-         K5Gl1VFm/hCBfa2BqlAEvKVt+oicbD4a+FlMt2x5/bAzYU11RKVNXPtv3q9Iq34YT6FZ
-         FnpecSl3CicmOEvEllb7gJN5UTXaeu5AlSMkGkXVY44+rISt7NO/t4DbDgp2b+Kr2xDF
-         VcaQ==
-X-Gm-Message-State: APjAAAXQ47oMTVbIF7OGWXvr0G1dST071ykQo9OyDu06gRqNtFMDHlBf
-        7DVv7K6Igv4C3xrITMNWXJR4RQ==
-X-Google-Smtp-Source: APXvYqxKS0cv20/0h4BRXpygSpky7XSNR80ysphE4pwHuVmtFWtVc2j/imDRVXzHlyblnA1mbGvV4Q==
-X-Received: by 2002:a92:5fc2:: with SMTP id i63mr4409919ill.218.1573661311628;
-        Wed, 13 Nov 2019 08:08:31 -0800 (PST)
-Received: from [192.168.1.163] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id t68sm327142ilb.66.2019.11.13.08.08.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 08:08:30 -0800 (PST)
-Subject: Re: general protection fault in io_commit_cqring
-To:     syzbot <syzbot+21147d79607d724bd6f3@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <000000000000af7e9805973c6356@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ff3df506-7b2c-3af7-a6e5-2264ac12b1da@kernel.dk>
-Date:   Wed, 13 Nov 2019 09:08:29 -0700
+        Wed, 13 Nov 2019 10:38:27 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60096 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726335AbfKMPi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:38:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BC271B49B;
+        Wed, 13 Nov 2019 15:38:23 +0000 (UTC)
+Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
+To:     John Garry <john.garry@huawei.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "hare@suse.com" <hare@suse.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+ <1573652209-163505-4-git-send-email-john.garry@huawei.com>
+ <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
+ <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ mQINBE6KyREBEACwRN6XKClPtxPiABx5GW+Yr1snfhjzExxkTYaINHsWHlsLg13kiemsS6o7
+ qrc+XP8FmhcnCOts9e2jxZxtmpB652lxRB9jZE40mcSLvYLM7S6aH0WXKn8bOqpqOGJiY2bc
+ 6qz6rJuqkOx3YNuUgiAxjuoYauEl8dg4bzex3KGkGRuxzRlC8APjHlwmsr+ETxOLBfUoRNuE
+ b4nUtaseMPkNDwM4L9+n9cxpGbdwX0XwKFhlQMbG3rWA3YqQYWj1erKIPpgpfM64hwsdk9zZ
+ QO1krgfULH4poPQFpl2+yVeEMXtsSou915jn/51rBelXeLq+cjuK5+B/JZUXPnNDoxOG3j3V
+ VSZxkxLJ8RO1YamqZZbVP6jhDQ/bLcAI3EfjVbxhw9KWrh8MxTcmyJPn3QMMEp3wpVX9nSOQ
+ tzG72Up/Py67VQe0x8fqmu7R4MmddSbyqgHrab/Nu+ak6g2RRn3QHXAQ7PQUq55BDtj85hd9
+ W2iBiROhkZ/R+Q14cJkWhzaThN1sZ1zsfBNW0Im8OVn/J8bQUaS0a/NhpXJWv6J1ttkX3S0c
+ QUratRfX4D1viAwNgoS0Joq7xIQD+CfJTax7pPn9rT////hSqJYUoMXkEz5IcO+hptCH1HF3
+ qz77aA5njEBQrDRlslUBkCZ5P+QvZgJDy0C3xRGdg6ZVXEXJOQARAQABtCpIYW5uZXMgUmVp
+ bmVja2UgKFN1U0UgTGFicykgPGhhcmVAc3VzZS5kZT6JAkEEEwECACsCGwMFCRLMAwAGCwkI
+ BwMCBhUIAgkKCwQWAgMBAh4BAheABQJOisquAhkBAAoJEGz4yi9OyKjPOHoQAJLeLvr6JNHx
+ GPcHXaJLHQiinz2QP0/wtsT8+hE26dLzxb7hgxLafj9XlAXOG3FhGd+ySlQ5wSbbjdxNjgsq
+ FIjqQ88/Lk1NfnqG5aUTPmhEF+PzkPogEV7Pm5Q17ap22VK623MPaltEba+ly6/pGOODbKBH
+ ak3gqa7Gro5YCQzNU0QVtMpWyeGF7xQK76DY/atvAtuVPBJHER+RPIF7iv5J3/GFIfdrM+wS
+ BubFVDOibgM7UBnpa7aohZ9RgPkzJpzECsbmbttxYaiv8+EOwark4VjvOne8dRaj50qeyJH6
+ HLpBXZDJH5ZcYJPMgunghSqghgfuUsd5fHmjFr3hDb5EoqAfgiRMSDom7wLZ9TGtT6viDldv
+ hfWaIOD5UhpNYxfNgH6Y102gtMmN4o2P6g3UbZK1diH13s9DA5vI2mO2krGz2c5BOBmcctE5
+ iS+JWiCizOqia5Op+B/tUNye/YIXSC4oMR++Fgt30OEafB8twxydMAE3HmY+foawCpGq06yM
+ vAguLzvm7f6wAPesDAO9vxRNC5y7JeN4Kytl561ciTICmBR80Pdgs/Obj2DwM6dvHquQbQrU
+ Op4XtD3eGUW4qgD99DrMXqCcSXX/uay9kOG+fQBfK39jkPKZEuEV2QdpE4Pry36SUGfohSNq
+ xXW+bMc6P+irTT39VWFUJMcSuQINBE6KyREBEACvEJggkGC42huFAqJcOcLqnjK83t4TVwEn
+ JRisbY/VdeZIHTGtcGLqsALDzk+bEAcZapguzfp7cySzvuR6Hyq7hKEjEHAZmI/3IDc9nbdh
+ EgdCiFatah0XZ/p4vp7KAelYqbv8YF/ORLylAdLh9rzLR6yHFqVaR4WL4pl4kEWwFhNSHLxe
+ 55G56/dxBuoj4RrFoX3ynerXfbp4dH2KArPc0NfoamqebuGNfEQmDbtnCGE5zKcR0zvmXsRp
+ qU7+caufueZyLwjTU+y5p34U4PlOO2Q7/bdaPEdXfpgvSpWk1o3H36LvkPV/PGGDCLzaNn04
+ BdiiiPEHwoIjCXOAcR+4+eqM4TSwVpTn6SNgbHLjAhCwCDyggK+3qEGJph+WNtNU7uFfscSP
+ k4jqlxc8P+hn9IqaMWaeX9nBEaiKffR7OKjMdtFFnBRSXiW/kOKuuRdeDjL5gWJjY+IpdafP
+ KhjvUFtfSwGdrDUh3SvB5knSixE3qbxbhbNxmqDVzyzMwunFANujyyVizS31DnWC6tKzANkC
+ k15CyeFC6sFFu+WpRxvC6fzQTLI5CRGAB6FAxz8Hu5rpNNZHsbYs9Vfr/BJuSUfRI/12eOCL
+ IvxRPpmMOlcI4WDW3EDkzqNAXn5Onx/b0rFGFpM4GmSPriEJdBb4M4pSD6fN6Y/Jrng/Bdwk
+ SQARAQABiQIlBBgBAgAPBQJOiskRAhsMBQkSzAMAAAoJEGz4yi9OyKjPgEwQAIP/gy/Xqc1q
+ OpzfFScswk3CEoZWSqHxn/fZasa4IzkwhTUmukuIvRew+BzwvrTxhHcz9qQ8hX7iDPTZBcUt
+ ovWPxz+3XfbGqE+q0JunlIsP4N+K/I10nyoGdoFpMFMfDnAiMUiUatHRf9Wsif/nT6oRiPNJ
+ T0EbbeSyIYe+ZOMFfZBVGPqBCbe8YMI+JiZeez8L9JtegxQ6O3EMQ//1eoPJ5mv5lWXLFQfx
+ f4rAcKseM8DE6xs1+1AIsSIG6H+EE3tVm+GdCkBaVAZo2VMVapx9k8RMSlW7vlGEQsHtI0FT
+ c1XNOCGjaP4ITYUiOpfkh+N0nUZVRTxWnJqVPGZ2Nt7xCk7eoJWTSMWmodFlsKSgfblXVfdM
+ 9qoNScM3u0b9iYYuw/ijZ7VtYXFuQdh0XMM/V6zFrLnnhNmg0pnK6hO1LUgZlrxHwLZk5X8F
+ uD/0MCbPmsYUMHPuJd5dSLUFTlejVXIbKTSAMd0tDSP5Ms8Ds84z5eHreiy1ijatqRFWFJRp
+ ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
+ PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
+Date:   Wed, 13 Nov 2019 16:38:22 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <000000000000af7e9805973c6356@google.com>
+In-Reply-To: <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 8:55 AM, syzbot wrote:
-> Hello,
+On 11/13/19 3:57 PM, John Garry wrote:
+> On 13/11/2019 14:06, Hannes Reinecke wrote:
+>> On 11/13/19 2:36 PM, John Garry wrote:
+>>> Some SCSI HBAs (such as HPSA, megaraid, mpt3sas, hisi_sas_v3 ..) support
+>>> multiple reply queues with single hostwide tags.
+>>>
+>>> In addition, these drivers want to use interrupt assignment in
+>>> pci_alloc_irq_vectors(PCI_IRQ_AFFINITY). However, as discussed in [0],
+>>> CPU hotplug may cause in-flight IO completion to not be serviced when an
+>>> interrupt is shutdown.
+>>>
+>>> To solve that problem, Ming's patchset to drain hctx's should ensure no
+>>> IOs are missed in-flight [1].
+>>>
+>>> However, to take advantage of that patchset, we need to map the HBA HW
+>>> queues to blk mq hctx's; to do that, we need to expose the HBA HW
+>>> queues.
+>>>
+>>> In making that transition, the per-SCSI command request tags are no
+>>> longer unique per Scsi host - they are just unique per hctx. As such,
+>>> the
+>>> HBA LLDD would have to generate this tag internally, which has a certain
+>>> performance overhead.
+>>>
+>>> However another problem is that blk mq assumes the host may accept
+>>> (Scsi_host.can_queue * #hw queue) commands. In [2], we removed the Scsi
+>>> host busy counter, which would stop the LLDD being sent more than
+>>> .can_queue commands; however, we should still ensure that the block
+>>> layer
+>>> does not issue more than .can_queue commands to the Scsi host.
+>>>
+>>> To solve this problem, introduce a shared tags per blk_mq_tag_set, which
+>>> may be requested when allocating the tagset.
+>>>
+>>> New flag BLK_MQ_F_TAG_HCTX_SHARED should be set when requesting the
+>>> tagset.
+>>>
+>>> This is based on work originally from Ming Lei in [3].
+>>>
+>>> [0]
+>>> https://lore.kernel.org/linux-block/alpine.DEB.2.21.1904051331270.1802@nanos.tec.linutronix.de/
+>>>
+>>> [1]
+>>> https://lore.kernel.org/linux-block/20191014015043.25029-1-ming.lei@redhat.com/
+>>>
+>>> [2]
+>>> https://lore.kernel.org/linux-scsi/20191025065855.6309-1-ming.lei@redhat.com/
+>>>
+>>> [3]
+>>> https://lore.kernel.org/linux-block/20190531022801.10003-1-ming.lei@redhat.com/
+>>>
+>>>
+>>> Signed-off-by: John Garry <john.garry@huawei.com>
+>>> ---
+>>>   block/blk-core.c       |  1 +
+>>>   block/blk-flush.c      |  2 +
+>>>   block/blk-mq-debugfs.c |  2 +-
+>>>   block/blk-mq-tag.c     | 85 ++++++++++++++++++++++++++++++++++++++++++
+>>>   block/blk-mq-tag.h     |  1 +
+>>>   block/blk-mq.c         | 61 +++++++++++++++++++++++++-----
+>>>   block/blk-mq.h         |  9 +++++
+>>>   include/linux/blk-mq.h |  3 ++
+>>>   include/linux/blkdev.h |  1 +
+>>>   9 files changed, 155 insertions(+), 10 deletions(-)
+>>>
+>> [ .. ]
+>>> @@ -396,15 +398,17 @@ static struct request
+>>> *blk_mq_get_request(struct request_queue *q,
+>>>           blk_mq_tag_busy(data->hctx);
+>>>       }
+>>>   -    tag = blk_mq_get_tag(data);
+>>> -    if (tag == BLK_MQ_TAG_FAIL) {
+>>> -        if (clear_ctx_on_error)
+>>> -            data->ctx = NULL;
+>>> -        blk_queue_exit(q);
+>>> -        return NULL;
+>>> +    if (data->hctx->shared_tags) {
+>>> +        shared_tag = blk_mq_get_shared_tag(data);
+>>> +        if (shared_tag == BLK_MQ_TAG_FAIL)
+>>> +            goto err_shared_tag;
+>>>       }
+>>>   -    rq = blk_mq_rq_ctx_init(data, tag, data->cmd_flags,
+>>> alloc_time_ns);
+>>> +    tag = blk_mq_get_tag(data);
+>>> +    if (tag == BLK_MQ_TAG_FAIL)
+>>> +        goto err_tag;
+>>> +
+>>> +    rq = blk_mq_rq_ctx_init(data, tag, shared_tag, data->cmd_flags,
+>>> alloc_time_ns);
+>>>       if (!op_is_flush(data->cmd_flags)) {
+>>>           rq->elv.icq = NULL;
+>>>           if (e && e->type->ops.prepare_request) {
 > 
-> syzbot found the following crash on:
+> Hi Hannes,
 > 
-> HEAD commit:    4e8f108c Add linux-next specific files for 20191113
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=121ad2d2e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ace1bcdd76242fd2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=21147d79607d724bd6f3
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1649e706e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11397f72e00000
+>> Why do you need to keep a parallel tag accounting between 'normal' and
+>> 'shared' tags here?
+>> Isn't is sufficient to get a shared tag only, and us that in lieo of the
+>> 'real' one?
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+21147d79607d724bd6f3@syzkaller.appspotmail.com
+> In theory, yes. Just the 'shared' tag should be adequate.
 > 
-> RSP: 002b:00007ffd6e8aa078 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441229
-> RDX: 0000000000000002 RSI: 0000000020000140 RDI: 0000000000000d0d
-> RBP: 00007ffd6e8aa090 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
-> R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000000
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 8903 Comm: syz-executor410 Not tainted 5.4.0-rc7-next-20191113
-> #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-> RIP: 0010:__io_commit_cqring fs/io_uring.c:496 [inline]
-> RIP: 0010:io_commit_cqring+0x1e1/0xdb0 fs/io_uring.c:592
-> Code: 03 0f 8e df 09 00 00 48 8b 45 d0 4c 8d a3 c0 00 00 00 4c 89 e2 48 c1
-> ea 03 44 8b b8 c0 01 00 00 48 b8 00 00 00 00 00 fc ff df <0f> b6 14 02 4c
-> 89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 61
-> RSP: 0018:ffff88808f51fc08 EFLAGS: 00010006
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff815abe4a
-> RDX: 0000000000000018 RSI: ffffffff81d168d5 RDI: ffff8880a9166100
-> RBP: ffff88808f51fc70 R08: 0000000000000004 R09: ffffed1011ea3f7d
-> R10: ffffed1011ea3f7c R11: 0000000000000003 R12: 00000000000000c0
-> R13: ffff8880a91661c0 R14: 1ffff1101522cc10 R15: 0000000000000000
-> FS:  0000000001e7a880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000140 CR3: 000000009a74c000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->    io_cqring_overflow_flush+0x6b9/0xa90 fs/io_uring.c:673
->    io_ring_ctx_wait_and_kill+0x24f/0x7c0 fs/io_uring.c:4260
->    io_uring_create fs/io_uring.c:4600 [inline]
->    io_uring_setup+0x1256/0x1cc0 fs/io_uring.c:4626
->    __do_sys_io_uring_setup fs/io_uring.c:4639 [inline]
->    __se_sys_io_uring_setup fs/io_uring.c:4636 [inline]
->    __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:4636
->    do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x441229
-> Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffd6e8aa078 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441229
-> RDX: 0000000000000002 RSI: 0000000020000140 RDI: 0000000000000d0d
-> RBP: 00007ffd6e8aa090 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
-> R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000000
-> Modules linked in:
-> ---[ end trace b0f5b127a57f623f ]---
-> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-> RIP: 0010:__io_commit_cqring fs/io_uring.c:496 [inline]
-> RIP: 0010:io_commit_cqring+0x1e1/0xdb0 fs/io_uring.c:592
-> Code: 03 0f 8e df 09 00 00 48 8b 45 d0 4c 8d a3 c0 00 00 00 4c 89 e2 48 c1
-> ea 03 44 8b b8 c0 01 00 00 48 b8 00 00 00 00 00 fc ff df <0f> b6 14 02 4c
-> 89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 61
-> RSP: 0018:ffff88808f51fc08 EFLAGS: 00010006
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff815abe4a
-> RDX: 0000000000000018 RSI: ffffffff81d168d5 RDI: ffff8880a9166100
-> RBP: ffff88808f51fc70 R08: 0000000000000004 R09: ffffed1011ea3f7d
-> R10: ffffed1011ea3f7c R11: 0000000000000003 R12: 00000000000000c0
-> R13: ffff8880a91661c0 R14: 1ffff1101522cc10 R15: 0000000000000000
-> FS:  0000000001e7a880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000140 CR3: 000000009a74c000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> A problem I see with this approach is that we lose the identity of which
+> tags are allocated for each hctx. As an example for this, consider
+> blk_mq_queue_tag_busy_iter(), which iterates the bits for each hctx.
+> Now, if you're just using shared tags only, that wouldn't work.
+> 
+> Consider blk_mq_can_queue() as another example - this tells us if a hctx
+> has any bits unset, while with only using shared tags it would tell if
+> any bits unset over all queues, and this change in semantics could break
+> things. At a glance, function __blk_mq_tag_idle() looks problematic also.
+> 
+> And this is where it becomes messy to implement.
+> 
+Oh, my. Indeed, that's correct.
 
-We fail allocating the rings due to the fail slab/page_alloc stuff,
-which means ctx->rings isn't setup. When then tear down the ctx, we'll
-blow up trying to stuff an entry in the CQ ring.
+But then we don't really care _which_ shared tag is assigned; so
+wouldn't be we better off by just having an atomic counter here?
+Cache locality will be blown anyway ...
 
-The below should fix it, I'll add it to the mix.
+Cheers,
 
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 11b3e1e23720..3e8a503bcca6 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4280,7 +4314,8 @@ static void io_ring_ctx_wait_and_kill(struct io_ring_ctx *ctx)
- 		io_wq_cancel_all(ctx->io_wq);
- 
- 	io_iopoll_reap_events(ctx);
--	io_cqring_overflow_flush(ctx, true);
-+	if (ctx->rings)
-+		io_cqring_overflow_flush(ctx, true);
- 	wait_for_completion(&ctx->completions[0]);
- 	io_ring_ctx_free(ctx);
- }
-
+Hannes
 -- 
-Jens Axboe
-
+Dr. Hannes Reinecke		      Teamlead Storage & Networking
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 247165 (AG München), GF: Felix Imendörffer
