@@ -2,131 +2,253 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041EFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB8BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD88D222CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZHIdB58"
+	by mail.kernel.org (Postfix) with ESMTP id 948CA2245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573620525;
+	bh=JekA7T9hI81Ns3VAxm1JGt/jGYHRceTz9qVWnShkahI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FI67T2gEZneNBCbIrtlAnAYvcv72sh4ArfptktNm9o0234PCb4cGf8F9YD79It2nE
+	 3HZ2Q53QwVjC4/SBiC1X45f5eLK0uB2AZtxvnESVwrY6mH0NwPFY4gYZFUoUmCdxrW
+	 rx6fMwda837Btr9lUSEUz+LPrXEcRc90uJ0OH4Sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfKMEiX (ORCPT
+        id S1727516AbfKMEso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 23:38:23 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40170 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbfKMEiW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 23:38:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id i10so688717wrs.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 20:38:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=6Rb656liMW5iqgFRm8uCYcs0BBDjpFH5RMQxLc43FYg=;
-        b=MZHIdB583lS1DUJ5f2Yk9eJgKd1TaKCH7MP2vBYjr53qWrEglioVmlCfFNu8r/Leix
-         joVMrtCtCuIsPrGbtuk5QNiOrtaoqsFXxVBYJQ/Mt212sWIuOTPsS+VZ20l4TiZjnhPC
-         lLspqlbgHrQ0Kj7eu+uMZAl2+ogz//tg7iV/sMl9lgHrfj5nQ3N1+E1Tis2y0/q8n9IN
-         mTwKjJc9HIV7oMYzWROYF5krcFKCsyh+anaNc0EUs6cAGKECZ1k+LwoN2ukEnAkd5NOb
-         q6+ValHnC3ou62E/Gz4TarLDdG2EwhRezd+61L3GoA5m+AeL+a1Gq46Vo1kksZQMtjKg
-         eQtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:in-reply-to
-         :message-id:references:user-agent:mime-version;
-        bh=6Rb656liMW5iqgFRm8uCYcs0BBDjpFH5RMQxLc43FYg=;
-        b=c79WRF8p2kjc8QXGLFI9pH0DSrpADfnZG2+kNPbwOElVVSMt/u4YyOtMcEut4Dy0jl
-         2QWqTtYB+S2VGUpQn+0ZshQolLsz2MAf/jrrHMA8ohz0gUAAZRE0wG9JINU0rjn1f0cs
-         mHMID4RP+BWMGgyfEoysPX3+Z3CJ/LO/4ndWSVP588kgFYkCGz/xjNq1v5ZVv4Wov7iW
-         Ft7H+pJg/M7s2qmsXAUjeSHhZWO6t/hhUplvM/IUIIYtsK719IHIweqfxLlTL/VZtkNe
-         +e4w76ZOpzn5lmRTf7AX1MuJOxWXvAguHn7xKqhVdDgOcTbRGXpeklyfrHcp7yoeIAH+
-         LtUA==
-X-Gm-Message-State: APjAAAWNMH8i2PhdIUx24jraT5y+mTn5ZsVtie2BXtd9GsOnvQf34YGo
-        8LZVsNKzAxuddRBQZ+8UXv1YoGCiP8g=
-X-Google-Smtp-Source: APXvYqz9J5U4F6/xJm+zDtXlYuJstE1JdYLst91hk210PVFcyd3/3d9oj8mbIs8r/VyDDtSwIAbmOQ==
-X-Received: by 2002:adf:c401:: with SMTP id v1mr691909wrf.375.1573619900605;
-        Tue, 12 Nov 2019 20:38:20 -0800 (PST)
-Received: from wambui.local ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id p4sm1322221wrx.71.2019.11.12.20.38.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 20:38:19 -0800 (PST)
-From:   Wambui Karuga <wambui@karuga.xyz>
-X-Google-Original-From: Wambui Karuga <wambui@wambui>
-Date:   Wed, 13 Nov 2019 07:38:00 +0300 (EAT)
-To:     Wambui Karuga <wambui.karugax@gmail.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-cc:     daniel@ffwll.ch
-Subject: Re: [PATCH] drm/print: add DRM_DEV_WARN macro
-In-Reply-To: <20191112182705.GL23790@phenom.ffwll.local>
-Message-ID: <alpine.LNX.2.21.99999.375.1911130736490.2567@wambui>
-References: <20191112170909.13733-1-wambui.karugax@gmail.com> <20191112182705.GL23790@phenom.ffwll.local>
-User-Agent: Alpine 2.21.99999 (LNX 375 2019-10-29)
+        Tue, 12 Nov 2019 23:48:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727388AbfKMEso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 23:48:44 -0500
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2036F22469
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 04:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573620523;
+        bh=JekA7T9hI81Ns3VAxm1JGt/jGYHRceTz9qVWnShkahI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Q6e6dqau9j98a1EJ39WHqDrzePZYLryhqHq5//h1qY76V083EtVU9mJSptdPXpe3x
+         jPocFR0TknPA+PiYmMDCNPVwt18KrPpjgg5E20bi0MbDLFPCxXDm3BSsbQhkpm/O66
+         JWRu5b5dyhiWgVND6CqvQpo+JqRYFgPFWkCmXJ0Y=
+Received: by mail-wm1-f51.google.com with SMTP id t26so472287wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 20:48:43 -0800 (PST)
+X-Gm-Message-State: APjAAAV735CsY3/0Ap5JfcQd607uMDnSndSs+fXZA+hMpV8/FZ8yFxj2
+        9+3Q+0OsVFzUePSeNOmouzOmO7uCSy/PxI0RrR+mFw==
+X-Google-Smtp-Source: APXvYqzHZAN8kHsTOGKXhrhA+lp57rKvesbhM9l64m01LPZyOzPCuYxVyYoQbLnO6Mm1Cg9oVrUR29QTzEdhyTF94Do=
+X-Received: by 2002:a05:600c:3cf:: with SMTP id z15mr844908wmd.76.1573620521471;
+ Tue, 12 Nov 2019 20:48:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <CALCETrVBzuOsDfaz5y3V4v+6xmeWufOYsOGnpZrRju6Pfsi6gg@mail.gmail.com>
+ <3208655.cZiRAY37Id@positron.chronox.de>
+In-Reply-To: <3208655.cZiRAY37Id@positron.chronox.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 12 Nov 2019 20:48:30 -0800
+X-Gmail-Original-Message-ID: <CALCETrVHdauN2ptZLSYAUDm=S3OGkxq=iH4qGxCuH0XCMKjGkQ@mail.gmail.com>
+Message-ID: <CALCETrVHdauN2ptZLSYAUDm=S3OGkxq=iH4qGxCuH0XCMKjGkQ@mail.gmail.com>
+Subject: Re: [PATCH v24 00/12] /dev/random - a new approach with full
+ SP800-90B compliance
+To:     =?UTF-8?Q?Stephan_M=C3=BCller?= <smueller@chronox.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 8:25 PM Stephan M=C3=BCller <smueller@chronox.de> w=
+rote:
+>
+> Am Dienstag, 12. November 2019, 16:33:59 CET schrieb Andy Lutomirski:
+>
+> Hi Andy,
+>
+> > On Mon, Nov 11, 2019 at 11:13 AM Stephan M=C3=BCller <smueller@chronox.=
+de> wrote:
+> > > The following patch set provides a different approach to /dev/random =
+which
+> > > is called Linux Random Number Generator (LRNG) to collect entropy wit=
+hin
+> > > the Linux kernel. The main improvements compared to the existing
+> > > /dev/random is to provide sufficient entropy during boot time as well=
+ as
+> > > in virtual environments and when using SSDs. A secondary design goal =
+is
+> > > to limit the impact of the entropy collection on massive parallel sys=
+tems
+> > > and also allow the use accelerated cryptographic primitives. Also, al=
+l
+> > > steps of the entropic data processing are testable.
+> >
+> > This is very nice!
+> >
+> > > The LRNG patch set allows a user to select use of the existing /dev/r=
+andom
+> > > or the LRNG during compile time. As the LRNG provides API and ABI
+> > > compatible interfaces to the existing /dev/random implementation, the
+> > > user can freely chose the RNG implementation without affecting kernel=
+ or
+> > > user space operations.
+> > >
+> > > This patch set provides early boot-time entropy which implies that no
+> > > additional flags to the getrandom(2) system call discussed recently o=
+n
+> > > the LKML is considered to be necessary.
+> >
+> > I'm uneasy about this.  I fully believe that, *on x86*, this works.
+> > But on embedded systems with in-order CPUs, a single clock, and very
+> > lightweight boot processes, most or all of boot might be too
+> > deterministic for this to work.
+> >
+> > I have a somewhat competing patch set here:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=
+=3Drandom
+> > /kill-it
+> >
+> > (Ignore the "horrible test hack" and the debugfs part.)
+> >
+> > The basic summary is that I change /dev/random so that it becomes
+> > functionally identical to getrandom(..., 0) -- in other words, it
+> > blocks until the CRNG is initialized but is then identical to
+> > /dev/urandom.  And I add getrandom(...., GRND_INSECURE) that is
+> > functionally identical to the existing /dev/urandom: it always returns
+> > *something* immediately, but it may or may not actually be
+> > cryptographically random or even random at all depending on system
+> > details.
+> >
+> > In other words, my series simplifies the ABI that we support.  Right
+> > now, we have three ways to ask for random numbers with different
+> > semantics and we need to have to RNGs in the kernel at all time.  With
+> > my changes, we have only two ways to ask for random numbers, and the
+> > /dev/random pool is entirely gone.
+> >
+> > Would you be amenable to merging this into your series (i.e. either
+> > merging the code or just the ideas)?  This would let you get rid of
+> > things like the compile-time selection of the blocking TRNG, since the
+> > blocking TRNG would be entirely gone.
+>
+> I pulled your code and found the following based on my explanation that I
+> would suggest to keep the TRNG at least as an option.
+>
+> - 7d54ef8512b06baf396f12584f7f48a9558ecd0f does not seem applicable:
 
+Not surprising.  It's just a cleanup to the existing code, and I doubt
+you inherited the oddity I'm fixing.
 
-On Tue, 12 Nov 2019, Daniel Vetter wrote:
+> - 6a26a3146e5fb90878dca9fde8caa1ca4233156a: My handler for /dev/urandom a=
+nd
+> getrandom(..., 0) are using one callback which issues a warning in both u=
+se
+> cases (see lrng_sdrng_read). So I think this patch may not be applicable =
+as
+> the LRNG code implements warning about being unseeded.
 
-> On Tue, Nov 12, 2019 at 08:09:09PM +0300, Wambui Karuga wrote:
->> Add the DRM_DEV_WARN helper macro for printing warnings
->> that use device pointers in their log output format.
->> DRM_DEV_WARN can replace the use of dev_warn in such cases.
->>
->> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
->
-> Can you pls include this in the patch to add the first user with rockchip?
-> Otherwise always a bit awkward when we add functions without callers.
->
-Okay, I'll send that as well.
-Thought it'd be better to get this accepted first.
+Probably true.
 
-wambui
-> lgtm otherwise.
-> -Daniel
+What is the actual semantics of /dev/urandom with your series applied?
+ Is there any situation in which it will block?
+
 >
->> ---
->>  include/drm/drm_print.h | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
->> index 5b8049992c24..6ddf91c0cb29 100644
->> --- a/include/drm/drm_print.h
->> +++ b/include/drm/drm_print.h
->> @@ -329,6 +329,15 @@ void drm_err(const char *format, ...);
->>  #define DRM_WARN_ONCE(fmt, ...)						\
->>  	_DRM_PRINTK(_once, WARNING, fmt, ##__VA_ARGS__)
->>
->> +/**
->> + * Warning output.
->> + *
->> + * @dev: device pointer
->> + * @fmt: printf() like format string.
->> + */
->> +#define DRM_DEV_WARN(dev, fmt, ...)					\
->> +	drm_dev_printk(dev, KERN_WARNING, fmt, ##__VA_ARGS__)
->> +
->>  /**
->>   * Error output.
->>   *
->> --
->> 2.17.1
->>
+> - 3e8e159da49b44ae0bb08e68fa2be760722fa033: I am happy to take that code =
+which
+> would almost directly apply. The last hunk however would be:
 >
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+> if (!(flags & GRND_INSECURE) && unlikely(!lrng_state_operational())) {
 >
+> =3D=3D> Shall I apply it to my code base? If yes, how shall the changes t=
+o
+> random.h be handled?
+>
+
+This might be a question for Ted.  Once the merge window opens, I'll
+resubmit it.
+
+>
+> - 920e97e7fc508e6f0da9c7dec94c8073fd63ab4d: I would pass on this patch du=
+e to
+> the following: it unconditionally starts removing the access to the TRNG =
+(the
+> LRNG's logical equivalent to the blocking_pool). As patch 10/12 of the LR=
+NG
+> patch series provides the TRNG that is a compile time option, your patch =
+would
+> logically and functionally be equivalent when deselecting
+> CONFIG_LRNG_TRNG_SUPPORT in the LRNG without any further changes to the L=
+RNG
+> code.
+
+Given your previous email about the TRNG, I'm wondering what the API
+for the TRNG should be.  I am willing to grant that there are users
+who need a TRNG for various reasons, and that not all of them can use
+hwrng.  (And the current hwrng API is pretty bad.)  But I'm not
+convinced that /dev/random or getrandom(..., GRND_RANDOM) is a
+reasonable way to access it.  A blocking_pool-style TRNG is a very
+limited resource, and I think it could make sense to require some sort
+of actual permission to use it.  GRND_RANDOM has no access control at
+all, and everyone expects /dev/random to be world-readable.  The most
+widespread user of /dev/random that I know of is gnupg, and gnupg
+really should not be using it.
+
+Would it make sense to have a /dev/true_random that is 0400 by default
+for users who actually need it?  Then /dev/random and GRND_RANDOM
+could work as they do with my patch, and maybe it does the right thing
+for everyone.
+
+>
+> - 693b9ffdf0fdc93456b5ad293ac05edf240a531b: This patch is applicable to t=
+he
+> LRNG. In case CONFIG_LRNG_TRNG_SUPPORT is not set, the TRNG is not presen=
+t.
+> Yet, the /dev/random and getrandom(GRND_RANDOM) would behave blocked unti=
+l
+> fully initialized. I have now added the general blocking until the LRNG i=
+s
+> fully initialized to the common /dev/random and getrandom(GRND_RANDOM)
+> interface function of lrng_trng_read_common. With that, the LRNG would be
+> fully equivalent to this patch if CONFIG_LRNG_TRNG_SUPPORT is not set.
+
+Sounds reasonable.
+
+> By making the TRNG compile-time selectable, I was hoping to serve all use=
+rs: I
+> wanted to cover the conclusions of the discussion to remove the blocking_=
+pool.
+> On the other hand, however, I want to support requirements that need the
+> blocking behavior.
+
+I find it odd that /dev/random would be either a TRNG or not a TRNG
+depending on kernel configuration.  For the small fraction of users
+that actually want a TRNG, wouldn't it be better to have an interface
+that fails outright if the TRNG is not enabled?
+
+--Andy
