@@ -2,72 +2,122 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C562FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC3AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AA7206EE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AB3206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKMVus (ORCPT
+        id S1726543AbfKMVxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:50:48 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:41778 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726979AbfKMVus (ORCPT
+        Wed, 13 Nov 2019 16:53:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39191 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfKMVxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:50:48 -0500
-Received: (qmail 5977 invoked by uid 2102); 13 Nov 2019 16:50:47 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 13 Nov 2019 16:50:47 -0500
-Date:   Wed, 13 Nov 2019 16:50:47 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Marco Elver <elver@google.com>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Wed, 13 Nov 2019 16:53:31 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iV0Zi-00074B-MH; Wed, 13 Nov 2019 22:53:18 +0100
+Date:   Wed, 13 Nov 2019 22:53:17 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     y2038@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        David Howells <dhowells@redhat.com>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-In-Reply-To: <20191113213336.GA20665@google.com>
-Message-ID: <Pine.LNX.4.44L0.1911131648010.1558-100000@iolanthe.rowland.org>
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Li RongQing <lirongqing@baidu.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH 17/23] y2038: time: avoid timespec usage in
+ settimeofday()
+In-Reply-To: <20191108211323.1806194-8-arnd@arndb.de>
+Message-ID: <alpine.DEB.2.21.1911132250010.2507@nanos.tec.linutronix.de>
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-8-arnd@arndb.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019, Marco Elver wrote:
+On Fri, 8 Nov 2019, Arnd Bergmann wrote:
+> -SYSCALL_DEFINE2(settimeofday, struct timeval __user *, tv,
+> +SYSCALL_DEFINE2(settimeofday, struct __kernel_old_timeval __user *, tv,
+>  		struct timezone __user *, tz)
+>  {
+>  	struct timespec64 new_ts;
+> -	struct timeval user_tv;
+>  	struct timezone new_tz;
+>  
+>  	if (tv) {
+> -		if (copy_from_user(&user_tv, tv, sizeof(*tv)))
+> +		if (get_user(new_ts.tv_sec, &tv->tv_sec) ||
+> +		    get_user(new_ts.tv_nsec, &tv->tv_usec))
+>  			return -EFAULT;
 
-> An expression works fine. The below patch would work with KCSAN, and all
-> your above examples work.
-> 
-> Re name: would it make sense to more directly convey the intent?  I.e.
-> "this expression can race, and it's fine that the result is approximate
-> if it does"?
-> 
-> My vote would go to something like 'smp_lossy' or 'lossy_race' -- but
-> don't have a strong preference, and would also be fine with 'data_race'.
-> Whatever is most legible.  Comments?
+How is that supposed to be correct on a 32bit kernel?
 
-Lossiness isn't really relevant.  Things like sticky writes work 
-perfectly well with data races; they don't lose anything.
+>  
+> -		if (!timeval_valid(&user_tv))
+> +		if (tv->tv_usec > USEC_PER_SEC)
+>  			return -EINVAL;
 
-My preference would be for "data_race" or something very similar
-("racy"? "race_ok"?).  That's the whole point -- we know the
-operation can be part of a data race and we don't care.
+That's incomplete:
 
-Alan Stern
+static inline bool timeval_valid(const struct timeval *tv)
+{
+        /* Dates before 1970 are bogus */
+        if (tv->tv_sec < 0)
+                return false;
 
+	/* Can't have more microseconds then a second */
+        if (tv->tv_usec < 0 || tv->tv_usec >= USEC_PER_SEC)
+                return false;
+
+        return true;
+}
+
+
+>  
+> -		new_ts.tv_sec = user_tv.tv_sec;
+> -		new_ts.tv_nsec = user_tv.tv_usec * NSEC_PER_USEC;
+> +		new_ts.tv_nsec *= NSEC_PER_USEC;
+>  	}
+>  	if (tz) {
+>  		if (copy_from_user(&new_tz, tz, sizeof(*tz)))
+> @@ -245,18 +244,17 @@ COMPAT_SYSCALL_DEFINE2(settimeofday, struct old_timeval32 __user *, tv,
+>  		       struct timezone __user *, tz)
+>  {
+>  	struct timespec64 new_ts;
+> -	struct timeval user_tv;
+>  	struct timezone new_tz;
+>  
+>  	if (tv) {
+> -		if (compat_get_timeval(&user_tv, tv))
+> +		if (get_user(new_ts.tv_sec, &tv->tv_sec) ||
+> +		    get_user(new_ts.tv_nsec, &tv->tv_usec))
+>  			return -EFAULT;
+>  
+> -		if (!timeval_valid(&user_tv))
+> +		if (new_ts.tv_nsec > USEC_PER_SEC)
+>  			return -EINVAL;
+
+Ditto.
+
+Thanks,
+
+	tglx
