@@ -2,151 +2,202 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03512C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9511207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A496207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBciHYu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfKMN5X convert rfc822-to-8bit (ORCPT
+        id S1727678AbfKMN51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:57:23 -0500
-Received: from mail-oln040092254097.outbound.protection.outlook.com ([40.92.254.97]:60976
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726190AbfKMN5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:57:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TiCL7JRsur7zoTMTRS/BL2Fg6ysmTn2F2mJxUiQK1RyAEYgBP7fGcs8RYfff6aYMiWSmQNRCWhx6XyTWh8G9ks1PkYTLjVGswL3hTRiSlSlnHDuMniv6+y4bby+yzO2dTXywP6vGkqMlTE43IUPNoi1TBKMghPQXPT9iDKyehnj1334MarTFPNhQZMRnKUJGDIHZXbPorfglwJPcC8JGbmEdoAEUXki4QX26UV/EKjabyGLpUB5lRuu5HSj90wF1uang5bxSsOw1oXcphFIaYn0O1xG9LZYDYz/eDCtL66dke6zHDh3v0NJ8hHFGw95p6kHxltVEmFUG83BdYqkngw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HYK4AJq2wVyOdrQ6YBlPBFYX/XCDfpNvP+ELcOZprcU=;
- b=b1yUZPSQk/b6PHFqQtcuUl/v8n5bbU4oOm+k+2zQsgVB8bxpyRUeBsg5sn6PSvEnPZqgY7e24tbz4zjxPVxxXcb1xUIYHD8ftFD7uKI4mSHQtgMgR2YgKTVcMPvnotayPM60oiyteVr8402kVyNXnqCKIisUo/ZhrfFdF07ozzqtNRFLp5XUTgGwDkGtzHQAJy7OCYipEfn2K9UxT5dGQv4NrMBzJpzjHZ/sNYoq2F4Ts2dNY/+wdd36wLWwu7VeZmZE1Fa8IJW3wMGaAraqtQlywx95CNSDOFgTvcme6vrUndRcj4z7TZ0Vd5JPkbFiRPtUyp3MnIGLabR9zBTB8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT035.eop-APC01.prod.protection.outlook.com
- (10.152.252.54) by PU1APC01HT222.eop-APC01.prod.protection.outlook.com
- (10.152.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2430.22; Wed, 13 Nov
- 2019 13:57:18 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
- PU1APC01FT035.mail.protection.outlook.com (10.152.252.214) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2451.23 via Frontend Transport; Wed, 13 Nov 2019 13:57:18 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
- 13:57:18 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v9 3/4] PCI: Change extend_bridge_window() to set resource
- size directly
-Thread-Topic: [PATCH v9 3/4] PCI: Change extend_bridge_window() to set
- resource size directly
-Thread-Index: AQHVmipDV6eC7pwnA0uzrURncVQLew==
-Date:   Wed, 13 Nov 2019 13:57:18 +0000
-Message-ID: <PS2P216MB07557D53F7621520BDFA582F80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0198.ausprd01.prod.outlook.com
- (2603:10c6:10:16::18) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:1c::13)
-x-incomingtopheadermarker: OriginalChecksum:418D55EF9DA2B97880F9FD6EF04FA1104D40CFE7061EC3F8BE00EC5B240CAB75;UpperCasedChecksum:0DB9C8F9DD6CFCB9133B6CED923B620A936ACCF4BA8BE2854E2B18E235801871;SizeAsReceived:7679;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [NlEcxp3pOd9B9pAVgewh+JpuDmWmXugCbhvRkVF0pPRnLH9LUMuW9n9zGAWDlkF+lIQwdyWG0wk=]
-x-microsoft-original-message-id: <20191113135710.GA3224@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 724d73c3-f127-449a-b1c8-08d768416585
-x-ms-exchange-slblob-mailprops: dEG5jEBie8mlFL0Oe7sWpdK/rFF0vM+sWL1qRZrZy26tb4PZdKegNw3NbXdJZ2dVjtIDyV3R1DNVPVDikMwFk/AMW1AsVzYEK/kugPDzdBtEKHCQ0vraFuc6Ppo6MWt58XiygU5cV3OGnNFx9XGNc2AXqgeRikjG9WqBndni2PCVQLbLHzzeg0pgixRaB7O+D2Sx12e8hYsxoR2zJbwvRojA0W44TRfXMXRIVDfj6aoZ5zNY7MfEmSt/mZADXYZ4NP+60GeU8COZoQ9PfwHC7QnPR2uCMVDb+N3E6ykhBipl5viiavzcN7g3032gh7bp0MTNUNwgL8CktbojfBXioFWTcySI4E5zekrWIIsxhPH+bh1XgAvDgJrzHSpEVBEoz0x8yniT6IT3EsGyhL9q76mtK0BfqdmhpE4vSFx3OPlQhc1FlPAdSC1PQJaUqo8bvzjNZbtli6jGamwWBplluPDJCadHv16Z5/TGjojk4Gr9plrCxCGS1JOH0ggAk+VoC+z7Jwvsgtpz7f1MU5jhi+QlRcnKNymuiy+JOU2eZoERyX/bS4SbRv09l3UXqr253fLyCONLgChQqD5Me6pEpcDFvKpFhdqmKTN4CqsROGvpSlVAF9F4TjTk8Hovx3YmirbPtghLBcvrsWKTjamOTVUyKydKxcxbCRyNPTPdH8k0u1r2mnHk5Q==
-x-ms-traffictypediagnostic: PU1APC01HT222:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I/RgUYNfOJnVA98S8qgaT5v7R/WNtEiJRAotre8adDG/LgA6paGBrl6O2Z9Mt44HqbKn+h4P2xdbrn4mrY03bgm4pOpoGW3En5BRmSe1LrHBtPqofZKQxVOBWTEzP4SKK50YV40mIpD8mEZC0sMbVo1lHEP4yBbRgmls/0gPcmf7halFfVFYKnABx9ALHqzp
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <AA404F1EE0CC284B998AF3418BE845A6@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 13 Nov 2019 08:57:27 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43684 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfKMN5Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:57:25 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y23so2650792ljh.10;
+        Wed, 13 Nov 2019 05:57:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dd8DkIORvL+QLs2iRz7r6c4ippkrhOFQgZqGhUsz2UE=;
+        b=TBciHYu83sbNwzrT0mMqbTW5AsBPWo1eiSOqa5j2rrvnri8JL7coLoP6S2kaGHxHDY
+         YhFJBZP4KwCWTHlBMevYYG3vy3fdakdQw9IMYJtqWrp8IZ4loJNaukR4I7lvtaDN78hn
+         WQk3vPyurU+mjZ4QUFifjKp9kA8vKYe8+UMx290A/gfhWLvrPiVPAoxPhAitd3NwslMe
+         9hvFlrfIj/nHLlPXd8Lkib/7B/sfEb6RHi4cQj9dVIagzpTreiPuF2i043KQlL/xwceO
+         v0bMtRSHwZofnJOCHiefoVylpMJYhe3WX2SL4/tHwka3M8NAAMzpDeQUfPpW2pgg1IAe
+         2Pzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dd8DkIORvL+QLs2iRz7r6c4ippkrhOFQgZqGhUsz2UE=;
+        b=Y+SfqVN1G5RrezeJL9HE96S7gzCyMyrWtCgwjTNEzGZICOlOrAruQisvl8JDuRZ2IQ
+         H1/1bkCI0/TWFfV+mvnWu3hzOgsExH2dGCq0I+9QyBEPpyCI01wAftgxSDDNxWZ+hYK0
+         71IzkVlbM8IFqIzX95935NfNECdZ2KfB+PgSwGrsB7iOywYDNz8FCinbIAbEXJSWtl7I
+         nLa+pdvb+RQ1SaW2zn8XzaGwxLwWWop7NiaJ5uYbWyCf6dKkpQe8wau80grvYvRpIGd2
+         I84b/r4Evf3cglg1CSzv5UjYSLLwCv2SWm5AnbowCXxvRPBt8gk1aAnMardxJfhOifRe
+         IR/Q==
+X-Gm-Message-State: APjAAAW8f24t/FWGGUuKDUxh87CzHJChBEcURCk5akC0LYvJZiPuxFJc
+        A4Ncabh1/a/JNP2dcjy4GPcpgmGb
+X-Google-Smtp-Source: APXvYqx2gyFRCOmE2W7LIkKtVfA8HVDq3+zaGrzUjMUttqo8xiM5aMN/5IxKLMsnrcUluee3YibkyQ==
+X-Received: by 2002:a05:651c:1127:: with SMTP id e7mr2669748ljo.70.1573653442641;
+        Wed, 13 Nov 2019 05:57:22 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id n8sm1093579lfe.31.2019.11.13.05.57.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Nov 2019 05:57:21 -0800 (PST)
+Subject: Re: [PATCH v2 17/17] ARM: dts: tegra30: cardhu-a04: Add CPU Operating
+ Performance Points
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191024221416.14197-1-digetx@gmail.com>
+ <20191024221416.14197-18-digetx@gmail.com>
+ <be6deeff-4294-c945-1539-57ec28b4c895@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8974f1a8-72bb-4413-d2b5-057853696fb4@gmail.com>
+Date:   Wed, 13 Nov 2019 16:57:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 724d73c3-f127-449a-b1c8-08d768416585
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 13:57:18.4396
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT222
+In-Reply-To: <be6deeff-4294-c945-1539-57ec28b4c895@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change extend_bridge_window() to set resource size directly instead of
-using additional resource lists.
+Hello Jon,
 
-Because additional resource lists are optional resources, any algorithm
-that requires guaranteed allocation that uses them cannot be guaranteed
-to work.
+13.11.2019 09:52, Jon Hunter пишет:
+> 
+> On 24/10/2019 23:14, Dmitry Osipenko wrote:
+>> Utilize common Tegra30 CPU OPP table. CPU DVFS is available now on
+>> cardhu-a04.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  arch/arm/boot/dts/tegra30-cardhu-a04.dts | 24 ++++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/tegra30-cardhu-a04.dts b/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+>> index 0d71925d4f0b..9234988624ec 100644
+>> --- a/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+>> +++ b/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+>> @@ -2,6 +2,8 @@
+>>  /dts-v1/;
+>>  
+>>  #include "tegra30-cardhu.dtsi"
+>> +#include "tegra30-cpu-opp.dtsi"
+>> +#include "tegra30-cpu-opp-microvolt.dtsi"
+>>  
+>>  /* This dts file support the cardhu A04 and later versions of board */
+>>  
+>> @@ -127,4 +129,26 @@
+>>  			nvidia,tegra-core-regulator;
+>>  		};
+>>  	};
+>> +
+>> +	cpus {
+>> +		cpu0: cpu@0 {
+>> +			cpu-supply = <&vddctrl_reg>;
+>> +			operating-points-v2 = <&cpu0_opp_table>;
+>> +		};
+>> +
+>> +		cpu@1 {
+>> +			cpu-supply = <&vddctrl_reg>;
+>> +			operating-points-v2 = <&cpu0_opp_table>;
+>> +		};
+>> +
+>> +		cpu@2 {
+>> +			cpu-supply = <&vddctrl_reg>;
+>> +			operating-points-v2 = <&cpu0_opp_table>;
+>> +		};
+>> +
+>> +		cpu@3 {
+>> +			cpu-supply = <&vddctrl_reg>;
+>> +			operating-points-v2 = <&cpu0_opp_table>;
+>> +		};
+>> +	};
+>>  };
+> 
+> Sorry for not testing this sooner, but this is generating the
+> following WARNING on boot ...
+> 
+> [    2.916019] ------------[ cut here ]------------
+> [    2.920669] WARNING: CPU: 2 PID: 1 at /dvs/git/dirty/git-master_l4t-upstream/kernel/drivers/opp/of.c:688 _of_add_opp_table_v2.part.2+0x45c/0x4d4
+> [    2.933713] Modules linked in:
+> [    2.936785] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc7-next-20191112-gfc6d6db1df2c #1
+> [    2.945403] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+> [    2.951706] [<c0112924>] (unwind_backtrace) from [<c010c9d0>] (show_stack+0x10/0x14)
+> [    2.959467] [<c010c9d0>] (show_stack) from [<c0aa4494>] (dump_stack+0xc0/0xd4)
+> [    2.966707] [<c0aa4494>] (dump_stack) from [<c0124750>] (__warn+0xe0/0xf8)
+> [    2.973593] [<c0124750>] (__warn) from [<c0124818>] (warn_slowpath_fmt+0xb0/0xb8)
+> [    2.981090] [<c0124818>] (warn_slowpath_fmt) from [<c0754be0>] (_of_add_opp_table_v2.part.2+0x45c/0x4d4)
+> [    2.990583] [<c0754be0>] (_of_add_opp_table_v2.part.2) from [<c0754c98>] (dev_pm_opp_of_add_table+0x40/0x15c)
+> [    3.000508] [<c0754c98>] (dev_pm_opp_of_add_table) from [<c0754de8>] (dev_pm_opp_of_cpumask_add_table+0x34/0xb4)
+> [    3.010704] [<c0754de8>] (dev_pm_opp_of_cpumask_add_table) from [<c075b058>] (cpufreq_init+0xf8/0x2cc)
+> [    3.020024] [<c075b058>] (cpufreq_init) from [<c0758758>] (cpufreq_online+0x260/0x824)
+> [    3.027953] [<c0758758>] (cpufreq_online) from [<c0758d98>] (cpufreq_add_dev+0x6c/0x78)
+> [    3.035976] [<c0758d98>] (cpufreq_add_dev) from [<c05b3188>] (subsys_interface_register+0xa0/0xec)
+> [    3.044951] [<c05b3188>] (subsys_interface_register) from [<c07574d4>] (cpufreq_register_driver+0x14c/0x20c)
+> [    3.054792] [<c07574d4>] (cpufreq_register_driver) from [<c075aee0>] (dt_cpufreq_probe+0x94/0x114)
+> [    3.063771] [<c075aee0>] (dt_cpufreq_probe) from [<c05b6a88>] (platform_drv_probe+0x48/0x98)
+> [    3.072225] [<c05b6a88>] (platform_drv_probe) from [<c05b4a38>] (really_probe+0x234/0x34c)
+> [    3.080502] [<c05b4a38>] (really_probe) from [<c05b4cc8>] (driver_probe_device+0x60/0x168)
+> [    3.088780] [<c05b4cc8>] (driver_probe_device) from [<c05b4f78>] (device_driver_attach+0x58/0x60)
+> [    3.097664] [<c05b4f78>] (device_driver_attach) from [<c05b5000>] (__driver_attach+0x80/0xbc)
+> [    3.106200] [<c05b5000>] (__driver_attach) from [<c05b2db0>] (bus_for_each_dev+0x74/0xb4)
+> [    3.114389] [<c05b2db0>] (bus_for_each_dev) from [<c05b3da4>] (bus_add_driver+0x164/0x1e8)
+> [    3.122666] [<c05b3da4>] (bus_add_driver) from [<c05b5b54>] (driver_register+0x7c/0x114)
+> [    3.130774] [<c05b5b54>] (driver_register) from [<c010306c>] (do_one_initcall+0x54/0x2a8)
+> [    3.138974] [<c010306c>] (do_one_initcall) from [<c0f01040>] (kernel_init_freeable+0x14c/0x1e8)
+> [    3.147695] [<c0f01040>] (kernel_init_freeable) from [<c0abbe88>] (kernel_init+0x8/0x10c)
+> [    3.155887] [<c0abbe88>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> [    3.163462] Exception stack(0xef0c9fb0 to 0xef0c9ff8)
+> [    3.168519] 9fa0:                                     00000000 00000000 00000000 00000000
+> [    3.176706] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    3.184893] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> [    3.191695] ---[ end trace a7dc36f7a4ddbdb2 ]---
+> [    3.197855] ------------[ cut here ]------------
+> 
+> Let me know if you can take a look at this.
 
-Remove the resource from add_list, as a zero-sized additional resource
-is redundant.
+The warning happens because Cardhu now has CPU OPPs in the device-tree,
+but supported_hw isn't set for the OPPs and thus the count of available
+OPPs is 0.
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/setup-bus.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+This is expected to happen because patch "cpufreq: tegra20: Use generic
+cpufreq-dt driver (Tegra30 supported now)" isn't applied yet.
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 728bcea26..fe8b2c715 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1818,7 +1818,7 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
- 				 resource_size_t new_size)
- {
--	struct pci_dev_resource *dev_res;
-+	resource_size_t add_size;
- 
- 	if (res->parent)
- 		return;
-@@ -1826,17 +1826,10 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
- 	if (resource_size(res) >= new_size)
- 		return;
- 
--	dev_res = res_to_dev_res(add_list, res);
--	if (!dev_res)
--		return;
--
--	/* Is there room to extend the window? */
--	if (new_size - resource_size(res) <= dev_res->add_size)
--		return;
--
--	dev_res->add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
--		&dev_res->add_size);
-+	add_size = new_size - resource_size(res);
-+	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-+	res->end = res->start + new_size - 1;
-+	remove_from_list(add_list, res);
- }
- 
- static void pci_bus_distribute_available_resources(struct pci_bus *bus,
--- 
-2.23.0
-
+It is possible to factor out the blacklisting of Tegra SoCs in
+cpufreq_dt_platdev_init() into a separate patch and request backporting
+of that change in order to avoid the warning noise for older kernel
+versions + newer device-tree. Please let me know if you think that it's
+worth to do the separation.
