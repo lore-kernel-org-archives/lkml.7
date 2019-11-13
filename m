@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB39EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30B2C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEB721D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCFB21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611197;
-	bh=AbhhGJjH9ocIp2u3UGP37MT5HgjAL/lrgf9N9EduUYw=;
+	s=default; t=1573611204;
+	bh=kk9s2ECVWRZh6QKxhKPAVyCqzJNCNwA+1D7J7+tmnYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQXnoWet9jsxtidnr2vZD6KXf08t6eDa7I70UbfReHGS2aFKdtCsVQK2yABgCvwrY
-	 6ttsWSsRr8a/pjAFzOfeq4A9XWPTXH3EJQ8tABAoxDYhhCA7D5qQCvQ0PfXtgek9Z8
-	 70pvnqweQ7hDhVgkT2Gh9yLL9gYlYcnoZTKTVzS0=
+	b=vLGVMJRpsXC8pZHgdZchU6ys/0YkoeBZpOoJh0fUikTTAen74UbKN0m+b1V6mCXxp
+	 mwINGkMmsKPObQLgfATGnBrMTNDzl1xqGWyFV6Hqt0xQq/WjXeXY662XVa6IHLFGi2
+	 b2fE4IHBE63kvazfUO1P9QMqB9jPmq7u+/Pu1pBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbfKMCNQ (ORCPT
+        id S1730414AbfKMCNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:13:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:13:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729878AbfKMB5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:48 -0500
+        id S1728828AbfKMB5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B68A42245A;
-        Wed, 13 Nov 2019 01:57:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37838222D3;
+        Wed, 13 Nov 2019 01:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610268;
-        bh=AbhhGJjH9ocIp2u3UGP37MT5HgjAL/lrgf9N9EduUYw=;
+        s=default; t=1573610265;
+        bh=kk9s2ECVWRZh6QKxhKPAVyCqzJNCNwA+1D7J7+tmnYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G+yEkN0bKXLbcE0O7OEJZxC2bbj35wpmI1fNhySI5oyrRIVL7ZZcQOKo/XzqoNuZl
-         OVjbv6diqjqJea23+crHP36+mKbwmmslU5g0t/DBE1sULtRm3BqGSoxSun5C/mVJRu
-         +3hVStrmQmZ81bg4jL5xHDL3irosi8YgaJELhJNI=
+        b=S6N+cyd+zaB3G71Fbh4Y7MyGs6M3UdQrymbtpPAPHOc/4aAXn3bKD819x/TKWPabD
+         3L3t32aBlxTDkSXPJMObs1f+UDU3E8xNnFeJc5+2+w9qPhvEFkXj8OSFB9xz8i+Ese
+         LXO/dh+9V1am/boJWNi48DCDXGitqUZlNCiEGFsE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 057/115] mtd: physmap_of: Release resources on error
-Date:   Tue, 12 Nov 2019 20:55:24 -0500
-Message-Id: <20191113015622.11592-57-sashal@kernel.org>
+Cc:     Cameron Kaiser <spectre@floodgap.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 055/115] KVM: PPC: Book3S PR: Exiting split hack mode needs to fixup both PC and LR
+Date:   Tue, 12 Nov 2019 20:55:22 -0500
+Message-Id: <20191113015622.11592-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,86 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+From: Cameron Kaiser <spectre@floodgap.com>
 
-[ Upstream commit ef0de747f7ad179c7698a5b0e28db05f18ecbf57 ]
+[ Upstream commit 1006284c5e411872333967b1970c2ca46a9e225f ]
 
-During probe, if there was an error the memory region and the memory
-map were not properly released.This can lead a system unusable if
-deferred probe is in use.
+When an OS (currently only classic Mac OS) is running in KVM-PR and makes a
+linked jump from code with split hack addressing enabled into code that does
+not, LR is not correctly updated and reflects the previously munged PC.
 
-Replace mem_request and map with devm_ioremap_resource
+To fix this, this patch undoes the address munge when exiting split
+hack mode so that code relying on LR being a proper address will now
+execute. This does not affect OS X or other operating systems running
+on KVM-PR.
 
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Cameron Kaiser <spectre@floodgap.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/maps/physmap_of_core.c | 27 +++++----------------------
- 1 file changed, 5 insertions(+), 22 deletions(-)
+ arch/powerpc/kvm/book3s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
-index b1bd4faecfb25..5d8399742c754 100644
---- a/drivers/mtd/maps/physmap_of_core.c
-+++ b/drivers/mtd/maps/physmap_of_core.c
-@@ -30,7 +30,6 @@
- struct of_flash_list {
- 	struct mtd_info *mtd;
- 	struct map_info map;
--	struct resource *res;
- };
- 
- struct of_flash {
-@@ -55,18 +54,10 @@ static int of_flash_remove(struct platform_device *dev)
- 			mtd_concat_destroy(info->cmtd);
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index d38280b01ef08..1eda812499376 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -79,8 +79,11 @@ void kvmppc_unfixup_split_real(struct kvm_vcpu *vcpu)
+ {
+ 	if (vcpu->arch.hflags & BOOK3S_HFLAG_SPLIT_HACK) {
+ 		ulong pc = kvmppc_get_pc(vcpu);
++		ulong lr = kvmppc_get_lr(vcpu);
+ 		if ((pc & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
+ 			kvmppc_set_pc(vcpu, pc & ~SPLIT_HACK_MASK);
++		if ((lr & SPLIT_HACK_MASK) == SPLIT_HACK_OFFS)
++			kvmppc_set_lr(vcpu, lr & ~SPLIT_HACK_MASK);
+ 		vcpu->arch.hflags &= ~BOOK3S_HFLAG_SPLIT_HACK;
  	}
- 
--	for (i = 0; i < info->list_size; i++) {
-+	for (i = 0; i < info->list_size; i++)
- 		if (info->list[i].mtd)
- 			map_destroy(info->list[i].mtd);
- 
--		if (info->list[i].map.virt)
--			iounmap(info->list[i].map.virt);
--
--		if (info->list[i].res) {
--			release_resource(info->list[i].res);
--			kfree(info->list[i].res);
--		}
--	}
- 	return 0;
  }
- 
-@@ -214,10 +205,11 @@ static int of_flash_probe(struct platform_device *dev)
- 
- 		err = -EBUSY;
- 		res_size = resource_size(&res);
--		info->list[i].res = request_mem_region(res.start, res_size,
--						       dev_name(&dev->dev));
--		if (!info->list[i].res)
-+		info->list[i].map.virt = devm_ioremap_resource(&dev->dev, &res);
-+		if (IS_ERR(info->list[i].map.virt)) {
-+			err = PTR_ERR(info->list[i].map.virt);
- 			goto err_out;
-+		}
- 
- 		err = -ENXIO;
- 		width = of_get_property(dp, "bank-width", NULL);
-@@ -240,15 +232,6 @@ static int of_flash_probe(struct platform_device *dev)
- 		if (err)
- 			goto err_out;
- 
--		err = -ENOMEM;
--		info->list[i].map.virt = ioremap(info->list[i].map.phys,
--						 info->list[i].map.size);
--		if (!info->list[i].map.virt) {
--			dev_err(&dev->dev, "Failed to ioremap() flash"
--				" region\n");
--			goto err_out;
--		}
--
- 		simple_map_init(&info->list[i].map);
- 
- 		/*
 -- 
 2.20.1
 
