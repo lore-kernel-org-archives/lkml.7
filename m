@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F88C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCF5C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F230F21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6252721D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611322;
-	bh=QNKsw1ScWAI/B1oICO7w9vn1HmKyrpOW0OpdHrOzMbg=;
+	s=default; t=1573611327;
+	bh=yW1ZY926CRyEvYL8nf0PNItB9Msvnl5KBJPysHlwXVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u5lZGEvbViqDWB7Ki2yefoYmlkTIyRYMhMBf7ig8w4kbPtVLTMPEqGw+ot4Ogolgq
-	 E+HF25EPOZFt8SISB3nSpilSdmV2/kOgU7G5Z54q9lIpflvxhSzR0WfBA/Tatg8yJc
-	 brBOy4LXpphfL0u1G0+afzvox7j5HYtJlVp2f34A=
+	b=kVmYGf8cnpCAnY15hwNKxiLSbZ6Spa/MLNnClX13J0jBU7D+/DYLfrbRRi7YbBDLP
+	 8N7waF/fDgrsAn6ABC5PWQU5/aQzaRtbhCpmstKOa00TOd6Hd65+tEm3iKaXcc5Gfp
+	 IiANt6U6wN5K2A5Q7OdxOx+C91n0Qom69uVjbZtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfKMB44 (ORCPT
+        id S1729882AbfKMCP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49466 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:15:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729589AbfKMB4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:48 -0500
+        id S1729610AbfKMB4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC2EC2245A;
-        Wed, 13 Nov 2019 01:56:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 231102246A;
+        Wed, 13 Nov 2019 01:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610207;
-        bh=QNKsw1ScWAI/B1oICO7w9vn1HmKyrpOW0OpdHrOzMbg=;
+        s=default; t=1573610211;
+        bh=yW1ZY926CRyEvYL8nf0PNItB9Msvnl5KBJPysHlwXVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRGJbruubUbK/P3m4nixI1bAYNGiKfiM1J/4upf7kpmaaQXLPv5p2ud45awUa2qX2
-         JG1iOAfDJPQ5nYbEWa/neL4jXteBamUFFw/LY4wJzFk4btqmANJuW4s744pdOtU2eK
-         Bt2h8iFnkRYtoqdpbgGpiqpyppbj/UKULbsK7aEg=
+        b=DGhGPPoKyZiA+J4nJpk5AT520bvSZXAnFBWGuw7YtdNzzJu4ZZtgll/9eVAWlEhf1
+         6Voms9YNTz5EN/OWOaNu5lR+6lUISbYs9cFbWBLEnc27TBinZYGG5qYPg7qAmMRFfo
+         9bFUQdA3FZiZJVH74RftB2CGh/cXrXNhpD6uid24=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 017/115] usb: gadget: udc: fotg210-udc: Fix a sleep-in-atomic-context bug in fotg210_get_status()
-Date:   Tue, 12 Nov 2019 20:54:44 -0500
-Message-Id: <20191113015622.11592-17-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 021/115] watchdog: w83627hf_wdt: Support NCT6796D, NCT6797D, NCT6798D
+Date:   Tue, 12 Nov 2019 20:54:48 -0500
+Message-Id: <20191113015622.11592-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,46 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 2337a77c1cc86bc4e504ecf3799f947659c86026 ]
+[ Upstream commit 57cbf0e3a0fd48e5ad8f3884562e8dde4827c1c8 ]
 
-The driver may sleep in an interrupt handler.
-The function call path (from bottom to top) in Linux-4.17 is:
+The watchdog controller on NCT6796D, NCT6797D, and NCT6798D is compatible
+with the wtachdog controller on other Nuvoton chips.
 
-[FUNC] fotg210_ep_queue(GFP_KERNEL)
-drivers/usb/gadget/udc/fotg210-udc.c, 744:
-	fotg210_ep_queue in fotg210_get_status
-drivers/usb/gadget/udc/fotg210-udc.c, 768:
-	fotg210_get_status in fotg210_setup_packet
-drivers/usb/gadget/udc/fotg210-udc.c, 949:
-	fotg210_setup_packet in fotg210_irq (interrupt handler)
-
-To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
-If possible, spin_unlock() and spin_lock() around fotg210_ep_queue()
-can be also removed.
-
-This bug is found by my static analysis tool DSAC.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/fotg210-udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/w83627hf_wdt.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/fotg210-udc.c b/drivers/usb/gadget/udc/fotg210-udc.c
-index d17d7052605ba..6866a0be249e4 100644
---- a/drivers/usb/gadget/udc/fotg210-udc.c
-+++ b/drivers/usb/gadget/udc/fotg210-udc.c
-@@ -744,7 +744,7 @@ static void fotg210_get_status(struct fotg210_udc *fotg210,
- 	fotg210->ep0_req->length = 2;
+diff --git a/drivers/watchdog/w83627hf_wdt.c b/drivers/watchdog/w83627hf_wdt.c
+index 7817836bff554..4b9365d4de7a9 100644
+--- a/drivers/watchdog/w83627hf_wdt.c
++++ b/drivers/watchdog/w83627hf_wdt.c
+@@ -50,7 +50,7 @@ static int cr_wdt_csr;		/* WDT control & status register */
+ enum chips { w83627hf, w83627s, w83697hf, w83697ug, w83637hf, w83627thf,
+ 	     w83687thf, w83627ehf, w83627dhg, w83627uhg, w83667hg, w83627dhg_p,
+ 	     w83667hg_b, nct6775, nct6776, nct6779, nct6791, nct6792, nct6793,
+-	     nct6795, nct6102 };
++	     nct6795, nct6796, nct6102 };
  
- 	spin_unlock(&fotg210->lock);
--	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_KERNEL);
-+	fotg210_ep_queue(fotg210->gadget.ep0, fotg210->ep0_req, GFP_ATOMIC);
- 	spin_lock(&fotg210->lock);
- }
+ static int timeout;			/* in seconds */
+ module_param(timeout, int, 0);
+@@ -100,6 +100,7 @@ MODULE_PARM_DESC(early_disable, "Disable watchdog at boot time (default=0)");
+ #define NCT6792_ID		0xc9
+ #define NCT6793_ID		0xd1
+ #define NCT6795_ID		0xd3
++#define NCT6796_ID		0xd4	/* also NCT9697D, NCT9698D */
+ 
+ #define W83627HF_WDT_TIMEOUT	0xf6
+ #define W83697HF_WDT_TIMEOUT	0xf4
+@@ -209,6 +210,7 @@ static int w83627hf_init(struct watchdog_device *wdog, enum chips chip)
+ 	case nct6792:
+ 	case nct6793:
+ 	case nct6795:
++	case nct6796:
+ 	case nct6102:
+ 		/*
+ 		 * These chips have a fixed WDTO# output pin (W83627UHG),
+@@ -407,6 +409,9 @@ static int wdt_find(int addr)
+ 	case NCT6795_ID:
+ 		ret = nct6795;
+ 		break;
++	case NCT6796_ID:
++		ret = nct6796;
++		break;
+ 	case NCT6102_ID:
+ 		ret = nct6102;
+ 		cr_wdt_timeout = NCT6102D_WDT_TIMEOUT;
+@@ -450,6 +455,7 @@ static int __init wdt_init(void)
+ 		"NCT6792",
+ 		"NCT6793",
+ 		"NCT6795",
++		"NCT6796",
+ 		"NCT6102",
+ 	};
  
 -- 
 2.20.1
