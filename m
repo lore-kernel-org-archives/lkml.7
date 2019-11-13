@@ -2,134 +2,255 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A26C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34781C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D61F206EE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13424206CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hP8mPH20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfKMRyP (ORCPT
+        id S1728114AbfKMRzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:54:15 -0500
-Received: from m9a0003g.houston.softwaregrp.com ([15.124.64.68]:44429 "EHLO
-        m9a0003g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbfKMRyP (ORCPT
+        Wed, 13 Nov 2019 12:55:36 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52648 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726564AbfKMRzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:54:15 -0500
-Received: FROM m9a0003g.houston.softwaregrp.com (15.121.0.190) BY m9a0003g.houston.softwaregrp.com WITH ESMTP;
- Wed, 13 Nov 2019 17:53:31 +0000
-Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
- M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 13 Nov 2019 17:52:48 +0000
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (15.124.8.12) by
- M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Wed, 13 Nov 2019 17:52:48 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dlbW0PwrLFcc7xWd/hdhiwTP6NO7pGwwu16I23ClSY7/1L7DzKGAVWi1Or3Fi9EWtnpdYY0BX6cVlQzd7CjsFffFulgLgrURs62M4TKcLjtjmy/eFaU1RQ3Q20moEsarQgEozXuAU7gR/fRSzSW67msEgjVvstsC9xx0kaLACdwDOdKJiEaOXRfdOwVbwx8nTMUnC7wfESk9uKh1XbEDtUudfsN0v9UXYfVFyNPZPzNiyKy3nVQUlwiwoUVANOwAuk3vBaNGntBMdPOz5cNILWYigckdGi1atgXXVJl/d7leh9IJ0VttpYIm+u5RfQhCTpoq8sE4jilaZxjD3rBGvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g+gGddVW3XDEVcryoA2Rz6R7ZvGWRutzoceULWkl9jY=;
- b=c5qMW+OUmgJqFJk+XHGAB8weg6a+qkCvjXYjuPrAPXP1Imu6svqWruzAzu9x+A39Z9+4WZI1ypW1bWIGOrbNwuGLvHghjhIBy0Eb37IAELPJOg9AITdFwgqTIxtUGoH3yrzfOaoo5eLK2Py8rIp45QeGEnz+n3P2aPhTCCHMhrvDkAFVH7Jo2iJB17cpGmTKWq4liRdQc1t+r341Mwgxb/gLgON+h9lIl7e/JdYlaPBTXf07VkNAcagxUS6E32Nri7Ob30LnbigpvvSlHU4yQUyHzT6YPYlPhfRPwbZ8rfd+arz57vjJURO02ZAeUhqIMPP4S+y2Rq9AkEjX7F7wfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Received: from MN2PR18MB3278.namprd18.prod.outlook.com (10.255.237.204) by
- MN2PR18MB2702.namprd18.prod.outlook.com (20.178.255.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Wed, 13 Nov 2019 17:52:48 +0000
-Received: from MN2PR18MB3278.namprd18.prod.outlook.com
- ([fe80::2914:6699:d7e5:de45]) by MN2PR18MB3278.namprd18.prod.outlook.com
- ([fe80::2914:6699:d7e5:de45%3]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
- 17:52:48 +0000
-From:   Lee Duncan <LDuncan@suse.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "wubo (T)" <wubo40@huawei.com>
-CC:     "cleech@redhat.com" <cleech@redhat.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ulrich Windl <Ulrich.Windl@rz.uni-regensburg.de>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>
-Subject: Re: [PATCH v3] scsi: avoid potential deadloop in iscsi_if_rx func
-Thread-Topic: [PATCH v3] scsi: avoid potential deadloop in iscsi_if_rx func
-Thread-Index: AdWPliQLA8PIGoMpTtGRxNyp42qoAAKLPyHxACIApAA=
-Date:   Wed, 13 Nov 2019 17:52:47 +0000
-Message-ID: <e0ddba45-7fd4-a1e9-b1e8-d59a46316695@suse.com>
-References: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DFB0ED@dggeml505-mbs.china.huawei.com>
- <yq18soksgji.fsf@oracle.com>
-In-Reply-To: <yq18soksgji.fsf@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P123CA0028.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::16)
- To MN2PR18MB3278.namprd18.prod.outlook.com (2603:10b6:208:168::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=LDuncan@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [73.25.22.216]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7add3b6a-636a-41c8-b9bb-08d768624b3f
-x-ms-traffictypediagnostic: MN2PR18MB2702:
-x-microsoft-antispam-prvs: <MN2PR18MB270260DD2CF908FCD7DB0CDCDA760@MN2PR18MB2702.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(346002)(396003)(376002)(136003)(189003)(199004)(7736002)(11346002)(229853002)(4326008)(446003)(66066001)(2616005)(6436002)(7416002)(5660300002)(52116002)(256004)(14444005)(3846002)(6116002)(478600001)(14454004)(186003)(6486002)(66946007)(6512007)(66476007)(66556008)(486006)(6246003)(476003)(66446008)(64756008)(386003)(102836004)(31696002)(36756003)(53546011)(6506007)(99286004)(86362001)(25786009)(31686004)(2906002)(71190400001)(71200400001)(26005)(54906003)(8676002)(8936002)(316002)(110136005)(76176011)(305945005)(81166006)(81156014)(80792005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR18MB2702;H:MN2PR18MB3278.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yBQMzg+j+fven3k9Nk8yaI4bJCAxlao34FreDBxOB3BGPAlpQPHFmYM/Xu5debZ42yu42IVhN0CR3XMouX+fiiJcdr0moWeXhpNdTiJYg+6c4hNXFr5FpJbN8S1hNyyRolmmIOWj2aep1uOQkY2xBRCL2EjRddS/D0U42wQ+521o9UsbCxLOMbVGzBqY5liLedFxH7CjXMB8DSDFotckm0po0iXjHX1iaOlnsxRihhGwtbPe/ofpNgGrIq74xyUIowt2hnzuGESzC958hLKkGHX0aiAyCny7APDXFaao/7WAaXvVUSBpAkEH+v05kNJpsItO81atkE+XzE1bp4f8WIe9miKpKg/1O9EaMPDPCgmd8OsIipTQw9ve/yqb3xof87hNb80qYVgw5ysH0AvlLnxQZCFKNlRX33jEsLXVSg9Xg33PS0IDseJQ0EkZ+WN7
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1424B068C9B9EF449149B2E38A3C57CF@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 13 Nov 2019 12:55:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573667734;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5hOxiCMZkC2udYRqxzprYUCZjx83pEXI0qIX/cevzrU=;
+        b=hP8mPH20EkMINGyRSxpd7d75yTyeJ5fQKLVXFrJlkowIqiR/UlHvaNev708/FTJtLa38V/
+        gYaek3XKq0JcVxmCBYGLlSamzgurdrP/BRfEDY0hhCvuyosa/cOX1c4pcjmgQkMAPMGkiy
+        Up4ndodjCr7a3l/76mSmnaq4+/wFLec=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-DAVqcWd6PVu2hWaYQGOl4Q-1; Wed, 13 Nov 2019 12:55:31 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 368B21088890;
+        Wed, 13 Nov 2019 17:55:29 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F49D620A5;
+        Wed, 13 Nov 2019 17:55:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     Steve French <sfrench@samba.org>, Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve Dickson <steved@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+cc:     dhowells@redhat.com, v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        linux-cachefs@redhat.com, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: FS-Cache/CacheFiles rewrite
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7add3b6a-636a-41c8-b9bb-08d768624b3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 17:52:47.7794
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v4O4qOup4K498SsG9Hw61rjNDTm1zhqIiuoN6iRkZYfi4+A5jPOoHPyAQlXeDLpMBpHFmtk+7/Sj6efe4H1DpA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2702
-X-OriginatorOrg: suse.com
+Content-ID: <24941.1573667720.1@warthog.procyon.org.uk>
+Date:   Wed, 13 Nov 2019 17:55:20 +0000
+Message-ID: <24942.1573667720@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: DAVqcWd6PVu2hWaYQGOl4Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTEvMTIvMTkgNTozNyBQTSwgTWFydGluIEsuIFBldGVyc2VuIHdyb3RlOg0KPiANCj4+IElu
-IGlzY3NpX2lmX3J4IGZ1bmMsIGFmdGVyIHJlY2VpdmluZyBvbmUgcmVxdWVzdCB0aHJvdWdoDQo+
-PiBpc2NzaV9pZl9yZWN2X21zZyBmdW5jLCBpc2NzaV9pZl9zZW5kX3JlcGx5IHdpbGwgYmUgY2Fs
-bGVkIHRvIHRyeSB0bw0KPj4gcmVwbHkgdGhlIHJlcXVlc3QgaW4gZG8tbG9vcC4gSWYgdGhlIHJl
-dHVybiBvZiBpc2NzaV9pZl9zZW5kX3JlcGx5DQo+PiBmdW5jIHJldHVybiAtRUFHQUlOIGFsbCB0
-aGUgdGltZSwgb25lIGRlYWRsb29wIHdpbGwgb2NjdXIuDQo+PiAgDQo+PiBGb3IgZXhhbXBsZSwg
-YSBjbGllbnQgb25seSBzZW5kIG1zZyB3aXRob3V0IGNhbGxpbmcgcmVjdm1zZyBmdW5jLCANCj4+
-IHRoZW4gaXQgd2lsbCByZXN1bHQgaW4gdGhlIHdhdGNoZG9nIHNvZnQgbG9ja3VwLiANCj4+IFRo
-ZSBkZXRhaWxzIGFyZSBnaXZlbiBhcyBmb2xsb3dzLA0KPiANCj4gTGVlL0NocmlzL1VscmljaDog
-UGxlYXNlIHJldmlldyENCj4gDQoNCg0KT2theSwgYWZ0ZXIgbG9va2luZyBhZ2FpbiBhdCB0aGUg
-dGhyZWFkLCBJIGRvIGhhdmUgc29tZSBhZGRpdGlvbmFsDQpmZWVkYmFjayBmb3IgdGhlIHBhdGNo
-IHN1Ym1pdHRlci4NCg0KWW91IHNob3VsZCBwdXQgeW91ciAiY2hhbmdlcyBpbiBWMiwgVjMsIC4u
-LiIgYWJvdmUgdGhlIHBhdGNoIGxpbmUgKHRoZQ0KIi0tICIgb24gYSBsaW5lIGJ5IGl0c2VsZiks
-IG5vdCBhcyBwYXJ0IG9mIHRoZSBwYXRjaC4NCg0KQWxzbywgYXMgbG9uZyBhcyB5b3UgYXJlIG1h
-a2luZyBvbmUgbGFzdCByb3VuZCBvZiBjaGFuZ2VzLCBwbGVhc2UgY2hhbmdlDQoiZGVhZGxvb3Ai
-IHRvICJkZWFkbG9jayIgaW4geW91ciBwYXRjaCBzdWJqZWN0LCBhcyBkZWFkbG9vcCBpcyBub3Qg
-YSB3b3JkLg0KDQpMYXN0bHksIHRoZSAiU3VnZ2VzdGVkLWJ5IiBsaW5lcyB5b3UgYWRkZWQgYXJl
-IGZpbmUsIGJ1dCB0aGF0IGdlbmVyYWxseQ0KbWVhbnMgdGhhdCBwZXJzb24gc3VnZ2VzdGVkIHRo
-ZSBwYXRjaCwgbm90IGNoYW5nZXMuIEZvciBmb2xrcyB0aGF0DQpzdWdnZXN0IGNoYW5nZXMsIGl0
-J3MgdXAgdG8gdGhlbSB0byBzYXkgdGhleSBsaWtlIG9yIGRvIG5vdCBsaWtlIHlvdXINCmNoYW5n
-ZXMgYWZ0ZXIgeW91IG1ha2UgdGhlbSwgYXQgd2hpY2ggcG9pbnQgdGhleSBjYW4gYWRkIHRoZWly
-DQoiUmV2aWV3ZWQtYnkiIHRhZyBpZiB0aGV5IHdpc2guDQoNClBsZWFzZSBmZWVsIGZyZWUgdG8g
-c2VuZCB5b3VyIHBhdGNoIHRvIG1lIGRpcmVjdGx5LCBiZWZvcmUgcHVibGlzaGluZywNCmlmIHlv
-dSB3b3VsZCBsaWtlIGEgcmV2aWV3IGJlZm9yZSBwdWJsaXNoaW5nIGFnYWluLg0KDQotLSANCkxl
-ZQ0K
+Hi,
+
+I've been rewriting the local cache for network filesystems with the aim of
+simplifying it, speeding it up, reducing its memory overhead and making it
+more understandable and easier to debug.
+
+For the moment fscache support is disabled in all network filesystems that
+were using, apart from afs.
+
+To this end, I have so far made the following changes to fscache:
+
+ (1) The fscache_cookie_def struct has gone, along with all the callback
+     functions it used to contain.  The filesystem stores the auxiliary dat=
+a
+     and file size into the cookie and these are written back lazily (possi=
+bly
+     too lazily at the moment).  Any necessary information is passed in to
+     fscache_acquire_cookie().
+
+ (2) The object state machine has been removed and replaced by a much simpl=
+er
+     dispatcher that runs the entire cookie instantiation procedure, cookie
+     teardown procedure or cache object withdrawal procedure in one go with=
+out
+     breaking it down into cancellable/abortable states.
+
+     To avoid latency issues, a thread pool is created to which these
+     operations will be handed off if any threads are idle; if no threads a=
+re
+     idle, the operation is run in the process that triggered it.
+
+ (3) The entire I/O API has been deleted and replaced with one that *only*
+     provides a "read cache to iter" function and a "write iter to cache"
+     function.  The cache therefore neither knows nor cares where netfs pag=
+es
+     are - and indeed, reads and writes don't need to go to such places.
+
+ (4) The netfs must allow the cache the opportunity to 'shape' a read from =
+the
+     server, both from ->readpages() and from ->write_begin(), so that the
+     size and start of the read are of a suitably aligned for the cache
+     granularity.  Cachefiles is currently using a 256KiB granule size.
+
+     A helper is provided to do most of the work: fscache_read_helper().
+
+ (5) An additional layer, an fscache_io_handle, has been interposed in the =
+I/O
+     API that allows the cache to store transient stuff, such as the open f=
+ile
+     struct pointer to the backing file for the duration of the netfs file
+     being open.
+
+     I'm tempted on one hand to merge this into the fscache_object struct a=
+nd
+     on the other hand to use this to get rid of 'cookie enablement' and al=
+low
+     already open files to be connected to the cache.
+
+ (6) The PG_fscache bit is now set on a page to indicate that the page is
+     being written to the cache and cleared upon completion.  write_begin,
+     page_mkwrite, releasepage, invalidatepage, etc. can wait on this.
+
+ (7) Cookie removal now read-locks the semaphore that is used to manage
+     addition and removal of a cache.  This greatly simplifies the logic in
+     detaching an object from a cookie and cleaning it up as relinquishment
+     and withdrawal can't then happen simultaneously.
+
+     It does mean, though, that cookie relinquishment is held up by cache
+     removal.
+
+And the following changes to cachefiles:
+
+ (1) The I/O code has been replaced.  The page waitqueue snooping and defer=
+red
+     backing-page to netfs-page copy is now entirely gone and asynchronous
+     direct I/O through kiocbs is now used instead to effect the transfer o=
+f
+     data to/from the cache.
+
+     This affords a speed increase of something like 40-50% and reduces the
+     amount of memory that is pinned during I/O.
+
+ (2) bmap() is no longer used to detect the presence of blocks in the
+     filesystem.  With a modern extent based filesystem, this may give both
+     false positives and false negatives if the filesystem optimises an ext=
+ent
+     by eliminating a block of zeros or adds a block to bridge between two
+     close neighbours.
+
+     Instead, a content map is stored in an xattr on the backing file, with=
+ 1
+     bit per 256KiB block.  The cache shapes the netfs's read requests to
+     request multiple-of-256KiB reads from the server, which are then writt=
+en
+     back.
+
+ (3) The content map and attributes are then stored lazily when the object =
+is
+     destroyed.  This may be too lazy.
+
+To aid this I've added the following:
+
+ (1) Wait/wake functions for the PG_fscache bit.
+
+ (2) ITER_MAPPING iterator that refers to a contiguous sequence of pinned
+     pages with no holes in a mapping.  This means you don't have to alloca=
+te
+     a sequence of bio_vecs to represent the same thing.
+
+     As stated, the pages *must* be pinned - such as by PG_locked,
+     PG_writeback or PG_fscache - before iov_iter_mapping() is called to se=
+t
+     the mapping up.
+
+Things that still need doing:
+
+ (1) afs (and any other netfs) needs to write changes to the cache at the s=
+ame
+     time it writes them to the server so that the cache doesn't get out of
+     sync.  This is also necessary to implement write-back caching and
+     disconnected operation.
+
+ (2) The content map is limited by the maximum xattr size.  Is it possible =
+to
+     configure the backing filesystem so that it doesn't merge extents acro=
+ss
+     certain boundaries or eliminate blocks of zeros so that I don't need a
+     content map?
+
+ (3) Use O_TMPFILE in the cache to effect immediate invalidation.  I/O can
+     then continue to progress whilst the cache driver replaces the linkage=
+.
+
+ (4) The file in the cache needs to be truncated if the netfs file is
+     shortened by truncation.
+
+ (5) Data insertion into the cache is not currently checked for space
+     availability.
+
+ (6) The stats need going over.  Some of them are obsolete and there are no
+     I/O stats working at the moment.
+
+ (7) Replacement I/O tracepoints are required.
+
+Future changes:
+
+ (1) Get rid of cookie enablement.
+
+ (2) Frame the limit on the cache capacity in terms of an amount of data th=
+at
+     can be stored in it rather than an amount of free space that must be
+     kept.
+
+ (3) Move culling out of cachefilesd into the kernel.
+
+ (4) Use the I/O handle to add caching to files that are already open, perh=
+aps
+     listing I/O handles from the cache tag.
+
+Questions:
+
+ (*) Does it make sense to actually permit multiple caches?
+
+ (*) Do we want to allow multiple filesystem instances (think NFS) to use t=
+he
+     same cache objects?  fscache no longer knows about the netfs state, an=
+d
+     the netfs now just reads and writes to the cache, so it's kind of
+     possible - but coherency management is tricky and would definitely be =
+up
+     to the netfs.
+
+The patches can be found here:
+
+=09https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/lo=
+g/?h=3Dfscache-iter
+
+I'm not going to post them for the moment unless someone really wants that.
+
+David
+
