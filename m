@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0719C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD515C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12EB20674
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59052248B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609930;
-	bh=l6pIeRuMJhfnBHzeFNNTbpdwiyNr5qVCW2IiF8wlkhU=;
+	s=default; t=1573609932;
+	bh=UAiA5p4GwIPMn4XuVsudYM5hQDLrQ1ON5FvGJrnxOCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNmLP4C/p44uwqInXEPujzCE+Jsce2j1PMC4G2CC1IDk5eIVQvrJRZDPnVhbyrkrK
-	 9HEMHNJ4JyKv2NgG/q2rBoq1ODTkUkWsYE+2AaWHwoLh9w8I5lX6rM8Bp25ocABDYa
-	 iWYHp5GXu9sRJFVySf8OH5T26lp9e6buf6ifAVwo=
+	b=Qm2Le9VbPjzXgXDd4T9HduZXmqexPH+iunkskg1Ytp71baK2C/93LSBpBQVgnVv1j
+	 TBl+LQnjSYlOR03w1IEvGoePvdF4sM4xo45gPFW0SIliRQGR1PnyRNsl3T1I6KvJI+
+	 ERAlCtT7yVZoy19QLk6DE6RE1uHLi4mdaiY1Qaz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbfKMBwJ (ORCPT
+        id S1728183AbfKMBwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:52:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:52:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbfKMBwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:03 -0500
+        id S1728150AbfKMBwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1460B20674;
-        Wed, 13 Nov 2019 01:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9EAB20674;
+        Wed, 13 Nov 2019 01:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609922;
-        bh=l6pIeRuMJhfnBHzeFNNTbpdwiyNr5qVCW2IiF8wlkhU=;
+        s=default; t=1573609926;
+        bh=UAiA5p4GwIPMn4XuVsudYM5hQDLrQ1ON5FvGJrnxOCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=riFSBAertdqd8ZRL1oQTyGJ+eRRy+QFZ1p3EKv7nubN4F4N217D8j4jmL8yVRS1LN
-         gIlAsnj5AGcLp/TmLfJqAbORRZqsClCsY0Q4GHegFTuL2xmwpD8ulP4npuneCdWwd8
-         LBBZ8fZChDR74DypEs9eZN1DTzc+d4hp794CR6cM=
+        b=TDsv+p7eZQiw1fG5QC721nryichxqkuXpkBmYX1lxGyC3GexIK2XQuMqdXhGoU/U7
+         9MaxNZd/R4aznUcmbiz6rL1xWifnsn+/uhyNXu8ljv1f7cMubN1dK3d73L7nn+uEdQ
+         /fiDCkkopU+ilamRZ8+NvV1esvrsLHveeFxa7S6o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Radoslaw Tyl <radoslawx.tyl@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 070/209] ixgbe: Fix crash with VFs and flow director on interface flap
-Date:   Tue, 12 Nov 2019 20:48:06 -0500
-Message-Id: <20191113015025.9685-70-sashal@kernel.org>
+Cc:     Zhu Yanjun <yanjun.zhu@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 072/209] IB/rxe: avoid srq memory leak
+Date:   Tue, 12 Nov 2019 20:48:08 -0500
+Message-Id: <20191113015025.9685-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,54 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Zhu Yanjun <yanjun.zhu@oracle.com>
 
-[ Upstream commit 5d826d209164b0752c883607be4cdbbcf7cab494 ]
+[ Upstream commit aae0484e15f062ad2c2502e68e15dfb8b8f84608 ]
 
-This patch fix crash when we have restore flow director filters after reset
-adapter. In ixgbe_fdir_filter_restore() filter->action is outside of the
-rx_ring array, as it has a VF identifier in the upper 32 bits.
+In rxe_queue_init, q and q->buf are allocated. In do_mmap_info, q->ip is
+allocated. When error occurs, rxe_srq_from_init and the later error
+handler do not free these allocated memories.  This will make memory leak.
 
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++++++++--
+ drivers/infiniband/sw/rxe/rxe_srq.c | 10 ++++++++--
  1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index f3e21de3b1f0b..b45a6e2ed8d15 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -5187,6 +5187,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	struct hlist_node *node2;
- 	struct ixgbe_fdir_filter *filter;
-+	u64 action;
+diff --git a/drivers/infiniband/sw/rxe/rxe_srq.c b/drivers/infiniband/sw/rxe/rxe_srq.c
+index 0d6c04ba7fc36..c41a5fee81f71 100644
+--- a/drivers/infiniband/sw/rxe/rxe_srq.c
++++ b/drivers/infiniband/sw/rxe/rxe_srq.c
+@@ -31,6 +31,7 @@
+  * SOFTWARE.
+  */
  
- 	spin_lock(&adapter->fdir_perfect_lock);
++#include <linux/vmalloc.h>
+ #include "rxe.h"
+ #include "rxe_loc.h"
+ #include "rxe_queue.h"
+@@ -129,13 +130,18 @@ int rxe_srq_from_init(struct rxe_dev *rxe, struct rxe_srq *srq,
  
-@@ -5195,12 +5196,17 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	err = do_mmap_info(rxe, uresp ? &uresp->mi : NULL, context, q->buf,
+ 			   q->buf_size, &q->ip);
+-	if (err)
++	if (err) {
++		vfree(q->buf);
++		kfree(q);
+ 		return err;
++	}
  
- 	hlist_for_each_entry_safe(filter, node2,
- 				  &adapter->fdir_filter_list, fdir_node) {
-+		action = filter->action;
-+		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
-+			action =
-+			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
-+
- 		ixgbe_fdir_write_perfect_filter_82599(hw,
- 				&filter->filter,
- 				filter->sw_idx,
--				(filter->action == IXGBE_FDIR_DROP_QUEUE) ?
-+				(action == IXGBE_FDIR_DROP_QUEUE) ?
- 				IXGBE_FDIR_DROP_QUEUE :
--				adapter->rx_ring[filter->action]->reg_idx);
-+				adapter->rx_ring[action]->reg_idx);
+ 	if (uresp) {
+ 		if (copy_to_user(&uresp->srq_num, &srq->srq_num,
+-				 sizeof(uresp->srq_num)))
++				 sizeof(uresp->srq_num))) {
++			rxe_queue_cleanup(q);
+ 			return -EFAULT;
++		}
  	}
  
- 	spin_unlock(&adapter->fdir_perfect_lock);
+ 	return 0;
 -- 
 2.20.1
 
