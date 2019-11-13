@@ -2,138 +2,173 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC86C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D89C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD132196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED342196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfKMCot (ORCPT
+        id S1727720AbfKMCqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:44:49 -0500
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:12446 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfKMCos (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:44:48 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47CTV33Jc9zQlBx;
-        Wed, 13 Nov 2019 03:44:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id LsOzyR1eKTKd; Wed, 13 Nov 2019 03:44:38 +0100 (CET)
-Date:   Wed, 13 Nov 2019 13:44:14 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 5/9] namei: LOOKUP_IN_ROOT: chroot-like scoped
- resolution
-Message-ID: <20191113024414.wlmvtjstpnkxa36n@yavin.dot.cyphar.com>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-6-cyphar@cyphar.com>
- <20191113020307.GB26530@ZenIV.linux.org.uk>
+        Tue, 12 Nov 2019 21:46:21 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6650 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727226AbfKMCqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:46:20 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6950BC9426FED6CEC6A2;
+        Wed, 13 Nov 2019 10:46:13 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
+ 10:46:05 +0800
+Subject: Re: [PATCH v3] lib: optimize cpumask_local_spread()
+To:     Michal Hocko <mhocko@kernel.org>
+References: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191108103102.GF15658@dhcp22.suse.cz>
+ <c6f24942-c8d6-e46a-f433-152d29af8c71@hisilicon.com>
+ <20191112115630.GD2763@dhcp22.suse.cz>
+CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Paul Burton" <paul.burton@mips.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        <netdev@vger.kernel.org>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <00856999-739f-fd73-eddd-d71e4e94962e@hisilicon.com>
+Date:   Wed, 13 Nov 2019 10:46:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zcwix2zvi4el6ukc"
-Content-Disposition: inline
-In-Reply-To: <20191113020307.GB26530@ZenIV.linux.org.uk>
+In-Reply-To: <20191112115630.GD2763@dhcp22.suse.cz>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Michal,
 
---zcwix2zvi4el6ukc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019/11/12 19:56, Michal Hocko wrote:
+> On Mon 11-11-19 10:02:37, Shaokun Zhang wrote:
+>> Hi Michal,
+>>
+>> On 2019/11/8 18:31, Michal Hocko wrote:
+>>> This changelog looks better, thanks! I still have some questions though.
+>>> Btw. cpumask_local_spread is used by the networking code but I do not
+>>> see net guys involved (Cc netdev)
+>>
+>> Oh, I forgot to involve the net guys, sorry.
+>>
+>>>
+>>> On Thu 07-11-19 09:44:08, Shaokun Zhang wrote:
+>>>> From: yuqi jin <jinyuqi@huawei.com>
+>>>>
+>>>> In the multi-processors and NUMA system, I/O driver will find cpu cores
+>>>> that which shall be bound IRQ. When cpu cores in the local numa have
+>>>> been used, it is better to find the node closest to the local numa node,
+>>>> instead of choosing any online cpu immediately.
+>>>>
+>>>> On Huawei Kunpeng 920 server, there are 4 NUMA node(0 -3) in the 2-cpu
+>>>> system(0 - 1).
+>>>
+>>> Please send a topology of this server (numactl -H).
+>>>
+>>
+>> available: 4 nodes (0-3)
+>> node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+>> node 0 size: 63379 MB
+>> node 0 free: 61899 MB
+>> node 1 cpus: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+>> node 1 size: 64509 MB
+>> node 1 free: 63942 MB
+>> node 2 cpus: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
+>> node 2 size: 64509 MB
+>> node 2 free: 63056 MB
+>> node 3 cpus: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+>> node 3 size: 63997 MB
+>> node 3 free: 63420 MB
+>> node distances:
+>> node   0   1   2   3
+>>   0:  10  16  32  33
+>>   1:  16  10  25  32
+>>   2:  32  25  10  16
+>>   3:  33  32  16  10
+>>
+>>>> We perform PS (parameter server) business test, the
+>>>> behavior of the service is that the client initiates a request through
+>>>> the network card, the server responds to the request after calculation. 
+>>>
+>>> Is the benchmark any ublicly available?
+>>>
+>>
+>> Sorry, the PS which we test is not open, but I think redis is the same as PS
+>> on the macro level. When there are both 24 redis servers on node2 and node3.
+>> if the 24-47 irqs and xps of NIC are not bound to node3, the redis servers
+>> on node3 will not performance good.
+> 
+> Are there any other benchmarks showing improvements?
+>
 
-On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Tue, Nov 05, 2019 at 08:05:49PM +1100, Aleksa Sarai wrote:
->=20
-> > @@ -2277,12 +2277,20 @@ static const char *path_init(struct nameidata *=
-nd, unsigned flags)
-> > =20
-> >  	nd->m_seq =3D read_seqbegin(&mount_lock);
-> > =20
-> > -	/* Figure out the starting path and root (if needed). */
-> > -	if (*s =3D=3D '/') {
-> > +	/* Absolute pathname -- fetch the root. */
-> > +	if (flags & LOOKUP_IN_ROOT) {
-> > +		/* With LOOKUP_IN_ROOT, act as a relative path. */
-> > +		while (*s =3D=3D '/')
-> > +			s++;
->=20
-> Er...  Why bother skipping slashes?  I mean, not only link_path_walk()
-> will skip them just fine, you are actually risking breakage in this:
->                 if (*s && unlikely(!d_can_lookup(dentry))) {
->                         fdput(f);
->                         return ERR_PTR(-ENOTDIR);
->                 }
-> which is downstream from there with you patch, AFAICS.
+Sorry, I don't have it. The issue is clear and the patch is helpful for the
+actual Parameter Server and Redis test.
 
-I switched to stripping the slashes at your suggestion a few revisions
-ago[1], and had (wrongly) assumed we needed to handle "/" somehow in
-path_init(). But you're quite right about link_path_walk() -- and I'd be
-more than happy to drop it.
+>>>> When two PS processes run on node2 and node3 separately and the
+>>>> network card is located on 'node2' which is in cpu1, the performance
+>>>> of node2 (26W QPS) and node3 (22W QPS) was different.
+>>>> It is better that the NIC queues are bound to the cpu1 cores in turn,
+>>>> then XPS will also be properly initialized, while cpumask_local_spread
+>>>> only considers the local node. When the number of NIC queues exceeds
+>>>> the number of cores in the local node, it returns to the online core
+>>>> directly. So when PS runs on node3 sending a calculated request,
+>>>> the performance is not as good as the node2. It is considered that
+>>>> the NIC and other I/O devices shall initialize the interrupt binding,
+>>>> if the cores of the local node are used up, it is reasonable to return
+>>>> the node closest to it.
+>>>
+>>> Can you post cpu affinities before and after this patch?
+>>>
+>>
+>> Before this patch
+>> Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
+>> 2
+>> Euler:~ # cat /proc/irq/345/smp_affinity    #IRQ0
+>> 00000000,00010000,00000000
+> 
+> This representation is awkward to parse. Could you add smp_affinity_list
+> please? It would save quite some head scratching.
+> 
 
-[1]: https://lore.kernel.org/lkml/20190712125552.GL17978@ZenIV.linux.org.uk/
+before patch
+Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
+2
+Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
+48
+Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
+0
+Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
+24
+Euler:/sys/bus/pci #
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+after patch
+Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
+2
+Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
+48
+Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
+72
+Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
+24
+Euler:/sys/bus/pci #
 
---zcwix2zvi4el6ukc
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Shaokun
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXctt+gAKCRCdlLljIbnQ
-EtaOAP4wZ6FONr+jCigAii+B0S1x/aNqVoCXGa0s32/c+X1spQEAiLcI0bIEdqjF
-tuAr6TYPTrpe63nhzokAO32LJ1rVrQM=
-=G6qn
------END PGP SIGNATURE-----
-
---zcwix2zvi4el6ukc--
