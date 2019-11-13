@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A53C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366E1C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A224222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CDC222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610098;
-	bh=+cr+gRA2SshBODWMDln8Yq9d8VynUPdCUo4G0OSVzV0=;
+	s=default; t=1573610100;
+	bh=WNzOcSDtG5/ZzPIRNc452Bw+G3KZ9d2AoXandGQy9MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=boFPI7awR+qGGMs6xOOIWVrNnTK6Ael7xU+oEyKkPufq6ocNbK6C/mzc8UXL9gNL8
-	 5YOedF8uta+3+Ihdrpl83YRGqjHF7UmnJ5g3pydNtlue61K49xPxEE43lgRLkqW3EB
-	 HYRXLYBYursGHvnHSLmgRhSOqbeqOvfVmPNFmOPc=
+	b=Wtki2ooDSblOZQwuOG4cbmVShbuB7p3z6fgvzA+hqX9CleyO3pnApJFTCbsBFj3Ao
+	 jceAB/+XqSY1SBPRmkFUUm4bjl76gXxbO4BUYVQ4fhuz0NYSey9OkL7MYuD/NAcqqB
+	 erEmlLDge7XhPsiBwlS6scZZX22CLSN9rrns/2To=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfKMBy5 (ORCPT
+        id S1727666AbfKMBy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:54:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46052 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:54:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727904AbfKMByz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:54:55 -0500
+        id S1728979AbfKMBy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:54:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208A9222CD;
-        Wed, 13 Nov 2019 01:54:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4379D222D4;
+        Wed, 13 Nov 2019 01:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610094;
-        bh=+cr+gRA2SshBODWMDln8Yq9d8VynUPdCUo4G0OSVzV0=;
+        s=default; t=1573610096;
+        bh=WNzOcSDtG5/ZzPIRNc452Bw+G3KZ9d2AoXandGQy9MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=olVpVziFrRhsD/nBWh0lkvUCYcNuttzc46OWNo/8ew6USyPgumgK5s2rA/gQ4kvn9
-         PS6Qw7tPNxEZxUs9uXunNa4xzuNKY9pZYLvdUITh31GKPtvzGzbRrctj5weDkioaby
-         ri5YhGR2I2msvr6XcA/ib5M18LFEYAaGk0l3zzVI=
+        b=O31C+kpZB4sHp8r5M/3LrkKdehhy7EUFcyRVt3+VAkYgcN0Wt9UTWlngUMBaEEBZy
+         aHb7jPt7UsAu3rUzyZZn0divSCl7jrMSuOJBxiDclYytQHMDbN8eFDNdIGoPXbkqJQ
+         KaU4WyjRlhB64NV2kzkIQqNX2rZ0KjHhORyBBHK0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 157/209] s390/kasan: avoid instrumentation of early C code
-Date:   Tue, 12 Nov 2019 20:49:33 -0500
-Message-Id: <20191113015025.9685-157-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 158/209] s390/kasan: avoid user access code instrumentation
+Date:   Tue, 12 Nov 2019 20:49:34 -0500
+Message-Id: <20191113015025.9685-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,72 +61,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 0a9b40911baffac6fc9cc2d88e893585870a97f7 ]
+[ Upstream commit b6cbe3e8bdff6f21f1b58b08a55f479cdcf98282 ]
 
-Instrumented C code cannot run without the kasan shadow area. Exempt
-source code files from kasan which are running before / used during
-kasan initialization.
+Kasan instrumentation adds "store" check for variables marked as
+modified by inline assembly. With user pointers containing addresses
+from another address space this produces false positives.
+
+static inline unsigned long clear_user_xc(void __user *to, ...)
+{
+	asm volatile(
+	...
+	: "+a" (to) ...
+
+User space access functions are wrapped by manually instrumented
+functions in kasan common code, which should be sufficient to catch
+errors. So, we just disable uaccess.o instrumentation altogether.
 
 Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/boot/Makefile            | 1 +
- arch/s390/boot/compressed/Makefile | 1 +
- arch/s390/kernel/Makefile          | 2 ++
- drivers/s390/char/Makefile         | 1 +
- 4 files changed, 5 insertions(+)
+ arch/s390/lib/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index 9e6668ee93de8..f6a9b0c203553 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -6,6 +6,7 @@
- KCOV_INSTRUMENT := n
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
+diff --git a/arch/s390/lib/Makefile b/arch/s390/lib/Makefile
+index 57ab40188d4bd..5418d10dc2a81 100644
+--- a/arch/s390/lib/Makefile
++++ b/arch/s390/lib/Makefile
+@@ -9,5 +9,9 @@ lib-$(CONFIG_SMP) += spinlock.o
+ lib-$(CONFIG_KPROBES) += probes.o
+ lib-$(CONFIG_UPROBES) += probes.o
  
- KBUILD_AFLAGS := $(KBUILD_AFLAGS_DECOMPRESSOR)
- KBUILD_CFLAGS := $(KBUILD_CFLAGS_DECOMPRESSOR)
-diff --git a/arch/s390/boot/compressed/Makefile b/arch/s390/boot/compressed/Makefile
-index b375c6c5ae7b1..9b3d821e5b46e 100644
---- a/arch/s390/boot/compressed/Makefile
-+++ b/arch/s390/boot/compressed/Makefile
-@@ -8,6 +8,7 @@
- KCOV_INSTRUMENT := n
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
- 
- obj-y	:= $(if $(CONFIG_KERNEL_UNCOMPRESSED),,head.o misc.o) piggy.o
- targets	:= vmlinux.lds vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2
-diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
-index b205c0ff0b220..762fc45376ffd 100644
---- a/arch/s390/kernel/Makefile
-+++ b/arch/s390/kernel/Makefile
-@@ -23,6 +23,8 @@ KCOV_INSTRUMENT_early_nobss.o	:= n
- UBSAN_SANITIZE_early.o		:= n
- UBSAN_SANITIZE_early_nobss.o	:= n
- 
-+KASAN_SANITIZE_early_nobss.o	:= n
++# Instrumenting memory accesses to __user data (in different address space)
++# produce false positives
++KASAN_SANITIZE_uaccess.o := n
 +
- #
- # Passing null pointers is ok for smp code, since we access the lowcore here.
- #
-diff --git a/drivers/s390/char/Makefile b/drivers/s390/char/Makefile
-index c6ab34f94b1b5..3072b89785ddf 100644
---- a/drivers/s390/char/Makefile
-+++ b/drivers/s390/char/Makefile
-@@ -11,6 +11,7 @@ endif
- GCOV_PROFILE_sclp_early_core.o		:= n
- KCOV_INSTRUMENT_sclp_early_core.o	:= n
- UBSAN_SANITIZE_sclp_early_core.o	:= n
-+KASAN_SANITIZE_sclp_early_core.o	:= n
- 
- CFLAGS_sclp_early_core.o		+= -D__NO_FORTIFY
- 
+ chkbss := mem.o
+ include $(srctree)/arch/s390/scripts/Makefile.chkbss
 -- 
 2.20.1
 
