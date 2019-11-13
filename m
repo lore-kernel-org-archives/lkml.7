@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0D6C17448
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310A2222D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE862245A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610248;
-	bh=JzuVXnbANtHScJdB3rqEe/ae8c7To3o2P+Dk19lLAnE=;
+	s=default; t=1573610250;
+	bh=ZbNF/HOQmAyS7qUPtr8/B5e3AqtF1X/+pA8iO8KsUvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tvt3llXRyfy5OaZ7FUCPSrXOPovSz0mS1OBpzfz7s8rVg/CuIdunZPaXcL9CJu5x5
-	 nO5XKHgP1JMbUM8RNT3q8ubX8RRzr1wIfk1MigWywQsfyYRfKMNFC9f6AYG0XxK/fN
-	 NKRf5Vseh+ue4GqoDulsuvtINgA9gWLFyt4elbO8=
+	b=HC7RdqvUBfLh8qEKzIj80nF5x94n0TT8goaAI1pjp7sfltjP8+GW7aT2fPNGI/lsX
+	 IRE9Fgjzd++1neaQVRfTrLE4QH+dSoO6oUQ7SLPRBRmcSLOwdRbILOu3bhjMvJa1pN
+	 8zoueEyHHnv73ZRySNfOwK7WRPT53XcmonGxWAb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbfKMB51 (ORCPT
+        id S1729826AbfKMB53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:57:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:57:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729757AbfKMB5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:22 -0500
+        id S1729782AbfKMB5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E75972053B;
-        Wed, 13 Nov 2019 01:57:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 845B4222CF;
+        Wed, 13 Nov 2019 01:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610241;
-        bh=JzuVXnbANtHScJdB3rqEe/ae8c7To3o2P+Dk19lLAnE=;
+        s=default; t=1573610245;
+        bh=ZbNF/HOQmAyS7qUPtr8/B5e3AqtF1X/+pA8iO8KsUvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wwTsFSYbhMBPSyhZ2V9UT25VOfugXm+ourbaCgXcM6ElqiIpM26GFdYY7ZdLOuw+d
-         6KTHTslY0Ncy6AIfdC/jGt39UOfgzU4ux1atQvjmmvkSjrCsdwcqmzhT7LMMcRqZI+
-         Y4otyWZGJrxO6b8Bs/JRcOkiIR5XWhv1S1xS+woc=
+        b=M6pdmhnoheEkdMLfBMWFWh3jDKr7wA1ZctEMvaQED0cwTZ95HXJd8a8AEVmN54u6z
+         CaQHPkarmvDsoF8Ods18C/4Amo1VQnXJQEw+CMm5K78H0x1bEp+/l1TQ4Hm6BrO15j
+         POWbWXONvYGbgs7zu4tYnK7W1FWP5LVUhG3OQ6d8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     NeilBrown <neilb@suse.com>, Jeff Mahoney <jeffm@suse.com>,
-        Shaohua Li <shli@fb.com>, Sasha Levin <sashal@kernel.org>,
-        linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 041/115] md: allow metadata updates while suspending an array - fix
-Date:   Tue, 12 Nov 2019 20:55:08 -0500
-Message-Id: <20191113015622.11592-41-sashal@kernel.org>
+Cc:     Radoslaw Tyl <radoslawx.tyl@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 044/115] ixgbe: Fix crash with VFs and flow director on interface flap
+Date:   Tue, 12 Nov 2019 20:55:11 -0500
+Message-Id: <20191113015622.11592-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,72 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit 059421e041eb461fb2b3e81c9adaec18ef03ca3c ]
+[ Upstream commit 5d826d209164b0752c883607be4cdbbcf7cab494 ]
 
-Commit 35bfc52187f6 ("md: allow metadata update while suspending.")
-added support for allowing md_check_recovery() to still perform
-metadata updates while the array is entering the 'suspended' state.
-This is needed to allow the processes of entering the state to
-complete.
+This patch fix crash when we have restore flow director filters after reset
+adapter. In ixgbe_fdir_filter_restore() filter->action is outside of the
+rx_ring array, as it has a VF identifier in the upper 32 bits.
 
-Unfortunately, the patch doesn't really work.  The test for
-"mddev->suspended" at the start of md_check_recovery() means that the
-function doesn't try to do anything at all while entering suspend.
-
-This patch moves the code of updating the metadata while suspending to
-*before* the test on mddev->suspended.
-
-Reported-by: Jeff Mahoney <jeffm@suse.com>
-Fixes: 35bfc52187f6 ("md: allow metadata update while suspending.")
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Shaohua Li <shli@fb.com>
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e529cef5483a8..b942c74f1ce83 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8736,6 +8736,18 @@ static void md_start_sync(struct work_struct *ws)
-  */
- void md_check_recovery(struct mddev *mddev)
- {
-+	if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags) && mddev->sb_flags) {
-+		/* Write superblock - thread that called mddev_suspend()
-+		 * holds reconfig_mutex for us.
-+		 */
-+		set_bit(MD_UPDATING_SB, &mddev->flags);
-+		smp_mb__after_atomic();
-+		if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags))
-+			md_update_sb(mddev, 0);
-+		clear_bit_unlock(MD_UPDATING_SB, &mddev->flags);
-+		wake_up(&mddev->sb_wait);
-+	}
-+
- 	if (mddev->suspended)
- 		return;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index d1472727ef882..4801d96c4fa91 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -5129,6 +5129,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	struct hlist_node *node2;
+ 	struct ixgbe_fdir_filter *filter;
++	u64 action;
  
-@@ -8896,16 +8908,6 @@ void md_check_recovery(struct mddev *mddev)
- 	unlock:
- 		wake_up(&mddev->sb_wait);
- 		mddev_unlock(mddev);
--	} else if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags) && mddev->sb_flags) {
--		/* Write superblock - thread that called mddev_suspend()
--		 * holds reconfig_mutex for us.
--		 */
--		set_bit(MD_UPDATING_SB, &mddev->flags);
--		smp_mb__after_atomic();
--		if (test_bit(MD_ALLOW_SB_UPDATE, &mddev->flags))
--			md_update_sb(mddev, 0);
--		clear_bit_unlock(MD_UPDATING_SB, &mddev->flags);
--		wake_up(&mddev->sb_wait);
+ 	spin_lock(&adapter->fdir_perfect_lock);
+ 
+@@ -5137,12 +5138,17 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 
+ 	hlist_for_each_entry_safe(filter, node2,
+ 				  &adapter->fdir_filter_list, fdir_node) {
++		action = filter->action;
++		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
++			action =
++			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
++
+ 		ixgbe_fdir_write_perfect_filter_82599(hw,
+ 				&filter->filter,
+ 				filter->sw_idx,
+-				(filter->action == IXGBE_FDIR_DROP_QUEUE) ?
++				(action == IXGBE_FDIR_DROP_QUEUE) ?
+ 				IXGBE_FDIR_DROP_QUEUE :
+-				adapter->rx_ring[filter->action]->reg_idx);
++				adapter->rx_ring[action]->reg_idx);
  	}
- }
- EXPORT_SYMBOL(md_check_recovery);
+ 
+ 	spin_unlock(&adapter->fdir_perfect_lock);
 -- 
 2.20.1
 
