@@ -2,170 +2,103 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968DBC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C5EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769BA2196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F172196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:37:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rliVUmAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfKMJgd (ORCPT
+        id S1727433AbfKMJhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:36:33 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38607 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfKMJgc (ORCPT
+        Wed, 13 Nov 2019 04:37:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47154 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKMJhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:36:32 -0500
-X-Originating-IP: 93.34.114.233
-Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E291720010;
-        Wed, 13 Nov 2019 09:36:27 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 10:38:28 +0100
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: max9611: Fix too short conversion time delay
-Message-ID: <20191113093828.vk5qqtlr7bs5z5fb@uno.localdomain>
-References: <20191113092133.23723-1-geert+renesas@glider.be>
+        Wed, 13 Nov 2019 04:37:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qSG9uSaAn7qofE50Yn5j5jsLtO131S+8AtBXIrCvYT4=; b=rliVUmAZLX+u0ixJ/WjtceIH2
+        z7YMtymyk/RzzWYXW5gOS7qQc6K1ozrKI5frsTTYmz2vYsMErYlGm0AMFF5ueeS3cfdqdwI6vPIv/
+        fHft0w8ZCCX9x0u/3wbTgJo1o6TXjwsZpRgoYEmpF+UhhoiU/XXt9cAmLh5nMkxcV2b/QADR8U729
+        msrz7Vh0AyD+nLcqPX5tKVLgOa3RIZazF4cTdb17fK6+tvSmezzDn6c8HnuwrW6NgzwaUCqYyM5uI
+        ACyFE2ovh5fAbrXVxNsGAl8IHaUYqya/xCYjU68+aHhoXfDLCKMB09nJ+VjSzbdKw3x8vTOVlrLFF
+        VIq1+NoTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUp52-0005Wr-Mo; Wed, 13 Nov 2019 09:36:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C1FE4305DE2;
+        Wed, 13 Nov 2019 10:35:42 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E4D5A20302F11; Wed, 13 Nov 2019 10:36:49 +0100 (CET)
+Date:   Wed, 13 Nov 2019 10:36:49 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     mingo@redhat.com, glenn@aurora.tech, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, tglx@linutronix.de,
+        luca.abeni@santannapisa.it, c.scordino@evidence.eu.com,
+        tommaso.cucinotta@santannapisa.it, bristot@redhat.com
+Subject: Re: [PATCH 2/2] sched/deadline: Temporary copy static parameters to
+ boosted non-DEADLINE entities
+Message-ID: <20191113093649.GI4131@hirez.programming.kicks-ass.net>
+References: <20191112075056.19971-1-juri.lelli@redhat.com>
+ <20191112075056.19971-3-juri.lelli@redhat.com>
+ <20191112105130.GZ4131@hirez.programming.kicks-ass.net>
+ <20191113092241.GB29273@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="awl3hpbx7r65k2ea"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191113092133.23723-1-geert+renesas@glider.be>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191113092241.GB29273@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 13, 2019 at 10:22:41AM +0100, Juri Lelli wrote:
 
---awl3hpbx7r65k2ea
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 26e4ffa01e7a..16164b0ba80b 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -4452,9 +4452,11 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
+> >  		if (!dl_prio(p->normal_prio) ||
+> >  		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
+> >  			p->dl.dl_boosted = 1;
+> > -			queue_flag |= ENQUEUE_REPLENISH;
+> > -		} else
+> > +			p->dl.deadline = pi_task->dl.deadline;
+> > +		} else {
+> >  			p->dl.dl_boosted = 0;
+> > +			p->dl.deadline = p->dl.normal_deadline;
+> > +		}
+> >  		p->sched_class = &dl_sched_class;
+> >  	} else if (rt_prio(prio)) {
+> >  		if (dl_prio(oldprio))
 
-Hi Geert,
+> So, the problem is more related to pi_se->dl_runtime than its deadline.
+> Even if we don't replenish at the instant in time when boosting happens,
+> the boosted task might still deplete its runtime while being boosted and
 
-On Wed, Nov 13, 2019 at 10:21:33AM +0100, Geert Uytterhoeven wrote:
-> As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
-> reading in probe"), max9611 initialization sometimes fails on the
-> Salvator-X(S) development board with:
->
->     max9611 4-007f: Invalid value received from ADC 0x8000: aborting
->     max9611: probe of 4-007f failed with error -5
->
-> The max9611 driver tests communications with the chip by reading the die
-> temperature during the probe function, which returns an invalid value.
->
-> According to the datasheet, the typical ADC conversion time is 2 ms, but
-> no minimum or maximum values are provided.  However, the driver assumes
-> a 1 ms conversion time.  Usually the usleep_range() call returns after
-> more than 1.8 ms, hence it succeeds.  When it returns earlier, the data
-> register may be read too early, and the previous measurement value will
-> be returned.  After boot, this is the temperature POR (power-on reset)
-> value, causing the failure above.
->
-> Fix this by increasing the delay from 1000-2000 =C2=B5s to 2000-2200 =C2=
-=B5s.
->
-> Note that this issue has always been present, but it was exposed by the
-> aformentioned commit.
->
-> Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> This problem was exposed in v5.3.
->
-> After this patch, probing of the two max9611 sensors succeeded during
-> ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
-> R-Car H3/M3-W/M3-N SoCs.
-> ---
->  drivers/iio/adc/max9611.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-> index da073d72f649f829..b0755f25356d700d 100644
-> --- a/drivers/iio/adc/max9611.c
-> +++ b/drivers/iio/adc/max9611.c
-> @@ -89,6 +89,11 @@
->  #define MAX9611_TEMP_SCALE_NUM		1000000
->  #define MAX9611_TEMP_SCALE_DIV		2083
->
-> +/*
-> + * Conversion time is 2 ms (typically)
-> + */
-> +#define MAX9611_CONV_TIME_US_RANGE	2000, 2200
-> +
+I thought we ignored all runtime checks when we were boosted? Yes, that
+is all sorts of broken, but IIRC we figured that barring something like
+proxy-execution there really wasn't anything sane we could do wrt
+bandwidth anyway.
 
-Is a 20% sleep range enough or should it be slightly lengthen ?
-
-Apart from this, thanks a lot for finding the issue root cause!
-
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-  j
-
->  struct max9611_dev {
->  	struct device *dev;
->  	struct i2c_client *i2c_client;
-
-> @@ -238,9 +243,9 @@ static int max9611_read_single(struct max9611_dev *ma=
-x9611,
->
->  	/*
->  	 * need a delay here to make register configuration
-> -	 * stabilize. 1 msec at least, from empirical testing.
-> +	 * stabilize.
->  	 */
-> -	usleep_range(1000, 2000);
-> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
->
->  	ret =3D i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
->  	if (ret < 0) {
-> @@ -507,7 +512,7 @@ static int max9611_init(struct max9611_dev *max9611)
->  			MAX9611_REG_CTRL2, 0);
->  		return ret;
->  	}
-> -	usleep_range(1000, 2000);
-> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
->
->  	return 0;
->  }
-> --
-> 2.17.1
->
-
---awl3hpbx7r65k2ea
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3LzxQACgkQcjQGjxah
-VjzhdA/7BuGKCuWi3ZGhqxzXvYRF9u8L9W9tpIsAE6Gx6AxVHU9W6kjlYKC/U7sj
-5LnR4aJyXJBH47p6KwIq72GlC20HFrA7jd0cd/sSaP2T3ci459RK+VITyM64UYlU
-WdBDriwpJyqoI0hRimUvpt/ELlP3RwM7p6xL6YgqSI0p86yzv49b1uK7XWnkpNBO
-YANm1dzwVyhOuoefRg7o97QBTJrSdX3bUdGywVMCZs8XnNK0G1YWwOnrx2i8x020
-WcBpw99YZkuLd29A4WcCrhOGxiKyVb4mdteQHKfvpiUN3tcsexhLr/W2TkIeQ1Ic
-tGr8leCsu33R+EWiaJMY58/JRUBrcK0DQasVZO+lZcrOGowrblklrDQkmQYoMQd3
-wB+Ivp47GjpLiRycHnI28JYO78ppxNwBpMChaEtuy5A6RMwDlD+4iPXLiMD7n3iy
-Ar6VwJow65/C36b9U8bTZlVyVqI1vQDjysnLtW+6HocDCb0HAiBJwUlgYqp6e5/c
-hgqm1e7UbVr3syyzHH38mHJ+GzuQEzJ5AASKerOPDTtq6K/a+0dhAGAG2X3bYia8
-0Fe6qEbH14XcE05hpqx8nHdfmERtRzncfb0a1sZ7HzdY7H1eBiTy/+EVBx2Vqx+4
-Ys1dW+z+21WIdtGOCF46fRqNZN6585AVcruHKGFG6wWSCz0eryg=
-=cKOB
------END PGP SIGNATURE-----
-
---awl3hpbx7r65k2ea--
+Seeing how proper bandwidth handling would have the boosted task consume
+the boostee's budget etc.. And blocking the entire boost chain when it
+collectively runs out.
