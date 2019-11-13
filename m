@@ -6,67 +6,134 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BEFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5373CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDB4222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F98221925
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573606796;
-	bh=4yb7lHvzpbKW8T+vAxn8lrwtcnJIt7w1XfolQKSalHY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JYL3Rgxd6Tp9vie3UpWAWAaJw2E9+2pnyjhdgTXOZTY3O7J+F1DvF00lIoczJIW4y
-	 MEE0Hl83T8CNL+fpNkwX1UXZ5Kkz2hCyJy76ypxuNhd3JdKgs6ZZqvkDOoY+EO6ihd
-	 QpS1MXYa/T3W+0CNxJw9e7EcHUIzV81505s2Tgsc=
+	s=default; t=1573606927;
+	bh=bAF3tCqTZUxvH9K7xmlG4hzJsF3fT2vJNQynwO4ypec=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Mx38TgKROR+F5lnWSWmGNWJvMZHVNCMFZ4u7d7uoc1boF3DgjDmi6WFnZwRt5mJR1
+	 oTN01Y8j1Nv1l8nvAyJjexsOZpXJ25a5TkVJREvUr3xbRIkSqrd2zZP2/jFL1BDWGV
+	 3iicAHBe1bVrTDmrl4Qy5o/08jtkBzEma0880oIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfKMA7z (ORCPT
+        id S1727109AbfKMBCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:59:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39896 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:02:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726991AbfKMA7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:59:54 -0500
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726986AbfKMBCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:02:05 -0500
+Received: from devnote2 (unknown [147.50.43.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1907D21A49;
-        Wed, 13 Nov 2019 00:59:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CF5A20818;
+        Wed, 13 Nov 2019 01:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573606794;
-        bh=4yb7lHvzpbKW8T+vAxn8lrwtcnJIt7w1XfolQKSalHY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JJuvo9RjvuXk1csk0IjP8HgMsg3QrX+FO4QOK52XFbZ7rda76fIOFWiyhvKCJ+BEM
-         fqMgQ9J9nRcO8NCM6Wr6uss6xlhl+oJebbpuDISQTaepRw5EqxggjI/lHDpRXztM1w
-         ClsqQsIkzJsN2ZpAobgaX4SKMy0wZRoFcvSA+D9A=
-Received: by mail-vs1-f50.google.com with SMTP id b16so203077vso.10;
-        Tue, 12 Nov 2019 16:59:54 -0800 (PST)
-X-Gm-Message-State: APjAAAUXof7eO2DkG2BDJ4+CczGHaLo4PexSMzbeQeHnuwEWRSPUPosq
-        DWRumo16D/wO3ipllwhay1NhCUGQCI8t9CcTFR8=
-X-Google-Smtp-Source: APXvYqxzhCiicadbSiGv+3jSbe/M5DxJ56s7Ccvpv1M88wusxemgOfgl/SvhuajmiHgEoWhrEcK34Lzh+HPvO2wYK9g=
-X-Received: by 2002:a05:6102:302f:: with SMTP id v15mr337333vsa.122.1573606793255;
- Tue, 12 Nov 2019 16:59:53 -0800 (PST)
-MIME-Version: 1.0
-References: <ed51f7dd-50a2-fbf5-7ea8-4bab6d48279e@gmail.com> <20191113003524.GQ11244@42.do-not-panic.com>
-In-Reply-To: <20191113003524.GQ11244@42.do-not-panic.com>
-From:   Luis Chamberlain <mcgrof@kernel.org>
-Date:   Tue, 12 Nov 2019 16:59:41 -0800
-X-Gmail-Original-Message-ID: <CAB=NE6XNWSPQhDkGDpL_VC-4U10bGKs6K4gzzegVQR5D41+edw@mail.gmail.com>
-Message-ID: <CAB=NE6XNWSPQhDkGDpL_VC-4U10bGKs6K4gzzegVQR5D41+edw@mail.gmail.com>
-Subject: Re: [PATCH] proc: Allow restricting permissions in /proc/sys
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1573606924;
+        bh=bAF3tCqTZUxvH9K7xmlG4hzJsF3fT2vJNQynwO4ypec=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=idHQd5mZmjTdcvQaTtf0yYmcvg9GpP2XIxFjcTpk9vIeNL678w/HpfrAhEjFENDfw
+         v6KuLbQbjrWKdCqPrAik/ttqlrVJmKRE0O4ElghLSUEAjn0PQ46Jr3gqmslaN/iz+0
+         THYYQYiy4Ewdehu9fRSccYa5f6LpCJhhFTGU3SdA=
+Date:   Wed, 13 Nov 2019 08:01:57 +0700
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v2 1/4] perf probe: Generate event name with line number
+Message-Id: <20191113080157.9d6316e9826dd5aed874537e@kernel.org>
+In-Reply-To: <20191112173131.e484666a4ae1bbd7708ccf15@kernel.org>
+References: <157314406866.4063.16995747442215702109.stgit@devnote2>
+        <157314407850.4063.2307803945694526578.stgit@devnote2>
+        <20191111140450.GB9365@kernel.org>
+        <20191111140625.GC9365@kernel.org>
+        <20191111140733.GD9365@kernel.org>
+        <20191112173131.e484666a4ae1bbd7708ccf15@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also, while at it. Please add a test cases for all of this. There is
-tools/testing/selftests/sysctl/ and the respective lib/test_sysctl.c.
+Hi Arnaldo,
 
-  Luis
+On Tue, 12 Nov 2019 17:31:31 +0700
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > > # perf probe --list
+> > > >   probe:kernel_read_l1 (on kernel_read@fs/read_write.c)
+> > > >   probe:kernel_read_l2 (on kernel_read:1@fs/read_write.c)
+> > > 
+> > > 
+> > > Also look above at the listing, I would expect this instead:
+> > > 
+> > > # perf probe --list
+> > >   probe:kernel_read_l1 (on kernel_read:1@fs/read_write.c)
+> > >   probe:kernel_read_l2 (on kernel_read:2@fs/read_write.c)
+> > > 
+> > > Right?
+> 
+> Yes, it should be so.
+
+Hmm, this looks the limiation of debuginfo generated by gcc.
+Let me explain what happens. So, here is the decoded Line info in
+debuginfo for kernel_read (is defined in fs/read_write.c:423)
+
+---
+$ readelf -wL /usr/lib/debug/boot/vmlinux-5.0.0-32-generic 
+...
+read_write.c                                 444  0xffffffff812b435d        
+read_write.c                                 424  0xffffffff812b4370               x
+read_write.c                                 425  0xffffffff812b4375               x
+read_write.c                                 426  0xffffffff812b4375       1       x
+read_write.c                                 428  0xffffffff812b4375       2       x
+
+---
+This shows the line number info points the kernel_read entry address is
+on #424, this means we can not distinguish kernel_read:0 and kernel_read:1
+from only the address information. (maybe huristically we can distinguish
+it by the "_L1" suffix. But if user gives another event name, it doesn't
+work.)
+---
+
+/build/linux-pvZVvI/linux-5.0.0/arch/x86/include/asm/current.h:
+current.h                                     13  0xffffffff812b4375       3       x
+current.h                                     15  0xffffffff812b4375       4       x
+current.h                                     15  0xffffffff812b4375       5       x
+current.h                                     15  0xffffffff812b4375       6       x
+current.h                                     15  0xffffffff812b4375       7       x
+
+/build/linux-pvZVvI/linux-5.0.0/fs/read_write.c:
+read_write.c                                 424  0xffffffff812b4375       8
+
+---
+And it seems that the dwarf_getsrc_die() returns the last line info
+correspoinding to given address (0xffffffff812b4375) even if it is
+not a stetement line. This is why probe:kernel_read_l2 is 
+on kernel_read:1. I will fix that.
+
+However, again, as long as the different lines are encoded in same
+address, we can not distinguish them except for checking "_L*"
+suffix.
+
+Possible solutions are
+ - Do not allow user to put probes on lines which shares the address
+   with other lines (user can put a probe only on the earliest line)
+ - Warn user that the line shares address with other lines and put
+   the probe with the earliest line number suffix.
+ - Just warn user. 
+
+THank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
