@@ -2,123 +2,164 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F9EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2C0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2C52196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB4D2196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:27:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plLBWJp5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uG6Ef4kX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfKMJ1M (ORCPT
+        id S1727284AbfKMJ1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:27:12 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46665 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKMJ1M (ORCPT
+        Wed, 13 Nov 2019 04:27:21 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:35676 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfKMJ1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:27:12 -0500
-Received: by mail-lf1-f67.google.com with SMTP id o65so1317545lff.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 01:27:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=98bbtxrlztsaSeBuCTpYhW6G78UV8jrpbvcn8tDSvYA=;
-        b=plLBWJp5AQE02m++GEPUI0YTKIjDTL5RtW1BLYg8HBlGB8epyTQPSL35OrV2QCJHHz
-         dlh8C9hIfz33ZhJWJLYHrWoZiPRvepsZ3cv2lPLq5wjba22yE8DV1VnHFromxUlRPeZH
-         UEsL4I2pC9Sq96gxTC6aqd10X/oLlypGSlBnhPabamclUTEQJ62S8IcGryqc2F2yT66n
-         XE3GnKeur9IvVOz3uhy2V0iaTlQvFmH9dtuu7wD3DonSbgVgYNY2WAFAkE5VPIQxZjGD
-         6yG3z6iDpGRY87NUzmCHIuwQt4l2dSKLgTgRek5hpzhOVqrlq0Ltx2/WOzTZzMMGGFIf
-         6m+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=98bbtxrlztsaSeBuCTpYhW6G78UV8jrpbvcn8tDSvYA=;
-        b=TRQkIQzacYYPdr7ZsS7ComXh/DxcUZ2jkRL1hhpELigJHLLfPs4FrHFLOyYQK+twps
-         nZLNnU+AozEu5uCRuUgieyA2wr0Ehbeya8BoguBpRcgmzM67bwn++xbaMKiD7AAjnglo
-         dYzsC/GdqlyLbUtO+b1k4T3rnsaX5gJLFs9YoJNAIhDVn4oYAQUuBlm1RBysO4JxtP+p
-         wVy3zOrxvnpCcXhoiI0mCK1Jxwfjq+Z+U0SiZFpz66F93Yn6WJa8LZMmE0Fu+uDKGjru
-         T/zr5q1EEJuhlSOi+Wu7w0TmIYUgrkC/uYEtQ5mE6+aijpCuNCdn4Q8zSfYREzMBajZT
-         HbHg==
-X-Gm-Message-State: APjAAAVltv5RtiWUDoP9QfUTuDm/KOvW4FPxrlwFQe3SeRiSbReGz+Ag
-        VO3OFmd74fkrMg1fy4xWR2IDBw==
-X-Google-Smtp-Source: APXvYqyJ5e7C/nCUl9Pi3lVJ8liQye4thGdWtnl2nLezYo7RVgIQsVKtF7flNXJjyitnyanCP2bepA==
-X-Received: by 2002:a05:6512:50f:: with SMTP id o15mr1953084lfb.168.1573637229877;
-        Wed, 13 Nov 2019 01:27:09 -0800 (PST)
-Received: from localhost (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
-        by smtp.gmail.com with ESMTPSA id x18sm595872ljc.39.2019.11.13.01.27.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 01:27:09 -0800 (PST)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     catalin.marinas@arm.com
-Cc:     will@kernel.org, john.garry@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH v2] arm64: Kconfig: add a choice for endianness
-Date:   Wed, 13 Nov 2019 10:26:52 +0100
-Message-Id: <20191113092652.28201-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 13 Nov 2019 04:27:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZVfxfkF9g4hBv743yfpuDiV5akcWiNbuAeJoSU5Y/NA=; b=uG6Ef4kXxJ/eYhTn9zV368mar
+        XrO50junT0zmYAokzxueiRYjBwd4O0DRDlnw4MQZngpBoyaPQfmKiW8Vm8kSFQ2HcqKRcXPXx9w12
+        sXNrMoJseotzcLkVGSL7cqg0TnhyXLo8exbG8wwCCcEIRfkKaFCRxNyaGlCAP6QDVwMLcJTdS/TuW
+        xG20zjizUelRPn7A69J1MUOLyXUh+zcZDuW9I0qngtO/SHHFEBondU5yZdsV7reTAPYBog9CdvQgt
+        FvzchmoeoXn2McaJZ/lE8sAJmeo4P+6yaR4irjWmq/jL1RjHG4pzUsk1mzs+fJRWorEiBNl+waUEN
+        DC3D/kt4A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUovA-0007lH-Hw; Wed, 13 Nov 2019 09:26:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 676E0301120;
+        Wed, 13 Nov 2019 10:25:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 871A520261861; Wed, 13 Nov 2019 10:26:36 +0100 (CET)
+Date:   Wed, 13 Nov 2019 10:26:36 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
+        alexei.starovoitov@gmail.com, rabin@rab.in,
+        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com
+Subject: [PATCH -v5mkII 13/17] arm/ftrace: Use __patch_text()
+Message-ID: <20191113092636.GG4131@hirez.programming.kicks-ass.net>
+References: <20191111131252.921588318@infradead.org>
+ <20191111132458.220458362@infradead.org>
+ <20191111164703.GA11521@willie-the-truck>
+ <20191111171955.GO4114@hirez.programming.kicks-ass.net>
+ <20191111172541.GT5671@hirez.programming.kicks-ass.net>
+ <20191112112950.GB17835@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112112950.GB17835@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
-CONFIG_CPU_BIG_ENDIAN gets enabled. Which tends not to be what most
-people want. Another concern that has come up is that ACPI isn't built
-for an allmodconfig kernel today since that also depends on !CPU_BIG_ENDIAN.
+On Tue, Nov 12, 2019 at 11:29:51AM +0000, Will Deacon wrote:
+> This fails to compile. I bodged it as below, but maybe this stuff should
+> actually live in insn.c. Not fussed either way. I ran the ftrace tests,
+> loaded a module and toggled ftrace on/off with this applied and it looks
+> like it works to me:
+> 
+> Tested-by: Will Deacon <will@kernel.org>
 
-Rework so that we introduce a 'choice' and default the choice to
-CPU_LITTLE_ENDIAN. That means that when we build an allmodconfig kernel
-it will default to CPU_LITTLE_ENDIAN that most people tends to want.
+Thanks, I've folded that and will leave any further cleanup to some ARM
+person that is capable of testing :-)
 
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- arch/arm64/Kconfig | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+Subject: arm/ftrace: Use __patch_text()
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Tue Oct 15 21:07:35 CEST 2019
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 64764ca92fca..c599b6b288be 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -877,10 +877,26 @@ config ARM64_PA_BITS
- 	default 48 if ARM64_PA_BITS_48
- 	default 52 if ARM64_PA_BITS_52
- 
-+choice
-+	prompt "Endianness"
-+	default CPU_LITTLE_ENDIAN
-+	help
-+	  Select the endianness of data accesses performed by the CPU. Userspace
-+	  applications will need to be compiled and linked for the endianness
-+	  that is selected here.
-+
- config CPU_BIG_ENDIAN
-        bool "Build big-endian kernel"
-        help
--         Say Y if you plan on running a kernel in big-endian mode.
-+	  Say Y if you plan on running a kernel with a big-endian userspace.
-+
-+config CPU_LITTLE_ENDIAN
-+	bool "Build little-endian kernel"
-+	help
-+	  Say Y if you plan on running a kernel with a little-endian userspace.
-+	  This is usually the case for distributions targetting arm64.
-+
-+endchoice
- 
- config SCHED_MC
- 	bool "Multi-core scheduler support"
--- 
-2.20.1
+Instead of flipping text protection, use the patch_text infrastructure
+that uses a fixmap alias where required.
 
+This removes the last user of set_all_modules_text_*().
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Will Deacon <will@kernel.org>
+Cc: rabin@rab.in
+Cc: ard.biesheuvel@linaro.org
+Cc: james.morse@arm.com
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+ arch/arm/kernel/Makefile |    4 ++--
+ arch/arm/kernel/ftrace.c |   10 ++--------
+ 2 files changed, 4 insertions(+), 10 deletions(-)
+
+--- a/arch/arm/kernel/Makefile
++++ b/arch/arm/kernel/Makefile
+@@ -49,8 +49,8 @@ obj-$(CONFIG_HAVE_ARM_SCU)	+= smp_scu.o
+ obj-$(CONFIG_HAVE_ARM_TWD)	+= smp_twd.o
+ obj-$(CONFIG_ARM_ARCH_TIMER)	+= arch_timer.o
+ obj-$(CONFIG_FUNCTION_TRACER)	+= entry-ftrace.o
+-obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o insn.o
+-obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o insn.o
++obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o insn.o patch.o
++obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o insn.o patch.o
+ obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o insn.o patch.o
+ obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
+ # Main staffs in KPROBES are in arch/arm/probes/ .
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -22,6 +22,7 @@
+ #include <asm/ftrace.h>
+ #include <asm/insn.h>
+ #include <asm/set_memory.h>
++#include <asm/patch.h>
+ 
+ #ifdef CONFIG_THUMB2_KERNEL
+ #define	NOP		0xf85deb04	/* pop.w {lr} */
+@@ -35,9 +36,7 @@ static int __ftrace_modify_code(void *da
+ {
+ 	int *command = data;
+ 
+-	set_kernel_text_rw();
+ 	ftrace_modify_all_code(*command);
+-	set_kernel_text_ro();
+ 
+ 	return 0;
+ }
+@@ -59,13 +58,11 @@ static unsigned long adjust_address(stru
+ 
+ int ftrace_arch_code_modify_prepare(void)
+ {
+-	set_all_modules_text_rw();
+ 	return 0;
+ }
+ 
+ int ftrace_arch_code_modify_post_process(void)
+ {
+-	set_all_modules_text_ro();
+ 	/* Make sure any TLB misses during machine stop are cleared. */
+ 	flush_tlb_all();
+ 	return 0;
+@@ -97,10 +94,7 @@ static int ftrace_modify_code(unsigned l
+ 			return -EINVAL;
+ 	}
+ 
+-	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
+-		return -EPERM;
+-
+-	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
++	__patch_text((void *)pc, new);
+ 
+ 	return 0;
+ }
