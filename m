@@ -2,134 +2,91 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4B8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BDCC17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10667222CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQYN9B7q"
+	by mail.kernel.org (Postfix) with ESMTP id 8F655222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573617316;
+	bh=dEeyqTef9bzMNnRFc/NUygZc4JIxUTQqcePHmfbL81k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wOCtwj3nKHskqyccRFNP5SfHjxupgYI4hnK3Q8hCpT1wf2iOUEqQhxqiyDKsiiV6i
+	 JOYpzDV9QvyZiL3JyXVVR0pI9or1nUxtu6QP2n+GRO2JLmSYw0iOXoHFhSbsCdZAum
+	 YJe8Ik1r+mYk6MNLn11UKrEXyRba8c1wHj3EeQt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfKMDxK (ORCPT
+        id S1727298AbfKMDzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 22:53:10 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45237 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfKMDxK (ORCPT
+        Tue, 12 Nov 2019 22:55:15 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45262 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKMDzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 22:53:10 -0500
-Received: by mail-qt1-f194.google.com with SMTP id 30so1033557qtz.12;
-        Tue, 12 Nov 2019 19:53:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Nq/J9uMGWrTnPkmQnrMD87MZeTWzLPk7BmlVxfF/ZKA=;
-        b=YQYN9B7q/wgS02JIZyJ0TAbsW8KYwpEAmBGKKUlx67Z7+6Vb4gWCGYfdoBoMWpFmRG
-         JVRzh/a7fNH7ZVcp5hhFNu0tJdkpkvhEBYO3GcQXtfMh6XlNAEnA0s3rLwGvWwOzWHgz
-         t+uoeEU60G60xNt5bn0fN264JrnqVH7LkgqLnwRd2JEfGizjDV+sNR7dmO02endZWrwW
-         ZKeu1amBq3VjCe67KsNjpIBxIO6K6bfMg8Fg2Ugj2fbBDMNOxibjfnGDQz4U1nZssUvY
-         R9BZb48yYeyquwzTljIX1QXZlgf+Zd6mcJH4XrF98K94LJ7FYMxc5NsvHjIHQp8tX4Gm
-         JosQ==
+        Tue, 12 Nov 2019 22:55:15 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 14so498890oir.12;
+        Tue, 12 Nov 2019 19:55:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Nq/J9uMGWrTnPkmQnrMD87MZeTWzLPk7BmlVxfF/ZKA=;
-        b=d3MAqTFpGNagPFJwnGiXlfX2s0PqzZkLtppbwFh1sI2PI/hcbXThvwMhYOY4QNetya
-         1CncQEUIvYydCkfvnPmxF8KqKxxUGa3OIwha+FMXcdwugNLSUTKyEJGrboQpFxzyZdZC
-         tNlknB5UXOw7Am3SKxnFJ2HzCBFCqwaDDxqMEVEt78dTIdhAoBl10q9KDxquk0t3hC8e
-         HgO/Bwy6aLhyi6DVjd3kg7RO8cSLh94pNrmKJIHL3p4Cylk+5yNzIfh8D8u9leYpFadY
-         +sm0gzv0Qlwv5FAAvXJcI/PW0lUrAJOc+mOybU4nk8Rk+nxiEzOhAnj8eMjxXs0pXVlx
-         GxzA==
-X-Gm-Message-State: APjAAAXcya2ukUjf1PTDPz5HGlzGxcgE8R+dXsXpv6f1GIC6MxVj1Ge4
-        xE3wVZMR71oqtcqeDOh1J/JdHgP+
-X-Google-Smtp-Source: APXvYqyl3AbKpUGwgYcN0lQfHM1ZMlimpb/l1TpYE32YfSHOe37RyNtLc93445Ah2lYB3H0h1G7iug==
-X-Received: by 2002:ac8:23d3:: with SMTP id r19mr753535qtr.297.1573617189374;
-        Tue, 12 Nov 2019 19:53:09 -0800 (PST)
-Received: from eaf ([181.47.179.0])
-        by smtp.gmail.com with ESMTPSA id a4sm358914qkk.113.2019.11.12.19.53.07
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5kWuAnb+93D0REhXXytiBbTkzGvCtPsyT0rZx99YMZ4=;
+        b=ZUoD3ENKGIAuMDoaGYEPJVn3++GGVj+jKmiJQdd7A1/iLJ5nlg+cVXJRG1j+K3B5oC
+         5tWsRLt9h8OjEWnIiXM7eUWyTIuZwn0M8c58n9071ITCG1moKimwmzv42IdLDFQysPLK
+         Fwx2BCld02QuWb+6BdXpFPqom5b48ElgVwdVYwnHIWrN4eyOLG+XWceUvhKvXkHWgMW+
+         kXL60zhQHXbgmO3qkEETwx+qiKQVAFQOG2E7rCh7K3cDIQnSxRW+SGnJob+2ZpykVNuC
+         wVT34NbO81539dBlbojnass+ngMBs9S9sx6l90LCWnPse6/J+bF9RjIfC9sojNrn7DHj
+         Ljlw==
+X-Gm-Message-State: APjAAAVV/kDFdmZZSVnRA1PLcZHg+2pXTLhi6hEOjbitednm9S75e6I+
+        eiH4Hndmsbin+YJclrEhUw==
+X-Google-Smtp-Source: APXvYqyhJ1i62xhTcrOaW8+Kr9g2RTxmHxUPGU56kpS88cTpyKfeDTpdQD6oVX2chc9xP27sjFYMvA==
+X-Received: by 2002:aca:48cb:: with SMTP id v194mr534349oia.156.1573617313969;
+        Tue, 12 Nov 2019 19:55:13 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l40sm349562ota.24.2019.11.12.19.55.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 19:53:08 -0800 (PST)
-Date:   Wed, 13 Nov 2019 00:53:04 -0300
-From:   Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Viacheslav Dubeyko <slava@dubeyko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 13/16] hfs/hfsplus: use 64-bit inode timestamps
-Message-ID: <20191113035304.GA8753@eaf>
-References: <20191108213257.3097633-1-arnd@arndb.de>
- <20191108213257.3097633-14-arnd@arndb.de>
+        Tue, 12 Nov 2019 19:55:13 -0800 (PST)
+Date:   Tue, 12 Nov 2019 21:55:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>
+Cc:     mchehab@kernel.org, shawnguo@kernel.org, robh+dt@kernel.org,
+        hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: Re: [PATCH 3/5] media: dt-bindings: Add bindings for i.MX8QXP/QM
+ JPEG driver
+Message-ID: <20191113035512.GA7965@bogus>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+ <1573053633-21437-4-git-send-email-mirela.rabulea@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191108213257.3097633-14-arnd@arndb.de>
+In-Reply-To: <1573053633-21437-4-git-send-email-mirela.rabulea@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:32:51PM +0100, Arnd Bergmann wrote:
-> The interpretation of on-disk timestamps in HFS and HFS+ differs
-> between 32-bit and 64-bit kernels at the moment. Use 64-bit timestamps
-> consistently so apply the current 64-bit behavior everyhere.
+On Wed,  6 Nov 2019 17:20:31 +0200, Mirela Rabulea wrote:
+> Add bindings documentation for i.MX8QXP/QM JPEG decoder & encoder driver.
 > 
-> According to the official documentation for HFS+ [1], inode timestamps
-> are supposed to cover the time range from 1904 to 2040 as originally
-> used in classic MacOS.
-> 
-> The traditional Linux usage is to convert the timestamps into an unsigned
-> 32-bit number based on the Unix epoch and from there to a time_t. On
-> 32-bit systems, that wraps the time from 2038 to 1902, so the last
-> two years of the valid time range become garbled. On 64-bit systems,
-> all times before 1970 get turned into timestamps between 2038 and 2106,
-> which is more convenient but also different from the documented behavior.
-> 
-> Looking at the Darwin sources [2], it seems that MacOS is inconsistent in
-> yet another way: all timestamps are wrapped around to a 32-bit unsigned
-> number when written to the disk, but when read back, all numeric values
-> lower than 2082844800U are assumed to be invalid, so we cannot represent
-> the times before 1970 or the times after 2040.
-> 
-> While all implementations seem to agree on the interpretation of values
-> between 1970 and 2038, they often differ on the exact range they support
-> when reading back values outside of the common range:
-> 
-> MacOS (traditional):		1904-2040
-> Apple Documentation:		1904-2040
-> MacOS X source comments:	1970-2040
-> MacOS X source code:		1970-2038
-> 32-bit Linux:			1902-2038
-> 64-bit Linux:			1970-2106
-> hfsfuse:			1970-2040
-> hfsutils (32 bit, old libc)	1902-2038
-> hfsutils (32 bit, new libc)	1970-2106
-> hfsutils (64 bit)		1904-2040
-> hfsplus-utils			1904-2040
-> hfsexplorer			1904-2040
-> 7-zip				1904-2040
-> 
-> Out of the above, the range from 1970 to 2106 seems to be the most useful,
-> as it allows using HFS and HFS+ beyond year 2038, and this matches the
-> behavior that most users would see today on Linux, as few people run
-> 32-bit kernels any more.
-> 
-> Link: [1] https://developer.apple.com/library/archive/technotes/tn/tn1150.html
-> Link: [2] https://opensource.apple.com/source/hfs/hfs-407.30.1/core/MacOSStubs.c.auto.html
-> Link: https://lore.kernel.org/lkml/20180711224625.airwna6gzyatoowe@eaf/
-> Cc: Viacheslav Dubeyko <slava@dubeyko.com>
-> Suggested-by: "Ernesto A. Fernández" <ernesto.mnd.fernandez@gmail.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 > ---
+>  .../devicetree/bindings/media/imx8-jpeg.yaml       | 83 ++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+> 
 
-Reviewed-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
