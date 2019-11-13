@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0209EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED51C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1CA21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788F221D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611846;
-	bh=0fCyDe2XJ+/YJ9Rha8IJWPEjZCdyHlAaygACeS00hbI=;
+	s=default; t=1573611849;
+	bh=/fUyGVnz4vUZV7QqWfrT9JvA8+OesvTPpl/KA51g0nE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkP8szH/pcjMC4e6WXmHFhYtwJ4LYRkekl3ePCXQ0Ps1XipiLYEKtpXsdCvPU5nBo
-	 TactCxsJxObcXU17BE5JNozFq9D3JxB6K9rGzYrcg6t8UlVBesgOlo/oL6stLLQde/
-	 ++0AZMtouxdP4DW+aKq9h9+VHUXu/U0jK2J87nUk=
+	b=2ndmES9krhvA7+M9SCdju9kN7nKwWu2fyxEKPRmh9U+HnZvKL1ia6Yp8E1f7VGzN3
+	 W+3gQ+g/D1H+Ssq5hfkl8tu2+rXo5eOiZAVleKLBAqxvoGKgheloiybp0SzwIdc1Ip
+	 wKdr9UoIj8Uj6qhRyAW58uri1qk8SLfKcAitonAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfKMCYF (ORCPT
+        id S1729206AbfKMCYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:24:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40652 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:24:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbfKMBwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:10 -0500
+        id S1728185AbfKMBwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22AD72245D;
-        Wed, 13 Nov 2019 01:52:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5D4E222CE;
+        Wed, 13 Nov 2019 01:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609929;
-        bh=0fCyDe2XJ+/YJ9Rha8IJWPEjZCdyHlAaygACeS00hbI=;
+        s=default; t=1573609933;
+        bh=/fUyGVnz4vUZV7QqWfrT9JvA8+OesvTPpl/KA51g0nE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RurpCokUzEofHBJQTJaxf3kixp7GAKhqa1bNNOCiYhCRO56EXUxMKO/3kg/Gt8n+o
-         aLRW2Eit5iOsPQDoeWFJvaOBivMsNOJUkN3vPMgr2SeEHwit53IQ9qZZD0rZoHtCqU
-         tG2FJeG3FFOp57hr23LuRtPrSFymH/a55CsyDx+8=
+        b=vF2i8ldmfvVQirprQN2PW38v/4lQD5dFlF7ixj3QVAb0h4RB5Zr1geiezZIsQEN8J
+         ttqNCZhxaXaNUt6R38GSY6fRZ9Y4LPXnR/iDYgsHwvxkVXZdH/lyRMaKsubjj627wf
+         uyRviSqM8Qo1ueQr1wl3Jw7H12Of3UTaZgBtDvII=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lijun Ou <oulijun@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 075/209] RDMA/hns: Bugfix for CM test
-Date:   Tue, 12 Nov 2019 20:48:11 -0500
-Message-Id: <20191113015025.9685-75-sashal@kernel.org>
+Cc:     Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 078/209] rpmsg: glink: smem: Support rx peak for size less than 4 bytes
+Date:   Tue, 12 Nov 2019 20:48:14 -0500
+Message-Id: <20191113015025.9685-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -58,33 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lijun Ou <oulijun@huawei.com>
+From: Arun Kumar Neelakantam <aneela@codeaurora.org>
 
-[ Upstream commit 15fc056fba7b17b9abfbe80a12f188403fc949fb ]
+[ Upstream commit 928002a5e9dab2ddc1a0fe3e00739e89be30dc6b ]
 
-It will print the warning when the MSB bit of SLID is not zero running
-cm_req_handler function that test CM. It needs to fixed zero when test
-RoCE device.
+The current rx peak function fails to read the data if size is
+less than 4bytes.
 
-Signed-off-by: Lijun Ou <oulijun@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Use memcpy_fromio to support data reads of size less than 4 bytes.
+
+Cc: stable@vger.kernel.org
+Fixes: f0beb4ba9b18 ("rpmsg: glink: Remove chunk size word align warning")
+Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/rpmsg/qcom_glink_smem.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index ce44a90d2bd3e..b5150d7b953bd 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -2268,6 +2268,7 @@ static int hns_roce_v2_poll_one(struct hns_roce_cq *hr_cq,
- 		wc->src_qp = (u8)roce_get_field(cqe->byte_32,
- 						V2_CQE_BYTE_32_RMT_QPN_M,
- 						V2_CQE_BYTE_32_RMT_QPN_S);
-+		wc->slid = 0;
- 		wc->wc_flags |= (roce_get_bit(cqe->byte_32,
- 					      V2_CQE_BYTE_32_GRH_S) ?
- 					      IB_WC_GRH : 0);
+diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
+index 2b5cf27909540..7b6544348a3e0 100644
+--- a/drivers/rpmsg/qcom_glink_smem.c
++++ b/drivers/rpmsg/qcom_glink_smem.c
+@@ -89,15 +89,11 @@ static void glink_smem_rx_peak(struct qcom_glink_pipe *np,
+ 		tail -= pipe->native.length;
+ 
+ 	len = min_t(size_t, count, pipe->native.length - tail);
+-	if (len) {
+-		__ioread32_copy(data, pipe->fifo + tail,
+-				len / sizeof(u32));
+-	}
++	if (len)
++		memcpy_fromio(data, pipe->fifo + tail, len);
+ 
+-	if (len != count) {
+-		__ioread32_copy(data + len, pipe->fifo,
+-				(count - len) / sizeof(u32));
+-	}
++	if (len != count)
++		memcpy_fromio(data + len, pipe->fifo, (count - len));
+ }
+ 
+ static void glink_smem_rx_advance(struct qcom_glink_pipe *np,
 -- 
 2.20.1
 
