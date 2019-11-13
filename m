@@ -2,134 +2,166 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3764C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4ADC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824B6222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8F8222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iAcAbSuh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WxsQl55y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J6vyXx5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfKMGBB (ORCPT
+        id S1727059AbfKMGBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:01:01 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:36260 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfKMGBA (ORCPT
+        Wed, 13 Nov 2019 01:01:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27672 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726010AbfKMGBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:01:00 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 19DA460D88; Wed, 13 Nov 2019 06:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573624859;
-        bh=wj+AeBWg49YIiNe7g8iPRpcUQczXBC+cdiu8/3qKz5g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iAcAbSuh78IQ6HqNYl5XPIW9z3UW1xlFdYr5B5HWke9YexP9g0twSbQSuD9VrXl86
-         OnmRbOvPAjI3Ky/v8amhPO0X0Hj05dZNlYg4FgAGS4SDRzkNgTdu4IHXrnk5LmNijb
-         EOk5hgx98pi5Nr/4fbG0sp3kisofUHPKRLJN9rMs=
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 13 Nov 2019 01:01:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573624893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BI1DBbTBrcq16pSAoz/BMA31HAPi7JaaeyCMiqZAhfE=;
+        b=J6vyXx5TL4SivpuPm9SALV30pua4eYyY280l+uLdUS3cBB1xphJIlh/cU9aV1Z3UhvvNO4
+        I79JPm5fnOBFjrh5iE8cB3msXn6EanIVQlJtxdDBHUFpl1IknPiBzKcBrlPN/5V0IAFDXJ
+        VFXuUwUhFDL9KBgkQqRD/PEU6skUOeM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-ZdQCrH3AO6aLXcu4nSUO7g-1; Wed, 13 Nov 2019 01:01:30 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: cang@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4F7E960D7D;
-        Wed, 13 Nov 2019 06:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573624856;
-        bh=wj+AeBWg49YIiNe7g8iPRpcUQczXBC+cdiu8/3qKz5g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WxsQl55y22Fo511ZW/WsyyebKmlwx7MMePxdpFUEevooVZzK0WdySjufi5XEiPF1Y
-         NImbYtm5Y5DLYg+xzc9OvAU/V61mulCrDnbfIKv6fu+4j2QtX3yUGYwwXPd4PQN4QW
-         LWHyVGdrG4QBs3wmTGXftt5lGlQaSJEAQoCpnQA4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4F7E960D7D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 5/5] scsi: ufs: Do not free irq in suspend
-Date:   Tue, 12 Nov 2019 22:00:23 -0800
-Message-Id: <1573624824-671-6-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573624824-671-1-git-send-email-cang@codeaurora.org>
-References: <1573624824-671-1-git-send-email-cang@codeaurora.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03C51107ACC7;
+        Wed, 13 Nov 2019 06:01:29 +0000 (UTC)
+Received: from ovpn-116-229.phx2.redhat.com (ovpn-116-229.phx2.redhat.com [10.3.116.229])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7730C101E3CB;
+        Wed, 13 Nov 2019 06:01:22 +0000 (UTC)
+Message-ID: <048d9e5ea9ea9cebe18aa96d59bd0a67b3429529.camel@redhat.com>
+Subject: Re: [PATCH 1/2] dm-snapshot: fix crash with the realtime kernel
+From:   Scott Wood <swood@redhat.com>
+To:     Nikos Tsironis <ntsironis@arrikto.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Cc:     Ilias Tsitsimpis <iliastsi@arrikto.com>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <dwagner@suse.de>, tglx@linutronix.de,
+        linux-rt-users@vger.kernel.org,
+        Paul Gortmaker <paul.gortmaker@windriver.com>
+In-Reply-To: <a6f588d3-2403-d50a-70a1-ed644082cc83@arrikto.com>
+References: <alpine.LRH.2.02.1911110811060.28408@file01.intranet.prod.int.rdu2.redhat.com>
+         <c9a772e9-e305-cf0b-1155-fb19bdb84e55@arrikto.com>
+         <20191112011444.GA32220@redhat.com>
+         <alpine.LRH.2.02.1911120240020.25757@file01.intranet.prod.int.rdu2.redhat.com>
+         <a6f588d3-2403-d50a-70a1-ed644082cc83@arrikto.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Date:   Wed, 13 Nov 2019 00:01:06 -0600
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: ZdQCrH3AO6aLXcu4nSUO7g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If PM QoS is enabled and we set request type to PM_QOS_REQ_AFFINE_IRQ then
-freeing up the irq makes the free_irq() print out warning with call stack.
-We don't really need to free up irq during suspend, disabling it during
-suspend and reenabling it during resume should be good enough.
+On Tue, 2019-11-12 at 13:45 +0200, Nikos Tsironis wrote:
+> On 11/12/19 9:50 AM, Mikulas Patocka wrote:
+> >=20
+> > On Mon, 11 Nov 2019, Mike Snitzer wrote:
+> >=20
+> > > On Mon, Nov 11 2019 at 11:37am -0500,
+> > > Nikos Tsironis <ntsironis@arrikto.com> wrote:
+> > >=20
+> > > > On 11/11/19 3:59 PM, Mikulas Patocka wrote:
+> > > > > Snapshot doesn't work with realtime kernels since the commit
+> > > > > f79ae415b64c.
+> > > > > hlist_bl is implemented as a raw spinlock and the code takes two
+> > > > > non-raw
+> > > > > spinlocks while holding hlist_bl (non-raw spinlocks are blocking
+> > > > > mutexes
+> > > > > in the realtime kernel, so they couldn't be taken inside a raw
+> > > > > spinlock).
+> > > > >=20
+> > > > > This patch fixes the problem by using non-raw spinlock
+> > > > > exception_table_lock instead of the hlist_bl lock.
+> > > > >=20
+> > > > > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> > > > > Fixes: f79ae415b64c ("dm snapshot: Make exception tables
+> > > > > scalable")
+> > > > >=20
+> > > >=20
+> > > > Hi Mikulas,
+> > > >=20
+> > > > I wasn't aware that hlist_bl is implemented as a raw spinlock in th=
+e
+> > > > real time kernel. I would expect it to be a standard non-raw
+> > > > spinlock,
+> > > > so everything works as expected. But, after digging further in the
+> > > > real
+> > > > time tree, I found commit ad7675b15fd87f1 ("list_bl: Make list head
+> > > > locking RT safe") which suggests that such a conversion would break
+> > > > other parts of the kernel.
+> > >=20
+> > > Right, the proper fix is to update list_bl to work on realtime (which
+> > > I
+> > > assume the referenced commit does).  I do not want to take this
+> > > dm-snapshot specific workaround that open-codes what should be done
+> > > within hlist_{bl_lock,unlock}, etc.
+> >=20
+> > If we change list_bl to use non-raw spinlock, it fails in dentry lookup=
+=20
+> > code. The dentry code takes a seqlock (which is implemented as preempt=
+=20
+> > disable in the realtime kernel) and then takes a list_bl lock.
+> >=20
+> > This is wrong from the real-time perspective (the chain in the hash
+> > could=20
+> > be arbitrarily long, so using non-raw spinlock could cause unbounded=20
+> > wait), however we can't do anything with it.
+> >=20
+> > I think that fixing dm-snapshot is way easier than fixing the dentry
+> > code.=20
+> > If you have an idea how to fix the dentry code, tell us.
+>=20
+> I too think that it would be better to fix list_bl. dm-snapshot isn't
+> really broken. One should be able to acquire a spinlock while holding
+> another spinlock.
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+That's not universally true -- even in the absence of RT there are nesting
+considerations.  But it would probably be good if raw locks weren't hidden
+inside other locking primitives without making it clear (ideally in the
+function names) that it's a raw lock.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 086d359..c449b68 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -266,26 +266,18 @@ static inline bool ufshcd_valid_tag(struct ufs_hba *hba, int tag)
- 	return tag >= 0 && tag < hba->nutrs;
- }
- 
--static inline int ufshcd_enable_irq(struct ufs_hba *hba)
-+static inline void ufshcd_enable_irq(struct ufs_hba *hba)
- {
--	int ret = 0;
--
- 	if (!hba->is_irq_enabled) {
--		ret = request_irq(hba->irq, ufshcd_intr, IRQF_SHARED, UFSHCD,
--				hba);
--		if (ret)
--			dev_err(hba->dev, "%s: request_irq failed, ret=%d\n",
--				__func__, ret);
-+		enable_irq(hba->irq);
- 		hba->is_irq_enabled = true;
- 	}
--
--	return ret;
- }
- 
- static inline void ufshcd_disable_irq(struct ufs_hba *hba)
- {
- 	if (hba->is_irq_enabled) {
--		free_irq(hba->irq, hba);
-+		disable_irq(hba->irq);
- 		hba->is_irq_enabled = false;
- 	}
- }
-@@ -7930,9 +7922,7 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 		goto out;
- 
- 	/* enable the host irq as host controller would be active soon */
--	ret = ufshcd_enable_irq(hba);
--	if (ret)
--		goto disable_irq_and_vops_clks;
-+	ufshcd_enable_irq(hba);
- 
- 	ret = ufshcd_vreg_set_hpm(hba);
- 	if (ret)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Moreover, apart from dm-snapshot, anyone ever using list_bl is at risk
+> of breaking the realtime kernel, if he or she is not aware of that
+> particular limitation of list_bl's implementation in the realtime tree.
+
+In particular the non-rcu variant seems inherently bad unless you protect
+traversal with some other lock (in which case why use bl at all?).  Maybe
+fully separate the rcu version of list_bl and keep using raw locks there
+(with the name clearly indicating so), with the side benefit that
+accidentally mixing rcu and non-rcu operations on the same list would becom=
+e
+a build error, and convert the non-rcu list_bl to use non-raw locks on RT.
+
+BTW, I'm wondering what makes bit spinlocks worse than raw spinlocks on
+RT...  commit ad7675b15fd87f19 says there's no lockdep visibility, but that
+seems orthogonal to RT, and could be addressed by adding a dep_map on debug
+builds the same way the raw lock is currently added.  The other bit spinloc=
+k
+conversion commits that I could find are replacing them with non-raw locks.
+
+-Scott
+
 
