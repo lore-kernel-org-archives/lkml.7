@@ -2,114 +2,110 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3899C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20270C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90FC206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:12:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573665129;
-	bh=kdtwDODNLE4YWiNVPQry0buhIpkJQq9tKqW/8U/Aylo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jCGpyzzU2jkUP8tY1fdDcXEgCM3R4gT/o6HfiEeTnpFmfHMSwfyjZOuICp+ZcoPK6
-	 n7wbBmeXLoJWukpMaoFd7fYEZVmxOKukKUksFfb340f72AlTnQm4NgL2OH6UKYsQMr
-	 GfFhRBrk1qgEWRL0uDLF2UuJCYgIwkegcQaajCRs=
+	by mail.kernel.org (Postfix) with ESMTP id 41079206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:13:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JDQTQlro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfKMRMI (ORCPT
+        id S1727450AbfKMRNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:12:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbfKMRMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:12:08 -0500
-Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 13 Nov 2019 12:13:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43260 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726098AbfKMRNY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:13:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573665203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4jSlvNFHg6IbUCrmqPiwkPs953WRyG/IfAUfAH0jbow=;
+        b=JDQTQlrocu8CMmBkF8NIe3akmkLsI6ANMXgi9QlBslRzIhlnrPbbvdEu5KZg2gFFW1Pp75
+        NWDibwmfrPDxPWCys1K+kOPdsDBzsEQT9MdH0cjXqJ9Tfqaj/UK39pOp6+c+1b4alvN/O/
+        NImZgDf+a8H29W4HHELwy9XMEdRGmaU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-Rhzwd5RWMB2ogwfEoeuiIw-1; Wed, 13 Nov 2019 12:13:20 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1653D206D9;
-        Wed, 13 Nov 2019 17:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573665126;
-        bh=kdtwDODNLE4YWiNVPQry0buhIpkJQq9tKqW/8U/Aylo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GYsSB3XJk2D3uObJ6kucsTytOJuFkfiicfpmrlr/4whLQZH2zdEClf6kJ0kv8g8yu
-         bHUlEAKZcDP4Dd8p1PaJUd15D1QyzkssyCjaVN8CDlOCPGo1DwvD/GxMGoAT2567Z8
-         gNlanMwRLkYByIAmPRdj2Y/DeE5raG4PhP9GeYCA=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        kernel test robot <rong.a.chen@intel.com>
-Subject: [PATCH] irq_work: Fix IRQ_WORK_BUZY bit clearing
-Date:   Wed, 13 Nov 2019 18:12:01 +0100
-Message-Id: <20191113171201.14032-1-frederic@kernel.org>
-X-Mailer: git-send-email 2.23.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5130117125C;
+        Wed, 13 Nov 2019 17:13:18 +0000 (UTC)
+Received: from [10.36.116.54] (ovpn-116-54.ams2.redhat.com [10.36.116.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B1FDE5F761;
+        Wed, 13 Nov 2019 17:13:15 +0000 (UTC)
+Subject: Re: [PATCH] iommu/arm-smmu-v3: Populate VMID field for
+ CMDQ_OP_TLBI_NH_VA
+To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        will@kernel.org, robin.murphy@arm.com
+Cc:     linuxarm@huawei.com, xuwei5@hisilicon.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191113161138.22336-1-shameerali.kolothum.thodi@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <5bf7d4e1-5231-3ee5-b239-d05523c96e5e@redhat.com>
+Date:   Wed, 13 Nov 2019 18:13:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191113161138.22336-1-shameerali.kolothum.thodi@huawei.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: Rhzwd5RWMB2ogwfEoeuiIw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While attempting to clear the buzy bit at the end of a work execution,
-atomic_cmpxchg() expects the value of the flags with the pending bit
-cleared as the old value. However we are passing by mistake the value of
-the flags before we actually cleared the pending bit.
+Hi Shameer,
 
-As a result, clearing the buzy bit fails and irq_work_sync() may stall:
+On 11/13/19 5:11 PM, Shameer Kolothum wrote:
+> CMDQ_OP_TLBI_NH_VA requires VMID and this was missing since
+> commit 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask
+> for CMD_TLBI_S2_IPA"). Add it back.
+>=20
+> Fixes: 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask for CMD_TL=
+BI_S2_IPA")
+> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-	watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [blktrace:4948]
-	CPU: 0 PID: 4948 Comm: blktrace Not tainted 5.4.0-rc7-00003-gfeb4a51323bab #1
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-	RIP: 0010:irq_work_sync+0x4/0x10
-	Call Trace:
-	  relay_close_buf+0x19/0x50
-	  relay_close+0x64/0x100
-	  blk_trace_free+0x1f/0x50
-	  __blk_trace_remove+0x1e/0x30
-	  blk_trace_ioctl+0x11b/0x140
-	  blkdev_ioctl+0x6c1/0xa40
-	  block_ioctl+0x39/0x40
-	  do_vfs_ioctl+0xa5/0x700
-	  ksys_ioctl+0x70/0x80
-	  __x64_sys_ioctl+0x16/0x20
-	  do_syscall_64+0x5b/0x1d0
-	  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Thanks!
 
-So clear the appropriate bit before passing the old flags to cmpxchg().
+Eric
 
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
-Fixes: feb4a51323ba ("irq_work: Slightly simplify IRQ_WORK_PENDING clearing")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Paul E . McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
----
- kernel/irq_work.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 49c53f80a13a..828cc30774bc 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -158,6 +158,7 @@ static void irq_work_run_list(struct llist_head *list)
- 		 * Clear the BUSY bit and return to the free state if
- 		 * no-one else claimed it meanwhile.
- 		 */
-+		flags &= ~IRQ_WORK_PENDING;
- 		(void)atomic_cmpxchg(&work->flags, flags, flags & ~IRQ_WORK_BUSY);
- 	}
- }
--- 
-2.23.0
+> ---
+> This came to light while verifying the "SMMUv3 Nested Stage Setup"
+> series by Eric. Please find the discusiion here,
+> https://lore.kernel.org/patchwork/cover/1099617/
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 8da93e730d6f..9b5274346df0 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -856,6 +856,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct a=
+rm_smmu_cmdq_ent *ent)
+>  =09=09cmd[1] |=3D FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
+>  =09=09break;
+>  =09case CMDQ_OP_TLBI_NH_VA:
+> +=09=09cmd[0] |=3D FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
+>  =09=09cmd[0] |=3D FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
+>  =09=09cmd[1] |=3D FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
+>  =09=09cmd[1] |=3D ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
+>=20
 
