@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1BFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7ADC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CAC22467
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8DD2246A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609887;
-	bh=+uoGzZI/z0s4GyKCeNi42jJRSmAhENwPFVh+s/rBrDc=;
+	s=default; t=1573609889;
+	bh=pPjVqW+TzBuF+V00o4hpuDk0lt7UMlrEz4zrYZiDHD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nMgaQuDD2CisJ6Kd/wA6mj096QajzGi98ydWGHM/1FtGYxmKIfOX5I0EiNHi5nDZ5
-	 XPge2ltliYPnWavHNpL/uVJXfcYgGpZWZ4Md0FLpZcbud+3GFp8FgphBizz/+GOI8M
-	 7iBt6CiMa2kKk1U4TlaDCh2agyFjk71IBw0ARWAM=
+	b=MG+zIIvzNjP7jADQizaUImP7fL6yVBdK1uQK7rJNNro4MSKNPuhZpk/PK170sceMG
+	 uYK7tWbSQ+1xh5zWReGCSuwTkTLgcdWxGLKVq4IyK8Ath35d8YOZWjFEIaTj/wxxmK
+	 mgoO3jZXaHvt0uY7yKEYhWF2Q2YADgNXLQgGcJ9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfKMBvZ (ORCPT
+        id S1727855AbfKMBv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:51:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38644 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:51:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfKMBvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:13 -0500
+        id S1727768AbfKMBvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 722D0222D4;
-        Wed, 13 Nov 2019 01:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 452AD222CE;
+        Wed, 13 Nov 2019 01:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609872;
-        bh=+uoGzZI/z0s4GyKCeNi42jJRSmAhENwPFVh+s/rBrDc=;
+        s=default; t=1573609878;
+        bh=pPjVqW+TzBuF+V00o4hpuDk0lt7UMlrEz4zrYZiDHD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wPK3kl9mTOyfjMNYioXgtxPxheqCr8W/tWTPLn6B3MGIssooNSPjxQFqGdisAwljj
-         FXl+pP7Ew+UbNf0+KozL9GiX8JGjZ/S38wxALnKVovYzv+AhH8+krsPksOwxTBzDYk
-         /RHOSiC8VbSd+nwqXTYLWKXah46Auj2xBYIXpfaI=
+        b=OWlSwcOjpb3KxVjp03ruAD4FXiI1ov+oGmYWYTE32EEUHJ1MV8vp8Zf1MZYouFCa3
+         i6svsa1QsvY92CS23PzDpO6y+tBm1Q5ZQZjCBk7+N6G03MC8vAifO8Txi+5c+8m0un
+         O/rBKd1KNbVpbdH/oo4k9oZX+LJvEEXqrONQPB2E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 035/209] usb: dwc3: gadget: Check ENBLSLPM before sending ep command
-Date:   Tue, 12 Nov 2019 20:47:31 -0500
-Message-Id: <20191113015025.9685-35-sashal@kernel.org>
+Cc:     Romain Izard <romain.izard.pro@gmail.com>,
+        Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 040/209] watchdog: sama5d4: fix timeout-sec usage
+Date:   Tue, 12 Nov 2019 20:47:36 -0500
+Message-Id: <20191113015025.9685-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,88 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Romain Izard <romain.izard.pro@gmail.com>
 
-[ Upstream commit 87dd96111b0bb8e616fcbd74dbf4bb4182f2c596 ]
+[ Upstream commit 2e0432f8f8ad11b4bd208445360220efa5b37d82 ]
 
-When operating in USB 2.0 speeds (HS/FS), if GUSB2PHYCFG.ENBLSLPM or
-GUSB2PHYCFG.SUSPHY is set, it must be cleared before issuing an endpoint
-command.
+When using watchdog_init_timeout to update the default timeout value,
+an error means that there is no "timeout-sec" in the relevant device
+tree node.
 
-Current implementation only save and restore GUSB2PHYCFG.SUSPHY
-configuration. We must save and clear both GUSB2PHYCFG.ENBLSLPM and
-GUSB2PHYCFG.SUSPHY settings. Restore them after the command is
-completed.
+This should not prevent binding of the driver to the device.
 
-DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
-
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: 976932e40036 ("watchdog: sama5d4: make use of timeout-secs provided in devicetree")
+Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+Reviewed-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ drivers/watchdog/sama5d4_wdt.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 54de732550648..a56448eccd2eb 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -271,27 +271,36 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
- 	const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
- 	struct dwc3		*dwc = dep->dwc;
- 	u32			timeout = 1000;
-+	u32			saved_config = 0;
- 	u32			reg;
- 
- 	int			cmd_status = 0;
--	int			susphy = false;
- 	int			ret = -EINVAL;
- 
- 	/*
--	 * Synopsys Databook 2.60a states, on section 6.3.2.5.[1-8], that if
--	 * we're issuing an endpoint command, we must check if
--	 * GUSB2PHYCFG.SUSPHY bit is set. If it is, then we need to clear it.
-+	 * When operating in USB 2.0 speeds (HS/FS), if GUSB2PHYCFG.ENBLSLPM or
-+	 * GUSB2PHYCFG.SUSPHY is set, it must be cleared before issuing an
-+	 * endpoint command.
- 	 *
--	 * We will also set SUSPHY bit to what it was before returning as stated
--	 * by the same section on Synopsys databook.
-+	 * Save and clear both GUSB2PHYCFG.ENBLSLPM and GUSB2PHYCFG.SUSPHY
-+	 * settings. Restore them after the command is completed.
-+	 *
-+	 * DWC_usb3 3.30a and DWC_usb31 1.90a programming guide section 3.2.2
- 	 */
- 	if (dwc->gadget.speed <= USB_SPEED_HIGH) {
- 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
- 		if (unlikely(reg & DWC3_GUSB2PHYCFG_SUSPHY)) {
--			susphy = true;
-+			saved_config |= DWC3_GUSB2PHYCFG_SUSPHY;
- 			reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
--			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wdt.c
+index 255169916dbb6..1e93c1b0e3cfc 100644
+--- a/drivers/watchdog/sama5d4_wdt.c
++++ b/drivers/watchdog/sama5d4_wdt.c
+@@ -247,11 +247,7 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
  		}
-+
-+		if (reg & DWC3_GUSB2PHYCFG_ENBLSLPM) {
-+			saved_config |= DWC3_GUSB2PHYCFG_ENBLSLPM;
-+			reg &= ~DWC3_GUSB2PHYCFG_ENBLSLPM;
-+		}
-+
-+		if (saved_config)
-+			dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
  	}
  
- 	if (DWC3_DEPCMD_CMD(cmd) == DWC3_DEPCMD_STARTTRANSFER) {
-@@ -380,9 +389,9 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
- 		dwc3_gadget_ep_get_transfer_index(dep);
- 	}
+-	ret = watchdog_init_timeout(wdd, wdt_timeout, &pdev->dev);
+-	if (ret) {
+-		dev_err(&pdev->dev, "unable to set timeout value\n");
+-		return ret;
+-	}
++	watchdog_init_timeout(wdd, wdt_timeout, &pdev->dev);
  
--	if (unlikely(susphy)) {
-+	if (saved_config) {
- 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
--		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
-+		reg |= saved_config;
- 		dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
- 	}
+ 	timeout = WDT_SEC2TICKS(wdd->timeout);
  
 -- 
 2.20.1
