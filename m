@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1D9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17D1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A2421D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6752067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611979;
-	bh=KB354o3/r9P+JtBFvnw5fnhLSpxOdIW6UqA4GyhnQBY=;
+	s=default; t=1573611986;
+	bh=aR+7IWwqhRZDLaMIVikkwQEGC9EKDQlI50+mJ7hE0ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NDlf/hbNOGtvSMZvCvPlAnYkoWdIhwzzxLNMG+HMNM0chE4Xet7klUAsfhtJ/hyF7
-	 5o3UiWoTmRQAk3dVZU/VPl4jDlhYqkRiqOhYLYr2N8wm48da3d5WYb00n/QJhJES95
-	 u7s1zS9hbVIaag12ERQaX7YmBujWU5KvytO//r9M=
+	b=DFvoPYvff4lpN47U3BSBgclQM8vGDkH8f2v3snpzj6OaZhrjM1y1FI3X/pI3IUEx1
+	 1RBQyRonoRTWLiiBSmCROPrfRtIT+rAkRuClzdPNME00IDKx0OddwI8zZWVLSrpFPE
+	 yv8o4VW7SuMLwyMfIVx3HX7cVkHlWq8wbh3u/Hk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfKMC0S (ORCPT
+        id S1730376AbfKMC0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:26:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38816 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:26:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbfKMBvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:17 -0500
+        id S1727751AbfKMBvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B0EB222D3;
-        Wed, 13 Nov 2019 01:51:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C048322459;
+        Wed, 13 Nov 2019 01:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609876;
-        bh=KB354o3/r9P+JtBFvnw5fnhLSpxOdIW6UqA4GyhnQBY=;
+        s=default; t=1573609875;
+        bh=aR+7IWwqhRZDLaMIVikkwQEGC9EKDQlI50+mJ7hE0ok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkQGPc13qIRJMzCiSlyDpJC6+hFeoDBeVccZMAzTx9L7rrSu0t2Nm72FDYELAByxj
-         kDMpMZRLEgENv1VXilwNsB0q+yVrstubyZN0jH5SzhGAdFWH0P4tMLPfq+m79p9eNb
-         6FtO4sIcuUJ8+wbTluVCOUgID8OhIIghuErtmWsY=
+        b=iMxKPJstolRhWnDb2BhXxagKYrFQblG9CsKxqlOaqwOZt+5hyda3r1NQcxgrcyfkw
+         L0xO62tdcnXe20T5qlwOkN9dKA/Bp7uu8c0rzWkeCM+3t5+chBsRWP5jx3MtP18Mjf
+         qCrPbnUkmCjwjtrN1a8UZOCa/YaZBAhPsmUYA0pw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -46,9 +46,9 @@ Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 039/209] watchdog: renesas_wdt: stop when unregistering
-Date:   Tue, 12 Nov 2019 20:47:35 -0500
-Message-Id: <20191113015025.9685-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 038/209] watchdog: core: fix null pointer dereference when releasing cdev
+Date:   Tue, 12 Nov 2019 20:47:34 -0500
+Message-Id: <20191113015025.9685-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -63,14 +63,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit 14de99b44b34dbb9d0f64845b1cbb675e047767e ]
+[ Upstream commit 953b9dd7725bad55a922a35e75bff7bebf7b9978 ]
 
-We want to go into a sane state when unregistering. Currently, it
-happens that the watchdog stops when unbinding because of RuntimePM
-stopping the core clock. When rebinding, the core clock gets reactivated
-and the watchdog fires even though it hasn't been opened by userspace
-yet. Strange scenario, yes, but sane state is much preferred anyhow.
+watchdog_stop() calls watchdog_update_worker() which needs a valid
+wdd->wd_data pointer. So, when unregistering the cdev, clear the
+pointers after we call watchdog_stop(), not before.
 
+Fixes: bb292ac1c602 ("watchdog: Introduce watchdog_stop_on_unregister helper")
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
@@ -78,21 +77,35 @@ Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/renesas_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/watchdog/watchdog_dev.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_wdt.c
-index d01efd342dc0c..62d9d3edcdf25 100644
---- a/drivers/watchdog/renesas_wdt.c
-+++ b/drivers/watchdog/renesas_wdt.c
-@@ -239,6 +239,7 @@ static int rwdt_probe(struct platform_device *pdev)
- 	watchdog_set_drvdata(&priv->wdev, priv);
- 	watchdog_set_nowayout(&priv->wdev, nowayout);
- 	watchdog_set_restart_priority(&priv->wdev, 0);
-+	watchdog_stop_on_unregister(&priv->wdev);
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index ffbdc4642ea55..f6c24b22b37c0 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -1019,16 +1019,16 @@ static void watchdog_cdev_unregister(struct watchdog_device *wdd)
+ 		old_wd_data = NULL;
+ 	}
  
- 	/* This overrides the default timeout only if DT configuration was found */
- 	ret = watchdog_init_timeout(&priv->wdev, 0, &pdev->dev);
+-	mutex_lock(&wd_data->lock);
+-	wd_data->wdd = NULL;
+-	wdd->wd_data = NULL;
+-	mutex_unlock(&wd_data->lock);
+-
+ 	if (watchdog_active(wdd) &&
+ 	    test_bit(WDOG_STOP_ON_UNREGISTER, &wdd->status)) {
+ 		watchdog_stop(wdd);
+ 	}
+ 
++	mutex_lock(&wd_data->lock);
++	wd_data->wdd = NULL;
++	wdd->wd_data = NULL;
++	mutex_unlock(&wd_data->lock);
++
+ 	hrtimer_cancel(&wd_data->timer);
+ 	kthread_cancel_work_sync(&wd_data->work);
+ 
 -- 
 2.20.1
 
