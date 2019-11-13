@@ -2,175 +2,118 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EA1C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9314DC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5141206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3C2206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="X1rU415t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFGJxtSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfKMA12 (ORCPT
+        id S1727093AbfKMA27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:27:28 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:15239 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKMA12 (ORCPT
+        Tue, 12 Nov 2019 19:28:59 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40566 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKMA27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:27:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573604845;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=5xqNjpajXQkP+Y+TYhP+1nqtNztIwRwTN9C3b1nVHUY=;
-        b=X1rU415tdviRpjQceWkcfn6amuVywC2wrmvGHD0vX+/0Q/ojhpbCiZztJnGQMktyJ3
-        hRE9q/jF88Qlhxljf8cNaJ7sO9SCTe7PHADU3v1ymkqdntKRom8yJBJdfCmvKnFDYZl1
-        uLUeGzk0N13gtd+N/C6lgCYiAmDNzaEtmul1Ln2DwBxTz/DFtzPsBohx/EREqFGaQj98
-        TD4EErzSjxIVoyvmMlEZcFH0X6L/BYc7OibBIXSjmNsRDtACdpxezHW76QFGVO2AG8pW
-        R5lLdXExZWR2BK0PD0DhpeGjbYwDhzKASno/NLzhEPOYHf+QwA79wKiw2PUmqWaXpZQg
-        3TqQ==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmwdNLqV/Nz7PsNPEA=="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id N09a57vAD0Q1ABR
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 13 Nov 2019 01:26:01 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Arnd Bergmann <arnd@arndb.de>,
+        Tue, 12 Nov 2019 19:28:59 -0500
+Received: by mail-pf1-f193.google.com with SMTP id r4so304422pfl.7;
+        Tue, 12 Nov 2019 16:28:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+6UC38FlfW6zBWqP8BAp6EAB/UtH52S4xyRIOBRxva8=;
+        b=LFGJxtSwbt9JzGE/xXosvMO7laOZYSPpwiN09NttkUsf5L8bmiWKNl2/h0gCrFuF4u
+         jkvvUyVKXZU8RR4dkfJDb0AI6tr6No7bkPhpCFsjqNPRhtW67RILNEG57HFtAc73mCt6
+         LwQ2zN1p0j5leWQ32VBYUD1iptQ4gRze9qWnWWLNCeQtloH2vw0Fk0YRBRX6YcM5adk9
+         qWvNk6812po+/DoqGJF+8M31NqJABipwex6QaeE+UptkcRoA+/wslhyLEXLtDGgtuxSR
+         EUWS3TyRCY8umC7f+MzZvNJrlD0VNsjh7BFsyPlLzGVLULpMgFd5751Ixqvy3QcxGdtd
+         iLjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+6UC38FlfW6zBWqP8BAp6EAB/UtH52S4xyRIOBRxva8=;
+        b=N+Ab+GUPMR9sSjcKX58e7BzPNy3m9cYSXbD+w7KWhiv5kR1PR2Mab+M2bf1sMx5rL3
+         c4Srg5MXNS9LoxNykC9X3AlJe1hypkCyCkx+z3LZcku9bPnDvdA+Z2H7+G4t0KMtZDrk
+         KCyoQPwhigTb6eoGnDDiUo8aSAAEb/2NEPt996PPZFGVmIpdH4IJOPHo77OktliSzCMl
+         N6ksyzj7VZt6zGC8h0Y4XKjq1kEm8crD5WNC15U3uGcwHLSi4UqxMJ/OvaradmhL/jWo
+         psb64w4RB2YI+23dDQyTKHw+QSv8WuhBYjYlyj5yl1dr7sQxfjTcbBlKOQs9o3xb2X8c
+         vWLw==
+X-Gm-Message-State: APjAAAWUPw4sobqFQ8Zr7bGEf5BCy8j7K9rbPoxbUrCtCvxQZSuyTwet
+        jzGxV2q6nmv8j/5mPm4KSTU=
+X-Google-Smtp-Source: APXvYqyUzu+U1GfY1fNa0qvrlGs3rQh80Mma2kbykoPxWn+oth422zw7pgkjdXPHPS777vRbnDbunQ==
+X-Received: by 2002:a65:46c1:: with SMTP id n1mr339639pgr.257.1573604938058;
+        Tue, 12 Nov 2019 16:28:58 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id y24sm132709pfr.116.2019.11.12.16.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 16:28:57 -0800 (PST)
+Date:   Tue, 12 Nov 2019 16:28:55 -0800
+From:   rokhov <dmitry.torokhov@gmail.com>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Armijn Hemel <armijn@tjaldur.nl>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v24 01/12] Linux Random Number Generator
-Date:   Wed, 13 Nov 2019 01:25:58 +0100
-Message-ID: <2264655.zbyk6f8WaQ@positron.chronox.de>
-In-Reply-To: <201911130807.RnsJ5SVf%lkp@intel.com>
-References: <2369119.jSEA3qhmGI@positron.chronox.de> <201911130807.RnsJ5SVf%lkp@intel.com>
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] input: ar1021: fix typo in preprocessor macro name
+Message-ID: <20191113002855.GK13374@dtor-ws>
+References: <1573211947-660-1-git-send-email-f.suligoi@asem.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573211947-660-1-git-send-email-f.suligoi@asem.it>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 13. November 2019, 01:14:05 CET schrieb kbuild test robot:
+On Fri, Nov 08, 2019 at 12:19:07PM +0100, Flavio Suligoi wrote:
+> Fix spelling mistake.
+> 
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 
-Hi kbuild,
+Applied, thank you.
 
-> Hi "Stephan,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on char-misc/char-misc-testing]
-> [also build test ERROR on v5.4-rc7 next-20191112]
-> [if your patch is applied to the wrong git tree, please drop us a note to
-> help improve the system. BTW, we also suggest to use '--base' option to
-> specify the base tree in git format-patch, please see
-> https://stackoverflow.com/a/37406982]
-> 
-> url:   
-> https://github.com/0day-ci/linux/commits/Stephan-M-ller/dev-random-a-new-ap
-> proach-with-full-SP800-90B-compliance/20191113-040847 base:  
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
-> 01b59c763fe2de845b65900485b141fdd7bbf93e config: mips-allmodconfig
-> (attached as .config)
-> compiler: mips-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget
-> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O
-> ~/bin/make.cross chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=mips
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/char/lrng/lrng_sw_noise.c: In function 
-'add_interrupt_randomness':
-> >> drivers/char/lrng/lrng_sw_noise.c:145:23: error: invalid application of
-> >> 'sizeof' to incomplete type 'struct pt_regs'
->        size_t n = (sizeof(struct pt_regs) / sizeof(u32));
->                           ^~~~~~
-> 
-> >> drivers/char/lrng/lrng_sw_noise.c:147:9: error: implicit declaration of
-> >> function 'instruction_pointer'; did you mean 'instruction_hazard'?
-> >> [-Werror=implicit-function-declaration]
->        ip = instruction_pointer(regs);
->             ^~~~~~~~~~~~~~~~~~~
->             instruction_hazard
->    cc1: some warnings being treated as errors
-> 
-> vim +145 drivers/char/lrng/lrng_sw_noise.c
-
-Thank you for the report.
-
-Both issues are fixed by including <asm/ptrace.h>.
-
-This will be fixed with the next installment of the patch.
-> 
->    125
->    126	/**
->    127	 * Hot code path - Callback for interrupt handler
->    128	 */
->    129	void add_interrupt_randomness(int irq, int irq_flags)
->    130	{
->    131		lrng_time_process();
->    132
->    133		if (!lrng_pool_highres_timer()) {
->    134			struct pt_regs *regs = get_irq_regs();
->    135			static atomic_t reg_idx = ATOMIC_INIT(0);
->    136			u64 ip;
->    137
->    138			lrng_pool_lfsr_u32(jiffies);
->    139			lrng_pool_lfsr_u32(irq);
->    140			lrng_pool_lfsr_u32(irq_flags);
->    141
->    142			if (regs) {
->    143				u32 *ptr = (u32 *)regs;
->    144				int reg_ptr = atomic_add_return_relaxed(1, 
-&reg_idx);
-> 
->  > 145				size_t n = (sizeof(struct pt_regs) / 
-sizeof(u32));
-> 
->    146
-> 
->  > 147				ip = instruction_pointer(regs);
-> 
 > ---
-> 0-DAY kernel test infrastructure                 Open Source Technology
-> Center https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel
-> Corporation
+>  drivers/input/touchscreen/ar1021_i2c.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/ar1021_i2c.c b/drivers/input/touchscreen/ar1021_i2c.c
+> index 28644f3..c0d5c24 100644
+> --- a/drivers/input/touchscreen/ar1021_i2c.c
+> +++ b/drivers/input/touchscreen/ar1021_i2c.c
+> @@ -13,7 +13,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/interrupt.h>
+>  
+> -#define AR1021_TOCUH_PKG_SIZE	5
+> +#define AR1021_TOUCH_PKG_SIZE	5
+>  
+>  #define AR1021_MAX_X	4095
+>  #define AR1021_MAX_Y	4095
+> @@ -25,7 +25,7 @@
+>  struct ar1021_i2c {
+>  	struct i2c_client *client;
+>  	struct input_dev *input;
+> -	u8 data[AR1021_TOCUH_PKG_SIZE];
+> +	u8 data[AR1021_TOUCH_PKG_SIZE];
+>  };
+>  
+>  static irqreturn_t ar1021_i2c_irq(int irq, void *dev_id)
+> -- 
+> 2.7.4
+> 
 
-
-Ciao
-Stephan
-
-
+-- 
+Dmitry
