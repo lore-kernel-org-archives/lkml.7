@@ -2,173 +2,135 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D89C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9585C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED342196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8689721872
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NDcAmf37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfKMCqV (ORCPT
+        id S1727495AbfKMCtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:46:21 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6650 "EHLO huawei.com"
+        Tue, 12 Nov 2019 21:49:02 -0500
+Received: from mail-eopbgr130042.outbound.protection.outlook.com ([40.107.13.42]:17070
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727226AbfKMCqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:46:20 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6950BC9426FED6CEC6A2;
-        Wed, 13 Nov 2019 10:46:13 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
- 10:46:05 +0800
-Subject: Re: [PATCH v3] lib: optimize cpumask_local_spread()
-To:     Michal Hocko <mhocko@kernel.org>
-References: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191108103102.GF15658@dhcp22.suse.cz>
- <c6f24942-c8d6-e46a-f433-152d29af8c71@hisilicon.com>
- <20191112115630.GD2763@dhcp22.suse.cz>
-CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Paul Burton" <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        <netdev@vger.kernel.org>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <00856999-739f-fd73-eddd-d71e4e94962e@hisilicon.com>
-Date:   Wed, 13 Nov 2019 10:46:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        id S1727170AbfKMCtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:49:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FDiwubE01vxXJDMelQSnF3xS1PETByvvvVAcyPMjlkN7rEDt9kTyG9qHQ/jsDXvMY0zwYX+kuIvko3WOJrlS5CpHFTZKgwq+xVDDRfT59cfO156BE29iDgolCubhPW4dcv0I1Srn9oOfHS5OtyWScKSGlbXgzr3yOzxaSMmWXUGqffX+2V3GiLrGev7TDGLDVeyqKcMJULXskGgZpu0fxF9DxSg3qdEx26P5NW7D/0ADCfvixuLnL51DUAOVpEMv8VLHLc8qbmCPVw2hf77/VrFa23RJ/jSf9EuLCPG4DbSjvV3hNWSdKwqa7+ACviG/JWpPhd2ATLEJZvSYgYykTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DdLQgduYFCrdeFhiuCOzJMega7KFSJ8sIPTVkWIdcAU=;
+ b=Z4+ciNHFJSUjRs90IVrA79ChaB3baeE6xSbKbMhHmdVj8WnRqYaBPBe+KU/Xegbxp4nGme+LrqwGS0PFXdzjaUdpAshjJxnqsIreUMfv3xpWauNmLj+ymSu+7pCojruFBXAmx9I50iaZPUjZKJo/hGeh8ohtqEsNwFrIl9H5j7zH+Vk96zEoTjm8E3uslgVDw3Ybg00VOPgMjpMbK0j+tnhAFavAPSk460E8radgGmW47bDqe9+GDwHIkOKytJqwzD9Uef63OcDKykpmJ4KG7tA+nSAN7Y4RVJUHxy9wor/u4o0TX1x2J/pEXGTFdHZgjsPn72ULJMBIKVtk+UfWvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DdLQgduYFCrdeFhiuCOzJMega7KFSJ8sIPTVkWIdcAU=;
+ b=NDcAmf37jEeuZ/bcE/SLgo/i7FBaq89XAMnAFL6ZloDK/BRyKOAsNiRmJM8vgI9c2cX9SmUt9dDB9/sg4ILOr0Do1D7c0bDCJZd1c6XGTftnDQ7zvQo7LwPAmNBN4plxQDpQ7JlvXbg7dM04RL3U01KcIVemc/Ob5+K5lnGXWnU=
+Received: from VE1PR04MB6768.eurprd04.prod.outlook.com (10.255.118.26) by
+ VE1PR04MB6558.eurprd04.prod.outlook.com (20.179.232.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.23; Wed, 13 Nov 2019 02:48:14 +0000
+Received: from VE1PR04MB6768.eurprd04.prod.outlook.com
+ ([fe80::9d62:61ea:616e:9996]) by VE1PR04MB6768.eurprd04.prod.outlook.com
+ ([fe80::9d62:61ea:616e:9996%6]) with mapi id 15.20.2430.027; Wed, 13 Nov 2019
+ 02:48:14 +0000
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Leo Li <leoyang.li@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>
+Subject: RE: [PATCH v4 47/47] soc: fsl: qe: remove PPC32 dependency from
+ CONFIG_QUICC_ENGINE
+Thread-Topic: [PATCH v4 47/47] soc: fsl: qe: remove PPC32 dependency from
+ CONFIG_QUICC_ENGINE
+Thread-Index: AQHVljTGk0ssum87vUySMpkhpG3T4qeIbCyg
+Date:   Wed, 13 Nov 2019 02:48:14 +0000
+Message-ID: <VE1PR04MB67681DD5C25A55B57A0C2F0191760@VE1PR04MB6768.eurprd04.prod.outlook.com>
+References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
+ <20191108130123.6839-48-linux@rasmusvillemoes.dk>
+In-Reply-To: <20191108130123.6839-48-linux@rasmusvillemoes.dk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=qiang.zhao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2ecea383-e625-4c64-a3fa-08d767e3ee28
+x-ms-traffictypediagnostic: VE1PR04MB6558:|VE1PR04MB6558:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6558421554CC613AA388F6D791760@VE1PR04MB6558.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1923;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(39860400002)(376002)(396003)(199004)(189003)(13464003)(81156014)(71190400001)(5660300002)(76176011)(6246003)(256004)(11346002)(478600001)(446003)(486006)(14444005)(476003)(9686003)(81166006)(4326008)(305945005)(7736002)(229853002)(8936002)(14454004)(8676002)(71200400001)(74316002)(52536014)(66556008)(6116002)(3846002)(66446008)(316002)(64756008)(186003)(26005)(76116006)(66946007)(25786009)(110136005)(33656002)(66476007)(2906002)(44832011)(7696005)(86362001)(54906003)(99286004)(66066001)(102836004)(6506007)(53546011)(55016002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6558;H:VE1PR04MB6768.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HL5/xKFOuP4wpWnMi494ZiMn3E+kdIpvlGuJwZDymaGE9X3rYq4IlIqoNMUIPhUWpNWepzhdoqjG0FvpSHr9uhm7zK7EK8XyysYvWJRM8QxemhaBoG9JEO955uXr1vymA6acwqBSwS/ldd7Az0nqiRS2igEIqFfEXXR4Hp/TuBwoWQFnT/zK3I+V7zsASxXUAA+QU99E6dA8E1+tovVR4SaO62tmqIlNh7TjnpLpSsB02hQCsjoIckt9Ret5+EJabOz3JahbBeNhRFZh6A+/q9w7rXuleqnYvYBmWqDdOLAdEqAowRszmzhO55gi8Nr37XZGnAZoDWC4nr3jDJQ8PpR6+PyUWw/iUTlVGOpIGujaxbhhZIGoBJPM+psp0G7jrFYzOXjHjF9yk2yn9ZI5GZm7JTzxLiK5DelQicEhT3H4qFz1LGI/1jWHLNBHujrD
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191112115630.GD2763@dhcp22.suse.cz>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ecea383-e625-4c64-a3fa-08d767e3ee28
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 02:48:14.6083
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Xf/3McJf2QUH7pKeue9p/MTRRUih3f5NRIuSs/G67qoDIyv/fD4f7WWJRDrkO+Kh0qHOksHtGpzO4qPb4W6xZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6558
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
-
-On 2019/11/12 19:56, Michal Hocko wrote:
-> On Mon 11-11-19 10:02:37, Shaokun Zhang wrote:
->> Hi Michal,
->>
->> On 2019/11/8 18:31, Michal Hocko wrote:
->>> This changelog looks better, thanks! I still have some questions though.
->>> Btw. cpumask_local_spread is used by the networking code but I do not
->>> see net guys involved (Cc netdev)
->>
->> Oh, I forgot to involve the net guys, sorry.
->>
->>>
->>> On Thu 07-11-19 09:44:08, Shaokun Zhang wrote:
->>>> From: yuqi jin <jinyuqi@huawei.com>
->>>>
->>>> In the multi-processors and NUMA system, I/O driver will find cpu cores
->>>> that which shall be bound IRQ. When cpu cores in the local numa have
->>>> been used, it is better to find the node closest to the local numa node,
->>>> instead of choosing any online cpu immediately.
->>>>
->>>> On Huawei Kunpeng 920 server, there are 4 NUMA node(0 -3) in the 2-cpu
->>>> system(0 - 1).
->>>
->>> Please send a topology of this server (numactl -H).
->>>
->>
->> available: 4 nodes (0-3)
->> node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
->> node 0 size: 63379 MB
->> node 0 free: 61899 MB
->> node 1 cpus: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
->> node 1 size: 64509 MB
->> node 1 free: 63942 MB
->> node 2 cpus: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
->> node 2 size: 64509 MB
->> node 2 free: 63056 MB
->> node 3 cpus: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
->> node 3 size: 63997 MB
->> node 3 free: 63420 MB
->> node distances:
->> node   0   1   2   3
->>   0:  10  16  32  33
->>   1:  16  10  25  32
->>   2:  32  25  10  16
->>   3:  33  32  16  10
->>
->>>> We perform PS (parameter server) business test, the
->>>> behavior of the service is that the client initiates a request through
->>>> the network card, the server responds to the request after calculation. 
->>>
->>> Is the benchmark any ublicly available?
->>>
->>
->> Sorry, the PS which we test is not open, but I think redis is the same as PS
->> on the macro level. When there are both 24 redis servers on node2 and node3.
->> if the 24-47 irqs and xps of NIC are not bound to node3, the redis servers
->> on node3 will not performance good.
-> 
-> Are there any other benchmarks showing improvements?
->
-
-Sorry, I don't have it. The issue is clear and the patch is helpful for the
-actual Parameter Server and Redis test.
-
->>>> When two PS processes run on node2 and node3 separately and the
->>>> network card is located on 'node2' which is in cpu1, the performance
->>>> of node2 (26W QPS) and node3 (22W QPS) was different.
->>>> It is better that the NIC queues are bound to the cpu1 cores in turn,
->>>> then XPS will also be properly initialized, while cpumask_local_spread
->>>> only considers the local node. When the number of NIC queues exceeds
->>>> the number of cores in the local node, it returns to the online core
->>>> directly. So when PS runs on node3 sending a calculated request,
->>>> the performance is not as good as the node2. It is considered that
->>>> the NIC and other I/O devices shall initialize the interrupt binding,
->>>> if the cores of the local node are used up, it is reasonable to return
->>>> the node closest to it.
->>>
->>> Can you post cpu affinities before and after this patch?
->>>
->>
->> Before this patch
->> Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
->> 2
->> Euler:~ # cat /proc/irq/345/smp_affinity    #IRQ0
->> 00000000,00010000,00000000
-> 
-> This representation is awkward to parse. Could you add smp_affinity_list
-> please? It would save quite some head scratching.
-> 
-
-before patch
-Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
-2
-Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
-48
-Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
-0
-Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
-24
-Euler:/sys/bus/pci #
-
-after patch
-Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
-2
-Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
-48
-Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
-72
-Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
-24
-Euler:/sys/bus/pci #
-
-Thanks,
-Shaokun
-
-
+T24gRnJpLCBOb3YgOCwgMjAxOSBhdCAyMTowMSwgUmFzbXVzIFZpbGxlbW9lcyA8bGludXhAcmFz
+bXVzdmlsbGVtb2VzLmRrPiB3cm90ZToNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
+PiBGcm9tOiBSYXNtdXMgVmlsbGVtb2VzIDxsaW51eEByYXNtdXN2aWxsZW1vZXMuZGs+DQo+IFNl
+bnQ6IDIwMTnE6jEx1MI4yNUgMjE6MDENCj4gVG86IFFpYW5nIFpoYW8gPHFpYW5nLnpoYW9Abnhw
+LmNvbT47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gQ2hyaXN0b3BoZSBMZXJveSA8
+Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+DQo+IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
+Lm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOyBTY290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0PjsgUmFzbXVz
+DQo+IFZpbGxlbW9lcyA8bGludXhAcmFzbXVzdmlsbGVtb2VzLmRrPg0KPiBTdWJqZWN0OiBbUEFU
+Q0ggdjQgNDcvNDddIHNvYzogZnNsOiBxZTogcmVtb3ZlIFBQQzMyIGRlcGVuZGVuY3kgZnJvbQ0K
+PiBDT05GSUdfUVVJQ0NfRU5HSU5FDQo+IA0KPiBUaGVyZSBhcmUgYWxzbyBBUk0gYW5kIEFSTTY0
+IGJhc2VkIFNPQ3Mgd2l0aCBhIFFVSUNDIEVuZ2luZSwgYW5kIHRoZSBjb3JlDQo+IFFFIGNvZGUg
+YXMgd2VsbCBhcyBuZXQvd2FuL2ZzbF91Y2NfaGRsYyBhbmQgdHR5L3NlcmlhbC91Y2NfdWFydCBo
+YXMgbm93IGJlZW4NCj4gbW9kaWZpZWQgdG8gbm90IHJlbHkgb24gcHBjaXNtcy4NCj4gDQo+IFNv
+IGV4dGVuZCB0aGUgYXJjaGl0ZWN0dXJlcyB0aGF0IGNhbiBzZWxlY3QgUVVJQ0NfRU5HSU5FLCBh
+bmQgYWRkIHRoZSByYXRoZXINCj4gbW9kZXN0IHJlcXVpcmVtZW50cyBvZiBPRiAmJiBIQVNfSU9N
+RU0uDQo+IA0KPiBUaGUgY29yZSBjb2RlIGFzIHdlbGwgYXMgdGhlIHVjY191YXJ0IGRyaXZlciBo
+YXMgYmVlbiB0ZXN0ZWQgb24gYW4gTFMxMDIxQQ0KPiAoYXJtKSwgYW5kIGl0IGhhcyBhbHNvIGJl
+ZW4gdGVzdGVkIHRoYXQgdGhlIFFFIGNvZGUgc3RpbGwgd29ya3Mgb24gYW4gbXBjODMwOQ0KPiAo
+cHBjKS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJhc211cyBWaWxsZW1vZXMgPGxpbnV4QHJhc211
+c3ZpbGxlbW9lcy5kaz4NCj4gLS0tDQo+ICBkcml2ZXJzL3NvYy9mc2wvcWUvS2NvbmZpZyB8IDMg
+KystDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+
+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNsL3FlL0tjb25maWcgYi9kcml2ZXJzL3Nv
+Yy9mc2wvcWUvS2NvbmZpZyBpbmRleA0KPiBjZmE0YjI5Mzk5OTIuLmYxOTc0ZjgxMTU3MiAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvZnNsL3FlL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9z
+b2MvZnNsL3FlL0tjb25maWcNCj4gQEAgLTUsNyArNSw4IEBADQo+IA0KPiAgY29uZmlnIFFVSUND
+X0VOR0lORQ0KPiAgCWJvb2wgIlFVSUNDIEVuZ2luZSAoUUUpIGZyYW1ld29yayBzdXBwb3J0Ig0K
+PiAtCWRlcGVuZHMgb24gRlNMX1NPQyAmJiBQUEMzMg0KPiArCWRlcGVuZHMgb24gT0YgJiYgSEFT
+X0lPTUVNDQo+ICsJZGVwZW5kcyBvbiBQUEMzMiB8fCBBUk0gfHwgQVJNNjQgfHwgQ09NUElMRV9U
+RVNUDQo+ICAJc2VsZWN0IEdFTkVSSUNfQUxMT0NBVE9SDQo+ICAJc2VsZWN0IENSQzMyDQo+ICAJ
+aGVscA0KPiAtLQ0KVGVzdGVkLWJ5OiBRaWFuZyBaaGFvIDxxaWFuZy56aGFvQG54cC5jb20+DQpU
+ZXN0ZWQgUUUtSERMQyBvbiBBUk02NCENCg0KQmVzdCBSZWdhcmRzDQpRaWFuZyBaaGFvDQo=
