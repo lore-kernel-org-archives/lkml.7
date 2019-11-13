@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A452C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7890C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7442067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2E32067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611758;
-	bh=KyMv468KYUxa0zlBPzJSuBJ/C6Qe6r6JSM8MqWf4Ufw=;
+	s=default; t=1573611768;
+	bh=9tlsXAq1wvbQ7vXhH0WzC2FHYWWLkSRWNraPNNPO6MY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiZ8l5ipgr6TtNpgzS5jsw1C5XGbSXDNcp6RfpX8OpaUAD0EuNWBS0rKq33rT6d5z
-	 bycbqIi8Qz1tk+Z63aF3PJz84yqJL96K8K+aXO9fy97nNTGHOW9VUITRB3yS92QLH1
-	 X4QffA8ETE/0ZlF5cTdhDLjnnpaozLbGgNZaanN0=
+	b=V7VuGOsH7HVL2Bgq66Y3ZAJ+uaZbLZJNoan4MCdzJ9DSnoC5OmbH8ALfa6CNiZ8Xz
+	 mPWO/bIHPe0CIYScD0Jzf17zaORNQpw3axbRhR7zxY67Bfiscgz8vYF+yb8uvjBquI
+	 a9Sje2M/3pUUjWHaegmsTJBLmTql1UFXM4CA0iew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfKMCWg (ORCPT
+        id S1729759AbfKMCWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:22:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43000 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:22:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbfKMBxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:24 -0500
+        id S1728456AbfKMBxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18613204EC;
-        Wed, 13 Nov 2019 01:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F726204EC;
+        Wed, 13 Nov 2019 01:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610003;
-        bh=KyMv468KYUxa0zlBPzJSuBJ/C6Qe6r6JSM8MqWf4Ufw=;
+        s=default; t=1573609993;
+        bh=9tlsXAq1wvbQ7vXhH0WzC2FHYWWLkSRWNraPNNPO6MY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Cgwikjk8xTJnBxEN6br8wJr2saUoSV2HOjObqTDH6dbtR+8mM5sXKxoWZNKteIIF
-         21ZYmYMShIH+4fBO5I/Z3Iq0jl4XnJRbZpkISN9Ory4PmGIinNfB1mFFJEwHSpurBP
-         fpS+VLiV5SzfJ0YotvZGFp+Qe4SUhC49ekahW5qI=
+        b=udlHMhAnBxFv2gumk0Es+3SIqfgQJD1se1tBYEaIbpH7dOdbszjDW8ClYcxcyDh3A
+         PrHgIRLfnAAuu6ZrANgKr+ZVXtkJBJFClKbGMiV3xSThLufLMZIbrZkbUqQeYnlWOK
+         JzTSl9SPrscbJcj3cAqW5J/PTqdpu+hUlwf/B9ws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     He Zhe <zhe.he@windriver.com>, rostedt@goodmis.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 110/209] printk: Correct wrong casting
-Date:   Tue, 12 Nov 2019 20:48:46 -0500
-Message-Id: <20191113015025.9685-110-sashal@kernel.org>
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 104/209] qtnfmac: inform wireless core about supported extended capabilities
+Date:   Tue, 12 Nov 2019 20:48:40 -0500
+Message-Id: <20191113015025.9685-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,41 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 51a72ab7372d85c96104e58036f1b49ba11e5d2b ]
+[ Upstream commit ab1c64a1d349cc7f1090a60ce85a53298e3d371d ]
 
-log_first_seq and console_seq are 64-bit unsigned integers.
-Correct a wrong casting that might cut off the output.
+Driver retrieves information about supported extended capabilities
+from wireless card. However this information is not propagated
+further to Linux wireless core. Fix this by setting extended
+capabilities fields of wiphy structure.
 
-Link: http://lkml.kernel.org/r/1538239553-81805-2-git-send-email-zhe.he@windriver.com
-Cc: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-[sergey.senozhatsky@gmail.com: More descriptive commit message]
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../net/wireless/quantenna/qtnfmac/cfg80211.c    |  9 +++++++++
+ .../net/wireless/quantenna/qtnfmac/commands.c    |  3 +--
+ drivers/net/wireless/quantenna/qtnfmac/core.c    | 16 ++++++++++++++--
+ drivers/net/wireless/quantenna/qtnfmac/core.h    |  1 +
+ 4 files changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 11d70fd15e706..52390f5a1db11 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2358,8 +2358,9 @@ void console_unlock(void)
- 		printk_safe_enter_irqsave(flags);
- 		raw_spin_lock(&logbuf_lock);
- 		if (console_seq < log_first_seq) {
--			len = sprintf(text, "** %u printk messages dropped **\n",
--				      (unsigned)(log_first_seq - console_seq));
-+			len = sprintf(text,
-+				      "** %llu printk messages dropped **\n",
-+				      log_first_seq - console_seq);
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
+index 1519d986b74a4..05b93f301ca08 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/cfg80211.c
+@@ -1126,6 +1126,15 @@ int qtnf_wiphy_register(struct qtnf_hw_info *hw_info, struct qtnf_wmac *mac)
+ 		wiphy->regulatory_flags |= REGULATORY_WIPHY_SELF_MANAGED;
+ 	}
  
- 			/* messages are gone, move to first one */
- 			console_seq = log_first_seq;
++	if (mac->macinfo.extended_capabilities_len) {
++		wiphy->extended_capabilities =
++			mac->macinfo.extended_capabilities;
++		wiphy->extended_capabilities_mask =
++			mac->macinfo.extended_capabilities_mask;
++		wiphy->extended_capabilities_len =
++			mac->macinfo.extended_capabilities_len;
++	}
++
+ 	strlcpy(wiphy->fw_version, hw_info->fw_version,
+ 		sizeof(wiphy->fw_version));
+ 	wiphy->hw_version = hw_info->hw_version;
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/commands.c b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+index 7fe22bb53bfc4..734844b34c266 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/commands.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+@@ -1356,8 +1356,7 @@ static int qtnf_parse_variable_mac_info(struct qtnf_wmac *mac,
+ 		ext_capa_mask = NULL;
+ 	}
+ 
+-	kfree(mac->macinfo.extended_capabilities);
+-	kfree(mac->macinfo.extended_capabilities_mask);
++	qtnf_mac_ext_caps_free(mac);
+ 	mac->macinfo.extended_capabilities = ext_capa;
+ 	mac->macinfo.extended_capabilities_mask = ext_capa_mask;
+ 	mac->macinfo.extended_capabilities_len = ext_capa_len;
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/core.c b/drivers/net/wireless/quantenna/qtnfmac/core.c
+index 19abbc4e23e06..08928d5e252d7 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/core.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/core.c
+@@ -304,6 +304,19 @@ void qtnf_mac_iface_comb_free(struct qtnf_wmac *mac)
+ 	}
+ }
+ 
++void qtnf_mac_ext_caps_free(struct qtnf_wmac *mac)
++{
++	if (mac->macinfo.extended_capabilities_len) {
++		kfree(mac->macinfo.extended_capabilities);
++		mac->macinfo.extended_capabilities = NULL;
++
++		kfree(mac->macinfo.extended_capabilities_mask);
++		mac->macinfo.extended_capabilities_mask = NULL;
++
++		mac->macinfo.extended_capabilities_len = 0;
++	}
++}
++
+ static void qtnf_vif_reset_handler(struct work_struct *work)
+ {
+ 	struct qtnf_vif *vif = container_of(work, struct qtnf_vif, reset_work);
+@@ -493,8 +506,7 @@ static void qtnf_core_mac_detach(struct qtnf_bus *bus, unsigned int macid)
+ 	}
+ 
+ 	qtnf_mac_iface_comb_free(mac);
+-	kfree(mac->macinfo.extended_capabilities);
+-	kfree(mac->macinfo.extended_capabilities_mask);
++	qtnf_mac_ext_caps_free(mac);
+ 	kfree(mac->macinfo.wowlan);
+ 	wiphy_free(wiphy);
+ 	bus->mac[macid] = NULL;
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/core.h b/drivers/net/wireless/quantenna/qtnfmac/core.h
+index a1e338a1f055a..ecb5c41c8ed76 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/core.h
++++ b/drivers/net/wireless/quantenna/qtnfmac/core.h
+@@ -151,6 +151,7 @@ struct qtnf_hw_info {
+ struct qtnf_vif *qtnf_mac_get_free_vif(struct qtnf_wmac *mac);
+ struct qtnf_vif *qtnf_mac_get_base_vif(struct qtnf_wmac *mac);
+ void qtnf_mac_iface_comb_free(struct qtnf_wmac *mac);
++void qtnf_mac_ext_caps_free(struct qtnf_wmac *mac);
+ struct wiphy *qtnf_wiphy_allocate(struct qtnf_bus *bus);
+ int qtnf_core_net_attach(struct qtnf_wmac *mac, struct qtnf_vif *priv,
+ 			 const char *name, unsigned char name_assign_type);
 -- 
 2.20.1
 
