@@ -2,178 +2,110 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B337C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19FCC17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2134C222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A3C222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arrikto-com.20150623.gappssmtp.com header.i=@arrikto-com.20150623.gappssmtp.com header.b="lSx2xsky"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p5Mn+phn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfKMJUk (ORCPT
+        id S1727295AbfKMJVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:20:40 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39320 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfKMJUk (ORCPT
+        Wed, 13 Nov 2019 04:21:45 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55804 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKMJVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:20:40 -0500
-Received: by mail-lj1-f194.google.com with SMTP id p18so1718168ljc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 01:20:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arrikto-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oIUwVCoXTRy2Xzc2WTbShQwLgC231DhggYOStvhTE1g=;
-        b=lSx2xskyZOQ4nh+qgQles1LugvACmjIDL4+NSPQoZ0lftWJM0Yz7BGSwn8J/e65eHj
-         fNkcUkR4tIE3elCZ/uAQNqDd19xusilTspuDXzLr/uFrfkTD+EoNbwLyS/618zlav+Xi
-         iRxLIGgp0zqdPG0k9Y4xmbnddDGRDNExZLiP1cTsNuGbR0uWoWaCCTUsK++TihJky9LA
-         wZcBtOqotrhrj4DPLxCP5PCq1uCAvjdD9SEjZe1Du88F4WH1ZyY6x2Woi0fxeVZtfdkh
-         dlb9Oaxx8wgfRDE6HWE7X3FQO0cH40SZ5W0ZB4BJPinujmePJtoVoKnRXASYIfQhqNIm
-         maeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oIUwVCoXTRy2Xzc2WTbShQwLgC231DhggYOStvhTE1g=;
-        b=Q78ncH4FHi6tvwPNOwKWCQO0f5NqfzxYNheyJcVfFtJMTchS2M6QXulCO/Y9PuGcXb
-         iDJ0pyx8F0CIeuN3RLJ0hthcS1m0xojS9dgBbMOa1mFkwQMsapmlR9aXqLiK7ZHkCtZ/
-         dxWkjDpb8gYOBNsWwIJkgugY35a1AfiAsL+5NDV0p4RgFs4UGm173xME/e6i18ImEv9D
-         Il8vQT50eS8O0cHMBA1t5dyZuwV+pf9EZA/x+YF1R++MNLyvfFUHCpkNbSoTQspL3zZx
-         mHOvLJZHeGFHDk+D5iR3ZzEUMg18r61ajlkDocI05M8d+xifqqK9tYcUGBQK9ReM5daf
-         hD0w==
-X-Gm-Message-State: APjAAAX1FqE+a6KS+KCu3boPg6BKIMmzwy8o60Rq22L9fuX+7OVsdcMv
-        eVpDa7P274qWW7If5pmuQcLhkwjVwnU=
-X-Google-Smtp-Source: APXvYqwiY91CbJbr6hD5Oc184++qYLiuxmCMCk29oRW9+ONz55GoBRsdrtel1P2KeRp8x+CEsBTkBA==
-X-Received: by 2002:a2e:9d8d:: with SMTP id c13mr1589644ljj.71.1573636838399;
-        Wed, 13 Nov 2019 01:20:38 -0800 (PST)
-Received: from [10.94.250.119] ([31.177.62.212])
-        by smtp.gmail.com with ESMTPSA id 3sm683657lfq.55.2019.11.13.01.20.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 01:20:37 -0800 (PST)
-Subject: Re: [PATCH RT 1/2 v2] dm-snapshot: fix crash with the realtime kernel
-To:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <msnitzer@redhat.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Ilias Tsitsimpis <iliastsi@arrikto.com>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, tglx@linutronix.de
-References: <alpine.LRH.2.02.1911121057490.12815@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Nikos Tsironis <ntsironis@arrikto.com>
-Message-ID: <ab6fa08d-256a-1f8c-24dd-e5c23b3328bf@arrikto.com>
-Date:   Wed, 13 Nov 2019 11:20:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 04:21:45 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAD9LTvd075931;
+        Wed, 13 Nov 2019 03:21:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573636889;
+        bh=+19M8RYh7GYsqFpm6snFxu0nMiEUH/Wi0M5/3kESkSs=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=p5Mn+phnCUr7oKAzu6BweVTNRMWqMooon2KLfcgJZ+f5R12BDIzweW29/GPLGHb57
+         kXCl2HVNfP9E/lPKNFlOND+zhc+tIAV3EeZydOtKtFdt9WVMxnX25h1wwMsyGeqM9Y
+         nH3mdt+kHGHNvMnK870IKW/sNd14P9YvkauxbzXI=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAD9LTXc101484
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 13 Nov 2019 03:21:29 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
+ Nov 2019 03:21:11 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 13 Nov 2019 03:21:11 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD9LJ1H056807;
+        Wed, 13 Nov 2019 03:21:24 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <ludovic.desroches@microchip.com>, <agross@kernel.org>,
+        <wsa+renesas@sang-engineering.com>, <ldewangan@nvidia.com>
+CC:     <vkoul@kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <digetx@gmail.com>,
+        <linux-tegra@vger.kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <bjorn.andersson@linaro.org>
+Subject: [PATCH 1/4] i2c: at91: Use dma_request_chan() directly for channel request
+Date:   Wed, 13 Nov 2019 11:22:32 +0200
+Message-ID: <20191113092235.30440-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191113092235.30440-1-peter.ujfalusi@ti.com>
+References: <20191113092235.30440-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.02.1911121057490.12815@file01.intranet.prod.int.rdu2.redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 6:09 PM, Mikulas Patocka wrote:
-> Snapshot doesn't work with realtime kernels since the commit f79ae415b64c.
-> hlist_bl is implemented as a raw spinlock and the code takes two non-raw
-> spinlocks while holding hlist_bl (non-raw spinlocks are blocking mutexes
-> in the realtime kernel).
-> 
-> We can't change hlist_bl to use non-raw spinlocks, this triggers warnings 
-> in dentry lookup code, because the dentry lookup code uses hlist_bl while 
-> holding a seqlock.
-> 
-> This patch fixes the problem by using non-raw spinlock 
-> exception_table_lock instead of the hlist_bl lock.
-> 
-> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> Fixes: f79ae415b64c ("dm snapshot: Make exception tables scalable")
-> 
+dma_request_slave_channel_reason() is:
+#define dma_request_slave_channel_reason(dev, name) \
+	dma_request_chan(dev, name)
 
-Reviewed-by: Nikos Tsironis <ntsironis@arrikto.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/i2c/busses/i2c-at91-master.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> ---
->  drivers/md/dm-snap.c |   23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> Index: linux-2.6/drivers/md/dm-snap.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/md/dm-snap.c	2019-11-12 16:44:36.000000000 +0100
-> +++ linux-2.6/drivers/md/dm-snap.c	2019-11-12 17:01:46.000000000 +0100
-> @@ -141,6 +141,10 @@ struct dm_snapshot {
->  	 * for them to be committed.
->  	 */
->  	struct bio_list bios_queued_during_merge;
-> +
-> +#ifdef CONFIG_PREEMPT_RT_BASE
-> +	spinlock_t exception_table_lock;
-> +#endif
->  };
->  
->  /*
-> @@ -625,30 +629,46 @@ static uint32_t exception_hash(struct dm
->  
->  /* Lock to protect access to the completed and pending exception hash tables. */
->  struct dm_exception_table_lock {
-> +#ifndef CONFIG_PREEMPT_RT_BASE
->  	struct hlist_bl_head *complete_slot;
->  	struct hlist_bl_head *pending_slot;
-> +#else
-> +	spinlock_t *lock;
-> +#endif
->  };
->  
->  static void dm_exception_table_lock_init(struct dm_snapshot *s, chunk_t chunk,
->  					 struct dm_exception_table_lock *lock)
->  {
-> +#ifndef CONFIG_PREEMPT_RT_BASE
->  	struct dm_exception_table *complete = &s->complete;
->  	struct dm_exception_table *pending = &s->pending;
->  
->  	lock->complete_slot = &complete->table[exception_hash(complete, chunk)];
->  	lock->pending_slot = &pending->table[exception_hash(pending, chunk)];
-> +#else
-> +	lock->lock = &s->exception_table_lock;
-> +#endif
->  }
->  
->  static void dm_exception_table_lock(struct dm_exception_table_lock *lock)
->  {
-> +#ifndef CONFIG_PREEMPT_RT_BASE
->  	hlist_bl_lock(lock->complete_slot);
->  	hlist_bl_lock(lock->pending_slot);
-> +#else
-> +	spin_lock(lock->lock);
-> +#endif
->  }
->  
->  static void dm_exception_table_unlock(struct dm_exception_table_lock *lock)
->  {
-> +#ifndef CONFIG_PREEMPT_RT_BASE
->  	hlist_bl_unlock(lock->pending_slot);
->  	hlist_bl_unlock(lock->complete_slot);
-> +#else
-> +	spin_unlock(lock->lock);
-> +#endif
->  }
->  
->  static int dm_exception_table_init(struct dm_exception_table *et,
-> @@ -1318,6 +1338,9 @@ static int snapshot_ctr(struct dm_target
->  	s->first_merging_chunk = 0;
->  	s->num_merging_chunks = 0;
->  	bio_list_init(&s->bios_queued_during_merge);
-> +#ifdef CONFIG_PREEMPT_RT_BASE
-> +	spin_lock_init(&s->exception_table_lock);
-> +#endif
->  
->  	/* Allocate hash table for COW data */
->  	if (init_hash_tables(s)) {
-> 
+diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+index 6e0b554dcd4e..7a862e00b475 100644
+--- a/drivers/i2c/busses/i2c-at91-master.c
++++ b/drivers/i2c/busses/i2c-at91-master.c
+@@ -758,14 +758,14 @@ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
+ 	slave_config.dst_maxburst = 1;
+ 	slave_config.device_fc = false;
+ 
+-	dma->chan_tx = dma_request_slave_channel_reason(dev->dev, "tx");
++	dma->chan_tx = dma_request_chan(dev->dev, "tx");
+ 	if (IS_ERR(dma->chan_tx)) {
+ 		ret = PTR_ERR(dma->chan_tx);
+ 		dma->chan_tx = NULL;
+ 		goto error;
+ 	}
+ 
+-	dma->chan_rx = dma_request_slave_channel_reason(dev->dev, "rx");
++	dma->chan_rx = dma_request_chan(dev->dev, "rx");
+ 	if (IS_ERR(dma->chan_rx)) {
+ 		ret = PTR_ERR(dma->chan_rx);
+ 		dma->chan_rx = NULL;
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
