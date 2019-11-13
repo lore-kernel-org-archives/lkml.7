@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04836C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E963DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12DF22473
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C702245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610262;
-	bh=EaemQSMRjOoOZA9hgJ+Xxl+flpaibVvlHklLcHHBV1Q=;
+	s=default; t=1573610266;
+	bh=tmAMY+oNmxk7Nfm7KyR/BS1nrQjUL/UOu/NrN+8wWdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1weB72zc4xbq5qrPF0p24Q0KiOSgnl3VhJ3T/rgBJkshDFgEfK67a1LwhKTdgrXKs
-	 y9hZDcEHE+gSDLVXRhGVIwYZkjr9Zj5CS34W1PSyduDroie9MbpnwWLq6udGaCMxOF
-	 SXaXpKQBSdSskxwYT3J2P74MW7hzxxDiCLLhP+HQ=
+	b=JJmEJVwtHifwSMIcZUyH53zg5PLXQbbH6dVnAORSQkTyRFrI5vy9QeOWM5hMqMPCZ
+	 GqS0P9nUJEIDpgfZk9Y+nPqKZzf75lxlkXJGIPPqxhYHW0Bg2XKYCfVYEKWyzjGs9t
+	 9NIardBBfClbVz0ykjQCUR88l/l9qN89wEBAdpbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfKMB5l (ORCPT
+        id S1728839AbfKMB5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:57:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50868 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:57:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729837AbfKMB5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:34 -0500
+        id S1729850AbfKMB5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF3C5222D3;
-        Wed, 13 Nov 2019 01:57:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414082245A;
+        Wed, 13 Nov 2019 01:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610253;
-        bh=EaemQSMRjOoOZA9hgJ+Xxl+flpaibVvlHklLcHHBV1Q=;
+        s=default; t=1573610260;
+        bh=tmAMY+oNmxk7Nfm7KyR/BS1nrQjUL/UOu/NrN+8wWdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vpTjgECGvJt/8jfOQBUi/sPGgqcSajlqC4aYnUr2KUKXcWYBcQAF1CtRqbWF2IEgd
-         NOvaWjoH4GUqTnlrCZHwoVXpgn5E/XHfzn20oO9GXyi5xeDklqxPFL+dNK1aeK431X
-         zo9UzIiL0lqcP/lzBNpy/dCEdZ4eRXP4Sy96Xc6Y=
+        b=mgUmwHMFjhdN7cUBQZOA1B5mbbAZIf0/PYHmrSpwqgn0LeJYDHf46eW6vHlj4OeKS
+         iXmfeyoBNAgHV/L+rL/sfmeaPjdIOIvN46J1YmxFcAVxeLqHfyF9ohTUC9EZ8wsjoQ
+         dXRyfxBICndAZoskXZnoVWUAvYXsxTwcFgzN0TyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 049/115] ata: ep93xx: Use proper enums for directions
-Date:   Tue, 12 Nov 2019 20:55:16 -0500
-Message-Id: <20191113015622.11592-49-sashal@kernel.org>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 052/115] media: pxa_camera: Fix check for pdev->dev.of_node
+Date:   Tue, 12 Nov 2019 20:55:19 -0500
+Message-Id: <20191113015622.11592-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -62,85 +64,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 6adde4a36f1b6a562a1057fbb1065007851050e7 ]
+[ Upstream commit 44d7f1a77d8c84f8e42789b5475b74ae0e6d4758 ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+Clang warns that the address of a pointer will always evaluated as true
+in a boolean context.
 
-drivers/ata/pata_ep93xx.c:662:36: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        drv_data->dma_rx_data.direction = DMA_FROM_DEVICE;
-                                        ~ ^~~~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:670:36: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        drv_data->dma_tx_data.direction = DMA_TO_DEVICE;
-                                        ~ ^~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:681:19: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        conf.direction = DMA_FROM_DEVICE;
-                       ~ ^~~~~~~~~~~~~~~
-drivers/ata/pata_ep93xx.c:692:19: warning: implicit conversion from
-enumeration type 'enum dma_data_direction' to different enumeration type
-'enum dma_transfer_direction' [-Wenum-conversion]
-        conf.direction = DMA_TO_DEVICE;
-                       ~ ^~~~~~~~~~~~~
+drivers/media/platform/pxa_camera.c:2400:17: warning: address of
+'pdev->dev.of_node' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pdev->dev.of_node && !pcdev->pdata) {
+             ~~~~~~~~~~^~~~~~~ ~~
+1 warning generated.
 
-Use the equivalent valued enums from the expected type so that Clang no
-longer warns about a conversion.
+Judging from the rest of the kernel, it seems like this was an error and
+just the value of of_node should be checked rather than the address.
 
-DMA_TO_DEVICE = DMA_MEM_TO_DEV = 1
-DMA_FROM_DEVICE = DMA_DEV_TO_MEM = 2
-
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/pata_ep93xx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/media/platform/pxa_camera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/pata_ep93xx.c b/drivers/ata/pata_ep93xx.c
-index 0a550190955ad..cc6d06c1b2c70 100644
---- a/drivers/ata/pata_ep93xx.c
-+++ b/drivers/ata/pata_ep93xx.c
-@@ -659,7 +659,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 	 * start of new transfer.
- 	 */
- 	drv_data->dma_rx_data.port = EP93XX_DMA_IDE;
--	drv_data->dma_rx_data.direction = DMA_FROM_DEVICE;
-+	drv_data->dma_rx_data.direction = DMA_DEV_TO_MEM;
- 	drv_data->dma_rx_data.name = "ep93xx-pata-rx";
- 	drv_data->dma_rx_channel = dma_request_channel(mask,
- 		ep93xx_pata_dma_filter, &drv_data->dma_rx_data);
-@@ -667,7 +667,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 		return;
+diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
+index edca993c2b1f0..d270a23299cc7 100644
+--- a/drivers/media/platform/pxa_camera.c
++++ b/drivers/media/platform/pxa_camera.c
+@@ -2374,7 +2374,7 @@ static int pxa_camera_probe(struct platform_device *pdev)
+ 	pcdev->res = res;
  
- 	drv_data->dma_tx_data.port = EP93XX_DMA_IDE;
--	drv_data->dma_tx_data.direction = DMA_TO_DEVICE;
-+	drv_data->dma_tx_data.direction = DMA_MEM_TO_DEV;
- 	drv_data->dma_tx_data.name = "ep93xx-pata-tx";
- 	drv_data->dma_tx_channel = dma_request_channel(mask,
- 		ep93xx_pata_dma_filter, &drv_data->dma_tx_data);
-@@ -678,7 +678,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 
- 	/* Configure receive channel direction and source address */
- 	memset(&conf, 0, sizeof(conf));
--	conf.direction = DMA_FROM_DEVICE;
-+	conf.direction = DMA_DEV_TO_MEM;
- 	conf.src_addr = drv_data->udma_in_phys;
- 	conf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	if (dmaengine_slave_config(drv_data->dma_rx_channel, &conf)) {
-@@ -689,7 +689,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
- 
- 	/* Configure transmit channel direction and destination address */
- 	memset(&conf, 0, sizeof(conf));
--	conf.direction = DMA_TO_DEVICE;
-+	conf.direction = DMA_MEM_TO_DEV;
- 	conf.dst_addr = drv_data->udma_out_phys;
- 	conf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	if (dmaengine_slave_config(drv_data->dma_tx_channel, &conf)) {
+ 	pcdev->pdata = pdev->dev.platform_data;
+-	if (&pdev->dev.of_node && !pcdev->pdata) {
++	if (pdev->dev.of_node && !pcdev->pdata) {
+ 		err = pxa_camera_pdata_from_dt(&pdev->dev, pcdev, &pcdev->asd);
+ 	} else {
+ 		pcdev->platform_flags = pcdev->pdata->flags;
 -- 
 2.20.1
 
