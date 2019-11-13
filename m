@@ -2,138 +2,218 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD496C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2173C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76AF2206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C5C206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="APqs78Vo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfKMUTR (ORCPT
+        id S1726949AbfKMUVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:19:17 -0500
-Received: from smtp.gentoo.org ([140.211.166.183]:33820 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfKMUTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:19:17 -0500
-Received: from grubbs.orbis-terrarum.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by smtp.gentoo.org (Postfix) with ESMTPS id 7604934CDB9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 20:19:15 +0000 (UTC)
-Received: (qmail 24118 invoked by uid 10000); 13 Nov 2019 20:19:07 -0000
-Date:   Wed, 13 Nov 2019 20:19:07 +0000
-From:   "Robin H. Johnson" <robbat2@gentoo.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Drew DeVault <sir@cmpwn.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        " Rafael J. Wysocki" <rafael@kernel.org>,
-        ~sircmpwn/public-inbox@lists.sr.ht, robbat2@gentoo.org
-Subject: Re: [PATCH v2] firmware loader: log path to loaded firmwares
-Message-ID: <robbat2-20191113T195158-869302266Z@orbis-terrarum.net>
-References: <20191103180646.34880-1-sir@cmpwn.com>
- <20191113005628.GT11244@42.do-not-panic.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rPF8rPXpDlNr1aSW"
-Content-Disposition: inline
-In-Reply-To: <20191113005628.GT11244@42.do-not-panic.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 13 Nov 2019 15:21:14 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46484 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfKMUVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:21:14 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b3so3855381wrs.13
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:21:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Vxg7fErovmPZRUiQLFPaUndHhsTa0KcxJAK3E2kbzLs=;
+        b=APqs78VoQYRNRcD2z55wsNoVUmqjCvT6dJijUhx0swgrmfCQpKU250Sj2yybQ0+l4w
+         7DyuggHzS7QqSqNTPA2EuRROfb6hPMtcZ91+ttOf9ZaFKX6T7HECTJEZUhpjotm0u020
+         eU9fViHK5VcofIfXsFJ2KLCQP4lnDDD/vxA524dl2Lo5Evjuatpdplj4FRU9e6No9A5q
+         JTzwN6Gt0a2bkHGDdzXSutW2Ov9XccKwR2JJXBLi/uQ+MMEjbsNcd+1PJI12mUBw83E1
+         lIHX/M8S61BMF5oG6/RkshN2v/dRXh8sPz5mdhX8S0NZrcvF/3O5imEYTYJRQ5y0hhJ0
+         3rcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Vxg7fErovmPZRUiQLFPaUndHhsTa0KcxJAK3E2kbzLs=;
+        b=VTbr46CmUQHf1FiV1oFxnWftPrUCqYfzPqcllQEJJJHac20+FhQ+XrNpbH4Q0ZCAqa
+         8VcRZ/jDGNfC8j1dyw33u658yPdE8v5eTW9i9aYt0z3x5UeCoj612G/3SXTrzgmQed6A
+         OHFzVugEjXByW/XhWnlAT8GOEuunHbNJu+HLDdg14nXwr7Etle2hRkoZ64n1Oug4F/RR
+         5Bw/LkwRyK0xdwbpxAdX3X54JoDkfgA5ovaoAznfXvBM9aIXtkgu2nDquugotcAcKyMP
+         nSwyYqFtqXCim9AclugsdeUpoPVbi3T8j/Vat6tyO3Is+cMNv+oXX87B44EEVYUgESl0
+         sOhg==
+X-Gm-Message-State: APjAAAW+gexyboIGEj128vUD5OKptH8BTnC93ETkpPL6+9Ivyk9BxvWZ
+        y3Hk8qT/laZMJNeokqoM/PuJjd455Yg=
+X-Google-Smtp-Source: APXvYqzFEApVCTLE8xYkeDbklVfQuPHlUEPb5AYmu9bzcn/4nBX3xRxtrONHlzi+7zFsI2+zvVw4lQ==
+X-Received: by 2002:a5d:4f06:: with SMTP id c6mr4661339wru.211.1573676470480;
+        Wed, 13 Nov 2019 12:21:10 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:bdd0:28e6:f0d9:a18c])
+        by smtp.gmail.com with ESMTPSA id n1sm4262231wrr.24.2019.11.13.12.21.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 13 Nov 2019 12:21:09 -0800 (PST)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, dietmar.eggemann@arm.com,
+        juri.lelli@redhat.com, rostedt@goodmis.org, mgorman@suse.de,
+        dsmythies@telus.net
+Cc:     linux-pm@vger.kernel.org, torvalds@linux-foundation.org,
+        tglx@linutronix.de, sargun@sargun.me, tj@kernel.org,
+        xiexiuqi@huawei.com, xiezhipeng1@huawei.com,
+        srinivas.pandruvada@linux.intel.com,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v3] sched/freq: move call to cpufreq_update_util
+Date:   Wed, 13 Nov 2019 21:21:01 +0100
+Message-Id: <1573676461-7990-1-git-send-email-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
+which might be inefficient when cpufreq driver has rate limitation.
 
---rPF8rPXpDlNr1aSW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When a task is attached on a CPU, we have call path:
 
-On Wed, Nov 13, 2019 at 12:56:28AM +0000, Luis Chamberlain wrote:
-> On Sun, Nov 03, 2019 at 01:06:46PM -0500, Drew DeVault wrote:
-> >=20
-> > This is useful for users who are trying to identify the firmwares in use
-> > on their system.
-> >=20
-> > Signed-off-by: Drew DeVault <sir@cmpwn.com>
-> > ---
-> > v2 uses dev_dbg instead of printk(KERN_INFO)
-> >=20
-> >  drivers/base/firmware_loader/main.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmwar=
-e_loader/main.c
-> > index bf44c79beae9..2537da43a572 100644
-> > --- a/drivers/base/firmware_loader/main.c
-> > +++ b/drivers/base/firmware_loader/main.c
-> > @@ -504,6 +504,7 @@ fw_get_filesystem_firmware(struct device *device, s=
-truct fw_priv *fw_priv,
-> >  					 path);
-> >  			continue;
-> >  		}
-> > +		dev_dbg(device, "Loading firmware from %s\n", path);
->=20
-> Because this is dev_dbg() I'm willing to consider it, so that its not
-> always enabled. However its not in the right place, the code path you
-> are addressing is only for direct filesystem lookups. If that fails
-> some systems do a fallback call out to userspace. To cover both cases,
-> you want it at the end of _request_firmware() on the success path. Can
-> you send a new patch?
-As the author of a separate patch that predates Drew's patch (originally
-in July, with a later version sent to the list last week):
-https://pastebin.com/Tf09x3ed (v1)
-https://lkml.org/lkml/2019/11/7/800 (v2)
+update_load_avg()
+  update_cfs_rq_load_avg()
+    cfs_rq_util_change -- > trig frequency update
+  attach_entity_load_avg()
+    cfs_rq_util_change -- > trig frequency update
 
-This already uses the _request_firmware path to fire after the firmware
-was successfully loaded. The commit message is also specific that it's
-to cover early boot situations, before UEVENT can be logged.
+The 1st frequency update will not take into account the utilization of the
+newly attached task and the 2nd one might be discard because of rate
+limitation of the cpufreq driver.
 
-dev_dbg means that the loglevel must have been set to debug BEFORE the
-firmware load took place, but this means either setting system-wide
-debug spam or requiring debugfs, which is annoying for boot stuff (not
-impossible, just annoying).
+update_cfs_rq_load_avg() is only called by update_blocked_averages()
+and update_load_avg() so we can move the call to
+cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
+interesting to notice that update_load_avg() already calls directly
+cfs_rq_util_change() for !SMP case.
 
-I have two uses cases overall:
-- log so you know exactly when it's loaded successfully (great if
-  loading a firmware causes your system to lock up a few seconds later)
-- at some point in the future, being able to query what firmware was
-  loaded in the past, and esp. exactly what version/data was in that
-  firmware file.
+This changes will also ensure that cpufreq_update_util() is called even
+when there is no more CFS rq in the leaf_cfs_rq_list to update but only
+irq, rt or dl pelt signals.
 
---=20
-Robin Hugh Johnson
-Gentoo Linux: Dev, Infra Lead, Foundation Treasurer
-E-Mail   : robbat2@gentoo.org
-GnuPG FP : 11ACBA4F 4778E3F6 E4EDF38E B27B944E 34884E85
-GnuPG FP : 7D0B3CEB E9B85B1F 825BCECF EE05E6F6 A48F6136
+Reported-by: Doug Smythies <dsmythies@telus.net>
+Fixes: 039ae8bcf7a5 ("sched/fair: Fix O(nr_cgroups) in the load balancing path")
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
 
---rPF8rPXpDlNr1aSW
-Content-Type: application/pgp-signature; name="signature.asc"
+changes for v3:
+- fix typo
+- test the decay of root cfs_rq even for !CONFIG_FAIR_GROUP_SCHED case
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-Comment: Robbat2 @ Orbis-Terrarum Networks - The text below is a digital signature. If it doesn't make any sense to you, ignore it.
+ kernel/sched/fair.c | 39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
-iQKTBAABCgB9FiEEveu2pS8Vb98xaNkRGTlfI8WIJsQFAl3MZTlfFIAAAAAALgAo
-aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldEJE
-RUJCNkE1MkYxNTZGREYzMTY4RDkxMTE5Mzk1RjIzQzU4ODI2QzQACgkQGTlfI8WI
-JsSwNg//XS4T7SmC0xiblewKz/No+63tlObI8ZHVxPz0Pud6g2Jew1yXKg3cDvaX
-P8bZwznqQUB4XrogsLKItf+tc4e+UsLHy+TNg891oPkcPv39aGcq/u695PaYy6AX
-bMMK6C/q3L4wzXG46h0OZ75FXpGFuVWn7xrEConkVCjXF0AZ99Pk7UVcXCpTEsUG
-Tc2vquofoqosUbc2MScfuCwNUvecgJB8RTqA8hrmTppgjgqoIxAUs3b9FLfzJAa0
-bgOAmvQiYCe/Vj2iMfekY28jUQ0KCYh67c28R5ruQF83XsfXvDUasCuzr3P5c2bE
-lWEDed2LGjqhc7gf1rG0HHoxMIw5vIQ0n8k7iRd+dEdFLsoIf5EGRQO6yCnTKWC9
-JHfY0spuvyLygJHfc9rql8AveXhgvE7tFFQvKKdEXtKrXfkbw6UGp8/oTigKWFw8
-ovRhAv2NTDcub3U7Q1A4gY8/CvR8vX9fnEV0kYCEt63fCX7aTov03RHrEvC5fK4t
-RAEfQ2zLQEMETqT4wTLp/dGvnO1F7YkP2cV+eZJig32OWdM+qhZ3M4XqMMwvfhbb
-JdY9w5Z/TibMCCfhQ5HBVMihURvtZ+k3MtMc2vTAjNW8HaoKk5L2k4qYYrJwk2tb
-/ZSyLEO6geBnzVmcgx4txdz28uJQbj9gzvEuZE7xazkjAV6MHrU=
-=tbEk
------END PGP SIGNATURE-----
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 69a81a5..0a8f4ea 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3504,9 +3504,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
+ 	cfs_rq->load_last_update_time_copy = sa->last_update_time;
+ #endif
+ 
+-	if (decayed)
+-		cfs_rq_util_change(cfs_rq, 0);
+-
+ 	return decayed;
+ }
+ 
+@@ -3616,8 +3613,12 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+ 		attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
+ 		update_tg_load_avg(cfs_rq, 0);
+ 
+-	} else if (decayed && (flags & UPDATE_TG))
+-		update_tg_load_avg(cfs_rq, 0);
++	} else if (decayed) {
++		cfs_rq_util_change(cfs_rq, 0);
++
++		if (flags & UPDATE_TG)
++			update_tg_load_avg(cfs_rq, 0);
++	}
+ }
+ 
+ #ifndef CONFIG_64BIT
+@@ -7543,6 +7544,7 @@ static void update_blocked_averages(int cpu)
+ 	const struct sched_class *curr_class;
+ 	struct rq_flags rf;
+ 	bool done = true;
++	int decayed;
+ 
+ 	rq_lock_irqsave(rq, &rf);
+ 	update_rq_clock(rq);
+@@ -7552,9 +7554,9 @@ static void update_blocked_averages(int cpu)
+ 	 * that RT, DL and IRQ signals have been updated before updating CFS.
+ 	 */
+ 	curr_class = rq->curr->sched_class;
+-	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+-	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+-	update_irq_load_avg(rq, 0);
++	decayed = update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
++	decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
++	decayed |= update_irq_load_avg(rq, 0);
+ 
+ 	/* Don't need periodic decay once load/util_avg are null */
+ 	if (others_have_blocked(rq))
+@@ -7567,9 +7569,13 @@ static void update_blocked_averages(int cpu)
+ 	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
+ 		struct sched_entity *se;
+ 
+-		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
++		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
+ 			update_tg_load_avg(cfs_rq, 0);
+ 
++			if (cfs_rq == &rq->cfs)
++				decayed = 1;
++		}
++
+ 		/* Propagate pending load changes to the parent, if any: */
+ 		se = cfs_rq->tg->se[cpu];
+ 		if (se && !skip_blocked_update(se))
+@@ -7588,6 +7594,9 @@ static void update_blocked_averages(int cpu)
+ 	}
+ 
+ 	update_blocked_load_status(rq, !done);
++
++	if (decayed)
++		cpufreq_update_util(rq, 0);
+ 	rq_unlock_irqrestore(rq, &rf);
+ }
+ 
+@@ -7644,6 +7653,7 @@ static inline void update_blocked_averages(int cpu)
+ 	struct cfs_rq *cfs_rq = &rq->cfs;
+ 	const struct sched_class *curr_class;
+ 	struct rq_flags rf;
++	int decayed;
+ 
+ 	rq_lock_irqsave(rq, &rf);
+ 	update_rq_clock(rq);
+@@ -7653,13 +7663,16 @@ static inline void update_blocked_averages(int cpu)
+ 	 * that RT, DL and IRQ signals have been updated before updating CFS.
+ 	 */
+ 	curr_class = rq->curr->sched_class;
+-	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+-	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+-	update_irq_load_avg(rq, 0);
++	decayed = update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
++	decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
++	decayed |= update_irq_load_avg(rq, 0);
+ 
+-	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
++	decayed |= update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
+ 
+ 	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
++
++	if (decayed)
++		cpufreq_update_util(rq, 0);
+ 	rq_unlock_irqrestore(rq, &rf);
+ }
+ 
+-- 
+2.7.4
 
---rPF8rPXpDlNr1aSW--
