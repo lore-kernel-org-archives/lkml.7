@@ -2,73 +2,160 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6143C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9376BC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3C82196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A032196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:44:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfKMCmg (ORCPT
+        id S1727434AbfKMCoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:42:36 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:44621 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbfKMCmg (ORCPT
+        Tue, 12 Nov 2019 21:44:17 -0500
+Received: from regular1.263xmail.com ([211.150.70.198]:48212 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfKMCoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:42:36 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAD2gJXc006446, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAD2gJXc006446
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Nov 2019 10:42:19 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Wed, 13 Nov 2019 10:42:19 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 13 Nov 2019 10:42:18 +0800
-Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
- ([fe80::3d7d:f7db:e1fb:307b%12]) with mapi id 15.01.1779.005; Wed, 13 Nov
- 2019 10:42:18 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 3/7] arm64: dts: realtek: rtd129x: Introduce r-bus
-Thread-Topic: [PATCH 3/7] arm64: dts: realtek: rtd129x: Introduce r-bus
-Thread-Index: AQHVmD0LJFqIXtM2kU2Y99tlfWut1aeIZHww
-Date:   Wed, 13 Nov 2019 02:42:18 +0000
-Message-ID: <f70d00d8b1f8446fb138b36c61d952f4@realtek.com>
-References: <20191111030434.29977-1-afaerber@suse.de>
- <20191111030434.29977-4-afaerber@suse.de>
-In-Reply-To: <20191111030434.29977-4-afaerber@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 12 Nov 2019 21:44:16 -0500
+Received: from localhost (unknown [192.168.167.13])
+        by regular1.263xmail.com (Postfix) with ESMTP id 59FD51EB;
+        Wed, 13 Nov 2019 10:44:04 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.9] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P27171T139653306865408S1573613042814360_;
+        Wed, 13 Nov 2019 10:44:03 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <4f10d3830a5a75db422b247fc6297adc>
+X-RL-SENDER: kever.yang@rock-chips.com
+X-SENDER: yk@rock-chips.com
+X-LOGIN-NAME: kever.yang@rock-chips.com
+X-FST-TO: daniel.lezcano@linaro.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH 2/3] arm64: dts: rk3399-rock960: add vdd_log
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        Akash Gajjar <akash@openedev.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        daniel.lezcano@linaro.org
+References: <20191111005158.25070-1-kever.yang@rock-chips.com>
+ <20191111005158.25070-2-kever.yang@rock-chips.com>
+ <20191111052232.GA2842@Mani-XPS-13-9360>
+ <3d129826-7705-819e-e68b-cc9080eb6c95@rock-chips.com>
+ <20191112171726.GA18622@Mani-XPS-13-9360>
+From:   Kever Yang <kever.yang@rock-chips.com>
+Message-ID: <885996a6-e314-52c8-fec4-f66526dd1397@rock-chips.com>
+Date:   Wed, 13 Nov 2019 10:44:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191112171726.GA18622@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KPiArCQlyYnVzOiByLWJ1c0A5ODAwMDAwMCB7DQo+ICsJCQljb21wYXRp
-YmxlID0gInNpbXBsZS1idXMiOw0KPiArCQkJcmVnID0gPDB4OTgwMDAwMDAgMHgxMDAwMDA+Ow0K
-PiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4g
-KwkJCXJhbmdlcyA9IDwweDAgMHg5ODAwMDAwMCAweDEwMDAwMD47DQo+ICsNCg0KVGhlIHItYnVz
-IHNpemUgb2YgUlREMTM5NSBpcyAweDIwMDAwMC4NCg0KUmVnYXJkcywNCkphbWVzDQoNCg0K
+Hi Manivannan,
+
+On 2019/11/13 上午1:17, Manivannan Sadhasivam wrote:
+> On Tue, Nov 12, 2019 at 04:10:17PM +0800, Kever Yang wrote:
+>> On 2019/11/11 下午1:22, Manivannan Sadhasivam wrote:
+>>> Hi Kever,
+>>>
+>>> On Mon, Nov 11, 2019 at 08:51:57AM +0800, Kever Yang wrote:
+>>>> Add vdd_log node according to rock960 schematic V13.
+>>>>
+>>>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+>>>> ---
+>>>>
+>>>>    arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 12 ++++++++++++
+>>>>    1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+>>>> index c7d48d41e184..73afee257115 100644
+>>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+>>>> @@ -76,6 +76,18 @@
+>>>>    		regulator-always-on;
+>>>>    		vin-supply = <&vcc5v0_sys>;
+>>>>    	};
+>>>> +
+>>>> +	vdd_log: vdd-log {
+>>>> +		compatible = "pwm-regulator";
+>>>> +		pwms = <&pwm2 0 25000 1>;
+>>>> +		regulator-name = "vdd_log";
+>>>> +		regulator-always-on;
+>>>> +		regulator-boot-on;
+>>>> +		regulator-min-microvolt = <800000>;
+>>>> +		regulator-max-microvolt = <1400000>;
+>>>> +		regulator-init-microvolt = <950000>;
+>>> The default value seems to be 0.9v as per both Rock960 and Ficus schematics.
+>>
+>> The default value is 0.9V when pwm-regulator is not enabled, and this
+>> 'init-microvolt' suppose to set the
+>>
+>> init value when pwm-regulator is enabled. I set this to 950mV because Peter
+>> report that he experience
+>>
+>> the system hang during Fedora boot  up, and update the vdd_log to 950mV can
+>> fix the issue due to
+>>
+>> engineer measure on another rk3399 board puma-Q7.
+>>
+> okay. Previously we had post-boot hang issue on Rock960 Model A boards when the
+> performance governor was set as default. So the vdd_log node was removed from
+> the devicetree. Have you tested that case also?
+>
+> Here is the commit:
+> 13682e524167 ("arm64: dts: rockchip: remove vdd_log from rock960 to fix a stability issues")
+
+
+For rk3399, the kernel does not touch this regulator, it should be take 
+care by bootloader.
+
+So I think we need to update both U-Boot and kernel.
+
+
+Thanks,
+
+- Kever
+
+>
+> thanks,
+> Mani
+>> Thanks,
+>>
+>> - Kever
+>>
+>>> Other than that,
+>>> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>>
+>>> Thanks,
+>>> Mani
+>>>
+>>>> +		vin-supply = <&vcc_sys>;
+>>>> +	};
+>>>>    };
+>>>>    &cpu_l0 {
+>>>> -- 
+>>>> 2.17.1
+>>>>
+>>
+
+
