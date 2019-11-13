@@ -2,110 +2,69 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17D1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700FCC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6752067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611986;
-	bh=aR+7IWwqhRZDLaMIVikkwQEGC9EKDQlI50+mJ7hE0ok=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFvoPYvff4lpN47U3BSBgclQM8vGDkH8f2v3snpzj6OaZhrjM1y1FI3X/pI3IUEx1
-	 1RBQyRonoRTWLiiBSmCROPrfRtIT+rAkRuClzdPNME00IDKx0OddwI8zZWVLSrpFPE
-	 yv8o4VW7SuMLwyMfIVx3HX7cVkHlWq8wbh3u/Hk4=
+	by mail.kernel.org (Postfix) with ESMTP id 53A7A2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbfKMC0Z (ORCPT
+        id S1728434AbfKMC0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:26:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfKMBvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:16 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C048322459;
-        Wed, 13 Nov 2019 01:51:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609875;
-        bh=aR+7IWwqhRZDLaMIVikkwQEGC9EKDQlI50+mJ7hE0ok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMxKPJstolRhWnDb2BhXxagKYrFQblG9CsKxqlOaqwOZt+5hyda3r1NQcxgrcyfkw
-         L0xO62tdcnXe20T5qlwOkN9dKA/Bp7uu8c0rzWkeCM+3t5+chBsRWP5jx3MtP18Mjf
-         qCrPbnUkmCjwjtrN1a8UZOCa/YaZBAhPsmUYA0pw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 038/209] watchdog: core: fix null pointer dereference when releasing cdev
-Date:   Tue, 12 Nov 2019 20:47:34 -0500
-Message-Id: <20191113015025.9685-38-sashal@kernel.org>
+        Tue, 12 Nov 2019 21:26:23 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60796 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727695AbfKMC0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:26:21 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6F456F005266790D6D92;
+        Wed, 13 Nov 2019 10:26:19 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 13 Nov 2019 10:26:09 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>
+CC:     YueHaibing <yuehaibing@huawei.com>, <linux-xfs@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] xfs: remove duplicated include from xfs_dir2_data.c
+Date:   Wed, 13 Nov 2019 02:25:01 +0000
+Message-ID: <20191113022501.55816-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
-References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Remove duplicated include.
 
-[ Upstream commit 953b9dd7725bad55a922a35e75bff7bebf7b9978 ]
-
-watchdog_stop() calls watchdog_update_worker() which needs a valid
-wdd->wd_data pointer. So, when unregistering the cdev, clear the
-pointers after we call watchdog_stop(), not before.
-
-Fixes: bb292ac1c602 ("watchdog: Introduce watchdog_stop_on_unregister helper")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/watchdog/watchdog_dev.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/xfs/libxfs/xfs_dir2_data.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index ffbdc4642ea55..f6c24b22b37c0 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -1019,16 +1019,16 @@ static void watchdog_cdev_unregister(struct watchdog_device *wdd)
- 		old_wd_data = NULL;
- 	}
+diff --git a/fs/xfs/libxfs/xfs_dir2_data.c b/fs/xfs/libxfs/xfs_dir2_data.c
+index 9e471a28b6c6..30293a1d03f6 100644
+--- a/fs/xfs/libxfs/xfs_dir2_data.c
++++ b/fs/xfs/libxfs/xfs_dir2_data.c
+@@ -18,7 +18,6 @@
+ #include "xfs_trans.h"
+ #include "xfs_buf_item.h"
+ #include "xfs_log.h"
+-#include "xfs_dir2_priv.h"
  
--	mutex_lock(&wd_data->lock);
--	wd_data->wdd = NULL;
--	wdd->wd_data = NULL;
--	mutex_unlock(&wd_data->lock);
--
- 	if (watchdog_active(wdd) &&
- 	    test_bit(WDOG_STOP_ON_UNREGISTER, &wdd->status)) {
- 		watchdog_stop(wdd);
- 	}
- 
-+	mutex_lock(&wd_data->lock);
-+	wd_data->wdd = NULL;
-+	wdd->wd_data = NULL;
-+	mutex_unlock(&wd_data->lock);
-+
- 	hrtimer_cancel(&wd_data->timer);
- 	kthread_cancel_work_sync(&wd_data->work);
- 
--- 
-2.20.1
+ static xfs_failaddr_t xfs_dir2_data_freefind_verify(
+ 		struct xfs_dir2_data_hdr *hdr, struct xfs_dir2_data_free *bf,
+
+
 
