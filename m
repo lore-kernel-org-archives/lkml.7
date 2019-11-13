@@ -2,144 +2,122 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18018C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C67C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA7E214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 302E9214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:54:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2+1bnPxq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfKMIyF (ORCPT
+        id S1727256AbfKMIyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:54:05 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52943 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfKMIyE (ORCPT
+        Wed, 13 Nov 2019 03:54:16 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:35386 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfKMIyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:54:04 -0500
-X-Originating-IP: 93.34.114.233
-Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 30C766000E;
-        Wed, 13 Nov 2019 08:53:57 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 09:55:58 +0100
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/2] pinctrl: rza1: remove unnecerssary static inline
- function
-Message-ID: <20191113085558.l6rde7xug3paoojf@uno.localdomain>
-References: <20191112141748.GA22061@localhost.localdomain>
+        Wed, 13 Nov 2019 03:54:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RaCx47cvCZ3gcezdlD/Dad0dV4W4cXz9wXVsioplrco=; b=2+1bnPxqWfCh7UXKKlS+DkuKJ
+        HFjbw/MgjtvPnbICzMza/x6ejytciGFsiTL/ZoC5mUCxpky2a1TxKLpkHEQ7KFty74RRyJWlpEexc
+        0Wbae5iCgRUAAMSIES1Acnh55KQa92E3pRvnfuq+qAxgxMmYkoRJKLr1n65XvsknJR+Ow/PLrQ+rt
+        fEml2S2uDQjbm31H61Qq9QkZd8B/wVQJz378iOem16ap6tVrYLzfGBbxWpDxk93oFJgFYYXBobE0L
+        LPBpa7GCXE1bztGAWAptn2RweJ2WrAOWPGsL/J6zM2gtLySJrqJNi5pGcCrzjpRYxaTJxK5t05JIM
+        R79/V9LSg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUoPU-00074f-KW; Wed, 13 Nov 2019 08:53:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7414830018B;
+        Wed, 13 Nov 2019 09:52:47 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 954212997AAC8; Wed, 13 Nov 2019 09:53:54 +0100 (CET)
+Date:   Wed, 13 Nov 2019 09:53:54 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
+        alexei.starovoitov@gmail.com
+Subject: Re: [PATCH -v5 05/17] x86/ftrace: Use text_poke()
+Message-ID: <20191113085354.GE4131@hirez.programming.kicks-ass.net>
+References: <20191111131252.921588318@infradead.org>
+ <20191111132457.761255803@infradead.org>
+ <20191112132536.28ac1b32@gandalf.local.home>
+ <20191112222413.GB4131@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bwknto7takkwphs5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112141748.GA22061@localhost.localdomain>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191112222413.GB4131@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 11:24:13PM +0100, Peter Zijlstra wrote:
+> On Tue, Nov 12, 2019 at 01:25:36PM -0500, Steven Rostedt wrote:
+> > On Mon, 11 Nov 2019 14:12:57 +0100
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > >  int ftrace_arch_code_modify_post_process(void)
+> > >      __releases(&text_mutex)
+> > >  {
+> > > -	set_all_modules_text_ro();
+> > > -	set_kernel_text_ro();
+> > > +	text_poke_finish();
+> > 
+> > Why is the text_poke_finish() needed here? Can we add a comment about
+> > why?
+> 
+> I think this is because of the text_poke_queue() in
+> ftrace_modify_code_direct(). I seem to have forgotten the code-flow
+> between the core and arch parts of ftrace again.
+> 
+> But sure, I can try and dig that out again and write a comment.
 
---bwknto7takkwphs5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+These are the two callgraphs:
 
-Hi Matti,
+  ftrace_module_enable()
+    ftrace_arch_code_modify_prepare()
+      do_for_each_ftrace_rec()
+	__ftrace_replace_code()
+	  ftrace_make_{call,nop}()
+	    ftrace_modify_code_direct()
+	      text_poke_queue()
 
-On Tue, Nov 12, 2019 at 04:17:48PM +0200, Matti Vaittinen wrote:
-> Having static inline oneliner does not benefit too much when it is
-> only called from another oneliner function. Remove some of the
-> 'onion'. This simplifies also the coming usage of the gpiolib
-> defines. We can do conversion from chip bits to gpiolib direction
-> defines as last step in the get_direction callback. Drivers can
-> use chip specific values in driver internal functions and do
-> conversion only once.
+    ftrace_arch_code_modify_post_process()
+      text_poke_finish();
 
-I assume your: "[PATCH 2/2] pinctrl: Use new GPIO_LINE_DIRECTION"
-supersedes this one, am I right ?
 
-Thanks
-  j
+  ftrace_run_update_code()
+    ftrace_arch_code_modify_prepare()
+    arch_ftrace_update_code()
+      ftrace_modify_all_code()
+	ftrace_replace_code()
+	  for_ftrace_rec_iter()
+	    text_poke_queue()
+	  text_poke_finish()
+    ftrace_arch_code_modify_post_process()
+      text_poke_finish()
 
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  drivers/pinctrl/pinctrl-rza1.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-> index 017fc6b3e27e..215db220d795 100644
-> --- a/drivers/pinctrl/pinctrl-rza1.c
-> +++ b/drivers/pinctrl/pinctrl-rza1.c
-> @@ -617,12 +617,6 @@ static void rza1_pin_reset(struct rza1_port *port, unsigned int pin)
->  	spin_unlock_irqrestore(&port->lock, irqflags);
->  }
->
-> -static inline int rza1_pin_get_direction(struct rza1_port *port,
-> -					 unsigned int pin)
-> -{
-> -	return !!rza1_get_bit(port, RZA1_PM_REG, pin);
-> -}
-> -
->  /**
->   * rza1_pin_set_direction() - set I/O direction on a pin in port mode
->   *
-> @@ -783,7 +777,7 @@ static int rza1_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
->  {
->  	struct rza1_port *port = gpiochip_get_data(chip);
->
-> -	return rza1_pin_get_direction(port, gpio);
-> +	return !!rza1_get_bit(port, RZA1_PM_REG, gpio);
->  }
->
->  static int rza1_gpio_direction_input(struct gpio_chip *chip,
->
-> base-commit: 70d97e099bb426ecb3ad4bf31e88dbf2ef4b2e4c
-> --
-> 2.21.0
->
->
-> --
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
->
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =]
 
---bwknto7takkwphs5
-Content-Type: application/pgp-signature; name="signature.asc"
+So while it is superfluous for ftrace_run_update_code() it is required
+for ftrace_module_enable(), and, as I said, pairs with the
+text_poke_queue() in ftrace_modify_code_direct().
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3LxR4ACgkQcjQGjxah
-Vjzu3A//VcmxB+zLrhFkIPEXStslWNxWBzlOPrVt1zEIGbpxgVBin7IaP30h4gml
-GrPxtZom3KkKbzbIYlS5syNycjxUT3NjYs2Yur4DBnAhvkoxrFLfprhjjX0fL170
-18RZJoH74NJYsjiDzbRRJQfN6JSNVgJ0XFCyLmQKhBA5K7UC4BT2hSvsLzzQ0neJ
-jXhtQ+VKayIDQ/lUArvoABE7V6wX+F4app7eZ+xkSPq1ptUByob6mr9wV7WMONNh
-qBd+U/+nV8ywD3qUWwDt//77FGZYbXM/mdKf3moYnvD8BYTaIA0l4MRoYuAh0bKg
-SLimFdCoBznxP4syuhiil5aDYhY21fK3XymjbBnoKHw3SlmJn2488eOdiDy1ErCy
-dT258CLPbO6YyI1aNxyZyIlWhWlavkM5/FvS4R+IUIJzJiT177gSWD2uTX0i8kd4
-3GIF63YcoUaJjNDGMRMla4tbDOgee3mdssRWDEynQlmYu3AV6krBF0tkRU8JaIaE
-l0kSRUPo6bxWsH+HFhNrXMGP3JSrfU26cR7t+V9intAxWaGmteXZV2ph1CjeMW8e
-gsa0GSGjvm5aEganXEi1pXoHD+5Fg34/6UHY7XYYQXkaFl7f92Cmkoc4EomfWkAR
-kpwLSvI76WXbaP6bKEH7FqWAyUcHEIzrBMqIWYBKx90aHEWiRAs=
-=SZJk
------END PGP SIGNATURE-----
-
---bwknto7takkwphs5--
+I'll stick in a comment.
