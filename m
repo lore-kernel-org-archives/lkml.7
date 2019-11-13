@@ -2,113 +2,117 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A783FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1A1C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8992084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B673E2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LwD23Nvn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwbkzzmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfKMACt (ORCPT
+        id S1726978AbfKMAGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:02:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54288 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726923AbfKMACt (ORCPT
+        Tue, 12 Nov 2019 19:06:39 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45866 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKMAGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:02:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573603368;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mFZNYzU4aq8T7KuOOh7683mZkvSGsdedXb2PwJoCtQ4=;
-        b=LwD23NvnG+Lmyq1AXSYQe28KMn5vIDePVlz6QJaw1vl2gNZaHB/tlPZ3ZTu05knWns8GL6
-        veuzD0CmPDGizWIUbCU5y8Nd4mXysdbI8VD2rOK4H67bNHW+202LTJt9JxBESVaNGWq+w7
-        gT8JdYqTl23YKbsPeVQ6DtL16Pe9Iok=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-5EKU7PrLP_mDMrmo4DPU2w-1; Tue, 12 Nov 2019 19:02:47 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C42CA800EB3;
-        Wed, 13 Nov 2019 00:02:45 +0000 (UTC)
-Received: from cantor.redhat.com (ovpn-116-198.phx2.redhat.com [10.3.116.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 401CE64020;
-        Wed, 13 Nov 2019 00:02:45 +0000 (UTC)
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>
-Subject: [PATCH v3] tpm_tis: turn on TPM before calling tpm_get_timeouts
-Date:   Tue, 12 Nov 2019 17:02:43 -0700
-Message-Id: <20191113000243.16611-1-jsnitsel@redhat.com>
-In-Reply-To: <20191111233418.17676-1-jsnitsel@redhat.com>
-References: <20191111233418.17676-1-jsnitsel@redhat.com>
+        Tue, 12 Nov 2019 19:06:39 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z4so250983pfn.12;
+        Tue, 12 Nov 2019 16:06:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qxixb8eOG9f0Waj85Ii66sBcrPEL1SwYM8/OBShmzIU=;
+        b=GwbkzzmFd/3KSzse4oSzV8spTmS1Hq9MSJ+MjSnZA+AyJwybaLEigvuHFIEfbiXS6d
+         4+JC3LJHQDNqaajASUJnO1Wh8OxVOD/XO4MCWVkbGFCQIT7yI8nSIHGUX9NNWmiXLOpQ
+         x1E3HuSPQU5I02PNA4Ljijlq2jYzndkSPc4wTal6/uxy/vUphPQIu+RNEgVdNRhPdJFp
+         UMrT5zav/9u1Ad/hyZOdqet3bZQLmSaXoKjKzrC3Z+vvaj9Ztv1OpNcI6TBFgismEQbH
+         D3n0QrVc6HbfkwIa+xnASGfiH/p7C47ueeJMXISnDok9va38S99za/nX9YNPE/INcKvh
+         oJcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qxixb8eOG9f0Waj85Ii66sBcrPEL1SwYM8/OBShmzIU=;
+        b=dyaP+rD7nB285rDe4pV3Z2c2nBJeR3Ec3m0JBgSQVuetgPSd59Bnvpib0clet8RM3i
+         WRCD5kEBoApGS/6NL+ATRXxKN87v8xP5Tj3JzK0hAnWlb8W4ZuoDfRMrWRtZVGsdU5i0
+         djtXEFvPw1QUiPo/DFG7IspNf9Z9hmt1JCw+fzlvraUnUNlpM0NoEGIpdupI8V8xx3nf
+         oWisXj5Q2cgdEP5p38mXm4x1RE588Cr6KaQ97aBr/KlXwfZr5lZuK/a7oVm9DcQLduIg
+         uk0BnkyX2juzSLCNg/s5qqvJNxd2TCLSh/moriptZYz2mPuRH+r1erSlrUQmsfrGYg6O
+         ++WQ==
+X-Gm-Message-State: APjAAAX/Fctsv7pi5XW6N379wtG8oILnHTZtVXzMyqbQ251Z6/KioTo6
+        h5HNiRNLhprPGSAfomQ5IEw=
+X-Google-Smtp-Source: APXvYqzPPCvZ/xeRcjC/56Xf4OuAS5ZOLvFyuBmwGEvMsuUJyT1ESrXu5+7loQBU2itfymvDEWQ3RQ==
+X-Received: by 2002:aa7:9f89:: with SMTP id z9mr755874pfr.123.1573603598329;
+        Tue, 12 Nov 2019 16:06:38 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id z10sm131918pgg.39.2019.11.12.16.06.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 16:06:37 -0800 (PST)
+Date:   Tue, 12 Nov 2019 16:06:35 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] Input: ili210x - do not retrieve/print chip
+ firmware version
+Message-ID: <20191113000635.GH13374@dtor-ws>
+References: <20191112164429.11225-1-TheSven73@gmail.com>
+ <20191112233421.eh44mv6ji2tk6ki2@earth.universe>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: 5EKU7PrLP_mDMrmo4DPU2w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112233421.eh44mv6ji2tk6ki2@earth.universe>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With power gating moved out of the tpm_transmit code we need
-to power on the TPM prior to calling tpm_get_timeouts.
+On Wed, Nov 13, 2019 at 12:34:21AM +0100, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Tue, Nov 12, 2019 at 11:44:27AM -0500, Sven Van Asbroeck wrote:
+> > The driver's method to retrieve the firmware version on ili2117/
+> > ili2118 chip flavours is incorrect. The firmware version register
+> > address and layout are wrong.
+> > 
+> > The firmware version is not actually used anywhere inside or
+> > outside this driver. There is a dev_dbg() print, but that is
+> > only visible when the developer explicitly compiles in debug
+> > support.
+> > 
+> > Don't make the code more complicated to preserve a feature that
+> > no-one is using. Remove all code associated with chip firmware
+> > version.
+> > 
+> > Link: https://lore.kernel.org/lkml/20191111181657.GA57214@dtor-ws/
+> > Cc: Marek Vasut <marex@denx.de>
+> > Cc: Adam Ford <aford173@gmail.com>
+> > Cc: <linux-kernel@vger.kernel.org>
+> > Cc: linux-input@vger.kernel.org
+> > Tree: https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=next
+> > Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> > ---
+> 
+> The firmware version check does one relevant thing: It tests
+> the I2C communication, which tends to be useful for board
+> bringup and development boards (which often allow to disconnect
+> (touch-)screens).
 
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()=
-")
-Reported-by: Christian Bundy <christianbundy@fraction.io>
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
----
-v3: call tpm_chip_stop in error path
-v2: fix stable cc to correct address
+If/when this is needed I propose we add a separate "lite" xfer check,
+similar to what elants_i2c and many other drivers are doing.
 
- drivers/char/tpm/tpm_tis_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks.
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_cor=
-e.c
-index 270f43acbb77..806acc666696 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev, struct tpm_=
-tis_data *priv, int irq,
- =09=09 * to make sure it works. May as well use that command to set the
- =09=09 * proper timeouts for the driver.
- =09=09 */
-+=09=09tpm_chip_start(chip);
- =09=09if (tpm_get_timeouts(chip)) {
- =09=09=09dev_err(dev, "Could not get TPM timeouts and durations\n");
- =09=09=09rc =3D -ENODEV;
-+=09=09=09tpm_chip_stop(chip);
- =09=09=09goto out_err;
- =09=09}
-=20
--=09=09tpm_chip_start(chip);
- =09=09chip->flags |=3D TPM_CHIP_FLAG_IRQ;
- =09=09if (irq) {
- =09=09=09tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
---=20
-2.24.0
-
+-- 
+Dmitry
