@@ -2,121 +2,251 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03A7C17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DCCC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A02214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1E4214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfKMKr0 (ORCPT
+        id S1727678AbfKMKt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:47:26 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50828 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfKMKr0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:47:26 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id A1F421C122C; Wed, 13 Nov 2019 11:47:24 +0100 (CET)
-Date:   Wed, 13 Nov 2019 11:47:24 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: Re: [PATCH 4.19 027/125] HID: wacom: generic: Treat serial number
- and related fields as unsigned
-Message-ID: <20191113104724.GD32553@amd>
-References: <20191111181438.945353076@linuxfoundation.org>
- <20191111181444.186103315@linuxfoundation.org>
+        Wed, 13 Nov 2019 05:49:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33058 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726138AbfKMKtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:49:25 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B5441B20D;
+        Wed, 13 Nov 2019 10:49:20 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 1B6A71E1498; Wed, 13 Nov 2019 11:49:20 +0100 (CET)
+Date:   Wed, 13 Nov 2019 11:49:20 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 04/23] mm: devmap: refactor 1-based refcounting for
+ ZONE_DEVICE pages
+Message-ID: <20191113104920.GF6367@quack2.suse.cz>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com>
+ <20191113042710.3997854-5-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bajzpZikUji1w+G9"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191111181444.186103315@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191113042710.3997854-5-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 12-11-19 20:26:51, John Hubbard wrote:
+> An upcoming patch changes and complicates the refcounting and
+> especially the "put page" aspects of it. In order to keep
+> everything clean, refactor the devmap page release routines:
+> 
+> * Rename put_devmap_managed_page() to page_is_devmap_managed(),
+>   and limit the functionality to "read only": return a bool,
+>   with no side effects.
+> 
+> * Add a new routine, put_devmap_managed_page(), to handle checking
+>   what kind of page it is, and what kind of refcount handling it
+>   requires.
+> 
+> * Rename __put_devmap_managed_page() to free_devmap_managed_page(),
+>   and limit the functionality to unconditionally freeing a devmap
+>   page.
+> 
+> This is originally based on a separate patch by Ira Weiny, which
+> applied to an early version of the put_user_page() experiments.
+> Since then, Jérôme Glisse suggested the refactoring described above.
+> 
+> Suggested-by: Jérôme Glisse <jglisse@redhat.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
---bajzpZikUji1w+G9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me. You can add:
 
-Hi!
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-> From: Jason Gerecke <killertofu@gmail.com>
->=20
-> commit ff479731c3859609530416a18ddb3db5db019b66 upstream.
->=20
-> The HID descriptors for most Wacom devices oddly declare the serial
-> number and other related fields as signed integers. When these numbers
-> are ingested by the HID subsystem, they are automatically sign-extended
-> into 32-bit integers. We treat the fields as unsigned elsewhere in the
-> kernel and userspace, however, so this sign-extension causes problems.
-> In particular, the sign-extended tool ID sent to userspace as ABS_MISC
-> does not properly match unsigned IDs used by xf86-input-wacom and libwaco=
-m.
->=20
-> We introduce a function 'wacom_s32tou' that can undo the automatic sign
-> extension performed by 'hid_snto32'. We call this function when processing
-> the serial number and related fields to ensure that we are dealing with
-> and reporting the unsigned form. We opt to use this method rather than
-> adding a descriptor fixup in 'wacom_hid_usage_quirk' since it should be
-> more robust in the face of future devices.
+								Honza
 
-> +++ b/drivers/hid/wacom.h
-> @@ -205,6 +205,21 @@ static inline void wacom_schedule_work(s
->  	}
+> ---
+>  include/linux/mm.h | 27 ++++++++++++++++---
+>  mm/memremap.c      | 67 ++++++++++++++++++++--------------------------
+>  2 files changed, 53 insertions(+), 41 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index a2adf95b3f9c..96228376139c 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -967,9 +967,10 @@ static inline bool is_zone_device_page(const struct page *page)
+>  #endif
+>  
+>  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> -void __put_devmap_managed_page(struct page *page);
+> +void free_devmap_managed_page(struct page *page);
+>  DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
+> -static inline bool put_devmap_managed_page(struct page *page)
+> +
+> +static inline bool page_is_devmap_managed(struct page *page)
+>  {
+>  	if (!static_branch_unlikely(&devmap_managed_key))
+>  		return false;
+> @@ -978,7 +979,6 @@ static inline bool put_devmap_managed_page(struct page *page)
+>  	switch (page->pgmap->type) {
+>  	case MEMORY_DEVICE_PRIVATE:
+>  	case MEMORY_DEVICE_FS_DAX:
+> -		__put_devmap_managed_page(page);
+>  		return true;
+>  	default:
+>  		break;
+> @@ -986,6 +986,27 @@ static inline bool put_devmap_managed_page(struct page *page)
+>  	return false;
 >  }
-> =20
-> +/*
-> + * Convert a signed 32-bit integer to an unsigned n-bit integer. Undoes
-> + * the normally-helpful work of 'hid_snto32' for fields that use signed
-> + * ranges for questionable reasons.
-> + */
-> +static inline __u32 wacom_s32tou(s32 value, __u8 n)
+>  
+> +static inline bool put_devmap_managed_page(struct page *page)
 > +{
-> +	switch (n) {
-> +	case 8:  return ((__u8)value);
-> +	case 16: return ((__u16)value);
-> +	case 32: return ((__u32)value);
+> +	bool is_devmap = page_is_devmap_managed(page);
+> +
+> +	if (is_devmap) {
+> +		int count = page_ref_dec_return(page);
+> +
+> +		/*
+> +		 * devmap page refcounts are 1-based, rather than 0-based: if
+> +		 * refcount is 1, then the page is free and the refcount is
+> +		 * stable because nobody holds a reference on the page.
+> +		 */
+> +		if (count == 1)
+> +			free_devmap_managed_page(page);
+> +		else if (!count)
+> +			__put_page(page);
 > +	}
-> +	return value & (1 << (n - 1)) ? value & (~(~0U << n)) : value;
+> +
+> +	return is_devmap;
 > +}
-
-Can we do something like:
-
-    BUG_ON(n>32);
-    if (n=3D=3D32) return ((__u32)value);
-    return value & ((1 << n) - 1);
-
-instead?
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---bajzpZikUji1w+G9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3L3zsACgkQMOfwapXb+vL8/QCgiIe5oadhm4mIYIdDv4aDxKpc
-7xAAoKcXIlCR+wWD6Y3I/GPxZDGSo9KG
-=sUjw
------END PGP SIGNATURE-----
-
---bajzpZikUji1w+G9--
+> +
+>  #else /* CONFIG_DEV_PAGEMAP_OPS */
+>  static inline bool put_devmap_managed_page(struct page *page)
+>  {
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 03ccbdfeb697..bc7e2a27d025 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -410,48 +410,39 @@ struct dev_pagemap *get_dev_pagemap(unsigned long pfn,
+>  EXPORT_SYMBOL_GPL(get_dev_pagemap);
+>  
+>  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> -void __put_devmap_managed_page(struct page *page)
+> +void free_devmap_managed_page(struct page *page)
+>  {
+> -	int count = page_ref_dec_return(page);
+> +	/* Clear Active bit in case of parallel mark_page_accessed */
+> +	__ClearPageActive(page);
+> +	__ClearPageWaiters(page);
+> +
+> +	mem_cgroup_uncharge(page);
+>  
+>  	/*
+> -	 * If refcount is 1 then page is freed and refcount is stable as nobody
+> -	 * holds a reference on the page.
+> +	 * When a device_private page is freed, the page->mapping field
+> +	 * may still contain a (stale) mapping value. For example, the
+> +	 * lower bits of page->mapping may still identify the page as
+> +	 * an anonymous page. Ultimately, this entire field is just
+> +	 * stale and wrong, and it will cause errors if not cleared.
+> +	 * One example is:
+> +	 *
+> +	 *  migrate_vma_pages()
+> +	 *    migrate_vma_insert_page()
+> +	 *      page_add_new_anon_rmap()
+> +	 *        __page_set_anon_rmap()
+> +	 *          ...checks page->mapping, via PageAnon(page) call,
+> +	 *            and incorrectly concludes that the page is an
+> +	 *            anonymous page. Therefore, it incorrectly,
+> +	 *            silently fails to set up the new anon rmap.
+> +	 *
+> +	 * For other types of ZONE_DEVICE pages, migration is either
+> +	 * handled differently or not done at all, so there is no need
+> +	 * to clear page->mapping.
+>  	 */
+> -	if (count == 1) {
+> -		/* Clear Active bit in case of parallel mark_page_accessed */
+> -		__ClearPageActive(page);
+> -		__ClearPageWaiters(page);
+> -
+> -		mem_cgroup_uncharge(page);
+> -
+> -		/*
+> -		 * When a device_private page is freed, the page->mapping field
+> -		 * may still contain a (stale) mapping value. For example, the
+> -		 * lower bits of page->mapping may still identify the page as
+> -		 * an anonymous page. Ultimately, this entire field is just
+> -		 * stale and wrong, and it will cause errors if not cleared.
+> -		 * One example is:
+> -		 *
+> -		 *  migrate_vma_pages()
+> -		 *    migrate_vma_insert_page()
+> -		 *      page_add_new_anon_rmap()
+> -		 *        __page_set_anon_rmap()
+> -		 *          ...checks page->mapping, via PageAnon(page) call,
+> -		 *            and incorrectly concludes that the page is an
+> -		 *            anonymous page. Therefore, it incorrectly,
+> -		 *            silently fails to set up the new anon rmap.
+> -		 *
+> -		 * For other types of ZONE_DEVICE pages, migration is either
+> -		 * handled differently or not done at all, so there is no need
+> -		 * to clear page->mapping.
+> -		 */
+> -		if (is_device_private_page(page))
+> -			page->mapping = NULL;
+> +	if (is_device_private_page(page))
+> +		page->mapping = NULL;
+>  
+> -		page->pgmap->ops->page_free(page);
+> -	} else if (!count)
+> -		__put_page(page);
+> +	page->pgmap->ops->page_free(page);
+>  }
+> -EXPORT_SYMBOL(__put_devmap_managed_page);
+> +EXPORT_SYMBOL(free_devmap_managed_page);
+>  #endif /* CONFIG_DEV_PAGEMAP_OPS */
+> -- 
+> 2.24.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
