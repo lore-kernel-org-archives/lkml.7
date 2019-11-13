@@ -2,103 +2,201 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F033C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6D6C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CE7222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:07:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oyrnK84K"
+	by mail.kernel.org (Postfix) with ESMTP id D188D222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 04:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573618086;
+	bh=1Xz1e3rpcu5Dl6WkiysgblTxtErL0d9tDfytLC7CXEo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S53q/6ArqO4EDhBWnfte1T1EksBsgrnncBHfoFAamGSDi1SKWVbJ+SOoEgd+zobuo
+	 bHjY/5yNUIHSaBcShiyIvH0zj8gHfVsDV5jMtNmhZhnhL3azsoVOjWdFmHQZxwk5Zd
+	 kYniQSvhpjUCSCS5kDMfrj1Hg4UyB0gpACQLKV4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfKMEH1 (ORCPT
+        id S1727349AbfKMEIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 23:07:27 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:41116 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfKMEH0 (ORCPT
+        Tue, 12 Nov 2019 23:08:05 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41580 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbfKMEIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 23:07:26 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD39E4j105913;
-        Wed, 13 Nov 2019 03:12:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=0uycHj1hnQzwFGbzXvkxe6k9HMxfe6ttpDQFwoIQ6ig=;
- b=oyrnK84K2lFalULpBohYNELqp5uWFq4H4bNYTd5O+HL+HohkNKKn4yBkDhRIexvWhkBP
- h6pM/s7KHtwVZNSb7WJJgWpip1ghFTmIuUd3u7Jg3GVcz1S0HPbOMJNLGmzUzcAsEUOo
- 7g1tqS0T9Qi8pfq07LO1MfU6HLaMsJxugqI3ynla/s0535IVhPiadUt+miRPYdLy+otF
- o+z8VKq8/v6b7er0P9YcYd3Q/YfVO4ex1Hrt4d9KJRW3b/8PremoFZ2Trk/xYooHqPy4
- 38a034x/8XZRbQcuMryqoQxIYmQELbakQIPTs12hFAR9DRL8wh5IJ+2LXWr7brPGxp6y Sw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2w5mvts7kj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 03:12:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD399jU167983;
-        Wed, 13 Nov 2019 03:12:34 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2w7vpnfw09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 03:12:34 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAD3CUEJ031961;
-        Wed, 13 Nov 2019 03:12:30 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Nov 2019 19:12:29 -0800
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Michael Schmitz" <schmitzmic@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, "Jonathan Corbet" <corbet@lwn.net>,
-        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
-        "Jens Axboe" <axboe@kernel.dk>,
-        "Viresh Kumar" <vireshk@kernel.org>,
-        "Oliver Neukum" <oneukum@suse.com>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        usb-storage@lists.one-eyed-alien.net, linux-doc@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 0/2] SG_NONE fix and cleanup
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <cover.1572656814.git.fthain@telegraphics.com.au>
-Date:   Tue, 12 Nov 2019 22:12:25 -0500
-In-Reply-To: <cover.1572656814.git.fthain@telegraphics.com.au> (Finn Thain's
-        message of "Sat, 02 Nov 2019 12:06:54 +1100")
-Message-ID: <yq1lfskpizq.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 12 Nov 2019 23:08:05 -0500
+Received: by mail-oi1-f193.google.com with SMTP id e9so538902oif.8;
+        Tue, 12 Nov 2019 20:08:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SfWsvDTJzevdEjzMrngS03ZeASmUAsKr6Bk84qRvmhU=;
+        b=lWkOrY6Ei/bGZoT3h0ZLzCVDxsZMY7ea12wDZxWc2DgCXpC1TNb3PLCdqz3gn9mOVa
+         ZSWlnEGg7h822JuhyOSp2krq1BlFTwEh6SUTNMLxpC/+V6GrNbErqx8KkfaizqSI+dsO
+         CfDDyT/u6Yg0oaWtcNiBE5I/gjW75lZQDm9CuVBJiKuK1b1tZF9gXYV9+nGyWvy3Arjh
+         ADDGUPcQS0SqVsBWp8zKEL/nY8CBBr5BwOowVlgi30ECD48YjcuCZ+jOe1fVt7KqBqt1
+         7KgeEPrAmU632auPCVJ7nSgfevHf7OoHb/l6NVkRkLMRGPXWjWdy/1VGd1i/+n84vyEo
+         KUhA==
+X-Gm-Message-State: APjAAAU6t7KtjWEA11atbzBaKxRvkkYu8De04FJFqF4w7Da1+qr9KvBM
+        G4/1Xncuycb7zLtVzPqTRw==
+X-Google-Smtp-Source: APXvYqwRUjP0Ny/K1cwD676eUUZNEvW/sKvkoiqZmyITmDaRQZxyPexAR+dfGrVGINIfyHcGyj/tlQ==
+X-Received: by 2002:aca:5cd5:: with SMTP id q204mr900116oib.14.1573618083945;
+        Tue, 12 Nov 2019 20:08:03 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e193sm296871oib.53.2019.11.12.20.08.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 20:08:03 -0800 (PST)
+Date:   Tue, 12 Nov 2019 22:08:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree
+ bindings
+Message-ID: <20191113040802.GA8269@bogus>
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
+ <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+ <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911130026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911130026
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 07, 2019 at 09:08:35PM +0100, Geert Uytterhoeven wrote:
+> Hi Prabhakar,
+> 
+> On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> > On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> > > >
+> > > > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Thanks for your patch!
+> > >
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> > > > @@ -0,0 +1,43 @@
+> > > > +* Renesas R-Car PCIe Endpoint Controller DT description
+> > > > +
+> > > > +Required properties:
+> > > > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> > > > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> > > > +                                    RZ/G2 compatible device.
+> > >
+> > > Unless I'm missing something, this is for the exact same hardware block as
+> > > Documentation/devicetree/bindings/pci/rcar-pci.txt?
+> > > So shouldn't you amend those bindings, instead of adding new compatible
+> > > values?
+> > > Please remember that DT describes hardware, not software policy.
+> > > So IMHO choosing between host and endpoint is purely a configuration
+> > > issue, and could be indicated by the presence or lack of some DT properties.
+> > > E.g. host mode requires both "bus-range" and "device_type" properties,
+> > > so their absence could indicate endpoint mode.
+> > >
+> > yes its the same hardware block as described in the rcar-pci.txt, I
+> > did think about amending it
+> > but  it might turn out to be bit messy,
+> >
+> > required properties host ======required properties Endpoint
+> > ====================||==================
+> > 1: reg                                || reg
+> > 2:bus-range                      || reg names
+> > 3: device_type                  || resets
+> > 4: ranges                          || clocks
+> > 5: dma-ranges                  || clock-names
+> > 6: interrupts                      ||
+> > 7: interrupt-cells               ||
+> > 8: interrupt-map-mask     ||
+> > 9: clocks                          ||
+> > 10: clock-names             ||
+> 
+> We have a similar situation with SPI, where a controller can operate in
+> master or slave mode, based on the absence or presence of the
+> "spi-slave" DT property.
+> 
+> > and if I go ahead with the same compatible string that would mean to
+> > add support for endpoint
+> > mode in the host driver itself. I did follow the examples of
+> 
+> You can still have two separate drivers, binding against the same
+> compatible value.  Just let the .probe() function return -ENODEV if it
+> discovers (by looking at DT properties) if the node is configured for
+> the other mode.
+> Which brings us to my next questions: is there any code that could be
+> shared between the drivers for the two modes?
+> 
+> > rockchip/cadence/designware where
+> > its the same hardware block but has two different binding files one
+> > for host mode and other for
+> > endpoint mode.
+> 
+> Having two separate DT binding documents sounds fine to me, if unifying
+> them makes things too complex.
+> However, I think they should use the same compatible value, because the
+> hardware block is the same, but just used in a different mode.
+> 
+> Rob/Mark: Any input from the DT maintainers?
 
-Finn,
+Separate files makes sense because different modes will want to 
+include different common schemas. We've generally been doing different 
+compatibles too which makes validating the node has the right set of 
+properties easier.
+ 
+> > > > +- reg: Five register ranges as listed in the reg-names property
+> > > > +- reg-names: Must include the following names
+> > > > +       - "apb-base"
+> > > > +       - "memory0"
+> > > > +       - "memory1"
+> > > > +       - "memory2"
+> > > > +       - "memory3"
+> > >
+> > > What is the purpose of the last 4 regions?
+> > > Can they be chosen by the driver, at runtime?
+> > >
+> > no the driver cannot choose them at runtime, as these are the only
+> > PCIE memory(0/1/2/3) ranges
+> > in the AXI address space where host memory can be mapped.
+> 
+> Are they fixed by the PCIe hardware, i.e. could they be looked up by the
+> driver based on the compatible value?
 
-> These two patches address some issues stemming from scsi-mq conversion.
+That would be strange for a memory range.
 
-Applied to 5.5/scsi-queue, thanks!
+Sounds like like 'ranges' though I'm not sure if 'ranges' for an EP 
+makes sense or what that should look like.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Rob
