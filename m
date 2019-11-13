@@ -2,174 +2,144 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF890C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669EEC17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BFB207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QQ9L+mzx"
+	by mail.kernel.org (Postfix) with ESMTP id 380C3206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfKMN4o (ORCPT
+        id S1727574AbfKMN47 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:56:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46244 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726190AbfKMN4m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:56:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573653401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=DahN3FKCGNPvbmWogZVF9bc0DBD4WYj2MI4we4l1rhA=;
-        b=QQ9L+mzxFibXTRZ5WpnvE3nFp4Q7Gb/xmEBR5tMWa4LzcCzFkLbAmMbvHetEP9MtyKR64y
-        dCNItV+se1jXfZu80H+SGp1xsvPvC4w4auzFlTdMLYVZKm+1rXgsk7gWGIv/0A8KQrGLqo
-        ugKIR8Z0FTyonYUs9Ck2RRsYyrWzLiI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-lsStrGfrPwSwIV-pQUc2SQ-1; Wed, 13 Nov 2019 08:56:40 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61B5710953CE;
-        Wed, 13 Nov 2019 13:56:38 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-69.ams2.redhat.com [10.36.116.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A8F1990A8;
-        Wed, 13 Nov 2019 13:56:31 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 7DDA811AAA; Wed, 13 Nov 2019 14:56:30 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     drm@redhat.com
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/ttm: fix mmap refcounting
-Date:   Wed, 13 Nov 2019 14:56:12 +0100
-Message-Id: <20191113135612.19679-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: lsStrGfrPwSwIV-pQUc2SQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 Nov 2019 08:56:59 -0500
+Received: from mail-oln040092255071.outbound.protection.outlook.com ([40.92.255.71]:50214
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726190AbfKMN47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:56:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UN5PV8EKe0imzQcsjsBHQ4sN0Gw1Vf9180yJPal24tKfW1qMsyIaKqC1EvdiohFw6ZVAc5TxcIecMCNjCGX3f2OmZFNAg7ENhk/bXFzLU6W/oYH+nJHGI/ccV3dKtFK8k1kDLnJQMK0FkI0GbpbTB3rUI8v9ldtIJRySa4k2+wclrHVTm6p+1sr8UYB4yG/dlxbiMl6gRa7lchOlySM8PmIdagVTSdLQ53WmPOiIXCvo47Zy7f7oKUw7WjPsuP9a135CI8lNzmHcvG20py6Dg1opudhve0cSuhA8cG8RBue42plFloGspsEqO8fjExRg8Um5rlKjEKOjPk2WTFjGfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nf10+7z0G+EnfjLVUGDq0Q0zMOOydC/Nljww+JKhsqI=;
+ b=e7/ArhO40rvuslFVXUMzrP4XfK2y/TQOyjIRFEKuXKQFqBT3t3PbTMWc+B4Z7z9aUN92dZ3s4WujA9ofE8uQ2yX5BM/DL8IKhWqU63QIzbH/1o9msGhx+FLWavMprWS19GSqZPc64up8lldwJ2tKmdywnf8ZR4thn9P8EgJRZoJOUm3TCTiSWCj++S6M9tiVG63bMRd+fts70gNTSNAWCSTPgmGCvi4XNppzTAYLZdqkxhUcmZ7qsTOMhboVFIUPWUQNr0CGh06DVNTK/M0ki23wuplRwtGRG0kNNmuYXF2jjrbECzFu014bLg2k2Ko4gQ/kU1+yvqS0UIBlF/sZoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT035.eop-APC01.prod.protection.outlook.com
+ (10.152.252.55) by PU1APC01HT056.eop-APC01.prod.protection.outlook.com
+ (10.152.253.82) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2430.22; Wed, 13 Nov
+ 2019 13:56:54 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
+ PU1APC01FT035.mail.protection.outlook.com (10.152.252.214) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2451.23 via Frontend Transport; Wed, 13 Nov 2019 13:56:54 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
+ 13:56:54 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v9 2/4] PCI: In extend_bridge_window() change available to
+ new_size
+Thread-Topic: [PATCH v9 2/4] PCI: In extend_bridge_window() change available
+ to new_size
+Thread-Index: AQHVmio1UPHQ91Txq0ecwsk7Nnr1Dw==
+Date:   Wed, 13 Nov 2019 13:56:54 +0000
+Message-ID: <PS2P216MB0755549F4C2941CD71DC68DD80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYBPR01CA0197.ausprd01.prod.outlook.com
+ (2603:10c6:10:16::17) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:1c::13)
+x-incomingtopheadermarker: OriginalChecksum:6ABFF8C6CB5C374E84EC9406E25A2B1D2CE7CE3FF859D33EF23710A2D99CD1E0;UpperCasedChecksum:EE51FB1531CB3BFF653E4977D9466CA2720D047675117CF78749BB980BE2349A;SizeAsReceived:7684;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [d6FG126QYELAKeKCY69GPDkm0PL3rfYSwjItcb0JdGmzxsfgNcu6fp0Ju1LBClc3CYlFZPZX8W8=]
+x-microsoft-original-message-id: <20191113135645.GA3220@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 5221be0a-eed8-417d-31af-08d768415754
+x-ms-exchange-slblob-mailprops: Eluf6BVNkXnWHxa7ZbiJC49Lj0H6xSaHWsHmds2yMHv17Tb5BrhIRnbD/a0tWCu1gSLWreanXa5G/VFuybTyPdE55IEJw9Dllbu6VOLc1M99D5pNpgMvBrEvGJd7Z0AZFFmRFAWuGesloQzPYcqF79+t1BQJxuIFNt8aS9XkcRen8vr9A+bvxGW6DBEOckZMrgnJyBj1cFaGt7WLqWhfMMl/Gs5THGUu3M11B8VuuU5tcudaMog0y3WPyheMGPd+QzIj3E6j8rFQOFKrj77l9FE4xqKsImrKFpwmKzuSfQ8BbRczqZDys3JqxhqNT1FhtO8XAPTqGvh+weQbWVrQCfebSZeW05CaVZTtIDNe/6ekU2NDb9olIZcky5kKn+FZXRvpKBYDt2rteVOEewWU7zYZfuB2MbU9TTXMUUxf29o4S8m1wLT28sjr6KSwyi8aUWkdU7hNb3zTQ6uMPVhi2PCb4h7lUjSfVcm4ugPCocPwTJ+cDDx0m+I1t3KSOFmu6Vt7CoLVdwi5mU2/TXwL9emFabGJLLSCg0nTvrKMj1kDMboFjLFOojvKWIv+/bgHaocD6PA/PgukqjPH/T5BxvkCbrzhf1N342rUMpqc0WZSEvs57XyP3AiDQVpGbpwvHRJ2leQmdTeN3jcH/BTJDq7jj1H7W/+V
+x-ms-traffictypediagnostic: PU1APC01HT056:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AN5wHYwLHym0P13WhMO/PgwEnvI1l/OGhCazB/81hf4rrc7pZbEitWyzpjs6UQXybBO1ABTNpwpIx8LVz12tYzOliAN5zQQ27ndj3I7gtgHVGiU5AQuqKBo/34P4cdBrGEa9mHTujxQdr3yepWYEa8wiw/dOCELrFLLHz+q0AiWU7XnONRK7ECUNUSfSCGwK
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A865B4D1DFD0F249AEDA33E259E1FC9C@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5221be0a-eed8-417d-31af-08d768415754
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 13:56:54.7631
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When mapping ttm objects via drm_gem_ttm_mmap() helper
-drm_gem_mmap_obj() will take an object reference.  That gets
-never released due to ttm having its own reference counting.
+In extend_bridge_window() change "available" parameter name to new_size.
+This makes more sense as this parameter represents the new size for the
+window.
 
-Fix that by dropping the gem object reference once the ttm mmap
-completed (and ttm refcount got bumped).
-
-For that to work properly the drm_gem_object_get() call in
-drm_gem_ttm_mmap() must be moved so it happens before calling
-obj->funcs->mmap(), otherwise the gem refcount would go down
-to zero.
-
-Fixes: 231927d939f0 ("drm/ttm: add drm_gem_ttm_mmap()")
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/gpu/drm/drm_gem.c            | 24 ++++++++++++++----------
- drivers/gpu/drm/drm_gem_ttm_helper.c | 13 ++++++++++++-
- 2 files changed, 26 insertions(+), 11 deletions(-)
+ drivers/pci/setup-bus.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 2f2b889096b0..000fa4a1899f 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -1105,21 +1105,33 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, un=
-signed long obj_size,
- =09if (obj_size < vma->vm_end - vma->vm_start)
- =09=09return -EINVAL;
-=20
-+=09/* Take a ref for this mapping of the object, so that the fault
-+=09 * handler can dereference the mmap offset's pointer to the object.
-+=09 * This reference is cleaned up by the corresponding vm_close
-+=09 * (which should happen whether the vma was created by this call, or
-+=09 * by a vm_open due to mremap or partial unmap or whatever).
-+=09 */
-+=09drm_gem_object_get(obj);
-+
- =09if (obj->funcs && obj->funcs->mmap) {
- =09=09/* Remove the fake offset */
- =09=09vma->vm_pgoff -=3D drm_vma_node_start(&obj->vma_node);
-=20
- =09=09ret =3D obj->funcs->mmap(obj, vma);
--=09=09if (ret)
-+=09=09if (ret) {
-+=09=09=09drm_gem_object_put_unlocked(obj);
- =09=09=09return ret;
-+=09=09}
- =09=09WARN_ON(!(vma->vm_flags & VM_DONTEXPAND));
- =09} else {
- =09=09if (obj->funcs && obj->funcs->vm_ops)
- =09=09=09vma->vm_ops =3D obj->funcs->vm_ops;
- =09=09else if (dev->driver->gem_vm_ops)
- =09=09=09vma->vm_ops =3D dev->driver->gem_vm_ops;
--=09=09else
-+=09=09else {
-+=09=09=09drm_gem_object_put_unlocked(obj);
- =09=09=09return -EINVAL;
-+=09=09}
-=20
- =09=09vma->vm_flags |=3D VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
- =09=09vma->vm_page_prot =3D pgprot_writecombine(vm_get_page_prot(vma->vm_f=
-lags));
-@@ -1128,14 +1140,6 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, uns=
-igned long obj_size,
-=20
- =09vma->vm_private_data =3D obj;
-=20
--=09/* Take a ref for this mapping of the object, so that the fault
--=09 * handler can dereference the mmap offset's pointer to the object.
--=09 * This reference is cleaned up by the corresponding vm_close
--=09 * (which should happen whether the vma was created by this call, or
--=09 * by a vm_open due to mremap or partial unmap or whatever).
--=09 */
--=09drm_gem_object_get(obj);
--
- =09return 0;
- }
- EXPORT_SYMBOL(drm_gem_mmap_obj);
-diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm_gem=
-_ttm_helper.c
-index 7412bfc5c05a..605a8a3da7f9 100644
---- a/drivers/gpu/drm/drm_gem_ttm_helper.c
-+++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
-@@ -64,8 +64,19 @@ int drm_gem_ttm_mmap(struct drm_gem_object *gem,
- =09=09     struct vm_area_struct *vma)
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index bd8231560..728bcea26 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1816,14 +1816,14 @@ void __init pci_assign_unassigned_resources(void)
+ 
+ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+ 				 struct list_head *add_list,
+-				 resource_size_t available)
++				 resource_size_t new_size)
  {
- =09struct ttm_buffer_object *bo =3D drm_gem_ttm_of_gem(gem);
-+=09int ret;
-=20
--=09return ttm_bo_mmap_obj(vma, bo);
-+=09ret =3D ttm_bo_mmap_obj(vma, bo);
-+=09if (ret < 0)
-+=09=09return ret;
-+
-+=09/*
-+=09 * ttm has its own object refcounting, so drop gem reference
-+=09 * to avoid double accounting counting.
-+=09 */
-+=09drm_gem_object_put_unlocked(gem);
-+
-+=09return 0;
+ 	struct pci_dev_resource *dev_res;
+ 
+ 	if (res->parent)
+ 		return;
+ 
+-	if (resource_size(res) >= available)
++	if (resource_size(res) >= new_size)
+ 		return;
+ 
+ 	dev_res = res_to_dev_res(add_list, res);
+@@ -1831,10 +1831,10 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+ 		return;
+ 
+ 	/* Is there room to extend the window? */
+-	if (available - resource_size(res) <= dev_res->add_size)
++	if (new_size - resource_size(res) <= dev_res->add_size)
+ 		return;
+ 
+-	dev_res->add_size = available - resource_size(res);
++	dev_res->add_size = new_size - resource_size(res);
+ 	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+ 		&dev_res->add_size);
  }
- EXPORT_SYMBOL(drm_gem_ttm_mmap);
-=20
---=20
-2.18.1
+-- 
+2.23.0
 
