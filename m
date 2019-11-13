@@ -2,131 +2,107 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1FBC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32340C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61110214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1228F214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKMIqt (ORCPT
+        id S1726410AbfKMIvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:46:49 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38758 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfKMIqs (ORCPT
+        Wed, 13 Nov 2019 03:51:15 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:56338 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfKMIvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:46:48 -0500
-Received: by mail-lf1-f65.google.com with SMTP id q28so1247172lfa.5;
-        Wed, 13 Nov 2019 00:46:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=W3tx9vTcRy8ZJ0agDP289YKSWdvALbninjws1EFtXz4=;
-        b=OZeGXd/7D+NEOw7+O/VOQ3izsgqYzg+LYQjAJvoYpoYim4nLj8FPb0UuqdQNeC/y9M
-         TujCE3mLi5BYY5tDKvRigetNAp8piHBSCWJ3aC6mT4Ek27DLQ5gDy/XdLjHhdLKHkfkP
-         Wv7IiB0DUj95dXl2O3lwYSCmDZfltwTKIDWVVYoeBQRRUDmrhRd5575dO7m03YIr5Axd
-         RRFxUtJE5HDzMtbcs/CaxiOOk4zlzs2yFIBtCjRaLB1q2l8haPMC2H4o8PQ7hvygpFAB
-         UpPN31/QdgIhFqD946RlEFPCREDWqY+iMdhHvgYCBR1IKQPivsobwGZwhPf6R6ec9+XO
-         QRjg==
-X-Gm-Message-State: APjAAAUoWKuuGbZ5W5XxMwGvIWPYVC/m1PHqV8Vkonz+w2c93HDJfDkh
-        eH+A/m62rlWASChvmcmgm24=
-X-Google-Smtp-Source: APXvYqzDo3RRDc/L+ac2pf0TnNoACT/NaQN97wtt5KkBBc107dV3OctDPavVkgKPOnh+rRtiec+KFg==
-X-Received: by 2002:a19:8092:: with SMTP id b140mr1789808lfd.13.1573634804848;
-        Wed, 13 Nov 2019 00:46:44 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id y75sm689653lff.58.2019.11.13.00.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 00:46:43 -0800 (PST)
-Date:   Wed, 13 Nov 2019 10:46:37 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     "thorsten.scherer@eckelmann.de" <thorsten.scherer@eckelmann.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 40/62] gpio: gpio-siox: Use new GPIO_LINE_DIRECTION
-Message-ID: <20191113084637.GA23872@localhost.localdomain>
-References: <cover.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
- <91a796dd2811b58f4be30875f5ef644f0e43f241.1572945896.git.matti.vaittinen@fi.rohmeurope.com>
- <20191111072715.GB4117@ws067.eckelmann.group>
- <e38b59d9c8bcf81bbd49fed2d9d17350d4dc4866.camel@fi.rohmeurope.com>
- <20191111104252.5ixcb2tpnj6n5e6t@pengutronix.de>
+        Wed, 13 Nov 2019 03:51:15 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: lra+25VO4pTiK58An5EnMXM4HMYFjq/Kv3La71l+jNO6qoRoYEBfbpgPbTjYIi4TJdWYcbd0fW
+ wVqHr1uelE3zj5T2bCkwkCAiBXn7geXh5W56caI8nc1gvq/8ysv1eN0ladp55yADnycLj4RELs
+ ghERICgNRp+huiZv80PMr+KefeNBByE4Q1dCq/4R+kKld6Knmws1t7Gxb7OjQGqLuX07vTefRp
+ Ln2rXDO2aBwERBrHYS7qSl39kfRoN14f7wO/LGfJ6R2ohE09+nzfc/Eo99aGa8A9MufQQytJc8
+ /Yc=
+X-IronPort-AV: E=Sophos;i="5.68,299,1569308400"; 
+   d="scan'208";a="54106703"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Nov 2019 01:51:14 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 Nov 2019 01:51:14 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 Nov 2019 01:51:12 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH 00/13] add defconfig support for SAM9X60
+Date:   Wed, 13 Nov 2019 10:50:56 +0200
+Message-ID: <1573635069-30883-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191111104252.5ixcb2tpnj6n5e6t@pengutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 11:42:52AM +0100, Uwe Kleine-König wrote:
-> Hello Matti,
-> 
-> On Mon, Nov 11, 2019 at 07:43:50AM +0000, Vaittinen, Matti wrote:
-> > On Mon, 2019-11-11 at 08:27 +0100, Thorsten Scherer wrote:
-> > > Hello,
-> > > 
-> > > On Tue, Nov 05, 2019 at 12:30:58PM +0200, Matti Vaittinen wrote:
-> > > > It's hard for occasional GPIO code reader/writer to know if values
-> > > > 0/1
-> > > > equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-> > > > GPIO_LINE_DIRECTION_OUT to help them out.
-> > > > 
-> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > 
-> > > for SIOX gpio:
-> > > 
-> > > Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
-> > > 
-> > > > Patches are compile-tested only. I have no HW to really test
-> > > > them.  Thus
-> > > > I'd appreciate carefull review. This work is mainly about
-> > > > converting
-> > > > zeros and ones to the new defines but it wouldn't be first time I
-> > > > get it wrong in one of the patches
-> > > > :)                                                   
-> > > 
-> > > Applied the patch(es) and tested them with SIOX device
-> > > 
-> > > Tested-by: Thorsten Scherer <t.scherer@eckelmann.de>
-> > 
-> > Big thanks! It's _really_ nice that someone takes the time to do the
-> > testing! Highly appreciated! :]
-> 
-> without wanting to devalue Thorsten's testing, I think testing your
-> series can be trivially done without a runtime check as your patches
-> won't change the compiled result. So just compile once without the patch
-> and once with and compare the results. If they are bit-by-bit identical
-> everything is fine.
+Hi,
 
-Right again Uwe. This is correct for most of the modules - assuming
-there's no __LINE__ or time related macros used. Few of the modules did
-get actual changes though.
+This series enables proper support for SAM9X60 in Kconfig and
+defconfig.
 
-Br,
-	Matti
+Thank you,
+Claudiu Beznea
+
+Claudiu Beznea (8):
+  ARM: at91: Kconfig: add sam9x60 pll config flag
+  ARM: at91: Kconfig: add config flag for SAM9X60 SoC
+  ARM: at91/defconfig: use savedefconfig
+  ARM: at91/defconfig: add config option for SAM9X60 SoC
+  ARM: at91/defconfig: enable atmel maxtouch
+  ARM: at91/defconfig: enable SAMA5D2's SHDWC
+  ARM: at91/defconfig: enable flexcom
+  ARM: at91/defconfig: enable XDMAC
+
+Codrin Ciubotariu (3):
+  ARM: at91/defconfig: Add I2S Multi-channel driver
+  ARM: at91/defconfig: Add driver for Audio PROTO board
+  ARM: at91/defconfig: enable CLASSD
+
+Tudor Ambarus (2):
+  ARM: at91/defconfig: enable AT91_SAMA5D2_ADC
+  ARM: at91/defconfig: enable ATMEL_QUADSPI
+
+ arch/arm/configs/at91_dt_defconfig | 56 ++++++++++++++++++--------------------
+ arch/arm/mach-at91/Kconfig         | 13 +++++++++
+ 2 files changed, 39 insertions(+), 30 deletions(-)
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+2.7.4
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
