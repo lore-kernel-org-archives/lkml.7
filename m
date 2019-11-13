@@ -2,109 +2,75 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84967C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27C8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 671292084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F63206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfKMCjr (ORCPT
+        id S1727698AbfKMClD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:39:47 -0500
-Received: from mga01.intel.com ([192.55.52.88]:43956 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfKMCjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:39:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 18:39:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,298,1569308400"; 
-   d="scan'208";a="216241266"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 12 Nov 2019 18:39:46 -0800
-Received: from [10.226.39.46] (unknown [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 3CF1E580372;
-        Tue, 12 Nov 2019 18:39:43 -0800 (PST)
-Subject: Re: [PATCH v5 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <73655e49e80ac08826ad2d470e1387ba1b662d83.1572950559.git.eswara.kota@linux.intel.com>
- <20191112191727.GA31422@bogus>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <29a5797b-f65c-ba87-0a45-ff5815bf9fd3@linux.intel.com>
-Date:   Wed, 13 Nov 2019 10:39:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 21:41:03 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:57903 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727474AbfKMClD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:41:03 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0ThwxWMo_1573612858;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ThwxWMo_1573612858)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 13 Nov 2019 10:40:59 +0800
+Subject: Re: [PATCH v2 6/8] mm/lru: remove rcu_read_lock to fix performance
+ regression
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <1573567588-47048-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1573567588-47048-7-git-send-email-alex.shi@linux.alibaba.com>
+ <20191112143844.GB7934@bombadil.infradead.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <a6bb6739-cc00-cf9f-cd69-6016ce93e054@linux.alibaba.com>
+Date:   Wed, 13 Nov 2019 10:40:58 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191112191727.GA31422@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+In-Reply-To: <20191112143844.GB7934@bombadil.infradead.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 11/13/2019 3:17 AM, Rob Herring wrote:
-> On Wed, Nov 06, 2019 at 11:44:01AM +0800, Dilip Kota wrote:
->> Add YAML schemas for PCIe RC controller on Intel Gateway SoCs
->> which is Synopsys DesignWare based PCIe core.
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
->> ---
->> Changes on v5:
->> 	Add Reviewed-by Andrew Murray.
->> 	Add possible values and default value for max-link-speed.
->> 	Remove $ref and add maximum and default for reset-assert-ms.
->> 	Set true flag for linux,pci-domain.
->> 	Define maxItems for ranges and clock.
->> 	Define maximum for num-lanes.
->> 	Update required list:
->> 	  Add #address-cells, #size-cells, #interrupt-cells.
->> 	  Remove num-lanes and linux,pci-domain.
->> 	Add required header files in example.
->> 	Remove status entry in example.
->>
->> changes on v4:
->> 	Add "snps,dw-pcie" compatible.
->> 	Rename phy-names property value to pcie.
->> 	And maximum and minimum values to num-lanes.
->> 	Add ref for reset-assert-ms entry and update the
->> 	 description for easy understanding.
->> 	Remove PCIe core interrupt entry.
->>
->> changes on v3:
->>          Add the appropriate License-Identifier
->>          Rename intel,rst-interval to 'reset-assert-us'
->>          Add additionalProperties: false
->>          Rename phy-names to 'pciephy'
->>          Remove the dtsi node split of SoC and board in the example
->>          Add #interrupt-cells = <1>; or else interrupt parsing will fail
->>          Name yaml file with compatible name
->>
->>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 +++++++++++++++++++++
->>   1 file changed, 138 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> I'm working on a common PCI schema which will shrink this, but in the
-> meantime:
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Sure, Thanks for reviewing the patch.
 
-Regards,
-Dilip
+ÔÚ 2019/11/12 ÏÂÎç10:38, Matthew Wilcox Ð´µÀ:
+> On Tue, Nov 12, 2019 at 10:06:26PM +0800, Alex Shi wrote:
+>> Intel 0day report there are performance regression on this patchset.
+>> The detailed info points to rcu_read_lock + PROVE_LOCKING which causes
+>> queued_spin_lock_slowpath waiting too long time to get lock.
+>> Remove rcu_read_lock is safe here since we had a spinlock hold.
+> Argh.  You have not sent these patches in a properly reviewable form!
+> I wasted all that time reviewing the earlier patch in this series only to
+> find out that you changed it here.  FIX THE PATCH, don't send a fix-patch
+> on top of it!
+> 
+
+Hi Matthew,
+
+Very sorry for your time! The main reasons I use a separate patch since a, Intel 0day asking me to credit their are founding, and I don't know how to give a clearly/elegant explanation for a non-exist regression in a fixed patch. b, this regression is kindly pretty tricky.  Maybe it's better saying thanks in version change log of cover-letter?
+
+Anyway, Thanks a lot for your review!
+
+Alex
