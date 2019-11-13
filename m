@@ -2,116 +2,162 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474BAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C65C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B57222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD4F222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cFFZOvWI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LbG0zOdg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfKMIgY (ORCPT
+        id S1726979AbfKMIk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:36:24 -0500
-Received: from m12-14.163.com ([220.181.12.14]:50514 "EHLO m12-14.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfKMIgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:36:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=dA+ZN
-        83cVR4cL1YH5CVSfq7SE556RGr+LTFA07tkT5E=; b=cFFZOvWI+2mgSBD6/Rr1E
-        CbzfpiM1dd4QzN0vlqzn4dXbsAbCmPLaMAWIoL1+vVx2vqxHcRP7T8rI7x6VMe/0
-        QzAXfscip9jNP2VuQqiliQYVGUIP5l1BQkh3B1LD37MgU5PXMpjdVWOiQUL8uUnl
-        wH++EsFKgxtzh0g2RYAytw=
-Received: from [192.168.1.133] (unknown [112.25.212.39])
-        by smtp10 (Coremail) with SMTP id DsCowADHz2ddwMtd9XrUCg--.280S2;
-        Wed, 13 Nov 2019 16:35:43 +0800 (CST)
-Subject: Re: Question about "asm/rwonce.h: No such file or directory"
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-References: <1da2db04-da6a-cedb-e85a-6ded68dada82@163.com>
- <20191112123125.GD17835@willie-the-truck>
- <CAK7LNARA99UUTY2v6rS=Nb4Cg5pB4RsR0PogLqdT9uNLcH20ew@mail.gmail.com>
- <32a3b660-f4d2-268e-2206-d50073298c0c@iogearbox.net>
- <CAK7LNASR=R=gyuaMO=VzdXrY3gaQ_FVE4es60bzXf=9ASR2qUw@mail.gmail.com>
- <021e7b46-047e-d381-9dca-bd61db08e4f8@163.com>
- <CAK7LNARKh3-cAqsYgcxFwq9CGk-CgBfkiQgfNSULkxwO0xa2vw@mail.gmail.com>
- <ac4577d4-c0f2-9596-df6f-3fcc563bde3e@163.com>
- <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
-From:   Xiao Yang <ice_yangxiao@163.com>
-Message-ID: <50602386-68b1-be38-a022-0bcf9df6a54e@163.com>
-Date:   Wed, 13 Nov 2019 16:35:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAK7LNATfK2pFnO2YV5zMLMxJGYyaj+f8w-k4K8xaoGbJ2Bd5eQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID: DsCowADHz2ddwMtd9XrUCg--.280S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZw47Wr13AFWxCw4kCF13twb_yoWDKrgEvw
-        10krykCr1fKr13JanxKFsxXFsrKw4kAryDX34rurn0gwsxAFZIg3ZYqFn5ZFs5t398ZFn3
-        WF1FvFsa9F98ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU55u4UUUUUU==
-X-Originating-IP: [112.25.212.39]
-X-CM-SenderInfo: 5lfhs5xdqj5xldr6il2tof0z/xtbB0h9sXlUMSx9uAQAAsd
+        Wed, 13 Nov 2019 03:40:57 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37648 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfKMIk5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 03:40:57 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t1so1313679wrv.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 00:40:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=duwBoEZu8ONR3Kpqj7k/vnfSyGY52V9/HA6DrXTVVao=;
+        b=LbG0zOdgKPABVSEgK1vjmpfZefrws6Ve9ii3LF79ah6JbAro9X/IalXn8g70oRwIs9
+         u9mXgOE+ECeneTh9bHGCfXT98oOe9dGQEmEJ/cndxRDTQe7xTau6KW+Z8l710c6b6VLD
+         0vvmR8FhCWelGuVRK49RBxU2k0ksf7iYplmEDqypYQcOkgMqiu7LQNRSD+GX2+8PXeoY
+         qw1RMG6kZ68B15y5Ku1EM1UaW6KcYSx2eYSm40RWyBywK7chFGgYa9Ki6GBhGSLNTVo3
+         ZhJzyQcmImIJMKhb7IG3QTuEmRp6A1xys5nKsecxxfcKfNLqlWYEQNbQIUtEIDuDDI21
+         0f5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=duwBoEZu8ONR3Kpqj7k/vnfSyGY52V9/HA6DrXTVVao=;
+        b=P4eejIf4FnOUlNbFCrQMUZNQIoilFgs+vKh+UHd+DCYuU6eNPUcRWECE9NejpFQr3m
+         wCKu4tc6/bPHQliCr/PBhugRc7IXdDntocpBKIreHiY7cQGEtTXN6/fQ94kgrHnMA7/w
+         BRcKTIwEeCOZAeMBgLiObhBCeIvp6/bTm4CSAzoTn5XtZhj0xBFRYZg01g/Vwf6hBJGK
+         /kr2EK/MquLmqAa5IFO8g4mFITUbj4As7/iwhc8ZWmjfjiEKGB8wtHH1sxLz0c80WCwL
+         dCLBxPZBxpm6d5QMetkV6ZfFq27zU8xNnkVdlezlmoIMgWJ/paIxr7RKsYMj5C75S+Lr
+         ewIw==
+X-Gm-Message-State: APjAAAVj9OlSgYecDsIyBEH4iuo5SZ8hP2h6szm3bJEBKcpIaCGmm112
+        3isf+pnuIO6PJFtq0JlZYlGB+Q==
+X-Google-Smtp-Source: APXvYqyhAqxkq744Z/HqS84ByvyvEvolM2hZLSHEnenA1CNXMue2JTN6yHOt6t1/M8gv/9Gnddkq1g==
+X-Received: by 2002:adf:ea8d:: with SMTP id s13mr1632661wrm.366.1573634453646;
+        Wed, 13 Nov 2019 00:40:53 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:8174:caa5:2144:f60])
+        by smtp.gmail.com with ESMTPSA id h205sm1667499wmf.35.2019.11.13.00.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 00:40:53 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rjw@rjwysocki.net, edubezval@gmail.com, rui.zhang@intel.com
+Cc:     linux-pm@vger.kernel.org, viresh.kumar@linaro.org,
+        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] thermal/drivers/Kconfig: Convert the CPU cooling device to a choice
+Date:   Wed, 13 Nov 2019 09:40:40 +0100
+Message-Id: <20191113084042.5707-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 3:53 PM, Masahiro Yamada wrote:
-> On Wed, Nov 13, 2019 at 4:17 PM Xiao Yang <ice_yangxiao@163.com> wrote:
->> On 11/13/19 2:57 PM, Masahiro Yamada wrote:
->>> Sorry, I really do not understand what you are doing.
->>>
->>> include/linux/compiler.h is only for kernel-space.
->>> Shrug if a user-land program includes it.
->> Hi Masahiro,
->>
->> For building tools/bpf, it is good to fix the compiler error by Daniel's
->> patch(i.e. use linux/filter from linux header).
->>
->> linux/compiler.h may be used by other code in kernel.  Is it possible to
->> trigger the same error when the other code
->>
->> including linux/compiler.h is built? Is this kind of code able to find
->> the location of <asm/rwonce.h>?
->
-> <asm/rwonce.h> is also kernel-only header.
->
-> The kernel code can find <asm/rwonce.h>, but user-land code cannot.
+The next changes will add a new way to cool down a CPU by injecting
+idle cycles. With the current configuration, a CPU cooling device is
+the cpufreq cooling device. As we want to add a new CPU cooling
+device, let's convert the CPU cooling to a choice giving a list of CPU
+cooling devices. At this point, there is obviously only one CPU
+cooling device.
 
-Hi Masahiro,
+There is no functional changes.
 
-Sorry, I am not familar with it.
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/Kconfig     | 13 +++++++++++--
+ drivers/thermal/Makefile    |  2 +-
+ include/linux/cpu_cooling.h |  6 +++---
+ 3 files changed, 15 insertions(+), 6 deletions(-)
 
-Thanks a lot for your explanation and I have seen the LINUXINCLUDE 
-variable in Makefile.
-
-I will try to send a patch as Daniel suggested.
-
-Best Regards,
-
-Xiao Yang
-
->
->
->
->
->> Best Regards,
->>
->> Xiao Yang
->>
->>
->
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 001a21abcc28..2b82c4861091 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -150,8 +150,17 @@ config THERMAL_GOV_POWER_ALLOCATOR
+ 
+ config CPU_THERMAL
+ 	bool "Generic cpu cooling support"
+-	depends on CPU_FREQ
+ 	depends on THERMAL_OF
++	help
++	  Enable the CPU cooling features. If the system has no active
++	  cooling device available, this option allows to use the CPU
++	  as a cooling device.
++
++if CPU_THERMAL
++
++config CPU_FREQ_THERMAL
++	bool "CPU frequency cooling device"
++	depends on CPU_FREQ
+ 	help
+ 	  This implements the generic cpu cooling mechanism through frequency
+ 	  reduction. An ACPI version of this already exists
+@@ -159,7 +168,7 @@ config CPU_THERMAL
+ 	  This will be useful for platforms using the generic thermal interface
+ 	  and not the ACPI interface.
+ 
+-	  If you want this support, you should say Y here.
++endif
+ 
+ config CLOCK_THERMAL
+ 	bool "Generic clock cooling support"
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index 74a37c7f847a..d3b01cc96981 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -19,7 +19,7 @@ thermal_sys-$(CONFIG_THERMAL_GOV_USER_SPACE)	+= user_space.o
+ thermal_sys-$(CONFIG_THERMAL_GOV_POWER_ALLOCATOR)	+= power_allocator.o
+ 
+ # cpufreq cooling
+-thermal_sys-$(CONFIG_CPU_THERMAL)	+= cpu_cooling.o
++thermal_sys-$(CONFIG_CPU_FREQ_THERMAL)	+= cpu_cooling.o
+ 
+ # clock cooling
+ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
+diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
+index b74732535e4b..3cdd85f987d7 100644
+--- a/include/linux/cpu_cooling.h
++++ b/include/linux/cpu_cooling.h
+@@ -19,7 +19,7 @@
+ 
+ struct cpufreq_policy;
+ 
+-#ifdef CONFIG_CPU_THERMAL
++#ifdef CONFIG_CPU_FREQ_THERMAL
+ /**
+  * cpufreq_cooling_register - function to create cpufreq cooling device.
+  * @policy: cpufreq policy.
+@@ -40,7 +40,7 @@ void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev);
+ struct thermal_cooling_device *
+ of_cpufreq_cooling_register(struct cpufreq_policy *policy);
+ 
+-#else /* !CONFIG_CPU_THERMAL */
++#else /* !CONFIG_CPU_FREQ_THERMAL */
+ static inline struct thermal_cooling_device *
+ cpufreq_cooling_register(struct cpufreq_policy *policy)
+ {
+@@ -58,6 +58,6 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
+ {
+ 	return NULL;
+ }
+-#endif /* CONFIG_CPU_THERMAL */
++#endif /* CONFIG_CPU_FREQ_THERMAL */
+ 
+ #endif /* __CPU_COOLING_H__ */
+-- 
+2.17.1
 
