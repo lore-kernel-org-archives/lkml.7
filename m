@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4975EC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C70C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154BB222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8388B222D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609855;
-	bh=LCgcg2823SU5nvSbZFB0e7JqZXVhEoWiEBO+CGbEi3A=;
+	s=default; t=1573609856;
+	bh=sOL8EgzU9/OBwUH+N3HrECg+l5C283/vV+tqbgXJvbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WJt7jjAduUh/rW4e3JkD2AZkM35aVes/WmvUYOFPnFVBNtDaJCpCmzmMWp2aOoDsV
-	 X8o+Hn+OKxbLwV2F0ghyFmyIfZ+AKXj+Ue+biPBwjWyhE1gblpuxp7/9B0XDGzh6/3
-	 2Y+G8Dr3e4WyNka7oChfnkP6JWcpZoeY4AvWfP6E=
+	b=qMeB0bTWLI6LCmuF0CI9+wdO5HDxKPa2K8D+YGvcto6dYWuHy6HakAKJh7Y7s3aRF
+	 iT/sB5ndIkVjrL5W+cdgMSLZTh4JJxE7HC6Sl+4B/O6ma0Ak2O84M7iyVTTayPhnn9
+	 GKq4cb5yzYjGLHy4O/j8Jl0mvuXQoKP1SJCS/gbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfKMBuy (ORCPT
+        id S1727567AbfKMBuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:50:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37624 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:50:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbfKMBuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:44 -0500
+        id S1727487AbfKMBup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDC402245A;
-        Wed, 13 Nov 2019 01:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6F84222CA;
+        Wed, 13 Nov 2019 01:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609843;
-        bh=LCgcg2823SU5nvSbZFB0e7JqZXVhEoWiEBO+CGbEi3A=;
+        s=default; t=1573609844;
+        bh=sOL8EgzU9/OBwUH+N3HrECg+l5C283/vV+tqbgXJvbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMNNKeObyslZ2Ax0UFu+JA7UQ0SymgBnBs+a2IuRXoA5sSnwhKjYoaF6F0c2yYS27
-         pnwHDiyOR3CI6UB1/qsK1KPnNJtW62m15sVTgGUv5HJ4zT1LciQfjVKWOgfgszjUxj
-         VB8TmUUsvnU0Re2511d/vDLXWe3wn9S2uUVWzBkk=
+        b=Gs7UHoT6NxbXvVZPRp+VxdVqRDlZXBc0wDGOlXRkVBljKktAYEYynU6hfLPk+LR0M
+         gLsY/KAI/lmh6umCfFoZRw4Jaa17sh8C8+O1Gua2ZUYXyPZyyL3JNixKN4UT7mQApU
+         0nWDixKNLh+R6fnCArO3b6Pkh9mHNUGCdOXIyU24=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 015/209] f2fs: keep lazytime on remount
-Date:   Tue, 12 Nov 2019 20:47:11 -0500
-Message-Id: <20191113015025.9685-15-sashal@kernel.org>
+Cc:     "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 016/209] IB/hfi1: Error path MAD response size is incorrect
+Date:   Tue, 12 Nov 2019 20:47:12 -0500
+Message-Id: <20191113015025.9685-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,31 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 
-[ Upstream commit 095680f24f2673d860fd1d3d2f54f40f330b4c63 ]
+[ Upstream commit 935c84ac649a147e1aad2c48ee5c5a1a9176b2d0 ]
 
-This patch fixes losing lazytime when remounting f2fs.
+If a MAD packet has incorrect header information, the logic uses the reply
+path to report the error.  The reply path expects *resp_len to be set
+prior to return.  Unfortunately, *resp_len is set to 0 for this path.
+This causes an incorrect response packet.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fix by ensuring that the *resp_len is defaulted to the incoming packet
+size (wc->bytes_len - sizeof(GRH)).
+
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/hfi1/mad.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index d9106bbe7df63..d72e937ff57b7 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1555,6 +1555,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 		(test_opt(sbi, POSIX_ACL) ? SB_POSIXACL : 0);
+diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
+index f208a25d0e4f5..1669548e91dcf 100644
+--- a/drivers/infiniband/hw/hfi1/mad.c
++++ b/drivers/infiniband/hw/hfi1/mad.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright(c) 2015-2017 Intel Corporation.
++ * Copyright(c) 2015-2018 Intel Corporation.
+  *
+  * This file is provided under a dual BSD/GPLv2 license.  When using or
+  * redistributing this file, you may do so under either license.
+@@ -4829,7 +4829,7 @@ static int hfi1_process_opa_mad(struct ib_device *ibdev, int mad_flags,
+ 	int ret;
+ 	int pkey_idx;
+ 	int local_mad = 0;
+-	u32 resp_len = 0;
++	u32 resp_len = in_wc->byte_len - sizeof(*in_grh);
+ 	struct hfi1_ibport *ibp = to_iport(ibdev, port);
  
- 	limit_reserve_root(sbi);
-+	*flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
- 	return 0;
- restore_gc:
- 	if (need_restart_gc) {
+ 	pkey_idx = hfi1_lookup_pkey_idx(ibp, LIM_MGMT_P_KEY);
 -- 
 2.20.1
 
