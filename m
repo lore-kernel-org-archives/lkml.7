@@ -2,109 +2,144 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB1DC17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67407C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B207B2245A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4850D222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfKMKuD (ORCPT
+        id S1727752AbfKMKu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:50:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:50438 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727685AbfKMKuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:50:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA81D7A7;
-        Wed, 13 Nov 2019 02:50:01 -0800 (PST)
-Received: from [192.168.1.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28EEC3F534;
-        Wed, 13 Nov 2019 02:49:59 -0800 (PST)
-Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
-        mgorman@suse.de, dsmythies@telus.net
-Cc:     linux-pm@vger.kernel.org, torvalds@linux-foundation.org,
-        tglx@linutronix.de, sargun@sargun.me, tj@kernel.org,
-        xiexiuqi@huawei.com, xiezhipeng1@huawei.com,
-        srinivas.pandruvada@linux.intel.com
-References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
- <20191112150544.GA3664@linaro.org>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <3b8cafb7-894d-c302-e6c6-b5844b1298b5@arm.com>
-Date:   Wed, 13 Nov 2019 11:49:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 05:50:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33800 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727432AbfKMKu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:50:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 91AAEB320;
+        Wed, 13 Nov 2019 10:50:23 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 550261E1498; Wed, 13 Nov 2019 11:50:23 +0100 (CET)
+Date:   Wed, 13 Nov 2019 11:50:23 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 03/23] mm/gup: move try_get_compound_head() to top,
+ fix minor issues
+Message-ID: <20191113105023.GG6367@quack2.suse.cz>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com>
+ <20191113042710.3997854-4-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191112150544.GA3664@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113042710.3997854-4-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.11.19 16:05, Vincent Guittot wrote:
-> Le Tuesday 12 Nov 2019 à 15:48:13 (+0100), Vincent Guittot a écrit :
->> update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
->> which might be inefficient when cpufreq driver has rate limitation.
->>
->> When a task is attached on a CPU, we have call path:
->>
->> update_blocked_averages()
->>   update_cfs_rq_load_avg()
->>     cfs_rq_util_change -- > trig frequency update
->>   attach_entity_load_avg()
->>     cfs_rq_util_change -- > trig frequency update
+On Tue 12-11-19 20:26:50, John Hubbard wrote:
+> An upcoming patch uses try_get_compound_head() more widely,
+> so move it to the top of gup.c.
+> 
+> Also fix a tiny spelling error and a checkpatch.pl warning.
+> 
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-This looks like attach_entity_load_avg() is called from
-update_blocked_averages(). Do you refer to the attach_entity_load_avg()
-call from attach_entity_cfs_rq() or update_load_avg() here? I assume the
-former.
+Looks good. You can add:
 
->> The 1st frequency update will not take into account the utilization of the
->> newly attached task and the 2nd one might be discard because of rate
->> limitation of the cpufreq driver.
->>
->> update_cfs_rq_load_avg() is only called by update_blocked_averages()
->> and update_load_avg() so we can move the call to
->> {cfs_rq,cpufreq}_util_change() into these 2 functions. It's also
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-s/cpufreq_util_change()/cpufreq_update_util() ?
+								Honza
 
-[...]
-
->> I have just rebased the patch on latest tip/sched/core and made it a proper
->> patchset after Doug reported that the problem has diseappeared according to
->> his 1st results but tests results are not all based on the same v5.4-rcX
->> and with menu instead of teo governor.
-
-I had some minor tweaks to do putting this on a0e813f26ebc ("sched/core:
-Further clarify sched_class::set_next_task()") ? I saw the '[tip:
-sched/urgent] sched/pelt: Fix update of blocked PELT ordering' tip-bot
-msg this morning though.
-
-[...]
-
->> @@ -7493,9 +7495,9 @@ static void update_blocked_averages(int cpu)
->>  	 * that RT, DL and IRQ signals have been updated before updating CFS.
->>  	 */
->>  	curr_class = rq->curr->sched_class;
->> -	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
->> -	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
->> -	update_irq_load_avg(rq, 0);
->> +	decayed |= update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
->> +	decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
->> +	decayed |= update_irq_load_avg(rq, 0);
-
-Why not 'decayed  = update_cfs_rq_load_avg()' like in the
-!CONFIG_FAIR_GROUP_SCHED case?
-
-[...]
+> ---
+>  mm/gup.c | 29 +++++++++++++++--------------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 199da99e8ffc..933524de6249 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -29,6 +29,21 @@ struct follow_page_context {
+>  	unsigned int page_mask;
+>  };
+>  
+> +/*
+> + * Return the compound head page with ref appropriately incremented,
+> + * or NULL if that failed.
+> + */
+> +static inline struct page *try_get_compound_head(struct page *page, int refs)
+> +{
+> +	struct page *head = compound_head(page);
+> +
+> +	if (WARN_ON_ONCE(page_ref_count(head) < 0))
+> +		return NULL;
+> +	if (unlikely(!page_cache_add_speculative(head, refs)))
+> +		return NULL;
+> +	return head;
+> +}
+> +
+>  /**
+>   * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned pages
+>   * @pages:  array of pages to be maybe marked dirty, and definitely released.
+> @@ -1793,20 +1808,6 @@ static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
+>  	}
+>  }
+>  
+> -/*
+> - * Return the compund head page with ref appropriately incremented,
+> - * or NULL if that failed.
+> - */
+> -static inline struct page *try_get_compound_head(struct page *page, int refs)
+> -{
+> -	struct page *head = compound_head(page);
+> -	if (WARN_ON_ONCE(page_ref_count(head) < 0))
+> -		return NULL;
+> -	if (unlikely(!page_cache_add_speculative(head, refs)))
+> -		return NULL;
+> -	return head;
+> -}
+> -
+>  #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
+>  static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+>  			 unsigned int flags, struct page **pages, int *nr)
+> -- 
+> 2.24.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
