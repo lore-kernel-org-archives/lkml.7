@@ -2,609 +2,225 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDE2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A50C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989E821A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C241E222CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bjMTT0AS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bvh348oJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfKMDL3 (ORCPT
+        id S1727343AbfKMDRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 22:11:29 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39301 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbfKMDL3 (ORCPT
+        Tue, 12 Nov 2019 22:17:11 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:38394 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbfKMDRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 22:11:29 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x28so599092pfo.6
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 19:11:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uoN1zWuQR8xWdesWJyeIFE0zLuz6Nmq8tGuDa+udlRQ=;
-        b=bjMTT0ASEpQPgh3SYFv+E2yOfLoabIF6LVnvtzvVLOfbiwy/3gRLN3vcNM16BzebHc
-         uDd6tbJSSLjWI/C3oa4K7PFjy4R8vOqfoFavu/OJROLTDosHrTunJqFCWh1d4wM67PZD
-         pkloG7WGBac/nOUXnqxJNFQu9tvenTA6PK/xc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uoN1zWuQR8xWdesWJyeIFE0zLuz6Nmq8tGuDa+udlRQ=;
-        b=tRGwspNonUGc8za/xVydBRBHQKm6Ae2e8LjNvJzLRhoi2Cz+GzzmxnxgvUiRg0NN4D
-         v8YSDm0BTz0ENc5ziKHGkpKvmmhf0MjkSxOgQfrGlh/lEvfSut53Go3b3u94gCc4D8SB
-         xODbEPkOXJhOnlIj7UU6PPU3Isf/QlquzvL3zcfAP7KWUI2X5VmW8NDJIFV3oyndU7Nq
-         C+MUEqHXpWkdNypZpvQC1Rx0JbzXGFY2bdGrGiBqeXwwPRhzpFtjyQrrhuox0UsD8l+/
-         suX2c05/kkp4hprx1NU7/hSFijmkQ5EC9nxbOS1VNbmIzh4nqJ7pWTwYAcF5XMAN1yPD
-         Y1ZQ==
-X-Gm-Message-State: APjAAAWIgVVtVBbiCpPnIBuKFY7qXoNT9VUeFHV3cL8KfQXKLW0qRyHE
-        +76RROm62KS2leMm4vTfFb4qKwuklTE=
-X-Google-Smtp-Source: APXvYqz4/4vziX+WG+5Vy0R5mBFcmg0uzTneHJsvW4b0xi+psICNOwKC2eNI8hkwGdVP3vFmOhR4CQ==
-X-Received: by 2002:a63:c603:: with SMTP id w3mr998253pgg.151.1573614686626;
-        Tue, 12 Nov 2019 19:11:26 -0800 (PST)
-Received: from localhost ([2620:15c:202:201:1b1f:9c69:179b:de9a])
-        by smtp.gmail.com with ESMTPSA id w2sm426008pfj.22.2019.11.12.19.11.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2019 19:11:26 -0800 (PST)
-From:   Jon Flatley <jflat@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     bleung@chromium.org, groeck@chromium.org, sre@kernel.org,
-        jflat@chromium.org
-Subject: [PATCH 3/3] platform: chrome: Added cros-ec-typec driver
-Date:   Tue, 12 Nov 2019 19:10:44 -0800
-Message-Id: <20191113031044.136232-4-jflat@chromium.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-In-Reply-To: <20191113031044.136232-1-jflat@chromium.org>
-References: <20191113031044.136232-1-jflat@chromium.org>
+        Tue, 12 Nov 2019 22:17:10 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD39ubg106447;
+        Wed, 13 Nov 2019 03:17:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=sZV6H98v0HPlnhfbrGjgaNH6H6SgCrfRRbDmLCVnuUM=;
+ b=bvh348oJKNxw0e2166NUEHOHJW/hnhEIJsJqCroLg/mdp4hMYmFpGO+nr8RYHOhbaP5T
+ f5TBNdxf435Rg0RkddIPcN1sHXPpB7l1U3EKikYycVpIKXH9IUDC4QyvnFMA5luRxWEF
+ vAXMTrBGwJaK5zp83Q5wAjqBaG6VmPPyKRkAIUihbBXM+mGRHe0dVkZgL4Oy4nKwP/Xt
+ RQKqNssYC3hGQ4ZZlhVKa1CoRwCB+gqgM+8Qx+NXX7HrLtM4rG1+w2pUjvljjjo2O3Rt
+ zynT4UgGRy6txkvpLvVvRzLNsx/f2yPEqyxVyFcplYzTXTmLdsS/GZ41FJOQtW+QWJ5C GQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2w5mvts866-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 03:17:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD39D5u179641;
+        Wed, 13 Nov 2019 03:15:04 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2w7vbc1wa5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 03:15:04 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAD3F3IB001063;
+        Wed, 13 Nov 2019 03:15:03 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Nov 2019 19:15:03 -0800
+To:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>
+Cc:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: lpfc: Move work items to a stack list
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191105080855.16881-1-dwagner@suse.de>
+Date:   Tue, 12 Nov 2019 22:15:00 -0500
+In-Reply-To: <20191105080855.16881-1-dwagner@suse.de> (Daniel Wagner's message
+        of "Tue, 5 Nov 2019 09:08:55 +0100")
+Message-ID: <yq1h838pivf.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911130026
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911130026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds the cros-ec-typec driver for implementing the USB Type-C connector
-class for cros-ec devices.
 
-Signed-off-by: Jon Flatley <jflat@chromium.org>
----
- drivers/mfd/cros_ec_dev.c               |   7 +-
- drivers/platform/chrome/Kconfig         |  11 +
- drivers/platform/chrome/Makefile        |   1 +
- drivers/platform/chrome/cros_ec_typec.c | 457 ++++++++++++++++++++++++
- 4 files changed, 473 insertions(+), 3 deletions(-)
- create mode 100644 drivers/platform/chrome/cros_ec_typec.c
+James/Dick: Please review!
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 6e6dfd6c1871..1136ef986695 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -78,9 +78,10 @@ static const struct mfd_cell cros_ec_rtc_cells[] = {
- 	{ .name = "cros-ec-rtc", },
- };
- 
--static const struct mfd_cell cros_usbpd_charger_cells[] = {
-+static const struct mfd_cell cros_usbpd_cells[] = {
- 	{ .name = "cros-usbpd-charger", },
- 	{ .name = "cros-usbpd-logger", },
-+	{ .name = "cros-ec-typec" },
- };
- 
- static const struct cros_feature_to_cells cros_subdevices[] = {
-@@ -96,8 +97,8 @@ static const struct cros_feature_to_cells cros_subdevices[] = {
- 	},
- 	{
- 		.id		= EC_FEATURE_USB_PD,
--		.mfd_cells	= cros_usbpd_charger_cells,
--		.num_cells	= ARRAY_SIZE(cros_usbpd_charger_cells),
-+		.mfd_cells	= cros_usbpd_cells,
-+		.num_cells	= ARRAY_SIZE(cros_usbpd_cells),
- 	},
- };
- 
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index d4a55b64bc29..1be5c86f2aad 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -210,6 +210,17 @@ config CROS_EC_SYSFS
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cros_ec_sysfs.
- 
-+config CROS_EC_TYPEC
-+	tristate "ChromeOS Embedded Controller USB Type-C class subdriver"
-+	depends on TYPEC && CROS_EC_USBPD_NOTIFY
-+	default n
-+	help
-+	  Say Y here to enable the USB Type-C class subdriver for ChromeOS
-+	  devices.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called cros-ec-typec.
-+
- config CROS_USBPD_LOGGER
- 	tristate "Logging driver for USB PD charger"
- 	depends on CHARGER_CROS_USBPD
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index efa355ab526f..bb298c083f1e 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
- obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
- obj-$(CONFIG_CROS_USBPD_LOGGER)		+= cros_usbpd_logger.o
- obj-$(CONFIG_CROS_EC_USBPD_NOTIFY)      += cros_ec_usbpd_notify.o
-+obj-$(CONFIG_CROS_EC_TYPEC) 		+= cros_ec_typec.o
- 
- obj-$(CONFIG_WILCO_EC)			+= wilco_ec/
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-new file mode 100644
-index 000000000000..262b914f0a2e
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -0,0 +1,457 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * cros_ec_usbpd - ChromeOS EC Power Delivery Driver
-+ *
-+ * Copyright (C) 2019 Google, Inc
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/kthread.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/cros_ec.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_ec_usbpd_notify.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/usb/typec.h>
-+#include <linux/slab.h>
-+
-+#define DRV_NAME "cros-ec-typec"
-+
-+struct port_data {
-+	int port_num;
-+	struct typec_port *port;
-+	struct typec_partner *partner;
-+	struct usb_pd_identity p_identity;
-+	struct typec_data *typec;
-+	struct typec_capability caps;
-+};
-+
-+struct typec_data {
-+	struct device *dev;
-+	struct cros_ec_dev *ec_dev;
-+	struct port_data *ports[EC_USB_PD_MAX_PORTS];
-+	unsigned int num_ports;
-+	struct notifier_block notifier;
-+
-+	int (*port_update)(struct typec_data *typec, int port_num);
-+};
-+
-+#define caps_to_port_data(_caps_) container_of(_caps_, struct port_data, caps)
-+
-+static int cros_typec_ec_command(struct typec_data *typec,
-+				 unsigned int version,
-+				 unsigned int command,
-+				 void *outdata,
-+				 unsigned int outsize,
-+				 void *indata,
-+				 unsigned int insize)
-+{
-+	struct cros_ec_dev *ec_dev = typec->ec_dev;
-+	struct cros_ec_command *msg;
-+	int ret;
-+	char host_cmd[32];
-+
-+	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	msg->version = version;
-+	msg->command = ec_dev->cmd_offset + command;
-+	msg->outsize = outsize;
-+	msg->insize = insize;
-+
-+	if (outsize)
-+		memcpy(msg->data, outdata, outsize);
-+
-+	sprintf(host_cmd, "typec HC 0x%x req: ", command);
-+	print_hex_dump(KERN_DEBUG, host_cmd, DUMP_PREFIX_NONE, 16, 1, outdata,
-+			outsize, 0);
-+
-+	ret = cros_ec_cmd_xfer_status(typec->ec_dev->ec_dev, msg);
-+	if (ret >= 0 && insize)
-+		memcpy(indata, msg->data, insize);
-+	sprintf(host_cmd, "typec HC 0x%x res: ", command);
-+	print_hex_dump(KERN_DEBUG, host_cmd, DUMP_PREFIX_NONE, 16, 1, indata,
-+			insize, 0);
-+
-+	kfree(msg);
-+	return ret;
-+}
-+
-+static int cros_typec_get_cmd_version(struct typec_data *typec, int cmd,
-+		uint8_t *version_mask)
-+{
-+	struct ec_params_get_cmd_versions req_v0;
-+	struct ec_params_get_cmd_versions_v1 req_v1;
-+	struct ec_response_get_cmd_versions res;
-+	int ret;
-+
-+	req_v1.cmd = cmd;
-+	ret = cros_typec_ec_command(typec, 1, EC_CMD_GET_CMD_VERSIONS, &req_v1,
-+			sizeof(req_v1), &res, sizeof(res));
-+	if (ret < 0) {
-+		req_v0.cmd = cmd;
-+		ret = cros_typec_ec_command(typec, 0, EC_CMD_GET_CMD_VERSIONS,
-+				&req_v0, sizeof(req_v0), &res, sizeof(res));
-+		if (ret < 0)
-+			return ret;
-+	}
-+	*version_mask = res.version_mask;
-+	dev_dbg(typec->dev, "EC CMD 0x%hhx has version mask 0x%hhx\n", cmd,
-+			*version_mask);
-+	return 0;
-+}
-+
-+static int cros_typec_query_pd_port_count(struct typec_data *typec)
-+{
-+	struct ec_response_usb_pd_ports res;
-+	int ret;
-+
-+	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
-+			&res, sizeof(res));
-+	if (ret < 0)
-+		return ret;
-+	typec->num_ports = res.num_ports;
-+	return 0;
-+}
-+
-+static int cros_typec_port_update(struct typec_data *typec,
-+				  int port_num,
-+				  struct ec_response_usb_pd_control *res,
-+				  size_t res_size,
-+				  int cmd_ver)
-+{
-+	struct port_data *port;
-+	struct ec_params_usb_pd_control req;
-+	int ret;
-+
-+	if (port_num < 0 || port_num >= typec->num_ports) {
-+		dev_err(typec->dev, "cannot get status for invalid port %d\n",
-+				port_num);
-+		return -EPERM;
-+	}
-+	port = typec->ports[port_num];
-+
-+	req.port = port_num;
-+	req.role = USB_PD_CTRL_ROLE_NO_CHANGE;
-+	req.mux = USB_PD_CTRL_MUX_NO_CHANGE;
-+	req.swap = USB_PD_CTRL_SWAP_NONE;
-+
-+	ret = cros_typec_ec_command(typec, cmd_ver, EC_CMD_USB_PD_CONTROL, &req,
-+			sizeof(req), res, res_size);
-+	if (ret < 0)
-+		return ret;
-+	dev_dbg(typec->dev, "Enabled %d: 0x%hhx\n", port_num, res->enabled);
-+	dev_dbg(typec->dev, "Role %d: 0x%hhx\n", port_num, res->role);
-+	dev_dbg(typec->dev, "Polarity %d: 0x%hhx\n", port_num, res->polarity);
-+
-+	return 0;
-+}
-+
-+static int cros_typec_query_pd_info(struct typec_data *typec, int port_num)
-+{
-+	struct ec_params_usb_pd_info_request req;
-+	struct ec_params_usb_pd_discovery_entry res;
-+	int ret;
-+
-+	req.port = port_num;
-+	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_DISCOVERY, &req,
-+			sizeof(req), &res, sizeof(res));
-+	if (ret < 0)
-+		return ret;
-+	/* FIXME Needs the rest of the info in PD Spec 6.4.4.3.1.1 */
-+	typec->ports[port_num]->p_identity.id_header = res.vid;
-+
-+	/* FIXME Needs bcdDevice to match PD Spec 6.4.4.3.1.3 */
-+	typec->ports[port_num]->p_identity.product = res.pid << 16;
-+	return 0;
-+}
-+
-+static int cros_typec_port_update_v0(struct typec_data *typec, int port_num)
-+{
-+	struct port_data *port;
-+	struct ec_response_usb_pd_control res;
-+	enum typec_orientation polarity;
-+	int ret;
-+
-+	port = typec->ports[port_num];
-+	ret = cros_typec_port_update(typec, port_num, &res, sizeof(res), 0);
-+	if (ret < 0)
-+		return ret;
-+	dev_dbg(typec->dev, "State %d: %hhx\n", port_num, res.state);
-+
-+	if (!res.enabled)
-+		polarity = TYPEC_ORIENTATION_NONE;
-+	else if (!res.polarity)
-+		polarity = TYPEC_ORIENTATION_NORMAL;
-+	else
-+		polarity = TYPEC_ORIENTATION_REVERSE;
-+
-+	typec_set_pwr_role(port->port, res.role ? TYPEC_SOURCE : TYPEC_SINK);
-+	typec_set_orientation(port->port, polarity);
-+
-+	return 0;
-+}
-+
-+static int cros_typec_add_partner(struct typec_data *typec, int port_num,
-+		bool pd_enabled)
-+{
-+	struct port_data *port;
-+	struct typec_partner_desc p_desc;
-+	int ret;
-+
-+	port = typec->ports[port_num];
-+	p_desc.usb_pd = pd_enabled;
-+	p_desc.identity = &port->p_identity;
-+
-+	port->partner = typec_register_partner(port->port, &p_desc);
-+	if (IS_ERR_OR_NULL(port->partner)) {
-+		dev_err(typec->dev, "Port %d partner register failed\n",
-+				port_num);
-+		port->partner = NULL;
-+		return PTR_ERR(port->partner);
-+	}
-+
-+	ret = cros_typec_query_pd_info(typec, port_num);
-+	if (ret < 0) {
-+		dev_err(typec->dev, "Port %d PD query failed\n", port_num);
-+		typec_unregister_partner(port->partner);
-+		port->partner = NULL;
-+		return ret;
-+	}
-+
-+	ret = typec_partner_set_identity(port->partner);
-+	return ret;
-+}
-+
-+static int cros_typec_set_port_params_v1_v2(struct typec_data *typec,
-+		int port_num, struct ec_response_usb_pd_control_v1 *res)
-+{
-+	struct port_data *port;
-+	enum typec_orientation polarity;
-+	int ret;
-+
-+	port = typec->ports[port_num];
-+	if (!(res->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
-+		polarity = TYPEC_ORIENTATION_NONE;
-+	else if (!res->polarity)
-+		polarity = TYPEC_ORIENTATION_NORMAL;
-+	else
-+		polarity = TYPEC_ORIENTATION_REVERSE;
-+	typec_set_orientation(port->port, polarity);
-+	typec_set_data_role(port->port, res->role & PD_CTRL_RESP_ROLE_DATA ?
-+			TYPEC_HOST : TYPEC_DEVICE);
-+	typec_set_pwr_role(port->port, res->role & PD_CTRL_RESP_ROLE_POWER ?
-+			TYPEC_SOURCE : TYPEC_SINK);
-+	typec_set_vconn_role(port->port, res->role & PD_CTRL_RESP_ROLE_VCONN ?
-+			TYPEC_SOURCE : TYPEC_SINK);
-+
-+	if (res->enabled & PD_CTRL_RESP_ENABLED_CONNECTED && !port->partner) {
-+		bool pd_enabled =
-+			res->enabled & PD_CTRL_RESP_ENABLED_PD_CAPABLE;
-+		ret = cros_typec_add_partner(typec, port_num, pd_enabled);
-+		if (!ret)
-+			return ret;
-+	}
-+	if (!(res->enabled & PD_CTRL_RESP_ENABLED_CONNECTED) && port->partner) {
-+		typec_unregister_partner(port->partner);
-+		port->partner = NULL;
-+	}
-+	return 0;
-+}
-+
-+static int cros_typec_port_update_v1(struct typec_data *typec, int port_num)
-+{
-+	/*struct port_data *port;*/
-+	struct ec_response_usb_pd_control_v1 res;
-+	struct ec_response_usb_pd_control *res_v0 =
-+		(struct ec_response_usb_pd_control *) &res;
-+	int ret;
-+
-+	ret = cros_typec_port_update(typec, port_num, res_v0, sizeof(res), 1);
-+	if (ret < 0)
-+		return ret;
-+	dev_dbg(typec->dev, "State %d: %s\n", port_num, res.state);
-+
-+	ret = cros_typec_set_port_params_v1_v2(typec, port_num, &res);
-+	return ret;
-+}
-+
-+static int cros_typec_try_role(const struct typec_capability *cap, int role)
-+{
-+	return 0;
-+}
-+
-+static int cros_typec_dr_set(const struct typec_capability *cap,
-+		enum typec_data_role role)
-+{
-+	return 0;
-+}
-+
-+static int cros_typec_pr_set(const struct typec_capability *cap,
-+		enum typec_role role)
-+{
-+	return 0;
-+}
-+
-+static int cros_typec_vconn_set(const struct typec_capability *cap,
-+		enum typec_role role)
-+{
-+	return 0;
-+}
-+
-+static int cros_typec_ec_event(struct notifier_block *nb,
-+			       unsigned long queued_during_suspend,
-+			       void *_notify)
-+{
-+	struct typec_data *typec;
-+	int i;
-+
-+	typec = container_of(nb, struct typec_data, notifier);
-+
-+	for (i = 0; i < typec->num_ports; ++i)
-+		typec->port_update(typec, i);
-+
-+	return NOTIFY_DONE;
-+
-+}
-+
-+static void cros_typec_unregister_notifier(void *data)
-+{
-+	struct typec_data *typec = data;
-+
-+	cros_ec_usbpd_unregister_notify(&typec->notifier);
-+}
-+
-+static int cros_typec_probe(struct platform_device *pd)
-+{
-+	struct cros_ec_dev *ec_dev = dev_get_drvdata(pd->dev.parent);
-+	struct device *dev = &pd->dev;
-+	struct typec_data *typec;
-+	uint8_t ver_mask;
-+	int i;
-+	int ret;
-+
-+	dev_dbg(dev, "Probing Cros EC Type-C device.\n");
-+
-+	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
-+	if (!typec)
-+		return -ENOMEM;
-+
-+	typec->dev = dev;
-+	typec->ec_dev = ec_dev;
-+
-+	platform_set_drvdata(pd, typec);
-+
-+	ret = cros_typec_query_pd_port_count(typec);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get PD port count from EC\n");
-+		return ret;
-+	}
-+	if (typec->num_ports > EC_USB_PD_MAX_PORTS) {
-+		dev_err(dev, "EC reported too many ports. got: %d, max: %d\n",
-+				typec->num_ports, EC_USB_PD_MAX_PORTS);
-+		return -EOVERFLOW;
-+	}
-+
-+	ret = cros_typec_get_cmd_version(typec, EC_CMD_USB_PD_CONTROL,
-+			&ver_mask);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get supported PD command versions\n");
-+		return ret;
-+	}
-+	/* No reason to support EC_CMD_USB_PD_CONTROL v2 as it doesn't add any
-+	 * useful information
-+	 */
-+	if (ver_mask & EC_VER_MASK(1)) {
-+		dev_dbg(dev, "Using PD command ver 1\n");
-+		typec->port_update = cros_typec_port_update_v1;
-+	} else {
-+		dev_dbg(dev, "Using PD command ver 0\n");
-+		typec->port_update = cros_typec_port_update_v0;
-+	}
-+
-+	for (i = 0; i < typec->num_ports; ++i) {
-+		struct port_data *port;
-+
-+		port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-+		if (!port) {
-+			ret = -ENOMEM;
-+			goto unregister_ports;
-+		}
-+		port->typec = typec;
-+		port->port_num = i;
-+		typec->ports[i] = port;
-+
-+		/* TODO Make sure these values are accurate */
-+		port->caps.type = TYPEC_PORT_DRP;
-+		port->caps.data = TYPEC_PORT_DFP;
-+		port->caps.prefer_role = TYPEC_SINK;
-+
-+		port->caps.try_role = cros_typec_try_role;
-+		port->caps.dr_set = cros_typec_dr_set;
-+		port->caps.pr_set = cros_typec_pr_set;
-+		port->caps.vconn_set = cros_typec_vconn_set;
-+		port->caps.port_type_set = NULL; /* Not permitted by PD spec */
-+
-+		port->port = typec_register_port(dev, &port->caps);
-+		if (IS_ERR_OR_NULL(port->port)) {
-+			dev_err(dev, "Failed to register typec port %d\n", i);
-+			ret = PTR_ERR(port->port);
-+			goto unregister_ports;
-+		}
-+
-+		ret = typec->port_update(typec, i);
-+		if (ret < 0) {
-+			dev_err(dev, "Failed to update typec port %d\n", i);
-+			goto unregister_ports;
-+		}
-+	}
-+
-+	typec->notifier.notifier_call = cros_typec_ec_event;
-+	ret = cros_ec_usbpd_register_notify(&typec->notifier);
-+	if (ret < 0) {
-+		dev_warn(dev, "Failed to register notifier\n");
-+	} else {
-+		ret = devm_add_action_or_reset(dev,
-+				cros_typec_unregister_notifier, typec);
-+		if (ret < 0)
-+			goto unregister_ports;
-+		dev_dbg(dev, "Registered EC notifier\n");
-+	}
-+
-+	return 0;
-+
-+unregister_ports:
-+	for (i = 0; i < typec->num_ports; ++i) {
-+		if (typec->ports[i] && typec->ports[i]->port)
-+			typec_unregister_port(typec->ports[i]->port);
-+	}
-+
-+	return ret;
-+}
-+
-+static struct platform_driver cros_ec_typec_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+	.probe = cros_typec_probe
-+};
-+
-+module_platform_driver(cros_ec_typec_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("ChromeOS EC USB-C connectors");
-+MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
-+MODULE_ALIAS("platform:" DRV_NAME);
+> Move all work items to a list which lives on the stack while holding
+> the corresponding lock.
+>
+> With this we avoid a race between testing if the list is empty and
+> extracting an element of the list. Although, the list_remove_head()
+> macro tests will return an NULL pointer if the list is empty the two
+> functions lpfc_sli_handle_slow_ring_event_s4() and
+> lpfc_sli4_els_xri_abort_event_proc() do not test the return element if
+> it's NULL.
+>
+> Instead adding another test if the pointer is NULL just avoid this
+> access pattern by using the stack list. This also avoids toggling the
+> interrupts on/off for every item.
+>
+> Fixes: 4f774513f7b3 ("[SCSI] lpfc 8.3.2 : Addition of SLI4 Interface - Queues")
+> Cc: James Smart <james.smart@broadcom.com>
+> Cc: Dick Kennedy <dick.kennedy@broadcom.com>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>
+> Hi,
+>
+> While trying to understand what's going on in the Oops below I figured
+> that it could be the result of the invalid pointer access. The patch
+> still needs testing by our customer but indepent of this I think the
+> patch fixes a real bug.
+>
+> [  139.392029] general protection fault: 0000 [#1] SMP PTI
+> [  139.397862] CPU: 5 PID: 998 Comm: kworker/5:13 Tainted: G                   4.12.14-226.g94364da-default #1 SLE15-SP1 (unreleased)
+> [  139.410962] Hardware name: Dell Inc. PowerEdge R730/072T6D, BIOS 2.9.1 12/04/2018
+> [  139.419339] Workqueue: lpfc_wq lpfc_sli4_hba_process_cq [lpfc]
+> [  139.425847] task: ffff95c996051440 task.stack: ffffaa038601c000
+> [  139.432459] RIP: 0010:lpfc_set_rrq_active+0xa6/0x2a0 [lpfc]
+> [  139.438676] RSP: 0018:ffffaa038601fcf8 EFLAGS: 00010046
+> [  139.444504] RAX: 0000000000000292 RBX: ffff95c5a9a0a000 RCX: 000000000000ffff
+> [  139.452466] RDX: ffff95c5accbb7b8 RSI: 0064695f74726f70 RDI: ffff95c5a9a0b160
+> [  139.460427] RBP: ffff95c5a9a0b160 R08: 0000000000000001 R09: 0000000000000002
+> [  139.468389] R10: ffffaa038601fdd8 R11: 61c8864680b583eb R12: 0000000000000001
+> [  139.476350] R13: 000000000000ffff R14: 00000000000002bb R15: 0064695f74726f70
+> [  139.484311] FS:  0000000000000000(0000) GS:ffff95c9bfc80000(0000) knlGS:0000000000000000
+> [  139.493340] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  139.499749] CR2: 0000560354607098 CR3: 00000007a000a003 CR4: 00000000001606e0
+> [  139.507711] Call Trace:
+> [  139.510451]  lpfc_sli4_io_xri_aborted+0x1a7/0x250 [lpfc]
+> [  139.516386]  lpfc_sli4_sp_handle_abort_xri_wcqe.isra.56+0xa0/0x180 [lpfc]
+> [  139.523964]  ? __switch_to_asm+0x40/0x70
+> [  139.528338]  ? __switch_to_asm+0x34/0x70
+> [  139.532718]  ? lpfc_sli4_fp_handle_cqe+0xc3/0x450 [lpfc]
+> [  139.538649]  lpfc_sli4_fp_handle_cqe+0xc3/0x450 [lpfc]
+> [  139.544383]  ? __switch_to_asm+0x34/0x70
+> [  139.548762]  __lpfc_sli4_process_cq+0xea/0x220 [lpfc]
+> [  139.554393]  ? lpfc_sli4_sp_handle_abort_xri_wcqe.isra.56+0x180/0x180 [lpfc]
+> [  139.562557]  __lpfc_sli4_hba_process_cq+0x29/0xc0 [lpfc]
+> [  139.568486]  process_one_work+0x1da/0x400
+> [  139.572959]  worker_thread+0x2b/0x3f0
+> [  139.577044]  ? process_one_work+0x400/0x400
+> [  139.581710]  kthread+0x113/0x130
+> [  139.585310]  ? kthread_create_worker_on_cpu+0x50/0x50
+> [  139.590945]  ret_from_fork+0x35/0x40
+>
+> Thanks,
+> Daniel
+>
+>  drivers/scsi/lpfc/lpfc_sli.c | 32 ++++++++++++++++++++++----------
+>  1 file changed, 22 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+> index 294f041961a8..cbeb1f408ccc 100644
+> --- a/drivers/scsi/lpfc/lpfc_sli.c
+> +++ b/drivers/scsi/lpfc/lpfc_sli.c
+> @@ -3903,16 +3903,16 @@ lpfc_sli_handle_slow_ring_event_s4(struct lpfc_hba *phba,
+>  	struct lpfc_cq_event *cq_event;
+>  	unsigned long iflag;
+>  	int count = 0;
+> +	LIST_HEAD(work_list);
+>  
+>  	spin_lock_irqsave(&phba->hbalock, iflag);
+>  	phba->hba_flag &= ~HBA_SP_QUEUE_EVT;
+> +	list_splice_init(&phba->sli4_hba.sp_queue_event, &work_list);
+>  	spin_unlock_irqrestore(&phba->hbalock, iflag);
+> -	while (!list_empty(&phba->sli4_hba.sp_queue_event)) {
+> +	while (!list_empty(&work_list)) {
+>  		/* Get the response iocb from the head of work queue */
+> -		spin_lock_irqsave(&phba->hbalock, iflag);
+> -		list_remove_head(&phba->sli4_hba.sp_queue_event,
+> -				 cq_event, struct lpfc_cq_event, list);
+> -		spin_unlock_irqrestore(&phba->hbalock, iflag);
+> +		list_remove_head(&work_list, cq_event,
+> +				 struct lpfc_cq_event, list);
+>  
+>  		switch (bf_get(lpfc_wcqe_c_code, &cq_event->cqe.wcqe_cmpl)) {
+>  		case CQE_CODE_COMPL_WQE:
+> @@ -3941,6 +3941,17 @@ lpfc_sli_handle_slow_ring_event_s4(struct lpfc_hba *phba,
+>  		if (count == 64)
+>  			break;
+>  	}
+> +
+> +	/*
+> +	 * If the limit stops the processing of events, move the
+> +	 * remaining events back to the main event queue.
+> +	 */
+> +	spin_lock_irqsave(&phba->hbalock, iflag);
+> +	if (!list_empty(&work_list)) {
+> +		phba->hba_flag |= HBA_SP_QUEUE_EVT;
+> +		list_splice(&work_list, &phba->sli4_hba.sp_queue_event);
+> +	}
+> +	spin_unlock_irqrestore(&phba->hbalock, iflag);
+>  }
+>  
+>  /**
+> @@ -12877,18 +12888,19 @@ lpfc_sli_intr_handler(int irq, void *dev_id)
+>  void lpfc_sli4_els_xri_abort_event_proc(struct lpfc_hba *phba)
+>  {
+>  	struct lpfc_cq_event *cq_event;
+> +	LIST_HEAD(work_list);
+>  
+>  	/* First, declare the els xri abort event has been handled */
+>  	spin_lock_irq(&phba->hbalock);
+>  	phba->hba_flag &= ~ELS_XRI_ABORT_EVENT;
+> +	list_splice_init(&phba->sli4_hba.sp_els_xri_aborted_work_queue,
+> +			 &work_list);
+>  	spin_unlock_irq(&phba->hbalock);
+>  	/* Now, handle all the els xri abort events */
+> -	while (!list_empty(&phba->sli4_hba.sp_els_xri_aborted_work_queue)) {
+> +	while (!list_empty(&work_list)) {
+>  		/* Get the first event from the head of the event queue */
+> -		spin_lock_irq(&phba->hbalock);
+> -		list_remove_head(&phba->sli4_hba.sp_els_xri_aborted_work_queue,
+> -				 cq_event, struct lpfc_cq_event, list);
+> -		spin_unlock_irq(&phba->hbalock);
+> +		list_remove_head(&work_list, cq_event,
+> +				 struct lpfc_cq_event, list);
+>  		/* Notify aborted XRI for ELS work queue */
+>  		lpfc_sli4_els_xri_aborted(phba, &cq_event->cqe.wcqe_axri);
+>  		/* Free the event processed back to the free pool */
+
 -- 
-2.24.0.432.g9d3f5f5b63-goog
-
+Martin K. Petersen	Oracle Linux Engineering
