@@ -2,84 +2,102 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDE8C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E7EC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34083206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573681621;
-	bh=n96/5PzGOEYZcGlnrAyxzYgSCUiVw6VEfwgsiPPkn1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VY6DtQuMYYSX5grapMa5MrMTKD5w/TGur/PCivyd2qovdZ6OEj9/iitzUOC6Xf1Ma
-	 PPoHl6gtzoh8MB1EhWQExBlW00Sfc/TreLNuW20DHxZ0Lj59K2EDm1gRZlsbQLDA48
-	 4mU0AgxeAMgSfav+8jetzUAZC4PkGCjDFPNo8Pfs=
+	by mail.kernel.org (Postfix) with ESMTP id 6CC05206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKMVq7 (ORCPT
+        id S1727049AbfKMVrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:46:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfKMVq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:46:58 -0500
-Received: from localhost (unknown [61.58.47.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E062D206EE;
-        Wed, 13 Nov 2019 21:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573681619;
-        bh=n96/5PzGOEYZcGlnrAyxzYgSCUiVw6VEfwgsiPPkn1Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tTZftfOKsYoPcVvvlTZZ8ykjYfA+IusaYfJnZQwrRLhsSel6Ge4Mg5TBwKlqVUrxa
-         WVJVT3qzQMw7oKE9wU5WVMWxXopD7Eh8Fz/yUoAEm18YdlE10U1/FtUvx1DuR9wAfP
-         oLgeo9NhvWT/+rZTWI+c+UWbvaexu+DFzlzlLoL8=
-Date:   Thu, 14 Nov 2019 05:46:55 +0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Javier F. Arias" <jarias.linux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: Fix CamelCase in function names
-Message-ID: <20191113214655.GB3926041@kroah.com>
-References: <20191113174348.oxek47hs7rxruisr@gmail.com>
+        Wed, 13 Nov 2019 16:47:22 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39162 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfKMVrV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 16:47:21 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iV0Tm-0006yP-AS; Wed, 13 Nov 2019 22:47:10 +0100
+Date:   Wed, 13 Nov 2019 22:47:09 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Borislav Petkov <bp@alien8.de>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, tyhicks@canonical.com,
+        colin.king@canonical.com, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH] x86/mtrr: only administrator can read the
+ configurations.
+In-Reply-To: <201911121434.FF26FF3FE@keescook>
+Message-ID: <alpine.DEB.2.21.1911132246220.2507@nanos.tec.linutronix.de>
+References: <20191105071714.27376-1-zhangxiaoxu5@huawei.com> <201911081236.57A127A@keescook> <20191108205031.GH4503@zn.tnic> <201911081320.5D3CD1A4CD@keescook> <20191108213307.GI4503@zn.tnic> <201911110934.AC5BA313@keescook> <20191112174956.GB32336@zn.tnic>
+ <201911121434.FF26FF3FE@keescook>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113174348.oxek47hs7rxruisr@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 12:43:48PM -0500, Javier F. Arias wrote:
-> This patch fixes CamelCase in function names with the ffs prefix.
-> Issue found by checkpatch.
+On Tue, 12 Nov 2019, Kees Cook wrote:
+> On Tue, Nov 12, 2019 at 06:49:56PM +0100, Borislav Petkov wrote:
+> > On Mon, Nov 11, 2019 at 09:56:16AM -0800, Kees Cook wrote:
+> > > Some recap from being accidentally offlist:
+> > > 
+> > > - this patch should check capabilities at open time (or retain the
+> > >   checks on the opener's permissions for later checks).
+> > > 
+> > > - changing the DAC permissions might break something that expects to
+> > >   read mtrr when not uid 0.
+> > > 
+> > > - if we leave the DAC permissions alone and just move the capable check
+> > >   to the opener, we should get the intent of the original patch. (i.e.
+> > >   check against CAP_SYS_ADMIN not just the wider uid 0.)
+> > > 
+> > > - *this may still break things* if userspace expects to be able to
+> > >   read other parts of the file as non-uid-0 and non-CAP_SYS_ADMIN.
+> > >   If *that* is the case, then we need to censor the contents using
+> > >   the opener's permissions (as done in other /proc cases).
+> > > 
+> > > I think the most cautious way forward is something like
+> > > 51d7b120418e ("/proc/iomem: only expose physical resource addresses to
+> > > privileged users"). Untested (and should likely be expanded to know
+> > > about read vs write for lockdown interaction):
+> > 
+> > I'm back'n'forth on this.
+> > 
+> > So tglx and I agree that it doesn't make a whole lotta sense for
+> > non-privileged luserspace to be able to read /proc/mtrr because it is a
+> > small leak and normal users shouldn't care about the caching attributes
+> > of memory regions in the first place.
+> > 
+> > So maybe we should do the second variant.
+> > 
+> > But then we're not supposed to break luserspace.
+> > 
+> > But then we can revert it if we do...
+> > 
+> > Ugh.
 > 
-> Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
-> ---
->  drivers/staging/exfat/exfat_super.c | 84 ++++++++++++++---------------
->  1 file changed, 42 insertions(+), 42 deletions(-)
-> 
-> diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-> index 23002aefc964..a6bbf0d7d378 100644
-> --- a/drivers/staging/exfat/exfat_super.c
-> +++ b/drivers/staging/exfat/exfat_super.c
-> @@ -343,7 +343,7 @@ static inline void exfat_save_attr(struct inode *inode, u32 attr)
->  		EXFAT_I(inode)->fid.attr = attr & (ATTR_RWMASK | ATTR_READONLY);
->  }
->  
-> -static int ffsMountVol(struct super_block *sb)
-> +static int ffs_mount_vol(struct super_block *sb)
+> Shall I send a patch for just moving the capable() checks into open()
+> and if someone yells we switch to the other option on the assumption
+> that then we'll have a real-world case we can test the other solution
+> against?
 
-Can't you just get rid of the crazy ffs prefix as well?
+Makes sense.
 
-That would be best, look at the TODO file, it says to do just that :)
+Thanks,
 
-thanks,
-
-greg k-h
+	tglx
