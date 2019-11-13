@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF00C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1371C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75E7F2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 773BD2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611587;
-	bh=oucbaIwMQWF2MuPnamtCAdOmq+gx0EtrQoYGxAWcjzg=;
+	s=default; t=1573611592;
+	bh=H98E+O2rGiNbR2/s9wKrb2qi+Flmw69WX72yGfxD1Vk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FsBRW+tBek2HqAG1Kp91N8zDtOKlvhpb6I2Mr0XTTeg8RmS21KWBvpIjGpKTv7pji
-	 V7oVIxnxrnsEjR5ePWpgX4zN4jM9dBUAa0YcU813OcVvML3K2oXbAyWHBUhVP/fpk1
-	 cLZPucvCWn4HNfCypXSaJxItwi4ObSX1gnuYYGWc=
+	b=zeVsZHVHM15ea43YrIA1rVg4kTmwkTDl55N3fpusY/UKTQTXM2mTsdEATmremxYH0
+	 os3IuecuraaVZeCecEc8DAHNJS6DbzJ1CJIt61SanhnfnunbHYbAt2jp61qhFR7ZYr
+	 AM3msQUG6cc19x3WzeHYhnulDHZyEkBef98USFeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfKMBzG (ORCPT
+        id S1729513AbfKMCTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46280 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:19:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfKMBzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:02 -0500
+        id S1728871AbfKMBzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01DFA204EC;
-        Wed, 13 Nov 2019 01:55:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43E8A222CD;
+        Wed, 13 Nov 2019 01:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610101;
-        bh=oucbaIwMQWF2MuPnamtCAdOmq+gx0EtrQoYGxAWcjzg=;
+        s=default; t=1573610105;
+        bh=H98E+O2rGiNbR2/s9wKrb2qi+Flmw69WX72yGfxD1Vk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XXniWUelPEApte45GoiVyDAn3SggPhXUO4Z5kwxehzpU7Gkm2qfB7Vu73pNEBqmL4
-         BD/o4NjZWOgeSNP9m9DwX+zIyAe/JPfmoKOkgUhQWP0exPrfhyGZ59FH/YPtS5bb/4
-         1RLC7Jjv3Isblackm1ZEuhVUF/UtGYN9VXfWc6WA=
+        b=XUDZZuFu7RLPU6x+4NIgmwo6NJVZmUlk21/0NF5L2lZMvVtcvutO97tcqNx2AAK+S
+         Wz2UeUUXRsI0ZgbOHc2h4rVYNV/N7SomWrhdrO6OpiX21gT0LzQxxfGbz8TYMDln8g
+         4vqAE2tkWVSAt0nshqQlZQOA9mr4WQ0HyNNkfMLw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vignesh R <vigneshr@ti.com>, Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 161/209] mfd: ti_am335x_tscadc: Keep ADC interface on if child is wakeup capable
-Date:   Tue, 12 Nov 2019 20:49:37 -0500
-Message-Id: <20191113015025.9685-161-sashal@kernel.org>
+Cc:     Tim Smith <tim.smith@citrix.com>, Mark Syms <mark.syms@citrix.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.19 164/209] GFS2: Flush the GFS2 delete workqueue before stopping the kernel threads
+Date:   Tue, 12 Nov 2019 20:49:40 -0500
+Message-Id: <20191113015025.9685-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -58,50 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+From: Tim Smith <tim.smith@citrix.com>
 
-[ Upstream commit c974ac771479327b5424f60d58845e31daddadea ]
+[ Upstream commit 1eb8d7387908022951792a46fa040ad3942b3b08 ]
 
-If a child device like touchscreen is wakeup capable, then keep ADC
-interface on, so that a touching resistive screen will generate wakeup
-event to the system.
+Flushing the workqueue can cause operations to happen which might
+call gfs2_log_reserve(), or get stuck waiting for locks taken by such
+operations.  gfs2_log_reserve() can io_schedule(). If this happens, it
+will never wake because the only thing which can wake it is gfs2_logd()
+which was already stopped.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This causes umount of a gfs2 filesystem to wedge permanently if, for
+example, the umount immediately follows a large delete operation.
+
+When this occured, the following stack trace was obtained from the
+umount command
+
+[<ffffffff81087968>] flush_workqueue+0x1c8/0x520
+[<ffffffffa0666e29>] gfs2_make_fs_ro+0x69/0x160 [gfs2]
+[<ffffffffa0667279>] gfs2_put_super+0xa9/0x1c0 [gfs2]
+[<ffffffff811b7edf>] generic_shutdown_super+0x6f/0x100
+[<ffffffff811b7ff7>] kill_block_super+0x27/0x70
+[<ffffffffa0656a71>] gfs2_kill_sb+0x71/0x80 [gfs2]
+[<ffffffff811b792b>] deactivate_locked_super+0x3b/0x70
+[<ffffffff811b79b9>] deactivate_super+0x59/0x60
+[<ffffffff811d2998>] cleanup_mnt+0x58/0x80
+[<ffffffff811d2a12>] __cleanup_mnt+0x12/0x20
+[<ffffffff8108c87d>] task_work_run+0x7d/0xa0
+[<ffffffff8106d7d9>] exit_to_usermode_loop+0x73/0x98
+[<ffffffff81003961>] syscall_return_slowpath+0x41/0x50
+[<ffffffff815a594c>] int_ret_from_sys_call+0x25/0x8f
+[<ffffffffffffffff>] 0xffffffffffffffff
+
+Signed-off-by: Tim Smith <tim.smith@citrix.com>
+Signed-off-by: Mark Syms <mark.syms@citrix.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/ti_am335x_tscadc.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/gfs2/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
-index fe8d335a4d74d..4660ad90ef556 100644
---- a/drivers/mfd/ti_am335x_tscadc.c
-+++ b/drivers/mfd/ti_am335x_tscadc.c
-@@ -295,11 +295,24 @@ static int ti_tscadc_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+index c212893534ed6..a971862b186e3 100644
+--- a/fs/gfs2/super.c
++++ b/fs/gfs2/super.c
+@@ -854,10 +854,10 @@ static int gfs2_make_fs_ro(struct gfs2_sbd *sdp)
+ 	if (error && !test_bit(SDF_SHUTDOWN, &sdp->sd_flags))
+ 		return error;
  
-+static int __maybe_unused ti_tscadc_can_wakeup(struct device *dev, void *data)
-+{
-+	return device_may_wakeup(dev);
-+}
-+
- static int __maybe_unused tscadc_suspend(struct device *dev)
- {
- 	struct ti_tscadc_dev	*tscadc = dev_get_drvdata(dev);
++	flush_workqueue(gfs2_delete_workqueue);
+ 	kthread_stop(sdp->sd_quotad_process);
+ 	kthread_stop(sdp->sd_logd_process);
  
- 	regmap_write(tscadc->regmap, REG_SE, 0x00);
-+	if (device_for_each_child(dev, NULL, ti_tscadc_can_wakeup)) {
-+		u32 ctrl;
-+
-+		regmap_read(tscadc->regmap, REG_CTRL, &ctrl);
-+		ctrl &= ~(CNTRLREG_POWERDOWN);
-+		ctrl |= CNTRLREG_TSCSSENB;
-+		regmap_write(tscadc->regmap, REG_CTRL, ctrl);
-+	}
- 	pm_runtime_put_sync(dev);
+-	flush_workqueue(gfs2_delete_workqueue);
+ 	gfs2_quota_sync(sdp->sd_vfs, 0);
+ 	gfs2_statfs_sync(sdp->sd_vfs, 0);
  
- 	return 0;
 -- 
 2.20.1
 
