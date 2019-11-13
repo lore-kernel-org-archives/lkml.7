@@ -2,114 +2,143 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0BCC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 629BCC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3676E206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2470206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:52:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ssIxIeeI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfKMQwR (ORCPT
+        id S1728120AbfKMQw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:52:17 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:57877 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbfKMQwR (ORCPT
+        Wed, 13 Nov 2019 11:52:58 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40675 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbfKMQw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:52:17 -0500
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MNso2-1iFasQ3ouO-00OHDf for <linux-kernel@vger.kernel.org>; Wed, 13 Nov
- 2019 17:52:15 +0100
-Received: by mail-qk1-f182.google.com with SMTP id 205so2358356qkk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:52:14 -0800 (PST)
-X-Gm-Message-State: APjAAAU9U68o8VkV7DOcwuDIfyg9sbnAy4LWKMLy2/FKRUaD9b8gXrh+
-        rqz1sNrSxwuejLw9wTeEr4/lU8wNk5BWYTowjho=
-X-Google-Smtp-Source: APXvYqxBmbGTEswmh4hjOplNI/MC4WIdMJDNv8/77Lo6sjoh34WwHy8gB4aUKN2y/UnSZ06SRm4X0OiPwCzQXFXv/sg=
-X-Received: by 2002:a37:4f0a:: with SMTP id d10mr3426187qkb.286.1573663933766;
- Wed, 13 Nov 2019 08:52:13 -0800 (PST)
+        Wed, 13 Nov 2019 11:52:57 -0500
+Received: by mail-ot1-f67.google.com with SMTP id m15so2202389otq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:52:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bVs75VZBcY9S0Y5srgopU4beZRbRSaSe1fH2IBEEzVk=;
+        b=ssIxIeeIslCiIJXffnM/puPFNeNmqyOWWUWtDbvqe4d/BOtTR/zgDVzI5AzNkOXmek
+         d5nc5yKCwdpjNhJbj9X5bsPU3H+lpjXv+S41FpkAjafu/1ILKgYSNIw2YJGDDibDOGDm
+         iTXa5j1XEcQEaGqtyExlnhGu7ZABwiMrrBp/NEh42TS5RELZjjcY2rG8aq+EO8xPu0/7
+         YjBvENhMkWS/hqSYnuOJuNFQgWDohADDi8v8UzWFS7ovBAkCbFzxXr5d9EYLgL/55pis
+         97SdNjAs5pm7As0sJuK/MBKxP83CWf52Z8Zcsl/4mp4LBamQZO7kYC3mpyycgVGUjrX5
+         B1vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bVs75VZBcY9S0Y5srgopU4beZRbRSaSe1fH2IBEEzVk=;
+        b=h98g8Ilt1x6eaLOru2K+L0A755hkLKsZK5iD3zcdDgly6rgLMg3J98uaFrq/S0RDoC
+         itOOH7xt1bLtZHWT538m7tDOqExOuRNAUx4j67UzmcR0b3+N8ZWaL2OpzmIw+rxrh2Ti
+         feugy6wY6+NAapbD/J+YQJMkUyO5crtgigu+x+VoDoZzEUUmj+2yHBmXufzvYxYdEy64
+         NWUAvvP/TtWBhsIpu9VsQJMA60Nf4a98HmaUUpkzmJhjp0aXmIZp61lr/6DiAcO72zS7
+         SpmPA9tOvZ0xLVKHbD7RSqKuoTIKOFWsf1wFHyz3zrbZHYNJi8wXcg3r8Z0Iv44GU7b6
+         LEzA==
+X-Gm-Message-State: APjAAAVtuGZr7qZYxHIeusc15OTwq/C0bId5Usy0+1YpY2GBcPLzHB1f
+        HkzMHV5tzs2b8Wfl13PFzZzp1aAFXmBN0Nl+NVNLFg==
+X-Google-Smtp-Source: APXvYqzqgVb0Dn3nghpgE0JOdTaxD1sSLXcYeBJ5SaBwI3JLusskqPp89fKtEBxxBB3bkmRTm/7hKGIUPIpcjOs3bko=
+X-Received: by 2002:a9d:30c8:: with SMTP id r8mr4241297otg.363.1573663976870;
+ Wed, 13 Nov 2019 08:52:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191112151642.680072-1-arnd@arndb.de> <s5hk1847rvm.wl-tiwai@suse.de>
- <CAK8P3a2TMEUhzxH7RKvAW9STk33KrbCriUaQawOMffoFC6UTQw@mail.gmail.com> <s5hzhgzn304.wl-tiwai@suse.de>
-In-Reply-To: <s5hzhgzn304.wl-tiwai@suse.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 13 Nov 2019 17:51:57 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3n9hrb-qfAYW9=eYApSX=pkOK5p6iGe0T29-KqGuh0tg@mail.gmail.com>
-Message-ID: <CAK8P3a3n9hrb-qfAYW9=eYApSX=pkOK5p6iGe0T29-KqGuh0tg@mail.gmail.com>
-Subject: Re: [PATCH v6 0/8] Fix year 2038 issue for sound subsystem
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+ <20191004114330.104746-2-Jonathan.Cameron@huawei.com> <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
+ <20191113094742.00000dc4@huawei.com> <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
+In-Reply-To: <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Nov 2019 08:52:46 -0800
+Message-ID: <CAPcyv4i=Kkycy3YtU7FS-qG02CFjAQTcN7UaGjbKwDnNHDZCEA@mail.gmail.com>
+Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
+To:     Tao Xu <tao3.xu@intel.com>
+Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, Keith Busch <keith.busch@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linuxarm <linuxarm@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:r33Z/L5CeFRsFCL/axU0zmuUJkL1+klyya4lkMKgYcS5/v89FJH
- piQf6zzb9VQYDPIWXFtAZKaSXfHKIWRsRM+3S/2Kv7SUFoD8Xqk1R6glYs2+bNSjVDew3ds
- 8J3LbSLeABgwKLRdEbPViJk1sS2bMwE42ABaqsqMJf/YEUv3CWcr0Jbbih6ZrnscXwV4EvG
- 3755IPuUi1EPXtOeA0SyA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gxLy5lW0F4Q=:JsejDnTjOeDhVS4vUlAy1O
- K6aseI7DHl9+aK9i5wvGfpKFu01WmTRnBKiT36vwIAjbVJ2j75x9U4qZmnGpwNlKShIs7pcnN
- hQtltI5KmnspNS1mETr6SwQW93sRGrO5c0479mYOudktPZ9H+n2CL5aCTR4/Ocnpu/q3ARQEl
- LiNAiUw7SCVufMdRqBc6BFbxrpYSSR6FUUvI/j+TjSjdu8VHZOESttd4TtpIwmXqfrV+3J7pu
- IFK1OQpvT+k/2LTEJOAidU6HO8aBbfUzVb0buOyLQtqcV9PJKrZdko7ePbVXMG7zog0HqHJjv
- CHOgQTPy5Qz+TZkgO8JtVG4U6RdN8nTWExIhZpoOL7qGoSwuE081RSurEkYBHYmFdwGQCwJWQ
- Y/9TQ87B5WRLdThEjtKy4E8rU1I0Ufw4MFBR5XkmZhPMPgSWVu+wjvRCFPFziVEqxDGzTdXEe
- VRnWyqGZINp/3A/hW9dqbnPr6h71B+GMpkTft//BqUuSR/WT+LzLOi9BySK+iEvbUMG1C0sPx
- EnCgg/QRMkhwBFXY4+Bkqy5UCpkw4RXHdTnE5nLY61HtGOcIDdwI1ALmgBVENcX8SFp+yAtvq
- dqSRC9arpW7rvOz4kxtlbsunHsTGx1kK+FDGujHusS0Zy5BkuD8fDneqUkpu/4kWgSp5cKEFU
- KdajgE4+TdnYlmYqfcyNuVskXifUtJRMFnxdKki5V4DkvGWVSEzc6eeiPGj3EIv0/m5AUt7Jf
- FzcOB3VhRwbeq/1jS8cgyAR0LOjp9eZrfymk505xwO5nVKyweudjJIRYSeah1DkIKZG+2c75a
- iefhqxRWYOq5wpHY+60Pcg1Fv3kLRMTqhGpAimODHut+BeUNBvNe5xmeVzj8+e0bU8ZXsyBFp
- NYD0WPHVj425D/e1iBKQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 5:40 PM Takashi Iwai <tiwai@suse.de> wrote:
-> On Wed, 13 Nov 2019 15:32:44 +0100, Arnd Bergmann wrote:
-
-> > We had discussed alternatives for this one last time, and decided
-> > to go with the solution I posted here. The main alternative would
-> > be to change the 'timespec' in snd_timer_tread to a fixed-length
-> > structure based on two 'long' members. This would avoid the
-> > need to match the command with the time_t type, but the cost would
-> > be requiring CLOCK_MONOTONIC timestamps to avoid the
-> > overflow, and changing all application source code that requires
-> > the type to be compatible with 'timespec'.
+On Wed, Nov 13, 2019 at 5:57 AM Tao Xu <tao3.xu@intel.com> wrote:
 >
-> Fair enough.
->
-> One thing I forgot to mention: when we add/modify the ioctl or ABI, we
-> need to increment the protocol version, e.g. SNDRV_PCM_VERSION to
-> indicate user-space the supported ABI.  Please change these in your
-> next patches, too.
+> On 11/13/2019 5:47 PM, Jonathan Cameron wrote:
+> > On Tue, 12 Nov 2019 09:55:17 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> >> [ add Tao Xu ]
+> >>
+> >> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
+> >> <Jonathan.Cameron@huawei.com> wrote:
+> >>>
+> >>> Generic Initiators are a new ACPI concept that allows for the
+> >>> description of proximity domains that contain a device which
+> >>> performs memory access (such as a network card) but neither
+> >>> host CPU nor Memory.
+> >>>
+> >>> This patch has the parsing code and provides the infrastructure
+> >>> for an architecture to associate these new domains with their
+> >>> nearest memory processing node.
+> >>
+> >> Thanks for this Jonathan. May I ask how this was tested? Tao has been
+> >> working on qemu support for HMAT [1]. I have not checked if it already
+> >> supports generic initiator entries, but it would be helpful to include
+> >> an example of how the kernel sees these configurations in practice.
+> >>
+> >> [1]: http://patchwork.ozlabs.org/cover/1096737/
+> >
+> > Tested against qemu with SRAT and SLIT table overrides from an
+> > initrd to actually create the node and give it distances
+> > (those all turn up correctly in the normal places).  DSDT override
+> > used to move an emulated network card into the GI numa node.  That
+> > currently requires the PCI patch referred to in the cover letter.
+> > On arm64 tested both on qemu and real hardware (overrides on tables
+> > even for real hardware as I can't persuade our BIOS team to implement
+> > Generic Initiators until an OS is actually using them.)
+> >
+> > Main real requirement is memory allocations then occur from one of
+> > the nodes at the minimal distance when you are do a devm_ allocation
+> > from a device assigned. Also need to be able to query the distances
+> > to allow load balancing etc.  All that works as expected.
+> >
+> > It only has a fairly tangential connection to HMAT in that HMAT
+> > can provide information on GI nodes.  Given HMAT code is quite happy
+> > with memoryless nodes anyway it should work.  QEMU doesn't currently
+> > have support to create GI SRAT entries let alone HMAT using them.
+> >
+> > Whilst I could look at adding such support to QEMU, it's not
+> > exactly high priority to emulate something we can test easily
+> > by overriding the tables before the kernel reads them.
+> >
+> > I'll look at how hard it is to build an HMAT tables for my test
+> > configs based on the ones I used to test your HMAT patches a while
+> > back.  Should be easy if tedious.
+> >
+> > Jonathan
+> >
+> Indeed, HMAT can support Generic Initiator, but as far as I know, QEMU
+> only can emulate a node with cpu and memory, or memory-only. Even if we
+> assign a node with cpu only, qemu will raise error. Considering
+> compatibility, there are lots of work to do for QEMU if we change NUMA
+> or SRAT table.
 
-Just to confirm: this should be a simple one-line patch at the end of the
-series like
-
-diff --git a/tools/include/uapi/sound/asound.h
-b/tools/include/uapi/sound/asound.h
-index df1153cea0b7..72e8380c6dcd 100644
---- a/include/uapi/sound/asound.h
-+++ b/include/uapi/sound/asound.h
-@@ -154,7 +154,7 @@ struct snd_hwdep_dsp_image {
-  *                                                                           *
-  *****************************************************************************/
-
--#define SNDRV_PCM_VERSION              SNDRV_PROTOCOL_VERSION(2, 0, 14)
-+#define SNDRV_PCM_VERSION              SNDRV_PROTOCOL_VERSION(2, 0, 15)
-
- typedef unsigned long snd_pcm_uframes_t;
- typedef signed long snd_pcm_sframes_t;
-
-right? Most other kernel interfaces have no version numbering, so
-I don't know what policy you have here.
-
-        Arnd
+Thanks for the background. It would still be a useful feature to be
+able to define a memory + generic-initiator node in qemu. That will
+mirror real world accelerators with local memory configurations.
