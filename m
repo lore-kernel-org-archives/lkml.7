@@ -2,241 +2,142 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFF9C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70D7C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C04206EE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B91206EE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VuoILmIm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gAWOwtuF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfKMSXO (ORCPT
+        id S1728394AbfKMSZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:23:14 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:59134 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbfKMSXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:23:14 -0500
-Received: from zn.tnic (p200300EC2F0FA700D5A2A5422FC158AE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:a700:d5a2:a542:2fc1:58ae])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9842B1EC0CDA;
-        Wed, 13 Nov 2019 19:23:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573669392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=UKGEADetohk5qnCPK5X+HcgpaPOf5iaScVD2zi3G9cU=;
-        b=VuoILmImVGHmfiqvnbpZZdD8095ET1xkoBZuUD/WaoOUnEYmXBkCMNQM215PWj1wep434q
-        ELIldMMtM5Xlw8zi4oOMie7xRpPgNDBXvqD6zL8OyBeH4x/XjYmayI9XegTsNfAlvyI6DW
-        6RZPN1xtkDS+I+buWAhVOUYnm3RlBr4=
-Date:   Wed, 13 Nov 2019 19:23:07 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] x86/resctrl: Add task resctrl information display
-Message-ID: <20191113182306.GB1647@zn.tnic>
-References: <20191107032731.7790-1-yu.c.chen@intel.com>
+        Wed, 13 Nov 2019 13:25:23 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45149 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbfKMSZW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:25:22 -0500
+Received: by mail-pl1-f194.google.com with SMTP id w7so1393609plz.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:25:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8pwxLXS3yTtk2YEMUUCjQyP203hwLsDnQtk6QOIH+hQ=;
+        b=gAWOwtuF3lIquOQlfbbubJi3yzRbCWqpkHyHpURP0xiyYdIGDhL2M6a0HVtr6b0Nee
+         iacrhyDyGnXJrOQU5Ea08GGqdbt5SzT6nFBJ478ifj6tfAWTrf9E2dhS4CHCo0FG8GrC
+         H4ilLZIILSpwzFdlRVRfzIEJreuOREzxlUFVc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8pwxLXS3yTtk2YEMUUCjQyP203hwLsDnQtk6QOIH+hQ=;
+        b=f5OUa5+lNABNauEqrPEzn4WfCKV28oYyfbPXlBSNlUrj/x0Raklrv9Cqa9DxI+xSC0
+         l137v9byYt4skpZ6uIFN6sYTQ7YrcmeufhfaRRLFzc/k7fShtoLACXi0dHp7ky/GDhNU
+         HXJnJGn9dS5WIqgw5LwDcecxPuYrfcgrrurqMBXToNbmicwBIjYg8Iqm+PbATLHk5lMH
+         AAFqkYWd9zLtAB8fGz8PGLWubYotSUsrS86TeLJSZDTgxOvXrCDpcffgefJgNJmcBuy6
+         vhXj+LPua57zerAgH7L9rUdX7oB8sfQkX7LRVyRP4lA5cktjFgvrdroGGwK7GjnngONE
+         wtTA==
+X-Gm-Message-State: APjAAAXoiok9s4/pxXWlpyM4M6bc5pWNXTBjkTdXSIvfGdo1N/0co8nE
+        +jZni4M3W/VG/bp1LDPKvt1QSg==
+X-Google-Smtp-Source: APXvYqzFyWMtneWFouUDOfR0m5QsWLsUNEWASLVCp8b8qDMIjhCm38Rrg4qYd8K/ZGfuwpWmWeHLcw==
+X-Received: by 2002:a17:902:8a8b:: with SMTP id p11mr5284252plo.152.1573669521942;
+        Wed, 13 Nov 2019 10:25:21 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r13sm4130991pfg.3.2019.11.13.10.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 10:25:21 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Jo=C3=A3o=20Moreira?= <joao.moreira@intel.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: [PATCH v5 0/8] crypto: x86: Fix indirect function call casts
+Date:   Wed, 13 Nov 2019 10:25:08 -0800
+Message-Id: <20191113182516.13545-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191107032731.7790-1-yu.c.chen@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 11:27:31AM +0800, Chen Yu wrote:
-> Monitoring tools that want to find out which resctrl CTRL
-> and MONITOR groups a task belongs to must currently read
-> the "tasks" file in every group until they locate the process
-> ID.
-> 
-> Add an additional file /proc/{pid}/resctrl to provide this
-> information.
-> 
-> For example:
->  cat /proc/1193/resctrl
-> CTRL_MON:/ctrl_grp0
-> MON:/ctrl_grp0/mon_groups/mon_grp0
-> 
-> If the resctrl filesystem has not been mounted,
-> reading /proc/{pid}/resctrl returns an error:
-> cat: /proc/1193/resctrl: No such device
-> 
-> Tested-by: Jinshi Chen <jinshi.chen@intel.com>
-> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-> Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> 
-> ---
->  arch/x86/include/asm/resctrl_sched.h   |  4 +++
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 46 ++++++++++++++++++++++++++
->  fs/proc/base.c                         |  9 +++++
-   ^^^^^^^^^^^^^^^
+v5:
+- remove macros entirely and switch to declarations with common prototypes
+v4: https://lore.kernel.org/lkml/20191111214552.36717-1-keescook@chromium.org
+v3: https://lore.kernel.org/lkml/20190507161321.34611-1-keescook@chromium.org
 
-So you're touching this file here and yet your Cc list doesn't have
-*anyone* who might be responsible for the proc fs (yeah, you have
-linux-fsdevel but I don't think that's enough). Have you heard of
-scripts/get_maintainer.pl?
+Hi,
 
-Use it in the future.
+Now that Clang's CFI has been fixed to do the right thing with extern
+asm functions, this patch series is much simplified. Repeating patch
+1's commit log here:
 
-Cc-ing some more people for the generic /proc bits.
+    The crypto glue performed function prototype casting to make indirect
+    calls to assembly routines. Instead of performing casts at the call
+    sites (which trips Control Flow Integrity prototype checking), switch
+    each prototype to a common standard set of arguments which allows the
+    incremental removal of the existing macros. In order to keep pointer
+    math unchanged, internal casting between u128 pointers and u8 pointers
+    is added.
 
->  3 files changed, 59 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/resctrl_sched.h b/arch/x86/include/asm/resctrl_sched.h
-> index f6b7fe2833cc..bba362e0e00f 100644
-> --- a/arch/x86/include/asm/resctrl_sched.h
-> +++ b/arch/x86/include/asm/resctrl_sched.h
-> @@ -5,6 +5,7 @@
->  #ifdef CONFIG_X86_CPU_RESCTRL
->  
->  #include <linux/sched.h>
-> +#include <linux/proc_fs.h>
->  #include <linux/jump_label.h>
->  
->  #define IA32_PQR_ASSOC	0x0c8f
-> @@ -84,6 +85,9 @@ static inline void resctrl_sched_in(void)
->  		__resctrl_sched_in();
->  }
->  
-> +int proc_resctrl_show(struct seq_file *m, struct pid_namespace *ns,
-> +		      struct pid *pid, struct task_struct *tsk);
-> +
->  #else
->  
->  static inline void resctrl_sched_in(void) {}
-> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> index a46dee8e78db..2317174174e9 100644
-> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> @@ -727,6 +727,52 @@ static int rdtgroup_tasks_show(struct kernfs_open_file *of,
->  	return ret;
->  }
->  
-> +int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
-> +		      struct pid *pid, struct task_struct *tsk)
-> +{
-> +	struct rdtgroup *rdtg;
-> +	int ret = 0;
-> +
-> +	mutex_lock(&rdtgroup_mutex);
-> +
-> +	/* Make sure resctrl has been mounted. */
-> +	if (!static_branch_unlikely(&rdt_enable_key)) {
-> +		ret = -ENODEV;
-> +		goto unlock;
-> +	}
-> +
-> +	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
-> +		struct rdtgroup *crg;
-> +
-> +		/*
-> +		 * Task information is only relevant for shareable
-> +		 * and exclusive groups.
-> +		 */
-> +		if (rdtg->mode != RDT_MODE_SHAREABLE &&
-> +		    rdtg->mode != RDT_MODE_EXCLUSIVE)
-> +			continue;
-> +
-> +		if (rdtg->closid == tsk->closid) {
+With this series (and the Clang LTO+CFI series) I am able to boot x86
+with all crytpo selftests enabled without tripping any CFI checks.
 
-Save an indentation level:
+Thanks!
 
-		if (rdtg->closid != tsk->closid)
-			continue;
+-Kees
 
-		seq_printf...
+Kees Cook (8):
+  crypto: x86/glue_helper: Regularize function prototypes
+  crypto: x86/serpent: Remove glue function macros usage
+  crypto: x86/camellia: Remove glue function macro usage
+  crypto: x86/twofish: Remove glue function macro usage
+  crypto: x86/cast6: Remove glue function macro usage
+  crypto: x86/aesni: Remove glue function macro usage
+  crypto: x86/glue_helper: Remove function prototype cast helpers
+  crypto, x86/sha: Eliminate casts on asm implementations
 
-> +			seq_printf(s, "CTRL_MON:/%s\n", rdtg->kn->name);
-> +			list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
-> +					    mon.crdtgrp_list) {
-> +				if (tsk->rmid != crg->mon.rmid)
-> +					continue;
-> +				seq_printf(s, "MON:%s%s/mon_groups/%s\n",
-> +					   rdtg == &rdtgroup_default ? "" : "/",
-> +					   rdtg->kn->name, crg->kn->name);
-> +				goto unlock;
-> +			}
-> +			goto unlock;
-> +		}
-> +	}
-> +	ret = -ENOENT;
-> +unlock:
-> +	mutex_unlock(&rdtgroup_mutex);
-> +
-> +	return ret;
-> +}
-> +
->  static int rdt_last_cmd_status_show(struct kernfs_open_file *of,
->  				    struct seq_file *seq, void *v)
->  {
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index ebea9501afb8..d8a61db78db5 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -95,6 +95,9 @@
->  #include <linux/sched/stat.h>
->  #include <linux/posix-timers.h>
->  #include <trace/events/oom.h>
-> +#ifdef CONFIG_X86_CPU_RESCTRL
-> +#include <asm/resctrl_sched.h>
-> +#endif
-
-If anything, this should be abstracted nicely into an
-include/linux/resctrl.h header. Other architectures would probably wanna
-use it too, I hear ARM64 has something like resctrl.
-
->  #include "internal.h"
->  #include "fd.h"
->  
-> @@ -3060,6 +3063,9 @@ static const struct pid_entry tgid_base_stuff[] = {
->  #endif
->  #ifdef CONFIG_CGROUPS
->  	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
-> +#endif
-> +#ifdef CONFIG_X86_CPU_RESCTRL
-> +	ONE("resctrl", S_IRUGO, proc_resctrl_show),
->  #endif
->  	ONE("oom_score",  S_IRUGO, proc_oom_score),
->  	REG("oom_adj",    S_IRUGO|S_IWUSR, proc_oom_adj_operations),
-> @@ -3460,6 +3466,9 @@ static const struct pid_entry tid_base_stuff[] = {
->  #endif
->  #ifdef CONFIG_CGROUPS
->  	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
-> +#endif
-> +#ifdef CONFIG_X86_CPU_RESCTRL
-> +	ONE("resctrl", S_IRUGO, proc_resctrl_show),
->  #endif
-
-Same here. proc_resctrl_show() looks like a generic function but it
-is x86-only. Need to call the x86-specific one in a real generic
-proc_resctrl_show() which other arches can add their code to, too.
-
-Not like that.
+ arch/x86/crypto/aesni-intel_glue.c         | 45 ++++++-------
+ arch/x86/crypto/camellia_aesni_avx2_glue.c | 74 ++++++++++-----------
+ arch/x86/crypto/camellia_aesni_avx_glue.c  | 74 ++++++++++-----------
+ arch/x86/crypto/camellia_glue.c            | 45 +++++++------
+ arch/x86/crypto/cast6_avx_glue.c           | 70 ++++++++++----------
+ arch/x86/crypto/glue_helper.c              | 13 ++--
+ arch/x86/crypto/serpent_avx2_glue.c        | 65 +++++++++---------
+ arch/x86/crypto/serpent_avx_glue.c         | 72 ++++++++++----------
+ arch/x86/crypto/serpent_sse2_glue.c        | 31 +++++----
+ arch/x86/crypto/sha1_ssse3_glue.c          | 61 +++++++----------
+ arch/x86/crypto/sha256_ssse3_glue.c        | 31 ++++-----
+ arch/x86/crypto/sha512_ssse3_glue.c        | 28 ++++----
+ arch/x86/crypto/twofish_avx_glue.c         | 76 ++++++++++------------
+ arch/x86/crypto/twofish_glue_3way.c        | 38 ++++++-----
+ arch/x86/include/asm/crypto/camellia.h     | 64 ++++++++----------
+ arch/x86/include/asm/crypto/glue_helper.h  | 11 +---
+ arch/x86/include/asm/crypto/serpent-avx.h  | 36 +++++-----
+ arch/x86/include/asm/crypto/serpent-sse2.h |  6 +-
+ arch/x86/include/asm/crypto/twofish.h      | 20 +++---
+ crypto/cast6_generic.c                     |  6 +-
+ crypto/serpent_generic.c                   |  6 +-
+ include/crypto/cast6.h                     |  4 +-
+ include/crypto/serpent.h                   |  4 +-
+ include/crypto/xts.h                       |  2 -
+ 24 files changed, 409 insertions(+), 473 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
