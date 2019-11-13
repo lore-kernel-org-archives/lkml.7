@@ -6,240 +6,228 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61535C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9ADBC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA9C21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B461921A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfKMAt1 (ORCPT
+        id S1727229AbfKMAt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 12 Nov 2019 19:49:27 -0500
 Received: from mga03.intel.com ([134.134.136.65]:40344 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfKMAt0 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:49:26 -0500
+        id S1726986AbfKMAt1 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:49:27 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 16:49:25 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 16:49:26 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,298,1569308400"; 
-   d="scan'208";a="229587800"
+   d="scan'208";a="229587804"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Nov 2019 16:49:23 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 12 Nov 2019 16:49:25 -0800
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 1/2] perf util: Move block tui function to ui browsers
-Date:   Wed, 13 Nov 2019 08:48:51 +0800
-Message-Id: <20191113004852.21265-1-yao.jin@linux.intel.com>
+Subject: [PATCH v1 2/2] perf report: Jump to symbol source view from total cycles view
+Date:   Wed, 13 Nov 2019 08:48:52 +0800
+Message-Id: <20191113004852.21265-2-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191113004852.21265-1-yao.jin@linux.intel.com>
+References: <20191113004852.21265-1-yao.jin@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be nice if we could jump to the assembler/source view
-(like the normal perf report) from total cycles view.
+This patch supports jumping from tui total cycles view to symbol
+source view.
 
-This patch moves the block_hists_tui_browse from block-info.c
-to ui/browsers/hists.c in order to reuse some browser codes
-(i.e do_annotate) for implementing new annotation view.
+For example,
+
+perf record -b ./div
+perf report --total-cycles
+
+In total cycles view, we can select one entry and press 'a' or
+press ENTER key to jump to symbol source view.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/ui/browsers/hists.c | 55 ++++++++++++++++++++++++++++
- tools/perf/util/block-info.c   | 65 +---------------------------------
- tools/perf/util/hist.h         | 12 +++++++
- 3 files changed, 68 insertions(+), 64 deletions(-)
+ tools/perf/builtin-report.c    |  9 ++++++---
+ tools/perf/ui/browsers/hists.c | 25 +++++++++++++++++++++++--
+ tools/perf/util/block-info.c   |  6 ++++--
+ tools/perf/util/block-info.h   |  3 ++-
+ tools/perf/util/hist.h         |  7 +++++--
+ 5 files changed, 40 insertions(+), 10 deletions(-)
 
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 1e81985b7d56..ceebea4013ca 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -493,7 +493,9 @@ static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
+ 
+ 	evlist__for_each_entry(evlist, pos) {
+ 		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
+-						 rep->min_percent, pos);
++						 rep->min_percent, pos,
++						 &rep->session->header.env,
++						 &rep->annotation_opts);
+ 		if (ret != 0)
+ 			return ret;
+ 	}
+@@ -525,7 +527,8 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+ 
+ 		if (rep->total_cycles_mode) {
+ 			report__browse_block_hists(&rep->block_reports[i++].hist,
+-						   rep->min_percent, pos);
++						   rep->min_percent, pos,
++						   NULL, NULL);
+ 			continue;
+ 		}
+ 
+@@ -1418,7 +1421,7 @@ int cmd_report(int argc, const char **argv)
+ 		if (sort__mode != SORT_MODE__BRANCH)
+ 			report.total_cycles_mode = false;
+ 		else
+-			sort_order = "sym";
++			sort_order = NULL;
+ 	}
+ 
+ 	if (strcmp(input_name, "-") != 0)
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 334afc2139e7..04301303c246 100644
+index 04301303c246..31fc5d589128 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -3448,3 +3448,58 @@ int perf_evlist__tui_browse_hists(struct evlist *evlist, const char *help,
- 					       warn_lost_event,
- 					       annotation_opts);
+@@ -2385,7 +2385,11 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+ 	if (!notes->src)
+ 		return 0;
+ 
+-	evsel = hists_to_evsel(browser->hists);
++	if (browser->block_evsel)
++		evsel = browser->block_evsel;
++	else
++		evsel = hists_to_evsel(browser->hists);
++
+ 	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt,
+ 				       browser->annotation_opts);
+ 	he = hist_browser__selected_entry(browser);
+@@ -3465,11 +3469,13 @@ static int block_hists_browser__title(struct hist_browser *browser, char *bf,
  }
+ 
+ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+-			   float min_percent)
++			   float min_percent, struct perf_env *env,
++			   struct annotation_options *annotation_opts)
+ {
+ 	struct hists *hists = &bh->block_hists;
+ 	struct hist_browser *browser;
+ 	int key = -1;
++	struct popup_action action;
+ 	static const char help[] =
+ 	" q             Quit \n";
+ 
+@@ -3480,11 +3486,15 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+ 	browser->block_evsel = evsel;
+ 	browser->title = block_hists_browser__title;
+ 	browser->min_pcnt = min_percent;
++	browser->env = env;
++	browser->annotation_opts = annotation_opts;
+ 
+ 	/* reset abort key so that it can get Ctrl-C as a key */
+ 	SLang_reset_tty();
+ 	SLang_init_tty(0, 0, 0);
+ 
++	memset(&action, 0, sizeof(action));
 +
-+static int block_hists_browser__title(struct hist_browser *browser, char *bf,
-+				      size_t size)
-+{
-+	struct hists *hists = evsel__hists(browser->block_evsel);
-+	const char *evname = perf_evsel__name(browser->block_evsel);
-+	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
-+	int ret;
+ 	while (1) {
+ 		key = hist_browser__run(browser, "? - help", true);
+ 
+@@ -3494,6 +3504,17 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+ 		case '?':
+ 			ui_browser__help_window(&browser->b, help);
+ 			break;
++		case 'a':
++		case K_ENTER:
++			if (!browser->selection ||
++			    !browser->selection->sym) {
++				continue;
++			}
 +
-+	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
-+	if (evname)
-+		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
-+
-+	return 0;
-+}
-+
-+int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
-+			   float min_percent)
-+{
-+	struct hists *hists = &bh->block_hists;
-+	struct hist_browser *browser;
-+	int key = -1;
-+	static const char help[] =
-+	" q             Quit \n";
-+
-+	browser = hist_browser__new(hists);
-+	if (!browser)
-+		return -1;
-+
-+	browser->block_evsel = evsel;
-+	browser->title = block_hists_browser__title;
-+	browser->min_pcnt = min_percent;
-+
-+	/* reset abort key so that it can get Ctrl-C as a key */
-+	SLang_reset_tty();
-+	SLang_init_tty(0, 0, 0);
-+
-+	while (1) {
-+		key = hist_browser__run(browser, "? - help", true);
-+
-+		switch (key) {
-+		case 'q':
-+			goto out;
-+		case '?':
-+			ui_browser__help_window(&browser->b, help);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+out:
-+	hist_browser__delete(browser);
-+	return 0;
-+}
++			action.ms.map = browser->selection->map;
++			action.ms.sym = browser->selection->sym;
++			do_annotate(browser, &action);
++			continue;
+ 		default:
+ 			break;
+ 		}
 diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 9abc201ebe63..5887f8f9149f 100644
+index 5887f8f9149f..c4b030bf6ec2 100644
 --- a/tools/perf/util/block-info.c
 +++ b/tools/perf/util/block-info.c
-@@ -10,6 +10,7 @@
- #include "map.h"
- #include "srcline.h"
- #include "evlist.h"
-+#include "hist.h"
- #include "ui/browsers/hists.h"
- 
- static struct block_header_column {
-@@ -439,70 +440,6 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- 	return block_reports;
+@@ -441,7 +441,8 @@ struct block_report *block_info__create_report(struct evlist *evlist,
  }
  
--#ifdef HAVE_SLANG_SUPPORT
--static int block_hists_browser__title(struct hist_browser *browser, char *bf,
--				      size_t size)
--{
--	struct hists *hists = evsel__hists(browser->block_evsel);
--	const char *evname = perf_evsel__name(browser->block_evsel);
--	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
--	int ret;
--
--	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
--	if (evname)
--		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
--
--	return 0;
--}
--
--static int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
--				  float min_percent)
--{
--	struct hists *hists = &bh->block_hists;
--	struct hist_browser *browser;
--	int key = -1;
--	static const char help[] =
--	" q             Quit \n";
--
--	browser = hist_browser__new(hists);
--	if (!browser)
--		return -1;
--
--	browser->block_evsel = evsel;
--	browser->title = block_hists_browser__title;
--	browser->min_pcnt = min_percent;
--
--	/* reset abort key so that it can get Ctrl-C as a key */
--	SLang_reset_tty();
--	SLang_init_tty(0, 0, 0);
--
--	while (1) {
--		key = hist_browser__run(browser, "? - help", true);
--
--		switch (key) {
--		case 'q':
--			goto out;
--		case '?':
--			ui_browser__help_window(&browser->b, help);
--			break;
--		default:
--			break;
--		}
--	}
--
--out:
--	hist_browser__delete(browser);
--	return 0;
--}
--#else
--static int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
--				  struct evsel *evsel __maybe_unused,
--				  float min_percent __maybe_unused)
--{
--	return 0;
--}
--#endif
--
  int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 			       struct evsel *evsel)
+-			       struct evsel *evsel)
++			       struct evsel *evsel, struct perf_env *env,
++			       struct annotation_options *annotation_opts)
  {
+ 	int ret;
+ 
+@@ -454,7 +455,8 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
+ 		return 0;
+ 	case 1:
+ 		symbol_conf.report_individual_block = true;
+-		ret = block_hists_tui_browse(bh, evsel, min_percent);
++		ret = block_hists_tui_browse(bh, evsel, min_percent,
++					     env, annotation_opts);
+ 		hists__delete_entries(&bh->block_hists);
+ 		return ret;
+ 	default:
+diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
+index e4d20bccd9b6..bef0d75e9819 100644
+--- a/tools/perf/util/block-info.h
++++ b/tools/perf/util/block-info.h
+@@ -71,7 +71,8 @@ struct block_report *block_info__create_report(struct evlist *evlist,
+ 					       u64 total_cycles);
+ 
+ int report__browse_block_hists(struct block_hist *bh, float min_percent,
+-			       struct evsel *evsel);
++			       struct evsel *evsel, struct perf_env *env,
++			       struct annotation_options *annotation_opts);
+ 
+ float block_info__total_cycles_percent(struct hist_entry *he);
+ 
 diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 4d87c7b4c1b2..e8b3122a30a7 100644
+index e8b3122a30a7..5bf122042c01 100644
 --- a/tools/perf/util/hist.h
 +++ b/tools/perf/util/hist.h
-@@ -449,6 +449,8 @@ enum rstype {
- 	A_SOURCE
- };
- 
-+struct block_hist;
-+
- #ifdef HAVE_SLANG_SUPPORT
- #include "../ui/keysyms.h"
- void attr_to_script(char *buf, struct perf_event_attr *attr);
-@@ -474,6 +476,9 @@ void run_script(char *cmd);
- int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		      struct evsel *evsel, enum rstype rstype);
+@@ -478,7 +478,8 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
  void res_sample_init(void);
-+
-+int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
-+			   float min_percent);
+ 
+ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+-			   float min_percent);
++			   float min_percent, struct perf_env *env,
++			   struct annotation_options *annotation_opts);
  #else
  static inline
  int perf_evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
-@@ -518,6 +523,13 @@ static inline int res_sample_browse(struct res_sample *res_samples __maybe_unuse
+@@ -525,7 +526,9 @@ static inline void res_sample_init(void) {}
  
- static inline void res_sample_init(void) {}
- 
-+int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
-+			   struct evsel *evsel __maybe_unused,
-+			   float min_percent __maybe_unused)
-+{
-+	return 0;
-+}
-+
- #define K_LEFT  -1000
- #define K_RIGHT -2000
- #define K_SWITCH_INPUT_DATA -3000
+ int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
+ 			   struct evsel *evsel __maybe_unused,
+-			   float min_percent __maybe_unused)
++			   float min_percent __maybe_unused,
++			   struct perf_env *env __maybe_unused,
++			   struct annotation_options *annotation_opts)
+ {
+ 	return 0;
+ }
 -- 
 2.17.1
 
