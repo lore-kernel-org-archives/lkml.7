@@ -2,133 +2,103 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B56C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCC1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B796222C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9111F21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:46:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ErVtDEnl";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nucpMfuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfKMGnw (ORCPT
+        id S1726392AbfKMGq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:43:52 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37782 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfKMGnw (ORCPT
+        Wed, 13 Nov 2019 01:46:28 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:44012 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfKMGq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:43:52 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d5so1244639ljl.4;
-        Tue, 12 Nov 2019 22:43:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=eleBs2EZgeGxIdjnJxRUDgNR0QCEuHcKtl+2MMsiu+k=;
-        b=CKLN1WWya4db7NlFWfND/NCsqsaMf+8NB6E27+MwdsNvAxqhP1YL+CheUb9KbyCZi5
-         p5fbwidJrCng5XE3vyjjm4O2ciVoDC6nuBwLz3Wqw6F3CS1H/rRPuDe3txKl4iax7A2B
-         FACJ1S9ErnK5iWa0ojtK//v2muhOnZhb9COPdLK20VIbNft4y0S2Jd6ex4ueeo1ISgWQ
-         92mYSwUVnk//irmXp2eieS3kb8H/niqRbANWH9LYihT71vmf3nD3kxHLFi/Y19cx9s+c
-         56jXV+tzcteOODQyIzgQ5wBmAZph/vcyFT4EFpTL+buFbhw42ny6Oo1T5Hc8IPB0Z4ze
-         A9Dg==
-X-Gm-Message-State: APjAAAWWgOrPxyZlH3aX0AmL5AWs71OZm+JfU/q8XnQnJVpsBaHuja9A
-        nK43CXFX09hdT39uJU4ZvBNfD+vauKE=
-X-Google-Smtp-Source: APXvYqzfHxLlPwdFw2DoXrFuJQBzFi2hHUa+ERPi2s1nSF9oBLUW98LODz/V3AZQroxmCtcGB1zjZg==
-X-Received: by 2002:a2e:9ad8:: with SMTP id p24mr1279835ljj.114.1573627430381;
-        Tue, 12 Nov 2019 22:43:50 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id b28sm472234ljp.9.2019.11.12.22.43.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 22:43:49 -0800 (PST)
-Date:   Wed, 13 Nov 2019 08:43:38 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] of: property: Fix documentation for out values
-Message-ID: <20191113064338.GA13274@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 13 Nov 2019 01:46:28 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9DE7F607C6; Wed, 13 Nov 2019 06:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573627587;
+        bh=jx/SmZAawFg/FnEm6roPssceTWagqsaNGcQB2jC2CHU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ErVtDEnlwkWs/Zb75oVW25mqYMk3x5q9r2Pvc4APPG1Jr+ap6L28HPlw4VQBGO1tR
+         3TIOigsZRd4wTzal5u/BxKQ6ukCDspyrFJsNCQpXzebVmx6Gk8qjO8ZMcEdAYA+0uA
+         1tSniIBNU769dri6Z/+BVYN/mNx47wCsme0p/q5c=
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E54876025A;
+        Wed, 13 Nov 2019 06:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573627586;
+        bh=jx/SmZAawFg/FnEm6roPssceTWagqsaNGcQB2jC2CHU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nucpMfukQCSI79i7LZevhREmB1OhyyC3Q82z5D657N6xVPAp4U6piXWiztX0wSONe
+         Txqj//gV5cmj3TrHNAaF+83efwnUak8pJd7FgrPuA3+2xNO4rJ6f3Pc0DobrQIvYN+
+         v7/hGvOnVJcDYR3fS2nq/rkLT05RWi7BND+7OECM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E54876025A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 1/7] scsi: ufs: Add device reset in link recovery path
+Date:   Tue, 12 Nov 2019 22:45:45 -0800
+Message-Id: <1573627552-12615-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1573627552-12615-1-git-send-email-cang@codeaurora.org>
+References: <1573627552-12615-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Property fetching functions which return number of successfully fetched
-properties should not state that out-values are only modified if 0 is
-returned. Fix this. Also, "pointer to return value" is slightly suboptimal
-phrase as "return value" commonly refers to value function returns (not via
-arguments). Rather use "pointer to found values".
+In order to recover from hibern8 exit failure, perform a reset in
+link recovery path before issuing link start-up.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
 ---
+ drivers/scsi/ufs/ufshcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes from v1. Removed statement about modifying arg ptr only upon
-successful execution (as requested by Frank). Also changed "pointer to
-return value" with "pointer to found values"
-
- drivers/of/property.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index d7fa75e31f22..c1dd22ed03f3 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -164,7 +164,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u64_index);
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-- * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @out_values:	pointer to found values.
-  * @sz_min:	minimum number of array elements to read
-  * @sz_max:	maximum number of array elements to read, if zero there is no
-  *		upper limit on the number of elements in the dts entry but only
-@@ -212,7 +212,7 @@ EXPORT_SYMBOL_GPL(of_property_read_variable_u8_array);
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-- * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @out_values:	pointer to found values.
-  * @sz_min:	minimum number of array elements to read
-  * @sz_max:	maximum number of array elements to read, if zero there is no
-  *		upper limit on the number of elements in the dts entry but only
-@@ -260,7 +260,7 @@ EXPORT_SYMBOL_GPL(of_property_read_variable_u16_array);
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-- * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @out_values:	pointer to return found values.
-  * @sz_min:	minimum number of array elements to read
-  * @sz_max:	maximum number of array elements to read, if zero there is no
-  *		upper limit on the number of elements in the dts entry but only
-@@ -334,7 +334,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u64);
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-- * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @out_values:	pointer to found values.
-  * @sz_min:	minimum number of array elements to read
-  * @sz_max:	maximum number of array elements to read, if zero there is no
-  *		upper limit on the number of elements in the dts entry but only
-
-base-commit: 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c28c144..525f8e6 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -3859,6 +3859,9 @@ static int ufshcd_link_recovery(struct ufs_hba *hba)
+ 	ufshcd_set_eh_in_progress(hba);
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 
++	/* Reset the attached device */
++	ufshcd_vops_device_reset(hba);
++
+ 	ret = ufshcd_host_reset_and_restore(hba);
+ 
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
 -- 
-2.21.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
