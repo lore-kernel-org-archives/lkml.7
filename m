@@ -2,51 +2,54 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47273C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C469C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16473222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A4722467
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610036;
-	bh=NouXRorkRrtpgDixB7XImri5OC4Rykp1q93l1bDDyYU=;
+	s=default; t=1573610041;
+	bh=7kkQdKM17MDDKEtGn+Zxkx5RKER3gUy2kCYhpw782+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6uaYoHeOA2iQsSLosMu/lrLPkT5JnpW95UHxbN9F38KqySqsigDkqdlyfHMi9UML
-	 06GzzRf6ZQssXB9izfHTe6pEGmuXuLN19dBo99R1Q5rLdAMkGFSfsZr4VBvgrcJ/od
-	 Q/91cxm2GJIMfX8uVevlQrj858JuVqXn9HwiVvNU=
+	b=LtNLObrLoiEY4rEF/f40/YzIv9HWkRgGUNXWv9kGZavBnWYy+W8U6rDxW9doGQZHd
+	 ZdfNGjGEBXQqdGbEkyCKxcgPYZ8kQYdX8hX6FAjeXu+Gqk9zefdvOIZ2yT2jVeOM0Z
+	 1EVWdDGcsL2xIAmpipfhdOHkmH4p3d7e93M4eytQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbfKMBxy (ORCPT
+        id S1728726AbfKMBx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:53:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43666 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:53:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbfKMBxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:42 -0500
+        id S1728686AbfKMBxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F383222CD;
-        Wed, 13 Nov 2019 01:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0F67222CD;
+        Wed, 13 Nov 2019 01:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610022;
-        bh=NouXRorkRrtpgDixB7XImri5OC4Rykp1q93l1bDDyYU=;
+        s=default; t=1573610030;
+        bh=7kkQdKM17MDDKEtGn+Zxkx5RKER3gUy2kCYhpw782+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pcg1bHC1Z2DASpuAe678wbG2I95Unqb1w9un7phbNKO6BxJc1VJDvUtmilQLwuDWa
-         VrXdwHKfg6tVDkQFCw+w0ww9bZvtEyqxZW28/RW4xNoTZ6d5Cnhc9myoO6V86E3cuF
-         vIMp9VR0FulJ4JVnAx8J54XQbn0vdmZbF/kWBLOM=
+        b=azWy3I/gL/mms2CtiGKHtEGeZpddEd9BKaVm3rARQ1SwHULq+838OppUiFxoiFJ6n
+         K7rWjSvB28sSHFBGK2lU9QJzqrOWlP2qfc9U6D3/cOkLpcOgiGdgcg+saEAg2dLeNi
+         y2J8EkSbYwDUvLYwTPr0T0Q+cPYTyNy+FZWGduuc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 122/209] soc: fsl: bman_portals: defer probe after bman's probe
-Date:   Tue, 12 Nov 2019 20:48:58 -0500
-Message-Id: <20191113015025.9685-122-sashal@kernel.org>
+Cc:     Davide Caratti <dcaratti@redhat.com>,
+        Lucas Bates <lucasb@mojatatu.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 124/209] tc-testing: fix build of eBPF programs
+Date:   Tue, 12 Nov 2019 20:49:00 -0500
+Message-Id: <20191113015025.9685-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,46 +62,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit e0940b34c40e95d1879691d2474d182c57aae0de ]
+[ Upstream commit cf5eafbfa586d030f9321cee516b91d089e38280 ]
 
-A crash in bman portal probing could not be triggered (as is the case
-with qman portals) but it does make calls [1] into the bman driver so
-lets make sure the bman portal probing happens after bman's.
+rely on uAPI headers in the current kernel tree, rather than requiring the
+correct version installed on the test system. While at it, group all
+sections in a single binary and test the 'section' parameter.
 
-[1]  bman_p_irqsource_add() (in bman) called by:
-       init_pcfg() called by:
-         bman_portal_probe()
-
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+Reported-by: Lucas Bates <lucasb@mojatatu.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/qbman/bman_portal.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../testing/selftests/tc-testing/bpf/Makefile | 29 +++++++++++++++++++
+ .../testing/selftests/tc-testing/bpf/action.c | 23 +++++++++++++++
+ .../tc-testing/tc-tests/actions/bpf.json      | 16 +++++-----
+ .../selftests/tc-testing/tdc_config.py        |  4 ++-
+ 4 files changed, 63 insertions(+), 9 deletions(-)
+ create mode 100644 tools/testing/selftests/tc-testing/bpf/Makefile
+ create mode 100644 tools/testing/selftests/tc-testing/bpf/action.c
 
-diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
-index 2f71f7df3465a..f9edd28894fda 100644
---- a/drivers/soc/fsl/qbman/bman_portal.c
-+++ b/drivers/soc/fsl/qbman/bman_portal.c
-@@ -91,7 +91,15 @@ static int bman_portal_probe(struct platform_device *pdev)
- 	struct device_node *node = dev->of_node;
- 	struct bm_portal_config *pcfg;
- 	struct resource *addr_phys[2];
--	int irq, cpu;
-+	int irq, cpu, err;
+diff --git a/tools/testing/selftests/tc-testing/bpf/Makefile b/tools/testing/selftests/tc-testing/bpf/Makefile
+new file mode 100644
+index 0000000000000..dc92eb271d9a1
+--- /dev/null
++++ b/tools/testing/selftests/tc-testing/bpf/Makefile
+@@ -0,0 +1,29 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+	err = bman_is_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failing probe due to bman probe error\n");
-+		return -ENODEV;
-+	}
++APIDIR := ../../../../include/uapi
++TEST_GEN_FILES = action.o
++
++top_srcdir = ../../../../..
++include ../../lib.mk
++
++CLANG ?= clang
++LLC   ?= llc
++PROBE := $(shell $(LLC) -march=bpf -mcpu=probe -filetype=null /dev/null 2>&1)
++
++ifeq ($(PROBE),)
++  CPU ?= probe
++else
++  CPU ?= generic
++endif
++
++CLANG_SYS_INCLUDES := $(shell $(CLANG) -v -E - </dev/null 2>&1 \
++	| sed -n '/<...> search starts here:/,/End of search list./{ s| \(/.*\)|-idirafter \1|p }')
++
++CLANG_FLAGS = -I. -I$(APIDIR) \
++	      $(CLANG_SYS_INCLUDES) \
++	      -Wno-compare-distinct-pointer-types
++
++$(OUTPUT)/%.o: %.c
++	$(CLANG) $(CLANG_FLAGS) \
++		 -O2 -target bpf -emit-llvm -c $< -o - |      \
++	$(LLC) -march=bpf -mcpu=$(CPU) $(LLC_FLAGS) -filetype=obj -o $@
+diff --git a/tools/testing/selftests/tc-testing/bpf/action.c b/tools/testing/selftests/tc-testing/bpf/action.c
+new file mode 100644
+index 0000000000000..c32b99b80e19e
+--- /dev/null
++++ b/tools/testing/selftests/tc-testing/bpf/action.c
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0
++ * Copyright (c) 2018 Davide Caratti, Red Hat inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of version 2 of the GNU General Public
++ * License as published by the Free Software Foundation.
++ */
++
++#include <linux/bpf.h>
++#include <linux/pkt_cls.h>
++
++__attribute__((section("action-ok"),used)) int action_ok(struct __sk_buff *s)
++{
++	return TC_ACT_OK;
++}
++
++__attribute__((section("action-ko"),used)) int action_ko(struct __sk_buff *s)
++{
++	s->data = 0x0;
++	return TC_ACT_OK;
++}
++
++char _license[] __attribute__((section("license"),used)) = "GPL";
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json b/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
+index 6f289a49e5ecf..1a9b282dd0be2 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
+@@ -55,7 +55,7 @@
+             "bpf"
+         ],
+         "setup": [
+-            "printf '#include <linux/bpf.h>\nchar l[] __attribute__((section(\"license\"),used))=\"GPL\"; __attribute__((section(\"action\"),used)) int m(struct __sk_buff *s) { return 2; }' | clang -O2 -x c -c - -target bpf -o _b.o",
++            "make -C bpf",
+             [
+                 "$TC action flush action bpf",
+                 0,
+@@ -63,14 +63,14 @@
+                 255
+             ]
+         ],
+-        "cmdUnderTest": "$TC action add action bpf object-file _b.o index 667",
++        "cmdUnderTest": "$TC action add action bpf object-file $EBPFDIR/action.o section action-ok index 667",
+         "expExitCode": "0",
+         "verifyCmd": "$TC action get action bpf index 667",
+-        "matchPattern": "action order [0-9]*: bpf _b.o:\\[action\\] id [0-9]* tag 3b185187f1855c4c( jited)? default-action pipe.*index 667 ref",
++        "matchPattern": "action order [0-9]*: bpf action.o:\\[action-ok\\] id [0-9]* tag [0-9a-f]{16}( jited)? default-action pipe.*index 667 ref",
+         "matchCount": "1",
+         "teardown": [
+             "$TC action flush action bpf",
+-            "rm -f _b.o"
++            "make -C bpf clean"
+         ]
+     },
+     {
+@@ -81,7 +81,7 @@
+             "bpf"
+         ],
+         "setup": [
+-            "printf '#include <linux/bpf.h>\nchar l[] __attribute__((section(\"license\"),used))=\"GPL\"; __attribute__((section(\"action\"),used)) int m(struct __sk_buff *s) { s->data = 0x0; return 2; }' | clang -O2 -x c -c - -target bpf -o _c.o",
++            "make -C bpf",
+             [
+                 "$TC action flush action bpf",
+                 0,
+@@ -89,10 +89,10 @@
+                 255
+             ]
+         ],
+-        "cmdUnderTest": "$TC action add action bpf object-file _c.o index 667",
++        "cmdUnderTest": "$TC action add action bpf object-file $EBPFDIR/action.o section action-ko index 667",
+         "expExitCode": "255",
+         "verifyCmd": "$TC action get action bpf index 667",
+-        "matchPattern": "action order [0-9]*: bpf _c.o:\\[action\\] id [0-9].*index 667 ref",
++        "matchPattern": "action order [0-9]*: bpf action.o:\\[action-ko\\] id [0-9].*index 667 ref",
+         "matchCount": "0",
+         "teardown": [
+             [
+@@ -101,7 +101,7 @@
+                 1,
+                 255
+             ],
+-            "rm -f _c.o"
++            "make -C bpf clean"
+         ]
+     },
+     {
+diff --git a/tools/testing/selftests/tc-testing/tdc_config.py b/tools/testing/selftests/tc-testing/tdc_config.py
+index a023d0d62b25c..d651bc1501bdb 100644
+--- a/tools/testing/selftests/tc-testing/tdc_config.py
++++ b/tools/testing/selftests/tc-testing/tdc_config.py
+@@ -16,7 +16,9 @@ NAMES = {
+           'DEV2': '',
+           'BATCH_FILE': './batch.txt',
+           # Name of the namespace to use
+-          'NS': 'tcut'
++          'NS': 'tcut',
++          # Directory containing eBPF test programs
++          'EBPFDIR': './bpf'
+         }
  
- 	pcfg = devm_kmalloc(dev, sizeof(*pcfg), GFP_KERNEL);
- 	if (!pcfg)
+ 
 -- 
 2.20.1
 
