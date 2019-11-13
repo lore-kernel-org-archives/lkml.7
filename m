@@ -2,250 +2,180 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA15FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2CBC17449
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE22A222D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE45D222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:12:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tGXerBJ7"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SZ7fERxe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfKMPMs (ORCPT
+        id S1728076AbfKMPMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:12:48 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38097 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728088AbfKMPMp (ORCPT
+        Wed, 13 Nov 2019 10:12:42 -0500
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:51288 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727988AbfKMPMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:12:45 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191113151243euoutp025eafe3e007dfc75e4a0c8dbe318992d8~WwZRt_leh0537205372euoutp02H
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:12:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191113151243euoutp025eafe3e007dfc75e4a0c8dbe318992d8~WwZRt_leh0537205372euoutp02H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573657963;
-        bh=RiDiIT7iZ5uWRSjJDpfwksM+DRbkVa+LCl9cMMehqnI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=tGXerBJ7Va5Aq7PP8dnmiz2KrZLnS/JofvI6jykP6ykDrjWcLbmeOkxA2AbBtKBlG
-         BQza9yLSGjzgEPyCQOn3kxME2+T2rJRgs2G8KKzSkuExgEkhPDhWBA+W2KcsvOoA8s
-         Mas6grB5W5AOTo7+ViQNfPiRIvS5iLl+Kd4G8/ME=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191113151242eucas1p19f54308ea4dd5ef747b4f485b803195a~WwZRYuPz-0444904449eucas1p1j;
-        Wed, 13 Nov 2019 15:12:42 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id D1.1C.04469.A6D1CCD5; Wed, 13
-        Nov 2019 15:12:42 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191113151242eucas1p1e8b0d203e369ebfd09e6f1a0a1dcbb38~WwZQ8Azu10439304393eucas1p1z;
-        Wed, 13 Nov 2019 15:12:42 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191113151242eusmtrp10b8b131e00d6d2b819161bb99d21f889~WwZQ7Vhb_2223022230eusmtrp1y;
-        Wed, 13 Nov 2019 15:12:42 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-71-5dcc1d6acedf
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D0.BE.04117.A6D1CCD5; Wed, 13
-        Nov 2019 15:12:42 +0000 (GMT)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191113151241eusmtip15dedb606b73b17597ce4871c94296be2~WwZQYnjNx0590005900eusmtip14;
-        Wed, 13 Nov 2019 15:12:41 +0000 (GMT)
-Subject: Re: [PATCH] devfreq: exynos-bus: workaround dev_pm_opp_set_rate()
- errors on Exynos5422/5800 SoCs
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        k.konieczny@partner.samsung.com
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Wed, 13 Nov 2019 10:12:22 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 15049C0E8F;
+        Wed, 13 Nov 2019 15:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1573657941; bh=BR2u1Q88cqsbGfAOXXojwkBp8kfiWQs0auglmg6xKq0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SZ7fERxeeCqN95S198ncRqPWVSI2Xh37hy9kqJHakuBUp801CGk81EOvtnSicH+9J
+         LaNdjb9uHs5uuxtiXL/J74Mc7HaT6CyN1HovlU8LEtQfDpIWa9JlVGSS3qODUo1vbz
+         lUS/WnTFdlgykScXmS6KOvpttIaKpggAPP2JVms1PwXxHydYfv9tZTy6FX9O2T+QDn
+         rtTNZPMrgxlxw8/9yVa8x0EJ/qa5rrR1XLregBBKhTqMr6MW23LBNmOVB2ccHk6Lzb
+         jPQ2iY6hjelAkB7kvM9TRb/LAdMOzi6f3mIWos7Bi9yvTYAEkivu9r+GXMDzItN4ly
+         NYtk10bzSmoBw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id BBDF6A0078;
+        Wed, 13 Nov 2019 15:12:18 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-Message-ID: <dd5bc937-e776-f717-1cf3-ee0e17621304@samsung.com>
-Date:   Wed, 13 Nov 2019 16:12:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <d742e7be-ca79-ae9e-6cc2-dc1fae08d252@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTYRD163bbpaFkKRAmoBBL0IgKEq9NUNDEaH/4Q/8Y1KCssnIX0uXG
-        RPBAIdASRUUwVAyXRQRLJYQokbOUFrkMIngQAZuIEKXQID9A2sXIvzfvvZk3kwyBSTpwDyJa
-        nsQo5HScVCDiN3X/6d8ds8UUtme5zYd6WVyPUx8WzDilbF1FlGpyBqP6+xuEVN/1n0JKOzmC
-        U8MtjwWUpaATUcX9rTyqrvOzkBrPrhEccZRpNbkCWWPFNVnb3GueTKnTIJlF63UKPyc6FMHE
-        RacwioDgcFHUikbLS3y/M62xawxloW6fPORAALkPRgyFwjwkIiRkDYJJkwXjigUESsNHnCss
-        CAxLOehfi9ZcxOOEagQDo2rEFbMIinJrBTaXCxkLVmMVZsOuZBrkq/LtczFynAcF88t8myAg
-        A6Ctz2DHYjIYrOoeewSf9IUq8/RaBEG4kaFgXKQ5izMYHk3Z7Q5kCAy809jnY6Q7jE2peRz2
-        hhuvSu1ZQI4IQVNZKuTWPgZ60zzGYRf4odet85vBeC+fz+FUmC5XCrnmmwgmbv9eF4KgQz+I
-        2xbCyB1Q3xLA0Udh9uswstFAOsHorDO3gxPcbXqIcbQY7uRIOLcvmHvzeRz2hLzVF3ghkpZs
-        uKxkwzUlG64p+Z/7BPE1yJ1JZuMjGTZQzqT6s3Q8myyP9L+cEK9Fa69lXNHPN6PFoUvtiCSQ
-        1FH81s0UJsHpFDY9vh0BgUldxc1pPWEScQSdnsEoEi4qkuMYth15Enypuzhz08R5CRlJJzGx
-        DJPIKP6pPMLBIws90McUXzl92F++9dPBNHRC56VzjcgtS1o4WT3Y8D3bU6AyagqGKhlFzcJI
-        8pu88tmZvcWC1Ja5jMxQ66/EOF0wMVpqsT799kx3NpOWHqhI8LtVt225K/iL1nu7Z4iP24XB
-        Xc+tV7OP9y7NBe0Pr1Opl8cazZHRZVL6/pn5idrVDCmfjaID/TAFS/8F3cqc4VYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xu7pZsmdiDdp3c1hsnLGe1eL6l+es
-        Fn37/jNa9D9+zWxx/vwGdouzTW/YLTY9vsZqcXnXHDaLz71HGC1mnN/HZLH2yF12i9uNK9gc
-        eDw2repk89i8pN7j4Ls9TB59W1YxenzeJBfAGqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2Ri
-        qWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8W/VJqaCK9oVm4/eYmxgPKbcxcjJISFgIrHp+RSm
-        LkYuDiGBpYwSV9bMZYZISEs0nl7NBGELS/y51sUGUfSaUaLn4js2kISwQLbEt9PLwBpEBCok
-        tlybATaJWeAuk8S6bx+gxm5nkrj88QULSBWbgL7EwbMnwWxeATuJb/NPMILYLAKqEsuePwVb
-        JyoQIfF8+w1GiBpBiZMzn4DVcwrYS1w4twpsG7OAusSfeZegbHGJW0/mM0HY8hLNW2czT2AU
-        moWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMFK3Hfu5ZQdj17vg
-        Q4wCHIxKPLwSEmdihVgTy4orcw8xSnAwK4nw7qg4ESvEm5JYWZValB9fVJqTWnyI0RTouYnM
-        UqLJ+cAkklcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgXGd9U3D
-        ujuPZypsvbx/1fuUH/cOifmVPHFZq3Krp/5WfmYrs5iv2gvRk8575031/n+k9frzuZNqTHqn
-        drwQ2/7d9/Mm3Z2rwgxm/XE6Ee/ZkRv0bIpprcpGLifnXUtWfFy6YkfcU36hLdLZpjPqzSvK
-        r1q7e3/X2LVt1rHCQhVt1adFLwU+ya9VYinOSDTUYi4qTgQAEWC1r+oCAAA=
-X-CMS-MailID: 20191113151242eucas1p1e8b0d203e369ebfd09e6f1a0a1dcbb38
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191008134950eucas1p15cfef5800efc10d5b18ec5eb37dde60b
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191008134950eucas1p15cfef5800efc10d5b18ec5eb37dde60b
-References: <CGME20191008134950eucas1p15cfef5800efc10d5b18ec5eb37dde60b@eucas1p1.samsung.com>
-        <20191008134923.30123-1-k.konieczny@partner.samsung.com>
-        <4f14d3af-e455-d05b-fc03-cba58e001f41@samsung.com>
-        <0ce56e65-d989-18f8-af84-2fbd74ba20aa@samsung.com>
-        <d742e7be-ca79-ae9e-6cc2-dc1fae08d252@samsung.com>
+Subject: [PATCH net-next 0/7] net: stmmac: CPU Performance Improvements
+Date:   Wed, 13 Nov 2019 16:12:01 +0100
+Message-Id: <cover.1573657592.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
+CPU Performance improvements for stmmac. Please check bellow for results
+before and after the series.
 
-On 14.10.2019 08:46, Chanwoo Choi wrote:
-> Hi Marek,
-> 
-> On 19. 10. 11. 오후 8:33, Marek Szyprowski wrote:
->> Hi Chanwoo,
->>
->> On 10.10.2019 04:50, Chanwoo Choi wrote:
->>> On 2019년 10월 08일 22:49, k.konieczny@partner.samsung.com wrote:
->>>> Commit 4294a779bd8d ("PM / devfreq: exynos-bus: Convert to use
->>>> dev_pm_opp_set_rate()") introduced errors:
->>>> exynos-bus: new bus device registered: soc:bus_wcore ( 84000 KHz ~ 400000 KHz)
->>>> exynos-bus: new bus device registered: soc:bus_noc ( 67000 KHz ~ 100000 KHz)
->>>> exynos-bus: new bus device registered: soc:bus_fsys_apb (100000 KHz ~ 200000 KHz)
->>>> ...
->>>> exynos-bus soc:bus_wcore: dev_pm_opp_set_rate: failed to find current OPP for freq 532000000 (-34)
->>>> exynos-bus soc:bus_noc: dev_pm_opp_set_rate: failed to find current OPP for freq 111000000 (-34)
->>>> exynos-bus soc:bus_fsys_apb: dev_pm_opp_set_rate: failed to find current OPP for freq 222000000 (-34)
->>>>
->>>> They are caused by incorrect PLL assigned to clock source, which results
->>>> in clock rate outside of OPP range. Add workaround for this in
->>>> exynos_bus_parse_of() by adjusting clock rate to those present in OPP.
->>> If the clock caused this issue, you can set the initial clock on DeviceTree
->>> with assigned-clock-* properties. Because the probe time of clock driver
->>> is early than the any device drivers.
->>>
->>> It is not proper to fix the clock issue on other device driver.
->>> I think you can fix it by using the supported clock properties.
->>
->> This issue is about something completely different. The OPPs defined in 
->> DT cannot be applied, because it is not possible to derive the needed 
->> clock rate from the bootloader-configured clock topology (mainly due to 
->> lack of common divisor values for some of the parent clocks). Some time 
->> ago Lukasz tried initially to redefine this clock topology using 
->> assigned-clock-rates/parents properties (see 
->> https://protect2.fireeye.com/url?k=4b80c0304459bc8e.4b814b7f-f87f1e1aee1a85c0&u=https://lkml.org/lkml/2019/7/15/276), but it has limitations and some 
->> such changes has to be done in bootloader. Until this is resolved, 
->> devfreq simply cannot set some of the defined OPPs.
-> 
-> As you mentioned, the wrong setting in bootloader cause the this issue.
-> So, this patch change the rate on exynos-bus.c in order to fix
-> the issue with workaround style. 
-> 
-> But, also, it can be fixed by initializing the clock rate on DT
-> although it is not fundamental solution as you mentioned.
-> 
-> If above two method are workaround way, I think that set the clock
-> rate in DT is proper. The role of 'assigned-clock-*' properties
-> is for this case in order to set the initial frequency on probe time.
+Patch 1/7, allows RX Interrupt on Completion to be disabled and only use the
+RX HW Watchdog.
 
-I can add 'assigned-clock-*' to DT, but the issue is caused in opp points,
-so the warning from exynos-bus will still be there.
+Patch 2/7, setups the default RX coalesce settings instead of using the
+minimum value.
 
-Before this fix, devfreq will issue warning and then change clock to max
-frequency within opp range. This fix mask warning, and as Marek and
-Lukasz Luba wrotes, the proper fix will be to make changes in u-boot
-(and connect proper PLLs to IPs).
+Patch 3/7, enables the Transmit Buffer Unavailable interrupt on GMAC4+ cores
+so that we don't miss any packet that could have been coalesced.
 
-Second solution would be to write down new OPP points with currently used
-frequencies, and with max one for 532 MHz.
+Patch 4/7 and 5/7, removes the uneeded computations for RX Flow Control
+activation/de-activation, on some cases.
 
-> I think that the previous patch[1] of Kamil Konieczny is missing
-> the patches which initialize the clock rate on DT file.
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4294a779bd8dff6c65e7e85ffe7a1ea236e92a68
-> 
->>
->> This issue was there from the beginning, recent Kamil's patch only 
->> revealed it. In fact it was even worse - devfreq and common clock 
->> framework silently set lower clock than the given OPP defined.
->>
->>>> Fixes: 4294a779bd8d ("PM / devfreq: exynos-bus: Convert to use dev_pm_opp_set_rate()")
->>>> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
->>>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->>>> ---
->>>>   drivers/devfreq/exynos-bus.c | 14 +++++++++++---
->>>>   1 file changed, 11 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->>>> index c832673273a2..37bd34d5625b 100644
->>>> --- a/drivers/devfreq/exynos-bus.c
->>>> +++ b/drivers/devfreq/exynos-bus.c
->>>> @@ -243,7 +243,7 @@ static int exynos_bus_parse_of(struct device_node *np,
->>>>   {
->>>>   	struct device *dev = bus->dev;
->>>>   	struct dev_pm_opp *opp;
->>>> -	unsigned long rate;
->>>> +	unsigned long rate, opp_rate;
->>>>   	int ret;
->>>>   
->>>>   	/* Get the clock to provide each bus with source clock */
->>>> @@ -267,13 +267,21 @@ static int exynos_bus_parse_of(struct device_node *np,
->>>>   	}
->>>>   
->>>>   	rate = clk_get_rate(bus->clk);
->>>> -
->>>> -	opp = devfreq_recommended_opp(dev, &rate, 0);
->>>> +	opp_rate = rate;
->>>> +	opp = devfreq_recommended_opp(dev, &opp_rate, 0);
->>>>   	if (IS_ERR(opp)) {
->>>>   		dev_err(dev, "failed to find dev_pm_opp\n");
->>>>   		ret = PTR_ERR(opp);
->>>>   		goto err_opp;
->>>>   	}
->>>> +	/*
->>>> +	 * FIXME: U-boot leaves clock source at incorrect PLL, this results
->>>> +	 * in clock rate outside defined OPP rate. Work around this bug by
->>>> +	 * setting clock rate to recommended one.
->>>> +	 */
->>>> +	if (rate > opp_rate)
->>>> +		clk_set_rate(bus->clk, opp_rate);
->>>> +
->>>>   	bus->curr_freq = dev_pm_opp_get_freq(opp);
->>>>   	dev_pm_opp_put(opp);
->>>>   
->>>>
->>>
->> Best regards
->>
-> 
-> 
+Patch 6/7, tunes-up the default coalesce settings.
+
+Patch 7/7, corrects the interpretation of TX Coalesce.
+
+
+NetPerf UDP Results:
+--------------------
+
+Socket  Message  Elapsed      Messages                   CPU      Service
+Size    Size     Time         Okay Errors   Throughput   Util     Demand
+bytes   bytes    secs            #      #   10^6bits/sec % SS     us/KB
+--- XGMAC@2.5G: Before
+212992    1400   10.00     2100620      0     2351.7     36.69    5.112
+212992           10.00     2100539            2351.6     26.18    3.648
+--- XGMAC@2.5G: After
+212992    1400   10.00     2116860      0     2370.4     27.61    3.816 
+212992           10.00     2111552            2364.5     17.41    2.407
+
+--- GMAC5@1G: Before
+212992    1400   10.00      786000      0      880.2     34.71    12.923
+212992           10.00      786000             880.2     23.42    8.719
+--- GMAC5@1G: After
+212992    1400   10.00      847702      0      949.3     15.07    5.201 
+212992           10.00      847702             949.3     12.91    4.456
+
+
+Perf TCP Results on RX Path:
+----------------------------
+--- XGMAC@2.5G: Before
+22.51%  swapper          [stmmac]           [k] dwxgmac2_dma_interrupt
+10.82%  swapper          [stmmac]           [k] dwxgmac2_host_mtl_irq_status
+ 5.21%  swapper          [stmmac]           [k] dwxgmac2_host_irq_status
+ 4.67%  swapper          [stmmac]           [k] dwxgmac3_safety_feat_irq_status
+ 3.63%  swapper          [kernel.kallsyms]  [k] stack_trace_consume_entry
+ 2.74%  iperf3           [kernel.kallsyms]  [k] copy_user_enhanced_fast_string
+ 2.52%  swapper          [kernel.kallsyms]  [k] update_stack_state
+ 1.94%  ksoftirqd/0      [stmmac]           [k] dwxgmac2_dma_interrupt
+ 1.45%  iperf3           [kernel.kallsyms]  [k] queued_spin_lock_slowpath
+ 1.26%  swapper          [kernel.kallsyms]  [k] create_object
+--- XGMAC@2.5G: After
+12.00%  swapper          [stmmac]           [k] dwxgmac2_dma_interrupt
+ 5.96%  swapper          [kernel.kallsyms]  [k] stack_trace_consume_entry
+ 5.65%  swapper          [stmmac]           [k] dwxgmac2_host_mtl_irq_status
+ 4.36%  swapper          [kernel.kallsyms]  [k] update_stack_state
+ 3.91%  iperf3           [kernel.kallsyms]  [k] copy_user_enhanced_fast_string
+ 2.82%  swapper          [stmmac]           [k] dwxgmac2_host_irq_status
+ 2.62%  swapper          [stmmac]           [k] dwxgmac3_safety_feat_irq_status
+ 2.25%  swapper          [kernel.kallsyms]  [k] create_object
+ 2.03%  swapper          [stmmac]           [k] stmmac_napi_poll_rx
+ 1.97%  swapper          [kernel.kallsyms]  [k] unwind_next_frame.part.4
+
+--- GMAC5@1G: Before
+31.29%  swapper          [stmmac]           [k] dwmac4_dma_interrupt
+14.57%  swapper          [stmmac]           [k] dwmac4_irq_mtl_status
+10.66%  swapper          [stmmac]           [k] dwmac4_irq_status
+ 1.97%  swapper          [kernel.kallsyms]  [k] stack_trace_consume_entry
+ 1.73%  iperf3           [kernel.kallsyms]  [k] copy_user_enhanced_fast_string
+ 1.59%  swapper          [kernel.kallsyms]  [k] update_stack_state
+ 1.15%  iperf3           [kernel.kallsyms]  [k] do_syscall_64
+ 1.01%  ksoftirqd/0      [stmmac]           [k] dwmac4_dma_interrupt
+ 0.89%  swapper          [kernel.kallsyms]  [k] __default_send_IPI_dest_field
+ 0.75%  swapper          [stmmac]           [k] stmmac_napi_poll_rx
+--- GMAC5@1G: After
+ 9.27%  swapper          [stmmac]           [k] dwmac4_dma_interrupt
+ 6.35%  swapper          [kernel.kallsyms]  [k] stack_trace_consume_entry
+ 4.94%  swapper          [kernel.kallsyms]  [k] update_stack_state
+ 4.70%  swapper          [stmmac]           [k] dwmac4_irq_mtl_status
+ 3.58%  swapper          [stmmac]           [k] dwmac4_irq_status
+ 3.42%  iperf3           [kernel.kallsyms]  [k] copy_user_enhanced_fast_string
+ 2.18%  swapper          [kernel.kallsyms]  [k] unwind_next_frame.part.4
+ 2.17%  swapper          [stmmac]           [k] stmmac_napi_poll_rx
+ 2.15%  swapper          [kernel.kallsyms]  [k] create_object
+ 1.26%  swapper          [kernel.kallsyms]  [k] unwind_get_return_address
+
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+
+Jose Abreu (7):
+  net: stmmac: Do not set RX IC bit if RX Coalesce is zero
+  net: stmmac: Setup a default RX Coalesce value instead of the minimum
+  net: stmmac: gmac4+: Enable the TBU Interrupt
+  net: stmmac: gmac4+: Remove uneeded computation for RFA/RFD
+  net: stmmac: xgmac: Remove uneeded computation for RFA/RFD
+  net: stmmac: Tune-up default coalesce settings
+  net: stmmac: TX Coalesce should be per-packet
+
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  5 +++--
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   | 14 ++------------
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.h   |  2 ++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 14 ++------------
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 14 ++++++++------
+ 5 files changed, 17 insertions(+), 32 deletions(-)
 
 -- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+2.7.4
 
