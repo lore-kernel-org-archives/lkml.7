@@ -2,142 +2,112 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8495FC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA31C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F393206EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5AF1206EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573679150;
-	bh=JeLh2TwMb/pxP+eN3XGV0+es0lcAgWbtdoAmHtde6Xk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dhe/4fPLOj+Z/vsULcFrgXkTRwCDea0vWVlIC7oEuY5SRUwFqlLWofPcn+oRmeHuw
-	 pseyp/d2pRBVNpS4XDqU8/hleRLJxC5qvQS1pxjFCATuU28N8PIWja3DJjKrvGELgH
-	 Hucm+8x0Xo/KApZPbzuf4wp9SV1IgRqa5azWuOYc=
+	s=default; t=1573679439;
+	bh=3hEkcmaUqAnk2YtPx/2AinQ4e6drdpknUYtp2Kk23H8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UFN2HisoQ3ZdJGyPIVIRJsR2vF8jf8nDHTQXFPrwdf7dV8vUDA/CmtS/jUaIrxoiJ
+	 BuH/p3/potpoOh8lPC/vdzV6xTVfHM6Jadys9BiBrsBlDwuXGVujR/r1VmEXU9uwVp
+	 z7iLqCl4zb78R/BfBBxfZDJkM/Kau9yAn7CCXS4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKMVFs (ORCPT
+        id S1726592AbfKMVKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:05:48 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38053 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfKMVFs (ORCPT
+        Wed, 13 Nov 2019 16:10:37 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46005 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfKMVKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:05:48 -0500
-Received: by mail-ot1-f65.google.com with SMTP id z25so2925376oti.5;
-        Wed, 13 Nov 2019 13:05:47 -0800 (PST)
+        Wed, 13 Nov 2019 16:10:37 -0500
+Received: by mail-lj1-f196.google.com with SMTP id n21so4166968ljg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 13:10:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=91N9W8fnm/Fhfqn455X3m9/csATT/jXc8I2Ji17aZzc=;
+        b=Mf6ceFn3HIXyCXGllj+S6+rL0Oyk5Vg2Ksehm712c1feeeeBFfn38uvk8g+ZDi2lDM
+         /DKVg58REdap/+mZuUAckUJIgt624cVXCYbpq3AlNnquRj209aGdVCbiQNLt25vbCoR/
+         PKHeiM7sE8M6mbU6rdxidHxwniSU4DXq8pTw0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0gzX/jw1PyFuoIoNGiysmpPTO8xY9NIG/RxfHqGfh2Q=;
-        b=j0XRVMyAVnxduF7XvhsyuxvaV3RGztw+iGfM+MwQQEoFovlcqWR5+a7Xc7YsRgC1+2
-         JkIdY8cx8NZGYkDV4DCO+rgVJQEvPCHFBES3BNF2Ewcm1Xv516Ed0kglUpsuiv0c8IX4
-         EuFb7GYpnM+1HFQ2TCTOLwBjyybMAgEOQ3X3xV069KF+C2B3SvmGmqIcohSyMHhNTjlJ
-         /1xRMPbfU1f/9U8b3F2v/hRUxuz/UqqXyuivk6jQaegNBydQwMYhLdF19M1RIyHowj5+
-         8MJL3MR1/xvzWVwYgXX+BRAnNdtrL0oN5Mm0A5zSvxFm97ScuhL4RFN2elJzvrL7Cz4X
-         7djQ==
-X-Gm-Message-State: APjAAAUD+chJxI99Q4yQzBAxQBRHwI9peM1+ZrIouGsWxC1OAgReXtBr
-        Yp/ARYTyoGeHRa3FrKTSdK8+s38=
-X-Google-Smtp-Source: APXvYqz7oQg0O4T2/+HXv6UGO2bjicLBIrBkWlHRPhWGEMo3z4ZzVUMtEURw7fKgvYuJOMit9S4WJA==
-X-Received: by 2002:a05:6830:1f1a:: with SMTP id u26mr2689695otg.75.1573679146408;
-        Wed, 13 Nov 2019 13:05:46 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id t19sm1109988otr.5.2019.11.13.13.05.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 13:05:45 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] dt-bindings: Improve validation build error handling
-Date:   Wed, 13 Nov 2019 15:05:44 -0600
-Message-Id: <20191113210544.1894-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=91N9W8fnm/Fhfqn455X3m9/csATT/jXc8I2Ji17aZzc=;
+        b=KEWxraZY0z33MM3xX4oHnUk53ehzJOekMlw1MHN1uTLRM0H8ZLxNyMqvvEzElB7Ktb
+         thMf9YK0ZqMGd+rpgA7usaT2BK6SKC7RZqG9TrT8bjOs8SX8DF7zOn7od+K44KjJSvTv
+         aLzyRwlvDK3/7uNXXuRkedAXAmrgMKfZTyN/EisVkBTKi1mc1mVpaZKC6PLAyiZxl3z+
+         /bbldkHSaqe3/lQ989imVtP8pHcyQz8sfRe7OD6KhAJxO0rLsY+NIHxyjtfkYfq5M5tM
+         KZoLUDJUQasyvZ5lVzfM1DOFISUGJXKsi37upaik/tV96jhgcN3NeT1S00YYP5JkJu3c
+         AXRw==
+X-Gm-Message-State: APjAAAV7PgPLwJ4M4tWcMbYMOGZEzw6YTw7qoDXkPpGO6cazRHnOU6D1
+        h6Zr0LBkia06ndVU2o0CvnyCTg4MjMY=
+X-Google-Smtp-Source: APXvYqz3qiKdlr/wJPbgPL1JAkSz1Ox/1kNvBfOkzYXg0KNlAhmaYaaWDiSeA6xHaORXCoEc/VdktQ==
+X-Received: by 2002:a2e:9758:: with SMTP id f24mr4014354ljj.105.1573679433227;
+        Wed, 13 Nov 2019 13:10:33 -0800 (PST)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id x23sm1554871lfe.8.2019.11.13.13.10.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Nov 2019 13:10:32 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id d22so4193140lji.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 13:10:32 -0800 (PST)
+X-Received: by 2002:a2e:9a8f:: with SMTP id p15mr4116040lji.148.1573679429322;
+ Wed, 13 Nov 2019 13:10:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191113204240.767922595@linutronix.de> <20191113210103.911310593@linutronix.de>
+In-Reply-To: <20191113210103.911310593@linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 13 Nov 2019 13:10:13 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whNAEuNPU3Oy_-EpjOojpysWcCh4uqDgOt2RjBNx2xBSg@mail.gmail.com>
+Message-ID: <CAHk-=whNAEuNPU3Oy_-EpjOojpysWcCh4uqDgOt2RjBNx2xBSg@mail.gmail.com>
+Subject: Re: [patch V3 02/20] x86/process: Unify copy_thread_tls()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Schema errors can cause make to exit before useful information is
-printed. This leaves developers wondering what's wrong. It can be
-overcome passing '-k' to make, but that's not an obvious solution.
-There's 2 scenarios where this happens.
+On Wed, Nov 13, 2019 at 1:02 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> +int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+> +                   unsigned long arg, struct task_struct *p, unsigned long tls)
+...
+> +#ifdef CONFIG_X86_64
+..
+> +#else
+> +       /* Clear all status flags including IF and set fixed bit. */
+> +       frame->flags = X86_EFLAGS_FIXED;
+> +#endif
 
-When using DT_SCHEMA_FILES to validate with a single schema, any error
-in the schema results in processed-schema.yaml being empty causing a
-make error. The result is the specific errors in the schema are never
-shown because processed-schema.yaml is the first target built. Simply
-making processed-schema.yaml last in extra-y ensures the full schema
-validation with detailed error messages happen first.
+Hmm. The unification I like, but it also shows these differences that
+I don't remember the reason for.
 
-The 2nd problem is while schema errors are ignored for
-processed-schema.yaml, full validation of the schema still runs in
-parallel and any schema validation errors will still stop the build when
-running validation of dts files. The fix is to not add the schema
-examples to extra-y in this case. This means 'dtbs_check' is no longer a
-superset of 'dt_binding_check'. Update the documentation to make this
-clear.
+Remind me why __switch_to_asm() on 32-bit safes eflags, but we don't
+do it on x86-64?
 
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/Makefile  | 5 ++++-
- Documentation/devicetree/writing-schema.rst | 6 ++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+The comment just talks about callee-saved registers, but flags isn't
+callee-saved, so there's something else going on.
 
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 5138a2f6232a..646cb3525373 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -12,7 +12,6 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
- 	$(call if_changed,chk_binding)
- 
- DT_TMP_SCHEMA := processed-schema.yaml
--extra-y += $(DT_TMP_SCHEMA)
- 
- quiet_cmd_mk_schema = SCHEMA  $@
-       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
-@@ -26,8 +25,12 @@ DT_DOCS = $(shell \
- 
- DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
- 
-+ifeq ($(CHECK_DTBS),)
- extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
- extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-+endif
- 
- $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
- 	$(call if_changed,mk_schema)
-+
-+extra-y += $(DT_TMP_SCHEMA)
-diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-index 3fce61cfd649..efcd5d21dc2b 100644
---- a/Documentation/devicetree/writing-schema.rst
-+++ b/Documentation/devicetree/writing-schema.rst
-@@ -133,11 +133,13 @@ binding schema. All of the DT binding documents can be validated using the
- 
-     make dt_binding_check
- 
--In order to perform validation of DT source files, use the `dtbs_check` target::
-+In order to perform validation of DT source files, use the ``dtbs_check`` target::
- 
-     make dtbs_check
- 
--This will first run the `dt_binding_check` which generates the processed schema.
-+Note that ``dtbs_check`` will skip any binding schema files with errors. It is
-+necessary to use ``dt_binding_check`` to get all the validation errors in the
-+binding schema files.
- 
- It is also possible to run checks with a single schema file by setting the
- ``DT_SCHEMA_FILES`` variable to a specific schema file.
--- 
-2.20.1
+This patch clearly doesn't change anything, I'm not complaining about
+the patch at all. I'm just wondering about the odd difference that the
+patch exposes.
 
+               Linus
