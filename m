@@ -2,97 +2,100 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBECAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F87C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB412196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:41:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pFBDnjap";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FL+JwYGf"
+	by mail.kernel.org (Postfix) with ESMTP id 594C32196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfKMAlZ (ORCPT
+        id S1727202AbfKMAmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:41:25 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:54652 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfKMAlZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:41:25 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6DCBC6078A; Wed, 13 Nov 2019 00:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573605684;
-        bh=uZiyTjnsg/7XCS4wXeu1iYBMRRvJ4sByw11TaeFLRYg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pFBDnjapNW1rNrLbo6CJVvdLUiEqBCzv8OiCVfGqcVWNrTaRNi2WleTy89s/SwUxx
-         xWzXZLbrO1m4/w7Cnx7JxLD2DTaZ8E2cKJY/HCaUtJ3PgqJur65qwnaY29xfu3H1Fj
-         lQ790hPGBR54n1A7vvpIhACQgK0bjnI7Fkq3I3YM=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 8586D60117;
-        Wed, 13 Nov 2019 00:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573605683;
-        bh=uZiyTjnsg/7XCS4wXeu1iYBMRRvJ4sByw11TaeFLRYg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FL+JwYGfit755UkRwchX/hZ3S7lPOFsMAyT3n0+1aGILby8txG5ewyzn4SA/lrjt9
-         aKYCdDa0QvNd2Pe7HOly+TS9wkFXCbRqoMX1b5Dg6tmzuvWUK8AWOtzMtSFHXGJnpT
-         Q9bDNhYxFVR8PN9NXjeHRWtoDbBaDrXe06gY2QBc=
+        Tue, 12 Nov 2019 19:42:52 -0500
+Received: from mga07.intel.com ([134.134.136.100]:12164 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfKMAmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:42:51 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 16:42:50 -0800
+X-IronPort-AV: E=Sophos;i="5.68,298,1569308400"; 
+   d="scan'208";a="194503911"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 16:42:50 -0800
+From:   ira.weiny@intel.com
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Subject: [PATCH V2 1/2] fs: Clean up mapping variable
+Date:   Tue, 12 Nov 2019 16:42:43 -0800
+Message-Id: <20191113004244.9981-2-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191113004244.9981-1-ira.weiny@intel.com>
+References: <20191113004244.9981-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 13 Nov 2019 08:41:23 +0800
-From:   cang@codeaurora.org
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/5] scsi: ufs: Add new bit field PA_INIT to UECDL
- register
-In-Reply-To: <MN2PR04MB69910D7CB55980F2C498A468FC770@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1573200932-384-1-git-send-email-cang@codeaurora.org>
- <1573200932-384-3-git-send-email-cang@codeaurora.org>
- <MN2PR04MB69910D7CB55980F2C498A468FC770@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <1ca07e76a0b6c95a116c44c4115508d4@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-12 15:53, Avri Altman wrote:
->> 
->> Add new bit field (bit-15) PA_INIT to UECDL register, this will 
->> correctly handle
->> any PA_INIT error.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Acked-by Avri Altman <avri.altman@wdc.com>
-> 
-> This is a HCI3.0 change, so maybe make note of that?
-> But UIC_DATA_LINK_LAYER_ERROR_CODE_MASK isn't being used anywhere,
-> better just remove it, don't you think?
-> Instead, while at it, fix ufshcd_update_uic_error to check
-> UIC_DATA_LINK_LAYER_ERROR when checking for data link layer errors?
+From: Ira Weiny <ira.weiny@intel.com>
 
-Hi Avri,
+The mapping variable is not directly used in these functions.  Just
+remove the additional variable.
 
-I will squash this change to my patch, it is used there.
-[PATCH v3 5/7] scsi: ufs: Fix irq return code
-url - https://lore.kernel.org/patchwork/patch/1148656/
+Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+Changes from V1
+	Update recipients list
 
-Thanks,
-Can Guo.
+ fs/f2fs/data.c      | 3 +--
+ fs/iomap/swapfile.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index ba3bcf4c7889..3c7777bfae17 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -3146,8 +3146,7 @@ int f2fs_migrate_page(struct address_space *mapping,
+ /* Copied from generic_swapfile_activate() to check any holes */
+ static int check_swap_activate(struct file *swap_file, unsigned int max)
+ {
+-	struct address_space *mapping = swap_file->f_mapping;
+-	struct inode *inode = mapping->host;
++	struct inode *inode = swap_file->f_mapping->host;
+ 	unsigned blocks_per_page;
+ 	unsigned long page_no;
+ 	unsigned blkbits;
+diff --git a/fs/iomap/swapfile.c b/fs/iomap/swapfile.c
+index a648dbf6991e..80571add0180 100644
+--- a/fs/iomap/swapfile.c
++++ b/fs/iomap/swapfile.c
+@@ -140,8 +140,7 @@ int iomap_swapfile_activate(struct swap_info_struct *sis,
+ 		.sis = sis,
+ 		.lowest_ppage = (sector_t)-1ULL,
+ 	};
+-	struct address_space *mapping = swap_file->f_mapping;
+-	struct inode *inode = mapping->host;
++	struct inode *inode = swap_file->f_mapping->host;
+ 	loff_t pos = 0;
+ 	loff_t len = ALIGN_DOWN(i_size_read(inode), PAGE_SIZE);
+ 	loff_t ret;
+-- 
+2.21.0
+
