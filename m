@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650EFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576D3C17448
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3166421783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2611821783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610793;
-	bh=7Eclvyk1oSXbFBFh01VOpWjcHVSzMgEQTosnOwSpzDI=;
+	s=default; t=1573610796;
+	bh=rIE4VPIrEIPSgI9Tss7jaX/soOHcNIuRa+Zq6z6B5Dc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QW4UVolqkAZjChTCgics0xRM0EsclADuhp9STIjlMOdbTKFddmyHHy/f8rG+efYFx
-	 nOSJnLB0h+YMcjhA+mBMrB6iCZPnD59aL3sSgSM2Fo4lIN3tr4mJUABwpIO3mbzKf1
-	 zNYNUFZ84vcA06uJNLB+gA4x1iZ4PsrmLQj2ahQ8=
+	b=eo4LM8u056aQB8l6Eo6PwvXLmc/Nz81L7CI7Z2ic2VvJ2equVi56yfRgBiM6HAneD
+	 qCLa0eXXe8y3gs1l8XSiOTaacTNXEGoAzqpvspbAVA+d40E7M9bniGEgrUMM3n6cpR
+	 8vHJuF81Z1JzYmJq0MhmiHQyclfb+BD5gabsl6TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbfKMCGc (ORCPT
+        id S1730684AbfKMCBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:06:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:01:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbfKMCBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:13 -0500
+        id S1729747AbfKMCA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F98E22474;
-        Wed, 13 Nov 2019 02:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1384B22467;
+        Wed, 13 Nov 2019 02:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610472;
-        bh=7Eclvyk1oSXbFBFh01VOpWjcHVSzMgEQTosnOwSpzDI=;
+        s=default; t=1573610458;
+        bh=rIE4VPIrEIPSgI9Tss7jaX/soOHcNIuRa+Zq6z6B5Dc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=joZzPXgyWhYguNhwGxiI92QzhfgwRawo5Q28bU5DasxDlmHXtTBKoSjHb8suXEcsl
-         Nt/KeXYO1NqhETgb7NXaG43YUHmmoCGhuwQTb82y/GRyzszSX6D1/4xpPc7a5ZhdRS
-         TjMNvC+1ZFtSw9YZMZkmYN3Z6DCfbVmezU2/cfts=
+        b=E37Da7sWOf3Upnp4oyte/10hB56nuANquvPy5Iv/UITAgxddCVuTmN4kgAY7/Iu9b
+         MuOZgkfh3INxw+RwXDXFhvOw9IjoNqR2axc6MJZ7/Z4LDSXNjqa9yQuSMhn9QNppZ4
+         luSV8i4TSSnIHA6iBe6yUyDxuVJeJqWMAlze/Kwg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 57/68] media: cx231xx: fix potential sign-extension overflow on large shift
-Date:   Tue, 12 Nov 2019 20:59:21 -0500
-Message-Id: <20191113015932.12655-57-sashal@kernel.org>
+Cc:     Shenghui Wang <shhuiw@foxmail.com>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 49/68] bcache: recal cached_dev_sectors on detach
+Date:   Tue, 12 Nov 2019 20:59:13 -0500
+Message-Id: <20191113015932.12655-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -60,41 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Shenghui Wang <shhuiw@foxmail.com>
 
-[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
+[ Upstream commit 46010141da6677b81cc77f9b47f8ac62bd1cbfd3 ]
 
-Shifting the u8 value[3] by an int can lead to sign-extension
-overflow. For example, if value[3] is 0xff and the shift is 24 then it
-is promoted to int and then the top bit is sign-extended so that all
-upper 32 bits are set.  Fix this by casting value[3] to a u32 before
-the shift.
+Recal cached_dev_sectors on cached_dev detached, as recal done on
+cached_dev attached.
 
-Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
+Update the cached_dev_sectors before bcache_device_detach called
+as bcache_device_detach will set bcache_device->c to NULL.
 
-Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/super.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
-index 6414188ffdfac..cd973e780da93 100644
---- a/drivers/media/usb/cx231xx/cx231xx-video.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-video.c
-@@ -1389,7 +1389,7 @@ int cx231xx_g_register(struct file *file, void *priv,
- 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
- 				(u16)reg->reg, value, 4);
- 		reg->val = value[0] | value[1] << 8 |
--			value[2] << 16 | value[3] << 24;
-+			value[2] << 16 | (u32)value[3] << 24;
- 		reg->size = 4;
- 		break;
- 	case 1:	/* AFE - read byte */
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index c5bc3e5e921e4..080f9afcde8da 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -904,6 +904,7 @@ static void cached_dev_detach_finish(struct work_struct *w)
+ 	bch_write_bdev_super(dc, &cl);
+ 	closure_sync(&cl);
+ 
++	calc_cached_dev_sectors(dc->disk.c);
+ 	bcache_device_detach(&dc->disk);
+ 	list_move(&dc->list, &uncached_devices);
+ 
 -- 
 2.20.1
 
