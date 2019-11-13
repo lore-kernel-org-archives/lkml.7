@@ -2,110 +2,131 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4CFC43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05D2C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16BCC206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E048206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:26:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMtWOa/T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKMVZI (ORCPT
+        id S1726991AbfKMV0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:25:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:58590 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbfKMVZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:25:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D87D7A7;
-        Wed, 13 Nov 2019 13:25:06 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F30ED3F52E;
-        Wed, 13 Nov 2019 13:25:00 -0800 (PST)
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-mips@vger.kernel.org, linux-ide@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
- <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
- <48da05e0-5acf-8ab3-a6c9-be4988a9450b@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b8e4d303-f226-53d9-f383-73872e41002b@arm.com>
-Date:   Wed, 13 Nov 2019 21:24:52 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 13 Nov 2019 16:26:20 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46928 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfKMV0U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 16:26:20 -0500
+Received: by mail-pl1-f195.google.com with SMTP id l4so1591453plt.13;
+        Wed, 13 Nov 2019 13:26:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kUPGjuMAO+elLx2tx2jBnDowMVSrPNVOZ3A3hy8rwgw=;
+        b=tMtWOa/Tu9MUDO8ylY3mvZT82GSoYCFZMaUDAIpjmjXqfcp+gjRX5adP+crRv+4hS7
+         6zTWWJ98DoSl2uZvmSJ4CrlQFAT8xGmzEHJ50IOOfqUCP968wm+0CiSHs3ra2aiHi/8x
+         cKdoRPgUIKnZV4U9JN79z7IQmVHTn7qqNv92tCgZteMU+/bwfi4YEDxQjy8PaRES0V89
+         Ht9Ro1TTZdvIbbTPHyg99bHZDiN6uPFDEc3GCVcTUY1imbMM0UKkr22TA4ezVS0f9wr/
+         unn8iYzQO3ouDI5COAaHAGjuk1wnlmH/LkwEIw/uvkbf8pO4igxb6lSf3iW7zNncCM1O
+         VLtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kUPGjuMAO+elLx2tx2jBnDowMVSrPNVOZ3A3hy8rwgw=;
+        b=MiMcuTCJAysOmd0JUH7pQ8nfX/bUO64SydBvBRMuYMbKWs1dQj1a4SQSHvRiA+giW9
+         DPmwyhP4HtiY9d4qu9jlkEHW+QtKf+6APIPXVOqtviAUZsB940JU8hVyYvp2E72GQBoy
+         smlYjpSSlcxGcCCDIl8V7u2znN2OYyFTG3Lzw1Z3kkw8zCTZXZJfyuJ0UfScqGyDAj2m
+         ykrpjqki/ng0KmdSFZm2mK1hK24NwaF+kbDbITWhyINE9zM2pUko4EKwFcBW10I/s/3g
+         W3WIEJTsKSCU3w7ILB/UZnhxTE7PAMMvUVEvw3hoZgl7eFI3BCWFxOlq4pr9lnZX3k6r
+         GCmw==
+X-Gm-Message-State: APjAAAUq1EHsrmFCqg3EC3o76WwPnJEJMtYWteo6epcPLcORcGBHIjCd
+        Wx+fWxolRSNiokxMhjOWsPtSPOVx
+X-Google-Smtp-Source: APXvYqwJy0pbLjIQeTHRotm4oI+p1es1FG6qBeLb2MnXJLGhHgCfshAN/Crx0ke8xDG4xfD8GnmuFg==
+X-Received: by 2002:a17:902:9b85:: with SMTP id y5mr5998531plp.334.1573680377188;
+        Wed, 13 Nov 2019 13:26:17 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id a6sm3996969pja.30.2019.11.13.13.26.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 13:26:16 -0800 (PST)
+Date:   Wed, 13 Nov 2019 13:26:14 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux@armlinux.org.uk, linus.walleij@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com
+Subject: Re: [PATCH v2 0/3] net: phy: switch to using fwnode_gpiod_get_index
+Message-ID: <20191113212614.GS13374@dtor-ws>
+References: <20191105004016.GT57214@dtor-ws>
+ <20191105005541.GP25745@shell.armlinux.org.uk>
+ <CAKdAkRQNWXjMdJ9F1Lu=8+rHWFJwoyWu6Lcc+LFesaSTz3wspg@mail.gmail.com>
+ <20191105.100423.1742603284030008698.davem@davemloft.net>
+ <20191105182022.GV57214@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <48da05e0-5acf-8ab3-a6c9-be4988a9450b@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105182022.GV57214@dtor-ws>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-13 8:41 pm, Florian Fainelli wrote:
-> On 11/13/19 12:34 PM, Robin Murphy wrote:
->> On 13/11/2019 4:13 pm, Nicolas Saenz Julienne wrote:
->>> Using a mask to represent bus DMA constraints has a set of limitations.
->>> The biggest one being it can only hold a power of two (minus one). The
->>> DMA mapping code is already aware of this and treats dev->bus_dma_mask
->>> as a limit. This quirk is already used by some architectures although
->>> still rare.
->>>
->>> With the introduction of the Raspberry Pi 4 we've found a new contender
->>> for the use of bus DMA limits, as its PCIe bus can only address the
->>> lower 3GB of memory (of a total of 4GB). This is impossible to represent
->>> with a mask. To make things worse the device-tree code rounds non power
->>> of two bus DMA limits to the next power of two, which is unacceptable in
->>> this case.
->>>
->>> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
->>> over the tree and treat it as such. Note that dev->bus_dma_limit is
->>> meant to contain the higher accesible DMA address.
->>
->> Neat, you win a "why didn't I do it that way in the first place?" :)
->>
->> Looking at it without all the history of previous attempts, this looks
->> entirely reasonable, and definitely a step in the right direction.
+On Tue, Nov 05, 2019 at 10:20:22AM -0800, Dmitry Torokhov wrote:
+> On Tue, Nov 05, 2019 at 10:04:23AM -0800, David Miller wrote:
+> > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Date: Tue, 5 Nov 2019 09:27:51 -0800
+> > 
+> > > On Mon, Nov 4, 2019 at 4:55 PM Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > >>
+> > >> On Mon, Nov 04, 2019 at 04:40:16PM -0800, Dmitry Torokhov wrote:
+> > >> > Hi Linus,
+> > >> >
+> > >> > On Mon, Oct 14, 2019 at 10:40:19AM -0700, Dmitry Torokhov wrote:
+> > >> > > This series switches phy drivers form using fwnode_get_named_gpiod() and
+> > >> > > gpiod_get_from_of_node() that are scheduled to be removed in favor
+> > >> > > of fwnode_gpiod_get_index() that behaves more like standard
+> > >> > > gpiod_get_index() and will potentially handle secondary software
+> > >> > > nodes in cases we need to augment platform firmware.
+> > >> > >
+> > >> > > Linus, as David would prefer not to pull in the immutable branch but
+> > >> > > rather route the patches through the tree that has the new API, could
+> > >> > > you please take them with his ACKs?
+> > >> >
+> > >> > Gentle ping on the series...
+> > >>
+> > >> Given that kbuild found a build issue with patch 1, aren't we waiting
+> > >> for you to produce an updated patch 1?
+> > > 
+> > > No: kbuild is unable to parse instructions such as "please pull an
+> > > immutable branch" before applying the series. Linus' tree already has
+> > > needed changes.
+> > 
+> > This is targetting the networking tree so it doesn't matter what is in
+> > Linus's tree, it has to build against MY tree and that's what Kbuild
+> > tests against.
+> > 
+> > Resubmit if it builds against my tree, and no sooner.
 > 
-> And while you are changing those, would it make sense to not only rename
-> the structure member but introduce a getter and setter in order to ease
-> future work where this would no longer be a scalar?
+> I am confused. You were OK with merging through Linus' Walleij tree, and
+> you acked all 3 patches earlier...
+> 
+> https://lore.kernel.org/netdev/20191011.140540.2027562826793118009.davem@davemloft.net/
+> 
+> "So submit this into the tree that will have the dependencies."
 
-I doubt it - once we get as a far as supporting multiple DMA ranges, 
-there will be a whole load of infrastructure churn anyway if only to 
-replace dma_pfn_offset, and I'm not sure a simple get/set paradigm would 
-even be viable, so it's probably better to save that until clearly 
-necessary.
+So what is the final verdict? Merge through Linus Walleij's tree, wait
+until after 5.5 merge window?
 
-Robin.
+Thanks.
+
+-- 
+Dmitry
