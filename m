@@ -2,428 +2,423 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EF4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21695C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33145222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC99F222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AdpLPb/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfKMNKm (ORCPT
+        id S1727276AbfKMNKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 Nov 2019 08:10:43 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41467 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKMNKm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Nov 2019 08:10:42 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40684 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726250AbfKMNKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:10:41 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 511A323320A95FC7BDC6;
-        Wed, 13 Nov 2019 21:10:39 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 13 Nov
- 2019 21:10:36 +0800
-Subject: Re: [PATCH 2/2] f2fs: support data compression
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-References: <20191022171602.93637-1-jaegeuk@kernel.org>
- <20191022171602.93637-2-jaegeuk@kernel.org>
- <20191027225006.GA321938@sol.localdomain>
- <da214cdc-0074-b7bf-7761-d4c4ad3d4f6a@huawei.com>
- <20191030025512.GA4791@sol.localdomain>
- <97c33fa1-15af-b319-29a1-22f254a26c0a@huawei.com>
- <20191030170246.GB693@sol.localdomain>
-From:   Chao Yu <yuchao0@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        Eric Biggers <ebiggers@kernel.org>
-Message-ID: <899f99e9-fdc7-a84b-14ec-623fa3a5e164@huawei.com>
-Date:   Wed, 13 Nov 2019 21:10:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+Received: by mail-ot1-f67.google.com with SMTP id 94so1525512oty.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:10:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QF5WItFeCSeyWhEtEa28xG3IXxEhK08V18E2ZmMDVCY=;
+        b=AdpLPb/9xQcjeQGBObE9KkFdrKzGVuDjMkkt9RiKnwOyd7JH9zBy+cXKIZbERfkqrt
+         /1odMjKpgZACxPSRnH/aM3+YFHRqQ3yl8nMtcdtpU3iskHLndB4G2izIVFBWP/VLeoMK
+         DkS5Hpa2kqFibppkuzdIHp1nSoAAxWUFydyd1zXx2QEICs+KddHHbspMgGxakufOFakP
+         Le6qoJQyD74ashzMIC5PbKQr45dmvxapE2sPf/13+edJhKQ6QQX3k8N1yVDc+Mk7YWh/
+         5ljpjCV7ht0y9XHOchUV2WaG70U1A7X3N3MCg6zHF++GCTi4se/3tMXUqwE9O8cMwrms
+         lt3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QF5WItFeCSeyWhEtEa28xG3IXxEhK08V18E2ZmMDVCY=;
+        b=P0pMt1+mUMQpnhPNF7fZhuaEJfNDrk815yiUgqvOu+7AORm+rvK2Ma9fh36TGVGFq6
+         c5FlmVb4Ze7C0ysvDDvykgK0fHUi86ZisHuKn4FoF79FIVsPog6xXSjZE7VS3xMiCXIV
+         1eOP/QiNYo4IzHKWl86Hm716i+IpbuTKOt2LfCEV47tcQbQDBlYv+K71DklXgrzHv/dT
+         3xRUF0B7U4GDoYcmhIjOy5G+4Q+FUVdHl3JDJYPPwgTM53p3aCtUDrlSrMlQaYgYG4sa
+         5emqWmLK+QWI32C1OW2UaEYQubbOoyh3YilDq4QRj1yfg4/ZlO4udNMAuQy1PHJwlZs1
+         KXVQ==
+X-Gm-Message-State: APjAAAWc4Z7WpskeQd/Hmx++MZYwv83Re4r4QLfhVZvnJV4TQXPx1yFI
+        Wzu6cCPGxaLJzl6BA//ejMOg5hMetXO6EOg8ppARNA==
+X-Google-Smtp-Source: APXvYqz6UTmXJGnA5c5F+FBQaPqa7OXAkmEhmRaxD5co7Y4keq0XN+aD4xkKFpebt89NNidxhgFV3VfiTjpZeAjJ4v8=
+X-Received: by 2002:a9d:68d4:: with SMTP id i20mr3207281oto.194.1573650641322;
+ Wed, 13 Nov 2019 05:10:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191030170246.GB693@sol.localdomain>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com> <1573560684-48104-4-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1573560684-48104-4-git-send-email-yash.shah@sifive.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 13 Nov 2019 14:10:30 +0100
+Message-ID: <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
+wt., 12 lis 2019 o 13:12 Yash Shah <yash.shah@sifive.com> napisa=C5=82(a):
+>
+> Adds the GPIO driver for SiFive RISC-V SoCs.
+>
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Various fixes and code cleanup]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  drivers/gpio/Kconfig       |   9 ++
+>  drivers/gpio/Makefile      |   1 +
+>  drivers/gpio/gpio-sifive.c | 255 +++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 265 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-sifive.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 38e096e..05e8a41 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -453,6 +453,15 @@ config GPIO_SAMA5D2_PIOBU
+>           The difference from regular GPIOs is that they
+>           maintain their value during backup/self-refresh.
+>
+> +config GPIO_SIFIVE
+> +       bool "SiFive GPIO support"
+> +       depends on OF_GPIO
+> +       select GPIO_GENERIC
+> +       select GPIOLIB_IRQCHIP
+> +       select REGMAP_MMIO
+> +       help
+> +         Say yes here to support the GPIO device on SiFive SoCs.
+> +
+>  config GPIO_SIOX
+>         tristate "SIOX GPIO support"
+>         depends on SIOX
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index d2fd19c..bf7984e 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -121,6 +121,7 @@ obj-$(CONFIG_ARCH_SA1100)           +=3D gpio-sa1100.=
+o
+>  obj-$(CONFIG_GPIO_SAMA5D2_PIOBU)       +=3D gpio-sama5d2-piobu.o
+>  obj-$(CONFIG_GPIO_SCH311X)             +=3D gpio-sch311x.o
+>  obj-$(CONFIG_GPIO_SCH)                 +=3D gpio-sch.o
+> +obj-$(CONFIG_GPIO_SIFIVE)              +=3D gpio-sifive.o
+>  obj-$(CONFIG_GPIO_SIOX)                        +=3D gpio-siox.o
+>  obj-$(CONFIG_GPIO_SODAVILLE)           +=3D gpio-sodaville.o
+>  obj-$(CONFIG_GPIO_SPEAR_SPICS)         +=3D gpio-spear-spics.o
+> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+> new file mode 100644
+> index 0000000..abdf839
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-sifive.c
+> @@ -0,0 +1,255 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 SiFive
+> + */
+> +#include <linux/bitops.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/regmap.h>
+> +
+> +#define GPIO_INPUT_VAL 0x00
+> +#define GPIO_INPUT_EN  0x04
+> +#define GPIO_OUTPUT_EN 0x08
+> +#define GPIO_OUTPUT_VAL        0x0C
+> +#define GPIO_RISE_IE   0x18
+> +#define GPIO_RISE_IP   0x1C
+> +#define GPIO_FALL_IE   0x20
+> +#define GPIO_FALL_IP   0x24
+> +#define GPIO_HIGH_IE   0x28
+> +#define GPIO_HIGH_IP   0x2C
+> +#define GPIO_LOW_IE    0x30
+> +#define GPIO_LOW_IP    0x34
+> +#define GPIO_OUTPUT_XOR        0x40
+> +
+> +#define MAX_GPIO       32
+> +
+> +struct sifive_gpio {
+> +       raw_spinlock_t          lock;
+> +       void __iomem            *base;
+> +       struct gpio_chip        gc;
+> +       struct regmap           *regs;
+> +       u32                     enabled;
+> +       unsigned int            trigger[MAX_GPIO];
+> +       unsigned int            irq_parent[MAX_GPIO];
+> +};
+> +
+> +static void sifive_set_ie(struct sifive_gpio *chip, unsigned int offset)
+> +{
+> +       unsigned long flags;
+> +       unsigned int trigger;
+> +
+> +       raw_spin_lock_irqsave(&chip->lock, flags);
+> +       trigger =3D (chip->enabled & BIT(offset)) ? chip->trigger[offset]=
+ : 0;
+> +       regmap_update_bits(chip->regs, GPIO_RISE_IE, BIT(offset),
+> +                          (trigger & IRQ_TYPE_EDGE_RISING) ? BIT(offset)=
+ : 0);
+> +       regmap_update_bits(chip->regs, GPIO_FALL_IE, BIT(offset),
+> +                          (trigger & IRQ_TYPE_EDGE_FALLING) ? BIT(offset=
+) : 0);
+> +       regmap_update_bits(chip->regs, GPIO_HIGH_IE, BIT(offset),
+> +                          (trigger & IRQ_TYPE_LEVEL_HIGH) ? BIT(offset) =
+: 0);
+> +       regmap_update_bits(chip->regs, GPIO_LOW_IE, BIT(offset),
+> +                          (trigger & IRQ_TYPE_LEVEL_LOW) ? BIT(offset) :=
+ 0);
+> +       raw_spin_unlock_irqrestore(&chip->lock, flags);
+> +}
+> +
+> +static int sifive_irq_set_type(struct irq_data *d, unsigned int trigger)
+> +{
+> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> +       struct sifive_gpio *chip =3D gpiochip_get_data(gc);
+> +       int offset =3D irqd_to_hwirq(d);
+> +
+> +       if (offset < 0 || offset >=3D gc->ngpio)
+> +               return -EINVAL;
+> +
+> +       chip->trigger[offset] =3D trigger;
+> +       sifive_set_ie(chip, offset);
+> +       return 0;
+> +}
+> +
+> +static void sifive_irq_enable(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> +       struct sifive_gpio *chip =3D gpiochip_get_data(gc);
+> +       int offset =3D irqd_to_hwirq(d) % MAX_GPIO;
+> +       u32 bit =3D BIT(offset);
+> +
+> +       irq_chip_enable_parent(d);
+> +
+> +       /* Switch to input */
+> +       gc->direction_input(gc, offset);
+> +
+> +       /* Clear any sticky pending interrupts */
+> +       iowrite32(bit, chip->base + GPIO_RISE_IP);
+> +       iowrite32(bit, chip->base + GPIO_FALL_IP);
+> +       iowrite32(bit, chip->base + GPIO_HIGH_IP);
+> +       iowrite32(bit, chip->base + GPIO_LOW_IP);
+> +
+> +       /* Enable interrupts */
+> +       assign_bit(offset, (unsigned long *)&chip->enabled, 1);
+> +       sifive_set_ie(chip, offset);
+> +}
+> +
+> +static void sifive_irq_disable(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> +       struct sifive_gpio *chip =3D gpiochip_get_data(gc);
+> +       int offset =3D irqd_to_hwirq(d) % MAX_GPIO;
+> +
+> +       assign_bit(offset, (unsigned long *)&chip->enabled, 0);
+> +       sifive_set_ie(chip, offset);
+> +       irq_chip_disable_parent(d);
+> +}
+> +
+> +static void sifive_irq_eoi(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> +       struct sifive_gpio *chip =3D gpiochip_get_data(gc);
+> +       int offset =3D irqd_to_hwirq(d) % MAX_GPIO;
+> +       u32 bit =3D BIT(offset);
+> +
+> +       /* Clear all pending interrupts */
+> +       iowrite32(bit, chip->base + GPIO_RISE_IP);
+> +       iowrite32(bit, chip->base + GPIO_FALL_IP);
+> +       iowrite32(bit, chip->base + GPIO_HIGH_IP);
+> +       iowrite32(bit, chip->base + GPIO_LOW_IP);
+> +
+> +       irq_chip_eoi_parent(d);
+> +}
+> +
+> +static struct irq_chip sifive_irqchip =3D {
+> +       .name           =3D "sifive-gpio",
+> +       .irq_set_type   =3D sifive_irq_set_type,
+> +       .irq_mask       =3D irq_chip_mask_parent,
+> +       .irq_unmask     =3D irq_chip_unmask_parent,
+> +       .irq_enable     =3D sifive_irq_enable,
+> +       .irq_disable    =3D sifive_irq_disable,
+> +       .irq_eoi        =3D sifive_irq_eoi,
+> +};
+> +
+> +static int sifive_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+> +                                            unsigned int child,
+> +                                            unsigned int child_type,
+> +                                            unsigned int *parent,
+> +                                            unsigned int *parent_type)
+> +{
+> +       /* All these interrupts are level high in the CPU */
+> +       *parent_type =3D IRQ_TYPE_LEVEL_HIGH;
+> +       *parent =3D child + 7;
+> +       return 0;
+> +}
+> +
+> +static const struct regmap_config sifive_gpio_regmap_config =3D {
+> +       .reg_bits =3D 32,
+> +       .reg_stride =3D 4,
+> +       .val_bits =3D 32,
+> +       .fast_io =3D true,
+> +};
+> +
+> +static int sifive_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct device_node *node =3D pdev->dev.of_node;
+> +       struct device_node *irq_parent;
+> +       struct irq_domain *parent;
+> +       struct gpio_irq_chip *girq;
+> +       struct sifive_gpio *chip;
+> +       struct resource *res;
+> +       int ret, ngpio;
+> +
+> +       chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+> +       if (!chip)
+> +               return -ENOMEM;
+> +
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       chip->base =3D devm_ioremap_resource(dev, res);
 
-I've split workqueue for fsverity, please test compression based on last patch.
+Use devm_platform_ioremap_resource() and drop the res variable.
 
-I shutdown F2FS_FS_COMPRESSION config, it looks all verity testcases can pass, will
-do more test for compress/encrypt/fsverity combination later.
+> +       if (IS_ERR(chip->base)) {
+> +               dev_err(dev, "failed to allocate device memory\n");
+> +               return PTR_ERR(chip->base);
+> +       }
+> +
+> +       chip->regs =3D devm_regmap_init_mmio(dev, chip->base,
+> +                                          &sifive_gpio_regmap_config);
 
-The diff is as below, code base is last g-dev-test branch:
+Why do you need this regmap here? You initialize a new regmap, then
+use your own locking despite not having disabled the internal locking
+in regmap, and then you initialize the mmio generic GPIO code which
+will use yet another lock to operate on the same registers and in the
+end you write to those registers without taking any lock anyway.
+Doesn't make much sense to me.
 
-From 5b51682bc3013b8de6dee4906865181c3ded435f Mon Sep 17 00:00:00 2001
-From: Chao Yu <yuchao0@huawei.com>
-Date: Tue, 12 Nov 2019 10:03:21 +0800
-Subject: [PATCH INCREMENT] f2fs: compress: split workqueue for fsverity
+> +       if (IS_ERR(chip->regs))
+> +               return PTR_ERR(chip->regs);
+> +
+> +       ngpio =3D of_irq_count(node);
+> +       if (ngpio >=3D MAX_GPIO) {
+> +               dev_err(dev, "Too many GPIO interrupts (max=3D%d)\n", MAX=
+_GPIO);
+> +               return -ENXIO;
+> +       }
+> +
+> +       irq_parent =3D of_irq_find_parent(node);
+> +       if (!irq_parent) {
+> +               dev_err(dev, "no IRQ parent node\n");
+> +               return -ENODEV;
+> +       }
+> +       parent =3D irq_find_host(irq_parent);
+> +       if (!parent) {
+> +               dev_err(dev, "no IRQ parent domain\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       ret =3D bgpio_init(&chip->gc, dev, 4,
+> +                        chip->base + GPIO_INPUT_VAL,
+> +                        chip->base + GPIO_OUTPUT_VAL,
+> +                        NULL,
+> +                        chip->base + GPIO_OUTPUT_EN,
+> +                        chip->base + GPIO_INPUT_EN,
+> +                        0);
+> +       if (ret) {
+> +               dev_err(dev, "unable to init generic GPIO\n");
+> +               return ret;
+> +       }
+> +
+> +       /* Disable all GPIO interrupts before enabling parent interrupts =
+*/
+> +       iowrite32(0, chip->base + GPIO_RISE_IE);
+> +       iowrite32(0, chip->base + GPIO_FALL_IE);
+> +       iowrite32(0, chip->base + GPIO_HIGH_IE);
+> +       iowrite32(0, chip->base + GPIO_LOW_IE);
+> +       chip->enabled =3D 0;
+> +
+> +       raw_spin_lock_init(&chip->lock);
+> +       chip->gc.base =3D -1;
+> +       chip->gc.ngpio =3D ngpio;
+> +       chip->gc.label =3D dev_name(dev);
+> +       chip->gc.parent =3D dev;
+> +       chip->gc.owner =3D THIS_MODULE;
+> +       girq =3D &chip->gc.irq;
+> +       girq->chip =3D &sifive_irqchip;
+> +       girq->fwnode =3D of_node_to_fwnode(node);
+> +       girq->parent_domain =3D parent;
+> +       girq->child_to_parent_hwirq =3D sifive_gpio_child_to_parent_hwirq=
+;
+> +       girq->handler =3D handle_bad_irq;
+> +       girq->default_type =3D IRQ_TYPE_NONE;
+> +
+> +       ret =3D gpiochip_add_data(&chip->gc, chip);
+> +       if (ret)
+> +               return ret;
+> +
+> +       platform_set_drvdata(pdev, chip);
+> +       dev_info(dev, "SiFive GPIO chip registered %d GPIOs\n", ngpio);
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/compress.c | 16 +++++---
- fs/f2fs/data.c     | 94 +++++++++++++++++++++++++++++++++++-----------
- fs/f2fs/f2fs.h     |  2 +-
- 3 files changed, 84 insertions(+), 28 deletions(-)
+Core gpio library emits a very similar debug message from
+gpiochip_setup_dev(), I think you can drop it and directly return
+gpiochip_add_data().
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index f4ce825f12b4..254275325890 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -377,7 +377,7 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
+Bartosz
 
- 	dec_page_count(sbi, F2FS_RD_DATA);
-
--	if (bio->bi_status)
-+	if (bio->bi_status || PageError(page))
- 		dic->failed = true;
-
- 	if (refcount_dec_not_one(&dic->ref))
-@@ -419,10 +419,14 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
- out_vunmap_rbuf:
- 	vunmap(dic->rbuf);
- out_free_dic:
--	f2fs_set_cluster_uptodate(dic->rpages, dic->cluster_size, ret, verity);
-+	if (!verity)
-+		f2fs_decompress_end_io(dic->rpages, dic->cluster_size,
-+								ret, false);
-+
- 	trace_f2fs_decompress_pages_end(dic->inode, dic->cluster_idx,
--								dic->clen, ret);
--	f2fs_free_dic(dic);
-+							dic->clen, ret);
-+	if (!verity)
-+		f2fs_free_dic(dic);
- }
-
- static bool is_page_in_cluster(struct compress_ctx *cc, pgoff_t index)
-@@ -1086,7 +1090,7 @@ void f2fs_free_dic(struct decompress_io_ctx *dic)
- 	kfree(dic);
- }
-
--void f2fs_set_cluster_uptodate(struct page **rpages,
-+void f2fs_decompress_end_io(struct page **rpages,
- 			unsigned int cluster_size, bool err, bool verity)
- {
- 	int i;
-@@ -1108,4 +1112,4 @@ void f2fs_set_cluster_uptodate(struct page **rpages,
- 		}
- 		unlock_page(rpage);
- 	}
--}
-+}
-\ No newline at end of file
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index c9362a53f8a1..2d64c6ffee84 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -98,7 +98,7 @@ static void __read_end_io(struct bio *bio, bool compr, bool verity)
- 		page = bv->bv_page;
-
- #ifdef CONFIG_F2FS_FS_COMPRESSION
--		if (compr && PagePrivate(page)) {
-+		if (compr && f2fs_is_compressed_page(page)) {
- 			f2fs_decompress_pages(bio, page, verity);
- 			continue;
- 		}
-@@ -115,9 +115,14 @@ static void __read_end_io(struct bio *bio, bool compr, bool verity)
- 		dec_page_count(F2FS_P_SB(page), __read_io_type(page));
- 		unlock_page(page);
- 	}
--	if (bio->bi_private)
--		mempool_free(bio->bi_private, bio_post_read_ctx_pool);
--	bio_put(bio);
-+}
-+
-+static void f2fs_release_read_bio(struct bio *bio);
-+static void __f2fs_read_end_io(struct bio *bio, bool compr, bool verity)
-+{
-+	if (!compr)
-+		__read_end_io(bio, false, verity);
-+	f2fs_release_read_bio(bio);
- }
-
- static void f2fs_decompress_bio(struct bio *bio, bool verity)
-@@ -127,19 +132,50 @@ static void f2fs_decompress_bio(struct bio *bio, bool verity)
-
- static void bio_post_read_processing(struct bio_post_read_ctx *ctx);
-
--static void decrypt_work(struct bio_post_read_ctx *ctx)
-+static void f2fs_decrypt_work(struct bio_post_read_ctx *ctx)
- {
- 	fscrypt_decrypt_bio(ctx->bio);
- }
-
--static void decompress_work(struct bio_post_read_ctx *ctx, bool verity)
-+static void f2fs_decompress_work(struct bio_post_read_ctx *ctx)
-+{
-+	f2fs_decompress_bio(ctx->bio, ctx->enabled_steps & (1 << STEP_VERITY));
-+}
-+
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
-+void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
- {
--	f2fs_decompress_bio(ctx->bio, verity);
-+	f2fs_decompress_end_io(rpages, cluster_size, false, true);
- }
-
--static void verity_work(struct bio_post_read_ctx *ctx)
-+static void f2fs_verify_bio(struct bio *bio)
- {
-+	struct page *page = bio_first_page_all(bio);
-+	struct decompress_io_ctx *dic =
-+			(struct decompress_io_ctx *)page_private(page);
-+
-+	f2fs_verify_pages(dic->rpages, dic->cluster_size);
-+	f2fs_free_dic(dic);
-+}
-+#endif
-+
-+static void f2fs_verity_work(struct work_struct *work)
-+{
-+	struct bio_post_read_ctx *ctx =
-+		container_of(work, struct bio_post_read_ctx, work);
-+
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
-+	/* previous step is decompression */
-+	if (ctx->enabled_steps & (1 << STEP_DECOMPRESS)) {
-+
-+		f2fs_verify_bio(ctx->bio);
-+		f2fs_release_read_bio(ctx->bio);
-+		return;
-+	}
-+#endif
-+
- 	fsverity_verify_bio(ctx->bio);
-+	__f2fs_read_end_io(ctx->bio, false, false);
- }
-
- static void f2fs_post_read_work(struct work_struct *work)
-@@ -148,18 +184,19 @@ static void f2fs_post_read_work(struct work_struct *work)
- 		container_of(work, struct bio_post_read_ctx, work);
-
- 	if (ctx->enabled_steps & (1 << STEP_DECRYPT))
--		decrypt_work(ctx);
-+		f2fs_decrypt_work(ctx);
-
--	if (ctx->enabled_steps & (1 << STEP_DECOMPRESS)) {
--		decompress_work(ctx,
--			ctx->enabled_steps & (1 << STEP_VERITY));
-+	if (ctx->enabled_steps & (1 << STEP_DECOMPRESS))
-+		f2fs_decompress_work(ctx);
-+
-+	if (ctx->enabled_steps & (1 << STEP_VERITY)) {
-+		INIT_WORK(&ctx->work, f2fs_verity_work);
-+		fsverity_enqueue_verify_work(&ctx->work);
- 		return;
- 	}
-
--	if (ctx->enabled_steps & (1 << STEP_VERITY))
--		verity_work(ctx);
--
--	__read_end_io(ctx->bio, false, false);
-+	__f2fs_read_end_io(ctx->bio,
-+		ctx->enabled_steps & (1 << STEP_DECOMPRESS), false);
- }
-
- static void f2fs_enqueue_post_read_work(struct f2fs_sb_info *sbi,
-@@ -176,12 +213,20 @@ static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
- 	 * we shouldn't recurse to the same workqueue.
- 	 */
-
--	if (ctx->enabled_steps) {
-+	if (ctx->enabled_steps & (1 << STEP_DECRYPT) ||
-+		ctx->enabled_steps & (1 << STEP_DECOMPRESS)) {
- 		INIT_WORK(&ctx->work, f2fs_post_read_work);
- 		f2fs_enqueue_post_read_work(ctx->sbi, &ctx->work);
- 		return;
- 	}
--	__read_end_io(ctx->bio, false, false);
-+
-+	if (ctx->enabled_steps & (1 << STEP_VERITY)) {
-+		INIT_WORK(&ctx->work, f2fs_verity_work);
-+		fsverity_enqueue_verify_work(&ctx->work);
-+		return;
-+	}
-+
-+	__f2fs_read_end_io(ctx->bio, false, false);
- }
-
- static bool f2fs_bio_post_read_required(struct bio *bio)
-@@ -205,7 +250,7 @@ static void f2fs_read_end_io(struct bio *bio)
- 		return;
- 	}
-
--	__read_end_io(bio, false, false);
-+	__f2fs_read_end_io(bio, false, false);
- }
-
- static void f2fs_write_end_io(struct bio *bio)
-@@ -864,6 +909,13 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
- 	return bio;
- }
-
-+static void f2fs_release_read_bio(struct bio *bio)
-+{
-+	if (bio->bi_private)
-+		mempool_free(bio->bi_private, bio_post_read_ctx_pool);
-+	bio_put(bio);
-+}
-+
- /* This can handle encryption stuffs */
- static int f2fs_submit_page_read(struct inode *inode, struct page *page,
- 							block_t blkaddr)
-@@ -2023,7 +2075,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- 				dic->failed = true;
- 				if (refcount_sub_and_test(dic->nr_cpages - i,
- 							&dic->ref))
--					f2fs_set_cluster_uptodate(dic->rpages,
-+					f2fs_decompress_end_io(dic->rpages,
- 							cc->cluster_size, true,
- 							false);
- 				f2fs_free_dic(dic);
-@@ -2053,7 +2105,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- out_put_dnode:
- 	f2fs_put_dnode(&dn);
- out:
--	f2fs_set_cluster_uptodate(cc->rpages, cc->cluster_size, true, false);
-+	f2fs_decompress_end_io(cc->rpages, cc->cluster_size, true, false);
- 	f2fs_destroy_compress_ctx(cc);
- 	*bio_ret = bio;
- 	return ret;
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 8a3a35b42a37..20067fa3b035 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3795,7 +3795,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- 				bool is_readahead);
- struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc);
- void f2fs_free_dic(struct decompress_io_ctx *dic);
--void f2fs_set_cluster_uptodate(struct page **rpages,
-+void f2fs_decompress_end_io(struct page **rpages,
- 			unsigned int cluster_size, bool err, bool verity);
- int f2fs_init_compress_ctx(struct compress_ctx *cc);
- void f2fs_destroy_compress_ctx(struct compress_ctx *cc);
--- 
-2.18.0.rc1
-
-
-
-On 2019/10/31 1:02, Eric Biggers wrote:
-> On Wed, Oct 30, 2019 at 04:43:52PM +0800, Chao Yu wrote:
->>>>>>  static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
->>>>>>  {
->>>>>> -	/*
->>>>>> -	 * We use different work queues for decryption and for verity because
->>>>>> -	 * verity may require reading metadata pages that need decryption, and
->>>>>> -	 * we shouldn't recurse to the same workqueue.
->>>>>> -	 */
->>>>>
->>>>> Why is it okay (i.e., no deadlocks) to no longer use different work queues for
->>>>> decryption and for verity?  See the comment above which is being deleted.
->>>>
->>>> Could you explain more about how deadlock happen? or share me a link address if
->>>> you have described that case somewhere?
->>>>
->>>
->>> The verity work can read pages from the file which require decryption.  I'm
->>> concerned that it could deadlock if the work is scheduled on the same workqueue.
->>
->> I assume you've tried one workqueue, and suffered deadlock..
->>
->>> Granted, I'm not an expert in Linux workqueues, so if you've investigated this
->>> and determined that it's safe, can you explain why?
->>
->> I'm not familiar with workqueue...  I guess it may not safe that if the work is
->> scheduled to the same cpu in where verity was waiting for data? if the work is
->> scheduled to other cpu, it may be safe.
->>
->> I can check that before splitting the workqueue for verity and decrypt/decompress.
->>
-> 
-> Yes this is a real problem, try 'kvm-xfstests -c f2fs/encrypt generic/579'.
-> The worker thread gets deadlocked in f2fs_read_merkle_tree_page() waiting for
-> the Merkle tree page to be decrypted.  This is with the v2 compression patch;
-> it works fine on current mainline.
-> 
-> INFO: task kworker/u5:0:61 blocked for more than 30 seconds.
->       Not tainted 5.4.0-rc1-00119-g464e31ba60d0 #13
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> kworker/u5:0    D    0    61      2 0x80004000
-> Workqueue: f2fs_post_read_wq f2fs_post_read_work
-> Call Trace:
->  context_switch kernel/sched/core.c:3384 [inline]
->  __schedule+0x299/0x6c0 kernel/sched/core.c:4069
->  schedule+0x44/0xd0 kernel/sched/core.c:4136
->  io_schedule+0x11/0x40 kernel/sched/core.c:5780
->  wait_on_page_bit_common mm/filemap.c:1174 [inline]
->  wait_on_page_bit mm/filemap.c:1223 [inline]
->  wait_on_page_locked include/linux/pagemap.h:527 [inline]
->  wait_on_page_locked include/linux/pagemap.h:524 [inline]
->  wait_on_page_read mm/filemap.c:2767 [inline]
->  do_read_cache_page+0x407/0x660 mm/filemap.c:2810
->  read_cache_page+0xd/0x10 mm/filemap.c:2894
->  f2fs_read_merkle_tree_page+0x2e/0x30 include/linux/pagemap.h:396
->  verify_page+0x110/0x560 fs/verity/verify.c:120
->  fsverity_verify_bio+0xe6/0x1a0 fs/verity/verify.c:239
->  verity_work fs/f2fs/data.c:142 [inline]
->  f2fs_post_read_work+0x36/0x50 fs/f2fs/data.c:160
->  process_one_work+0x225/0x550 kernel/workqueue.c:2269
->  worker_thread+0x4b/0x3c0 kernel/workqueue.c:2415
->  kthread+0x125/0x140 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> INFO: task kworker/u5:1:1140 blocked for more than 30 seconds.
->       Not tainted 5.4.0-rc1-00119-g464e31ba60d0 #13
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> kworker/u5:1    D    0  1140      2 0x80004000
-> Workqueue: f2fs_post_read_wq f2fs_post_read_work
-> Call Trace:
->  context_switch kernel/sched/core.c:3384 [inline]
->  __schedule+0x299/0x6c0 kernel/sched/core.c:4069
->  schedule+0x44/0xd0 kernel/sched/core.c:4136
->  io_schedule+0x11/0x40 kernel/sched/core.c:5780
->  wait_on_page_bit_common mm/filemap.c:1174 [inline]
->  wait_on_page_bit mm/filemap.c:1223 [inline]
->  wait_on_page_locked include/linux/pagemap.h:527 [inline]
->  wait_on_page_locked include/linux/pagemap.h:524 [inline]
->  wait_on_page_read mm/filemap.c:2767 [inline]
->  do_read_cache_page+0x407/0x660 mm/filemap.c:2810
->  read_cache_page+0xd/0x10 mm/filemap.c:2894
->  f2fs_read_merkle_tree_page+0x2e/0x30 include/linux/pagemap.h:396
->  verify_page+0x110/0x560 fs/verity/verify.c:120
->  fsverity_verify_bio+0xe6/0x1a0 fs/verity/verify.c:239
->  verity_work fs/f2fs/data.c:142 [inline]
->  f2fs_post_read_work+0x36/0x50 fs/f2fs/data.c:160
->  process_one_work+0x225/0x550 kernel/workqueue.c:2269
->  worker_thread+0x4b/0x3c0 kernel/workqueue.c:2415
->  kthread+0x125/0x140 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> 
-> Showing all locks held in the system:
-> 1 lock held by khungtaskd/21:
->  #0: ffffffff82250520 (rcu_read_lock){....}, at: rcu_lock_acquire.constprop.0+0x0/0x30 include/trace/events/lock.h:13
-> 2 locks held by kworker/u5:0/61:
->  #0: ffff88807b78eb28 ((wq_completion)f2fs_post_read_wq){+.+.}, at: set_work_data kernel/workqueue.c:619 [inline]
->  #0: ffff88807b78eb28 ((wq_completion)f2fs_post_read_wq){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
->  #0: ffff88807b78eb28 ((wq_completion)f2fs_post_read_wq){+.+.}, at: process_one_work+0x1ad/0x550 kernel/workqueue.c:2240
->  #1: ffffc90000253e50 ((work_completion)(&ctx->work)){+.+.}, at: set_work_data kernel/workqueue.c:619 [inline]
->  #1: ffffc90000253e50 ((work_completion)(&ctx->work)){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
->  #1: ffffc90000253e50 ((work_completion)(&ctx->work)){+.+.}, at: process_one_work+0x1ad/0x550 kernel/workqueue.c:2240
-> 2 locks held by kworker/u5:1/1140:
->  #0: ffff88807b78eb28 ((wq_completion)f2fs_post_read_wq){+.+.}, at: set_work_data kernel/workqueue.c:619 [inline]
->  #0: ffff88807b78eb28 ((wq_completion)f2fs_post_read_wq){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
->  #0: ffff88807b78eb28 ((wq_completion)f2fs_post_read_wq){+.+.}, at: process_one_work+0x1ad/0x550 kernel/workqueue.c:2240
->  #1: ffffc9000174be50 ((work_completion)(&ctx->work)){+.+.}, at: set_work_data kernel/workqueue.c:619 [inline]
->  #1: ffffc9000174be50 ((work_completion)(&ctx->work)){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
->  #1: ffffc9000174be50 ((work_completion)(&ctx->work)){+.+.}, at: process_one_work+0x1ad/0x550 kernel/workqueue.c:2240
-> .
-> 
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id sifive_gpio_match[] =3D {
+> +       { .compatible =3D "sifive,gpio0" },
+> +       { .compatible =3D "sifive,fu540-c000-gpio" },
+> +       { },
+> +};
+> +
+> +static struct platform_driver sifive_gpio_driver =3D {
+> +       .probe          =3D sifive_gpio_probe,
+> +       .driver =3D {
+> +               .name   =3D "sifive_gpio",
+> +               .of_match_table =3D of_match_ptr(sifive_gpio_match),
+> +       },
+> +};
+> +builtin_platform_driver(sifive_gpio_driver)
+> --
+> 2.7.4
+>
