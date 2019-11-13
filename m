@@ -2,114 +2,182 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A36C17440
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3096C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280BC204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB332067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:01:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DM1iTS34";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UE9aPwJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfKMDAT (ORCPT
+        id S1727348AbfKMDBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 22:00:19 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:40158 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfKMDAS (ORCPT
+        Tue, 12 Nov 2019 22:01:51 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:36268 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfKMDBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 22:00:18 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUisf-0001fa-C2; Wed, 13 Nov 2019 02:59:41 +0000
-Date:   Wed, 13 Nov 2019 02:59:41 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 5/9] namei: LOOKUP_IN_ROOT: chroot-like scoped
- resolution
-Message-ID: <20191113025941.GE26530@ZenIV.linux.org.uk>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-6-cyphar@cyphar.com>
- <20191113020307.GB26530@ZenIV.linux.org.uk>
- <20191113024414.wlmvtjstpnkxa36n@yavin.dot.cyphar.com>
+        Tue, 12 Nov 2019 22:01:50 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0AFCE60EE5; Wed, 13 Nov 2019 03:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573614109;
+        bh=BipDRM2O/OZqpn2UIsa5kp5hdDb04ZWLuxjfRN7HIrI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DM1iTS34AU1idWXs6MkhxblaNFJcv+9ciBNUrdkmZK8rkwSsjtQr/B/eF3td01z57
+         kCex6YcqHipWehXmzIAR49Af3pEE8FFBKQAqh5VBviND1aODTT7ubGkTu50J9tWbPO
+         9xHdils+h91bQ6N33GXTbUfbtcH3a+zbWlny6Yqw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id D5BDE6088D;
+        Wed, 13 Nov 2019 03:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573614105;
+        bh=BipDRM2O/OZqpn2UIsa5kp5hdDb04ZWLuxjfRN7HIrI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UE9aPwJvuWpw5VgcMxLLS5DMrfL03LnojckUNnNY2q1wGpSb98hElH+NK15rLf8lX
+         wPUxZm+xVo1XI/SvxigioSyQEEI2I7F+cs7BXGpBGAV+/1iz1IPNzNwEqmcahhyHN2
+         3Uewx2AzOMhwB3tGgXTW7H+nN6azxAyxjupgGKnk=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113024414.wlmvtjstpnkxa36n@yavin.dot.cyphar.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 Nov 2019 11:01:44 +0800
+From:   cang@codeaurora.org
+To:     Alim Akhtar <alim.akhtar@gmail.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 5/5] scsi: ufs: Complete pending requests in host reset
+ and restore path
+In-Reply-To: <CAGOxZ502wp17UFEk67Qno9DQ0dFPfwMRTLNTCvOXibQDhOw4SA@mail.gmail.com>
+References: <1573200932-384-1-git-send-email-cang@codeaurora.org>
+ <1573200932-384-6-git-send-email-cang@codeaurora.org>
+ <CAGOxZ502wp17UFEk67Qno9DQ0dFPfwMRTLNTCvOXibQDhOw4SA@mail.gmail.com>
+Message-ID: <ceffae90eaaa1e042b816bf707e01835@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 01:44:14PM +1100, Aleksa Sarai wrote:
-> On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > On Tue, Nov 05, 2019 at 08:05:49PM +1100, Aleksa Sarai wrote:
-> > 
-> > > @@ -2277,12 +2277,20 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
-> > >  
-> > >  	nd->m_seq = read_seqbegin(&mount_lock);
-> > >  
-> > > -	/* Figure out the starting path and root (if needed). */
-> > > -	if (*s == '/') {
-> > > +	/* Absolute pathname -- fetch the root. */
-> > > +	if (flags & LOOKUP_IN_ROOT) {
-> > > +		/* With LOOKUP_IN_ROOT, act as a relative path. */
-> > > +		while (*s == '/')
-> > > +			s++;
-> > 
-> > Er...  Why bother skipping slashes?  I mean, not only link_path_walk()
-> > will skip them just fine, you are actually risking breakage in this:
-> >                 if (*s && unlikely(!d_can_lookup(dentry))) {
-> >                         fdput(f);
-> >                         return ERR_PTR(-ENOTDIR);
-> >                 }
-> > which is downstream from there with you patch, AFAICS.
+On 2019-11-13 10:24, Alim Akhtar wrote:
+> Hi Can,
 > 
-> I switched to stripping the slashes at your suggestion a few revisions
-> ago[1], and had (wrongly) assumed we needed to handle "/" somehow in
-> path_init(). But you're quite right about link_path_walk() -- and I'd be
-> more than happy to drop it.
+> On Fri, Nov 8, 2019 at 1:50 PM Can Guo <cang@codeaurora.org> wrote:
+>> 
+>> In UFS host reset and restore path, before probe, we stop and start 
+>> the
+>> host controller once. After host controller is stopped, the pending
+>> requests, if any, are cleared from the doorbell, but no completion IRQ
+>> would be raised due to the hba is stopped.
+>> These pending requests shall be completed along with the first NOP_OUT
+>> command(as it is the first command which can raise a transfer 
+>> completion
+>> IRQ) sent during probe.
+>> Since the OCSs of these pending requests are not SUCCESS(because they 
+>> are
+>> not yet literally finished), their UPIUs shall be dumped. When there 
+>> are
+>> multiple pending requests, the UPIU dump can be overwhelming and may 
+>> lead
+>> to stability issues because it is in atomic context.
+>> Therefore, before probe, complete these pending requests right after 
+>> host
+>> controller is stopped.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+> Looks good, I hope this is tested on your platform.
+> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+> 
 
-That, IIRC, was about untangling the weirdness around multiple calls of
-dirfd_path_init() and basically went "we might want just strip the slashes
-in case of that flag very early in the entire thing, so that later the
-normal logics for absolute/relative would DTRT".  Since your check is
-right next to checking for absolute pathnames (and not in the very
-beginning of path_init()), we might as well turn the check for
-absolute pathname into *s == '/' && !(flags & LOOKUP_IN_ROOT) and be
-done with that.
+Hi Alim,
+
+Thanks for the review. We've tested it out on our platforms.
+
+Best regards,
+Can Guo.
+
+>>  drivers/scsi/ufs/ufshcd.c | 20 +++++++-------------
+>>  1 file changed, 7 insertions(+), 13 deletions(-)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index 5950a7c..4df4136 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -5404,8 +5404,8 @@ static void ufshcd_err_handler(struct 
+>> work_struct *work)
+>> 
+>>         /*
+>>          * if host reset is required then skip clearing the pending
+>> -        * transfers forcefully because they will automatically get
+>> -        * cleared after link startup.
+>> +        * transfers forcefully because they will get cleared during
+>> +        * host reset and restore
+>>          */
+>>         if (needs_reset)
+>>                 goto skip_pending_xfer_clear;
+>> @@ -6333,9 +6333,13 @@ static int ufshcd_host_reset_and_restore(struct 
+>> ufs_hba *hba)
+>>         int err;
+>>         unsigned long flags;
+>> 
+>> -       /* Reset the host controller */
+>> +       /*
+>> +        * Stop the host controller and complete the requests
+>> +        * cleared by h/w
+>> +        */
+>>         spin_lock_irqsave(hba->host->host_lock, flags);
+>>         ufshcd_hba_stop(hba, false);
+>> +       ufshcd_complete_requests(hba);
+>>         spin_unlock_irqrestore(hba->host->host_lock, flags);
+>> 
+>>         /* scale up clocks to max frequency before full 
+>> reinitialization */
+>> @@ -6369,7 +6373,6 @@ static int ufshcd_host_reset_and_restore(struct 
+>> ufs_hba *hba)
+>>  static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+>>  {
+>>         int err = 0;
+>> -       unsigned long flags;
+>>         int retries = MAX_HOST_RESET_RETRIES;
+>> 
+>>         do {
+>> @@ -6379,15 +6382,6 @@ static int ufshcd_reset_and_restore(struct 
+>> ufs_hba *hba)
+>>                 err = ufshcd_host_reset_and_restore(hba);
+>>         } while (err && --retries);
+>> 
+>> -       /*
+>> -        * After reset the door-bell might be cleared, complete
+>> -        * outstanding requests in s/w here.
+>> -        */
+>> -       spin_lock_irqsave(hba->host->host_lock, flags);
+>> -       ufshcd_transfer_req_compl(hba);
+>> -       ufshcd_tmc_handler(hba);
+>> -       spin_unlock_irqrestore(hba->host->host_lock, flags);
+>> -
+>>         return err;
+>>  }
+>> 
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
