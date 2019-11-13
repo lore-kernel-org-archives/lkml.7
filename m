@@ -2,155 +2,111 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1174C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2877C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919E0206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D292E222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfKMNvx (ORCPT
+        id S1727612AbfKMNwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:51:53 -0500
-Received: from smtp2.goneo.de ([85.220.129.33]:46438 "EHLO smtp2.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbfKMNvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:51:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by smtp2.goneo.de (Postfix) with ESMTP id 3941123FC29;
-        Wed, 13 Nov 2019 14:51:49 +0100 (CET)
-X-Virus-Scanned: by goneo
-Received: from smtp2.goneo.de ([127.0.0.1])
-        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id VWH12606cqcp; Wed, 13 Nov 2019 14:51:48 +0100 (CET)
-Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp2.goneo.de (Postfix) with ESMTPA id 2BF0B23F40C;
-        Wed, 13 Nov 2019 14:51:47 +0100 (CET)
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Lars Poeschel <poeschel@lemonage.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Winslow <swinslow@gmail.com>,
-        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     coverity-bot <keescook+coverity-bot@chromium.org>
-Subject: [PATCH net-next] nfc: pn533: pn533_phy_ops dev_[up,down] return int
-Date:   Wed, 13 Nov 2019 14:50:22 +0100
-Message-Id: <20191113135039.32086-1-poeschel@lemonage.de>
-X-Mailer: git-send-email 2.24.0
+        Wed, 13 Nov 2019 08:52:11 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:47828 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKMNwL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:52:11 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A2DFF1C1250; Wed, 13 Nov 2019 14:52:09 +0100 (CET)
+Date:   Wed, 13 Nov 2019 14:52:09 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     pavel@denx.de
+Cc:     linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 113/125] usb: dwc3: gadget: fix race when disabling
+ ep with cancelled xfers
+Message-ID: <20191113135209.GB20980@duo.ucw.cz>
+References: <20191111181438.945353076@linuxfoundation.org>
+ <20191111181454.916507789@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="z6Eq5LdranGa6ru8"
+Content-Disposition: inline
+In-Reply-To: <20191111181454.916507789@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change dev_up and dev_down functions of struct pn533_phy_ops to return
-int. This way the pn533 core can report errors in the phy layer to upper
-layers.
-The only user of this is currently uart.c and it is changed to report
-the error of a possibly failing call to serdev_device_open.
 
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1487395 ("Error handling issues")
-Fixes: c656aa4c27b1 ("nfc: pn533: add UART phy driver")
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
- drivers/nfc/pn533/pn533.c | 12 ++++++++----
- drivers/nfc/pn533/pn533.h |  4 ++--
- drivers/nfc/pn533/uart.c  | 13 ++++++++++---
- 3 files changed, 20 insertions(+), 9 deletions(-)
+--z6Eq5LdranGa6ru8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/nfc/pn533/pn533.c b/drivers/nfc/pn533/pn533.c
-index aa766e7ece70..346e084387f7 100644
---- a/drivers/nfc/pn533/pn533.c
-+++ b/drivers/nfc/pn533/pn533.c
-@@ -2643,13 +2643,17 @@ static int pn532_sam_configuration(struct nfc_dev *nfc_dev)
- static int pn533_dev_up(struct nfc_dev *nfc_dev)
- {
- 	struct pn533 *dev = nfc_get_drvdata(nfc_dev);
-+	int rc;
- 
--	if (dev->phy_ops->dev_up)
--		dev->phy_ops->dev_up(dev);
-+	if (dev->phy_ops->dev_up) {
-+		rc = dev->phy_ops->dev_up(dev);
-+		if (rc)
-+			return rc;
-+	}
- 
- 	if ((dev->device_type == PN533_DEVICE_PN532) ||
- 		(dev->device_type == PN533_DEVICE_PN532_AUTOPOLL)) {
--		int rc = pn532_sam_configuration(nfc_dev);
-+		rc = pn532_sam_configuration(nfc_dev);
- 
- 		if (rc)
- 			return rc;
-@@ -2665,7 +2669,7 @@ static int pn533_dev_down(struct nfc_dev *nfc_dev)
- 
- 	ret = pn533_rf_field(nfc_dev, 0);
- 	if (dev->phy_ops->dev_down && !ret)
--		dev->phy_ops->dev_down(dev);
-+		ret = dev->phy_ops->dev_down(dev);
- 
- 	return ret;
- }
-diff --git a/drivers/nfc/pn533/pn533.h b/drivers/nfc/pn533/pn533.h
-index b66f02a53167..5f94f38a2a08 100644
---- a/drivers/nfc/pn533/pn533.h
-+++ b/drivers/nfc/pn533/pn533.h
-@@ -224,8 +224,8 @@ struct pn533_phy_ops {
- 	 * bring up it's interface to the chip and have it suspended for power
- 	 * saving reasons otherwise.
- 	 */
--	void (*dev_up)(struct pn533 *priv);
--	void (*dev_down)(struct pn533 *priv);
-+	int (*dev_up)(struct pn533 *priv);
-+	int (*dev_down)(struct pn533 *priv);
- };
- 
- 
-diff --git a/drivers/nfc/pn533/uart.c b/drivers/nfc/pn533/uart.c
-index 46e5ff16f699..a0665d8ea85b 100644
---- a/drivers/nfc/pn533/uart.c
-+++ b/drivers/nfc/pn533/uart.c
-@@ -100,20 +100,27 @@ static void pn532_uart_abort_cmd(struct pn533 *dev, gfp_t flags)
- 	pn533_recv_frame(dev, NULL, -ENOENT);
- }
- 
--static void pn532_dev_up(struct pn533 *dev)
-+static int pn532_dev_up(struct pn533 *dev)
- {
- 	struct pn532_uart_phy *pn532 = dev->phy;
-+	int ret = 0;
-+
-+	ret = serdev_device_open(pn532->serdev);
-+	if (ret)
-+		return ret;
- 
--	serdev_device_open(pn532->serdev);
- 	pn532->send_wakeup = PN532_SEND_LAST_WAKEUP;
-+	return ret;
- }
- 
--static void pn532_dev_down(struct pn533 *dev)
-+static int pn532_dev_down(struct pn533 *dev)
- {
- 	struct pn532_uart_phy *pn532 = dev->phy;
- 
- 	serdev_device_close(pn532->serdev);
- 	pn532->send_wakeup = PN532_SEND_WAKEUP;
-+
-+	return 0;
- }
- 
- static struct pn533_phy_ops uart_phy_ops = {
--- 
-2.24.0
+Hi!
 
+> From: Felipe Balbi <felipe.balbi@linux.intel.com>
+>=20
+> [ Upstream commit d8eca64eec7103ab1fbabc0a187dbf6acfb2af93 ]
+>=20
+> When disabling an endpoint which has cancelled requests, we should
+> make sure to giveback requests that are currently pending in the
+> cancelled list, otherwise we may fall into a situation where command
+> completion interrupt fires after endpoint has been disabled, therefore
+> causing a splat.
+>=20
+> Fixes: fec9095bdef4 "usb: dwc3: gadget: remove wait_end_transfer"
+> Reported-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+> Link: https://lore.kernel.org/r/20191031090713.1452818-1-felipe.balbi@lin=
+ux.intel.com
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/usb/dwc3/gadget.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 54de732550648..8398c33d08e7c 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -698,6 +698,12 @@ static void dwc3_remove_requests(struct dwc3 *dwc, s=
+truct dwc3_ep *dep)
+> =20
+>  		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
+>  	}
+> +
+> +	while (!list_empty(&dep->cancelled_list)) {
+> +		req =3D next_request(&dep->cancelled_list);
+> +
+> +		dwc3_gadget_giveback(dep, req, -ESHUTDOWN);
+> +	}
+>  }
+
+This is third copy of a loop. Perhaps it is time to create a helper?
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--z6Eq5LdranGa6ru8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXcwKiQAKCRAw5/Bqldv6
+8ixSAKCflMLincjXXFUMPrtOaJvWPURdqgCfXnLt5LhqLyDYBsUy8nhX0Yo05tM=
+=a3RU
+-----END PGP SIGNATURE-----
+
+--z6Eq5LdranGa6ru8--
