@@ -2,128 +2,175 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30F0C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBFCC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83A821A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:08:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUDBGayJ"
+	by mail.kernel.org (Postfix) with ESMTP id 38BA521A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573607455;
+	bh=UHojKoHJkSEXKX2pCIHTRX25I6EJIfI6hK+0Q8psVrY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q/8oFTdjN9aL2fx9dr09UBtdgrOpQV4bRJYfb4Ec//+maKD6EW1X/7ppXQkASiNhI
+	 UAo8ZTxmnAXpXgdTWc95HzMFt/eOrSN5DSE2Eztz8IbP1wt+F9RlTEtFXGlm+mqgYM
+	 S6wzLR4woPJ/xWzv7+RzUcvOUBWW7i8TKAcuauyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfKMBIX (ORCPT
+        id S1727312AbfKMBKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:08:23 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:36869 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfKMBIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:08:21 -0500
-Received: by mail-yb1-f193.google.com with SMTP id q7so305260ybk.4;
-        Tue, 12 Nov 2019 17:08:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yCcpUR5xkua6Y67E1na1yBqKbBskN49m1re7QSulc+c=;
-        b=CUDBGayJwfrXnS81uXoV6axLx6w9zRBvGZj0bs3n3k8g5md33a3NxNZKjf/lZQ2Lgc
-         isEk0dD6bAR4+RgG/mrAf11xWuiCXXHeX39W7QOTCS8PoUTO4r3Yx/n5aptWhBfTGlBX
-         Uvd0/0amO0IJkLarJc1o2KBEZPIbfspvtrfcda4kekqVOy2JciyuuyY4A55Toquc7cWd
-         HNhe7u+bQrVv2GEo8N2mchTUdAgnRCq8VaI4eQ6r6RebDcuiVS5Bf88dIwcAXIyL7Jzr
-         hne8OOb2qeW0y1V/kmUYNFkrccfQQ051QvihxZ3DX74kZ56E3MRuyW91sTeqII+C2jDr
-         z6TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yCcpUR5xkua6Y67E1na1yBqKbBskN49m1re7QSulc+c=;
-        b=c8kfpqrGB1q+sYDtPOZWYEuVlqiPfL02h4IrYo5dKk72rW+vMmJo1u23svBZt61nT0
-         ICl96bE196e06iMNh4U7tKqhb3b4GX6H5k59NXyfL4jNrHTKNG/vhuq+nn450fMJcsbJ
-         lMLvzNrvrwEt5d7kC1wQXH2qVl/Q2HyfAfabHSDtBbeBogxjBj4O0G43osIb9iWnacyL
-         Tdoegu9KFqUFyQE3FhDmfqdcjDHEi8CgMVr5vS9akfmtM3A/BAK8wNRhPOwxXE8yIJs0
-         3JmtbMcoT+byckn+tbKCuZ25+nlPwvW2ahT6laU3jp513JTUgijVng7bSHYf7ljymA71
-         hB4w==
-X-Gm-Message-State: APjAAAUoUdLRl8esF/F1L/+JiUAl9OOvKguF6fpuTyJjzGvlEJuUujn7
-        jQVynbKtsk98l1o/C5Mkb4BDhz1+AMhWUhUbayNXf6Hx
-X-Google-Smtp-Source: APXvYqzyro2dGGTOyuvh5jyYXnhBqcnTkQTANa4z2q7vE0p41H0RGhhtbgv9AjTm9xWSWnitwREQkvbnm84KuSXSb7w=
-X-Received: by 2002:a25:d8c5:: with SMTP id p188mr724930ybg.414.1573607300682;
- Tue, 12 Nov 2019 17:08:20 -0800 (PST)
+        Tue, 12 Nov 2019 20:10:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbfKMBKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:10:54 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B7BC21A49;
+        Wed, 13 Nov 2019 01:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573607452;
+        bh=UHojKoHJkSEXKX2pCIHTRX25I6EJIfI6hK+0Q8psVrY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DzoCk/LEjfy/7ut5nKnxEQq7QeB7s//h6mMkiYHXigi2Qe+mtvTPQlKD/xYiEjoA+
+         kcbKq3J2tjphzECfvFU/8c6aBJN1YRBe4nTWHWPvXcTWAkFRfQdQmulqsmTMKeC7Ww
+         KKujlcFDotf3FJEAXhmL4esuTG/xQ0GE8CzblrAg=
+Date:   Tue, 12 Nov 2019 20:10:51 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4.19 STABLE] KVM: x86: introduce is_pae_paging
+Message-ID: <20191113011051.GJ8496@sasha-vm>
+References: <20191111225423.29309-1-sean.j.christopherson@intel.com>
+ <aecfcc9e-dcab-2b52-ebdb-373a416a4951@redhat.com>
 MIME-Version: 1.0
-References: <20191022142139.16789-1-candlesea@gmail.com> <nycvar.YFH.7.76.1911121457050.1799@cbobk.fhfr.pm>
- <CAO-hwJKO5u6xUrBe_ne0OqFAHM9dpwtTOWtYW+3z-LxSFT6VWQ@mail.gmail.com>
-In-Reply-To: <CAO-hwJKO5u6xUrBe_ne0OqFAHM9dpwtTOWtYW+3z-LxSFT6VWQ@mail.gmail.com>
-From:   Candle Sun <candlesea@gmail.com>
-Date:   Wed, 13 Nov 2019 09:08:09 +0800
-Message-ID: <CAPnx3XPLkrsxDwWujd5Yi3qwwVzhBAp7Kh9sGNPxfFpXmmovhw@mail.gmail.com>
-Subject: Re: [PATCH v4] HID: core: check whether Usage Page item is after
- Usage ID items
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        =?UTF-8?B?57+f5LqsIChPcnNvbiBaaGFpKQ==?= <orson.zhai@unisoc.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <aecfcc9e-dcab-2b52-ebdb-373a416a4951@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 11:18 PM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
+On Tue, Nov 12, 2019 at 12:05:44AM +0100, Paolo Bonzini wrote:
+>On 11/11/19 23:54, Sean Christopherson wrote:
+>> From: Paolo Bonzini <pbonzini@redhat.com>
+>>
+>> Upstream commit bf03d4f9334728bf7c8ffc7de787df48abd6340e.
+>>
+>> Checking for 32-bit PAE is quite common around code that fiddles with
+>> the PDPTRs.  Add a function to compress all checks into a single
+>> invocation.
+>>
+>> Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
+>> where it fails to check is_long_mode() and results in KVM incorrectly
+>> attempting to load PDPTRs for a 64-bit guest.
+>>
+>> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>> [sean: backport to 4.x; handle vmx.c split in 5.x, call out the bugfix]
+>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> ---
+>>  arch/x86/kvm/vmx.c | 7 +++----
+>>  arch/x86/kvm/x86.c | 8 ++++----
+>>  arch/x86/kvm/x86.h | 5 +++++
+>>  3 files changed, 12 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+>> index 6f7b3acdab26..83acaed244ba 100644
+>> --- a/arch/x86/kvm/vmx.c
+>> +++ b/arch/x86/kvm/vmx.c
+>> @@ -5181,7 +5181,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
+>>  		      (unsigned long *)&vcpu->arch.regs_dirty))
+>>  		return;
+>>
+>> -	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
+>> +	if (is_pae_paging(vcpu)) {
+>>  		vmcs_write64(GUEST_PDPTR0, mmu->pdptrs[0]);
+>>  		vmcs_write64(GUEST_PDPTR1, mmu->pdptrs[1]);
+>>  		vmcs_write64(GUEST_PDPTR2, mmu->pdptrs[2]);
+>> @@ -5193,7 +5193,7 @@ static void ept_save_pdptrs(struct kvm_vcpu *vcpu)
+>>  {
+>>  	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
+>>
+>> -	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
+>> +	if (is_pae_paging(vcpu)) {
+>>  		mmu->pdptrs[0] = vmcs_read64(GUEST_PDPTR0);
+>>  		mmu->pdptrs[1] = vmcs_read64(GUEST_PDPTR1);
+>>  		mmu->pdptrs[2] = vmcs_read64(GUEST_PDPTR2);
+>> @@ -12021,8 +12021,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
+>>  		 * If PAE paging and EPT are both on, CR3 is not used by the CPU and
+>>  		 * must not be dereferenced.
+>>  		 */
+>> -		if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu) &&
+>> -		    !nested_ept) {
+>> +		if (is_pae_paging(vcpu) && !nested_ept) {
+>>  			if (!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3)) {
+>>  				*entry_failure_code = ENTRY_FAIL_PDPTE;
+>>  				return 1;
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index 6ae8a013af31..b9b87fb75ac0 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -633,7 +633,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
+>>  	gfn_t gfn;
+>>  	int r;
+>>
+>> -	if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
+>> +	if (!is_pae_paging(vcpu))
+>>  		return false;
+>>
+>>  	if (!test_bit(VCPU_EXREG_PDPTR,
+>> @@ -884,8 +884,8 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+>>  	if (is_long_mode(vcpu) &&
+>>  	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
+>>  		return 1;
+>> -	else if (is_pae(vcpu) && is_paging(vcpu) &&
+>> -		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+>> +	else if (is_pae_paging(vcpu) &&
+>> +		 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+>>  		return 1;
+>>
+>>  	kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush);
+>> @@ -8312,7 +8312,7 @@ static int __set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
+>>  		kvm_update_cpuid(vcpu);
+>>
+>>  	idx = srcu_read_lock(&vcpu->kvm->srcu);
+>> -	if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
+>> +	if (is_pae_paging(vcpu)) {
+>>  		load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
+>>  		mmu_reset_needed = 1;
+>>  	}
+>> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+>> index 3a91ea760f07..608e5f8c5d0a 100644
+>> --- a/arch/x86/kvm/x86.h
+>> +++ b/arch/x86/kvm/x86.h
+>> @@ -139,6 +139,11 @@ static inline int is_paging(struct kvm_vcpu *vcpu)
+>>  	return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
+>>  }
+>>
+>> +static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return !is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu);
+>> +}
+>> +
+>>  static inline u32 bit(int bitno)
+>>  {
+>>  	return 1 << (bitno & 31);
+>>
 >
-> Hi all,
->
-> On Tue, Nov 12, 2019 at 2:57 PM Jiri Kosina <jikos@kernel.org> wrote:
-> >
-> > On Tue, 22 Oct 2019, Candle Sun wrote:
-> >
-> > > From: Candle Sun <candle.sun@unisoc.com>
-> > >
-> > > Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> > > to Main item") adds support for Usage Page item after Usage ID items
-> > > (such as keyboards manufactured by Primax).
-> > [ ... snip ... ]
-> >
-> > Benjamin,
-> >
-> > are you planning to run this through your testsuite against regressions?
-> >
-> > I believe that's the last missing step, otherwise I'd be fine merging
-> > this.
->
-> Sorry I had to deal with family issues 2 weeks ago, and now RHEL is
-> coming back at me and eating all my time.
->
-> The kernel patch is now OK, so we can grab it now (either you take it
-> Jiri, and add my acked-by or I'll push it later...)
->
-> Candle, can you rework
-> https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/58 so
-> that it mirrors the kernel code (and get rid of the
-> self.local.usage_page_last logic)?
->
-> Cheers,
-> Benjamin
->
+>Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
-Thanks Jiri and Benjamin.
-I will rework the hid-tools patch ASAP.
+Queued up for 4.19, thank you.
 
-Regards,
-Candle
-
-> >
-> > Thanks,
-> >
-> > --
-> > Jiri Kosina
-> > SUSE Labs
-> >
->
+-- 
+Thanks,
+Sasha
