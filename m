@@ -2,218 +2,362 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2173C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED0FC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C5C206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3133A206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="APqs78Vo"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HGNxW8kK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfKMUVO (ORCPT
+        id S1726995AbfKMUVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:21:14 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46484 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfKMUVO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:21:14 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b3so3855381wrs.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:21:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Vxg7fErovmPZRUiQLFPaUndHhsTa0KcxJAK3E2kbzLs=;
-        b=APqs78VoQYRNRcD2z55wsNoVUmqjCvT6dJijUhx0swgrmfCQpKU250Sj2yybQ0+l4w
-         7DyuggHzS7QqSqNTPA2EuRROfb6hPMtcZ91+ttOf9ZaFKX6T7HECTJEZUhpjotm0u020
-         eU9fViHK5VcofIfXsFJ2KLCQP4lnDDD/vxA524dl2Lo5Evjuatpdplj4FRU9e6No9A5q
-         JTzwN6Gt0a2bkHGDdzXSutW2Ov9XccKwR2JJXBLi/uQ+MMEjbsNcd+1PJI12mUBw83E1
-         lIHX/M8S61BMF5oG6/RkshN2v/dRXh8sPz5mdhX8S0NZrcvF/3O5imEYTYJRQ5y0hhJ0
-         3rcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Vxg7fErovmPZRUiQLFPaUndHhsTa0KcxJAK3E2kbzLs=;
-        b=VTbr46CmUQHf1FiV1oFxnWftPrUCqYfzPqcllQEJJJHac20+FhQ+XrNpbH4Q0ZCAqa
-         8VcRZ/jDGNfC8j1dyw33u658yPdE8v5eTW9i9aYt0z3x5UeCoj612G/3SXTrzgmQed6A
-         OHFzVugEjXByW/XhWnlAT8GOEuunHbNJu+HLDdg14nXwr7Etle2hRkoZ64n1Oug4F/RR
-         5Bw/LkwRyK0xdwbpxAdX3X54JoDkfgA5ovaoAznfXvBM9aIXtkgu2nDquugotcAcKyMP
-         nSwyYqFtqXCim9AclugsdeUpoPVbi3T8j/Vat6tyO3Is+cMNv+oXX87B44EEVYUgESl0
-         sOhg==
-X-Gm-Message-State: APjAAAW+gexyboIGEj128vUD5OKptH8BTnC93ETkpPL6+9Ivyk9BxvWZ
-        y3Hk8qT/laZMJNeokqoM/PuJjd455Yg=
-X-Google-Smtp-Source: APXvYqzFEApVCTLE8xYkeDbklVfQuPHlUEPb5AYmu9bzcn/4nBX3xRxtrONHlzi+7zFsI2+zvVw4lQ==
-X-Received: by 2002:a5d:4f06:: with SMTP id c6mr4661339wru.211.1573676470480;
-        Wed, 13 Nov 2019 12:21:10 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:bdd0:28e6:f0d9:a18c])
-        by smtp.gmail.com with ESMTPSA id n1sm4262231wrr.24.2019.11.13.12.21.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 13 Nov 2019 12:21:09 -0800 (PST)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, dietmar.eggemann@arm.com,
-        juri.lelli@redhat.com, rostedt@goodmis.org, mgorman@suse.de,
-        dsmythies@telus.net
-Cc:     linux-pm@vger.kernel.org, torvalds@linux-foundation.org,
-        tglx@linutronix.de, sargun@sargun.me, tj@kernel.org,
-        xiexiuqi@huawei.com, xiezhipeng1@huawei.com,
-        srinivas.pandruvada@linux.intel.com,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v3] sched/freq: move call to cpufreq_update_util
-Date:   Wed, 13 Nov 2019 21:21:01 +0100
-Message-Id: <1573676461-7990-1-git-send-email-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 13 Nov 2019 15:21:33 -0500
+Received: from ozlabs.org ([203.11.71.1]:39451 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfKMUVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:21:33 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CwxN3QpGz9sP3;
+        Thu, 14 Nov 2019 07:21:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573676489;
+        bh=cqdhA1GeUnwdtRyeU+v2vCtRwjGGl9JmaH/BSlxeAUU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HGNxW8kKyzAHe3qeZib0aVg7+e+tJaDO46mWktPdydbVQMXsqOm6MGdo9eaLK9Yf3
+         Ka6vTYSOpwtS80zM1DigfFsBjSGwh4D7zDNfy1BhfrpRXvjj+zSpytxe1drFioA+SE
+         w8emrMAWEMDxPy/iUQEaUn26Z5KhBdfjTffJ2iUPYUSZjUBDkURkNTV2KKKJDg/HyG
+         Im2Kxh5pvaw23uAFPcCVhFQfvDkDPkfcmtOHa6jCaJ5lzJ8EXmiZ+rIqFhNS5jTWxl
+         IsW8alWAPQbR17XGXwKgbLCRy9AUXGvRUe58IxmN3dn4v/cLF305FkDHXZJ6ODbSdC
+         vi8GL2OS74B9A==
+Date:   Thu, 14 Nov 2019 07:21:20 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: linux-next: Signed-off-by missing for commit in the net tree
+Message-ID: <20191114072120.505dcb59@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/qT.g2TIBVnLNH.MDe3tItZQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-which might be inefficient when cpufreq driver has rate limitation.
+--Sig_/qT.g2TIBVnLNH.MDe3tItZQ
+Content-Type: multipart/mixed; boundary="MP_/JK.BRX0v6NlJ_9YjZwq/T3/"
 
-When a task is attached on a CPU, we have call path:
+--MP_/JK.BRX0v6NlJ_9YjZwq/T3/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-update_load_avg()
-  update_cfs_rq_load_avg()
-    cfs_rq_util_change -- > trig frequency update
-  attach_entity_load_avg()
-    cfs_rq_util_change -- > trig frequency update
+Hi all,
 
-The 1st frequency update will not take into account the utilization of the
-newly attached task and the 2nd one might be discard because of rate
-limitation of the cpufreq driver.
+Commits
 
-update_cfs_rq_load_avg() is only called by update_blocked_averages()
-and update_load_avg() so we can move the call to
-cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
-interesting to notice that update_load_avg() already calls directly
-cfs_rq_util_change() for !SMP case.
+  4a15d574e68a ("can: j1939: warn if resources are still linked on destroy")
+  ddeeb7d4822e ("can: j1939: j1939_can_recv(): add priv refcounting")
+  8d7a5f000e23 ("can: j1939: transport: j1939_cancel_active_session(): use =
+hrtimer_try_to_cancel() instead of hrtimer_cancel()")
+  62ebce1dc1fa ("can: j1939: make sure socket is held as long as session ex=
+ists")
+  d966635b384b ("can: j1939: transport: make sure the aborted session will =
+be deactivated only once")
+  fd81ebfe7975 ("can: j1939: socket: rework socket locking for j1939_sk_rel=
+ease() and j1939_sk_sendmsg()")
+  c48c8c1e2e81 ("can: j1939: main: j1939_ndev_to_priv(): avoid crash if can=
+_ml_priv is NULL")
+  25fe97cb7620 ("can: j1939: move j1939_priv_put() into sk_destruct callbac=
+k")
+  975987e7015b ("can: af_can: export can_sock_destruct()")
 
-This changes will also ensure that cpufreq_update_util() is called even
-when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-irq, rt or dl pelt signals.
+are missing a Signed-off-by from their committer.
 
-Reported-by: Doug Smythies <dsmythies@telus.net>
-Fixes: 039ae8bcf7a5 ("sched/fair: Fix O(nr_cgroups) in the load balancing path")
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
+Dave, since your trees are immutable, you are really going to have to
+do some premerge checking for these ... I have attached the scripts I
+use.  Others have some git hooks which do something similar.
 
-changes for v3:
-- fix typo
-- test the decay of root cfs_rq even for !CONFIG_FAIR_GROUP_SCHED case
+--=20
+Cheers,
+Stephen Rothwell
 
- kernel/sched/fair.c | 39 ++++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+--MP_/JK.BRX0v6NlJ_9YjZwq/T3/
+Content-Type: application/x-shellscript
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment; filename=check_commits
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 69a81a5..0a8f4ea 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3504,9 +3504,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
- 	cfs_rq->load_last_update_time_copy = sa->last_update_time;
- #endif
- 
--	if (decayed)
--		cfs_rq_util_change(cfs_rq, 0);
--
- 	return decayed;
- }
- 
-@@ -3616,8 +3613,12 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 		attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
- 		update_tg_load_avg(cfs_rq, 0);
- 
--	} else if (decayed && (flags & UPDATE_TG))
--		update_tg_load_avg(cfs_rq, 0);
-+	} else if (decayed) {
-+		cfs_rq_util_change(cfs_rq, 0);
-+
-+		if (flags & UPDATE_TG)
-+			update_tg_load_avg(cfs_rq, 0);
-+	}
- }
- 
- #ifndef CONFIG_64BIT
-@@ -7543,6 +7544,7 @@ static void update_blocked_averages(int cpu)
- 	const struct sched_class *curr_class;
- 	struct rq_flags rf;
- 	bool done = true;
-+	int decayed;
- 
- 	rq_lock_irqsave(rq, &rf);
- 	update_rq_clock(rq);
-@@ -7552,9 +7554,9 @@ static void update_blocked_averages(int cpu)
- 	 * that RT, DL and IRQ signals have been updated before updating CFS.
- 	 */
- 	curr_class = rq->curr->sched_class;
--	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
--	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
--	update_irq_load_avg(rq, 0);
-+	decayed = update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-+	decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-+	decayed |= update_irq_load_avg(rq, 0);
- 
- 	/* Don't need periodic decay once load/util_avg are null */
- 	if (others_have_blocked(rq))
-@@ -7567,9 +7569,13 @@ static void update_blocked_averages(int cpu)
- 	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
- 		struct sched_entity *se;
- 
--		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
-+		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
- 			update_tg_load_avg(cfs_rq, 0);
- 
-+			if (cfs_rq == &rq->cfs)
-+				decayed = 1;
-+		}
-+
- 		/* Propagate pending load changes to the parent, if any: */
- 		se = cfs_rq->tg->se[cpu];
- 		if (se && !skip_blocked_update(se))
-@@ -7588,6 +7594,9 @@ static void update_blocked_averages(int cpu)
- 	}
- 
- 	update_blocked_load_status(rq, !done);
-+
-+	if (decayed)
-+		cpufreq_update_util(rq, 0);
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
-@@ -7644,6 +7653,7 @@ static inline void update_blocked_averages(int cpu)
- 	struct cfs_rq *cfs_rq = &rq->cfs;
- 	const struct sched_class *curr_class;
- 	struct rq_flags rf;
-+	int decayed;
- 
- 	rq_lock_irqsave(rq, &rf);
- 	update_rq_clock(rq);
-@@ -7653,13 +7663,16 @@ static inline void update_blocked_averages(int cpu)
- 	 * that RT, DL and IRQ signals have been updated before updating CFS.
- 	 */
- 	curr_class = rq->curr->sched_class;
--	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
--	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
--	update_irq_load_avg(rq, 0);
-+	decayed = update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-+	decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-+	decayed |= update_irq_load_avg(rq, 0);
- 
--	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-+	decayed |= update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
- 
- 	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
-+
-+	if (decayed)
-+		cpufreq_update_util(rq, 0);
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
--- 
-2.7.4
+#!/bin/bash
 
+if [ "$#" -lt 1 ]; then
+	printf 'Usage: %s <commit range>\n' "$0" 1>&2
+	exit 1
+fi
+
+commits=3D$(git rev-list --no-merges "$@")
+if [ -z "$commits" ]; then
+	printf 'No commits\n'
+	exit 0
+fi
+
+"$(realpath "$(dirname "$0")")/check_fixes" "$@"
+
+declare -a author_missing committer_missing
+
+print_commits()
+{
+	if [ "$#" -eq 1 ]; then
+		return
+	fi
+
+	local t=3D"$1"
+
+	shift
+
+	s=3D
+	is=3D'is'
+	its=3D'its'
+	if [ "$#" -gt 1 ]; then
+		s=3D's'
+		is=3D'are'
+		its=3D'their'
+	fi
+	printf 'Commit%s\n\n' "$s"
+	git log --no-walk --pretty=3D'format:  %h ("%s")' "$@"
+	printf '\n%s missing a Signed-off-by from %s %s%s.\n\n' \
+		"$is" "$its" "$t" "$s"
+}
+
+check_unexpected_files()
+{
+	local files
+
+	readarray files < <(git diff-tree -r --diff-filter=3DA --name-only --no-co=
+mmit-id "$1" '*.rej' '*.orig')
+	if [ "${#files[@]}" -eq 0 ]; then
+		return
+	fi
+
+	s=3D
+	this=3D'this'
+	if [ "${#files[@]}" -gt 1 ]; then
+		s=3D's'
+		this=3D'these'
+	fi
+
+	printf 'Commit\n\n'
+	git log --no-walk --pretty=3D'format:  %h ("%s")' "$1"
+	printf '\nadded %s unexpected file%s:\n\n' "$this" "$s"
+	printf '  %s\n' "${files[@]}"
+}
+
+for c in $commits; do
+	ae=3D$(git log -1 --format=3D'<%ae>%n<%aE>%n %an %n %aN ' "$c" | sort -u)
+	ce=3D$(git log -1 --format=3D'<%ce>%n<%cE>%n %cn %n %cN ' "$c" | sort -u)
+	sob=3D$(git log -1 --format=3D'%b' "$c" |
+		sed -En 's/^\s*Signed-off-by:?\s*/ /ip')
+
+	if ! grep -i -F -q "$ae" <<<"$sob"; then
+		author_missing+=3D("$c")
+	fi
+	if ! grep -i -F -q "$ce" <<<"$sob"; then
+		committer_missing+=3D("$c")
+	fi
+
+	check_unexpected_files "$c"
+done
+
+print_commits 'author' "${author_missing[@]}"
+print_commits 'committer' "${committer_missing[@]}"
+
+exec gitk "$@"
+
+--MP_/JK.BRX0v6NlJ_9YjZwq/T3/
+Content-Type: application/x-shellscript
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment; filename=check_fixes
+
+#!/bin/bash
+
+if [ "$#" -lt 1 ]; then
+        printf 'Usage: %s <commit range>\n', "$0" 1>&2
+        exit 1
+fi
+
+commits=3D$(git rev-list --no-merges -i --grep=3D'^[[:space:]]*Fixes:' "$@")
+if [ -z "$commits" ]; then
+        exit 0
+fi
+
+# This should be a git tree that contains *only* Linus' tree
+Linus_tree=3D"${HOME}/kernels/linus.git"
+
+split_re=3D'^([Cc][Oo][Mm][Mm][Ii][Tt])?[[:space:]]*([[:xdigit:]]{5,})([[:s=
+pace:]]*)(.*)$'
+nl=3D$'\n'
+tab=3D$'\t'
+
+# Strip the leading and training spaces from a string
+strip_spaces()
+{
+	[[ "$1" =3D~ ^[[:space:]]*(.*[^[:space:]])[[:space:]]*$ ]]
+	echo "${BASH_REMATCH[1]}"
+}
+
+for c in $commits; do
+
+	commit_log=3D$(git log -1 --format=3D'%h ("%s")' "$c")
+	commit_msg=3D"In commit
+
+  $commit_log
+
+"
+
+	fixes_lines=3D$(git log -1 --format=3D'%B' "$c" |
+			grep -i '^[[:space:]]*Fixes:')
+
+	while read -r fline; do
+		[[ "$fline" =3D~ ^[[:space:]]*[Ff][Ii][Xx][Ee][Ss]:[[:space:]]*(.*)$ ]]
+		f=3D"${BASH_REMATCH[1]}"
+		fixes_msg=3D"Fixes tag
+
+  $fline
+
+has these problem(s):
+
+"
+		sha=3D
+		subject=3D
+		msg=3D
+		if [[ "$f" =3D~ $split_re ]]; then
+			first=3D"${BASH_REMATCH[1]}"
+			sha=3D"${BASH_REMATCH[2]}"
+			spaces=3D"${BASH_REMATCH[3]}"
+			subject=3D"${BASH_REMATCH[4]}"
+			if [ "$first" ]; then
+				msg=3D"${msg:+${msg}${nl}}  - leading word '$first' unexpected"
+			fi
+			if [ -z "$subject" ]; then
+				msg=3D"${msg:+${msg}${nl}}  - missing subject"
+			elif [ -z "$spaces" ]; then
+				msg=3D"${msg:+${msg}${nl}}  - missing space between the SHA1 and the su=
+bject"
+			fi
+		else
+			printf '%s%s  - %s\n' "$commit_msg" "$fixes_msg" 'No SHA1 recognised'
+			commit_msg=3D''
+			continue
+		fi
+		if ! git rev-parse -q --verify "$sha" >/dev/null; then
+			printf '%s%s  - %s\n' "$commit_msg" "$fixes_msg" 'Target SHA1 does not e=
+xist'
+			commit_msg=3D''
+			continue
+		fi
+
+		if [ "${#sha}" -lt 12 ]; then
+			msg=3D"${msg:+${msg}${nl}}  - SHA1 should be at least 12 digits long${nl=
+}    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11$=
+{nl}    or later) just making sure it is not set (or set to \"auto\")."
+		fi
+		# reduce the subject to the part between () if there
+		if [[ "$subject" =3D~ ^\((.*)\) ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+		elif [[ "$subject" =3D~ ^\((.*) ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+			msg=3D"${msg:+${msg}${nl}}  - Subject has leading but no trailing parent=
+heses"
+		fi
+
+		# strip matching quotes at the start and end of the subject
+		# the unicode characters in the classes are
+		# U+201C LEFT DOUBLE QUOTATION MARK
+		# U+201D RIGHT DOUBLE QUOTATION MARK
+		# U+2018 LEFT SINGLE QUOTATION MARK
+		# U+2019 RIGHT SINGLE QUOTATION MARK
+		re1=3D$'^[\"\u201C](.*)[\"\u201D]$'
+		re2=3D$'^[\'\u2018](.*)[\'\u2019]$'
+		re3=3D$'^[\"\'\u201C\u2018](.*)$'
+		if [[ "$subject" =3D~ $re1 ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+		elif [[ "$subject" =3D~ $re2 ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+		elif [[ "$subject" =3D~ $re3 ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+			msg=3D"${msg:+${msg}${nl}}  - Subject has leading but no trailing quotes"
+		fi
+
+		subject=3D$(strip_spaces "$subject")
+
+		target_subject=3D$(git log -1 --format=3D'%s' "$sha")
+		target_subject=3D$(strip_spaces "$target_subject")
+
+		# match with ellipses
+		case "$subject" in
+		*...)	subject=3D"${subject%...}"
+			target_subject=3D"${target_subject:0:${#subject}}"
+			;;
+		...*)	subject=3D"${subject#...}"
+			target_subject=3D"${target_subject: -${#subject}}"
+			;;
+		*\ ...\ *)
+			s1=3D"${subject% ... *}"
+			s2=3D"${subject#* ... }"
+			subject=3D"$s1 $s2"
+			t1=3D"${target_subject:0:${#s1}}"
+			t2=3D"${target_subject: -${#s2}}"
+			target_subject=3D"$t1 $t2"
+			;;
+		esac
+		subject=3D$(strip_spaces "$subject")
+		target_subject=3D$(strip_spaces "$target_subject")
+
+		if [ "$subject" !=3D "${target_subject:0:${#subject}}" ]; then
+			msg=3D"${msg:+${msg}${nl}}  - Subject does not match target commit subje=
+ct${nl}    Just use${nl}${tab}git log -1 --format=3D'Fixes: %h (\"%s\")'"
+		fi
+		lsha=3D$(cd "$Linus_tree" && git rev-parse -q --verify "$sha")
+		if [ -z "$lsha" ]; then
+			count=3D$(git rev-list --count "$sha".."$c")
+			if [ "$count" -eq 0 ]; then
+				msg=3D"${msg:+${msg}${nl}}  - Target is not an ancestor of this commit"
+			fi
+		fi
+		if [ "$msg" ]; then
+			printf '%s%s%s\n' "$commit_msg" "$fixes_msg" "$msg"
+			commit_msg=3D''
+		fi
+	done <<< "$fixes_lines"
+done
+
+exit 0
+
+--MP_/JK.BRX0v6NlJ_9YjZwq/T3/--
+
+--Sig_/qT.g2TIBVnLNH.MDe3tItZQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3MZcAACgkQAVBC80lX
+0Gy6/Af/bC3OqDtFAQ6sBwBr3KME8BhaE/vjn9zmx7WISP1/95DBUP2eQLH71DBr
+D6Bts+D6lsIH2Zlxb/ZSBxMukV+fsp9EjWOeEmVH/K09/QwNuDNLHTrh+OJpwqUc
+ph/vKsIWmRQ6eha60ll2cC8araV3M+JkDCKdYONkZ9kzqNWkAfx7o/kpfA1DvEFd
+mlMD1f7YIliViyeVO9GGgJNM2tf4csIfW97LbKCyyOJeD9NqHCkQmzxYLJ/do1w7
+TK/N5dDrteF5nbofU78v1J/AMr2PyPoflyxHNDrJ9Yrkren5daYiaevzQVzpczIw
+cddA712FK2u24sz2D6YrLf21TvhGaw==
+=DL7n
+-----END PGP SIGNATURE-----
+
+--Sig_/qT.g2TIBVnLNH.MDe3tItZQ--
