@@ -2,38 +2,51 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5CAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C22C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F1B206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4781206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfKMQz0 (ORCPT
+        id S1728670AbfKMQ4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:55:26 -0500
-Received: from foss.arm.com ([217.140.110.172]:55614 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727159AbfKMQzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:55:25 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E30330E;
-        Wed, 13 Nov 2019 08:55:25 -0800 (PST)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BCE253F534;
-        Wed, 13 Nov 2019 08:55:23 -0800 (PST)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        Dietmar.Eggemann@arm.com, tj@kernel.org,
-        patrick.bellasi@matbug.net, surenb@google.com, qperret@google.com
-Subject: [PATCH] sched/uclamp: Fix overzealous type replacement
-Date:   Wed, 13 Nov 2019 16:53:34 +0000
-Message-Id: <20191113165334.14291-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 13 Nov 2019 11:56:09 -0500
+Received: from smtprelay0046.hostedemail.com ([216.40.44.46]:53376 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726129AbfKMQ4I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:56:08 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 30073100E7B40;
+        Wed, 13 Nov 2019 16:56:07 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cloth41_18055f6faa706
+X-Filterd-Recvd-Size: 2543
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 13 Nov 2019 16:56:04 +0000 (UTC)
+Message-ID: <ac4566662a04e0c25039df7ed30789d0792885cd.camel@perches.com>
+Subject: Re: [PATCH 1/7] drm/amdgpu: remove set but not used variable
+ 'mc_shared_chmap' from 'gfx_v6_0.c' and 'gfx_v7_0.c'
+From:   Joe Perches <joe@perches.com>
+To:     yu kuai <yukuai3@huawei.com>, alexander.deucher@amd.com,
+        Felix.Kuehling@amd.com, christian.koenig@amd.com,
+        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch,
+        Rex.Zhu@amd.com, evan.quan@amd.com
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, zhengbin13@huawei.com,
+        yi.zhang@huawei.com
+Date:   Wed, 13 Nov 2019 08:55:47 -0800
+In-Reply-To: <1573649074-72589-2-git-send-email-yukuai3@huawei.com>
+References: <1573649074-72589-1-git-send-email-yukuai3@huawei.com>
+         <1573649074-72589-2-git-send-email-yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,63 +54,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some uclamp helpers had their return type changed from 'unsigned int' to
-'enum uclamp_id' by commit
+On Wed, 2019-11-13 at 20:44 +0800, yu kuai wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c: In function
+> ‘gfx_v6_0_constants_init’:
+> drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c:1579:6: warning: variable
+> ‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
+[]
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
+[]
+> @@ -1678,7 +1678,6 @@ static void gfx_v6_0_constants_init(struct amdgpu_device *adev)
+>  
+>  	WREG32(mmBIF_FB_EN, BIF_FB_EN__FB_READ_EN_MASK | BIF_FB_EN__FB_WRITE_EN_MASK);
+>  
+> -	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
 
-  0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+I do not know the hardware but frequently hardware like
+this has read ordering requirements and various registers
+can not be read in a random order.
 
-but it happens that some *actually* do return an unsigned int value. Those
-are the helpers that return a utilization value: uclamp_rq_max_value() and
-uclamp_eff_value(). Fix those up.
+Does removing this read have no effect on the hardware?
 
-Note that this doesn't lead to any obj diff using a relatively recent
-aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
-already figures out that the return value is 11 bits (bits_per(1024)) and
-doesn't seem to do anything funny. I'm still marking this as fixing the
-above commit to be on the safe side.
+>  	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
+>  	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+>  
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+[]
+> @@ -4336,7 +4336,6 @@ static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
+>  		break;
+>  	}
+>  
+> -	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
+>  	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
+>  	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
 
-Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- kernel/sched/core.c  | 4 ++--
- kernel/sched/sched.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 513a4794ff36..71a45025cd2e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
- }
- 
- static inline
--enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
-+unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
- 				   unsigned int clamp_value)
- {
- 	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-@@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
- 	return uc_req;
- }
- 
--enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-+unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
- {
- 	struct uclamp_se uc_eff;
- 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 05c282775f21..280a3c735935 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2300,7 +2300,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
- #endif /* CONFIG_CPU_FREQ */
- 
- #ifdef CONFIG_UCLAMP_TASK
--enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
-+unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
- 
- static __always_inline
- unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
--- 
-2.22.0
+Same question.
 
