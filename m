@@ -2,170 +2,67 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE66C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7086BC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D1E206EE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mYe+MJkx"
+	by mail.kernel.org (Postfix) with ESMTP id 468FC206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 23:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573686012;
+	bh=2AmqOHyJ6omnuRzB5myDDOYWpOkM5LXqNgKm+BcO0DM=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=ncPyJRHfdw6f2AdIjIyQPVwCElL/Ca8NUvE4r/H2TlwUXBaBvkHmTCDECUTjcOfxM
+	 0fQToppYQKVZ0rOkMaFxvnWR9YXongsQjlAPNejZ4x31IK8lydQZpQSsQDm/il2ZKi
+	 K4XKYE4DAoHSzRRbABOtopPvMjUiKIhgwUTfXCJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKMW7u (ORCPT
+        id S1727121AbfKMXAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:59:50 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:13052 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfKMW7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 17:59:44 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcc8ade0000>; Wed, 13 Nov 2019 14:59:43 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 Nov 2019 14:59:43 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 Nov 2019 14:59:43 -0800
-Received: from [10.2.160.107] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
- 2019 22:59:43 +0000
-Subject: Re: [PATCH v4 04/23] mm: devmap: refactor 1-based refcounting for
- ZONE_DEVICE pages
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-References: <20191113042710.3997854-1-jhubbard@nvidia.com>
- <20191113042710.3997854-5-jhubbard@nvidia.com>
- <CAPcyv4gGu=G-c1czSAYJ3joTYS_ZYOJ6i9umKzCQEFzpwZMiiA@mail.gmail.com>
- <CAPcyv4hr64b-k4j7ZY796+k-+Dy11REMcvPJ+QjTsyJ3vSdfKg@mail.gmail.com>
- <00148078-1795-da3e-916e-3ae2dcdd553d@nvidia.com>
- <CAPcyv4iwG4V+sNLcOX4x-TA7W8MWNSEaZzupDgKh8btZMytoqg@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <8b887222-a1b4-c5ce-527a-5a6f2a73f943@nvidia.com>
-Date:   Wed, 13 Nov 2019 14:56:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 13 Nov 2019 18:00:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726564AbfKMXAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 18:00:10 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6731F206E3;
+        Wed, 13 Nov 2019 23:00:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573686010;
+        bh=2AmqOHyJ6omnuRzB5myDDOYWpOkM5LXqNgKm+BcO0DM=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=U1OmHvn7yTe0q9tomleg7XpTyaB1EQTLSdnzts5zIBElzVfeyiW+/o/qhv4pW0fkc
+         NnFu6UYR1dbfJ+fcXe6QuRRHfjxPuOcqhYm64O/BP68yIoGBcbu7Maq0YsI8jxMqJI
+         I8lE+eA4bbW2BC0nzBURe2C42Adq3gUOO+YiLgpc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iwG4V+sNLcOX4x-TA7W8MWNSEaZzupDgKh8btZMytoqg@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573685983; bh=+Rmtc3S/dpjDCjZWKcpDoRZBPDTDBQ2pKKlWpjZisAo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mYe+MJkxrgNR137Q2ejzje6pRuep2M18oTZCivJor/Aq8akkqynarSLzze5gBAR6e
-         Qbgg3D7fCX2h5Zp1bm8UCD5jTXu5RgNW/1wytp5sIWhpcH1/XVit7/Hqo1FuECTgjG
-         jaeg32K4uRKA3UWevFbdUUXyjiUNrk/AfZUXltrSNK7fGabRHXeRaGFfre96i3rq7X
-         ouT4NLlcMG8uUv2YW1+St8ZRhZhMfIq0xvEzPkblzu397MrZASgjNbz6jsR8uW1MwV
-         7mOV3InoZ3RXAMS6XnUTdXbtUPhzTvW8KfaZYgbYIJ5ILNS37evrPk9qlwTKM1SE3y
-         Yu1anxljvu1OQ==
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org>
+References: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org>
+Cc:     orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Baolin Wang <baolin.wang@linaro.org>, mturquette@baylibre.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 1/2] clk: sprd: Use IS_ERR() to validate the return value of syscon_regmap_lookup_by_phandle()
+User-Agent: alot/0.8.1
+Date:   Wed, 13 Nov 2019 15:00:08 -0800
+Message-Id: <20191113230010.6731F206E3@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 2:55 PM, Dan Williams wrote:
-> On Wed, Nov 13, 2019 at 2:49 PM John Hubbard <jhubbard@nvidia.com> wrote:
->>
->> On 11/13/19 2:00 PM, Dan Williams wrote:
->> ...
->>>> Ugh, when did all this HMM specific manipulation sneak into the
->>>> generic ZONE_DEVICE path? It used to be gated by pgmap type with its
->>>> own put_zone_device_private_page(). For example it's certainly
->>>> unnecessary and might be broken (would need to check) to call
->>>> mem_cgroup_uncharge() on a DAX page. ZONE_DEVICE users are not a
->>>> monolith and the HMM use case leaks pages into code paths that DAX
->>>> explicitly avoids.
->>>
->>> It's been this way for a while and I did not react previously,
->>> apologies for that. I think __ClearPageActive, __ClearPageWaiters, and
->>> mem_cgroup_uncharge, belong behind a device-private conditional. The
->>> history here is:
->>>
->>> Move some, but not all HMM specifics to hmm_devmem_free():
->>>       2fa147bdbf67 mm, dev_pagemap: Do not clear ->mapping on final put
->>>
->>> Remove the clearing of mapping since no upstream consumers needed it:
->>>       b7a523109fb5 mm: don't clear ->mapping in hmm_devmem_free
->>>
->>> Add it back in once an upstream consumer arrived:
->>>       7ab0ad0e74f8 mm/hmm: fix ZONE_DEVICE anon page mapping reuse
->>>
->>> We're now almost entirely free of ->page_free callbacks except for
->>> that weird nouveau case, can that FIXME in nouveau_dmem_page_free()
->>> also result in killing the ->page_free() callback altogether? In the
->>> meantime I'm proposing a cleanup like this:
->>
->>
->> OK, assuming this is acceptable (no obvious problems jump out at me,
->> and we can also test it with HMM), then how would you like to proceed, as
->> far as patches go: add such a patch as part of this series here, or as a
->> stand-alone patch either before or after this series? Or something else?
->> And did you plan on sending it out as such?
-> 
-> I think it makes sense to include it in your series since you're
-> looking to refactor the implementation. I can send you one based on
-> current linux-next as a lead-in cleanup before the refactor. Does that
-> work for you?
-> 
+Quoting Baolin Wang (2019-10-08 00:41:38)
+> The syscon_regmap_lookup_by_phandle() will never return NULL, thus use
+> IS_ERR() to validate the return value instead of IS_ERR_OR_NULL().
+>=20
+> Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
 
-That would be perfect!
+Applied to clk-next
 
->>
->> Also, the diffs didn't quite make it through intact to my "git apply", so
->> I'm re-posting the diff in hopes that this time it survives:
-> 
-> Apologies for that. For quick "how about this" patch examples, I just
-> copy and paste into gmail and it sometimes clobbers it.
-> 
-
-No problem at all, I do the same thing and *usually* it works. ha. And
-as you say, it's good enough for discussions.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
