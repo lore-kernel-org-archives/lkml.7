@@ -2,90 +2,122 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED3FC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEBBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275BA222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507EF222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:06:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X8HMahfV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfKMLCz (ORCPT
+        id S1727717AbfKMLGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 06:02:55 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45734 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfKMLCz (ORCPT
+        Wed, 13 Nov 2019 06:06:54 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51562 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKMLGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:02:55 -0500
-Received: from 79.184.253.153.ipv4.supernova.orange.pl (79.184.253.153) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id f9c9ec80f02b64f5; Wed, 13 Nov 2019 12:02:52 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Breno =?ISO-8859-1?Q?Leit=E3o?= <leitao@debian.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David@rox.of.borg, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Casey Leedom <leedom@chelsio.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] power: avs: smartreflex: Remove superfluous cast in debugfs_create_file() call
-Date:   Wed, 13 Nov 2019 12:02:51 +0100
-Message-ID: <2168390.66xqsT3ub9@kreacher>
-In-Reply-To: <20191021145149.31657-5-geert+renesas@glider.be>
-References: <20191021145149.31657-1-geert+renesas@glider.be> <20191021145149.31657-5-geert+renesas@glider.be>
+        Wed, 13 Nov 2019 06:06:54 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADB6XsH114264;
+        Wed, 13 Nov 2019 05:06:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573643193;
+        bh=gSAJ+1KpkGy+Q87mlI/tRdXnYA0Fp4XtcaHY6UfujOc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=X8HMahfV7qdJsgEfNTulOHlp4TJPpj8nc0CC/YuUcqC+GwSC256cdrxmxhENY2e04
+         61oz5VO/LASJhQ6t8VoztScF/KDh/y35LJ2aiXKQVOJyZT17XY2kNpp2lcswkz8cfF
+         dRgCdPrCHiN/hq8y1ejhy1NM/P4Z2Pqh2ELfzubI=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADB6Wu9096144
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 13 Nov 2019 05:06:32 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
+ Nov 2019 05:06:15 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 13 Nov 2019 05:06:15 -0600
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADB6T5G127091;
+        Wed, 13 Nov 2019 05:06:29 -0600
+Subject: Re: [PATCH] irqchip/ti-sci-inta: Use ERR_CAST inlined function
+ instead of ERR_PTR(PTR_ERR(...))
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Markus Elfring <markus.elfring@web.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <776b7135-26af-df7d-c3a9-4339f7bf1f15@web.de>
+ <670cd9a2-2083-bb5e-7bfc-58d5c90ec756@ti.com>
+ <29a69991ec7726d133e54a2891159e86@www.loen.fr>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <3642882b-edab-1667-f370-47e8358edc82@ti.com>
+Date:   Wed, 13 Nov 2019 16:35:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <29a69991ec7726d133e54a2891159e86@www.loen.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, October 21, 2019 4:51:48 PM CET Geert Uytterhoeven wrote:
-> There is no need to cast a typed pointer to a void pointer when calling
-> a function that accepts the latter.  Remove it, as the cast prevents
-> further compiler checks.
+
+
+On 11/11/19 3:45 PM, Marc Zyngier wrote:
+> On 2019-11-11 04:45, Lokesh Vutla wrote:
+>> On 05/11/19 5:00 PM, Markus Elfring wrote:
+>>> From: Markus Elfring <elfring@users.sourceforge.net>
+>>> Date: Tue, 5 Nov 2019 12:19:39 +0100
+>>>
+>>> A coccicheck run provided information like the following.
+>>>
+>>> drivers/irqchip/irq-ti-sci-inta.c:250:9-16: WARNING: ERR_CAST can be used
+>>> with vint_desc.
+>>>
+>>> Generated by: scripts/coccinelle/api/err_cast.cocci
+>>>
+>>> Thus adjust the exception handling in one if branch.
+>>>
+>>> Fixes: 9f1463b86c13277d0bd88d5ee359577ef40f4da7 ("irqchip/ti-sci-inta: Add
+>>> support for Interrupt Aggregator driver")
+>>
+>> Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt
+>> Aggregator driver")
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/power/avs/smartreflex.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I fundamentally disagree with the "Fixes:" tag. This isn't a fix,
+> just a minor readability improvement. Flagging things as "Fixes:"
+> ends up triggering all kind of unnecessary backports to -stable.
 > 
-> diff --git a/drivers/power/avs/smartreflex.c b/drivers/power/avs/smartreflex.c
-> index 4684e7df833a81e9..5376f3d22f31eade 100644
-> --- a/drivers/power/avs/smartreflex.c
-> +++ b/drivers/power/avs/smartreflex.c
-> @@ -905,7 +905,7 @@ static int omap_sr_probe(struct platform_device *pdev)
->  	sr_info->dbg_dir = debugfs_create_dir(sr_info->name, sr_dbg_dir);
->  
->  	debugfs_create_file("autocomp", S_IRUGO | S_IWUSR, sr_info->dbg_dir,
-> -			    (void *)sr_info, &pm_sr_fops);
-> +			    sr_info, &pm_sr_fops);
->  	debugfs_create_x32("errweight", S_IRUGO, sr_info->dbg_dir,
->  			   &sr_info->err_weight);
->  	debugfs_create_x32("errmaxlimit", S_IRUGO, sr_info->dbg_dir,
+>> With this:
+
+Fine with me. Please drop the fixes tag.
+
+Thanks and regards.
+Lokesh
+
+>>
+>> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
 > 
-
-Applying as 5.5 material, thanks!
-
-
-
-
+> I'll otherwise take this patch in -next.
+> 
+> Thanks,
+> 
+>         M.
