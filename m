@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C479C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1305AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA375206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBF4206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610674;
-	bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
+	s=default; t=1573610678;
+	bh=iufa2eP/TUMfHuSqsOfMqcEWWdjpkgEBSDuAnm64Qv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JgR9ZPqEAQkqCPcmG4WiKS5M6qIUiZxz6jQLAJhqry2bEnMzSDlmkXC1vScY5PXax
-	 qfOAbFULZoaybMSDiy5cynmjm88vuYXVTyHcGeu22vpDYBcpYYCamsrIdoYSjUE/o+
-	 1YN662y43/KKO6X482MC8ODeXs1RPboHulRWdmxs=
+	b=Dj7e1pLDEUpQM/9tq6489Pg/Q45EQlAwx7p8Xc1yl82Tj8YujUzbkU7R34HnQaHET
+	 u6TJMdkF+sHvl0WhJgqUh2vvxF24yg2YqL4O82AEj5Ko87EYpl13nWeNkYL9KLl0rI
+	 7aC/KJq5E8uMV6acmBys0w/zSdy5tyFn+xZAbWBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730938AbfKMCCE (ORCPT
+        id S1728176AbfKMCEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:02:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58288 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:04:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730923AbfKMCCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:01 -0500
+        id S1730936AbfKMCCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1E0F204EC;
-        Wed, 13 Nov 2019 02:01:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 407CF206B6;
+        Wed, 13 Nov 2019 02:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610520;
-        bh=7Oz3PQNUNgCniA01lkUK3vBCs4s5pP39V23TBiRS1qQ=;
+        s=default; t=1573610523;
+        bh=iufa2eP/TUMfHuSqsOfMqcEWWdjpkgEBSDuAnm64Qv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IU2uhWvwcsP7YWD+yt5A8fH7YW0lhjC4TF9LnnfGdD5BO0NEf0GEF7ZqGvpCU0vKu
-         EuD1YZHaVzqJzvKZvtfkrdNuAkwmhioJScvv0i8r0jni0DHbsTNEddy7Y6nCiDuj2q
-         vryNoRpbyGzZsq6X2vREUjzRPlc3aty+4/xbFyTg=
+        b=UbzZne8QIhXb6SuhMkxZ74u6PL3p7Xx/bv8GoVcEqr10desssU3egoJfw4UrI1d8N
+         nHmRPeYRIH/9aRpZHpGGd2/SsDcR3GACF4pVM4kLI0K771bpzjChDOsiRQcE+7css7
+         ZFEK0rkBnGR/A44bp3PFbV717EsPng0MjbdtvxV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 18/48] IB/mthca: Fix error return code in __mthca_init_one()
-Date:   Tue, 12 Nov 2019 21:01:01 -0500
-Message-Id: <20191113020131.13356-18-sashal@kernel.org>
+Cc:     Michael Pobega <mpobega@neverware.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 20/48] ALSA: hda/sigmatel - Disable automute for Elo VuPoint
+Date:   Tue, 12 Nov 2019 21:01:03 -0500
+Message-Id: <20191113020131.13356-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -59,35 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Michael Pobega <mpobega@neverware.com>
 
-[ Upstream commit 39f2495618c5e980d2873ea3f2d1877dd253e07a ]
+[ Upstream commit d153135e93a50cdb6f1b52e238909e9965b56056 ]
 
-Fix to return a negative error code from the mthca_cmd_init() error
-handling case instead of 0, as done elsewhere in this function.
+The Elo VuPoint 15MX has two headphone jacks of which neither work by
+default. Disabling automute allows ALSA to work normally with the
+speakers & left headphone jack.
 
-Fixes: 80fd8238734c ("[PATCH] IB/mthca: Encapsulate command interface init")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Future pin configuration changes may be required in the future to get
+the right headphone jack working in tandem.
+
+Signed-off-by: Michael Pobega <mpobega@neverware.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mthca/mthca_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_sigmatel.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mthca/mthca_main.c b/drivers/infiniband/hw/mthca/mthca_main.c
-index ded76c101dde3..834b06aacc2bf 100644
---- a/drivers/infiniband/hw/mthca/mthca_main.c
-+++ b/drivers/infiniband/hw/mthca/mthca_main.c
-@@ -989,7 +989,8 @@ static int __mthca_init_one(struct pci_dev *pdev, int hca_type)
- 		goto err_free_dev;
- 	}
+diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
+index 0abab7926dca3..d1a6d20ace0da 100644
+--- a/sound/pci/hda/patch_sigmatel.c
++++ b/sound/pci/hda/patch_sigmatel.c
+@@ -77,6 +77,7 @@ enum {
+ 	STAC_DELL_M6_BOTH,
+ 	STAC_DELL_EQ,
+ 	STAC_ALIENWARE_M17X,
++	STAC_ELO_VUPOINT_15MX,
+ 	STAC_92HD89XX_HP_FRONT_JACK,
+ 	STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK,
+ 	STAC_92HD73XX_ASUS_MOBO,
+@@ -1875,6 +1876,18 @@ static void stac92hd73xx_fixup_no_jd(struct hda_codec *codec,
+ 		codec->no_jack_detect = 1;
+ }
  
--	if (mthca_cmd_init(mdev)) {
-+	err = mthca_cmd_init(mdev);
-+	if (err) {
- 		mthca_err(mdev, "Failed to init command interface, aborting.\n");
- 		goto err_free_dev;
- 	}
++
++static void stac92hd73xx_disable_automute(struct hda_codec *codec,
++				     const struct hda_fixup *fix, int action)
++{
++	struct sigmatel_spec *spec = codec->spec;
++
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
++
++	spec->gen.suppress_auto_mute = 1;
++}
++
+ static const struct hda_fixup stac92hd73xx_fixups[] = {
+ 	[STAC_92HD73XX_REF] = {
+ 		.type = HDA_FIXUP_FUNC,
+@@ -1900,6 +1913,10 @@ static const struct hda_fixup stac92hd73xx_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = stac92hd73xx_fixup_alienware_m17x,
+ 	},
++	[STAC_ELO_VUPOINT_15MX] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = stac92hd73xx_disable_automute,
++	},
+ 	[STAC_92HD73XX_INTEL] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = intel_dg45id_pin_configs,
+@@ -1938,6 +1955,7 @@ static const struct hda_model_fixup stac92hd73xx_models[] = {
+ 	{ .id = STAC_DELL_M6_BOTH, .name = "dell-m6" },
+ 	{ .id = STAC_DELL_EQ, .name = "dell-eq" },
+ 	{ .id = STAC_ALIENWARE_M17X, .name = "alienware" },
++	{ .id = STAC_ELO_VUPOINT_15MX, .name = "elo-vupoint-15mx" },
+ 	{ .id = STAC_92HD73XX_ASUS_MOBO, .name = "asus-mobo" },
+ 	{}
+ };
+@@ -1987,6 +2005,8 @@ static const struct snd_pci_quirk stac92hd73xx_fixup_tbl[] = {
+ 		      "Alienware M17x", STAC_ALIENWARE_M17X),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_DELL, 0x0490,
+ 		      "Alienware M17x R3", STAC_DELL_EQ),
++	SND_PCI_QUIRK(0x1059, 0x1011,
++		      "ELO VuPoint 15MX", STAC_ELO_VUPOINT_15MX),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x1927,
+ 				"HP Z1 G2", STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x2b17,
 -- 
 2.20.1
 
