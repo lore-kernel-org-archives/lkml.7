@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C610C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC0FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26CBA206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1FA206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610909;
-	bh=LH61V/qzUmWOj7rI6InJebjBB7kMjoSX9nWyR9/yzfo=;
+	s=default; t=1573610913;
+	bh=HbgVx4qjb6kTQShWNZlxWmMuVhrxfteiZTihwmQgvoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2sZzuRpBb2EDuyVLVFr/yCK9rW+h32izw+7hTqDnki+M/lH/BAcYPxK39Qk/Bh4Rh
-	 cDkmjl/VnxV1gQjVTD6DzLEDD0QrhmghDtMm6iAaElAQ22gg4I5j/yDOZImCMTkulY
-	 dIt5cAJNdo7IVMMRR2nb0dPP2FXW4vrkjkaCrA2A=
+	b=g19LpxCpcEXViSKF1Irh/HZnmPlQn2+i9XaRrX11h1ddLsYH/VGPu2rt/Mx9aRAxR
+	 Z8JqEf5gJQglF/j4KazNiwkZYqJv7GZhbRDhNBKznrdsXB+ITGVc0PpqEnFIFwCtz4
+	 4OqbuLdkMGNVpYfzjeoQbfF2XjB2FIJWqVX/fR60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbfKMCAD (ORCPT
+        id S1728585AbfKMCIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:00:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54754 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:08:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729465AbfKMB7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:59:53 -0500
+        id S1730345AbfKMCAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDC7222467;
-        Wed, 13 Nov 2019 01:59:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94098222CF;
+        Wed, 13 Nov 2019 02:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610392;
-        bh=LH61V/qzUmWOj7rI6InJebjBB7kMjoSX9nWyR9/yzfo=;
+        s=default; t=1573610402;
+        bh=HbgVx4qjb6kTQShWNZlxWmMuVhrxfteiZTihwmQgvoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w4JdBIPtmwJjG+FaXexDGzF4MGcjbM6qqZBJrotcyeFQ6LP2VBQkgRXUGIFLSHn21
-         5/JLuvp66nOWpxviEETqK3lQMiUun0dGVnAIFSkF6hbpZCBVQtK3HHtrFHPG3ZBHO3
-         8aB1IlBHNredVZntwSUciBVPMBwaRJF5Qtib9z4s=
+        b=aadU0IQIT+HLt1mKlF9BASIMVAVA5teMW71EQJO79ZBICyyAprVPfxXuMBvoYMTZA
+         Ze0Oxh2GeqqMIJZIXtuQkz9mDOFyQegUPkzWPtokwGaFmFiqGxko2x7745en4RZ/hA
+         I9XvUCRzyUReXKR45zbWBmPJSJkgO3Tn+VuxElDQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Zaborowski <andrew.zaborowski@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/68] nl80211: Fix a GET_KEY reply attribute
-Date:   Tue, 12 Nov 2019 20:58:37 -0500
-Message-Id: <20191113015932.12655-13-sashal@kernel.org>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 19/68] powerpc/pseries: Fix DTL buffer registration
+Date:   Tue, 12 Nov 2019 20:58:43 -0500
+Message-Id: <20191113015932.12655-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -60,34 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Zaborowski <andrew.zaborowski@intel.com>
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 
-[ Upstream commit efdfce7270de85a8706d1ea051bef3a7486809ff ]
+[ Upstream commit db787af1b8a6b4be428ee2ea7d409dafcaa4a43c ]
 
-Use the NL80211_KEY_IDX attribute inside the NL80211_ATTR_KEY in
-NL80211_CMD_GET_KEY responses to comply with nl80211_key_policy.
-This is unlikely to affect existing userspace.
+When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we register the DTL
+buffer for a cpu when the associated file under powerpc/dtl in debugfs
+is opened. When doing so, we need to set the size of the buffer being
+registered in the second u32 word of the buffer. This needs to be in big
+endian, but we are not doing the conversion resulting in the below error
+showing up in dmesg:
 
-Signed-off-by: Andrew Zaborowski <andrew.zaborowski@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+	dtl_start: DTL registration for cpu 0 (hw 0) failed with -4
+
+Fix this in the obvious manner.
+
+Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 2 +-
+ arch/powerpc/platforms/pseries/dtl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 060bc0cc82526..bb19be78aed70 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -3058,7 +3058,7 @@ static void get_key_callback(void *c, struct key_params *params)
- 			 params->cipher)))
- 		goto nla_put_failure;
+diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
+index 39049e4884fbd..37de83c5ef172 100644
+--- a/arch/powerpc/platforms/pseries/dtl.c
++++ b/arch/powerpc/platforms/pseries/dtl.c
+@@ -150,7 +150,7 @@ static int dtl_start(struct dtl *dtl)
  
--	if (nla_put_u8(cookie->msg, NL80211_ATTR_KEY_IDX, cookie->idx))
-+	if (nla_put_u8(cookie->msg, NL80211_KEY_IDX, cookie->idx))
- 		goto nla_put_failure;
+ 	/* Register our dtl buffer with the hypervisor. The HV expects the
+ 	 * buffer size to be passed in the second word of the buffer */
+-	((u32 *)dtl->buf)[1] = DISPATCH_LOG_BYTES;
++	((u32 *)dtl->buf)[1] = cpu_to_be32(DISPATCH_LOG_BYTES);
  
- 	nla_nest_end(cookie->msg, key);
+ 	hwcpu = get_hard_smp_processor_id(dtl->cpu);
+ 	addr = __pa(dtl->buf);
 -- 
 2.20.1
 
