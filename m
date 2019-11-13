@@ -2,140 +2,82 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFB6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9933CC17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD0A2196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:01:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiksfhJA"
+	by mail.kernel.org (Postfix) with ESMTP id 6C03A222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 07:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfKMHBt (ORCPT
+        id S1726564AbfKMHDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:01:49 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:38681 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfKMHBt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:01:49 -0500
-Received: by mail-yw1-f68.google.com with SMTP id m196so380603ywd.5;
-        Tue, 12 Nov 2019 23:01:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PjvWzi5zAYDzWCzMMij4/zfnC+NCGyH/qKPEJGtsxFA=;
-        b=SiksfhJAN1W/uAeCuU4qY1s9ABOuCtBmJRiK+lb7NzZQRYuk0uO5tTA9KwN+GH+A0z
-         9OZ2PalvM9Nsd2P+QfroLRUCmQittDRndNaTPSbOawYIX0uLlNh3Kw7abLGTP5LRCgM7
-         NY3juym5/hTRXqlIn0G3OyvYokefg1pySjfNXhDzBdBMspQ23eIfhgqeyj9VD0eX5iqj
-         aGJn0vg/bHFzS7GUPVGz3xCDDGTc50XuGHa7p9aX/drh/0ISHp6UkXcV1QnZEEwjSK5l
-         ylZfR+5/s+h+CLsY0X/H46pFMBHhkVhPI+LIFj/UlbwsDSE2zT+4Aiyw/OIJWUyH4hYa
-         T4pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PjvWzi5zAYDzWCzMMij4/zfnC+NCGyH/qKPEJGtsxFA=;
-        b=Me9MTDA9al9UL3sM/HcfZkOR/mKZny40Q8+7KO0FKw8ad2hSHGMM38vZWrnsDu8f3Q
-         w8QjT8UBZ+rzKsp4QAl0FwW5Nca9gfI/QoZ2TaOj33Rz64JcVyg7LNtktvV2vcd0taay
-         VW0rvj6i1hdK2J2cP1sdf4XnvWsn7yxqQRgYYVF20WT5YKG3TPxGfTsRVGui5o1lZJf3
-         8cE4i84Dm48khn/W8S5DiLIu1NzpS9DDp8WYpodi81LRnFkwz1acN+Ftw1UzCYHxBQqb
-         A0cRNbSRWtgn2JA6Fez9BNJhSdn0XaYRVweSz8O6GK740WeTWdtwUYO6VT/M7PJ3QzQq
-         l/Fw==
-X-Gm-Message-State: APjAAAVmoVzeLLww1AYveq/NhsqSq4LB25MfyiJgFHtR9k3h4M8316ij
-        uu8a7suHOJ8plqBWVq881GKnZu8l7a4Ngtx0gXw=
-X-Google-Smtp-Source: APXvYqytmTgUznWrkZNaCm0wGchaTdWq2lIA2CGsbtK9nqE383blgmwrbwRQ5AdkDaQoV4z9HoievrtIxfwEhmytANY=
-X-Received: by 2002:a81:2f0f:: with SMTP id v15mr1186047ywv.183.1573628508049;
- Tue, 12 Nov 2019 23:01:48 -0800 (PST)
+        Wed, 13 Nov 2019 02:03:20 -0500
+Received: from verein.lst.de ([213.95.11.211]:60684 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfKMHDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 02:03:19 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3AA5868C4E; Wed, 13 Nov 2019 08:03:13 +0100 (CET)
+Date:   Wed, 13 Nov 2019 08:03:12 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v5 02/10] iommu/vt-d: Use per-device dma_ops
+Message-ID: <20191113070312.GA2735@lst.de>
+References: <20190725031717.32317-1-baolu.lu@linux.intel.com> <20190725031717.32317-3-baolu.lu@linux.intel.com> <20190725054413.GC24527@lst.de> <bc831f88-5b19-7531-00aa-a7577dd5c1ac@linux.intel.com> <20190725114348.GA30957@lst.de> <a098359a-0f89-6028-68df-9f83718df256@linux.intel.com> <20191112071640.GA3343@lst.de> <0885617e-8390-6d18-987f-40d49f9f563e@linux.intel.com>
 MIME-Version: 1.0
-References: <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com> <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk> <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
- <20191101234622.GM26530@ZenIV.linux.org.uk> <20191102172229.GT20975@paulmck-ThinkPad-P72>
- <20191102180842.GN26530@ZenIV.linux.org.uk> <20191103163524.GO26530@ZenIV.linux.org.uk>
- <20191103182058.GQ26530@ZenIV.linux.org.uk> <20191103185133.GR26530@ZenIV.linux.org.uk>
-In-Reply-To: <20191103185133.GR26530@ZenIV.linux.org.uk>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 13 Nov 2019 09:01:36 +0200
-Message-ID: <CAOQ4uxiHH=e=Y5Xb3bkv+USxE0AftHiP935GGQEKkv54E17oDA@mail.gmail.com>
-Subject: Re: [PATCH][RFC] ecryptfs_lookup_interpose(): lower_dentry->d_inode
- is not stable
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, wugyuan@cn.ibm.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        ecryptfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0885617e-8390-6d18-987f-40d49f9f563e@linux.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 3, 2019 at 8:52 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Wed, Nov 13, 2019 at 10:50:27AM +0800, Lu Baolu wrote:
+> Currently, this is a block issue for using per-device dma ops in Intel
+> IOMMU driver. Hence block this driver from using the generic iommu dma
+> ops.
+
+That is in fact the reason why I bring it up :)
+
+> I'd like to align Intel IOMMU driver with other vendors. Use iommu dma
+> ops for devices which have been selected to go through iommu. And use
+> direct dma ops if selected to by pass.
 >
-> lower_dentry can't go from positive to negative (we have it pinned),
-> but it *can* go from negative to positive.  So fetching ->d_inode
-> into a local variable, doing a blocking allocation, checking that
-> now ->d_inode is non-NULL and feeding the value we'd fetched
-> earlier to a function that won't accept NULL is not a good idea.
+> One concern of this propose is that for devices with limited address
+> capability, shall we force it to use iommu or alternatively use swiotlb
+> if user decides to let it by pass iommu.
 >
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> ---
-> diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
-> index a905d5f4f3b0..3c2298721359 100644
-> --- a/fs/ecryptfs/inode.c
-> +++ b/fs/ecryptfs/inode.c
-> @@ -319,7 +319,7 @@ static int ecryptfs_i_size_read(struct dentry *dentry, struct inode *inode)
->  static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
->                                      struct dentry *lower_dentry)
->  {
-> -       struct inode *inode, *lower_inode = d_inode(lower_dentry);
-> +       struct inode *inode, *lower_inode;
->         struct ecryptfs_dentry_info *dentry_info;
->         struct vfsmount *lower_mnt;
->         int rc = 0;
-> @@ -339,7 +339,15 @@ static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
->         dentry_info->lower_path.mnt = lower_mnt;
->         dentry_info->lower_path.dentry = lower_dentry;
->
-> -       if (d_really_is_negative(lower_dentry)) {
-> +       /*
-> +        * negative dentry can go positive under us here - its parent is not
-> +        * locked.  That's OK and that could happen just as we return from
-> +        * ecryptfs_lookup() anyway.  Just need to be careful and fetch
-> +        * ->d_inode only once - it's not stable here.
-> +        */
-> +       lower_inode = READ_ONCE(lower_dentry->d_inode);
-> +
-> +       if (!lower_inode) {
->                 /* We want to add because we couldn't find in lower */
->                 d_add(dentry, NULL);
->                 return NULL;
+> I understand that using swiotlb will cause some overhead due to the
+> bounced buffer, but Intel IOMMU is default on hence any users who use a
+> default kernel won't suffer this. We only need to document this so that
+> users understand this overhead when they decide to let such devices by
+> pass iommu. This is common to all vendor iommu drivers as far as I can
+> see.
 
-Sigh!
-
-Open coding a human readable macro to solve a subtle lookup race.
-That doesn't sound like a scalable solution.
-I have a feeling this is not the last patch we will be seeing along
-those lines.
-
-Seeing that developers already confused about when they should use
-d_really_is_negative() over d_is_negative() [1] and we probably
-don't want to add d_really_really_is_negative(), how about
-applying that READ_ONCE into d_really_is_negative() and
-re-purpose it as a macro to be used when races with lookup are
-a concern?
-
-Thanks,
-Amir.
-
-[1] https://lore.kernel.org/linux-fsdevel/20190903135803.GA25692@hsiangkao-HP-ZHAN-66-Pro-G1/
+Indeed.  And one idea would be to lift the code in the powerpc
+dma_iommu_ops that check a flag and use the direct ops to the generic
+dma code and a flag in struct device.  We can then switch the intel
+iommu ops (and AMD Gart) over to it.
