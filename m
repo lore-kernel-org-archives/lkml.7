@@ -2,337 +2,130 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1677BC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7D0C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5AB922459
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4207F22459
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fLRGbGdd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U1bRV0hG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfKMNlv (ORCPT
+        id S1727577AbfKMNmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:41:51 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40389 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfKMNlu (ORCPT
+        Wed, 13 Nov 2019 08:42:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20321 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726434AbfKMNmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:41:50 -0500
-Received: by mail-lf1-f67.google.com with SMTP id j26so1992111lfh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 05:41:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7VCmbEVddaGiCCPH6BV+lZcmBJTHDXU7QLX9bBBFD+o=;
-        b=fLRGbGddTVjrMg7NvQKf2dOxVkisty4DDw/FMCI9gPqU66vAZlxSbO4xoEKpbyONE9
-         4P/kSYntUDOiM16n2T6v+yx7mJMvQnLPjg1jU1sNO4dy7CdNpkvQ5h6Cn7PLwhYb3WM1
-         zxCB+5oVkDxLum4MK7tzFw1yVjAf8pgXSMMvaeE5lYX49msnwbnzm1FF0AKqucq/v+wK
-         cb5vn4/ed67OB84VqK1U+g3rCl/41VBZFU92VxfQYzSsZMPrbDKB16AvDELxEwxpyoXA
-         18NTiENwdpPVk8oj8z6hlHMejbAniWoqgPyJ+sV4sMSa7WWhbmsxrfESfR4UGdSr+14l
-         k8rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=7VCmbEVddaGiCCPH6BV+lZcmBJTHDXU7QLX9bBBFD+o=;
-        b=Mts5IougloxD54e5D2rbZ9s/t9bxkUPsfTWP8dBSs2cq1BUKrQKmCFQ3iShbVAHB/X
-         zjgH3IUz4fp/m48InZu53ivi2FHQEVehUT6CdaekNeFWInWVcCFCv5si7H7qlCb+9sva
-         PHeA1cj9U3ixevzhLy3SqiD4RW3LMGASooopqUu5tz5WnMI9u+JEf9p1JZ5lDYiMB9Kr
-         a3hwFUK1oj/UFIPNtfzHobmQkJAGxO3k7wHgosf0FypPxzjRDZUrva/l2cvAlQe/ieVm
-         26ZK5H1mmpeqtJYyuSZcMid5WNNOzGUmM/Tzf2wrVqEBU9yBLTM4aVFQBZYObS0UN8Dt
-         vQqQ==
-X-Gm-Message-State: APjAAAVRMkTligrJ7ZVvTDEP2uUR4mu8GXj3DuZYhR1Y6+9GS2Ltj6SG
-        MJsszY/8GyTXAj/ZOI6bQn8sWQ==
-X-Google-Smtp-Source: APXvYqxVMqq98NlHyqRGjR6gNOmNfE6nWSJ5oK3cqMKxY5IDDe5Vz08ABJHvBR9aN/e+9Lyz61hnyw==
-X-Received: by 2002:ac2:51b5:: with SMTP id f21mr2728379lfk.159.1573652507050;
-        Wed, 13 Nov 2019 05:41:47 -0800 (PST)
-Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
-        by smtp.gmail.com with ESMTPSA id n133sm1147966lfd.88.2019.11.13.05.41.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 05:41:46 -0800 (PST)
-Date:   Wed, 13 Nov 2019 15:41:44 +0200
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Po Liu <po.liu@nxp.com>
-Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [EXT] Re: [v2,net-next, 1/2] enetc: Configure the Time-Aware
- Scheduler via tc-taprio offload
-Message-ID: <20191113134142.GA2508@khorivan>
-Mail-Followup-To: Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-References: <20191111042715.13444-2-Po.Liu@nxp.com>
- <20191112082823.28998-1-Po.Liu@nxp.com>
- <20191112210958.GB1833@khorivan>
- <VE1PR04MB6496EB580B65AFDA43DC1E9A92760@VE1PR04MB6496.eurprd04.prod.outlook.com>
+        Wed, 13 Nov 2019 08:42:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573652536;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JgU2e8RT59hEaQw/a6iawkjHzbdgc0u0v1JZhhfT5kU=;
+        b=U1bRV0hGlhzyn7KIa2MD0bWHh1j91mybyLpqcIIFndulbD3A4AEbf1yDiuyM6FUfdejAsw
+        mPa/quPq2dzOQtcJFyNnByi1IND5L/ESWTOiRm6bfK6iwfh+0+AfOFhqN0mHXGFm9V1ftV
+        jDl7+cHeo1QjKfMMIL6rWFmhB9ouUvU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-nY7xI--DNa61pN8DDiLq6g-1; Wed, 13 Nov 2019 08:42:13 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D08391852E20;
+        Wed, 13 Nov 2019 13:42:10 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id BD3972B7C5;
+        Wed, 13 Nov 2019 13:42:08 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 13 Nov 2019 14:42:09 +0100 (CET)
+Date:   Wed, 13 Nov 2019 14:42:06 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v8 1/2] fork: extend clone3() to support setting a PID
+Message-ID: <20191113134206.GA4320@redhat.com>
+References: <20191113080301.1197762-1-areber@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191113080301.1197762-1-areber@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: nY7xI--DNa61pN8DDiLq6g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VE1PR04MB6496EB580B65AFDA43DC1E9A92760@VE1PR04MB6496.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 03:45:08AM +0000, Po Liu wrote:
->Hi Ivan,
+On 11/13, Adrian Reber wrote:
 >
->> -----Original Message-----
->> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> Sent: 2019年11月13日 5:10
->> To: Po Liu <po.liu@nxp.com>
->> Cc: Claudiu Manoil <claudiu.manoil@nxp.com>; davem@davemloft.net; linux-
->> kernel@vger.kernel.org; netdev@vger.kernel.org; vinicius.gomes@intel.com;
->> Vladimir Oltean <vladimir.oltean@nxp.com>; Alexandru Marginean
->> <alexandru.marginean@nxp.com>; Xiaoliang Yang
->> <xiaoliang.yang_1@nxp.com>; Roy Zang <roy.zang@nxp.com>; Mingkai Hu
->> <mingkai.hu@nxp.com>; Jerry Huang <jerry.huang@nxp.com>; Leo Li
->> <leoyang.li@nxp.com>
->> Subject: [EXT] Re: [v2,net-next, 1/2] enetc: Configure the Time-Aware Scheduler
->> via tc-taprio offload
->>
->> Caution: EXT Email
->>
->> Hello,
->>
->> On Tue, Nov 12, 2019 at 08:42:49AM +0000, Po Liu wrote:
->> >ENETC supports in hardware for time-based egress shaping according to
->> >IEEE 802.1Qbv. This patch implement the Qbv enablement by the hardware
->> >offload method qdisc tc-taprio method.
->> >Also update cbdr writeback to up level since control bd ring may
->> >writeback data to control bd ring.
->> >
->> >Signed-off-by: Po Liu <Po.Liu@nxp.com>
->> >Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->> >Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
->> >---
->> >changes:
->> >- introduce a local define CONFIG_FSL_ENETC_QOS to fix the various
->> >  configurations will result in link errors.
->> >  Since the CONFIG_NET_SCH_TAPRIO depends on many Qos configs. Not
->> >  to use it directly in driver. Add it to CONFIG_FSL_ENETC_QOS depends
->> >  on list, so only CONFIG_NET_SCH_TAPRIO enabled, user can enable this
->> >  tsn feature, or else, return not support.
->> >
->> > drivers/net/ethernet/freescale/enetc/Kconfig  |  10 ++
->> > drivers/net/ethernet/freescale/enetc/Makefile |   1 +
->> > drivers/net/ethernet/freescale/enetc/enetc.c  |  19 ++-
->> > drivers/net/ethernet/freescale/enetc/enetc.h  |   7 +
->> > .../net/ethernet/freescale/enetc/enetc_cbdr.c |   5 +-
->> > .../net/ethernet/freescale/enetc/enetc_hw.h   | 150 ++++++++++++++++--
->> > .../net/ethernet/freescale/enetc/enetc_qos.c  | 130 +++++++++++++++
->> > 7 files changed, 300 insertions(+), 22 deletions(-) create mode 100644
->> > drivers/net/ethernet/freescale/enetc/enetc_qos.c
->> >
->>
->> [...]
->>
->> >
->> >@@ -1483,6 +1479,19 @@ int enetc_setup_tc(struct net_device *ndev, enum
->> tc_setup_type type,
->> >       return 0;
->> > }
->> >
->> >+int enetc_setup_tc(struct net_device *ndev, enum tc_setup_type type,
->> >+                 void *type_data)
->> >+{
->> >+      switch (type) {
->> >+      case TC_SETUP_QDISC_MQPRIO:
->> >+              return enetc_setup_tc_mqprio(ndev, type_data);
->> Sorry didn't see v2, so i duplicate my question here:
->>
->> This patch is for taprio offload, I see that mqprio is related and is part of taprio
->> offload configuration. But taprio offload has own mqprio settings.
->> The taprio mqprio part is not offloaded with TC_SETUP_QDISC_MQPRIO.
->>
->> So, a combination of mqprio and tario qdiscs used.
->> Could you please share the commands were used for your setup?
->>
->
->Example command:
->tc qdisc replace dev eth0 parent root handle 100  taprio num_tc 8 map 0 1 2 3 4 5 6 7 queues 1@0 1@1 1@2 1@3 1@4 1@5 1@6 1@7 base-time 01 sched-entry S 02 300000 flags 0x2
+> @@ -175,23 +187,47 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+> =20
+>  =09for (i =3D ns->level; i >=3D 0; i--) {
+>  =09=09int pid_min =3D 1;
 
-So, the TC_SETUP_QDISC_MQPRIO is really not required here, and mqprio qdisc is
-not used. Then why is it here, should be placed in separate patch at least.
+Well, this is really minor but again, pid_min is only used in the "else"
+branch below, you can move this declaration there.
 
-But even the comb mqprio qdisc and taprio qdisc are used together then taprio
-requires hw offload also. I'm Ok to add it later to taprio, and I'm asking
-about it because I need it also, what ever way it could be added.
+> +
+> +=09=09if (set_tid_size) {
+> +=09=09=09tid =3D set_tid[ns->level - i];
+> +=09=09=09if (tid < 1 || tid >=3D pid_max)
+> +=09=09=09=09return ERR_PTR(-EINVAL);
+> +=09=09=09/* Also fail if a PID !=3D 1 is requested and no PID 1 exists *=
+/
+> +=09=09=09if (tid !=3D 1 && !tmp->child_reaper)
+> +=09=09=09=09return ERR_PTR(-EINVAL);
+> +=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
+> +=09=09=09=09return ERR_PTR(-EPERM);
+> +=09=09}
+> =20
+>  =09=09idr_preload(GFP_KERNEL);
+>  =09=09spin_lock_irq(&pidmap_lock);
+> =20
+> -=09=09/*
+> -=09=09 * init really needs pid 1, but after reaching the maximum
+> -=09=09 * wrap back to RESERVED_PIDS
+> -=09=09 */
+> -=09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+> -=09=09=09pid_min =3D RESERVED_PIDS;
+> -
+> -=09=09/*
+> -=09=09 * Store a null pointer so find_pid_ns does not find
+> -=09=09 * a partially initialized PID (see below).
+> -=09=09 */
+> -=09=09nr =3D idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+> -=09=09=09=09      pid_max, GFP_ATOMIC);
+> +=09=09if (tid) {
+> +=09=09=09nr =3D idr_alloc(&tmp->idr, NULL, tid,
+> +=09=09=09=09       tid + 1, GFP_ATOMIC);
+> +=09=09=09/*
+> +=09=09=09 * If ENOSPC is returned it means that the PID is
+> +=09=09=09 * alreay in use. Return EEXIST in that case.
+> +=09=09=09 */
+> +=09=09=09if (nr =3D=3D -ENOSPC)
+> +=09=09=09=09nr =3D -EEXIST;
+> +=09=09=09set_tid_size--;
+                        ^^^^^^^^^^^^^^^
+May I ask you to move this decrement into the "if (set_tid_size)" block abo=
+ve?
 
-Not clear how you combined mqprio qdisc and taprio now to get it working
-From this command:
+Oleg.
 
-tc qdisc replace dev eth0 parent root handle 100  taprio num_tc 8 map 0 1 2 3 4 
-5 6 7 queues 1@0 1@1 1@2 1@3 1@4 1@5 1@6 1@7 base-time 01 sched-entry S 02 
-300000 flags 0x2
-
-I can conclude that some default h/w mapping (one to one) were used and no need
-to use mqprio qdisc, the command above is enough.
-
-Is it true?
-Then move it to spearate patch please as it's not taprio related yet.
-
->
->> And couple interesting questions about all of this:
->> - The taprio qdisc has to have mqprio settings, but if it's done with mqprio then
->> it just skipped (by reading tc class num).
->> - If no separate mqprio qdisc configuration then mqprio conf from taprio is set,
->> who should restore tc mappings when taprio qdisc is unloaded?
->> Maybe there is reason to implement TC_SETUP_QDISC_MQPRIO offload in
->> taprio since it's required feature?
->
-
-[...]
-
->>
->> >+
->> >+      /* Configure the (administrative) gate control list using the
->> >+       * control BD descriptor.
->> >+       */
->> >+      gcl_config = &cbd.gcl_conf;
->> >+
->> >+      data_size = sizeof(struct tgs_gcl_data) + gcl_len *
->> >+ sizeof(struct gce);
->> >+
->> >+      gcl_data = kzalloc(data_size, __GFP_DMA | GFP_KERNEL);
->> >+      if (!gcl_data)
->> >+              return -ENOMEM;
->> >+
->> >+      gce = (struct gce *)(gcl_data + 1);
->> >+
->> >+      /* Since no initial state config in taprio, set gates open as default.
->> >+       */
->> tc-taprio and IEEE Qbv allows to change configuration in flight, so that oper
->> state is active till new admin start time. So, here comment says it does initial
->> state config, if in-flight feature is not supported then error has to be returned
->> instead of silently rewriting configuration. But if it can be implemented then
->> state should be remembered/verified in order to not brake oper configuration?
->
->I think this is ok as per standard. Also see this comment in
->net/sched/sch_taprio.c:
-
-From the code above (duplicate for convenience):
-      if (admin_conf->enable) {
-              enetc_wr(&priv->si->hw,
-                       ENETC_QBV_PTGCR_OFFSET,
-                       temp & (~ENETC_QBV_TGE));
-              usleep_range(10, 20);
-              enetc_wr(&priv->si->hw,
-                       ENETC_QBV_PTGCR_OFFSET,
-                       temp | ENETC_QBV_TGE);
-      } else {
-              enetc_wr(&priv->si->hw,
-                       ENETC_QBV_PTGCR_OFFSET,
-                       temp & (~ENETC_QBV_TGE));
-              return 0;
-      }
-
-I see that's not true, as Simon noted, you have same command:
-
-enetc_wr(&priv->si->hw, ENETC_QBV_PTGCR_OFFSET, temp & (~ENETC_QBV_TGE));
-
-before enabling and for disabling. I guess it's stop command, that is disable
-qbv. So, before enabling new configuration with enetc_setup_tc(), the tario is
-inited|cleared|reseted|rebooted|defaulted|offed but not updated. It means no
-in-flight capabilities or they are ignored.
-
-JFI, it's possible to do first time:
-
-tc qdisc replace dev eth0 parent root handle 100  taprio num_tc 8 map 0 1 2 3 4 
-5 6 7 queues 1@0 1@1 1@2 1@3 1@4 1@5 1@6 1@7 base-time 01 sched-entry S 02 
-300000 flags 0x2
-
-and then:
-
-tc qdisc replace dev eth0 parent root handle 100  taprio base-time 01 
-sched-entry S 02 200000 flags 0x2
-
-Do it many times, but w/o mqprio configuration.
-
-So, this function must return error if it cannot be done, as above commands
-suppose that configuration can be updated in runtime, that is, set ADMIN cycle
-while OPER cycle is still active for some time and not broken like it's done
-now. If it can be achieved then no need to do
-enetc_wr(&priv->si->hw, ENETC_QBV_PTGCR_OFFSET, temp & (~ENETC_QBV_TGE));
-when admin_conf->enable.
-
-So or return error, or do it appropriately.
-
->
->	/* Until the schedule starts, all the queues are open */
->I would change the comment.
->
->> >+      gcl_config->atc = 0xff;
->> >+      gcl_config->acl_len = cpu_to_le16(gcl_len);
->>
->> Ok, this is maximum number of schedules.
->> According to tc-taprio it's possible to set cycle period more then schedules
->> actually can consume. If cycle time is more, then last gate's state can be kept
->> till the end of cycle. But if last schedule has it's own interval set then gates
->> should be closed till the end of cycle or no? if it has to be closed, then one more
->> endl schedule should be present closing gates at the end of list for the rest cycle
->> time. Can be implemented in h/w but just to be sure, how it's done in h/w?
->>
->There is already check the list len in up code.
->if (admin_conf->num_entries > enetc_get_max_gcl_len(&priv->si->hw))
->	return -EINVAL;
->gcl_len = admin_conf->num_entries;
-
-I mean +1 schedule to finalize the cycle with closed gates if last schedule
-has provided time interval. If I set couple schedules, with intervals, and cycle
-time more then those schedules consume, then I suppose the gates closed for the
-rest time of cycle, probably.
-
-Example:
-
-sched1 ----> shced2 ----> time w/o scheds -> cycle end
-gate 1       gate 2       no gates
-
-But if shced2 is last one then gate 2 is opened till the end of cycle.
-So, to close gate one more shched is needed with closed gates to finalize it.
-Or it's supposed that gate2 is opened till the end of cycle,
-How is it in you case. Or this is can be provided by configuration from tc?
-
-It's question not statement. Just though. Anyway i'll verify later it can be
-done with tc and how it's done in sw version, just interesting how your h/w
-works.
-
->
->> >+
->> >+      if (!admin_conf->base_time) {
->> >+              gcl_data->btl =
->> >+                      cpu_to_le32(enetc_rd(&priv->si->hw, ENETC_SICTR0));
->> >+              gcl_data->bth =
->> >+                      cpu_to_le32(enetc_rd(&priv->si->hw, ENETC_SICTR1));
-
-[...]
-
--- 
-Regards,
-Ivan Khoronzhuk
