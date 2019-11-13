@@ -2,54 +2,52 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C469C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99BAC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A4722467
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E00222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610041;
-	bh=7kkQdKM17MDDKEtGn+Zxkx5RKER3gUy2kCYhpw782+w=;
+	s=default; t=1573610043;
+	bh=s5iwcHxkRt8+t8tvmr6U2LXDWYdG4gCtv2HSTwEukQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LtNLObrLoiEY4rEF/f40/YzIv9HWkRgGUNXWv9kGZavBnWYy+W8U6rDxW9doGQZHd
-	 ZdfNGjGEBXQqdGbEkyCKxcgPYZ8kQYdX8hX6FAjeXu+Gqk9zefdvOIZ2yT2jVeOM0Z
-	 1EVWdDGcsL2xIAmpipfhdOHkmH4p3d7e93M4eytQ=
+	b=qlbK6x4rPMT8TCo591JUF3mnow+JCQ5ivP91g+AN1H3rM9xd7+Yk478CAF4289J2H
+	 H0zAtzBTaU3PhKCHY3gwqtsGuVQrZwprnROxvp6GmulIYY5Xa9OGI2daYl3jyzkBHj
+	 yKsFUuq3r0jVXcu/86W+oCztrhbnloYKPNP6KVCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbfKMBx7 (ORCPT
+        id S1728742AbfKMByD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:53:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:54:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728686AbfKMBxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:52 -0500
+        id S1728728AbfKMByA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:54:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0F67222CD;
-        Wed, 13 Nov 2019 01:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1727A2245A;
+        Wed, 13 Nov 2019 01:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610030;
-        bh=7kkQdKM17MDDKEtGn+Zxkx5RKER3gUy2kCYhpw782+w=;
+        s=default; t=1573610039;
+        bh=s5iwcHxkRt8+t8tvmr6U2LXDWYdG4gCtv2HSTwEukQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=azWy3I/gL/mms2CtiGKHtEGeZpddEd9BKaVm3rARQ1SwHULq+838OppUiFxoiFJ6n
-         K7rWjSvB28sSHFBGK2lU9QJzqrOWlP2qfc9U6D3/cOkLpcOgiGdgcg+saEAg2dLeNi
-         y2J8EkSbYwDUvLYwTPr0T0Q+cPYTyNy+FZWGduuc=
+        b=JH3Pv+uBJZmLursdzQ03gQkN2M9WCSnAwna39NlHQHvjmNeztQE44aZASAXakNm/t
+         Li8jhNR2y06jUYJBzOk0o7vi7aYSL19k2Zbe0eGdqkRwGhoWvBsEZQ4lQhRUKOX8gs
+         QmslyK7jqo/5XI2wp9nMKMOuhhwOnX22tq4Bdua0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Davide Caratti <dcaratti@redhat.com>,
-        Lucas Bates <lucasb@mojatatu.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 124/209] tc-testing: fix build of eBPF programs
-Date:   Tue, 12 Nov 2019 20:49:00 -0500
-Message-Id: <20191113015025.9685-124-sashal@kernel.org>
+Cc:     Radu Solea <radu.solea@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 130/209] crypto: mxs-dcp - Fix SHA null hashes and output length
+Date:   Tue, 12 Nov 2019 20:49:06 -0500
+Message-Id: <20191113015025.9685-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -62,168 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Radu Solea <radu.solea@nxp.com>
 
-[ Upstream commit cf5eafbfa586d030f9321cee516b91d089e38280 ]
+[ Upstream commit c709eebaf5c5faa8a0f140355f9cfe67e8f7afb1 ]
 
-rely on uAPI headers in the current kernel tree, rather than requiring the
-correct version installed on the test system. While at it, group all
-sections in a single binary and test the 'section' parameter.
+DCP writes at least 32 bytes in the output buffer instead of hash length
+as documented. Add intermediate buffer to prevent write out of bounds.
 
-Reported-by: Lucas Bates <lucasb@mojatatu.com>
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When requested to produce null hashes DCP fails to produce valid output.
+Add software workaround to bypass hardware and return valid output.
+
+Signed-off-by: Radu Solea <radu.solea@nxp.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../testing/selftests/tc-testing/bpf/Makefile | 29 +++++++++++++++++++
- .../testing/selftests/tc-testing/bpf/action.c | 23 +++++++++++++++
- .../tc-testing/tc-tests/actions/bpf.json      | 16 +++++-----
- .../selftests/tc-testing/tdc_config.py        |  4 ++-
- 4 files changed, 63 insertions(+), 9 deletions(-)
- create mode 100644 tools/testing/selftests/tc-testing/bpf/Makefile
- create mode 100644 tools/testing/selftests/tc-testing/bpf/action.c
+ drivers/crypto/mxs-dcp.c | 47 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 37 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/tc-testing/bpf/Makefile b/tools/testing/selftests/tc-testing/bpf/Makefile
-new file mode 100644
-index 0000000000000..dc92eb271d9a1
---- /dev/null
-+++ b/tools/testing/selftests/tc-testing/bpf/Makefile
-@@ -0,0 +1,29 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+APIDIR := ../../../../include/uapi
-+TEST_GEN_FILES = action.o
-+
-+top_srcdir = ../../../../..
-+include ../../lib.mk
-+
-+CLANG ?= clang
-+LLC   ?= llc
-+PROBE := $(shell $(LLC) -march=bpf -mcpu=probe -filetype=null /dev/null 2>&1)
-+
-+ifeq ($(PROBE),)
-+  CPU ?= probe
-+else
-+  CPU ?= generic
-+endif
-+
-+CLANG_SYS_INCLUDES := $(shell $(CLANG) -v -E - </dev/null 2>&1 \
-+	| sed -n '/<...> search starts here:/,/End of search list./{ s| \(/.*\)|-idirafter \1|p }')
-+
-+CLANG_FLAGS = -I. -I$(APIDIR) \
-+	      $(CLANG_SYS_INCLUDES) \
-+	      -Wno-compare-distinct-pointer-types
-+
-+$(OUTPUT)/%.o: %.c
-+	$(CLANG) $(CLANG_FLAGS) \
-+		 -O2 -target bpf -emit-llvm -c $< -o - |      \
-+	$(LLC) -march=bpf -mcpu=$(CPU) $(LLC_FLAGS) -filetype=obj -o $@
-diff --git a/tools/testing/selftests/tc-testing/bpf/action.c b/tools/testing/selftests/tc-testing/bpf/action.c
-new file mode 100644
-index 0000000000000..c32b99b80e19e
---- /dev/null
-+++ b/tools/testing/selftests/tc-testing/bpf/action.c
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ * Copyright (c) 2018 Davide Caratti, Red Hat inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of version 2 of the GNU General Public
-+ * License as published by the Free Software Foundation.
+diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
+index 56bd28174f525..3425ccc012168 100644
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -28,9 +28,24 @@
+ 
+ #define DCP_MAX_CHANS	4
+ #define DCP_BUF_SZ	PAGE_SIZE
++#define DCP_SHA_PAY_SZ  64
+ 
+ #define DCP_ALIGNMENT	64
+ 
++/*
++ * Null hashes to align with hw behavior on imx6sl and ull
++ * these are flipped for consistency with hw output
 + */
++const uint8_t sha1_null_hash[] =
++	"\x09\x07\xd8\xaf\x90\x18\x60\x95\xef\xbf"
++	"\x55\x32\x0d\x4b\x6b\x5e\xee\xa3\x39\xda";
 +
-+#include <linux/bpf.h>
-+#include <linux/pkt_cls.h>
++const uint8_t sha256_null_hash[] =
++	"\x55\xb8\x52\x78\x1b\x99\x95\xa4"
++	"\x4c\x93\x9b\x64\xe4\x41\xae\x27"
++	"\x24\xb9\x6f\x99\xc8\xf4\xfb\x9a"
++	"\x14\x1c\xfc\x98\x42\xc4\xb0\xe3";
 +
-+__attribute__((section("action-ok"),used)) int action_ok(struct __sk_buff *s)
-+{
-+	return TC_ACT_OK;
-+}
-+
-+__attribute__((section("action-ko"),used)) int action_ko(struct __sk_buff *s)
-+{
-+	s->data = 0x0;
-+	return TC_ACT_OK;
-+}
-+
-+char _license[] __attribute__((section("license"),used)) = "GPL";
-diff --git a/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json b/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
-index 6f289a49e5ecf..1a9b282dd0be2 100644
---- a/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
-+++ b/tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json
-@@ -55,7 +55,7 @@
-             "bpf"
-         ],
-         "setup": [
--            "printf '#include <linux/bpf.h>\nchar l[] __attribute__((section(\"license\"),used))=\"GPL\"; __attribute__((section(\"action\"),used)) int m(struct __sk_buff *s) { return 2; }' | clang -O2 -x c -c - -target bpf -o _b.o",
-+            "make -C bpf",
-             [
-                 "$TC action flush action bpf",
-                 0,
-@@ -63,14 +63,14 @@
-                 255
-             ]
-         ],
--        "cmdUnderTest": "$TC action add action bpf object-file _b.o index 667",
-+        "cmdUnderTest": "$TC action add action bpf object-file $EBPFDIR/action.o section action-ok index 667",
-         "expExitCode": "0",
-         "verifyCmd": "$TC action get action bpf index 667",
--        "matchPattern": "action order [0-9]*: bpf _b.o:\\[action\\] id [0-9]* tag 3b185187f1855c4c( jited)? default-action pipe.*index 667 ref",
-+        "matchPattern": "action order [0-9]*: bpf action.o:\\[action-ok\\] id [0-9]* tag [0-9a-f]{16}( jited)? default-action pipe.*index 667 ref",
-         "matchCount": "1",
-         "teardown": [
-             "$TC action flush action bpf",
--            "rm -f _b.o"
-+            "make -C bpf clean"
-         ]
-     },
-     {
-@@ -81,7 +81,7 @@
-             "bpf"
-         ],
-         "setup": [
--            "printf '#include <linux/bpf.h>\nchar l[] __attribute__((section(\"license\"),used))=\"GPL\"; __attribute__((section(\"action\"),used)) int m(struct __sk_buff *s) { s->data = 0x0; return 2; }' | clang -O2 -x c -c - -target bpf -o _c.o",
-+            "make -C bpf",
-             [
-                 "$TC action flush action bpf",
-                 0,
-@@ -89,10 +89,10 @@
-                 255
-             ]
-         ],
--        "cmdUnderTest": "$TC action add action bpf object-file _c.o index 667",
-+        "cmdUnderTest": "$TC action add action bpf object-file $EBPFDIR/action.o section action-ko index 667",
-         "expExitCode": "255",
-         "verifyCmd": "$TC action get action bpf index 667",
--        "matchPattern": "action order [0-9]*: bpf _c.o:\\[action\\] id [0-9].*index 667 ref",
-+        "matchPattern": "action order [0-9]*: bpf action.o:\\[action-ko\\] id [0-9].*index 667 ref",
-         "matchCount": "0",
-         "teardown": [
-             [
-@@ -101,7 +101,7 @@
-                 1,
-                 255
-             ],
--            "rm -f _c.o"
-+            "make -C bpf clean"
-         ]
-     },
-     {
-diff --git a/tools/testing/selftests/tc-testing/tdc_config.py b/tools/testing/selftests/tc-testing/tdc_config.py
-index a023d0d62b25c..d651bc1501bdb 100644
---- a/tools/testing/selftests/tc-testing/tdc_config.py
-+++ b/tools/testing/selftests/tc-testing/tdc_config.py
-@@ -16,7 +16,9 @@ NAMES = {
-           'DEV2': '',
-           'BATCH_FILE': './batch.txt',
-           # Name of the namespace to use
--          'NS': 'tcut'
-+          'NS': 'tcut',
-+          # Directory containing eBPF test programs
-+          'EBPFDIR': './bpf'
-         }
+ /* DCP DMA descriptor. */
+ struct dcp_dma_desc {
+ 	uint32_t	next_cmd_addr;
+@@ -48,6 +63,7 @@ struct dcp_coherent_block {
+ 	uint8_t			aes_in_buf[DCP_BUF_SZ];
+ 	uint8_t			aes_out_buf[DCP_BUF_SZ];
+ 	uint8_t			sha_in_buf[DCP_BUF_SZ];
++	uint8_t			sha_out_buf[DCP_SHA_PAY_SZ];
  
+ 	uint8_t			aes_key[2 * AES_KEYSIZE_128];
  
+@@ -513,8 +529,6 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
+ 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+ 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
+ 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
+-	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
+-
+ 	struct dcp_dma_desc *desc = &sdcp->coh->desc[actx->chan];
+ 
+ 	dma_addr_t digest_phys = 0;
+@@ -536,10 +550,23 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
+ 	desc->payload = 0;
+ 	desc->status = 0;
+ 
++	/*
++	 * Align driver with hw behavior when generating null hashes
++	 */
++	if (rctx->init && rctx->fini && desc->size == 0) {
++		struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
++		const uint8_t *sha_buf =
++			(actx->alg == MXS_DCP_CONTROL1_HASH_SELECT_SHA1) ?
++			sha1_null_hash : sha256_null_hash;
++		memcpy(sdcp->coh->sha_out_buf, sha_buf, halg->digestsize);
++		ret = 0;
++		goto done_run;
++	}
++
+ 	/* Set HASH_TERM bit for last transfer block. */
+ 	if (rctx->fini) {
+-		digest_phys = dma_map_single(sdcp->dev, req->result,
+-					     halg->digestsize, DMA_FROM_DEVICE);
++		digest_phys = dma_map_single(sdcp->dev, sdcp->coh->sha_out_buf,
++					     DCP_SHA_PAY_SZ, DMA_FROM_DEVICE);
+ 		desc->control0 |= MXS_DCP_CONTROL0_HASH_TERM;
+ 		desc->payload = digest_phys;
+ 	}
+@@ -547,9 +574,10 @@ static int mxs_dcp_run_sha(struct ahash_request *req)
+ 	ret = mxs_dcp_start_dma(actx);
+ 
+ 	if (rctx->fini)
+-		dma_unmap_single(sdcp->dev, digest_phys, halg->digestsize,
++		dma_unmap_single(sdcp->dev, digest_phys, DCP_SHA_PAY_SZ,
+ 				 DMA_FROM_DEVICE);
+ 
++done_run:
+ 	dma_unmap_single(sdcp->dev, buf_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
+ 
+ 	return ret;
+@@ -567,6 +595,7 @@ static int dcp_sha_req_to_buf(struct crypto_async_request *arq)
+ 	const int nents = sg_nents(req->src);
+ 
+ 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
++	uint8_t *out_buf = sdcp->coh->sha_out_buf;
+ 
+ 	uint8_t *src_buf;
+ 
+@@ -621,11 +650,9 @@ static int dcp_sha_req_to_buf(struct crypto_async_request *arq)
+ 
+ 		actx->fill = 0;
+ 
+-		/* For some reason, the result is flipped. */
+-		for (i = 0; i < halg->digestsize / 2; i++) {
+-			swap(req->result[i],
+-			     req->result[halg->digestsize - i - 1]);
+-		}
++		/* For some reason the result is flipped */
++		for (i = 0; i < halg->digestsize; i++)
++			req->result[i] = out_buf[halg->digestsize - i - 1];
+ 	}
+ 
+ 	return 0;
 -- 
 2.20.1
 
