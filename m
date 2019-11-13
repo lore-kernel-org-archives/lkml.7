@@ -2,112 +2,112 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA31C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A210C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AF1206EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573679439;
-	bh=3hEkcmaUqAnk2YtPx/2AinQ4e6drdpknUYtp2Kk23H8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UFN2HisoQ3ZdJGyPIVIRJsR2vF8jf8nDHTQXFPrwdf7dV8vUDA/CmtS/jUaIrxoiJ
-	 BuH/p3/potpoOh8lPC/vdzV6xTVfHM6Jadys9BiBrsBlDwuXGVujR/r1VmEXU9uwVp
-	 z7iLqCl4zb78R/BfBBxfZDJkM/Kau9yAn7CCXS4o=
+	by mail.kernel.org (Postfix) with ESMTP id EEBF920702
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:12:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="FCmdsICW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfKMVKh (ORCPT
+        id S1726564AbfKMVL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:10:37 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46005 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfKMVKh (ORCPT
+        Wed, 13 Nov 2019 16:11:58 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40020 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMVL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:10:37 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n21so4166968ljg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 13:10:35 -0800 (PST)
+        Wed, 13 Nov 2019 16:11:58 -0500
+Received: by mail-ot1-f65.google.com with SMTP id m15so2921468otq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 13:11:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=91N9W8fnm/Fhfqn455X3m9/csATT/jXc8I2Ji17aZzc=;
-        b=Mf6ceFn3HIXyCXGllj+S6+rL0Oyk5Vg2Ksehm712c1feeeeBFfn38uvk8g+ZDi2lDM
-         /DKVg58REdap/+mZuUAckUJIgt624cVXCYbpq3AlNnquRj209aGdVCbiQNLt25vbCoR/
-         PKHeiM7sE8M6mbU6rdxidHxwniSU4DXq8pTw0=
+         :cc:content-transfer-encoding;
+        bh=VMOtDktK5nRZtvkNQ1ABpB+ui18anwf6LEg99H2kEls=;
+        b=FCmdsICWDz7CiyQdNCqoFbVHGJm/vIUdM11of8QtCdEqO7kTxrmAzgtKeqkUeUm4PG
+         8uarwrA7BmME+wfycpyXsjrlY0OfLFDjcp8db0KZVB1KPHsE3eaHzwerC/qPVbP5olIT
+         BWOdSHrdGYBGqY6o1SWe7pGROzLjpICRv+F228I4+OxXBo1Ao3yFFOy8gdsMD9RgakZX
+         w9X8/kT7zMm5mfn8BOLLEhoQiymp+SwxusRI/kp4S/eSbFHrA3Hvxnfw/pv9OJ3maDKU
+         klD3Y8Gx3qNKvg+NG+WblD9vg3DYLW9rYjq1OZ3woFdcGRDFVLLlvezA5YmD5IzQljUk
+         E+Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=91N9W8fnm/Fhfqn455X3m9/csATT/jXc8I2Ji17aZzc=;
-        b=KEWxraZY0z33MM3xX4oHnUk53ehzJOekMlw1MHN1uTLRM0H8ZLxNyMqvvEzElB7Ktb
-         thMf9YK0ZqMGd+rpgA7usaT2BK6SKC7RZqG9TrT8bjOs8SX8DF7zOn7od+K44KjJSvTv
-         aLzyRwlvDK3/7uNXXuRkedAXAmrgMKfZTyN/EisVkBTKi1mc1mVpaZKC6PLAyiZxl3z+
-         /bbldkHSaqe3/lQ989imVtP8pHcyQz8sfRe7OD6KhAJxO0rLsY+NIHxyjtfkYfq5M5tM
-         KZoLUDJUQasyvZ5lVzfM1DOFISUGJXKsi37upaik/tV96jhgcN3NeT1S00YYP5JkJu3c
-         AXRw==
-X-Gm-Message-State: APjAAAV7PgPLwJ4M4tWcMbYMOGZEzw6YTw7qoDXkPpGO6cazRHnOU6D1
-        h6Zr0LBkia06ndVU2o0CvnyCTg4MjMY=
-X-Google-Smtp-Source: APXvYqz3qiKdlr/wJPbgPL1JAkSz1Ox/1kNvBfOkzYXg0KNlAhmaYaaWDiSeA6xHaORXCoEc/VdktQ==
-X-Received: by 2002:a2e:9758:: with SMTP id f24mr4014354ljj.105.1573679433227;
-        Wed, 13 Nov 2019 13:10:33 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id x23sm1554871lfe.8.2019.11.13.13.10.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 13:10:32 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id d22so4193140lji.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 13:10:32 -0800 (PST)
-X-Received: by 2002:a2e:9a8f:: with SMTP id p15mr4116040lji.148.1573679429322;
- Wed, 13 Nov 2019 13:10:29 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VMOtDktK5nRZtvkNQ1ABpB+ui18anwf6LEg99H2kEls=;
+        b=l/0KUMLqAAlBBRKlD8f1YbEM/qjAIdJzvVlB/cpJxrgNYWtxT0R4/cM3wVqVgALpeh
+         wRM/KrSKtNsNRNWvK6LjquWccUWmklNCOQQy/gdf01JZkHiUFxvSMMAHhhp0cT6D6eEn
+         v1983smPMk/uUjZYUF2lOvkl1uFAcTvq4R3MgZdb3VjCxZ1Ef2YVNJugFFcDpRTJgBpS
+         q8vWCH5AJeULjcqqjwt7tJJ4nqoKSJzFbAn5GEWMIkCB25RLsOR7yEsXWuwwTXwZ7W9N
+         guotKR6QXQgAaULkg8btXTK9P47WkgUR1I2Q13bcGUvn9tLCgzcYur5AXXntAshH9m8h
+         9/kA==
+X-Gm-Message-State: APjAAAWAevTK1y70ACfTp3cc+HeX9tyCB0SSMHlWYCDnaulmH8pPZ3+U
+        KRRMEccDIzgsfWyyYDHwVzzvGqzVQwhZJDloMmG8NK1mpc4=
+X-Google-Smtp-Source: APXvYqxSKeojpYQlGp84/x8qspq7fqr/e6I8/BHRNkdeEoelyfRcWNtBcKSzleojEZUw8yIj1FjB/HAbRbhRsY6TSDY=
+X-Received: by 2002:a9d:5f11:: with SMTP id f17mr4554871oti.207.1573679517249;
+ Wed, 13 Nov 2019 13:11:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20191113204240.767922595@linutronix.de> <20191113210103.911310593@linutronix.de>
-In-Reply-To: <20191113210103.911310593@linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 13 Nov 2019 13:10:13 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whNAEuNPU3Oy_-EpjOojpysWcCh4uqDgOt2RjBNx2xBSg@mail.gmail.com>
-Message-ID: <CAHk-=whNAEuNPU3Oy_-EpjOojpysWcCh4uqDgOt2RjBNx2xBSg@mail.gmail.com>
-Subject: Re: [patch V3 02/20] x86/process: Unify copy_thread_tls()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
+References: <7B45B9B3-0947-459A-B4FD-9F6CB2F9EF3A@redhat.com> <28CEC8B8-AC6A-4A13-B5A4-C47DB64B45E6@redhat.com>
+In-Reply-To: <28CEC8B8-AC6A-4A13-B5A4-C47DB64B45E6@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Nov 2019 13:11:46 -0800
+Message-ID: <CAPcyv4gpN8kbh1i6jCDdC2OP41G3C2+7YD4rYz-3HaD_pufvyg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 1:02 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Wed, Nov 13, 2019 at 12:40 PM David Hildenbrand <david@redhat.com> wrote=
+:
+[..]
+> >>>> I'm still struggling to understand the motivation of distinguishing
+> >>>> "active" as something distinct from "online". As long as the "online=
+"
+> >>>> granularity is improved from sections down to subsections then most
+> >>>> code paths are good to go. The others can use get_devpagemap() to
+> >>>> check for ZONE_DEVICE in a race free manner as they currently do.
+> >>>
+> >>> I thought we wanted to unify access if we don=E2=80=99t really care a=
+bout the zone as in most pfn walkers - E.g., for zone shrinking.
+> >>
+> >> Agree, when the zone does not matter, which is most cases, then
+> >> pfn_online() and pfn_valid() are sufficient.
 >
-> +int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
-> +                   unsigned long arg, struct task_struct *p, unsigned long tls)
-...
-> +#ifdef CONFIG_X86_64
-..
-> +#else
-> +       /* Clear all status flags including IF and set fixed bit. */
-> +       frame->flags = X86_EFLAGS_FIXED;
-> +#endif
+> Oh, and just to clarify why I proposed pfn_active(): The issue right now =
+is that a PFN that is valid but not online could be offline memory (memmap =
+not initialized) or ZONE_DEVICE. That=E2=80=98s why I wanted to have a way =
+to detect if a memmap was initialized, independent of the zone. That=E2=80=
+=98s important for generic PFN walkers.
 
-Hmm. The unification I like, but it also shows these differences that
-I don't remember the reason for.
+That's what I was debating with Toshiki [1], whether there is a real
+example of needing to distinguish ZONE_DEVICE from offline memory in a
+pfn walker. The proposed use case in this patch set of being able to
+set hwpoison on ZONE_DEVICE pages does not seem like a good idea to
+me. My suspicion is that this is a common theme and others are looking
+to do these types page manipulations that only make sense for online
+memory. If that is the case then treating ZONE_DEVICE as offline seems
+the right direction.
 
-Remind me why __switch_to_asm() on 32-bit safes eflags, but we don't
-do it on x86-64?
-
-The comment just talks about callee-saved registers, but flags isn't
-callee-saved, so there's something else going on.
-
-This patch clearly doesn't change anything, I'm not complaining about
-the patch at all. I'm just wondering about the odd difference that the
-patch exposes.
-
-               Linus
+[1]: https://lore.kernel.org/linux-mm/CAPcyv4joVDwiL21PPyJ7E_mMFR2SL3QTi09V=
+Mtfxb_W+-1p8vQ@mail.gmail.com/
