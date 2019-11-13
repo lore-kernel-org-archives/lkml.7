@@ -2,180 +2,210 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F309CC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35493C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B0E206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:07:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyDoknLJ"
+	by mail.kernel.org (Postfix) with ESMTP id C115A20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfKMUHd (ORCPT
+        id S1726564AbfKMUJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:07:33 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43353 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfKMUHc (ORCPT
+        Wed, 13 Nov 2019 15:09:31 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31718 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726179AbfKMUJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:07:32 -0500
-Received: by mail-ed1-f66.google.com with SMTP id w6so2956098edx.10;
-        Wed, 13 Nov 2019 12:07:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xo7TSU3PyADuaEOLwwRfPTSplFzoMg0DpXCyHGNlmZk=;
-        b=NyDoknLJaoCb+3KO5H3My3hgZyJhANHCmOyE5GsZTQiCx1+v6Nnhrb2zHEMkqIifij
-         McA/FfWiV0LUGaSc4pyRGicTtReHp9jm5OFsvvcrhiHeemBTOKJ2HVa7VQYJAj4U5eXQ
-         URk7ZvQhGbAj1kUsy80MoNROLSjommLDG1ilUdaQ+EsgQPavZ59sreHC7JsXN/oubsta
-         2+Y9Bfhtlnc2/IS+ZZaPlj+CQq/P3owXudh8rRP1uRoqGAtD+jvbGpKgbuwclD02gn/z
-         V68nTYrGEO5jXFDp0KNQZa1cxqXD3VBv4/EuEYl7dtSZ/jPDyJ62p8jUJB2PaHcu8kyh
-         iQyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=xo7TSU3PyADuaEOLwwRfPTSplFzoMg0DpXCyHGNlmZk=;
-        b=Bt3s95uj3C5EL+U97+WY0ONu9SGTOqTFfIyAg1g/crGxqiF/QuqP//7nsLFH/m+zpl
-         2VNxnUyF5Kh0ZuP+oA7EaOlSY+j+IxFNnR0gp2xi/uFSNT42MYf8fRuaY4T6ciIlAHZq
-         RuWjoP60nO6c/seAU2xcaOMO2BgdETaFDlTunbW9mPfyxkY7I9YOHTvh7kXjj5m2/F2P
-         CACT4NS2Dt92j0MhNi1wTupLifY0Nnnd/MHmC/x+C8FEI2p+V2bqbXxHVPTX7ZhIumgt
-         3tp4dRy9cWbcQUKoJRwZSGoFx3IC6GcqKZBhUIv5ZYsScYW0kcPxKxi4H6KQkfqBmMK3
-         vSfQ==
-X-Gm-Message-State: APjAAAUfVn+2bbTGDy2Q6/XVPtFLuzd2l24kF8eCyRIEFwSNoR/EvLXn
-        J2pIfMrTPebojbZcI4JoKPZo2KUk
-X-Google-Smtp-Source: APXvYqzHQ4U6H/B4dODBlz0d9rShVWHTgUy6wPQA+c1ecDlGbXoyMAFXXcuMsCqS3sY/zmCBYDRlGw==
-X-Received: by 2002:a17:907:1102:: with SMTP id qu2mr4583407ejb.300.1573675649689;
-        Wed, 13 Nov 2019 12:07:29 -0800 (PST)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x29sm301662edi.20.2019.11.13.12.07.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 12:07:28 -0800 (PST)
-Subject: Re: [PATCH AUTOSEL 4.14 014/115] ata: ahci_brcm: Match BCM63138
- compatible strings
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
-References: <20191113015622.11592-1-sashal@kernel.org>
- <20191113015622.11592-14-sashal@kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <bcd8f736-34a7-b0bb-adc1-1f7a092fc1f5@gmail.com>
-Date:   Wed, 13 Nov 2019 12:07:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191113015622.11592-14-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 13 Nov 2019 15:09:30 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADK8Zxg078857
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:09:29 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w8ny0e6v7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 15:09:29 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 13 Nov 2019 20:09:27 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Nov 2019 20:09:24 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADK9Nom41943190
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 20:09:23 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B7B04C04E;
+        Wed, 13 Nov 2019 20:09:23 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12CE84C044;
+        Wed, 13 Nov 2019 20:09:22 +0000 (GMT)
+Received: from dhcp-9-31-103-201.watson.ibm.com (unknown [9.31.103.201])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Nov 2019 20:09:21 +0000 (GMT)
+Subject: Re: [PATCH v6 2/3] IMA: Define an IMA hook to measure keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 13 Nov 2019 15:09:21 -0500
+In-Reply-To: <20191113184658.2862-3-nramas@linux.microsoft.com>
+References: <20191113184658.2862-1-nramas@linux.microsoft.com>
+         <20191113184658.2862-3-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111320-4275-0000-0000-0000037D7AD4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111320-4276-0000-0000-00003890DDFA
+Message-Id: <1573675761.4843.13.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=4 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911130164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 5:54 PM, Sasha Levin wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
+On Wed, 2019-11-13 at 10:46 -0800, Lakshmi Ramasubramanian wrote:
+> Measure asymmetric keys used for verifying file signatures,
+> certificates, etc.
 > 
-> [ Upstream commit fb8506f15f2e394f5f648575cf48a26e8744390c ]
+> This patch defines a new IMA hook namely ima_post_key_create_or_update()
+> to measure asymmetric keys.
 > 
-> Match the "brcm,bcm63138-ahci" compatible string in order to allow this
-> driver to probe on such platforms.
+> Note that currently IMA subsystem can be enabled without
+> enabling KEYS subsystem.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Adding support for measuring asymmetric keys in IMA requires KEYS
+> subsystem to be enabled. To handle this dependency a new config
+> namely CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS has been added. Enabling
+> this config requires the following configs to be enabled:
+>     CONFIG_IMA, CONFIG_KEYS, CONFIG_ASYMMETRIC_KEY_TYPE, and
+>     CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE.
+> 
+> CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is off by default.
+> 
+> The IMA hook is defined in a new file namely ima_asymmetric_keys.c
+> which is built only if CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is enabled.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-This is a feature and not really a bug fix, is someone specifically
-asking for this to be back ported? Also without the matching SATA PHY
-driver changes:
+All that is is needed is the key and public_key structures, which are
+defined in include/linux/keys.h and include/crypto/public_key.h.  If
+the keys subsystem is disabled, then the new IMA hook won't be called.
+ There's no need for a new Kconfig option or a new file.
 
-7b69fa1c5c930886f8a916cc47096dd4044c007a ("phy: brcm-sata: Add BCM63138
-(DSL) PHY init sequence")
+Please move the hook to just after ima_kexec_cmdline().
 
-this is pretty useless on its own. Same applies to all automatic
-selections, not just this kernel obviously.
+Mimi
 
 > ---
->  drivers/ata/ahci_brcm.c | 1 +
->  1 file changed, 1 insertion(+)
+>  security/integrity/ima/Kconfig               | 14 ++++++
+>  security/integrity/ima/Makefile              |  1 +
+>  security/integrity/ima/ima_asymmetric_keys.c | 51 ++++++++++++++++++++
+>  3 files changed, 66 insertions(+)
+>  create mode 100644 security/integrity/ima/ima_asymmetric_keys.c
 > 
-> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-> index 5936d1679bf3a..0a3998526bb1d 100644
-> --- a/drivers/ata/ahci_brcm.c
-> +++ b/drivers/ata/ahci_brcm.c
-> @@ -297,6 +297,7 @@ static struct scsi_host_template ahci_platform_sht = {
->  static const struct of_device_id ahci_of_match[] = {
->  	{.compatible = "brcm,bcm7425-ahci", .data = (void *)BRCM_SATA_BCM7425},
->  	{.compatible = "brcm,bcm7445-ahci", .data = (void *)BRCM_SATA_BCM7445},
-> +	{.compatible = "brcm,bcm63138-ahci", .data = (void *)BRCM_SATA_BCM7445},
->  	{.compatible = "brcm,bcm-nsp-ahci", .data = (void *)BRCM_SATA_NSP},
->  	{},
->  };
-> 
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 838476d780e5..c6d14884bc19 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -310,3 +310,17 @@ config IMA_APPRAISE_SIGNED_INIT
+>  	default n
+>  	help
+>  	   This option requires user-space init to be signed.
+> +
+> +config IMA_MEASURE_ASYMMETRIC_KEYS
+> +	bool "Enable measuring asymmetric keys on key create or update"
+> +	depends on IMA
+> +	depends on KEYS
+> +	depends on ASYMMETRIC_KEY_TYPE
+> +	depends on ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+> +	default n
+> +	help
+> +	   This option enables measuring asymmetric keys when
+> +	   the key is created or updated. Additionally, IMA policy
+> +	   needs to be configured to either measure keys linked to
+> +	   any keyring or only measure keys linked to the keyrings
+> +	   specified in the IMA policy through the keyrings= option.
+> diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
+> index 31d57cdf2421..3e9d0ad68c7b 100644
+> --- a/security/integrity/ima/Makefile
+> +++ b/security/integrity/ima/Makefile
+> @@ -12,3 +12,4 @@ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
+>  ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
+>  ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
+>  obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
+> +obj-$(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) += ima_asymmetric_keys.o
+> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+> new file mode 100644
+> index 000000000000..f6884641a622
+> --- /dev/null
+> +++ b/security/integrity/ima/ima_asymmetric_keys.c
+> @@ -0,0 +1,51 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2019 Microsoft Corporation
+> + *
+> + * Author: Lakshmi Ramasubramanian (nramas@linux.microsoft.com)
+> + *
+> + * File: ima_asymmetric_keys.c
+> + *       Defines an IMA hook to measure asymmetric keys on key
+> + *       create or update.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <crypto/public_key.h>
+> +#include <keys/asymmetric-type.h>
+> +#include "ima.h"
+> +
+> +/**
+> + * ima_post_key_create_or_update - measure asymmetric keys
+> + * @keyring: keyring to which the key is linked to
+> + * @key: created or updated key
+> + * @flags: key flags
+> + * @create: flag indicating whether the key was created or updated
+> + *
+> + * Keys can only be measured, not appraised.
+> + */
+> +void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+> +				   unsigned long flags, bool create)
+> +{
+> +	const struct public_key *pk;
+> +
+> +	/* Only asymmetric keys are handled by this hook. */
+> +	if (key->type != &key_type_asymmetric)
+> +		return;
+> +
+> +	/* Get the public_key of the given asymmetric key to measure. */
+> +	pk = key->payload.data[asym_crypto];
+> +
+> +	/*
+> +	 * keyring->description points to the name of the keyring
+> +	 * (such as ".builtin_trusted_keys", ".ima", etc.) to
+> +	 * which the given key is linked to.
+> +	 *
+> +	 * The name of the keyring is passed in the "eventname"
+> +	 * parameter to process_buffer_measurement() and is set
+> +	 * in the "eventname" field in ima_event_data for
+> +	 * the key measurement IMA event.
+> +	 */
+> +	process_buffer_measurement(pk->key, pk->keylen,
+> +				   keyring->description, KEY_CHECK, 0);
+> +}
 
-
--- 
-Florian
