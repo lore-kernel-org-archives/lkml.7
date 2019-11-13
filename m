@@ -4,51 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1559DC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8C6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E369A206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9DA206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611116;
-	bh=3JxE7MxnwJWUazFf1/4aL5Jz2vKF4IYWKmV9aRGK8Zw=;
+	s=default; t=1573611119;
+	bh=yK1zw7+ztDz/wY5Xfb41Gx3AS89+UUsmCgSojd7FXaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OyKr7yj8kHnx/lXHgkLFi5ehSFAQFjnGBm465cpXkiTN3NjFUO6SaPwFn7WeNKklZ
-	 VYdatfURqNbN15nKml2LWd1lvwujNWTw3Bi5zktuhuYB4rpGZB/D89VuaMsuyW16vS
-	 4iIitRTDLDz5v+RTxuYfYfeVsNb3195CneCRYGF0=
+	b=qd3IVbePeI0GwT7hYjdlvkFt7h7OOghTXmRAZAmAvtZP8cPU89Vhqmv1FEcc8jiM1
+	 wgWEUzFFgpNZXFitOCvUa2YH2aPN2mbsoKUh5BptQrHRtEo25wotCuVEuw9zU2pwlk
+	 Z2CyYsNUKqGz86szLQRz51+Ft4/c76Py+V6/ijgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfKMB6g (ORCPT
+        id S1729833AbfKMCL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:58:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52244 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:11:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730023AbfKMB62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:28 -0500
+        id S1729017AbfKMB6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B52742246A;
-        Wed, 13 Nov 2019 01:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD3982245A;
+        Wed, 13 Nov 2019 01:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610307;
-        bh=3JxE7MxnwJWUazFf1/4aL5Jz2vKF4IYWKmV9aRGK8Zw=;
+        s=default; t=1573610314;
+        bh=yK1zw7+ztDz/wY5Xfb41Gx3AS89+UUsmCgSojd7FXaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DlSkgjxM/8t0/r3DNrJOVwfSZVWmwM/EEKZIPKyETUvQE7SZgRQ6Hm5MdgAQoC/u7
-         oQ2heRW2+BrNKKNdRF3bQW1t7cK9TYkPdrX4qj1lSrRKo69M/+z408M+ICbKLu3TAf
-         ntHarC/jXY+K4uPm1mriOEzRoRoFJ72uI656DrH4=
+        b=K+rdSH8qyF4nS660MNtAMaT/JqBxVQvbqvqp0XpPlERdKiInMU67IsY8V+uOx+kYY
+         vomvvFHr55YD+7ZuFDHlflt65NuPx0snfxasG7QS6dkMhQYbOXDWkPDdathCXAG1x6
+         967XoD9ylldBEpAbjzM8F77e/90CKSJU4l2JUupg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Radu Solea <radu.solea@nxp.com>,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 076/115] crypto: mxs-dcp - Fix AES issues
-Date:   Tue, 12 Nov 2019 20:55:43 -0500
-Message-Id: <20191113015622.11592-76-sashal@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Chang S . Bae" <chang.seok.bae@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Markus T Metzger <markus.t.metzger@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Shankar <ravi.v.shankar@intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 080/115] x86/fsgsbase/64: Fix ptrace() to read the FS/GS base accurately
+Date:   Tue, 12 Nov 2019 20:55:47 -0500
+Message-Id: <20191113015622.11592-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -61,119 +71,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radu Solea <radu.solea@nxp.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-[ Upstream commit fadd7a6e616b89c7f4f7bfa7b824f290bab32c3c ]
+[ Upstream commit 07e1d88adaaeab247b300926f78cc3f950dbeda3 ]
 
-The DCP driver does not obey cryptlen, when doing android CTS this
-results in passing to hardware input stream lengths which are not
-multiple of block size.
+On 64-bit kernels ptrace can read the FS/GS base using the register access
+APIs (PTRACE_PEEKUSER, etc.) or PTRACE_ARCH_PRCTL.
 
-Add a check to prevent future erroneous stream lengths from reaching the
-hardware and adjust the scatterlist walking code to obey cryptlen.
+Make both of these mechanisms return the actual FS/GS base.
 
-Also properly copy-out the IV for chaining.
+This will improve debuggability by providing the correct information
+to ptracer such as GDB.
 
-Signed-off-by: Radu Solea <radu.solea@nxp.com>
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[ chang: Rebased and revised patch description. ]
+[ mingo: Revised the changelog some more. ]
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Markus T Metzger <markus.t.metzger@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ravi Shankar <ravi.v.shankar@intel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/1537312139-5580-2-git-send-email-chang.seok.bae@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/mxs-dcp.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ arch/x86/kernel/ptrace.c | 62 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 52 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
-index 4615dbee22d0a..e1e1e81107904 100644
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -225,6 +225,12 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
- 	dma_addr_t dst_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_out_buf,
- 					     DCP_BUF_SZ, DMA_FROM_DEVICE);
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 584cdd475bb31..734549492a18b 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -40,6 +40,7 @@
+ #include <asm/hw_breakpoint.h>
+ #include <asm/traps.h>
+ #include <asm/syscall.h>
++#include <asm/mmu_context.h>
  
-+	if (actx->fill % AES_BLOCK_SIZE) {
-+		dev_err(sdcp->dev, "Invalid block size!\n");
-+		ret = -EINVAL;
-+		goto aes_done_run;
-+	}
+ #include "tls.h"
+ 
+@@ -343,6 +344,49 @@ static int set_segment_reg(struct task_struct *task,
+ 	return 0;
+ }
+ 
++static unsigned long task_seg_base(struct task_struct *task,
++				   unsigned short selector)
++{
++	unsigned short idx = selector >> 3;
++	unsigned long base;
 +
- 	/* Fill in the DMA descriptor. */
- 	desc->control0 = MXS_DCP_CONTROL0_DECR_SEMAPHORE |
- 		    MXS_DCP_CONTROL0_INTERRUPT |
-@@ -254,6 +260,7 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
- 
- 	ret = mxs_dcp_start_dma(actx);
- 
-+aes_done_run:
- 	dma_unmap_single(sdcp->dev, key_phys, 2 * AES_KEYSIZE_128,
- 			 DMA_TO_DEVICE);
- 	dma_unmap_single(sdcp->dev, src_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
-@@ -280,13 +287,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 
- 	uint8_t *out_tmp, *src_buf, *dst_buf = NULL;
- 	uint32_t dst_off = 0;
-+	uint32_t last_out_len = 0;
- 
- 	uint8_t *key = sdcp->coh->aes_key;
- 
- 	int ret = 0;
- 	int split = 0;
--	unsigned int i, len, clen, rem = 0;
-+	unsigned int i, len, clen, rem = 0, tlen = 0;
- 	int init = 0;
-+	bool limit_hit = false;
- 
- 	actx->fill = 0;
- 
-@@ -305,6 +314,11 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 	for_each_sg(req->src, src, nents, i) {
- 		src_buf = sg_virt(src);
- 		len = sg_dma_len(src);
-+		tlen += len;
-+		limit_hit = tlen > req->nbytes;
++	if (likely((selector & SEGMENT_TI_MASK) == 0)) {
++		if (unlikely(idx >= GDT_ENTRIES))
++			return 0;
 +
-+		if (limit_hit)
-+			len = req->nbytes - (tlen - len);
- 
- 		do {
- 			if (actx->fill + len > out_off)
-@@ -321,13 +335,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 			 * If we filled the buffer or this is the last SG,
- 			 * submit the buffer.
- 			 */
--			if (actx->fill == out_off || sg_is_last(src)) {
-+			if (actx->fill == out_off || sg_is_last(src) ||
-+				limit_hit) {
- 				ret = mxs_dcp_run_aes(actx, req, init);
- 				if (ret)
- 					return ret;
- 				init = 0;
- 
- 				out_tmp = out_buf;
-+				last_out_len = actx->fill;
- 				while (dst && actx->fill) {
- 					if (!split) {
- 						dst_buf = sg_virt(dst);
-@@ -350,6 +366,19 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 				}
- 			}
- 		} while (len);
++		/*
++		 * There are no user segments in the GDT with nonzero bases
++		 * other than the TLS segments.
++		 */
++		if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
++			return 0;
 +
-+		if (limit_hit)
-+			break;
-+	}
++		idx -= GDT_ENTRY_TLS_MIN;
++		base = get_desc_base(&task->thread.tls_array[idx]);
++	} else {
++#ifdef CONFIG_MODIFY_LDT_SYSCALL
++		struct ldt_struct *ldt;
 +
-+	/* Copy the IV for CBC for chaining */
-+	if (!rctx->ecb) {
-+		if (rctx->enc)
-+			memcpy(req->info, out_buf+(last_out_len-AES_BLOCK_SIZE),
-+				AES_BLOCK_SIZE);
++		/*
++		 * If performance here mattered, we could protect the LDT
++		 * with RCU.  This is a slow path, though, so we can just
++		 * take the mutex.
++		 */
++		mutex_lock(&task->mm->context.lock);
++		ldt = task->mm->context.ldt;
++		if (unlikely(idx >= ldt->nr_entries))
++			base = 0;
 +		else
-+			memcpy(req->info, in_buf+(last_out_len-AES_BLOCK_SIZE),
-+				AES_BLOCK_SIZE);
- 	}
++			base = get_desc_base(ldt->entries + idx);
++		mutex_unlock(&task->mm->context.lock);
++#else
++		base = 0;
++#endif
++	}
++
++	return base;
++}
++
+ #endif	/* CONFIG_X86_32 */
  
- 	return ret;
+ static unsigned long get_flags(struct task_struct *task)
+@@ -436,18 +480,16 @@ static unsigned long getreg(struct task_struct *task, unsigned long offset)
+ 
+ #ifdef CONFIG_X86_64
+ 	case offsetof(struct user_regs_struct, fs_base): {
+-		/*
+-		 * XXX: This will not behave as expected if called on
+-		 * current or if fsindex != 0.
+-		 */
+-		return task->thread.fsbase;
++		if (task->thread.fsindex == 0)
++			return task->thread.fsbase;
++		else
++			return task_seg_base(task, task->thread.fsindex);
+ 	}
+ 	case offsetof(struct user_regs_struct, gs_base): {
+-		/*
+-		 * XXX: This will not behave as expected if called on
+-		 * current or if fsindex != 0.
+-		 */
+-		return task->thread.gsbase;
++		if (task->thread.gsindex == 0)
++			return task->thread.gsbase;
++		else
++			return task_seg_base(task, task->thread.gsindex);
+ 	}
+ #endif
+ 	}
 -- 
 2.20.1
 
