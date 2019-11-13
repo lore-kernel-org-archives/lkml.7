@@ -2,152 +2,181 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90346C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ED0C1744A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 641AF21A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D89222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QPZ40zSa";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="C5/UqQ1B"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fhiVEHHu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKMGr2 (ORCPT
+        id S1726291AbfKMGwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:47:28 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:46442 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfKMGr1 (ORCPT
+        Wed, 13 Nov 2019 01:52:35 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6574 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfKMGwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:47:27 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6F1B860DF8; Wed, 13 Nov 2019 06:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573627646;
-        bh=CfQKWzPAIBBRWL1m6nlO3ABW3eoRsUcJysSGhIsU7XU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPZ40zSapC8rjIPk827658kUCsN+poo4E7XiCcURC60ZGxqPy3+Rb3zNATuTFIwJO
-         3TTolqfOFD4UBQA7JhDozohx/dk7kMQVpqGn4r2JcNieogyWawlJNprITF3gQpBc3H
-         FbrUe0QxWXVSurckPCVVTBlSDMAfMY0eFtUqb/ec=
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5C1B60DBB;
-        Wed, 13 Nov 2019 06:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573627633;
-        bh=CfQKWzPAIBBRWL1m6nlO3ABW3eoRsUcJysSGhIsU7XU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C5/UqQ1B1wbLGM2aqqZSiHpntieVGjRqmKtBwHvOG8guXAs0ywsgzV3lgoWboVYMJ
-         xfvgjJQOzfvvHV1aBDzIsABDEq5nOCj8mS/8DboXP4SxvZ9PDmElwWHOMGr5O4IwpJ
-         xaRZX086Izrb2NFtDEOzuMPpVGrSm8NEJNEvcZZc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A5C1B60DBB
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Subhash Jadavani <subhashj@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 7/7] scsi: ufs: Fix error handing during hibern8 enter
-Date:   Tue, 12 Nov 2019 22:45:51 -0800
-Message-Id: <1573627552-12615-8-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573627552-12615-1-git-send-email-cang@codeaurora.org>
-References: <1573627552-12615-1-git-send-email-cang@codeaurora.org>
+        Wed, 13 Nov 2019 01:52:35 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcba8330000>; Tue, 12 Nov 2019 22:52:35 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 12 Nov 2019 22:52:32 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 12 Nov 2019 22:52:32 -0800
+Received: from [10.26.11.32] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
+ 2019 06:52:28 +0000
+Subject: Re: [PATCH v2 17/17] ARM: dts: tegra30: cardhu-a04: Add CPU Operating
+ Performance Points
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+CC:     <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191024221416.14197-1-digetx@gmail.com>
+ <20191024221416.14197-18-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <be6deeff-4294-c945-1539-57ec28b4c895@nvidia.com>
+Date:   Wed, 13 Nov 2019 06:52:26 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191024221416.14197-18-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573627955; bh=hAPd6vZThQ+ICA6jEK3O0xPM/BMVXTDWmnPp5G7Fimo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=fhiVEHHuUlKQKh/SUp1f/FV3Xb5BTTUjeEXDPAVhN/qeRYd9N9K/67RobSEmkLjz5
+         XkO7RqKkw7Hs0jhpoUR+HveNbzjc1n6pWq5+5LTpB7wEc0ACXmmvggfrLr3Pg/ylaM
+         mjzHneb86evOmfocAm5KFSznU7P4cqdRLzmlbSaDUbG84jESguezC91jfdOdYpjcpz
+         3ncYu1EIDrooxG64vcK5c0HJLSuuBf0v2Ij8gtdvkUym9PxEw4dwOy4B1qaRGw4Iul
+         fdtk9lPqpLKuTFFfDqJkZS4dmLbdEXRQKQTM87y2o9s3u2rGUiIs0IgYizDwCFbGM7
+         8VgFqu2OvT3rQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
 
-During clock gating (ufshcd_gate_work()), we first put the link hibern8 by
-calling ufshcd_uic_hibern8_enter() and if ufshcd_uic_hibern8_enter()
-returns success (0) then we gate all the clocks.
-Now let’s zoom in to what ufshcd_uic_hibern8_enter() does internally:
-It calls __ufshcd_uic_hibern8_enter() which on detecting the LINERESET,
-initiates the full recovery and puts the link back to highest HS gear and
-returns success (0) to ufshcd_uic_hibern8_enter() which is the issue as
-link is still in active state due to recovery!
-Now ufshcd_uic_hibern8_enter() returns success to ufshcd_gate_work() and
-hence it goes ahead with gating the UFS clock while link is still in active
-state hence I believe controller would raise UIC error interrupts. But when
-we service the interrupt, clocks might have already been disabled!
+On 24/10/2019 23:14, Dmitry Osipenko wrote:
+> Utilize common Tegra30 CPU OPP table. CPU DVFS is available now on
+> cardhu-a04.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/boot/dts/tegra30-cardhu-a04.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/tegra30-cardhu-a04.dts b/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+> index 0d71925d4f0b..9234988624ec 100644
+> --- a/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+> +++ b/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+> @@ -2,6 +2,8 @@
+>  /dts-v1/;
+>  
+>  #include "tegra30-cardhu.dtsi"
+> +#include "tegra30-cpu-opp.dtsi"
+> +#include "tegra30-cpu-opp-microvolt.dtsi"
+>  
+>  /* This dts file support the cardhu A04 and later versions of board */
+>  
+> @@ -127,4 +129,26 @@
+>  			nvidia,tegra-core-regulator;
+>  		};
+>  	};
+> +
+> +	cpus {
+> +		cpu0: cpu@0 {
+> +			cpu-supply = <&vddctrl_reg>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +		};
+> +
+> +		cpu@1 {
+> +			cpu-supply = <&vddctrl_reg>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +		};
+> +
+> +		cpu@2 {
+> +			cpu-supply = <&vddctrl_reg>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +		};
+> +
+> +		cpu@3 {
+> +			cpu-supply = <&vddctrl_reg>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +		};
+> +	};
+>  };
 
-This change fixes for this by returning failure from
-__ufshcd_uic_hibern8_enter() if recovery succeeds as link is still not in
-hibern8, upon receiving the error ufshcd_hibern8_enter() would initiate
-retry to put the link state back into hibern8.
+Sorry for not testing this sooner, but this is generating the
+following WARNING on boot ...
 
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+[    2.916019] ------------[ cut here ]------------
+[    2.920669] WARNING: CPU: 2 PID: 1 at /dvs/git/dirty/git-master_l4t-upstream/kernel/drivers/opp/of.c:688 _of_add_opp_table_v2.part.2+0x45c/0x4d4
+[    2.933713] Modules linked in:
+[    2.936785] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc7-next-20191112-gfc6d6db1df2c #1
+[    2.945403] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+[    2.951706] [<c0112924>] (unwind_backtrace) from [<c010c9d0>] (show_stack+0x10/0x14)
+[    2.959467] [<c010c9d0>] (show_stack) from [<c0aa4494>] (dump_stack+0xc0/0xd4)
+[    2.966707] [<c0aa4494>] (dump_stack) from [<c0124750>] (__warn+0xe0/0xf8)
+[    2.973593] [<c0124750>] (__warn) from [<c0124818>] (warn_slowpath_fmt+0xb0/0xb8)
+[    2.981090] [<c0124818>] (warn_slowpath_fmt) from [<c0754be0>] (_of_add_opp_table_v2.part.2+0x45c/0x4d4)
+[    2.990583] [<c0754be0>] (_of_add_opp_table_v2.part.2) from [<c0754c98>] (dev_pm_opp_of_add_table+0x40/0x15c)
+[    3.000508] [<c0754c98>] (dev_pm_opp_of_add_table) from [<c0754de8>] (dev_pm_opp_of_cpumask_add_table+0x34/0xb4)
+[    3.010704] [<c0754de8>] (dev_pm_opp_of_cpumask_add_table) from [<c075b058>] (cpufreq_init+0xf8/0x2cc)
+[    3.020024] [<c075b058>] (cpufreq_init) from [<c0758758>] (cpufreq_online+0x260/0x824)
+[    3.027953] [<c0758758>] (cpufreq_online) from [<c0758d98>] (cpufreq_add_dev+0x6c/0x78)
+[    3.035976] [<c0758d98>] (cpufreq_add_dev) from [<c05b3188>] (subsys_interface_register+0xa0/0xec)
+[    3.044951] [<c05b3188>] (subsys_interface_register) from [<c07574d4>] (cpufreq_register_driver+0x14c/0x20c)
+[    3.054792] [<c07574d4>] (cpufreq_register_driver) from [<c075aee0>] (dt_cpufreq_probe+0x94/0x114)
+[    3.063771] [<c075aee0>] (dt_cpufreq_probe) from [<c05b6a88>] (platform_drv_probe+0x48/0x98)
+[    3.072225] [<c05b6a88>] (platform_drv_probe) from [<c05b4a38>] (really_probe+0x234/0x34c)
+[    3.080502] [<c05b4a38>] (really_probe) from [<c05b4cc8>] (driver_probe_device+0x60/0x168)
+[    3.088780] [<c05b4cc8>] (driver_probe_device) from [<c05b4f78>] (device_driver_attach+0x58/0x60)
+[    3.097664] [<c05b4f78>] (device_driver_attach) from [<c05b5000>] (__driver_attach+0x80/0xbc)
+[    3.106200] [<c05b5000>] (__driver_attach) from [<c05b2db0>] (bus_for_each_dev+0x74/0xb4)
+[    3.114389] [<c05b2db0>] (bus_for_each_dev) from [<c05b3da4>] (bus_add_driver+0x164/0x1e8)
+[    3.122666] [<c05b3da4>] (bus_add_driver) from [<c05b5b54>] (driver_register+0x7c/0x114)
+[    3.130774] [<c05b5b54>] (driver_register) from [<c010306c>] (do_one_initcall+0x54/0x2a8)
+[    3.138974] [<c010306c>] (do_one_initcall) from [<c0f01040>] (kernel_init_freeable+0x14c/0x1e8)
+[    3.147695] [<c0f01040>] (kernel_init_freeable) from [<c0abbe88>] (kernel_init+0x8/0x10c)
+[    3.155887] [<c0abbe88>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+[    3.163462] Exception stack(0xef0c9fb0 to 0xef0c9ff8)
+[    3.168519] 9fa0:                                     00000000 00000000 00000000 00000000
+[    3.176706] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    3.184893] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    3.191695] ---[ end trace a7dc36f7a4ddbdb2 ]---
+[    3.197855] ------------[ cut here ]------------
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 7a5a904..934c27a 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -3891,15 +3891,24 @@ static int __ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
- 			     ktime_to_us(ktime_sub(ktime_get(), start)), ret);
- 
- 	if (ret) {
-+		int err;
-+
- 		dev_err(hba->dev, "%s: hibern8 enter failed. ret = %d\n",
- 			__func__, ret);
- 
- 		/*
--		 * If link recovery fails then return error so that caller
--		 * don't retry the hibern8 enter again.
-+		 * If link recovery fails then return error code (-ENOLINK)
-+		 * returned ufshcd_link_recovery().
-+		 * If link recovery succeeds then return -EAGAIN to attempt
-+		 * hibern8 enter retry again.
- 		 */
--		if (ufshcd_link_recovery(hba))
--			ret = -ENOLINK;
-+		err = ufshcd_link_recovery(hba);
-+		if (err) {
-+			dev_err(hba->dev, "%s: link recovery failed", __func__);
-+			ret = err;
-+		} else {
-+			ret = -EAGAIN;
-+		}
- 	} else
- 		ufshcd_vops_hibern8_notify(hba, UIC_CMD_DME_HIBER_ENTER,
- 								POST_CHANGE);
-@@ -3913,7 +3922,7 @@ static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
- 
- 	for (retries = UIC_HIBERN8_ENTER_RETRIES; retries > 0; retries--) {
- 		ret = __ufshcd_uic_hibern8_enter(hba);
--		if (!ret || ret == -ENOLINK)
-+		if (!ret)
- 			goto out;
- 	}
- out:
+Let me know if you can take a look at this.
+
+Thanks
+Jon
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+nvpublic
