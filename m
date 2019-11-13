@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B69AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E07C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C8721D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB4E222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611792;
-	bh=0Sjkf189679x4uXqj5BLH1BM4wR2jv51XnrwoMD8oH0=;
+	s=default; t=1573611794;
+	bh=m9VhWDbXbHgBh8aFo56pVeSLUAJfO+QY+O/6sQJbDBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WU9D7zgyGYbug+VW3u4QLjrK7Kuvh5HjQnLckFFWyrmE4v5CwK85vTinYVPMULLH+
-	 D5GTTmy3lZxAQnA+FTwAWuOZSN+vDV4oXPepygCQOa+ts45bwNYlaioW57gc6eEG4K
-	 VUu1Q91r22XwOAhUOkcB4sfbJ6SfDM69bPlofpsQ=
+	b=UwiyaVbPsauXjKm+ikJhiuiNFuYsNoZ3pKDlNnaS3vUx73hVFGQUhNzhlXHJg80/y
+	 PlfRZQzPi+yBGBa861+asSjfWZUilf8fBKCpb7o213rHp4qj52onPeZWnKAc4sEL12
+	 0JFR6OqyYsvi5XgJHNpWkBh0SFnFmA1FTguqC4/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbfKMBwq (ORCPT
+        id S1729879AbfKMCXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:52:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41548 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:23:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbfKMBwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:35 -0500
+        id S1728401AbfKMBwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C28222CA;
-        Wed, 13 Nov 2019 01:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29332222CA;
+        Wed, 13 Nov 2019 01:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609954;
-        bh=0Sjkf189679x4uXqj5BLH1BM4wR2jv51XnrwoMD8oH0=;
+        s=default; t=1573609966;
+        bh=m9VhWDbXbHgBh8aFo56pVeSLUAJfO+QY+O/6sQJbDBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNgJMfd2b8JwA1KlXQAZv6VJLbOQfrXwR2k5dGamy+1HnPq5UKxSqFm9ZGkrYqSmA
-         uLTlEGhol1XBr44KY6B2mxCbrnk+ROeWj7g3cyOhPQxQwBEgpd5GF0rFVLmta8R0K+
-         UDrXHdNA8YQ0AZOoxZIBUHznarajPVjE2w3Jxa+c=
+        b=VFwxk2tLPmTc11n2IYUg7yF+lbXJUdgZkyizgVrVHHAr9zwOIairi+mVXswqjq063
+         Xf6G5YniF1eGxae2hg0jznzu7fPp9sNhiYHQuCuxDkhDfYNQZ9T7HMjzpReBVR/tWD
+         aQdPhGHjNMwnSVNUt2KXO3+36WwdulLaDrKVrwP0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Reichl <hias@horus.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 089/209] media: rc: ir-rc6-decoder: enable toggle bit for Kathrein RCU-676 remote
-Date:   Tue, 12 Nov 2019 20:48:25 -0500
-Message-Id: <20191113015025.9685-89-sashal@kernel.org>
+Cc:     SolidHal <hal@halemmerich.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 097/209] usb: dwc2: disable power_down on rockchip devices
+Date:   Tue, 12 Nov 2019 20:48:33 -0500
+Message-Id: <20191113015025.9685-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,56 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Reichl <hias@horus.com>
+From: SolidHal <hal@halemmerich.com>
 
-[ Upstream commit 85e4af0a7ae2f146769b7475ae531bf8a3f3afb4 ]
+[ Upstream commit c216765d3a1defda5e7e2dabd878f99f0cd2ebf2 ]
 
-The Kathrein RCU-676 remote uses the 32-bit rc6 protocol and toggles
-bit 15 (0x8000) on repeated button presses, like MCE remotes.
+ The bug would let the usb controller enter partial power down,
+ which was formally known as hibernate, upon boot if nothing was plugged
+ in to the port. Partial power down couldn't be exited properly, so any
+ usb devices plugged in after boot would not be usable.
 
-Add it's customer code 0x80460000 to the 32-bit rc6 toggle
-handling code to get proper scancodes and toggle reports.
+ Before the name change, params.hibernation was false by default, so
+ _dwc2_hcd_suspend() would skip entering hibernation. With the
+ rename, _dwc2_hcd_suspend() was changed to use  params.power_down
+ to decide whether or not to enter partial power down.
 
-Signed-off-by: Matthias Reichl <hias@horus.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+ Since params.power_down is non-zero by default, it needs to be set
+ to 0 for rockchip devices to restore functionality.
+
+ This bug was reported in the linux-usb thread:
+ REGRESSION: usb: dwc2: USB device not seen after boot
+
+ The commit that caused this regression is:
+6d23ee9caa6790aea047f9aca7f3c03cb8d96eb6
+
+Signed-off-by: SolidHal <hal@halemmerich.com>
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/ir-rc6-decoder.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/usb/dwc2/params.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/rc/ir-rc6-decoder.c b/drivers/media/rc/ir-rc6-decoder.c
-index 68487ce9f79b6..d96aed1343e42 100644
---- a/drivers/media/rc/ir-rc6-decoder.c
-+++ b/drivers/media/rc/ir-rc6-decoder.c
-@@ -40,6 +40,7 @@
- #define RC6_6A_MCE_TOGGLE_MASK	0x8000	/* for the body bits */
- #define RC6_6A_LCC_MASK		0xffff0000 /* RC6-6A-32 long customer code mask */
- #define RC6_6A_MCE_CC		0x800f0000 /* MCE customer code */
-+#define RC6_6A_KATHREIN_CC	0x80460000 /* Kathrein RCU-676 customer code */
- #ifndef CHAR_BIT
- #define CHAR_BIT 8	/* Normally in <limits.h> */
- #endif
-@@ -242,13 +243,17 @@ static int ir_rc6_decode(struct rc_dev *dev, struct ir_raw_event ev)
- 				toggle = 0;
- 				break;
- 			case 32:
--				if ((scancode & RC6_6A_LCC_MASK) == RC6_6A_MCE_CC) {
-+				switch (scancode & RC6_6A_LCC_MASK) {
-+				case RC6_6A_MCE_CC:
-+				case RC6_6A_KATHREIN_CC:
- 					protocol = RC_PROTO_RC6_MCE;
- 					toggle = !!(scancode & RC6_6A_MCE_TOGGLE_MASK);
- 					scancode &= ~RC6_6A_MCE_TOGGLE_MASK;
--				} else {
-+					break;
-+				default:
- 					protocol = RC_PROTO_RC6_6A_32;
- 					toggle = 0;
-+					break;
- 				}
- 				break;
- 			default:
+diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+index dff2c6e8d797c..a93415f33bf36 100644
+--- a/drivers/usb/dwc2/params.c
++++ b/drivers/usb/dwc2/params.c
+@@ -88,6 +88,7 @@ static void dwc2_set_rk_params(struct dwc2_hsotg *hsotg)
+ 	p->host_perio_tx_fifo_size = 256;
+ 	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 <<
+ 		GAHBCFG_HBSTLEN_SHIFT;
++	p->power_down = 0;
+ }
+ 
+ static void dwc2_set_ltq_params(struct dwc2_hsotg *hsotg)
 -- 
 2.20.1
 
