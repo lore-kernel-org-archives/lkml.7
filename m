@@ -2,121 +2,98 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19848C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DA2C17442
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE8C21A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931122196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hJ6RPPBE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jUkHh1it"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfKMGOR (ORCPT
+        id S1726285AbfKMGQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:14:17 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34549 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfKMGOR (ORCPT
+        Wed, 13 Nov 2019 01:16:54 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54819 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725858AbfKMGQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:14:17 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 5so669337otk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 22:14:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u8/eBOEFYWm/dQgNr/pNtbBC73p9IYMi5gGkpqo2SI4=;
-        b=hJ6RPPBE1NoZf0/QVupYvy9OSDziN9tXHIJgPesa3XQzwUekMxqHmy4ywWzJ7olyYn
-         S25aiGORN3SKrmbL/zg3J82nKwwPyIlH7PmQWbCLsU8YVru2546iAwoNbriXDphYCHP3
-         MpbJ6zeFfdnFYRNFEWoBo/jpLeE7M5vPyoMOZssjrCd54wlf2SAg74J9p7QSN2Rc3HbZ
-         dxBhLBVLxCENTG/wdo2QS9QsWhp6iAHjPsEyxbnLxnN4Zf7etAvI1IsZWkGfHlLFA659
-         krN85FOxSocMTjuEy7YL4rUwZsNs9tYal7YQEvS3BOcZKt5J7hBKVU3FLEUJVZFKERpY
-         75eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u8/eBOEFYWm/dQgNr/pNtbBC73p9IYMi5gGkpqo2SI4=;
-        b=M/Iylq7cvZqlBFHKWmxllm/n4oMagQhV0a0lXUVyl2guM3OhKO+cOcqLAYAhSJM9Xz
-         eTx8g6EnO6eHG3CKAd38AmF+uW0zCRXgFZIaOb3AB4QyS1dEL/nWGuDr8LnlhWO6L23R
-         rDKVj1MrmK+MYWVbsEu5GxW9a/ISWfHS7sX4qnuNjw5BTecIdNYS2nJ+Z6aH8e1zYOFg
-         sL33LYWUWZYdRvnzhVKbPZ/dNCrEKk61JPlflFyYLcqQMnZgH45ydjSaCE91JPjJ7bx1
-         5VBHj9YQUaAkjEMw+X4sXD3vu/JXko418lRVYunQThahkeCzjxv+85lSD3NClrcHTXJn
-         yW7Q==
-X-Gm-Message-State: APjAAAXBbkgZg0ZJqUooUACfxmN/CuQlc31P9r7I2ApYlfrOdB2p83ep
-        BKgYu9ztdtLtaGYL5OKOfWIHdxtJ8sMe2/SbrBUSCw==
-X-Google-Smtp-Source: APXvYqydyDDmkM3Pb1e2pPbf9fbI2BGEVuN/kDhx0lcoQbUla4YO7+zpV4A7M6u65IKIch5dF7aZebIgX7kFjMgndhw=
-X-Received: by 2002:a05:6830:1b70:: with SMTP id d16mr1213448ote.71.1573625656497;
- Tue, 12 Nov 2019 22:14:16 -0800 (PST)
+        Wed, 13 Nov 2019 01:16:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573625813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AIZp9yHBFDUruuXW0JJC83eKv9Q2/zaGLYS7xvC/kAM=;
+        b=jUkHh1itCo4BL6/EbwjcAJCGt/lqqW5SfAfiyWwbtH0EV4g8tqUWQZ9KlaCKOYTBj9BbxK
+        nBAgSlpVWpERaQUZiPI/C2yOHXx8ptodERZCA2IqbwfvuyWoCUiJo2JESwqnmc77YoJf76
+        Lnc2WMSp7JVdqvhB0642IBa+BIbcg7A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-BJZpVlNKOnKu364uHqvsJw-1; Wed, 13 Nov 2019 01:16:47 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51A1718B5F71;
+        Wed, 13 Nov 2019 06:16:46 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 13C164D751;
+        Wed, 13 Nov 2019 06:16:46 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A90E34BB5C;
+        Wed, 13 Nov 2019 06:16:45 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 01:16:45 -0500 (EST)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Ian Kent <raven@themaw.net>,
+        kernel test robot <rong.a.chen@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
+        lkp@lists.01.org, ltp@lists.linux.it,
+        DavidHowells <dhowells@redhat.com>,
+        AlViro <viro@ZenIV.linux.org.uk>
+Message-ID: <975334005.11814790.1573625805426.JavaMail.zimbra@redhat.com>
+In-Reply-To: <e38bc7a8505571bbb750fc0198ec85c892ac7b3a.camel@themaw.net>
+References: <20191111010022.GH29418@shao2-debian> <3fb8b1b04dd7808b45caf5262ee629c09c71e0b6.camel@themaw.net> <1108442397.11662343.1573560143066.JavaMail.zimbra@redhat.com> <20191112120818.GA8858@lst.de> <5f758be455bb8f761d028ea078b3e2a618dfd4b1.camel@themaw.net> <e38bc7a8505571bbb750fc0198ec85c892ac7b3a.camel@themaw.net>
+Subject: Re: [LTP] [xfs] 73e5fff98b: kmsg.dev/zero:Can't_open_blockdev
 MIME-Version: 1.0
-References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157309901655.1582359.18126990555058555754.stgit@dwillia2-desk3.amr.corp.intel.com>
- <87h839tpo9.fsf@linux.ibm.com> <CAPcyv4gTRiZuA8A7cDxCZtHJv=LZMjd=tVgq35gbc0K8BUDHsA@mail.gmail.com>
- <738e328b-9a9b-b297-8379-f0d72d06c5c9@linux.ibm.com>
-In-Reply-To: <738e328b-9a9b-b297-8379-f0d72d06c5c9@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Nov 2019 22:14:04 -0800
-Message-ID: <CAPcyv4iB1r7FAYEm_+vtj_BGS1k6Cu_2xG7tH9O601zrk2wNXw@mail.gmail.com>
-Subject: Re: [PATCH 04/16] libnvdimm: Move nd_numa_attribute_group to device_type
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [10.43.17.163, 10.4.195.20]
+Thread-Topic: 73e5fff98b: kmsg.dev/zero:Can't_open_blockdev
+Thread-Index: AzWavxd/8PGGbt3Ud1LytMdxvpbGqQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: BJZpVlNKOnKu364uHqvsJw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:02 PM Aneesh Kumar K.V
-<aneesh.kumar@linux.ibm.com> wrote:
->
-> On 11/13/19 6:56 AM, Dan Williams wrote:
-> > On Tue, Nov 12, 2019 at 1:23 AM Aneesh Kumar K.V
-> > <aneesh.kumar@linux.ibm.com> wrote:
-> >>
-> >> Dan Williams <dan.j.williams@intel.com> writes:
-> >>
-> >>> A 'struct device_type' instance can carry default attributes for the
-> >>> device. Use this facility to remove the export of
-> >>> nd_numa_attribute_group and put the responsibility on the core rather
-> >>> than leaf implementations to define this attribute.
-> >>>
-> >>> Cc: Ira Weiny <ira.weiny@intel.com>
-> >>> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> >>> Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> >>> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> >>> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> >>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >>
-> >>
-> >> can we also expose target_node in a similar way? This allows application
-> >> to better understand the node locality of the SCM device.
-> >
-> > It is already exported for device-dax instances. See
-> > DEVICE_ATTR_RO(target_node) in drivers/dax/bus.c. I did not see a use
-> > case for it to be exported for other nvdimm device types.
-> >
->
-> some applications do want to access the fsdax namspace as different
-> mount points based on numa affinity. If can differentiate the two
-> regions with different target_node and same numa_node, that will help
-> them better isolate these mounts.
 
-Can you be more explicit than "some", and what's the impact if the
-kernel continues with the status quo and does not export this data?
-I'm trying to come up with the justification to include into the
-changelog that adds that information.
 
-At least on the pmem platforms I am working with the pmem ranges with
-different target nodes also appear on different numa nodes so there is
-no incremental benefit for target node there.
+----- Original Message -----
+> > > > # mount -t xfs /dev/zero /mnt/xfs
+> >=20
+> > Assuming that is what is being done ...
+>=20
+> Arrrh, of course, a difference between get_tree_bdev() and
+> mount_bdev() is that get_tree_bdev() prints this message when
+> blkdev_get_by_path() fails whereas mount_bdev() doesn't.
+>=20
+> Both however do return an error in this case so the behaviour
+> is the same.
+>=20
+> So I'm calling this not a problem with the subject patch.
+>=20
+> What needs to be done to resolve this in ltp I don't know?
+
+I think that's question for kernel test robot, which has this extra
+check built on top. ltp itself doesn't treat this extra message as FAIL.
+
+Jan
+
