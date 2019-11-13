@@ -2,157 +2,193 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32153C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8194C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADBF2245C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B102A222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:01:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xgq0Qdfp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i3uhVvKZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CP8tEFwh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfKMPAn (ORCPT
+        id S1727969AbfKMPBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:00:43 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:46268 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727550AbfKMPAn (ORCPT
+        Wed, 13 Nov 2019 10:01:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45845 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727730AbfKMPBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:00:43 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DB7646030B; Wed, 13 Nov 2019 15:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573657241;
-        bh=6KJbCUxPimYHs4dQnfQiI+lDr5dgFdlKC/Z1ifkfhI0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Xgq0QdfprfvO891edqUa5hL252PgrGodyJhTWkNnZFguVg4feNCT/q7YamuaRGSBI
-         KgE4EbLGeCzTjn2JqK8DMIXUZFxG3aj0aslwVLFYU9Y+ZstWqw0ZeRvfY51EN6TF8u
-         WBSZ+bRL9OI8ur2ky2WltRmjGKWOTYq4HFlBEki8=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id B99626030B;
-        Wed, 13 Nov 2019 15:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573657240;
-        bh=6KJbCUxPimYHs4dQnfQiI+lDr5dgFdlKC/Z1ifkfhI0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i3uhVvKZD0Wztude+9oqQQE+wI8vdO5XMPxSc2QFKCMBwLqn0aSzNROj/7rs6Wmi8
-         PCYlKZfMtR6iu6fr3kf2dnZ6qXVnzZb5LVSctoAm/v993LKBRfewi+z5JkFE8bWzcn
-         ccy1gYEg5acNuBv0N0m0zdqB7d6DvpXILwoQ4x80=
+        Wed, 13 Nov 2019 10:01:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573657265;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pZrVnWf11qMep6zPjTPieof4+h3HJFQO0raZCoFr0t8=;
+        b=CP8tEFwh9jaEnWgVFHWpo3y2rqEO4YM2NLhNunWji9w6mggb8Ly92yKCJAk7M2Qs+srFFh
+        V/DSe1J8dA+m8JeP5caaFHznIdhJT7nOJbcQHnPMofVmwlMmlHeg2fZd2WCUZTagciKz7f
+        zvRkq7wiPWb4W4xWwHIExEyMGI71W9k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-349-oR_IZnsWO86m8XAGuP0U2w-1; Wed, 13 Nov 2019 10:01:04 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 093F118B5F76;
+        Wed, 13 Nov 2019 15:01:02 +0000 (UTC)
+Received: from thinkpad.redhat.com (ovpn-117-236.ams2.redhat.com [10.36.117.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EDF3360308;
+        Wed, 13 Nov 2019 15:00:56 +0000 (UTC)
+From:   Laurent Vivier <lvivier@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Shah <amit@kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org, stable@vger.kernel.org,
+        Laurent Vivier <lvivier@redhat.com>
+Subject: [PATCH v2] virtio_console: allocate inbufs in add_port() only if it is needed
+Date:   Wed, 13 Nov 2019 16:00:56 +0100
+Message-Id: <20191113150056.9990-1-lvivier@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 13 Nov 2019 20:30:40 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
-In-Reply-To: <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org>
-References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
- <20191021033220.GG4500@tuxbook-pro>
- <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
- <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
- <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
- <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org>
-Message-ID: <1565197bda60573937453e95dcafbe68@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: oR_IZnsWO86m8XAGuP0U2w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Rob,
+When we hot unplug a virtserialport and then try to hot plug again,
+it fails:
 
-On 2019-10-25 13:24, Sai Prakash Ranjan wrote:
-> On 2019-10-25 04:03, Rob Herring wrote:
->> On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
->> <saiprakash.ranjan@codeaurora.org> wrote:
->>> 
->>> Hi Rob,
->>> 
->>> On 2019-10-24 01:19, Rob Herring wrote:
->>> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
->>> > <bjorn.andersson@linaro.org> wrote:
->>> >>
->>> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
->>> >>
->>> >> > LLCC behaviour is controlled by the configuration data set
->>> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
->>> >> > Also convert the existing bindings to json-schema and add
->>> >> > the compatible for SC7180 SoC.
->>> >> >
->>> >>
->>> >> Thanks for the patches and thanks for the review Stephen. Series
->>> >> applied
->>> >
->>> > And they break dt_binding_check. Please fix.
->>> >
->>> 
->>> I did check this and think that the error log from dt_binding_check 
->>> is
->>> not valid because it says cache-level is a required property [1], but
->>> there is no such property in LLCC bindings.
->> 
->> Then you should point out the issue and not just submit stuff ignoring
->> it. It has to be resolved one way or another.
->> 
-> 
-> I did not ignore it. When I ran the dt-binding check locally, it did 
-> not
-> error out and just passed on [1] and it was my bad that I did not check
-> the entire build logs to see if llcc dt binding check had some warning 
-> or
-> not. But this is the usual case where most of us don't look at the 
-> entire
-> build logs to check if there is a warning or not. We notice if there is 
-> an
-> immediate exit/fail in case of some warning/error. So it would be good 
-> if
-> we fail the dt-binding check build if there is some warning/error or 
-> atleast
-> provide some option to strict build to fail on warning, maybe there is 
-> already
-> a flag to do this?
-> 
-> After submitting the patch, I noticed this build failure on
-> patchwork.ozlabs.org and was waiting for your reply.
-> 
-> [1] https://paste.ubuntu.com/p/jNK8yfVkMG/
-> 
->> If you refer to the DT spec[1], cache-level is required. The schema is
->> just enforcing that now. It's keying off the node name of
->> 'cache-controller'.
->> 
-> 
-> This is not L2 or L3 cache, this is a system cache (last level cache) 
-> shared by
-> clients other than just CPU. So I don't know how do we specify 
-> cache-level for
-> this, let me know if you have some pointers.
-> 
+(qemu) chardev-add socket,id=3Dserial0,path=3D/tmp/serial0,server,nowait
+(qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
+                  chardev=3Dserial0,id=3Dserial0,name=3Dserial0
+(qemu) device_del serial0
+(qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
+                  chardev=3Dserial0,id=3Dserial0,name=3Dserial0
+kernel error:
+  virtio-ports vport2p2: Error allocating inbufs
+qemu error:
+  virtio-serial-bus: Guest failure in adding port 2 for device \
+                     virtio-serial0.0
 
-Any ideas on specifying the cache-level for system cache? Does 
-dt-binding-check
-needs to be updated for this case?
+This happens because buffers for the in_vq are allocated when the port is
+added but are not released when the port is unplugged.
 
-Thanks,
-Sai
+They are only released when virtconsole is removed (see a7a69ec0d8e4)
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+To avoid the problem and to be symmetric, we could allocate all the buffers
+in init_vqs() as they are released in remove_vqs(), but it sounds like
+a waste of memory.
+
+Rather than that, this patch changes add_port() logic to ignore ENOSPC
+error in fill_queue(), which means queue has already been filled.
+
+Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+Cc: mst@redhat.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+---
+
+Notes:
+    v2: making fill_queue return int and testing return code for -ENOSPC
+
+ drivers/char/virtio_console.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+index 7270e7b69262..9e6534fd1aa4 100644
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -1325,24 +1325,24 @@ static void set_console_size(struct port *port, u16=
+ rows, u16 cols)
+ =09port->cons.ws.ws_col =3D cols;
+ }
+=20
+-static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
++static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+ {
+ =09struct port_buffer *buf;
+-=09unsigned int nr_added_bufs;
++=09int nr_added_bufs;
+ =09int ret;
+=20
+ =09nr_added_bufs =3D 0;
+ =09do {
+ =09=09buf =3D alloc_buf(vq->vdev, PAGE_SIZE, 0);
+ =09=09if (!buf)
+-=09=09=09break;
++=09=09=09return -ENOMEM;
+=20
+ =09=09spin_lock_irq(lock);
+ =09=09ret =3D add_inbuf(vq, buf);
+ =09=09if (ret < 0) {
+ =09=09=09spin_unlock_irq(lock);
+ =09=09=09free_buf(buf, true);
+-=09=09=09break;
++=09=09=09return ret;
+ =09=09}
+ =09=09nr_added_bufs++;
+ =09=09spin_unlock_irq(lock);
+@@ -1362,7 +1362,6 @@ static int add_port(struct ports_device *portdev, u32=
+ id)
+ =09char debugfs_name[16];
+ =09struct port *port;
+ =09dev_t devt;
+-=09unsigned int nr_added_bufs;
+ =09int err;
+=20
+ =09port =3D kmalloc(sizeof(*port), GFP_KERNEL);
+@@ -1421,11 +1420,9 @@ static int add_port(struct ports_device *portdev, u3=
+2 id)
+ =09spin_lock_init(&port->outvq_lock);
+ =09init_waitqueue_head(&port->waitqueue);
+=20
+-=09/* Fill the in_vq with buffers so the host can send us data. */
+-=09nr_added_bufs =3D fill_queue(port->in_vq, &port->inbuf_lock);
+-=09if (!nr_added_bufs) {
++=09err =3D fill_queue(port->in_vq, &port->inbuf_lock);
++=09if (err < 0 && err !=3D -ENOSPC) {
+ =09=09dev_err(port->dev, "Error allocating inbufs\n");
+-=09=09err =3D -ENOMEM;
+ =09=09goto free_device;
+ =09}
+=20
+@@ -2059,14 +2056,11 @@ static int virtcons_probe(struct virtio_device *vde=
+v)
+ =09INIT_WORK(&portdev->control_work, &control_work_handler);
+=20
+ =09if (multiport) {
+-=09=09unsigned int nr_added_bufs;
+-
+ =09=09spin_lock_init(&portdev->c_ivq_lock);
+ =09=09spin_lock_init(&portdev->c_ovq_lock);
+=20
+-=09=09nr_added_bufs =3D fill_queue(portdev->c_ivq,
+-=09=09=09=09=09   &portdev->c_ivq_lock);
+-=09=09if (!nr_added_bufs) {
++=09=09err =3D fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
++=09=09if (err < 0) {
+ =09=09=09dev_err(&vdev->dev,
+ =09=09=09=09"Error allocating buffers for control queue\n");
+ =09=09=09/*
+@@ -2077,7 +2071,7 @@ static int virtcons_probe(struct virtio_device *vdev)
+ =09=09=09=09=09   VIRTIO_CONSOLE_DEVICE_READY, 0);
+ =09=09=09/* Device was functional: we need full cleanup. */
+ =09=09=09virtcons_remove(vdev);
+-=09=09=09return -ENOMEM;
++=09=09=09return err;
+ =09=09}
+ =09} else {
+ =09=09/*
+--=20
+2.23.0
+
