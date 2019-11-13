@@ -2,169 +2,177 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A75C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E8C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA1D206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B54206E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:09:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOJotr2t"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ymS1XAra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfKMSDK (ORCPT
+        id S1727779AbfKMSJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:03:10 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43053 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfKMSDJ (ORCPT
+        Wed, 13 Nov 2019 13:09:39 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54309 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfKMSJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:03:09 -0500
-Received: by mail-il1-f194.google.com with SMTP id r9so2619071ilq.10;
-        Wed, 13 Nov 2019 10:03:09 -0800 (PST)
+        Wed, 13 Nov 2019 13:09:38 -0500
+Received: by mail-wm1-f66.google.com with SMTP id z26so2999569wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:09:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nkMxg4bs0DY+fIenh6frbtx62cRKfHn1vX+M8COZOOM=;
-        b=ZOJotr2theprfi37s1ZEIS5HHCaeL01Ab4HU5FUqizNaVMrYRTk4el/33r/GtMwgJx
-         gP9lK+Uj7/CPHrRUlpL34TEYUIqnW/WZ91lxe8yxHXCY7GPimgK5aaJVySsPdS5WP3Q9
-         MoPnQCkLJBQfX8K65SYN32vyf5T3XvKQ/iUxOeTRzOdo5lhvfot79VRaWgJfSVRsbAjY
-         6b93BTjyxUXfnT38ACpOPQSLCoQvPJBxcIAetT4unDApSPQSVWbNIG1UlWP1GBQn8fdN
-         f65KaOmfq+5w4Ao8GkocnWjJeAP98sXWLtoI5S1rsWMV469MzVHghhMcP0Jt6MxbHDbM
-         fkiw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=M+vh+JtPBA/nELsdW8FXtsVseJ/XSaHzYgPaZO1dM+k=;
+        b=ymS1XAraf98PBmkpZgbandG8SepionTVitSyVJ3HE5CT9CgRmGSWPljQ6pHaDOT6bv
+         SOwwIVal93txZ45NRyKqlavEHJdQeYEIFJDldelwfpokq0npZ8qcGOtCfuZsoHSa+A6Z
+         Lg2dE1YIwma3+snkOjhYe/tIQmdVpniaY4LTjoQMaj8QQkwvGhnPUlbtpHFolHPM3o9k
+         tpILFP4wXYDOeOUMte7X5iNidAeSth6TwP5BF/3Gk1HtyOK6J4mNl8/MBi4jEwIpxaXq
+         LLQgtUCymMMlVeelxIBEk/WA6CPrPQh4uDoASJncvwUTNOVUTUNtfWN6ENVOUmTtzwD+
+         cy0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nkMxg4bs0DY+fIenh6frbtx62cRKfHn1vX+M8COZOOM=;
-        b=V/sKGFYQsBWnNbepsp6NpqM0VKBk0eB4VWKl76j2W5/TkOc0wrtwFN3bDVbdb0F3QY
-         Bn/RgJpTM60o+57s2UkECN/Xhsop2UwVXG9NsIhJJqelTkNyh6qDsvikx0WRccV19NGQ
-         SeLMN/A4OjQ3SVqntszssSIMclnnB+Cxv5jWudBErabu6xUDw450Ho39TV6D3I+N70+F
-         crICZ7iTQDK46XsDrdvRm+mOVBTHnmjzki7K7txWxunA2TsyCbu/aZKw9kPZmMBgir3E
-         DvY0t6VLuppuPHNUCoYvIXxV7XodHEh3lsLcNLAvKl6/toG1i+CQW9ikdsmG96x+fv7L
-         fe+A==
-X-Gm-Message-State: APjAAAUlV1anpTLXNVsCWGTexTqu7gEGglwSWWKKnlu2eYvlsEc7oPdk
-        aFszjKYcrzTlVk3iKA7FcoKDhamuZ+rrE0GsI4I=
-X-Google-Smtp-Source: APXvYqwv3ffUNkAkeZW/JhON9obx0IFBdDOnyhASnVKWZt22SwhgbxtOrGqRpWEjNjq1r4lCXRxECbyDTjz5rKC0CEo=
-X-Received: by 2002:a05:6e02:c91:: with SMTP id b17mr5199609ile.33.1573668188735;
- Wed, 13 Nov 2019 10:03:08 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=M+vh+JtPBA/nELsdW8FXtsVseJ/XSaHzYgPaZO1dM+k=;
+        b=qAZudNbybIpL+tORB1wCwwVicUKZWi32jd09bZoQ4QJ7tg1S8JwM+hnMWu47wlGYnM
+         bxbUvIsGRNb1Ie79McWXYrpdz8o/RjA3oyFWSBKik0DVUsGoLQqvtzkgMOk4NxqS/tVV
+         ZkkEjbegZE1q+2HNAtgGNVhcPY6bcXIaO+pqb9I1JCeLV6nzJvRny5uN8ytV1V50tKMD
+         67tKoTgOqcO8avAHYG36G69vrlfR6SNQx4pgN5oFm9n8/g/Njg+CAWusMBoJjQV/A+yZ
+         K6Y+gElHgSbG4QS2grTOPHRIAk6hamvIocuZRNgGTuUAzD/yq7EU+lWO8QEGytLrKWVl
+         CNfA==
+X-Gm-Message-State: APjAAAUuZ1jIG1umgvK3+F/3ZyiiIeKmL8JdNHWkCZm59F2BWZfDw1fn
+        TMnpB55YUPnYscD224D/YD7Yhw==
+X-Google-Smtp-Source: APXvYqx1692n6c6jZamqQWXLIh1PjQUnanC8Gmv1QQBmTl6/FzG1v9T/32/TTnlGT7giZXO7b4hBtA==
+X-Received: by 2002:a7b:c001:: with SMTP id c1mr4117921wmb.96.1573668575773;
+        Wed, 13 Nov 2019 10:09:35 -0800 (PST)
+Received: from linaro.org ([2a01:e0a:f:6020:bdd0:28e6:f0d9:a18c])
+        by smtp.gmail.com with ESMTPSA id z8sm3605501wrp.49.2019.11.13.10.09.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 10:09:34 -0800 (PST)
+Date:   Wed, 13 Nov 2019 19:09:32 +0100
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
+Message-ID: <20191113180932.GA24352@linaro.org>
+References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
+ <20191112150544.GA3664@linaro.org>
+ <3b8cafb7-894d-c302-e6c6-b5844b1298b5@arm.com>
+ <CAKfTPtBMNnM2tTfb72VtufDpwBvqu6Ttj3dnLgoNOZ--Q6qo+Q@mail.gmail.com>
+ <bcba52bc-6780-1efc-6ef4-1a75f1cef33d@arm.com>
+ <20191113175035.GA8553@linaro.org>
 MIME-Version: 1.0
-References: <20191109004033.1496871-1-bjorn.andersson@linaro.org>
- <20191109004033.1496871-2-bjorn.andersson@linaro.org> <CAOCk7NrkpwyuZnq7C3CgLDBHoCXM=SMxvt_iv+nQzS9atT3B9A@mail.gmail.com>
-In-Reply-To: <CAOCk7NrkpwyuZnq7C3CgLDBHoCXM=SMxvt_iv+nQzS9atT3B9A@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Wed, 13 Nov 2019 11:02:57 -0700
-Message-ID: <CAOCk7Nq4MgZ1ai6vu+hq3H8qu7P924JCsy1_ru7=5MCF2Z2nwg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] remoteproc: qcom_q6v5_mss: Don't reassign mpss
- region on shutdown
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191113175035.GA8553@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:01 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> On Fri, Nov 8, 2019 at 5:40 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > Trying to reclaim mpss memory while the mba is not running causes the
-> > system to crash on devices with security fuses blown, so leave it
-> > assigned to the remote on shutdown and recover it on a subsequent boot.
-> >
-> > Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> Stuff still works on the laptop, and I don't hit the access violation
-> with the crash dump scenario on the mtp.
->
-> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Le Wednesday 13 Nov 2019 à 18:50:35 (+0100), Vincent Guittot a écrit :
+> Le Wednesday 13 Nov 2019 à 15:09:47 (+0100), Dietmar Eggemann a écrit :
+> > On 13.11.19 14:30, Vincent Guittot wrote:
+> > > On Wed, 13 Nov 2019 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> > >>
+> > >> On 12.11.19 16:05, Vincent Guittot wrote:
+> > >>> Le Tuesday 12 Nov 2019 à 15:48:13 (+0100), Vincent Guittot a écrit :
+> > 
+> > [...]
+> > 
+> > >>>> @@ -7493,9 +7495,9 @@ static void update_blocked_averages(int cpu)
+> > >>>>       * that RT, DL and IRQ signals have been updated before updating CFS.
+> > >>>>       */
+> > >>>>      curr_class = rq->curr->sched_class;
+> > >>>> -    update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> > >>>> -    update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> > >>>> -    update_irq_load_avg(rq, 0);
+> > >>>> +    decayed |= update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> > >>>> +    decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> > >>>> +    decayed |= update_irq_load_avg(rq, 0);
+> > >>
+> > >> Why not 'decayed  = update_cfs_rq_load_avg()' like in the
+> > >> !CONFIG_FAIR_GROUP_SCHED case?
+> > > 
+> > > Because it is handled by the update_load_avg() in
+> > > for_each_leaf_cfs_rq_safe() loop
+> > > 
+> > > This means that we can have 2 calls to cpufreq_update_util in
+> > > update_blocked_average() but at least the values will be up to date in
+> > > both calls unlike previously.
+> > > 
+> > > I'm going to prepare an additional patch to remove this useless call.
+> > > I have also seen some possible further optimization that i need to
+> > > study a bit more before preparing a patch
+> > 
+> > I see. The update_load_avg() call for the taskgroup skeleton se
+> > (cfs_rq->tg->se[cpu]). But what happens to the cpu which only has the
+> > root cfs_rq i the list? It doesn't have a skeleton se.
+> 
+> you're right. I have to add the following to make sure it will be called
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 2eb1aa8..9fc077c 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7604,9 +7604,13 @@ static void update_blocked_averages(int cpu)
+>                         cpu,
+>                         cfs_rq == &rq->cfs ? 0 : (long)cfs_rq->tg );
+>  
+> -               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
+> +               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
+>                         update_tg_load_avg(cfs_rq, 0);
+>  
+> +                       if (cfs_rq == &rq->cfs)
+> +                               decayed = 1;
+> +               }
+> +
+>                 trace_sched_load_contrib_blocked(cpu,
+>                         &cfs_rq->avg,
+>                         cfs_rq == &rq->cfs ? 0 : (long)cfs_rq->tg );
 
-Actually, nack that.  See comment below.
+the proper fix without some debug trace events :-)
 
->
-> > ---
-> >
-> > Changes since v1:
-> > - Assign memory back to Linux in coredump case
-> >
-> >  drivers/remoteproc/qcom_q6v5_mss.c | 20 ++++++++++----------
-> >  1 file changed, 10 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> > index de919f2e8b94..efab574b2e12 100644
-> > --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> > +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> > @@ -875,11 +875,6 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
-> >                 writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> >         }
-> >
-> > -       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-> > -                                     false, qproc->mpss_phys,
-> > -                                     qproc->mpss_size);
-> > -       WARN_ON(ret);
-> > -
-> >         q6v5_reset_assert(qproc);
-> >
-> >         q6v5_clk_disable(qproc->dev, qproc->reset_clks,
-> > @@ -969,6 +964,10 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
-> >                         max_addr = ALIGN(phdr->p_paddr + phdr->p_memsz, SZ_4K);
-> >         }
-> >
-> > +       /* Try to reset ownership back to Linux */
-> > +       q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-> > +                               qproc->mpss_phys, qproc->mpss_size);
-> > +
-> >         mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
-> >         qproc->mpss_reloc = mpss_reloc;
-> >         /* Load firmware segments */
-> > @@ -1058,9 +1057,14 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
-> >         void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
-> >
-> >         /* Unlock mba before copying segments */
-> > -       if (!qproc->dump_mba_loaded)
-> > +       if (!qproc->dump_mba_loaded) {
-> >                 ret = q6v5_mba_load(qproc);
-> >
-> > +               /* Try to reset ownership back to Linux */
-> > +               q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-> > +                                       qproc->mpss_phys, qproc->mpss_size);
+@@ -7567,9 +7569,13 @@ static void update_blocked_averages(int cpu)
+ 	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
+ 		struct sched_entity *se;
+ 
+-		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
++		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
+ 			update_tg_load_avg(cfs_rq, 0);
+ 
++			if (cfs_rq == &rq->cfs)
++				decayed = 1;
++		}
++
+ 		/* Propagate pending load changes to the parent, if any: */
+ 		se = cfs_rq->tg->se[cpu];
+ 		if (se && !skip_blocked_update(se))
 
-If the load fails, we can't pull the memory otherwise we'll hit the
-access violation (serror).  I happened to see this on a production
-device, where I think the load fails because crashdumps are not
-enabled.
 
-> > +       }
-> > +
-> >         if (!ptr || ret)
-> >                 memset(dest, 0xff, segment->size);
-> >         else
-> > @@ -1111,10 +1115,6 @@ static int q6v5_start(struct rproc *rproc)
-> >         return 0;
-> >
-> >  reclaim_mpss:
-> > -       xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-> > -                                               false, qproc->mpss_phys,
-> > -                                               qproc->mpss_size);
-> > -       WARN_ON(xfermemop_ret);
-> >         q6v5_mba_reclaim(qproc);
-> >
-> >         return ret;
-> > --
-> > 2.23.0
-> >
+
+> 
+> 
