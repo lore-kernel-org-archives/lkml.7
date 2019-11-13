@@ -2,154 +2,261 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB5CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE496C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F42206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A34206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QuLdIKvO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ckz+TG9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfKMRul (ORCPT
+        id S1727700AbfKMRvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:50:41 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53215 "EHLO
+        Wed, 13 Nov 2019 12:51:04 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39243 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbfKMRul (ORCPT
+        with ESMTP id S1726120AbfKMRvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:50:41 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l1so2955144wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:50:39 -0800 (PST)
+        Wed, 13 Nov 2019 12:51:04 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t26so3025380wmi.4;
+        Wed, 13 Nov 2019 09:51:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=XtZ5+hurRglr2Zec63tSlfjqtuoBsXpGgI+k5kdQDcU=;
-        b=QuLdIKvOrPdm9jUB2Y3bTEmV76qPaTwnuZ2n/kzC+Pw6MXe1N4HV1EZNRLJghkAhXU
-         goHShHGpbQkNngKCZylqHOEnNL0SvIgSfF/5LqoCIPr4zbdY3yCLA0rcGWjdqtOXHiQ9
-         ebCfGFWOzHaqD8WI0UnFdMzT8grOKeXdEfWX9kPLFW/+Ud/2ouVzUhlQc7SVPKiUAA3C
-         v1kHT8uYWHsAmRDQGJqfKvF/tU/ht6qPaQPgWeFfEEySzgO345SedMr5p25ncrZLeHQm
-         BPi3QMvjcCj1OKZwBiWckNcKSbUm41swEvu4hiJxee55vL/yhuiXGTocJ1bVZGp5ac4a
-         8GRg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=qzzDBOvLkhrbh494Qc4Z0VlfmRg1EJQ03rXnO9Mftjk=;
+        b=Ckz+TG9tYlw0m9OttsGTs9nJCH7TOKM4uTw+Sa1nNydaUzRdKKXD1V4Buf42LHGqAe
+         iE2FkSfzKvj6vYGAsui4uPedXV0/g94qdd492aWhhMIzPyzugnvALXv1DN8sIbGJGBC0
+         NE51Ne1wBWIhu/FNZzS1s/P0BEwbdzrbtplWTY5NWzVYN/edYprM9kjqpWWTXpbXY9EV
+         8LVPC6CrfzSPdoHCDXkSdds9fr8i5ZaBAG6Bjmcpp7s9sNDUVW5+ZrR6lquD8xI8KXjm
+         5z6P9t72BlMdlR1dqIZChQbDAqLKh3ZSGLHTEO9eGCi6DtcaQ+TPM7kzHPgabJj7Qhlk
+         eYzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XtZ5+hurRglr2Zec63tSlfjqtuoBsXpGgI+k5kdQDcU=;
-        b=YzKwCzJKWnJ4xurFJCNRZjmPXQfUSGztxQApf0lCgcw+Iqks52F+xswgaFeFdIXHlS
-         DxgCyTU7rs21ngE74JshYX6cdgqjhSKLUGHMCSEeix8TqceBg8R4MkvptXdXGXfzvgpg
-         RekUHWALPZMRrG2nZYDU1MnhLcNCH/RYEY+AZa3igBnJKJs20MctcbGK2ZTPHpWYDQ4L
-         vbT1QVu9aQSdxsfvYAdA/tqCS767FZnSgNm0f5xYkRN+Ffk8M42pX18mF5Nn3tgWjcgf
-         at0TVV+4Os543vhe5e1PQnJog3jOQK2zSXMD37I58QYps0lzCHKMJvPYHfIjSSmlXjl2
-         VioQ==
-X-Gm-Message-State: APjAAAWA5dk7r4NlhmMedKXV+VAmOKXRvaWQ/J6GNmzTaRXps4pdddtF
-        CtJOYqzQKPsQNqSSN5AIY1JxeQ==
-X-Google-Smtp-Source: APXvYqwOVazO2F4zD8CghNWIMLBqPeDM2BvHp40pB/noJ1PV95xa2h4VO4iA6aANqurH7qMZLVQGng==
-X-Received: by 2002:a7b:c347:: with SMTP id l7mr4047027wmj.48.1573667439032;
-        Wed, 13 Nov 2019 09:50:39 -0800 (PST)
-Received: from linaro.org ([2a01:e0a:f:6020:bdd0:28e6:f0d9:a18c])
-        by smtp.gmail.com with ESMTPSA id u1sm2854689wmc.3.2019.11.13.09.50.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 09:50:37 -0800 (PST)
-Date:   Wed, 13 Nov 2019 18:50:35 +0100
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v2] sched/freq: move call to cpufreq_update_util
-Message-ID: <20191113175035.GA8553@linaro.org>
-References: <1573570093-1340-1-git-send-email-vincent.guittot@linaro.org>
- <20191112150544.GA3664@linaro.org>
- <3b8cafb7-894d-c302-e6c6-b5844b1298b5@arm.com>
- <CAKfTPtBMNnM2tTfb72VtufDpwBvqu6Ttj3dnLgoNOZ--Q6qo+Q@mail.gmail.com>
- <bcba52bc-6780-1efc-6ef4-1a75f1cef33d@arm.com>
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=qzzDBOvLkhrbh494Qc4Z0VlfmRg1EJQ03rXnO9Mftjk=;
+        b=UOpFx6Ivet3P38D/y1lwd9pB+/XCqI9AJtp7a5U7u1GJ6u7+tmCotNtoWsWyig+fsY
+         IbkSzl9qC4UNRpLoLToN/VbNQfe1QLVZKvOS21KZGOdgEi8DV96ydygkLY8Q8Agnzm/P
+         8+hdD0vLZ533oCxTVwLX7y+Q18KzY9zQzAPxYm3NEKssj+Osleyi1du7GQ6h4jrby973
+         bFV8QRcLSdx0rnnASaS6Eqb52md0KkUCUW1/roox7Se5posj4B+lFsg50e/rk+7V3vqk
+         1ABpK4Db5nTcrtSnzHoJVn7wzExLVrWvyuPgzXs4FqhEeqQ/aZy/YpX4AEl7Pg2c8BLE
+         BfKQ==
+X-Gm-Message-State: APjAAAXI/P7H8KPhmVp/u6UUFZDJEnqq6ZCccrJAtitLtbmxkZvqZOaM
+        txDiBrSmkEBQmvX5kU2yxbI=
+X-Google-Smtp-Source: APXvYqxY92gjSsnH0FK0MObe+RVUZHrJMUlsHR/YtNeM6aP9bJMWxET2pTpHVRrEZmpw+lSUgwKswg==
+X-Received: by 2002:a7b:ce11:: with SMTP id m17mr3554877wmc.123.1573667461198;
+        Wed, 13 Nov 2019 09:51:01 -0800 (PST)
+Received: from localhost ([94.73.41.211])
+        by smtp.gmail.com with ESMTPSA id m187sm391448wmf.35.2019.11.13.09.50.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 09:51:00 -0800 (PST)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Kever Yang <kever.yang@rock-chips.com>
+Cc:     <heiko@sntech.de>, <linux-rockchip@lists.infradead.org>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Akash Gajjar <akash@openedev.com>,
+        Alexis Ballier <aballier@gentoo.org>,
+        =?utf-8?B?QW5kcml1cyDFoHRpa29uYXM=?= <andrius@stikonas.eu>,
+        Andy Yan <andyshrk@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Xie <nick@khadas.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Soeren Moch <smoch@web.de>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for =?iso-8859-1?Q?vdd=5Flog?=
+Date:   Wed, 13 Nov 2019 18:50:57 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bcba52bc-6780-1efc-6ef4-1a75f1cef33d@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Message-ID: <977a15a9-8469-4821-ba13-8c2c59a145e7@gmail.com>
+In-Reply-To: <20191111005158.25070-3-kever.yang@rock-chips.com>
+References: <20191111005158.25070-1-kever.yang@rock-chips.com>
+ <20191111005158.25070-3-kever.yang@rock-chips.com>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le Wednesday 13 Nov 2019 à 15:09:47 (+0100), Dietmar Eggemann a écrit :
-> On 13.11.19 14:30, Vincent Guittot wrote:
-> > On Wed, 13 Nov 2019 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> >>
-> >> On 12.11.19 16:05, Vincent Guittot wrote:
-> >>> Le Tuesday 12 Nov 2019 à 15:48:13 (+0100), Vincent Guittot a écrit :
-> 
-> [...]
-> 
-> >>>> @@ -7493,9 +7495,9 @@ static void update_blocked_averages(int cpu)
-> >>>>       * that RT, DL and IRQ signals have been updated before updating CFS.
-> >>>>       */
-> >>>>      curr_class = rq->curr->sched_class;
-> >>>> -    update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> >>>> -    update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> >>>> -    update_irq_load_avg(rq, 0);
-> >>>> +    decayed |= update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> >>>> +    decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> >>>> +    decayed |= update_irq_load_avg(rq, 0);
-> >>
-> >> Why not 'decayed  = update_cfs_rq_load_avg()' like in the
-> >> !CONFIG_FAIR_GROUP_SCHED case?
-> > 
-> > Because it is handled by the update_load_avg() in
-> > for_each_leaf_cfs_rq_safe() loop
-> > 
-> > This means that we can have 2 calls to cpufreq_update_util in
-> > update_blocked_average() but at least the values will be up to date in
-> > both calls unlike previously.
-> > 
-> > I'm going to prepare an additional patch to remove this useless call.
-> > I have also seen some possible further optimization that i need to
-> > study a bit more before preparing a patch
-> 
-> I see. The update_load_avg() call for the taskgroup skeleton se
-> (cfs_rq->tg->se[cpu]). But what happens to the cpu which only has the
-> root cfs_rq i the list? It doesn't have a skeleton se.
+On Monday, November 11, 2019 1:51:58 AM CET, Kever Yang wrote:
+> Since there is no devfreq used for vdd_log, so the vdd_log(pwm regulator)
+> will be 'enable' with the dts node at a default PWM state with high or low
+> output. Both too high or too low for vdd_log is not good for the board,
+> add init voltage for driver to make the regulator get into a know output.
+>
+> Note that this will be used by U-Boot for init voltage output, and this
+> is very important for it may get system hang somewhere during system
+> boot up with regulator enable and without this init value.
 
-you're right. I have to add the following to make sure it will be called
+Hi, just for reference: doing the math based on the Sapphire board
+schematic, the values for vdd_log are:
+|------|-------|
+| PWM  | Volts |
+|------|-------|
+| Hi-Z | 1.136 |
+|   0% | 1.356 |
+| 100% | .9167 |
+|------|-------|
+The datasheet states that the acceptable range for vdd_log is 0.8 .. 1.0
+So, an option could be to configure GPIO1_C3 as output high and vdd_log
+would be at the range's center.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2eb1aa8..9fc077c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7604,9 +7604,13 @@ static void update_blocked_averages(int cpu)
-                        cpu,
-                        cfs_rq == &rq->cfs ? 0 : (long)cfs_rq->tg );
- 
--               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
-+               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
-                        update_tg_load_avg(cfs_rq, 0);
- 
-+                       if (cfs_rq == &rq->cfs)
-+                               decayed = 1;
-+               }
-+
-                trace_sched_load_contrib_blocked(cpu,
-                        &cfs_rq->avg,
-                        cfs_rq == &rq->cfs ? 0 : (long)cfs_rq->tg );
+Aside from math on paper, it has been tested. Setting GPIO1_C3 as output
+high gives a vdd_log of 0.922 measured volts and the board, so far, works
+fine.
 
+Regards,
+  Vicente.
+
+> CC: Elaine Zhang <zhangqing@rock-chips.com>
+> CC: Peter Robinson <pbrobinson@gmail.com>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+>
+>  arch/arm64/boot/dts/rockchip/rk3399-evb.dts          | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-firefly.dts      | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts   | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts    | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts     | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts       | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts    | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi    | 1 +
+>  9 files changed, 9 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> index 77008dca45bc..fa241aeb11b0 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> @@ -65,6 +65,7 @@
+>  =09=09regulator-name =3D "vdd_center";
+>  =09=09regulator-min-microvolt =3D <800000>;
+>  =09=09regulator-max-microvolt =3D <1400000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09regulator-always-on;
+>  =09=09regulator-boot-on;
+>  =09=09status =3D "okay";
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+> index 92de83dd4dbc..4e45269fcdff 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+> @@ -208,6 +208,7 @@
+>  =09=09regulator-boot-on;
+>  =09=09regulator-min-microvolt =3D <430000>;
+>  =09=09regulator-max-microvolt =3D <1400000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09vin-supply =3D <&vcc_sys>;
+>  =09};
+>  };
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> index c133e8d64b2a..692f3154edc3 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> @@ -100,6 +100,7 @@
+>  =09=09regulator-name =3D "vdd_log";
+>  =09=09regulator-min-microvolt =3D <800000>;
+>  =09=09regulator-max-microvolt =3D <1400000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09regulator-always-on;
+>  =09=09regulator-boot-on;
+>  =09};
+> diff --git=20
+> a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+> index 4944d78a0a1c..c2ac80d99301 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+> @@ -79,6 +79,7 @@
+>  =09=09regulator-boot-on;
+>  =09=09regulator-min-microvolt =3D <800000>;
+>  =09=09regulator-max-microvolt =3D <1400000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09vin-supply =3D <&vsys_3v3>;
+>  =09};
+> =20
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+> index 73be38a53796..c32abcc4ddc1 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+> @@ -101,6 +101,7 @@
+>  =09=09regulator-boot-on;
+>  =09=09regulator-min-microvolt =3D <800000>;
+>  =09=09regulator-max-microvolt =3D <1400000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09vin-supply =3D <&vcc5v0_sys>;
+>  =09};
+>  };
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+> index 0541dfce924d..9d674c51f025 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+> @@ -164,6 +164,7 @@
+>  =09=09regulator-boot-on;
+>  =09=09regulator-min-microvolt =3D <800000>;
+>  =09=09regulator-max-microvolt =3D <1400000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09vin-supply =3D <&vcc_sys>;
+>  =09};
+>  };
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> index 19f7732d728c..7d856ce1d156 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> @@ -129,6 +129,7 @@
+>  =09=09regulator-boot-on;
+>  =09=09regulator-min-microvolt =3D <800000>;
+>  =09=09regulator-max-microvolt =3D <1400000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09vin-supply =3D <&vcc3v3_sys>;
+>  =09};
+>  };
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> index e544deb61d28..8fbccbc8bf47 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> @@ -174,6 +174,7 @@
+>  =09=09regulator-boot-on;
+>  =09=09regulator-min-microvolt =3D <800000>;
+>  =09=09regulator-max-microvolt =3D <1700000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09vin-supply =3D <&vcc5v0_sys>;
+>  =09};
+>  };
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+> index 1bc1579674e5..f8e2cb8c0624 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+> @@ -133,6 +133,7 @@
+>  =09=09regulator-boot-on;
+>  =09=09regulator-min-microvolt =3D <800000>;
+>  =09=09regulator-max-microvolt =3D <1400000>;
+> +=09=09regulator-init-microvolt =3D <950000>;
+>  =09=09vin-supply =3D <&vcc_sys>;
+>  =09};
+>  };
 
