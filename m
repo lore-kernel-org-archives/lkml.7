@@ -2,272 +2,221 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ADEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B672C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2BF222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3C42245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:21:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P58mPzYU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxKlmTJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfKMPTO (ORCPT
+        id S1727934AbfKMPVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:19:14 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37301 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfKMPTO (ORCPT
+        Wed, 13 Nov 2019 10:21:15 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58542 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727721AbfKMPVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:19:14 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p24so1877594pfn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 07:19:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KAzyCDiMhQgDTvcJf/hx8upE6E8G92HV2i4vTyZKSjU=;
-        b=P58mPzYU0tuHfAJmfQmwqHqTLpSW88BSMXX6Wz1tQiZriZPP7DiK4Cf8/c+DTmmglD
-         yNbdfca4pwgdnGaGyDsfmlCKomUkVTrIDoSarblL33500ZPcaKk7lrezdH7+XUNPOBE3
-         IWRACgkb/Wx2C0gb+gr1xx63xyxHvpnQ7/0k4pogt4sY1bSAREiDxFScFX8jlkynLfWm
-         81Z05bc0oBbPvgE9a3zZoxqxIMAP478zkICEGzlKg6v8MzElOqusskn3lLW2GJURUbSp
-         rEx/4ScaCU+Pjzy5p/kRR1no7iW90e0BJjeMdmuZpykqGWzkMwhCj20I+EFgBydvP/rf
-         0DwA==
+        Wed, 13 Nov 2019 10:21:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573658473;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ni75lCcQrpsQ864Hh4egoWZfMx6GoJOEu0Txc6DxR4I=;
+        b=CxKlmTJ9zYkmt2GzNNT3luDAqq941+CYoSePybgNcMPAlDTjIZ1JARN93o0hkG6YePNGmX
+        J3I20ODQbmgyeLIB1TnFqIDyAC4txglnAv0t+gOucCWwD05+EtPj28YHF8lWtXREEDucOv
+        pQUNkp3iIsRFWTLJ0Sd232XJNBrYAL0=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-42-STKTtBrUMkeWs0-6mROSBg-1; Wed, 13 Nov 2019 10:21:12 -0500
+Received: by mail-qk1-f197.google.com with SMTP id 64so1733378qkm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 07:21:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KAzyCDiMhQgDTvcJf/hx8upE6E8G92HV2i4vTyZKSjU=;
-        b=bya0oG8P8jxlwetBZ21Fc6LCDdttPVN8VuvSg/a4r+auFj1DSLEhB/5nZCbzmuYeah
-         D3EVg7xJ6iQvxjskUEGm6RK4jfGZv5H5loBW0nNNHHNCflFywH65xS+RewQqOLnJDY+Q
-         VDuB00X1zxKgb6LzN4HTxlUYW/qYBqLpFCgjyLMj9t+BgfE+B0xtwn8XHzxYMhwZUwTe
-         uaTVy5nan+4+yXd62jR/XS9Nqu7Ir9YM94PNKmPP0fXHaDFmxzfKE/If9J+knrRHLLu7
-         zxC0EvPekQgblzDqOtIVbVbABsAV1Ps5zjsoQQKVijtGMJuxMD9SiEPTVWtLmUSyCQ8R
-         izXg==
-X-Gm-Message-State: APjAAAUCvZdDnQx/EuRV2i5vTk8WOGKbQ9Y/Wl4tCRg7B0N86vVSk0eG
-        LzxsPHo5TPP0hCsNCoAQo2BIIgf7oRJcc8DfbqYCiw==
-X-Google-Smtp-Source: APXvYqyjK3cl80QIVz/Bf5694+rHns4NS+Hsxwdlsvzzz3xBbPgmmxl+Y114q8hfOcarzqglmNkoCT0+bqi2iBxQ5/w=
-X-Received: by 2002:aa7:9806:: with SMTP id e6mr5123522pfl.25.1573658352964;
- Wed, 13 Nov 2019 07:19:12 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XcCOD3MZGV+TFihxnkOXCXAXzldN+sMQ52FQOz5W/8o=;
+        b=OFU/A71rRCZWizCimsHo9/NRmfhNoEd3fjoIfNMp8NPYwxQeJ4jpS8X1FDjoCAp8tE
+         /5ngcS1hM7KreRnb062Fn4uH7oOi2TqGMYqiv/lbkQ36HOrD1dgkPcDqLVtZ0GPlq5Bw
+         Hr8Ixk9wq/e2cpbbkUfQQIjgGRyB7vLwlYVfx+7q3O4Sv0CNt1drI2XELDWIl5gNGeRL
+         PVNuoTjCd2ZTDWkoa8sp5MKAmQpA5v1kp3iJkfaR4uSsMcKH4bCMQSq0HPWne/bdAs0Z
+         n1cTx9n0NrKeyr3pvjURqemLj262nnBpH5WhfSf+8uvi6bB0RWp8YOG50kbrbsA1IQ6N
+         ZJ5g==
+X-Gm-Message-State: APjAAAXdLM6jHFjgnrxYFH4Q56SmSIOOKChX+z8ZLfA4jG0aQCt3cfRh
+        i3nHDb9PH3FuPi2tvi99qptqv5HvfaAd0jsyg57wXh2/7OBkA4snYicnBFBbPjxRkLknoTgtDAY
+        QoPiLnWoE9UutHCjuk0Oetctu
+X-Received: by 2002:a37:7b83:: with SMTP id w125mr2785623qkc.343.1573658471664;
+        Wed, 13 Nov 2019 07:21:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz7xnbYa9tTLt6MQY+f/nsPs3ipIWvgyM8Tf9P55Utd9mLx47RmBjetUvy+qCiobpbI+BzFHQ==
+X-Received: by 2002:a37:7b83:: with SMTP id w125mr2785592qkc.343.1573658471330;
+        Wed, 13 Nov 2019 07:21:11 -0800 (PST)
+Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
+        by smtp.gmail.com with ESMTPSA id i128sm1078375qkf.134.2019.11.13.07.21.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 07:21:10 -0800 (PST)
+Date:   Wed, 13 Nov 2019 10:21:05 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Laurent Vivier <lvivier@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Shah <amit@kernel.org>,
+        virtualization@lists.linux-foundation.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] virtio_console: allocate inbufs in add_port() only if
+ it is needed
+Message-ID: <20191113101929-mutt-send-email-mst@kernel.org>
+References: <20191113150056.9990-1-lvivier@redhat.com>
 MIME-Version: 1.0
-References: <20191112211002.128278-1-jannh@google.com> <20191112211002.128278-3-jannh@google.com>
- <CACT4Y+aojSsss3+Y2FB9Rw=OPxXgsFrGF0YiAJ9eo2wJM0ruWg@mail.gmail.com>
-In-Reply-To: <CACT4Y+aojSsss3+Y2FB9Rw=OPxXgsFrGF0YiAJ9eo2wJM0ruWg@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 13 Nov 2019 16:19:01 +0100
-Message-ID: <CAAeHK+zy1dTvn-VSGYjoNKcp1jHS65ZAoM5M259T1_OE411WUg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/kasan: Print original address on #GP
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191113150056.9990-1-lvivier@redhat.com>
+X-MC-Unique: STKTtBrUMkeWs0-6mROSBg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:11 AM 'Dmitry Vyukov' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> On Tue, Nov 12, 2019 at 10:10 PM 'Jann Horn' via kasan-dev
-> <kasan-dev@googlegroups.com> wrote:
-> >
-> > Make #GP exceptions caused by out-of-bounds KASAN shadow accesses easier
-> > to understand by computing the address of the original access and
-> > printing that. More details are in the comments in the patch.
-> >
-> > This turns an error like this:
-> >
-> >     kasan: CONFIG_KASAN_INLINE enabled
-> >     kasan: GPF could be caused by NULL-ptr deref or user memory access
-> >     traps: dereferencing non-canonical address 0xe017577ddf75b7dd
-> >     general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-> >
-> > into this:
-> >
-> >     traps: dereferencing non-canonical address 0xe017577ddf75b7dd
-> >     kasan: maybe dereferencing invalid pointer in range
-> >             [0x00badbeefbadbee8-0x00badbeefbadbeef]
-> >     general protection fault: 0000 [#3] PREEMPT SMP KASAN PTI
-> >     [...]
+On Wed, Nov 13, 2019 at 04:00:56PM +0100, Laurent Vivier wrote:
+> When we hot unplug a virtserialport and then try to hot plug again,
+> it fails:
+>=20
+> (qemu) chardev-add socket,id=3Dserial0,path=3D/tmp/serial0,server,nowait
+> (qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
+>                   chardev=3Dserial0,id=3Dserial0,name=3Dserial0
+> (qemu) device_del serial0
+> (qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
+>                   chardev=3Dserial0,id=3Dserial0,name=3Dserial0
+> kernel error:
+>   virtio-ports vport2p2: Error allocating inbufs
+> qemu error:
+>   virtio-serial-bus: Guest failure in adding port 2 for device \
+>                      virtio-serial0.0
+>=20
+> This happens because buffers for the in_vq are allocated when the port is
+> added but are not released when the port is unplugged.
+>=20
+> They are only released when virtconsole is removed (see a7a69ec0d8e4)
+>=20
+> To avoid the problem and to be symmetric, we could allocate all the buffe=
+rs
+> in init_vqs() as they are released in remove_vqs(), but it sounds like
+> a waste of memory.
+>=20
+> Rather than that, this patch changes add_port() logic to ignore ENOSPC
+> error in fill_queue(), which means queue has already been filled.
+>=20
+> Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> Cc: mst@redhat.com
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+> ---
+>=20
+> Notes:
+>     v2: making fill_queue return int and testing return code for -ENOSPC
+>=20
+>  drivers/char/virtio_console.c | 24 +++++++++---------------
+>  1 file changed, 9 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.=
+c
+> index 7270e7b69262..9e6534fd1aa4 100644
+> --- a/drivers/char/virtio_console.c
+> +++ b/drivers/char/virtio_console.c
+> @@ -1325,24 +1325,24 @@ static void set_console_size(struct port *port, u=
+16 rows, u16 cols)
+>  =09port->cons.ws.ws_col =3D cols;
+>  }
+> =20
+> -static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+> +static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+>  {
+>  =09struct port_buffer *buf;
+> -=09unsigned int nr_added_bufs;
+> +=09int nr_added_bufs;
+>  =09int ret;
+> =20
+>  =09nr_added_bufs =3D 0;
+>  =09do {
+>  =09=09buf =3D alloc_buf(vq->vdev, PAGE_SIZE, 0);
+>  =09=09if (!buf)
+> -=09=09=09break;
+> +=09=09=09return -ENOMEM;
+> =20
+>  =09=09spin_lock_irq(lock);
+>  =09=09ret =3D add_inbuf(vq, buf);
+>  =09=09if (ret < 0) {
+>  =09=09=09spin_unlock_irq(lock);
+>  =09=09=09free_buf(buf, true);
+> -=09=09=09break;
+> +=09=09=09return ret;
+>  =09=09}
+>  =09=09nr_added_bufs++;
+>  =09=09spin_unlock_irq(lock);
+> @@ -1362,7 +1362,6 @@ static int add_port(struct ports_device *portdev, u=
+32 id)
+>  =09char debugfs_name[16];
+>  =09struct port *port;
+>  =09dev_t devt;
+> -=09unsigned int nr_added_bufs;
+>  =09int err;
+> =20
+>  =09port =3D kmalloc(sizeof(*port), GFP_KERNEL);
+> @@ -1421,11 +1420,9 @@ static int add_port(struct ports_device *portdev, =
+u32 id)
+>  =09spin_lock_init(&port->outvq_lock);
+>  =09init_waitqueue_head(&port->waitqueue);
+> =20
+> -=09/* Fill the in_vq with buffers so the host can send us data. */
+> -=09nr_added_bufs =3D fill_queue(port->in_vq, &port->inbuf_lock);
+> -=09if (!nr_added_bufs) {
+> +=09err =3D fill_queue(port->in_vq, &port->inbuf_lock);
+> +=09if (err < 0 && err !=3D -ENOSPC) {
+>  =09=09dev_err(port->dev, "Error allocating inbufs\n");
+> -=09=09err =3D -ENOMEM;
+>  =09=09goto free_device;
+>  =09}
+> =20
 
-Would it make sense to use the common "BUG: KASAN: <bug-type>" report
-format here? Something like:
+Pls add a comment explaining that -ENOSPC happens when
+queue already has buffers (e.g. from previous detach).
 
-BUG: KASAN: invalid-ptr-deref in range ...
 
-Otherwise this looks amazing, distinguishing NULL pointer accesses
-from wild memory accesses is much more convenient with this. Thanks
-Jann!
+> @@ -2059,14 +2056,11 @@ static int virtcons_probe(struct virtio_device *v=
+dev)
+>  =09INIT_WORK(&portdev->control_work, &control_work_handler);
+> =20
+>  =09if (multiport) {
+> -=09=09unsigned int nr_added_bufs;
+> -
+>  =09=09spin_lock_init(&portdev->c_ivq_lock);
+>  =09=09spin_lock_init(&portdev->c_ovq_lock);
+> =20
+> -=09=09nr_added_bufs =3D fill_queue(portdev->c_ivq,
+> -=09=09=09=09=09   &portdev->c_ivq_lock);
+> -=09=09if (!nr_added_bufs) {
+> +=09=09err =3D fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
+> +=09=09if (err < 0) {
+>  =09=09=09dev_err(&vdev->dev,
+>  =09=09=09=09"Error allocating buffers for control queue\n");
+>  =09=09=09/*
+> @@ -2077,7 +2071,7 @@ static int virtcons_probe(struct virtio_device *vde=
+v)
+>  =09=09=09=09=09   VIRTIO_CONSOLE_DEVICE_READY, 0);
+>  =09=09=09/* Device was functional: we need full cleanup. */
+>  =09=09=09virtcons_remove(vdev);
+> -=09=09=09return -ENOMEM;
+> +=09=09=09return err;
+>  =09=09}
+>  =09} else {
+>  =09=09/*
+> --=20
+> 2.23.0
 
->
-> Nice!
->
-> +Andrey, do you see any issues for TAGS mode? Or, Jann, did you test
-> it by any chance?
-
-Hm, this looks like x86-specific change, so I don't think it
-interferes with the TAGS mode.
-
->
->
-> > Signed-off-by: Jann Horn <jannh@google.com>
-> > ---
-> >  arch/x86/include/asm/kasan.h |  6 +++++
-> >  arch/x86/kernel/traps.c      |  2 ++
-> >  arch/x86/mm/kasan_init_64.c  | 52 +++++++++++++++++++++++++-----------
-> >  3 files changed, 44 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/kasan.h b/arch/x86/include/asm/kasan.h
-> > index 13e70da38bed..eaf624a758ed 100644
-> > --- a/arch/x86/include/asm/kasan.h
-> > +++ b/arch/x86/include/asm/kasan.h
-> > @@ -25,6 +25,12 @@
-> >
-> >  #ifndef __ASSEMBLY__
-> >
-> > +#ifdef CONFIG_KASAN_INLINE
-> > +void kasan_general_protection_hook(unsigned long addr);
-> > +#else
-> > +static inline void kasan_general_protection_hook(unsigned long addr) { }
-> > +#endif
-> > +
-> >  #ifdef CONFIG_KASAN
-> >  void __init kasan_early_init(void);
-> >  void __init kasan_init(void);
-> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> > index 479cfc6e9507..e271a5a1ddd4 100644
-> > --- a/arch/x86/kernel/traps.c
-> > +++ b/arch/x86/kernel/traps.c
-> > @@ -58,6 +58,7 @@
-> >  #include <asm/umip.h>
-> >  #include <asm/insn.h>
-> >  #include <asm/insn-eval.h>
-> > +#include <asm/kasan.h>
-> >
-> >  #ifdef CONFIG_X86_64
-> >  #include <asm/x86_init.h>
-> > @@ -544,6 +545,7 @@ static void print_kernel_gp_address(struct pt_regs *regs)
-> >                 return;
-> >
-> >         pr_alert("dereferencing non-canonical address 0x%016lx\n", addr_ref);
-> > +       kasan_general_protection_hook(addr_ref);
-> >  #endif
-> >  }
-> >
-> > diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-> > index 296da58f3013..9ef099309489 100644
-> > --- a/arch/x86/mm/kasan_init_64.c
-> > +++ b/arch/x86/mm/kasan_init_64.c
-> > @@ -246,20 +246,44 @@ static void __init kasan_map_early_shadow(pgd_t *pgd)
-> >  }
-> >
-> >  #ifdef CONFIG_KASAN_INLINE
-> > -static int kasan_die_handler(struct notifier_block *self,
-> > -                            unsigned long val,
-> > -                            void *data)
-> > +/*
-> > + * With CONFIG_KASAN_INLINE, accesses to bogus pointers (outside the high
-> > + * canonical half of the address space) cause out-of-bounds shadow memory reads
-> > + * before the actual access. For addresses in the low canonical half of the
-> > + * address space, as well as most non-canonical addresses, that out-of-bounds
-> > + * shadow memory access lands in the non-canonical part of the address space,
-> > + * causing #GP to be thrown.
-> > + * Help the user figure out what the original bogus pointer was.
-> > + */
-> > +void kasan_general_protection_hook(unsigned long addr)
-> >  {
-> > -       if (val == DIE_GPF) {
-> > -               pr_emerg("CONFIG_KASAN_INLINE enabled\n");
-> > -               pr_emerg("GPF could be caused by NULL-ptr deref or user memory access\n");
-> > -       }
-> > -       return NOTIFY_OK;
-> > -}
-> > +       unsigned long orig_addr;
-> > +       const char *addr_type;
-> > +
-> > +       if (addr < KASAN_SHADOW_OFFSET)
-> > +               return;
->
-> Thinking how much sense it makes to compare addr with KASAN_SHADOW_END...
-> If the addr is > KASAN_SHADOW_END, we know it's not a KASAN access,
-> but do we ever get GP on canonical addresses?
->
-> >
-> > -static struct notifier_block kasan_die_notifier = {
-> > -       .notifier_call = kasan_die_handler,
-> > -};
-> > +       orig_addr = (addr - KASAN_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT;
-> > +       /*
-> > +        * For faults near the shadow address for NULL, we can be fairly certain
-> > +        * that this is a KASAN shadow memory access.
-> > +        * For faults that correspond to shadow for low canonical addresses, we
-> > +        * can still be pretty sure - that shadow region is a fairly narrow
-> > +        * chunk of the non-canonical address space.
-> > +        * But faults that look like shadow for non-canonical addresses are a
-> > +        * really large chunk of the address space. In that case, we still
-> > +        * print the decoded address, but make it clear that this is not
-> > +        * necessarily what's actually going on.
-> > +        */
-> > +       if (orig_addr < PAGE_SIZE)
-> > +               addr_type = "dereferencing kernel NULL pointer";
-> > +       else if (orig_addr < TASK_SIZE_MAX)
-> > +               addr_type = "probably dereferencing invalid pointer";
->
-> This is access to user memory, right? In outline mode we call it
-> "user-memory-access". We could say about "user" part here as well.
-
-I think we should use the same naming scheme here as in
-get_wild_bug_type(): null-ptr-deref, user-memory-access and
-wild-memory-access.
-
->
-> > +       else
-> > +               addr_type = "maybe dereferencing invalid pointer";
-> > +       pr_alert("%s in range [0x%016lx-0x%016lx]\n", addr_type,
-> > +                orig_addr, orig_addr + (1 << KASAN_SHADOW_SCALE_SHIFT) - 1);
->
-> "(1 << KASAN_SHADOW_SCALE_SHIFT) - 1)" part may be replaced with
-> KASAN_SHADOW_MASK.
-> Overall it can make sense to move this mm/kasan/report.c b/c we are
-> open-coding a number of things here (e.g. reverse address mapping). If
-> another arch will do the same, it will need all of this code too (?).
->
-> But in general I think it's a very good usability improvement for KASAN.
->
-> > +}
-> >  #endif
-> >
-> >  void __init kasan_early_init(void)
-> > @@ -298,10 +322,6 @@ void __init kasan_init(void)
-> >         int i;
-> >         void *shadow_cpu_entry_begin, *shadow_cpu_entry_end;
-> >
-> > -#ifdef CONFIG_KASAN_INLINE
-> > -       register_die_notifier(&kasan_die_notifier);
-> > -#endif
-> > -
-> >         memcpy(early_top_pgt, init_top_pgt, sizeof(early_top_pgt));
-> >
-> >         /*
-> > --
-> > 2.24.0.432.g9d3f5f5b63-goog
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191112211002.128278-3-jannh%40google.com.
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/CACT4Y%2BaojSsss3%2BY2FB9Rw%3DOPxXgsFrGF0YiAJ9eo2wJM0ruWg%40mail.gmail.com.
