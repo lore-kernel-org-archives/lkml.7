@@ -2,86 +2,318 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5C2C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD78C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A04222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E8C222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t9QomIeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfKMNh3 (ORCPT
+        id S1727481AbfKMNhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:37:29 -0500
-Received: from mga07.intel.com ([134.134.136.100]:44270 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfKMNh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:37:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 05:37:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
-   d="scan'208";a="207452896"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.81])
-  by orsmga003.jf.intel.com with ESMTP; 13 Nov 2019 05:37:27 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@kernel.org, sashal@kernel.org,
-        gregkh@linuxfoundation.org, pavel@denx.de,
+        Wed, 13 Nov 2019 08:37:40 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40770 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbfKMNhj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 08:37:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=W7usFROFF3fsdWRNY+5NMk8LSNdlchEf2gZtNlXIxVc=; b=t9QomIeJY+XVMUq5UqJORjyt4b
+        0lQ1nltCrRTmvZngDW2Ks+5Wheddik8g8/HwTQGCPmmvkKnXgVpS94X0sG+m1ReeUV40F71D6jVFk
+        i56x5bvTpR8j1qlcq88pNWYZwmX4cfT0OBJMP8H1brj/gOWGlaImppF+wTlIyb+0LHsvqrIcspb6Z
+        QC8zdteCNOA4UA1K8Nnr3PP1ztUeG6UNkBaydC2PmAX1XM54stxUFYeL4MbqhRKxNFSBrE27lRsAX
+        UkeGFeN4sc70KT2Eisn9O1FxQDYLkiEPctVPWnxMBr5xTLvIMOXcTP9f3/hXYEQNJrgHIxu7U7LDx
+        fG49W9Ng==;
+Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUspy-0008NH-Rg; Wed, 13 Nov 2019 13:37:35 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
         linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, alexander.shishkin@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>, stable@vger.kernel.org
-Subject: [PATCH] perf/x86/uncore: Remove unnecessary check for uncore_pmu
-Date:   Wed, 13 Nov 2019 05:35:02 -0800
-Message-Id: <1573652102-131731-1-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct device
+Date:   Wed, 13 Nov 2019 14:37:30 +0100
+Message-Id: <20191113133731.20870-2-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113133731.20870-1-hch@lst.de>
+References: <20191113133731.20870-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Several IOMMU drivers have a bypass mode where they can use a direct
+mapping if the devices DMA mask is large enough.  Add generic support
+to the core dma-mapping code to do that to switch those drivers to
+a common solution.
 
-The uncore_pmu pointer in uncore_pmu_enable/disable() is from
-container_of, which never be NULL.
-
-Remove the unnecessary check for uncore_pmu.
-
-Fixes: 75be6f703a14 ("perf/x86/uncore: Fix event group support")
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/events/intel/uncore.c | 6 ------
- 1 file changed, 6 deletions(-)
+ include/linux/device.h      |  4 ++++
+ include/linux/dma-mapping.h | 30 ++++++++++++++++++------------
+ kernel/dma/mapping.c        | 35 ++++++++++++++++++++++++++---------
+ 3 files changed, 48 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 86467f8..81eed07 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -780,9 +780,6 @@ static void uncore_pmu_enable(struct pmu *pmu)
- 	struct intel_uncore_box *box;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 297239a08bb7..b8a3b4ec46bd 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1217,6 +1217,9 @@ struct dev_links_info {
+  *              device.
+  * @dma_coherent: this particular device is dma coherent, even if the
+  *		architecture supports non-coherent devices.
++ * @dma_ops_bypass: If set to %true then the dma_ops are bypassed for the
++ *		streaming DMA operations (->map_* / ->unmap_* / ->sync_*).
++ *		This flag is managed by the dma_ops from ->dma_supported.
+  *
+  * At the lowest level, every device in a Linux system is represented by an
+  * instance of struct device. The device structure contains the information
+@@ -1316,6 +1319,7 @@ struct device {
+     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
+ 	bool			dma_coherent:1;
+ #endif
++	bool			dma_ops_bypass : 1;
+ };
  
- 	uncore_pmu = container_of(pmu, struct intel_uncore_pmu, pmu);
--	if (!uncore_pmu)
--		return;
--
- 	box = uncore_pmu_to_box(uncore_pmu, smp_processor_id());
- 	if (!box)
- 		return;
-@@ -797,9 +794,6 @@ static void uncore_pmu_disable(struct pmu *pmu)
- 	struct intel_uncore_box *box;
+ static inline struct device *kobj_to_dev(struct kobject *kobj)
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 4d450672b7d6..22fe74179e02 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -191,9 +191,15 @@ static inline int dma_mmap_from_global_coherent(struct vm_area_struct *vma,
+ }
+ #endif /* CONFIG_DMA_DECLARE_COHERENT */
  
- 	uncore_pmu = container_of(pmu, struct intel_uncore_pmu, pmu);
--	if (!uncore_pmu)
--		return;
--
- 	box = uncore_pmu_to_box(uncore_pmu, smp_processor_id());
- 	if (!box)
+-static inline bool dma_is_direct(const struct dma_map_ops *ops)
++/*
++ * Check if the devices uses a direct mapping for streaming DMA operations.
++ * This allows IOMMU drivers to set a bypass mode if the DMA mask is large
++ * enough.
++ */
++static inline bool dma_map_direct(struct device *dev,
++		const struct dma_map_ops *ops)
+ {
+-	return likely(!ops);
++	return likely(!ops) || dev->dma_ops_bypass;
+ }
+ 
+ /*
+@@ -282,7 +288,7 @@ static inline dma_addr_t dma_map_page_attrs(struct device *dev,
+ 	dma_addr_t addr;
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		addr = dma_direct_map_page(dev, page, offset, size, dir, attrs);
+ 	else
+ 		addr = ops->map_page(dev, page, offset, size, dir, attrs);
+@@ -297,7 +303,7 @@ static inline void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr,
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		dma_direct_unmap_page(dev, addr, size, dir, attrs);
+ 	else if (ops->unmap_page)
+ 		ops->unmap_page(dev, addr, size, dir, attrs);
+@@ -316,7 +322,7 @@ static inline int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+ 	int ents;
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		ents = dma_direct_map_sg(dev, sg, nents, dir, attrs);
+ 	else
+ 		ents = ops->map_sg(dev, sg, nents, dir, attrs);
+@@ -334,7 +340,7 @@ static inline void dma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+ 	debug_dma_unmap_sg(dev, sg, nents, dir);
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		dma_direct_unmap_sg(dev, sg, nents, dir, attrs);
+ 	else if (ops->unmap_sg)
+ 		ops->unmap_sg(dev, sg, nents, dir, attrs);
+@@ -355,7 +361,7 @@ static inline dma_addr_t dma_map_resource(struct device *dev,
+ 	if (WARN_ON_ONCE(pfn_valid(PHYS_PFN(phys_addr))))
+ 		return DMA_MAPPING_ERROR;
+ 
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		addr = dma_direct_map_resource(dev, phys_addr, size, dir, attrs);
+ 	else if (ops->map_resource)
+ 		addr = ops->map_resource(dev, phys_addr, size, dir, attrs);
+@@ -371,7 +377,7 @@ static inline void dma_unmap_resource(struct device *dev, dma_addr_t addr,
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+-	if (!dma_is_direct(ops) && ops->unmap_resource)
++	if (!dma_map_direct(dev, ops) && ops->unmap_resource)
+ 		ops->unmap_resource(dev, addr, size, dir, attrs);
+ 	debug_dma_unmap_resource(dev, addr, size, dir);
+ }
+@@ -383,7 +389,7 @@ static inline void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
+ 	else if (ops->sync_single_for_cpu)
+ 		ops->sync_single_for_cpu(dev, addr, size, dir);
+@@ -397,7 +403,7 @@ static inline void dma_sync_single_for_device(struct device *dev,
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		dma_direct_sync_single_for_device(dev, addr, size, dir);
+ 	else if (ops->sync_single_for_device)
+ 		ops->sync_single_for_device(dev, addr, size, dir);
+@@ -411,7 +417,7 @@ dma_sync_sg_for_cpu(struct device *dev, struct scatterlist *sg,
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		dma_direct_sync_sg_for_cpu(dev, sg, nelems, dir);
+ 	else if (ops->sync_sg_for_cpu)
+ 		ops->sync_sg_for_cpu(dev, sg, nelems, dir);
+@@ -425,7 +431,7 @@ dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		dma_direct_sync_sg_for_device(dev, sg, nelems, dir);
+ 	else if (ops->sync_sg_for_device)
+ 		ops->sync_sg_for_device(dev, sg, nelems, dir);
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 12ff766ec1fa..fdb6e16c1b00 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -105,6 +105,19 @@ void *dmam_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+ }
+ EXPORT_SYMBOL(dmam_alloc_attrs);
+ 
++/*
++ * Check if the devices uses a direct mapping for DMA allocations.
++ * This allows IOMMU drivers to set a bypass mode if the DMA mask is large
++ * enough.
++ */
++static inline bool dma_alloc_direct(struct device *dev,
++		const struct dma_map_ops *ops)
++{
++	return likely(!ops) ||
++		(dev->dma_ops_bypass &&
++		 dma_direct_supported(dev, dev->coherent_dma_mask));
++}
++
+ /*
+  * Create scatter-list for the already allocated DMA buffer.
+  */
+@@ -138,7 +151,7 @@ int dma_get_sgtable_attrs(struct device *dev, struct sg_table *sgt,
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+-	if (dma_is_direct(ops))
++	if (dma_alloc_direct(dev, ops))
+ 		return dma_direct_get_sgtable(dev, sgt, cpu_addr, dma_addr,
+ 				size, attrs);
+ 	if (!ops->get_sgtable)
+@@ -206,7 +219,7 @@ bool dma_can_mmap(struct device *dev)
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+-	if (dma_is_direct(ops))
++	if (dma_alloc_direct(dev, ops))
+ 		return dma_direct_can_mmap(dev);
+ 	return ops->mmap != NULL;
+ }
+@@ -231,7 +244,7 @@ int dma_mmap_attrs(struct device *dev, struct vm_area_struct *vma,
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+-	if (dma_is_direct(ops))
++	if (dma_alloc_direct(dev, ops))
+ 		return dma_direct_mmap(dev, vma, cpu_addr, dma_addr, size,
+ 				attrs);
+ 	if (!ops->mmap)
+@@ -244,7 +257,7 @@ u64 dma_get_required_mask(struct device *dev)
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		return dma_direct_get_required_mask(dev);
+ 	if (ops->get_required_mask)
+ 		return ops->get_required_mask(dev);
+@@ -275,7 +288,7 @@ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+ 	/* let the implementation decide on the zone to allocate from: */
+ 	flag &= ~(__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM);
+ 
+-	if (dma_is_direct(ops))
++	if (dma_alloc_direct(dev, ops))
+ 		cpu_addr = dma_direct_alloc(dev, size, dma_handle, flag, attrs);
+ 	else if (ops->alloc)
+ 		cpu_addr = ops->alloc(dev, size, dma_handle, flag, attrs);
+@@ -307,7 +320,7 @@ void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
  		return;
+ 
+ 	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
+-	if (dma_is_direct(ops))
++	if (dma_alloc_direct(dev, ops))
+ 		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
+ 	else if (ops->free)
+ 		ops->free(dev, size, cpu_addr, dma_handle, attrs);
+@@ -318,7 +331,11 @@ int dma_supported(struct device *dev, u64 mask)
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+-	if (dma_is_direct(ops))
++	/*
++	 * Only call the dma-direct version if we really do not have any ops
++	 * set, as the dma_supported op will set the dma_ops_bypass flag.
++	 */
++	if (!ops)
+ 		return dma_direct_supported(dev, mask);
+ 	if (!ops->dma_supported)
+ 		return 1;
+@@ -374,7 +391,7 @@ void dma_cache_sync(struct device *dev, void *vaddr, size_t size,
+ 
+ 	BUG_ON(!valid_dma_direction(dir));
+ 
+-	if (dma_is_direct(ops))
++	if (dma_alloc_direct(dev, ops))
+ 		arch_dma_cache_sync(dev, vaddr, size, dir);
+ 	else if (ops->cache_sync)
+ 		ops->cache_sync(dev, vaddr, size, dir);
+@@ -386,7 +403,7 @@ size_t dma_max_mapping_size(struct device *dev)
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 	size_t size = SIZE_MAX;
+ 
+-	if (dma_is_direct(ops))
++	if (dma_map_direct(dev, ops))
+ 		size = dma_direct_max_mapping_size(dev);
+ 	else if (ops && ops->max_mapping_size)
+ 		size = ops->max_mapping_size(dev);
 -- 
-2.7.4
+2.20.1
 
