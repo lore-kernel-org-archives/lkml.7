@@ -2,192 +2,227 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E702C47411
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728B6C33C9A
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6395823602
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78ACC233CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="RRj1kkDT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="cyuf7T9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfKMQCW (ORCPT
+        id S1727528AbfKMP5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:02:22 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39767 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbfKMQCW (ORCPT
+        Wed, 13 Nov 2019 10:57:17 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:21788 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfKMP5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:02:22 -0500
-Received: by mail-il1-f195.google.com with SMTP id a7so2246052ild.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:02:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vaq1pj16nvNdrIA4rU9ikCjEIqjZ7g4H3dbwn5ZPZpE=;
-        b=RRj1kkDTg6ox6n0Uq2c0HcGj9sRL1KGKC4asp/ZKW+ZZfa/hvrSRZhm/LyqUPnDo3s
-         BGLX5fN1tfLoluE3a3v2I+bFWyxUhYjK4DaUXkxgnmMyS28XpGwZa3OIxzhMxZunbtLe
-         L3JwGeCZaNdvnEKowxEO6r0DTar0Y7L55JXX4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vaq1pj16nvNdrIA4rU9ikCjEIqjZ7g4H3dbwn5ZPZpE=;
-        b=s2ixIbxnK6UQtSyOHQEM3T9FpFaHo0Fty+Kpt/eoY6coTONTDODa4fn505UTNDXJbI
-         WmIWlQPNKYP/+bUpa503njdHRasulwOHgksfDNG4403PN8OhKSYmZ3ZDR2CsXUsY4FU0
-         5bMk7LP5eHsT020uDUE/ZxpZSmpGCzK5YTT/S7CccEM8n3Hl6ws8qkcKvE1VpsvRsPRD
-         ZltQzkNsw6AdwRmyYgwhicZg/jJcYs8WyKwPQL2Y7V/nh1VbkDNQM6RfduP45Gp35D1i
-         F3FU5yR25tzjHJPqZAiaXjHEaq4Q0nQMfDXDe4bpEg9yYQim2VHeJ6RS6W8Vlri0VC4o
-         dWbQ==
-X-Gm-Message-State: APjAAAUB5QR7zETRspl3nptvQM0eRciflKkw8o69bl2akoxIBw3orLA+
-        ZKa9c5geLdd9r6JsdC/ozG7uU/T/1EeYQvs/5aUhcA==
-X-Google-Smtp-Source: APXvYqxhBwpo0UE8m+50rphlIrAnu7/RxFsTHA50cy7rxY4tNFKVyYWyDIfBwLu1/QjLIrJq9mXhbVsNMLCVRw2E2Lk=
-X-Received: by 2002:a92:c14d:: with SMTP id b13mr4723899ilh.174.1573660940866;
- Wed, 13 Nov 2019 08:02:20 -0800 (PST)
+        Wed, 13 Nov 2019 10:57:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573660634;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=/LGnKiYy7wgg2UQ6QDBC/em5eo8m26dky6ZlAzfrAsc=;
+        b=cyuf7T9i12p7uQf9BiRFWm9pDXkuuF3wpZ5PVtdyTo8ANoAJYOHxkzzeZJ1ZHiYg9u
+        Dh6Dat1TVQEoTzm9KhHqaxj9lH5h1Tu1vW6QW6TmwRyuOigpUJavGV4yud98/t4GE0Ea
+        v8vzNfVMJ+HwQ8C6FxnRSjhWVmwnXhrsJxrdyDbuEB+IsgZ7uzhKZQPKMmNAtxbKfVWQ
+        XaJ/FWFaavSjiDCII08nL2jYxd8UGn4rf5Ah672+8lXv+wAqur3WkuLPcI2qAfXy5oEM
+        uzUJhFJTpjvHSB6vh6rDGIeySER0WGNdciy64oyvOyK1CcTR1HdkVrLCJBFkinMlYkDO
+        cSag==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS325Pjw=="
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
+        with ESMTPSA id 20735bvADFsBGfU
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 13 Nov 2019 16:54:11 +0100 (CET)
+From:   Olaf Hering <olaf@aepfle.de>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Olaf Hering <olaf@aepfle.de>
+Subject: [PATCH v2] tools/hv: async name resolution in kvp_daemon
+Date:   Wed, 13 Nov 2019 16:54:00 +0100
+Message-Id: <20191113155400.25456-1-olaf@aepfle.de>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-References: <20191107104957.306383-1-colin.king@canonical.com>
-In-Reply-To: <20191107104957.306383-1-colin.king@canonical.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 13 Nov 2019 17:02:10 +0100
-Message-ID: <CAJfpegtr_xg_VG2npTfaxC+vD7B8bKa_0n9pu5vyfU-XQ9oV9Q@mail.gmail.com>
-Subject: Re: [PATCH][V2] ovl: fix lookup failure on multi lower squashfs
-To:     Colin King <colin.king@canonical.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 11:50 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> In the past, overlayfs required that lower fs have non null uuid in
-> order to support nfs export and decode copy up origin file handles.
->
-> Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
-> lower fs") relaxed this requirement for nfs export support, as long
-> as uuid (even if null) is unique among all lower fs.
->
-> However, said commit unintentionally also relaxed the non null uuid
-> requirement for decoding copy up origin file handles, regardless of
-> the unique uuid requirement.
->
-> Amend this mistake by disabling decoding of copy up origin file handle
-> from lower fs with a conflicting uuid.
->
-> We still encode copy up origin file handles from those fs, because
-> file handles like those already exist in the wild and because they
-> might provide useful information in the future.
->
-> Reported-by: Colin Ian King <colin.king@canonical.com>
-> Link: https://lore.kernel.org/lkml/20191106234301.283006-1-colin.king@canonical.com/
-> Fixes: 9df085f3c9a2 ("ovl: relax requirement for non null uuid ...")
-> Cc: stable@vger.kernel.org # v4.20+
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  fs/overlayfs/namei.c     |  8 ++++++++
->  fs/overlayfs/ovl_entry.h |  2 ++
->  fs/overlayfs/super.c     | 16 ++++++++++------
->  3 files changed, 20 insertions(+), 6 deletions(-)
->
-> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-> index e9717c2f7d45..f47c591402d7 100644
-> --- a/fs/overlayfs/namei.c
-> +++ b/fs/overlayfs/namei.c
-> @@ -325,6 +325,14 @@ int ovl_check_origin_fh(struct ovl_fs *ofs, struct ovl_fh *fh, bool connected,
->         int i;
->
->         for (i = 0; i < ofs->numlower; i++) {
-> +               /*
-> +                * If lower fs uuid is not unique among lower fs we cannot match
-> +                * fh->uuid to layer.
-> +                */
-> +               if (ofs->lower_layers[i].fsid &&
-> +                   ofs->lower_layers[i].fs->bad_uuid)
-> +                       continue;
-> +
->                 origin = ovl_decode_real_fh(fh, ofs->lower_layers[i].mnt,
->                                             connected);
->                 if (origin)
-> diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
-> index a8279280e88d..28348c44ea5b 100644
-> --- a/fs/overlayfs/ovl_entry.h
-> +++ b/fs/overlayfs/ovl_entry.h
-> @@ -22,6 +22,8 @@ struct ovl_config {
->  struct ovl_sb {
->         struct super_block *sb;
->         dev_t pseudo_dev;
-> +       /* Unusable (conflicting) uuid */
-> +       bool bad_uuid;
->  };
->
->  struct ovl_layer {
-> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-> index afbcb116a7f1..5d4faab57ba0 100644
-> --- a/fs/overlayfs/super.c
-> +++ b/fs/overlayfs/super.c
-> @@ -1255,17 +1255,18 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
->  {
->         unsigned int i;
->
-> -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
-> -               return true;
-> -
->         for (i = 0; i < ofs->numlowerfs; i++) {
->                 /*
->                  * We use uuid to associate an overlay lower file handle with a
->                  * lower layer, so we can accept lower fs with null uuid as long
->                  * as all lower layers with null uuid are on the same fs.
-> +                * if we detect multiple lower fs with the same uuid, we
-> +                * disable lower file handle decoding on all of them.
->                  */
-> -               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid))
-> +               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid)) {
-> +                       ofs->lower_fs[i].bad_uuid = true;
->                         return false;
-> +               }
->         }
->         return true;
->  }
-> @@ -1277,6 +1278,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
->         unsigned int i;
->         dev_t dev;
->         int err;
-> +       bool bad_uuid = false;
->
->         /* fsid 0 is reserved for upper fs even with non upper overlay */
->         if (ofs->upper_mnt && ofs->upper_mnt->mnt_sb == sb)
-> @@ -1287,10 +1289,11 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
->                         return i + 1;
->         }
->
-> -       if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
-> +       if (ofs->upper_mnt && !ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
+The hostname is resolved just once since commit 58125210ab3b ("Tools:
+hv: cache FQDN in kvp_daemon to avoid timeouts") to make sure the VM
+responds within the timeout limits to requests from the host.
 
-This seems bogus: why only check conflicting lower layers if there's
-an upper layer?
+If for some reason getaddrinfo fails, the string returned by the
+"FullyQualifiedDomainName" request contains some error string, which is
+then used by tools on the host side.
 
-> +               bad_uuid = true;
->                 ofs->config.index = false;
->                 ofs->config.nfs_export = false;
-> -               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', falling back to index=off,nfs_export=off.\n",
-> +               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', enforcing index=off,nfs_export=off.\n",
+Adjust the code to resolve the current hostname in a separate thread.
+This thread loops until getaddrinfo returns success. During this time
+all "FullyQualifiedDomainName" requests will be answered with an empty
+string.
 
-And this while this makes sense, it doesn't really fit into this patch
-(no change of behavior regarding how index and nfs_export are
-handled).
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
+---
 
-Thanks,
-Miklos
+v2:
+- link with -pthread instead of -lpthread
+- consider some errors from getaddrinfo fatal, log them via syslog
+- update also hostname in the loop
+
+ tools/hv/Makefile        |  2 ++
+ tools/hv/hv_kvp_daemon.c | 83 ++++++++++++++++++++++++++++++++++--------------
+ 2 files changed, 62 insertions(+), 23 deletions(-)
+
+diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+index b57143d9459c..9bbab96ac06d 100644
+--- a/tools/hv/Makefile
++++ b/tools/hv/Makefile
+@@ -22,6 +22,8 @@ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ 
+ ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
+ 
++$(OUTPUT)hv_kvp_daemon: LDFLAGS += -pthread
++
+ all: $(ALL_PROGRAMS)
+ 
+ export srctree OUTPUT CC LD CFLAGS
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index e9ef4ca6a655..b930506a9632 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -41,6 +41,7 @@
+ #include <net/if.h>
+ #include <limits.h>
+ #include <getopt.h>
++#include <pthread.h>
+ 
+ /*
+  * KVP protocol: The user mode component first registers with the
+@@ -85,7 +86,7 @@ static char *processor_arch;
+ static char *os_build;
+ static char *os_version;
+ static char *lic_version = "Unknown version";
+-static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
++static char *full_domain_name;
+ static struct utsname uts_buf;
+ 
+ /*
+@@ -1327,27 +1328,67 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ 	return error;
+ }
+ 
+-
+-static void
+-kvp_get_domain_name(char *buffer, int length)
++/*
++ * Async retrival of Fully Qualified Domain Name because getaddrinfo takes an
++ * unpredictable amount of time to finish.
++ */
++static void *kvp_getaddrinfo(void *p)
+ {
+-	struct addrinfo	hints, *info ;
+-	int error = 0;
++	char *tmp, **str_ptr = (char **)p;
++	char hostname[HOST_NAME_MAX + 1];
++	struct addrinfo	*info, hints = {
++		.ai_family = AF_INET, /* Get only ipv4 addrinfo. */
++		.ai_socktype = SOCK_STREAM,
++		.ai_flags = AI_CANONNAME,
++	};
++	int ret;
+ 
+-	gethostname(buffer, length);
+-	memset(&hints, 0, sizeof(hints));
+-	hints.ai_family = AF_INET; /*Get only ipv4 addrinfo. */
+-	hints.ai_socktype = SOCK_STREAM;
+-	hints.ai_flags = AI_CANONNAME;
++	do {
++		if (gethostname(hostname, sizeof(hostname) - 1) < 0)
++			goto out;
+ 
+-	error = getaddrinfo(buffer, NULL, &hints, &info);
+-	if (error != 0) {
+-		snprintf(buffer, length, "getaddrinfo failed: 0x%x %s",
+-			error, gai_strerror(error));
++		ret = getaddrinfo(hostname, NULL, &hints, &info);
++		switch (ret) {
++		case 0:
++			break;
++		case EAI_BADFLAGS:
++		case EAI_MEMORY:
++		case EAI_OVERFLOW:
++		case EAI_SOCKTYPE:
++		case EAI_SYSTEM:
++			/* Permanent failure */
++			syslog(LOG_ERR, "getaddrinfo failed: %d %s",
++				ret, gai_strerror(ret));
++			goto out;
++		default:
++			/* Temporary failure, aim for success. */
++			sleep(1);
++		}
++	} while (ret);
++
++	ret = asprintf(&tmp, "%s", info->ai_canonname);
++	freeaddrinfo(info);
++	if (ret <= 0)
++		goto out;
++
++	if (ret > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)
++		tmp[HV_KVP_EXCHANGE_MAX_VALUE_SIZE - 1] = '\0';
++	*str_ptr = tmp;
++
++out:
++	pthread_exit(NULL);
++}
++
++static void kvp_obtain_domain_name(char **str_ptr)
++{
++	pthread_t t;
++
++	if (pthread_create(&t, NULL, kvp_getaddrinfo, str_ptr)) {
++		syslog(LOG_ERR, "pthread_create failed; error: %d %s",
++			errno, strerror(errno));
+ 		return;
+ 	}
+-	snprintf(buffer, length, "%s", info->ai_canonname);
+-	freeaddrinfo(info);
++	pthread_detach(t);
+ }
+ 
+ void print_usage(char *argv[])
+@@ -1412,11 +1453,7 @@ int main(int argc, char *argv[])
+ 	 * Retrieve OS release information.
+ 	 */
+ 	kvp_get_os_info();
+-	/*
+-	 * Cache Fully Qualified Domain Name because getaddrinfo takes an
+-	 * unpredictable amount of time to finish.
+-	 */
+-	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
++	kvp_obtain_domain_name(&full_domain_name);
+ 
+ 	if (kvp_file_init()) {
+ 		syslog(LOG_ERR, "Failed to initialize the pools");
+@@ -1571,7 +1608,7 @@ int main(int argc, char *argv[])
+ 
+ 		switch (hv_msg->body.kvp_enum_data.index) {
+ 		case FullyQualifiedDomainName:
+-			strcpy(key_value, full_domain_name);
++			strcpy(key_value, full_domain_name ? : "");
+ 			strcpy(key_name, "FullyQualifiedDomainName");
+ 			break;
+ 		case IntegrationServicesVersion:
