@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EF8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28A7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63CC2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911612067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612043;
-	bh=I3ZLCnIDcjBuO+pE/ZPwAvwz5deLJv3WIzNphLQ4FDQ=;
+	s=default; t=1573612049;
+	bh=jYO8D5McdN9+Q6vkHg8beGmm5RMdUchnT+uUGGGrN10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fv3QsCApM4KgImubxirk2oHSA6AbXZWV6dDtmwY2S8S/O7DbUO/KoCVYESC8xvCmZ
-	 j+EJJooLE2ulJKUQYNu8bmKbHL05Ajin8LtJP56Au3Nf/o9iBmZblUhJiKCCirETje
-	 Gm6lYU6pOqZ9N3dExUhp/iRCpyirKskHuy69YgEc=
+	b=hvbRiBCE4WWuIOzT65rPJArbHAGSpZG9JuZ6m6MFJ7QHRWLax5Adoy2HQTU69fUfW
+	 ZUTfgkfghRig7cse+A/x7dRAKB3fLqxDHixC9d9O6wTQNHwS2Nh2RaZ91rIn+4WXiK
+	 1GJEc5H3mbXgT6mJAgShNcHG/zxw+jkCDkvHnZ4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfKMBvB (ORCPT
+        id S1728369AbfKMC11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:51:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37868 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:27:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727522AbfKMBuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:50 -0500
+        id S1727556AbfKMBvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58CDF22466;
-        Wed, 13 Nov 2019 01:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8D53222D4;
+        Wed, 13 Nov 2019 01:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609850;
-        bh=I3ZLCnIDcjBuO+pE/ZPwAvwz5deLJv3WIzNphLQ4FDQ=;
+        s=default; t=1573609861;
+        bh=jYO8D5McdN9+Q6vkHg8beGmm5RMdUchnT+uUGGGrN10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmz8FHqA7pWushjdnAS2MizU9JmTDQh8wdOjK1cjo2w+JtbFhAkUKp8ahetnMPqeW
-         fqhx8B2bG3OUYn7KAseFhtUaQ2PYEoKtQWKHytslwDSKH27brliV8LBHvlGlPxzFoz
-         JU8hmFH10+yvyKJrdHN2YKOJy0XvJWAA3K4Uyhao=
+        b=vdBdfcVM25lQu/N6Yxc8LvAv5JoS4YNsSSR+Ibpb4WMok98PQtREMYw4+LOFgeBG9
+         6iukE57fRr2fuF4q+zLFZ/6Am8q9zxZcmn13BI3IffL4vuVUjwafPE3RuuG1qKH16f
+         GZGBrwXH8J/IoaxtH59SGoxC89seVJYT6B9mP8lQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 021/209] iommu/io-pgtable-arm: Fix race handling in split_blk_unmap()
-Date:   Tue, 12 Nov 2019 20:47:17 -0500
-Message-Id: <20191113015025.9685-21-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 027/209] ata: ahci_brcm: Match BCM63138 compatible strings
+Date:   Tue, 12 Nov 2019 20:47:23 -0500
+Message-Id: <20191113015025.9685-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,56 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 85c7a0f1ef624ef58173ef52ea77780257bdfe04 ]
+[ Upstream commit fb8506f15f2e394f5f648575cf48a26e8744390c ]
 
-In removing the pagetable-wide lock, we gained the possibility of the
-vanishingly unlikely case where we have a race between two concurrent
-unmappers splitting the same block entry. The logic to handle this is
-fairly straightforward - whoever loses the race frees their partial
-next-level table and instead dereferences the winner's newly-installed
-entry in order to fall back to a regular unmap, which intentionally
-echoes the pre-existing case of recursively splitting a 1GB block down
-to 4KB pages by installing a full table of 2MB blocks first.
+Match the "brcm,bcm63138-ahci" compatible string in order to allow this
+driver to probe on such platforms.
 
-Unfortunately, the chump who implemented that logic failed to update the
-condition check for that fallback, meaning that if said race occurs at
-the last level (where the loser's unmap_idx is valid) then the unmap
-won't actually happen. Fix that to properly account for both the race
-and recursive cases.
-
-Fixes: 2c3d273eabe8 ("iommu/io-pgtable-arm: Support lockless operation")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-[will: re-jig control flow to avoid duplicate cmpxchg test]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/ata/ahci_brcm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 88641b4560bc8..2f79efd16a052 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -574,13 +574,12 @@ static size_t arm_lpae_split_blk_unmap(struct arm_lpae_io_pgtable *data,
- 			return 0;
- 
- 		tablep = iopte_deref(pte, data);
-+	} else if (unmap_idx >= 0) {
-+		io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
-+		return size;
- 	}
- 
--	if (unmap_idx < 0)
--		return __arm_lpae_unmap(data, iova, size, lvl, tablep);
--
--	io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
--	return size;
-+	return __arm_lpae_unmap(data, iova, size, lvl, tablep);
- }
- 
- static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
+diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+index f3d557777d829..898792d661e56 100644
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -381,6 +381,7 @@ static struct scsi_host_template ahci_platform_sht = {
+ static const struct of_device_id ahci_of_match[] = {
+ 	{.compatible = "brcm,bcm7425-ahci", .data = (void *)BRCM_SATA_BCM7425},
+ 	{.compatible = "brcm,bcm7445-ahci", .data = (void *)BRCM_SATA_BCM7445},
++	{.compatible = "brcm,bcm63138-ahci", .data = (void *)BRCM_SATA_BCM7445},
+ 	{.compatible = "brcm,bcm-nsp-ahci", .data = (void *)BRCM_SATA_NSP},
+ 	{},
+ };
 -- 
 2.20.1
 
