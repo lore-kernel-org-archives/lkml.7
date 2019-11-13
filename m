@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8B2C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5874FC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3E82053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317C422474
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610423;
-	bh=uPqAL7yy9auhhcmmWvGPsA0w0sPseh05Du9m9H55Qlg=;
+	s=default; t=1573610427;
+	bh=iufa2eP/TUMfHuSqsOfMqcEWWdjpkgEBSDuAnm64Qv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6k6pdKgTJ7ogEE6+l+NZtuLsSgWrFv5oW5TyQTtsPQkGNeOI5WOq75TmvYHZsPeB
-	 zHs7aUJ7cc2aa0HzaJQoalCcB2cZ/9+7fqdds/M6yzYtmVferfbDRrbQ57tpEwQsYv
-	 oEtaNR8+BuaqJVYuAyqdpBl8OFd0AKNY8gakhUyU=
+	b=Hj9IGDR1iI2cA9rVrnj725uOkH1i8jSoyW4Z6uBBNBYUP4X7BpgZ4927+W+/1gFFP
+	 yzCdkwmNdE6t7A+aND3QbSv+J1+4hs/KNpC+3265HPkodlJHuEOzbapR5YgeyZ4g4G
+	 2+wWoEuzf+5HT7ecxW3rrPMCSVuxCFX1qJRKiJXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfKMCAW (ORCPT
+        id S1728975AbfKMCAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:00:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:00:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730457AbfKMCAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:16 -0500
+        id S1729568AbfKMCAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F18982245A;
-        Wed, 13 Nov 2019 02:00:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F8A222CF;
+        Wed, 13 Nov 2019 02:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610415;
-        bh=uPqAL7yy9auhhcmmWvGPsA0w0sPseh05Du9m9H55Qlg=;
+        s=default; t=1573610418;
+        bh=iufa2eP/TUMfHuSqsOfMqcEWWdjpkgEBSDuAnm64Qv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Up4va7JQhMM2qMN7BT8qdEI4Gf1tFxRRV6TLII3dxjqGZqxU43Y6KiQTfxDadEMDV
-         mwUeNOFPVPuKnhSOcbntOdJxrYIRmSbKvWqNOSHyCbmLFYDAe+3RwmlqwhcRbWpYmO
-         X6clxvXD44OoauGbqKBysv5bpJsujMP2UJTmF690=
+        b=0dabojMiaO9WaeKsuzVVD5IUg0ZbBDBC0YOVUj6eBZ8tMGBCRa/jOVOrSAlRBQwU1
+         5GCZquykxFdEjmYhz3kvjMg6BgsQZDJBzfyuW7EHzmtPkXFcl98EdPxVnHsxSw06n1
+         fW6kngfmvF9pQE7GuabPOSYRLUn/1gpokCmnenDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 27/68] media: pxa_camera: Fix check for pdev->dev.of_node
-Date:   Tue, 12 Nov 2019 20:58:51 -0500
-Message-Id: <20191113015932.12655-27-sashal@kernel.org>
+Cc:     Michael Pobega <mpobega@neverware.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 28/68] ALSA: hda/sigmatel - Disable automute for Elo VuPoint
+Date:   Tue, 12 Nov 2019 20:58:52 -0500
+Message-Id: <20191113015932.12655-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -62,46 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Michael Pobega <mpobega@neverware.com>
 
-[ Upstream commit 44d7f1a77d8c84f8e42789b5475b74ae0e6d4758 ]
+[ Upstream commit d153135e93a50cdb6f1b52e238909e9965b56056 ]
 
-Clang warns that the address of a pointer will always evaluated as true
-in a boolean context.
+The Elo VuPoint 15MX has two headphone jacks of which neither work by
+default. Disabling automute allows ALSA to work normally with the
+speakers & left headphone jack.
 
-drivers/media/platform/pxa_camera.c:2400:17: warning: address of
-'pdev->dev.of_node' will always evaluate to 'true'
-[-Wpointer-bool-conversion]
-        if (&pdev->dev.of_node && !pcdev->pdata) {
-             ~~~~~~~~~~^~~~~~~ ~~
-1 warning generated.
+Future pin configuration changes may be required in the future to get
+the right headphone jack working in tandem.
 
-Judging from the rest of the kernel, it seems like this was an error and
-just the value of of_node should be checked rather than the address.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Michael Pobega <mpobega@neverware.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/pxa_camera.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_sigmatel.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
-index 390d708c807a0..3fab9f776afa7 100644
---- a/drivers/media/platform/pxa_camera.c
-+++ b/drivers/media/platform/pxa_camera.c
-@@ -2334,7 +2334,7 @@ static int pxa_camera_probe(struct platform_device *pdev)
- 	pcdev->res = res;
+diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
+index 0abab7926dca3..d1a6d20ace0da 100644
+--- a/sound/pci/hda/patch_sigmatel.c
++++ b/sound/pci/hda/patch_sigmatel.c
+@@ -77,6 +77,7 @@ enum {
+ 	STAC_DELL_M6_BOTH,
+ 	STAC_DELL_EQ,
+ 	STAC_ALIENWARE_M17X,
++	STAC_ELO_VUPOINT_15MX,
+ 	STAC_92HD89XX_HP_FRONT_JACK,
+ 	STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK,
+ 	STAC_92HD73XX_ASUS_MOBO,
+@@ -1875,6 +1876,18 @@ static void stac92hd73xx_fixup_no_jd(struct hda_codec *codec,
+ 		codec->no_jack_detect = 1;
+ }
  
- 	pcdev->pdata = pdev->dev.platform_data;
--	if (&pdev->dev.of_node && !pcdev->pdata) {
-+	if (pdev->dev.of_node && !pcdev->pdata) {
- 		err = pxa_camera_pdata_from_dt(&pdev->dev, pcdev, &pcdev->asd);
- 	} else {
- 		pcdev->platform_flags = pcdev->pdata->flags;
++
++static void stac92hd73xx_disable_automute(struct hda_codec *codec,
++				     const struct hda_fixup *fix, int action)
++{
++	struct sigmatel_spec *spec = codec->spec;
++
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
++
++	spec->gen.suppress_auto_mute = 1;
++}
++
+ static const struct hda_fixup stac92hd73xx_fixups[] = {
+ 	[STAC_92HD73XX_REF] = {
+ 		.type = HDA_FIXUP_FUNC,
+@@ -1900,6 +1913,10 @@ static const struct hda_fixup stac92hd73xx_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = stac92hd73xx_fixup_alienware_m17x,
+ 	},
++	[STAC_ELO_VUPOINT_15MX] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = stac92hd73xx_disable_automute,
++	},
+ 	[STAC_92HD73XX_INTEL] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = intel_dg45id_pin_configs,
+@@ -1938,6 +1955,7 @@ static const struct hda_model_fixup stac92hd73xx_models[] = {
+ 	{ .id = STAC_DELL_M6_BOTH, .name = "dell-m6" },
+ 	{ .id = STAC_DELL_EQ, .name = "dell-eq" },
+ 	{ .id = STAC_ALIENWARE_M17X, .name = "alienware" },
++	{ .id = STAC_ELO_VUPOINT_15MX, .name = "elo-vupoint-15mx" },
+ 	{ .id = STAC_92HD73XX_ASUS_MOBO, .name = "asus-mobo" },
+ 	{}
+ };
+@@ -1987,6 +2005,8 @@ static const struct snd_pci_quirk stac92hd73xx_fixup_tbl[] = {
+ 		      "Alienware M17x", STAC_ALIENWARE_M17X),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_DELL, 0x0490,
+ 		      "Alienware M17x R3", STAC_DELL_EQ),
++	SND_PCI_QUIRK(0x1059, 0x1011,
++		      "ELO VuPoint 15MX", STAC_ELO_VUPOINT_15MX),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x1927,
+ 				"HP Z1 G2", STAC_92HD89XX_HP_Z1_G2_RIGHT_MIC_JACK),
+ 	SND_PCI_QUIRK(PCI_VENDOR_ID_HP, 0x2b17,
 -- 
 2.20.1
 
