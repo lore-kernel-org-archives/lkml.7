@@ -2,232 +2,155 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9ADBC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5423C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B461921A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC90C21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:50:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i1oPPqm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfKMAt1 (ORCPT
+        id S1727126AbfKMAuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:49:27 -0500
-Received: from mga03.intel.com ([134.134.136.65]:40344 "EHLO mga03.intel.com"
+        Tue, 12 Nov 2019 19:50:54 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57373 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfKMAt1 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:49:27 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 16:49:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,298,1569308400"; 
-   d="scan'208";a="229587804"
-Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Nov 2019 16:49:25 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 2/2] perf report: Jump to symbol source view from total cycles view
-Date:   Wed, 13 Nov 2019 08:48:52 +0800
-Message-Id: <20191113004852.21265-2-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191113004852.21265-1-yao.jin@linux.intel.com>
-References: <20191113004852.21265-1-yao.jin@linux.intel.com>
+        id S1726986AbfKMAuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:50:54 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CQyd69NLz9sPh;
+        Wed, 13 Nov 2019 11:50:49 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573606250;
+        bh=y2HIDRUkrrIBeYigQEgKBF8prcyYDSmPm3oxZWimhMQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=i1oPPqm4j9T7JQDA4WK7kCy+Ocfj14lfeA7k5C669xsEz32G8v74JeNvXrd4fuc2H
+         5TwTLKwyHGsRRLVNO8q/pZWwdNFG+uligsMOFZl2mcROEVhME1gA8WD/r+H8UV7k2F
+         yG/k3em8XRX5QvT1DynPpHaLDQ6njjVYnJGX/raz3e1H4U/ebdaurazBtxlfDDhHjv
+         6EJZ1h6452J6yh14eh4cCR5XuI+dPJXefpKxAo8syUGp2hDC7j24Bj+trfw1LopOUj
+         ujnZNFQTu9P6kwp8oDgyLkU5z67dVVhhd0WI5WEi7AlUNz+KFkh/ces7gYwBKLB7jZ
+         EK881bIuBebbw==
+Date:   Wed, 13 Nov 2019 11:50:49 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Imre Deak <imre.deak@intel.com>,
+        Jon Bloomfield <jon.bloomfield@intel.com>,
+        Andi Shyti <andi@etezian.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: linux-next: manual merge of the drm tree with Linus' tree
+Message-ID: <20191113115049.2d30b88c@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/fhU9Km009fVWjlMp34IeRum";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch supports jumping from tui total cycles view to symbol
-source view.
+--Sig_/fhU9Km009fVWjlMp34IeRum
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For example,
+Hi all,
 
-perf record -b ./div
-perf report --total-cycles
+Today's linux-next merge of the drm tree got a conflict in:
 
-In total cycles view, we can select one entry and press 'a' or
-press ENTER key to jump to symbol source view.
+  drivers/gpu/drm/i915/gt/intel_gt_pm.c
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-report.c    |  9 ++++++---
- tools/perf/ui/browsers/hists.c | 25 +++++++++++++++++++++++--
- tools/perf/util/block-info.c   |  6 ++++--
- tools/perf/util/block-info.h   |  3 ++-
- tools/perf/util/hist.h         |  7 +++++--
- 5 files changed, 40 insertions(+), 10 deletions(-)
+between commit:
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1e81985b7d56..ceebea4013ca 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -493,7 +493,9 @@ static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
- 
- 	evlist__for_each_entry(evlist, pos) {
- 		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
--						 rep->min_percent, pos);
-+						 rep->min_percent, pos,
-+						 &rep->session->header.env,
-+						 &rep->annotation_opts);
- 		if (ret != 0)
- 			return ret;
- 	}
-@@ -525,7 +527,8 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
- 
- 		if (rep->total_cycles_mode) {
- 			report__browse_block_hists(&rep->block_reports[i++].hist,
--						   rep->min_percent, pos);
-+						   rep->min_percent, pos,
-+						   NULL, NULL);
- 			continue;
- 		}
- 
-@@ -1418,7 +1421,7 @@ int cmd_report(int argc, const char **argv)
- 		if (sort__mode != SORT_MODE__BRANCH)
- 			report.total_cycles_mode = false;
- 		else
--			sort_order = "sym";
-+			sort_order = NULL;
- 	}
- 
- 	if (strcmp(input_name, "-") != 0)
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 04301303c246..31fc5d589128 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2385,7 +2385,11 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
- 	if (!notes->src)
- 		return 0;
- 
--	evsel = hists_to_evsel(browser->hists);
-+	if (browser->block_evsel)
-+		evsel = browser->block_evsel;
-+	else
-+		evsel = hists_to_evsel(browser->hists);
-+
- 	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt,
- 				       browser->annotation_opts);
- 	he = hist_browser__selected_entry(browser);
-@@ -3465,11 +3469,13 @@ static int block_hists_browser__title(struct hist_browser *browser, char *bf,
- }
- 
- int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
--			   float min_percent)
-+			   float min_percent, struct perf_env *env,
-+			   struct annotation_options *annotation_opts)
- {
- 	struct hists *hists = &bh->block_hists;
- 	struct hist_browser *browser;
- 	int key = -1;
-+	struct popup_action action;
- 	static const char help[] =
- 	" q             Quit \n";
- 
-@@ -3480,11 +3486,15 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
- 	browser->block_evsel = evsel;
- 	browser->title = block_hists_browser__title;
- 	browser->min_pcnt = min_percent;
-+	browser->env = env;
-+	browser->annotation_opts = annotation_opts;
- 
- 	/* reset abort key so that it can get Ctrl-C as a key */
- 	SLang_reset_tty();
- 	SLang_init_tty(0, 0, 0);
- 
-+	memset(&action, 0, sizeof(action));
-+
- 	while (1) {
- 		key = hist_browser__run(browser, "? - help", true);
- 
-@@ -3494,6 +3504,17 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
- 		case '?':
- 			ui_browser__help_window(&browser->b, help);
- 			break;
-+		case 'a':
-+		case K_ENTER:
-+			if (!browser->selection ||
-+			    !browser->selection->sym) {
-+				continue;
-+			}
-+
-+			action.ms.map = browser->selection->map;
-+			action.ms.sym = browser->selection->sym;
-+			do_annotate(browser, &action);
-+			continue;
- 		default:
- 			break;
- 		}
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 5887f8f9149f..c4b030bf6ec2 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -441,7 +441,8 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- }
- 
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
--			       struct evsel *evsel)
-+			       struct evsel *evsel, struct perf_env *env,
-+			       struct annotation_options *annotation_opts)
- {
- 	int ret;
- 
-@@ -454,7 +455,8 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 		return 0;
- 	case 1:
- 		symbol_conf.report_individual_block = true;
--		ret = block_hists_tui_browse(bh, evsel, min_percent);
-+		ret = block_hists_tui_browse(bh, evsel, min_percent,
-+					     env, annotation_opts);
- 		hists__delete_entries(&bh->block_hists);
- 		return ret;
- 	default:
-diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-index e4d20bccd9b6..bef0d75e9819 100644
---- a/tools/perf/util/block-info.h
-+++ b/tools/perf/util/block-info.h
-@@ -71,7 +71,8 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- 					       u64 total_cycles);
- 
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
--			       struct evsel *evsel);
-+			       struct evsel *evsel, struct perf_env *env,
-+			       struct annotation_options *annotation_opts);
- 
- float block_info__total_cycles_percent(struct hist_entry *he);
- 
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index e8b3122a30a7..5bf122042c01 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -478,7 +478,8 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- void res_sample_init(void);
- 
- int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
--			   float min_percent);
-+			   float min_percent, struct perf_env *env,
-+			   struct annotation_options *annotation_opts);
- #else
- static inline
- int perf_evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
-@@ -525,7 +526,9 @@ static inline void res_sample_init(void) {}
- 
- int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
- 			   struct evsel *evsel __maybe_unused,
--			   float min_percent __maybe_unused)
-+			   float min_percent __maybe_unused,
-+			   struct perf_env *env __maybe_unused,
-+			   struct annotation_options *annotation_opts)
- {
- 	return 0;
- }
--- 
-2.17.1
+  7e34f4e4aad3 ("drm/i915/gen8+: Add RC6 CTX corruption WA")
 
+from Linus' tree and commit:
+
+  3e7abf814193 ("drm/i915: Extract GT render power state management")
+
+from the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/gt/intel_gt_pm.c
+index fac75afed35b,060a27d9af34..000000000000
+--- a/drivers/gpu/drm/i915/gt/intel_gt_pm.c
++++ b/drivers/gpu/drm/i915/gt/intel_gt_pm.c
+@@@ -38,20 -61,10 +61,13 @@@ static int __gt_unpark(struct intel_wak
+  	gt->awake =3D intel_display_power_get(i915, POWER_DOMAIN_GT_IRQ);
+  	GEM_BUG_ON(!gt->awake);
+ =20
+ +	if (NEEDS_RC6_CTX_CORRUPTION_WA(i915))
+ +		intel_uncore_forcewake_get(&i915->uncore, FORCEWAKE_ALL);
+ +
+- 	intel_enable_gt_powersave(i915);
+-=20
+- 	i915_update_gfx_val(i915);
+- 	if (INTEL_GEN(i915) >=3D 6)
+- 		gen6_rps_busy(i915);
+-=20
++ 	intel_rps_unpark(&gt->rps);
+  	i915_pmu_gt_unparked(i915);
+ =20
+- 	intel_gt_queue_hangcheck(gt);
+-=20
+- 	pm_notify(i915, INTEL_GT_UNPARK);
++ 	intel_gt_unpark_requests(gt);
+ =20
+  	return 0;
+  }
+@@@ -64,17 -77,12 +80,17 @@@ static int __gt_park(struct intel_waker
+ =20
+  	GEM_TRACE("\n");
+ =20
+- 	pm_notify(i915, INTEL_GT_PARK);
++ 	intel_gt_park_requests(gt);
+ =20
++ 	i915_vma_parked(gt);
+  	i915_pmu_gt_parked(i915);
+- 	if (INTEL_GEN(i915) >=3D 6)
+- 		gen6_rps_idle(i915);
++ 	intel_rps_park(&gt->rps);
+ =20
+ +	if (NEEDS_RC6_CTX_CORRUPTION_WA(i915)) {
+ +		i915_rc6_ctx_wa_check(i915);
+ +		intel_uncore_forcewake_put(&i915->uncore, FORCEWAKE_ALL);
+ +	}
+ +
+  	/* Everything switched off, flush any residual interrupt just in case */
+  	intel_synchronize_irq(i915);
+ =20
+
+--Sig_/fhU9Km009fVWjlMp34IeRum
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LU2kACgkQAVBC80lX
+0Gy6twf+PunW6hUvgwu55PeWS0uopLjp0iX14SVwP3Ia/i5RVgeXyeB2HGzFGVyp
+jTFePWNcH26MsNm7RLWCtbisuqqYaiugEVAAX1chrv3KonvbaUlbUnrDnDSe0ZOb
+qfL/s4XzpV5db042rQXwsQFHLIANKLoxC6ybmZ09n0B6JwfmTj0Xim5NX5rsCKAn
+AwtpBc/p2mX4daBkmKLh/+qp8cUsTgSPBVJHSw+ee0AnEt/so0S4T2LHrzDq3qFS
+dGR4weleYo5ddnrap6EHpPddxZAaUbm1ILhrgE5LKm4hUgXEZ5LU1Jxxb4pRUePm
+IVCAPN00QAa4ftOzDmJ09bLer/iErg==
+=hNS8
+-----END PGP SIGNATURE-----
+
+--Sig_/fhU9Km009fVWjlMp34IeRum--
