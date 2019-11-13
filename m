@@ -2,62 +2,93 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F3AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABD5C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909FC222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573641920;
-	bh=omdYK6XtMhbv1v/RiOXnCMGLXx1Yi9frz/as92P7Dsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kXvzvdKgxtI3r/Zgxs+XQaiRSyNEJO9cjfXz56s6WFmOw1XLJI23R9Z8MxyE75Oj5
-	 LxjFH1+fupBdDV/ChfbOREU+/V+BqYM5y3zfInY6+ti3ZLVVlbv4PlFT0kGXJCppxS
-	 F7fybSF9iptf7OlYi/RXfyGEiBQpGU+izO+76JCs=
+	by mail.kernel.org (Postfix) with ESMTP id 260D221D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfKMKpT (ORCPT
+        id S1727697AbfKMKp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:45:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbfKMKpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:45:19 -0500
-Received: from localhost (unknown [61.58.47.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C51C4222D0;
-        Wed, 13 Nov 2019 10:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573641917;
-        bh=omdYK6XtMhbv1v/RiOXnCMGLXx1Yi9frz/as92P7Dsc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sT0SxUJqSCwc3KIYye9HuP2ReIeLdY1LEuKYuVRVzn2Ca/25yks9bwuTH/Y1Y5VPg
-         JUV9DZpJsKlf5b5WYy1hRg3FCN/81xcEAgJrr3ydZukW8auJKzruoKPjGX9b2ffcdw
-         ZwsdnAqYZqyhp198Fn48tpmgiMLRaib2GJ6oTWUQ=
-Date:   Wed, 13 Nov 2019 11:45:15 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Javier F. Arias" <jarias.linux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] staging: rtl8723bs: Rename variable
-Message-ID: <20191113104515.GC2068945@kroah.com>
-References: <61ec6328ccb22696ccc769ce9fbbe26fd00cd04a.1573605920.git.jarias.linux@gmail.com>
- <1610b265f1c6ee0148002642836283fb3757a36f.1573605920.git.jarias.linux@gmail.com>
+        Wed, 13 Nov 2019 05:45:58 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2093 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726138AbfKMKp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 05:45:58 -0500
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id E888C4C444F589C77A84;
+        Wed, 13 Nov 2019 10:45:56 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 13 Nov 2019 10:45:56 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 13 Nov
+ 2019 10:45:55 +0000
+Subject: Re: [QUESTION]perf stat: comment of miss ratio
+To:     Andi Kleen <ak@linux.intel.com>,
+        "liuqi (BA)" <liuqi115@hisilicon.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>,
+        huangdaode <huangdaode@hisilicon.com>,
+        linyunsheng <linyunsheng@huawei.com>
+References: <F57F094935A66448B135517D3F6EA397F35063@DGGEMA504-MBS.china.huawei.com>
+ <20191109024754.GA573472@tassilo.jf.intel.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <71f30f49-d8b4-abff-9f75-674dcbb7fad0@huawei.com>
+Date:   Wed, 13 Nov 2019 10:45:54 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1610b265f1c6ee0148002642836283fb3757a36f.1573605920.git.jarias.linux@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191109024754.GA573472@tassilo.jf.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 08:38:47PM -0500, Javier F. Arias wrote:
-> This patch renames a variable name previously defined in uppercase.
+On 09/11/2019 02:47, Andi Kleen wrote:
+>>     Relevant code is checked to make sure that the ratio is calculated by
+>>
+>>     L1-dcache-load-misses/L1-dcache-loads, data "7.58%=30249/399189*100%" also
+>>
+>>     proves this conclusion.
+>>
+>>     So, I'm not sure why we use "of all L1-dcache hits" here to describe miss
+>>     ratio,
+> 
+> Yes you're right it should be "of all L1-dcache accesses"
+> 
+> Please send a patch to fix the string and also check if this isn't wrong with some other
+> ratio too.
+> 
 
-That says what you did, but not _why_ you want to do it.
+"    399,189      L1-dcache-loads           #  246.396 M/sec
+      30,249      L1-dcache-load-misses     #    7.58% of all L1-dcache 
+hits    (18.04%)"
 
+
+If accesses and loads are equivalent, could we use consistent terminology?
+
+Thanks,
+John
