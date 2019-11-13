@@ -2,93 +2,194 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F9AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA97C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB79222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5398F2196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:30:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XKiI/Jub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfKMJaO (ORCPT
+        id S1727443AbfKMJaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:30:14 -0500
-Received: from relay.sw.ru ([185.231.240.75]:39206 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbfKMJaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:30:13 -0500
-Received: from finist_cl7.qa.sw.ru ([10.94.4.83] helo=finist-ce7.sw.ru)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <khorenko@virtuozzo.com>)
-        id 1iUoyF-00062s-7g; Wed, 13 Nov 2019 12:29:51 +0300
-From:   Konstantin Khorenko <khorenko@virtuozzo.com>
-To:     Jessica Yu <jeyu@kernel.org>, Prarit Bhargava <prarit@redhat.com>,
-        Barret Rhoden <brho@google.com>
-Cc:     Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-kernel@vger.kernel.org, David Arcari <darcari@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 1/1] kernel/module.c: wakeup processes in module_wq on module unload
-Date:   Wed, 13 Nov 2019 12:29:50 +0300
-Message-Id: <20191113092950.15556-2-khorenko@virtuozzo.com>
-X-Mailer: git-send-email 2.15.1
-In-Reply-To: <20191113092950.15556-1-khorenko@virtuozzo.com>
-References: <20191113092950.15556-1-khorenko@virtuozzo.com>
+        Wed, 13 Nov 2019 04:30:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23970 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726598AbfKMJay (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 04:30:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573637453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KfiIJYnhwIPb8ies+GY26eVHRvipn+z/HevJMP92/8A=;
+        b=XKiI/JubTH57aGQE9bXdRegVHcbKTV3OgcfykwYnPHoF6zIWlqntw/16GUEEtjzCLh+2wj
+        5vFed1NHzrileFTAiqXsy/V/foxN/gCETx7qBbJ1LVC23pF2iVCXA7LWJ4BcaGW+5JutYD
+        g84/lnJI/EbkbFSo7bj+1HWMSgvuTJA=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-154-nj06QX41N1SouMLNaKG29A-1; Wed, 13 Nov 2019 04:30:52 -0500
+Received: by mail-qt1-f198.google.com with SMTP id x21so938978qtp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 01:30:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hz47sGg839T2K5KCo2tSAJMtBP36J6bni/N4ATh4qyY=;
+        b=DfzhbfIb9Z0oBV/2fi5uEQ9MxyPniYS0trgUAfhbYjgoyrERL/1NT2on9s4xAfjPZ/
+         NruE35EsErg1OXR/pFKvD+JfU0/ZuOO/I68N9EpeYt6fTczW97spVB28VP4qdcMIQsUf
+         8m8g2T/8q5WPjnBHvwRgYyxctg9eBDXw7/+zT5zgFkRR3KamDPqz6sHalNMUZQtOA+9D
+         HbBWUSNBoh1zFfSIjp1nJAuGxlV42fi9aZMBhFqO3K8P66mrE6K7ACPpXgtBumLrkmTo
+         0CJSioOUNqUJnNZuc+7Uv246KAgp476/w/H3nGkXJcdzrn1xu7JbW/XcR91VtfYCZQAZ
+         jrLQ==
+X-Gm-Message-State: APjAAAVx7s6TdBSwutwyLzoLt6MkDTbpHl17WGQdNpAf7hT3mpPTS7q/
+        VT/BvPhgbsYJXdb1rC6HzpkivOIjTfnSsMKuiVSeAd4DTVQqkwmz2zW1AdQHzOsr+n/lrV1rjJQ
+        zYVT5j4XeMohXZSY602P2+XaHLpfWKfwD+q8evLX6
+X-Received: by 2002:ac8:1c03:: with SMTP id a3mr1631534qtk.31.1573637451861;
+        Wed, 13 Nov 2019 01:30:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyQpDT1ZafGlHqigVXzWNpvKLF+xEID7Y+nNygKPNFImm3esWvrN1WNXzuqvEPRocHYM7fdnYrsZIt18L3KZ6U=
+X-Received: by 2002:ac8:1c03:: with SMTP id a3mr1631512qtk.31.1573637451614;
+ Wed, 13 Nov 2019 01:30:51 -0800 (PST)
+MIME-Version: 1.0
+References: <e1e05bd3-19f5-0dfe-66ad-70717c1c29c6@codeaurora.org>
+In-Reply-To: <e1e05bd3-19f5-0dfe-66ad-70717c1c29c6@codeaurora.org>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Wed, 13 Nov 2019 10:30:39 +0100
+Message-ID: <CAO-hwJLdz1sA4tNsLLgZKGA7Ko6dqt9VF5T2nh5uczHxU532HA@mail.gmail.com>
+Subject: Re: Query regarding hid-multitouch.c driver in 4.14/4.19
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org, prsood@codeaurora.org,
+        gkohli@codeaurora.org
+X-MC-Unique: nj06QX41N1SouMLNaKG29A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the race between load and unload a kernel module.
+Hi Neeraj,
 
-sys_delete_module()
- try_stop_module()
-  mod->state = _GOING
-					add_unformed_module()
-					 old = find_module_all()
-					 (old->state == _GOING =>
-					  wait_event_interruptible())
+On Wed, Nov 13, 2019 at 4:11 AM Neeraj Upadhyay <neeraju@codeaurora.org> wr=
+ote:
+>
+> Hi,
+>
+> I have one query regarding hid-multitouch.c driver and need your guidance=
+ on
+> how hid-multitouchc can restore/support the original behaviour, where, fo=
+r
+> devices, for which application is not
+> HID_DG_TOUCHSCREEN/HID_DG_TOUCHPAD, and has
+> HID_DG_CONTACTID usage in its report, can still use generic input mapping=
+s.
+>
+> We are using kernel versions 4.14 , 4.19 respectively in 2 different
+> projects:
+>
+> 4.14:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/dri=
+vers/hid/hid-multitouch.c?h=3Dv4.14.153
+> 4.19:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/dri=
+vers/hid/hid-multitouch.c?h=3Dv4.19.83
+>
+> I checked the application for our hid device, it's HID_DG_PEN, device
+> also has a HID_DG_CONTACTID usage defined in
+>
+> its report.
+>
+> In 4.19, is_mt_collection is set to 'true'. All multitouch code paths or
+> input mapping is configured
+>
+> mt_allocate_report_data()
+>          ...
+>          for (n =3D 0; n < field->report_count; n++) {
+>                          if (field->usage[n].hid =3D=3D HID_DG_CONTACTID)
+>                                  rdata->is_mt_collection =3D true;   //
+> is_mt_collection is set to 'true'
+>                  }
+>          }
+>
+> mt_input_mapping()
+>          ...
+>          if (rdata->is_mt_collection)
+>              return mt_touch_input_mapping(...)  //
+> mt_touch_input_mapping() is called
+>
+> mt_event()
+>          if (rdata && rdata->is_mt_collection)
+>              return mt_touch_event();  // mt_touch_event() is called
+>
+> However, in 4.14, the behaviour was different, mt input mapping was done
+> only
+> for HID_DG_TOUCHSCREEN/HID_DG_TOUCHPAD , and because our hid device is
+> HID_DG_PEN, generic mappings were applied for it; with these settings,
+> device
+> responds to events.
+>
+> static int mt_input_mapping()
+>          if (field->application =3D=3D HID_DG_TOUCHSCREEN ||
+>              field->application =3D=3D HID_DG_TOUCHPAD)
+>              return mt_touch_input_mapping();  // This is not called.
+>
+>
+> mt_touch_input_mapping()
+>          case HID_DG_CONTACTID:
+>                          mt_store_field(usage, td, hi);
+>                          td->touches_by_report++;
+>                          td->mt_report_id =3D field->report->id; //
+> mt_report_id is not set.
+>                          return 1;
+>
+>
+> Looks like this behaviour changed, with below commits:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/d=
+rivers/hid/hid-multitouch.c?h=3Dv4.19.83&id=3D8dfe14b3b47ff832cb638731f9fc6=
+96a3a84f804
+> 8dfe14b3b47f    HID: multitouch: ditch mt_report_id
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/d=
+rivers/hid/hid-multitouch.c?h=3Dv4.19.83&id=3Dba6b055e0f3b4ff4942e4ab273260=
+affcfad9bff
+> ba6b055e0f3b     HID: input: enable Totem on the Dell Canvas 27
+>
+> Can you please suggest on how we can support/preserve the original
+> behaviour?
 
-					 During pre-condition
-					 finished_loading() rets 0
-					 schedule()
-					 (never gets waken up later)
- free_module()
-  mod->state = _UNFORMED
-   list_del_rcu(&mod->list)
-   (dels mod from "modules" list)
+Hmm, I would initially say that a firmware that exports Contact ID for
+a Pen is definitely wrong. The Contact ID usage has been introduced in
+https://www.usb.org/sites/default/files/hutrr34.pdf and is
+specifically for multi-touch, not multi pen.
 
-return
+Anyway, couple of questions:
+- does the device supports multi-pen?
+- can you share the report descriptor and a few events when triggering
+this particular report (ideally with hid-recorder from
+https://gitlab.freedesktop.org/libevdev/hid-tools/
 
-The race above leads to modprobe hanging forever on loading
-a module.
+Cheers,
+Benjamin
 
-Error paths on loading module call wake_up_all(&module_wq) after
-freeing module, so let's do the same on straight module unload.
-
-Fixes: 6e6de3dee51a ("kernel/module.c: Only return -EEXIST
-for modules that have finished loading")
-
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
----
- kernel/module.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/module.c b/kernel/module.c
-index ff2d7359a418..cb09a5f37a5f 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1033,6 +1033,8 @@ SYSCALL_DEFINE2(delete_module, const char __user *, name_user,
- 	strlcpy(last_unloaded_module, mod->name, sizeof(last_unloaded_module));
- 
- 	free_module(mod);
-+	/* someone could wait for the module in add_unformed_module() */
-+	wake_up_all(&module_wq);
- 	return 0;
- out:
- 	mutex_unlock(&module_mutex);
--- 
-2.15.1
+>
+>
+> Thanks
+> Neeraj
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member=
+ of the Code Aurora Forum, hosted by The Linux Foundation
+>
 
