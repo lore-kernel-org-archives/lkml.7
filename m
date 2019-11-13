@@ -7,54 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CF0C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E16C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E932053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C4522467
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611648;
-	bh=0gEzsh+7Ngn7kbU3KfbwyUiSURyxIcBfrRMxOaEwNbA=;
+	s=default; t=1573611650;
+	bh=4AqIKX5t8RvYRZ+5XLEmOm7MDx4bs/HyQdJ9zb2hRN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DxV59tD5ydb/clCBTCjR/6MxQOOpWzU617iOSuxT9CtRqp6WIGrQT7T1F6x+bfoX6
-	 7jChPFy3ncjsdsn+dDA0uAEi5fz+/h6FExzw/cr8SOfD3at5Vffng9pj+N1+OsjODB
-	 2BUUJZ3I/Aeebe7+RN0V3ZEgyFWDs3AsGiFP79Z4=
+	b=yQg2m7kEoC0Acdkx2GePCuHhPSELRpF95D2RqymRGq5LEGSZC8h8o6g2fO7erRUK5
+	 LiQMi4ajD611Yg+UvGbHrBklEaXZLloXKT6ILsHylTJoN/cJefVHns/U7DtfXahWfy
+	 ZhyWjRATGKIKHcQXIleHrRXcVH/HvVcdZgNUgzuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfKMByQ (ORCPT
+        id S1728807AbfKMByP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:54:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44732 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:54:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728795AbfKMByN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:54:13 -0500
+        id S1728775AbfKMByL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:54:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5047E2245D;
-        Wed, 13 Nov 2019 01:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5C24222D4;
+        Wed, 13 Nov 2019 01:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610053;
-        bh=0gEzsh+7Ngn7kbU3KfbwyUiSURyxIcBfrRMxOaEwNbA=;
+        s=default; t=1573610050;
+        bh=4AqIKX5t8RvYRZ+5XLEmOm7MDx4bs/HyQdJ9zb2hRN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cxo+MAPDgl3abIHpX6dvdTBqo0ZAyWhgBFsr/J7SzbL1vo8iRTe5x4g3q2sTKVXM1
-         v5qg3wsu74Sm1Y2ck3WPo83hfw/Gjy77YeUvFg12iNItZlu7oULZm4kQh0vG0RiFr3
-         g2CshbdKwIxMgZtDlAX010vF6osT9+qYyVquJJ/o=
+        b=rL3Se1c9cTF/YCYGKsg55L0OjKMZAMQovEoeV5ysIBKwtPBStwuvUjaF7Belywtxn
+         Gy8sDhtdfO2ZOAa+pY2DYAFAZ3uB39wfdnOETCxyPJbV1XfAKcL9LV8rK4IulNtK7u
+         bBrgtmH3AADjIHOH6eTl0zWB89z0x4Ek3oVLtJzY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 139/209] mmc: renesas_sdhi_internal_dmac: set scatter/gather max segment size
-Date:   Tue, 12 Nov 2019 20:49:15 -0500
-Message-Id: <20191113015025.9685-139-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 137/209] mmc: renesas_sdhi_internal_dmac: Whitelist r8a774a1
+Date:   Tue, 12 Nov 2019 20:49:13 -0500
+Message-Id: <20191113015025.9685-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,54 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-[ Upstream commit 54541815b43f4e49c82628bf28bbb31d86d2f58a ]
+[ Upstream commit 2e1501a8bdd49eaa0e967c0ad00e9dcd68d0b30f ]
 
-Fix warning when running with CONFIG_DMA_API_DEBUG_SG=y by allocating a
-device_dma_parameters structure and filling in the max segment size. The
-size used is the result of a discussion with Renesas hardware engineers
-and unfortunately not found in the datasheet.
+We need r8a774a1 to be whitelisted for SDHI to work on the RZ/G2M,
+but we don't care about the revision of the SoC, so just whitelist
+the generic part number.
 
-  renesas_sdhi_internal_dmac ee140000.sd: DMA-API: mapping sg segment
-  longer than device claims to support [len=126976] [max=65536]
-
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-[wsa: simplified some logic after validating intended dma_parms life cycle
-      and added comment]
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/renesas_sdhi_internal_dmac.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/mmc/host/renesas_sdhi_internal_dmac.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-index f4aefa8954bfc..382172fb3da8f 100644
+index ca0b43973769c..f4aefa8954bfc 100644
 --- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
 +++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-@@ -310,12 +310,20 @@ static const struct soc_device_attribute gen3_soc_whitelist[] = {
- static int renesas_sdhi_internal_dmac_probe(struct platform_device *pdev)
- {
- 	const struct soc_device_attribute *soc = soc_device_match(gen3_soc_whitelist);
-+	struct device *dev = &pdev->dev;
- 
- 	if (!soc)
- 		return -ENODEV;
- 
- 	global_flags |= (unsigned long)soc->data;
- 
-+	dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms), GFP_KERNEL);
-+	if (!dev->dma_parms)
-+		return -ENOMEM;
-+
-+	/* value is max of SD_SECCNT. Confirmed by HW engineers */
-+	dma_set_max_seg_size(dev, 0xffffffff);
-+
- 	return renesas_sdhi_probe(pdev, &renesas_sdhi_internal_dmac_dma_ops);
- }
- 
+@@ -298,6 +298,7 @@ static const struct soc_device_attribute gen3_soc_whitelist[] = {
+ 	{ .soc_id = "r8a7796", .revision = "ES1.0",
+ 	  .data = (void *)BIT(SDHI_INTERNAL_DMAC_ONE_RX_ONLY) },
+ 	/* generic ones */
++	{ .soc_id = "r8a774a1" },
+ 	{ .soc_id = "r8a7795" },
+ 	{ .soc_id = "r8a7796" },
+ 	{ .soc_id = "r8a77965" },
 -- 
 2.20.1
 
