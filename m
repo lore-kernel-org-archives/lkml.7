@@ -2,54 +2,51 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4500C17449
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DF8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C20C22474
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415802053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611614;
-	bh=iORbwAUQT32YOs7L6orzyi2v9UCPskwpAZJBMgtZrms=;
+	s=default; t=1573611617;
+	bh=RCjXUI6866u57JwmTNcRqya4SFDlPhHwx59HYYacEfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Op3sfc6eu/Xd9HnNHnRoq7i4iCRVMNtwBZ7eRZx24msorGaWG/TKIlgjXNSrcvUcs
-	 DU/YLAMLf1X3qQ3tDnNslsbBxP8hcWQB4wDfqgH91X4M1/NeF36k5akInoMwm3P1CL
-	 bV3INCtQAhFlIFHatN8M/G9MqsK8LtyeeTMLf1Vk=
+	b=gI2kSk8Xn2BjGGuV25Bf34XTWgWJ01zn4b+dlgqkxE2f/T9UvK1FvhSEhnf72zh/h
+	 HNfNOgbAS3WE2Mjiyzpj69fwVrc0IBwkjWa72oZBVdB9gtZtNowBGmmDMR2jbQp45K
+	 M8oitCn5DV7HjEujsjP4nqJPa5EF/lKZiRAvz880=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbfKMByh (ORCPT
+        id S1729443AbfKMCUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:54:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45352 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:20:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbfKMBy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:54:28 -0500
+        id S1728917AbfKMByg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:54:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82D472245A;
-        Wed, 13 Nov 2019 01:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD5D42245D;
+        Wed, 13 Nov 2019 01:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610068;
-        bh=iORbwAUQT32YOs7L6orzyi2v9UCPskwpAZJBMgtZrms=;
+        s=default; t=1573610075;
+        bh=RCjXUI6866u57JwmTNcRqya4SFDlPhHwx59HYYacEfk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a0GAc63VHUX7/FwWQ8RrytyNstqOvI6j7VhRaSw2PFSu5kkj6ZZUIVOsz2OO5G05H
-         NGrNVkCnI6ysDoe/hnNomFQwdbS8q9496TkWeHuYyyn8dwbaCCprFT2kkYW4TpJKVf
-         sfj2AMgAsT3nCMtke+hWo/0ZqNve3kTLKOpiS7pI=
+        b=XTsqZs1jpKScPlveYOPeTltzaPtw6SWg0U/mF0c6CcpjEbEYkevF0lEAgmdmzXVmN
+         MyXSPmU3nTqlrNIs4L8xe566g3bn2WICrpn5UopN78+e3j/THsYn/n4e0HmoSdmLmz
+         3dQg/4NxXCDBls95925nr4Z43ZDkNYunGZpb/pyg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 147/209] platform/x86: mlx-platform: Properly use mlxplat_mlxcpld_msn201x_items
-Date:   Tue, 12 Nov 2019 20:49:23 -0500
-Message-Id: <20191113015025.9685-147-sashal@kernel.org>
+Cc:     Yogesh Gaur <yogeshnarayan.gaur@nxp.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 152/209] mtd: devices: m25p80: Make sure WRITE_EN is issued before each write
+Date:   Tue, 12 Nov 2019 20:49:28 -0500
+Message-Id: <20191113015025.9685-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -62,48 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 
-[ Upstream commit 8289c4b6f2e53750de78bd38cecb6bce4d7a988c ]
+[ Upstream commit 3baa8ec88c2feb902328e59a4dcf0f0aaab7d2ff ]
 
-Clang warns that mlxplat_mlxcpld_msn201x_items is not going to be
-emitted in the final assembly because it's only used in ARRAY_SIZE right
-now, which is a compile time evaluation since the array's size is known.
+Some SPI controllers can't write nor->page_size bytes in a single step
+because their TX FIFO is too small, but when that happens we should
+make sure a WRITE_EN command before each write access and READ_SR command
+after each write access is issued.
 
-drivers/platform/x86/mlx-platform.c:555:32: warning: variable
-'mlxplat_mlxcpld_msn201x_items' is not needed and will not be emitted
-[-Wunneeded-internal-declaration]
-static struct mlxreg_core_item mlxplat_mlxcpld_msn201x_items[] = {
-                               ^
-1 warning generated.
+The core is already taking care of that, so all we have to do here is
+return the actual number of bytes that were written during the
+spi_mem_exec_op() operation.
 
-It appears this was a copy and paste mistake from when this item was
-first added. Use the definition in mlxplat_mlxcpld_msn201x_data so that
-Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/141
-Fixes: a49a41482f61 ("platform/x86: mlx-platform: Add support for new msn201x system type")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/mlx-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/devices/m25p80.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 742a0c2179256..d17db140cb1fc 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -575,7 +575,7 @@ static struct mlxreg_core_item mlxplat_mlxcpld_msn201x_items[] = {
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index 270d3c9580c51..c4a1d04b8c800 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -90,7 +90,6 @@ static ssize_t m25p80_write(struct spi_nor *nor, loff_t to, size_t len,
+ 				   SPI_MEM_OP_ADDR(nor->addr_width, to, 1),
+ 				   SPI_MEM_OP_NO_DUMMY,
+ 				   SPI_MEM_OP_DATA_OUT(len, buf, 1));
+-	size_t remaining = len;
+ 	int ret;
  
- static
- struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_msn201x_data = {
--	.items = mlxplat_mlxcpld_msn21xx_items,
-+	.items = mlxplat_mlxcpld_msn201x_items,
- 	.counter = ARRAY_SIZE(mlxplat_mlxcpld_msn201x_items),
- 	.cell = MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET,
- 	.mask = MLXPLAT_CPLD_AGGR_MASK_DEF,
+ 	/* get transfer protocols. */
+@@ -101,22 +100,16 @@ static ssize_t m25p80_write(struct spi_nor *nor, loff_t to, size_t len,
+ 	if (nor->program_opcode == SPINOR_OP_AAI_WP && nor->sst_write_second)
+ 		op.addr.nbytes = 0;
+ 
+-	while (remaining) {
+-		op.data.nbytes = remaining < UINT_MAX ? remaining : UINT_MAX;
+-		ret = spi_mem_adjust_op_size(flash->spimem, &op);
+-		if (ret)
+-			return ret;
+-
+-		ret = spi_mem_exec_op(flash->spimem, &op);
+-		if (ret)
+-			return ret;
++	ret = spi_mem_adjust_op_size(flash->spimem, &op);
++	if (ret)
++		return ret;
++	op.data.nbytes = len < op.data.nbytes ? len : op.data.nbytes;
+ 
+-		op.addr.val += op.data.nbytes;
+-		remaining -= op.data.nbytes;
+-		op.data.buf.out += op.data.nbytes;
+-	}
++	ret = spi_mem_exec_op(flash->spimem, &op);
++	if (ret)
++		return ret;
+ 
+-	return len;
++	return op.data.nbytes;
+ }
+ 
+ /*
 -- 
 2.20.1
 
