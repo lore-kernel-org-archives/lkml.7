@@ -2,115 +2,133 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA2DC4741B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A86C47421
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745542247D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB9623357
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvo2vdSi"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Lsyan+DY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfKMPqv (ORCPT
+        id S1728187AbfKMPxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:46:51 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40544 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727745AbfKMPqv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:46:51 -0500
-Received: by mail-pf1-f194.google.com with SMTP id r4so1918835pfl.7;
-        Wed, 13 Nov 2019 07:46:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TBVtymOI9WwZsWEvU07x8pNEkzVPUQwttMv3w1HkiJ8=;
-        b=mvo2vdSi3TpgqVnEPaWhYlSWv2KwG7IyopXGZJg3fMsbp3v6j1pIvTAVW8UfVQkH9K
-         XdEFqj8ztEc9jrMWhZI0oyM3fLG+vzPaurnl13NBHlkvwMQQDhKJ6tjoxWfmuVy3EnkF
-         WoqlsNflDPGF0RgSgSo+t5DT/6kTQvRdi+rzdAh/wqLE6FZw2HyT08WjnZD03GNGakdY
-         rCCVMbfDRWP3TaNAPYx8WgMgXBxyrbVUACB9X7fOfbiVcpTu4DTMkV9WBeSyi6DAx7dY
-         YzujGpVbXJ+ZM7bDbrBcRP2H5GvkH/9WTqLtPyQuonXAb2cs/0VgfHG1ZROKJeg9Ea2Y
-         imUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TBVtymOI9WwZsWEvU07x8pNEkzVPUQwttMv3w1HkiJ8=;
-        b=cJWfVSNCMkEefci9wmM/TGe3+gPIhXQ7hgUQwP5CfJ9w4nZEW5LCjxbkjEotZRlU0J
-         8nlzuvQ6wr2YdopsTQ853Fo1i91DISKroVjLfk5SucRP5jsiyr/iLZPwvFHRWpRFmWT+
-         418LV1N6Ri9F4tWTPFbeDCSu5ntmM+5fd3N02DavPKKPFNDYdEm14O9UPIQ0dtpCmI1n
-         g9X3sxbBrcrZQgk7yb32gfDPqZbC35IytqCOMCPTAkVnDBFn40GaSdn1JJXZ5nEjkWcp
-         AzPaG2h1fdlB9ZIBV2MkUpHsJn1rJEevIlWwU7tEu723lsF2Lpf5ZVPKWB/NkK52g/5p
-         I7rg==
-X-Gm-Message-State: APjAAAVUZFfScK6acZq7D1LT2q1beUn2i3ITnbSLdOVSdzU9h91WofcY
-        dnbDo70EeRWpfsYqBRhP3lQ=
-X-Google-Smtp-Source: APXvYqw+4YtAO4BurwCMDsiaBzTWfhVwSTwA+/T/CjKbuQnohvT7t9DtGQo9ioj0WANfV+2kt5VWFA==
-X-Received: by 2002:a63:e84d:: with SMTP id a13mr4422751pgk.226.1573660010409;
-        Wed, 13 Nov 2019 07:46:50 -0800 (PST)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id 16sm3953091pfc.21.2019.11.13.07.46.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 07:46:49 -0800 (PST)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     kvalo@codeaurora.org, davem@davemloft.net
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2] ath10k: Handle "invalid" BDFs for msm8998 devices
-Date:   Wed, 13 Nov 2019 07:46:46 -0800
-Message-Id: <20191113154646.43048-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 Nov 2019 10:53:08 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:59932 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726074AbfKMPxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:53:04 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 20344412D2;
+        Wed, 13 Nov 2019 15:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:x-mailer:message-id:date:date:subject
+        :subject:from:from:received:received:received; s=mta-01; t=
+        1573660380; x=1575474781; bh=u6VsNH8spieqcZMUkwhitlLPwcJWZA6GXjz
+        wh0sgyTs=; b=Lsyan+DYpW6IleLOjFmf3XpEK9zYBKXdYEnzmDUPEQS42b9Tiby
+        hkzVq2+4LuGLOW1Wh3/0ge3qIJZj2e20aqG4D2iugnJ7fbfcAmdlUzKXzukxNb3x
+        kFmSghKapTW9B5iuXXBpLI9qeSpr6Ktkp/JHTh3TJzOBpr/uEcCauUOk=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5Lco3oJBrAxV; Wed, 13 Nov 2019 18:53:00 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 4CECE42F12;
+        Wed, 13 Nov 2019 18:52:59 +0300 (MSK)
+Received: from localhost.dev.yadro.com (172.17.15.69) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Wed, 13 Nov 2019 18:52:53 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <openbmc@lists.ozlabs.org>
+Subject: [PATCH 2/2] mmc: sdhci-of-aspeed: add inversion signal presence
+Date:   Wed, 13 Nov 2019 18:52:37 +0300
+Message-ID: <20191113155237.30646-3-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113155237.30646-1-i.mikhaylov@yadro.com>
+References: <20191113155237.30646-1-i.mikhaylov@yadro.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.17.15.69]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the BDF download QMI message has the end field set to 1, it signals
-the end of the transfer, and triggers the firmware to do a CRC check.  The
-BDFs for msm8998 devices fail this check, yet the firmware is happy to
-still use the BDF.  It appears that this error is not caught by the
-downstream drive by concidence, therefore there are production devices
-in the field where this issue needs to be handled otherwise we cannot
-support wifi on them.  So, attempt to detect this scenario as best we can
-and treat it as non-fatal.
+Change the default .get_cd callback. Add inverted signal card detection
+check.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 
-v2:
--tweak conditional nesting
--add comment in code to clarify
-
- drivers/net/wireless/ath/ath10k/qmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-index 637f83ef65f8..6df2d3ac5474 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -279,7 +279,15 @@ static int ath10k_qmi_bdf_dnld_send_sync(struct ath10k_qmi *qmi)
- 		if (ret < 0)
- 			goto out;
+diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+index 8962f6664381..8eded8a6ed8d 100644
+--- a/drivers/mmc/host/sdhci-of-aspeed.c
++++ b/drivers/mmc/host/sdhci-of-aspeed.c
+@@ -31,6 +31,7 @@ struct aspeed_sdc {
+ struct aspeed_sdhci {
+ 	struct aspeed_sdc *parent;
+ 	u32 width_mask;
++	u8 cd_inverted;
+ };
  
--		if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
-+		/* end = 1 triggers a CRC check on the BDF.  If this fails, we
-+		 * get a QMI_ERR_MALFORMED_MSG_V01 error, but the FW is still
-+		 * willing to use the BDF.  For some platforms, all the valid
-+		 * released BDFs fail this CRC check, so attempt to detect this
-+		 * scenario and treat it as non-fatal.
-+		 */
-+		if (resp.resp.result != QMI_RESULT_SUCCESS_V01 &&
-+		    !(req->end == 1 &&
-+		      resp.resp.result == QMI_ERR_MALFORMED_MSG_V01)) {
- 			ath10k_err(ar, "failed to download board data file: %d\n",
- 				   resp.resp.error);
- 			ret = -EINVAL;
+ static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+@@ -143,6 +144,21 @@ static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
+ 	return (delta / 0x100) - 1;
+ }
+ 
++static int aspeed_get_cd(struct mmc_host *mmc)
++{
++	struct aspeed_sdhci *aspeed_sdhci;
++	struct sdhci_pltfm_host *pltfm_priv;
++	struct sdhci_host *host = mmc_priv(mmc);
++
++	int presence = !!(sdhci_readl(host, SDHCI_PRESENT_STATE)
++			 & SDHCI_CARD_PRESENT);
++
++	pltfm_priv = sdhci_priv(host);
++	aspeed_sdhci = sdhci_pltfm_priv(pltfm_priv);
++
++	return presence ^ aspeed_sdhci->cd_inverted;
++}
++
+ static int aspeed_sdhci_probe(struct platform_device *pdev)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host;
+@@ -183,6 +199,13 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
+ 		goto err_pltfm_free;
+ 	}
+ 
++	dev->cd_inverted = 0;
++	host->mmc_host_ops.get_cd = aspeed_get_cd;
++	if (of_property_read_bool(pdev->dev.of_node, "cd-inverted")) {
++		dev->cd_inverted = 1;
++		dev_info(&pdev->dev, "aspeed: sdhci: presence signal inversion enabled\n");
++	}
++
+ 	ret = mmc_of_parse(host->mmc);
+ 	if (ret)
+ 		goto err_sdhci_add;
 -- 
-2.17.1
+2.20.1
 
