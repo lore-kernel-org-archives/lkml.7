@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3320CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E11C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E5521D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F62D21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611378;
-	bh=aR/t5YCcCHV0IFWZ+c2GSkzd6RjwinwwAH6PYhNmBXU=;
+	s=default; t=1573611381;
+	bh=gZnYs58YiVe5TChW7bml8wRKh6KmwgwD+XgFFTEa1qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZKw9rdY4+yEfF2CQ4Kprr6DWyXVcQ0StVcRDqsamYiHqdKtYmcAV1LenNmNlOcoo
-	 ZWyXFXbRDTr9EdzWVeucfTya2WAX0eFyxK4/E8v5URqn/cBvB3f5fkMb7BqkraKdzo
-	 +yis64nCyhHyPyM98gh0sYK6oiBH1X8um4MPtNgE=
+	b=P7v/6TVJRfBDBHL+3N5DrBCd/HSmJHvUK5CA25s4ihpyZxTn7N2oJISHcGeNy2xuA
+	 v7EpPKBMuotgzsBMPleMMQ79KPy78Uy7FGI150yQ/Tmv+9TVSAkbR2LW8ssLgAcr5L
+	 toKQCVaZCFR0z7BZYlvXq96SAPjakGwM5gdbPa1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730569AbfKMCQR (ORCPT
+        id S1729924AbfKMCQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:16:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49104 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:16:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbfKMB4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:38 -0500
+        id S1729539AbfKMB4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123E422476;
-        Wed, 13 Nov 2019 01:56:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F732245A;
+        Wed, 13 Nov 2019 01:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610197;
-        bh=aR/t5YCcCHV0IFWZ+c2GSkzd6RjwinwwAH6PYhNmBXU=;
+        s=default; t=1573610196;
+        bh=gZnYs58YiVe5TChW7bml8wRKh6KmwgwD+XgFFTEa1qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jjPF/Nj95MmyTNSlQGvvbO7xDGgew715Oy7a1jGPwYRlMqCqhSht76GiCTzAlYVpL
-         JANNTEqOWBjuVurJxCwfayns7XGpQRJxlAI2QQ5P1u5X6yXDBrpgW8NxrIo++mD7fE
-         zREU7fvGY+MRoj+w1LZmz1GIEVE1PNgA7ptOmixc=
+        b=Qbg5xJFc4p2cUe/WAHxmj3wKuL9VaT9b7wz59uUQzvqLlkQ8BYSbkx4o9VCM6kPgk
+         UvMYp6khjkkKaqnRV/xbFHxqoJF/RWXlXI16QjAp7aV0UC8dsULANMVRDPFsLFTm70
+         Y7S9NP6OFIvz23A1ckTDuNnimzMOXY/atizqmtWA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Christoffer Dall <cdall@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.14 011/115] kvm: arm/arm64: Fix stage2_flush_memslot for 4 level page table
-Date:   Tue, 12 Nov 2019 20:54:38 -0500
-Message-Id: <20191113015622.11592-11-sashal@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 010/115] iommu/io-pgtable-arm: Fix race handling in split_blk_unmap()
+Date:   Tue, 12 Nov 2019 20:54:37 -0500
+Message-Id: <20191113015622.11592-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -61,39 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit d2db7773ba864df6b4e19643dfc54838550d8049 ]
+[ Upstream commit 85c7a0f1ef624ef58173ef52ea77780257bdfe04 ]
 
-So far we have only supported 3 level page table with fixed IPA of
-40bits, where PUD is folded. With 4 level page tables, we need
-to check if the PUD entry is valid or not. Fix stage2_flush_memslot()
-to do this check, before walking down the table.
+In removing the pagetable-wide lock, we gained the possibility of the
+vanishingly unlikely case where we have a race between two concurrent
+unmappers splitting the same block entry. The logic to handle this is
+fairly straightforward - whoever loses the race frees their partial
+next-level table and instead dereferences the winner's newly-installed
+entry in order to fall back to a regular unmap, which intentionally
+echoes the pre-existing case of recursively splitting a 1GB block down
+to 4KB pages by installing a full table of 2MB blocks first.
 
-Acked-by: Christoffer Dall <cdall@kernel.org>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Unfortunately, the chump who implemented that logic failed to update the
+condition check for that fallback, meaning that if said race occurs at
+the last level (where the loser's unmap_idx is valid) then the unmap
+won't actually happen. Fix that to properly account for both the race
+and recursive cases.
+
+Fixes: 2c3d273eabe8 ("iommu/io-pgtable-arm: Support lockless operation")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+[will: re-jig control flow to avoid duplicate cmpxchg test]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/mmu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iommu/io-pgtable-arm.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 1f4cac53b9234..9f69202d8e49b 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -375,7 +375,8 @@ static void stage2_flush_memslot(struct kvm *kvm,
- 	pgd = kvm->arch.pgd + stage2_pgd_index(addr);
- 	do {
- 		next = stage2_pgd_addr_end(addr, end);
--		stage2_flush_puds(kvm, pgd, addr, next);
-+		if (!stage2_pgd_none(*pgd))
-+			stage2_flush_puds(kvm, pgd, addr, next);
- 	} while (pgd++, addr = next, addr != end);
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index e8018a308868e..17a9225283dd1 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -551,13 +551,12 @@ static int arm_lpae_split_blk_unmap(struct arm_lpae_io_pgtable *data,
+ 			return 0;
+ 
+ 		tablep = iopte_deref(pte, data);
++	} else if (unmap_idx >= 0) {
++		io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
++		return size;
+ 	}
+ 
+-	if (unmap_idx < 0)
+-		return __arm_lpae_unmap(data, iova, size, lvl, tablep);
+-
+-	io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
+-	return size;
++	return __arm_lpae_unmap(data, iova, size, lvl, tablep);
  }
  
+ static int __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
 -- 
 2.20.1
 
