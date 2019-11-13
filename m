@@ -2,98 +2,80 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32963C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6B1C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71580206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GpRaz3Wz"
+	by mail.kernel.org (Postfix) with ESMTP id ECC2C206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfKMRQw (ORCPT
+        id S1728417AbfKMRSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:16:52 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46796 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbfKMRQv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:16:51 -0500
-Received: by mail-lf1-f65.google.com with SMTP id o65so2567607lff.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:16:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tbmpc8I08dUNbz0TweIhlLBpMYWo1Ddtf0bugPdpg4o=;
-        b=GpRaz3WzKyv4b6el90Iz4gY68k6ZMkDSEh2Hm5M0XVO2GvGiQXYLuOeRblysRbV95O
-         /o9QxM7Dr9VjPZHJbmlPD+v+xOjqiSGlLuBd177bF9Y5icVTpiZRrTKok3ZZTQ/wDtBz
-         OD0/VdGCoCIgoImm/TAEY+RuYIVJBGoif7u3rV8vKwf2bmxMkH46wFW8r/B8lLgHUY/j
-         AYfLYXuLFlbVDpa/kxWt9gdsZixvnBRgFarHNgasLVY1VE/8+aqZM1tiw/DA61fKvNnp
-         rwq1i9Eyg15IRctXukzSqaoYhr16QJbzTuSfXkLs7LUDp3Zvi+TCTQ1gaTePQTg2eWA7
-         0sHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tbmpc8I08dUNbz0TweIhlLBpMYWo1Ddtf0bugPdpg4o=;
-        b=K7UVAyDEtJgvzUodH7IFOrAQ9DAZSlaUuF3XeLN0GdSdWimNaG8nEYhyCPsE08juhh
-         63B1QVMDReH6/TQRO/R7AQ5OVB5nEKEpdCSlR98eEL1ikf0uyayLdbyqAxTdEik3vzU6
-         JNwTQMu2CMIAcMtmGfxAMzZBELWWw8kOEepOl/s2vjFZVo0SpDDmsTg6I13lPqQ7E18A
-         bX8pKJcVizq8Pmd88OwwtwTM76nxm14CfF5n88wlz3xsT+pfkjMbi4bDVy1+NqPcJIy2
-         Za+Gu7cJGqkbaokcIv834t8YCtneVOMjcPWYGhlzGHLaW/Dv0WyjGweTAy/tfQRO1p37
-         ygmQ==
-X-Gm-Message-State: APjAAAXxMbw+tNA8GKztctsofr1ODf6hfRkvckiPVYxRfuB9lMW+dLHP
-        Rh+l6duEqTusrQedml+vgqQg5Y9QcH7kECa6ELrHzw==
-X-Google-Smtp-Source: APXvYqzIPzbgpPUyvUtrneet0HOhaTTyNY9TeCNaIXTIuQ/Kcp/SiKtz7hsji0MJix60noP5lG6p8beaOSZpn4+OlKA=
-X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr3446808lfp.5.1573665408550;
- Wed, 13 Nov 2019 09:16:48 -0800 (PST)
+        Wed, 13 Nov 2019 12:18:05 -0500
+Received: from mga02.intel.com ([134.134.136.20]:62542 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727343AbfKMRSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:18:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 09:18:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,301,1569308400"; 
+   d="scan'208";a="229813198"
+Received: from dmsnyder-mobl1.amr.corp.intel.com (HELO [10.252.193.15]) ([10.252.193.15])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Nov 2019 09:18:02 -0800
+Subject: Re: [alsa-devel] [PATCH v5 1/6] ASoC: amd:Create multiple I2S
+ platform device Endpoint
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Akshu.Agrawal@amd.com,
+        Sanju R Mehta <sanju.mehta@amd.com>,
+        Mark Brown <broonie@kernel.org>, djkurtz@google.com,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Alexander.Deucher@amd.com,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <1573629249-13272-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <1573629249-13272-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <2febc57c-5cca-b8bd-afdf-a4d77b48c3b0@linux.intel.com>
+Date:   Wed, 13 Nov 2019 10:11:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20191113094256.1108-1-peter.ujfalusi@ti.com> <20191113094256.1108-6-peter.ujfalusi@ti.com>
-In-Reply-To: <20191113094256.1108-6-peter.ujfalusi@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 13 Nov 2019 18:16:37 +0100
-Message-ID: <CACRpkdZ=xM2GYTDDLKoFwwdqp09-UDOyqogDW5pLvg4QaZXR6Q@mail.gmail.com>
-Subject: Re: [PATCH 5/9] spi: pl022: Use dma_request_chan() directly for
- channel request
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Mark Brown <broonie@kernel.org>, radu_nicolae.pirea@upb.ro,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andi Shyti <andi@etezian.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1573629249-13272-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 10:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-> dma_request_slave_channel_reason() is:
-> #define dma_request_slave_channel_reason(dev, name) \
->         dma_request_chan(dev, name)
->
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>   static void snd_acp3x_remove(struct pci_dev *pci)
+>   {
+> +	int i;
+>   	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+nit-pick: a lot of kernel folks like xmas-tree style, with counters and 
+return status declared last.
 
-Yours,
-Linus Walleij
+>   
+> -	platform_device_unregister(adata->pdev);
+> +	if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
+> +		for (i = 0 ; i <  ACP3x_DEVS ; i++)
+> +			platform_device_unregister(adata->pdev[i]);
+> +	}
+>   	iounmap(adata->acp3x_base);
+>   
+>   	pci_disable_msi(pci);
