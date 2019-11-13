@@ -2,267 +2,135 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A112C47419
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1054C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043B522516
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A400F222CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="mcNkhykI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dr/pD/nd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfKMPmg (ORCPT
+        id S1728302AbfKMQWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:42:36 -0500
-Received: from mail.efficios.com ([167.114.142.138]:42688 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfKMPmf (ORCPT
+        Wed, 13 Nov 2019 11:22:18 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:33037 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKMQWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:42:35 -0500
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 7E28F41B83A;
-        Wed, 13 Nov 2019 10:42:33 -0500 (EST)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id K58JuUnuzxZg; Wed, 13 Nov 2019 10:42:32 -0500 (EST)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id D95AD41B837;
-        Wed, 13 Nov 2019 10:42:32 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D95AD41B837
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1573659752;
-        bh=FhDyoaSamwOoit6AZp13rM1I9YEN7KFqbITeNrPBKRs=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=mcNkhykIJaAqzMqqqCvDGEFJkNDx/zwMqYny8VKFjabvRBFMvnSGfXoH6vWOwUDvQ
-         AmyhIpaPqtQrVlx4qS7L9QAhq6J5NgcwaFmexKu1S7l5cp4ld30l75CtcnJgou/+FD
-         zkakI7xPXFkdTUsaOcCl1JOEKxZrbKPyF5jX2hdj4nLlxsQ+g0JCAjP7UZIA8qD2UT
-         YlIq15GLLWNWj1loxjNPdDyatTIXVE1gMWTbubRXewVexItlNdSHdIGOwkBvN327h2
-         cShmok9/InUyyM1YA3G8pqCNDE5fGq221YNlW4yOJYRplgx4pFR7K2tgOZV+gffOwJ
-         ItRdZfdUwKxAg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id ELZuxbM9r3uJ; Wed, 13 Nov 2019 10:42:32 -0500 (EST)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id BAC4041B81E;
-        Wed, 13 Nov 2019 10:42:32 -0500 (EST)
-Date:   Wed, 13 Nov 2019 10:42:32 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86 <x86@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>,
-        rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        bristot <bristot@redhat.com>, jbaron@akamai.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        paulmck <paulmck@kernel.org>
-Message-ID: <394483573.90.1573659752560.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20191111132458.162172862@infradead.org>
-References: <20191111131252.921588318@infradead.org> <20191111132458.162172862@infradead.org>
-Subject: Re: [PATCH -v5 12/17] x86/kprobes: Fix ordering
+        Wed, 13 Nov 2019 11:22:18 -0500
+Received: by mail-yb1-f195.google.com with SMTP id i15so1183151ybq.0;
+        Wed, 13 Nov 2019 08:22:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wrNEKbAI8SdPL4/nZNWweKCBGdbsKNPBi2tTjgkTk4g=;
+        b=dr/pD/ndVpnhQ/dq8vwt31HTFhiLecVsaulHcl8WYtV7IlU6Vk6Q2zoGJoZPO0Q9lg
+         0kqoeQhbXKNkDNlyDCfM5Z3Q9cdUg3sBTb/ZvKqQ16U/WLseWLg6mWtPTr1ar4clvrqE
+         VchRnBOu+R3jh2MGWvvhXAMpI7He3QdrA6ARhAvsIXN850RnNBNxcmbIzsveOg2oiLU8
+         yX4SglKyPb6phah2sZi9ZCKd6Jvf/R9rRPSifGYwYz2gkkO7sqxW9A1QBw6lW4Szd5L8
+         CUJSn1m/GKcc4aE1TYmjvsEbUsvDxirufa2cE++pM2XjuQL6VkBhpB2/xipSCRqXh/oD
+         hqDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wrNEKbAI8SdPL4/nZNWweKCBGdbsKNPBi2tTjgkTk4g=;
+        b=PJO8V9D9d1s62Dkt1SL2YOXmYcaFc8zYrf70KuUDK5Rio2Txj0XbVvAQ5BU6Em5gSL
+         9RAIh+sdu96PRwJVf+3CfBiVL3R9MSUyMPQJtHd4wVQybrkpw9NWhRG2nqZy91MDplwu
+         7JBJhdHoqN58mAXeEUwWs99nM7KA3nLS9yhEJ4+TgguiMmSHbWdOXr3DpRxAAkbb8xEf
+         lhiY0jcMx4EmJAQ/TNGTiQhErUQckeXgjR3Qa5Idn7Yl4xJNmGYjSMU9F3SSh6xxMc+W
+         YKJm9b1nSqWzYu0qxCjmIRTr0ydM7EB1RrwFN1SjY4T0NxIOY7JYnISaUmiTWSbt3Owp
+         E+9A==
+X-Gm-Message-State: APjAAAX8A8BQ85yCXfaS0bW7q14I82qOTnIlw4DKxsPfZo5A+84a/kgN
+        80esdLRsQLhNqGWCdXf7nLf1Yekv30DGGuyKvRo=
+X-Google-Smtp-Source: APXvYqzf53BzBYGwZQWzU7OdbtYI8t2gX4zwRnBJBC0//jpJ443Zjiuag9Mi5MgK7DtkD9rouz5Qh4pH5DLzKHfS9xk=
+X-Received: by 2002:a25:383:: with SMTP id 125mr3323615ybd.45.1573662136812;
+ Wed, 13 Nov 2019 08:22:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - FF70 (Linux)/8.8.15_GA_3869)
-Thread-Topic: x86/kprobes: Fix ordering
-Thread-Index: dqf0tEXpjeJ/FwQ1gL/HsGrGYF9OnQ==
+References: <20191022143736.GX26530@ZenIV.linux.org.uk> <20191022201131.GZ26530@ZenIV.linux.org.uk>
+ <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com> <20191101234622.GM26530@ZenIV.linux.org.uk>
+ <20191102172229.GT20975@paulmck-ThinkPad-P72> <20191102180842.GN26530@ZenIV.linux.org.uk>
+ <20191103163524.GO26530@ZenIV.linux.org.uk> <20191103182058.GQ26530@ZenIV.linux.org.uk>
+ <20191103185133.GR26530@ZenIV.linux.org.uk> <CAOQ4uxiHH=e=Y5Xb3bkv+USxE0AftHiP935GGQEKkv54E17oDA@mail.gmail.com>
+ <20191113125216.GF26530@ZenIV.linux.org.uk>
+In-Reply-To: <20191113125216.GF26530@ZenIV.linux.org.uk>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 13 Nov 2019 18:22:05 +0200
+Message-ID: <CAOQ4uxifKE2sJE=tCUj3qHFim8xXiwcdf-ugb3_tpHbmm5YnZw@mail.gmail.com>
+Subject: Re: [PATCH][RFC] ecryptfs_lookup_interpose(): lower_dentry->d_inode
+ is not stable
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, wugyuan@cn.ibm.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Gao Xiang <hsiangkao@aol.com>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        ecryptfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Nov 11, 2019, at 8:13 AM, Peter Zijlstra peterz@infradead.org wrote:
+On Wed, Nov 13, 2019 at 2:52 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Wed, Nov 13, 2019 at 09:01:36AM +0200, Amir Goldstein wrote:
+> > > -       if (d_really_is_negative(lower_dentry)) {
+> > > +       /*
+> > > +        * negative dentry can go positive under us here - its parent is not
+> > > +        * locked.  That's OK and that could happen just as we return from
+> > > +        * ecryptfs_lookup() anyway.  Just need to be careful and fetch
+> > > +        * ->d_inode only once - it's not stable here.
+> > > +        */
+> > > +       lower_inode = READ_ONCE(lower_dentry->d_inode);
+> > > +
+> > > +       if (!lower_inode) {
+> > >                 /* We want to add because we couldn't find in lower */
+> > >                 d_add(dentry, NULL);
+> > >                 return NULL;
+> >
+> > Sigh!
+> >
+> > Open coding a human readable macro to solve a subtle lookup race.
+> > That doesn't sound like a scalable solution.
+> > I have a feeling this is not the last patch we will be seeing along
+> > those lines.
+> >
+> > Seeing that developers already confused about when they should use
+> > d_really_is_negative() over d_is_negative() [1] and we probably
+> > don't want to add d_really_really_is_negative(), how about
+> > applying that READ_ONCE into d_really_is_negative() and
+> > re-purpose it as a macro to be used when races with lookup are
+> > a concern?
+>
+> Would you care to explain what that "fix" would've achieved here,
+> considering the fact that barriers are no-ops on UP and this is
+> *NOT* an SMP race?
+>
+> And it's very much present on UP - we have
+>         fetch ->d_inode into local variable
+>         do blocking allocation
+>         check if ->d_inode is NULL now
+>         if it is not, use the value in local variable and expect it to be non-NULL
+>
+> That's not a case of missing barriers.  At all.  And no redefinition of
+> d_really_is_negative() is going to help - it can't retroactively affect
+> the value explicitly fetched into a local variable some time prior to
+> that.
+>
 
-> Kprobes does something like:
-> 
-> register:
->	arch_arm_kprobe()
->	  text_poke(INT3)
->          /* guarantees nothing, INT3 will become visible at some point, maybe */
-> 
->        kprobe_optimizer()
->	  /* guarantees the bytes after INT3 are unused */
->	  syncrhonize_rcu_tasks();
+Indeed. I missed that part of your commit message and didn't
+realize the variable was being used later.
+The language in the comment "can go positive under us" implied
+SMP race so I misunderstood the reason for READ_ONCE().
 
-syncrhonize -> synchronize
+Sorry for the noise.
 
->	  text_poke_bp(JMP32);
->	  /* implies IPI-sync, kprobe really is enabled */
-> 
-> 
-> unregister:
->	__disarm_kprobe()
->	  unoptimize_kprobe()
->	    text_poke_bp(INT3 + tail);
->	    /* implies IPI-sync, so tail is guaranteed visible */
->          arch_disarm_kprobe()
->            text_poke(old);
->	    /* guarantees nothing, old will maybe become visible */
-> 
->	synchronize_rcu()
-> 
->        free-stuff
-> 
-> Now the problem is that on register, the synchronize_rcu_tasks() does
-> not imply sufficient to guarantee all CPUs have already observed INT3
-> (although in practise this is exceedingly unlikely not to have
-
-practise -> practice
-
-> happened) (similar to how MEMBARRIER_CMD_PRIVATE_EXPEDITED does not
-> imply MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE).
-> 
-> Worse, even if it did, we'd have to do 2 synchronize calls to provide
-> the guarantee we're looking for, the first to ensure INT3 is visible,
-> the second to guarantee nobody is then still using the instruction
-> bytes after INT3.
-
-I'm not entirely convinced about this last statement though. AFAIU:
-
-- Swapping between some instruction and INT3 is OK,
-- Swapping back between that INT3 and _original_ instruction is OK,
-- Anything else needs to have explicit core serialization.
-
-So I understand the part about requiring the synchronize call to guarantee
-that nobody is then still using the instruction bytes following INT3, but not
-the rationale for the first synchronization. What operation would theoretically
-follow this first synchronize call ?
-
-I understand that this patch modifies arch_{arm,disarm}_kprobe to add
-core serialization after inserting/removing the INT3 even in the case
-where no optimized kprobes are used, which is heavier than what is
-strictly required without optimized kprobes. I'm all fine for the added
-simplicity that comes with making this slow-path even slower, but it
-would be good to document this subtlety in the code.
-
-Thanks,
-
-Mathieu
-
-> 
-> Similar on unregister; the synchronize_rcu() between
-> __unregister_kprobe_top() and __unregister_kprobe_bottom() does not
-> guarantee all CPUs are free of the INT3 (and observe the old text).
-> 
-> Therefore, sprinkle some IPI-sync love around. This guarantees that
-> all CPUs agree on the text and RCU once again provides the required
-> guaranteed.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: hpa@zytor.com
-> Cc: paulmck@kernel.org
-> Cc: mathieu.desnoyers@efficios.com
-> ---
-> arch/x86/include/asm/text-patching.h |    1 +
-> arch/x86/kernel/alternative.c        |   11 ++++++++---
-> arch/x86/kernel/kprobes/core.c       |    2 ++
-> arch/x86/kernel/kprobes/opt.c        |   12 ++++--------
-> 4 files changed, 15 insertions(+), 11 deletions(-)
-> 
-> --- a/arch/x86/include/asm/text-patching.h
-> +++ b/arch/x86/include/asm/text-patching.h
-> @@ -42,6 +42,7 @@ extern void text_poke_early(void *addr,
->  * an inconsistent instruction while you patch.
->  */
-> extern void *text_poke(void *addr, const void *opcode, size_t len);
-> +extern void text_poke_sync(void);
-> extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
-> extern int poke_int3_handler(struct pt_regs *regs);
-> extern void text_poke_bp(void *addr, const void *opcode, size_t len, const void
-> *emulate);
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -936,6 +936,11 @@ static void do_sync_core(void *info)
-> 	sync_core();
-> }
-> 
-> +void text_poke_sync(void)
-> +{
-> +	on_each_cpu(do_sync_core, NULL, 1);
-> +}
-> +
-> struct text_poke_loc {
-> 	s32 rel_addr; /* addr := _stext + rel_addr */
-> 	s32 rel32;
-> @@ -1085,7 +1090,7 @@ static void text_poke_bp_batch(struct te
-> 	for (i = 0; i < nr_entries; i++)
-> 		text_poke(text_poke_addr(&tp[i]), &int3, sizeof(int3));
-> 
-> -	on_each_cpu(do_sync_core, NULL, 1);
-> +	text_poke_sync();
-> 
-> 	/*
-> 	 * Second step: update all but the first byte of the patched range.
-> @@ -1107,7 +1112,7 @@ static void text_poke_bp_batch(struct te
-> 		 * not necessary and we'd be safe even without it. But
-> 		 * better safe than sorry (plus there's not only Intel).
-> 		 */
-> -		on_each_cpu(do_sync_core, NULL, 1);
-> +		text_poke_sync();
-> 	}
-> 
-> 	/*
-> @@ -1123,7 +1128,7 @@ static void text_poke_bp_batch(struct te
-> 	}
-> 
-> 	if (do_sync)
-> -		on_each_cpu(do_sync_core, NULL, 1);
-> +		text_poke_sync();
-> 
-> 	/*
-> 	 * sync_core() implies an smp_mb() and orders this store against
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -502,11 +502,13 @@ int arch_prepare_kprobe(struct kprobe *p
-> void arch_arm_kprobe(struct kprobe *p)
-> {
-> 	text_poke(p->addr, ((unsigned char []){INT3_INSN_OPCODE}), 1);
-> +	text_poke_sync();
-> }
-> 
-> void arch_disarm_kprobe(struct kprobe *p)
-> {
-> 	text_poke(p->addr, &p->opcode, 1);
-> +	text_poke_sync();
-> }
-> 
-> void arch_remove_kprobe(struct kprobe *p)
-> --- a/arch/x86/kernel/kprobes/opt.c
-> +++ b/arch/x86/kernel/kprobes/opt.c
-> @@ -444,14 +444,10 @@ void arch_optimize_kprobes(struct list_h
-> /* Replace a relative jump with a breakpoint (int3).  */
-> void arch_unoptimize_kprobe(struct optimized_kprobe *op)
-> {
-> -	u8 insn_buff[JMP32_INSN_SIZE];
-> -
-> -	/* Set int3 to first byte for kprobes */
-> -	insn_buff[0] = INT3_INSN_OPCODE;
-> -	memcpy(insn_buff + 1, op->optinsn.copied_insn, DISP32_SIZE);
-> -
-> -	text_poke_bp(op->kp.addr, insn_buff, JMP32_INSN_SIZE,
-> -		     text_gen_insn(JMP32_INSN_OPCODE, op->kp.addr, op->optinsn.insn));
-> +	arch_arm_kprobe(&op->kp);
-> +	text_poke(op->kp.addr + INT3_INSN_SIZE,
-> +		  op->optinsn.copied_insn, DISP32_SIZE);
-> +	text_poke_sync();
-> }
-> 
->  /*
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Amir.
