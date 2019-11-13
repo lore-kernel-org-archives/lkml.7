@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B922C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C18AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D9721D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA87221D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611742;
-	bh=jaHaRyda7MXr3YsDxYA2f/RYFTQs0cy+RIHpbN7vCdE=;
+	s=default; t=1573611750;
+	bh=dVNRZUOppbIJs5ql/gl9Dfu+yySfO+0rBHt2dBpyjbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5d9S4GNB8RrAtTXzDdbRm0zG3nLYcDFCKU/YX59tIf1NBFRtulTvCKnA7MIwWUyJ
-	 sd5Xb0A9EYfBlvR//Uo1XFSo0qR/hR595eDTETzmglBiQhNEVoLpUtcn4hBh5ISN73
-	 sK9nn6vz4jhbei3XnWZ9oYg41trYesXn2pIlHjzI=
+	b=qY7Jv16OoFAaTFJZALCvZfl94uzwNHGM/7d+35WXT7G3ZevOvjjPH1cyXekKeFNMO
+	 MOkoO4mpXVu8l8YDjbtjIhgAcgjFmAAHHnls/KFv+LMr43ORXCJfHHKzuNCu+EErPO
+	 GT9r9ornTo5Fi7tqGH0CI3whaVyhB5rjHm7TbXmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfKMCWQ (ORCPT
+        id S1729416AbfKMCW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:22:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43314 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:22:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728592AbfKMBxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:32 -0500
+        id S1727440AbfKMBxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F66222CF;
-        Wed, 13 Nov 2019 01:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F4D222CD;
+        Wed, 13 Nov 2019 01:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610012;
-        bh=jaHaRyda7MXr3YsDxYA2f/RYFTQs0cy+RIHpbN7vCdE=;
+        s=default; t=1573610009;
+        bh=dVNRZUOppbIJs5ql/gl9Dfu+yySfO+0rBHt2dBpyjbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZrqeph2rH/6fRP6PGfNwbP/5m+vd8Vr1DQYaO3V2kMdxmrvPBqapUN4B2rd8CKN3
-         2r3mVRUBVCd5wzfNt2bnbPhjtMPEDcvpvItnROoX7H+4R0fXAM5m94ZzCYUgOTJNBH
-         U8E1OTlnj2r1g27+6aRKzv7vD+yKimwnkyGLIz2Y=
+        b=YH/Ct24kvlkeGoRV4FcQPbHgieEzYyf9DV4wTLI5Pum4uu7P+lUK45V0vooigDCFr
+         K0NGvu29OxHjHFQtuaYv6yETpCAfSgojkcoPGFAe0HL75l9rC/gugtkpq84sh3fCS2
+         MD+53ymf3wGufBDs189dKXVQPL5IzJ+cKlsPdjKM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 116/209] i2c: omap: use core to detect 'no zero length' quirk
-Date:   Tue, 12 Nov 2019 20:48:52 -0500
-Message-Id: <20191113015025.9685-116-sashal@kernel.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 114/209] media: cec-gpio: select correct Signal Free Time
+Date:   Tue, 12 Nov 2019 20:48:50 -0500
+Message-Id: <20191113015025.9685-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -62,54 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-[ Upstream commit f37b2bb6ac3e6ebf855d9d4f05cc6932a8e5b463 ]
+[ Upstream commit c439d5c1e13dbf66cff53455432f21d4d0536c51 ]
 
-And don't reimplement in the driver.
+If a receive is in progress or starts before the transmit has
+a chance, then lower the Signal Free Time of the upcoming transmit
+to no more than CEC_SIGNAL_FREE_TIME_NEW_INITIATOR.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This is per the specification requirements.
+
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-omap.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/media/cec/cec-pin.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index 2ac86096ddd95..cd9c65f3d404f 100644
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -661,9 +661,6 @@ static int omap_i2c_xfer_msg(struct i2c_adapter *adap,
- 	dev_dbg(omap->dev, "addr: 0x%04x, len: %d, flags: 0x%x, stop: %d\n",
- 		msg->addr, msg->len, msg->flags, stop);
+diff --git a/drivers/media/cec/cec-pin.c b/drivers/media/cec/cec-pin.c
+index 0496d93b2b8fa..8f987bc0dd883 100644
+--- a/drivers/media/cec/cec-pin.c
++++ b/drivers/media/cec/cec-pin.c
+@@ -936,6 +936,17 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
+ 			/* Start bit, switch to receive state */
+ 			pin->ts = ts;
+ 			pin->state = CEC_ST_RX_START_BIT_LOW;
++			/*
++			 * If a transmit is pending, then that transmit should
++			 * use a signal free time of no more than
++			 * CEC_SIGNAL_FREE_TIME_NEW_INITIATOR since it will
++			 * have a new initiator due to the receive that is now
++			 * starting.
++			 */
++			if (pin->tx_msg.len && pin->tx_signal_free_time >
++			    CEC_SIGNAL_FREE_TIME_NEW_INITIATOR)
++				pin->tx_signal_free_time =
++					CEC_SIGNAL_FREE_TIME_NEW_INITIATOR;
+ 			break;
+ 		}
+ 		if (ktime_to_ns(pin->ts) == 0)
+@@ -1158,6 +1169,15 @@ static int cec_pin_adap_transmit(struct cec_adapter *adap, u8 attempts,
+ {
+ 	struct cec_pin *pin = adap->pin;
  
--	if (msg->len == 0)
--		return -EINVAL;
--
- 	omap->receiver = !!(msg->flags & I2C_M_RD);
- 	omap_i2c_resize_fifo(omap, msg->len, omap->receiver);
- 
-@@ -1179,6 +1176,10 @@ static const struct i2c_algorithm omap_i2c_algo = {
- 	.functionality	= omap_i2c_func,
- };
- 
-+static const struct i2c_adapter_quirks omap_i2c_quirks = {
-+	.flags = I2C_AQ_NO_ZERO_LEN,
-+};
++	/*
++	 * If a receive is in progress, then this transmit should use
++	 * a signal free time of max CEC_SIGNAL_FREE_TIME_NEW_INITIATOR
++	 * since when it starts transmitting it will have a new initiator.
++	 */
++	if (pin->state != CEC_ST_IDLE &&
++	    signal_free_time > CEC_SIGNAL_FREE_TIME_NEW_INITIATOR)
++		signal_free_time = CEC_SIGNAL_FREE_TIME_NEW_INITIATOR;
 +
- #ifdef CONFIG_OF
- static struct omap_i2c_bus_platform_data omap2420_pdata = {
- 	.rev = OMAP_I2C_IP_VERSION_1,
-@@ -1453,6 +1454,7 @@ omap_i2c_probe(struct platform_device *pdev)
- 	adap->class = I2C_CLASS_DEPRECATED;
- 	strlcpy(adap->name, "OMAP I2C adapter", sizeof(adap->name));
- 	adap->algo = &omap_i2c_algo;
-+	adap->quirks = &omap_i2c_quirks;
- 	adap->dev.parent = &pdev->dev;
- 	adap->dev.of_node = pdev->dev.of_node;
- 	adap->bus_recovery_info = &omap_i2c_bus_recovery_info;
+ 	pin->tx_signal_free_time = signal_free_time;
+ 	pin->tx_extra_bytes = 0;
+ 	pin->tx_msg = *msg;
 -- 
 2.20.1
 
