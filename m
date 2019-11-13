@@ -2,213 +2,171 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A029DC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBD9C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 834AC206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573664819;
-	bh=3pA/KHI5sE+m79lcOcQ98rIbIxyybLCXDOI9joKhQfs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gcEu1g0QMK+uXXvfAtenYkUVkOs4zPVQNBeQGeO1/+SmPzcEy0rXL98GZPq+ZqHd9
-	 uBKNqhBRYz4PrjABZGdABnljfaW12AIvtDZcQxZfDm2wW+USAzFHYbvZeMHMwHaCju
-	 rvh6gpmTKVnTy++gX3x0w5RwJF8ckdqudWtOQVKc=
+	by mail.kernel.org (Postfix) with ESMTP id 1B8E420409
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pY4iiW2e";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ii66yd42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbfKMRG7 (ORCPT
+        id S1727573AbfKMRJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727638AbfKMRG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:06:59 -0500
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30DCB206D9;
-        Wed, 13 Nov 2019 17:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573664817;
-        bh=3pA/KHI5sE+m79lcOcQ98rIbIxyybLCXDOI9joKhQfs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TwOWVIvSoknGvfV8g68WQy7A/iminy0BlIzADGjPqtO1Wy1PopzGyTjMWGo2UpuPM
-         TmbRo1ddgr08OXsgScXLTJZm3P5bLeFm7O32ywjUErxrEelMmpfSUUFMP+nK6X2uif
-         I8SQPZP3KOwo2gSIb2hB/R9g7ZcEK5w1uwOSy4Eg=
-Received: by mail-qk1-f171.google.com with SMTP id e2so2386357qkn.5;
-        Wed, 13 Nov 2019 09:06:58 -0800 (PST)
-X-Gm-Message-State: APjAAAVkYNLmGOdLwtjxADfDqE9uMU6ay53VbYXg/23x+gR5R9F6qfgd
-        q8NmJ7xyd18ivHuNKFIfDrAep9Ky7j99CvxlzA==
-X-Google-Smtp-Source: APXvYqzRlmF9TeJ9hDMYOQGNIdfY5VhEdyxfYQraKHmCjaj33WSKpBhDL2bHJvGdOc3QzkjC5v8NL/rqmH6i8piI88A=
-X-Received: by 2002:a37:4904:: with SMTP id w4mr3196213qka.119.1573664817154;
- Wed, 13 Nov 2019 09:06:57 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
- <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
- <20191112193942.GA27334@bogus> <20191113145159.vw7icflfve7dnefm@smtp.gmail.com>
-In-Reply-To: <20191113145159.vw7icflfve7dnefm@smtp.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 13 Nov 2019 11:06:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJY6YMC2ba4DNFnsq=XESOoUTDA6Q+Y7gutMT0VN--DNw@mail.gmail.com>
-Message-ID: <CAL_JsqJY6YMC2ba4DNFnsq=XESOoUTDA6Q+Y7gutMT0VN--DNw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Wed, 13 Nov 2019 12:09:44 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:8480 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726155AbfKMRJn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:09:43 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xADH0agB014987;
+        Wed, 13 Nov 2019 09:08:32 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=AV150CMhEZJfztroqUWG6iYTfcMr4oTZyRwZXVJXG/o=;
+ b=pY4iiW2eG6YoEJA8AyPNZPJHty7/L1idTbNA7lZvxhfjJiNnz/yafHNXSTB6vcptgZ8N
+ EeSZYwNIJ60y3ULztQIe7l9JuDLm1ik06tbzOXsy+6xzS5+7at4uHhgetlvzJgnnmVe7
+ XxQv2nrzNxOxYk3mvmBxrw+RYsjLdIlNP1Y= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2w7prjgmp4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 13 Nov 2019 09:08:31 -0800
+Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 13 Nov 2019 09:08:30 -0800
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 13 Nov 2019 09:08:30 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Lck35ah2BfHCsawtXOFQCSvJXKIGtsx8mKe5/PteTChtvdtWFdyKjwhD/A+0qDFXLctYR2fUOLTzyHw10xfBvjge953sfv/hV4GpyBa71T/BMUK0jr0o2MzLmRXz5SF0chDDkn9Z6GU/O+4NPAUXOGUb54yxxQgX1GCituAV+t4F01/rcimAhpQh6CP9dynimn8E2SweWtaj8BO+5fumhs9HrHySiQwrrPVS0hAT+tADJB/RHs5efrw2k6krFdKq+6jh4dezyGog3DVAflPX25GEYcQuxHxQDGNZrEi/jpcyYfZc+iOz7TIpBzrpkMZFmyYpImspKFB5PLx45vxQGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AV150CMhEZJfztroqUWG6iYTfcMr4oTZyRwZXVJXG/o=;
+ b=fQfnGSqtX81Kv3URcFHA9og+nY0HpUkhjFlpz+VRaAlBdmIoxHHBilrrR0tv8wTiHA/65Ylly+qWICD3NhLS5UhyvfvmlAl8MRIxRneRFoNwOX+NjB5UMVs0J7b5BjYqt+atspZTF0YvDi28W5jXFWhLnksFI6iVUFnKuVCbN6XRVyeeqxVBm6SwZ+StFqTScAOrwaV3F1dndZJ9NIt8zNZBASdxlWp7PyiUFDyC4oi5fuVxRJysb9VVEbvupBWlo1+JJTSLHrOvbM5ZujSYPFQrWNPLKbbTO1znmFcP27g2PD3Aa9XfJw8/zUwHzZtTsj2Nc59oBY1zJi//Olv8vA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AV150CMhEZJfztroqUWG6iYTfcMr4oTZyRwZXVJXG/o=;
+ b=ii66yd42ZXGAU58KLM3ZaEmpDSfAdrgGpplguPcxzuUW6+ryoOgfTePMwapDSCuTxXwfo26pEXz903rWsnJWdcqySpjz57Y2UtM5ye6g6iUI1RKRPDRIZadQhEVG6wgM8WZOUAemVB/ndh329fbfF70lM/oEquo+SNjChh6pIPk=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB2852.namprd15.prod.outlook.com (20.178.221.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Wed, 13 Nov 2019 17:08:29 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::3056:945b:e60e:e2e0]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::3056:945b:e60e:e2e0%6]) with mapi id 15.20.2430.027; Wed, 13 Nov 2019
+ 17:08:29 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     =?iso-8859-1?Q?Michal_Koutn=FD?= <mkoutny@suse.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
+ get_mem_cgroup_from_mm()
+Thread-Topic: [PATCH 1/2] mm: memcg: switch to css_tryget() in
+ get_mem_cgroup_from_mm()
+Thread-Index: AQHVlPTSqR6tDyqEq0WgIBYYtGCX/KeJVScAgAAK2IA=
+Date:   Wed, 13 Nov 2019 17:08:29 +0000
+Message-ID: <20191113170823.GA12464@castle.DHCP.thefacebook.com>
+References: <20191106225131.3543616-1-guro@fb.com>
+ <20191113162934.GF19372@blackbody.suse.cz>
+In-Reply-To: <20191113162934.GF19372@blackbody.suse.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR10CA0052.namprd10.prod.outlook.com
+ (2603:10b6:300:2c::14) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::14bb]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5e663491-3b6f-49fb-d017-08d7685c1aa8
+x-ms-traffictypediagnostic: BN8PR15MB2852:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR15MB28520515048202CE75F47224BE760@BN8PR15MB2852.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(136003)(39860400002)(376002)(366004)(189003)(199004)(8676002)(52116002)(76176011)(81156014)(478600001)(386003)(102836004)(81166006)(256004)(14444005)(2906002)(186003)(25786009)(316002)(4326008)(6116002)(6506007)(1076003)(71190400001)(66946007)(8936002)(71200400001)(6916009)(54906003)(305945005)(486006)(86362001)(6512007)(11346002)(14454004)(5660300002)(446003)(33656002)(229853002)(6486002)(6246003)(66446008)(66556008)(64756008)(9686003)(46003)(66476007)(99286004)(6436002)(476003)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2852;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bRSx2SJKkfmLczaA1PP59a4qImitf8rSCBn8PIvl4LcU+zS2/RgpMMpkRfAhyjNGSWPjNbOrPegd0dRcUGx5UUzGqXUBnVgR1Iaa9v4qXvftET7fY+00ovHCQCiepVgYoM+8lgcNh05WsLFDnuYQvMQJWwF/AWcgPpEde6pj7dnR0FUJyU+N2iSs4KBFDp7sxCNe4PcUlHfhsCN3LEODoHMztSFRzd5qHKveGxVlvfGM8+C69YxEpS1s7ttBvDi26PDVAwHBQ5BYJ0q5HpcZ6ElISWogVEjcQ/vep9mOjTf2slveMOdIQ5+CIlaNUBTPeMjQX2WXv4xa/Qf7ryeDMTqVRNEsHMm/wxi+lt4HP+ppuinsQVCybBbuIuwJaN6ZwUs7bMPXGZ7ctGl1gQ+6QL9TfDlzs+F+OjaHB4uXRuanB1WHe+99etLe/KlQ8i2E
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <976747A0B33EBD4A92BBDD26F233AC3A@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e663491-3b6f-49fb-d017-08d7685c1aa8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 17:08:29.2613
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mIsgv7w1Jn1P+txumkm88km72Ko6QMN7C4ZJ0MpOwWBZZxA4o4uxpwCNPCkK6M+d
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2852
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-13_04:2019-11-13,2019-11-13 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911130148
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 8:52 AM Marcelo Schmitt
-<marcelo.schmitt1@gmail.com> wrote:
->
-> Hi Rob,
->
-> Thanks for reviewing the binding doc again.
-> Aparently, this patch was added to Greg KH's staging tree.
-> What is the right procedure in this case? Should I send a v5 patchset or
-> just send a patch for this doc?
+On Wed, Nov 13, 2019 at 05:29:34PM +0100, Michal Koutn=FD wrote:
+> Hi.
+>=20
+> On Wed, Nov 06, 2019 at 02:51:30PM -0800, Roman Gushchin <guro@fb.com> wr=
+ote:
+> > Let's fix it by switching from css_tryget_online() to css_tryget().
+> Is this a safe thing to do? The stack captures a kmem charge path, with
+> css_tryget() it may happen it gets an offlined memcg and carry out
+> charge into it. What happens when e.g. memcg_deactivate_kmem_caches is
+> skipped as a consequence?
 
-You need to do an incremental patch. Greg doesn't rebase.
+The thing here is that css_tryget_online() cannot pin the online state,
+so even if returned true, the cgroup can be offline at the return from
+the function. So if we rely somewhere on it, it's already broken.
 
-> In any case, I still have some doubts about the maximum constraint of
-> the channel property. Comments inline.
->
->
-> Thanks
->
-> Marcelo
->
-> On 11/12, Rob Herring wrote:
-> > On Fri, Nov 08, 2019 at 10:56:09AM -0300, Marcelo Schmitt wrote:
-> > > Add a devicetree schema for AD7292 monitor and control system.
-> > >
-> > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > > ---
-> > > Changelog V3 -> V4:
-> > > - updated SPDX identifier to GPL-2.0-only
-> > > - changed maxitems constraint on channel property
-> > >
-> > >  .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
-> > >  MAINTAINERS                                   |   7 ++
-> > >  2 files changed, 111 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > > new file mode 100644
-> > > index 000000000000..b68be3aaf587
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > > @@ -0,0 +1,104 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only
-> >
-> > Sigh, I gave you the exact line to use:
-> >
-> > # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >
-> > I've said to dual license with (GPL-2.0-only OR BSD-2-Clause) and people
-> > think I mean to pick one. So now I just give the whole line. I don't
-> > know how to be clearer.
->
-> I thought I could use just GPL-2.0 since the driver code is GPL-2.0.
-> Anyway, I'll use the above line to specify the dt-binding license.
->
-> >
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Analog Devices AD7292 10-Bit Monitor and Control System
-> > > +
-> > > +maintainers:
-> > > +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > > +
-> > > +description: |
-> > > +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-> > > +  Temperature Sensor, and GPIOs
-> > > +
-> > > +  Specifications about the part can be found at:
-> > > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - adi,ad7292
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  vref-supply:
-> > > +    description: |
-> > > +      The regulator supply for ADC and DAC reference voltage.
-> > > +
-> > > +  spi-cpha: true
-> > > +
-> > > +  '#address-cells':
-> > > +    const: 1
-> > > +
-> > > +  '#size-cells':
-> > > +    const: 0
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - spi-cpha
-> > > +
-> > > +patternProperties:
-> > > +  "^channel@[0-7]$":
-> > > +    type: object
-> > > +    description: |
-> > > +      Represents the external channels which are connected to the ADC.
-> > > +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> > > +
-> > > +    properties:
-> > > +      reg:
-> > > +        description: |
-> > > +          The channel number. It can have up to 8 channels numbered from 0 to 7.
-> > > +        items:
-> > > +          maximum: 7
-> >
-> > Not what I said either. A slight but important difference in that you
-> > are missing a '-' to make 'items' a list rather than a schema/dict.
-> >
-> > Update dt-schema. This should give a warning now.
->
-> I'm confused, I don't know how to make this doc the way you want.
-> I pulled the updates from the master branch of dt-schema repo and
-> reinstalled it.
-> Then I tried
->         items:
->           - maximum: 7
-> I've tried
->         - items:
->             maximum: 7
-> I also tried
->         - items:
->           maximum: 7
-> all gave me parsing errors when processing the ad7292 schema with
-> 'make dt_binding_check' and also with 'make -k dt_binding_check'.
-> Am I using the right branch? Should I pull from a branch other than the
-> master?
+Generally speaking, it's better to reduce it's usage to the bare minimum.
 
-Sorry, my fault there. The meta-schema requires 'minimum' if you give
-'maximum'. So:
+>=20
+> > The problem is caused by an exiting task which is associated with
+> > an offline memcg. We're iterating over and over in the
+> > do {} while (!css_tryget_online()) loop, but obviously the memcg won't
+> > become online and the exiting task won't be migrated to a live memcg.
+> As discussed in other replies, the task is not yet exiting. However, the
+> access to memcg isn't through `current` but `mm->owner`, i.e. another
+> task of a threadgroup may have got stuck in an offlined memcg (I don't
+> have a good explanation for that though).
 
-        items:
-          - minimum: 0
-            maximum: 7
+Yes, it's true, and I've no idea how the memcg can be offline in this case =
+too.
+We've seen it only several times in fb production, so it seems to be a real=
+ly
+rare case. Could be anything from a tiny race somewhere to cpu bugs.
 
-The error message was less than useful, but I think I have a fix for that too.
-
-Rob
+Thanks!
