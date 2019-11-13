@@ -2,133 +2,187 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03F8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 05:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50EEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 05:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4E221A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 05:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA69F222CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 05:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725996AbfKMFB3 (ORCPT
+        id S1726105AbfKMFJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 00:01:29 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54782 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725446AbfKMFB3 (ORCPT
+        Wed, 13 Nov 2019 00:09:49 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:51099 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfKMFJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 00:01:29 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0ThxP.9P_1573621281;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0ThxP.9P_1573621281)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 13 Nov 2019 13:01:22 +0800
-Subject: Re: ocfs2: xattr problems with 5.4.0-rc7
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-To:     Thomas Voegtle <tv@lio96.de>, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <alpine.LSU.2.21.1911121355550.7620@er-systems.de>
- <fc2993e9-f0d6-fb7c-5050-8dbb36338140@linux.alibaba.com>
-Message-ID: <3ea0ee86-eb74-7330-75fa-15f90e82ada7@linux.alibaba.com>
-Date:   Wed, 13 Nov 2019 13:01:21 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Wed, 13 Nov 2019 00:09:49 -0500
+X-Greylist: delayed 606 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 00:09:47 EST
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 763252800021B;
+        Wed, 13 Nov 2019 05:59:39 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 38CC8477C16; Wed, 13 Nov 2019 05:59:39 +0100 (CET)
+Date:   Wed, 13 Nov 2019 05:59:39 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: Make sure pciehp_isr clears interrupt events
+Message-ID: <20191113045939.hhmzfbx46vkgmsvn@wunner.de>
+References: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <fc2993e9-f0d6-fb7c-5050-8dbb36338140@linux.alibaba.com>
-Content-Type: text/plain; charset=iso-8859-7
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 04:59:38PM -0500, Stuart Hayes wrote:
+> The pciehp interrupt handler pciehp_isr() will read the slot status
+> register and then write back to it to clear just the bits that caused the
+> interrupt. If a different interrupt event bit gets set between the read and
+> the write, pciehp_isr() will exit without having cleared all of the
+> interrupt event bits, so we will never get another hotplug interrupt from
+> that device.
 
+The IRQ is masked when it occurs and unmasked after it's been handled.
+See the invocation of mask_ack_irq() in handle_edge_irq() and
+handle_level_irq() in kernel/irq/chip.c.
 
-On 19/11/13 09:28, Joseph Qi wrote:
-> Hi Thomas,
-> Thanks for reporting this issue.
-> I have some doubts on it, please see my comments below.
-> 
-> On 19/11/12 22:45, Thomas Voegtle wrote:
->>
->> Hello,
->>
->> with 5.4.0-rc7 and 4.9.200 we see the following errors with mkdir or touch on a ocfs2 mountpoint:
->>
->> root@s2:/shared/ClusterShareDisk# mkdir dir
->> mkdir: cannot create directory ¡dir¢: Invalid argument
->>
->> which produces this output:
->>
->> root@s2:/shared/ClusterShareDisk# dmesg
->> [ 6918.815770] (mkdir,19461,0):ocfs2_xa_set:2242 ERROR: status = -22
->> [ 6918.815772] (mkdir,19461,0):ocfs2_mknod:408 ERROR: status = -22
->> [ 6918.816215] (mkdir,19461,0):ocfs2_mknod:486 ERROR: status = -22
->> [ 6918.816216] (mkdir,19461,0):ocfs2_mkdir:652 ERROR: status = -22
->>
-> ocfs2_xa_set
->   ocfs2_xa_prepare_entry
-> 
-> Since ocfs2_xa_set() returns -EINVAL, it means loc->xl_entry is NULL.
-> 
-> 	if (!loc->xl_entry) {
-> 		rc = -EINVAL;
-> 		goto out;
-> 	}
-> 
-> After reverting
-> commit 56e94ea132bb "fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()",
-> it will call ocfs2_xa_add_entry(),
-> 
-> 	if (loc->xl_entry) {
-> 		...
-> 	} else
-> 		ocfs2_xa_add_entry(loc, name_hash);
-> 
-> Theoretically it will cause NULL pointer dereference when access attributes of loc->xl_entry.
-> So could you please check if the issue is caused by NULL loc->xl_entry?
-> 
+If the IRQ has fired in-between, the IRQ chip is expected to invoke
+the IRQ handler again.  There is some support for IRQ chips not
+capable of replaying interrupts in kernel/irq/resend.c, but in general,
+if you do not get another hotplug interrupt, the hardware is broken.
+What kind of IRQ chip are you using and what kind of chip is the
+hotplug port built into?
 
-I think I've got the answer. loc->xl_ops->xlo_add_entry() will handle this case.
-I'll revert this patch.
+I'm not opposed to quirks to support such broken hardware but the
+commit message shouldn't purport that it's normal behavior and the
+quirk should only be executed where necessary and be made explicit
+in the code to be a quirk.
 
 Thanks,
-Joseph
+
+Lukas
 
 > 
->> We got some ACLs:
->> $ getfacl /shared/ClusterShareDisk/
->> getfacl: Removing leading '/' from absolute path names
->> # file: shared/ClusterShareDisk/
->> # owner: root
->> # group: root
->> user::rwx
->> user:admin:rwx
->> group::rwx
->> mask::rwx
->> other::---
->> default:user::rwx
->> default:user:admin:rwx
->> default:group::rwx
->> default:mask::rwx
->> default:other::---
->>
->> And of course it is mounted with user_xattr and acl option.
->>
->> Reverting
->> commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d
->> Author: Jia-Ju Bai <baijiaju1990@gmail.com>
->> Date:   Sun Oct 6 17:57:50 2019 -0700
->>
->>     fs: ocfs2: fix possible null-pointer dereferences in
->> ocfs2_xa_prepare_entry()
->>
->> fixes the problem.
->>
->> Greetings,
->>
->>
->>     Thomas
+> That is expected behavior according to the PCI Express spec (v.5.0, section
+> 6.7.3.4, "Software Notification of Hot-Plug Events").
+> 
+> Because the "presence detect changed" and "data link layer state changed"
+> event bits are both getting set at nearly the same time when a device is
+> added or removed, this is more likely to happen than it might seem. The
+> issue can be reproduced rather easily by connecting and disconnecting an
+> NVMe device on at least one system model.
+> 
+> This patch fixes the issue by modifying pciehp_isr() to loop back and
+> re-read the slot status register immediately after writing to it, until
+> it sees that all of the event status bits have been cleared.
+> 
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> ---
+>  drivers/pci/hotplug/pciehp_hpc.c | 39 +++++++++++++++++++++++++++-----
+>  1 file changed, 33 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 1a522c1c4177..8ec22a872b28 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -487,12 +487,21 @@ void pciehp_power_off_slot(struct controller *ctrl)
+>  		 PCI_EXP_SLTCTL_PWR_OFF);
+>  }
+>  
+> +/*
+> + * We should never need to re-read the slot status register this many times,
+> + * because there are only six possible events that could generate this
+> + * interrupt.  If we still see events after this many reads, there's a stuck
+> + * bit.
+> + */
+> +#define MAX_ISR_STATUS_READS 6
+> +
+>  static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  {
+>  	struct controller *ctrl = (struct controller *)dev_id;
+>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+>  	struct device *parent = pdev->dev.parent;
+> -	u16 status, events;
+> +	u16 status, events = 0;
+> +	int status_reads = 0;
+>  
+>  	/*
+>  	 * Interrupts only occur in D3hot or shallower and only if enabled
+> @@ -517,6 +526,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  		}
+>  	}
+>  
+> +read_status:
+>  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+>  	if (status == (u16) ~0) {
+>  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+> @@ -529,16 +539,34 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  	 * Slot Status contains plain status bits as well as event
+>  	 * notification bits; right now we only want the event bits.
+>  	 */
+> -	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+> -			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+> -			   PCI_EXP_SLTSTA_DLLSC);
+> +	status &= (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+> +		   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+> +		   PCI_EXP_SLTSTA_DLLSC);
+>  
+>  	/*
+>  	 * If we've already reported a power fault, don't report it again
+>  	 * until we've done something to handle it.
+>  	 */
+>  	if (ctrl->power_fault_detected)
+> -		events &= ~PCI_EXP_SLTSTA_PFD;
+> +		status &= ~PCI_EXP_SLTSTA_PFD;
+> +
+> +	if (status) {
+> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
+> +		events |= status;
+> +	}
+> +
+> +	/*
+> +	 * All of the event bits must be zero before the port will send
+> +	 * a new interrupt.  If an event bit gets set between the read
+> +	 * and the write, we'll never get another interrupt, so loop until
+> +	 * we see no event bits set.
+> +	 */
+> +	if (status && status_reads++ < MAX_ISR_STATUS_READS)
+> +		goto read_status;
+> +
+> +	if (status_reads == MAX_ISR_STATUS_READS)
+> +		ctrl_warn(ctrl, "Slot(%s): Hot plug event bit stuck, reading %x\n",
+> +			  status, slot_name(ctrl));
+>  
+>  	if (!events) {
+>  		if (parent)
+> @@ -546,7 +574,6 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  		return IRQ_NONE;
+>  	}
+>  
+> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+>  	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
+>  	if (parent)
+>  		pm_runtime_put(parent);
+> -- 
+> 2.18.1
+> 
