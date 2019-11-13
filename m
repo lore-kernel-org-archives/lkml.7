@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DEBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF11DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4D621783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DACC21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611066;
-	bh=esQHSeTVM91ePA4FJLhiHKk/DtarxUAqDEScTNlyDvw=;
+	s=default; t=1573611071;
+	bh=xkffcVnzZep407UHCvdiZ/+ZuoK++P160a1VYGYgzwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pi8kkCeVfPsNdEvSDYAd8mVo8OBfnR1C0TpoeA1jv0NKgmpHlmpDciOVDW+BauUU6
-	 yW/xMDi0cmOkWgayGAXmczy03NC2P2gqhwXNXqF59irTdlJl+J7QoHI+yqSud1NR8d
-	 z8ZeArQrbmiFkSMC01h6kOROnFb1HSP/atuDL6xU=
+	b=pmB9fx4TrFypp3lNFCQNqTbrQUUp01iTobnvPYPyoZfot8MYnhfpP0cMTpYRD6m8o
+	 H5fcUX+JTsuBiYNvtrzXwPNUyHvFcjMKsdZ6ThzpVZ2SWfUNeGnuLW8dPD5L1W94iW
+	 55grnnKodo4+sqZu1l5T+Vb0Lz+0V/spioSfCBP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbfKMCLE (ORCPT
+        id S1730555AbfKMCLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:11:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53214 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:11:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729190AbfKMB7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:59:02 -0500
+        id S1730165AbfKMB67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83629222D3;
-        Wed, 13 Nov 2019 01:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DC8422474;
+        Wed, 13 Nov 2019 01:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610342;
-        bh=esQHSeTVM91ePA4FJLhiHKk/DtarxUAqDEScTNlyDvw=;
+        s=default; t=1573610338;
+        bh=xkffcVnzZep407UHCvdiZ/+ZuoK++P160a1VYGYgzwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGQtR6GCDjaiyXp0TDP6zpqSX4lOVRFv6c3wNF2wYg6FeB6gri4p5NdTirEx059CR
-         OWKS/6CeecY5QfhM20zyrfIPL6TBkfaU9If2kIIERq5AreTJXKB6DOWo8lfSuUS3+g
-         WQN16bRK5LcDOjmCVoeUpep0V44hWWJZ0mucZCa8=
+        b=Im+/18JHWASCuoAbnd52ShU54u3LkFImJNmIgITJONvWZLqflq8cAMwabDJNhTq33
+         Ei+yqNS2Bl7p/D89ttdvepjMCd3tLzcKlRh447MdMovTaIl7kZivr0UrWZGYYRxsFf
+         q+iPsecuMf1Rb7ztncg/PujDrJ1GiVuBe8bzyyuA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
-        dan.j.williams@intel.com, dyoung@redhat.com,
-        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 095/115] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
-Date:   Tue, 12 Nov 2019 20:56:02 -0500
-Message-Id: <20191113015622.11592-95-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 094/115] media: cx231xx: fix potential sign-extension overflow on large shift
+Date:   Tue, 12 Nov 2019 20:56:01 -0500
+Message-Id: <20191113015622.11592-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -70,65 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
+[ Upstream commit 32ae592036d7aeaabcccb2b1715373a68639a768 ]
 
-The only use of KEXEC_BACKUP_SRC_END is as an argument to
-walk_system_ram_res():
+Shifting the u8 value[3] by an int can lead to sign-extension
+overflow. For example, if value[3] is 0xff and the shift is 24 then it
+is promoted to int and then the top bit is sign-extended so that all
+upper 32 bits are set.  Fix this by casting value[3] to a u32 before
+the shift.
 
-  int crash_load_segments(struct kimage *image)
-  {
-    ...
-    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                        image, determine_backup_region);
+Detected by CoverityScan, CID#1016522 ("Unintended sign extension")
 
-walk_system_ram_res() expects "start, end" arguments that are inclusive,
-i.e., the range to be walked includes both the start and end addresses.
+Fixes: e0d3bafd0258 ("V4L/DVB (10954): Add cx231xx USB driver")
 
-KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
-first address *past* the desired 0-640KB range.
-
-Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
-region is [0-0x9ffff], not [0-0xa0000].
-
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Brijesh Singh <brijesh.singh@amd.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Lianbo Jiang <lijiang@redhat.com>
-CC: Takashi Iwai <tiwai@suse.de>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Tom Lendacky <thomas.lendacky@amd.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: baiyaowei@cmss.chinamobile.com
-CC: bhe@redhat.com
-CC: dan.j.williams@intel.com
-CC: dyoung@redhat.com
-CC: kexec@lists.infradead.org
-Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/kexec.h | 2 +-
+ drivers/media/usb/cx231xx/cx231xx-video.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index f327236f0fa71..5125fca472bb0 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -67,7 +67,7 @@ struct kimage;
- 
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
- 
- /*
-  * CPU does not save ss and sp on stack if execution is already
+diff --git a/drivers/media/usb/cx231xx/cx231xx-video.c b/drivers/media/usb/cx231xx/cx231xx-video.c
+index 179b8481a870d..fd33c2e9327da 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-video.c
++++ b/drivers/media/usb/cx231xx/cx231xx-video.c
+@@ -1389,7 +1389,7 @@ int cx231xx_g_register(struct file *file, void *priv,
+ 		ret = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER,
+ 				(u16)reg->reg, value, 4);
+ 		reg->val = value[0] | value[1] << 8 |
+-			value[2] << 16 | value[3] << 24;
++			value[2] << 16 | (u32)value[3] << 24;
+ 		reg->size = 4;
+ 		break;
+ 	case 1:	/* AFE - read byte */
 -- 
 2.20.1
 
