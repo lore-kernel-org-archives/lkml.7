@@ -2,188 +2,295 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA1CC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099CDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6E020818
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA90E20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfKMJ4n (ORCPT
+        id S1727680AbfKMJ44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:56:43 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37319 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfKMJ4m (ORCPT
+        Wed, 13 Nov 2019 04:56:56 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:57316 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727378AbfKMJ4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:56:42 -0500
-X-Originating-IP: 93.34.114.233
-Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id E79A24000B;
-        Wed, 13 Nov 2019 09:56:36 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 10:58:31 +0100
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-iio@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: max9611: Fix too short conversion time delay
-Message-ID: <20191113095831.ipezy2ganb7tk73i@uno.localdomain>
-References: <20191113092133.23723-1-geert+renesas@glider.be>
- <20191113093828.vk5qqtlr7bs5z5fb@uno.localdomain>
- <CAMuHMdUeY62SBvzgHCMxjeDO6f_c3isbw82FKJatzny=qiDULQ@mail.gmail.com>
+        Wed, 13 Nov 2019 04:56:55 -0500
+Received: from mail-wr1-f70.google.com ([209.85.221.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1iUpOP-0005Fy-Vk
+        for linux-kernel@vger.kernel.org; Wed, 13 Nov 2019 09:56:53 +0000
+Received: by mail-wr1-f70.google.com with SMTP id q12so1285792wrr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 01:56:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EoiUDOwW4wxyzppZmSS5uyFip4bzvGiAJfL4Yfo2Xi4=;
+        b=APfqYpYv9ZsOWrSh/u/y0KsE/Cc+IQ1m+RkWKPyd2Joea1rAJT78iVc5b7aKx+lHve
+         O0ANvs04G03yW94yp61hzNfQSGi3apV21uigkZXvX4xp8d5hZlmu9MitWMooXKirrp+A
+         6EML4ivj6BZsPutLONw9XcmCYkwXGBXdJDsH/n0d/1btG+r3y/BgRsaWssbJwVpFSBcZ
+         y2BNXZ2Apg5pxkjd0ENEQSamNPRRnV2x0DHOCibThdsLo0SVJUTpQvDIJSo0Nk69FiHf
+         YGGm08d26tq9oDxj8DD5HtSwJqMp/+8WnTp06kMsh58TnaxtS5A+0YDUAW8+5Sb7F9kr
+         ax4Q==
+X-Gm-Message-State: APjAAAXsCg8iUwUpnR65DghizFAKD2acdV5oIXYkHqZjkupy3i1G4VXq
+        xhnxFTNpPR3gDiXDPHf/q+bTy4dj9e17loA/IyLjU+IwcJS4xNLJgwwNrCAhoov4oiKiJexQKrk
+        VtMPrZVypzNjkvMLcZzVzVV1WFcG1mWNYnKc01TntonIBwScvBLoiNmPQ
+X-Received: by 2002:a1c:64d4:: with SMTP id y203mr1922461wmb.27.1573639013548;
+        Wed, 13 Nov 2019 01:56:53 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxIwwlbA2u7qRPwiMpiXC42i8bF2tanN97OE0837IyPaTeg2C7rGjV+1OzU+YxpI0lxjhWvod6mSB8CrawZMCA=
+X-Received: by 2002:a1c:64d4:: with SMTP id y203mr1922435wmb.27.1573639013177;
+ Wed, 13 Nov 2019 01:56:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4nrix7m2kjdzc3cg"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUeY62SBvzgHCMxjeDO6f_c3isbw82FKJatzny=qiDULQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20191111181438.945353076@linuxfoundation.org> <20191111181439.215958503@linuxfoundation.org>
+In-Reply-To: <20191111181439.215958503@linuxfoundation.org>
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+Date:   Wed, 13 Nov 2019 17:56:42 +0800
+Message-ID: <CAMy_GT_Snw-e6sLt9apftWjTagGuMYUPqsuqnSFbJJ39uGOZ2g@mail.gmail.com>
+Subject: Re: [PATCH 4.19 001/125] bonding: fix state transition issue in link monitoring
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Aleksei Zakharov <zakharov.a.g@yandex.ru>,
+        Sha Zhang <zhangsha.zhang@huawei.com>,
+        Mahesh Bandewar <maheshb@google.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---4nrix7m2kjdzc3cg
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Geert,
-
-On Wed, Nov 13, 2019 at 10:46:21AM +0100, Geert Uytterhoeven wrote:
-> Hi Jacopo,
+On Tue, Nov 12, 2019 at 3:05 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Wed, Nov 13, 2019 at 10:36 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
-> > On Wed, Nov 13, 2019 at 10:21:33AM +0100, Geert Uytterhoeven wrote:
-> > > As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
-> > > reading in probe"), max9611 initialization sometimes fails on the
-> > > Salvator-X(S) development board with:
-> > >
-> > >     max9611 4-007f: Invalid value received from ADC 0x8000: aborting
-> > >     max9611: probe of 4-007f failed with error -5
-> > >
-> > > The max9611 driver tests communications with the chip by reading the =
-die
-> > > temperature during the probe function, which returns an invalid value.
-> > >
-> > > According to the datasheet, the typical ADC conversion time is 2 ms, =
-but
-> > > no minimum or maximum values are provided.  However, the driver assum=
-es
-> > > a 1 ms conversion time.  Usually the usleep_range() call returns after
-> > > more than 1.8 ms, hence it succeeds.  When it returns earlier, the da=
-ta
-> > > register may be read too early, and the previous measurement value wi=
-ll
-> > > be returned.  After boot, this is the temperature POR (power-on reset)
-> > > value, causing the failure above.
-> > >
-> > > Fix this by increasing the delay from 1000-2000 =C2=B5s to 2000-2200 =
-=C2=B5s.
-> > >
-> > > Note that this issue has always been present, but it was exposed by t=
-he
-> > > aformentioned commit.
-> > >
-> > > Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > ---
-> > > This problem was exposed in v5.3.
-> > >
-> > > After this patch, probing of the two max9611 sensors succeeded during
-> > > ca. 3000 boot cycles on Salvator-X(S) boards, equipped with various
-> > > R-Car H3/M3-W/M3-N SoCs.
-> > > ---
-> > >  drivers/iio/adc/max9611.c | 11 ++++++++---
-> > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-> > > index da073d72f649f829..b0755f25356d700d 100644
-> > > --- a/drivers/iio/adc/max9611.c
-> > > +++ b/drivers/iio/adc/max9611.c
-> > > @@ -89,6 +89,11 @@
-> > >  #define MAX9611_TEMP_SCALE_NUM               1000000
-> > >  #define MAX9611_TEMP_SCALE_DIV               2083
-> > >
-> > > +/*
-> > > + * Conversion time is 2 ms (typically)
-> > > + */
-> > > +#define MAX9611_CONV_TIME_US_RANGE   2000, 2200
-> > > +
-> >
-> > Is a 20% sleep range enough or should it be slightly lengthen ?
+> From: Jay Vosburgh <jay.vosburgh@canonical.com>
 >
-> 10%?
-
-Ehrm... yes :/
-
+> [ Upstream commit 1899bb325149e481de31a4f32b59ea6f24e176ea ]
 >
-> This only impacts the variation, so what really happens depends on the
-> rate of the hrtimer (if present).
-> On R-Car Gen3, I think that uses the ARM Architectured Timer (cp15),
-> which has a period of 120 ns.
+> Since de77ecd4ef02 ("bonding: improve link-status update in
+> mii-monitoring"), the bonding driver has utilized two separate variables
+> to indicate the next link state a particular slave should transition to.
+> Each is used to communicate to a different portion of the link state
+> change commit logic; one to the bond_miimon_commit function itself, and
+> another to the state transition logic.
 >
-
-I'm not questioning the hrtimer rate, I'm questioning what would be an
-ideal interval to coalesce this with as much other delays as possible,
-but I think we're good and this is really a minor thing mostly for my
-personal education, as I've seen mentioned in other reviews a 20%
-range is usually suggested (found no mention of that in
-timers-howto.rst though)
-
-Thanks again for fixing this
-  j
-
-> > Apart from this, thanks a lot for finding the issue root cause!
-> >
-> > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>         Unfortunately, the two variables can become unsynchronized,
+> resulting in incorrect link state transitions within bonding.  This can
+> cause slaves to become stuck in an incorrect link state until a
+> subsequent carrier state transition.
 >
-> Thanks!
+>         The issue occurs when a special case in bond_slave_netdev_event
+> sets slave->link directly to BOND_LINK_FAIL.  On the next pass through
+> bond_miimon_inspect after the slave goes carrier up, the BOND_LINK_FAIL
+> case will set the proposed next state (link_new_state) to BOND_LINK_UP,
+> but the new_link to BOND_LINK_DOWN.  The setting of the final link state
+> from new_link comes after that from link_new_state, and so the slave
+> will end up incorrectly in _DOWN state.
 >
-> Gr{oetje,eeting}s,
+>         Resolve this by combining the two variables into one.
 >
->                         Geert
+> Reported-by: Aleksei Zakharov <zakharov.a.g@yandex.ru>
+> Reported-by: Sha Zhang <zhangsha.zhang@huawei.com>
+> Cc: Mahesh Bandewar <maheshb@google.com>
+> Fixes: de77ecd4ef02 ("bonding: improve link-status update in mii-monitoring")
+> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/net/bonding/bond_main.c |   41 +++++++++++++++++++---------------------
+>  include/net/bonding.h           |    3 --
+>  2 files changed, 21 insertions(+), 23 deletions(-)
 >
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
+> --- a/drivers/net/bonding/bond_main.c
+> +++ b/drivers/net/bonding/bond_main.c
+> @@ -2074,8 +2074,7 @@ static int bond_miimon_inspect(struct bo
+>         ignore_updelay = !rcu_dereference(bond->curr_active_slave);
 >
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+>         bond_for_each_slave_rcu(bond, slave, iter) {
+> -               slave->new_link = BOND_LINK_NOCHANGE;
+> -               slave->link_new_state = slave->link;
+> +               bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+>
+>                 link_state = bond_check_dev_link(bond, slave->dev, 0);
+>
+> @@ -2111,7 +2110,7 @@ static int bond_miimon_inspect(struct bo
+>                         }
+>
+>                         if (slave->delay <= 0) {
+> -                               slave->new_link = BOND_LINK_DOWN;
+> +                               bond_propose_link_state(slave, BOND_LINK_DOWN);
+>                                 commit++;
+>                                 continue;
+>                         }
+> @@ -2150,7 +2149,7 @@ static int bond_miimon_inspect(struct bo
+>                                 slave->delay = 0;
+>
+>                         if (slave->delay <= 0) {
+> -                               slave->new_link = BOND_LINK_UP;
+> +                               bond_propose_link_state(slave, BOND_LINK_UP);
+>                                 commit++;
+>                                 ignore_updelay = false;
+>                                 continue;
+> @@ -2188,7 +2187,7 @@ static void bond_miimon_commit(struct bo
+>         struct slave *slave, *primary;
+>
+>         bond_for_each_slave(bond, slave, iter) {
+> -               switch (slave->new_link) {
+> +               switch (slave->link_new_state) {
+>                 case BOND_LINK_NOCHANGE:
+>                         /* For 802.3ad mode, check current slave speed and
+>                          * duplex again in case its port was disabled after
+> @@ -2263,8 +2262,8 @@ static void bond_miimon_commit(struct bo
+>
+>                 default:
+>                         netdev_err(bond->dev, "invalid new link %d on slave %s\n",
+> -                                  slave->new_link, slave->dev->name);
+> -                       slave->new_link = BOND_LINK_NOCHANGE;
+> +                                  slave->link_new_state, slave->dev->name);
+> +                       bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+>
+>                         continue;
+>                 }
+> @@ -2664,13 +2663,13 @@ static void bond_loadbalance_arp_mon(str
+>         bond_for_each_slave_rcu(bond, slave, iter) {
+>                 unsigned long trans_start = dev_trans_start(slave->dev);
+>
+> -               slave->new_link = BOND_LINK_NOCHANGE;
+> +               bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+>
+>                 if (slave->link != BOND_LINK_UP) {
+>                         if (bond_time_in_interval(bond, trans_start, 1) &&
+>                             bond_time_in_interval(bond, slave->last_rx, 1)) {
+>
+> -                               slave->new_link = BOND_LINK_UP;
+> +                               bond_propose_link_state(slave, BOND_LINK_UP);
+>                                 slave_state_changed = 1;
+>
+>                                 /* primary_slave has no meaning in round-robin
+> @@ -2697,7 +2696,7 @@ static void bond_loadbalance_arp_mon(str
+>                         if (!bond_time_in_interval(bond, trans_start, 2) ||
+>                             !bond_time_in_interval(bond, slave->last_rx, 2)) {
+>
+> -                               slave->new_link = BOND_LINK_DOWN;
+> +                               bond_propose_link_state(slave, BOND_LINK_DOWN);
+>                                 slave_state_changed = 1;
+>
+>                                 if (slave->link_failure_count < UINT_MAX)
+> @@ -2729,8 +2728,8 @@ static void bond_loadbalance_arp_mon(str
+>                         goto re_arm;
+>
+>                 bond_for_each_slave(bond, slave, iter) {
+> -                       if (slave->new_link != BOND_LINK_NOCHANGE)
+> -                               slave->link = slave->new_link;
+> +                       if (slave->link_new_state != BOND_LINK_NOCHANGE)
+> +                               slave->link = slave->link_new_state;
+>                 }
+>
+>                 if (slave_state_changed) {
+> @@ -2753,9 +2752,9 @@ re_arm:
+>  }
+>
+>  /* Called to inspect slaves for active-backup mode ARP monitor link state
+> - * changes.  Sets new_link in slaves to specify what action should take
+> - * place for the slave.  Returns 0 if no changes are found, >0 if changes
+> - * to link states must be committed.
+> + * changes.  Sets proposed link state in slaves to specify what action
+> + * should take place for the slave.  Returns 0 if no changes are found, >0
+> + * if changes to link states must be committed.
+>   *
+>   * Called with rcu_read_lock held.
+>   */
+> @@ -2767,12 +2766,12 @@ static int bond_ab_arp_inspect(struct bo
+>         int commit = 0;
+>
+>         bond_for_each_slave_rcu(bond, slave, iter) {
+> -               slave->new_link = BOND_LINK_NOCHANGE;
+> +               bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+>                 last_rx = slave_last_rx(bond, slave);
+>
+>                 if (slave->link != BOND_LINK_UP) {
+>                         if (bond_time_in_interval(bond, last_rx, 1)) {
+> -                               slave->new_link = BOND_LINK_UP;
+> +                               bond_propose_link_state(slave, BOND_LINK_UP);
+>                                 commit++;
+>                         }
+>                         continue;
+> @@ -2800,7 +2799,7 @@ static int bond_ab_arp_inspect(struct bo
+>                 if (!bond_is_active_slave(slave) &&
+>                     !rcu_access_pointer(bond->current_arp_slave) &&
+>                     !bond_time_in_interval(bond, last_rx, 3)) {
+> -                       slave->new_link = BOND_LINK_DOWN;
+> +                       bond_propose_link_state(slave, BOND_LINK_DOWN);
+>                         commit++;
+>                 }
+>
+> @@ -2813,7 +2812,7 @@ static int bond_ab_arp_inspect(struct bo
+>                 if (bond_is_active_slave(slave) &&
+>                     (!bond_time_in_interval(bond, trans_start, 2) ||
+>                      !bond_time_in_interval(bond, last_rx, 2))) {
+> -                       slave->new_link = BOND_LINK_DOWN;
+> +                       bond_propose_link_state(slave, BOND_LINK_DOWN);
+>                         commit++;
+>                 }
+>         }
+> @@ -2833,7 +2832,7 @@ static void bond_ab_arp_commit(struct bo
+>         struct slave *slave;
+>
+>         bond_for_each_slave(bond, slave, iter) {
+> -               switch (slave->new_link) {
+> +               switch (slave->link_new_state) {
+>                 case BOND_LINK_NOCHANGE:
+>                         continue;
+>
+> @@ -2886,7 +2885,7 @@ static void bond_ab_arp_commit(struct bo
+>
+>                 default:
+>                         netdev_err(bond->dev, "impossible: new_link %d on slave %s\n",
 
---4nrix7m2kjdzc3cg
-Content-Type: application/pgp-signature; name="signature.asc"
+Hello,
 
------BEGIN PGP SIGNATURE-----
+I think the error message here should be: "impossible: link_new_state
+%d on slave %s\n" instead?
+As in the upstream commit it's:
+         slave_err(bond->dev, slave->dev,
+                         "impossible: link_new_state %d on slave\n",
+                          slave->link_new_state);
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3L08cACgkQcjQGjxah
-Vjz2VBAAmVgNax3Q2EqlMa191fXpyMMKE1rVyVhEmTpY6CjHQjCAIeTsnb/POqZU
-6BM6jZ2WNkpb3zHxRlRjURKkJUsupTgCZS+ifYNTraIoqXuY3PYpXPo6/lOHMGb5
-/vSDaLPF5sAiy4z670Gh3trgi3JZzWl0cLKpPCrUGa+TiSO3ifD0yAqAjQN4//0M
-fKoWokKRvVLsXX1ZkuryKZdDkKq9JDIjui4xDQHGo+2P4oexg7iF735msbXuyH/w
-VJ43+qQYktd9+lST8JYMf/c8aMDh8NGMs3m+DKxkvBiIzVySY9k2eGMcS4VUXjy+
-r4SnFpmYoxJOpMRIdOOCn3ZkCEQRmfkuLBIZUgLd8gu3yKsvfD+hSr5V89wUSvVl
-QBnSXCIRKUefcUWSR9P8O+CmyF//n/EipO9+Dm4l3SPuZPPJx/3UdG6UwsqaCxdI
-Yo5RXVFPP70Xae29ufeqMCN0vP8tMuqMYuBdQhbXqy0hDSCZVI2KOEnnhhy/GITr
-EiDoEKcBGQuGv43zG8Dv9W/ISpVmlH/0Yvt0Y47iShVE6szWFGyWswK3sRjLuuF+
-xDGxWMsAtCfeCCfM0CB2cJjTqq4TAtseep6Vprj2FPZkfUSQsjLeJChVlvtMMBDl
-idDM6QYmNMJEKCtw2RdCKFJncu5hhPwAvfiFyNjOa7CWkjsI8rY=
-=evql
------END PGP SIGNATURE-----
+Thanks
 
---4nrix7m2kjdzc3cg--
+
+
+
+> -                                  slave->new_link, slave->dev->name);
+> +                                  slave->link_new_state, slave->dev->name);
+>                         continue;
+>                 }
+>
+> --- a/include/net/bonding.h
+> +++ b/include/net/bonding.h
+> @@ -149,7 +149,6 @@ struct slave {
+>         unsigned long target_last_arp_rx[BOND_MAX_ARP_TARGETS];
+>         s8     link;            /* one of BOND_LINK_XXXX */
+>         s8     link_new_state;  /* one of BOND_LINK_XXXX */
+> -       s8     new_link;
+>         u8     backup:1,   /* indicates backup slave. Value corresponds with
+>                               BOND_STATE_ACTIVE and BOND_STATE_BACKUP */
+>                inactive:1, /* indicates inactive slave */
+> @@ -539,7 +538,7 @@ static inline void bond_propose_link_sta
+>
+>  static inline void bond_commit_link_state(struct slave *slave, bool notify)
+>  {
+> -       if (slave->link == slave->link_new_state)
+> +       if (slave->link_new_state == BOND_LINK_NOCHANGE)
+>                 return;
+>
+>         slave->link = slave->link_new_state;
+>
+>
