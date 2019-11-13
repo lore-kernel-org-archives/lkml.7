@@ -2,243 +2,141 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA56C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED48C33C8C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EA7206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01FF206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfKMTGF (ORCPT
+        id S1728747AbfKMTGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 Nov 2019 14:06:06 -0500
+Received: from mga17.intel.com ([192.55.52.151]:44893 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727290AbfKMTGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Nov 2019 14:06:05 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:42266 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727290AbfKMTGE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:06:04 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iUxwa-0000xi-Sg; Wed, 13 Nov 2019 19:04:44 +0000
-Subject: Re: [PATCH][V3] ovl: fix lookup failure on multi lower squashfs
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20191113175746.110933-1-colin.king@canonical.com>
- <CAOQ4uxiV06H9s8WMso6A1A7mhdvQ_AuWM0n71VoGYTdryi8KNA@mail.gmail.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a494f07f-c1e3-a9e3-2af5-252d59df4bfd@canonical.com>
-Date:   Wed, 13 Nov 2019 19:04:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 11:06:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,301,1569308400"; 
+   d="scan'208";a="198545356"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga008.jf.intel.com with ESMTP; 13 Nov 2019 11:06:02 -0800
+Date:   Wed, 13 Nov 2019 11:06:02 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 22/23] selftests/vm: run_vmtests: invoke gup_benchmark
+ with basic FOLL_PIN coverage
+Message-ID: <20191113190602.GC12947@iweiny-DESK2.sc.intel.com>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com>
+ <20191113042710.3997854-23-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxiV06H9s8WMso6A1A7mhdvQ_AuWM0n71VoGYTdryi8KNA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113042710.3997854-23-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/11/2019 18:34, Amir Goldstein wrote:
-> On Wed, Nov 13, 2019 at 7:57 PM Colin King <colin.king@canonical.com> wrote:
->>
->> From: Amir Goldstein <amir73il@gmail.com>
->>
->> In the past, overlayfs required that lower fs have non null
->> uuid in order to support nfs export and decode copy up origin file handles.
->>
->> Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
->> lower fs") relaxed this requirement for nfs export support, as long
->> as uuid (even if null) is unique among all lower fs.
->>
->> However, said commit unintentionally also relaxed the non null uuid
->> requirement for decoding copy up origin file handles, regardless of
->> the unique uuid requirement.
->>
->> Amend this mistake by disabling decoding of copy up origin file handle
->> from lower fs with a conflicting uuid.
->>
->> We still encode copy up origin file handles from those fs, because
->> file handles like those already exist in the wild and because they
->> might provide useful information in the future.
->>
->> [Colin Ian King] fixed the case of index=off,nfs_export=off
->>
->> Reported-by: Colin Ian King <colin.king@canonical.com>
->> Link: https://lore.kernel.org/lkml/20191106234301.283006-1-colin.king@canonical.com/
->> Fixes: 9df085f3c9a2 ("ovl: relax requirement for non null uuid ...")
->> Cc: stable@vger.kernel.org # v4.20+
->> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
->> Tested-by: Colin Ian King <colin.king@canonical.com>
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>`
->> ---
->>
->> V3: fix the following check:
->>   -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
->>   +       if (!ofs->config.nfs_export && !ofs->upper_mnt)
->>
->> Add the index=off,nfs_export=off comment in the commit message
->>
->> ---
->>  fs/overlayfs/namei.c     |  8 ++++++++
->>  fs/overlayfs/ovl_entry.h |  2 ++
->>  fs/overlayfs/super.c     | 15 +++++++++++----
->>  3 files changed, 21 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
->> index e9717c2f7d45..f47c591402d7 100644
->> --- a/fs/overlayfs/namei.c
->> +++ b/fs/overlayfs/namei.c
->> @@ -325,6 +325,14 @@ int ovl_check_origin_fh(struct ovl_fs *ofs, struct ovl_fh *fh, bool connected,
->>         int i;
->>
->>         for (i = 0; i < ofs->numlower; i++) {
->> +               /*
->> +                * If lower fs uuid is not unique among lower fs we cannot match
->> +                * fh->uuid to layer.
->> +                */
->> +               if (ofs->lower_layers[i].fsid &&
->> +                   ofs->lower_layers[i].fs->bad_uuid)
->> +                       continue;
->> +
->>                 origin = ovl_decode_real_fh(fh, ofs->lower_layers[i].mnt,
->>                                             connected);
->>                 if (origin)
->> diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
->> index a8279280e88d..28348c44ea5b 100644
->> --- a/fs/overlayfs/ovl_entry.h
->> +++ b/fs/overlayfs/ovl_entry.h
->> @@ -22,6 +22,8 @@ struct ovl_config {
->>  struct ovl_sb {
->>         struct super_block *sb;
->>         dev_t pseudo_dev;
->> +       /* Unusable (conflicting) uuid */
->> +       bool bad_uuid;
->>  };
->>
->>  struct ovl_layer {
->> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
->> index afbcb116a7f1..e53d399ce0af 100644
->> --- a/fs/overlayfs/super.c
->> +++ b/fs/overlayfs/super.c
->> @@ -1255,7 +1255,7 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
->>  {
->>         unsigned int i;
->>
->> -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
->> +       if (!ofs->config.nfs_export && !ofs->upper_mnt)
->>                 return true;
->>
->>         for (i = 0; i < ofs->numlowerfs; i++) {
->> @@ -1263,9 +1263,13 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
->>                  * We use uuid to associate an overlay lower file handle with a
->>                  * lower layer, so we can accept lower fs with null uuid as long
->>                  * as all lower layers with null uuid are on the same fs.
->> +                * if we detect multiple lower fs with the same uuid, we
->> +                * disable lower file handle decoding on all of them.
->>                  */
->> -               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid))
->> +               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid)) {
->> +                       ofs->lower_fs[i].bad_uuid = true;
->>                         return false;
->> +               }
->>         }
->>         return true;
->>  }
->> @@ -1277,6 +1281,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
->>         unsigned int i;
->>         dev_t dev;
->>         int err;
->> +       bool bad_uuid = false;
->>
->>         /* fsid 0 is reserved for upper fs even with non upper overlay */
->>         if (ofs->upper_mnt && ofs->upper_mnt->mnt_sb == sb)
->> @@ -1287,10 +1292,11 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
->>                         return i + 1;
->>         }
->>
->> -       if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
->> +       if (ofs->upper_mnt && !ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
-
-
+On Tue, Nov 12, 2019 at 08:27:09PM -0800, John Hubbard wrote:
+> It's good to have basic unit test coverage of the new FOLL_PIN
+> behavior. Fortunately, the gup_benchmark unit test is extremely
+> fast (a few milliseconds), so adding it the the run_vmtests suite
+> is going to cause no noticeable change in running time.
 > 
-> Sorry I wasn't clear.
-> Miklos is right. the test ofs->upper_mnt here is bogus because
-> nfs_export could be enabled without upper.
-> The change you made in v3 to ovl_lower_uuid_ok() should be enough.
-
-OK, so the following is required for V4:
-
-+	if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
-
+> So, add two new invocations to run_vmtests:
 > 
->> +               bad_uuid = true;
->>                 ofs->config.index = false;
->>                 ofs->config.nfs_export = false;
->> -               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', falling back to index=off,nfs_export=off.\n",
->> +               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', enforcing index=off,nfs_export=off.\n",
->>                         uuid_is_null(&sb->s_uuid) ? "null" : "conflicting",
->>                         path->dentry);
->>         }
->> @@ -1303,6 +1309,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
->>
->>         ofs->lower_fs[ofs->numlowerfs].sb = sb;
->>         ofs->lower_fs[ofs->numlowerfs].pseudo_dev = dev;
->> +       ofs->lower_fs[ofs->numlowerfs].bad_uuid = bad_uuid;
->>         ofs->numlowerfs++;
->>
->>         return ofs->numlowerfs;
->> --
->> 2.20.1
->>
+> 1) Run gup_benchmark with normal get_user_pages().
+> 
+> 2) Run gup_benchmark with pin_user_pages(). This is much like
+> the first call, except that it sets FOLL_PIN.
+> 
+> Running these two in quick succession also provide a visual
+> comparison of the running times, which is convenient.
+> 
+> The new invocations are fairly early in the run_vmtests script,
+> because with test suites, it's usually preferable to put the
+> shorter, faster tests first, all other things being equal.
+> 
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+> ---
+>  tools/testing/selftests/vm/run_vmtests | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftests/vm/run_vmtests
+> index 951c507a27f7..93e8dc9a7cad 100755
+> --- a/tools/testing/selftests/vm/run_vmtests
+> +++ b/tools/testing/selftests/vm/run_vmtests
+> @@ -104,6 +104,28 @@ echo "NOTE: The above hugetlb tests provide minimal coverage.  Use"
+>  echo "      https://github.com/libhugetlbfs/libhugetlbfs.git for"
+>  echo "      hugetlb regression testing."
+>  
+> +echo "--------------------------------------------"
+> +echo "running 'gup_benchmark -U' (normal/slow gup)"
+> +echo "--------------------------------------------"
+> +./gup_benchmark -U
+> +if [ $? -ne 0 ]; then
+> +	echo "[FAIL]"
+> +	exitcode=1
+> +else
+> +	echo "[PASS]"
+> +fi
+> +
+> +echo "------------------------------------------"
+> +echo "running gup_benchmark -c (pin_user_pages)"
+> +echo "------------------------------------------"
+> +./gup_benchmark -c
+> +if [ $? -ne 0 ]; then
+> +	echo "[FAIL]"
+> +	exitcode=1
+> +else
+> +	echo "[PASS]"
+> +fi
+> +
+>  echo "-------------------"
+>  echo "running userfaultfd"
+>  echo "-------------------"
+> -- 
+> 2.24.0
+> 
