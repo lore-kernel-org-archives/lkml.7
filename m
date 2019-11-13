@@ -2,104 +2,112 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1A1C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFF1C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9ACC206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9568D206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 10:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573640453;
+	bh=aFsBOvHVyME8LY3ePTW/JWDZQv8QeWFSB0xthmKTJ4c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FRoCxjg8E43zh0ism4Fbg9EZmWqBa7PZ9OIomvOefn/r4LrqKmZLBXBb3vGvJskQG
+	 lR05YHWmE1UdROL+8REBBsKSuNgUwycURBx/DkEO4mTtl42wmJigEMgF1iD4A8rpcs
+	 Z2lOhATnR7g7CvvbIlHGSpIdmurNqofmgWfkqtF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfKMKT5 (ORCPT
+        id S1727385AbfKMKUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 05:19:57 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:44722 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKMKT4 (ORCPT
+        Wed, 13 Nov 2019 05:20:52 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35383 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfKMKUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 05:19:56 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 06E5C1C1229; Wed, 13 Nov 2019 11:19:54 +0100 (CET)
-Date:   Wed, 13 Nov 2019 11:19:54 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 4.19 062/125] ALSA: usb-audio: Fix possible NULL
- dereference at create_yamaha_midi_quirk()
-Message-ID: <20191113101954.GA32553@amd>
-References: <20191111181438.945353076@linuxfoundation.org>
- <20191111181448.565879068@linuxfoundation.org>
+        Wed, 13 Nov 2019 05:20:51 -0500
+Received: by mail-ot1-f65.google.com with SMTP id z6so1157246otb.2;
+        Wed, 13 Nov 2019 02:20:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Lvja61wwJEkxFUoNesZ7CUJfOp6AZA3UJFpr6tZxyM=;
+        b=Vahx1NVOfVngUdWpiVbr8W7QMs1jlP9JWvUBvMyttiC9/GvubEkW0+uiJUPe9tZxwG
+         7dINTQlveyGH9wxuZ1ecFRwDc237Wo/kq9KHsACePsL+VXOi80zOxGOYPDJrq3w2WPe8
+         HlW9zN2uwxv3Lz6GteEbLf8Bt2Vb/dT89PFnBXulIA58i1/ek/GU0pLpyixsYlVEcKoo
+         o7siEm6oPxQ0V4QHjnMTrt7F+FI9mI7B/bvqHT7L3m6K9fjm9FDVP0KDG6bcZQuegrCW
+         RplF6Td/GKT+rMwra1pqHLn2pjK3GVH2IBu86ZCs14ohBPUMuqLq9hGKwSh9G5dim9rp
+         +/yQ==
+X-Gm-Message-State: APjAAAXU3eaX7kiIe7J/PjQV5xBoodCGZlbWmqQvVW3dlQQ/DuhMfV8Y
+        UEsO+dz5CnV+gR1njp4OLmVgpbN9FmpezhmuIfY=
+X-Google-Smtp-Source: APXvYqx7+iaSr/YFYkN/OL/jLYa0u92ocpHWjpBLM/QT3evJcxb2dZgQ4dGsiKKKGXO464GduvcJf5QQBQnKxv9uLdE=
+X-Received: by 2002:a9d:7d01:: with SMTP id v1mr2015836otn.167.1573640449727;
+ Wed, 13 Nov 2019 02:20:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
-Content-Disposition: inline
-In-Reply-To: <20191111181448.565879068@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191113023559.62295-1-saravanak@google.com> <20191113023559.62295-2-saravanak@google.com>
+In-Reply-To: <20191113023559.62295-2-saravanak@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 13 Nov 2019 11:20:38 +0100
+Message-ID: <CAJZ5v0j=tpZDe5JU+tBRRmtgK=Vuj7UTzqB2Ravg-BctcP6u+Q@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Clarify documentation for fwnode_operations.add_links()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 13, 2019 at 3:36 AM Saravana Kannan <saravanak@google.com> wrote:
+>
+> The wording was a bit ambiguous. So update it to make it clear.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks better with this change IMO:
 
-Hi!
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> From: Takashi Iwai <tiwai@suse.de>
->=20
-> commit 60849562a5db4a1eee2160167e4dce4590d3eafe upstream.
->=20
-> The previous addition of descriptor validation may lead to a NULL
-> dereference at create_yamaha_midi_quirk() when either injd or outjd is
-> NULL.  Add proper non-NULL checks.
-
-This is wrong.
-
-> @@ -259,8 +259,8 @@ static int create_yamaha_midi_quirk(stru
->  					NULL, USB_MS_MIDI_OUT_JACK);
->  	if (!injd && !outjd)
->  		return -ENODEV;
-
-Clearly code wants to allow at most one of them to be NULL.
-
-> -	if (!snd_usb_validate_midi_desc(injd) ||
-> -	    !snd_usb_validate_midi_desc(outjd))
-> +	if (!(injd && snd_usb_validate_midi_desc(injd)) ||
-> +	    !(outjd && snd_usb_validate_midi_desc(outjd)))
->  		return -ENODEV;
-
-Yet it will return here if it is. Correct check would be
-
-+     if (!(!injd || snd_usb_validate_midi_desc(injd)) ||
-+         !(!outjd || snd_usb_validate_midi_desc(outjd)))
-
-AFAICT.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---OXfL5xGRrasGEqWY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3L2MoACgkQMOfwapXb+vKkvwCfQwemC8SZ0emRIQydohEHDrpA
-oQwAn1dEXHbybsKKrhheQUqGeQG0zE90
-=bi0F
------END PGP SIGNATURE-----
-
---OXfL5xGRrasGEqWY--
+> ---
+>  include/linux/fwnode.h | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index 766ff9bb5876..23df37f85398 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -94,15 +94,16 @@ struct fwnode_reference_args {
+>   *             available suppliers.
+>   *
+>   *             Return 0 if device links have been successfully created to all
+> - *             the suppliers this device needs to create device links to or if
+> - *             the supplier information is not known.
+> + *             the known suppliers of this device or if the supplier
+> + *             information is not known.
+>   *
+> - *             Return -ENODEV if and only if the suppliers needed for probing
+> - *             the device are not yet available to create device links to.
+> + *             Return -ENODEV if the suppliers needed for probing this device
+> + *             have not been registered yet (because device links can only be
+> + *             created to devices registered with the driver core).
+>   *
+> - *             Return -EAGAIN if there are suppliers that need to be linked to
+> - *             that are not yet available but none of those suppliers are
+> - *             necessary for probing this device.
+> + *             Return -EAGAIN if some of the suppliers of this device have not
+> + *             been registered yet, but none of those suppliers are necessary
+> + *             for probing the device.
+>   */
+>  struct fwnode_operations {
+>         struct fwnode_handle *(*get)(struct fwnode_handle *fwnode);
+> --
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+>
