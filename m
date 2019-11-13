@@ -2,160 +2,87 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41CCC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50680C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C20B206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF6420409
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UaiurrxD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="PdwBBOQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfKMS0B (ORCPT
+        id S1728526AbfKMS07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:26:01 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40701 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbfKMSZY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:25:24 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 15so1874091pgt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 10:25:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qi9/NyJEMAI/v/yEt1QBedR/fOWtH+g+t+OXCVVBZWw=;
-        b=UaiurrxDV7eCNiFtLqe0b8S9HTI4M1eI6wdxAZ1ftvrn92KRlgVaItkwPIO+ZlPAfN
-         ti+O2ZtUesIYO0CVjR+oCiwdrW5+PwSW20W6X+FZCoQEColq6ksIeM4RaKkHaibGC0po
-         M7usgsql9ml/NVprhibzkRXtrvx6htC8krF80=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qi9/NyJEMAI/v/yEt1QBedR/fOWtH+g+t+OXCVVBZWw=;
-        b=K7jA2emDCMDVDFaF6A3BToK98rNUpmiZzpPTE2IQKv6Kd9eoUHUsTjY75Wz2wQ261p
-         ebgj1TH+Cr7sYhan+G49EoisvwbEINaBh8pKdQb1LMtzPHcbgyTN4m34/ew6/5EaFh82
-         M/WBN76mlQkewWUu5K4uUt4h3l2tKn7UaAgzZynPtIr80JQcxHeQz0it7+ItnDV//i0p
-         Ijpryd1Tn6FF+XQxe7d8NbZZRgjZxgOe6PqIPbXuOgTnR5Bhinv8XgkuBpKHQSpQOBe8
-         21Lqbh2FDbfu8Z9kHHFyHv07Rt2g3+L+rK+79Ls84FobXzKaECZZymAR1O+Jbxc2yaYL
-         KN9w==
-X-Gm-Message-State: APjAAAWajAB7bwSaPulIMvRVyyz45ji0Ug5ta/l/JuEvl4EmUnG9YNos
-        0d0xvhgC+mbk8gbFV9saVmjz3A==
-X-Google-Smtp-Source: APXvYqzh4ByHjL3GL653Ot7WEt8CrI2NVmzKGJF+0Zm/LXRtz4wDCGg9LuyYPoUvg2VCcKHiKQktsQ==
-X-Received: by 2002:a63:f48:: with SMTP id 8mr5337407pgp.329.1573669523327;
-        Wed, 13 Nov 2019 10:25:23 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q1sm2794222pgr.92.2019.11.13.10.25.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 10:25:21 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        =?UTF-8?q?Jo=C3=A3o=20Moreira?= <joao.moreira@intel.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: [PATCH v5 1/8] crypto: x86/glue_helper: Regularize function prototypes
-Date:   Wed, 13 Nov 2019 10:25:09 -0800
-Message-Id: <20191113182516.13545-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191113182516.13545-1-keescook@chromium.org>
-References: <20191113182516.13545-1-keescook@chromium.org>
+        Wed, 13 Nov 2019 13:26:59 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:38082 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727538AbfKMS06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:26:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tqYhob/E5epp8M/KG4PYlFii+q6GD8g+aIml5ORUXbM=; b=PdwBBOQliKWOyoJdy1W9WixuaT
+        7tLZk99hIt2MfRqgkT3BHWBh1Yx4UR5SWtH5ivhWBFAVizI77f5DCUrH5lG7kb9D6yYKH+HmsXHB6
+        CKB6HX7l2l9ejvcuSjVKqDvu4zpJB52S9/43M4cvAJMXo+xmKjawqnE5cb/vezq5C9mQ=;
+Received: from p5dcc3bb7.dip0.t-ipconnect.de ([93.204.59.183] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iUxM0-0001tL-HV; Wed, 13 Nov 2019 19:26:56 +0100
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iUxM0-0006E1-5Y; Wed, 13 Nov 2019 19:26:56 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lgirdwood@gmail.com, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, phh@phh.me, b.galvani@gmail.com,
+        stefan@agner.ch
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] regulator: rn5t618: fix rc5t619 ldo10 enable
+Date:   Wed, 13 Nov 2019 19:26:43 +0100
+Message-Id: <20191113182643.23885-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The crypto glue performed function prototype casting to make indirect
-calls to assembly routines. Instead of performing casts at the call
-sites (which trips Control Flow Integrity prototype checking), switch
-each prototype to a common standard set of arguments which allows the
-incremental removal of the existing macros. In order to keep pointer
-math unchanged, internal casting between u128 pointers and u8 pointers
-is added.
+LDO9 and LDO10 were listed with the same enable bits.
+That looks insane and there are no provisions in the code for handling such
+a special case. Also other out-of-tree drivers use a separate bit to
+enable it.
+Example:
+https://github.com/brunotl/kernel-kobo-mx6sl-ntx/blob/master/drivers/regulator/ricoh619-regulator.c
+So it seems to be clearly a bug.
+I cannot fully check it on my board without schematics and just discovered
+this during code analysis for another problem.
 
-Co-developed-by: João Moreira <joao.moreira@intel.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- arch/x86/crypto/glue_helper.c             | 13 +++++++++----
- arch/x86/include/asm/crypto/glue_helper.h |  6 +++---
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ drivers/regulator/rn5t618-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/crypto/glue_helper.c b/arch/x86/crypto/glue_helper.c
-index d15b99397480..2eb1fc017187 100644
---- a/arch/x86/crypto/glue_helper.c
-+++ b/arch/x86/crypto/glue_helper.c
-@@ -134,7 +134,8 @@ int glue_cbc_decrypt_req_128bit(const struct common_glue_ctx *gctx,
- 				src -= num_blocks - 1;
- 				dst -= num_blocks - 1;
- 
--				gctx->funcs[i].fn_u.cbc(ctx, dst, src);
-+				gctx->funcs[i].fn_u.cbc(ctx, (u8 *)dst,
-+							(const u8 *)src);
- 
- 				nbytes -= func_bytes;
- 				if (nbytes < bsize)
-@@ -188,7 +189,9 @@ int glue_ctr_req_128bit(const struct common_glue_ctx *gctx,
- 
- 			/* Process multi-block batch */
- 			do {
--				gctx->funcs[i].fn_u.ctr(ctx, dst, src, &ctrblk);
-+				gctx->funcs[i].fn_u.ctr(ctx, (u8 *)dst,
-+							(const u8 *)src,
-+							&ctrblk);
- 				src += num_blocks;
- 				dst += num_blocks;
- 				nbytes -= func_bytes;
-@@ -210,7 +213,8 @@ int glue_ctr_req_128bit(const struct common_glue_ctx *gctx,
- 
- 		be128_to_le128(&ctrblk, (be128 *)walk.iv);
- 		memcpy(&tmp, walk.src.virt.addr, nbytes);
--		gctx->funcs[gctx->num_funcs - 1].fn_u.ctr(ctx, &tmp, &tmp,
-+		gctx->funcs[gctx->num_funcs - 1].fn_u.ctr(ctx, (u8 *)&tmp,
-+							  (const u8 *)&tmp,
- 							  &ctrblk);
- 		memcpy(walk.dst.virt.addr, &tmp, nbytes);
- 		le128_to_be128((be128 *)walk.iv, &ctrblk);
-@@ -240,7 +244,8 @@ static unsigned int __glue_xts_req_128bit(const struct common_glue_ctx *gctx,
- 
- 		if (nbytes >= func_bytes) {
- 			do {
--				gctx->funcs[i].fn_u.xts(ctx, dst, src,
-+				gctx->funcs[i].fn_u.xts(ctx, (u8 *)dst,
-+							(const u8 *)src,
- 							walk->iv);
- 
- 				src += num_blocks;
-diff --git a/arch/x86/include/asm/crypto/glue_helper.h b/arch/x86/include/asm/crypto/glue_helper.h
-index 8d4a8e1226ee..22d54e8b8375 100644
---- a/arch/x86/include/asm/crypto/glue_helper.h
-+++ b/arch/x86/include/asm/crypto/glue_helper.h
-@@ -12,10 +12,10 @@
- #include <crypto/b128ops.h>
- 
- typedef void (*common_glue_func_t)(void *ctx, u8 *dst, const u8 *src);
--typedef void (*common_glue_cbc_func_t)(void *ctx, u128 *dst, const u128 *src);
--typedef void (*common_glue_ctr_func_t)(void *ctx, u128 *dst, const u128 *src,
-+typedef void (*common_glue_cbc_func_t)(void *ctx, u8 *dst, const u8 *src);
-+typedef void (*common_glue_ctr_func_t)(void *ctx, u8 *dst, const u8 *src,
- 				       le128 *iv);
--typedef void (*common_glue_xts_func_t)(void *ctx, u128 *dst, const u128 *src,
-+typedef void (*common_glue_xts_func_t)(void *ctx, u8 *dst, const u8 *src,
- 				       le128 *iv);
- 
- #define GLUE_FUNC_CAST(fn) ((common_glue_func_t)(fn))
+diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
+index eb807a059479..4a91be0ad5ae 100644
+--- a/drivers/regulator/rn5t618-regulator.c
++++ b/drivers/regulator/rn5t618-regulator.c
+@@ -90,7 +90,7 @@ static const struct regulator_desc rc5t619_regulators[] = {
+ 	REG(LDO7, LDOEN1, BIT(6), LDO7DAC, 0x7f, 900000, 3500000, 25000),
+ 	REG(LDO8, LDOEN1, BIT(7), LDO8DAC, 0x7f, 900000, 3500000, 25000),
+ 	REG(LDO9, LDOEN2, BIT(0), LDO9DAC, 0x7f, 900000, 3500000, 25000),
+-	REG(LDO10, LDOEN2, BIT(0), LDO10DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO10, LDOEN2, BIT(1), LDO10DAC, 0x7f, 900000, 3500000, 25000),
+ 	/* LDO RTC */
+ 	REG(LDORTC1, LDOEN2, BIT(4), LDORTCDAC, 0x7f, 1700000, 3500000, 25000),
+ 	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
 -- 
-2.17.1
+2.20.1
 
