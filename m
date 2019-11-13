@@ -4,257 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30406C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9651FC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2050F2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8352063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKMWjH (ORCPT
+        id S1726979AbfKMWnE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:39:07 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47564 "EHLO
+        Wed, 13 Nov 2019 17:43:04 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56617 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfKMWjG (ORCPT
+        with ESMTP id S1726251AbfKMWnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 17:39:06 -0500
+        Wed, 13 Nov 2019 17:43:04 -0500
 Received: from 79.184.253.153.ipv4.supernova.orange.pl (79.184.253.153) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 695e88c4f6f8395e; Wed, 13 Nov 2019 23:39:02 +0100
+ id f3edbef927abb36a; Wed, 13 Nov 2019 23:43:01 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 12/23] y2038: syscalls: change remaining timeval to __kernel_old_timeval
-Date:   Wed, 13 Nov 2019 23:39:01 +0100
-Message-ID: <43741269.9cZ5YESnMi@kreacher>
-In-Reply-To: <20191108211323.1806194-3-arnd@arndb.de>
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-3-arnd@arndb.de>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] acpi: fix potential race conditions bypassing checks
+Date:   Wed, 13 Nov 2019 23:43:01 +0100
+Message-ID: <3383209.2KrX3GKxIT@kreacher>
+In-Reply-To: <3AEC2592-C58F-4E27-9C12-0C6E92136F5C@umn.edu>
+References: <20191028183114.15709-1-kjlu@umn.edu> <3605712.hsAW26GfSv@kreacher> <3AEC2592-C58F-4E27-9C12-0C6E92136F5C@umn.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, November 8, 2019 10:12:11 PM CET Arnd Bergmann wrote:
-> All of the remaining syscalls that pass a timeval (gettimeofday, utime,
-> futimesat) can trivially be changed to pass a __kernel_old_timeval
-> instead, which has a compatible layout, but avoids ambiguity with
-> the timeval type in user space.
+On Monday, October 28, 2019 10:32:26 PM CET Kangjie Lu wrote:
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > On Oct 28, 2019, at 4:51 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > 
+> > On Monday, October 28, 2019 7:31:14 PM CET Kangjie Lu wrote:
+> >> "obj" is a local variable. Elements are deep-copied from external
+> >> package to obj and security-checked. The original code is
+> >> seemingly fine; however, compilers optimize the deep copies into
+> >> shallow copies, introducing potential race conditions. For
+> >> example, the checks for type and length may be bypassed.
+> > 
+> > How exactly?
 
-For the change in power/power.h
+Not answered.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
->  arch/powerpc/include/asm/asm-prototypes.h |  3 ++-
->  arch/powerpc/kernel/syscalls.c            |  4 ++--
->  fs/select.c                               | 10 +++++-----
->  fs/utimes.c                               |  8 ++++----
->  include/linux/syscalls.h                  | 10 +++++-----
->  kernel/power/power.h                      |  2 +-
->  kernel/time/time.c                        |  2 +-
->  7 files changed, 20 insertions(+), 19 deletions(-)
+> > What compiler(s) do such optimizations in this particular case?
 > 
-> diff --git a/arch/powerpc/include/asm/asm-prototypes.h b/arch/powerpc/include/asm/asm-prototypes.h
-> index 8561498e653c..2c25dc079cb9 100644
-> --- a/arch/powerpc/include/asm/asm-prototypes.h
-> +++ b/arch/powerpc/include/asm/asm-prototypes.h
-> @@ -92,7 +92,8 @@ long sys_swapcontext(struct ucontext __user *old_ctx,
->  long sys_debug_setcontext(struct ucontext __user *ctx,
->  			  int ndbg, struct sig_dbg_op __user *dbg);
->  int
-> -ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, struct timeval __user *tvp);
-> +ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp,
-> +	   struct __kernel_old_timeval __user *tvp);
->  unsigned long __init early_init(unsigned long dt_ptr);
->  void __init machine_init(u64 dt_ptr);
->  #endif
-> diff --git a/arch/powerpc/kernel/syscalls.c b/arch/powerpc/kernel/syscalls.c
-> index 3bfb3888e897..078608ec2e92 100644
-> --- a/arch/powerpc/kernel/syscalls.c
-> +++ b/arch/powerpc/kernel/syscalls.c
-> @@ -79,7 +79,7 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, size_t, len,
->   * sys_select() with the appropriate args. -- Cort
->   */
->  int
-> -ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, struct timeval __user *tvp)
-> +ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, struct __kernel_old_timeval __user *tvp)
->  {
->  	if ( (unsigned long)n >= 4096 )
->  	{
-> @@ -89,7 +89,7 @@ ppc_select(int n, fd_set __user *inp, fd_set __user *outp, fd_set __user *exp, s
->  		    || __get_user(inp, ((fd_set __user * __user *)(buffer+1)))
->  		    || __get_user(outp, ((fd_set  __user * __user *)(buffer+2)))
->  		    || __get_user(exp, ((fd_set  __user * __user *)(buffer+3)))
-> -		    || __get_user(tvp, ((struct timeval  __user * __user *)(buffer+4))))
-> +		    || __get_user(tvp, ((struct __kernel_old_timeval  __user * __user *)(buffer+4))))
->  			return -EFAULT;
->  	}
->  	return sys_select(n, inp, outp, exp, tvp);
-> diff --git a/fs/select.c b/fs/select.c
-> index 53a0c149f528..11d0285d46b7 100644
-> --- a/fs/select.c
-> +++ b/fs/select.c
-> @@ -321,7 +321,7 @@ static int poll_select_finish(struct timespec64 *end_time,
->  	switch (pt_type) {
->  	case PT_TIMEVAL:
->  		{
-> -			struct timeval rtv;
-> +			struct __kernel_old_timeval rtv;
->  
->  			if (sizeof(rtv) > sizeof(rtv.tv_sec) + sizeof(rtv.tv_usec))
->  				memset(&rtv, 0, sizeof(rtv));
-> @@ -698,10 +698,10 @@ int core_sys_select(int n, fd_set __user *inp, fd_set __user *outp,
->  }
->  
->  static int kern_select(int n, fd_set __user *inp, fd_set __user *outp,
-> -		       fd_set __user *exp, struct timeval __user *tvp)
-> +		       fd_set __user *exp, struct __kernel_old_timeval __user *tvp)
->  {
->  	struct timespec64 end_time, *to = NULL;
-> -	struct timeval tv;
-> +	struct __kernel_old_timeval tv;
->  	int ret;
->  
->  	if (tvp) {
-> @@ -720,7 +720,7 @@ static int kern_select(int n, fd_set __user *inp, fd_set __user *outp,
->  }
->  
->  SYSCALL_DEFINE5(select, int, n, fd_set __user *, inp, fd_set __user *, outp,
-> -		fd_set __user *, exp, struct timeval __user *, tvp)
-> +		fd_set __user *, exp, struct __kernel_old_timeval __user *, tvp)
->  {
->  	return kern_select(n, inp, outp, exp, tvp);
->  }
-> @@ -810,7 +810,7 @@ SYSCALL_DEFINE6(pselect6_time32, int, n, fd_set __user *, inp, fd_set __user *,
->  struct sel_arg_struct {
->  	unsigned long n;
->  	fd_set __user *inp, *outp, *exp;
-> -	struct timeval __user *tvp;
-> +	struct __kernel_old_timeval __user *tvp;
->  };
->  
->  SYSCALL_DEFINE1(old_select, struct sel_arg_struct __user *, arg)
-> diff --git a/fs/utimes.c b/fs/utimes.c
-> index 1ba3f7883870..c952b6b3d8a0 100644
-> --- a/fs/utimes.c
-> +++ b/fs/utimes.c
-> @@ -161,9 +161,9 @@ SYSCALL_DEFINE4(utimensat, int, dfd, const char __user *, filename,
->   * utimensat() instead.
->   */
->  static long do_futimesat(int dfd, const char __user *filename,
-> -			 struct timeval __user *utimes)
-> +			 struct __kernel_old_timeval __user *utimes)
->  {
-> -	struct timeval times[2];
-> +	struct __kernel_old_timeval times[2];
->  	struct timespec64 tstimes[2];
->  
->  	if (utimes) {
-> @@ -190,13 +190,13 @@ static long do_futimesat(int dfd, const char __user *filename,
->  
->  
->  SYSCALL_DEFINE3(futimesat, int, dfd, const char __user *, filename,
-> -		struct timeval __user *, utimes)
-> +		struct __kernel_old_timeval __user *, utimes)
->  {
->  	return do_futimesat(dfd, filename, utimes);
->  }
->  
->  SYSCALL_DEFINE2(utimes, char __user *, filename,
-> -		struct timeval __user *, utimes)
-> +		struct __kernel_old_timeval __user *, utimes)
->  {
->  	return do_futimesat(AT_FDCWD, filename, utimes);
->  }
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index 2f27bc9d5ef0..e665920fa359 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -51,7 +51,7 @@ struct statx;
->  struct __sysctl_args;
->  struct sysinfo;
->  struct timespec;
-> -struct timeval;
-> +struct __kernel_old_timeval;
->  struct __kernel_timex;
->  struct timezone;
->  struct tms;
-> @@ -732,7 +732,7 @@ asmlinkage long sys_prctl(int option, unsigned long arg2, unsigned long arg3,
->  asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, struct getcpu_cache __user *cache);
->  
->  /* kernel/time.c */
-> -asmlinkage long sys_gettimeofday(struct timeval __user *tv,
-> +asmlinkage long sys_gettimeofday(struct __kernel_old_timeval __user *tv,
->  				struct timezone __user *tz);
->  asmlinkage long sys_settimeofday(struct timeval __user *tv,
->  				struct timezone __user *tz);
-> @@ -1082,9 +1082,9 @@ asmlinkage long sys_time32(old_time32_t __user *tloc);
->  asmlinkage long sys_utime(char __user *filename,
->  				struct utimbuf __user *times);
->  asmlinkage long sys_utimes(char __user *filename,
-> -				struct timeval __user *utimes);
-> +				struct __kernel_old_timeval __user *utimes);
->  asmlinkage long sys_futimesat(int dfd, const char __user *filename,
-> -			      struct timeval __user *utimes);
-> +			      struct __kernel_old_timeval __user *utimes);
->  #endif
->  asmlinkage long sys_futimesat_time32(unsigned int dfd,
->  				     const char __user *filename,
-> @@ -1098,7 +1098,7 @@ asmlinkage long sys_getdents(unsigned int fd,
->  				struct linux_dirent __user *dirent,
->  				unsigned int count);
->  asmlinkage long sys_select(int n, fd_set __user *inp, fd_set __user *outp,
-> -			fd_set __user *exp, struct timeval __user *tvp);
-> +			fd_set __user *exp, struct __kernel_old_timeval __user *tvp);
->  asmlinkage long sys_poll(struct pollfd __user *ufds, unsigned int nfds,
->  				int timeout);
->  asmlinkage long sys_epoll_wait(int epfd, struct epoll_event __user *events,
-> diff --git a/kernel/power/power.h b/kernel/power/power.h
-> index 44bee462ff57..7cdc64dc2373 100644
-> --- a/kernel/power/power.h
-> +++ b/kernel/power/power.h
-> @@ -179,7 +179,7 @@ extern void swsusp_close(fmode_t);
->  extern int swsusp_unmark(void);
->  #endif
->  
-> -struct timeval;
-> +struct __kernel_old_timeval;
->  /* kernel/power/swsusp.c */
->  extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
->  
-> diff --git a/kernel/time/time.c b/kernel/time/time.c
-> index 7eba7c9a7e3e..bc114f0be8f1 100644
-> --- a/kernel/time/time.c
-> +++ b/kernel/time/time.c
-> @@ -137,7 +137,7 @@ SYSCALL_DEFINE1(stime32, old_time32_t __user *, tptr)
->  #endif /* __ARCH_WANT_SYS_TIME32 */
->  #endif
->  
-> -SYSCALL_DEFINE2(gettimeofday, struct timeval __user *, tv,
-> +SYSCALL_DEFINE2(gettimeofday, struct __kernel_old_timeval __user *, tv,
->  		struct timezone __user *, tz)
->  {
->  	if (likely(tv != NULL)) {
-> 
+> Tested on LLVM. The deep copy is indeed optimized into a shallow copy at optimization level O2.
 
+OK, that should have been mentioned in the changelog.
+
+> > 
+> >> The fix tells compilers to not optimize the deep copy by inserting
+> >> "volatile".
+> > 
+> > Have you actually analyzed the object code produced by the compiler with and
+> > without the volatile to determine whether or not it has an effect as expected
+> > on code generation?
+> 
+> Yes, with “volatile", the deep copy is preserved, and “obj” is created as a local variable.
+
+OK, but does it actually make a practical difference?
+
+> > 
+> >> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> >> ---
+> >> drivers/acpi/processor_throttling.c | 2 +-
+> >> 1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
+> >> index 532a1ae3595a..6f4d86f8a9ce 100644
+> >> --- a/drivers/acpi/processor_throttling.c
+> >> +++ b/drivers/acpi/processor_throttling.c
+> >> @@ -413,7 +413,7 @@ static int acpi_processor_get_throttling_control(struct acpi_processor *pr)
+> >> 	acpi_status status = 0;
+> >> 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> >> 	union acpi_object *ptc = NULL;
+> >> -	union acpi_object obj = { 0 };
+> >> +	volatile union acpi_object obj = { 0 };
+
+Why don't you change obj to a pointer instead?
+
+> >> 	struct acpi_processor_throttling *throttling;
+> >> 
+> >> 	status = acpi_evaluate_object(pr->handle, "_PTC", NULL, &buffer);
+> >> 
 
 
 
