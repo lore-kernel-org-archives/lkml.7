@@ -2,122 +2,210 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D12C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A988AC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71946222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6854D222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jg5JN1ky"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="C0Dbe7TC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbfKMLlh (ORCPT
+        id S1727963AbfKMLnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 06:41:37 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:17327 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfKMLlb (ORCPT
+        Wed, 13 Nov 2019 06:43:23 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42296 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727693AbfKMLnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:41:31 -0500
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id xADBfGnQ005654
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 20:41:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xADBfGnQ005654
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573645277;
-        bh=J6rJT8P5SnuQtYPsxB/K65h5d3rtBJCHsFkTNmOyQlQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jg5JN1kyvIRVl+wnxWLogXC8ILKa+IPKGO3oktS6ZUotAb3IrHuk4Cd8D0jRpS+Z/
-         nn4aw7dZ1b0YnJJ7AiKHjQ2t/Cu60ALE0Dh9E3WfRj2CTKfY0JUzC8ZchaQv0FppaG
-         Fwy+yVGWbgh8TTCt820j9oWM9oW/tdMhKvpLE05p+HEk4CY8OYLGlPFutee/2rSxRW
-         uBKiz4+K20hREfUyGRaxCJ8Ox9HxaPzJ3CDeJjbRXdUn34oD9JR64StlSm4xVn3BV0
-         M49dIKUVvlEoFbtYI68+5VwbIlJ9NPgm31QO5fibO43FyIEoowXPOyocKhEDAk9wjx
-         bZL9tMKtNoJnQ==
-X-Nifty-SrcIP: [209.85.221.176]
-Received: by mail-vk1-f176.google.com with SMTP id r4so472371vkf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 03:41:17 -0800 (PST)
-X-Gm-Message-State: APjAAAWPAFWKZOJwhkBvZxfJv0Zw0Iszf8AOq/ffPAcQ+bjRIT2mRx9+
-        2jwP40lcBI4mSugx8/tqmIBiSXE+8U0Ra3jkBkE=
-X-Google-Smtp-Source: APXvYqxqblFCrOJg10zfx2WK5ReUHCOH5foJoWAQQv3PyYkLJdqhdmg4TbDz/1KDQB+Qui2LDB57vmmLTKCspKoZrlo=
-X-Received: by 2002:a1f:4192:: with SMTP id o140mr1284724vka.26.1573645275987;
- Wed, 13 Nov 2019 03:41:15 -0800 (PST)
+        Wed, 13 Nov 2019 06:43:18 -0500
+Received: by mail-wr1-f65.google.com with SMTP id a15so1972680wrf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 03:43:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NWmx5zlrVzI636UV5zn7jwNNYyPpT2kzazOSeqZFCPQ=;
+        b=C0Dbe7TCduZqSim4I/9b7E74bGQO34GH/iKoO+dE+3EHLfWv1lLPGbvorBCoaRGMDb
+         48v7HTSQHP1LaVgvLNGy/yOxyJTlvTeKuq2CZR/Q7GIgmnQIbkvYhHi8TV/Ec+0WSA8P
+         awH+k+k5IQBNK5RO6uqKbJl7dFmz19ED4sy2I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=NWmx5zlrVzI636UV5zn7jwNNYyPpT2kzazOSeqZFCPQ=;
+        b=cFw6MFxdY0y4hXhuP6CsmSAOwIIWsLoeYTGSilxdGA9l5yJwL8Zd5lHzuuO0EmN/w/
+         vPySY05h/jcZTz9o8OH5zHqLqDOnXQ2yU9QGzvH/quvXqaBx0EXsBmodymKZwZnSkSAv
+         Du8HXcJzAOqtkTi1IJG5+LGalSyjt5g+tuiAF4s/Az1Lzf8aKIEkRUHj8aBVINI4swyj
+         ujBSMs1wvbl+dmVnqeLmSOWbwymbmUy1SmbhRX7QCo4p+wI1iPNGkn/keOtT8uYVMfay
+         yaG1ZneRUsIi2HJf84mNKwGVEkf7FEqMoDqUlqmzVliBGFnadYHKEW9UIuQ7iqyH65RL
+         TaZw==
+X-Gm-Message-State: APjAAAXScJkcfsPGxME2usrs4/dMM0qHGCP12fs2geycU6xgSwm1H3GE
+        +0j8a5zJVHe6eOPZg6Wf3Dvikg==
+X-Google-Smtp-Source: APXvYqw4ALVmGTh9KFISsJCvLVpFEzXuyu2WMWEkcAdM7khXUlUWKA93QR1nKFP8k/o5YdLFIE0ItA==
+X-Received: by 2002:a5d:50ce:: with SMTP id f14mr2625324wrt.219.1573645394576;
+        Wed, 13 Nov 2019 03:43:14 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id w4sm2544060wrs.1.2019.11.13.03.43.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 03:43:13 -0800 (PST)
+Date:   Wed, 13 Nov 2019 12:43:11 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jan Kara <jack@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf <bpf@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/23] mm/gup: track dma-pinned pages: FOLL_PIN,
+ FOLL_LONGTERM
+Message-ID: <20191113114311.GP23790@phenom.ffwll.local>
+Mail-Followup-To: Jan Kara <jack@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>, David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf <bpf@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191112000700.3455038-1-jhubbard@nvidia.com>
+ <20191112203802.GD5584@ziepe.ca>
+ <02fa935c-3469-b766-b691-5660084b60b9@nvidia.com>
+ <CAKMK7uHvk+ti00mCCF2006U003w1dofFg9nSfmZ4bS2Z2pEDNQ@mail.gmail.com>
+ <7b671bf9-4d94-f2cc-8453-863acd5a1115@nvidia.com>
+ <20191113101210.GD6367@quack2.suse.cz>
 MIME-Version: 1.0
-References: <20190906154706.2449696-1-arnd@arndb.de> <CAMuHMdUMgDBo1gkvQ_Bd8mjMiPjdWWY=9AU6K1S7NcJy5jhvGQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdUMgDBo1gkvQ_Bd8mjMiPjdWWY=9AU6K1S7NcJy5jhvGQ@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 13 Nov 2019 20:40:39 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASNp4jPYHmh3e4QYwenYbVrK69tvB_LLyK_ew1eqBNrEw@mail.gmail.com>
-Message-ID: <CAK7LNASNp4jPYHmh3e4QYwenYbVrK69tvB_LLyK_ew1eqBNrEw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: don't export unused return_address()
-To:     Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113101210.GD6367@quack2.suse.cz>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 11:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Arnd,
->
-> On Fri, Sep 6, 2019 at 5:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > Without the frame pointer enabled, return_address() is an inline
-> > function and does not need to be exported, as shown by this warning:
-> >
-> > WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-> >
-> > Move the EXPORT_SYMBOL_GPL() into the #ifdef as well.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Thanks for your patch!
->
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> > --- a/arch/arm/kernel/return_address.c
-> > +++ b/arch/arm/kernel/return_address.c
-> > @@ -53,6 +53,7 @@ void *return_address(unsigned int level)
-> >                 return NULL;
-> >  }
-> >
->
-> Checkpatch doesn't like the empty line above:
->
-> WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
->
-> > +EXPORT_SYMBOL_GPL(return_address);
-> > +
-> >  #endif /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
-> >
-> > -EXPORT_SYMBOL_GPL(return_address);
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+On Wed, Nov 13, 2019 at 11:12:10AM +0100, Jan Kara wrote:
+> On Wed 13-11-19 01:02:02, John Hubbard wrote:
+> > On 11/13/19 12:22 AM, Daniel Vetter wrote:
+> > ...
+> > > > > Why are we doing this? I think things got confused here someplace, as
+> > > > 
+> > > > 
+> > > > Because:
+> > > > 
+> > > > a) These need put_page() calls,  and
+> > > > 
+> > > > b) there is no put_pages() call, but there is a release_pages() call that
+> > > > is, arguably, what put_pages() would be.
+> > > > 
+> > > > 
+> > > > > the comment still says:
+> > > > > 
+> > > > > /**
+> > > > >   * put_user_page() - release a gup-pinned page
+> > > > >   * @page:            pointer to page to be released
+> > > > >   *
+> > > > >   * Pages that were pinned via get_user_pages*() must be released via
+> > > > >   * either put_user_page(), or one of the put_user_pages*() routines
+> > > > >   * below.
+> > > > 
+> > > > 
+> > > > Ohhh, I missed those comments. They need to all be changed over to
+> > > > say "pages that were pinned via pin_user_pages*() or
+> > > > pin_longterm_pages*() must be released via put_user_page*()."
+> > > > 
+> > > > The get_user_pages*() pages must still be released via put_page.
+> > > > 
+> > > > The churn is due to a fairly significant change in strategy, whis
+> > > > is: instead of changing all get_user_pages*() sites to call
+> > > > put_user_page(), change selected sites to call pin_user_pages*() or
+> > > > pin_longterm_pages*(), plus put_user_page().
+> > > 
+> > > Can't we call this unpin_user_page then, for some symmetry? Or is that
+> > > even more churn?
+> > > 
+> > > Looking from afar the naming here seems really confusing.
+> > 
+> > 
+> > That look from afar is valuable, because I'm too close to the problem to see
+> > how the naming looks. :)
+> > 
+> > unpin_user_page() sounds symmetrical. It's true that it would cause more
+> > churn (which is why I started off with a proposal that avoids changing the
+> > names of put_user_page*() APIs). But OTOH, the amount of churn is proportional
+> > to the change in direction here, and it's really only 10 or 20 lines changed,
+> > in the end.
+> > 
+> > So I'm open to changing to that naming. It would be nice to hear what others
+> > prefer, too...
+> 
+> FWIW I'd find unpin_user_page() also better than put_user_page() as a
+> counterpart to pin_user_pages().
 
-
-
-What has happened to this patch?
-
-I still see this warning.
-
-
-
+One more point from afar on pin/unpin: We use that a lot in graphics for
+permanently pinned graphics buffer objects. Which really only should be
+used for scanout. So at least graphics folks should have an appropriate
+mindset and try to make sure we don't overuse this stuff.
+-Daniel
 -- 
-Best Regards
-Masahiro Yamada
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
