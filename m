@@ -2,114 +2,121 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11743C17442
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C3CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74E92245B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C8A21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfKMOBD (ORCPT
+        id S1727550AbfKMOB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:01:03 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35330 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfKMOBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:01:02 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 09863290CD8
-Message-ID: <58ed179388b6f9d6caddd91dc03e411ca714157d.camel@collabora.com>
-Subject: Re: [PATCH 4/5] media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org
-Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, s.hauer@pengutronix.de, aisheng.dong@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
-        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se,
-        dafna.hirschfeld@collabora.com
-Date:   Wed, 13 Nov 2019 11:00:35 -0300
-In-Reply-To: <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
-         <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 13 Nov 2019 09:01:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:53012 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfKMOB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 09:01:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01C0B7A7;
+        Wed, 13 Nov 2019 06:01:28 -0800 (PST)
+Received: from localhost.localdomain (unknown [10.1.196.67])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D25AA3F6C4;
+        Wed, 13 Nov 2019 06:01:26 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] arm64: Combine workarounds for speculative AT
+ errata
+To:     Steven Price <steven.price@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+References: <20191113114118.2427-1-steven.price@arm.com>
+ <20191113114118.2427-2-steven.price@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <173fe989-4692-aa22-05b0-a217b7fd1d89@arm.com>
+Date:   Wed, 13 Nov 2019 14:01:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
+In-Reply-To: <20191113114118.2427-2-steven.price@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mirela,
 
-Thanks for the patch. It's nice to see support for i.MX8!
+On 13/11/2019 11:41, Steven Price wrote:
+> Cortex-A57/A72 have a similar errata to Cortex-A76 regarding speculation
+> of the AT instruction. Since the workaround for A57/A72 doesn't require
+> VHE, the restriction enforcing VHE for A76 can be removed by combining
+> the workaround flag for both errata.
+> 
+> So combine WORKAROUND_1165522 and WORKAROUND_1319367 into
+> WORKAROUND_SPECULATIVE_AT. The majority of code is contained within VHE
+> or NVHE specific functions, for the cases where the code is shared extra
+> checks against has_vhe().
+> 
+> This also paves the way for adding a similar erratum for Cortex-A55.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-On Wed, 2019-11-06 at 17:20 +0200, Mirela Rabulea wrote:
-> V4L2 driver for the JPEG encoder/decoder from i.MX8QXP/i.MX8QM application
-> processors.
-> The multi-planar buffers API is used.
-> 
-> Baseline and extended sequential jpeg decoding is supported.
-> Progressive jpeg decoding is not supported by the IP.
-> Supports encode and decode of various formats:
->      YUV444, YUV422, YUV420, RGB, ARGB, Gray
-> YUV420 is the only multi-planar format supported.
-> Minimum resolution is 64 x 64, maximum 8192 x 8192.
-> The alignment requirements for the resolution depend on the format,
-> multiple of 16 resolutions should work for all formats.
-> 
-> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
-> ---
->  drivers/media/platform/Kconfig                |    2 +
->  drivers/media/platform/Makefile               |    1 +
->  drivers/media/platform/imx-jpeg/Kconfig       |   10 +
->  drivers/media/platform/imx-jpeg/Makefile      |    3 +
->  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c |  168 ++
->  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h |  140 ++
->  drivers/media/platform/imx-jpeg/mxc-jpeg.c    | 2266 +++++++++++++++++++++++++
->  drivers/media/platform/imx-jpeg/mxc-jpeg.h    |  187 ++
->  8 files changed, 2777 insertions(+)
->  create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
->  create mode 100644 drivers/media/platform/imx-jpeg/Makefile
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
-> 
-> [..]
-
+> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> index 4f8187a4fc46..b801f8e832aa 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -744,6 +744,16 @@ static const struct midr_range erratum_1418040_list[] = {
+>   };
+>   #endif
+>   
+> +#ifdef CONFIG_ARM64_WORKAROUND_SPECULATIVE_AT
+> +static const struct midr_range erratum_speculative_at_list[] = {
+> +#ifdef CONFIG_ARM64_ERRATUM_1165522
+> +	/* Cortex A76 r0p0 to r2p0 */
+> +	MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 2, 0),
+> +#endif
+> +	{},
 > +};
+> +#endif
 > +
-> +/*
-> + * default configuration stream, 64x64 yuv422
-> + * split by JPEG marker, so it's easier to modify & use
-> + */
-> +static const unsigned char jpeg_soi[] = {0xFF, 0xD8};
-> +static const unsigned char jpeg_app0[] = {0xFF, 0xE0,
+>   const struct arm64_cpu_capabilities arm64_errata[] = {
+>   #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
+>   	{
+> @@ -868,12 +878,11 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+>   		ERRATA_MIDR_RANGE_LIST(erratum_1418040_list),
+>   	},
+>   #endif
+> -#ifdef CONFIG_ARM64_ERRATUM_1165522
+> +#ifdef CONFIG_ARM64_WORKAROUND_SPECULATIVE_AT
+>   	{
+> -		/* Cortex-A76 r0p0 to r2p0 */
+>   		.desc = "ARM erratum 1165522",
+> -		.capability = ARM64_WORKAROUND_1165522,
+> -		ERRATA_MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 2, 0),
+> +		.capability = ARM64_WORKAROUND_SPECULATIVE_AT,
+> +		ERRATA_MIDR_RANGE_LIST(erratum_speculative_at_list),
+>   	},
+>   #endif
+>   #ifdef CONFIG_ARM64_ERRATUM_1463225
+> @@ -910,7 +919,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+>   #ifdef CONFIG_ARM64_ERRATUM_1319367
+>   	{
+>   		.desc = "ARM erratum 1319367",
+> -		.capability = ARM64_WORKAROUND_1319367,
+> +		.capability = ARM64_WORKAROUND_SPECULATIVE_AT,
+>   		ERRATA_MIDR_RANGE_LIST(ca57_a72),
+>   	},
+>   #endif
 
-I think it's time to re-consider creating some common code
-for drivers that deal with JPEG parsing. I don't know
-exactly how this should be done, but it's worth a try.
+Have you tested this patch with both the errata CONFIGs turned on ?
+Having multiple entries for the same capability should trigger a WARNING at
+boot with init_cpu_hwcaps_indirect_list_from_array().
+You could simply add the MIDRs to the midr_list and update the description
+to include all the Errata numbers.
 
-Having been there, it might sound unfair to request you to
-take such action. However, someone has to do these kinds
-of cleanups and improvements, sooner or later, if we want
-to keep a clean codebase.
-
-Hope this makes sense.
-
-Regards,
-Ezequiel
-
+Suzuki
