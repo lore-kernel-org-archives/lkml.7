@@ -2,157 +2,278 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48545C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE9FC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265B8206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB687206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="tSDAklaS"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="pCpoe/mN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfKMWyn (ORCPT
+        id S1726991AbfKMW4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:54:43 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43397 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfKMWym (ORCPT
+        Wed, 13 Nov 2019 17:56:01 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37890 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfKMW4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 17:54:42 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so2298322pgh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 14:54:41 -0800 (PST)
+        Wed, 13 Nov 2019 17:56:00 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a14so3442702oid.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 14:55:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YzThP7vqWAF2JKLOm94GCZOblrnMR8+6q3/EyLUdnt0=;
-        b=tSDAklaSoQvipGE27ua1O3lzpOd4kK5GoM9WC9l+9BqEgxiVPneK7Dqnxf/glB1p26
-         geJO7MDJ4zdV3iK3WmZsouncLPqY2Rf03BRL99x6kl4H6wlwqKYXJdKkXC/uzfs8tI2a
-         tU+BzUeZNVJTDgf4ivkYrtP6JeNfXjnIoe8yLWcgRcYCMMMRH3f0wjwF1zbGDm4nRG5C
-         Qgz8PxAeaQZf1xPoa8B9rTo+1yJYhamQ3l1NGfOeNXb84ZDRaYcS+1fZcT/e2gHU0/AQ
-         5A0lB7G7eGevTcarm5sQAZ5XFNvwmK6yUtoDcyD8lusEYl6kebRdprgHaq99MBcn5ul9
-         Tlhw==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1bJ2iQSSM6xcSelzNGAxbFz3I+vbpZT1i7brWNNqBkM=;
+        b=pCpoe/mNOZz7kf3BriV6FO1vlXqTtiMMjAyo1q9EkOVhYkaiAqjCUuZi8sR+VQiBUA
+         tepmQBglxY1OyOFgLzLhHdxfydFb30a1T5RkieXCkBFnd+r3jlYUpcVkeItPqd8k1TpH
+         QuhVbvlkeE58Xf1ZF8OpCLmfeJPI9CouiPQucJ+3FTXLyAwrqgBL1Jq/bDxYNQJ1pm0t
+         QwUZhi1PIoqdyrkPynzAPysfVDAz8iXycZT/frJ4ZqyEjG7GG1vaypwpuBBW6+YfO+vS
+         yAWIhvE5Ewgu6JZ+miOrKnhJdqk41OXN/rGjK6CG6z8BEEbcMZ3o541dr2Qk8nqK1nMV
+         nr8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YzThP7vqWAF2JKLOm94GCZOblrnMR8+6q3/EyLUdnt0=;
-        b=kMpgyRFVTyDt2GLtHCe5XfXBAw1oFnoTC6Rxeoi4z2xSmo/d5Grz5/TY+5IawqIqE/
-         9E3Tl6P0A8/2NIx1LhUCuKcNyfGOhhxk+UjeXtnwW4quDaXiEDxhHdYfFwulJ3JAOz76
-         e9e9HkSYtxLP6m6zGpvVxuEym9d8RErEFqn2kq0MXyukheMVOddR3Xi74X28IiPwhV7N
-         uPWDtK5fDL70rBBICQzhQW+BRmRmJCoCetMVQcEZ7FWy1tutpqGTGyExhd0PnUKSvDTD
-         2e+PIDT5mya6utZtD8KKgAmJOsU0ep8+5jeghE7ME2TtPMhTY99Gj1UWvB67PX5CdnD4
-         e13A==
-X-Gm-Message-State: APjAAAUPZ8rPCFpFIudrLBTow+H91mVxFDCv8FVybQfYvnOHN03545m9
-        +FVAMj0p64ULJOCVTcodYY417SJAuLRV3Q==
-X-Google-Smtp-Source: APXvYqwueIJ4re/fD86sVeb5x152yqjDqaH+pkQk8TNwHRHEoNwzt5z5yAcy2w25lsp6UQrocV+tUQ==
-X-Received: by 2002:a65:68d7:: with SMTP id k23mr6395729pgt.157.1573685680314;
-        Wed, 13 Nov 2019 14:54:40 -0800 (PST)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.gmail.com with ESMTPSA id l21sm3250622pjt.28.2019.11.13.14.54.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 14:54:39 -0800 (PST)
-From:   Mark Salyzyn <salyzyn@android.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
-        Tim Murray <timmurray@google.com>,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: [PATCH v2] firmware_class: make firmware caching configurable
-Date:   Wed, 13 Nov 2019 14:54:26 -0800
-Message-Id: <20191113225429.118495-1-salyzyn@android.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191113210124.59909-1-salyzyn@android.com>
-References: <20191113210124.59909-1-salyzyn@android.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1bJ2iQSSM6xcSelzNGAxbFz3I+vbpZT1i7brWNNqBkM=;
+        b=SVSqWNObV3w6CVu3XauMeToMowiArxpCdVoYD+Qo+gcURxxW+gsoLXlt+J6SLdXpn+
+         TVZEAREr8qeC+7phFOsSx3zgtpZiaczHr1XXfMFqaxpB0vbLHHkJR2Y/L8ewQlE/Pjyd
+         ukOqm5e2CQmkIeLhC1n4jbiGXiFBZZK5+PxMJBJYEYFI7K/NzEXcv/NtUCqrVybI9oNF
+         I3oeWYsa/HFGX+dqLNx/F03ZIWXzqD0Rx6v04rnGtHw3rgJRSbzdyyJwYkLqB7oTTtYS
+         VGk94Z0Hxh3Vs2zny/fq6WAqXydHlWU9WTZJMw/YPej+Y17b0F1Nw8s3qmb1GknzgFzi
+         z5RA==
+X-Gm-Message-State: APjAAAUPcBSGkrx3WBu6lSULJRaaT/oueaMjUb2kAhpF9W74CiEfL4DQ
+        5dijVVEKrZnrAP/Y817S2WbJ9K7yeP3HgboVo4DKgA==
+X-Google-Smtp-Source: APXvYqyJeu0oEnEbiksmKmpQyhxc2gHeYTp6WMlUX+9IHLnztuXVhLxAlHQ8+r67EFGUZS3SArHRAAMqXvaEz+sSmQk=
+X-Received: by 2002:aca:ea57:: with SMTP id i84mr868531oih.73.1573685758691;
+ Wed, 13 Nov 2019 14:55:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191113042710.3997854-1-jhubbard@nvidia.com> <20191113042710.3997854-5-jhubbard@nvidia.com>
+ <CAPcyv4gGu=G-c1czSAYJ3joTYS_ZYOJ6i9umKzCQEFzpwZMiiA@mail.gmail.com>
+ <CAPcyv4hr64b-k4j7ZY796+k-+Dy11REMcvPJ+QjTsyJ3vSdfKg@mail.gmail.com> <00148078-1795-da3e-916e-3ae2dcdd553d@nvidia.com>
+In-Reply-To: <00148078-1795-da3e-916e-3ae2dcdd553d@nvidia.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 13 Nov 2019 14:55:47 -0800
+Message-ID: <CAPcyv4iwG4V+sNLcOX4x-TA7W8MWNSEaZzupDgKh8btZMytoqg@mail.gmail.com>
+Subject: Re: [PATCH v4 04/23] mm: devmap: refactor 1-based refcounting for
+ ZONE_DEVICE pages
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because firmware caching generates uevent messages that are sent over
-a netlink socket, it can prevent suspend on many platforms.  It's
-also not always useful, so make it a configurable option.
+On Wed, Nov 13, 2019 at 2:49 PM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On 11/13/19 2:00 PM, Dan Williams wrote:
+> ...
+> >> Ugh, when did all this HMM specific manipulation sneak into the
+> >> generic ZONE_DEVICE path? It used to be gated by pgmap type with its
+> >> own put_zone_device_private_page(). For example it's certainly
+> >> unnecessary and might be broken (would need to check) to call
+> >> mem_cgroup_uncharge() on a DAX page. ZONE_DEVICE users are not a
+> >> monolith and the HMM use case leaks pages into code paths that DAX
+> >> explicitly avoids.
+> >
+> > It's been this way for a while and I did not react previously,
+> > apologies for that. I think __ClearPageActive, __ClearPageWaiters, and
+> > mem_cgroup_uncharge, belong behind a device-private conditional. The
+> > history here is:
+> >
+> > Move some, but not all HMM specifics to hmm_devmem_free():
+> >      2fa147bdbf67 mm, dev_pagemap: Do not clear ->mapping on final put
+> >
+> > Remove the clearing of mapping since no upstream consumers needed it:
+> >      b7a523109fb5 mm: don't clear ->mapping in hmm_devmem_free
+> >
+> > Add it back in once an upstream consumer arrived:
+> >      7ab0ad0e74f8 mm/hmm: fix ZONE_DEVICE anon page mapping reuse
+> >
+> > We're now almost entirely free of ->page_free callbacks except for
+> > that weird nouveau case, can that FIXME in nouveau_dmem_page_free()
+> > also result in killing the ->page_free() callback altogether? In the
+> > meantime I'm proposing a cleanup like this:
+>
+>
+> OK, assuming this is acceptable (no obvious problems jump out at me,
+> and we can also test it with HMM), then how would you like to proceed, as
+> far as patches go: add such a patch as part of this series here, or as a
+> stand-alone patch either before or after this series? Or something else?
+> And did you plan on sending it out as such?
 
-Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-Cc: Tim Murray <timmurray@google.com>
-Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rafael J. Wysocki <rafael@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-team@android.com
----
-v2
-- move config from drivers/base/Kconfig to
-  drivers/base/firmware_loader/Kconfig
-- drop blank line
-- default yes conditional on PM_SLEEP
----
- drivers/base/firmware_loader/Kconfig | 12 ++++++++++++
- drivers/base/firmware_loader/main.c  |  6 +++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
+I think it makes sense to include it in your series since you're
+looking to refactor the implementation. I can send you one based on
+current linux-next as a lead-in cleanup before the refactor. Does that
+work for you?
 
-diff --git a/drivers/base/firmware_loader/Kconfig b/drivers/base/firmware_loader/Kconfig
-index 3f9e274e2ed3..33e6552ddbb6 100644
---- a/drivers/base/firmware_loader/Kconfig
-+++ b/drivers/base/firmware_loader/Kconfig
-@@ -169,5 +169,17 @@ config FW_LOADER_COMPRESS
- 	  be compressed with either none or crc32 integrity check type (pass
- 	  "-C crc32" option to xz command).
- 
-+config FW_CACHE
-+	bool "Enable firmware caching during suspend"
-+	depends on PM_SLEEP
-+	default y if PM_SLEEP
-+	help
-+	  Because firmware caching generates uevent messages that are sent
-+	  over a netlink socket, it can prevent suspend on many platforms.
-+	  It is also not always useful, so on such platforms we have the
-+	  option.
-+
-+	  If unsure, say Y.
-+
- endif # FW_LOADER
- endmenu
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index bf44c79beae9..1c9f03514a47 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -51,7 +51,7 @@ struct firmware_cache {
- 	struct list_head head;
- 	int state;
- 
--#ifdef CONFIG_PM_SLEEP
-+#ifdef CONFIG_FW_CACHE
- 	/*
- 	 * Names of firmware images which have been cached successfully
- 	 * will be added into the below list so that device uncache
-@@ -556,7 +556,7 @@ static void fw_set_page_data(struct fw_priv *fw_priv, struct firmware *fw)
- 		 (unsigned int)fw_priv->size);
- }
- 
--#ifdef CONFIG_PM_SLEEP
-+#ifdef CONFIG_FW_CACHE
- static void fw_name_devm_release(struct device *dev, void *res)
- {
- 	struct fw_name_devm *fwn = res;
-@@ -1046,7 +1046,7 @@ request_firmware_nowait(
- }
- EXPORT_SYMBOL(request_firmware_nowait);
- 
--#ifdef CONFIG_PM_SLEEP
-+#ifdef CONFIG_FW_CACHE
- static ASYNC_DOMAIN_EXCLUSIVE(fw_cache_domain);
- 
- /**
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+>
+> Also, the diffs didn't quite make it through intact to my "git apply", so
+> I'm re-posting the diff in hopes that this time it survives:
 
+Apologies for that. For quick "how about this" patch examples, I just
+copy and paste into gmail and it sometimes clobbers it.
+
+>
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index f9f76f6ba07b..21db1ce8c0ae 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -338,13 +338,7 @@ static void pmem_release_disk(void *__pmem)
+>         put_disk(pmem->disk);
+>   }
+>
+> -static void pmem_pagemap_page_free(struct page *page)
+> -{
+> -       wake_up_var(&page->_refcount);
+> -}
+> -
+>   static const struct dev_pagemap_ops fsdax_pagemap_ops = {
+> -       .page_free              = pmem_pagemap_page_free,
+>         .kill                   = pmem_pagemap_kill,
+>         .cleanup                = pmem_pagemap_cleanup,
+>   };
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 03ccbdfeb697..157edb8f7cf8 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -419,12 +419,6 @@ void __put_devmap_managed_page(struct page *page)
+>          * holds a reference on the page.
+>          */
+>         if (count == 1) {
+> -               /* Clear Active bit in case of parallel mark_page_accessed */
+> -               __ClearPageActive(page);
+> -               __ClearPageWaiters(page);
+> -
+> -               mem_cgroup_uncharge(page);
+> -
+>                 /*
+>                  * When a device_private page is freed, the page->mapping field
+>                  * may still contain a (stale) mapping value. For example, the
+> @@ -446,10 +440,17 @@ void __put_devmap_managed_page(struct page *page)
+>                  * handled differently or not done at all, so there is no need
+>                  * to clear page->mapping.
+>                  */
+> -               if (is_device_private_page(page))
+> -                       page->mapping = NULL;
+> +               if (is_device_private_page(page)) {
+> +                       /* Clear Active bit in case of parallel mark_page_accessed */
+> +                       __ClearPageActive(page);
+> +                       __ClearPageWaiters(page);
+>
+> -               page->pgmap->ops->page_free(page);
+> +                       mem_cgroup_uncharge(page);
+> +
+> +                       page->mapping = NULL;
+> +                       page->pgmap->ops->page_free(page);
+> +               } else
+> +                       wake_up_var(&page->_refcount);
+>         } else if (!count)
+>                 __put_page(page);
+>   }
+> --
+> 2.24.0
+>
+>
+> thanks,
+> --
+> John Hubbard
+> NVIDIA
+>
+> >
+> > diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> > index ad8e4df1282b..4eae441f86c9 100644
+> > --- a/drivers/nvdimm/pmem.c
+> > +++ b/drivers/nvdimm/pmem.c
+> > @@ -337,13 +337,7 @@ static void pmem_release_disk(void *__pmem)
+> >          put_disk(pmem->disk);
+> >   }
+> >
+> > -static void pmem_pagemap_page_free(struct page *page)
+> > -{
+> > -       wake_up_var(&page->_refcount);
+> > -}
+> > -
+> >   static const struct dev_pagemap_ops fsdax_pagemap_ops = {
+> > -       .page_free              = pmem_pagemap_page_free,
+> >          .kill                   = pmem_pagemap_kill,
+> >          .cleanup                = pmem_pagemap_cleanup,
+> >   };
+> > diff --git a/mm/memremap.c b/mm/memremap.c
+> > index 03ccbdfeb697..157edb8f7cf8 100644
+> > --- a/mm/memremap.c
+> > +++ b/mm/memremap.c
+> > @@ -419,12 +419,6 @@ void __put_devmap_managed_page(struct page *page)
+> >           * holds a reference on the page.
+> >           */
+> >          if (count == 1) {
+> > -               /* Clear Active bit in case of parallel mark_page_accessed */
+> > -               __ClearPageActive(page);
+> > -               __ClearPageWaiters(page);
+> > -
+> > -               mem_cgroup_uncharge(page);
+> > -
+> >                  /*
+> >                   * When a device_private page is freed, the page->mapping field
+> >                   * may still contain a (stale) mapping value. For example, the
+> > @@ -446,10 +440,17 @@ void __put_devmap_managed_page(struct page *page)
+> >                   * handled differently or not done at all, so there is no need
+> >                   * to clear page->mapping.
+> >                   */
+> > -               if (is_device_private_page(page))
+> > -                       page->mapping = NULL;
+> > +               if (is_device_private_page(page)) {
+> > +                       /* Clear Active bit in case of parallel
+> > mark_page_accessed */
+> > +                       __ClearPageActive(page);
+> > +                       __ClearPageWaiters(page);
+> >
+> > -               page->pgmap->ops->page_free(page);
+> > +                       mem_cgroup_uncharge(page);
+> > +
+> > +                       page->mapping = NULL;
+> > +                       page->pgmap->ops->page_free(page);
+> > +               } else
+> > +                       wake_up_var(&page->_refcount);
+> >          } else if (!count)
+> >                  __put_page(page);
+> >   }
+> >
