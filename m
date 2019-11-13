@@ -2,97 +2,152 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BBEC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994CCC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862AB2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DDD82067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:30:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iZR8PCI6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mawd8vkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfKMC3o (ORCPT
+        id S1727946AbfKMCaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:29:44 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39700 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfKMC3n (ORCPT
+        Tue, 12 Nov 2019 21:30:05 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55800 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfKMCaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:29:43 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUiP4-0000ox-FH; Wed, 13 Nov 2019 02:29:06 +0000
-Date:   Wed, 13 Nov 2019 02:29:06 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 7/9] open: introduce openat2(2) syscall
-Message-ID: <20191113022906.GD26530@ZenIV.linux.org.uk>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-8-cyphar@cyphar.com>
+        Tue, 12 Nov 2019 21:30:04 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F26D4611AD; Wed, 13 Nov 2019 02:30:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573612204;
+        bh=z2r5uWIsjDvxKFVEHYoB49j8sCNktDPwByXTjPf6Wzo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iZR8PCI6qvpQ3oSaMUW+0bcn3WuxdAi72hYNtZgu6HW6lW+7Pq31Ul4nGYAVl5d+t
+         RM/MC7Q4Oew2ravc5DG6nE+SOOMxoEYLajLAA7P0n4WH2oEr52hpqUVgKMqxbOtDEG
+         osTNIXjP809D/ix6rfpvqCVLXkMW5rd7r3FcAgIQ=
+Received: from [10.79.169.100] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DCB5612DD;
+        Wed, 13 Nov 2019 02:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573612201;
+        bh=z2r5uWIsjDvxKFVEHYoB49j8sCNktDPwByXTjPf6Wzo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mawd8vkztFVhWwO+zcRd9np6hEhSYUYDcv2+zpMiept3DIXyr833mZX653DY421Qt
+         CKU2gvIkR1y43y/Zrllh1J1pffSWT5hWxWz2bwf1k09vXrFlTsP7IS+Xl4qDggkjob
+         lSornY0oWzf3uCLulhyVIbOCdrA0H/g4MwsphLiE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DCB5612DD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        rydberg@bitmath.org
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org, prsood@codeaurora.org,
+        gkohli@codeaurora.org
+Subject: Query regarding hid-multitouch.c driver in 4.14/4.19
+Message-ID: <e1e05bd3-19f5-0dfe-66ad-70717c1c29c6@codeaurora.org>
+Date:   Wed, 13 Nov 2019 07:59:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105090553.6350-8-cyphar@cyphar.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 08:05:51PM +1100, Aleksa Sarai wrote:
-  
-> +/*
-> + * Arguments for how openat2(2) should open the target path. If @resolve is
-> + * zero, then openat2(2) operates very similarly to openat(2).
-> + *
-> + * However, unlike openat(2), unknown bits in @flags result in -EINVAL rather
-> + * than being silently ignored. @mode must be zero unless one of {O_CREAT,
-> + * O_TMPFILE} are set, and @upgrade_mask must be zero unless O_PATH is set.
-> + *
-> + * @flags: O_* flags.
-> + * @mode: O_CREAT/O_TMPFILE file mode.
-> + * @upgrade_mask: UPGRADE_* flags (to restrict O_PATH re-opening).
+Hi,
 
-???
+I have one query regarding hid-multitouch.c driver and need your guidance on
+how hid-multitouchc can restore/support the original behaviour, where, for
+devices, for which application is not 
+HID_DG_TOUCHSCREEN/HID_DG_TOUCHPAD, and has
+HID_DG_CONTACTID usage in its report, can still use generic input mappings.
 
-> + * @resolve: RESOLVE_* flags.
-> + */
-> +struct open_how {
-> +	__aligned_u64 flags;
-> +	__u16 mode;
-> +	__u16 __padding[3]; /* must be zeroed */
-> +	__aligned_u64 resolve;
-> +};
+We are using kernel versions 4.14 , 4.19 respectively in 2 different 
+projects:
+
+4.14: 
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/hid/hid-multitouch.c?h=v4.14.153
+4.19: 
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/hid/hid-multitouch.c?h=v4.19.83
+
+I checked the application for our hid device, it's HID_DG_PEN, device 
+also has a HID_DG_CONTACTID usage defined in
+
+its report.
+
+In 4.19, is_mt_collection is set to 'true'. All multitouch code paths or 
+input mapping is configured
+
+mt_allocate_report_data()
+         ...
+         for (n = 0; n < field->report_count; n++) {
+                         if (field->usage[n].hid == HID_DG_CONTACTID)
+                                 rdata->is_mt_collection = true;   // 
+is_mt_collection is set to 'true'
+                 }
+         }
+
+mt_input_mapping()
+         ...
+         if (rdata->is_mt_collection)
+             return mt_touch_input_mapping(...)  // 
+mt_touch_input_mapping() is called
+
+mt_event()
+         if (rdata && rdata->is_mt_collection)
+             return mt_touch_event();  // mt_touch_event() is called
+
+However, in 4.14, the behaviour was different, mt input mapping was done 
+only
+for HID_DG_TOUCHSCREEN/HID_DG_TOUCHPAD , and because our hid device is
+HID_DG_PEN, generic mappings were applied for it; with these settings, 
+device
+responds to events.
+
+static int mt_input_mapping()
+         if (field->application == HID_DG_TOUCHSCREEN ||
+             field->application == HID_DG_TOUCHPAD)
+             return mt_touch_input_mapping();  // This is not called.
+
+
+mt_touch_input_mapping()
+         case HID_DG_CONTACTID:
+                         mt_store_field(usage, td, hi);
+                         td->touches_by_report++;
+                         td->mt_report_id = field->report->id; // 
+mt_report_id is not set.
+                         return 1;
+
+
+Looks like this behaviour changed, with below commits:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/hid/hid-multitouch.c?h=v4.19.83&id=8dfe14b3b47ff832cb638731f9fc696a3a84f804
+8dfe14b3b47f    HID: multitouch: ditch mt_report_id
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/hid/hid-multitouch.c?h=v4.19.83&id=ba6b055e0f3b4ff4942e4ab273260affcfad9bff
+ba6b055e0f3b     HID: input: enable Totem on the Dell Canvas 27
+
+Can you please suggest on how we can support/preserve the original 
+behaviour?
+
+
+Thanks
+Neeraj
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
+
