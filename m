@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AF7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8B2C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F37A2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3E82053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610420;
-	bh=zWC4O1+FzD5XCxY6cfO9t5+HbfsT82QfocFT7nsEfbA=;
+	s=default; t=1573610423;
+	bh=uPqAL7yy9auhhcmmWvGPsA0w0sPseh05Du9m9H55Qlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahB/Fqni3vd4PTZ6iYnPwmb78BnHJ5qBrx/vdqz9FvKOZtyi9pXHEtujHaOZO3T+6
-	 wpgosM/jRggRDH0kB4a7u2BE6giPQ2GVLf1BfMs/HDU4aSZVmpL4gDlQXuSxMpNhiw
-	 ErOyh34E2q93e7WMz6dw1pY8oZQR6sLBr5rBpyJU=
+	b=K6k6pdKgTJ7ogEE6+l+NZtuLsSgWrFv5oW5TyQTtsPQkGNeOI5WOq75TmvYHZsPeB
+	 zHs7aUJ7cc2aa0HzaJQoalCcB2cZ/9+7fqdds/M6yzYtmVferfbDRrbQ57tpEwQsYv
+	 oEtaNR8+BuaqJVYuAyqdpBl8OFd0AKNY8gakhUyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbfKMCAO (ORCPT
+        id S1729631AbfKMCAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:00:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55102 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:00:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730369AbfKMCAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:06 -0500
+        id S1730457AbfKMCAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DA222467;
-        Wed, 13 Nov 2019 02:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F18982245A;
+        Wed, 13 Nov 2019 02:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610405;
-        bh=zWC4O1+FzD5XCxY6cfO9t5+HbfsT82QfocFT7nsEfbA=;
+        s=default; t=1573610415;
+        bh=uPqAL7yy9auhhcmmWvGPsA0w0sPseh05Du9m9H55Qlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WfGRZDNR5cQnxS6+zIEyj46/OrnzLallymxjagMc8VOjJthV9TwbGae6Lj+DpeELL
-         oiR7GCxjRLzFsy5NvxmhNnZpKCUfYAriNPuzbIAWrz9NIObtoNiNMFXc71hDdP6H3J
-         cHPzgfS8enbd6OeRXogyCkN9J/M9madwcZZzqmVI=
+        b=Up4va7JQhMM2qMN7BT8qdEI4Gf1tFxRRV6TLII3dxjqGZqxU43Y6KiQTfxDadEMDV
+         mwUeNOFPVPuKnhSOcbntOdJxrYIRmSbKvWqNOSHyCbmLFYDAe+3RwmlqwhcRbWpYmO
+         X6clxvXD44OoauGbqKBysv5bpJsujMP2UJTmF690=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 21/68] mtd: rawnand: sh_flctl: Use proper enum for flctl_dma_fifo0_transfer
-Date:   Tue, 12 Nov 2019 20:58:45 -0500
-Message-Id: <20191113015932.12655-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 27/68] media: pxa_camera: Fix check for pdev->dev.of_node
+Date:   Tue, 12 Nov 2019 20:58:51 -0500
+Message-Id: <20191113015932.12655-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -63,58 +64,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit e2bfa4ca23d9b5a7bdfcf21319fad9b59e38a05c ]
+[ Upstream commit 44d7f1a77d8c84f8e42789b5475b74ae0e6d4758 ]
 
-Clang warns when one enumerated type is converted implicitly to another:
+Clang warns that the address of a pointer will always evaluated as true
+in a boolean context.
 
-drivers/mtd/nand/raw/sh_flctl.c:483:46: warning: implicit conversion
-from enumeration type 'enum dma_transfer_direction' to different
-enumeration type 'enum dma_data_direction' [-Wenum-conversion]
-                flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
-                ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
-drivers/mtd/nand/raw/sh_flctl.c:542:46: warning: implicit conversion
-from enumeration type 'enum dma_transfer_direction' to different
-enumeration type 'enum dma_data_direction' [-Wenum-conversion]
-                flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
-                ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
-2 warnings generated.
+drivers/media/platform/pxa_camera.c:2400:17: warning: address of
+'pdev->dev.of_node' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (&pdev->dev.of_node && !pcdev->pdata) {
+             ~~~~~~~~~~^~~~~~~ ~~
+1 warning generated.
 
-Use the proper enums from dma_data_direction to satisfy Clang.
-
-DMA_MEM_TO_DEV = DMA_TO_DEVICE = 1
-DMA_DEV_TO_MEM = DMA_FROM_DEVICE = 2
+Judging from the rest of the kernel, it seems like this was an error and
+just the value of of_node should be checked rather than the address.
 
 Reported-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/sh_flctl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/platform/pxa_camera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/sh_flctl.c b/drivers/mtd/nand/sh_flctl.c
-index 442ce619b3b6d..d6c013f93b8c0 100644
---- a/drivers/mtd/nand/sh_flctl.c
-+++ b/drivers/mtd/nand/sh_flctl.c
-@@ -480,7 +480,7 @@ static void read_fiforeg(struct sh_flctl *flctl, int rlen, int offset)
+diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
+index 390d708c807a0..3fab9f776afa7 100644
+--- a/drivers/media/platform/pxa_camera.c
++++ b/drivers/media/platform/pxa_camera.c
+@@ -2334,7 +2334,7 @@ static int pxa_camera_probe(struct platform_device *pdev)
+ 	pcdev->res = res;
  
- 	/* initiate DMA transfer */
- 	if (flctl->chan_fifo0_rx && rlen >= 32 &&
--		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
-+		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_FROM_DEVICE) > 0)
- 			goto convert;	/* DMA success */
- 
- 	/* do polling transfer */
-@@ -539,7 +539,7 @@ static void write_ec_fiforeg(struct sh_flctl *flctl, int rlen,
- 
- 	/* initiate DMA transfer */
- 	if (flctl->chan_fifo0_tx && rlen >= 32 &&
--		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
-+		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_TO_DEVICE) > 0)
- 			return;	/* DMA success */
- 
- 	/* do polling transfer */
+ 	pcdev->pdata = pdev->dev.platform_data;
+-	if (&pdev->dev.of_node && !pcdev->pdata) {
++	if (pdev->dev.of_node && !pcdev->pdata) {
+ 		err = pxa_camera_pdata_from_dt(&pdev->dev, pcdev, &pcdev->asd);
+ 	} else {
+ 		pcdev->platform_flags = pcdev->pdata->flags;
 -- 
 2.20.1
 
