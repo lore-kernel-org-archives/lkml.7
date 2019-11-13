@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B1FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E563C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81DD8206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E2F2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612060;
-	bh=iOCWkkQyNZ9HFAZK0cqFlOadkurC8YTumm+nF+4sP6Y=;
+	s=default; t=1573612063;
+	bh=MbvfzHdLIyxp1OB5gLuB0mj1aev0t0AolzqUnsL+2KU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fSqJO26VidS8jE7OHRsZiB+SPvp6cczb5d3yP332PT8M2Qv6N0eEpbDJNh1eBh3Te
-	 3ntkpTT95R9VjgiAi1BXjpCgsXW8dgQecVaBA4FIoW2KjArw3w+cRjNYcjq92y9wkJ
-	 MYsqTX+EqtdgSTMiBmTzeIUZ4zKXGUnhLz9oWX9M=
+	b=GUr8ChyMEnquWhUDlvbG44SGZssTouc7j16QDqxyJbAzklx0jIMDYGiLT+r7XDsNl
+	 znajHROH4cuG+qreOOgYTUBcp2LXavhDHusIdRvb9wjJJ5DpB2McLtakBvkyNgI3/C
+	 oiaAKOLZMrpsT9qHq11a2V+F11ksrcIyfmFD6+qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfKMC1i (ORCPT
+        id S1727521AbfKMBuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:27:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37888 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:50:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727531AbfKMBuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:51 -0500
+        id S1727458AbfKMBul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 622D3222CA;
-        Wed, 13 Nov 2019 01:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69B5122459;
+        Wed, 13 Nov 2019 01:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609851;
-        bh=iOCWkkQyNZ9HFAZK0cqFlOadkurC8YTumm+nF+4sP6Y=;
+        s=default; t=1573609841;
+        bh=MbvfzHdLIyxp1OB5gLuB0mj1aev0t0AolzqUnsL+2KU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dgCGl2tWDcxJ96EYTVJn/bPazGO/v2QBK27aEOibBrYvkTMcJw2Efj7TYMyof2JfL
-         hdmi/1kSnd8dBzUZeanO7r2LIt3zs+Lp1sYwOgfwPRYY001yypZM6PDo8uCv51drT+
-         9VyQRTOBk+GZfhaEbeEz447oZmYHyylU4J93Ti5Q=
+        b=Cl/jQo9/ViDXPVhIDJ3g6WQkUxeYY4Qu+JPI9vClFV+AMHBautMO2sFhw4WjZlneF
+         v+6jHKvH4hoNSMgxewwOQMxlpQrvrL8S2wL4LFdffE9hEDmdOPWroiVOhvBdi9reHM
+         gl6VImlM4ALdHGdstpEr4AFqCuWVBGp3DLmZ7fA4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 022/209] iommu/arm-smmu-v3: Fix unexpected CMD_SYNC timeout
-Date:   Tue, 12 Nov 2019 20:47:18 -0500
-Message-Id: <20191113015025.9685-22-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 013/209] ACPI / LPSS: Make acpi_lpss_find_device() also find PCI devices
+Date:   Tue, 12 Nov 2019 20:47:09 -0500
+Message-Id: <20191113015025.9685-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -60,84 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhen Lei <thunder.leizhen@huawei.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 0f02477d16980938a84aba8688a4e3a303306116 ]
+[ Upstream commit 1e30124ac60abc41d74793900f8b4034f29bcb3d ]
 
-The condition break condition of:
+On some Cherry Trail systems the GPU ACPI fwnode has power-resources which
+point to the PMIC, which is connected over one of the LPSS I2C controllers.
 
-	(int)(VAL - sync_idx) >= 0
+To get the suspend/resume ordering correct for this we need to be able to
+add device-links between the GPU and the I2c controller. The GPU is a PCI
+device, so this requires acpi_lpss_find_device() to also work on PCI devs.
 
-in the __arm_smmu_sync_poll_msi() polling loop requires that sync_idx
-must be increased monotonically according to the sequence of the CMDs in
-the cmdq.
-
-However, since the msidata is populated using atomic_inc_return_relaxed()
-before taking the command-queue spinlock, then the following scenario
-can occur:
-
-CPU0			CPU1
-msidata=0
-			msidata=1
-			insert cmd1
-insert cmd0
-			smmu execute cmd1
-smmu execute cmd0
-			poll timeout, because msidata=1 is overridden by
-			cmd0, that means VAL=0, sync_idx=1.
-
-This is not a functional problem, since the caller will eventually either
-timeout or exit due to another CMD_SYNC, however it's clearly not what
-the code is supposed to be doing. Fix it, by incrementing the sequence
-count with the command-queue lock held, allowing us to drop the atomic
-operations altogether.
-
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-[will: dropped the specialised cmd building routine for now]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/acpi/acpi_lpss.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 40fbf20d69e5a..2ab7100bcff12 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -567,7 +567,7 @@ struct arm_smmu_device {
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index c651e206d7960..924b9f089e79f 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -16,6 +16,7 @@
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/mutex.h>
++#include <linux/pci.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/clk-lpss.h>
+ #include <linux/platform_data/x86/pmc_atom.h>
+@@ -494,12 +495,18 @@ static int match_hid_uid(struct device *dev, void *data)
  
- 	int				gerr_irq;
- 	int				combined_irq;
--	atomic_t			sync_nr;
-+	u32				sync_nr;
- 
- 	unsigned long			ias; /* IPA */
- 	unsigned long			oas; /* PA */
-@@ -964,14 +964,13 @@ static int __arm_smmu_cmdq_issue_sync_msi(struct arm_smmu_device *smmu)
- 	struct arm_smmu_cmdq_ent ent = {
- 		.opcode = CMDQ_OP_CMD_SYNC,
- 		.sync	= {
--			.msidata = atomic_inc_return_relaxed(&smmu->sync_nr),
- 			.msiaddr = virt_to_phys(&smmu->sync_count),
- 		},
+ static struct device *acpi_lpss_find_device(const char *hid, const char *uid)
+ {
++	struct device *dev;
++
+ 	struct hid_uid data = {
+ 		.hid = hid,
+ 		.uid = uid,
  	};
  
--	arm_smmu_cmdq_build_cmd(cmd, &ent);
--
- 	spin_lock_irqsave(&smmu->cmdq.lock, flags);
-+	ent.sync.msidata = ++smmu->sync_nr;
-+	arm_smmu_cmdq_build_cmd(cmd, &ent);
- 	arm_smmu_cmdq_insert_cmd(smmu, cmd);
- 	spin_unlock_irqrestore(&smmu->cmdq.lock, flags);
+-	return bus_find_device(&platform_bus_type, NULL, &data, match_hid_uid);
++	dev = bus_find_device(&platform_bus_type, NULL, &data, match_hid_uid);
++	if (dev)
++		return dev;
++
++	return bus_find_device(&pci_bus_type, NULL, &data, match_hid_uid);
+ }
  
-@@ -2196,7 +2195,6 @@ static int arm_smmu_init_structures(struct arm_smmu_device *smmu)
- {
- 	int ret;
- 
--	atomic_set(&smmu->sync_nr, 0);
- 	ret = arm_smmu_init_queues(smmu);
- 	if (ret)
- 		return ret;
+ static bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
 -- 
 2.20.1
 
