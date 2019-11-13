@@ -2,281 +2,199 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBA9C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E48C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E065D222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16340222C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 14:52:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mApGCYcy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUAYyn5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfKMOwH (ORCPT
+        id S1727850AbfKMOwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:52:07 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38656 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727637AbfKMOwG (ORCPT
+        Wed, 13 Nov 2019 09:52:44 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41138 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfKMOwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:52:06 -0500
-Received: by mail-qk1-f193.google.com with SMTP id e2so1944381qkn.5;
-        Wed, 13 Nov 2019 06:52:05 -0800 (PST)
+        Wed, 13 Nov 2019 09:52:43 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m125so1926582qkd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 06:52:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+TVONtKMnYlgKfuCSUQF9CV9h8e4BaOkNxZ+ZGZ6OVU=;
-        b=mApGCYcyErV7zLFfy/nP6PCbiNXpGvXvKGnmPcBpe5j23rSoHRZ0c0Ut5rcEHnwutK
-         mQzPh/GhYoM6t5JxAOWErtVyMwemtLo6vno7vv9gWZ0izHIYGs46xCc1ew4GnWiIglen
-         eGzUG/zqeCUz8uazKLFEkF5mSL8EvEgQ/8VxYnOxuejEaqWD/DY9E0/8C0AHrmuXISUn
-         I0bV5sf3VI67d3XavWXTp6xxoCGbRkzSKAYgsReJR+IVfQQUC5QVgVPdEqr8VIhmcXHC
-         fPVtdSKH2ivRbm8Z8W57UUW1ot5mr4hM7CRV+YWTz5jzhSs67cBii1UiQC3XZDCYU71i
-         Enhg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=sn9pVHm74Rw5zcVcwKY9qhnttEm3LKTT86EDfnHaeSg=;
+        b=XUAYyn5FNWyiJY668xT4WWtxlgdzjMRSgKWZ8x0updTL2qzbPm0Peaop0lP+bv6VeO
+         B77hf7591CMB+Bl1oPOc0OJMT/n4/suiHqlMGRI3rRFfG7IOXMdTHUxAJjJy6gALV+22
+         RjD+h6JehCszadPbbR4v/Zj5gvwBNqLXPHkNIjLYhivMCYMl/l1KqOl8iAg+A4nCfUOF
+         PYBfjdHpcGxcNwKe/5/5z/ZSPgWOSVurmoCoGx5ewFoYWyoqlbhKfMm3BfpRXI1YLJQ8
+         QEaJdcz0txTAuJXsb87p9goX5TC+wgX1O37BhDUdZZC0McmWUy4AulASNfFCK8qallTa
+         Xw/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+TVONtKMnYlgKfuCSUQF9CV9h8e4BaOkNxZ+ZGZ6OVU=;
-        b=Bt9zhv9zFt+7EWFyZZ8Fb7wFV3122dCWcd0t2lWDAsBy2dDTn1raCZarx3psXh7l/1
-         vbM/WfX90zuGE7tB29SC0M4d85rJSbJfOnVuwOORF7yny1Y+1GKXEeCJAyyTucnqzSJr
-         5S5xgOZ7WkcB8RaD0SW2H1BxLk3fwywHPnRHn+frQi2f+S1n5bw48f42yYoRRn5YClnO
-         p4YTSX4dg/2/dYapo3F+6oZuKFR6Ie53S/++DwDJFvhw9dAAnKwj1lfltZquAGZ+3MBd
-         GGcCLUoBUjXStidf/MWaYqSNMUzvLj1oB6TQHuw/WP039QXwsZdLYSvWGpTElXXuy9gw
-         QSjQ==
-X-Gm-Message-State: APjAAAUu3lj4ZAMuUzhs3YPhsjufYuKb0iPXJbojKB23iqA70GeA1OMz
-        PSZFZ1QzTt5FHxJ+2u3aImXkvkJW
-X-Google-Smtp-Source: APXvYqwjXCIV15LPJW4fCFYIilYLxM9XtYn6XUXfXV20fxrKk9zW39txP4fLxmmCh8MlFtfOpabGrw==
-X-Received: by 2002:a37:4f83:: with SMTP id d125mr2888805qkb.205.1573656725214;
-        Wed, 13 Nov 2019 06:52:05 -0800 (PST)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id 130sm1075339qkd.33.2019.11.13.06.52.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=sn9pVHm74Rw5zcVcwKY9qhnttEm3LKTT86EDfnHaeSg=;
+        b=AYNO5Cz/urgwDJuvgE9FsprLKr4xlYptAE4II6fJ1+HuqsTVREN2XPbFqITsVp16mF
+         ps5dBgODPPZ4QXpinxw8gL0R4LMXTatnN9PvvIZ0rui9YwJnhl0Ni56MwJuYVY/KeMoJ
+         Cwb1Pu9XEp90s1c3ocDi7ib1O+xrwcwusVLwxnNHVesUf9qr4P5uHSqfg4fpN5+2u0Il
+         hXeDWc83Hnr4nhIr1mxWVwmttTcusA1sDfTyctxReNE44viIqnP9CbNeH7cGZB9lpMrw
+         BIQ29FNTz8s/4tmref5L2FtAUNRaAQnRbKjAb0cac5DPjDEc2mOYdT9Yt9YN2ft65UTg
+         G1DQ==
+X-Gm-Message-State: APjAAAWkojdcEVgeN/Cv9kmIy76zn1coLSG3S/Fk+HNV90cPEQ2Kq3Ac
+        7TcBFf/ry0RASrzoC78ZFuNwc3HbqvGe6w==
+X-Google-Smtp-Source: APXvYqy2GpS+D438d7eJFr76BIAz885Qr5V0A8K1nscKluUykoiF20QzNt4i2oU48YLTO+W62Uyb8A==
+X-Received: by 2002:a05:620a:8da:: with SMTP id z26mr2694003qkz.499.1573656762309;
+        Wed, 13 Nov 2019 06:52:42 -0800 (PST)
+Received: from gmail.com ([184.75.212.4])
+        by smtp.gmail.com with ESMTPSA id w18sm1083957qkb.41.2019.11.13.06.52.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 06:52:04 -0800 (PST)
-Date:   Wed, 13 Nov 2019 11:52:00 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
-        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
-Message-ID: <20191113145159.vw7icflfve7dnefm@smtp.gmail.com>
-References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
- <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
- <20191112193942.GA27334@bogus>
+        Wed, 13 Nov 2019 06:52:41 -0800 (PST)
+Date:   Wed, 13 Nov 2019 09:52:39 -0500
+From:   "Javier F. Arias" <jarias.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH V3 1/4] staging: rtl8723bs: Add necessary braces
+Message-ID: <1d47d745c077cc808bf0c09d2ee40e3c03d34b06.1573656487.git.jarias.linux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112193942.GA27334@bogus>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+This patchset adds braces when they should be used on all arms of
+the statement.
+Issue found by Checkpatch.
 
-Thanks for reviewing the binding doc again.
-Aparently, this patch was added to Greg KH's staging tree.
-What is the right procedure in this case? Should I send a v5 patchset or
-just send a patch for this doc?
+Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
+---
+Changes in V3:
+	- No changes.
+Changes in V2:
+        - Add braces and balance statements in the same patch instead
+          of performing a new change in a subsequent patch.
+        - Fix a typo in the commit description.
 
-In any case, I still have some doubts about the maximum constraint of
-the channel property. Comments inline.
+ drivers/staging/rtl8723bs/core/rtw_xmit.c | 34 +++++++++++++----------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+index fdb585ff5925..44fc604ea5b7 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
++++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+@@ -370,9 +370,9 @@ static void update_attrib_vcs_info(struct adapter *padapter, struct xmit_frame *
+ 	/* 		Other fragments are protected by previous fragment. */
+ 	/* 		So we only need to check the length of first fragment. */
+ 	if (pmlmeext->cur_wireless_mode < WIRELESS_11_24N  || padapter->registrypriv.wifi_spec) {
+-		if (sz > padapter->registrypriv.rts_thresh)
++		if (sz > padapter->registrypriv.rts_thresh) {
+ 			pattrib->vcs_mode = RTS_CTS;
+-		else {
++		} else {
+ 			if (pattrib->rtsen)
+ 				pattrib->vcs_mode = RTS_CTS;
+ 			else if (pattrib->cts2self)
+@@ -679,8 +679,9 @@ static s32 update_attrib(struct adapter *padapter, _pkt *pkt, struct pkt_attrib
+ 		memcpy(pattrib->ra, pattrib->dst, ETH_ALEN);
+ 		memcpy(pattrib->ta, get_bssid(pmlmepriv), ETH_ALEN);
+ 		DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_ap);
+-	} else
++	} else {
+ 		DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_unknown);
++	}
+ 
+ 	pattrib->pktlen = pktfile.pkt_len;
+ 
+@@ -724,9 +725,9 @@ static s32 update_attrib(struct adapter *padapter, _pkt *pkt, struct pkt_attrib
+ 		rtw_set_scan_deny(padapter, 3000);
+ 
+ 	/*  If EAPOL , ARP , OR DHCP packet, driver must be in active mode. */
+-	if (pattrib->icmp_pkt == 1)
++	if (pattrib->icmp_pkt == 1) {
+ 		rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_LEAVE, 1);
+-	else if (pattrib->dhcp_pkt == 1) {
++	} else if (pattrib->dhcp_pkt == 1) {
+ 		DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_active);
+ 		rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_SPECIAL_PACKET, 1);
+ 	}
+@@ -926,8 +927,9 @@ static s32 xmitframe_swencrypt(struct adapter *padapter, struct xmit_frame *pxmi
+ 		default:
+ 				break;
+ 		}
+-	} else
++	} else {
+ 		RT_TRACE(_module_rtl871x_xmit_c_, _drv_notice_, ("### xmitframe_hwencrypt\n"));
++	}
+ 
+ 	return _SUCCESS;
+ }
+@@ -1204,8 +1206,9 @@ s32 rtw_xmitframe_coalesce(struct adapter *padapter, _pkt *pkt, struct xmit_fram
+ 			ClearMFrag(mem_start);
+ 
+ 			break;
+-		} else
++		} else {
+ 			RT_TRACE(_module_rtl871x_xmit_c_, _drv_err_, ("%s: There're still something in packet!\n", __func__));
++		}
+ 
+ 		addr = (SIZE_PTR)(pframe);
+ 
+@@ -1446,17 +1449,18 @@ void rtw_update_protection(struct adapter *padapter, u8 *ie, uint ie_len)
+ 	case AUTO_VCS:
+ 	default:
+ 		perp = rtw_get_ie(ie, _ERPINFO_IE_, &erp_len, ie_len);
+-		if (!perp)
++		if (!perp) {
+ 			pxmitpriv->vcs = NONE_VCS;
+-		else {
++		} else {
+ 			protection = (*(perp + 2)) & BIT(1);
+ 			if (protection) {
+ 				if (pregistrypriv->vcs_type == RTS_CTS)
+ 					pxmitpriv->vcs = RTS_CTS;
+ 				else
+ 					pxmitpriv->vcs = CTS_TO_SELF;
+-			} else
++			} else {
+ 				pxmitpriv->vcs = NONE_VCS;
++			}
+ 		}
+ 
+ 		break;
+@@ -1509,8 +1513,9 @@ static struct xmit_buf *__rtw_alloc_cmd_xmitbuf(struct xmit_priv *pxmitpriv,
+ 			DBG_871X("%s pxmitbuf->sctx is not NULL\n", __func__);
+ 			rtw_sctx_done_err(&pxmitbuf->sctx, RTW_SCTX_DONE_BUF_ALLOC);
+ 		}
+-	} else
++	} else {
+ 		DBG_871X("%s fail, no xmitbuf available !!!\n", __func__);
++	}
+ 
+ 	return pxmitbuf;
+ }
+@@ -2177,11 +2182,12 @@ inline bool xmitframe_hiq_filter(struct xmit_frame *xmitframe)
+ 				, attrib->ether_type, attrib->dhcp_pkt?" DHCP":"");
+ 			allow = true;
+ 		}
+-	} else if (registry->hiq_filter == RTW_HIQ_FILTER_ALLOW_ALL)
++	} else if (registry->hiq_filter == RTW_HIQ_FILTER_ALLOW_ALL) {
+ 		allow = true;
+-	else if (registry->hiq_filter == RTW_HIQ_FILTER_DENY_ALL) {
+-	} else
++	} else if (registry->hiq_filter == RTW_HIQ_FILTER_DENY_ALL) {
++	} else {
+ 		rtw_warn_on(1);
++	}
+ 
+ 	return allow;
+ }
+-- 
+2.20.1
 
-Thanks
-
-Marcelo
-
-On 11/12, Rob Herring wrote:
-> On Fri, Nov 08, 2019 at 10:56:09AM -0300, Marcelo Schmitt wrote:
-> > Add a devicetree schema for AD7292 monitor and control system.
-> > 
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > ---
-> > Changelog V3 -> V4:
-> > - updated SPDX identifier to GPL-2.0-only
-> > - changed maxitems constraint on channel property
-> > 
-> >  .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
-> >  MAINTAINERS                                   |   7 ++
-> >  2 files changed, 111 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > new file mode 100644
-> > index 000000000000..b68be3aaf587
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > @@ -0,0 +1,104 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> 
-> Sigh, I gave you the exact line to use:
-> 
-> # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> 
-> I've said to dual license with (GPL-2.0-only OR BSD-2-Clause) and people 
-> think I mean to pick one. So now I just give the whole line. I don't 
-> know how to be clearer.
-
-I thought I could use just GPL-2.0 since the driver code is GPL-2.0.
-Anyway, I'll use the above line to specify the dt-binding license.
-
-> 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices AD7292 10-Bit Monitor and Control System
-> > +
-> > +maintainers:
-> > +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > +
-> > +description: |
-> > +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-> > +  Temperature Sensor, and GPIOs
-> > +
-> > +  Specifications about the part can be found at:
-> > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,ad7292
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  vref-supply:
-> > +    description: |
-> > +      The regulator supply for ADC and DAC reference voltage.
-> > +
-> > +  spi-cpha: true
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - spi-cpha
-> > +
-> > +patternProperties:
-> > +  "^channel@[0-7]$":
-> > +    type: object
-> > +    description: |
-> > +      Represents the external channels which are connected to the ADC.
-> > +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> > +
-> > +    properties:
-> > +      reg:
-> > +        description: |
-> > +          The channel number. It can have up to 8 channels numbered from 0 to 7.
-> > +        items:
-> > +          maximum: 7
-> 
-> Not what I said either. A slight but important difference in that you 
-> are missing a '-' to make 'items' a list rather than a schema/dict.
-> 
-> Update dt-schema. This should give a warning now.
-
-I'm confused, I don't know how to make this doc the way you want.
-I pulled the updates from the master branch of dt-schema repo and
-reinstalled it.
-Then I tried
-        items:
-          - maximum: 7
-I've tried
-        - items:
-            maximum: 7
-I also tried
-        - items:
-          maximum: 7
-all gave me parsing errors when processing the ad7292 schema with 
-'make dt_binding_check' and also with 'make -k dt_binding_check'.
-Am I using the right branch? Should I pull from a branch other than the
-master?
-I was first inspired by the adi,ad7124.yaml doc which has a similar
-channel declaration. Curiously, processing the ad7292 schema the way it
-was in v4 gave me no errors so, I must be missing something.
-
-> 
-> > +
-> > +      diff-channels:
-> > +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> > +        maxItems: 1
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    spi {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      ad7292: adc@0 {
-> > +        compatible = "adi,ad7292";
-> > +        reg = <0>;
-> > +        spi-max-frequency = <25000000>;
-> > +        vref-supply = <&adc_vref>;
-> > +        spi-cpha;
-> > +
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        channel@0 {
-> > +          reg = <0>;
-> > +          diff-channels = <0 1>;
-> > +        };
-> > +        channel@2 {
-> > +          reg = <2>;
-> > +        };
-> > +        channel@3 {
-> > +          reg = <3>;
-> > +        };
-> > +        channel@4 {
-> > +          reg = <4>;
-> > +        };
-> > +        channel@5 {
-> > +          reg = <5>;
-> > +        };
-> > +        channel@6 {
-> > +          reg = <6>;
-> > +        };
-> > +        channel@7 {
-> > +          reg = <7>;
-> > +        };
-> > +      };
-> > +    };
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 32bf5f8116d0..5d00e871c4c6 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -813,6 +813,13 @@ S:	Supported
-> >  F:	drivers/iio/adc/ad7124.c
-> >  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> >  
-> > +ANALOG DEVICES INC AD7292 DRIVER
-> > +M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > +L:	linux-iio@vger.kernel.org
-> > +W:	http://ez.analog.com/community/linux-device-drivers
-> > +S:	Supported
-> > +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > +
-> >  ANALOG DEVICES INC AD7606 DRIVER
-> >  M:	Stefan Popa <stefan.popa@analog.com>
-> >  L:	linux-iio@vger.kernel.org
-> > -- 
-> > 2.23.0
-> > 
