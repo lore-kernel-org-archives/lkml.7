@@ -2,172 +2,215 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895DAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D1EC33C8C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA0D206F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:47:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iieNDePt"
+	by mail.kernel.org (Postfix) with ESMTP id 4175B206F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbfKMSrR (ORCPT
+        id S1728659AbfKMSr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:47:17 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:43344 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfKMSrE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:47:04 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id ED11F20B4904;
-        Wed, 13 Nov 2019 10:47:02 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ED11F20B4904
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573670823;
-        bh=DKCaB/fse/DmuVBERqJi6zlr2kjIKA9EFo+2/yYf1DA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=iieNDePtOMwQYbIUxCM8KyrQE3/t/JQ5JbXXc8gUKNVe5RKcTPRqUYAq3PIPES0Sn
-         M19RKfCZh2HdoiZolTtQyaGdB6bk3eaUesRXI+lK+rrXN92RJqx8I7ddq41OGoEx5W
-         iu79XxRvO9mfOFrBTrB7xyAvDGcwycqib9uglyJg=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/3] IMA: Define an IMA hook to measure keys
-Date:   Wed, 13 Nov 2019 10:46:57 -0800
-Message-Id: <20191113184658.2862-3-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191113184658.2862-1-nramas@linux.microsoft.com>
-References: <20191113184658.2862-1-nramas@linux.microsoft.com>
+        Wed, 13 Nov 2019 13:47:59 -0500
+Received: from mga17.intel.com ([192.55.52.151]:43379 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727241AbfKMSr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:47:58 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 10:47:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,301,1569308400"; 
+   d="scan'208";a="216489509"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga002.jf.intel.com with ESMTP; 13 Nov 2019 10:47:53 -0800
+Date:   Wed, 13 Nov 2019 10:47:53 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 08/23] vfio, mm: fix get_user_pages_remote() and
+ FOLL_LONGTERM
+Message-ID: <20191113184752.GD12699@iweiny-DESK2.sc.intel.com>
+References: <20191113042710.3997854-1-jhubbard@nvidia.com>
+ <20191113042710.3997854-9-jhubbard@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113042710.3997854-9-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Measure asymmetric keys used for verifying file signatures,
-certificates, etc.
+On Tue, Nov 12, 2019 at 08:26:55PM -0800, John Hubbard wrote:
+> As it says in the updated comment in gup.c: current FOLL_LONGTERM
+> behavior is incompatible with FAULT_FLAG_ALLOW_RETRY because of the
+> FS DAX check requirement on vmas.
+> 
+> However, the corresponding restriction in get_user_pages_remote() was
+> slightly stricter than is actually required: it forbade all
+> FOLL_LONGTERM callers, but we can actually allow FOLL_LONGTERM callers
+> that do not set the "locked" arg.
+> 
+> Update the code and comments accordingly, and update the VFIO caller
+> to take advantage of this, fixing a bug as a result: the VFIO caller
+> is logically a FOLL_LONGTERM user.
+> 
+> Also, remove an unnessary pair of calls that were releasing and
+> reacquiring the mmap_sem. There is no need to avoid holding mmap_sem
+> just in order to call page_to_pfn().
+> 
+> Also, move the DAX check ("if a VMA is DAX, don't allow long term
+> pinning") from the VFIO call site, all the way into the internals
+> of get_user_pages_remote() and __gup_longterm_locked(). That is:
+> get_user_pages_remote() calls __gup_longterm_locked(), which in turn
+> calls check_dax_vmas(). It's lightly explained in the comments as well.
+> 
+> Thanks to Jason Gunthorpe for pointing out a clean way to fix this,
+> and to Dan Williams for helping clarify the DAX refactoring.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Jerome Glisse <jglisse@redhat.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
 
-This patch defines a new IMA hook namely ima_post_key_create_or_update()
-to measure asymmetric keys.
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-Note that currently IMA subsystem can be enabled without
-enabling KEYS subsystem.
-
-Adding support for measuring asymmetric keys in IMA requires KEYS
-subsystem to be enabled. To handle this dependency a new config
-namely CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS has been added. Enabling
-this config requires the following configs to be enabled:
-    CONFIG_IMA, CONFIG_KEYS, CONFIG_ASYMMETRIC_KEY_TYPE, and
-    CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE.
-
-CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is off by default.
-
-The IMA hook is defined in a new file namely ima_asymmetric_keys.c
-which is built only if CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is enabled.
-
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- security/integrity/ima/Kconfig               | 14 ++++++
- security/integrity/ima/Makefile              |  1 +
- security/integrity/ima/ima_asymmetric_keys.c | 51 ++++++++++++++++++++
- 3 files changed, 66 insertions(+)
- create mode 100644 security/integrity/ima/ima_asymmetric_keys.c
-
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index 838476d780e5..c6d14884bc19 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -310,3 +310,17 @@ config IMA_APPRAISE_SIGNED_INIT
- 	default n
- 	help
- 	   This option requires user-space init to be signed.
-+
-+config IMA_MEASURE_ASYMMETRIC_KEYS
-+	bool "Enable measuring asymmetric keys on key create or update"
-+	depends on IMA
-+	depends on KEYS
-+	depends on ASYMMETRIC_KEY_TYPE
-+	depends on ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-+	default n
-+	help
-+	   This option enables measuring asymmetric keys when
-+	   the key is created or updated. Additionally, IMA policy
-+	   needs to be configured to either measure keys linked to
-+	   any keyring or only measure keys linked to the keyrings
-+	   specified in the IMA policy through the keyrings= option.
-diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-index 31d57cdf2421..3e9d0ad68c7b 100644
---- a/security/integrity/ima/Makefile
-+++ b/security/integrity/ima/Makefile
-@@ -12,3 +12,4 @@ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
- ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
- ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
- obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
-+obj-$(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) += ima_asymmetric_keys.o
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-new file mode 100644
-index 000000000000..f6884641a622
---- /dev/null
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 Microsoft Corporation
-+ *
-+ * Author: Lakshmi Ramasubramanian (nramas@linux.microsoft.com)
-+ *
-+ * File: ima_asymmetric_keys.c
-+ *       Defines an IMA hook to measure asymmetric keys on key
-+ *       create or update.
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <crypto/public_key.h>
-+#include <keys/asymmetric-type.h>
-+#include "ima.h"
-+
-+/**
-+ * ima_post_key_create_or_update - measure asymmetric keys
-+ * @keyring: keyring to which the key is linked to
-+ * @key: created or updated key
-+ * @flags: key flags
-+ * @create: flag indicating whether the key was created or updated
-+ *
-+ * Keys can only be measured, not appraised.
-+ */
-+void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-+				   unsigned long flags, bool create)
-+{
-+	const struct public_key *pk;
-+
-+	/* Only asymmetric keys are handled by this hook. */
-+	if (key->type != &key_type_asymmetric)
-+		return;
-+
-+	/* Get the public_key of the given asymmetric key to measure. */
-+	pk = key->payload.data[asym_crypto];
-+
-+	/*
-+	 * keyring->description points to the name of the keyring
-+	 * (such as ".builtin_trusted_keys", ".ima", etc.) to
-+	 * which the given key is linked to.
-+	 *
-+	 * The name of the keyring is passed in the "eventname"
-+	 * parameter to process_buffer_measurement() and is set
-+	 * in the "eventname" field in ima_event_data for
-+	 * the key measurement IMA event.
-+	 */
-+	process_buffer_measurement(pk->key, pk->keylen,
-+				   keyring->description, KEY_CHECK, 0);
-+}
--- 
-2.17.1
-
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 25 ++-----------------------
+>  mm/gup.c                        | 27 ++++++++++++++++++++++-----
+>  2 files changed, 24 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index d864277ea16f..7301b710c9a4 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -340,7 +340,6 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  {
+>  	struct page *page[1];
+>  	struct vm_area_struct *vma;
+> -	struct vm_area_struct *vmas[1];
+>  	unsigned int flags = 0;
+>  	int ret;
+>  
+> @@ -348,33 +347,13 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  		flags |= FOLL_WRITE;
+>  
+>  	down_read(&mm->mmap_sem);
+> -	if (mm == current->mm) {
+> -		ret = get_user_pages(vaddr, 1, flags | FOLL_LONGTERM, page,
+> -				     vmas);
+> -	} else {
+> -		ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags, page,
+> -					    vmas, NULL);
+> -		/*
+> -		 * The lifetime of a vaddr_get_pfn() page pin is
+> -		 * userspace-controlled. In the fs-dax case this could
+> -		 * lead to indefinite stalls in filesystem operations.
+> -		 * Disallow attempts to pin fs-dax pages via this
+> -		 * interface.
+> -		 */
+> -		if (ret > 0 && vma_is_fsdax(vmas[0])) {
+> -			ret = -EOPNOTSUPP;
+> -			put_page(page[0]);
+> -		}
+> -	}
+> -	up_read(&mm->mmap_sem);
+> -
+> +	ret = get_user_pages_remote(NULL, mm, vaddr, 1, flags | FOLL_LONGTERM,
+> +				    page, NULL, NULL);
+>  	if (ret == 1) {
+>  		*pfn = page_to_pfn(page[0]);
+>  		return 0;
+>  	}
+>  
+> -	down_read(&mm->mmap_sem);
+> -
+>  	vaddr = untagged_addr(vaddr);
+>  
+>  	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 933524de6249..83702b2e86c8 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -29,6 +29,13 @@ struct follow_page_context {
+>  	unsigned int page_mask;
+>  };
+>  
+> +static __always_inline long __gup_longterm_locked(struct task_struct *tsk,
+> +						  struct mm_struct *mm,
+> +						  unsigned long start,
+> +						  unsigned long nr_pages,
+> +						  struct page **pages,
+> +						  struct vm_area_struct **vmas,
+> +						  unsigned int flags);
+>  /*
+>   * Return the compound head page with ref appropriately incremented,
+>   * or NULL if that failed.
+> @@ -1167,13 +1174,23 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+>  		struct vm_area_struct **vmas, int *locked)
+>  {
+>  	/*
+> -	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
+> +	 * Parts of FOLL_LONGTERM behavior are incompatible with
+>  	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
+> -	 * vmas.  As there are no users of this flag in this call we simply
+> -	 * disallow this option for now.
+> +	 * vmas. However, this only comes up if locked is set, and there are
+> +	 * callers that do request FOLL_LONGTERM, but do not set locked. So,
+> +	 * allow what we can.
+>  	 */
+> -	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
+> -		return -EINVAL;
+> +	if (gup_flags & FOLL_LONGTERM) {
+> +		if (WARN_ON_ONCE(locked))
+> +			return -EINVAL;
+> +		/*
+> +		 * This will check the vmas (even if our vmas arg is NULL)
+> +		 * and return -ENOTSUPP if DAX isn't allowed in this case:
+> +		 */
+> +		return __gup_longterm_locked(tsk, mm, start, nr_pages, pages,
+> +					     vmas, gup_flags | FOLL_TOUCH |
+> +					     FOLL_REMOTE);
+> +	}
+>  
+>  	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
+>  				       locked,
+> -- 
+> 2.24.0
+> 
