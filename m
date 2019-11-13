@@ -2,100 +2,115 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BEAC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A112C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCA720643
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="rdK4ZdHR"
+	by mail.kernel.org (Postfix) with ESMTP id A735820643
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfKMQkE (ORCPT
+        id S1728558AbfKMQkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:40:04 -0500
-Received: from vern.gendns.com ([98.142.107.122]:33946 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbfKMQkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:40:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QrvW6E32K5Vx93CTVXth40KpCgKxLN9+MjmqBa8HhYQ=; b=rdK4ZdHRwSz49vILav5p93Yhsu
-        s0JgORPMrczDhB+6+VsPQBw6DulH10gp+48pYNDxLSIb3+NvlY5YXHUG0aMQkNkN/LRIJgL+q1v11
-        kHVaI1m1z4idkL5UfkrnGvW3wEJr3Dbd7yZnGXBckkHHYF196WmeuTT/ifi1YANq99Es6YE2CZTX3
-        GgPoxxAeJQjzLQ3kQelwc3MvAz0Ugi8WqdiqhftIDzaH62iucTIdQ9XewhtXPLhETHNt3dxmuPZEL
-        DuHdeoORIzasqi78q3dIwxpL2rFCcvvQtMa4zHTs67doZEun6vC4EnjxkZQMcuXlugEP1eM79BlH8
-        ex+KYp8g==;
-Received: from [2600:1700:4830:165f::fb2] (port=42830)
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1iUvDz-0004Ht-9V; Wed, 13 Nov 2019 11:10:31 -0500
-Subject: Re: [PATCH AUTOSEL 4.19 087/209] ARM: dts: da850-lego-ev3: slow down
- A/DC as much as possible
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Sekhar Nori <nsekhar@ti.com>, devicetree@vger.kernel.org
-References: <20191113015025.9685-1-sashal@kernel.org>
- <20191113015025.9685-87-sashal@kernel.org>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <96753746-79ae-3db2-c6d8-e4d5615c0354@lechnology.com>
-Date:   Wed, 13 Nov 2019 10:10:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191113015025.9685-87-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        Wed, 13 Nov 2019 11:40:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40962 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727687AbfKMQkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:40:46 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5F9A6ACA7;
+        Wed, 13 Nov 2019 16:40:44 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 17:40:43 +0100
+Message-ID: <s5hzhgzn304.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 0/8] Fix year 2038 issue for sound subsystem
+In-Reply-To: <CAK8P3a2TMEUhzxH7RKvAW9STk33KrbCriUaQawOMffoFC6UTQw@mail.gmail.com>
+References: <20191112151642.680072-1-arnd@arndb.de>
+        <s5hk1847rvm.wl-tiwai@suse.de>
+        <CAK8P3a2TMEUhzxH7RKvAW9STk33KrbCriUaQawOMffoFC6UTQw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 7:48 PM, Sasha Levin wrote:
-> From: David Lechner <david@lechnology.com>
+On Wed, 13 Nov 2019 15:32:44 +0100,
+Arnd Bergmann wrote:
 > 
-> [ Upstream commit aea4762fb46e048c059ff49565ee33da07c8aeb3 ]
+> On Tue, Nov 12, 2019 at 9:37 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > On Tue, 12 Nov 2019 16:16:34 +0100, Arnd Bergmann wrote:
+> > > I would like to propose merging this into the alsa tree after
+> > > the v5.5 merge window for inclusion into v5.6, to allow a good
+> > > amount of testing, in particular for the header changes that
+> > > may cause problems for user space applications.
+> >
+> > Agreed, it's still no urgent problem.
 > 
-> Due to the electrical design of the A/DC circuits on LEGO MINDSTORMS EV3,
-> if we are reading analog values as fast as possible (i.e. using DMA to
-> service the SPI) the A/DC chip will read incorrect values - as much as
-> 0.1V off when the SPI is running at 10MHz. (This has to do with the
-> capacitor charge time when channels are muxed in the A/DC.)
+> I actually do think it's getting urgent, anything that touches
+> the ABI must be done carefully and not rushed.
 > 
-> This patch slows down the SPI as much as possible (if CPU is at 456MHz,
-> SPI runs at 1/2 of that, so 228MHz and has a max prescalar of 256, so
-> we could get ~891kHz, but we're just rounding it to 1MHz). We also use
-> the max allowable value for WDELAY to slow things down even more.
+> The urgency at the moment is that developers are starting to
+> deploy systems with 64-bit time_t with musl-libc making this
+> the default now, and 32-bit risc-v not offering 32-bit time_t at all.
 > 
-> These changes reduce the error of the analog values to about 5mV, which
-> is tolerable.
+> At the moment, this means that audio support is broken for
+> them, and that needs to be fixed.
 > 
-> Commits a3762b13a596 ("spi: spi-davinci: Add support for SPI_CS_WORD")
-> and e2540da86ef8 ("iio: adc: ti-ads7950: use SPI_CS_WORD to reduce
-> CPU usage") introduce changes that allow DMA transfers to be used, so
-> this slow down is needed now.
-> 
+> The other reason why lots of people care about moving all user
+> space to 64-bit time_t is that 32-bit hardware is slowly starting
+> to become less common. We know there will still be many
+> 32-bit ARM systems operational in 2038, but most of them will
+> be on (then) 10+ year old hardware, running even older software
+> that already being worked on today. The longer it takes us to
+> stop using 32-bit time_t in user space, the more systems will
+> end up having to be thrown away rather than fixed.
 
-I doubt that the commits above would be backported, so it does not
-make sense to backport this patch.
+Don't worry, I planned merging the whole changes for 5.6.
+
+> > So now taking a quick look through the series, I find this approach is
+> > the way to go.  Although one might get a bit more optimization after
+> > squeeze, it's already a good compromise between the readability and
+> > the efficiency.
+> 
+> Thanks!
+> 
+> > A slight uncertain implementation is the timer tread stuff, especially
+> > the conditional definition of SNDRV_TIMER_IOCTL_TREAD (IIRC, I already
+> > complained it in the past, too).  But I have no other idea as well, so
+> > unless someone else gives a better option, we can live with that.
+> 
+> We had discussed alternatives for this one last time, and decided
+> to go with the solution I posted here. The main alternative would
+> be to change the 'timespec' in snd_timer_tread to a fixed-length
+> structure based on two 'long' members. This would avoid the
+> need to match the command with the time_t type, but the cost would
+> be requiring CLOCK_MONOTONIC timestamps to avoid the
+> overflow, and changing all application source code that requires
+> the type to be compatible with 'timespec'.
+
+Fair enough.
+
+One thing I forgot to mention: when we add/modify the ioctl or ABI, we
+need to increment the protocol version, e.g. SNDRV_PCM_VERSION to
+indicate user-space the supported ABI.  Please change these in your
+next patches, too.
 
 
+thanks,
+
+Takashi
