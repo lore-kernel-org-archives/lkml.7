@@ -2,266 +2,110 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E7BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8295EC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8F5222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7D8222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sCOHN334"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfKMBhE (ORCPT
+        id S1727185AbfKMBim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:37:04 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:38890 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfKMBhD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:37:03 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUhaA-0007L8-8i; Wed, 13 Nov 2019 01:36:30 +0000
-Date:   Wed, 13 Nov 2019 01:36:30 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 3/9] namei: LOOKUP_NO_XDEV: block mountpoint crossing
-Message-ID: <20191113013630.GZ26530@ZenIV.linux.org.uk>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-4-cyphar@cyphar.com>
+        Tue, 12 Nov 2019 20:38:42 -0500
+Received: from ozlabs.org ([203.11.71.1]:47745 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbfKMBil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:38:41 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CS1q5RFzz9s7T;
+        Wed, 13 Nov 2019 12:38:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573609119;
+        bh=SwByYoLFEyaFhQcPYB6VEXGbPTJYyU/NVRS6uduhnb4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sCOHN334fwWpfr9TMDGipJgaqrutE3a+4jM5VH6z7EXMyn9iJ50gJQRPRwFVMgWf9
+         Vq2AIqvNRm5a03rM14FW+ApKojy2HPxW9oWcpbSmldpa2/DsYKEqREJiyFyA4HdftD
+         0ZVQXlmY1ckYJVXBcSU/4NVxMKWPSTz/s7xrVTsWuI5yGzbCNwIn7BpvwELokcX858
+         HW13SfHKXFFvOqW9qAa3D+IpfsEHO28RKuBifeHk+ID0KY7WrfM3aoeL/1AVeQeOPr
+         622Ag6NW5kfo/LbeuN12OSMOsPD1b+lH05NSgzR8V4XzcNx6ej+nJYFxuU8BifsEAY
+         NO/N89t+KWOMQ==
+Date:   Wed, 13 Nov 2019 12:38:38 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Imre Deak <imre.deak@intel.com>,
+        Jon Bloomfield <jon.bloomfield@intel.com>,
+        Andi Shyti <andi.shyti@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Subject: linux-next: manual merge of the drm tree with Linus' tree
+Message-ID: <20191113123838.79733d12@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105090553.6350-4-cyphar@cyphar.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; boundary="Sig_/6rImgs7l5p3T26k6mTBrh+/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 08:05:47PM +1100, Aleksa Sarai wrote:
+--Sig_/6rImgs7l5p3T26k6mTBrh+/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> @@ -862,6 +870,8 @@ static int nd_jump_root(struct nameidata *nd)
->  void nd_jump_link(struct path *path)
->  {
->  	struct nameidata *nd = current->nameidata;
-> +
-> +	nd->last_magiclink.same_mnt = (nd->path.mnt == path->mnt);
->  	path_put(&nd->path);
->  
->  	nd->path = *path;
-> @@ -1082,6 +1092,10 @@ const char *get_link(struct nameidata *nd)
->  		if (nd->flags & LOOKUP_MAGICLINK_JUMPED) {
->  			if (unlikely(nd->flags & LOOKUP_NO_MAGICLINKS))
->  				return ERR_PTR(-ELOOP);
-> +			if (unlikely(nd->flags & LOOKUP_NO_XDEV)) {
-> +				if (!nd->last_magiclink.same_mnt)
-> +					return ERR_PTR(-EXDEV);
-> +			}
->  		}
+Hi all,
 
-Ugh...  Wouldn't it be better to take that logics (some equivalent thereof)
-into nd_jump_link()?  Or just have nd_jump_link() return an error...
+Today's linux-next merge of the drm tree got a conflict in:
 
-I mean, look at the callers of nd_jump_link().
-static const char *policy_get_link(struct dentry *dentry,
-                                   struct inode *inode,
-                                   struct delayed_call *done)
-{
-        struct aa_ns *ns;
-        struct path path;  
+  drivers/gpu/drm/i915/i915_drv.h
+  drivers/gpu/drm/i915/intel_pm.c
+  drivers/gpu/drm/i915/intel_pm.h
 
-        if (!dentry)   
-                return ERR_PTR(-ECHILD);
-        ns = aa_get_current_ns();
-        path.mnt = mntget(aafs_mnt);
-        path.dentry = dget(ns_dir(ns));
-        nd_jump_link(&path); 
-        aa_put_ns(ns);
+between commit:
 
-        return NULL;
-}
-- very close to the end of ->get_link() instance.
+  7e34f4e4aad3 ("drm/i915/gen8+: Add RC6 CTX corruption WA")
 
-static const char *proc_pid_get_link(struct dentry *dentry,
-                                     struct inode *inode,
-                                     struct delayed_call *done)
-{ 
-        struct path path;
-        int error = -EACCES;
+from Linus' tree and commits:
 
-        if (!dentry)
-                return ERR_PTR(-ECHILD);
+  c113236718e8 ("drm/i915: Extract GT render sleep (rc6) management")
+  3e7abf814193 ("drm/i915: Extract GT render power state management")
 
-        /* Are we allowed to snoop on the tasks file descriptors? */
-        if (!proc_fd_access_allowed(inode))
-                goto out;
+from the drm tree.
 
-        error = PROC_I(inode)->op.proc_get_link(dentry, &path);
-        if (error)
-                goto out;
+I fixed it up (This was too messy, so I effectively reverted the former
+patch) and can carry the fix as necessary. This is now fixed as far as
+linux-next is concerned, but any non trivial conflicts should be
+mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
 
-        nd_jump_link(&path);
-        return NULL;
-out:   
-        return ERR_PTR(error);
-}
-Ditto.
+--=20
+Cheers,
+Stephen Rothwell
 
-static const char *proc_ns_get_link(struct dentry *dentry,
-                                    struct inode *inode,
-                                    struct delayed_call *done)
-{
-        const struct proc_ns_operations *ns_ops = PROC_I(inode)->ns_ops;
-        struct task_struct *task;
-        struct path ns_path;
-        void *error = ERR_PTR(-EACCES);
+--Sig_/6rImgs7l5p3T26k6mTBrh+/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-        if (!dentry)
-                return ERR_PTR(-ECHILD);
+-----BEGIN PGP SIGNATURE-----
 
-        task = get_proc_task(inode);
-        if (!task)
-                return error;
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LXp4ACgkQAVBC80lX
+0GzjeQf7BC4V/F2EG4zt7/3N+0BYwYkGe+Kugr0EZAjh3hnulTNBnqgKWwwPQanE
+DJ9fhhbB23y7o3SQwsmMTw7LKpsdgi9ZSgkP67LjT19YlwaUKnrchR7+wCLlbojy
+3bPqhwvJl1eqJ7uTqE5cve+VDAqjeFt22ALDt2j4E5y5wRqKEwB+5d0NFNhhdTVi
+K0iO1gVy9jOBKPwKafgduBqJ6FjXQi5MrDvMRz8ISFbvtf9PMK801ADRsoqrPCyR
+TatirABGL49YUSNwHa+hVnjtyRvtVrd8qz7admOGxJGh8Yc4ggsDfGwg7EApPi4e
+MFhqzN3PkJqdLeAEWpSCIuCGEtF4yg==
+=/F2F
+-----END PGP SIGNATURE-----
 
-        if (ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS)) {
-                error = ns_get_path(&ns_path, task, ns_ops);
-                if (!error)
-                        nd_jump_link(&ns_path);
-        }
-        put_task_struct(task);
-        return error;
-}
-
-The same.  And that's it - there's no more of them.  So how about
-this in the beginning of the series, then having your magiclink
-error handling done in nd_jump_link()?
-
-diff --git a/fs/namei.c b/fs/namei.c
-index 671c3c1a3425..8ec924813c30 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -859,7 +859,7 @@ static int nd_jump_root(struct nameidata *nd)
-  * Helper to directly jump to a known parsed path from ->get_link,
-  * caller must have taken a reference to path beforehand.
-  */
--void nd_jump_link(struct path *path)
-+const char *nd_jump_link(struct path *path)
- {
- 	struct nameidata *nd = current->nameidata;
- 	path_put(&nd->path);
-@@ -867,6 +867,7 @@ void nd_jump_link(struct path *path)
- 	nd->path = *path;
- 	nd->inode = nd->path.dentry->d_inode;
- 	nd->flags |= LOOKUP_JUMPED;
-+	return NULL;
- }
- 
- static inline void put_link(struct nameidata *nd)
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index ebea9501afb8..ac4e57a3dfa5 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1626,8 +1626,7 @@ static const char *proc_pid_get_link(struct dentry *dentry,
- 	if (error)
- 		goto out;
- 
--	nd_jump_link(&path);
--	return NULL;
-+	return nd_jump_link(&path);
- out:
- 	return ERR_PTR(error);
- }
-diff --git a/fs/proc/namespaces.c b/fs/proc/namespaces.c
-index dd2b35f78b09..dde0c501b2f3 100644
---- a/fs/proc/namespaces.c
-+++ b/fs/proc/namespaces.c
-@@ -54,7 +54,7 @@ static const char *proc_ns_get_link(struct dentry *dentry,
- 	if (ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS)) {
- 		error = ns_get_path(&ns_path, task, ns_ops);
- 		if (!error)
--			nd_jump_link(&ns_path);
-+			error = nd_jump_link(&ns_path);
- 	}
- 	put_task_struct(task);
- 	return error;
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 397a08ade6a2..f3e8438e5631 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -68,7 +68,7 @@ extern int follow_up(struct path *);
- extern struct dentry *lock_rename(struct dentry *, struct dentry *);
- extern void unlock_rename(struct dentry *, struct dentry *);
- 
--extern void nd_jump_link(struct path *path);
-+extern const char *nd_jump_link(struct path *path);
- 
- static inline void nd_terminate_link(void *name, size_t len, size_t maxlen)
- {
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index 45d13b6462aa..98aef94b4777 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -2453,18 +2453,16 @@ static const char *policy_get_link(struct dentry *dentry,
- 				   struct inode *inode,
- 				   struct delayed_call *done)
- {
--	struct aa_ns *ns;
--	struct path path;
--
--	if (!dentry)
--		return ERR_PTR(-ECHILD);
--	ns = aa_get_current_ns();
--	path.mnt = mntget(aafs_mnt);
--	path.dentry = dget(ns_dir(ns));
--	nd_jump_link(&path);
--	aa_put_ns(ns);
--
--	return NULL;
-+	const char *err = ERR_PTR(-ECHILD);
-+
-+	if (dentry) {
-+		struct aa_ns *ns = aa_get_current_ns();
-+		struct path path = {.mnt = mntget(aafs_mnt),
-+				    .dentry = ns_dir(ns)};
-+		err = nd_jump_link(&path);
-+		aa_put_ns(ns);
-+	}
-+	return err;
- }
- 
- static int policy_readlink(struct dentry *dentry, char __user *buffer,
+--Sig_/6rImgs7l5p3T26k6mTBrh+/--
