@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D662C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C08C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13677222CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0132222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609944;
-	bh=0+tj+ChrT6Rg6cUA04EqBppN5Cmg4xlFOYO8ZyoCzEE=;
+	s=default; t=1573609947;
+	bh=B2KYIyJoPWeC/UNCnJwJ0lmKqBLfynwxhRwcJ6I1OCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qgWZS+fdJPTuqkYrgScAcbrONNAYU+BAhClov1U2cG2a75ablqyGOKf+IDkaF9Eh8
-	 uhShN0+n4RXcwJcFt/NWanS0SZrAUQ6E5piu87AxoHVZ6M1uHXp8sitJ7a9FthbozE
-	 vBEblx/neS288SP/+GdhYs1ls//4pCPBkMx3cfiY=
+	b=aZWvWSerKax7t1WPWOpeedPFNQpbC4kU+uV+rfiO/tepVEtAwSiiz7VF3CPBOCy3U
+	 BgFrmwSZAg6scOIFniYQEigCXM4vSNvZx7Jf9MEJ7SMNNaRWQVul4HV1/QECJNlm2a
+	 xU6O03GKjd4CIFhhslPrSL6+LNyfmvCcqrZ0aHb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKMBwW (ORCPT
+        id S1728266AbfKMBwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:52:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40892 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:52:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbfKMBwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:18 -0500
+        id S1728228AbfKMBwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8D55222CD;
-        Wed, 13 Nov 2019 01:52:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0681A204EC;
+        Wed, 13 Nov 2019 01:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609937;
-        bh=0+tj+ChrT6Rg6cUA04EqBppN5Cmg4xlFOYO8ZyoCzEE=;
+        s=default; t=1573609938;
+        bh=B2KYIyJoPWeC/UNCnJwJ0lmKqBLfynwxhRwcJ6I1OCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YDPcyBhVgEOAgz+WglplywxKuam7xvENL4xyezbIhxJoXbpY7fsHgfCP3lRxa62y7
-         IyF51fAoh8F3lDZVIg8x27M0k5mF+93YfiL3n7/x4fCyAppBk2iBTv0U9QkhoVc+lz
-         yAdl/T5rAPDo5u/zULXTcWmpXgJFiylDkI4ln7So=
+        b=dk7CQOE/MLo13vEPYKz/lHA3DInbGbed1t0zvd8QOmLbsoZcEXEy1oblBo5jQMGxp
+         v1L5oQP/PNQR2QQX4+YMmydAm6kU5etsblqejtlucBmYBDzT7ri9ajty17HeO2tN43
+         xbsUpyxDo9BPjIq+0vg+mK9lhAbwGqzzLchap5WQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 080/209] OPP: Return error on error from dev_pm_opp_get_opp_count()
-Date:   Tue, 12 Nov 2019 20:48:16 -0500
-Message-Id: <20191113015025.9685-80-sashal@kernel.org>
+Cc:     Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 4.19 081/209] ACPICA: Never run _REG on system_memory and system_IO
+Date:   Tue, 12 Nov 2019 20:48:17 -0500
+Message-Id: <20191113015025.9685-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -58,32 +61,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Bob Moore <robert.moore@intel.com>
 
-[ Upstream commit 09f662f95306f3e3d47ab6842bc4b0bb868a80ad ]
+[ Upstream commit 8b1cafdcb4b75c5027c52f1e82b47ebe727ad7ed ]
 
-Return error number instead of 0 on failures.
+These address spaces are defined by the ACPI spec to be
+"always available", and thus _REG should never be run on them.
+Provides compatibility with other ACPI implementations.
 
-Fixes: a1e8c13600bf ("PM / OPP: "opp-hz" is optional for power domains")
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpica/acevents.h |  2 ++
+ drivers/acpi/acpica/aclocal.h  |  2 +-
+ drivers/acpi/acpica/evregion.c | 17 +++++++++++++++--
+ drivers/acpi/acpica/evrgnini.c |  6 +-----
+ drivers/acpi/acpica/evxfregn.c |  1 -
+ 5 files changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index f3433bf47b100..1e80f9ec1aa6a 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -313,7 +313,7 @@ int dev_pm_opp_get_opp_count(struct device *dev)
- 		count = PTR_ERR(opp_table);
- 		dev_dbg(dev, "%s: OPP table not found (%d)\n",
- 			__func__, count);
--		return 0;
-+		return count;
+diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
+index 298180bf7e3c1..bfcc68b9f708d 100644
+--- a/drivers/acpi/acpica/acevents.h
++++ b/drivers/acpi/acpica/acevents.h
+@@ -230,6 +230,8 @@ acpi_ev_default_region_setup(acpi_handle handle,
+ 
+ acpi_status acpi_ev_initialize_region(union acpi_operand_object *region_obj);
+ 
++u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
++
+ /*
+  * evsci - SCI (System Control Interrupt) handling/dispatch
+  */
+diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
+index 0f28a38a43ea1..99b0da8991098 100644
+--- a/drivers/acpi/acpica/aclocal.h
++++ b/drivers/acpi/acpica/aclocal.h
+@@ -395,9 +395,9 @@ struct acpi_simple_repair_info {
+ /* Info for running the _REG methods */
+ 
+ struct acpi_reg_walk_info {
+-	acpi_adr_space_type space_id;
+ 	u32 function;
+ 	u32 reg_run_count;
++	acpi_adr_space_type space_id;
+ };
+ 
+ /*****************************************************************************
+diff --git a/drivers/acpi/acpica/evregion.c b/drivers/acpi/acpica/evregion.c
+index 70c2bd169f669..49decca4e08ff 100644
+--- a/drivers/acpi/acpica/evregion.c
++++ b/drivers/acpi/acpica/evregion.c
+@@ -653,6 +653,19 @@ acpi_ev_execute_reg_methods(struct acpi_namespace_node *node,
+ 
+ 	ACPI_FUNCTION_TRACE(ev_execute_reg_methods);
+ 
++	/*
++	 * These address spaces do not need a call to _REG, since the ACPI
++	 * specification defines them as: "must always be accessible". Since
++	 * they never change state (never become unavailable), no need to ever
++	 * call _REG on them. Also, a data_table is not a "real" address space,
++	 * so do not call _REG. September 2018.
++	 */
++	if ((space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) ||
++	    (space_id == ACPI_ADR_SPACE_SYSTEM_IO) ||
++	    (space_id == ACPI_ADR_SPACE_DATA_TABLE)) {
++		return_VOID;
++	}
++
+ 	info.space_id = space_id;
+ 	info.function = function;
+ 	info.reg_run_count = 0;
+@@ -714,8 +727,8 @@ acpi_ev_reg_run(acpi_handle obj_handle,
  	}
  
- 	count = _get_opp_count(opp_table);
+ 	/*
+-	 * We only care about regions.and objects that are allowed to have address
+-	 * space handlers
++	 * We only care about regions and objects that are allowed to have
++	 * address space handlers
+ 	 */
+ 	if ((node->type != ACPI_TYPE_REGION) && (node != acpi_gbl_root_node)) {
+ 		return (AE_OK);
+diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
+index 39284deedd885..17df5dacd43cf 100644
+--- a/drivers/acpi/acpica/evrgnini.c
++++ b/drivers/acpi/acpica/evrgnini.c
+@@ -16,9 +16,6 @@
+ #define _COMPONENT          ACPI_EVENTS
+ ACPI_MODULE_NAME("evrgnini")
+ 
+-/* Local prototypes */
+-static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
+-
+ /*******************************************************************************
+  *
+  * FUNCTION:    acpi_ev_system_memory_region_setup
+@@ -33,7 +30,6 @@ static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node);
+  * DESCRIPTION: Setup a system_memory operation region
+  *
+  ******************************************************************************/
+-
+ acpi_status
+ acpi_ev_system_memory_region_setup(acpi_handle handle,
+ 				   u32 function,
+@@ -313,7 +309,7 @@ acpi_ev_pci_config_region_setup(acpi_handle handle,
+  *
+  ******************************************************************************/
+ 
+-static u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node)
++u8 acpi_ev_is_pci_root_bridge(struct acpi_namespace_node *node)
+ {
+ 	acpi_status status;
+ 	struct acpi_pnp_device_id *hid;
+diff --git a/drivers/acpi/acpica/evxfregn.c b/drivers/acpi/acpica/evxfregn.c
+index 091415b14fbf1..3b3a25d9f0e6d 100644
+--- a/drivers/acpi/acpica/evxfregn.c
++++ b/drivers/acpi/acpica/evxfregn.c
+@@ -193,7 +193,6 @@ acpi_remove_address_space_handler(acpi_handle device,
+ 				 */
+ 				region_obj =
+ 				    handler_obj->address_space.region_list;
+-
+ 			}
+ 
+ 			/* Remove this Handler object from the list */
 -- 
 2.20.1
 
