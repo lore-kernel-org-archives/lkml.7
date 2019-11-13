@@ -2,130 +2,198 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1874FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C74C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4612206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F063020637
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 17:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N89l11Bm"
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="nXo4MPMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfKMRBe (ORCPT
+        id S1728230AbfKMREF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:01:34 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38472 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfKMRBe (ORCPT
+        Wed, 13 Nov 2019 12:04:05 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42059 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727284AbfKMREE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 12:01:34 -0500
-Received: by mail-il1-f196.google.com with SMTP id u17so2448178ilq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:01:33 -0800 (PST)
+        Wed, 13 Nov 2019 12:04:04 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z12so2558525lfj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:04:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bBWxzsZRUXKbQzzivFjemLaJtwPKdmL9lKnNHf/rwAM=;
-        b=N89l11BmZ7KDAZGxB47EC1AYg6Yxy1wBxilJdrAUL+wf60hooxylxjDXwTs3ZVa8fV
-         IOzY9jFb4SoA5B5B7Qk2dV9Etb0EBG2TyXo3kUXsOy96E/uTaBK4m8IcyQUhs07AZbRX
-         J5TON/jLYKd7nEgPCtKqNRlZagzwmWje7FBDE=
+        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Ue0ID/EjSuwhaD2YneyBx29WXL6CWZKuZ5z+LHgXpJg=;
+        b=nXo4MPMimiDbNQH6nt9QKyqzlNtrRIxXJBcHxAUys+WwtJroFlI/L45jpHvsebk6XF
+         yOVY0/9kLoGlVYf2flnhoHHeNyUFee3GjnAoSxriM+YnqVd0i0IY3M9SXY79y0Qc5bl+
+         4bfO7Y1K3AKuISea0tNmmUeNfK+t1mAYI7X4fgEJEnlpnS5RmLScLYiQ/eav1LzK4a5f
+         utqsyoDqvxdMaPjNlTFrBMbtYPm3xllqkJmFKnchP/HIH9INUcw3rJh0JlJMMPw0iE7O
+         9k9a44l8NUvpiJnAzBgrAqxPKFIeEBWDlVxe5LwCKINSMopuOgMBmeBsSfyDXFpf9OkD
+         6wZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bBWxzsZRUXKbQzzivFjemLaJtwPKdmL9lKnNHf/rwAM=;
-        b=g9HzNWYoPo6GdIoJEV1pg8lUSWrfxDrMYab2B1W8XaNCp5/V6PGt/L4AvogZo32uGm
-         mEuuS/WlZdt7FCUR/f7XEjybhPIIE3VEXb88bKRYMiaeee95+B5soW/Z5MaiyT1fMn9S
-         g73qQF8hhMiVoko610lkiRS/CtovH8KdQh0r1CGVAC9WU7y8dFjlpk8AvWwnSbpJtAZo
-         ecXDog8ZbzUW4vX0kKeBTYazrIPkXBE+YZ6XaLUFikOhg2VWjNDQWpjqh6miYCzTBK/S
-         RKiiPVmF+fBW/aM1xHDeo13V1WmjaPSdAXF5erLPum0sGjisW/qFcjiqXKdXFxZaLdlv
-         CTZQ==
-X-Gm-Message-State: APjAAAVsDhKyyx3jnt3qhRPf9Ysgs7gUD9x/LxBULA6dnVb2edorc7Q8
-        3wh4rrZ3Tzvn4TJIaV52DUwGrL0/dpc=
-X-Google-Smtp-Source: APXvYqwGKVJVqS3/Y5FBIDKNaIGxlVfmU1Ek/070rURA9E1BBiyAtpivoz1fSaLfj8AcImwaClFsIQ==
-X-Received: by 2002:a05:6e02:68c:: with SMTP id o12mr5468508ils.223.1573664493212;
-        Wed, 13 Nov 2019 09:01:33 -0800 (PST)
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
-        by smtp.gmail.com with ESMTPSA id v13sm365203ili.65.2019.11.13.09.01.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 09:01:32 -0800 (PST)
-Received: by mail-io1-f46.google.com with SMTP id c11so3319014iom.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 09:01:31 -0800 (PST)
-X-Received: by 2002:a5d:8953:: with SMTP id b19mr4637156iot.168.1573664490254;
- Wed, 13 Nov 2019 09:01:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20191111005158.25070-1-kever.yang@rock-chips.com> <20191111005158.25070-3-kever.yang@rock-chips.com>
-In-Reply-To: <20191111005158.25070-3-kever.yang@rock-chips.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 13 Nov 2019 09:01:16 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UjbPALRU2r0s27F4RxjsbDyQ+horUBezVQejk1pT=vqA@mail.gmail.com>
-Message-ID: <CAD=FV=UjbPALRU2r0s27F4RxjsbDyQ+horUBezVQejk1pT=vqA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
-To:     Kever Yang <kever.yang@rock-chips.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Akash Gajjar <akash@openedev.com>,
-        Alexis Ballier <aballier@gentoo.org>,
-        =?UTF-8?Q?Andrius_=C5=A0tikonas?= <andrius@stikonas.eu>,
-        Andy Yan <andyshrk@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Xie <nick@khadas.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Soeren Moch <smoch@web.de>, Vicente Bergas <vicencb@gmail.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Ue0ID/EjSuwhaD2YneyBx29WXL6CWZKuZ5z+LHgXpJg=;
+        b=qbQY1iYGlJoqq9KqHD1fA1ethzVHwoSrQ9RTZe/gVg1buTu4Vw0FamLvc6tJw8WSoF
+         0QBj31aYPzm3K71zwZXMaARwwgC3HFSfhprU5SqiRdKsP1qig5hez9fzBts9+5HbnQ4f
+         9eX5CNsWIJJCQIFt/BH7aTD1sFSHMhgQ5N1DIkv6R6e1dfh3Tmhfdxv+dw6JEKK0rvcT
+         n11SrmUcv+uoU30QqBJ6/iem0IgdIRlUS0Z61NzspgvTBQFFLONo49V0A92iy4Z0Bg5B
+         WFheOFgnbEsKcn1rEPRlx4QUGSApYwKsdXHxOSxbOfiL93dsIe0dB7VKDFTIOQtIi4DA
+         5nIA==
+X-Gm-Message-State: APjAAAVcz7xGH79Tx4tNLAm+bENJyLEwuXFqk0K5eRXrJXz/d/5r+gmG
+        Hs3I7h6xgSUtyJaTi8eEyNv+sg==
+X-Google-Smtp-Source: APXvYqwckKbihNytza45QZsltEB/MDJqnRgjYzMjFCZ0dtdDbXhtUUZWPablqNPawdiu3JdQfr+hNA==
+X-Received: by 2002:a19:bec5:: with SMTP id o188mr3518166lff.140.1573664640846;
+        Wed, 13 Nov 2019 09:04:00 -0800 (PST)
+Received: from ?IPv6:2a00:1370:812c:3592:78e6:4794:4f9c:243a? ([2a00:1370:812c:3592:78e6:4794:4f9c:243a])
+        by smtp.gmail.com with ESMTPSA id g21sm1202642ljh.2.2019.11.13.09.03.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 09:04:00 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [Y2038] [PATCH 13/16] hfs/hfsplus: use 64-bit inode timestamps
+From:   Viacheslav Dubeyko <slava@dubeyko.com>
+In-Reply-To: <CAK8P3a1Bvdb4Xn1Aqfnxnn24HPb6FXxAAVwq8ypO31AqoR1hBw@mail.gmail.com>
+Date:   Wed, 13 Nov 2019 20:03:56 +0300
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        =?utf-8?B?IkVybmVzdG8gQS4gRmVybsOhbmRleiI=?= 
+        <ernesto.mnd.fernandez@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <09B5EC34-DE6B-4017-A842-7983E7874F98@dubeyko.com>
+References: <20191108213257.3097633-1-arnd@arndb.de>
+ <20191108213257.3097633-14-arnd@arndb.de>
+ <2520E708-4636-4CA8-B953-0F46F8E7454A@dubeyko.com>
+ <CAK8P3a1Bvdb4Xn1Aqfnxnn24HPb6FXxAAVwq8ypO31AqoR1hBw@mail.gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Sun, Nov 10, 2019 at 4:52 PM Kever Yang <kever.yang@rock-chips.com> wrote:
->
-> Since there is no devfreq used for vdd_log, so the vdd_log(pwm regulator)
-> will be 'enable' with the dts node at a default PWM state with high or low
-> output. Both too high or too low for vdd_log is not good for the board,
-> add init voltage for driver to make the regulator get into a know output.
->
-> Note that this will be used by U-Boot for init voltage output, and this
-> is very important for it may get system hang somewhere during system
-> boot up with regulator enable and without this init value.
-
-I'm a tad bit confused here.  When U-Boot boots the kernel, how is the
-PWM configured?
-
-I remember folks going through a lot of work to make sure that we
-could actually _read_ the PWM state that the bootloader gave us and
-report it as the initial voltage.  If the kernel ends up needing to
-configure the PWM regulator's period for some reason, I remember it
-would actually pick something close.  Is that not working for you?
-
-For instance, on rk3288-veyron when I boot up mainline (no devfreq on
-rk3288-veyron on mainline) the vdd_logic reports 1.2 volts because it
-read what the bootloader left it as.
-
-...are you saying that U-Boot doesn't configure the PWM and you're
-trying to fix it up in the kernel?
-
--Doug
 
 
--Doug
+> On Nov 13, 2019, at 11:06 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>=20
+> On Wed, Nov 13, 2019 at 7:00 AM Viacheslav Dubeyko <slava@dubeyko.com> =
+wrote:
+>>> On Nov 9, 2019, at 12:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> * There are two time systems.  Both are based on seconds since
+>>> * a particular time/date.
+>>> - *   Unix:   unsigned lil-endian since 00:00 GMT, Jan. 1, 1970
+>>> + *   Unix:   signed little-endian since 00:00 GMT, Jan. 1, 1970
+>>> *    mac:    unsigned big-endian since 00:00 GMT, Jan. 1, 1904
+>>> *
+>>> + * HFS implementations are highly inconsistent, this one matches =
+the
+>>> + * traditional behavior of 64-bit Linux, giving the most useful
+>>> + * time range between 1970 and 2106, by treating any on-disk =
+timestamp
+>>> + * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
+>>> */
+>>> -#define __hfs_u_to_mtime(sec)        cpu_to_be32(sec + 2082844800U =
+- sys_tz.tz_minuteswest * 60)
+>>> -#define __hfs_m_to_utime(sec)        (be32_to_cpu(sec) - =
+2082844800U  + sys_tz.tz_minuteswest * 60)
+>>=20
+>> I believe it makes sense to introduce some constant instead of =
+hardcoded value (2082844800U and 60).
+>> It will be easier to understand the code without necessity to take a =
+look into the comments.
+>> What do you think?
+>=20
+> Every other user of sys_tz.tz_minuteswest uses a plain '60', I think =
+that one
+> is easy enough to understand from context. Naming the other constant
+> is a good idea, I've now folded the change below into my patch.
+>=20
+> Thanks for the review!
+>=20
+>      Arnd
+>=20
+> 8<-----
+> diff --git a/fs/hfs/hfs_fs.h b/fs/hfs/hfs_fs.h
+> index 26733051ee50..f71c384064c8 100644
+> --- a/fs/hfs/hfs_fs.h
+> +++ b/fs/hfs/hfs_fs.h
+> @@ -247,22 +247,24 @@ extern void hfs_mark_mdb_dirty(struct =
+super_block *sb);
+>  *
+>  * HFS implementations are highly inconsistent, this one matches the
+>  * traditional behavior of 64-bit Linux, giving the most useful
+>  * time range between 1970 and 2106, by treating any on-disk timestamp
+> - * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
+> + * under HFS_UTC_OFFSET (Jan 1 1970) as a time between 2040 and 2106.
+>  */
+> +#define HFS_UTC_OFFSET 2082844800U
+> +
+> static inline time64_t __hfs_m_to_utime(__be32 mt)
+> {
+> -       time64_t ut =3D (u32)(be32_to_cpu(mt) - 2082844800U);
+> +       time64_t ut =3D (u32)(be32_to_cpu(mt) - HFS_UTC_OFFSET);
+>=20
+>        return ut + sys_tz.tz_minuteswest * 60;
+> }
+>=20
+> static inline __be32 __hfs_u_to_mtime(time64_t ut)
+> {
+>        ut -=3D sys_tz.tz_minuteswest * 60;
+>=20
+> -       return cpu_to_be32(lower_32_bits(ut) + 2082844800U);
+> +       return cpu_to_be32(lower_32_bits(ut) + HFS_UTC_OFFSET);
+> }
+> #define HFS_I(inode)   (container_of(inode, struct hfs_inode_info, =
+vfs_inode))
+> #define HFS_SB(sb)     ((struct hfs_sb_info *)(sb)->s_fs_info)
+>=20
+> diff --git a/fs/hfsplus/hfsplus_fs.h b/fs/hfsplus/hfsplus_fs.h
+> index 22d0a22c41a3..3b03fff68543 100644
+> --- a/fs/hfsplus/hfsplus_fs.h
+> +++ b/fs/hfsplus/hfsplus_fs.h
+> @@ -538,20 +538,22 @@ int hfsplus_read_wrapper(struct super_block =
+*sb);
+>  *
+>  * HFS+ implementations are highly inconsistent, this one matches the
+>  * traditional behavior of 64-bit Linux, giving the most useful
+>  * time range between 1970 and 2106, by treating any on-disk timestamp
+> - * under 2082844800U (Jan 1 1970) as a time between 2040 and 2106.
+> + * under HFSPLUS_UTC_OFFSET (Jan 1 1970) as a time between 2040 and =
+2106.
+>  */
+> +#define HFSPLUS_UTC_OFFSET 2082844800U
+> +
+> static inline time64_t __hfsp_mt2ut(__be32 mt)
+> {
+> -       time64_t ut =3D (u32)(be32_to_cpu(mt) - 2082844800U);
+> +       time64_t ut =3D (u32)(be32_to_cpu(mt) - HFSPLUS_UTC_OFFSET);
+>=20
+>        return ut;
+> }
+>=20
+> static inline __be32 __hfsp_ut2mt(time64_t ut)
+> {
+> -       return cpu_to_be32(lower_32_bits(ut) + 2082844800U);
+> +       return cpu_to_be32(lower_32_bits(ut) + HFSPLUS_UTC_OFFSET);
+> }
+>=20
+> /* compatibility */
+> #define hfsp_mt2ut(t)          (struct timespec64){ .tv_sec =3D =
+__hfsp_mt2ut(t) }
+
+Looks good for me. I like the patch.
+
+Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
+
+Thanks,
+Vyacheslav Dubeyko.
+
