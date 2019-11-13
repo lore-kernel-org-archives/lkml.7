@@ -2,105 +2,98 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FD1C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581CBC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF557206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:15:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j1+uqJII"
+	by mail.kernel.org (Postfix) with ESMTP id 59AC4206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 22:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573683332;
+	bh=CoxUo/aSepDBO7izp9qrDJUrGpD/En80chyDGPOhMV0=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=CN6wyACyre3TmnFfM5Y9wjUGy3+8XxRaeDmbP5i5LWPz6S4Evjhxnr5ivP7aCfl8w
+	 T/SRh2JziCx91BVGz5fOoSls1bN3/Pyl8gSHasPKXHPp02ziznrT1jokmABE378AzE
+	 4uCzBktq/LMrphLvMjLNYBR429IVkgNrZrxOa06s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKMWPA (ORCPT
+        id S1727054AbfKMWPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:15:00 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59588 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfKMWO4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 17:14:56 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADMEodx086252;
-        Wed, 13 Nov 2019 16:14:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573683290;
-        bh=MoVVMIm/tqY3PrtvmbkHheuw5YFQdQcT2+p9yspkVRs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=j1+uqJIIzrqdH74VK+NDeLipAvwK4oCMRGtFbBKYvxmiwPsNwe+Rg4lDICmeb0XnC
-         jZ3fhucDHX3PV69Fv6NjkgL8qXGlyxLnAUFTkXkcRzw5z2v+muKcxbQOKgALHft4lJ
-         hngMUbCwhNndKi+zsCuQ21uQrtCznOeq5wMQ+UMM=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADMEorM120248
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 16:14:50 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 16:14:31 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 16:14:31 -0600
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADMEnfo071231;
-        Wed, 13 Nov 2019 16:14:49 -0600
-Received: from localhost (ulb0232989.dhcp.ti.com [128.247.59.95])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xADMEnu04426;
-        Wed, 13 Nov 2019 16:14:49 -0600 (CST)
-From:   Caleb Robey <c-robey@ti.com>
-To:     <linux-patch-review@list.ti.com>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        "Andreas Dannenberg" <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        "Caleb Robey" <c-robey@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-Subject: [uL PATCH 2/2] ARM: dts: am5729: beaglebone-ai: dra7 reqs in dts
-Date:   Wed, 13 Nov 2019 16:13:44 -0600
-Message-ID: <20191113221345.4795-3-c-robey@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191113221345.4795-1-c-robey@ti.com>
-References: <20191113221345.4795-1-c-robey@ti.com>
+        Wed, 13 Nov 2019 17:15:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfKMWPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 17:15:30 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CAD9206E3;
+        Wed, 13 Nov 2019 22:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573683330;
+        bh=CoxUo/aSepDBO7izp9qrDJUrGpD/En80chyDGPOhMV0=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=ntlvFKWnLpHku9jHgRoJH4W5VoSQD0haBcfRADrXRuOXVDhDhoYY5H7aZFLkmFMNp
+         gf+lIRnxVJbdsyZkEdW+9mJcbWOrKAPubzNP+ll1w+Ac0HmwWDMd7w/klUgoD1IU+4
+         wJDt0ef0I6Yzu6Y/XPgImpAeBs6I/4E0A7osNS8A=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191025111338.27324-2-chunyan.zhang@unisoc.com>
+References: <20191025111338.27324-1-chunyan.zhang@unisoc.com> <20191025111338.27324-2-chunyan.zhang@unisoc.com>
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Xiaolong Zhang <xiaolong.zhang@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+To:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/5] clk: sprd: add gate for pll clocks
+User-Agent: alot/0.8.1
+Date:   Wed, 13 Nov 2019 14:15:28 -0800
+Message-Id: <20191113221530.5CAD9206E3@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Small nomenclature change for beaglebone AI compatibility.
+Quoting Chunyan Zhang (2019-10-25 04:13:34)
+> diff --git a/drivers/clk/sprd/gate.c b/drivers/clk/sprd/gate.c
+> index f59d1936b412..d8b480f852f3 100644
+> --- a/drivers/clk/sprd/gate.c
+> +++ b/drivers/clk/sprd/gate.c
+> @@ -109,3 +120,11 @@ const struct clk_ops sprd_sc_gate_ops =3D {
+>  };
+>  EXPORT_SYMBOL_GPL(sprd_sc_gate_ops);
+> =20
+> +#define sprd_pll_sc_gate_unprepare sprd_sc_gate_disable
 
-Signed-off-by: Jason Kridner <jdk@ti.com>
+Why is there a redefine? Just use the function where it is.
 
----
- arch/arm/boot/dts/dra7.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +
+> +const struct clk_ops sprd_pll_sc_gate_ops =3D {
+> +       .unprepare      =3D sprd_pll_sc_gate_unprepare,
+> +       .prepare        =3D sprd_pll_sc_gate_prepare,
+> +       .is_enabled     =3D sprd_gate_is_enabled,
+> +};
+> +EXPORT_SYMBOL_GPL(sprd_pll_sc_gate_ops);
+> diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
+> index dc352ea55e1f..598ce607ca0a 100644
+> --- a/drivers/clk/sprd/gate.h
+> +++ b/drivers/clk/sprd/gate.h
+> @@ -14,16 +14,19 @@ struct sprd_gate {
+>         u32                     enable_mask;
+>         u16                     flags;
+>         u16                     sc_offset;
+> +       u32                     udelay;
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 953f0ffce2a9..563d64c69fd4 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -143,7 +143,7 @@
- 	 * the moment, just use a fake OCP bus entry to represent the whole bus
- 	 * hierarchy.
- 	 */
--	ocp {
-+	ocp: ocp {
- 		compatible = "ti,dra7-l3-noc", "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-2.17.1
+Does the delay need to be 32 bits wide? Maybe a u8 or u16 will work?
+Otherwise, make it an unsigned long please because the bit width doesn't
+matter.
 
