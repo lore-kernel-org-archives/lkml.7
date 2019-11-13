@@ -2,103 +2,99 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67155C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22976C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352C12245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610178;
-	bh=Pa9IDB6Fd3A8IIm+kJX6e40chC4y0g1zGgVAP5mCn/o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YnhljtYuXsVNgvCbfwdCv+F6hunQM+z/o/Fwd8zYCyvKoZymhxRyKpVSBNy6hzMkD
-	 HGhrqjg3EJWg8pZ+FH9mVrhLm88Yso3gH63k5fmOxEio1JBtQrZaYWkSEA1aO0vWk0
-	 b/gZPYu8kL1Ms5be6+RTDTus9z15PZWdmG8zJM3E=
+	by mail.kernel.org (Postfix) with ESMTP id EAFC0222D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbfKMB4R (ORCPT
+        id S1729462AbfKMB4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbfKMB4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:01 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 980832247C;
-        Wed, 13 Nov 2019 01:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610160;
-        bh=Pa9IDB6Fd3A8IIm+kJX6e40chC4y0g1zGgVAP5mCn/o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=huwAjqkPIMGYVEMdFklJgIADNpowjtEotdgqm3dJYhmFkVeknMHe66bqJAm8yyEW+
-         Fh3+l2zxHL+Z6JpPFxYXKgWbtniYtiCoA3QCI26RvDGDOGXrzABDXfCQpy+2VXBASq
-         d4XaGSC59MRGuAAJYQ/L7OrRUonUqFHlZjljhQ0s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yuchung Cheng <ycheng@google.com>, Wei Wang <weiwan@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 203/209] tcp: start receiver buffer autotuning sooner
-Date:   Tue, 12 Nov 2019 20:50:19 -0500
-Message-Id: <20191113015025.9685-203-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
-References: <20191113015025.9685-1-sashal@kernel.org>
+        Tue, 12 Nov 2019 20:56:22 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39164 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbfKMB4H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:07 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUhsc-0007v0-Hn; Wed, 13 Nov 2019 01:55:34 +0000
+Date:   Wed, 13 Nov 2019 01:55:34 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 4/9] namei: LOOKUP_BENEATH: O_BENEATH-like scoped
+ resolution
+Message-ID: <20191113015534.GA26530@ZenIV.linux.org.uk>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-5-cyphar@cyphar.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105090553.6350-5-cyphar@cyphar.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuchung Cheng <ycheng@google.com>
+On Tue, Nov 05, 2019 at 08:05:48PM +1100, Aleksa Sarai wrote:
 
-[ Upstream commit 041a14d2671573611ffd6412bc16e2f64469f7fb ]
+Minor nit here - I'd split "move the conditional call of set_root()
+into nd_jump_root()" into a separate patch before that one.  Makes
+for fewer distractions in this one.  I'd probably fold "and be
+ready for errors other than -ECHILD" into the same preliminary
+patch.
 
-Previously receiver buffer auto-tuning starts after receiving
-one advertised window amount of data. After the initial receiver
-buffer was raised by patch a337531b942b ("tcp: up initial rmem to
-128KB and SYN rwin to around 64KB"), the reciver buffer may take
-too long to start raising. To address this issue, this patch lowers
-the initial bytes expected to receive roughly the expected sender's
-initial window.
+> +			/* Not currently safe for scoped-lookups. */
+> +			if (unlikely(nd->flags & LOOKUP_IS_SCOPED))
+> +				return ERR_PTR(-EXDEV);
 
-Fixes: a337531b942b ("tcp: up initial rmem to 128KB and SYN rwin to around 64KB")
-Signed-off-by: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: Wei Wang <weiwan@google.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/ipv4/tcp_input.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also a candidate for doing in nd_jump_link()...
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 0e2b07be08585..57e8dad956ec4 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -438,7 +438,7 @@ void tcp_init_buffer_space(struct sock *sk)
- 	if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK))
- 		tcp_sndbuf_expand(sk);
- 
--	tp->rcvq_space.space = tp->rcv_wnd;
-+	tp->rcvq_space.space = min_t(u32, tp->rcv_wnd, TCP_INIT_CWND * tp->advmss);
- 	tcp_mstamp_refresh(tp);
- 	tp->rcvq_space.time = tp->tcp_mstamp;
- 	tp->rcvq_space.seq = tp->copied_seq;
--- 
-2.20.1
+> @@ -1373,8 +1403,11 @@ static int follow_dotdot_rcu(struct nameidata *nd)
+>  	struct inode *inode = nd->inode;
+>  
+>  	while (1) {
+> -		if (path_equal(&nd->path, &nd->root))
+> +		if (path_equal(&nd->path, &nd->root)) {
+> +			if (unlikely(nd->flags & LOOKUP_BENEATH))
+> +				return -EXDEV;
 
+Umm...  Are you sure it's not -ECHILD?
