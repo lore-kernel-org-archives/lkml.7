@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7989BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31F5C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A20B206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8896B206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610866;
-	bh=Zgkwqrff4/iY33NyPBf0FfOVn1J4uPqkRyaGWhNjPxM=;
+	s=default; t=1573610881;
+	bh=l51evxqU8zJCOrGtKLHrLz9etFFXDJe12qIraGCuN0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aR2Gg0a98fUD+ggY+M+4YKL0bmR9u0xHxqEUd7G2+xJRsKREciDdYc+MpHECqT9um
-	 IEcITbM+90YX9IJwCqru+lt4kRd3+AoDalN9fm12JOePhBCiOeKfxZ+WZxWl3y82wv
-	 GaLN4AvFcmJWwdK9bGWPROwnN9MaoVFBQJycRZmk=
+	b=0pTKN7d4Mze/9aClMUR50DqTgYqlAOQ1PgccUDzU2k2v2vqOmjQ/su8u8wpAJJqfK
+	 tIG5O++tFz/rOKuUYvm6HDqciYSPvJbnY16yelyDmUgYcV0bBS8fr4+KE+qtthYIX/
+	 efzqpBS6qjH80HWA6jisCnNtRNUVheKn1AcNzpLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbfKMCHp (ORCPT
+        id S1729636AbfKMCH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:07:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55856 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:07:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730512AbfKMCAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:34 -0500
+        id S1730443AbfKMCAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDDE922467;
-        Wed, 13 Nov 2019 02:00:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5622922469;
+        Wed, 13 Nov 2019 02:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610433;
-        bh=Zgkwqrff4/iY33NyPBf0FfOVn1J4uPqkRyaGWhNjPxM=;
+        s=default; t=1573610413;
+        bh=l51evxqU8zJCOrGtKLHrLz9etFFXDJe12qIraGCuN0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ovz5ZaFhDZH21SEeqCmayfYg5MFUMQ3HNzaJQ1B+aKklzyC2MAT8Yrm/e0+3UfVEX
-         No6A9yBJLLqqfmOo2CMuIzXRvKsUjXzWcIB1aJOogtVirlj8+BLCXo1AseRWPWfEwG
-         RTgLWw06+4vp/A+p59c/3BGufD/1O4Ta1lqsxHBY=
+        b=IP+6Ya2xSANg9jwqiCf6aqA3hhx0PuT3m8Guk3vMx+FxNjovIsB2fDY5X9wsIRPUc
+         v9euERtQYlXKhBxjvG0uNcH3trZ1ZsA5c8RsfYdhdQj3bnGgeESU9Ln3vTvHKP2Rma
+         xXhFkKWjWplJ+DzIIEUPqokGOA21XMnIi1JaFWR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 35/68] clk: samsung: Use clk_hw API for calling clk framework from clk notifiers
-Date:   Tue, 12 Nov 2019 20:58:59 -0500
-Message-Id: <20191113015932.12655-35-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 26/68] ata: ep93xx: Use proper enums for directions
+Date:   Tue, 12 Nov 2019 20:58:50 -0500
+Message-Id: <20191113015932.12655-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -59,68 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1da220e3a5d22fccda0bc8542997abc1d1741268 ]
+[ Upstream commit 6adde4a36f1b6a562a1057fbb1065007851050e7 ]
 
-clk_notifier_register() documentation states, that the provided notifier
-callbacks associated with the notifier must not re-enter into the clk
-framework by calling any top-level clk APIs. Fix this by replacing
-clk_get_rate() calls with clk_hw_get_rate(), which is safe in this
-context.
+Clang warns when one enumerated type is implicitly converted to another.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <snawrocki@kernel.org>
+drivers/ata/pata_ep93xx.c:662:36: warning: implicit conversion from
+enumeration type 'enum dma_data_direction' to different enumeration type
+'enum dma_transfer_direction' [-Wenum-conversion]
+        drv_data->dma_rx_data.direction = DMA_FROM_DEVICE;
+                                        ~ ^~~~~~~~~~~~~~~
+drivers/ata/pata_ep93xx.c:670:36: warning: implicit conversion from
+enumeration type 'enum dma_data_direction' to different enumeration type
+'enum dma_transfer_direction' [-Wenum-conversion]
+        drv_data->dma_tx_data.direction = DMA_TO_DEVICE;
+                                        ~ ^~~~~~~~~~~~~
+drivers/ata/pata_ep93xx.c:681:19: warning: implicit conversion from
+enumeration type 'enum dma_data_direction' to different enumeration type
+'enum dma_transfer_direction' [-Wenum-conversion]
+        conf.direction = DMA_FROM_DEVICE;
+                       ~ ^~~~~~~~~~~~~~~
+drivers/ata/pata_ep93xx.c:692:19: warning: implicit conversion from
+enumeration type 'enum dma_data_direction' to different enumeration type
+'enum dma_transfer_direction' [-Wenum-conversion]
+        conf.direction = DMA_TO_DEVICE;
+                       ~ ^~~~~~~~~~~~~
+
+Use the equivalent valued enums from the expected type so that Clang no
+longer warns about a conversion.
+
+DMA_TO_DEVICE = DMA_MEM_TO_DEV = 1
+DMA_FROM_DEVICE = DMA_DEV_TO_MEM = 2
+
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-cpu.c | 6 +++---
- drivers/clk/samsung/clk-cpu.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/ata/pata_ep93xx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
-index 8bf7e805fd349..1271315b0c25b 100644
---- a/drivers/clk/samsung/clk-cpu.c
-+++ b/drivers/clk/samsung/clk-cpu.c
-@@ -152,7 +152,7 @@ static int exynos_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
- 			struct exynos_cpuclk *cpuclk, void __iomem *base)
- {
- 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
--	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
-+	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
- 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
- 	unsigned long div0, div1 = 0, mux_reg;
- 	unsigned long flags;
-@@ -280,7 +280,7 @@ static int exynos5433_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
- 			struct exynos_cpuclk *cpuclk, void __iomem *base)
- {
- 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
--	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
-+	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
- 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
- 	unsigned long div0, div1 = 0, mux_reg;
- 	unsigned long flags;
-@@ -432,7 +432,7 @@ int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
- 	else
- 		cpuclk->clk_nb.notifier_call = exynos_cpuclk_notifier_cb;
+diff --git a/drivers/ata/pata_ep93xx.c b/drivers/ata/pata_ep93xx.c
+index bd6b089c67a3a..634c814cbeda4 100644
+--- a/drivers/ata/pata_ep93xx.c
++++ b/drivers/ata/pata_ep93xx.c
+@@ -659,7 +659,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+ 	 * start of new transfer.
+ 	 */
+ 	drv_data->dma_rx_data.port = EP93XX_DMA_IDE;
+-	drv_data->dma_rx_data.direction = DMA_FROM_DEVICE;
++	drv_data->dma_rx_data.direction = DMA_DEV_TO_MEM;
+ 	drv_data->dma_rx_data.name = "ep93xx-pata-rx";
+ 	drv_data->dma_rx_channel = dma_request_channel(mask,
+ 		ep93xx_pata_dma_filter, &drv_data->dma_rx_data);
+@@ -667,7 +667,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+ 		return;
  
--	cpuclk->alt_parent = __clk_lookup(alt_parent);
-+	cpuclk->alt_parent = __clk_get_hw(__clk_lookup(alt_parent));
- 	if (!cpuclk->alt_parent) {
- 		pr_err("%s: could not lookup alternate parent %s\n",
- 				__func__, alt_parent);
-diff --git a/drivers/clk/samsung/clk-cpu.h b/drivers/clk/samsung/clk-cpu.h
-index d4b6b517fe1b4..bd38c6aa38970 100644
---- a/drivers/clk/samsung/clk-cpu.h
-+++ b/drivers/clk/samsung/clk-cpu.h
-@@ -49,7 +49,7 @@ struct exynos_cpuclk_cfg_data {
-  */
- struct exynos_cpuclk {
- 	struct clk_hw				hw;
--	struct clk				*alt_parent;
-+	struct clk_hw				*alt_parent;
- 	void __iomem				*ctrl_base;
- 	spinlock_t				*lock;
- 	const struct exynos_cpuclk_cfg_data	*cfg;
+ 	drv_data->dma_tx_data.port = EP93XX_DMA_IDE;
+-	drv_data->dma_tx_data.direction = DMA_TO_DEVICE;
++	drv_data->dma_tx_data.direction = DMA_MEM_TO_DEV;
+ 	drv_data->dma_tx_data.name = "ep93xx-pata-tx";
+ 	drv_data->dma_tx_channel = dma_request_channel(mask,
+ 		ep93xx_pata_dma_filter, &drv_data->dma_tx_data);
+@@ -678,7 +678,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+ 
+ 	/* Configure receive channel direction and source address */
+ 	memset(&conf, 0, sizeof(conf));
+-	conf.direction = DMA_FROM_DEVICE;
++	conf.direction = DMA_DEV_TO_MEM;
+ 	conf.src_addr = drv_data->udma_in_phys;
+ 	conf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	if (dmaengine_slave_config(drv_data->dma_rx_channel, &conf)) {
+@@ -689,7 +689,7 @@ static void ep93xx_pata_dma_init(struct ep93xx_pata_data *drv_data)
+ 
+ 	/* Configure transmit channel direction and destination address */
+ 	memset(&conf, 0, sizeof(conf));
+-	conf.direction = DMA_TO_DEVICE;
++	conf.direction = DMA_MEM_TO_DEV;
+ 	conf.dst_addr = drv_data->udma_out_phys;
+ 	conf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	if (dmaengine_slave_config(drv_data->dma_tx_channel, &conf)) {
 -- 
 2.20.1
 
