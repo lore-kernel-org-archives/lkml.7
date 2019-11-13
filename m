@@ -2,111 +2,241 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE814C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFF9C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A40206E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C04206EE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 18:23:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VuoILmIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfKMSUS (ORCPT
+        id S1728236AbfKMSXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 13:20:18 -0500
-Received: from 4.mo2.mail-out.ovh.net ([87.98.172.75]:54680 "EHLO
-        4.mo2.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbfKMSUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:20:18 -0500
-X-Greylist: delayed 4199 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 13:20:17 EST
-Received: from player792.ha.ovh.net (unknown [10.109.159.139])
-        by mo2.mail-out.ovh.net (Postfix) with ESMTP id B59F01B1309
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 18:00:53 +0100 (CET)
-Received: from kaod.org (deibp9eh1--blueice1n4.emea.ibm.com [195.212.29.166])
-        (Authenticated sender: clg@kaod.org)
-        by player792.ha.ovh.net (Postfix) with ESMTPSA id B5E55C0CFAD3;
-        Wed, 13 Nov 2019 17:00:36 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] KVM: PPC: Book3S HV: XIVE: Fix potential page leak
- on error path
-To:     Greg Kurz <groug@kaod.org>, Paul Mackerras <paulus@ozlabs.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Lijun Pan <ljp@linux.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Laurent Vivier <lvivier@redhat.com>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <157366357346.1026356.14522564753643067538.stgit@bahia.lan>
- <157366357929.1026356.18181561111939034621.stgit@bahia.lan>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Message-ID: <e49f522e-c265-4f00-f6f8-57f8583e7d8a@kaod.org>
-Date:   Wed, 13 Nov 2019 18:00:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 13 Nov 2019 13:23:14 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:59134 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbfKMSXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 13:23:14 -0500
+Received: from zn.tnic (p200300EC2F0FA700D5A2A5422FC158AE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:a700:d5a2:a542:2fc1:58ae])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9842B1EC0CDA;
+        Wed, 13 Nov 2019 19:23:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573669392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=UKGEADetohk5qnCPK5X+HcgpaPOf5iaScVD2zi3G9cU=;
+        b=VuoILmImVGHmfiqvnbpZZdD8095ET1xkoBZuUD/WaoOUnEYmXBkCMNQM215PWj1wep434q
+        ELIldMMtM5Xlw8zi4oOMie7xRpPgNDBXvqD6zL8OyBeH4x/XjYmayI9XegTsNfAlvyI6DW
+        6RZPN1xtkDS+I+buWAhVOUYnm3RlBr4=
+Date:   Wed, 13 Nov 2019 19:23:07 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] x86/resctrl: Add task resctrl information display
+Message-ID: <20191113182306.GB1647@zn.tnic>
+References: <20191107032731.7790-1-yu.c.chen@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <157366357929.1026356.18181561111939034621.stgit@bahia.lan>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 3946560650099067671
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrudefuddgleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdqfffguegfifdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucfkpheptddrtddrtddrtddpudelhedrvdduvddrvdelrdduieeinecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejledvrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheptghlgheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+Content-Disposition: inline
+In-Reply-To: <20191107032731.7790-1-yu.c.chen@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/11/2019 17:46, Greg Kurz wrote:
-> We need to check the host page size is big enough to accomodate the
-> EQ. Let's do this before taking a reference on the EQ page to avoid
-> a potential leak if the check fails.
+On Thu, Nov 07, 2019 at 11:27:31AM +0800, Chen Yu wrote:
+> Monitoring tools that want to find out which resctrl CTRL
+> and MONITOR groups a task belongs to must currently read
+> the "tasks" file in every group until they locate the process
+> ID.
 > 
-> Cc: stable@vger.kernel.org # v5.2
-> Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
-> Signed-off-by: Greg Kurz <groug@kaod.org>
-
-
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-
+> Add an additional file /proc/{pid}/resctrl to provide this
+> information.
+> 
+> For example:
+>  cat /proc/1193/resctrl
+> CTRL_MON:/ctrl_grp0
+> MON:/ctrl_grp0/mon_groups/mon_grp0
+> 
+> If the resctrl filesystem has not been mounted,
+> reading /proc/{pid}/resctrl returns an error:
+> cat: /proc/1193/resctrl: No such device
+> 
+> Tested-by: Jinshi Chen <jinshi.chen@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+> Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> 
 > ---
->  arch/powerpc/kvm/book3s_xive_native.c |   13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+>  arch/x86/include/asm/resctrl_sched.h   |  4 +++
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 46 ++++++++++++++++++++++++++
+>  fs/proc/base.c                         |  9 +++++
+   ^^^^^^^^^^^^^^^
+
+So you're touching this file here and yet your Cc list doesn't have
+*anyone* who might be responsible for the proc fs (yeah, you have
+linux-fsdevel but I don't think that's enough). Have you heard of
+scripts/get_maintainer.pl?
+
+Use it in the future.
+
+Cc-ing some more people for the generic /proc bits.
+
+>  3 files changed, 59 insertions(+)
 > 
-> diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
-> index 0e1fc5a16729..d83adb1e1490 100644
-> --- a/arch/powerpc/kvm/book3s_xive_native.c
-> +++ b/arch/powerpc/kvm/book3s_xive_native.c
-> @@ -630,12 +630,6 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
+> diff --git a/arch/x86/include/asm/resctrl_sched.h b/arch/x86/include/asm/resctrl_sched.h
+> index f6b7fe2833cc..bba362e0e00f 100644
+> --- a/arch/x86/include/asm/resctrl_sched.h
+> +++ b/arch/x86/include/asm/resctrl_sched.h
+> @@ -5,6 +5,7 @@
+>  #ifdef CONFIG_X86_CPU_RESCTRL
 >  
->  	srcu_idx = srcu_read_lock(&kvm->srcu);
->  	gfn = gpa_to_gfn(kvm_eq.qaddr);
-> -	page = gfn_to_page(kvm, gfn);
-> -	if (is_error_page(page)) {
-> -		srcu_read_unlock(&kvm->srcu, srcu_idx);
-> -		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
-> -		return -EINVAL;
-> -	}
+>  #include <linux/sched.h>
+> +#include <linux/proc_fs.h>
+>  #include <linux/jump_label.h>
 >  
->  	page_size = kvm_host_page_size(kvm, gfn);
->  	if (1ull << kvm_eq.qshift > page_size) {
-> @@ -644,6 +638,13 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
->  		return -EINVAL;
->  	}
+>  #define IA32_PQR_ASSOC	0x0c8f
+> @@ -84,6 +85,9 @@ static inline void resctrl_sched_in(void)
+>  		__resctrl_sched_in();
+>  }
 >  
-> +	page = gfn_to_page(kvm, gfn);
-> +	if (is_error_page(page)) {
-> +		srcu_read_unlock(&kvm->srcu, srcu_idx);
-> +		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
-> +		return -EINVAL;
+> +int proc_resctrl_show(struct seq_file *m, struct pid_namespace *ns,
+> +		      struct pid *pid, struct task_struct *tsk);
+> +
+>  #else
+>  
+>  static inline void resctrl_sched_in(void) {}
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index a46dee8e78db..2317174174e9 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -727,6 +727,52 @@ static int rdtgroup_tasks_show(struct kernfs_open_file *of,
+>  	return ret;
+>  }
+>  
+> +int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
+> +		      struct pid *pid, struct task_struct *tsk)
+> +{
+> +	struct rdtgroup *rdtg;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&rdtgroup_mutex);
+> +
+> +	/* Make sure resctrl has been mounted. */
+> +	if (!static_branch_unlikely(&rdt_enable_key)) {
+> +		ret = -ENODEV;
+> +		goto unlock;
 > +	}
 > +
->  	qaddr = page_to_virt(page) + (kvm_eq.qaddr & ~PAGE_MASK);
->  	srcu_read_unlock(&kvm->srcu, srcu_idx);
->  
-> 
+> +	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
+> +		struct rdtgroup *crg;
+> +
+> +		/*
+> +		 * Task information is only relevant for shareable
+> +		 * and exclusive groups.
+> +		 */
+> +		if (rdtg->mode != RDT_MODE_SHAREABLE &&
+> +		    rdtg->mode != RDT_MODE_EXCLUSIVE)
+> +			continue;
+> +
+> +		if (rdtg->closid == tsk->closid) {
 
+Save an indentation level:
+
+		if (rdtg->closid != tsk->closid)
+			continue;
+
+		seq_printf...
+
+> +			seq_printf(s, "CTRL_MON:/%s\n", rdtg->kn->name);
+> +			list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
+> +					    mon.crdtgrp_list) {
+> +				if (tsk->rmid != crg->mon.rmid)
+> +					continue;
+> +				seq_printf(s, "MON:%s%s/mon_groups/%s\n",
+> +					   rdtg == &rdtgroup_default ? "" : "/",
+> +					   rdtg->kn->name, crg->kn->name);
+> +				goto unlock;
+> +			}
+> +			goto unlock;
+> +		}
+> +	}
+> +	ret = -ENOENT;
+> +unlock:
+> +	mutex_unlock(&rdtgroup_mutex);
+> +
+> +	return ret;
+> +}
+> +
+>  static int rdt_last_cmd_status_show(struct kernfs_open_file *of,
+>  				    struct seq_file *seq, void *v)
+>  {
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index ebea9501afb8..d8a61db78db5 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -95,6 +95,9 @@
+>  #include <linux/sched/stat.h>
+>  #include <linux/posix-timers.h>
+>  #include <trace/events/oom.h>
+> +#ifdef CONFIG_X86_CPU_RESCTRL
+> +#include <asm/resctrl_sched.h>
+> +#endif
+
+If anything, this should be abstracted nicely into an
+include/linux/resctrl.h header. Other architectures would probably wanna
+use it too, I hear ARM64 has something like resctrl.
+
+>  #include "internal.h"
+>  #include "fd.h"
+>  
+> @@ -3060,6 +3063,9 @@ static const struct pid_entry tgid_base_stuff[] = {
+>  #endif
+>  #ifdef CONFIG_CGROUPS
+>  	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
+> +#endif
+> +#ifdef CONFIG_X86_CPU_RESCTRL
+> +	ONE("resctrl", S_IRUGO, proc_resctrl_show),
+>  #endif
+>  	ONE("oom_score",  S_IRUGO, proc_oom_score),
+>  	REG("oom_adj",    S_IRUGO|S_IWUSR, proc_oom_adj_operations),
+> @@ -3460,6 +3466,9 @@ static const struct pid_entry tid_base_stuff[] = {
+>  #endif
+>  #ifdef CONFIG_CGROUPS
+>  	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
+> +#endif
+> +#ifdef CONFIG_X86_CPU_RESCTRL
+> +	ONE("resctrl", S_IRUGO, proc_resctrl_show),
+>  #endif
+
+Same here. proc_resctrl_show() looks like a generic function but it
+is x86-only. Need to call the x86-specific one in a real generic
+proc_resctrl_show() which other arches can add their code to, too.
+
+Not like that.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
