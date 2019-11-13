@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E563C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A24C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E2F2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1ACD2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612063;
-	bh=MbvfzHdLIyxp1OB5gLuB0mj1aev0t0AolzqUnsL+2KU=;
+	s=default; t=1573612066;
+	bh=IWdzDFSf/TRr9ci4D2Ci/WM12+j7L/sItckgGxtTqy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUr8ChyMEnquWhUDlvbG44SGZssTouc7j16QDqxyJbAzklx0jIMDYGiLT+r7XDsNl
-	 znajHROH4cuG+qreOOgYTUBcp2LXavhDHusIdRvb9wjJJ5DpB2McLtakBvkyNgI3/C
-	 oiaAKOLZMrpsT9qHq11a2V+F11ksrcIyfmFD6+qE=
+	b=ALlBaPSHcSeHOz8UH3BmSzlM0YY0/EfbQIz+z0R6m//MEnDPV57TnIlcZ9w8gmweP
+	 Gh4ZchbijPg3GDBe3yT/VeuWc5mxDKV15EkPRcEiJTnfiJKBN4vmqefA+wGv3eyEUg
+	 CrpMqrBByTzBO5IfidAkGnkC/DtGDjE4WLwn95XE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfKMBuu (ORCPT
+        id S1729683AbfKMC1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:50:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37494 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:27:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727458AbfKMBul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:41 -0500
+        id S1727515AbfKMBut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69B5122459;
-        Wed, 13 Nov 2019 01:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E9AB22459;
+        Wed, 13 Nov 2019 01:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609841;
-        bh=MbvfzHdLIyxp1OB5gLuB0mj1aev0t0AolzqUnsL+2KU=;
+        s=default; t=1573609849;
+        bh=IWdzDFSf/TRr9ci4D2Ci/WM12+j7L/sItckgGxtTqy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cl/jQo9/ViDXPVhIDJ3g6WQkUxeYY4Qu+JPI9vClFV+AMHBautMO2sFhw4WjZlneF
-         v+6jHKvH4hoNSMgxewwOQMxlpQrvrL8S2wL4LFdffE9hEDmdOPWroiVOhvBdi9reHM
-         gl6VImlM4ALdHGdstpEr4AFqCuWVBGp3DLmZ7fA4=
+        b=2EGJ3IgeNfif66fLmlCCb7QOhlMizbXYgtBBsjaZT01ggxyoOgP/yQ2ERsNy13YH9
+         ILmAjG0W3ZanCb25diiDPOmx9okWGx/goj7rG5GYa1r4Ef6jTS9QGtrniUeAEoNs8g
+         /NkA686EtOpkqeUHvo2YLkCYoXcKTFIIRFiD9rJM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/209] ACPI / LPSS: Make acpi_lpss_find_device() also find PCI devices
-Date:   Tue, 12 Nov 2019 20:47:09 -0500
-Message-Id: <20191113015025.9685-13-sashal@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 020/209] mt76: fix handling ps-poll frames
+Date:   Tue, 12 Nov 2019 20:47:16 -0500
+Message-Id: <20191113015025.9685-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,58 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 1e30124ac60abc41d74793900f8b4034f29bcb3d ]
+[ Upstream commit 36d910960fae3f9e74bedf3e0ef39ee26bdaa51f ]
 
-On some Cherry Trail systems the GPU ACPI fwnode has power-resources which
-point to the PMIC, which is connected over one of the LPSS I2C controllers.
+Hardware station lookup for pspoll frames can fail, which makes the driver
+ignore ps-poll frames. Fix the resulting powersave issues by looking up
+the station for pspoll frames in software
 
-To get the suspend/resume ordering correct for this we need to be able to
-add device-links between the GPU and the I2c controller. The GPU is a PCI
-device, so this requires acpi_lpss_find_device() to also work on PCI devs.
-
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_lpss.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mac80211.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index c651e206d7960..924b9f089e79f 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -16,6 +16,7 @@
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/mutex.h>
-+#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/clk-lpss.h>
- #include <linux/platform_data/x86/pmc_atom.h>
-@@ -494,12 +495,18 @@ static int match_hid_uid(struct device *dev, void *data)
+diff --git a/drivers/net/wireless/mediatek/mt76/mac80211.c b/drivers/net/wireless/mediatek/mt76/mac80211.c
+index ade4a2029a24a..1b5abd4816ed7 100644
+--- a/drivers/net/wireless/mediatek/mt76/mac80211.c
++++ b/drivers/net/wireless/mediatek/mt76/mac80211.c
+@@ -548,6 +548,12 @@ mt76_check_ps(struct mt76_dev *dev, struct sk_buff *skb)
+ 	struct mt76_wcid *wcid = status->wcid;
+ 	bool ps;
  
- static struct device *acpi_lpss_find_device(const char *hid, const char *uid)
- {
-+	struct device *dev;
++	if (ieee80211_is_pspoll(hdr->frame_control) && !wcid) {
++		sta = ieee80211_find_sta_by_ifaddr(dev->hw, hdr->addr2, NULL);
++		if (sta)
++			wcid = status->wcid = (struct mt76_wcid *) sta->drv_priv;
++	}
 +
- 	struct hid_uid data = {
- 		.hid = hid,
- 		.uid = uid,
- 	};
+ 	if (!wcid || !wcid->sta)
+ 		return;
  
--	return bus_find_device(&platform_bus_type, NULL, &data, match_hid_uid);
-+	dev = bus_find_device(&platform_bus_type, NULL, &data, match_hid_uid);
-+	if (dev)
-+		return dev;
-+
-+	return bus_find_device(&pci_bus_type, NULL, &data, match_hid_uid);
- }
- 
- static bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
 -- 
 2.20.1
 
