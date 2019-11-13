@@ -2,95 +2,130 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BA0C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740CFC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D9C2414D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BFF21DEF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfKMQ3i (ORCPT
+        id S1728375AbfKMQae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:29:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36170 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726115AbfKMQ3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:29:38 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 307AFB205;
-        Wed, 13 Nov 2019 16:29:36 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 17:29:34 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
- get_mem_cgroup_from_mm()
-Message-ID: <20191113162934.GF19372@blackbody.suse.cz>
-References: <20191106225131.3543616-1-guro@fb.com>
+        Wed, 13 Nov 2019 11:30:34 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:54861 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfKMQad (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:30:33 -0500
+Received: from localhost.localdomain ([78.238.229.36]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MTRAS-1iIqj91PGm-00Tiv9; Wed, 13 Nov 2019 17:30:27 +0100
+From:   Laurent Vivier <laurent@vivier.eu>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Laurent Vivier <laurent@vivier.eu>
+Subject: [RFC] binfmt_misc: pass binfmt_misc flags to the interpreter
+Date:   Wed, 13 Nov 2019 17:30:23 +0100
+Message-Id: <20191113163023.12093-1-laurent@vivier.eu>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l+goss899txtYvYf"
-Content-Disposition: inline
-In-Reply-To: <20191106225131.3543616-1-guro@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:tKDMUG8kcwt6Ne6b/bU0I1DLrrXe8vTkpOS+u1umkGjkHDSF+JU
+ A7lwtw6498ZdmmBz3K/VaEjT8J6PNt8keECx4g+9SGAHtcspsCjYiAdKlcF9xAEuufKb8y9
+ pEgsZuyqKfdHBoOGNdB93fl6L6EmER3HmIEY64rmNEAShCmbAWpRSw7WIYy/qL2WTqVS1gI
+ uETF245dKXzKYPRsFW1mQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Tvi5kkWmOQE=:ZFtWzL0TVRJ2aXPjbIWkcW
+ 8Ju9ZhhcB0e3hPbGotiKy9DsFQJQw6G4WePxU34waM4OCqeQOQShcOcPp6prro9ATF4DBvjW0
+ WuCz9+0Wg3fU16nIYJTiaDnSzbmwT9e53aQqCTTPI4UgoRffaFU7FIbKLm9/cs+ZGtOGWLIZR
+ UgkfcNIeFQkZzQct5tHAv3wugtQjCitxxkt9On1X3gcG6h9kasI+9Ruo8s2cXeSFf9wFF4loO
+ FiSyFT/HFqlOUeGnNwLO9qWBlD9458lL5OO27p8+5ZTX49C0+gzJIIfIZZZoJde4ztiFMm/GR
+ ir+yGZbZpL8msdwP/AFXb6ClbzSTu8TVKDSjp91lf28Gy4cRR/6JfK+KTyG83qF6tsqRqIzxd
+ 5O6iOKE/gkeSGC2ybVehvrfErfcoSxgpODFPwk/g/JVrP3ievnbD7KrlM16OATiAOidMUIgcs
+ wRRSIcGfhXMs5S45B5+QoUCpVho2Q68XE5Ay9Ty8zPQ7A0z5enLM8rcLo9D1loum1LU4USgAF
+ k4yMrbaJOIpogPsUNLBaAX68ec3tqRxmOzdLhLwbGe9sMUUEGJepGxLTAbG6jd8ae4BKXhBBf
+ yEdeMopecLr5vyk0R7hZSR8XQgJeP7or4jdtCNdKZz76TW4EmTe5EkLnBgf6OHj7HuJxjQshf
+ ts/MwAfP4HwLSbVUIMUMNjfocISmcl7dNXwJahZZQrUf5+7JaIk/rvkkWWGRto3qURXkt8Qa0
+ CdADQegswy8fGsqZT8d7HFq2TA1URShuQcDuptGSZ6sLt4D1oRD26b6fvJbkIiZK9nAdXC67K
+ 9ryYW2rag1fxD9krIb507bWQjxT313+lDNAciFzQMp2iMA1lGi7lxvhID8wqNGUgoBUtCds2X
+ NdOLxUv2hlPHwV9TWcVg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It can be useful to the interpreter to know which flags are in use.
 
---l+goss899txtYvYf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+For instance, knowing if the preserve-argv[0] is in use would
+allow to skip the pathname argument.
 
-Hi.
+This patch uses an unused auxiliary vector, AT_FLAGS,  to pass the
+content of the binfmt flags (bits for P, F, C, O, ...).
 
-On Wed, Nov 06, 2019 at 02:51:30PM -0800, Roman Gushchin <guro@fb.com> wrote:
-> Let's fix it by switching from css_tryget_online() to css_tryget().
-Is this a safe thing to do? The stack captures a kmem charge path, with
-css_tryget() it may happen it gets an offlined memcg and carry out
-charge into it. What happens when e.g. memcg_deactivate_kmem_caches is
-skipped as a consequence?
+Signed-off-by: Laurent Vivier <laurent@vivier.eu>
+---
+ fs/binfmt_elf.c         | 2 +-
+ fs/binfmt_elf_fdpic.c   | 2 +-
+ fs/binfmt_misc.c        | 2 ++
+ include/linux/binfmts.h | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
 
-> The problem is caused by an exiting task which is associated with
-> an offline memcg. We're iterating over and over in the
-> do {} while (!css_tryget_online()) loop, but obviously the memcg won't
-> become online and the exiting task won't be migrated to a live memcg.
-As discussed in other replies, the task is not yet exiting. However, the
-access to memcg isn't through `current` but `mm->owner`, i.e. another
-task of a threadgroup may have got stuck in an offlined memcg (I don't
-have a good explanation for that though).
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index c5642bcb6b46..7a34c03e5857 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -250,7 +250,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+ 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
+ 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
+ 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
+-	NEW_AUX_ENT(AT_FLAGS, 0);
++	NEW_AUX_ENT(AT_FLAGS, bprm->fmt_flags);
+ 	NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
+ 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
+ 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index d86ebd0dcc3d..8fe839be125e 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -647,7 +647,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+ 	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
+ 	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
+ 	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
+-	NEW_AUX_ENT(AT_FLAGS,	0);
++	NEW_AUX_ENT(AT_FLAGS,	bprm->fmt_flags);
+ 	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
+ 	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
+ 	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
+diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+index cdb45829354d..b204fa5a2fe4 100644
+--- a/fs/binfmt_misc.c
++++ b/fs/binfmt_misc.c
+@@ -149,6 +149,8 @@ static int load_misc_binary(struct linux_binprm *bprm)
+ 	if (!fmt)
+ 		return retval;
+ 
++	bprm->fmt_flags = fmt->flags;
++
+ 	/* Need to be able to load the file after exec */
+ 	retval = -ENOENT;
+ 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index b40fc633f3be..dae0d0d7b84d 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -60,7 +60,7 @@ struct linux_binprm {
+ 				   different for binfmt_{misc,script} */
+ 	unsigned interp_flags;
+ 	unsigned interp_data;
+-	unsigned long loader, exec;
++	unsigned long loader, exec, fmt_flags;
+ 
+ 	struct rlimit rlim_stack; /* Saved RLIMIT_STACK used during exec. */
+ 
+-- 
+2.21.0
 
-HTH,
-Michal
-
---l+goss899txtYvYf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl3ML2cACgkQia1+riC5
-qSgQZA/+KD6f95XTCnV55rr15xwdquOdz4T+bmiNstvliVaYqvukej5/cCxTPKJK
-I4zHkgTix48h9NDvrvIuOaY68D+nlczIUsAIA1BQlZga7HnV96+d1/j/TFiNMIyr
-FDFHIfNU07mO6C5uCQOYe1VLfa9auNrpNtkhiqYYhaFrLVsQC7veGWg2Euy914Rc
-YgQMhFuz4HxFwOtXaHKh+SvvNhL9qttdOZx1ACAAcNhS0nltpj/mGhG2gO8mChkh
-YhXjf5CeDY4nqnLwgiDlRQN66cSOL/DVUC7Acl3NLpmWzTkKuS3gIIsSTvzhsKAE
-G/B/fbPupZuPuE8tC+kVdKacZVhJ1v1mgcyZxRAXKaSGOhCXhSIQlqt9bgflGMwZ
-Gfp8YY8F1LcFZdTuCvkodnS4TAAnL54GEuvqAxTqs7FzTgb9VBtx7C99spTxXY3q
-uC99i+J8swSO/a14Eo0RGAZB0RKtDpGxHyTa/kwsHx2JcJLrFKQGzstK2rdmUS1q
-2mt6zT+AM8RVJqHSVdtDGdA1fBlZcDvWTRIr/FtQswGFtXN8ikpEfUXRT0NrL75s
-89w/b3qb2PMVaDoIwGEnIudNYCmoEhBo8OocB8pWwt3BYnBX7L+aLXqDX9ITLJOj
-vOwcVSWNy2EuLN6XEa1P8opml3XXoDl2l9D/7a4qIb8214XwAtY=
-=Czsl
------END PGP SIGNATURE-----
-
---l+goss899txtYvYf--
