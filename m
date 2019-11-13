@@ -2,113 +2,110 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EBBC33CAA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA49AC4742B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3DD224B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5B023441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:00:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldo4ffH/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="qpKTYPbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfKMPkW (ORCPT
+        id S1728222AbfKMQAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:40:22 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46193 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfKMPkV (ORCPT
+        Wed, 13 Nov 2019 11:00:31 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:21085 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727216AbfKMQAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:40:21 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r18so1583346pgu.13;
-        Wed, 13 Nov 2019 07:40:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ki1SPD44lh1SNybw/5rgBcA9dSnsxmRipdKWolsiTPQ=;
-        b=ldo4ffH/lXYIRRC9tzF8JwFZccS5LE1eNAXXtU1VS/5IB4wnVJb7htBqIKuKI8178C
-         tO9TJGxlsknv5aUpJySM+Wem8RH82ICkpo3nAenXYrfA3W6c9rUby7YKTlE6RJAC+fef
-         +Vqi2ABeS++Z6YTbuqfZ4XBVt1uRMel9RyjDYlCAOnzEFPh4ikQRyJ7ZtDPm2XzKbLCk
-         0XvxdQphfr5HEwRpCp95eJ8HHjMwXFOB83ep+96dGDqMu6lwB1BQp90HYfRnqAoTFsMu
-         70ciVkQJS00t2lYlajUIKEOc2C6gWu0mrj8z/hQMDmoUShmuHCGmicWJLKfFgkuaAiVp
-         pCYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ki1SPD44lh1SNybw/5rgBcA9dSnsxmRipdKWolsiTPQ=;
-        b=hpCavwQvju1slM1Zk9QHnyCZJSpZ7szvMbuUmRbiVSno4LsbFmk0B7gxk5cz8r+Hoy
-         ommMV9UC4l218md/RdtMi0rO5rVnwy2CvWtm4y+QDlftdk/norRc9GhNWFzCpFfU39NK
-         poy3I0tm84VJUHE1pqJPw1M9fENGqxp1fUBtngziarQuyM0n0TqQ2ylBk269tRWlh8kk
-         cTNw8neXYw3gufuHbfp3nGUSihC1jUglvFRTrfPcRy1POTfPWFJkXcY36mBNfum8T79w
-         2Hx/ycBhJdsBM5ZVIbtEvfH+5IsV5Jfa0baTeuIfhEo4bMuZJbLjqFf7hOMiz919Yhw1
-         wTvQ==
-X-Gm-Message-State: APjAAAX2Loj6wkaFuSLVw/PPoc+BHRK1++FY9tom/W3xlblnYEJRX1Yp
-        FdRM7UwwX44HC8DKIG56VLE=
-X-Google-Smtp-Source: APXvYqzV4a9iYr/kLopHbCKtDwEFBpFCvcaVBZZ4KkPQvS54XiRuxUSsvQNuQJEpJnmCLUzjZnLo6w==
-X-Received: by 2002:a63:db15:: with SMTP id e21mr4399962pgg.21.1573659620998;
-        Wed, 13 Nov 2019 07:40:20 -0800 (PST)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id q8sm2911407pgg.15.2019.11.13.07.40.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 07:40:20 -0800 (PST)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     kvalo@codeaurora.org, davem@davemloft.net
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2] ath10k: Fix qmi init error handling
-Date:   Wed, 13 Nov 2019 07:40:16 -0800
-Message-Id: <20191113154016.42836-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 Nov 2019 11:00:31 -0500
+X-Greylist: delayed 376 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 11:00:29 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573660828;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=RdiTOqLL6TpP/1ppCJ5I+QMZbD8ieq03oQjLfF8v3IE=;
+        b=qpKTYPbWoJBGYh5ZgJRyMhXNOUK+dtNGeSCY1KoBAamHnNPh7yMkg+2mo8uKOEv37r
+        uvzEZ/BjHi+t89/SQc85xsjcxEvqLe5El5OPZs8aiXz8nrBFgSvAQcfXTSKZk2i50hrX
+        OPu6hTDpS9C1r9wAuFR0XuQh9OgC8bvI1RUMO/1U6qluL7tVlXmXiwf3KpfTTUqfslSx
+        1jB7+aXCXm3IuGloVL2kPl1w8I9Y42ukzIjYRM2A/Bv4zPGGWV+0tN3F1gxttXx1VUOo
+        HDe+LSxsgFj0h9lyQxwjjZ6bPxDBPu9uXQO+8O4VyAI5vpDrDjG37pcoSCluvJ0DRrM+
+        9p7Q==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4AUztn93FPS2dyuY8hl6Q=="
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
+        with ESMTPSA id 20735bvADG0SGhN
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 13 Nov 2019 17:00:28 +0100 (CET)
+Date:   Wed, 13 Nov 2019 17:00:21 +0100
+From:   Olaf Hering <olaf@aepfle.de>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH v2] tools/hv: async name resolution in kvp_daemon
+Message-ID: <20191113170021.2e98f1fb.olaf@aepfle.de>
+In-Reply-To: <20191113155400.25456-1-olaf@aepfle.de>
+References: <20191113155400.25456-1-olaf@aepfle.de>
+X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/3x08emajI3SN.tG200Ioafb"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When ath10k_qmi_init() fails, the error handling does not free the irq
-resources, which causes an issue if we EPROBE_DEFER as we'll attempt to
-(re-)register irqs which are already registered.
+--Sig_/3x08emajI3SN.tG200Ioafb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fix this by doing a power off since we just powered on the hardware, and
-freeing the irqs as error handling.
+Am Wed, 13 Nov 2019 16:54:00 +0100
+schrieb Olaf Hering <olaf@aepfle.de>:
 
-Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
+> During this time all "FullyQualifiedDomainName" requests will be
+> answered with an empty string.
 
-v2:
--Call power_off() as well
+> +			strcpy(key_value, full_domain_name ? : "");
+>  			strcpy(key_name, "FullyQualifiedDomainName");
 
- drivers/net/wireless/ath/ath10k/snoc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index cd22c8654aa9..50b3d443ad37 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -1563,13 +1563,16 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
- 	ret = ath10k_qmi_init(ar, msa_size);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to register wlfw qmi client: %d\n", ret);
--		goto err_core_destroy;
-+		goto err_power_off;
- 	}
- 
- 	ath10k_dbg(ar, ATH10K_DBG_SNOC, "snoc probe\n");
- 
- 	return 0;
- 
-+err_power_off:
-+	ath10k_hw_power_off(ar);
-+
- err_free_irq:
- 	ath10k_snoc_free_irq(ar);
- 
--- 
-2.17.1
+KY, Haiyang, Stephen,
 
+please check if the host side can actually handle such temporary, empty str=
+ing.
+If the tools cache the first result, the implemented approach can not work.
+If that is indeed the case, is there some sort of -ERETRY in the protocol?
+
+
+Olaf
+
+--Sig_/3x08emajI3SN.tG200Ioafb
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl3MKJUACgkQ86SN7mm1
+DoDNUxAAj9Xsz8miILXi1nmy/CqbawpOYRBs2IxdOiPMHkxkqgyOvBd3KW5dJumq
+0hHPjemJaBS2u90ijPpeLjxGkgjSHH614QLz5BnTvMatkuW6AYYNy75L5eQ2tn26
+EaEgj8Bdv5tKzq0puj+CZLSywJeoH6g2gR6YNDS5EypIZsIBZ11I8+Y7Zrcot74N
+IXaI5tINChIKisVPGoft5HJrpC7I78+tpl9hp1jFefNA0J81td4pr4pDi+qn9IYs
+6m6Lz9B9ivKrsBhB+Sg5TdJLbpRRZ+ixmpVClFOllWqdCumQhMPdYnRdS5h2mCWU
+fxgPSa9Rzc43zTp94QQxBiojOJJr+kbrW0nJsQJ/YsVXLS0eLzesm8qleVDONekm
+Gm8S7vQiyYNi3QarBcKuQkHLP+3AV4uhxdr9pd1Whn6afxy9dYWD4lg2WqXbudt2
+Wbol3o9aN1KhP7iu69iaGg2UCCf+G6aFyxqFH0/B9dm92QbpJoTpDrRKcxr6+LX5
+NglvJxKH6TxSz2GLpjkkalrSZPWx6CfNmIMiaWViDxuf0gXxx+Iwn0nMDHvDeXEo
+r9DEB9u3lWcytSqyMegWfTk0mUjkisb2Od52SqDNO6gaTyg40qgorjtkEee69fek
+CPrDcAZbhGs1bDTvpBMi/ku+PI9vAccbM2b7OvteEQIEATeFDQc=
+=Ox4b
+-----END PGP SIGNATURE-----
+
+--Sig_/3x08emajI3SN.tG200Ioafb--
