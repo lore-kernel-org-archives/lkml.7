@@ -2,146 +2,149 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3652C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86646C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D95206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC4B206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K3ELKy0L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPgZkNtV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKMUaz (ORCPT
+        id S1727100AbfKMUa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:30:55 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:5469 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfKMUax (ORCPT
+        Wed, 13 Nov 2019 15:30:59 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37982 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfKMUa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:30:53 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcc67fb0000>; Wed, 13 Nov 2019 12:30:51 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 Nov 2019 12:30:48 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 Nov 2019 12:30:48 -0800
-Received: from [10.2.160.107] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
- 2019 20:30:47 +0000
-Subject: Re: [PATCH v3 00/23] mm/gup: track dma-pinned pages: FOLL_PIN,
- FOLL_LONGTERM
-To:     Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf <bpf@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        <kvm@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191112000700.3455038-1-jhubbard@nvidia.com>
- <20191112203802.GD5584@ziepe.ca>
- <02fa935c-3469-b766-b691-5660084b60b9@nvidia.com>
- <CAKMK7uHvk+ti00mCCF2006U003w1dofFg9nSfmZ4bS2Z2pEDNQ@mail.gmail.com>
- <7b671bf9-4d94-f2cc-8453-863acd5a1115@nvidia.com>
- <20191113101210.GD6367@quack2.suse.cz>
- <20191113114311.GP23790@phenom.ffwll.local>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <283b121d-f526-f43f-de45-dc2f8318d860@nvidia.com>
-Date:   Wed, 13 Nov 2019 12:28:02 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 13 Nov 2019 15:30:57 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z19so3496255wmk.3;
+        Wed, 13 Nov 2019 12:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ARc1c4NWQIkAXUbZl2g6F4/UfLbb0UiIjA2X2CNwbfw=;
+        b=DPgZkNtV9TySsLprAz9X6cfEcuJ1iWz3TZ7z/0WQsAiJ2TB6q1xgvhAzMKPUNCz8IW
+         mEbcGGes20jeyJKkeBoNtNvJBZHgKBPMGcONrhxb7c6NcVMLMWKpM4nQTfKQkFy+I1AE
+         mnyMsNcpMBNFIYh1SLUzfK2FPP9+DoD1o5hlHPIDn/eyu1bZiI8SZ3lHoldiOE9xiWMt
+         oVlBZjDEoUsIYH4ixsgARQgYOqQLvS+a6kjGR6gG2Li8IynUyu+8Urgqkh8X7XOBO89q
+         OOIeA4orxlj7IuUysG/toBtd9rIezQkXeVg6EevdVtMrsQMhGeGEUsLcwVUwhCss6Cwo
+         08YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ARc1c4NWQIkAXUbZl2g6F4/UfLbb0UiIjA2X2CNwbfw=;
+        b=Mwz8GW9ldRdAUXRLiEwCWn9InFSofDgviJ07rAo/fAJof8lgEagWi/gBjYy3yb8cDw
+         L6dhGK57wC+QWIfMVNB+9xwe8wLa7sYdsPsp2ExDJEHlvxbZgDsJ0Du6dozxUFIMzXM9
+         isvtb+LMD7K2R6x+ifPPKoB0q6g7R5H6hm4foLg6ZtjlUHbvvmViBhDC+CYx/y62mhiT
+         qXv3NUI7+ViAm3a7y7BZeDFfU+xgD3cGrajm3EyhvDl3IhPhh0i54rQDTNjzYhQxWqPg
+         a7Q/U6xHwVCbfMO7qf+g/Ti+PGobA2XYw1rquFxSxcnPM4ImZk5zxSplVIFOjdXhOor0
+         bLyQ==
+X-Gm-Message-State: APjAAAX/+34zThfA+Kn1SqieyDcOYaOm+WDwvBlSQ4Xebf0WQfCR6MVL
+        7LEO2aovQBoX/36/A1pcyJI=
+X-Google-Smtp-Source: APXvYqwsZMxYcPT1O5TmHUKvHDe4kDMdOAPEEEe/9ZhN5uqEYQ2xOTAh4KFPPpjTJYByeQgzjrNzuA==
+X-Received: by 2002:a1c:48c4:: with SMTP id v187mr4605576wma.27.1573677055550;
+        Wed, 13 Nov 2019 12:30:55 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f2d:7d00:f8b2:b0b6:7d0e:ced4? (p200300EA8F2D7D00F8B2B0B67D0ECED4.dip0.t-ipconnect.de. [2003:ea:8f2d:7d00:f8b2:b0b6:7d0e:ced4])
+        by smtp.googlemail.com with ESMTPSA id q17sm3436655wmj.12.2019.11.13.12.30.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 12:30:55 -0800 (PST)
+Subject: Re: [PATCH] [RFC] r8169: check for valid MAC before clobbering
+To:     Brian Norris <briannorris@chromium.org>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Chun-Hao Lin <hau@realtek.com>
+References: <20191113005816.37084-1-briannorris@chromium.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <32422b2d-6cab-3ea2-aca3-3e74d68599a3@gmail.com>
+Date:   Wed, 13 Nov 2019 21:30:42 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191113114311.GP23790@phenom.ffwll.local>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20191113005816.37084-1-briannorris@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573677051; bh=w2mV+XepuxnOtihiYgL/XuqwUYU2QI7jYfF/MppVAWE=;
-        h=X-PGP-Universal:Subject:To:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=K3ELKy0LEaE4Frm6QQ4jLw8cJF3zobatTYiyQ/Vg2jO630IkqTksnY4sEeXMrgt5a
-         b46qAh7TsgPVJKCPcTPIoUnjxNn6h2xUdpivOkXuz3queuSeoxqaSFBxc3yHdAdKf1
-         weqLMTvKu8Vs4tf6la1SbXQc5ZvBvuc6pK240FvHmEYJ0o2WePNqZANag+FSCa5U1i
-         2iyzSKadjF0T/uRVrR4KM4Ey20Bg7sJaaQBcaSS9Pr1q7odGMaBmeJ4hRBriIHKA4P
-         1LTpfohPn7iHAuSCtXbApQkiiVLKyUBXMKbsJDCLOd3JNZEji1iUk1dM5atghZtAzC
-         EJVJspvV4f3sw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 3:43 AM, Daniel Vetter wrote:
-...
->>>> Can't we call this unpin_user_page then, for some symmetry? Or is that
->>>> even more churn?
->>>>
->>>> Looking from afar the naming here seems really confusing.
->>>
->>>
->>> That look from afar is valuable, because I'm too close to the problem to see
->>> how the naming looks. :)
->>>
->>> unpin_user_page() sounds symmetrical. It's true that it would cause more
->>> churn (which is why I started off with a proposal that avoids changing the
->>> names of put_user_page*() APIs). But OTOH, the amount of churn is proportional
->>> to the change in direction here, and it's really only 10 or 20 lines changed,
->>> in the end.
->>>
->>> So I'm open to changing to that naming. It would be nice to hear what others
->>> prefer, too...
->>
->> FWIW I'd find unpin_user_page() also better than put_user_page() as a
->> counterpart to pin_user_pages().
+On 13.11.2019 01:58, Brian Norris wrote:
+> I have some old systems with RTL8168g Ethernet, where the BIOS (based on
+> Coreboot) programs the MAC address into the MAC0 registers (at offset
+> 0x0 and 0x4). The relevant Coreboot source is publicly available here:
 > 
-> One more point from afar on pin/unpin: We use that a lot in graphics for
-> permanently pinned graphics buffer objects. Which really only should be
-> used for scanout. So at least graphics folks should have an appropriate
-> mindset and try to make sure we don't overuse this stuff.
-> -Daniel
+> https://review.coreboot.org/cgit/coreboot.git/tree/src/mainboard/google/jecht/lan.c?h=4.10#n139
+> 
+> (The BIOS is built off a much older branch, but the code is effectively
+> the same.)
+> 
+> Note that this was apparently the recommended solution in an application
+> note at the time (I have a copy, but it's not marked for redistribution
+> :( ), with no mention of the method used in rtl_read_mac_address().
+> 
+The application note refers to RTL8105e which is quite different from
+RTL8168g. For RTL8168g the BIOS has to write the MAC to the respective
+GigaMAC registers, see rtl_read_mac_address for these registers.
+
+If recompiling the BIOS isn't an option, then easiest should be to
+change the MAC after boot with "ifconfig" or "ip" command.
+
+> The result is that ever since commit 89cceb2729c7 ("r8169:add support
+> more chips to get mac address from backup mac address register"), my MAC
+> address changes to use an address I never intended.
+> 
+> Unfortunately, these commits don't really provide any documentation, and
+> I'm not sure when the recommendation actually changed. So I'm sending
+> this as RFC, in case I can get any tips from Realtek on how to avoid
+> breaking compatibility like this.
+> 
+> I'll freely admit that the devices in question are currently pinned to
+> an ancient kernel. We're only recently testing newer kernels on these
+> devices, which brings me here.
+> 
+> I'll also admit that I don't have much means to test this widely, and
+> I'm not sure what implicit behaviors other systems were depending on
+> along the way.
+> 
+> Fixes: 89cceb2729c7 ("r8169:add support more chips to get mac address from backup mac address register")
+> Fixes: 6e1d0b898818 ("r8169:add support for RTL8168H and RTL8107E")
+> Cc: Chun-Hao Lin <hau@realtek.com>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
+>  drivers/net/ethernet/realtek/r8169_main.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index c4e961ea44d5..94067cf30514 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -7031,11 +7031,14 @@ static void rtl_init_mac_address(struct rtl8169_private *tp)
+>  	if (!rc)
+>  		goto done;
+>  
+> -	rtl_read_mac_address(tp, mac_addr);
+> +	/* Check first to see if (e.g.) bootloader already programmed
+> +	 * something.
+> +	 */
+> +	rtl_read_mac_from_reg(tp, mac_addr, MAC0);
+>  	if (is_valid_ether_addr(mac_addr))
+>  		goto done;
+>  
+> -	rtl_read_mac_from_reg(tp, mac_addr, MAC0);
+> +	rtl_read_mac_address(tp, mac_addr);
+>  	if (is_valid_ether_addr(mac_addr))
+>  		goto done;
+>  
 > 
 
-OK, Ira also likes "unpin", and so far no one has said *anything* in favor
-of the "put_user_page" names, so I think we have a winner! I'll change the
-names to unpin_user_page*().
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
