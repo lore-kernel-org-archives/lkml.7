@@ -2,105 +2,101 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E28C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507BEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DFB222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8A2222CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfKMDjr (ORCPT
+        id S1727536AbfKMDno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 22:39:47 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:5362 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727440AbfKMDjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 22:39:46 -0500
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam2.hygon.cn with ESMTP id xAD3dNcf021115;
-        Wed, 13 Nov 2019 11:39:23 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id xAD3dH7t097843;
-        Wed, 13 Nov 2019 11:39:17 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from bogon.higon.com (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Wed, 13 Nov
- 2019 11:39:20 +0800
-From:   Jinke Fan <fanjinke@hygon.cn>
-To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jinke Fan <fanjinke@hygon.cn>
-Subject: [RFC PATCH] HID: quirks: Add quirk for HP MSU1465 PIXART OEM mouse
-Date:   Wed, 13 Nov 2019 11:38:41 +0800
-Message-ID: <20191113033841.25174-1-fanjinke@hygon.cn>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 Nov 2019 22:43:44 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:55702 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726994AbfKMDno (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 22:43:44 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0ThxeMyX_1573616617;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0ThxeMyX_1573616617)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 13 Nov 2019 11:43:38 +0800
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Subject: [PATCH 0/3] sched/numa: introduce advanced numa statistic
+Message-ID: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+Date:   Wed, 13 Nov 2019 11:43:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn xAD3dNcf021115
-X-DNSRBL: 
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PixArt OEM mouse disconnets/reconnects every minute on
-Linux. All contents of dmesg are repetitive:
+Modern production environment could use hundreds of cgroup to control
+the resources for different workloads, along with the complicated
+resource binding.
 
-[ 1465.810014] usb 1-2.2: USB disconnect, device number 20
-[ 1467.431509] usb 1-2.2: new low-speed USB device number 21 using xhci_hcd
-[ 1467.654982] usb 1-2.2: New USB device found, idVendor=03f0,idProduct=1f4a, bcdDevice= 1.00
-[ 1467.654985] usb 1-2.2: New USB device strings: Mfr=1, Product=2,SerialNumber=0
-[ 1467.654987] usb 1-2.2: Product: HP USB Optical Mouse
-[ 1467.654988] usb 1-2.2: Manufacturer: PixArt
-[ 1467.699722] input: PixArt HP USB Optical Mouse as /devices/pci0000:00/0000:00:07.1/0000:05:00.3/usb1/1-2/1-2.2/1-2.2:1.0/0003:03F0:1F4A.0012/input/input19
-[ 1467.700124] hid-generic 0003:03F0:1F4A.0012: input,hidraw0: USB HID v1.11 Mouse [PixArt HP USB Optical Mouse] on usb-0000:05:00.3-2.2/input0
+On NUMA platforms where we have multiple nodes, things become even more
+complicated, we hope there are more local memory access to improve the
+performance, and NUMA Balancing keep working hard to achieve that,
+however, wrong memory policy or node binding could easily waste the
+effort, result a lot of remote page accessing.
 
-So add HID_QUIRK_ALWAYS_POLL for this one as well.
-Test the patch, the mouse is no longer disconnected and there are no
-duplicate logs in dmesg.
+We need to perceive such problems, then we got chance to fix it before
+there are too much damages, however, there are no good approach yet to
+help catch the mouse who introduced the remote access.
 
-Reference:
-https://github.com/sriemer/fix-linux-mouse
+This patch set is trying to fill in the missing pieces， by introduce
+the per-cgroup NUMA locality/exectime statistics, and expose the per-task
+page migration failure counter, with these statistics, we could achieve
+the daily monitoring on NUMA efficiency, to give warning when things going
+too wrong.
 
-Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
----
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+Please check the third patch for more details.
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 447e8db21174..00904537e17c 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -573,6 +573,7 @@
- #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_094A	0x094a
- #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0941	0x0941
- #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641	0x0641
-+#define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_1f4a	0x1f4a
- 
- #define USB_VENDOR_ID_HUION		0x256c
- #define USB_DEVICE_ID_HUION_TABLET	0x006e
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index c50bcd967d99..9a35af1e2662 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -94,6 +94,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_094A), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0941), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_1f4a), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_IDEACOM, USB_DEVICE_ID_IDEACOM_IDC6680), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_INNOMEDIA, USB_DEVICE_ID_INNEX_GENESIS_ATARI), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M610X), HID_QUIRK_MULTI_INPUT },
+Thanks to Peter, Mel and Michal for the good advices :-)
+
+Michael Wang (3):
+  sched/numa: advanced per-cgroup numa statistic
+  sched/numa: expose per-task pages-migration-failure counter
+  sched/numa: documentation for per-cgroup numa stat
+
+ Documentation/admin-guide/cg-numa-stat.rst      | 161 ++++++++++++++++++++++++
+ Documentation/admin-guide/kernel-parameters.txt |   4 +
+ Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
+ include/linux/sched.h                           |  18 ++-
+ include/linux/sched/sysctl.h                    |   6 +
+ init/Kconfig                                    |   9 ++
+ kernel/sched/core.c                             |  91 ++++++++++++++
+ kernel/sched/debug.c                            |   1 +
+ kernel/sched/fair.c                             |  33 +++++
+ kernel/sched/sched.h                            |  17 +++
+ kernel/sysctl.c                                 |  11 ++
+ 11 files changed, 359 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+
+
 -- 
-2.17.1
+2.14.4.44.g2045bb6
 
