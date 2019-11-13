@@ -2,121 +2,132 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B99C33C8C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DFAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDA0206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414E7206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EJrWl+1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKMUea (ORCPT
+        id S1726564AbfKMUhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:34:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:58006 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfKMUe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:34:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ECF57A7;
-        Wed, 13 Nov 2019 12:34:28 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CFC03F52E;
-        Wed, 13 Nov 2019 12:34:23 -0800 (PST)
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
-Date:   Wed, 13 Nov 2019 20:34:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 15:37:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35914 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726162AbfKMUhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:37:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573677441;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zR6D3pONuhiH0qc0/Iv2UQgY08BbLP2x6Vmi8FX4RW4=;
+        b=EJrWl+1Zm/PWNbuJutqHKjQ/DwP4OdOGZxhsPz0rduPSiiyuOPVrwiQB09XRVXelVwC6y9
+        cdx5Gtwjn5y6aYAllZ/nP0C9RSwZBcCcksvrf2VJifYURvzmx4ZJd0sSbip1+j0L81LHmV
+        wsxeHGHilKsZevo3qim2zHuK2iMXmVo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-270-haOFguBlM-Cqz5GiKmuc7A-1; Wed, 13 Nov 2019 15:37:18 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F3BB18B9FC1;
+        Wed, 13 Nov 2019 20:37:17 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-40.phx2.redhat.com [10.3.112.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 197365F78C;
+        Wed, 13 Nov 2019 20:37:16 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 712E7119; Wed, 13 Nov 2019 18:37:10 -0200 (BRST)
+Date:   Wed, 13 Nov 2019 18:37:10 -0200
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Hewenliang <hewenliang4@huawei.com>, tstoyanov@vmware.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linfeilong@huawei.com
+Subject: Re: [PATCH] tools lib traceevent: Fix memory leakage in
+ copy_filter_type
+Message-ID: <20191113203710.GC3078@redhat.com>
+References: <20191025082312.62690-1-hewenliang4@huawei.com>
+ <20191113144626.44ad5418@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191113144626.44ad5418@gandalf.local.home>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: haOFguBlM-Cqz5GiKmuc7A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/11/2019 4:13 pm, Nicolas Saenz Julienne wrote:
-> Using a mask to represent bus DMA constraints has a set of limitations.
-> The biggest one being it can only hold a power of two (minus one). The
-> DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> as a limit. This quirk is already used by some architectures although
-> still rare.
-> 
-> With the introduction of the Raspberry Pi 4 we've found a new contender
-> for the use of bus DMA limits, as its PCIe bus can only address the
-> lower 3GB of memory (of a total of 4GB). This is impossible to represent
-> with a mask. To make things worse the device-tree code rounds non power
-> of two bus DMA limits to the next power of two, which is unacceptable in
-> this case.
-> 
-> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
-> over the tree and treat it as such. Note that dev->bus_dma_limit is
-> meant to contain the higher accesible DMA address.
+Em Wed, Nov 13, 2019 at 02:46:26PM -0500, Steven Rostedt escreveu:
+> On Fri, 25 Oct 2019 04:23:12 -0400
+> Hewenliang <hewenliang4@huawei.com> wrote:
+>=20
+> > It is necessary to free the memory that we have allocated
+> > when error occurs.
+> >=20
+> > Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filte=
+r_type()")
+> > Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+>=20
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>=20
+> Arnaldo,
 
-Neat, you win a "why didn't I do it that way in the first place?" :)
+sure
+=20
+> Can you take this?
+>=20
+> -- Steve
+>=20
+> > ---
+> >  tools/lib/traceevent/parse-filter.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent=
+/parse-filter.c
+> > index 552592d153fb..fbaa790d10d8 100644
+> > --- a/tools/lib/traceevent/parse-filter.c
+> > +++ b/tools/lib/traceevent/parse-filter.c
+> > @@ -1473,8 +1473,10 @@ static int copy_filter_type(struct tep_event_fil=
+ter *filter,
+> >  =09if (strcmp(str, "TRUE") =3D=3D 0 || strcmp(str, "FALSE") =3D=3D 0) =
+{
+> >  =09=09/* Add trivial event */
+> >  =09=09arg =3D allocate_arg();
+> > -=09=09if (arg =3D=3D NULL)
+> > +=09=09if (arg =3D=3D NULL) {
+> > +=09=09=09free(str);
+> >  =09=09=09return -1;
+> > +=09=09}
+> > =20
+> >  =09=09arg->type =3D TEP_FILTER_ARG_BOOLEAN;
+> >  =09=09if (strcmp(str, "TRUE") =3D=3D 0)
+> > @@ -1483,8 +1485,11 @@ static int copy_filter_type(struct tep_event_fil=
+ter *filter,
+> >  =09=09=09arg->boolean.value =3D 0;
+> > =20
+> >  =09=09filter_type =3D add_filter_type(filter, event->id);
+> > -=09=09if (filter_type =3D=3D NULL)
+> > +=09=09if (filter_type =3D=3D NULL) {
+> > +=09=09=09free(str);
+> > +=09=09=09free(arg);
+> >  =09=09=09return -1;
+> > +=09=09}
+> > =20
+> >  =09=09filter_type->filter =3D arg;
+> > =20
 
-Looking at it without all the history of previous attempts, this looks 
-entirely reasonable, and definitely a step in the right direction.
-
-[...]
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 5a7551d060f2..f18827cf96df 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -1097,7 +1097,7 @@ void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size)
->   		 * Limit coherent and dma mask based on size
->   		 * retrieved from firmware.
->   		 */
-> -		dev->bus_dma_mask = mask;
-> +		dev->bus_dma_limit = mask;
-
-Although this preserves the existing behaviour, as in of_dma_configure() 
-we can do better here since we have the original address range to hand. 
-I think it's worth keeping the ACPI and OF paths in sync for minor 
-tweaks like this, rather than letting them diverge unnecessarily.
-
-Otherwise, the rest looks OK to me - in principle we could store it as 
-an exclusive limit such that we could then streamline the min_not_zero() 
-tests to just min(mask, limit - 1), but that's probably too clever for 
-its own good.
-
-Robin.
-
->   		dev->coherent_dma_mask = mask;
->   		*dev->dma_mask = mask;
->   	}
