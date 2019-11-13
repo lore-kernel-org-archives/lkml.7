@@ -2,183 +2,409 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB13C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0CFC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA8F222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9603C222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 06:47:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ewgsk6hP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AuAiwIZI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VPSWfLGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfKMGq5 (ORCPT
+        id S1727254AbfKMGrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 01:46:57 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34696 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfKMGq4 (ORCPT
+        Wed, 13 Nov 2019 01:47:04 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:45436 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfKMGrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 01:46:56 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAD6kppY017248;
-        Wed, 13 Nov 2019 00:46:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573627611;
-        bh=x2h5LxHXZug+wqRXSRWXSn/T/yqH7K6RNcNFs8WuSfY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ewgsk6hPYVYgRQIXFah+1EWOXyNUNH6YNiZg68tuBuUpxI4fCgQBYElShR9TTeq2q
-         QqriaCv6brxq1jVMxJgrYOsVK11yZFf7Il3WOsmYwtErJP7pNMmGMHY7raUgDwSRb9
-         qmnPsaT+KmlCTZghM/Z2HtGdOsanHQ5T1GjzHs7s=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD6kpQZ053087;
-        Wed, 13 Nov 2019 00:46:51 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 00:46:50 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 00:46:33 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD6kmSq025956;
-        Wed, 13 Nov 2019 00:46:49 -0600
-Subject: Re: [PATCH] firmware: ti_sci: rm: Add support for tx_tdtype parameter
- for tx channel
-To:     Tero Kristo <t-kristo@ti.com>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
-        Vinod <vkoul@kernel.org>
-References: <20191025084715.25098-1-peter.ujfalusi@ti.com>
- <b2231065-ae16-8870-03ac-a435f190ee9f@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <31bce7ea-1769-c299-03a6-60c5b699fd7f@ti.com>
-Date:   Wed, 13 Nov 2019 08:48:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <b2231065-ae16-8870-03ac-a435f190ee9f@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 13 Nov 2019 01:47:03 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BA7E160D80; Wed, 13 Nov 2019 06:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573627622;
+        bh=wbqS/4iqtYkrVf1TqaFoK+xDG2XbcTXX4wNnHTDvMIk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AuAiwIZIqgiyeKcP2bwMy+nTuWsRYmjilUSB0bqbdfwS8gkbvQb0bQalRgxFyOtZA
+         JXm0fshJKq29zpiSZkCcqbhhI8Ux/a7gFtX98jg8AwjIMgaG5pIJD7Y6HDgcAowECy
+         7/iIrutJMjaX414DvClUmOiGHewP4kNRvGacHiyM=
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1B6E602EF;
+        Wed, 13 Nov 2019 06:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573627617;
+        bh=wbqS/4iqtYkrVf1TqaFoK+xDG2XbcTXX4wNnHTDvMIk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VPSWfLGkwcI0igHWiNuLkb9Nfkhmfbj5DsixE2mUILTq2uybhLUWNh49j9tBHFg7K
+         enMym/2cYDkaw1v1EeAN7ys9y/pQIAuZ8BVwGsQ8q/KJAnl1bxhNRCcrDj9/gH7PGG
+         rbmqcCdwsEllRdlOfXeaRqgzmTe7m4idjkNbitQM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D1B6E602EF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 5/7] scsi: ufs: Fix irq return code
+Date:   Tue, 12 Nov 2019 22:45:49 -0800
+Message-Id: <1573627552-12615-6-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1573627552-12615-1-git-send-email-cang@codeaurora.org>
+References: <1573627552-12615-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Tero,
+From: Venkat Gopalakrishnan <venkatg@codeaurora.org>
 
-On 01/11/2019 10.23, Tero Kristo wrote:
-> On 25/10/2019 11:47, Peter Ujfalusi wrote:
->> The system controller's resource manager have support for configuring the
->> TDTYPE of TCHAN_CFG register on j721e.
->> With this parameter the teardown completion can be controlled:
->> TDTYPE == 0: Return without waiting for peer to complete the teardown
->> TDTYPE == 1: Wait for peer to complete the teardown
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> 
-> Reviewed-by: Tero Kristo <t-kristo@ti.com>
+Return IRQ_HANDLED only if the irq is really handled, this will
+help in catching spurious interrupts that go unhandled.
 
-I'll take this patch as part of the upcoming v6 of the k3 DMA support
-series to make sure it is buildable unless someone will pick this for
-5.5-rc1.
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 134 ++++++++++++++++++++++++++++++++++------------
+ drivers/scsi/ufs/ufshci.h |   2 +-
+ 2 files changed, 100 insertions(+), 36 deletions(-)
 
-- Péter
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 671ea2a..8d1b04f 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -240,7 +240,7 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
+ 	END_FIX
+ };
+ 
+-static void ufshcd_tmc_handler(struct ufs_hba *hba);
++static irqreturn_t ufshcd_tmc_handler(struct ufs_hba *hba);
+ static void ufshcd_async_scan(void *data, async_cookie_t cookie);
+ static int ufshcd_reset_and_restore(struct ufs_hba *hba);
+ static int ufshcd_eh_host_reset_handler(struct scsi_cmnd *cmd);
+@@ -4799,19 +4799,29 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
+  * ufshcd_uic_cmd_compl - handle completion of uic command
+  * @hba: per adapter instance
+  * @intr_status: interrupt status generated by the controller
++ *
++ * Returns
++ *  IRQ_HANDLED - If interrupt is valid
++ *  IRQ_NONE    - If invalid interrupt
+  */
+-static void ufshcd_uic_cmd_compl(struct ufs_hba *hba, u32 intr_status)
++static irqreturn_t ufshcd_uic_cmd_compl(struct ufs_hba *hba, u32 intr_status)
+ {
++	irqreturn_t retval = IRQ_NONE;
++
+ 	if ((intr_status & UIC_COMMAND_COMPL) && hba->active_uic_cmd) {
+ 		hba->active_uic_cmd->argument2 |=
+ 			ufshcd_get_uic_cmd_result(hba);
+ 		hba->active_uic_cmd->argument3 =
+ 			ufshcd_get_dme_attr_val(hba);
+ 		complete(&hba->active_uic_cmd->done);
++		retval = IRQ_HANDLED;
+ 	}
+ 
+-	if ((intr_status & UFSHCD_UIC_PWR_MASK) && hba->uic_async_done)
++	if ((intr_status & UFSHCD_UIC_PWR_MASK) && hba->uic_async_done) {
+ 		complete(hba->uic_async_done);
++		retval = IRQ_HANDLED;
++	}
++	return retval;
+ }
+ 
+ /**
+@@ -4867,8 +4877,12 @@ static void __ufshcd_transfer_req_compl(struct ufs_hba *hba,
+ /**
+  * ufshcd_transfer_req_compl - handle SCSI and query command completion
+  * @hba: per adapter instance
++ *
++ * Returns
++ *  IRQ_HANDLED - If interrupt is valid
++ *  IRQ_NONE    - If invalid interrupt
+  */
+-static void ufshcd_transfer_req_compl(struct ufs_hba *hba)
++static irqreturn_t ufshcd_transfer_req_compl(struct ufs_hba *hba)
+ {
+ 	unsigned long completed_reqs;
+ 	u32 tr_doorbell;
+@@ -4887,7 +4901,12 @@ static void ufshcd_transfer_req_compl(struct ufs_hba *hba)
+ 	tr_doorbell = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
+ 	completed_reqs = tr_doorbell ^ hba->outstanding_reqs;
+ 
+-	__ufshcd_transfer_req_compl(hba, completed_reqs);
++	if (completed_reqs) {
++		__ufshcd_transfer_req_compl(hba, completed_reqs);
++		return IRQ_HANDLED;
++	} else {
++		return IRQ_NONE;
++	}
+ }
+ 
+ /**
+@@ -5406,61 +5425,77 @@ static void ufshcd_err_handler(struct work_struct *work)
+ /**
+  * ufshcd_update_uic_error - check and set fatal UIC error flags.
+  * @hba: per-adapter instance
++ *
++ * Returns
++ *  IRQ_HANDLED - If interrupt is valid
++ *  IRQ_NONE    - If invalid interrupt
+  */
+-static void ufshcd_update_uic_error(struct ufs_hba *hba)
++static irqreturn_t ufshcd_update_uic_error(struct ufs_hba *hba)
+ {
+ 	u32 reg;
++	irqreturn_t retval = IRQ_NONE;
+ 
+ 	/* PHY layer lane error */
+ 	reg = ufshcd_readl(hba, REG_UIC_ERROR_CODE_PHY_ADAPTER_LAYER);
+ 	/* Ignore LINERESET indication, as this is not an error */
+ 	if ((reg & UIC_PHY_ADAPTER_LAYER_ERROR) &&
+-			(reg & UIC_PHY_ADAPTER_LAYER_LANE_ERR_MASK)) {
++	    (reg & UIC_PHY_ADAPTER_LAYER_LANE_ERR_MASK)) {
+ 		/*
+ 		 * To know whether this error is fatal or not, DB timeout
+ 		 * must be checked but this error is handled separately.
+ 		 */
+ 		dev_dbg(hba->dev, "%s: UIC Lane error reported\n", __func__);
+ 		ufshcd_update_reg_hist(&hba->ufs_stats.pa_err, reg);
++		retval |= IRQ_HANDLED;
+ 	}
+ 
+ 	/* PA_INIT_ERROR is fatal and needs UIC reset */
+ 	reg = ufshcd_readl(hba, REG_UIC_ERROR_CODE_DATA_LINK_LAYER);
+-	if (reg)
++	if ((reg & UIC_DATA_LINK_LAYER_ERROR) &&
++	    (reg & UIC_DATA_LINK_LAYER_ERROR_CODE_MASK)) {
+ 		ufshcd_update_reg_hist(&hba->ufs_stats.dl_err, reg);
+ 
+-	if (reg & UIC_DATA_LINK_LAYER_ERROR_PA_INIT)
+-		hba->uic_error |= UFSHCD_UIC_DL_PA_INIT_ERROR;
+-	else if (hba->dev_quirks &
+-		   UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS) {
+-		if (reg & UIC_DATA_LINK_LAYER_ERROR_NAC_RECEIVED)
+-			hba->uic_error |=
+-				UFSHCD_UIC_DL_NAC_RECEIVED_ERROR;
+-		else if (reg & UIC_DATA_LINK_LAYER_ERROR_TCx_REPLAY_TIMEOUT)
+-			hba->uic_error |= UFSHCD_UIC_DL_TCx_REPLAY_ERROR;
++		if (reg & UIC_DATA_LINK_LAYER_ERROR_PA_INIT)
++			hba->uic_error |= UFSHCD_UIC_DL_PA_INIT_ERROR;
++		else if (hba->dev_quirks &
++				UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS) {
++			if (reg & UIC_DATA_LINK_LAYER_ERROR_NAC_RECEIVED)
++				hba->uic_error |=
++					UFSHCD_UIC_DL_NAC_RECEIVED_ERROR;
++			else if (reg & UIC_DATA_LINK_LAYER_ERROR_TCx_REPLAY_TIMEOUT)
++				hba->uic_error |= UFSHCD_UIC_DL_TCx_REPLAY_ERROR;
++		}
++		retval |= IRQ_HANDLED;
+ 	}
+ 
+ 	/* UIC NL/TL/DME errors needs software retry */
+ 	reg = ufshcd_readl(hba, REG_UIC_ERROR_CODE_NETWORK_LAYER);
+-	if (reg) {
++	if ((reg & UIC_NETWORK_LAYER_ERROR) &&
++	    (reg & UIC_NETWORK_LAYER_ERROR_CODE_MASK)) {
+ 		ufshcd_update_reg_hist(&hba->ufs_stats.nl_err, reg);
+ 		hba->uic_error |= UFSHCD_UIC_NL_ERROR;
++		retval |= IRQ_HANDLED;
+ 	}
+ 
+ 	reg = ufshcd_readl(hba, REG_UIC_ERROR_CODE_TRANSPORT_LAYER);
+-	if (reg) {
++	if ((reg & UIC_TRANSPORT_LAYER_ERROR) &&
++	    (reg & UIC_TRANSPORT_LAYER_ERROR_CODE_MASK)) {
+ 		ufshcd_update_reg_hist(&hba->ufs_stats.tl_err, reg);
+ 		hba->uic_error |= UFSHCD_UIC_TL_ERROR;
++		retval |= IRQ_HANDLED;
+ 	}
+ 
+ 	reg = ufshcd_readl(hba, REG_UIC_ERROR_CODE_DME);
+-	if (reg) {
++	if ((reg & UIC_DME_ERROR) &&
++	    (reg & UIC_DME_ERROR_CODE_MASK)) {
+ 		ufshcd_update_reg_hist(&hba->ufs_stats.dme_err, reg);
+ 		hba->uic_error |= UFSHCD_UIC_DME_ERROR;
++		retval |= IRQ_HANDLED;
+ 	}
+ 
+ 	dev_dbg(hba->dev, "%s: UIC error flags = 0x%08x\n",
+ 			__func__, hba->uic_error);
++	return retval;
+ }
+ 
+ static bool ufshcd_is_auto_hibern8_error(struct ufs_hba *hba,
+@@ -5483,10 +5518,15 @@ static bool ufshcd_is_auto_hibern8_error(struct ufs_hba *hba,
+ /**
+  * ufshcd_check_errors - Check for errors that need s/w attention
+  * @hba: per-adapter instance
++ *
++ * Returns
++ *  IRQ_HANDLED - If interrupt is valid
++ *  IRQ_NONE    - If invalid interrupt
+  */
+-static void ufshcd_check_errors(struct ufs_hba *hba)
++static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
+ {
+ 	bool queue_eh_work = false;
++	irqreturn_t retval = IRQ_NONE;
+ 
+ 	if (hba->errors & INT_FATAL_ERRORS) {
+ 		ufshcd_update_reg_hist(&hba->ufs_stats.fatal_err, hba->errors);
+@@ -5495,7 +5535,7 @@ static void ufshcd_check_errors(struct ufs_hba *hba)
+ 
+ 	if (hba->errors & UIC_ERROR) {
+ 		hba->uic_error = 0;
+-		ufshcd_update_uic_error(hba);
++		retval = ufshcd_update_uic_error(hba);
+ 		if (hba->uic_error)
+ 			queue_eh_work = true;
+ 	}
+@@ -5543,6 +5583,7 @@ static void ufshcd_check_errors(struct ufs_hba *hba)
+ 			}
+ 			schedule_work(&hba->eh_work);
+ 		}
++		retval |= IRQ_HANDLED;
+ 	}
+ 	/*
+ 	 * if (!queue_eh_work) -
+@@ -5550,44 +5591,62 @@ static void ufshcd_check_errors(struct ufs_hba *hba)
+ 	 * itself without s/w intervention or errors that will be
+ 	 * handled by the SCSI core layer.
+ 	 */
++	return retval;
+ }
+ 
+ /**
+  * ufshcd_tmc_handler - handle task management function completion
+  * @hba: per adapter instance
++ *
++ * Returns
++ *  IRQ_HANDLED - If interrupt is valid
++ *  IRQ_NONE    - If invalid interrupt
+  */
+-static void ufshcd_tmc_handler(struct ufs_hba *hba)
++static irqreturn_t ufshcd_tmc_handler(struct ufs_hba *hba)
+ {
+ 	u32 tm_doorbell;
+ 
+ 	tm_doorbell = ufshcd_readl(hba, REG_UTP_TASK_REQ_DOOR_BELL);
+ 	hba->tm_condition = tm_doorbell ^ hba->outstanding_tasks;
+-	wake_up(&hba->tm_wq);
++	if (hba->tm_condition) {
++		wake_up(&hba->tm_wq);
++		return IRQ_HANDLED;
++	} else {
++		return IRQ_NONE;
++	}
+ }
+ 
+ /**
+  * ufshcd_sl_intr - Interrupt service routine
+  * @hba: per adapter instance
+  * @intr_status: contains interrupts generated by the controller
++ *
++ * Returns
++ *  IRQ_HANDLED - If interrupt is valid
++ *  IRQ_NONE    - If invalid interrupt
+  */
+-static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
++static irqreturn_t ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
+ {
++	irqreturn_t retval = IRQ_NONE;
++
+ 	hba->errors = UFSHCD_ERROR_MASK & intr_status;
+ 
+ 	if (ufshcd_is_auto_hibern8_error(hba, intr_status))
+ 		hba->errors |= (UFSHCD_UIC_HIBERN8_MASK & intr_status);
+ 
+ 	if (hba->errors)
+-		ufshcd_check_errors(hba);
++		retval |= ufshcd_check_errors(hba);
+ 
+ 	if (intr_status & UFSHCD_UIC_MASK)
+-		ufshcd_uic_cmd_compl(hba, intr_status);
++		retval |= ufshcd_uic_cmd_compl(hba, intr_status);
+ 
+ 	if (intr_status & UTP_TASK_REQ_COMPL)
+-		ufshcd_tmc_handler(hba);
++		retval |= ufshcd_tmc_handler(hba);
+ 
+ 	if (intr_status & UTP_TRANSFER_REQ_COMPL)
+-		ufshcd_transfer_req_compl(hba);
++		retval |= ufshcd_transfer_req_compl(hba);
++
++	return retval;
+ }
+ 
+ /**
+@@ -5595,8 +5654,9 @@ static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
+  * @irq: irq number
+  * @__hba: pointer to adapter instance
+  *
+- * Returns IRQ_HANDLED - If interrupt is valid
+- *		IRQ_NONE - If invalid interrupt
++ * Returns
++ *  IRQ_HANDLED - If interrupt is valid
++ *  IRQ_NONE    - If invalid interrupt
+  */
+ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ {
+@@ -5619,14 +5679,18 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 		if (intr_status)
+ 			ufshcd_writel(hba, intr_status, REG_INTERRUPT_STATUS);
+-		if (enabled_intr_status) {
+-			ufshcd_sl_intr(hba, enabled_intr_status);
+-			retval = IRQ_HANDLED;
+-		}
++		if (enabled_intr_status)
++			retval |= ufshcd_sl_intr(hba, enabled_intr_status);
+ 
+ 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+ 	} while (intr_status && --retries);
+ 
++	if (retval == IRQ_NONE) {
++		dev_err(hba->dev, "%s: Unhandled interrupt 0x%08x\n",
++					__func__, intr_status);
++		ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
++	}
++
+ 	spin_unlock(hba->host->host_lock);
+ 	return retval;
+ }
+diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h
+index dbb75cd..c2961d3 100644
+--- a/drivers/scsi/ufs/ufshci.h
++++ b/drivers/scsi/ufs/ufshci.h
+@@ -195,7 +195,7 @@ enum {
+ 
+ /* UECDL - Host UIC Error Code Data Link Layer 3Ch */
+ #define UIC_DATA_LINK_LAYER_ERROR		0x80000000
+-#define UIC_DATA_LINK_LAYER_ERROR_CODE_MASK	0x7FFF
++#define UIC_DATA_LINK_LAYER_ERROR_CODE_MASK	0xFFFF
+ #define UIC_DATA_LINK_LAYER_ERROR_TCX_REP_TIMER_EXP	0x2
+ #define UIC_DATA_LINK_LAYER_ERROR_AFCX_REQ_TIMER_EXP	0x4
+ #define UIC_DATA_LINK_LAYER_ERROR_FCX_PRO_TIMER_EXP	0x8
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> 
->> ---
->> Hi,
->>
->> I know it is kind of getting late for 5.5, but can you consider this
->> small
->> addition so I can add the support for it in the initial DMA driver?
->>
->> Thanks and regards,
->> Peter
->>
->>   drivers/firmware/ti_sci.c              | 1 +
->>   drivers/firmware/ti_sci.h              | 7 +++++++
->>   include/linux/soc/ti/ti_sci_protocol.h | 2 ++
->>   3 files changed, 10 insertions(+)
->>
->> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
->> index 4126be9e3216..f13e4a96f3b7 100644
->> --- a/drivers/firmware/ti_sci.c
->> +++ b/drivers/firmware/ti_sci.c
->> @@ -2412,6 +2412,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const
->> struct ti_sci_handle *handle,
->>       req->fdepth = params->fdepth;
->>       req->tx_sched_priority = params->tx_sched_priority;
->>       req->tx_burst_size = params->tx_burst_size;
->> +    req->tx_tdtype = params->tx_tdtype;
->>         ret = ti_sci_do_xfer(info, xfer);
->>       if (ret) {
->> diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
->> index f0d068c03944..255327171dae 100644
->> --- a/drivers/firmware/ti_sci.h
->> +++ b/drivers/firmware/ti_sci.h
->> @@ -910,6 +910,7 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
->>    *   12 - Valid bit for @ref
->> ti_sci_msg_rm_udmap_tx_ch_cfg::tx_credit_count
->>    *   13 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::fdepth
->>    *   14 - Valid bit for @ref
->> ti_sci_msg_rm_udmap_tx_ch_cfg::tx_burst_size
->> + *   15 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_tdtype
->>    *
->>    * @nav_id: SoC device ID of Navigator Subsystem where tx channel is
->> located
->>    *
->> @@ -973,6 +974,11 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
->>    *
->>    * @tx_burst_size: UDMAP transmit channel burst size configuration
->> to be
->>    * programmed into the tx_burst_size field of the TCHAN_TCFG register.
->> + *
->> + * @tx_tdtype: UDMAP transmit channel teardown type configuration to be
->> + * programmed into the tdtype field of the TCHAN_TCFG register:
->> + * 0 - Return immediately
->> + * 1 - Wait for completion message from remote peer
->>    */
->>   struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
->>       struct ti_sci_msg_hdr hdr;
->> @@ -994,6 +1000,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
->>       u16 fdepth;
->>       u8 tx_sched_priority;
->>       u8 tx_burst_size;
->> +    u8 tx_tdtype;
->>   } __packed;
->>     /**
->> diff --git a/include/linux/soc/ti/ti_sci_protocol.h
->> b/include/linux/soc/ti/ti_sci_protocol.h
->> index 9531ec823298..f3aed0b91564 100644
->> --- a/include/linux/soc/ti/ti_sci_protocol.h
->> +++ b/include/linux/soc/ti/ti_sci_protocol.h
->> @@ -342,6 +342,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
->>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID        BIT(11)
->>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_CREDIT_COUNT_VALID      BIT(12)
->>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FDEPTH_VALID            BIT(13)
->> +#define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID            BIT(15)
->>       u16 nav_id;
->>       u16 index;
->>       u8 tx_pause_on_err;
->> @@ -359,6 +360,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
->>       u16 fdepth;
->>       u8 tx_sched_priority;
->>       u8 tx_burst_size;
->> +    u8 tx_tdtype;
->>   };
->>     /**
->>
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
