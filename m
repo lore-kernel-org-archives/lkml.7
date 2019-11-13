@@ -2,129 +2,116 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF16C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5FEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36D121A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80CD222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 15:12:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQ3XKwp2"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RKjwJjIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfKMPLz (ORCPT
+        id S1728021AbfKMPMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:11:55 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46147 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727550AbfKMPLy (ORCPT
+        Wed, 13 Nov 2019 10:12:23 -0500
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:51236 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727112AbfKMPMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:11:54 -0500
-Received: by mail-il1-f195.google.com with SMTP id q1so2072361ile.13;
-        Wed, 13 Nov 2019 07:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Oet7iN8luRIwm2cG0enPN1WO0bfm28VO//v3gW2hBng=;
-        b=GQ3XKwp2AaghEayclfUYMtj06s+kNJ3pPo2qy6o3BVVu+8If5uf39XUbSZkODmmU33
-         WDeAJ8hMYpRvi0cUuO/9lrc5XrrtCMRY0onKyQX+VhaWxmTI+Lz9TJj1GRzi3MxLdt04
-         tekoOYGqFXTHSJzb8/GuwS7hRrbPZtwG2eVfgxdjpZDVr/iJ7aDlFDftc6szgU1vzaZZ
-         WeINd1UMXpiaoHmo3QdKl8f0o0Ow/3SUmeyIp8xIT1lRCsIZfWVSQ879lYWJ+YbUDZFI
-         II3F90tO59YT4Nw3DJh9VTEt4ev51KZP3sH1tQ8GQslbwz1aAb4/uPva7x6OjUoSOp5j
-         K0/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Oet7iN8luRIwm2cG0enPN1WO0bfm28VO//v3gW2hBng=;
-        b=Em66xhI7iZmT7T/LPeWqOybGO8xX7y921lsnGQIplIt7UXDqLcwhSWXWW3A2PFTdDp
-         NdI07XtacRO9E02E1F671F71fgkCBB4QY4MPOgrMNPttUqk0+YcSKRU7o6zHKI11lEKQ
-         0Y/2wERkDV137dSeG1E6PylhdAo+gx1HWHE2KkKJUlpGwa8kVZXTWvrCiuYdLE7Ohq+d
-         Q7UDdGk88mjfNQAf0s+iSemnK3E9kF4Qh8UlO3pSIupl52kDkYgDjWoMaT5hXOFjQa5N
-         bTP547L7khkGVIUqu1guJ+eMTjQ1qoYsX6pz5c+RV4iCrHpVCnm/MjYgkTt6Y8vjCaGW
-         Itmg==
-X-Gm-Message-State: APjAAAUwwKznI1dOHVP9MtBLPCI29yxtfKU9x8i4EDTN7qdEFeRJ69gN
-        fW+pAlV0H4DH0Bp/pSySPEkt8KcwS0s1I0a28NaNIA==
-X-Google-Smtp-Source: APXvYqzJ6RcpW1AKYY64DcFg31Q3abj110+k7vsmWtJerlFCp+aLmBxLTxWeV9e9dqahFbq36N/70b0ruDZgONRDz9Y=
-X-Received: by 2002:a92:831d:: with SMTP id f29mr4564735ild.263.1573657912726;
- Wed, 13 Nov 2019 07:11:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20191106231650.1580-1-jeffrey.l.hugo@gmail.com>
- <20191112084225.casuncbo7z54vu4g@netronome.com> <CAOCk7NpNgtTSus2KtBMe=jGLFyBumVfRVxKxtHoEDUEt2-6tqQ@mail.gmail.com>
- <87d0dws79m.fsf@kamboji.qca.qualcomm.com>
-In-Reply-To: <87d0dws79m.fsf@kamboji.qca.qualcomm.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Wed, 13 Nov 2019 08:11:41 -0700
-Message-ID: <CAOCk7NpGm7jLH-z9CdJaYAGkg_WuiBxtxgwby+BJef=asFbavw@mail.gmail.com>
-Subject: Re: [PATCH] ath10k: Fix qmi init error handling
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Simon Horman <simon.horman@netronome.com>, davem@davemloft.net,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 Nov 2019 10:12:21 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 35925C0E96;
+        Wed, 13 Nov 2019 15:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1573657941; bh=Ip3ZDkHX7NjVjcJ1Wnwx1pavIU7mIEYu8qbPr6qGCVE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=RKjwJjIbQR+b7Qw8AJQTa1EuVAYkdBYBwdUPUj3HKxK5nhKYKRWpDhx4POpCBI6iX
+         sVkFCKeRJssVtG6zlC3NP2ZtrCHf74fupWBYwmK6Cl4m4nS/BYkb0SpRvXvPVJsXSw
+         utshHfdZHSs+9K5iyd8GS63XWDYic+ccPqomEDcUHGXJA1Z9zaoY/kX8YB8XBRzFU/
+         PxewJ9qPxkGL2xWv51Nm/89hQFqUpw5gvXggVdVfaet7xu0OWOjJq/uHdIk+QTvCUC
+         W+6fZLi9+pecHIpgLmfZq4i27xMVKWE2Ety9HT/8Ru/WDY4df82Ap8VvaJdFegOaQM
+         OM4kvyazqqGzg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id B5DBDA008F;
+        Wed, 13 Nov 2019 15:12:19 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 5/7] net: stmmac: xgmac: Remove uneeded computation for RFA/RFD
+Date:   Wed, 13 Nov 2019 16:12:06 +0100
+Message-Id: <6c27de99de61a9dfa65ba163b5d870cac9f6a249.1573657592.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1573657592.git.Jose.Abreu@synopsys.com>
+References: <cover.1573657592.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1573657592.git.Jose.Abreu@synopsys.com>
+References: <cover.1573657592.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 9:57 PM Kalle Valo <kvalo@codeaurora.org> wrote:
->
-> Jeffrey Hugo <jeffrey.l.hugo@gmail.com> writes:
->
-> > On Tue, Nov 12, 2019 at 1:42 AM Simon Horman <simon.horman@netronome.com> wrote:
-> >>
-> >> On Wed, Nov 06, 2019 at 03:16:50PM -0800, Jeffrey Hugo wrote:
-> >> > When ath10k_qmi_init() fails, the error handling does not free the irq
-> >> > resources, which causes an issue if we EPROBE_DEFER as we'll attempt to
-> >> > (re-)register irqs which are already registered.
-> >> >
-> >> > Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
-> >> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> >> > ---
-> >> >  drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
-> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> >
-> >> > diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-> >> > index fc15a0037f0e..f2a0b7aaad3b 100644
-> >> > --- a/drivers/net/wireless/ath/ath10k/snoc.c
-> >> > +++ b/drivers/net/wireless/ath/ath10k/snoc.c
-> >> > @@ -1729,7 +1729,7 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
-> >> >       ret = ath10k_qmi_init(ar, msa_size);
-> >> >       if (ret) {
-> >> >               ath10k_warn(ar, "failed to register wlfw qmi client: %d\n", ret);
-> >> > -             goto err_core_destroy;
-> >> > +             goto err_free_irq;
-> >> >       }
-> >>
-> >> From a casual examination of the code this seems like a step in the right
-> >> direction. But does this error path also need to call ath10k_hw_power_off() ?
-> >
-> > It probably should.  I don't see any fatal errors from the step being
-> > skipped, although it might silence some regulator warnings about being
-> > left on.  Unlikely to be observed by most folks as I was initing the
-> > driver pretty early to debug some things.  Looks like Kalle already
-> > picked up this patch though, so I guess your suggestion would need to
-> > be a follow up.
->
-> Actually it's only in the pending branch, which means that the patch can
-> be changed or a new version can be submitted:
+RFA and RFD should not be dependent on FIFO size. In fact, the more FIFO
+space we have, the later we can activate Flow Control. Let's use
+hard-coded values for RFA and RFD for all FIFO sizes with the exception
+of 4k, which is a special case.
 
-Thats an interesting flow.  Ok.
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
->
-> https://wireless.wiki.kernel.org/en/users/drivers/ath10k/submittingpatches#patch_flow
->
-> The easiest way to check the state of a wireless patch is from
-> patchwork:
->
-> https://patchwork.kernel.org/patch/11231325/
->
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#checking_state_of_patches_from_patchwork
->
-> --
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index f148cb2061d8..22a7f0cc1b90 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -183,19 +183,9 @@ static void dwxgmac2_dma_rx_mode(void __iomem *ioaddr, int mode,
+ 			rfa = 0x01; /* Full-1.5K */
+ 			break;
+ 
+-		case 8192:
+-			rfd = 0x06; /* Full-4K */
+-			rfa = 0x0a; /* Full-6K */
+-			break;
+-
+-		case 16384:
+-			rfd = 0x06; /* Full-4K */
+-			rfa = 0x12; /* Full-10K */
+-			break;
+-
+ 		default:
+-			rfd = 0x06; /* Full-4K */
+-			rfa = 0x1e; /* Full-16K */
++			rfd = 0x07; /* Full-4.5K */
++			rfa = 0x04; /* Full-3K */
+ 			break;
+ 		}
+ 
+-- 
+2.7.4
+
