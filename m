@@ -2,137 +2,92 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49C9C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F579C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D15222CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7487C222CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 13:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573652989;
+	bh=G/H/25XOIBV/tVCn3Kcc1t4NrQPyjMLjjJ0VAvwfiew=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=fRdV2NbJ7xCOY7eXp22O71bbKWWqBjhfW+CMmFO6MoG2Bp5AvvPZrPayBKGeeL0MF
+	 IJSDzCCSz02cT6eGDk/lkBL0p+BeLtssEnrp0N4GE6dMGEp6Xxa9w09btQ0buiY62U
+	 SEv3pkcUkt7xklwwgIZkDl6FuJ0jubsux7hyRNE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfKMNti (ORCPT
+        id S1727480AbfKMNts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:49:38 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47544 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfKMNti (ORCPT
+        Wed, 13 Nov 2019 08:49:48 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:58103 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726521AbfKMNts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 08:49:38 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 68EB71C1250; Wed, 13 Nov 2019 14:49:36 +0100 (CET)
-Date:   Wed, 13 Nov 2019 14:49:36 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 093/125] usb: gadget: configfs: fix concurrent issue
- between composite APIs
-Message-ID: <20191113134935.GA20980@duo.ucw.cz>
-References: <20191111181438.945353076@linuxfoundation.org>
- <20191111181452.322265396@linuxfoundation.org>
+        Wed, 13 Nov 2019 08:49:48 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iUt1c-00023o-CE; Wed, 13 Nov 2019 14:49:36 +0100
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2 5/6] PCI: brcmstb: add MSI capability
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Content-Disposition: inline
-In-Reply-To: <20191111181452.322265396@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 Nov 2019 14:58:57 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <andrew.murray@arm.com>, <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>, <james.quinlan@broadcom.com>,
+        <mbrugger@suse.com>, <phil@raspberrypi.org>,
+        <jeremy.linton@arm.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20191112155926.16476-6-nsaenzjulienne@suse.de>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+ <20191112155926.16476-6-nsaenzjulienne@suse.de>
+Message-ID: <d8cae6625265f95441019e33129febcd@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: nsaenzjulienne@suse.de, andrew.murray@arm.com, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, eric@anholt.net, wahrenst@gmx.net, james.quinlan@broadcom.com, mbrugger@suse.com, phil@raspberrypi.org, jeremy.linton@arm.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-11-12 17:08, Nicolas Saenz Julienne wrote:
+> From: Jim Quinlan <james.quinlan@broadcom.com>
+>
+> This commit adds MSI to the Broadcom STB PCIe host controller. It 
+> does
+> not add MSIX since that functionality is not in the HW.  The MSI
+> controller is physically located within the PCIe block, however, 
+> there
+> is no reason why the MSI controller could not be moved elsewhere in
+> the future.
+>
+> Since the internal Brcmstb MSI controller is intertwined with the 
+> PCIe
+> controller, it is not its own platform device but rather part of the
+> PCIe platform device.
+>
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
-On Mon 2019-11-11 19:28:52, Greg Kroah-Hartman wrote:
-> From: Peter Chen <peter.chen@nxp.com>
->=20
-> [ Upstream commit 1a1c851bbd706ea9f3a9756c2d3db28523506d3b ]
->=20
-> We meet several NULL pointer issues if configfs_composite_unbind
-> and composite_setup (or composite_disconnect) are running together.
-> These issues occur when do the function switch stress test, the
-> configfs_compsoite_unbind is called from user mode by
-> echo "" to /sys/../UDC entry, and meanwhile, the setup interrupt
-> or disconnect interrupt occurs by hardware. The composite_setup
-
-> +++ b/drivers/usb/gadget/configfs.c
-> @@ -61,6 +61,8 @@ struct gadget_info {
->  	bool use_os_desc;
->  	char b_vendor_code;
->  	char qw_sign[OS_STRING_QW_SIGN_LEN];
-> +	spinlock_t spinlock;
-> +	bool unbind;
->  };
-> =20
->  static inline struct gadget_info *to_gadget_info(struct config_item *ite=
-m)
-> @@ -1244,6 +1246,7 @@ static int configfs_composite_bind(struct usb_gadge=
-t *gadget,
->  	int				ret;
-> =20
->  	/* the gi->lock is hold by the caller */
-> +	gi->unbind =3D 0;
->  	cdev->gadget =3D gadget;
-
-Since variable is bool, I'd expect "=3D false" here?
-
-> +	unsigned long flags;
-> =20
->  	/* the gi->lock is hold by the caller */
-
-"is held".
-
->  	cdev =3D get_gadget_data(gadget);
->  	gi =3D container_of(cdev, struct gadget_info, cdev);
-> +	spin_lock_irqsave(&gi->spinlock, flags);
-> +	gi->unbind =3D 1;
-
-=3D true;
-
-> +static int configfs_composite_setup(struct usb_gadget *gadget,
-> +		const struct usb_ctrlrequest *ctrl)
-> +{
-> +	struct usb_composite_dev *cdev;
-> +	struct gadget_info *gi;
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	cdev =3D get_gadget_data(gadget);
-> +	if (!cdev)
-> +		return 0;
-> +
-> +	gi =3D container_of(cdev, struct gadget_info, cdev);
-> +	spin_lock_irqsave(&gi->spinlock, flags);
-> +	cdev =3D get_gadget_data(gadget);
-
-cdev already contains required value, why get it second time? (If it
-needs to be done under lock, comment might be useful...)
-
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXcwJ7wAKCRAw5/Bqldv6
-8hTcAKCkZ8+lOfe0KoaldFtnuuwaU+hcAgCfUtdgELdKe9XSVUlkKviX4Tmx90Y=
-=M6Kj
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+         M.
+-- 
+Jazz is not dead. It just smells funny...
