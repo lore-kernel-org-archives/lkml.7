@@ -2,217 +2,232 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B36C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4324AC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4B8214E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09423214E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 08:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ckxLb/2f"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="wJkmsfJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKMIIz (ORCPT
+        id S1726326AbfKMINJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 03:08:55 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42292 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfKMIIz (ORCPT
+        Wed, 13 Nov 2019 03:13:09 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3332 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725966AbfKMINJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 03:08:55 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAD88r9A046927;
-        Wed, 13 Nov 2019 02:08:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573632533;
-        bh=6rDwGXwTQN32EHn7rFYe5HgX16STJmuiP0QLoRWW/Sc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ckxLb/2fdYNLuGkeU7RnDFu8C4sJFlBDdDLGyNk0oobaVWEzUltKGEviqXoEyG5Qa
-         B0Q7bqs7dGbyOo64JEv4z7+Ha5e2MBmsnobNjdXc2BUKzSKu6j6+LKPFNCMmmjDRck
-         VD5n6hMRGkYsIYNcEoSKGudAiZPDnlhBk76uAuac=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAD88rVI054401
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 02:08:53 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 02:08:29 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 02:08:29 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD88ibY060428;
-        Wed, 13 Nov 2019 02:08:45 -0600
-Subject: Re: [PATCH 08/17] remoteproc/omap: Add support for DRA7xx remote
- processors
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <s-anna@ti.com>
-References: <20191028124238.19224-1-t-kristo@ti.com>
- <20191028124238.19224-9-t-kristo@ti.com> <20191111233707.GJ3108315@builder>
- <0d26759a-8a48-e573-cbf6-721c6e5367c1@ti.com> <20191112181343.GJ3797@yoga>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <77354704-70cd-fd07-5ea6-4572dfad0c52@ti.com>
-Date:   Wed, 13 Nov 2019 10:08:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191112181343.GJ3797@yoga>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Wed, 13 Nov 2019 03:13:09 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAD87lLu022604;
+        Wed, 13 Nov 2019 03:10:53 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2w7prju0gn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Nov 2019 03:10:53 -0500
+Received: from m0167089.ppops.net (m0167089.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xAD8AOwL024758;
+        Wed, 13 Nov 2019 03:10:52 -0500
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2052.outbound.protection.outlook.com [104.47.45.52])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2w7prju0gj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Nov 2019 03:10:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mNe5PsgLzVWBBQl1ZLInI9yDR/AOabCvh+VwFBfCU+5e50KC5WmPKSRecY6GU2sTDNw772fsTcaHifah2ezW6bmNVYzv06KS7yYWaYTuLMmVomjvosHylmP+G2cf2N32jMzL6m8E3RvPoDGSwE6o+xHyl9Il7rKo4j2cIK7lAjuQkdLxTMcf2aJA47ulmKCI/ji0ivDtYle2vIDOregXdREne1xcmqBT+5iEr5j00LhglXAuzQ38QXDVo8n2Mw82CfOVq4jH+TCBGSJhrALegcrCA/zXxxb8nseSycI4ildJm4ixxIpFuDf73Ls87OoEmw7wZBWtf1zAW3N1u270qQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TGDsyqn79GkHKoxSrCavDr1Pv4hkyRtjCfl83OOcR0g=;
+ b=nW8fo4N3Vy+uecPvEfsX4GCY3YMsfvPkwA1s88g1ZYAlh1FIgiqmSK1XHyQYkvh70nHAGf6SHfkv/pAYWqtiYybLWk52Ug9nW+BmMPcOHvcC0wsjoKrpH0V1cENoCGGf7MB3nMAon9BH0uBc9jIdr0TRs/jVOHltZmHwkZlxJhUjzI2xC03x13FJ7x4+/YPY1cAX1CGIy6u4+4prjgDMJ8unhqPgGtz+iVDJZneveL7a0SumpYzt/QLBqhMnh+DW1fB1jBjINO0luMGVIrT6AdfnKHmrKpSEUYwfqVbzioiM3EJZWbq11dvNhsFajOoetOgiCeAW7fyMEpPb6VT1dA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TGDsyqn79GkHKoxSrCavDr1Pv4hkyRtjCfl83OOcR0g=;
+ b=wJkmsfJfEnvxyWXZH3IGGUxuZ9VJkV3El91V/t1w2EkVPuiSJzliOy3n57twyPBtmMgZUjAUFx4FsrYFH1lWyJmraFtkiEXUjgw51/aJnwkbaLFzlbfEtaMp6U43TCWGcpcL6vS/5hP957ABq9z1HOG7rbVKgvm3PWx1lPAlaEw=
+Received: from BY5PR03MB4965.namprd03.prod.outlook.com (52.133.249.215) by
+ BY5PR03MB5316.namprd03.prod.outlook.com (10.186.132.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Wed, 13 Nov 2019 08:10:51 +0000
+Received: from BY5PR03MB4965.namprd03.prod.outlook.com
+ ([fe80::c437:442b:4a7b:8121]) by BY5PR03MB4965.namprd03.prod.outlook.com
+ ([fe80::c437:442b:4a7b:8121%4]) with mapi id 15.20.2451.018; Wed, 13 Nov 2019
+ 08:10:51 +0000
+From:   "Hennerich, Michael" <Michael.Hennerich@analog.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>
+CC:     "Bia, Beniamin" <Beniamin.Bia@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "biabeniamin@outlook.com" <biabeniamin@outlook.com>,
+        Jean Delvare <jdelvare@suse.com>
+Subject: RE: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
+ Power Monitor driver
+Thread-Topic: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
+ Power Monitor driver
+Thread-Index: AQHVmW7fc5smHJ/4gUWJS2j2jDw7xKeHzPmAgAALEgCAAOankA==
+Date:   Wed, 13 Nov 2019 08:10:50 +0000
+Message-ID: <BY5PR03MB4965158557D9AEA20A48F95F8E760@BY5PR03MB4965.namprd03.prod.outlook.com>
+References: <20191112153552.27431-1-beniamin.bia@analog.com>
+ <20191112173757.0000075b@huawei.com> <20191112181734.GA30127@roeck-us.net>
+In-Reply-To: <20191112181734.GA30127@roeck-us.net>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcbWhlbm5lcmlc?=
+ =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
+ =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy0xOTNiNzBjYi0wNWVkLTExZWEtOGY5YS00ODg5?=
+ =?us-ascii?Q?ZTc3Y2RkZWZcYW1lLXRlc3RcMTkzYjcwY2QtMDVlZC0xMWVhLThmOWEtNDg4?=
+ =?us-ascii?Q?OWU3N2NkZGVmYm9keS50eHQiIHN6PSIyOTk3IiB0PSIxMzIxODEwNjI0ODg4?=
+ =?us-ascii?Q?MTQ0OTMiIGg9Ii9nQmlJWEcySlVkbTIxclhQMDJKaGk2RzNyZz0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUt3QkFB?=
+ =?us-ascii?Q?Q2Q4NjNiK1puVkFiNUwrT1FBWGU4d3ZrdjQ1QUJkN3pBQ0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQUE4QVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBWWVqd1pRQUFBQUFBQUFBQUFBQUFBSjRBQUFCaEFHUUFh?=
+ =?us-ascii?Q?UUJmQUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QUc4QWFnQmxBR01BZEFCekFG?=
+ =?us-ascii?Q?OEFkQUJwQUdVQWNnQXhBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR0VBWkFCcEFGOEFjd0JsQUdNQWRR?=
+ =?us-ascii?Q?QnlBR1VBWHdCd0FISUFid0JxQUdVQVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURJ?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUE9Ii8+PC9tZXRhPg=3D=3D?=
+x-dg-rorf: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e405abf5-b796-4b5f-a311-08d76810ff6a
+x-ms-traffictypediagnostic: BY5PR03MB5316:
+x-ms-exchange-purlcount: 3
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR03MB5316A5B89ABB5C21A9B8BF718E760@BY5PR03MB5316.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(346002)(136003)(396003)(189003)(199004)(13464003)(81166006)(66556008)(7696005)(66946007)(476003)(2906002)(76116006)(81156014)(64756008)(8676002)(966005)(7416002)(25786009)(6506007)(256004)(33656002)(478600001)(53546011)(446003)(66476007)(14454004)(14444005)(52536014)(66446008)(8936002)(45080400002)(76176011)(486006)(102836004)(5660300002)(55016002)(186003)(11346002)(71190400001)(99286004)(74316002)(316002)(9686003)(6306002)(26005)(86362001)(305945005)(110136005)(7736002)(229853002)(6116002)(54906003)(4326008)(71200400001)(6246003)(66066001)(3846002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR03MB5316;H:BY5PR03MB4965.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TQxzSdSVy+dtFvJWy3S0sVddO0U+lo304c4SzjG4wBapnhOndaOe41OFTvgNyzqoNR0B56fKehP925WQRpclExVHQ9hg5S2w+UHm9fYD2Oth2BVgWp2xrVlGtXCsv2fY+udxC/UgZCAcrV+w0fkxOpoCdXoupL0CLxGeKI/zjRtgWuiqXMA+iIYo9JzK07T3e1MLGYIMh5S9eAoz7vuCaGHT2AvkXpsCO0CJEiULIyEOVjv2AHK3Md/TGEE98KQ13R5vEGrc9161jWso71bdNh015DOV56VWmuZeIqqaDo5txay0lVzKXXbynjGLcUw0N6obrAU73m7slpSc3gQa2lVZQqNAukI62XfPE7NSzB5N1esrnDbnYRb0sUQZ10HSnUmGmtLcWlFO2iOZ3kpBPOSIkDxJAV4+1Cbla/Zth1F9kjWLLjm+DASqcOnQ6/BQBrU9MaSjyEmjXA5FQAwmg6gdLnogRIned6uv9nlIw7c=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e405abf5-b796-4b5f-a311-08d76810ff6a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 08:10:50.8147
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vEY7TtDtrgJ+Xy5zw1RB5HrPcCSGt26HvhBygUS79lIkMAeiTIK09vwCzXmPTM7aQGtALGB+QG+8RsdBq/QNKK3EwgkO/zmUQTu/gmZjwO8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5316
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-13_01:2019-11-13,2019-11-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 clxscore=1011 spamscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911130074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/2019 20:13, Bjorn Andersson wrote:
-> On Tue 12 Nov 00:37 PST 2019, Tero Kristo wrote:
-> 
->> On 12/11/2019 01:37, Bjorn Andersson wrote:
->>> On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
-> [..]
->>>> +	for (; data && data->device_name; data++) {
->>>> +		if (!strcmp(dev_name(&pdev->dev), data->device_name))
->>>
->>> I don't fancy the reliance on node names in devicetree, is this well
->>> defined in the binding?
->>
->> I don't think it is.... So, would it be better to just replace the
->> compatible strings for dra7 remoteprocs to be like ti,dra7-dsp1 /
->> ti,dra7-dsp2 etc.? I think that would clean up the code also quite a bit.
->>
-> 
-> While it would solve "my" problem I'm not entirely sure about it being
-> a proper way to flag that they should have different default firmware.
-> 
-> One way would be to simply rely on a "firmware-name" property read from
-> DeviceTree (this was previously objected to, but we have that for
-> several bindings now).
 
-Ok, that should work, and would make things easily customizable also.
 
--Tero
+> -----Original Message-----
+> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
+> Sent: Dienstag, 12. November 2019 20:18
+> To: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Bia, Beniamin <Beniamin.Bia@analog.com>; jic23@kernel.org;
+> lars@metafoo.de; Hennerich, Michael <Michael.Hennerich@analog.com>;
+> pmeerw@pmeerw.net; gregkh@linuxfoundation.org; linux-
+> iio@vger.kernel.org; devel@driverdev.osuosl.org; linux-
+> kernel@vger.kernel.org; mark.rutland@arm.com; robh+dt@kernel.org;
+> devicetree@vger.kernel.org; paulmck@linux.ibm.com;
+> mchehab+samsung@kernel.org; linus.walleij@linaro.org;
+> nicolas.ferre@microchip.com; biabeniamin@outlook.com; Jean Delvare
+> <jdelvare@suse.com>
+> Subject: Re: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
+> Power Monitor driver
+>=20
+> On Tue, Nov 12, 2019 at 05:37:57PM +0000, Jonathan Cameron wrote:
+> > On Tue, 12 Nov 2019 17:35:50 +0200
+> > Beniamin Bia <beniamin.bia@analog.com> wrote:
+> >
+> > > From: Michael Hennerich <michael.hennerich@analog.com>
+> > >
+> > > ADM1177 is a Hot Swap Controller and Digital Power Monitor with Soft
+> > > Start Pin.
+> > >
+> > > Datasheet:
+> > > Link:
+> > > https://www.analog.com/media/en/technical-documentation/data-
+> sheets/
+> > > ADM1177.pdf
+> > >
+> > > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> > > Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
+> > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> >
+> > Hi Beniamin,
+> >
+> > A couple immediate thoughts.
+> >
+> > 1. That cc list has some rather non obvious people on it.  Unless somet=
+hing
+> >    fairly surprising is going on, probably better to cut it back a bit.
+> >
+> > 2. Why IIO?  Not entirely obvious to me.  From first glance this is def=
+initely
+> >    doing hardware monitoring.  If there is a reason there should be a c=
+lear
+> >    statement here on why.
+> >
+>=20
+> I don't see why this is implemented as iio driver. I think it should be
+> implemented as hardware monitoring driver.
 
-> 
-> Regards,
-> Bjorn
-> 
->>>
->>>> +			return data->fw_name;
->>>> +	}
->>>> +
->>>> +	return ERR_PTR(-ENOENT);
->>>>    }
->>>>    static int omap_rproc_get_boot_data(struct platform_device *pdev,
->>>> @@ -334,7 +384,8 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
->>>>    	int ret;
->>>>    	if (!of_device_is_compatible(np, "ti,omap4-dsp") &&
->>>> -	    !of_device_is_compatible(np, "ti,omap5-dsp"))
->>>> +	    !of_device_is_compatible(np, "ti,omap5-dsp") &&
->>>> +	    !of_device_is_compatible(np, "ti,dra7-dsp"))
->>>>    		return 0;
->>>>    	oproc->boot_data = devm_kzalloc(&pdev->dev, sizeof(*oproc->boot_data),
->>>> @@ -360,18 +411,27 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
->>>>    		return -EINVAL;
->>>>    	}
->>>> +	if (of_device_is_compatible(np, "ti,dra7-dsp"))
->>>> +		oproc->boot_data->boot_reg_shift = 10;
->>>
->>> Put this in omap_rproc_dev_data.
->>
->> Yeah.
->>
->>>
->>>> +
->>>>    	return 0;
->>>>    }
->>>>    static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
->>>>    					       struct rproc *rproc)
->>>>    {
->>>> -	static const char * const mem_names[] = {"l2ram"};
->>>> +	static const char * const ipu_mem_names[] = {"l2ram"};
->>>> +	static const char * const dra7_dsp_mem_names[] = {"l2ram", "l1pram",
->>>> +								"l1dram"};
->>>>    	struct device_node *np = pdev->dev.of_node;
->>>>    	struct omap_rproc *oproc = rproc->priv;
->>>>    	struct device *dev = &pdev->dev;
->>>> +	const char * const *mem_names;
->>>>    	struct resource *res;
->>>>    	int num_mems;
->>>> +	const __be32 *addrp;
->>>> +	u32 l4_offset = 0;
->>>> +	u64 size;
->>>>    	int i;
->>>>    	/* OMAP4 and OMAP5 DSPs do not have support for flat SRAM */
->>>> @@ -379,7 +439,15 @@ static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
->>>>    	    of_device_is_compatible(np, "ti,omap5-dsp"))
->>>>    		return 0;
->>>> -	num_mems = ARRAY_SIZE(mem_names);
->>>> +	/* DRA7 DSPs have two additional SRAMs at L1 level */
->>>> +	if (of_device_is_compatible(np, "ti,dra7-dsp")) {
->>>> +		mem_names = dra7_dsp_mem_names;
->>>> +		num_mems = ARRAY_SIZE(dra7_dsp_mem_names);
->>>> +	} else {
->>>> +		mem_names = ipu_mem_names;
->>>> +		num_mems = ARRAY_SIZE(ipu_mem_names);
->>>> +	}
->>>> +
->>>>    	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
->>>>    				  GFP_KERNEL);
->>>>    	if (!oproc->mem)
->>>> @@ -395,7 +463,26 @@ static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
->>>>    			return PTR_ERR(oproc->mem[i].cpu_addr);
->>>>    		}
->>>>    		oproc->mem[i].bus_addr = res->start;
->>>> -		oproc->mem[i].dev_addr = OMAP_RPROC_IPU_L2RAM_DEV_ADDR;
->>>> +
->>>> +		/*
->>>> +		 * The DSPs have the internal memories starting at a fixed
->>>> +		 * offset of 0x800000 from address 0, and this corresponds to
->>>> +		 * L2RAM. The L3 address view has the L2RAM bus address as the
->>>> +		 * starting address for the IP, so the L2RAM memory region needs
->>>> +		 * to be processed first, and the device addresses for each
->>>> +		 * memory region can be computed using the relative offset
->>>> +		 * from this base address.
->>>> +		 */
->>>> +		if (of_device_is_compatible(np, "ti,dra7-dsp") &&
->>>
->>> Please don't use a ternary operator repeatedly, it makes the code hard
->>> to follow.
->>
->> Yeah this parts looks somewhat messy, let me try to fix that.
->>
->> -Tero
->>
->>>
->>> Regards,
->>> Bjorn
->>>
->>>> +		    !strcmp(mem_names[i], "l2ram")) {
->>>> +			addrp = of_get_address(dev->of_node, i, &size, NULL);
->>>> +			l4_offset = of_translate_address(dev->of_node, addrp);
->>>> +		}
->>>> +		oproc->mem[i].dev_addr =
->>>> +			of_device_is_compatible(np, "ti,dra7-dsp") ?
->>>> +				res->start - l4_offset +
->>>> +				OMAP_RPROC_DSP_LOCAL_MEM_OFFSET :
->>>> +				OMAP_RPROC_IPU_L2RAM_DEV_ADDR;
->>>>    		oproc->mem[i].size = resource_size(res);
->>>>    		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
->>>> -- 
->>>> 2.17.1
->>>>
->>>> --
->>
->> --
+Totally agree that this driver could have been implemented as HWMON driver.
+Well we use this device as USB supply monitor on our embedded portably kits=
+, to detect low VBUS or excess current draw.=20
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ADALM-PLUTO and ADALM2000:
+https://www.analog.com/en/design-center/evaluation-hardware-and-software/ev=
+aluation-boards-kits/adalm-pluto.html
+
+https://www.analog.com/en/design-center/evaluation-hardware-and-software/ev=
+aluation-boards-kits/ADALM2000.html
+
+The only connectivity to the host PC is via IIO/libiio USB Gadget FS and Et=
+hernet backends.
+
+We recommend people to read the IIO attributes whenever they report an issu=
+e.
+Unless libiio supports directly HWMON or HWMON adds an IIO bridge we would =
+prefer this driver being exposed as IIO device, since HWMON users still can=
+ use the IIO/HWMON bridge.
+
+-Michael
+
