@@ -7,61 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C91C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B6EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1003C21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF4121D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611531;
-	bh=esQHSeTVM91ePA4FJLhiHKk/DtarxUAqDEScTNlyDvw=;
+	s=default; t=1573611534;
+	bh=ZhaejBiZlZmk0+HgH9Jh1GY+ficYYpHrDSmFxd6848E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=djlrg++nQSEvqwraXa4vbwP+ACHppvv3Xu5NNfJHI/2WKo/istj4NgLJ12T5EkGh5
-	 dWMB0uZWKjIvV1WSCxEU+9q/BhLQexhF6+O8Kl/zQtMCK/+IRHQH0V7OA+dDVL9oT+
-	 Jt86z5oqVMRxyPu2eO5YCprKZpRKXXePIq5f0TlI=
+	b=EWEeZB2DPbInTrJ6r2WKy5g11/UllcjLmWguPqMltEu3a+VjdOR8zO92AIbfEaSbt
+	 bjXlQXgncJG04pi5OVmB2BOLNFl5M705wSFVHIpBpuHz42SXWO1h36mcg2fUjtuWXX
+	 +fdtjoZ28Ps9zmUyDaYayAmKiX16JFS1O4HDvz3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfKMBzd (ORCPT
+        id S1727254AbfKMCSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:55:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46974 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:18:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbfKMBzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:25 -0500
+        id S1729144AbfKMBzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D5ED204EC;
-        Wed, 13 Nov 2019 01:55:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8634620674;
+        Wed, 13 Nov 2019 01:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610124;
-        bh=esQHSeTVM91ePA4FJLhiHKk/DtarxUAqDEScTNlyDvw=;
+        s=default; t=1573610132;
+        bh=ZhaejBiZlZmk0+HgH9Jh1GY+ficYYpHrDSmFxd6848E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4jLor58Au9I29R8fbNN+HsUR5/iSfFD9BN7xVwaqUyqn+nNrMfp7E1ATTucgLqLx
-         2vUjAXJHr570IOps24cmXPcRfXAUj6oLLRGn7VD/tqEpiaKqD0EqIn/UFxQLAcKTGP
-         wUYE/IyqlzFI5UFor83xKHysV/Fh/K2V+OtWv/ps=
+        b=ydqmGvdCvF8nbVNkEuDo01Bol3hEkE8e+36FOvmAehtV7tNx/EVSCBG0VsSwg1SHG
+         VGytAbb9LtfwZ/5fDYKITFlfdA3NorRO7p+xn6YKuRDwYiZbc2XzYZcqOb4pfiSL8G
+         7TZSpdb8rY6dxSugAgg60cjQHmmrSOEfL4rCKHno=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
-        dan.j.williams@intel.com, dyoung@redhat.com,
-        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 176/209] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
-Date:   Tue, 12 Nov 2019 20:49:52 -0500
-Message-Id: <20191113015025.9685-176-sashal@kernel.org>
+Cc:     Trent Piepho <tpiepho@impinj.com>,
+        =?UTF-8?q?Jan=20Kundr=C3=83=C2=A1t?= <jan.kundrat@cesnet.cz>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 182/209] spi: spidev: Fix OF tree warning logic
+Date:   Tue, 12 Nov 2019 20:49:58 -0500
+Message-Id: <20191113015025.9685-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -70,65 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Trent Piepho <tpiepho@impinj.com>
 
-[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
+[ Upstream commit 605b3bec73cbd74b4ac937b580cd0b47d1300484 ]
 
-The only use of KEXEC_BACKUP_SRC_END is as an argument to
-walk_system_ram_res():
+spidev will make a big fuss if a device tree node binds a device by
+using "spidev" as the node's compatible property.
 
-  int crash_load_segments(struct kimage *image)
-  {
-    ...
-    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                        image, determine_backup_region);
+However, the logic for this isn't looking for "spidev" in the
+compatible, but rather checking that the device is NOT compatible with
+spidev's list of devices.
 
-walk_system_ram_res() expects "start, end" arguments that are inclusive,
-i.e., the range to be walked includes both the start and end addresses.
+This causes a false positive if a device not named "rohm,dh2228fv", etc.
+binds to spidev, even if a means other than putting "spidev" in the
+device tree was used.  E.g., the sysfs driver_override attribute.
 
-KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
-first address *past* the desired 0-640KB range.
-
-Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
-region is [0-0x9ffff], not [0-0xa0000].
-
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Brijesh Singh <brijesh.singh@amd.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Lianbo Jiang <lijiang@redhat.com>
-CC: Takashi Iwai <tiwai@suse.de>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Tom Lendacky <thomas.lendacky@amd.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: baiyaowei@cmss.chinamobile.com
-CC: bhe@redhat.com
-CC: dan.j.williams@intel.com
-CC: dyoung@redhat.com
-CC: kexec@lists.infradead.org
-Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
+Signed-off-by: Trent Piepho <tpiepho@impinj.com>
+Reviewed-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
+Tested-by: Jan KundrÃ¡t <jan.kundrat@cesnet.cz>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/kexec.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spidev.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index f327236f0fa71..5125fca472bb0 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -67,7 +67,7 @@ struct kimage;
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index cda10719d1d1b..c5fe08bc34a0a 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -724,11 +724,9 @@ static int spidev_probe(struct spi_device *spi)
+ 	 * compatible string, it is a Linux implementation thing
+ 	 * rather than a description of the hardware.
+ 	 */
+-	if (spi->dev.of_node && !of_match_device(spidev_dt_ids, &spi->dev)) {
+-		dev_err(&spi->dev, "buggy DT: spidev listed directly in DT\n");
+-		WARN_ON(spi->dev.of_node &&
+-			!of_match_device(spidev_dt_ids, &spi->dev));
+-	}
++	WARN(spi->dev.of_node &&
++	     of_device_is_compatible(spi->dev.of_node, "spidev"),
++	     "%pOF: buggy DT: spidev listed directly in DT\n", spi->dev.of_node);
  
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
+ 	spidev_probe_acpi(spi);
  
- /*
-  * CPU does not save ss and sp on stack if execution is already
 -- 
 2.20.1
 
