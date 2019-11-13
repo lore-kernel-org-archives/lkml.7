@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3B9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A20BC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15545222CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5237A22459
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610010;
-	bh=3xOrFvEETPELfuNZgkHn7Y2v1ZZIxqMiDdP4KdOnb0M=;
+	s=default; t=1573610015;
+	bh=ZuxISFpjVcO7GCboqYdugbKvyKVhZhtr62RJc7RF7PY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DCJlIr8V9pOltr/b7GQt7pCDkHFDPF6N2F1RAEvm3Bn1eI0Oi+Alxv6MFhIeZ/I/q
-	 UwXKEVbzqdtN8moiqiLg/fh5vj7ffOv095KJ2lT8igGf6vmdGujjC8gkj4RWVpTOyv
-	 lsy5q20mEq6Nfqo0l7V152qmHa3J2YuvVteQJURQ=
+	b=kozBjdw98oDwGJB259Qz5azLe2WFr1aUnLWPy820EWx8qMGw9tZPrUYj3cTXyr/eP
+	 3UAt8T3sqBjeFBuze832gQVWdaq1ke1qeXvixY/vqYtney9q1vhEu2+vcBx1n0vGJM
+	 ECASLxPwJqx0bYa/gZKf3o1dumSc+35GiqSiVq2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfKMBx3 (ORCPT
+        id S1728557AbfKMBxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:53:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42906 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:53:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbfKMBxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:21 -0500
+        id S1728568AbfKMBxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D872204EC;
-        Wed, 13 Nov 2019 01:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E6EF222CF;
+        Wed, 13 Nov 2019 01:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610000;
-        bh=3xOrFvEETPELfuNZgkHn7Y2v1ZZIxqMiDdP4KdOnb0M=;
+        s=default; t=1573610004;
+        bh=ZuxISFpjVcO7GCboqYdugbKvyKVhZhtr62RJc7RF7PY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KSOunPwRDKcJXCcKuCxV57DCYUxcFsdIZKHdx295PG8RgkFqr5K26OOix4zU9JRUt
-         DIHiISjRkrt32vXSBKnHdRXqE98r5Mvg3zzRhWl8LII+LxFrxtK2kxhOBM8B+ACguN
-         5R22luwLNCaY6zt6DURA8HHznZpdFYGlOnobvuiw=
+        b=bxkbQO+dTD6qSwkMYygPHUv1Y8ZtrQGsI8LexJEa5ZrdtukLll03j7yjAyZbdD2td
+         mgWNNvc/LmpQk/dbNhVHCJZAa/o6XiawDZGi16lxb4JJqnB4lGWXUM44e1aWyN0Qhb
+         NnstcsRGFCXhuhhL97TIm2KwXxJQCsms9MIxJnzU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 108/209] clk: samsung: Use clk_hw API for calling clk framework from clk notifiers
-Date:   Tue, 12 Nov 2019 20:48:44 -0500
-Message-Id: <20191113015025.9685-108-sashal@kernel.org>
+Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 111/209] NFSv4.x: fix lock recovery during delegation recall
+Date:   Tue, 12 Nov 2019 20:48:47 -0500
+Message-Id: <20191113015025.9685-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,68 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit 1da220e3a5d22fccda0bc8542997abc1d1741268 ]
+[ Upstream commit 44f411c353bf6d98d5a34f8f1b8605d43b2e50b8 ]
 
-clk_notifier_register() documentation states, that the provided notifier
-callbacks associated with the notifier must not re-enter into the clk
-framework by calling any top-level clk APIs. Fix this by replacing
-clk_get_rate() calls with clk_hw_get_rate(), which is safe in this
-context.
+Running "./nfstest_delegation --runtest recall26" uncovers that
+client doesn't recover the lock when we have an appending open,
+where the initial open got a write delegation.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <snawrocki@kernel.org>
+Instead of checking for the passed in open context against
+the file lock's open context. Check that the state is the same.
+
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-cpu.c | 6 +++---
- drivers/clk/samsung/clk-cpu.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ fs/nfs/delegation.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
-index d2c99d8916b83..a5fddebbe5305 100644
---- a/drivers/clk/samsung/clk-cpu.c
-+++ b/drivers/clk/samsung/clk-cpu.c
-@@ -152,7 +152,7 @@ static int exynos_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
- 			struct exynos_cpuclk *cpuclk, void __iomem *base)
- {
- 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
--	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
-+	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
- 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
- 	unsigned long div0, div1 = 0, mux_reg;
- 	unsigned long flags;
-@@ -280,7 +280,7 @@ static int exynos5433_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
- 			struct exynos_cpuclk *cpuclk, void __iomem *base)
- {
- 	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
--	unsigned long alt_prate = clk_get_rate(cpuclk->alt_parent);
-+	unsigned long alt_prate = clk_hw_get_rate(cpuclk->alt_parent);
- 	unsigned long alt_div = 0, alt_div_mask = DIV_MASK;
- 	unsigned long div0, div1 = 0, mux_reg;
- 	unsigned long flags;
-@@ -432,7 +432,7 @@ int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
- 	else
- 		cpuclk->clk_nb.notifier_call = exynos_cpuclk_notifier_cb;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 825a8c52165a2..bd8eac752a73a 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -93,7 +93,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t flags)
+ 	return nfs4_do_check_delegation(inode, flags, false);
+ }
  
--	cpuclk->alt_parent = __clk_lookup(alt_parent);
-+	cpuclk->alt_parent = __clk_get_hw(__clk_lookup(alt_parent));
- 	if (!cpuclk->alt_parent) {
- 		pr_err("%s: could not lookup alternate parent %s\n",
- 				__func__, alt_parent);
-diff --git a/drivers/clk/samsung/clk-cpu.h b/drivers/clk/samsung/clk-cpu.h
-index d4b6b517fe1b4..bd38c6aa38970 100644
---- a/drivers/clk/samsung/clk-cpu.h
-+++ b/drivers/clk/samsung/clk-cpu.h
-@@ -49,7 +49,7 @@ struct exynos_cpuclk_cfg_data {
-  */
- struct exynos_cpuclk {
- 	struct clk_hw				hw;
--	struct clk				*alt_parent;
-+	struct clk_hw				*alt_parent;
- 	void __iomem				*ctrl_base;
- 	spinlock_t				*lock;
- 	const struct exynos_cpuclk_cfg_data	*cfg;
+-static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_state *state, const nfs4_stateid *stateid)
++static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
+ {
+ 	struct inode *inode = state->inode;
+ 	struct file_lock *fl;
+@@ -108,7 +108,7 @@ static int nfs_delegation_claim_locks(struct nfs_open_context *ctx, struct nfs4_
+ 	spin_lock(&flctx->flc_lock);
+ restart:
+ 	list_for_each_entry(fl, list, fl_list) {
+-		if (nfs_file_open_context(fl->fl_file) != ctx)
++		if (nfs_file_open_context(fl->fl_file)->state != state)
+ 			continue;
+ 		spin_unlock(&flctx->flc_lock);
+ 		status = nfs4_lock_delegation_recall(fl, state, stateid);
+@@ -155,7 +155,7 @@ static int nfs_delegation_claim_opens(struct inode *inode,
+ 		seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
+ 		err = nfs4_open_delegation_recall(ctx, state, stateid);
+ 		if (!err)
+-			err = nfs_delegation_claim_locks(ctx, state, stateid);
++			err = nfs_delegation_claim_locks(state, stateid);
+ 		if (!err && read_seqcount_retry(&sp->so_reclaim_seqcount, seq))
+ 			err = -EAGAIN;
+ 		mutex_unlock(&sp->so_delegreturn_mutex);
 -- 
 2.20.1
 
