@@ -2,135 +2,109 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9585C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00193C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8689721872
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:49:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NDcAmf37"
+	by mail.kernel.org (Postfix) with ESMTP id CF3C72245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfKMCtC (ORCPT
+        id S1727619AbfKMCu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:49:02 -0500
-Received: from mail-eopbgr130042.outbound.protection.outlook.com ([40.107.13.42]:17070
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727170AbfKMCtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:49:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FDiwubE01vxXJDMelQSnF3xS1PETByvvvVAcyPMjlkN7rEDt9kTyG9qHQ/jsDXvMY0zwYX+kuIvko3WOJrlS5CpHFTZKgwq+xVDDRfT59cfO156BE29iDgolCubhPW4dcv0I1Srn9oOfHS5OtyWScKSGlbXgzr3yOzxaSMmWXUGqffX+2V3GiLrGev7TDGLDVeyqKcMJULXskGgZpu0fxF9DxSg3qdEx26P5NW7D/0ADCfvixuLnL51DUAOVpEMv8VLHLc8qbmCPVw2hf77/VrFa23RJ/jSf9EuLCPG4DbSjvV3hNWSdKwqa7+ACviG/JWpPhd2ATLEJZvSYgYykTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DdLQgduYFCrdeFhiuCOzJMega7KFSJ8sIPTVkWIdcAU=;
- b=Z4+ciNHFJSUjRs90IVrA79ChaB3baeE6xSbKbMhHmdVj8WnRqYaBPBe+KU/Xegbxp4nGme+LrqwGS0PFXdzjaUdpAshjJxnqsIreUMfv3xpWauNmLj+ymSu+7pCojruFBXAmx9I50iaZPUjZKJo/hGeh8ohtqEsNwFrIl9H5j7zH+Vk96zEoTjm8E3uslgVDw3Ybg00VOPgMjpMbK0j+tnhAFavAPSk460E8radgGmW47bDqe9+GDwHIkOKytJqwzD9Uef63OcDKykpmJ4KG7tA+nSAN7Y4RVJUHxy9wor/u4o0TX1x2J/pEXGTFdHZgjsPn72ULJMBIKVtk+UfWvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DdLQgduYFCrdeFhiuCOzJMega7KFSJ8sIPTVkWIdcAU=;
- b=NDcAmf37jEeuZ/bcE/SLgo/i7FBaq89XAMnAFL6ZloDK/BRyKOAsNiRmJM8vgI9c2cX9SmUt9dDB9/sg4ILOr0Do1D7c0bDCJZd1c6XGTftnDQ7zvQo7LwPAmNBN4plxQDpQ7JlvXbg7dM04RL3U01KcIVemc/Ob5+K5lnGXWnU=
-Received: from VE1PR04MB6768.eurprd04.prod.outlook.com (10.255.118.26) by
- VE1PR04MB6558.eurprd04.prod.outlook.com (20.179.232.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.23; Wed, 13 Nov 2019 02:48:14 +0000
-Received: from VE1PR04MB6768.eurprd04.prod.outlook.com
- ([fe80::9d62:61ea:616e:9996]) by VE1PR04MB6768.eurprd04.prod.outlook.com
- ([fe80::9d62:61ea:616e:9996%6]) with mapi id 15.20.2430.027; Wed, 13 Nov 2019
- 02:48:14 +0000
-From:   Qiang Zhao <qiang.zhao@nxp.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Leo Li <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>
-Subject: RE: [PATCH v4 47/47] soc: fsl: qe: remove PPC32 dependency from
- CONFIG_QUICC_ENGINE
-Thread-Topic: [PATCH v4 47/47] soc: fsl: qe: remove PPC32 dependency from
- CONFIG_QUICC_ENGINE
-Thread-Index: AQHVljTGk0ssum87vUySMpkhpG3T4qeIbCyg
-Date:   Wed, 13 Nov 2019 02:48:14 +0000
-Message-ID: <VE1PR04MB67681DD5C25A55B57A0C2F0191760@VE1PR04MB6768.eurprd04.prod.outlook.com>
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
- <20191108130123.6839-48-linux@rasmusvillemoes.dk>
-In-Reply-To: <20191108130123.6839-48-linux@rasmusvillemoes.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiang.zhao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2ecea383-e625-4c64-a3fa-08d767e3ee28
-x-ms-traffictypediagnostic: VE1PR04MB6558:|VE1PR04MB6558:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6558421554CC613AA388F6D791760@VE1PR04MB6558.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1923;
-x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(39860400002)(376002)(396003)(199004)(189003)(13464003)(81156014)(71190400001)(5660300002)(76176011)(6246003)(256004)(11346002)(478600001)(446003)(486006)(14444005)(476003)(9686003)(81166006)(4326008)(305945005)(7736002)(229853002)(8936002)(14454004)(8676002)(71200400001)(74316002)(52536014)(66556008)(6116002)(3846002)(66446008)(316002)(64756008)(186003)(26005)(76116006)(66946007)(25786009)(110136005)(33656002)(66476007)(2906002)(44832011)(7696005)(86362001)(54906003)(99286004)(66066001)(102836004)(6506007)(53546011)(55016002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6558;H:VE1PR04MB6768.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HL5/xKFOuP4wpWnMi494ZiMn3E+kdIpvlGuJwZDymaGE9X3rYq4IlIqoNMUIPhUWpNWepzhdoqjG0FvpSHr9uhm7zK7EK8XyysYvWJRM8QxemhaBoG9JEO955uXr1vymA6acwqBSwS/ldd7Az0nqiRS2igEIqFfEXXR4Hp/TuBwoWQFnT/zK3I+V7zsASxXUAA+QU99E6dA8E1+tovVR4SaO62tmqIlNh7TjnpLpSsB02hQCsjoIckt9Ret5+EJabOz3JahbBeNhRFZh6A+/q9w7rXuleqnYvYBmWqDdOLAdEqAowRszmzhO55gi8Nr37XZGnAZoDWC4nr3jDJQ8PpR6+PyUWw/iUTlVGOpIGujaxbhhZIGoBJPM+psp0G7jrFYzOXjHjF9yk2yn9ZI5GZm7JTzxLiK5DelQicEhT3H4qFz1LGI/1jWHLNBHujrD
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 12 Nov 2019 21:50:56 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:47956 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727170AbfKMCuy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:50:54 -0500
+Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xAD2orO6025271
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 21:50:53 -0500
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xAD2oms6010608
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 21:50:53 -0500
+Received: by mail-qk1-f200.google.com with SMTP id m189so581509qkc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 18:50:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8QTCb+WFX3FpJ3fVztSaFH+rTvdtPtL4YNVcXp9Kn7s=;
+        b=KCGNkxPYKSAnzNPBG4ZsVxm8v71tHTYqSgOfYtCnC1IRqtln/pazrA/L59rQU7sZvn
+         wCOtHtDdODvsGGYmvTWnJFGYIdZSa07CiChdsvTllSnJZftHd7huEIS2P1txq2qBWJA9
+         CyJIJBjIDio2oqliJe5XE5hXoAfpITYSvzrqjVP73SNzrEplq/Ehy/KUR5waxg8JMXbf
+         nXNdFnV0lQ4h254WLpxIPvbZn7x20FoD+i1A5UqwYTtFvGjTaK3B0k8kNlc2jkJtD7hi
+         bdi/VxYUtZ+CTddxE7LS6FjP2Pd3Ik3wqV+EpIGdPyTPFm4ioSkG5Llz/o3YGpFn3Ks4
+         oI3w==
+X-Gm-Message-State: APjAAAVhH27mQSPRXfKKq2zKZEgrteaG9yGBkqCYp3D//f6gIKlY1I86
+        Gn1QMpsWvoAlFIJwl0tmVJH3o5uqN1lAPGnCumyaroGsAaA/e6SuuxKFYR0qPsmuJpqd5MiwodB
+        itgzvPQBq9mvFUg38JphX8ooL2GFvjyo7vFk=
+X-Received: by 2002:a37:c44b:: with SMTP id h11mr646984qkm.234.1573613448301;
+        Tue, 12 Nov 2019 18:50:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyWCFwzxoLiz+DgZpL/3YHBFIyVsL+YXuOhgpxf7giev41idLzl1WPF245u/f3hwaBto4LWkw==
+X-Received: by 2002:a37:c44b:: with SMTP id h11mr646972qkm.234.1573613448001;
+        Tue, 12 Nov 2019 18:50:48 -0800 (PST)
+Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id j71sm319265qke.90.2019.11.12.18.50.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 18:50:47 -0800 (PST)
+From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: exfat: convert WARN to a pr_info
+Date:   Tue, 12 Nov 2019 21:50:34 -0500
+Message-Id: <20191113025035.186051-1-valdis.kletnieks@vt.edu>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ecea383-e625-4c64-a3fa-08d767e3ee28
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 02:48:14.6083
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xf/3McJf2QUH7pKeue9p/MTRRUih3f5NRIuSs/G67qoDIyv/fD4f7WWJRDrkO+Kh0qHOksHtGpzO4qPb4W6xZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6558
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCBOb3YgOCwgMjAxOSBhdCAyMTowMSwgUmFzbXVzIFZpbGxlbW9lcyA8bGludXhAcmFz
-bXVzdmlsbGVtb2VzLmRrPiB3cm90ZToNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PiBGcm9tOiBSYXNtdXMgVmlsbGVtb2VzIDxsaW51eEByYXNtdXN2aWxsZW1vZXMuZGs+DQo+IFNl
-bnQ6IDIwMTnE6jEx1MI4yNUgMjE6MDENCj4gVG86IFFpYW5nIFpoYW8gPHFpYW5nLnpoYW9Abnhw
-LmNvbT47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gQ2hyaXN0b3BoZSBMZXJveSA8
-Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+DQo+IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
-Lm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBTY290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0PjsgUmFzbXVz
-DQo+IFZpbGxlbW9lcyA8bGludXhAcmFzbXVzdmlsbGVtb2VzLmRrPg0KPiBTdWJqZWN0OiBbUEFU
-Q0ggdjQgNDcvNDddIHNvYzogZnNsOiBxZTogcmVtb3ZlIFBQQzMyIGRlcGVuZGVuY3kgZnJvbQ0K
-PiBDT05GSUdfUVVJQ0NfRU5HSU5FDQo+IA0KPiBUaGVyZSBhcmUgYWxzbyBBUk0gYW5kIEFSTTY0
-IGJhc2VkIFNPQ3Mgd2l0aCBhIFFVSUNDIEVuZ2luZSwgYW5kIHRoZSBjb3JlDQo+IFFFIGNvZGUg
-YXMgd2VsbCBhcyBuZXQvd2FuL2ZzbF91Y2NfaGRsYyBhbmQgdHR5L3NlcmlhbC91Y2NfdWFydCBo
-YXMgbm93IGJlZW4NCj4gbW9kaWZpZWQgdG8gbm90IHJlbHkgb24gcHBjaXNtcy4NCj4gDQo+IFNv
-IGV4dGVuZCB0aGUgYXJjaGl0ZWN0dXJlcyB0aGF0IGNhbiBzZWxlY3QgUVVJQ0NfRU5HSU5FLCBh
-bmQgYWRkIHRoZSByYXRoZXINCj4gbW9kZXN0IHJlcXVpcmVtZW50cyBvZiBPRiAmJiBIQVNfSU9N
-RU0uDQo+IA0KPiBUaGUgY29yZSBjb2RlIGFzIHdlbGwgYXMgdGhlIHVjY191YXJ0IGRyaXZlciBo
-YXMgYmVlbiB0ZXN0ZWQgb24gYW4gTFMxMDIxQQ0KPiAoYXJtKSwgYW5kIGl0IGhhcyBhbHNvIGJl
-ZW4gdGVzdGVkIHRoYXQgdGhlIFFFIGNvZGUgc3RpbGwgd29ya3Mgb24gYW4gbXBjODMwOQ0KPiAo
-cHBjKS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJhc211cyBWaWxsZW1vZXMgPGxpbnV4QHJhc211
-c3ZpbGxlbW9lcy5kaz4NCj4gLS0tDQo+ICBkcml2ZXJzL3NvYy9mc2wvcWUvS2NvbmZpZyB8IDMg
-KystDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+
-IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNsL3FlL0tjb25maWcgYi9kcml2ZXJzL3Nv
-Yy9mc2wvcWUvS2NvbmZpZyBpbmRleA0KPiBjZmE0YjI5Mzk5OTIuLmYxOTc0ZjgxMTU3MiAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvZnNsL3FlL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9z
-b2MvZnNsL3FlL0tjb25maWcNCj4gQEAgLTUsNyArNSw4IEBADQo+IA0KPiAgY29uZmlnIFFVSUND
-X0VOR0lORQ0KPiAgCWJvb2wgIlFVSUNDIEVuZ2luZSAoUUUpIGZyYW1ld29yayBzdXBwb3J0Ig0K
-PiAtCWRlcGVuZHMgb24gRlNMX1NPQyAmJiBQUEMzMg0KPiArCWRlcGVuZHMgb24gT0YgJiYgSEFT
-X0lPTUVNDQo+ICsJZGVwZW5kcyBvbiBQUEMzMiB8fCBBUk0gfHwgQVJNNjQgfHwgQ09NUElMRV9U
-RVNUDQo+ICAJc2VsZWN0IEdFTkVSSUNfQUxMT0NBVE9SDQo+ICAJc2VsZWN0IENSQzMyDQo+ICAJ
-aGVscA0KPiAtLQ0KVGVzdGVkLWJ5OiBRaWFuZyBaaGFvIDxxaWFuZy56aGFvQG54cC5jb20+DQpU
-ZXN0ZWQgUUUtSERMQyBvbiBBUk02NCENCg0KQmVzdCBSZWdhcmRzDQpRaWFuZyBaaGFvDQo=
+syzbot took a nosedive because it runs with panic_on_warn set. And
+it's quite correct, it shouldn't have been a WARN in the first place.
+Other locations just use a pr_info(), so do that here too.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Reported-by: syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com
+Fixes: c48c9f7ff32b ("staging: exfat: add exfat filesystem code to staging")
+---
+ drivers/staging/exfat/exfat_blkdev.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/exfat/exfat_blkdev.c b/drivers/staging/exfat/exfat_blkdev.c
+index 7bcd98b13109..8204720b2bf2 100644
+--- a/drivers/staging/exfat/exfat_blkdev.c
++++ b/drivers/staging/exfat/exfat_blkdev.c
+@@ -59,8 +59,8 @@ int exfat_bdev_read(struct super_block *sb, sector_t secno, struct buffer_head *
+ 	if (*bh)
+ 		return 0;
+ 
+-	WARN(!p_fs->dev_ejected,
+-	     "[EXFAT] No bh, device seems wrong or to be ejected.\n");
++	if (p_fs->dev_ejected)
++		pr_info("[EXFAT] No bh, device seems wrong or to be ejected.\n");
+ 
+ 	return -EIO;
+ }
+@@ -112,8 +112,8 @@ int exfat_bdev_write(struct super_block *sb, sector_t secno, struct buffer_head
+ 	return 0;
+ 
+ no_bh:
+-	WARN(!p_fs->dev_ejected,
+-	     "[EXFAT] No bh, device seems wrong or to be ejected.\n");
++	if (p_fs->dev_ejected)
++		pr_info("[EXFAT] No bh, device seems wrong or to be ejected.\n");
+ 
+ 	return -EIO;
+ }
+-- 
+2.24.0
+
