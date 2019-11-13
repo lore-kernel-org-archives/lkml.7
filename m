@@ -2,120 +2,130 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D4FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6796BC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB853222C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 405F7222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joNac9DA"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="WSfeS8ak";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S4DmqHqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfKMBMb (ORCPT
+        id S1727338AbfKMBNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:12:31 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:33596 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfKMBMb (ORCPT
+        Tue, 12 Nov 2019 20:13:32 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:43857 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726979AbfKMBNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:12:31 -0500
-Received: by mail-yw1-f65.google.com with SMTP id q140so165760ywg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 17:12:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DML7y3ZgeawbCghKl2/U9gcID5bkzvxXQZvoeM1CZYk=;
-        b=joNac9DApN0htbfASeTvQ+Ie9Ozq1A6iOn4xXW9Cj0ebnLmzKXvH9BUtqi5z2ViadC
-         TfRJ4MpWgNw3/ZL/mlclWCy3dV6/oGgk9V9L3wKf6+jhtV7jQ8S4pLwLJFvsFQVNRLUV
-         8WOCWrJFXSPlcjQQOaFBcjMwQ5ozHyZR12NstjBCqASlFRrfk4NcfOrVZfP6lQCM4Axy
-         WtnyHgHw1N/+q+pPFWvW9Q68o1QM7gRfYvdQgfcKuK44CHLDFFrkhpwRSs+7ZZbYR/KP
-         HRt9GHYAu2hEE6G3DxHaN4WIq3fClIyoCV2InYXgeaGIvVRA8J3eYsDQQZWjwvM+1xhM
-         GDiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=DML7y3ZgeawbCghKl2/U9gcID5bkzvxXQZvoeM1CZYk=;
-        b=B2m6aUStA8OmX6uDekj9P98apAkx6w/K321p3AtyZxPUemDqdJ6HbvIMpGDPQ706hv
-         cT5pYZOHBg1h8Ze3vRy99AEmGU+MUeOA7sTdYf1mB1Z+KGhSwne8Y4pCmCsEKowkwJrh
-         wPB+hegCZIyB0tBYPl109f2aHHatCUMqJIF64u9x0j44YlJpM8hXJHZxuvgvz9BiPfVM
-         ks42UGZFRfV7ewefjQDqueCZJXVmW7Q/uncXLYBTlze6UB+bgDBaBu/hC0jVl0hbNMtJ
-         /BQZBfaxm25k2ZvniH8JfdAmgu0GQSRGykyNSDmdPXistEfTVvy0K1OwyjIqkSwgCDJ7
-         Fywg==
-X-Gm-Message-State: APjAAAVjd+etyPeyNEBL37uou4aVvClQSwJvqphbNO7bU3RUHQVrvZ4e
-        uOuu0WV8noKwzW64c8F/gCV93xrFvNTKcA==
-X-Google-Smtp-Source: APXvYqwYhQHAI0u8Q70c2G5qysEs5laUdqZaIMhbe42bNoU+FfJNxrMt37oHKrt9rLPp5E9YsSYP8Q==
-X-Received: by 2002:a0d:c207:: with SMTP id e7mr594797ywd.101.1573607550217;
-        Tue, 12 Nov 2019 17:12:30 -0800 (PST)
-Received: from gmail.com ([196.247.56.44])
-        by smtp.gmail.com with ESMTPSA id t15sm290269ywf.69.2019.11.12.17.12.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 17:12:29 -0800 (PST)
-Date:   Tue, 12 Nov 2019 20:12:26 -0500
-From:   "Javier F. Arias" <jarias.linux@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-Subject: Re: [Outreachy kernel] Re: [PATCH 7/9] staging: rtl8723bs: Fix
- incorrect type in argument warnings
-Message-ID: <20191113011226.fw5ohzpchgizhpen@gmail.com>
-Mail-Followup-To: Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-References: <cover.1573577309.git.jarias.linux@gmail.com>
- <637726782ce6c6ed3d68b5e595481857916bbc56.1573577309.git.jarias.linux@gmail.com>
- <20191112203343.GA1833645@kroah.com>
+        Tue, 12 Nov 2019 20:13:31 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id D2B5621B55;
+        Tue, 12 Nov 2019 20:13:30 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 12 Nov 2019 20:13:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
+        /zCvsz2UmlaGRP+ibIQ/q5XTxRY0oupK+ptfh45XkeM=; b=WSfeS8akzcvt1+Sd
+        lg+4NHlU2tgbNEgX+HsXn0zR2G+t3CwHvozbTcxZUfz8eWp2FOOhtBqYQXWFeQUa
+        TkB0JS4iOgNKxOb/0tAa+Imix2NNQyYpIpzEU4gnRHyoDy+B+1d/g4bPZg+FBkUS
+        W8qxT/S+BR84v+1ui6+Lbs4ZX4q7qQgYV9aYaVon4EQ2e7iGaSqnKX7ox4qUVNzB
+        i20+egenxBlRbAIjtlg6zHa5lBsTfcav1rbLcI6k4fj4OJIRguMh+rS5HBw2nCav
+        ondJzKwhInPsFtjm1s/r+FzHIFPZ57TIlrs7KxZuin4V7pd2jx/ScYFM/EMlLG2I
+        tXwOSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=/zCvsz2UmlaGRP+ibIQ/q5XTxRY0oupK+ptfh45Xk
+        eM=; b=S4DmqHqEOLVCAP3J/NmyBQI4huVkyWLfHJ0RMTgZeB3wPiJ8JoYpZFY48
+        Luzwk7b2vTDfxhnZwuTctUF4LHUmG7BxcZhEXJPJ2FbVt2NiRohXmWtqpxpiksm6
+        nvoqfNmi0qBd+JJnihRIOXWfFyCjt1zxrcc0kCkXb9eW1cPdapW2ntr9Qv7oJ45+
+        Lf83UZ2z0xJUTH/VC4YmuPWeykJl24XoijjXE2DyRjGZujb9CczIS41b6T0docjf
+        F+ofsuaxAb0PNvE+fe1CSLaXlK3v4b48ZJIyUVk+K92KyjYDxXavKRTYSlAvDOTe
+        yjNNUTzPXCe97OwgkorCb/CyHi0bA==
+X-ME-Sender: <xms:uVjLXTMBN2lj-G8eXLLJ0GV54GaDl45YigOwnw4Ypb2oVuzX5ludHg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeftddgfeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucffohhmrghinhepkhhmsh
+    hgrdguvghvpdhgihhthhhusgdrtghomhenucfkphepuddukedrvddtkedrudekledrudek
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvthenuc
+    evlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:uVjLXYajw7_1GkK2nuw0PnYXYRV1llanT22Tgllb0TBWvk62787Jcw>
+    <xmx:uVjLXSsy6H9LFyfoa-FamaTYsVYh8TH2Kmq25moliwNWOYy5xy3QMA>
+    <xmx:uVjLXZ643NCHbqR9vXaW5RvDs5PzbkgDUnGW8rysiRFvOITxAtETeQ>
+    <xmx:uljLXdyn3CF1Hbh_Yda7Vtr7gRh2RHC0LRBq0qaf0ZGBTJW7Z1yqvg>
+Received: from mickey.themaw.net (unknown [118.208.189.18])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 04FBD306005E;
+        Tue, 12 Nov 2019 20:13:25 -0500 (EST)
+Message-ID: <5f758be455bb8f761d028ea078b3e2a618dfd4b1.camel@themaw.net>
+Subject: Re: [LTP] [xfs] 73e5fff98b: kmsg.dev/zero:Can't_open_blockdev
+From:   Ian Kent <raven@themaw.net>
+To:     Christoph Hellwig <hch@lst.de>, Jan Stancek <jstancek@redhat.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
+        lkp@lists.01.org, ltp@lists.linux.it,
+        DavidHowells <dhowells@redhat.com>,
+        AlViro <viro@ZenIV.linux.org.uk>
+Date:   Wed, 13 Nov 2019 09:13:22 +0800
+In-Reply-To: <20191112120818.GA8858@lst.de>
+References: <20191111010022.GH29418@shao2-debian>
+         <3fb8b1b04dd7808b45caf5262ee629c09c71e0b6.camel@themaw.net>
+         <1108442397.11662343.1573560143066.JavaMail.zimbra@redhat.com>
+         <20191112120818.GA8858@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112203343.GA1833645@kroah.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 09:33:43PM +0100, Greg KH wrote:
-> On Tue, Nov 12, 2019 at 11:55:27AM -0500, Javier F. Arias wrote:
-> > Fix incorrect type in declarations to solve the 'incorrect
-> > type in argument 3' warnings in the rtw_get_ie function calls.
-> > Issue found by Sparse.
+Adding Al and David to the CC, hopefully that will draw their
+attention to this a bit sooner.
+
+On Tue, 2019-11-12 at 13:08 +0100, Christoph Hellwig wrote:
+> On Tue, Nov 12, 2019 at 07:02:23AM -0500, Jan Stancek wrote:
+> > https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/fs_fill/fs_fill.c
 > > 
-> > Signed-off-by: Javier F. Arias <jarias.linux@gmail.com>
-> > ---
-> >  drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > Setup of that test is trying different file system types, and it
+> > looks
+> > at errno code of "mount -t $fs /dev/zero /mnt/$fs".
 > > 
-> > diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> > index db6528a01229..bb63295e8d4e 100644
-> > --- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> > +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> > @@ -83,7 +83,7 @@ static char *translate_scan(struct adapter *padapter,
-> >  {
-> >  	struct iw_event iwe;
-> >  	u16 cap;
-> > -	u32 ht_ielen = 0;
-> > +	sint ht_ielen = 0;
-> 
-> sint?  Ick, try fixing up the function call itself please.
-> 
-> thanks,
-> 
-> greg k-h
+> > Test still PASSes. This report appears to be only about extra
+> > message in dmesg,
+> > which wasn't there before:
+> > 
+> > # mount -t xfs /dev/zero /mnt/xfs
 
-Hello Greg,
+Assuming that is what is being done ...
 
-I found that rtw_get_ie is called 62 times and the passed argument
-can be declared as sint, uint, u32, u8 and probably a couple more.
-I'll drop this patch for now and check more carefully if this fix
-would require more changes, as changing the argument type wouldn't
-solve the warning described in the commit.
+> > # dmesg -c
+> > [  897.177168] /dev/zero: Can't open blockdev
+> 
+> That message comes from fs/super.c:get_tree_bdev(), a common library
+> used by all block device based file systems using the new mount API.
+
+I'll have a look at get_tree_bdev() but when I compared mount_bdev()
+to get_tree_bdev() before using it they looked like they did pretty
+much the same thing.
+
+I don't know how /dev/zero is meant to be handled, I'll need to try
+and work that out if Al or David don't see this soon enough.
 
 > 
-> -- 
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191112203343.GA1833645%40kroah.com.
+> It doesn't seem all that useful to me, but it is something we'll
+> need to discuss with David and Al, not the XFS maintainers.
+
+Ian
+
