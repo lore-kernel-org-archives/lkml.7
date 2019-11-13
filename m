@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1306BC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5DBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D4A2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9738821D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611781;
-	bh=3/Uq4ZXq7sa6LCZZyXYuOU63UAjEPvJQybSyyern0yY=;
+	s=default; t=1573611786;
+	bh=Em/6r+eVCEBPBMQzKf3l+OODRJz6v5UF0j2kgMaZOdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3OpuOEC2T2E8Zg+GdZ5TfRC8Kfw8KWwfA3EXB7tzIObzQvnuxIxGQVA0y60xLL7q
-	 errVpS5avUiuROxF8RGAJWsO3PzstTOhnCPHFvRP8KN4Sv+2jxDIDpD0AHKao8ksFc
-	 QZfv0TFue1Fm1oBaz89VvpU3yKX3oRIG8EhbT4mE=
+	b=KT1SjuoGomlJWhkjxAhOry9udM648v+590iyC6qLZNxPdw83/8pSHbFihoUvxywLB
+	 1AIy09NA/zo9hy75dd8PZ0sQVgadhqN+Lu+0AuTLIRdiL+BgOpl/JHVQIHoscmEsV4
+	 /ChbZrwKbq0T0M+evmPeFKLNmyo/jYkviz9LkeDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbfKMBw7 (ORCPT
+        id S1729992AbfKMCXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:52:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41956 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:23:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbfKMBwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:46 -0500
+        id S1728344AbfKMBw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B6E8222CD;
-        Wed, 13 Nov 2019 01:52:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF46222CD;
+        Wed, 13 Nov 2019 01:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609965;
-        bh=3/Uq4ZXq7sa6LCZZyXYuOU63UAjEPvJQybSyyern0yY=;
+        s=default; t=1573609974;
+        bh=Em/6r+eVCEBPBMQzKf3l+OODRJz6v5UF0j2kgMaZOdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBxt6jR3M3+of01X1yS8ASWrD7YCyvBIXkV1D+Z0HnDzegGpYx90wUxT09tp0HikB
-         oHmUfmx45jcuSx5alvwPeU+cmJWOC/5lNgwQImGwE9QuhkcEmlpa3XZ6gnZ+PwUCll
-         5b/8MTgvh8PxpByUSZnzi0ExJt1Lcq047gvmUY1c=
+        b=Cis2shCPkh/6aSYjOwmgosilxQ0x9o3s2PQ16VXmX2YT6byHjS9C7EpydbvSQf+cA
+         4yHlTSNudcvTGgyZqK3Cek5Uc9bEW7CbE4jv1JUtWwTHrDUx0oUKjR2qUIuMMmMyGE
+         TgNXY0ZPsXbeaQrkjFC7BylSOntW+yL6RJZYlSH0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 096/209] USB: serial: cypress_m8: fix interrupt-out transfer length
-Date:   Tue, 12 Nov 2019 20:48:32 -0500
-Message-Id: <20191113015025.9685-96-sashal@kernel.org>
+Cc:     Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 100/209] brcmfmac: reduce timeout for action frame scan
+Date:   Tue, 12 Nov 2019 20:48:36 -0500
+Message-Id: <20191113015025.9685-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -58,36 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
 
-[ Upstream commit 56445eef55cb5904096fed7a73cf87b755dfffc7 ]
+[ Upstream commit edb6d6885bef82d1eac432dbeca9fbf4ec349d7e ]
 
-Fix interrupt-out transfer length which was being set to the
-transfer-buffer length rather than the size of the outgoing packet.
+Finding a common channel to send an action frame out is required for
+some action types. Since a loop with several scan retry is used to find
+the channel, a short wait time could be considered for each attempt.
+This patch reduces the wait time from 1500 to 450 msec for each action
+frame scan.
 
-Note that no slab data was leaked as the whole transfer buffer is always
-cleared before each transfer.
+This patch fixes the WFA p2p certification 5.1.20 failure caused by the
+long action frame send time.
 
-Fixes: 9aa8dae7b1fa ("cypress_m8: use usb_fill_int_urb where appropriate")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/cypress_m8.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
-index e0035c0231202..2c58649fd47a4 100644
---- a/drivers/usb/serial/cypress_m8.c
-+++ b/drivers/usb/serial/cypress_m8.c
-@@ -769,7 +769,7 @@ static void cypress_send(struct usb_serial_port *port)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+index 3e9c4f2f5dd12..7822740a8cb40 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+@@ -74,7 +74,7 @@
+ #define P2P_AF_MAX_WAIT_TIME		msecs_to_jiffies(2000)
+ #define P2P_INVALID_CHANNEL		-1
+ #define P2P_CHANNEL_SYNC_RETRY		5
+-#define P2P_AF_FRM_SCAN_MAX_WAIT	msecs_to_jiffies(1500)
++#define P2P_AF_FRM_SCAN_MAX_WAIT	msecs_to_jiffies(450)
+ #define P2P_DEFAULT_SLEEP_TIME_VSDB	200
  
- 	usb_fill_int_urb(port->interrupt_out_urb, port->serial->dev,
- 		usb_sndintpipe(port->serial->dev, port->interrupt_out_endpointAddress),
--		port->interrupt_out_buffer, port->interrupt_out_size,
-+		port->interrupt_out_buffer, actual_size,
- 		cypress_write_int_callback, port, priv->write_urb_interval);
- 	result = usb_submit_urb(port->interrupt_out_urb, GFP_ATOMIC);
- 	if (result) {
+ /* WiFi P2P Public Action Frame OUI Subtypes */
+@@ -1134,7 +1134,6 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
+ {
+ 	struct afx_hdl *afx_hdl = &p2p->afx_hdl;
+ 	struct brcmf_cfg80211_vif *pri_vif;
+-	unsigned long duration;
+ 	s32 retry;
+ 
+ 	brcmf_dbg(TRACE, "Enter\n");
+@@ -1150,7 +1149,6 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
+ 	 * pending action frame tx is cancelled.
+ 	 */
+ 	retry = 0;
+-	duration = msecs_to_jiffies(P2P_AF_FRM_SCAN_MAX_WAIT);
+ 	while ((retry < P2P_CHANNEL_SYNC_RETRY) &&
+ 	       (afx_hdl->peer_chan == P2P_INVALID_CHANNEL)) {
+ 		afx_hdl->is_listen = false;
+@@ -1158,7 +1156,8 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
+ 			  retry);
+ 		/* search peer on peer's listen channel */
+ 		schedule_work(&afx_hdl->afx_work);
+-		wait_for_completion_timeout(&afx_hdl->act_frm_scan, duration);
++		wait_for_completion_timeout(&afx_hdl->act_frm_scan,
++					    P2P_AF_FRM_SCAN_MAX_WAIT);
+ 		if ((afx_hdl->peer_chan != P2P_INVALID_CHANNEL) ||
+ 		    (!test_bit(BRCMF_P2P_STATUS_FINDING_COMMON_CHANNEL,
+ 			       &p2p->status)))
+@@ -1171,7 +1170,7 @@ static s32 brcmf_p2p_af_searching_channel(struct brcmf_p2p_info *p2p)
+ 			afx_hdl->is_listen = true;
+ 			schedule_work(&afx_hdl->afx_work);
+ 			wait_for_completion_timeout(&afx_hdl->act_frm_scan,
+-						    duration);
++						    P2P_AF_FRM_SCAN_MAX_WAIT);
+ 		}
+ 		if ((afx_hdl->peer_chan != P2P_INVALID_CHANNEL) ||
+ 		    (!test_bit(BRCMF_P2P_STATUS_FINDING_COMMON_CHANNEL,
 -- 
 2.20.1
 
