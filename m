@@ -2,101 +2,150 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109A4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBF4C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17C0222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573606646;
-	bh=GP9XXD7ZqGCN3PTKCtWCaRGc0mi2WgNpEW7NgKaQhJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ydn44DvfKjF8Je4MV67R2VO7VRonsDhObBIo2iDl45DdCW5c5pbJompKctih9dxpf
-	 Gur5wqrO6FyBl+jMOahdtluWhIzpUCCNKQkftJ5oFw84lRBxvzEsiC9giWD6vNy+Ml
-	 4jbasY44krvEytAY3pGkwB/RiyQ/ViZWnVxkmPpI=
+	by mail.kernel.org (Postfix) with ESMTP id 457D92084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:58:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qYIKu66i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKMA5Z (ORCPT
+        id S1727148AbfKMA6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:57:25 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40177 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfKMA5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:57:25 -0500
-Received: by mail-pl1-f194.google.com with SMTP id e3so284678plt.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 16:57:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=220I2/ElUHylXyQ2K7+j8zEngS8Zy3HJWnMySgkjXUI=;
-        b=m+SFQZtojUOZKV8rvw8K8FZAQyoXabF2vbCVdjfoUz1tr79hCjGyL68B/a/v2MB/tT
-         Ir3PNU58N39CJONleM++gVdZOjQlh77key61Y50j9cEZJApVdZ9LMQmWoQtclpQGZmaG
-         GkjhOg0PEv5mBBDCvXoY9+Q/IvkYECD5xaumzFK9rq3+wGOH+3qhMv35Q4NK4iO6rzqt
-         /hQhByGf5eURr0XfJypdsF9kg2Yd/zApPK7o/SadifjKmAIETdkeofgZQA+rSDjKHp0v
-         +6Md34vJFZFrhqz48+lqK2Y2XK9OqwYB3sPrKwoeEcPGFgAsf6ziAqGDCV6LmDr3pBFA
-         NHMw==
-X-Gm-Message-State: APjAAAUpGyJJ/lOuFRRawApA4wkw1/7PgT/BJazbngghBjBWsB2WbEcs
-        wO93pTKs54JW7N1pOCviVAzqrjmP
-X-Google-Smtp-Source: APXvYqwxjuvKRuDIpJUyRN6Z1/16fJSpZi4PHJhLHmho7QU+Yt1+KkdrYD1KV81PWztz4hjeOSnDpQ==
-X-Received: by 2002:a17:902:ba91:: with SMTP id k17mr789293pls.100.1573606644375;
-        Tue, 12 Nov 2019 16:57:24 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t12sm204645pgv.45.2019.11.12.16.57.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 16:57:23 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id C3D14403DC; Wed, 13 Nov 2019 00:57:22 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 00:57:22 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Robin H. Johnson" <robbat2@gentoo.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: log names of loaded firmware
-Message-ID: <20191113005722.GU11244@42.do-not-panic.com>
-References: <20191107174353.20625-1-robbat2@gentoo.org>
+        Tue, 12 Nov 2019 19:58:13 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45555 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726957AbfKMA6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:58:13 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47CR753PcCz9sPh;
+        Wed, 13 Nov 2019 11:58:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573606689;
+        bh=ZBkUHDMWS5AB+9yNCiNLnvsF5dXKFxRx6HUcHSjsaPQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qYIKu66iwF18qDVT+9E8ozi4qN+qMIR4+z0NScyB1lUEpuPmZa9FFE3DfsBPz/Ye/
+         FtR+im7O0SBWPIfYhhWRbIjVD+34DmQ2/pXTpUUFgIIZQssU1g4SBssDnCcpPotgQV
+         ib1eIOuKfTfoGR9LoSa2s9PuXuLtmzqcWGoNfcbws0Gk6Gl2cTYVyZihvwBnus73yl
+         SJPez+a6W/vPUP4QpCxRZ77GYQPum2mhqZ7nwCsCpKRKlicUgA27L+STl8/FZUFeEw
+         0AXzJAPa/1MzkyG1KxDEv3GoZSIUSYEZhxT/1HG+Ip0En1tJTwtyIesG7Mx20EGjRo
+         idSk0BOks1ADg==
+Date:   Wed, 13 Nov 2019 11:58:08 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Imre Deak <imre.deak@intel.com>,
+        Jon Bloomfield <jon.bloomfield@intel.com>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Subject: linux-next: manual merge of the drm tree with Linus' tree
+Message-ID: <20191113115808.65d4138e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107174353.20625-1-robbat2@gentoo.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/kV_LBYPKme8Ev4xmxVLLmHe";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 09:43:53AM -0800, Robin H. Johnson wrote:
-> It's non-trivial to figure out names of firmware that was actually
-> loaded, add a print statement at the end of _request_firmware that logs
-> the name & result of each firmware.
-> 
-> This is esp. valuable early in boot, before logging of UEVENT is
-> available.
-> 
-> Signed-off-by: Robin H. Johnson <robbat2@gentoo.org>
-> ---
->  drivers/base/firmware_loader/main.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-> index bf44c79beae9..f0362af16b66 100644
-> --- a/drivers/base/firmware_loader/main.c
-> +++ b/drivers/base/firmware_loader/main.c
-> @@ -791,6 +791,8 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
->  		fw = NULL;
->  	}
->  
-> +	dev_info(device, "%s %s ret=%d\n", __func__, name, ret);
-> +
+--Sig_/kV_LBYPKme8Ev4xmxVLLmHe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch!
+Hi all,
 
-Sorry but we don't want to always print this. We however can *debug*
-a system with dev_dbg() but there is a patch which someone is working
-on which will do this. I cc'd you on it.
+Today's linux-next merge of the drm tree got a conflict in:
 
-  Luis
+  drivers/gpu/drm/i915/i915_drv.c
+
+between commits:
+
+  7e34f4e4aad3 ("drm/i915/gen8+: Add RC6 CTX corruption WA")
+  2f216a850715 ("drm/i915: update rawclk also on resume")
+
+
+from Linus' tree and commits:
+
+  5bcd53aa39f3 ("drm/i915: pass i915 to i915_driver_modeset_probe()")
+  fd6fe087ca47 ("drm/i915/gt: Call intel_gt_sanitize() directly")
+
+from the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/i915_drv.c
+index 3d717e282908,ccb5b566795f..000000000000
+--- a/drivers/gpu/drm/i915/i915_drv.c
++++ b/drivers/gpu/drm/i915/i915_drv.c
+@@@ -364,11 -296,14 +296,11 @@@ static int i915_driver_modeset_probe(st
+  	if (ret)
+  		goto cleanup_vga_client;
+ =20
+- 	intel_power_domains_init_hw(dev_priv, false);
+ -	/* must happen before intel_power_domains_init_hw() on VLV/CHV */
+ -	intel_update_rawclk(i915);
+ -
++ 	intel_power_domains_init_hw(i915, false);
+ =20
+- 	intel_csr_ucode_init(dev_priv);
++ 	intel_csr_ucode_init(i915);
+ =20
+- 	ret =3D intel_irq_install(dev_priv);
++ 	ret =3D intel_irq_install(i915);
+  	if (ret)
+  		goto cleanup_csr;
+ =20
+@@@ -2048,14 -1948,8 +1947,10 @@@ static int i915_drm_resume_early(struc
+ =20
+  	intel_display_power_resume_early(dev_priv);
+ =20
+- 	intel_sanitize_gt_powersave(dev_priv);
+-=20
+  	intel_power_domains_resume(dev_priv);
+ =20
+ +	i915_rc6_ctx_wa_resume(dev_priv);
+ +
+- 	intel_gt_sanitize(&dev_priv->gt, true);
+-=20
+  	enable_rpm_wakeref_asserts(&dev_priv->runtime_pm);
+ =20
+  	return ret;
+
+--Sig_/kV_LBYPKme8Ev4xmxVLLmHe
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3LVSAACgkQAVBC80lX
+0GxObAf9EK3RQ7S1TMgfyRmdBWJMZ5oAx/e6sgpyToIerf9imckzafTYAgoIss04
+YJmorDSXjbBkrTcVB6whx+JvV/ULqLBQi9+PI3Af7QWM6pCoRpulCvnT8MGTYdSQ
+Zz/R1cUnbbHxhSCol6KJBXKonxShqKkWJrXMZtj7buFjVAhA9pwLTFh9Cek/Z/zx
+14ju1J07Id65nAFueapYh90uJAC/dm+ookXkSvIt+m+Ar1yHJtkWCsa3CDmjFLLr
+z0mqCkwSEpkloWfFDPSRiP12eSm1R/qJWwYAxdqQrFsAkZTq+DZe/cJUZzPiA2YC
+3d/yd/S6LqqHlpKiLSfR/Pg5XggIoA==
+=nfXk
+-----END PGP SIGNATURE-----
+
+--Sig_/kV_LBYPKme8Ev4xmxVLLmHe--
