@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F31C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF43C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B1D22469
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250A6222CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610362;
-	bh=+ugDS3NL4mHHN24G7VTK1jmCHcSW7yZCBs8zU+QAsHI=;
+	s=default; t=1573610368;
+	bh=SUtoJuBQ0kWFqFHCogcPBI0EufRGC1iwfMg31fJcoOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Fsqss3xrLNpdW7AIW5Omk2salj3IaU0EYqKTgwBfI9VLC3uDL7iCpSPcG5V7F+r5
-	 +BkyMIHX5blbVcwMAFYuv5nUcQlRbDXiO8eUUziEXJXIzyVHcIn4PJmf+MaM/adPCD
-	 XyNS1AZoKnDA14/Vt2A4jm43YeXT6IG9pgboiSvM=
+	b=dGEsn+7DXo4WoCFYhyL6INp5JNRbVENjk0a7RIemFVNieaTKi/5FOF+ojk8AMMWlC
+	 6hiDhl4OLf+Z0U186R+U7O82S3HMCFofvACN8UeGqBE8PlmKhvYyIkiItd4hvZo0DZ
+	 icKD01S+sq/XRI7xjrQqYNGiZESPL859W9y/idTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfKMB7U (ORCPT
+        id S1730280AbfKMB70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:59:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53644 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:59:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727741AbfKMB7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:59:15 -0500
+        id S1727741AbfKMB7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:59:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B10662247B;
-        Wed, 13 Nov 2019 01:59:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99CE322490;
+        Wed, 13 Nov 2019 01:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610355;
-        bh=+ugDS3NL4mHHN24G7VTK1jmCHcSW7yZCBs8zU+QAsHI=;
+        s=default; t=1573610361;
+        bh=SUtoJuBQ0kWFqFHCogcPBI0EufRGC1iwfMg31fJcoOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2PAhrods90GicdI5HmNtd1bdwteDNfcausMoJLJXtmCtClgLAq0IW2nQboV0nQG82
-         oVr79EIdhZjgAndkCzQmEceVe3LzXfWr1eZ39sUoYhhrSOixAGnvV9+GhoFhAKF48f
-         AZYjAATptynnlW727TtZAQjKtEBzCRgvgNwJ49Xc=
+        b=JlhNHwoKn0CHEhCjZzql2GLWeqXxxoch/YxB8/c/YIhBUf2CSlJrNT8LOvekQUQsr
+         kEsb/33qBJSm0QUXOoSAXAJ0WsdKAzllw1yJL2EgaLxA1bhX/Q4nIs0Y6cCWp6nlcG
+         WQIKlkdj2KbzoBgSPOwDaweS8iRQFOLhtVFvaBW4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhong jiang <zhongjiang@huawei.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 106/115] misc: cxl: Fix possible null pointer dereference
-Date:   Tue, 12 Nov 2019 20:56:13 -0500
-Message-Id: <20191113015622.11592-106-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        Petr Machata <petrm@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 111/115] mlxsw: spectrum_switchdev: Check notification relevance based on upper device
+Date:   Tue, 12 Nov 2019 20:56:18 -0500
+Message-Id: <20191113015622.11592-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -61,35 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 3dac3583bf1a61db6aaf31dfd752c677a4400afd ]
+[ Upstream commit 5050f6ae253ad1307af3486c26fc4f94287078b7 ]
 
-It is not safe to dereference an object before a null test. It is
-not needed and just remove them. Ftrace can be used instead.
+VxLAN FDB updates are sent with the VxLAN device which is not our upper
+and will therefore be ignored by current code.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Solve this by checking whether the upper device (bridge) is our upper.
+
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/cxl/guest.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/cxl/guest.c b/drivers/misc/cxl/guest.c
-index 1a64eb185cfd5..de2ce55395454 100644
---- a/drivers/misc/cxl/guest.c
-+++ b/drivers/misc/cxl/guest.c
-@@ -1028,8 +1028,6 @@ int cxl_guest_init_afu(struct cxl *adapter, int slice, struct device_node *afu_n
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+index 8a1788108f52a..698de51b3fef0 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+@@ -1939,8 +1939,15 @@ static int mlxsw_sp_switchdev_event(struct notifier_block *unused,
+ 	struct net_device *dev = switchdev_notifier_info_to_dev(ptr);
+ 	struct mlxsw_sp_switchdev_event_work *switchdev_work;
+ 	struct switchdev_notifier_fdb_info *fdb_info = ptr;
++	struct net_device *br_dev;
  
- void cxl_guest_remove_afu(struct cxl_afu *afu)
- {
--	pr_devel("in %s - AFU(%d)\n", __func__, afu->slice);
--
- 	if (!afu)
- 		return;
+-	if (!mlxsw_sp_port_dev_lower_find_rcu(dev))
++	/* Tunnel devices are not our uppers, so check their master instead */
++	br_dev = netdev_master_upper_dev_get_rcu(dev);
++	if (!br_dev)
++		return NOTIFY_DONE;
++	if (!netif_is_bridge_master(br_dev))
++		return NOTIFY_DONE;
++	if (!mlxsw_sp_port_dev_lower_find_rcu(br_dev))
+ 		return NOTIFY_DONE;
  
+ 	switchdev_work = kzalloc(sizeof(*switchdev_work), GFP_ATOMIC);
 -- 
 2.20.1
 
