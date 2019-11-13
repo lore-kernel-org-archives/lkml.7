@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB25C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346D4C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B2722470
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043A4222CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610167;
-	bh=Sdmu46wqyOZ8xb4qgKmubdm8/s9CbLdUeDfQxVPweYg=;
+	s=default; t=1573610170;
+	bh=ynIhFj/qx4jDaE1Oo3VHwQCKtQ8asuUgAcjpPSkosCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1R2eDDjQR6PEw7r7fZvQECdDdULiIBl2osd+DW3HkMRiWmMl4+SkNIsQ/a9XPL+uB
-	 09Zpy6v6V4/oVKgEtCzcndw7fyVMHfg+F617ki4tUTrFr1emdzALmlkrdauF9Y/hgU
-	 VgiNaWetp7hvMF6ixgPRzXGX9r1sVVT7GmXOLh+I=
+	b=Aj4DAP9tiP0p+IE+huExifNoTanVQiblb2nDNy99VXWeopb4VfOHUNynGk+dwYx8j
+	 JIn8KbQDCzFyJASJoDdwFEH/UFSy0Itv4cN42xJcOgM8zZbRyt2+Ad2Pa2nxENQEAa
+	 pjrNXy9psYdyEIV3cEoESm6eFkQ2AW1wX03xaak4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfKMB4G (ORCPT
+        id S1729401AbfKMB4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47700 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729274AbfKMBzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:55:51 -0500
+        id S1729288AbfKMBzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14FC92245D;
-        Wed, 13 Nov 2019 01:55:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E73722473;
+        Wed, 13 Nov 2019 01:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610150;
-        bh=Sdmu46wqyOZ8xb4qgKmubdm8/s9CbLdUeDfQxVPweYg=;
+        s=default; t=1573610152;
+        bh=ynIhFj/qx4jDaE1Oo3VHwQCKtQ8asuUgAcjpPSkosCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RjpLJpytF9KrOA/Mk6ykd5SsbXjWyUQn+9tMUSvkmu1UmcWZSbj3NgkMbqnyeYzLa
-         o+K2GzsFZvCMTp62Xqrs14xeKCY/ZGZu/di9zP/bHKcdit92Ftitig8c0G139HXuQK
-         me9ZZU6u1RTAvdIWIFweicg7iB0Phjd0HpXq/eFI=
+        b=q8y3PzVaR1c1Chf6hfIKQC0qe0Dz3Q2zwSxo8UYriI4p5C4Y6xY82Z3MdydYQpgt4
+         82CbEYhKPFPozUkyziGnDkrt46FsYHdefMqAyYncEauWkpnNbguRqHjbUz0SzOKzEz
+         RnTLHHYgYQjsEpvdPLH4qYLSHkBHVvyuqYgmoT4c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 195/209] netfilter: nft_compat: do not dump private area
-Date:   Tue, 12 Nov 2019 20:50:11 -0500
-Message-Id: <20191113015025.9685-195-sashal@kernel.org>
+Cc:     zhong jiang <zhongjiang@huawei.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 196/209] misc: cxl: Fix possible null pointer dereference
+Date:   Tue, 12 Nov 2019 20:50:12 -0500
+Message-Id: <20191113015025.9685-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -61,71 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: zhong jiang <zhongjiang@huawei.com>
 
-[ Upstream commit d701d8117200399d85e63a737d2e4e897932f3b6 ]
+[ Upstream commit 3dac3583bf1a61db6aaf31dfd752c677a4400afd ]
 
-Zero pad private area, otherwise we expose private kernel pointer to
-userspace. This patch also zeroes the tail area after the ->matchsize
-and ->targetsize that results from XT_ALIGN().
+It is not safe to dereference an object before a null test. It is
+not needed and just remove them. Ftrace can be used instead.
 
-Fixes: 0ca743a55991 ("netfilter: nf_tables: add compatibility layer for x_tables")
-Reported-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_compat.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ drivers/misc/cxl/guest.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/netfilter/nft_compat.c b/net/netfilter/nft_compat.c
-index 1245e02239d90..469f9da5073bf 100644
---- a/net/netfilter/nft_compat.c
-+++ b/net/netfilter/nft_compat.c
-@@ -269,6 +269,24 @@ nft_target_destroy(const struct nft_ctx *ctx, const struct nft_expr *expr)
- 	kfree(expr->ops);
- }
+diff --git a/drivers/misc/cxl/guest.c b/drivers/misc/cxl/guest.c
+index b83a373e3a8dd..08f4a512afad2 100644
+--- a/drivers/misc/cxl/guest.c
++++ b/drivers/misc/cxl/guest.c
+@@ -1020,8 +1020,6 @@ int cxl_guest_init_afu(struct cxl *adapter, int slice, struct device_node *afu_n
  
-+static int nft_extension_dump_info(struct sk_buff *skb, int attr,
-+				   const void *info,
-+				   unsigned int size, unsigned int user_size)
-+{
-+	unsigned int info_size, aligned_size = XT_ALIGN(size);
-+	struct nlattr *nla;
-+
-+	nla = nla_reserve(skb, attr, aligned_size);
-+	if (!nla)
-+		return -1;
-+
-+	info_size = user_size ? : size;
-+	memcpy(nla_data(nla), info, info_size);
-+	memset(nla_data(nla) + info_size, 0, aligned_size - info_size);
-+
-+	return 0;
-+}
-+
- static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
+ void cxl_guest_remove_afu(struct cxl_afu *afu)
  {
- 	const struct xt_target *target = expr->ops->data;
-@@ -276,7 +294,8 @@ static int nft_target_dump(struct sk_buff *skb, const struct nft_expr *expr)
+-	pr_devel("in %s - AFU(%d)\n", __func__, afu->slice);
+-
+ 	if (!afu)
+ 		return;
  
- 	if (nla_put_string(skb, NFTA_TARGET_NAME, target->name) ||
- 	    nla_put_be32(skb, NFTA_TARGET_REV, htonl(target->revision)) ||
--	    nla_put(skb, NFTA_TARGET_INFO, XT_ALIGN(target->targetsize), info))
-+	    nft_extension_dump_info(skb, NFTA_TARGET_INFO, info,
-+				    target->targetsize, target->usersize))
- 		goto nla_put_failure;
- 
- 	return 0;
-@@ -504,7 +523,8 @@ static int __nft_match_dump(struct sk_buff *skb, const struct nft_expr *expr,
- 
- 	if (nla_put_string(skb, NFTA_MATCH_NAME, match->name) ||
- 	    nla_put_be32(skb, NFTA_MATCH_REV, htonl(match->revision)) ||
--	    nla_put(skb, NFTA_MATCH_INFO, XT_ALIGN(match->matchsize), info))
-+	    nft_extension_dump_info(skb, NFTA_MATCH_INFO, info,
-+				    match->matchsize, match->usersize))
- 		goto nla_put_failure;
- 
- 	return 0;
 -- 
 2.20.1
 
