@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DF6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525A5C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290C02053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE35222D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610237;
-	bh=zyZYw0nM4RFgVaebb4BmvAOIVPjPO6GvSiUzaPlDJ34=;
+	s=default; t=1573610238;
+	bh=nV3Afj2p0AljyImMjr0YVmZVcER+1VWGOKDMdHq3Q3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aRzE5fRenF2bXBPptIpnVBmizCEyO21kSQQ/uPw05vl4vgoKmssy6ovMHv1Z27UAl
-	 lxszIAyqqiiaiUHw37oRzRilDKbkVCEN9bLoy5/Vp9/UyBt3Wr50XcndxKEz+JNLAj
-	 XYA5x5WuGdhtrfa+6WYhpcdHjenrk32+wXieqOSA=
+	b=eOb5roMjukMSFQsZymABeR4RemUf6SbpXu/n9mV4g2u5nPlTcPVwEN4lvj3pIqsFG
+	 1ijdaFE5DX2DFlk/Pkn1YdKF7WGbsGWCyTSnDD6PO6gwZ99lhn2YPG6eMhtKiC7O8j
+	 Rzw7yELW+LbEePP62FSzJm02k/56E6LSuiEDYF2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfKMB5Q (ORCPT
+        id S1729725AbfKMB5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:57:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50160 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:57:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbfKMB5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:57:11 -0500
+        id S1729718AbfKMB5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 982C22053B;
-        Wed, 13 Nov 2019 01:57:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07BFC22474;
+        Wed, 13 Nov 2019 01:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610230;
-        bh=zyZYw0nM4RFgVaebb4BmvAOIVPjPO6GvSiUzaPlDJ34=;
+        s=default; t=1573610235;
+        bh=nV3Afj2p0AljyImMjr0YVmZVcER+1VWGOKDMdHq3Q3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1BV8oqWAP3kftW0z88ncgtAs3knJw1fwosIgBm7uws9vIGbqVku1csQ88YtDBDU2
-         awhKH6mSuYVC/qJhTiNoHHMhGhwt/sv2JwrUWu2q3o8un1lhyw1sFRgRMhs1+c2pdQ
-         NofbLlwn4G9fLH9LEHKqG3twOB/qfx4xHhMNYKfY=
+        b=JJ5xYXxs0v8N3QUVz7xlVY48gs3E145OFK77xcRM7Vrfsh/zWptrT6BgnLqByAKAB
+         kKOE2V8OI/Qp010CWGgPHDd6blkA1NxV5oVp7uP9ze5QnIfqk2EuiK1pADYptaBynR
+         fIXRso1g8JIz1J2EAAddD52Ubvl3k0AhK/FOQ2Uo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 032/115] powerpc/pseries: Fix how we iterate over the DTL entries
-Date:   Tue, 12 Nov 2019 20:54:59 -0500
-Message-Id: <20191113015622.11592-32-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 036/115] mtd: rawnand: sh_flctl: Use proper enum for flctl_dma_fifo0_transfer
+Date:   Tue, 12 Nov 2019 20:55:03 -0500
+Message-Id: <20191113015622.11592-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,38 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 9258227e9dd1da8feddb07ad9702845546a581c9 ]
+[ Upstream commit e2bfa4ca23d9b5a7bdfcf21319fad9b59e38a05c ]
 
-When CONFIG_VIRT_CPU_ACCOUNTING_NATIVE is not set, we look up dtl_idx in
-the lppaca to determine the number of entries in the buffer. Since
-lppaca is in big endian, we need to do an endian conversion before using
-this in our calculation to determine the number of entries in the
-buffer. Without this, we do not iterate over the existing entries in the
-DTL buffer properly.
+Clang warns when one enumerated type is converted implicitly to another:
 
-Fixes: 7c105b63bd98 ("powerpc: Add CONFIG_CPU_LITTLE_ENDIAN kernel config option.")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+drivers/mtd/nand/raw/sh_flctl.c:483:46: warning: implicit conversion
+from enumeration type 'enum dma_transfer_direction' to different
+enumeration type 'enum dma_data_direction' [-Wenum-conversion]
+                flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
+                ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+drivers/mtd/nand/raw/sh_flctl.c:542:46: warning: implicit conversion
+from enumeration type 'enum dma_transfer_direction' to different
+enumeration type 'enum dma_data_direction' [-Wenum-conversion]
+                flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
+                ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+2 warnings generated.
+
+Use the proper enums from dma_data_direction to satisfy Clang.
+
+DMA_MEM_TO_DEV = DMA_TO_DEVICE = 1
+DMA_DEV_TO_MEM = DMA_FROM_DEVICE = 2
+
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/dtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/sh_flctl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-index c762689e0eb33..ef6595153642e 100644
---- a/arch/powerpc/platforms/pseries/dtl.c
-+++ b/arch/powerpc/platforms/pseries/dtl.c
-@@ -184,7 +184,7 @@ static void dtl_stop(struct dtl *dtl)
+diff --git a/drivers/mtd/nand/sh_flctl.c b/drivers/mtd/nand/sh_flctl.c
+index e7f3c98487e62..43db80e5d994f 100644
+--- a/drivers/mtd/nand/sh_flctl.c
++++ b/drivers/mtd/nand/sh_flctl.c
+@@ -480,7 +480,7 @@ static void read_fiforeg(struct sh_flctl *flctl, int rlen, int offset)
  
- static u64 dtl_current_index(struct dtl *dtl)
- {
--	return lppaca_of(dtl->cpu).dtl_idx;
-+	return be64_to_cpu(lppaca_of(dtl->cpu).dtl_idx);
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
+ 	/* initiate DMA transfer */
+ 	if (flctl->chan_fifo0_rx && rlen >= 32 &&
+-		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
++		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_FROM_DEVICE) > 0)
+ 			goto convert;	/* DMA success */
  
+ 	/* do polling transfer */
+@@ -539,7 +539,7 @@ static void write_ec_fiforeg(struct sh_flctl *flctl, int rlen,
+ 
+ 	/* initiate DMA transfer */
+ 	if (flctl->chan_fifo0_tx && rlen >= 32 &&
+-		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
++		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_TO_DEVICE) > 0)
+ 			return;	/* DMA success */
+ 
+ 	/* do polling transfer */
 -- 
 2.20.1
 
