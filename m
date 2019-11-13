@@ -2,137 +2,121 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF7FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32E2C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A15206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED74206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="blBmwo40"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nn03DCxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfKMU1Y (ORCPT
+        id S1726393AbfKMUax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:27:24 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11058 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfKMU1X (ORCPT
+        Wed, 13 Nov 2019 15:30:53 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:45175 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMUaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:27:23 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcc66ef0001>; Wed, 13 Nov 2019 12:26:23 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 13 Nov 2019 12:27:19 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 13 Nov 2019 12:27:19 -0800
-Received: from [10.2.160.107] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Nov
- 2019 20:27:18 +0000
-Subject: Re: [PATCH v4 09/23] mm/gup: introduce pin_user_pages*() and FOLL_PIN
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20191113042710.3997854-1-jhubbard@nvidia.com>
- <20191113042710.3997854-10-jhubbard@nvidia.com>
- <20191113185902.GB12915@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <d5b14492-45a9-914e-92db-29592c3634e5@nvidia.com>
-Date:   Wed, 13 Nov 2019 12:24:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 13 Nov 2019 15:30:52 -0500
+Received: by mail-yb1-f194.google.com with SMTP id i7so1486982ybk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 12:30:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HhUJSPQDvSVcW6lExUu0Aos25QWc66JPMYbcEiKuXrc=;
+        b=Nn03DCxiI7YI0L9xwwcV+FWANHJyX0Nosiah9C9ZEYM6RrUknHizEw0/Ycd051SlK3
+         p+Abqia/sM7br2NF1iq6mgg7c3AqnCya0VFzL+xCg6m/DvN2uAaXNdeI+hA1pF0mlLm7
+         lajPR7C6kVPLXfNzWmevC8ueutQUsmor9IfCJkTa6m9g1VjBQ0cCm0ROz3JWUfbpI+eB
+         PiOheiqaWiP9+CJ6BJaOZOv4+4gGvcJ41Un+Wqvod2rKcV1KbUYOz4xORFCqDAbJgbQQ
+         562C+TZg0L8TjWX3oLB+QWrwC15uulzsY5TV58YDTkSLEnYd9pPzqLJ2FvpCLH1ZoccY
+         jJiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HhUJSPQDvSVcW6lExUu0Aos25QWc66JPMYbcEiKuXrc=;
+        b=iWZH0zWqLnXNXQIMbihKB54SQ0iEJp9s6ysyHE2uDL/CdFluk0SRGkaDBbdmb1G3mM
+         Uxq4Odp9F9mRRMc5phNXrLDsp7eDrg/rqbCFBfNJUCwkWWRN9mV8KAylEUavIHJl0V4v
+         Wex93vteoxva9G7raGOKXey/4W5ERbOiMeMo283b9cw7LFYJrR4ItoR/KqO5oYMjhwfl
+         J6SidmD0fecQLL2Syf/u+jYph4SrS9FIwssos+lbXmo/Csu3NQOzh8Nq55+OUpIm3BS0
+         k2+cLRgfLllFLOruM68uyuahNzRJFG+fShMnWW0lgweh+hFvboS70As/mD6P4/j6lfxJ
+         KJtw==
+X-Gm-Message-State: APjAAAX3eFZAoptRPbVKBmieHGrahKSc2Dmrw9nFxw9arVp+BVyMJddo
+        AfxQqTVw1iN/Y4gJ/LMNNCgAtbIU4feDOgV1gEc=
+X-Google-Smtp-Source: APXvYqxtTDE1DuX7odfSWA32rCc5N/jNL04v+VM3rGUIhjMW0FCHmUvG7BWWqqzfvcrhoqFMyCvgmEKAHAX+rTFSN4k=
+X-Received: by 2002:a25:768d:: with SMTP id r135mr3778035ybc.25.1573677051679;
+ Wed, 13 Nov 2019 12:30:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113185902.GB12915@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573676784; bh=ZP9QEqV97zzS7vyaMLJBGQGSKGW2tyNWtWpkiSoCJc4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=blBmwo40hUXWDReswYBJ9TKWl7H2L/k0XDDTqLc9LkITedj/TfVhMrycxbdicryg9
-         h3wCNANbDFiVSj6oyHjfFnRbLVuCRi3pWpRJRe/jbCLOFnYnWP5+VYQpU1VxmX02Oe
-         x63ynn9Lg49xuQZl/cSCofyxC/5cUmsD/0Qztzy4aTmtjHXl5koB/p/oGnI3O50jC6
-         JimPfnxSS5Hd9PocW7OekFWFS3ot4vxXyyvMqqBzeRQ9mC6jlTWwR4/WgqeBc/ncw1
-         PM3rgjSIKR9vLy74nuxe2z7dV2iTNewdvjl7FyfEINYcs/7W4YGwW/FeVW7CmMMCVV
-         2lZpQK+CR/Twg==
+References: <1572964400-16542-1-git-send-email-rppt@kernel.org> <1572964400-16542-3-git-send-email-rppt@kernel.org>
+In-Reply-To: <1572964400-16542-3-git-send-email-rppt@kernel.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Wed, 13 Nov 2019 12:30:39 -0800
+Message-ID: <CAMo8BfLpdy4biZ4UvE4PDhscCFOj75nHWTwO+HFXpWx1qQOmEQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] xtensa: get rid of __ARCH_USE_5LEVEL_HACK
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 10:59 AM, Ira Weiny wrote:
-> On Tue, Nov 12, 2019 at 08:26:56PM -0800, John Hubbard wrote:
->> Introduce pin_user_pages*() variations of get_user_pages*() calls,
->> and also pin_longterm_pages*() variations.
->>
->> These variants all set FOLL_PIN, which is also introduced, and
->> thoroughly documented.
->>
->> The pin_longterm*() variants also set FOLL_LONGTERM, in addition
->> to FOLL_PIN:
->>
->>      pin_user_pages()
->>      pin_user_pages_remote()
->>      pin_user_pages_fast()
->>
->>      pin_longterm_pages()
->>      pin_longterm_pages_remote()
->>      pin_longterm_pages_fast()
-> 
-> At some point in this conversation I thought we were going to put in "unpin_*"
-> versions of these.
-> 
-> Is that still in the plans?
-> 
+Hi Mike,
 
-Why yes it is! :)  Daniel Vetter and Jan Kara both already weighed in [1],
-in favor of "unpin_user_page*()", rather than "put_user_page*()".
+On Tue, Nov 5, 2019 at 6:33 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>
+> xtensa has 2-level page tables and already uses pgtable-nopmd for page
+> table folding.
+>
+> Add walks of p4d level where appropriate and drop usage of
+> __ARCH_USE_5LEVEL_HACK.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/xtensa/include/asm/pgtable.h |  1 -
+>  arch/xtensa/mm/fault.c            | 10 ++++++++--
+>  arch/xtensa/mm/kasan_init.c       |  6 ++++--
+>  arch/xtensa/mm/mmu.c              |  3 ++-
+>  arch/xtensa/mm/tlb.c              |  5 ++++-
+>  5 files changed, 18 insertions(+), 7 deletions(-)
 
-I'll change those names.
+This change missed a spot in arch/xtensa/include/asm/fixmap.h.
+I've added the following hunk and queued both patches to the xtensa tree:
 
-[1] https://lore.kernel.org/r/20191113101210.GD6367@quack2.suse.cz
+diff --git a/arch/xtensa/include/asm/fixmap.h b/arch/xtensa/include/asm/fixmap.h
+index 7e25c1b50ac0..cfb8696917e9 100644
+--- a/arch/xtensa/include/asm/fixmap.h
++++ b/arch/xtensa/include/asm/fixmap.h
+@@ -78,8 +78,10 @@ static inline unsigned long virt_to_fix(const
+unsigned long vaddr)
+
+ #define kmap_get_fixmap_pte(vaddr) \
+        pte_offset_kernel( \
+-               pmd_offset(pud_offset(pgd_offset_k(vaddr), (vaddr)), (vaddr)), \
+-               (vaddr) \
+-       )
++               pmd_offset(pud_offset(p4d_offset(pgd_offset_k(vaddr), \
++                                                (vaddr)), \
++                                     (vaddr)), \
++                          (vaddr)), \
++               (vaddr))
+
+ #endif
 
 
-thanks,
 -- 
-John Hubbard
-NVIDIA
+Thanks.
+-- Max
