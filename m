@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B17BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272C7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6726421783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF8421783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611294;
-	bh=S42pxMw6/wYTxvLBzsja1ndTqzGbyWY3pPEbYY4F1S4=;
+	s=default; t=1573611298;
+	bh=/ocGoJgUZnU/MR4jKC+MPYAL4fHXHIMop3CtzsQDJYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=weoW79QSnsKtpl4/YoVjMonhcAwE07WVz/z7uvGHQnPaDCE98MRowZa98+CcVJsiV
-	 i1veMA1Yp811Sba4WXRUbNVjXuqs9twjozDhOiCKknCklUQIP2fpDM39qg3jHsUa7Q
-	 HljtrIbJh/qn1lMDDeURb5lKiJabx01E7mlP40M8=
+	b=n3IAMs/R19YcZV+iRzD3nD919qNh2cXFi9+uN0JQV0NjY0lpp3DljpORn2gSW7eZC
+	 EpQ5eO+/VhcN3FCDqjH2YqoeV4mFSsCDtWXrmYM+pTaNOXIWHtfkfHoxfOM+sm7f7c
+	 jvwGlfF61hIdUXIGQsDwMOWtC5iGFVI8DLbel5wM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfKMB5E (ORCPT
+        id S1730338AbfKMCO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:57:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49780 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:14:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729636AbfKMB46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:58 -0500
+        id S1729659AbfKMB5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:57:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F22D2247B;
-        Wed, 13 Nov 2019 01:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0E1F2053B;
+        Wed, 13 Nov 2019 01:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610217;
-        bh=S42pxMw6/wYTxvLBzsja1ndTqzGbyWY3pPEbYY4F1S4=;
+        s=default; t=1573610223;
+        bh=/ocGoJgUZnU/MR4jKC+MPYAL4fHXHIMop3CtzsQDJYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2X1a76TOX+sdhJMk6WLTZuB9yf0DR5J5tCXgqYqqqzzR+NjtMr7CTfNlRaPq3q+E+
-         M87kFzykvtqoLLBl74VG8xbeteIiRDXPs5trWdORh1Zm7149kIOSB+8baC+67Ig5yx
-         Z0T5/yWW/Aci2tUYPPRHiBYBjGbGZtvuNY5nMeRY=
+        b=dYTPdzmtdtJXREuRpenS+1uj/OWtt0B8yyzHCQTPYiiyt/Qc44289qIzZd5aUv51/
+         8Fg+YSkuto5eFk5/WUQDlOz8iCz5oXWNI9WhzvXA1A1M4ELD2WhF+56HrgLzyD3DGH
+         zGCEqjIOYkrc2+7N9fFRw3NEdoC8S7YkyU/XO/eQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 024/115] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
-Date:   Tue, 12 Nov 2019 20:54:51 -0500
-Message-Id: <20191113015622.11592-24-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 028/115] mei: samples: fix a signedness bug in amt_host_if_call()
+Date:   Tue, 12 Nov 2019 20:54:55 -0500
+Message-Id: <20191113015622.11592-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -60,43 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 5e621f5d538985f010035c6f3e28c22829d36db1 ]
+[ Upstream commit 185647813cac080453cb73a2e034a8821049f2a7 ]
 
-Clang warns when implicitly converting from one enumerated type to
-another. Avoid this by using the equivalent value from the expected
-type.
+"out_buf_sz" needs to be signed for the error handling to work.
 
-drivers/dma/timb_dma.c:548:27: warning: implicit conversion from
-enumeration type 'enum dma_transfer_direction' to different enumeration
-type 'enum dma_data_direction' [-Wenum-conversion]
-                td_desc->desc_list_len, DMA_MEM_TO_DEV);
-                                        ^~~~~~~~~~~~~~
-1 warning generated.
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/timb_dma.c | 2 +-
+ samples/mei/mei-amt-version.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
-index 896bafb7a5324..cf6588cc3efdc 100644
---- a/drivers/dma/timb_dma.c
-+++ b/drivers/dma/timb_dma.c
-@@ -545,7 +545,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,
- 	}
- 
- 	dma_sync_single_for_device(chan2dmadev(chan), td_desc->txd.phys,
--		td_desc->desc_list_len, DMA_MEM_TO_DEV);
-+		td_desc->desc_list_len, DMA_TO_DEVICE);
- 
- 	return &td_desc->txd;
- }
+diff --git a/samples/mei/mei-amt-version.c b/samples/mei/mei-amt-version.c
+index bb9988914a563..32234481ad7db 100644
+--- a/samples/mei/mei-amt-version.c
++++ b/samples/mei/mei-amt-version.c
+@@ -370,7 +370,7 @@ static uint32_t amt_host_if_call(struct amt_host_if *acmd,
+ 			unsigned int expected_sz)
+ {
+ 	uint32_t in_buf_sz;
+-	uint32_t out_buf_sz;
++	ssize_t out_buf_sz;
+ 	ssize_t written;
+ 	uint32_t status;
+ 	struct amt_host_if_resp_header *msg_hdr;
 -- 
 2.20.1
 
