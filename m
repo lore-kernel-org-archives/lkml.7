@@ -2,205 +2,108 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6684FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE69C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3709D20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B7C204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ek02E4S8"
+	dkim=pass (2048-bit key) header.d=generalsoftwareinc-com.20150623.gappssmtp.com header.i=@generalsoftwareinc-com.20150623.gappssmtp.com header.b="XaiDIDDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbfKMQdH (ORCPT
+        id S1728434AbfKMQda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:33:07 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52383 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfKMQdG (ORCPT
+        Wed, 13 Nov 2019 11:33:30 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41553 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfKMQda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:33:06 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l1so2691888wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:33:04 -0800 (PST)
+        Wed, 13 Nov 2019 11:33:30 -0500
+Received: by mail-vs1-f68.google.com with SMTP id 190so1745306vss.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 08:33:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UeCgLesamDTUsDPPV6ZtQD74frhXEKTdzsqtnT1K74E=;
-        b=ek02E4S88ezVo5r3GsFDdmDoSP4U21NdmJasFqGC0n17Noz8o7rg/mNxpIL44gVsRL
-         cVsOxqMmDDaNOgrCj3tl2sAtxILqzcQxQKQAHzxtWz/C97RkQwVWE59oukKBcumN40TD
-         spVPS/mI/THKvYhUoG31Aw3CFMquMxsvqP9+I=
+        d=generalsoftwareinc-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EMqO7kO+eGq0uCIQ1EQILqtM2ejcR6sdBUV13AtA/lk=;
+        b=XaiDIDDtPVY40xuVO13Q/1v0UVMXCUMTz9cC7XOMCVRm1GcuhOAK9WCwAL0vdpJ3Il
+         Jlw/rEZS2aFPaNetjY5RElc/Mfud2PtkVURTTzhq7z/Tzg6IzVx21Wt7xJVyVnQVbjjD
+         eF1uGxtrs0jFLbYHX168KizsPTdPhvycgGSrjeTG9H2af0NI0nIyP43tgzsydTeXJQOD
+         TnV59ZoVoN/zBwyBIIe+sPskrI9l++l7yvE+nYVsXaoKbvRW/Td7bPyEAiTMRuTxafzc
+         edDMQG/94ozk80m58lfWGYU88wihBWMDGk5ZLYOB1Ch7F/wAND0IAjHvQ0zkTTjT7rcq
+         6iHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=UeCgLesamDTUsDPPV6ZtQD74frhXEKTdzsqtnT1K74E=;
-        b=BBdJHl5NBRT4AIi/SWN1LmjVx7LqCt3zKKnaHICVgB+PwdV4xEVvJsUrpD10YCwq4P
-         Aawqyjyc3kjC8bhRGfg0+5NHFrPwkITZXvGsW7XvTOPATRlQ58Gt1zAtcqrHz2JBxfWW
-         dW6YVr6rYHnKyuwoKFhIKT85AnjRWsYFhpZXqdibIkaTV2+dHHx2OutmHlYY4MJCd415
-         NrtNP1DBWoyb722FzVLfrytEz2IS/vZSCL8VV/8vCXcqRO4GmQz5HGITkHETb0mUjgFT
-         VxcIS/Y5RNU4kmovHdzi31T2QfZolYi3tKLntog1khoKQFH4f9NqiTuHnsIvVOFgPhML
-         25ow==
-X-Gm-Message-State: APjAAAXnJXq3ovvR//bySZg97/fWN9XiNxs2XAUl+f6avpvHP01/xPj1
-        VZETqZlxB+1jciSs91KwoRv5jA==
-X-Google-Smtp-Source: APXvYqw2/nDqQyepkb4kR7SVsSAZUW7SvsXxh+2chPgZTCPmhzlIyS69PbSrFUkGklpg3CpALDkTcQ==
-X-Received: by 2002:a05:600c:22cb:: with SMTP id 11mr3653834wmg.117.1573662783863;
-        Wed, 13 Nov 2019 08:33:03 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id j22sm4202715wrd.41.2019.11.13.08.33.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EMqO7kO+eGq0uCIQ1EQILqtM2ejcR6sdBUV13AtA/lk=;
+        b=RTL9mQ2yQ3fCVHR061IkNJA8BsRv5mVljXJW2rcTrDAukF+1TPLP4Ku+MFQ6aH80Jg
+         jlYe0RzXUu2KuOGjKFEtiuRRuWB1k0l0I6tTdOxd5YHms86OB8gic8+oPFYBuQGD2R+i
+         PSP06fQjROXW3VUokeRn4OWHAU0d8XFNxIEhj+a+1GFDAxka+Po5ulN0v2N5pmGPo9wr
+         I4MLzbR/qJfV3QdTMJlV3wClL4HUEu1+vbgCdXwEqMKjf4VRoezcdoTghJDTW6Cp/40N
+         LjEVIo1Osqz6XXO+oviBrLqqRWFKX0eY0Em+D4R1gIbYRwRa+O5SWeiHUpC0xORpHgwD
+         Kyxg==
+X-Gm-Message-State: APjAAAXu0nd3VblHrhTJizDCTQrUa4Bxybd4qRzqyJXXvR6VcehZhzw2
+        jvjcWAkIugVteZ1N0EmMU/JPCw==
+X-Google-Smtp-Source: APXvYqzI2uGfY1AjLJBGPLMwVGPxmNpIdIDSf0dVimu/BkUp0yx8RWSj5ex9NX6esogZOPKMKUVuzQ==
+X-Received: by 2002:a05:6102:7ce:: with SMTP id y14mr2401899vsg.220.1573662808770;
+        Wed, 13 Nov 2019 08:33:28 -0800 (PST)
+Received: from ubuntu1804-desktop ([172.97.41.74])
+        by smtp.gmail.com with ESMTPSA id b26sm612034uaf.5.2019.11.13.08.33.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 08:33:02 -0800 (PST)
-Date:   Wed, 13 Nov 2019 17:33:00 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     drm@redhat.com,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/ttm: fix mmap refcounting
-Message-ID: <20191113163300.GS23790@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>, drm@redhat.com,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191113135612.19679-1-kraxel@redhat.com>
+        Wed, 13 Nov 2019 08:33:28 -0800 (PST)
+Date:   Wed, 13 Nov 2019 11:33:27 -0500
+From:   "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org
+Subject: [RFC 2/2] ** do not apply this patch ** Just for illustration
+ purposes
+Message-ID: <141cb10cc2eabc5c3130496f12d84dd1ef247e20.1573661658.git.frank@generalsoftwareinc.com>
+References: <cover.1573661658.git.frank@generalsoftwareinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191113135612.19679-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.2.0-3-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <cover.1573661658.git.frank@generalsoftwareinc.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 02:56:12PM +0100, Gerd Hoffmann wrote:
-> When mapping ttm objects via drm_gem_ttm_mmap() helper
-> drm_gem_mmap_obj() will take an object reference.  That gets
-> never released due to ttm having its own reference counting.
-> 
-> Fix that by dropping the gem object reference once the ttm mmap
-> completed (and ttm refcount got bumped).
-> 
-> For that to work properly the drm_gem_object_get() call in
-> drm_gem_ttm_mmap() must be moved so it happens before calling
-> obj->funcs->mmap(), otherwise the gem refcount would go down
-> to zero.
-> 
-> Fixes: 231927d939f0 ("drm/ttm: add drm_gem_ttm_mmap()")
+Prints a message that will allow us to evaluate the number of pages
+allocated by each CPU buffer as well the main values that participate
+in its calculation.
 
-Since the offending patch is in drm-next and we're in the merge window
-freeze past -rc6 please remember to apply this to drm-misc-next-fixes.
-Otherwise it'll miss the merge window.
+ $ echo 0 > /sys/kernel/debug/tracing/tracing_on
+ $ echo 4096 > /sys/kernel/debug/tracing/buffer_size_kb
+   .... e.g. of output:
+   PAGE_SIZE: 4096, BUF_PAGE_HDR_SIZE: 16, size: 4194304, nr_pages: 1029
 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Frank A. Cancio Bello <frank@generalsoftwareinc.com>
+---
+ kernel/trace/ring_buffer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I was wondering whether we'd need a cc: stable, in case someone is really
-fast and gets the vm_close in before we finish the mmap. But I think we
-should be serialized by mmap_sem here enough ...
-
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-> ---
->  drivers/gpu/drm/drm_gem.c            | 24 ++++++++++++++----------
->  drivers/gpu/drm/drm_gem_ttm_helper.c | 13 ++++++++++++-
->  2 files changed, 26 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-> index 2f2b889096b0..000fa4a1899f 100644
-> --- a/drivers/gpu/drm/drm_gem.c
-> +++ b/drivers/gpu/drm/drm_gem.c
-> @@ -1105,21 +1105,33 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
->  	if (obj_size < vma->vm_end - vma->vm_start)
->  		return -EINVAL;
->  
-> +	/* Take a ref for this mapping of the object, so that the fault
-> +	 * handler can dereference the mmap offset's pointer to the object.
-> +	 * This reference is cleaned up by the corresponding vm_close
-> +	 * (which should happen whether the vma was created by this call, or
-> +	 * by a vm_open due to mremap or partial unmap or whatever).
-> +	 */
-> +	drm_gem_object_get(obj);
-> +
->  	if (obj->funcs && obj->funcs->mmap) {
->  		/* Remove the fake offset */
->  		vma->vm_pgoff -= drm_vma_node_start(&obj->vma_node);
->  
->  		ret = obj->funcs->mmap(obj, vma);
-> -		if (ret)
-> +		if (ret) {
-> +			drm_gem_object_put_unlocked(obj);
->  			return ret;
-> +		}
->  		WARN_ON(!(vma->vm_flags & VM_DONTEXPAND));
->  	} else {
->  		if (obj->funcs && obj->funcs->vm_ops)
->  			vma->vm_ops = obj->funcs->vm_ops;
->  		else if (dev->driver->gem_vm_ops)
->  			vma->vm_ops = dev->driver->gem_vm_ops;
-> -		else
-> +		else {
-> +			drm_gem_object_put_unlocked(obj);
->  			return -EINVAL;
-> +		}
->  
->  		vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
->  		vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
-> @@ -1128,14 +1140,6 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
->  
->  	vma->vm_private_data = obj;
->  
-> -	/* Take a ref for this mapping of the object, so that the fault
-> -	 * handler can dereference the mmap offset's pointer to the object.
-> -	 * This reference is cleaned up by the corresponding vm_close
-> -	 * (which should happen whether the vma was created by this call, or
-> -	 * by a vm_open due to mremap or partial unmap or whatever).
-> -	 */
-> -	drm_gem_object_get(obj);
-> -
->  	return 0;
->  }
->  EXPORT_SYMBOL(drm_gem_mmap_obj);
-> diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm_gem_ttm_helper.c
-> index 7412bfc5c05a..605a8a3da7f9 100644
-> --- a/drivers/gpu/drm/drm_gem_ttm_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
-> @@ -64,8 +64,19 @@ int drm_gem_ttm_mmap(struct drm_gem_object *gem,
->  		     struct vm_area_struct *vma)
->  {
->  	struct ttm_buffer_object *bo = drm_gem_ttm_of_gem(gem);
-> +	int ret;
->  
-> -	return ttm_bo_mmap_obj(vma, bo);
-> +	ret = ttm_bo_mmap_obj(vma, bo);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/*
-> +	 * ttm has its own object refcounting, so drop gem reference
-> +	 * to avoid double accounting counting.
-> +	 */
-> +	drm_gem_object_put_unlocked(gem);
-> +
-> +	return 0;
->  }
->  EXPORT_SYMBOL(drm_gem_ttm_mmap);
->  
-> -- 
-> 2.18.1
-> 
-
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 66358d66c933..c10b6bcb29b9 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1730,6 +1730,8 @@ int ring_buffer_resize(struct ring_buffer *buffer, unsigned long size,
+ 		return size;
+ 
+ 	nr_pages = DIV_ROUND_UP(size, BUF_PAGE_SIZE);
++	printk(KERN_ALERT "PAGE_SIZE: %lu, BUF_PAGE_HDR_SIZE: %lu, size: %lu, nr_pages: %ld",
++	       PAGE_SIZE, BUF_PAGE_HDR_SIZE, size, nr_pages);
+ 
+ 	/* we need a minimum of two pages */
+ 	if (nr_pages < 2)
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.17.1
+
