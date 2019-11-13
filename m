@@ -2,209 +2,105 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B44BC17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E28C17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182CD222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:39:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fqR3SopY"
+	by mail.kernel.org (Postfix) with ESMTP id 28DFB222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 03:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfKMDji (ORCPT
+        id S1727582AbfKMDjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 22:39:38 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7391 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727334AbfKMDjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 22:39:36 -0500
-X-UUID: f139437760fb47b2828d7eae4b70c7da-20191113
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ojrDnsfdwYe9t3UwwQBjkpkbLrv4GYdPYJSAaR+f3sE=;
-        b=fqR3SopYE2LeOzeacYEtpzgkyJPDV2ukYBObcF3AZkly8vzQD0wJeLlz9nyspKW8vzNRZ/Cg6mw4O8fdOo1rQuv6BwQ2B3jZNicYHZfiaG4y1QibmMNshCX3OXtigki3szfNaVOJ65aukcZXW0NTbhrrCts/qbxh6GM7YLYfEdI=;
-X-UUID: f139437760fb47b2828d7eae4b70c7da-20191113
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <ming-fan.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1570457128; Wed, 13 Nov 2019 11:39:30 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 13 Nov 2019 11:39:24 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 13 Nov 2019 11:39:24 +0800
-From:   Ming-Fan Chen <ming-fan.chen@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Evan Green <evgreen@chromium.org>, Joerg Roedel <jroedel@suse.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Ming-Fan Chen <ming-fan.chen@mediatek.com>
-Subject: [PATCH v1 2/2] memory: mtk-smi: Add bandwidth initial golden setting for MT6779
-Date:   Wed, 13 Nov 2019 11:39:22 +0800
-Message-ID: <1573616362-2557-3-git-send-email-ming-fan.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1573616362-2557-1-git-send-email-ming-fan.chen@mediatek.com>
-References: <1573616362-2557-1-git-send-email-ming-fan.chen@mediatek.com>
+        Tue, 12 Nov 2019 22:39:47 -0500
+Received: from spam01.hygon.cn ([110.188.70.11]:5362 "EHLO spam2.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727440AbfKMDjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 22:39:46 -0500
+Received: from MK-FE.hygon.cn ([172.23.18.61])
+        by spam2.hygon.cn with ESMTP id xAD3dNcf021115;
+        Wed, 13 Nov 2019 11:39:23 +0800 (GMT-8)
+        (envelope-from fanjinke@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-FE.hygon.cn with ESMTP id xAD3dH7t097843;
+        Wed, 13 Nov 2019 11:39:17 +0800 (GMT-8)
+        (envelope-from fanjinke@hygon.cn)
+Received: from bogon.higon.com (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Wed, 13 Nov
+ 2019 11:39:20 +0800
+From:   Jinke Fan <fanjinke@hygon.cn>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jinke Fan <fanjinke@hygon.cn>
+Subject: [RFC PATCH] HID: quirks: Add quirk for HP MSU1465 PIXART OEM mouse
+Date:   Wed, 13 Nov 2019 11:38:41 +0800
+Message-ID: <20191113033841.25174-1-fanjinke@hygon.cn>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam2.hygon.cn xAD3dNcf021115
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U01JIGJhbmR3aWR0aCBpbml0aWFsIGdvbGRlbiBzZXR0aW5nIGZvciBNVDY3NzkgbWFrZSBzdXJl
-DQpiZXR0ZXIgcGVyZm9ybWFuY2Ugb2YgbWVtb3J5IGNvbnRyb2wgZm9yIG11bHRpbWVkaWEgbW9k
-dWxlcy4NCg0KU2lnbmVkLW9mZi1ieTogTWluZy1GYW4gQ2hlbiA8bWluZy1mYW4uY2hlbkBtZWRp
-YXRlay5jb20+DQotLS0NCiBkcml2ZXJzL21lbW9yeS9tdGstc21pLmMgfCAgMTQxICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0NCiAxIGZpbGUgY2hhbmdlZCwg
-MTM5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L21lbW9yeS9tdGstc21pLmMgYi9kcml2ZXJzL21lbW9yeS9tdGstc21pLmMNCmluZGV4IDQzOWQ3
-ZDguLmYzNjE4ZDAgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21lbW9yeS9tdGstc21pLmMNCisrKyBi
-L2RyaXZlcnMvbWVtb3J5L210ay1zbWkuYw0KQEAgLTQxLDIxICs0MSw1MCBAQA0KICNkZWZpbmUg
-U01JX0xBUkJfTk9OU0VDX0NPTihpZCkJKDB4MzgwICsgKChpZCkgKiA0KSkNCiAjZGVmaW5lIEZf
-TU1VX0VOCQlCSVQoMCkNCiANCisjZGVmaW5lIFNNSV9MQVJCX0NNRF9USFJUX0NPTgkgMHgyNA0K
-KyNkZWZpbmUgU01JX0xBUkJfU1dfRkxBRwkgMHg0MA0KKyNkZWZpbmUgU01JX0xBUkJfV1JSX1BP
-UlQJIDB4MTAwDQorI2RlZmluZSBTTUlfTEFSQl9XUlJfUE9SVHgoaWQpCSAoU01JX0xBUkJfV1JS
-X1BPUlQgKyAoKChpZCkgJiAweDFmKSA8PCAyKSkNCisjZGVmaW5lIFNNSV9MQVJCX09TVERMX1BP
-UlQJIDB4MjAwDQorI2RlZmluZSBTTUlfTEFSQl9PU1RETF9QT1JUeChpZCkgKFNNSV9MQVJCX09T
-VERMX1BPUlQgKyAoKChpZCkgJiAweDFmKSA8PCAyKSkNCisNCiAvKiBTTUkgQ09NTU9OICovDQor
-I2RlZmluZSBTTUlfTDFMRU4JCQkweDEwMA0KKyNkZWZpbmUgU01JX0wxQVJCMAkJCTB4MTA0DQor
-I2RlZmluZSBTTUlfTDFBUkIoaWQpCQkJKFNNSV9MMUFSQjAgKyAoKChpZCkgJiAweDcpIDw8IDIp
-KQ0KKw0KICNkZWZpbmUgU01JX0JVU19TRUwJCQkweDIyMA0KICNkZWZpbmUgU01JX0JVU19MQVJC
-X1NISUZUKGxhcmJpZCkJKChsYXJiaWQpIDw8IDEpDQogLyogQWxsIGFyZSBNTVUwIGRlZmF1bHRs
-eS4gT25seSBzcGVjaWFsaXplIG1tdTEgaGVyZS4gKi8NCiAjZGVmaW5lIEZfTU1VMV9MQVJCKGxh
-cmJpZCkJCSgweDEgPDwgU01JX0JVU19MQVJCX1NISUZUKGxhcmJpZCkpDQogDQorI2RlZmluZSBT
-TUlfTTRVX1RICQkJMHgyMzQNCisjZGVmaW5lIFNNSV9GSUZPX1RIMQkJCTB4MjM4DQorI2RlZmlu
-ZSBTTUlfRklGT19USDIJCQkweDIzYw0KKyNkZWZpbmUgU01JX0RDTQkJCQkweDMwMA0KKyNkZWZp
-bmUgU01JX0RVTU1ZCQkJMHg0NDQNCisNCisjZGVmaW5lIFNNSV9MQVJCX1BPUlRfTlJfTUFYCQkz
-Mg0KKyNkZWZpbmUgU01JX0NPTU1PTl9MQVJCX05SX01BWAkJOA0KKyNkZWZpbmUgU01JX0xBUkJf
-TUlTQ19OUgkJMg0KKyNkZWZpbmUgU01JX0NPTU1PTl9NSVNDX05SCQk2DQorDQogZW51bSBtdGtf
-c21pX2dlbiB7DQogCU1US19TTUlfR0VOMSwNCiAJTVRLX1NNSV9HRU4yDQogfTsNCiANCitzdHJ1
-Y3QgbXRrX3NtaV9yZWdfcGFpciB7DQorCXUxNglvZmZzZXQ7DQorCXUzMgl2YWx1ZTsNCit9Ow0K
-Kw0KIHN0cnVjdCBtdGtfc21pX2NvbW1vbl9wbGF0IHsNCiAJZW51bSBtdGtfc21pX2dlbiBnZW47
-DQogCWJvb2wgICAgICAgICAgICAgaGFzX2dhbHM7DQogCXUzMiAgICAgICAgICAgICAgYnVzX3Nl
-bDsgLyogQmFsYW5jZSBzb21lIGxhcmJzIHRvIGVudGVyIG1tdTAgb3IgbW11MSAqLw0KKwl1MTYg
-ICAgICAgICAgICAgICAgICAgICAqYndsOw0KKwlzdHJ1Y3QgbXRrX3NtaV9yZWdfcGFpciAqbWlz
-YzsNCiB9Ow0KIA0KIHN0cnVjdCBtdGtfc21pX2xhcmJfZ2VuIHsNCkBAIC02Myw2ICs5Miw4IEBA
-IHN0cnVjdCBtdGtfc21pX2xhcmJfZ2VuIHsNCiAJdm9pZCAoKmNvbmZpZ19wb3J0KShzdHJ1Y3Qg
-ZGV2aWNlICopOw0KIAl1bnNpZ25lZCBpbnQJCQlsYXJiX2RpcmVjdF90b19jb21tb25fbWFzazsN
-CiAJYm9vbAkJCQloYXNfZ2FsczsNCisJdTgJCQkJKmJ3bDsNCisJc3RydWN0IG10a19zbWlfcmVn
-X3BhaXIJCSptaXNjOw0KIH07DQogDQogc3RydWN0IG10a19zbWkgew0KQEAgLTE2MCw3ICsxOTEs
-NyBAQCBzdGF0aWMgdm9pZCBtdGtfc21pX2xhcmJfY29uZmlnX3BvcnRfZ2VuMl9nZW5lcmFsKHN0
-cnVjdCBkZXZpY2UgKmRldikNCiB7DQogCXN0cnVjdCBtdGtfc21pX2xhcmIgKmxhcmIgPSBkZXZf
-Z2V0X2RydmRhdGEoZGV2KTsNCiAJdTMyIHJlZzsNCi0JaW50IGk7DQorCWludCBpLCBpZDsNCiAN
-CiAJaWYgKEJJVChsYXJiLT5sYXJiaWQpICYgbGFyYi0+bGFyYl9nZW4tPmxhcmJfZGlyZWN0X3Rv
-X2NvbW1vbl9tYXNrKQ0KIAkJcmV0dXJuOw0KQEAgLTE3MCw2ICsyMDEsMjAgQEAgc3RhdGljIHZv
-aWQgbXRrX3NtaV9sYXJiX2NvbmZpZ19wb3J0X2dlbjJfZ2VuZXJhbChzdHJ1Y3QgZGV2aWNlICpk
-ZXYpDQogCQlyZWcgfD0gRl9NTVVfRU47DQogCQl3cml0ZWwocmVnLCBsYXJiLT5iYXNlICsgU01J
-X0xBUkJfTk9OU0VDX0NPTihpKSk7DQogCX0NCisNCisJaWYgKGxhcmItPmxhcmJfZ2VuLT5id2wp
-DQorCQlmb3IgKGkgPSAwOyBpIDwgbGFyYi0+bGFyYl9nZW4tPnBvcnRfaW5fbGFyYltsYXJiLT5s
-YXJiaWRdOyBpKyspDQorCQkJd3JpdGVsX3JlbGF4ZWQobGFyYi0+bGFyYl9nZW4tPmJ3bFtsYXJi
-LT5sYXJiaWQgKg0KKwkJCQkgICAgICAgU01JX0xBUkJfUE9SVF9OUl9NQVggKyBpXSwNCisJCQkJ
-ICAgICAgIGxhcmItPmJhc2UgKyBTTUlfTEFSQl9PU1RETF9QT1JUeChpKSk7DQorDQorCWlmIChs
-YXJiLT5sYXJiX2dlbi0+bWlzYykNCisJCWZvciAoaSA9IDAsIGlkID0gbGFyYi0+bGFyYmlkICog
-U01JX0xBUkJfTUlTQ19OUjsNCisJCQlpIDwgU01JX0xBUkJfTUlTQ19OUjsgaSsrLCBpZCsrKQ0K
-KwkJCXdyaXRlbF9yZWxheGVkKGxhcmItPmxhcmJfZ2VuLT5taXNjW2lkXS52YWx1ZSwNCisJCQkJ
-ICAgICAgIGxhcmItPmJhc2UgKw0KKwkJCQkgICAgICAgbGFyYi0+bGFyYl9nZW4tPm1pc2NbaWRd
-Lm9mZnNldCk7DQorCXdtYigpOyAvKiBtYWtlIHN1cmUgc2V0dGluZ3MgYXJlIHdyaXR0ZW4gKi8N
-CiB9DQogDQogc3RhdGljIHZvaWQgbXRrX3NtaV9sYXJiX2NvbmZpZ19wb3J0X210ODE3MyhzdHJ1
-Y3QgZGV2aWNlICpkZXYpDQpAQCAtMjQ2LDYgKzI5MSw1NSBAQCBzdGF0aWMgdm9pZCBtdGtfc21p
-X2xhcmJfY29uZmlnX3BvcnRfZ2VuMShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogCQkJCSAgICAgIC8q
-IElQVTAgfCBJUFUxIHwgQ0NVICovDQogfTsNCiANCitzdGF0aWMgdTggbXRrX3NtaV9sYXJiX210
-Njc3OV9id2xbTVRLX0xBUkJfTlJfTUFYXVtTTUlfTEFSQl9QT1JUX05SX01BWF0gPSB7DQorCXsw
-eDI4LCAweDI4LCAweDAxLCAweDI4LCAweDAxLCAweDAxLCAweDBhLCAweDBhLCAweDI4LH0sDQor
-CXsweDI4LCAweDAxLCAweDI4LCAweDI4LCAweDBhLCAweDAxLCAweDAxLCAweDBkLCAweDBkLCAw
-eDA3LA0KKwkgMHgwMSwgMHgwNywgMHgwMSwgMHgyOCx9LA0KKwl7MHgxOCwgMHgwMSwgMHgwOCwg
-MHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMiwNCisJIDB4MDEsIDB4MDF9
-LA0KKwl7MHgwMSwgMHgwMywgMHgwMiwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwNCwgMHgw
-MiwgMHgwMSwNCisJIDB4MDQsIDB4MDEsIDB4MDEsIDB4MDEsIDB4MDEsIDB4MDQsIDB4MGIsIDB4
-MTMsIDB4MTQsfSwNCisJe30sDQorCXsweDEzLCAweDBmLCAweDBkLCAweDA3LCAweDA3LCAweDA0
-LCAweDAzLCAweDAxLCAweDAzLCAweDAxLA0KKwkgMHgwNSwgMHgwYywgMHgwMSwgMHgwMSwgMHgw
-OCwgMHgwNiwgMHgwMiwgMHgwMSwgMHgwOCwgMHgwOCwNCisJIDB4MDEsIDB4MDEsIDB4MDEsIDB4
-MDEsIDB4MDEsIDB4MDEsfSwNCisJezB4MDEsIDB4MDEsIDB4MDEsfSwNCisJezB4MDEsIDB4MDEs
-IDB4MDEsIDB4MDEsfSwNCisJezB4MDEsIDB4MDEsIDB4MDEsIDB4MDEsIDB4MDEsIDB4MDEsIDB4
-MDEsIDB4MDEsIDB4MDEsIDB4MDEsfSwNCisJezB4MWYsIDB4MWEsIDB4MDIsIDB4MDQsIDB4MWYs
-IDB4MDIsIDB4MTQsIDB4MDEsIDB4MWYsIDB4MDQsDQorCSAweDA0LCAweDAxLCAweDAxLCAweDAx
-LCAweDAyLCAweDAyLCAweDA0LCAweDAyLCAweDAxLCAweDAyLA0KKwkgMHgwNCwgMHgwMiwgMHgw
-MiwgMHgwMSx9LA0KKwl7MHgxZiwgMHgxYSwgMHgwMiwgMHgwNCwgMHgxZiwgMHgwMiwgMHgxNCwg
-MHgwMSwgMHgxZiwgMHgxYSwNCisJIDB4MDIsIDB4MDQsIDB4MWYsIDB4MDIsIDB4MTQsIDB4MDEs
-IDB4MDEsIDB4MDIsIDB4MDIsIDB4MDQsDQorCSAweDAyLCAweDBhLCAweDAyLCAweDAyLCAweDA0
-LCAweDAyLCAweDBhLCAweDAyLCAweDA0LCAweDAyLCAweDA0LH0sDQorCXsweDAxLCAweDAxLCAw
-eDAxLCAweDAxLCAweDAxLH0sDQorfTsNCisNCitzdGF0aWMgc3RydWN0IG10a19zbWlfcmVnX3Bh
-aXINCisJbXRrX3NtaV9sYXJiX210Njc3OV9taXNjW01US19MQVJCX05SX01BWF1bU01JX0xBUkJf
-TUlTQ19OUl0gPSB7DQorCXt7U01JX0xBUkJfQ01EX1RIUlRfQ09OLCAweDM3MDI1Nn0sIHtTTUlf
-TEFSQl9TV19GTEFHLCAweDF9LH0sDQorCXt7U01JX0xBUkJfQ01EX1RIUlRfQ09OLCAweDMwMDI1
-Nn0sIHtTTUlfTEFSQl9TV19GTEFHLCAweDF9LH0sDQorCXt7U01JX0xBUkJfQ01EX1RIUlRfQ09O
-LCAweDM3MDI1Nn0sIHtTTUlfTEFSQl9TV19GTEFHLCAweDF9LH0sDQorCXt9LA0KKwl7e1NNSV9M
-QVJCX0NNRF9USFJUX0NPTiwgMHgzMDAyNTZ9LCB7U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9LA0K
-Kwl7e1NNSV9MQVJCX0NNRF9USFJUX0NPTiwgMHgzMDAyNTZ9LCB7U01JX0xBUkJfU1dfRkxBRywg
-MHgxfSx9LA0KKwl7e1NNSV9MQVJCX0NNRF9USFJUX0NPTiwgMHgzMDAyNTZ9LCB7U01JX0xBUkJf
-U1dfRkxBRywgMHgxfSx9LA0KKwl7e1NNSV9MQVJCX0NNRF9USFJUX0NPTiwgMHgzMDAyNTZ9LCB7
-U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9LA0KKwl7e1NNSV9MQVJCX0NNRF9USFJUX0NPTiwgMHgz
-NzAyNTZ9LCB7U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9LA0KKwl7e1NNSV9MQVJCX0NNRF9USFJU
-X0NPTiwgMHgzNzAyNTZ9LCB7U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9LA0KKwl7e1NNSV9MQVJC
-X0NNRF9USFJUX0NPTiwgMHgzNzAyNTZ9LCB7U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9LA0KK307
-DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfc21pX2xhcmJfZ2VuIG10a19zbWlfbGFyYl9t
-dDY3NzkgPSB7DQorCS5wb3J0X2luX2xhcmIgPSB7OSwgMTQsIDEyLCAxOSwgMCwgMjYsIDMsIDQs
-IDEwLCAyNCwgMzEsIDUsfSwNCisJLmNvbmZpZ19wb3J0ICA9IG10a19zbWlfbGFyYl9jb25maWdf
-cG9ydF9nZW4yX2dlbmVyYWwsDQorCS5sYXJiX2RpcmVjdF90b19jb21tb25fbWFzayA9DQorCQlC
-SVQoNCkgfCBCSVQoNikgfCBCSVQoMTEpIHwgQklUKDEyKSB8IEJJVCgxMyksDQorCQkvKiBEVU1N
-WSB8IElQVTAgfCBJUFUxIHwgQ0NVIHwgTURMQSAqLw0KKwkuYndsICA9ICh1OCAqKW10a19zbWlf
-bGFyYl9tdDY3NzlfYndsLA0KKwkubWlzYyA9IChzdHJ1Y3QgbXRrX3NtaV9yZWdfcGFpciAqKW10
-a19zbWlfbGFyYl9tdDY3NzlfbWlzYywNCit9Ow0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
-ZGV2aWNlX2lkIG10a19zbWlfbGFyYl9vZl9pZHNbXSA9IHsNCiAJew0KIAkJLmNvbXBhdGlibGUg
-PSAibWVkaWF0ZWssbXQ4MTczLXNtaS1sYXJiIiwNCkBAIC0yNjAsNiArMzU0LDEwIEBAIHN0YXRp
-YyB2b2lkIG10a19zbWlfbGFyYl9jb25maWdfcG9ydF9nZW4xKHN0cnVjdCBkZXZpY2UgKmRldikN
-CiAJCS5kYXRhID0gJm10a19zbWlfbGFyYl9tdDI3MTINCiAJfSwNCiAJew0KKwkJLmNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ2Nzc5LXNtaS1sYXJiIiwNCisJCS5kYXRhID0gJm10a19zbWlfbGFy
-Yl9tdDY3NzkNCisJfSwNCisJew0KIAkJLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXNt
-aS1sYXJiIiwNCiAJCS5kYXRhID0gJm10a19zbWlfbGFyYl9tdDgxODMNCiAJfSwNCkBAIC0zOTMs
-NiArNDkxLDI5IEBAIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgbXRrX3NtaV9sYXJiX3N1c3Bl
-bmQoc3RydWN0IGRldmljZSAqZGV2KQ0KIAkJICAgIEZfTU1VMV9MQVJCKDcpLA0KIH07DQogDQor
-c3RhdGljIHUxNiBtdGtfc21pX2NvbW1vbl9tdDY3NzlfYndsW1NNSV9DT01NT05fTEFSQl9OUl9N
-QVhdID0gew0KKwkweDEwMDAsIDB4MTAwMCwgMHgxMDAwLCAweDEwMDAsIDB4MTAwMCwgMHgxMDAw
-LCAweDEwMDAsIDB4MTAwMCwNCit9Ow0KKw0KK3N0YXRpYyBzdHJ1Y3QgbXRrX3NtaV9yZWdfcGFp
-cg0KKwltdGtfc21pX2NvbW1vbl9tdDY3NzlfbWlzY1tTTUlfQ09NTU9OX01JU0NfTlJdID0gew0K
-Kwl7U01JX0wxTEVOLCAweGJ9LA0KKwl7U01JX000VV9USCwgMHhlMTAwZTEwfSwNCisJe1NNSV9G
-SUZPX1RIMSwgMHg1MDYwOTBhfSwNCisJe1NNSV9GSUZPX1RIMiwgMHg1MDYwOTBhfSwNCisJe1NN
-SV9EQ00sIDB4NGYxfSwNCisJe1NNSV9EVU1NWSwgMHgxfSwNCit9Ow0KKw0KK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRrX3NtaV9jb21tb25fcGxhdCBtdGtfc21pX2NvbW1vbl9tdDY3NzkgPSB7DQor
-CS5nZW4gICAgICA9IE1US19TTUlfR0VOMiwNCisJLmhhc19nYWxzID0gdHJ1ZSwNCisJLmJ1c19z
-ZWwgID0gRl9NTVUxX0xBUkIoMSkgfCBGX01NVTFfTEFSQigyKSB8IEZfTU1VMV9MQVJCKDQpIHwN
-CisJCSAgICBGX01NVTFfTEFSQig1KSB8IEZfTU1VMV9MQVJCKDYpIHwgRl9NTVUxX0xBUkIoNyks
-DQorCS5id2wgICAgICA9IG10a19zbWlfY29tbW9uX210Njc3OV9id2wsDQorCS5taXNjICAgICA9
-IG10a19zbWlfY29tbW9uX210Njc3OV9taXNjLA0KK307DQorDQogc3RhdGljIGNvbnN0IHN0cnVj
-dCBvZl9kZXZpY2VfaWQgbXRrX3NtaV9jb21tb25fb2ZfaWRzW10gPSB7DQogCXsNCiAJCS5jb21w
-YXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1zbWktY29tbW9uIiwNCkBAIC00MDcsNiArNTI4LDEw
-IEBAIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgbXRrX3NtaV9sYXJiX3N1c3BlbmQoc3RydWN0
-IGRldmljZSAqZGV2KQ0KIAkJLmRhdGEgPSAmbXRrX3NtaV9jb21tb25fZ2VuMiwNCiAJfSwNCiAJ
-ew0KKwkJLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LXNtaS1jb21tb24iLA0KKwkJLmRh
-dGEgPSAmbXRrX3NtaV9jb21tb25fbXQ2Nzc5LA0KKwl9LA0KKwl7DQogCQkuY29tcGF0aWJsZSA9
-ICJtZWRpYXRlayxtdDgxODMtc21pLWNvbW1vbiIsDQogCQkuZGF0YSA9ICZtdGtfc21pX2NvbW1v
-bl9tdDgxODMsDQogCX0sDQpAQCAtNDg0LDcgKzYwOSw3IEBAIHN0YXRpYyBpbnQgX19tYXliZV91
-bnVzZWQgbXRrX3NtaV9jb21tb25fcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCiB7DQogCXN0
-cnVjdCBtdGtfc21pICpjb21tb24gPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCiAJdTMyIGJ1c19z
-ZWwgPSBjb21tb24tPnBsYXQtPmJ1c19zZWw7DQotCWludCByZXQ7DQorCWludCBpLCByZXQ7DQog
-DQogCXJldCA9IG10a19zbWlfY2xrX2VuYWJsZShjb21tb24pOw0KIAlpZiAocmV0KSB7DQpAQCAt
-NDk0LDYgKzYxOSwxOCBAQCBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIG10a19zbWlfY29tbW9u
-X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogDQogCWlmIChjb21tb24tPnBsYXQtPmdlbiA9
-PSBNVEtfU01JX0dFTjIgJiYgYnVzX3NlbCkNCiAJCXdyaXRlbChidXNfc2VsLCBjb21tb24tPmJh
-c2UgKyBTTUlfQlVTX1NFTCk7DQorDQorCWlmIChjb21tb24tPnBsYXQtPmJ3bCkNCisJCWZvciAo
-aSA9IDA7IGkgPCBTTUlfQ09NTU9OX0xBUkJfTlJfTUFYOyBpKyspDQorCQkJd3JpdGVsX3JlbGF4
-ZWQoY29tbW9uLT5wbGF0LT5id2xbaV0sDQorCQkJCSAgICAgICBjb21tb24tPmJhc2UgKyBTTUlf
-TDFBUkIoaSkpOw0KKw0KKwlpZiAoY29tbW9uLT5wbGF0LT5taXNjKQ0KKwkJZm9yIChpID0gMDsg
-aSA8IFNNSV9DT01NT05fTUlTQ19OUjsgaSsrKQ0KKwkJCXdyaXRlbF9yZWxheGVkKGNvbW1vbi0+
-cGxhdC0+bWlzY1tpXS52YWx1ZSwNCisJCQkJICAgICAgIGNvbW1vbi0+YmFzZSArDQorCQkJCSAg
-ICAgICBjb21tb24tPnBsYXQtPm1pc2NbaV0ub2Zmc2V0KTsNCisJd21iKCk7IC8qIG1ha2Ugc3Vy
-ZSBzZXR0aW5ncyBhcmUgd3JpdHRlbiAqLw0KIAlyZXR1cm4gMDsNCiB9DQogDQotLSANCjEuNy45
-LjUNCg==
+The PixArt OEM mouse disconnets/reconnects every minute on
+Linux. All contents of dmesg are repetitive:
+
+[ 1465.810014] usb 1-2.2: USB disconnect, device number 20
+[ 1467.431509] usb 1-2.2: new low-speed USB device number 21 using xhci_hcd
+[ 1467.654982] usb 1-2.2: New USB device found, idVendor=03f0,idProduct=1f4a, bcdDevice= 1.00
+[ 1467.654985] usb 1-2.2: New USB device strings: Mfr=1, Product=2,SerialNumber=0
+[ 1467.654987] usb 1-2.2: Product: HP USB Optical Mouse
+[ 1467.654988] usb 1-2.2: Manufacturer: PixArt
+[ 1467.699722] input: PixArt HP USB Optical Mouse as /devices/pci0000:00/0000:00:07.1/0000:05:00.3/usb1/1-2/1-2.2/1-2.2:1.0/0003:03F0:1F4A.0012/input/input19
+[ 1467.700124] hid-generic 0003:03F0:1F4A.0012: input,hidraw0: USB HID v1.11 Mouse [PixArt HP USB Optical Mouse] on usb-0000:05:00.3-2.2/input0
+
+So add HID_QUIRK_ALWAYS_POLL for this one as well.
+Test the patch, the mouse is no longer disconnected and there are no
+duplicate logs in dmesg.
+
+Reference:
+https://github.com/sriemer/fix-linux-mouse
+
+Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
+---
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 447e8db21174..00904537e17c 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -573,6 +573,7 @@
+ #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_094A	0x094a
+ #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0941	0x0941
+ #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641	0x0641
++#define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_1f4a	0x1f4a
+ 
+ #define USB_VENDOR_ID_HUION		0x256c
+ #define USB_DEVICE_ID_HUION_TABLET	0x006e
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index c50bcd967d99..9a35af1e2662 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -94,6 +94,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_094A), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0941), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641), HID_QUIRK_ALWAYS_POLL },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_1f4a), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_IDEACOM, USB_DEVICE_ID_IDEACOM_IDC6680), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_INNOMEDIA, USB_DEVICE_ID_INNEX_GENESIS_ATARI), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M610X), HID_QUIRK_MULTI_INPUT },
+-- 
+2.17.1
 
