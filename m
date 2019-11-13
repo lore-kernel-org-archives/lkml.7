@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE91C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA358C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F12206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96E521783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611078;
-	bh=D9FF+PKLhEVyXZcKFFSveysZnUiYAUBTZCk1o2cEWVk=;
+	s=default; t=1573611080;
+	bh=BS6rKx4QK1VTGB6Ow00xYvFJ4tektkmDu92Gqm0uiNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MbHa1IN0rBTQrlty0H+ycuC+SpaYoGdRbfdNWQD7p/pzj1J9uq9UMuyFFh747+i09
-	 IGzzpBhZUT4p9yXb1d8pp9DAToDIyL4vNJIZZ7u7+62B9NcSIRTkleq/IWEetHDB/2
-	 SCxXNzqGo02HKTB+kxYCQS5mwf6nZpIErvcP8QCU=
+	b=dmxjoOvwNaiqHuG8nZC8CV9Ib6bsQRb9UQ5nc5qjgMGDBrX4hXNPuhpglwknKSTOg
+	 gBm8HLONgfyO6EtyqU0zsF2ZT65WZ0x6/Zsozxqww2Ag3i512DyiEH+1DaDLN+VhN9
+	 XUnBFLXbqfhSdcJhxfFcRpd+cob2UPjefELsYRgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfKMCLQ (ORCPT
+        id S1730143AbfKMB6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:11:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53040 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:58:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbfKMB6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:58:55 -0500
+        id S1729090AbfKMB6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:58:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76189222D3;
-        Wed, 13 Nov 2019 01:58:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD3552245A;
+        Wed, 13 Nov 2019 01:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610335;
-        bh=D9FF+PKLhEVyXZcKFFSveysZnUiYAUBTZCk1o2cEWVk=;
+        s=default; t=1573610330;
+        bh=BS6rKx4QK1VTGB6Ow00xYvFJ4tektkmDu92Gqm0uiNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sfY/juds/7c0rLT6rlHBzTUQFFlrS3g4T7XUIRYjAiAlnJ/SxwU2Lf+Fat+jQXd/t
-         sz7s/b+flLCpmawQ08FAKZqWK5Gh0tVU6kIgTQqc0m7Yb3jFfHWfEY31Cd9g0ysH54
-         EbalyJub8hGnEGMqqH1j/9XOj5L5bR9ZaOG/X2qM=
+        b=eVvLYY4nybhgtak+2M11OTyUpwSObuZJIzX5aob0+7TrnPI0KxTNNSFEktAjL8YgN
+         Vp4kjI4f8lbVsds2EliWsL9ooJSaOFLKC3RDMyru7Y4gJYK7rZ+UYEWyyFA/K+fGf3
+         n+uOX0EH2eBC146o8quUQH3xMAcOEdgpEgHVqeLA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wang6495@umn.edu>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 092/115] media: isif: fix a NULL pointer dereference bug
-Date:   Tue, 12 Nov 2019 20:55:59 -0500
-Message-Id: <20191113015622.11592-92-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Lianbo Jiang <lijiang@redhat.com>,
+        x86@kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 088/115] proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
+Date:   Tue, 12 Nov 2019 20:55:55 -0500
+Message-Id: <20191113015622.11592-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,47 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit a26ac6c1bed951b2066cc4b2257facd919e35c0b ]
+[ Upstream commit cf089611f4c446285046fcd426d90c18f37d2905 ]
 
-In isif_probe(), there is a while loop to get the ISIF base address and
-linearization table0 and table1 address. In the loop body, the function
-platform_get_resource() is called to get the resource. If
-platform_get_resource() returns NULL, the loop is terminated and the
-execution goes to 'fail_nobase_res'. Suppose the loop is terminated at the
-first iteration because platform_get_resource() returns NULL and the
-execution goes to 'fail_nobase_res'. Given that there is another while loop
-at 'fail_nobase_res' and i equals to 0, one iteration of the second while
-loop will be executed. However, the second while loop does not check the
-return value of platform_get_resource(). This can cause a NULL pointer
-dereference bug if the return value is a NULL pointer.
+Lianbo reported a build error with a particular 32-bit config, see Link
+below for details.
 
-This patch avoids the above issue by adding a check in the second while
-loop after the call to platform_get_resource().
+Provide a weak copy_oldmem_page_encrypted() function which architectures
+can override, in the same manner other functionality in that file is
+supplied.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Lianbo Jiang <lijiang@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: x86@kernel.org
+Link: http://lkml.kernel.org/r/710b9d95-2f70-eadf-c4a1-c3dc80ee4ebb@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/isif.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/proc/vmcore.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
-index 5813b49391edb..90d0f13283ae9 100644
---- a/drivers/media/platform/davinci/isif.c
-+++ b/drivers/media/platform/davinci/isif.c
-@@ -1102,7 +1102,8 @@ static int isif_probe(struct platform_device *pdev)
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 885d445afa0d9..ce400f97370d3 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -164,6 +164,16 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+ 	return remap_pfn_range(vma, from, pfn, size, prot);
+ }
  
- 	while (i >= 0) {
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
--		release_mem_region(res->start, resource_size(res));
-+		if (res)
-+			release_mem_region(res->start, resource_size(res));
- 		i--;
- 	}
- 	vpfe_unregister_ccdc_device(&isif_hw_dev);
++/*
++ * Architectures which support memory encryption override this.
++ */
++ssize_t __weak
++copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
++			   unsigned long offset, int userbuf)
++{
++	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
++}
++
+ /*
+  * Copy to either kernel or user space
+  */
 -- 
 2.20.1
 
