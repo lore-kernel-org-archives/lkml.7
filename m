@@ -2,111 +2,138 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E21C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375A2C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E319206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:36:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XgT9OOUk"
+	by mail.kernel.org (Postfix) with ESMTP id 1864F2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfKMCgM (ORCPT
+        id S1727575AbfKMCgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:36:12 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:41460 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfKMCgJ (ORCPT
+        Tue, 12 Nov 2019 21:36:16 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:38752 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727405AbfKMCgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:36:09 -0500
-Received: by mail-pg1-f201.google.com with SMTP id e6so742951pgc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Nov 2019 18:36:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=j/m5gKoO0jXE5BYiRELmqLQO+KOEzq6qVcGYQdzOaSA=;
-        b=XgT9OOUk3Yzbi5DcZ2hay2pQFUGc1C8JY/5SA0LlfseAK+RhPY+71H6xpSldWlhSUe
-         R9GgGqV4at+vdSBUE8daDaNeFdK+nLrVVaDX/LAkaLhuF3uf6imXA+7dLiENKvXLfaWp
-         iLdt55FdJCRJZ1R1A5pWhqZj+jjlwzp4usrjP2FUtoZyo114DxMiDZ5jfZHluHJgnbBA
-         8QRRFNIdOTHX9gS5bdLMBT6zr1BxIyqjIk4upS3q+n7pWPeFmF5OfwpZbWYU8drHzMhO
-         jjpTtkobVVPWzyCvqti8iv4ADbXMyvD0D0UsAez45khHi5TiY/0D42l5dprS4XOUaWpD
-         vb6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=j/m5gKoO0jXE5BYiRELmqLQO+KOEzq6qVcGYQdzOaSA=;
-        b=CkQqZhZwj/4aQIgyEUeaotJRaohppxxtj5/RDIVcQ+TeoERdA0YFw6/cRiEHjoPB9n
-         5y9D4mXJ3n1d9npIOUbJAOfJY6gnnwLaWpGjwn4H0H8U0EGtEQO7Q+7Jh+IdhCqltPAN
-         7jeP13MRffNozTSmcgX1Gs7EvItNtRosnToz1ootWXoy2lNsLteDJcsorUCFKqgtMFt6
-         B9wuo0ryrnW3hES1spx5wrD5dWZfb708r7DSNnip9W+0sfN5Waf/GAgTMnZZRoWiITYJ
-         H0q40eQeexm9DqlGFmG7ZjGZOXmWBx33TXzIPYPSS+V7PiO/XHF9W0ikybrUxSzEM+M8
-         kkEw==
-X-Gm-Message-State: APjAAAUhtjED05kbzLyF7Yd/g32VAAJNkppgo46b5o1ZLLxoANXSbzL2
-        nO+c6ZEK/WMqqF3lsP/80ptePH5APq1eqdo=
-X-Google-Smtp-Source: APXvYqy/iTcBCYhhvymxkn9JScQwGqIbVYAjgoqO+QvFZA1fjoiQ8ng2UZoFhvy3CTVKg4ofr5GXs6lQhmmutcw=
-X-Received: by 2002:a63:8f5e:: with SMTP id r30mr933408pgn.146.1573612568112;
- Tue, 12 Nov 2019 18:36:08 -0800 (PST)
-Date:   Tue, 12 Nov 2019 18:35:59 -0800
-In-Reply-To: <20191113023559.62295-1-saravanak@google.com>
-Message-Id: <20191113023559.62295-2-saravanak@google.com>
-Mime-Version: 1.0
-References: <20191113023559.62295-1-saravanak@google.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v1] driver core: Clarify documentation for fwnode_operations.add_links()
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 12 Nov 2019 21:36:14 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47CTJ769lnzQlB7;
+        Wed, 13 Nov 2019 03:36:07 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id wVw8SxpwKUfa; Wed, 13 Nov 2019 03:36:01 +0100 (CET)
+Date:   Wed, 13 Nov 2019 13:35:37 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 7/9] open: introduce openat2(2) syscall
+Message-ID: <20191113023537.epcgw5u2fdbinnyj@yavin.dot.cyphar.com>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-8-cyphar@cyphar.com>
+ <20191113022906.GD26530@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ohhoiky5cv3wybqd"
+Content-Disposition: inline
+In-Reply-To: <20191113022906.GD26530@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wording was a bit ambiguous. So update it to make it clear.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- include/linux/fwnode.h | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+--ohhoiky5cv3wybqd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 766ff9bb5876..23df37f85398 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -94,15 +94,16 @@ struct fwnode_reference_args {
-  *		available suppliers.
-  *
-  *		Return 0 if device links have been successfully created to all
-- *		the suppliers this device needs to create device links to or if
-- *		the supplier information is not known.
-+ *		the known suppliers of this device or if the supplier
-+ *		information is not known.
-  *
-- *		Return -ENODEV if and only if the suppliers needed for probing
-- *		the device are not yet available to create device links to.
-+ *		Return -ENODEV if the suppliers needed for probing this device
-+ *		have not been registered yet (because device links can only be
-+ *		created to devices registered with the driver core).
-  *
-- *		Return -EAGAIN if there are suppliers that need to be linked to
-- *		that are not yet available but none of those suppliers are
-- *		necessary for probing this device.
-+ *		Return -EAGAIN if some of the suppliers of this device have not
-+ *		been registered yet, but none of those suppliers are necessary
-+ *		for probing the device.
-  */
- struct fwnode_operations {
- 	struct fwnode_handle *(*get)(struct fwnode_handle *fwnode);
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Tue, Nov 05, 2019 at 08:05:51PM +1100, Aleksa Sarai wrote:
+> > +/*
+> > + * Arguments for how openat2(2) should open the target path. If @resol=
+ve is
+> > + * zero, then openat2(2) operates very similarly to openat(2).
+> > + *
+> > + * However, unlike openat(2), unknown bits in @flags result in -EINVAL=
+ rather
+> > + * than being silently ignored. @mode must be zero unless one of {O_CR=
+EAT,
+> > + * O_TMPFILE} are set, and @upgrade_mask must be zero unless O_PATH is=
+ set.
+> > + *
+> > + * @flags: O_* flags.
+> > + * @mode: O_CREAT/O_TMPFILE file mode.
+> > + * @upgrade_mask: UPGRADE_* flags (to restrict O_PATH re-opening).
+>=20
+> ???
 
+Sorry, that was left over from a previous revision (where the magic-link
+re-opening restrictions were part of this series).
+
+> > + * @resolve: RESOLVE_* flags.
+> > + */
+> > +struct open_how {
+> > +	__aligned_u64 flags;
+> > +	__u16 mode;
+> > +	__u16 __padding[3]; /* must be zeroed */
+> > +	__aligned_u64 resolve;
+> > +};
+
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--ohhoiky5cv3wybqd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXctr9QAKCRCdlLljIbnQ
+Ej91AQDSESPrMbumo+B1bVc2FthUOUuONyqVLG0aRmu7PQjnOgD7BOxMC9suhDip
+ayqrtLJhXKxmKpbFt69x0a97Rx8tGQ8=
+=4v0x
+-----END PGP SIGNATURE-----
+
+--ohhoiky5cv3wybqd--
