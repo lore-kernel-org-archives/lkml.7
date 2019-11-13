@@ -2,31 +2,31 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136C9C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF975C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E9E206FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4823206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 21:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKMVCZ (ORCPT
+        id S1727200AbfKMVCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:02:25 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38880 "EHLO
+        Wed, 13 Nov 2019 16:02:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38943 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfKMVCU (ORCPT
+        with ESMTP id S1727068AbfKMVCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:02:20 -0500
+        Wed, 13 Nov 2019 16:02:24 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iUzmH-00066C-Lg; Wed, 13 Nov 2019 22:02:13 +0100
-Message-Id: <20191113204240.767922595@linutronix.de>
+        id 1iUzmQ-00068D-Nt; Wed, 13 Nov 2019 22:02:22 +0100
+Message-Id: <20191113210105.078437077@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 13 Nov 2019 21:42:40 +0100
+Date:   Wed, 13 Nov 2019 21:42:54 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -35,110 +35,205 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>
-Subject: [patch V3 00/20] x86/iopl: Prevent user space from using CLI/STI with
- iopl(3)
+Subject: [patch V3 14/20] x86/ioperm: Share I/O bitmap if identical
+References: <20191113204240.767922595@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the third version of the attempt to confine the unwanted side
-effects of iopl(). The first version of this series can be found here:
+From: Thomas Gleixner <tglx@linutronix.de>
 
-   https://lore.kernel.org/r/20191106193459.581614484@linutronix.de
+The I/O bitmap is duplicated on fork. That's wasting memory and slows down
+fork. There is no point to do so. As long as the bitmap is not modified it
+can be shared between threads and processes.
 
-Second version is here:
+Add a refcount and just share it on fork. If a task modifies the bitmap
+then it has to do the duplication if and only if it is shared.
 
-   https://lore.kernel.org/r/20191111220314.519933535@linutronix.de
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
 
-The V1 cover letter also contains a longer variant of the
-background. Summary:
-
-iopl(level = 3) enables aside of access to all 65536 I/O ports also the
-usage of CLI/STI in user space.
-
-Disabling interrupts in user space can lead to system lockups and breaks
-assumptions in the kernel that userspace always runs with interrupts
-enabled.
-
-iopl() is often preferred over ioperm() as it avoids the overhead of
-copying the tasks I/O bitmap to the TSS bitmap on context switch. This
-overhead can be avoided by providing a all zeroes bitmap in the TSS and
-switching the TSS bitmap offset to this permit all IO bitmap. It's
-marginally slower than iopl() which is a one time setup, but prevents the
-usage of CLI/STI in user space.
-
-The changes vs. V3:
-
-    - Split out the restructuring of the first/subsequent ioperm()
-      invocation into a seperate patch to address the inconsisteny which
-      Andy detected in the patch which introduces the concept of
-      invalidating the I/O bitmap base to speed up context switching.
-      This change is moved in front so the subsequent changes are
-      functionally correct.
-
-    - Moved the non HW TSS data related to I/O bitmap(s) into a seperate
-      data structure. Modified version of Ingos proposed patch.
-
-    - Made struct memeber names more consistent (Ingo)
-
-    - Dropped the bitmap union. It is not longer necessary because V2
-      already dropped the finer grained copying algorithm. The sequence
-      count approach should avoid most of the copying overhead when the
-      number of ioperm() using processes is very low which is the normal
-      case.
-
-    - Dropped the pointer storage of the bitmap in the TSS data as it is
-      not required (Peter, Andy)
-
-    - Fixed the missing refcount setting in the bitmap duplication code
-      path. (Peter, Andy)
-
-    - Updated changelog and comment to explain the bitmap invalidation
-      logic. (Andy)
-
-    - Removed TIF_IO_BITMAP from the TIF flags which are evaluated on the
-      next task for entering the slow path.
-
-    - Folded the NULL pointer check fix
-
-    - Simplified the config option in the legacy removal patch (Andy)
-
-    - Extended the scope of the config option to disable ioperm() along
-      with iopl() which also mokes all related storage and functions
-      compile time conditional. (Andy)
-
-The series is also available from git:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/iopl
-
-Thanks,
-
-	tglx
 ---
- arch/x86/Kconfig                        |   18 ++
- arch/x86/entry/common.c                 |    4 
- arch/x86/include/asm/io_bitmap.h        |   29 ++++
- arch/x86/include/asm/paravirt.h         |    4 
- arch/x86/include/asm/paravirt_types.h   |    2 
- arch/x86/include/asm/pgtable_32_types.h |    2 
- arch/x86/include/asm/processor.h        |  113 ++++++++++-------
- arch/x86/include/asm/ptrace.h           |    6 
- arch/x86/include/asm/switch_to.h        |   10 +
- arch/x86/include/asm/thread_info.h      |   14 +-
- arch/x86/include/asm/xen/hypervisor.h   |    2 
- arch/x86/kernel/cpu/common.c            |  188 ++++++++++++----------------
- arch/x86/kernel/doublefault.c           |    2 
- arch/x86/kernel/ioport.c                |  209 +++++++++++++++++++++-----------
- arch/x86/kernel/paravirt.c              |    2 
- arch/x86/kernel/process.c               |  200 ++++++++++++++++++++++++------
- arch/x86/kernel/process_32.c            |   77 -----------
- arch/x86/kernel/process_64.c            |   86 -------------
- arch/x86/kernel/ptrace.c                |   12 +
- arch/x86/kvm/vmx/vmx.c                  |    8 -
- arch/x86/mm/cpu_entry_area.c            |    8 +
- arch/x86/xen/enlighten_pv.c             |   10 -
- tools/testing/selftests/x86/ioperm.c    |   16 ++
- tools/testing/selftests/x86/iopl.c      |  129 ++++++++++++++++++-
- 24 files changed, 674 insertions(+), 477 deletions(-)
+V3: Reset the ref count after duplicating io_bitmap. (Peter, Andy)
+
+V2: New patch
+---
+ arch/x86/include/asm/io_bitmap.h |    5 ++++
+ arch/x86/kernel/ioport.c         |   48 +++++++++++++++++++++++++++++++--------
+ arch/x86/kernel/process.c        |   39 ++++---------------------------
+ 3 files changed, 50 insertions(+), 42 deletions(-)
+
+--- a/arch/x86/include/asm/io_bitmap.h
++++ b/arch/x86/include/asm/io_bitmap.h
+@@ -2,15 +2,20 @@
+ #ifndef _ASM_X86_IOBITMAP_H
+ #define _ASM_X86_IOBITMAP_H
+ 
++#include <linux/refcount.h>
+ #include <asm/processor.h>
+ 
+ struct io_bitmap {
+ 	u64		sequence;
++	refcount_t	refcnt;
+ 	/* The maximum number of bytes to copy so all zero bits are covered */
+ 	unsigned int	max;
+ 	unsigned long	bitmap[IO_BITMAP_LONGS];
+ };
+ 
++struct task_struct;
++
++void io_bitmap_share(struct task_struct *tsk);
+ void io_bitmap_exit(void);
+ 
+ void tss_update_io_bitmap(void);
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -16,6 +16,17 @@
+ 
+ static atomic64_t io_bitmap_sequence;
+ 
++void io_bitmap_share(struct task_struct *tsk)
++ {
++	/*
++	 * Take a refcount on current's bitmap. It can be used by
++	 * both tasks as long as none of them changes the bitmap.
++	 */
++	refcount_inc(&current->thread.io_bitmap->refcnt);
++	tsk->thread.io_bitmap = current->thread.io_bitmap;
++	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
++}
++
+ void io_bitmap_exit(void)
+ {
+ 	struct io_bitmap *iobm = current->thread.io_bitmap;
+@@ -25,7 +36,8 @@ void io_bitmap_exit(void)
+ 	preempt_disable();
+ 	tss_update_io_bitmap();
+ 	preempt_enable();
+-	kfree(iobm);
++	if (iobm && refcount_dec_and_test(&iobm->refcnt))
++		kfree(iobm);
+ }
+ 
+ /*
+@@ -58,9 +70,32 @@ long ksys_ioperm(unsigned long from, uns
+ 			return -ENOMEM;
+ 
+ 		memset(iobm->bitmap, 0xff, sizeof(iobm->bitmap));
++		refcount_set(&iobm->refcnt, 1);
++	}
++
++	/*
++	 * If the bitmap is not shared, then nothing can take a refcount as
++	 * current can obviously not fork at the same time. If it's shared
++	 * duplicate it and drop the refcount on the original one.
++	 */
++	if (refcount_read(&iobm->refcnt) > 1) {
++		iobm = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
++		if (!iobm)
++			return -ENOMEM;
++		refcount_set(&iobm->refcnt, 1);
++		io_bitmap_exit();
+ 	}
+ 
+ 	/*
++	 * Store the bitmap pointer (might be the same if the task already
++	 * head one). Must be done here so freeing the bitmap when all
++	 * permissions are dropped has the pointer set up.
++	 */
++	t->io_bitmap = iobm;
++	/* Mark it active for context switching and exit to user mode */
++	set_thread_flag(TIF_IO_BITMAP);
++
++	/*
+ 	 * Update the tasks bitmap. The update of the TSS bitmap happens on
+ 	 * exit to user mode. So this needs no protection.
+ 	 */
+@@ -86,16 +121,11 @@ long ksys_ioperm(unsigned long from, uns
+ 
+ 	iobm->max = (max_long + 1) * sizeof(unsigned long);
+ 
+-	/* Update the sequence number to force an update in switch_to() */
+-	iobm->sequence = atomic64_add_return(1, &io_bitmap_sequence);
+-
+ 	/*
+-	 * Store the bitmap pointer (might be the same if the task already
+-	 * head one). Set the TIF flag, just in case this is the first
+-	 * invocation.
++	 * Update the sequence number to force a TSS update on return to
++	 * user mode.
+ 	 */
+-	t->io_bitmap = iobm;
+-	set_thread_flag(TIF_IO_BITMAP);
++	iobm->sequence = atomic64_add_return(1, &io_bitmap_sequence);
+ 
+ 	return 0;
+ }
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -122,37 +122,13 @@ static int set_new_tls(struct task_struc
+ 		return do_set_thread_area_64(p, ARCH_SET_FS, tls);
+ }
+ 
+-static inline int copy_io_bitmap(struct task_struct *tsk)
+-{
+-	struct io_bitmap *iobm = current->thread.io_bitmap;
+-
+-	if (likely(!test_tsk_thread_flag(current, TIF_IO_BITMAP)))
+-		return 0;
+-
+-	tsk->thread.io_bitmap = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
+-
+-	if (!tsk->thread.io_bitmap)
+-		return -ENOMEM;
+-
+-	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+-	return 0;
+-}
+-
+-static inline void free_io_bitmap(struct task_struct *tsk)
+-{
+-	if (tsk->thread.io_bitmap) {
+-		kfree(tsk->thread.io_bitmap);
+-		tsk->thread.io_bitmap = NULL;
+-	}
+-}
+-
+ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+ 		    unsigned long arg, struct task_struct *p, unsigned long tls)
+ {
+ 	struct inactive_task_frame *frame;
+ 	struct fork_frame *fork_frame;
+ 	struct pt_regs *childregs;
+-	int ret;
++	int ret = 0;
+ 
+ 	childregs = task_pt_regs(p);
+ 	fork_frame = container_of(childregs, struct fork_frame, regs);
+@@ -193,16 +169,13 @@ int copy_thread_tls(unsigned long clone_
+ 	task_user_gs(p) = get_user_gs(current_pt_regs());
+ #endif
+ 
+-	ret = copy_io_bitmap(p);
+-	if (ret)
+-		return ret;
+-
+ 	/* Set a new TLS for the child thread? */
+-	if (clone_flags & CLONE_SETTLS) {
++	if (clone_flags & CLONE_SETTLS)
+ 		ret = set_new_tls(p, tls);
+-		if (ret)
+-			free_io_bitmap(p);
+-	}
++
++	if (!ret && unlikely(test_tsk_thread_flag(current, TIF_IO_BITMAP)))
++		io_bitmap_share(p);
++
+ 	return ret;
+ }
+ 
+
 
