@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33658C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0719C17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02550222CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12EB20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573609927;
-	bh=r8hnijHJ0SYL+qyAwyuyhR0Z1cWediu4nKfrfBcM7Z8=;
+	s=default; t=1573609930;
+	bh=l6pIeRuMJhfnBHzeFNNTbpdwiyNr5qVCW2IiF8wlkhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X6wZsKwdRII3qwIqyUf6B8ttHr7+GzeYsS7DwWOr48VLQEw2PiKPGipLQ7SIDEFBz
-	 B9es5Tqj879FJ8KeMOP10f6BgQ3BzRp3CFg2Wvw53WL7AM7a4QQWb4CRbJTTYMB6j3
-	 mbaX5xyeACW7qwfhSUAzSOxdF2YW72PMZgfl8rQ0=
+	b=xNmLP4C/p44uwqInXEPujzCE+Jsce2j1PMC4G2CC1IDk5eIVQvrJRZDPnVhbyrkrK
+	 9HEMHNJ4JyKv2NgG/q2rBoq1ODTkUkWsYE+2AaWHwoLh9w8I5lX6rM8Bp25ocABDYa
+	 iWYHp5GXu9sRJFVySf8OH5T26lp9e6buf6ifAVwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfKMBwF (ORCPT
+        id S1728169AbfKMBwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:52:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:52:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbfKMBwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:52:00 -0500
+        id S1728119AbfKMBwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:52:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7952820674;
-        Wed, 13 Nov 2019 01:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1460B20674;
+        Wed, 13 Nov 2019 01:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609920;
-        bh=r8hnijHJ0SYL+qyAwyuyhR0Z1cWediu4nKfrfBcM7Z8=;
+        s=default; t=1573609922;
+        bh=l6pIeRuMJhfnBHzeFNNTbpdwiyNr5qVCW2IiF8wlkhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gfjo+XwXI8EUxKXfZzQHNGqxBUUE+Wcj1PkXPC3YJ2rFzdVk4whajbR0Z1x9jJE7w
-         DoVSkMyvoBuSth2/D6DEzkqZeSNC5VH3QiT0S3dE3jJZAxezA8j3PBrbjyWfl4D2ZW
-         vD76y9kK0oCvSF607PBjxSIk5oSsIZN5veTV9GeU=
+        b=riFSBAertdqd8ZRL1oQTyGJ+eRRy+QFZ1p3EKv7nubN4F4N217D8j4jmL8yVRS1LN
+         gIlAsnj5AGcLp/TmLfJqAbORRZqsClCsY0Q4GHegFTuL2xmwpD8ulP4npuneCdWwd8
+         LBBZ8fZChDR74DypEs9eZN1DTzc+d4hp794CR6cM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Radoslaw Tyl <radoslawx.tyl@intel.com>,
         Andrew Bowers <andrewx.bowers@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 068/209] ixgbe: Fix ixgbe TX hangs with XDP_TX beyond queue limit
-Date:   Tue, 12 Nov 2019 20:48:04 -0500
-Message-Id: <20191113015025.9685-68-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 070/209] ixgbe: Fix crash with VFs and flow director on interface flap
+Date:   Tue, 12 Nov 2019 20:48:06 -0500
+Message-Id: <20191113015025.9685-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -63,46 +62,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-[ Upstream commit 8d7179b1e2d64b3493c0114916486fe92e6109a9 ]
+[ Upstream commit 5d826d209164b0752c883607be4cdbbcf7cab494 ]
 
-We have Tx hang when number Tx and XDP queues are more than 64.
-In XDP always is MTQC == 0x0 (64TxQs). We need more space for Tx queues.
+This patch fix crash when we have restore flow director filters after reset
+adapter. In ixgbe_fdir_filter_restore() filter->action is outside of the
+rx_ring array, as it has a VF identifier in the upper 32 bits.
 
 Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
 Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 85280765d793d..f3e21de3b1f0b 100644
+index f3e21de3b1f0b..b45a6e2ed8d15 100644
 --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
 +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -3582,12 +3582,18 @@ static void ixgbe_setup_mtqc(struct ixgbe_adapter *adapter)
- 		else
- 			mtqc |= IXGBE_MTQC_64VF;
- 	} else {
--		if (tcs > 4)
-+		if (tcs > 4) {
- 			mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_8TC_8TQ;
--		else if (tcs > 1)
-+		} else if (tcs > 1) {
- 			mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_4TC_4TQ;
--		else
--			mtqc = IXGBE_MTQC_64Q_1PB;
-+		} else {
-+			u8 max_txq = adapter->num_tx_queues +
-+				adapter->num_xdp_queues;
-+			if (max_txq > 63)
-+				mtqc = IXGBE_MTQC_RT_ENA | IXGBE_MTQC_4TC_4TQ;
-+			else
-+				mtqc = IXGBE_MTQC_64Q_1PB;
-+		}
+@@ -5187,6 +5187,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	struct hlist_node *node2;
+ 	struct ixgbe_fdir_filter *filter;
++	u64 action;
+ 
+ 	spin_lock(&adapter->fdir_perfect_lock);
+ 
+@@ -5195,12 +5196,17 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
+ 
+ 	hlist_for_each_entry_safe(filter, node2,
+ 				  &adapter->fdir_filter_list, fdir_node) {
++		action = filter->action;
++		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
++			action =
++			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
++
+ 		ixgbe_fdir_write_perfect_filter_82599(hw,
+ 				&filter->filter,
+ 				filter->sw_idx,
+-				(filter->action == IXGBE_FDIR_DROP_QUEUE) ?
++				(action == IXGBE_FDIR_DROP_QUEUE) ?
+ 				IXGBE_FDIR_DROP_QUEUE :
+-				adapter->rx_ring[filter->action]->reg_idx);
++				adapter->rx_ring[action]->reg_idx);
  	}
  
- 	IXGBE_WRITE_REG(hw, IXGBE_MTQC, mtqc);
+ 	spin_unlock(&adapter->fdir_perfect_lock);
 -- 
 2.20.1
 
