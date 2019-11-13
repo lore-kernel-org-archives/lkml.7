@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0183AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFCBC17441
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD17822459
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156D3222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610023;
-	bh=tWMoYBDBxFN95d0VknL5vepaomjR5eoKtzCaE7yb/NY=;
+	s=default; t=1573610028;
+	bh=ZMIpm2eGoF1gz+prN8Rj5RSMJQK+YlymFSmMKKZXimg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwWZXqrr84ivwGxbmnnOlvrSyVitd7AFGJohiynbh6/RMoMEFIe5jjAjyC0ot3q1k
-	 QRdVn9TlgB41jexNxIz6asoN7lZa8xAKI1Mei3msB0cfrIWpihFLHTCjlKrLYcwlsy
-	 mAAQElQCD5Et7IHbdtjgghLkmOwjZ8T8kbWHsDCw=
+	b=2baxjHDcQRjPGds7JZnwQpjSVaGbSArBm+SBKTr+gAtr9Zn2Gdgp9+iuk7xHId80G
+	 42OGt8FhnzEcTndEsoYdyHiMP/Q2K5HOVuMWSchpq/HoSaBp4rUSn/79ALk2TzH8i7
+	 1uNT/4Uh5aoBfyNvbCZN4ag2QIidQDJm2FawbH08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfKMBxn (ORCPT
+        id S1728671AbfKMBxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:53:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43342 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:53:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfKMBxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:53:33 -0500
+        id S1728608AbfKMBxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:53:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F9F02245A;
-        Wed, 13 Nov 2019 01:53:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94DB32245C;
+        Wed, 13 Nov 2019 01:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610013;
-        bh=tWMoYBDBxFN95d0VknL5vepaomjR5eoKtzCaE7yb/NY=;
+        s=default; t=1573610014;
+        bh=ZMIpm2eGoF1gz+prN8Rj5RSMJQK+YlymFSmMKKZXimg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IO9op3sTdcQ8pHwZrBBSlRXH3zPUkk4OmwuEgyfT+LeKOpAv2JtfrkFZe/yJkBis6
-         Wdn+Et5Ee3d83A0p6JGAgz5SUnRVBCX11Ym1cyeUDLyt3kGPSnnb7shcTX7JfNGGuO
-         y4qeIMLq+QW6aXPSmh3c5fh2tNd+zoh6tue3qvzo=
+        b=A1qUoaXMmn2gGh81d06JuSEIal686YXWxsT7dj6D3TT+9gqHiW+QKT5Bs7Qlu4oaO
+         ZFSpPUTrDSCVkvCPGGpmMgtPFhrHHOBMmBgUJX4nQYB/YTffRpsogDwSYdG3kSOrQj
+         R2xTSAP5FqYNpsmA1sH5WHo24ilUFqQQbi+TB/sE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Gross <andy.gross@linaro.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
         Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 117/209] i2c: qup: use core to detect 'no zero length' quirk
-Date:   Tue, 12 Nov 2019 20:48:53 -0500
-Message-Id: <20191113015025.9685-117-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 118/209] i2c: tegra: use core to detect 'no zero length' quirk
+Date:   Tue, 12 Nov 2019 20:48:54 -0500
+Message-Id: <20191113015025.9685-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -63,67 +63,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit de82bb431855580ad659bfed3e858bd9dd12efd0 ]
+[ Upstream commit c96c0f2683804b710531e7b754dcd02b5ded6d4a ]
 
 And don't reimplement in the driver.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Andy Gross <andy.gross@linaro.org>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-qup.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index c86c3ae1318f2..e09cd0775ae91 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -1088,11 +1088,6 @@ static int qup_i2c_xfer(struct i2c_adapter *adap,
- 	writel(I2C_MINI_CORE | I2C_N_VAL, qup->base + QUP_CONFIG);
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index ef13b6ce9d8de..47d196c026ba6 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -684,9 +684,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
  
- 	for (idx = 0; idx < num; idx++) {
--		if (msgs[idx].len == 0) {
--			ret = -EINVAL;
--			goto out;
--		}
--
- 		if (qup_i2c_poll_state_i2c_master(qup)) {
- 			ret = -EIO;
- 			goto out;
-@@ -1520,9 +1515,6 @@ qup_i2c_determine_mode_v2(struct qup_i2c_dev *qup,
+ 	tegra_i2c_flush_fifos(i2c_dev);
  
- 	/* All i2c_msgs should be transferred using either dma or cpu */
- 	for (idx = 0; idx < num; idx++) {
--		if (msgs[idx].len == 0)
--			return -EINVAL;
+-	if (msg->len == 0)
+-		return -EINVAL;
 -
- 		if (msgs[idx].flags & I2C_M_RD)
- 			max_rx_len = max_t(unsigned int, max_rx_len,
- 					   msgs[idx].len);
-@@ -1636,9 +1628,14 @@ static const struct i2c_algorithm qup_i2c_algo_v2 = {
-  * which limits the possible read to 256 (QUP_READ_LIMIT) bytes.
-  */
- static const struct i2c_adapter_quirks qup_i2c_quirks = {
+ 	i2c_dev->msg_buf = msg->buf;
+ 	i2c_dev->msg_buf_remaining = msg->len;
+ 	i2c_dev->msg_err = I2C_ERR_NONE;
+@@ -831,6 +828,7 @@ static const struct i2c_algorithm tegra_i2c_algo = {
+ 
+ /* payload size is only 12 bit */
+ static const struct i2c_adapter_quirks tegra_i2c_quirks = {
 +	.flags = I2C_AQ_NO_ZERO_LEN,
- 	.max_read_len = QUP_READ_LIMIT,
+ 	.max_read_len = 4096,
+ 	.max_write_len = 4096 - 12,
  };
- 
-+static const struct i2c_adapter_quirks qup_i2c_quirks_v2 = {
-+	.flags = I2C_AQ_NO_ZERO_LEN,
-+};
-+
- static void qup_i2c_enable_clocks(struct qup_i2c_dev *qup)
- {
- 	clk_prepare_enable(qup->clk);
-@@ -1701,6 +1698,7 @@ static int qup_i2c_probe(struct platform_device *pdev)
- 		is_qup_v1 = true;
- 	} else {
- 		qup->adap.algo = &qup_i2c_algo_v2;
-+		qup->adap.quirks = &qup_i2c_quirks_v2;
- 		is_qup_v1 = false;
- 		if (acpi_match_device(qup_i2c_acpi_match, qup->dev))
- 			goto nodma;
 -- 
 2.20.1
 
