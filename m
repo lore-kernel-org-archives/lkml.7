@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E22FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43791206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A73D206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610841;
-	bh=zzrMT65p4aIG+QXYsqjFqm0EsZZulY+2S2RkW/+FWLs=;
+	s=default; t=1573610849;
+	bh=uwR+ZkkgiwpN6ZchteRgte5Qy/AWfYAwBCYwH+Xv/ZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RWrZR4qfxDj9hcJjfWU3MXCyMA9Cx9tiHod2h14ySbygvjRcWaZz7ZLvqe9oMK8li
-	 S3UUdc95NUWOJ/Qfq/fi7iFoDsXEv6mRE9kXCONia1CSOZxY45AxfEcEXe7CX86MCx
-	 91tNVwZqvV+SX8X3/RKVHTYIaUTrT30sek3rMNEE=
+	b=tMlpToVJHe1nhoNqRmKxjwHyWz19z8slxeOwk2y5sGICC+m/fRFMWHOkkikhd2m1Y
+	 UQleW/8SbCpcP3ZsGlzXCzHa3dWN6x8eq4vEBv7rMevfS/edBN+bQpaxGMLllIYIaG
+	 UaXvZ5MatTme4TXNMNmkPGw851ybJ1PvyxiY1RQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbfKMCHT (ORCPT
+        id S1730848AbfKMCH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:07:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56244 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:07:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729697AbfKMCAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:48 -0500
+        id S1730550AbfKMCAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ACC622469;
-        Wed, 13 Nov 2019 02:00:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B7B22470;
+        Wed, 13 Nov 2019 02:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610446;
-        bh=zzrMT65p4aIG+QXYsqjFqm0EsZZulY+2S2RkW/+FWLs=;
+        s=default; t=1573610443;
+        bh=uwR+ZkkgiwpN6ZchteRgte5Qy/AWfYAwBCYwH+Xv/ZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cGgJJdvQwRMOv0FUHNIlOPm4Oo/7pcfiu5MwNHyXLoFYfWEI2t4YGGN3sJ2B4S8H0
-         IqZIpT6PXUiY0MMTV0s53uoglx99QxkDzLhXycd1DPMk/xIlGWi4mXSr9DcsXXbnkQ
-         QgH8/XTg1fD88FU2bg4YhFHDDVBP2OSjjS7rbX0I=
+        b=RhRD94IGCvYaj1I6hgP/+ALK4ik5W2u0GM48hkqjmFy0dwF4uuQ9bvYiYkkFUgc5e
+         gD85Oja/Z6hkvlmegoDrVTHLmazmgMkOF205RlUmzEzL4+MJEYGMBN5seQFVDP7VPq
+         UUtx8VCa2MdLo3JO6q2xTYGEKfLivKhxZiGjWEDY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Radu Solea <radu.solea@nxp.com>,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 43/68] crypto: mxs-dcp - Fix AES issues
-Date:   Tue, 12 Nov 2019 20:59:07 -0500
-Message-Id: <20191113015932.12655-43-sashal@kernel.org>
+Cc:     Julian Sax <jsbc@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 40/68] Input: silead - try firmware reload after unsuccessful resume
+Date:   Tue, 12 Nov 2019 20:59:04 -0500
+Message-Id: <20191113015932.12655-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -61,119 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radu Solea <radu.solea@nxp.com>
+From: Julian Sax <jsbc@gmx.de>
 
-[ Upstream commit fadd7a6e616b89c7f4f7bfa7b824f290bab32c3c ]
+[ Upstream commit dde27443211062e841806feaf690674b7c3a599f ]
 
-The DCP driver does not obey cryptlen, when doing android CTS this
-results in passing to hardware input stream lengths which are not
-multiple of block size.
+A certain silead controller (Chip ID: 0x56810000) loses its firmware
+after suspend, causing the resume to fail. This patch tries to load
+the firmware, should a resume error occur and retries the resuming.
 
-Add a check to prevent future erroneous stream lengths from reaching the
-hardware and adjust the scatterlist walking code to obey cryptlen.
-
-Also properly copy-out the IV for chaining.
-
-Signed-off-by: Radu Solea <radu.solea@nxp.com>
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/mxs-dcp.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ drivers/input/touchscreen/silead.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
-index 7483adf120084..b4bd34429cc14 100644
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -225,6 +225,12 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
- 	dma_addr_t dst_phys = dma_map_single(sdcp->dev, sdcp->coh->aes_out_buf,
- 					     DCP_BUF_SZ, DMA_FROM_DEVICE);
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index f502c8488be86..867772878c0c8 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -504,20 +504,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
+ static int __maybe_unused silead_ts_resume(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
++	bool second_try = false;
+ 	int error, status;
  
-+	if (actx->fill % AES_BLOCK_SIZE) {
-+		dev_err(sdcp->dev, "Invalid block size!\n");
-+		ret = -EINVAL;
-+		goto aes_done_run;
+ 	silead_ts_set_power(client, SILEAD_POWER_ON);
+ 
++ retry:
+ 	error = silead_ts_reset(client);
+ 	if (error)
+ 		return error;
+ 
++	if (second_try) {
++		error = silead_ts_load_fw(client);
++		if (error)
++			return error;
 +	}
 +
- 	/* Fill in the DMA descriptor. */
- 	desc->control0 = MXS_DCP_CONTROL0_DECR_SEMAPHORE |
- 		    MXS_DCP_CONTROL0_INTERRUPT |
-@@ -254,6 +260,7 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
+ 	error = silead_ts_startup(client);
+ 	if (error)
+ 		return error;
  
- 	ret = mxs_dcp_start_dma(actx);
- 
-+aes_done_run:
- 	dma_unmap_single(sdcp->dev, key_phys, 2 * AES_KEYSIZE_128,
- 			 DMA_TO_DEVICE);
- 	dma_unmap_single(sdcp->dev, src_phys, DCP_BUF_SZ, DMA_TO_DEVICE);
-@@ -280,13 +287,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 
- 	uint8_t *out_tmp, *src_buf, *dst_buf = NULL;
- 	uint32_t dst_off = 0;
-+	uint32_t last_out_len = 0;
- 
- 	uint8_t *key = sdcp->coh->aes_key;
- 
- 	int ret = 0;
- 	int split = 0;
--	unsigned int i, len, clen, rem = 0;
-+	unsigned int i, len, clen, rem = 0, tlen = 0;
- 	int init = 0;
-+	bool limit_hit = false;
- 
- 	actx->fill = 0;
- 
-@@ -305,6 +314,11 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 	for_each_sg(req->src, src, nents, i) {
- 		src_buf = sg_virt(src);
- 		len = sg_dma_len(src);
-+		tlen += len;
-+		limit_hit = tlen > req->nbytes;
-+
-+		if (limit_hit)
-+			len = req->nbytes - (tlen - len);
- 
- 		do {
- 			if (actx->fill + len > out_off)
-@@ -321,13 +335,15 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 			 * If we filled the buffer or this is the last SG,
- 			 * submit the buffer.
- 			 */
--			if (actx->fill == out_off || sg_is_last(src)) {
-+			if (actx->fill == out_off || sg_is_last(src) ||
-+				limit_hit) {
- 				ret = mxs_dcp_run_aes(actx, req, init);
- 				if (ret)
- 					return ret;
- 				init = 0;
- 
- 				out_tmp = out_buf;
-+				last_out_len = actx->fill;
- 				while (dst && actx->fill) {
- 					if (!split) {
- 						dst_buf = sg_virt(dst);
-@@ -350,6 +366,19 @@ static int mxs_dcp_aes_block_crypt(struct crypto_async_request *arq)
- 				}
- 			}
- 		} while (len);
-+
-+		if (limit_hit)
-+			break;
-+	}
-+
-+	/* Copy the IV for CBC for chaining */
-+	if (!rctx->ecb) {
-+		if (rctx->enc)
-+			memcpy(req->info, out_buf+(last_out_len-AES_BLOCK_SIZE),
-+				AES_BLOCK_SIZE);
-+		else
-+			memcpy(req->info, in_buf+(last_out_len-AES_BLOCK_SIZE),
-+				AES_BLOCK_SIZE);
+ 	status = silead_ts_get_status(client);
+ 	if (status != SILEAD_STATUS_OK) {
++		if (!second_try) {
++			second_try = true;
++			dev_dbg(dev, "Reloading firmware after unsuccessful resume\n");
++			goto retry;
++		}
+ 		dev_err(dev, "Resume error, status: 0x%02x\n", status);
+ 		return -ENODEV;
  	}
- 
- 	return ret;
 -- 
 2.20.1
 
