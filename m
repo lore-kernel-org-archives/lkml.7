@@ -4,60 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7325C17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF405C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F510222C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA9021783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610611;
-	bh=rNvF+D9boZoPCiNVhtlnr9pBgxIcp4oAPRekViOg1Ms=;
+	s=default; t=1573610623;
+	bh=jIJzKKrRiPN4sYSrKyogbBy6hg42/byJJuVxrEWKYyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/XYzJrypTOFaGEyl6GM3cSpjPOA5G7o84NeSbhty+HUcUmc07OuFRXWeRSpT4dTV
-	 ebsP0ZUYzd5fNYF7A33Qzk1VDgpeTgY0sLXpJCJe2tT2Seln/tfehcCtzKUbL+6s6d
-	 cBG2cWDz7Svq9gM7VCEUCgwAbWmG9ivTinpQ8kQE=
+	b=LNMQ1pKPow7BZ33OjurCvk/rOV+bDcxPpwJyZQALI2j6BZ4dcmA+5TA7+EH1xo/L9
+	 MFZZE68s5M5SXACUwTqSmHU5qbwcc4BjJQmlpJHQzPWpAQYwxeraJAUyvL32gRpGlE
+	 Pv7w9/ekw4JZysK0fH8WZiRdhw4UNF3N5Z39JgBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731106AbfKMCDa (ORCPT
+        id S1728766AbfKMCDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:03:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59540 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:03:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbfKMCCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:43 -0500
+        id S1730163AbfKMCCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0EDA204EC;
-        Wed, 13 Nov 2019 02:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D678621783;
+        Wed, 13 Nov 2019 02:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610562;
-        bh=rNvF+D9boZoPCiNVhtlnr9pBgxIcp4oAPRekViOg1Ms=;
+        s=default; t=1573610555;
+        bh=jIJzKKrRiPN4sYSrKyogbBy6hg42/byJJuVxrEWKYyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3UgGdEKZ+YO4V+CY70HOC1NGdoMNJlb6iwQALolkotGkzY2+Sg2tWntS8QSw1RGr
-         U3NL8M8o0JwdD8puQxsN9s/PPdHuduIDGwMkE7JyKMRt2CcF2uTogGVuYJos42rdeZ
-         QBLMP/rh3Mk0gcYT7CwMQ/1M8uMVHqvI3feCuh2I=
+        b=1kly9vC3KOIFb5FEAuJ2BmhJkBk3s1PciSMGBD25zCYvyfYRqYaUfNA15as4nKXeY
+         k5sTjL0zkZfhxbCWu4KB9erF9wiIGpYvs/AwXQ1ogvhWlWdx1yq7yrAcJj1x/xdQTM
+         KJ4Z6F1E4r6uF6tLir9XG7IBTghkVSinIdmz06wU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        baiyaowei@cmss.chinamobile.com, bhe@redhat.com,
-        dan.j.williams@intel.com, dyoung@redhat.com,
-        kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 41/48] x86/kexec: Correct KEXEC_BACKUP_SRC_END off-by-one error
-Date:   Tue, 12 Nov 2019 21:01:24 -0500
-Message-Id: <20191113020131.13356-41-sashal@kernel.org>
+Cc:     Wenwen Wang <wang6495@umn.edu>, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 38/48] media: isif: fix a NULL pointer dereference bug
+Date:   Tue, 12 Nov 2019 21:01:21 -0500
+Message-Id: <20191113020131.13356-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -70,65 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
+[ Upstream commit a26ac6c1bed951b2066cc4b2257facd919e35c0b ]
 
-The only use of KEXEC_BACKUP_SRC_END is as an argument to
-walk_system_ram_res():
+In isif_probe(), there is a while loop to get the ISIF base address and
+linearization table0 and table1 address. In the loop body, the function
+platform_get_resource() is called to get the resource. If
+platform_get_resource() returns NULL, the loop is terminated and the
+execution goes to 'fail_nobase_res'. Suppose the loop is terminated at the
+first iteration because platform_get_resource() returns NULL and the
+execution goes to 'fail_nobase_res'. Given that there is another while loop
+at 'fail_nobase_res' and i equals to 0, one iteration of the second while
+loop will be executed. However, the second while loop does not check the
+return value of platform_get_resource(). This can cause a NULL pointer
+dereference bug if the return value is a NULL pointer.
 
-  int crash_load_segments(struct kimage *image)
-  {
-    ...
-    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                        image, determine_backup_region);
+This patch avoids the above issue by adding a check in the second while
+loop after the call to platform_get_resource().
 
-walk_system_ram_res() expects "start, end" arguments that are inclusive,
-i.e., the range to be walked includes both the start and end addresses.
-
-KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
-first address *past* the desired 0-640KB range.
-
-Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
-region is [0-0x9ffff], not [0-0xa0000].
-
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Brijesh Singh <brijesh.singh@amd.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Lianbo Jiang <lijiang@redhat.com>
-CC: Takashi Iwai <tiwai@suse.de>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Tom Lendacky <thomas.lendacky@amd.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: baiyaowei@cmss.chinamobile.com
-CC: bhe@redhat.com
-CC: dan.j.williams@intel.com
-CC: dyoung@redhat.com
-CC: kexec@lists.infradead.org
-Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/kexec.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/isif.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index d2434c1cad055..414f9b52e58e6 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -66,7 +66,7 @@ struct kimage;
+diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
+index 99faea2e84c6b..78e37cf3470f2 100644
+--- a/drivers/media/platform/davinci/isif.c
++++ b/drivers/media/platform/davinci/isif.c
+@@ -1106,7 +1106,8 @@ static int isif_probe(struct platform_device *pdev)
  
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
- 
- /*
-  * CPU does not save ss and sp on stack if execution is already
+ 	while (i >= 0) {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+-		release_mem_region(res->start, resource_size(res));
++		if (res)
++			release_mem_region(res->start, resource_size(res));
+ 		i--;
+ 	}
+ 	vpfe_unregister_ccdc_device(&isif_hw_dev);
 -- 
 2.20.1
 
