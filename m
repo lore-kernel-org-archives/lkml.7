@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC8DC17441
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C755C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA67222CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1521D222CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610206;
-	bh=W6Cv9nYKuyieexMWJNDnH/JK4Gkfrg+rFkLPx5ydw7A=;
+	s=default; t=1573610210;
+	bh=YJh3dwXnlo6J40iWdRCkulTOyWzvrfmmV1Y3oAGdLM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TD8zTp88uWQK0q5h6Y+Tq9hUAwGIZk7cW9s87SW4UCL9+QHMf6xCtgid4PxMjB4fe
-	 QzikGz+I/UgPtql43x44GrYkucHZJZCndcz+LjJ4oOIM2h0kcthbKVKQXml8kSZq1g
-	 sNbe7ZFX4BcuThBjsKZgt0eVLr3vjZ8OPiThjm94=
+	b=k2wbfNZ8N0hfZdDaIzx9dt4v/LXdxfGy/LcEdivk/yK/nI0JrdFklADRYFxbPjAt2
+	 fLFS5BdphR8l9MaN0UjHc5SJ9avKBZI7EZlrWT9rdgtSz9E7+JUfll1JyoobQ4j7Dq
+	 m2MZBPibCFfnTPYpN8q1dhby2TWaUuFRlcAzkmGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbfKMB4p (ORCPT
+        id S1729601AbfKMB4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48986 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727511AbfKMB4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:36 -0500
+        id S1729479AbfKMB4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3E8E222D4;
-        Wed, 13 Nov 2019 01:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BBB1222D3;
+        Wed, 13 Nov 2019 01:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610195;
-        bh=W6Cv9nYKuyieexMWJNDnH/JK4Gkfrg+rFkLPx5ydw7A=;
+        s=default; t=1573610200;
+        bh=YJh3dwXnlo6J40iWdRCkulTOyWzvrfmmV1Y3oAGdLM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHdawAVYP+uama5eNeEV3CPDxXoVSSPrv3jfwKOjXKESu6ZKViTyhxMwRi1zKiMpF
-         a+l+j59Zr0dRz4RNzGF4cwBf4zdA81mbgEBDCov/zP2SMw4PO4BMfde8mReqQZdVwW
-         1d2wC9oynw9f4gB2Z5Cm7ux63pn972pa/5CRWlKg=
+        b=idSZaHTSYdFHjVSJUV9M2haWsfcp29MQR8GKEAj4c59gjJF+suVi4VguBpQyZ7xeR
+         Xw63dZ66t6fT9lvZr4Y//x0QzA74JfrRXWqAZDIVFo4h0mS88Q8MbmwUq9vXwPuBmB
+         yRDE0AoQYUxfPrmLCGoGUQqWPZqGDpFRPfr9eDSw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 009/115] IB/hfi1: Ensure ucast_dlid access doesnt exceed bounds
-Date:   Tue, 12 Nov 2019 20:54:36 -0500
-Message-Id: <20191113015622.11592-9-sashal@kernel.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Punit Agrawal <punit.agrawal@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 012/115] arm64/numa: Report correct memblock range for the dummy node
+Date:   Tue, 12 Nov 2019 20:54:39 -0500
+Message-Id: <20191113015622.11592-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -59,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dennis Dalessandro <dennis.dalessandro@intel.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
 
-[ Upstream commit 3144533bf667c8e53bb20656b78295960073e57b ]
+[ Upstream commit 77cfe950901e5c13aca2df6437a05f39dd9a929b ]
 
-The dlid assignment made by looking into the u_ucast_dlid array does not
-do an explicit check for the size of the array. The code path to arrive at
-def_port, the index value is long and complicated so its best to just have
-an explicit check here.
+The dummy node ID is marked into all memory ranges on the system. So the
+dummy node really extends the entire memblock.memory. Hence report correct
+extent information for the dummy node using memblock range helper functions
+instead of the range [0LLU, PFN_PHYS(max_pfn) - 1)].
 
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 1a2db30034 ("arm64, numa: Add NUMA support for arm64 platforms")
+Acked-by: Punit Agrawal <punit.agrawal@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/mm/numa.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.c b/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.c
-index a72278e9cd274..9c8ddaaa6fbbf 100644
---- a/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.c
-+++ b/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.c
-@@ -351,7 +351,8 @@ static uint32_t opa_vnic_get_dlid(struct opa_vnic_adapter *adapter,
- 			if (unlikely(!dlid))
- 				v_warn("Null dlid in MAC address\n");
- 		} else if (def_port != OPA_VNIC_INVALID_PORT) {
--			dlid = info->vesw.u_ucast_dlid[def_port];
-+			if (def_port < OPA_VESW_MAX_NUM_DEF_PORT)
-+				dlid = info->vesw.u_ucast_dlid[def_port];
- 		}
- 	}
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index dad128ba98bf8..e9c843e0c1727 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -419,7 +419,7 @@ static int __init dummy_numa_init(void)
+ 	if (numa_off)
+ 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+ 	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
+-		0LLU, PFN_PHYS(max_pfn) - 1);
++		memblock_start_of_DRAM(), memblock_end_of_DRAM() - 1);
  
+ 	for_each_memblock(memory, mblk) {
+ 		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
 -- 
 2.20.1
 
