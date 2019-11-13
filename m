@@ -2,112 +2,104 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0563C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF37C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A93206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 19:58:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBSfG6I/"
+	by mail.kernel.org (Postfix) with ESMTP id E8F49206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 20:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573675465;
+	bh=LZIwwPqo6cGSYYo3omBkRDVFip05Z5LaeW4j2tDTV2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TYIagd/rcC+CU6QHoDzl+GLTYs34fLQy1tYU0iSbhcHup980xUv5QDAblkj3+uo/0
+	 01xqn2KtzOUBRDFK1vZDynQZVfq1vxs5/1tgaAPRDE5CsPjEyIbxh99jId5M0RdCMH
+	 vCNMhF6EVfauv4d8pRG/U5KpTN17J4xViwKUZeoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbfKMT6P (ORCPT
+        id S1726393AbfKMUEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 14:58:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38867 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfKMT6P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 14:58:15 -0500
-Received: by mail-pl1-f193.google.com with SMTP id w8so1507970plq.5;
-        Wed, 13 Nov 2019 11:58:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=gISrUJSSGENPSYg0FzwrhO2Nvy2MYNgI0VQirzmff5I=;
-        b=kBSfG6I/08byu4W8xTnGVIvc3sVxIpiX37mKEksKf2EBtpAj+TPckk+eQPW86+Z1Z8
-         vxs59+0DsaZ+Z+0T709ACEth4GhYdkO2Sycql0TVsbC9cA8E3Cjl+Rt9YA28OACxF11c
-         fhEDdfnt7Kl52KW+gFm67OslZ9oQabc2byemD+TnAJvD3GijS79xL0GZi2pbRpCsruPg
-         Q3+Vrc876YUDUK07c1AlbhkjY62Gmrj/wzYvYj69U/6ap1inSNIPyi3hFxZ+9gTiLq72
-         OiTXKpiM+P8HpygOE7ZSEeXrYovhBrqAN2I8nf/t0zvAsjVrO5lOalMmeRqdKX15HNrz
-         O5Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=gISrUJSSGENPSYg0FzwrhO2Nvy2MYNgI0VQirzmff5I=;
-        b=V+kTw9pK0wfpGqoRDQ7sx/SHKVR49iqjehGKfGfFcjXz0FbwvAiNtLkGJMZQCFp32H
-         Uc+N0m+be5KHcp5jWoY+5XIh2yuUH4FdXJCgtYzLlfboj7V/voDE21SflmnVy4kQmyrO
-         IyzYYJ9UaUybuViDK8pcnZu0LWCgAb70tF3dsdBI81b4uSQZgtChl4fxDbBpcWLJKasM
-         TijxQOwC/iyvPrU8UgST0kBSEGbasn/XRSigo7Zu0//Qv0Cec5ky7B/HftxddnPiOc73
-         RlQmQIJn4mHi7Wx6hrebPbNqULH//1EqCMNQW8Zf0hlq9H3EgbGAxxxNrEPKSlsDDras
-         Rlaw==
-X-Gm-Message-State: APjAAAXSpx8ZoxC0508AULlWErgfTKIQWCN/m0RsUzMXAwJXenabbyys
-        oXcZsMwkiOObb5H592AS51D4GehB
-X-Google-Smtp-Source: APXvYqxUcT44/H/jHCiIeSm9wjFHihUIqgWpImQgGDPRlXdWg35beSHPJUOAIMLOERSUlNeyaHXQHg==
-X-Received: by 2002:a17:902:6a82:: with SMTP id n2mr5744755plk.5.1573675092580;
-        Wed, 13 Nov 2019 11:58:12 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id j11sm3275304pgk.3.2019.11.13.11.58.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 11:58:12 -0800 (PST)
-Date:   Wed, 13 Nov 2019 11:58:09 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.4-rc7
-Message-ID: <20191113195809.GA4263@dtor-ws>
+        Wed, 13 Nov 2019 15:04:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfKMUEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:04:22 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D7B206E5;
+        Wed, 13 Nov 2019 20:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573675462;
+        bh=LZIwwPqo6cGSYYo3omBkRDVFip05Z5LaeW4j2tDTV2g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lhnZFjvlbtfVvcPSF1Xz2bXxwpvSyQKGXcs/DZmH2Yq6Qo5X6zS2xMotyjpkxZx6x
+         CBBLyub/I93WCDLJkqQlz+qJKMDdR92ckWE9aeoZS0KU0JuiLO68+Z8tcNS1zd10Pw
+         SXhtQGMI7Ad6ZHKdgaQ60mOoZNuf6k6cAqaMMnN4=
+Date:   Wed, 13 Nov 2019 12:04:20 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: arm64/sha: fix function types
+Message-ID: <20191113200419.GE221701@gmail.com>
+Mail-Followup-To: Sami Tolvanen <samitolvanen@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kees Cook <keescook@chromium.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191112223046.176097-1-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191112223046.176097-1-samitolvanen@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Nov 12, 2019 at 02:30:46PM -0800, Sami Tolvanen wrote:
+> Declare assembly functions with the expected function type
+> instead of casting pointers in C to avoid type mismatch failures
+> with Control-Flow Integrity (CFI) checking.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/arm64/crypto/sha1-ce-glue.c   | 12 +++++-------
+>  arch/arm64/crypto/sha2-ce-glue.c   | 26 +++++++++++---------------
+>  arch/arm64/crypto/sha256-glue.c    | 30 ++++++++++++------------------
+>  arch/arm64/crypto/sha512-ce-glue.c | 23 ++++++++++-------------
+>  arch/arm64/crypto/sha512-glue.c    | 13 +++++--------
+>  5 files changed, 43 insertions(+), 61 deletions(-)
+> 
+> diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
+> index bdc1b6d7aff7..3153a9bbb683 100644
+> --- a/arch/arm64/crypto/sha1-ce-glue.c
+> +++ b/arch/arm64/crypto/sha1-ce-glue.c
+> @@ -25,7 +25,7 @@ struct sha1_ce_state {
+>  	u32			finalize;
+>  };
+>  
+> -asmlinkage void sha1_ce_transform(struct sha1_ce_state *sst, u8 const *src,
+> +asmlinkage void sha1_ce_transform(struct sha1_state *sst, u8 const *src,
+>  				  int blocks);
 
-Please pull from:
+Please update the comments in the corresponding assembly files too.
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+Also, this change doesn't really make sense because the assembly functions still
+expect struct sha1_ce_state, and they access sha1_ce_state::finalize which is
+not present in struct sha1_state.  There should either be wrapper functions that
+explicitly do the cast from sha1_state to sha1_ce_state, or there should be
+comments in the assembly files that very clearly explain that although the
+function prototype takes sha1_state, it's really assumed to be a sha1_ce_state.
 
-to receive updates for the input subsystem. You will get fixes to
-Synaptics RMI4 driver and fix for use after free in error path handling
-of Cypress TTSP driver.
+Likewise for SHA-256 and SHA-512.
 
-Changelog:
----------
-
-Andrew Duggan (3):
-      Input: synaptics-rmi4 - disable the relative position IRQ in the F12 driver
-      Input: synaptics-rmi4 - do not consume more data than we have (F11, F12)
-      Input: synaptics-rmi4 - remove unused result_bits mask
-
-Lucas Stach (2):
-      Input: synaptics-rmi4 - fix video buffer size
-      Input: synaptics-rmi4 - clear IRQ enables for F54
-
-Pan Bian (1):
-      Input: cyttsp4_core - fix use after free bug
-
-Diffstat:
---------
-
- drivers/input/rmi4/rmi_f11.c             |  9 +++------
- drivers/input/rmi4/rmi_f12.c             | 32 ++++++++++++++++++++++++++++----
- drivers/input/rmi4/rmi_f54.c             |  4 ++--
- drivers/input/touchscreen/cyttsp4_core.c |  7 -------
- 4 files changed, 33 insertions(+), 19 deletions(-)
-
-Thanks.
-
-
--- 
-Dmitry
+- Eric
