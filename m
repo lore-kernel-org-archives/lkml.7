@@ -2,180 +2,175 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E71C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EA1C17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7B22084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573604756;
-	bh=mLoRc7xrMdQw+ffhUJg6Sb6nBeDmV1R+gXAnFi4PYOQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ksvNb5aPyMnx670HkeuTybT1skIFgM1VQ7U26InrxpT/l4LcDrJ7YGOk618dq4EW2
-	 kPpXZd8iS5919KqEkNTMghByLT/A2R/HWkKcaCWxBT36q0frwGZ57ybhOtSALP71VH
-	 Y7BSSjlqu7whur0eoFdgfl0xVr9Pj5DZJ4DD6fcA=
+	by mail.kernel.org (Postfix) with ESMTP id D5141206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 00:27:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="X1rU415t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfKMAZz (ORCPT
+        id S1727065AbfKMA12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:25:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfKMAZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 19:25:54 -0500
-Received: from paulmck-ThinkPad-P72.home (mobile-166-170-41-44.mycingular.net [166.170.41.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 511E8206BB;
-        Wed, 13 Nov 2019 00:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573604753;
-        bh=mLoRc7xrMdQw+ffhUJg6Sb6nBeDmV1R+gXAnFi4PYOQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Qc7ANhhF0Q56Mvvb7FTBCe5m32hrRAqrgGZH8nUAiTUkP2Uos/8QMH9dWGu4cKiVc
-         W4HNcWNZNAdIbI4n1M+m9gBmTfcagZx4VeNFf8UkK8GZzWJFTjAI37Ut35W6szBKe2
-         QP74ZjQqV+vGcQg072MVSntLtt2JX0g6nNTRM7HM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B618335227E6; Tue, 12 Nov 2019 16:25:52 -0800 (PST)
-Date:   Tue, 12 Nov 2019 16:25:52 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzbot+3ef049d50587836c0606@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>
-Subject: Re: KCSAN: data-race in __alloc_file / __alloc_file
-Message-ID: <20191113002552.GY2865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CAHk-=wjB61GNmqpX0BLA5tpL4tsjWV7akaTc2Roth7uGgax+mw@mail.gmail.com>
- <Pine.LNX.4.44L0.1911101034180.29192-100000@netrider.rowland.org>
- <CAHk-=wjErHCwkcgO-=NReU0KR4TFozrFktbhh2rzJ=mPgRO0-g@mail.gmail.com>
- <CAHk-=wghq7rmtskFj7EbngpXUTJfc4H9sDcx10E6kMHoH2EsKA@mail.gmail.com>
- <20191110204442.GA2865@paulmck-ThinkPad-P72>
- <CANpmjNOepvb6+zJmDePxj21n2rctM4Sp4rJ66x_J-L1UmNK54A@mail.gmail.com>
- <20191111143130.GO2865@paulmck-ThinkPad-P72>
- <CANpmjNP4qj7XcYcdrEEb+0_qeg-ii77qy0=-b9k07VRyNjqixA@mail.gmail.com>
+        Tue, 12 Nov 2019 19:27:28 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:15239 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKMA12 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:27:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573604845;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=5xqNjpajXQkP+Y+TYhP+1nqtNztIwRwTN9C3b1nVHUY=;
+        b=X1rU415tdviRpjQceWkcfn6amuVywC2wrmvGHD0vX+/0Q/ojhpbCiZztJnGQMktyJ3
+        hRE9q/jF88Qlhxljf8cNaJ7sO9SCTe7PHADU3v1ymkqdntKRom8yJBJdfCmvKnFDYZl1
+        uLUeGzk0N13gtd+N/C6lgCYiAmDNzaEtmul1Ln2DwBxTz/DFtzPsBohx/EREqFGaQj98
+        TD4EErzSjxIVoyvmMlEZcFH0X6L/BYc7OibBIXSjmNsRDtACdpxezHW76QFGVO2AG8pW
+        R5lLdXExZWR2BK0PD0DhpeGjbYwDhzKASno/NLzhEPOYHf+QwA79wKiw2PUmqWaXpZQg
+        3TqQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmwdNLqV/Nz7PsNPEA=="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
+        with ESMTPSA id N09a57vAD0Q1ABR
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 13 Nov 2019 01:26:01 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v24 01/12] Linux Random Number Generator
+Date:   Wed, 13 Nov 2019 01:25:58 +0100
+Message-ID: <2264655.zbyk6f8WaQ@positron.chronox.de>
+In-Reply-To: <201911130807.RnsJ5SVf%lkp@intel.com>
+References: <2369119.jSEA3qhmGI@positron.chronox.de> <201911130807.RnsJ5SVf%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNP4qj7XcYcdrEEb+0_qeg-ii77qy0=-b9k07VRyNjqixA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 04:10:20PM +0100, Marco Elver wrote:
-> On Mon, 11 Nov 2019 at 15:31, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Mon, Nov 11, 2019 at 03:17:51PM +0100, Marco Elver wrote:
-> > > On Sun, 10 Nov 2019 at 21:44, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > On Sun, Nov 10, 2019 at 11:20:53AM -0800, Linus Torvalds wrote:
-> > > > > On Sun, Nov 10, 2019 at 11:12 AM Linus Torvalds
-> > > > > <torvalds@linux-foundation.org> wrote:
-> > > > > >
-> > > > > > And this is where WRITE_IDEMPOTENT would make a possible difference.
-> > > > > > In particular, if we make the optimization to do the "read and only
-> > > > > > write if changed"
-> > > > >
-> > > > > It might be useful for checking too. IOW, something like KCSAN could
-> > > > > actually check that if a field has an idempotent write to it, all
-> > > > > writes always have the same value.
-> > > > >
-> > > > > Again, there's the issue with lifetime.
-> > > > >
-> > > > > Part of that is "initialization is different". Those writes would not
-> > > > > be marked idempotent, of course, and they'd write another value.
-> > > > >
-> > > > > There's also the issue of lifetime at the _end_ of the use, of course.
-> > > > > There _are_ interesting data races at the end of the lifetime, both
-> > > > > reads and writes.
-> > > > >
-> > > > > In particular, if it's a sticky flag, in order for there to not be any
-> > > > > races, all the writes have to happen with a refcount held, and the
-> > > > > final read has to happen after the final refcount is dropped (and the
-> > > > > refcounts have to have atomicity and ordering, of course). I'm not
-> > > > > sure how easy something like that is model in KSAN. Maybe it already
-> > > > > does things like that for all the other refcount stuff we do.
-> > > > >
-> > > > > But the lifetime can be problematic for other reasons too - in this
-> > > > > particular case we have a union for that sticky flag (which is used
-> > > > > under the refcount), and then when the final refcount is released we
-> > > > > read that value (thus no data race) but because of the union we will
-> > > > > now start using that field with *different* data. It becomes that RCU
-> > > > > list head instead.
-> > > > >
-> > > > > That kind of "it used to be a sticky flag, but now the lifetime of the
-> > > > > flag is over, and it's something entirely different" might be a
-> > > > > nightmare for something like KCSAN. It sounds complicated to check
-> > > > > for, but I have no idea what KCSAN really considers complicated or
-> > > > > not.
-> > > >
-> > > > But will "one size fits all" be practical and useful?
-> > > >
-> > > > For my code, I would be happy to accept a significant "false positive"
-> > > > rate to get even a probabilistic warning of other-task accesses to some
-> > > > of RCU's fields.  Even if the accesses were perfect from a functional
-> > > > viewpoint, they could be problematic from a performance and scalability
-> > > > viewpoint.  And for something like RCU, real bugs, even those that are
-> > > > very improbable, need to be fixed.
-> > > >
-> > > > But other code (and thus other developers and maintainers) are going to
-> > > > have different needs.  For all I know, some might have good reasons to
-> > > > exclude their code from KCSAN analysis entirely.
-> > > >
-> > > > Would it make sense for KCSAN to have per-file/subsystem/whatever flags
-> > > > specifying the depth of the analysis?
-> > >
-> > > Just to answer this: we already have this, and disable certain files
-> > > already. So it's an option if required. Just need maintainers to add
-> > > KCSAN_SANITIZE := n, or KCSAN_SANITIZE_file.o := n to Makefiles, and
-> > > KCSAN will simply ignore those.
-> > >
-> > > FWIW we now also have a config option to "ignore repeated writes with
-> > > the same value". It may be a little overaggressive/imprecise in
-> > > filtering data races, but anything else like the super precise
-> > > analysis involving tracking lifetimes and values (and whatever else
-> > > the rules would require) is simply too complex. So, the current
-> > > solution will avoid reporting cases like the original report here
-> > > (__alloc_file), but at the cost of maybe being a little imprecise.
-> > > It's probably a reasonable trade-off, given that we have too many data
-> > > races to deal with on syzbot anyway.
-> >
-> > Nice!
-> >
-> > Is this added repeated-writes analysis something that can be disabled?
-> > I would prefer that the analysis of RCU complain in this case as a
-> > probabilistic cache-locality warning.  If it can be disabled, please
-> > let me know if there is anything that I need to do to make this happen.
-> 
-> It's hidden behind a Kconfig config option, and actually disabled by
-> default. We can't enable/disable this on a per-file basis.
-> 
-> Right now, we'll just enable it on the public syzbot instance, which
-> will use the most conservative config.  Of course you can still run
-> your own fuzzer/stress test of choice with KCSAN and the option
-> disabled. Is that enough?
-> 
-> Otherwise I could also just say if the symbolized top stack frame
-> contains "rcu_", don't ignore -- which would be a little hacky and
-> imprecise though. What do you prefer?
+Am Mittwoch, 13. November 2019, 01:14:05 CET schrieb kbuild test robot:
 
-Tough question.  ;-)
+Hi kbuild,
 
-We could try the "rcu_" trick, and if it doesn't cause problems for
-others, why not?
+> Hi "Stephan,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on char-misc/char-misc-testing]
+> [also build test ERROR on v5.4-rc7 next-20191112]
+> [if your patch is applied to the wrong git tree, please drop us a note to
+> help improve the system. BTW, we also suggest to use '--base' option to
+> specify the base tree in git format-patch, please see
+> https://stackoverflow.com/a/37406982]
+> 
+> url:   
+> https://github.com/0day-ci/linux/commits/Stephan-M-ller/dev-random-a-new-ap
+> proach-with-full-SP800-90B-compliance/20191113-040847 base:  
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
+> 01b59c763fe2de845b65900485b141fdd7bbf93e config: mips-allmodconfig
+> (attached as .config)
+> compiler: mips-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget
+> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O
+> ~/bin/make.cross chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=mips
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/char/lrng/lrng_sw_noise.c: In function 
+'add_interrupt_randomness':
+> >> drivers/char/lrng/lrng_sw_noise.c:145:23: error: invalid application of
+> >> 'sizeof' to incomplete type 'struct pt_regs'
+>        size_t n = (sizeof(struct pt_regs) / sizeof(u32));
+>                           ^~~~~~
+> 
+> >> drivers/char/lrng/lrng_sw_noise.c:147:9: error: implicit declaration of
+> >> function 'instruction_pointer'; did you mean 'instruction_hazard'?
+> >> [-Werror=implicit-function-declaration]
+>        ip = instruction_pointer(regs);
+>             ^~~~~~~~~~~~~~~~~~~
+>             instruction_hazard
+>    cc1: some warnings being treated as errors
+> 
+> vim +145 drivers/char/lrng/lrng_sw_noise.c
 
-						Thanx, Paul
+Thank you for the report.
+
+Both issues are fixed by including <asm/ptrace.h>.
+
+This will be fixed with the next installment of the patch.
+> 
+>    125
+>    126	/**
+>    127	 * Hot code path - Callback for interrupt handler
+>    128	 */
+>    129	void add_interrupt_randomness(int irq, int irq_flags)
+>    130	{
+>    131		lrng_time_process();
+>    132
+>    133		if (!lrng_pool_highres_timer()) {
+>    134			struct pt_regs *regs = get_irq_regs();
+>    135			static atomic_t reg_idx = ATOMIC_INIT(0);
+>    136			u64 ip;
+>    137
+>    138			lrng_pool_lfsr_u32(jiffies);
+>    139			lrng_pool_lfsr_u32(irq);
+>    140			lrng_pool_lfsr_u32(irq_flags);
+>    141
+>    142			if (regs) {
+>    143				u32 *ptr = (u32 *)regs;
+>    144				int reg_ptr = atomic_add_return_relaxed(1, 
+&reg_idx);
+> 
+>  > 145				size_t n = (sizeof(struct pt_regs) / 
+sizeof(u32));
+> 
+>    146
+> 
+>  > 147				ip = instruction_pointer(regs);
+> 
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology
+> Center https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel
+> Corporation
+
+
+Ciao
+Stephan
+
+
