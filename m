@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F536C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AF7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3F42246A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F37A2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610418;
-	bh=vTpcVYcvxzR34taHLSLfCiRR7n/iUpgwaOY9lPqklpo=;
+	s=default; t=1573610420;
+	bh=zWC4O1+FzD5XCxY6cfO9t5+HbfsT82QfocFT7nsEfbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epp29X0u9JAQmFXbLPOBRr8JFWScEhyKfJkK61Yi1eFHPPEeGT6M6HMAKYEZZzELI
-	 EQE+PI3vbVs2iNcsCAfVdHiZVVSuH5fGPLw8UDz+KlhgbmpMod+tfKNUKh75XlSgnj
-	 j0fHwtbsililYQSx3cE4h3m9/P/QM9PB/wQzzHpI=
+	b=ahB/Fqni3vd4PTZ6iYnPwmb78BnHJ5qBrx/vdqz9FvKOZtyi9pXHEtujHaOZO3T+6
+	 wpgosM/jRggRDH0kB4a7u2BE6giPQ2GVLf1BfMs/HDU4aSZVmpL4gDlQXuSxMpNhiw
+	 ErOyh34E2q93e7WMz6dw1pY8oZQR6sLBr5rBpyJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbfKMCAR (ORCPT
+        id S1730449AbfKMCAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:00:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55278 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:00:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729568AbfKMCAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:00:11 -0500
+        id S1730369AbfKMCAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:00:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5FDE222CF;
-        Wed, 13 Nov 2019 02:00:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6DA222467;
+        Wed, 13 Nov 2019 02:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610410;
-        bh=vTpcVYcvxzR34taHLSLfCiRR7n/iUpgwaOY9lPqklpo=;
+        s=default; t=1573610405;
+        bh=zWC4O1+FzD5XCxY6cfO9t5+HbfsT82QfocFT7nsEfbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HxL9Hz5NW1TegaPM3z9xX7Ipdcr/q8XgqTSBhXFwyveXMMVvPWhnl9P/lRU8OLioN
-         jXNGy3nqgJGk9GA3nnrvddN36hrfwIbDtzetkXnHqra9xy0U5wI0HYACEAXqkKBhCs
-         2P1ss0vyzUtg35leiDInZXpq7BHcUQCM95XTryRw=
+        b=WfGRZDNR5cQnxS6+zIEyj46/OrnzLallymxjagMc8VOjJthV9TwbGae6Lj+DpeELL
+         oiR7GCxjRLzFsy5NvxmhNnZpKCUfYAriNPuzbIAWrz9NIObtoNiNMFXc71hDdP6H3J
+         cHPzgfS8enbd6OeRXogyCkN9J/M9madwcZZzqmVI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 24/68] IB/mlx4: Avoid implicit enumerated type conversion
-Date:   Tue, 12 Nov 2019 20:58:48 -0500
-Message-Id: <20191113015932.12655-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 21/68] mtd: rawnand: sh_flctl: Use proper enum for flctl_dma_fifo0_transfer
+Date:   Tue, 12 Nov 2019 20:58:45 -0500
+Message-Id: <20191113015932.12655-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 References: <20191113015932.12655-1-sashal@kernel.org>
@@ -63,47 +63,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit b56511c15713ba6c7572e77a41f7ddba9c1053ec ]
+[ Upstream commit e2bfa4ca23d9b5a7bdfcf21319fad9b59e38a05c ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+Clang warns when one enumerated type is converted implicitly to another:
 
-drivers/infiniband/hw/mlx4/mad.c:1811:41: warning: implicit conversion
-from enumeration type 'enum mlx4_ib_qp_flags' to different enumeration
-type 'enum ib_qp_create_flags' [-Wenum-conversion]
-                qp_init_attr.init_attr.create_flags = MLX4_IB_SRIOV_TUNNEL_QP;
-                                                    ~ ^~~~~~~~~~~~~~~~~~~~~~~
+drivers/mtd/nand/raw/sh_flctl.c:483:46: warning: implicit conversion
+from enumeration type 'enum dma_transfer_direction' to different
+enumeration type 'enum dma_data_direction' [-Wenum-conversion]
+                flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
+                ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+drivers/mtd/nand/raw/sh_flctl.c:542:46: warning: implicit conversion
+from enumeration type 'enum dma_transfer_direction' to different
+enumeration type 'enum dma_data_direction' [-Wenum-conversion]
+                flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
+                ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+2 warnings generated.
 
-drivers/infiniband/hw/mlx4/mad.c:1819:41: warning: implicit conversion
-from enumeration type 'enum mlx4_ib_qp_flags' to different enumeration
-type 'enum ib_qp_create_flags' [-Wenum-conversion]
-                qp_init_attr.init_attr.create_flags = MLX4_IB_SRIOV_SQP;
-                                                    ~ ^~~~~~~~~~~~~~~~~
+Use the proper enums from dma_data_direction to satisfy Clang.
 
-The type mlx4_ib_qp_flags explicitly provides supplemental values to the
-type ib_qp_create_flags. Make that clear to Clang by changing the
-create_flags type to u32.
+DMA_MEM_TO_DEV = DMA_TO_DEVICE = 1
+DMA_DEV_TO_MEM = DMA_FROM_DEVICE = 2
 
 Reported-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/rdma/ib_verbs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/sh_flctl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index 0638b8aeba34d..1d9c701b1c7b3 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -1026,7 +1026,7 @@ struct ib_qp_init_attr {
- 	struct ib_qp_cap	cap;
- 	enum ib_sig_type	sq_sig_type;
- 	enum ib_qp_type		qp_type;
--	enum ib_qp_create_flags	create_flags;
-+	u32			create_flags;
+diff --git a/drivers/mtd/nand/sh_flctl.c b/drivers/mtd/nand/sh_flctl.c
+index 442ce619b3b6d..d6c013f93b8c0 100644
+--- a/drivers/mtd/nand/sh_flctl.c
++++ b/drivers/mtd/nand/sh_flctl.c
+@@ -480,7 +480,7 @@ static void read_fiforeg(struct sh_flctl *flctl, int rlen, int offset)
  
- 	/*
- 	 * Only needed for special QP types, or when using the RW API.
+ 	/* initiate DMA transfer */
+ 	if (flctl->chan_fifo0_rx && rlen >= 32 &&
+-		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
++		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_FROM_DEVICE) > 0)
+ 			goto convert;	/* DMA success */
+ 
+ 	/* do polling transfer */
+@@ -539,7 +539,7 @@ static void write_ec_fiforeg(struct sh_flctl *flctl, int rlen,
+ 
+ 	/* initiate DMA transfer */
+ 	if (flctl->chan_fifo0_tx && rlen >= 32 &&
+-		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
++		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_TO_DEVICE) > 0)
+ 			return;	/* DMA success */
+ 
+ 	/* do polling transfer */
 -- 
 2.20.1
 
