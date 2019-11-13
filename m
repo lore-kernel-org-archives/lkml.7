@@ -2,98 +2,85 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649CBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730F0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343AB20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:47:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oTjqyiq0"
+	by mail.kernel.org (Postfix) with ESMTP id 47C9220818
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 09:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfKMJra (ORCPT
+        id S1727640AbfKMJrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 04:47:30 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59152 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727578AbfKMJr3 (ORCPT
+        Wed, 13 Nov 2019 04:47:37 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:36108 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725996AbfKMJrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 04:47:29 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAD9lPO0084421;
-        Wed, 13 Nov 2019 03:47:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573638445;
-        bh=eGjBTMj+RQxCssIXFWDGuYzJCRzhhvflhoF8CYxUAQ0=;
-        h=From:To:CC:Subject:Date;
-        b=oTjqyiq0v57Z/KPHhuwD733ovHJPe9UNw9XADR40XKCNAfXNB4NtRs5CwatiJZVKD
-         +85C078VzhYgrRvSkG9xl4buxJG5g4PqL/N9tQJOUtivLAHkxjU6cDfyuqGvbSqwwV
-         n791WkyEVv0G1mMGXgG7Ngb9HWbzkDhKZOkvAyCw=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD9lPRg072648;
-        Wed, 13 Nov 2019 03:47:25 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 03:47:07 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 03:47:24 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAD9lMc8083574;
-        Wed, 13 Nov 2019 03:47:23 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <gregkh@linuxfoundation.org>, <yoshihiro.shimoda.uh@renesas.com>
-CC:     <vkoul@kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] usb: renesas_usbhs: Use dma_request_chan() directly for channel request
-Date:   Wed, 13 Nov 2019 11:48:38 +0200
-Message-ID: <20191113094838.2141-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 13 Nov 2019 04:47:36 -0500
+Received: from [109.168.11.45] (port=55106 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1iUpFN-001u9L-Rh; Wed, 13 Nov 2019 10:47:33 +0100
+Subject: Re: [PATCH v3 1/3] i2c: use void pointers for supplying data for
+ reads and writes
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-iio@vger.kernel.orgi, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+ <20191112203132.163306-2-dmitry.torokhov@gmail.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <c422deb2-9eb8-4111-d9bd-eeddbebf5eac@lucaceresoli.net>
+Date:   Wed, 13 Nov 2019 10:47:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191112203132.163306-2-dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel_reason() is:
-#define dma_request_slave_channel_reason(dev, name) \
-	dma_request_chan(dev, name)
+Hi Dmitry,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/usb/renesas_usbhs/fifo.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+thanks for having taken into account my comments.
 
-diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
-index 86637cd066cf..01c6a48c41bc 100644
---- a/drivers/usb/renesas_usbhs/fifo.c
-+++ b/drivers/usb/renesas_usbhs/fifo.c
-@@ -1273,11 +1273,11 @@ static void usbhsf_dma_init_dt(struct device *dev, struct usbhs_fifo *fifo,
- 	 */
- 	snprintf(name, sizeof(name), "ch%d", channel);
- 	if (channel & 1) {
--		fifo->tx_chan = dma_request_slave_channel_reason(dev, name);
-+		fifo->tx_chan = dma_request_chan(dev, name);
- 		if (IS_ERR(fifo->tx_chan))
- 			fifo->tx_chan = NULL;
- 	} else {
--		fifo->rx_chan = dma_request_slave_channel_reason(dev, name);
-+		fifo->rx_chan = dma_request_chan(dev, name);
- 		if (IS_ERR(fifo->rx_chan))
- 			fifo->rx_chan = NULL;
- 	}
+On 12/11/19 21:31, Dmitry Torokhov wrote:
+> There is no need to force users of i2c_master_send()/i2c_master_recv()
+> and other i2c read/write bulk data API to cast everything into u8 pointers.
+> While everything can be considered byte stream, the drivers are usually
+> work with more structured data.
+> 
+> Let's switch the APIs to accept [const] void pointers to cut amount of
+> casting needed.
+> 
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Luca
