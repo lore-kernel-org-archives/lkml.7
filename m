@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B04C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4D6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3CC121D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC24521783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611333;
-	bh=aO/bn3g/L37I+yaRgds2a8RKO4/vCXQ9XJIrNV99pwM=;
+	s=default; t=1573611339;
+	bh=N/YrXusPb2G9RCgcBFHvHfCVYPhvcbkrrCUUliW9ALo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=suJt58dHS0QelEvWY2GS/kCUsyhqrsZmCRLYP4bpTzAYxhrFP/xqr32kvgwQWGIgW
-	 xuQl7L1QjhZEGEC5+OmSzOkpFuDzWwoNg2E0p9312Sv/fGmKUv0hnm/tYbu6WTrwFS
-	 V1VB2P1wGB7g4hifWt3CYg1mo0h9dzzh3l6vhO9I=
+	b=ozRwsSD1CP15ddYcK8+2C1lWJHLBFVg6gZddpOZKCAyU9PFFT+HXlXnzK6ftMXtt2
+	 iYDwo/ohgRW/oG9sRKSm5SUh0yQkR+Bb/FK7C9zpNW57AY0r5lI2Pnlyp4h4tZkUEA
+	 4ZSe4x6Tp/J1WNMNALXEggcgev2xC3ufujqk7MGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbfKMCPb (ORCPT
+        id S1730734AbfKMCPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:15:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49568 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:15:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbfKMB4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:51 -0500
+        id S1728595AbfKMB4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19E572245A;
-        Wed, 13 Nov 2019 01:56:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F13F0222D4;
+        Wed, 13 Nov 2019 01:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610210;
-        bh=aO/bn3g/L37I+yaRgds2a8RKO4/vCXQ9XJIrNV99pwM=;
+        s=default; t=1573610209;
+        bh=N/YrXusPb2G9RCgcBFHvHfCVYPhvcbkrrCUUliW9ALo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uRrDGV3RjIMvwKsdFkyDvd9M5M+vI772zSkHXKtzAjyRYU3KOFEu/kpzcomrlRADZ
-         WmxOVQMRoj3AvoSv2lsxKOyULjOHQRExdMOLjGrBpKcUdvyV4QNKHkB6o1B2qKZraL
-         qcgV4EGtW9E+z9uIH4TPTpFY7yCnn9LnpFUI4LMY=
+        b=w1kQW83QXRbojMp5xXQUHrA/OpFUQwDYxlUcaBUGTtIDYQ1x6JacZIvOVlKU6IMrv
+         jSxmdEsn4Z8zI4Gy6mNEVsr+hTk6IYCcEPsTA14TSxRJ9JJTZoM/HrJJn/42xLWONK
+         7Bija0/m2xY/WUp9ZM2TrrtSASimAYn/jqiqqD8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 020/115] irqchip/irq-mvebu-icu: Fix wrong private data retrieval
-Date:   Tue, 12 Nov 2019 20:54:47 -0500
-Message-Id: <20191113015622.11592-20-sashal@kernel.org>
+Cc:     Andrew Zaborowski <andrew.zaborowski@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 019/115] nl80211: Fix a GET_KEY reply attribute
+Date:   Tue, 12 Nov 2019 20:54:46 -0500
+Message-Id: <20191113015622.11592-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
 References: <20191113015622.11592-1-sashal@kernel.org>
@@ -60,44 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Andrew Zaborowski <andrew.zaborowski@intel.com>
 
-[ Upstream commit 2b4dab69dcca13c5be2ddaf1337ae4accd087de6 ]
+[ Upstream commit efdfce7270de85a8706d1ea051bef3a7486809ff ]
 
-The irq_domain structure has an host_data pointer that just stores
-private data. It is meant to not be touched by the IRQ core. However,
-when it comes to MSI, the MSI layer adds its own private data there
-with a structure that also has a host_data pointer.
+Use the NL80211_KEY_IDX attribute inside the NL80211_ATTR_KEY in
+NL80211_CMD_GET_KEY responses to comply with nl80211_key_policy.
+This is unlikely to affect existing userspace.
 
-Because this IRQ domain is an MSI domain, to access private data we
-should do a d->host_data->host_data, also wrapped as
-'platform_msi_get_host_data()'.
-
-This bug was lying there silently because the 'icu' structure retrieved
-this way was just called by dev_err(), only producing a
-'(NULL device *):' output on the console.
-
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Andrew Zaborowski <andrew.zaborowski@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mvebu-icu.c | 2 +-
+ net/wireless/nl80211.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index e18c48d3a92e7..6a77b9ea8e418 100644
---- a/drivers/irqchip/irq-mvebu-icu.c
-+++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -92,7 +92,7 @@ static int
- mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
- 			       unsigned long *hwirq, unsigned int *type)
- {
--	struct mvebu_icu *icu = d->host_data;
-+	struct mvebu_icu *icu = platform_msi_get_host_data(d);
- 	unsigned int icu_group;
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 9627c52c3f937..df8c5312f26ad 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -3118,7 +3118,7 @@ static void get_key_callback(void *c, struct key_params *params)
+ 			 params->cipher)))
+ 		goto nla_put_failure;
  
- 	/* Check the count of the parameters in dt */
+-	if (nla_put_u8(cookie->msg, NL80211_ATTR_KEY_IDX, cookie->idx))
++	if (nla_put_u8(cookie->msg, NL80211_KEY_IDX, cookie->idx))
+ 		goto nla_put_failure;
+ 
+ 	nla_nest_end(cookie->msg, key);
 -- 
 2.20.1
 
