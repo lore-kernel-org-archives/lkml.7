@@ -2,123 +2,123 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56F4C17447
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560B3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEF821A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF2B21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 12:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LM0vB6+8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qv+QCjhn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfKMMuR (ORCPT
+        id S1727119AbfKMMvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:50:17 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39533 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfKMMuR (ORCPT
+        Wed, 13 Nov 2019 07:51:22 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49135 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726195AbfKMMvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 07:50:17 -0500
-Received: by mail-ot1-f66.google.com with SMTP id w24so998946otk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 04:50:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xKNQ7v4yv1nHmpKbLcQIzTqXHeIHYPJhDQUIafBrUCo=;
-        b=LM0vB6+8Ne7H07hxWLkz3Uwzgsdk3gzgJzHbZ37eVIC4oFtORQ85UnfEtJ8FoHHNBE
-         s26758Ku8mxiQnVuIuR0QbmkIPWXeKlItB7UE/KWXjFyFQCjxbjHpJCMoXuBK0+vPi9H
-         GBut02p0Sjb+QT5pRyEuPPKQAI6iKcUCJbYpsKEfJcoV+dhwmhdwA4WMzoHMFSU3VeCV
-         e5OFRB2axfyh7bXT61SNTbdtpbiEgXWtjQLjzgFbSVz/08lIITk6vbIbczOQdmFj6N5j
-         Y0yUOsInw4IDVgMsRybL3sOt1q7n8Fktow4YtoJAKUCbsRvXfROnji+TXlSff9JEF3SJ
-         +/6A==
+        Wed, 13 Nov 2019 07:51:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573649480;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AEYP6d5aalZAfcFv0NrW7o6lXGeRFq/9ZDlpjwAiWdQ=;
+        b=Qv+QCjhnD0UYP1bY+Kn48W8Oq7s9S8TJhyjSW1zZuujL9TXIx9/zIIG+waOwfzar/822JM
+        KYJHDl19bNL5B5XRx32Z1tO5s4pURIIQWDnXimGAwxXD6ljIKzPHlz3YSYd7ZfPtfqYl7/
+        pu1ZYZNjyxIEYkbfn3qmvIC7qwLlN6I=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-44-m0dnMIFPMLKZywH4aiBcjw-1; Wed, 13 Nov 2019 07:51:19 -0500
+Received: by mail-wm1-f69.google.com with SMTP id l184so1311951wmf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 04:51:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xKNQ7v4yv1nHmpKbLcQIzTqXHeIHYPJhDQUIafBrUCo=;
-        b=IgA4OhW6a1dVTZhWicMuWVTV4CL9ye213t3wzSQuF/kgkcfIXv9pM3/9d93TkNzqU2
-         wTS3ZuvrZiyfyplwdOu8fSm7RQmatjvbCG9XZXoR9CUAJUbZn6uvU4GGo9aZel/GXGjo
-         xi6cT0oTmLv6fsp108SIm1E98qll9qoNRW7hLyFCwMWAFgkQhnQ29KYet8PFg/ntW6RI
-         x5iTGlf58X7XXLGlzU/z7NyyfsdxmsSMXjqyCQPIXFpxDeDM2taFamzCQQx2eRjTsjQ3
-         6FJmGVYlmucL3b3jaCyrUT+gkOZ0XhjgBU9XpiNgMIbrpbnCX6lJ68/eBP2GhKmeDO1E
-         wz1Q==
-X-Gm-Message-State: APjAAAVe7S1be5fMHlB3x3/jhRDoU6V9kKwp8Ea6F6HCbU3gwR/Hzd1Y
-        rimkWWh5RdoLtYnWFrWJoOp3WFeDvPw9i0f96Vp8KA==
-X-Google-Smtp-Source: APXvYqxVBL98LhQNMDEZ+JCt3DYDZmvFZn/sBaunf1BYMjKSFf+P7kKH1lyOQa8E2L9C+/To/hXUX1yE/Yn5+ZKKqUk=
-X-Received: by 2002:a05:6830:453:: with SMTP id d19mr2708443otc.256.1573649416541;
- Wed, 13 Nov 2019 04:50:16 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=miLVHytVLBaZY4qRF4Hh54R/kGdync3E1wgmyFgh4so=;
+        b=ACSDAy8Ezg44yQ4rPJmx4HTezRugrbcTLubp3vVvrXmSkCBYTT0jDkp84g1LFgv/fs
+         O1F77MnBc3B1M71REMguFbMBOfcD8rIlOA4NFrQUlv4ZuYSmxJD9SyMLirfwz/zvGev8
+         7C7WVd6qyqCW5VhuwcvQCm+Z7jxnGjQAVkq7cdh7scP6R0oylFnNvxA9/SEGtDx0M+Wk
+         I6YrxF19Wo46VLP17DsVuTMNrADbCNx8x++Q1k256GWs0OxkbvXfC8tSFRzCpGJLhSOs
+         eHMOdQlynNe3d90P/tCrgafZKud6O+2PO3Rudy6gNDHLnIR47V7T6MEv1dxwdJHb/hc6
+         BjHw==
+X-Gm-Message-State: APjAAAXznjxfLY8aH9Y2a6bfecfnWLwKkzx54rfVt4nNlcE7xa6CQi5W
+        kOe9WSG03JT8yGKpL7fHRUkM7IdBBxJVJOlPZ6ltwwxhD9N9Ir610XJKAdUD8m3eGs1yZx5yAUc
+        U9PwW6pR7YFzJ0eeOdc0+Wf7i
+X-Received: by 2002:adf:dc8d:: with SMTP id r13mr2582107wrj.391.1573649477835;
+        Wed, 13 Nov 2019 04:51:17 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwqi8MVjGYsZE1Fd2uuOZsh+3k4ruvI3QhtSRwtPfnv/LsKOAMb2NX00BIk78fbl0gKHRqQHQ==
+X-Received: by 2002:adf:dc8d:: with SMTP id r13mr2582087wrj.391.1573649477582;
+        Wed, 13 Nov 2019 04:51:17 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id u26sm2207436wmj.9.2019.11.13.04.51.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 04:51:16 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH] selftests: kvm: fix build with glibc >= 2.30
+Date:   Wed, 13 Nov 2019 13:51:15 +0100
+Message-Id: <20191113125115.23100-1-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191113084352.GA25535@localhost.localdomain>
-In-Reply-To: <20191113084352.GA25535@localhost.localdomain>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 13 Nov 2019 13:50:05 +0100
-Message-ID: <CAMpxmJU3fSa_dUiLs44FKuuTAVTD+_q3WxUX5PCRuvaWCuxKdA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mmio: remove untrue leftover comment
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: m0dnMIFPMLKZywH4aiBcjw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 13 lis 2019 o 09:44 Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> napisa=C5=82(a):
->
-> The comment should have been removed when new GPIO direction
-> definitions were taken in use as the function logic was changed. It
-> is now perfectly valid and Ok to hit the return from the bottom of
-> the direction getting function.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->
-> Sorry guys. Just noticed that I should've removed this comment in
-> original patch series.
->
->  drivers/gpio/gpio-mmio.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-> index cd07c948649f..f729e3e9e983 100644
-> --- a/drivers/gpio/gpio-mmio.c
-> +++ b/drivers/gpio/gpio-mmio.c
-> @@ -386,7 +386,6 @@ static int bgpio_get_dir(struct gpio_chip *gc, unsign=
-ed int gpio)
->                 if (!(gc->read_reg(gc->reg_dir_in) & bgpio_line2mask(gc, =
-gpio)))
->                         return GPIO_LINE_DIRECTION_OUT;
->
-> -       /* This should not happen */
->         return GPIO_LINE_DIRECTION_IN;
->  }
->
->
-> base-commit: 70d97e099bb426ecb3ad4bf31e88dbf2ef4b2e4c
-> --
-> 2.21.0
->
->
-> --
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
->
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =3D]
+Glibc-2.30 gained gettid() wrapper, selftests fail to compile:
 
-Queued for v5.5, thanks!
+lib/assert.c:58:14: error: static declaration of =E2=80=98gettid=E2=80=99 f=
+ollows non-static declaration
+   58 | static pid_t gettid(void)
+      |              ^~~~~~
+In file included from /usr/include/unistd.h:1170,
+                 from include/test_util.h:18,
+                 from lib/assert.c:10:
+/usr/include/bits/unistd_ext.h:34:16: note: previous declaration of =E2=80=
+=98gettid=E2=80=99 was here
+   34 | extern __pid_t gettid (void) __THROW;
+      |                ^~~~~~
 
-Bartosz
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ tools/testing/selftests/kvm/lib/assert.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/kvm/lib/assert.c b/tools/testing/selft=
+ests/kvm/lib/assert.c
+index 4911fc77d0f6..d1cf9f6e0e6b 100644
+--- a/tools/testing/selftests/kvm/lib/assert.c
++++ b/tools/testing/selftests/kvm/lib/assert.c
+@@ -55,7 +55,7 @@ static void test_dump_stack(void)
+ #pragma GCC diagnostic pop
+ }
+=20
+-static pid_t gettid(void)
++static pid_t _gettid(void)
+ {
+ =09return syscall(SYS_gettid);
+ }
+@@ -72,7 +72,7 @@ test_assert(bool exp, const char *exp_str,
+ =09=09fprintf(stderr, "=3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D\n"
+ =09=09=09"  %s:%u: %s\n"
+ =09=09=09"  pid=3D%d tid=3D%d - %s\n",
+-=09=09=09file, line, exp_str, getpid(), gettid(),
++=09=09=09file, line, exp_str, getpid(), _gettid(),
+ =09=09=09strerror(errno));
+ =09=09test_dump_stack();
+ =09=09if (fmt) {
+--=20
+2.20.1
+
