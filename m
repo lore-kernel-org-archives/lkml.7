@@ -2,104 +2,123 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4504EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ABAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73312068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:51:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3bVHkR7"
+	by mail.kernel.org (Postfix) with ESMTP id 8C60D206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 16:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfKMQvA (ORCPT
+        id S1728630AbfKMQvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:51:00 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33321 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfKMQvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:51:00 -0500
-Received: by mail-il1-f194.google.com with SMTP id m5so2441923ilq.0;
-        Wed, 13 Nov 2019 08:50:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:message-id:in-reply-to:references:subject:mime-version
-         :content-transfer-encoding;
-        bh=NP8j8j6RNWGWdkRYwKycP0G7EVjWhJ/1/S2VtEbTWEI=;
-        b=b3bVHkR79gud8RsdtbJsGQ8MipQ93ILczeh4pBu7MsXxWVjLcj8NFcurtsKaR3kxm+
-         aBKpFdzkmKz/9MssldZxYRoBWOwEF5ZcAoGS6N5mYr+JoSZFL2tKMnhtuAD9z8lqgNVL
-         fuzx9z1mwv1LkyVd+vRqjTDDbAdG5iQP6X8WBfFBIAsrBd9QBqJy/sZ/dOv3nQh9OIk4
-         3diUkn+dpk4AvvU1Gtdq35jXzSdoH7s5/JCnRKn3m9R7IJ9/KeMNvthgowPfHkp/KV81
-         y2tRDeg6BIsrPBHAyEZtwhynpWMmicOd3IoTqNcz7S8TIXB6Vut8mTeN810GBpOkyLs6
-         Frqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
-         :subject:mime-version:content-transfer-encoding;
-        bh=NP8j8j6RNWGWdkRYwKycP0G7EVjWhJ/1/S2VtEbTWEI=;
-        b=c4qPnMTzRykJTkrMwPMXpnuSoGmzjiAI63/dPWfovwVEMc0yM7O7TLd+/5wj4Z78Db
-         FOOulpzskFidHnE1warXWl6scZLP5veX+Sw4vLX8a6g7x54LOct4nYLLce5J2SzdO5E3
-         GmVejK1U0GEm//0pzLtt6qXJTI1SSoBOjEcZYEO9Sla2XzAZ6Y/4wuVK7hNYFn/fRIVh
-         O3J+ZnQ4/MO9cJR31EKZuUsp2QCFZAUK4EeiI3wkDz6yQ9OCDtv7UnHQh7Vwb3Rn7vkK
-         Nq9pac8oPNTwr7N9n/q7e1Bj22dlNERmz8DXEtR3Oj6aPymx2JTw6PmFy7pMoq/7ytGW
-         2N8A==
-X-Gm-Message-State: APjAAAXzXrmbzYPN/smkfk26Ci2YVTaNIQe3TM03cBmsJQHO8YJYIsu2
-        Hxwm4QL/HIwn5khQUHBTaME=
-X-Google-Smtp-Source: APXvYqxidv/3QuJpKi2UYUh97LztfaRik/hvAhPtTgiijuFqBY3yCbYbxLs2pWGM5VdnkKH6Jirewg==
-X-Received: by 2002:a92:83d0:: with SMTP id p77mr4821131ilk.116.1573663859473;
-        Wed, 13 Nov 2019 08:50:59 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id c73sm345713ila.9.2019.11.13.08.50.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 08:50:58 -0800 (PST)
-Date:   Wed, 13 Nov 2019 08:50:51 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     syzbot <syzbot+0b3ccd4f62dac2cf3a7d@syzkaller.appspotmail.com>,
-        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, edumazet@google.com, john.fastabend@gmail.com,
-        kafai@fb.com, kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Message-ID: <5dcc346b151ef_65172b2715e085b42b@john-XPS-13-9370.notmuch>
-In-Reply-To: <000000000000f90bb30596c1d438@google.com>
-References: <00000000000006602605752ffa1a@google.com>
- <000000000000f90bb30596c1d438@google.com>
-Subject: Re: general protection fault in tcp_cleanup_ulp
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+        Wed, 13 Nov 2019 11:51:04 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:38646 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfKMQvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:51:02 -0500
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iUvr5-0004JU-OS; Wed, 13 Nov 2019 09:50:56 -0700
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+References: <PS2P216MB075563AA6AD242AA666EDC6A80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <7f824f5f-ee0f-0591-9170-1433c0813857@deltatee.com>
+Date:   Wed, 13 Nov 2019 09:50:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <PS2P216MB075563AA6AD242AA666EDC6A80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: benh@kernel.crashing.org, corbet@lwn.net, mika.westerberg@linux.intel.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nicholas.johnson-opensource@outlook.com.au
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot wrote:
-> syzbot suspects this bug was fixed by commit:
-> 
-> commit 5607fff303636d48b88414c6be353d9fed700af2
-> Author: John Fastabend <john.fastabend@gmail.com>
-> Date:   Tue Sep 18 16:01:44 2018 +0000
-> 
->      bpf: sockmap only allow ESTABLISHED sock state
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17fdc73c600000
-> start commit:   28619527 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-> git tree:       bpf
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8f59875069d721b6
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0b3ccd4f62dac2cf3a7d
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13537269400000
-> 
-> If the result looks correct, please mark the bug fixed by replying with:
-> 
-> #syz fix: bpf: sockmap only allow ESTABLISHED sock state
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-#syz fix: bpf: sockmap only allow ESTABLISHED sock state
+
+On 2019-11-13 8:25 a.m., Nicholas Johnson wrote:
+> Currently, the kernel can sometimes assign the MMIO_PREF window
+> additional size into the MMIO window, resulting in extra MMIO additional
+> size, despite the MMIO_PREF additional size being assigned successfully
+> into the MMIO_PREF window.
+> 
+> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
+> fails. In the next pass, because MMIO_PREF is already assigned, the
+> attempt to assign MMIO_PREF returns an error code instead of success
+> (nothing more to do, already allocated). Hence, the size which is
+> actually allocated, but thought to have failed, is placed in the MMIO
+> window.
+> 
+> Example of problem (more context can be found in the bug report URL):
+> 
+> Mainline kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
+> 
+> Patched kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
+> 
+> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
+> with the same configuration, with a Ubuntu mainline kernel and a kernel
+> patched with this patch.
+> 
+> The bug results in the MMIO_PREF being added to the MMIO window, which
+> means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
+> the MMIO window will likely fail to be assigned altogether due to lack
+> of 32-bit address space.
+> 
+> Change find_free_bus_resource() to do the following:
+> - Return first unassigned resource of the correct type.
+> - If none of the above, return first assigned resource of the correct type.
+> - If none of the above, return NULL.
+> 
+> Returning an assigned resource of the correct type allows the caller to
+> distinguish between already assigned and no resource of the correct type.
+> 
+> Rename find_free_bus_resource to find_bus_resource_of_type().
+> 
+> Add checks in pbus_size_io() and pbus_size_mem() to return success if
+> resource returned from find_free_bus_resource() is already allocated.
+> 
+> This avoids pbus_size_io() and pbus_size_mem() returning error code to
+> __pci_bus_size_bridges() when a resource has been successfully assigned
+> in a previous pass. This fixes the existing behaviour where space for a
+> resource could be reserved multiple times in different parent bridge
+> windows.
+> 
+> Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
+> 
+> Reported-by: Kit Chow <kchow@gigaio.com>
+> Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+You can add mine as well:
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Thanks,
+
+Logan
