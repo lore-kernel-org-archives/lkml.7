@@ -2,116 +2,96 @@ Return-Path: <SRS0=LLNM=ZF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB306C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF0CC17447
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD2521783
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BED21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 11:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LerTC+FO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIUP6HJ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfKMLSS (ORCPT
+        id S1727850AbfKMLUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 06:18:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56286 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727171AbfKMLSS (ORCPT
+        Wed, 13 Nov 2019 06:20:44 -0500
+Received: from mail-io1-f51.google.com ([209.85.166.51]:44118 "EHLO
+        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727171AbfKMLUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:18:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573643896;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+4DKEG1YD9+fOubUldl9MnL4bU7MmbHESVaIk7Jx6mw=;
-        b=LerTC+FOqBT4kru6Y7lOowwUe14QAAnZqtbXZvo0JE2CmEqI/Y0RC35FO3V9SEZYDitAoo
-        jOgPdHMNMzEYCteAjZdEu5CfKdNBG9kK6AcXb8310DwihsuSoxOpQwCoxXp9C450uj/6PC
-        Dpyns1oGKHS9aJ69UDu2ra+pVlW2UzQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-i03voM_8MgmSRku1iW4VOA-1; Wed, 13 Nov 2019 06:18:13 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48304107ACC5;
-        Wed, 13 Nov 2019 11:18:12 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4440D6106E;
-        Wed, 13 Nov 2019 11:18:09 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id xADBI8gN023568;
-        Wed, 13 Nov 2019 06:18:08 -0500
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id xADBI80c023564;
-        Wed, 13 Nov 2019 06:18:08 -0500
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Wed, 13 Nov 2019 06:18:08 -0500 (EST)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     tglx@linutronix.de, linux-rt-users@vger.kernel.org
-cc:     Mike Snitzer <msnitzer@redhat.com>,
-        Nikos Tsironis <ntsironis@arrikto.com>,
-        Scott Wood <swood@redhat.com>,
-        Ilias Tsitsimpis <iliastsi@arrikto.com>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH RT 2/2 v3] list_bl: avoid BUG when the list is not locked
-In-Reply-To: <alpine.LRH.2.02.1911121110430.12815@file01.intranet.prod.int.rdu2.redhat.com>
-Message-ID: <alpine.LRH.2.02.1911130616570.20335@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.1911121110430.12815@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Wed, 13 Nov 2019 06:20:44 -0500
+Received: by mail-io1-f51.google.com with SMTP id j20so2067697ioo.11;
+        Wed, 13 Nov 2019 03:20:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=E4UUTk/t8uEes636KBwiMf4uCLpW7SUwTukCuJGV2gQ=;
+        b=NIUP6HJ7cZn6VNtTHqEup48z6htdvYdviXFeI9rrFeZQUOA8atO2mZ87YJBOhpOJ1O
+         Lt5nD8Tab2jacC6s/bVARkIzfu8E68Yk0h3H3Hpe7WfLyh0DnSGtGuto11j6TnwPU8/X
+         ngLvnF1gbtZ1C1DSFoRcIpSqEEtAgtScXVtB5SSwuHVnRCaOpXMSIjBnRzpGAimp3PqC
+         Z3IMCedoAHGVYhBrADI4yqdUPoXGFPV+bTXJAUHpqT29qi7YIxGNxqpwP+vqiNenNzv8
+         KgtG/JyDoleXuoGEbg3e5sWF9+PADJm6WrVGZW1nDp5tZG9zL6SZYzHo5JjUX0z2146d
+         jtmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=E4UUTk/t8uEes636KBwiMf4uCLpW7SUwTukCuJGV2gQ=;
+        b=ESiGRWzDhRZYBARpLLB3h9zSc7hvU1EUZN219gWJ7YKjUpjGEWDtjm37/OW4X1i5t5
+         JlrzLbPm2djWtmuUoHg8OUbsYAuiFlsmLkHspvuUFHeT213iUhdkZ6yc1xjaPOWWrVG6
+         IXxNYdtANEfuDYLxgTz46/nE8gqM7rhOkhWVDj2Zb7NpJ9moYX4iRVCCyGbsIQfpX1+s
+         BplmjWiLLwilmcs0TBOhF2XfORTrwk3YAyE3h2GiiYPwIg3yaUcADob03t+Il/QomE8S
+         CHfXQ8s23t6X5q/GsbAast2DxM09hRX1TYI3YqysvzdsRO8+EL383z/Yji24Ua1LSOGp
+         KsxQ==
+X-Gm-Message-State: APjAAAV25/7mO/+HBX8Ta8lHAIcnRD82qzVjqcxpzJcV3TuRv1/NCPqy
+        auUQeaOwarhuyeT7HAjZY68zcKW5pqyq2XYvPWd72X+u
+X-Google-Smtp-Source: APXvYqyzAwG7kNXP0VtaM+bOtHh6R0X5bYvj2ZKk/LsHWL2cUgxqWt5N8Raq/rtmN9BzipVCDmD8oCvvzpW5z4O6g4c=
+X-Received: by 2002:a02:9f95:: with SMTP id a21mr2464235jam.16.1573644043378;
+ Wed, 13 Nov 2019 03:20:43 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: i03voM_8MgmSRku1iW4VOA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: TEXT/PLAIN; charset=WINDOWS-1252
+References: <20191113013529.GA64000@TonyMac-Alibaba>
+In-Reply-To: <20191113013529.GA64000@TonyMac-Alibaba>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Wed, 13 Nov 2019 12:21:10 +0100
+Message-ID: <CAOi1vP98n4coOhc79Q+t63sCGvLmpXCwEYf8yuME+ST2K1HDsw@mail.gmail.com>
+Subject: Re: 'current_state' is uninitialized in rbd_object_map_update_finish()
+To:     Tony Lu <tonylu@linux.alibaba.com>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_bl would crash with BUG() if we used it without locking. dm-snapshot=
-=20
-uses its own locking on realtime kernels (it can't use list_bl because=20
-list_bl uses raw spinlock and dm-snapshot takes other non-raw spinlocks=20
-while holding bl_lock).
+On Wed, Nov 13, 2019 at 2:35 AM Tony Lu <tonylu@linux.alibaba.com> wrote:
+>
+> Hello,
+>
+> There is a warning during compiling driver rbd for uninitialized
+> 'current state' in rbd_object_map_update_finish():
+>
+> drivers/block/rbd.c: In function 'rbd_object_map_callback':
+> drivers/block/rbd.c:2122:21: warning: =E2=80=98current_state=E2=80=99 may=
+ be used uninitialized in this function [-Wmaybe-uninitialized]
+>       (current_state =3D=3D OBJECT_EXISTS && state =3D=3D OBJECT_EXISTS_C=
+LEAN))
+>
+> drivers/block/rbd.c:2090:23: note: =E2=80=98current_state=E2=80=99 was de=
+clared here
+>   u8 state, new_state, current_state;
+>                        ^~~~~~~~~~~~~
 
-To avoid this BUG, we must set LIST_BL_LOCKMASK =3D 0.
+Hi Tony,
 
-This patch is intended only for the realtime kernel patchset, not for the=
-=20
-upstream kernel.
+It looks like this warning was also reported by kbuild, on gcc 6.3 and
+7.4.  It's bogus, I'll send a patch to silence it.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Thanks,
 
----
- include/linux/list_bl.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Index: linux-rt-devel/include/linux/list_bl.h
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
---- linux-rt-devel.orig/include/linux/list_bl.h=092019-11-13 12:15:50.00000=
-0000 +0100
-+++ linux-rt-devel/include/linux/list_bl.h=092019-11-13 12:15:50.000000000 =
-+0100
-@@ -19,7 +19,7 @@
-  * some fast and compact auxiliary data.
-  */
-=20
--#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
-+#if (defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)) && !defined(CO=
-NFIG_PREEMPT_RT_BASE)
- #define LIST_BL_LOCKMASK=091UL
- #else
- #define LIST_BL_LOCKMASK=090UL
-
+                Ilya
