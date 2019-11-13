@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3878C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6EFC17440
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA3B222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6062084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Nov 2019 02:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573611441;
-	bh=ETy3/oLlODMF6IqyyikE3r7NS0VCBoZzrTvaSa//SfQ=;
+	s=default; t=1573611445;
+	bh=Nbm+0sMkxlk6HRLaRQOFwTLW1an+JMQpxxCNSerK81o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IHH2DXeq+W1c13XxCqhLmHiZjrymcgKJiLIaCUB3mNomdfeiclcJ6b3boefwm3Owb
-	 DAfYRUfj+aP4J8uH6i6JNWTG1ZUnhz86Och6+QeSumv+NDft7uyUeEmAM0uMSfY3KQ
-	 h7fEBKgggI/imY/pF87SpGNR81llwVMf34in7Q/M=
+	b=S7YDAMYVW645ODLuFnxNMNsZZU9mKBuqFkNJ6F+8k8P99nY2ra0CEzpaVxp48Lkvq
+	 A5HCq2FolatAyh8G1s4t41XEsbs4IlMQhIune6Zbq+s/EmoLlkGXdyoiIeqX5E8E5Z
+	 pPK8yOWkSnyUUby9Iytkc+fLXWD+oR6EyIGxGQg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbfKMCRU (ORCPT
+        id S1729365AbfKMB4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:17:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:56:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbfKMB4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:06 -0500
+        id S1729253AbfKMBzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:55:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4307222CF;
-        Wed, 13 Nov 2019 01:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C19F122473;
+        Wed, 13 Nov 2019 01:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610166;
-        bh=ETy3/oLlODMF6IqyyikE3r7NS0VCBoZzrTvaSa//SfQ=;
+        s=default; t=1573610148;
+        bh=Nbm+0sMkxlk6HRLaRQOFwTLW1an+JMQpxxCNSerK81o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EavFTl58i4xagNZZMB5z3YiC1bALAzr29wT70OVM2lXTG0Lju8QyNSzw0jnilS7FO
-         W5rUSAOUOfAFd3Dv4yDW5HFXkVCNlIfVJynqHiqZO2tfwrKADUnTjFVAcWZ5JxNe6A
-         Kb/AVhHxk1qh+QTyuCdf5+bE2A+7sxu6VWte0+p0=
+        b=bVXUZWaE5NnLDtRveSoXvK0b6E6YR7GMvmQKCCpS6ObUIfVxEdm8SABdP/DacKF6y
+         oWon788sJI32rtvCC8xqtHLhpsbfqF8JwL7fw/6T1jnc9PDUWKFM+QXbyk/t0TXdna
+         mCqOF1+6UPyEw0G+uNFGXaUDosRPzYlvdfW+NGd8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 207/209] powerpc/time: Fix clockevent_decrementer initalisation for PR KVM
-Date:   Tue, 12 Nov 2019 20:50:23 -0500
-Message-Id: <20191113015025.9685-207-sashal@kernel.org>
+Cc:     Petr Machata <petrm@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 193/209] selftests: forwarding: Have lldpad_app_wait_set() wait for unknown, too
+Date:   Tue, 12 Nov 2019 20:50:09 -0500
+Message-Id: <20191113015025.9685-193-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -58,47 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit b4d16ab58c41ff0125822464bdff074cebd0fe47 ]
+[ Upstream commit 372809055f6c830ff978564e09f58bcb9e9b937c ]
 
-In the recent commit 8b78fdb045de ("powerpc/time: Use
-clockevents_register_device(), fixing an issue with large
-decrementer") we changed the way we initialise the decrementer
-clockevent(s).
+Immediately after mlxsw module is probed and lldpad started, added APP
+entries are briefly in "unknown" state before becoming "pending". That's
+the state that lldpad_app_wait_set() typically sees, and since there are
+no pending entries at that time, it bails out. However the entries have
+not been pushed to the kernel yet at that point, and thus the test case
+fails.
 
-We no longer initialise the mult & shift values of
-decrementer_clockevent itself.
+Fix by waiting for both unknown and pending entries to disappear before
+proceeding.
 
-This has the effect of breaking PR KVM, because it uses those values
-in kvmppc_emulate_dec(). The symptom is guest kernels spin forever
-mid-way through boot.
-
-For now fix it by assigning back to decrementer_clockevent the mult
-and shift values.
-
-Fixes: 8b78fdb045de ("powerpc/time: Use clockevents_register_device(), fixing an issue with large decrementer")
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: d159261f3662 ("selftests: mlxsw: Add test for trust-DSCP")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/time.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/testing/selftests/net/forwarding/lib.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 6a1f0a084ca35..7707990c4c169 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -988,6 +988,10 @@ static void register_decrementer_clockevent(int cpu)
+diff --git a/tools/testing/selftests/net/forwarding/lib.sh b/tools/testing/selftests/net/forwarding/lib.sh
+index ca53b539aa2d1..08bac6cf1bb3a 100644
+--- a/tools/testing/selftests/net/forwarding/lib.sh
++++ b/tools/testing/selftests/net/forwarding/lib.sh
+@@ -251,7 +251,7 @@ lldpad_app_wait_set()
+ {
+ 	local dev=$1; shift
  
- 	printk_once(KERN_DEBUG "clockevent: %s mult[%x] shift[%d] cpu[%d]\n",
- 		    dec->name, dec->mult, dec->shift, cpu);
-+
-+	/* Set values for KVM, see kvm_emulate_dec() */
-+	decrementer_clockevent.mult = dec->mult;
-+	decrementer_clockevent.shift = dec->shift;
- }
- 
- static void enable_large_decrementer(void)
+-	while lldptool -t -i $dev -V APP -c app | grep -q pending; do
++	while lldptool -t -i $dev -V APP -c app | grep -Eq "pending|unknown"; do
+ 		echo "$dev: waiting for lldpad to push pending APP updates"
+ 		sleep 5
+ 	done
 -- 
 2.20.1
 
