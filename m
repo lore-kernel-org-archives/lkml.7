@@ -2,113 +2,216 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68901C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3796C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F7E206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573771539;
-	bh=xWFHui9sK8qDks61dZHYJDLOYXUZjqDf3zzjpdqApAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M98t3SRcE6NK6lZdPgQoQHCH2Bia92IG0aCNuI3vlzYFRWXgR6x5plUyKEcFSPZlQ
-	 JEIdNOPngrHfAxm+ZTi8ayufTorVDguBvBaLuboWzSPQQZtli+3J9kZ2RZsl3/ThNj
-	 TKV5v4r7t+WVvOe4kgVngBuoHwT51u5MGjrUcyzA=
+	by mail.kernel.org (Postfix) with ESMTP id C3319206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:47:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoX51meU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfKNWph (ORCPT
+        id S1727118AbfKNWrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:45:37 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39064 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKNWph (ORCPT
+        Thu, 14 Nov 2019 17:47:15 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42274 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNWrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:45:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VBWSxyqFNu57a211AegG4LgleE/has5MXudCMHIozs4=; b=up5DdfD/1x/hAHbiXVOVPlRfP
-        NPuQjpXURVaBXynlhBNx3/LW7UvG/N9gVE5hcrGPKpV1CNS7+Latc0RbONtqvZmyy8m9Cm2o9BSHg
-        SE6ywZHp4ILU7svhX+iDbhSLFdcjJ74xMvLJ+GrLSPS5f8iPzqC5wyxrJSgoL+DO3TNJI=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iVNrD-0007jQ-8S; Thu, 14 Nov 2019 22:44:55 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 566CF274328B; Thu, 14 Nov 2019 22:44:54 +0000 (GMT)
-Date:   Thu, 14 Nov 2019 22:44:54 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jacob Rasmussen <jacobraz@google.com>
-Cc:     Ross Zwisler <zwisler@google.com>,
-        Jacob Rasmussen <jacobraz@chromium.org>,
-        linux-kernel@vger.kernel.org, Bard Liao <bardliao@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] ASoC: rt5645: Fixed typo for buddy jack support.
-Message-ID: <20191114224454.GD4664@sirena.co.uk>
-References: <20191114190844.42484-1-jacobraz@google.com>
- <20191114214301.GA159315@google.com>
- <CAPZ+yN+EP=ffzWDz4hWZ3W=usDoYt7VFKaoMAgzvjo7WL_jW=g@mail.gmail.com>
+        Thu, 14 Nov 2019 17:47:15 -0500
+Received: by mail-wr1-f65.google.com with SMTP id a15so8717246wrf.9;
+        Thu, 14 Nov 2019 14:47:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JGRlcMeoKAOOhjcDJOF5DFr5u4BH2xeU+rJMkirYWaY=;
+        b=eoX51meUHmLR8wQIfteVxzkvSZri+BeLozXZmXDuNhJcArpEX+XUjnEc506JaWySMF
+         fvfTvmAQPASJqGPozMCGBtFSbhzGbCjWqUf5lEc9CFOS/S4CNSyVFPebOVza2DnCJ+Jc
+         nivEEojQyUnOkHQV/qTkqlr31rG86Qver7ATIhE1o3SVN3YaFUUke59puk/mNRsDvi1L
+         743tCms9wMdlL3+oXMxB3JymLJbpIGtsel0gDu0efrr/npXxjoPi4ScrRX4FX5XlEALV
+         r++Sfbs/rw2znawKFhrfSeNb0rfkBzWPA0NPnExU6BhIcHPccLYQvxNPoJFG4pOj0Vd8
+         OUJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JGRlcMeoKAOOhjcDJOF5DFr5u4BH2xeU+rJMkirYWaY=;
+        b=T7RYs0hnQAn3nWkMCYhe+2JEirn701YtDTRL3NNBRVJsFXxKNDKuetRTvL67M+4WbA
+         /spfzu8kPgcxH/wLi1IZzWtuSFLFUdK+fii1Qdz02L2cl845thpYoTgokOTVBBMAQst6
+         +4t5ksnV+gfqEYeDItsq/n1m2K23vXHMr5RnMQqgrXyBb+G46fDu5GD/CKaqvQ4L/2Z7
+         tgaBVBmC3LcVdj4kluXx0QTozLdp7fOpwgPYHFq52CTPWLQDXan+/lBQ44pztewsSKUc
+         9HSfncigNilJx9ja1FcIoNm9h1jUjIXkdXulAObRAvD8Cl93+ys1j0QpBJ2awvun5OnE
+         ZaWA==
+X-Gm-Message-State: APjAAAVZXFMrvH5cpzuGBbjJPR8o7RRvj0caGWXSkomJAlc7K2sSmS8n
+        4UMna6L/lXycJbQSdI3XFEwr7zaDkkRDjj+rcfg=
+X-Google-Smtp-Source: APXvYqwuKMxsXT28TKbuQooL9rQ1QVttKzL0StbnqApJLFSD/gam1Od9P5ARGt5yH6+H78iilIRoigLLmxYsdIh2VJ4=
+X-Received: by 2002:adf:ef0c:: with SMTP id e12mr11270259wro.270.1573771632171;
+ Thu, 14 Nov 2019 14:47:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n/aVsWSeQ4JHkrmm"
-Content-Disposition: inline
-In-Reply-To: <CAPZ+yN+EP=ffzWDz4hWZ3W=usDoYt7VFKaoMAgzvjo7WL_jW=g@mail.gmail.com>
-X-Cookie: Santa Claus is watching!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191108084517.21617-1-peron.clem@gmail.com> <20191108084517.21617-5-peron.clem@gmail.com>
+ <20191113085858.76rad3vpszknu4cp@pengutronix.de>
+In-Reply-To: <20191113085858.76rad3vpszknu4cp@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 14 Nov 2019 23:47:00 +0100
+Message-ID: <CAJiuCceYg7WC=peHYeC=eE-HOsKH_SdsKyWwkWY5VpeY+uzaKA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Uwe,
 
---n/aVsWSeQ4JHkrmm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, 13 Nov 2019 at 09:58, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Fri, Nov 08, 2019 at 09:45:14AM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > PWM core has an option to bypass whole logic and output unchanged sourc=
+e
+> > clock as PWM output. This is achieved by enabling bypass bit.
+> >
+> > Note that when bypass is enabled, no other setting has any meaning, not
+> > even enable bit.
+> >
+> > This mode of operation is needed to achieve high enough frequency to
+> > serve as clock source for AC200 chip which is integrated into same
+> > package as H6 SoC.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 44 +++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index a10022d6c0fd..9cc928ab47bc 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -3,6 +3,10 @@
+> >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> >   *
+> >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electr=
+ons.com>
+> > + *
+> > + * Limitations:
+> > + * - When outputing the source clock directly, the PWM logic will be b=
+ypassed
+> > + *   and the currently running period is not guaranteed to be complete=
+d
+> >   */
+> >
+> >  #include <linux/bitops.h>
+> > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
+> >
+> >  struct sun4i_pwm_data {
+> >       bool has_prescaler_bypass;
+> > +     bool has_direct_mod_clk_output;
+> >       unsigned int npwm;
+> >  };
+> >
+> > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *c=
+hip,
+> >
+> >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+> > +     /*
+> > +      * PWM chapter in H6 manual has a diagram which explains that if =
+bypass
+> > +      * bit is set, no other setting has any meaning. Even more, exper=
+iment
+> > +      * proved that also enable bit is ignored in this case.
+> > +      */
+> > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > +         sun4i_pwm->data->has_direct_mod_clk_output) {
+> > +             state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate=
+);
+> > +             state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period, 2);
+>
+> I first thought you're losing precision here by reusing state->period
+> here, but with a divisor of 2 everything is fine.
+>
+> > +             state->polarity =3D PWM_POLARITY_NORMAL;
+> > +             state->enabled =3D true;
+> > +             return;
+> > +     }
+> > +
+> >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
+> >           sun4i_pwm->data->has_prescaler_bypass)
+> >               prescaler =3D 1;
+> > @@ -204,6 +223,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, s=
+truct pwm_device *pwm,
+> >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+> >       struct pwm_state cstate;
+> >       u32 ctrl;
+> > +     bool bypass =3D false;
+> >       int ret;
+> >       unsigned int delay_us;
+> >       unsigned long now;
+> > @@ -218,9 +238,24 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >               }
+> >       }
+> >
+> > +     /*
+> > +      * Although it would make much more sense to check for bypass in
+> > +      * sun4i_pwm_calculate(), value of bypass bit also depends on "en=
+abled".
+>
+> I don't understand this reasoning. sun4i_pwm_calculate knows about
+> .enabled and also sun4i_pwm->data->has_direct_mod_clk_output. Maybe just
+> add a bool *bypass as parameter and move the logic there?
 
-On Thu, Nov 14, 2019 at 03:43:32PM -0700, Jacob Rasmussen wrote:
-> On Thu, Nov 14, 2019 at 2:43 PM Ross Zwisler <zwisler@google.com> wrote:
+I asked myself the same question, however the sun4i_pwm_calculate is
+only called when period or duty_cycle is updated not when state is
+toggled between disabled / enabled.
 
-> > On Thu, Nov 14, 2019 at 12:08:44PM -0700, Jacob Rasmussen wrote:
-> > > Had a typo in e7cfd867fd98 that resulted in buddy jack support not being
-> > > fixed.
+Should we also call it when the state is switched to enabled ?
 
-> > > Fixes: e7cfd867fd98 ("ASoC: rt5645: Fixed buddy jack support.")
-> > > Cc: <zwisler@google.com>
-> > > Cc: <jacobraz@google.com>
-> > > CC: stable@vger.kernel.org
+Regards,
+Cl=C3=A9ment
 
-> > Need to add your signed-off-by.  With that added you can add:
-
-> > Reviewed-by: Ross Zwisler <zwisler@google.com>
-> Signed-off-by: Jacob Rasmussen <jacobraz@google.com>
-
-I'd be more comfortable with this if you could repost with the signoff
-and the patch in one mail.
-
---n/aVsWSeQ4JHkrmm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3N2OUACgkQJNaLcl1U
-h9AMRgf7BSP5AIvGA9TnvKf2VoXlRlNS8DrafSXItt9h4X1RVJgmcCFoF+W9AZrL
-2UM5V9NfuB0A+PsVYWTdUWbIvDYrBRb4NecaaYJvEa7XVL+dtvOLrqGZcANn/Trr
-lnqwHZhMrHyIRPWXjCdWuM6XymaC8n31ptGJH+OJ6/QJBvwiM/HvMBVPNjFczuU3
-1NOVR4shUdS83vqRTWzqNOwQaOfRbSxlG8OH1de0inLiqDXM+4BN6T2BabBfTelI
-f/JnxMOvQBaIAnjN2hsY/f4Q3acDof1btff0hSLSH25wOKeUtrWq3MRt6H94CkbJ
-1T0d6DDwjKphYDn6J9ijVUWO5pOi+A==
-=SPvm
------END PGP SIGNATURE-----
-
---n/aVsWSeQ4JHkrmm--
+>
+> > +      */
+> > +     if (state->enabled) {
+> > +             u32 clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+> > +             bypass =3D (state->period * clk_rate >=3D NSEC_PER_SEC) &=
+&
+> > +                      (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
+> > +                      (state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_=
+SEC);
+> > +     }
+> > +
+>
+> This looks right now.
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
