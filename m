@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52B1C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96078C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794DA206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E7E20740
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Xc7sVy9d"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CjDBNJoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKNRmg (ORCPT
+        id S1727048AbfKNRml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:42:36 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:64705 "EHLO
+        Thu, 14 Nov 2019 12:42:41 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:64767 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfKNRme (ORCPT
+        with ESMTP id S1726957AbfKNRmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:42:34 -0500
+        Thu, 14 Nov 2019 12:42:37 -0500
 Received: from grover.flets-west.jp (softbank126021098169.bbtec.net [126.21.98.169]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id xAEHgSo4028428;
-        Fri, 15 Nov 2019 02:42:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xAEHgSo4028428
+        by conuserg-09.nifty.com with ESMTP id xAEHgSo6028428;
+        Fri, 15 Nov 2019 02:42:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xAEHgSo6028428
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573753350;
-        bh=rmpRFmxNZ/Mz3ML460iOsaBVMxNlFRyIh/Y5zJuSSiI=;
+        s=dec2015msa; t=1573753351;
+        bh=fUBxXICdayMSot+TU06/7Ds+CnTO5ybIlw5ICaeyTpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xc7sVy9dshezER+j91adxqP9RRE1WwfyarA600bZ8t2aXXFCoRhP0zGXPFRhpiCP/
-         G0kqU+UaVGBXf3+78g/81f53DdGHT030OKS35vyW8LyFINRGmv4f48aPWPKeUoLAUl
-         kec2dPH9dFM9s/gxiEQWZUgHUvB+1fufxiLtQOqf9F6kxIMdzKfN+amak4vW9ozdf7
-         HS0tZuR/6wnMjub8sqAYZBKwDBKnQmtZqLyTQDuQvpe6ImQDfIQz7nrdpX3W1Rczo2
-         otMv0nLO7rxRqVzkcZ2XZW2LB1BU4BPWXxBKf3/QDFrxmg85ZPnwPnONhOBoMe2ykI
-         XUrON9xfkU33Q==
+        b=CjDBNJoQ1nFHK4r4CLKmPL1Jn0sCTmTUQp802gD4dmqGZ0GxE/pGDuq2sx3/33pY6
+         K7t9nxIiS2w/keZd7gwq/hJbzESVtEBRwiQBSQCsjLx1jPARHdYyq+4B+93QyjK3BB
+         Dwx3FkGg3jOx3vbJuvPHSwUuac9bTx0S/CVfSey1gIpIopP15PT9Ni1TK9Y356WvhA
+         9aRFtC0Ja8r4QPid+ztjELX4X8/AtJozLZJQBzNA6XoODUaKjqXp9g1BWEWhmiukjp
+         SPUI+8c92LCaDx6a8RpPHrh/Svk1BCk8SPXg/Bp7FTZUrk9X54GP/S6wRNUkevZGMk
+         qreEmMHLVJHvw==
 X-Nifty-SrcIP: [126.21.98.169]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] modpost: stop symbol preloading for modversion CRC
-Date:   Fri, 15 Nov 2019 02:42:24 +0900
-Message-Id: <20191114174226.7201-4-yamada.masahiro@socionext.com>
+Subject: [PATCH 6/6] modpost: respect the previous export when 'exported twice' is warned
+Date:   Fri, 15 Nov 2019 02:42:26 +0900
+Message-Id: <20191114174226.7201-6-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191114174226.7201-1-yamada.masahiro@socionext.com>
 References: <20191114174226.7201-1-yamada.masahiro@socionext.com>
@@ -54,141 +54,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is complicated to add mocked-up symbols to pre-handle CRC.
-Handle CRC after all the export symbols in the relevant module
-are registered.
+When 'exported twice' is warned, let sym_add_exported() return without
+updating the symbol info. This respects the previous export, which is
+ordered first in modules.order
+
+This simplifies the code too.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/mod/modpost.c | 64 +++++++++++++++++++++++--------------------
- 1 file changed, 35 insertions(+), 29 deletions(-)
+ scripts/mod/modpost.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 6735ae3da4c2..73bdf27c41fe 100644
+index 06086105011f..d9a92fbe1146 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -169,7 +169,7 @@ struct symbol {
- 	unsigned int vmlinux:1;    /* 1 if symbol is defined in vmlinux */
- 	unsigned int kernel:1;     /* 1 if symbol is from kernel
- 				    *  (only for external modules) **/
--	unsigned int preloaded:1;  /* 1 if symbol from Module.symvers, or crc */
-+	unsigned int preloaded:1;  /* 1 if symbol from Module.symvers */
- 	unsigned int is_static:1;  /* 1 if symbol is not global */
- 	enum export  export;       /* Type of export */
- 	char name[0];
-@@ -410,15 +410,15 @@ static struct symbol *sym_add_exported(const char *name, struct module *mod,
- 	return s;
+@@ -211,13 +211,11 @@ static struct symbol *new_symbol(const char *name, struct module *module,
+ 				 enum export export)
+ {
+ 	unsigned int hash;
+-	struct symbol *new;
+ 
+ 	hash = tdb_hash(name) % SYMBOL_HASH_SIZE;
+-	new = symbolhash[hash] = alloc_symbol(name, 0, symbolhash[hash]);
+-	new->module = module;
+-	new->export = export;
+-	return new;
++	symbolhash[hash] = alloc_symbol(name, 0, symbolhash[hash]);
++
++	return symbolhash[hash];
  }
  
--static void sym_update_crc(const char *name, struct module *mod,
--			   unsigned int crc, enum export export)
-+static void sym_set_crc(const char *name, const struct module *mod,
-+			unsigned int crc)
- {
- 	struct symbol *s = find_symbol(name);
+ static struct symbol *find_symbol(const char *name)
+@@ -392,17 +390,15 @@ static struct symbol *sym_add_exported(const char *name, struct module *mod,
  
  	if (!s) {
--		s = new_symbol(name, mod, export);
--		/* Don't complain when we find it later. */
--		s->preloaded = 1;
-+		warn("%s: '__crc_%s' is invalid use. __crc_* is reserved for modversion\n",
-+		     mod->name, name);
-+		return;
- 	}
- 	s->crc = crc;
- 	s->crc_valid = 1;
-@@ -683,12 +683,34 @@ static int ignore_undef_symbol(struct elf_info *info, const char *symname)
- 	return 0;
- }
- 
-+static void handle_modversion(const struct module *mod,
-+			      const struct elf_info *info,
-+			      const Elf_Sym *sym, const char *symname)
-+{
-+	unsigned int crc;
-+
-+	if (sym->st_shndx == SHN_UNDEF) {
-+		warn("EXPORT symbol \"%s\" [%s%s] version generation failed, symbol will not be versioned.\n",
-+		     symname, mod->name, is_vmlinux(mod->name) ? "":".ko");
-+		return;
-+	}
-+
-+	if (sym->st_shndx == SHN_ABS) {
-+		crc = sym->st_value;
-+	} else {
-+		unsigned int *crcp;
-+
-+		/* symbol points to the CRC in the ELF object */
-+		crcp = sym_get_data(info, sym);
-+		crc = TO_NATIVE(*crcp);
-+	}
-+	sym_set_crc(symname, mod, crc);
-+}
-+
- static void handle_symbol(struct module *mod, struct elf_info *info,
- 			  const Elf_Sym *sym, const char *symname)
- {
--	unsigned int crc;
- 	enum export export;
--	bool is_crc = false;
- 	const char *name;
- 
- 	if ((!is_vmlinux(mod->name) || mod->is_dot_o) &&
-@@ -697,21 +719,6 @@ static void handle_symbol(struct module *mod, struct elf_info *info,
- 	else
- 		export = export_from_sec(info, get_secindex(info, sym));
- 
--	/* CRC'd symbol */
--	if (strstarts(symname, "__crc_")) {
--		is_crc = true;
--		crc = (unsigned int) sym->st_value;
--		if (sym->st_shndx != SHN_UNDEF && sym->st_shndx != SHN_ABS) {
--			unsigned int *crcp;
--
--			/* symbol points to the CRC in the ELF object */
--			crcp = sym_get_data(info, sym);
--			crc = TO_NATIVE(*crcp);
+ 		s = new_symbol(name, mod, export);
+-	} else {
+-		if (!external_module || is_vmlinux(s->module->name) ||
+-		    s->module == mod) {
+-			warn("%s: '%s' exported twice. Previous export was in %s%s\n",
+-			     mod->name, name, s->module->name,
+-			     is_vmlinux(s->module->name) ? "" : ".ko");
+-		} else {
+-			/* In case Module.symvers was out of date */
+-			s->module = mod;
 -		}
--		sym_update_crc(symname + strlen("__crc_"), mod, crc,
--				export);
--	}
--
- 	switch (sym->st_shndx) {
- 	case SHN_COMMON:
- 		if (strstarts(symname, "__gnu_lto_")) {
-@@ -746,11 +753,6 @@ static void handle_symbol(struct module *mod, struct elf_info *info,
- 		}
- #endif
- 
--		if (is_crc) {
--			const char *e = is_vmlinux(mod->name) ?"":".ko";
--			warn("EXPORT symbol \"%s\" [%s%s] version generation failed, symbol will not be versioned.\n",
--			     symname + strlen("__crc_"), mod->name, e);
--		}
- 		mod->unres = alloc_symbol(symname,
- 					  ELF_ST_BIND(sym->st_info) == STB_WEAK,
- 					  mod->unres);
-@@ -2063,6 +2065,10 @@ static void read_symbols(const char *modname)
- 			sym_update_namespace(symname + strlen("__kstrtabns_"),
- 					     namespace_from_kstrtabns(&info,
- 								      sym));
++	} else if (!external_module || is_vmlinux(s->module->name) ||
++		   s->module == mod) {
++		warn("%s: '%s' exported twice. Previous export was in %s%s\n",
++		     mod->name, name, s->module->name,
++		     is_vmlinux(s->module->name) ? "" : ".ko");
++		return s;
+ 	}
 +
-+		if (strstarts(symname, "__crc_"))
-+			handle_modversion(mod, &info, sym,
-+					  symname + strlen("__crc_"));
- 	}
- 
- 	// check for static EXPORT_SYMBOL_* functions && global vars
-@@ -2476,7 +2482,7 @@ static void read_dump(const char *fname, unsigned int kernel)
- 		s->kernel    = kernel;
- 		s->preloaded = 1;
- 		s->is_static = 0;
--		sym_update_crc(symname, mod, crc, export_no(export));
-+		sym_set_crc(symname, mod, crc);
- 		sym_update_namespace(symname, namespace);
- 	}
- 	release_file(file, size);
++	s->module = mod;
+ 	s->vmlinux   = is_vmlinux(mod->name);
+ 	s->kernel    = 0;
+ 	s->export    = export;
 -- 
 2.17.1
 
