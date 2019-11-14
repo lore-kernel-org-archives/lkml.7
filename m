@@ -2,80 +2,103 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD26DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0440C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A150220709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51272071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfKNK5L (ORCPT
+        id S1726973AbfKNK5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:57:11 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40297 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfKNK5L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:57:11 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iVCoC-0008OC-T1; Thu, 14 Nov 2019 11:57:04 +0100
-Date:   Thu, 14 Nov 2019 11:57:04 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 21/23] y2038: itimer: change implementation to
- timespec64
-In-Reply-To: <CAK8P3a27OV864GfvLK_wjO7dK__r59dZ_dNQACp4G00gJrAwMw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1911141153350.2507@nanos.tec.linutronix.de>
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-12-arnd@arndb.de> <alpine.DEB.2.21.1911132306070.2507@nanos.tec.linutronix.de> <CAK8P3a27OV864GfvLK_wjO7dK__r59dZ_dNQACp4G00gJrAwMw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 14 Nov 2019 05:57:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33300 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725977AbfKNK5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 05:57:40 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4E0BFACD8;
+        Thu, 14 Nov 2019 10:57:38 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus OSDs
+Date:   Thu, 14 Nov 2019 10:57:32 +0000
+Message-Id: <20191114105736.8636-1-lhenriques@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019, Arnd Bergmann wrote:
-> On Wed, Nov 13, 2019 at 11:28 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > On Fri, 8 Nov 2019, Arnd Bergmann wrote:
-> > > @@ -197,19 +207,13 @@ static void set_cpu_itimer(struct task_struct *tsk, unsigned int clock_id,
-> > >  #define timeval_valid(t) \
-> > >       (((t)->tv_sec >= 0) && (((unsigned long) (t)->tv_usec) < USEC_PER_SEC))
-> >
-> > Hrm, why do we have yet another incarnation of timeval_valid()?
-> 
-> No idea, you have to ask the author of commit 7d99b7d634d8 ("[PATCH]
-> Validate and
-> sanitze itimer timeval from userspace") ;-)
+Hi!
 
-I don't know that guy. :)
+So, after the feedback I got from v1 [1] I've sent out a pull-request
+for the OSDs [2] which encodes require_osd_release into the OSDMap
+client data.  This allows the client to figure out which ceph release
+the OSDs cluster is running and decide whether or not it's safe to use
+the copy-from Op for copy_file_range.
 
-> > Can we please have only one (the inline version)?
-> 
-> I'm removing the inline version in a later patch along with most of the rest of
-> include/linux/time32.h.
-> 
-> Having the macro version is convenient for this patch, since I'm using it
-> on two different structures (itimerval/__kernel_old_timeval and
-> old_itimerval32/old_timeval32), neither of which is the type used in the
-> inline function.
+This new patchset I'm sending simply adds enough functionality to the
+kernel client so that it can take advantage of this OSD patch:
 
-Fair enough.
+0001 - adds the ability to decode TYPE_MSGR2 addresses.  This is a
+       required functionality for enabling SERVER_NAUTILUS in the
+       client.  I hope I got the new format right, as I couldn't figure
+       out what the hard-coded values (see comments) really mean.
 
-Thanks,
+0002 - allows the client to retrieve the new require_osd_release field
+       from the OSDMap if available.  This patch also adds SERVER_MIMIC,
+       SERVER_NAUTILUS and SERVER_OCTOPUS to the supported features,
+       which TBH I'm not sure if that's a safe thing to do -- the only
+       issue I've seen was that Nautilus requires the ability to decode
+       TYPE_MSGR2 address, but I may have missed others.
 
-	tglx
+0003 - debug code to add require_osd_release to the osdmap debugfs file.
+
+0004 - adds the truncate_{seq,size} fields to the 'copy-from' operation
+       if the OSDs are >= Octopus.
+
+Also note that, as suggested by Ilya, I've dropped the patch that would
+change the default mount options to 'copyfrom'.
+
+These patches have been tested with the xfstests generic test suite, and
+with a couple of other (local) tests that exercise the cephfs
+copy_file_range syscall.  I didn't saw any issues, but as I said above,
+I'm not really sure if adding the SERVER_* flags to the supported
+features have other side effects.
+
+[1] https://lore.kernel.org/lkml/20191108141555.31176-1-lhenriques@suse.com/
+[2] https://github.com/ceph/ceph/pull/31611
+
+Cheers,
+--
+Luis
+
+Luis Henriques (4):
+  ceph: add support for TYPE_MSGR2 address decode
+  ceph: get the require_osd_release field from the osdmap
+  ceph: add require_osd_release field to osdmap debugfs
+  ceph: add support for sending truncate_{seq,size} in 'copy-from' Op
+
+ fs/ceph/file.c                     | 10 +++++++-
+ include/linux/ceph/ceph_features.h | 10 ++++++--
+ include/linux/ceph/decode.h        |  3 ++-
+ include/linux/ceph/osd_client.h    |  1 +
+ include/linux/ceph/osdmap.h        |  1 +
+ include/linux/ceph/rados.h         | 23 ++++++++++++++++++
+ net/ceph/ceph_strings.c            | 38 ++++++++++++++++++++++++++++++
+ net/ceph/debugfs.c                 |  2 ++
+ net/ceph/decode.c                  | 33 ++++++++++++++++++++++++--
+ net/ceph/osd_client.c              |  7 +++++-
+ net/ceph/osdmap.c                  | 21 +++++++++++++++++
+ 11 files changed, 142 insertions(+), 7 deletions(-)
+
