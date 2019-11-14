@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAB4C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3978C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A9120706
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9063720706
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:27:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EeXAWMjo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RsZOuaCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfKNO12 (ORCPT
+        id S1726881AbfKNO1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:27:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22355 "EHLO
+        Thu, 14 Nov 2019 09:27:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42283 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726190AbfKNO12 (ORCPT
+        with ESMTP id S1726190AbfKNO1a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:27:28 -0500
+        Thu, 14 Nov 2019 09:27:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573741646;
+        s=mimecast20190719; t=1573741649;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=rck3QvMXcs5G6TH9GTO7yJG2Ho368eKyJPcy810jFBA=;
-        b=EeXAWMjo/SCSJ5EOkBzCS2ZUyYxzcPXEaenc+hNk3RqRhbSaH8RqWLs7gE/t0wETpbez84
-        M88cpa6iZYWRFZWXIjIfY7HjZj34MFN2Cp/S31FsPScAdpjnIsK6R0hk9wskkzZoNQWX3q
-        j9X9QekSsaBNKuISJG4E48pyGmar6Yg=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r9lFGrn/hfvWI99SrtAfzuK7vAeCFYqVUsOFDBSrW0M=;
+        b=RsZOuaCoaIkoRDUqdXXr7QAq9oLqGPN2FPQAql2O4X9QdQtYBpibBGQPWcPfE178ekQGll
+        BZ/TLy4XPi9hsEfuEh0Xl19oW6b7gpLzZlvpbEXzpxZ2PtZJOebSqznw4VkysFVBKtQSBO
+        4Ut/m07SZqn+PCYctYObU7nHHcsxuy4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-bHZ5F6fHNj6UDkD5tJR4QQ-1; Thu, 14 Nov 2019 09:27:22 -0500
+ us-mta-432-3oHvSvZLObWGE4AHDrVbiQ-1; Thu, 14 Nov 2019 09:27:26 -0500
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 008181005500;
-        Thu, 14 Nov 2019 14:27:21 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0880100550E;
+        Thu, 14 Nov 2019 14:27:24 +0000 (UTC)
 Received: from dcbz.redhat.com (ovpn-116-65.ams2.redhat.com [10.36.116.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B4365E258;
-        Thu, 14 Nov 2019 14:27:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 62AB45E26B;
+        Thu, 14 Nov 2019 14:27:22 +0000 (UTC)
 From:   Adrian Reber <areber@redhat.com>
 To:     Christian Brauner <christian.brauner@ubuntu.com>,
         Eric Biederman <ebiederm@xmission.com>,
@@ -54,12 +55,14 @@ Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
         Mike Rapoport <rppt@linux.ibm.com>,
         Radostin Stoyanov <rstoyanov1@gmail.com>,
         Adrian Reber <areber@redhat.com>
-Subject: [PATCH v10 1/2] fork: extend clone3() to support setting a PID
-Date:   Thu, 14 Nov 2019 15:27:06 +0100
-Message-Id: <20191114142707.1608679-1-areber@redhat.com>
+Subject: [PATCH v10 2/2] selftests: add tests for clone3() with *set_tid
+Date:   Thu, 14 Nov 2019 15:27:07 +0100
+Message-Id: <20191114142707.1608679-2-areber@redhat.com>
+In-Reply-To: <20191114142707.1608679-1-areber@redhat.com>
+References: <20191114142707.1608679-1-areber@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: bHZ5F6fHNj6UDkD5tJR4QQ-1
+X-MC-Unique: 3oHvSvZLObWGE4AHDrVbiQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -68,419 +71,533 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main motivation to add set_tid to clone3() is CRIU.
+This tests clone3() with *set_tid to see if all desired PIDs are working
+as expected. The tests are trying multiple invalid input parameters as
+well as creating processes while specifying a certain PID in multiple
+PID namespaces at the same time.
 
-To restore a process with the same PID/TID CRIU currently uses
-/proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-ns_last_pid and then (quickly) does a clone(). This works most of the
-time, but it is racy. It is also slow as it requires multiple syscalls.
-
-Extending clone3() to support *set_tid makes it possible restore a
-process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-race free (as long as the desired PID/TID is available).
-
-This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-on clone3() with *set_tid as they are currently in place for ns_last_pid.
-
-The original version of this change was using a single value for
-set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
-decided to change set_tid to an array to enable setting the PID of a
-process in multiple PID namespaces at the same time. If a process is
-created in a PID namespace it is possible to influence the PID inside
-and outside of the PID namespace. Details also in the corresponding
-selftest.
-
-To create a process with the following PIDs:
-
-      PID NS level         Requested PID
-        0 (host)              31496
-        1                        42
-        2                         1
-
-For that example the two newly introduced parameters to struct
-clone_args (set_tid and set_tid_size) would need to be:
-
-  set_tid[0] =3D 1;
-  set_tid[1] =3D 42;
-  set_tid[2] =3D 31496;
-  set_tid_size =3D 3;
-
-If only the PIDs of the two innermost nested PID namespaces should be
-defined it would look like this:
-
-  set_tid[0] =3D 1;
-  set_tid[1] =3D 42;
-  set_tid_size =3D 2;
-
-The PID of the newly created process would then be the next available
-free PID in the PID namespace level 0 (host) and 42 in the PID namespace
-at level 1 and the PID of the process in the innermost PID namespace
-would be 1.
-
-The set_tid array is used to specify the PID of a process starting
-from the innermost nested PID namespaces up to set_tid_size PID namespaces.
-
-set_tid_size cannot be larger then the current PID namespace level.
+Additionally this moves common clone3() test code into clone3_selftests.h.
 
 Signed-off-by: Adrian Reber <areber@redhat.com>
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
-v2:
- - Removed (size < sizeof(struct clone_args)) as discussed with
-   Christian and Dmitry
- - Added comment to ((set_tid !=3D 1) && idr_get_cursor() <=3D 1) (Oleg)
- - Use idr_alloc() instead of idr_alloc_cyclic() (Oleg)
-
-v3:
- - Return EEXIST if PID is already in use (Christian)
- - Drop CLONE_SET_TID (Christian and Oleg)
- - Use idr_is_empty() instead of idr_get_cursor() (Oleg)
- - Handle different `struct clone_args` sizes (Dmitry)
-
-v4:
- - Rework struct size check with defines (Christian)
- - Reduce number of set_tid checks (Oleg)
- - Less parentheses and more robust code (Oleg)
- - Do ns_capable() on correct user_ns (Oleg, Christian)
-
-v5:
- - make set_tid checks earlier in alloc_pid() (Christian)
- - remove unnecessary comment and struct size check (Christian)
-
-v6:
- - remove CLONE_SET_TID from description (Christian)
- - add clone3() tests for different clone_args sizes (Christian)
- - move more set_tid checks to alloc_pid() (Oleg)
- - make all set_tid checks lockless (Oleg)
-
-v7:
- - changed set_tid to be an array to set the PID of a process
-   in multiple nested PID namespaces at the same time as discussed
-   at LPC 2019 (container MC)
-
-v8:
- - skip unnecessary memset() (Rasmus)
- - replace set_tid copy loop with a single copy (Christian)
- - more parameter error checking (Christian)
- - cache set_tid in alloc_pid() (Oleg)
- - move code in "else" branch (Oleg)
-
 v9:
- - added kernel-doc to include/uapi/linux/sched.h (Christian)
- - moved a variable to limit its scope; keep all set_tid_size
-   related changes in one place (Oleg)
+ - applied all changes from Christian's review (except using the
+   NSpid: parsing code from selftests/pidfd/pidfd_fdinfo_test.c)
 
 v10:
- - added CLONE_ARGS_SIZE_VER1 to sched.h (Christian)
+ - added even more '\n' and include file fixes (Christian)
 ---
- include/linux/pid.h           |  3 +-
- include/linux/pid_namespace.h |  2 +
- include/linux/sched/task.h    |  3 ++
- include/uapi/linux/sched.h    | 53 ++++++++++++++++++---------
- kernel/fork.c                 | 24 +++++++++++-
- kernel/pid.c                  | 69 +++++++++++++++++++++++++++--------
- kernel/pid_namespace.c        |  2 -
- 7 files changed, 119 insertions(+), 37 deletions(-)
+ tools/testing/selftests/clone3/.gitignore     |   1 +
+ tools/testing/selftests/clone3/Makefile       |   2 +-
+ tools/testing/selftests/clone3/clone3.c       |   8 +-
+ .../selftests/clone3/clone3_clear_sighand.c   |  20 +-
+ .../selftests/clone3/clone3_selftests.h       |  33 ++
+ .../testing/selftests/clone3/clone3_set_tid.c | 357 ++++++++++++++++++
+ 6 files changed, 395 insertions(+), 26 deletions(-)
+ create mode 100644 tools/testing/selftests/clone3/clone3_selftests.h
+ create mode 100644 tools/testing/selftests/clone3/clone3_set_tid.c
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 034e3cd60dc0..998ae7d24450 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -124,7 +124,8 @@ extern struct pid *find_vpid(int nr);
- extern struct pid *find_get_pid(int nr);
- extern struct pid *find_ge_pid(int nr, struct pid_namespace *);
+diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/self=
+tests/clone3/.gitignore
+index 2a30ae18b06e..0dc4f32c6cb8 100644
+--- a/tools/testing/selftests/clone3/.gitignore
++++ b/tools/testing/selftests/clone3/.gitignore
+@@ -1,2 +1,3 @@
+ clone3
+ clone3_clear_sighand
++clone3_set_tid
+diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selfte=
+sts/clone3/Makefile
+index eb26eb793c80..cf976c732906 100644
+--- a/tools/testing/selftests/clone3/Makefile
++++ b/tools/testing/selftests/clone3/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS +=3D -g -I../../../../usr/include/
 =20
--extern struct pid *alloc_pid(struct pid_namespace *ns);
-+extern struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
-+=09=09=09     size_t set_tid_size);
- extern void free_pid(struct pid *pid);
- extern void disable_pid_allocation(struct pid_namespace *ns);
+-TEST_GEN_PROGS :=3D clone3 clone3_clear_sighand
++TEST_GEN_PROGS :=3D clone3 clone3_clear_sighand clone3_set_tid
 =20
-diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
-index 49538b172483..2ed6af88794b 100644
---- a/include/linux/pid_namespace.h
-+++ b/include/linux/pid_namespace.h
-@@ -12,6 +12,8 @@
- #include <linux/ns_common.h>
- #include <linux/idr.h>
+ include ../lib.mk
+diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selfte=
+sts/clone3/clone3.c
+index 0f8a9ef40117..4669b3d418e7 100644
+--- a/tools/testing/selftests/clone3/clone3.c
++++ b/tools/testing/selftests/clone3/clone3.c
+@@ -18,6 +18,7 @@
+ #include <sched.h>
 =20
-+/* MAX_PID_NS_LEVEL is needed for limiting size of 'struct pid' */
-+#define MAX_PID_NS_LEVEL 32
-=20
- struct fs_pin;
-=20
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index 4b1c3b664f51..f1879884238e 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -26,6 +26,9 @@ struct kernel_clone_args {
- =09unsigned long stack;
- =09unsigned long stack_size;
- =09unsigned long tls;
-+=09pid_t *set_tid;
-+=09/* Number of elements in *set_tid */
-+=09size_t set_tid_size;
- };
+ #include "../kselftest.h"
++#include "clone3_selftests.h"
 =20
  /*
-diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-index 1d500ed03c63..2e649cfa07f4 100644
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -39,24 +39,38 @@
- #ifndef __ASSEMBLY__
- /**
-  * struct clone_args - arguments for the clone3 syscall
-- * @flags:       Flags for the new process as listed above.
-- *               All flags are valid except for CSIGNAL and
-- *               CLONE_DETACHED.
-- * @pidfd:       If CLONE_PIDFD is set, a pidfd will be
-- *               returned in this argument.
-- * @child_tid:   If CLONE_CHILD_SETTID is set, the TID of the
-- *               child process will be returned in the child's
-- *               memory.
-- * @parent_tid:  If CLONE_PARENT_SETTID is set, the TID of
-- *               the child process will be returned in the
-- *               parent's memory.
-- * @exit_signal: The exit_signal the parent process will be
-- *               sent when the child exits.
-- * @stack:       Specify the location of the stack for the
-- *               child process.
-- * @stack_size:  The size of the stack for the child process.
-- * @tls:         If CLONE_SETTLS is set, the tls descriptor
-- *               is set to tls.
-+ * @flags:        Flags for the new process as listed above.
-+ *                All flags are valid except for CSIGNAL and
-+ *                CLONE_DETACHED.
-+ * @pidfd:        If CLONE_PIDFD is set, a pidfd will be
-+ *                returned in this argument.
-+ * @child_tid:    If CLONE_CHILD_SETTID is set, the TID of the
-+ *                child process will be returned in the child's
-+ *                memory.
-+ * @parent_tid:   If CLONE_PARENT_SETTID is set, the TID of
-+ *                the child process will be returned in the
-+ *                parent's memory.
-+ * @exit_signal:  The exit_signal the parent process will be
-+ *                sent when the child exits.
-+ * @stack:        Specify the location of the stack for the
-+ *                child process.
-+ * @stack_size:   The size of the stack for the child process.
-+ * @tls:          If CLONE_SETTLS is set, the tls descriptor
-+ *                is set to tls.
-+ * @set_tid:      Pointer to an array of type *pid_t. The size
-+ *                of the array is defined using @set_tid_size.
-+ *                This array is used select PIDs/TIDs for newly
-+ *                created processes. The first element in this
-+ *                defines the PID in the most nested PID
-+ *                namespace. Each additional element in the array
-+ *                defines the PID in the parent PID namespace of
-+ *                the original PID namespace. If the array has
-+ *                less entries than the number of currently
-+ *                nested PID namespaces only the PIDs in the
-+ *                corresponding namespaces are set.
-+ * @set_tid_size: This defines the size of the array referenced
-+ *                in @set_tid. This cannot be larger than the
-+ *                kernel's limit of nested PID namespaces.
-  *
-  * The structure is versioned by size and thus extensible.
-  * New struct members must go at the end of the struct and
-@@ -71,10 +85,13 @@ struct clone_args {
- =09__aligned_u64 stack;
- =09__aligned_u64 stack_size;
- =09__aligned_u64 tls;
-+=09__aligned_u64 set_tid;
-+=09__aligned_u64 set_tid_size;
+  * Different sizes of struct clone_args
+@@ -35,11 +36,6 @@ enum test_mode {
+ =09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG,
  };
+=20
+-static pid_t raw_clone(struct clone_args *args, size_t size)
+-{
+-=09return syscall(__NR_clone3, args, size);
+-}
+-
+ static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mo=
+de)
+ {
+ =09struct clone_args args =3D {
+@@ -83,7 +79,7 @@ static int call_clone3(uint64_t flags, size_t size, enum =
+test_mode test_mode)
+=20
+ =09memcpy(&args_ext.args, &args, sizeof(struct clone_args));
+=20
+-=09pid =3D raw_clone((struct clone_args *)&args_ext, size);
++=09pid =3D sys_clone3((struct clone_args *)&args_ext, size);
+ =09if (pid < 0) {
+ =09=09ksft_print_msg("%s - Failed to create new process\n",
+ =09=09=09=09strerror(errno));
+diff --git a/tools/testing/selftests/clone3/clone3_clear_sighand.c b/tools/=
+testing/selftests/clone3/clone3_clear_sighand.c
+index 0d957be1bdc5..456783ad19d6 100644
+--- a/tools/testing/selftests/clone3/clone3_clear_sighand.c
++++ b/tools/testing/selftests/clone3/clone3_clear_sighand.c
+@@ -14,30 +14,12 @@
+ #include <sys/wait.h>
+=20
+ #include "../kselftest.h"
++#include "clone3_selftests.h"
+=20
+ #ifndef CLONE_CLEAR_SIGHAND
+ #define CLONE_CLEAR_SIGHAND 0x100000000ULL
  #endif
 =20
- #define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
-+#define CLONE_ARGS_SIZE_VER1 80 /* sizeof second published struct */
-=20
- /*
-  * Scheduling policies
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 954e875e72b1..417570263f1f 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2087,7 +2087,8 @@ static __latent_entropy struct task_struct *copy_proc=
-ess(
- =09stackleak_task_init(p);
-=20
- =09if (pid !=3D &init_struct_pid) {
--=09=09pid =3D alloc_pid(p->nsproxy->pid_ns_for_children);
-+=09=09pid =3D alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid,
-+=09=09=09=09args->set_tid_size);
- =09=09if (IS_ERR(pid)) {
- =09=09=09retval =3D PTR_ERR(pid);
- =09=09=09goto bad_fork_cleanup_thread;
-@@ -2590,6 +2591,7 @@ noinline static int copy_clone_args_from_user(struct =
-kernel_clone_args *kargs,
- {
- =09int err;
- =09struct clone_args args;
-+=09pid_t *kset_tid =3D kargs->set_tid;
-=20
- =09if (unlikely(usize > PAGE_SIZE))
- =09=09return -E2BIG;
-@@ -2600,6 +2602,15 @@ noinline static int copy_clone_args_from_user(struct=
- kernel_clone_args *kargs,
- =09if (err)
- =09=09return err;
-=20
-+=09if (unlikely(args.set_tid_size > MAX_PID_NS_LEVEL))
-+=09=09return -EINVAL;
-+
-+=09if (unlikely(!args.set_tid && args.set_tid_size > 0))
-+=09=09return -EINVAL;
-+
-+=09if (unlikely(args.set_tid && args.set_tid_size =3D=3D 0))
-+=09=09return -EINVAL;
-+
- =09/*
- =09 * Verify that higher 32bits of exit_signal are unset and that
- =09 * it is a valid signal
-@@ -2617,8 +2628,16 @@ noinline static int copy_clone_args_from_user(struct=
- kernel_clone_args *kargs,
- =09=09.stack=09=09=3D args.stack,
- =09=09.stack_size=09=3D args.stack_size,
- =09=09.tls=09=09=3D args.tls,
-+=09=09.set_tid_size=09=3D args.set_tid_size,
- =09};
-=20
-+=09if (args.set_tid &&
-+=09=09copy_from_user(kset_tid, u64_to_user_ptr(args.set_tid),
-+=09=09=09(kargs->set_tid_size * sizeof(pid_t))))
-+=09=09return -EFAULT;
-+
-+=09kargs->set_tid =3D kset_tid;
-+
- =09return 0;
- }
-=20
-@@ -2662,6 +2681,9 @@ SYSCALL_DEFINE2(clone3, struct clone_args __user *, u=
-args, size_t, size)
- =09int err;
-=20
- =09struct kernel_clone_args kargs;
-+=09pid_t set_tid[MAX_PID_NS_LEVEL];
-+
-+=09kargs.set_tid =3D set_tid;
-=20
- =09err =3D copy_clone_args_from_user(&kargs, uargs, size);
- =09if (err)
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 7b5f6c963d72..eb32668997c6 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -157,7 +157,8 @@ void free_pid(struct pid *pid)
- =09call_rcu(&pid->rcu, delayed_put_pid);
- }
-=20
--struct pid *alloc_pid(struct pid_namespace *ns)
-+struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
-+=09=09      size_t set_tid_size)
- {
- =09struct pid *pid;
- =09enum pid_type type;
-@@ -166,6 +167,17 @@ struct pid *alloc_pid(struct pid_namespace *ns)
- =09struct upid *upid;
- =09int retval =3D -ENOMEM;
-=20
-+=09/*
-+=09 * set_tid_size contains the size of the set_tid array. Starting at
-+=09 * the most nested currently active PID namespace it tells alloc_pid()
-+=09 * which PID to set for a process in that most nested PID namespace
-+=09 * up to set_tid_size PID namespaces. It does not have to set the PID
-+=09 * for a process in all nested PID namespaces but set_tid_size must
-+=09 * never be greater than the current ns->level + 1.
-+=09 */
-+=09if (set_tid_size > ns->level + 1)
-+=09=09return ERR_PTR(-EINVAL);
-+
- =09pid =3D kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
- =09if (!pid)
- =09=09return ERR_PTR(retval);
-@@ -174,24 +186,51 @@ struct pid *alloc_pid(struct pid_namespace *ns)
- =09pid->level =3D ns->level;
-=20
- =09for (i =3D ns->level; i >=3D 0; i--) {
--=09=09int pid_min =3D 1;
-+=09=09int tid =3D 0;
-+
-+=09=09if (set_tid_size) {
-+=09=09=09tid =3D set_tid[ns->level - i];
-+=09=09=09if (tid < 1 || tid >=3D pid_max)
-+=09=09=09=09return ERR_PTR(-EINVAL);
-+=09=09=09/*
-+=09=09=09 * Also fail if a PID !=3D 1 is requested and
-+=09=09=09 * no PID 1 exists.
-+=09=09=09 */
-+=09=09=09if (tid !=3D 1 && !tmp->child_reaper)
-+=09=09=09=09return ERR_PTR(-EINVAL);
-+=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-+=09=09=09=09return ERR_PTR(-EPERM);
-+=09=09=09set_tid_size--;
-+=09=09}
-=20
- =09=09idr_preload(GFP_KERNEL);
- =09=09spin_lock_irq(&pidmap_lock);
-=20
--=09=09/*
--=09=09 * init really needs pid 1, but after reaching the maximum
--=09=09 * wrap back to RESERVED_PIDS
--=09=09 */
--=09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
--=09=09=09pid_min =3D RESERVED_PIDS;
+-#ifndef __NR_clone3
+-#define __NR_clone3 -1
+-struct clone_args {
+-=09__aligned_u64 flags;
+-=09__aligned_u64 pidfd;
+-=09__aligned_u64 child_tid;
+-=09__aligned_u64 parent_tid;
+-=09__aligned_u64 exit_signal;
+-=09__aligned_u64 stack;
+-=09__aligned_u64 stack_size;
+-=09__aligned_u64 tls;
+-};
+-#endif
 -
--=09=09/*
--=09=09 * Store a null pointer so find_pid_ns does not find
--=09=09 * a partially initialized PID (see below).
--=09=09 */
--=09=09nr =3D idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
--=09=09=09=09      pid_max, GFP_ATOMIC);
-+=09=09if (tid) {
-+=09=09=09nr =3D idr_alloc(&tmp->idr, NULL, tid,
-+=09=09=09=09       tid + 1, GFP_ATOMIC);
-+=09=09=09/*
-+=09=09=09 * If ENOSPC is returned it means that the PID is
-+=09=09=09 * alreay in use. Return EEXIST in that case.
-+=09=09=09 */
-+=09=09=09if (nr =3D=3D -ENOSPC)
-+=09=09=09=09nr =3D -EEXIST;
-+=09=09} else {
-+=09=09=09int pid_min =3D 1;
-+=09=09=09/*
-+=09=09=09 * init really needs pid 1, but after reaching the
-+=09=09=09 * maximum wrap back to RESERVED_PIDS
-+=09=09=09 */
-+=09=09=09if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
-+=09=09=09=09pid_min =3D RESERVED_PIDS;
+-static pid_t sys_clone3(struct clone_args *args, size_t size)
+-{
+-=09return syscall(__NR_clone3, args, size);
+-}
+-
+ static void test_clone3_supported(void)
+ {
+ =09pid_t pid;
+diff --git a/tools/testing/selftests/clone3/clone3_selftests.h b/tools/test=
+ing/selftests/clone3/clone3_selftests.h
+new file mode 100644
+index 000000000000..988c194d850d
+--- /dev/null
++++ b/tools/testing/selftests/clone3/clone3_selftests.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
-+=09=09=09/*
-+=09=09=09 * Store a null pointer so find_pid_ns does not find
-+=09=09=09 * a partially initialized PID (see below).
-+=09=09=09 */
-+=09=09=09nr =3D idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-+=09=09=09=09=09      pid_max, GFP_ATOMIC);
++#ifndef _CLONE3_SELFTESTS_H
++#define _CLONE3_SELFTESTS_H
++
++#define _GNU_SOURCE
++#include <sched.h>
++#include <stdint.h>
++#include <syscall.h>
++#include <linux/types.h>
++
++#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
++
++#ifndef __NR_clone3
++#define __NR_clone3 -1
++struct clone_args {
++=09__aligned_u64 flags;
++=09__aligned_u64 pidfd;
++=09__aligned_u64 child_tid;
++=09__aligned_u64 parent_tid;
++=09__aligned_u64 exit_signal;
++=09__aligned_u64 stack;
++=09__aligned_u64 stack_size;
++=09__aligned_u64 tls;
++};
++#endif
++
++static pid_t sys_clone3(struct clone_args *args, size_t size)
++{
++=09return syscall(__NR_clone3, args, size);
++}
++
++#endif /* _CLONE3_SELFTESTS_H */
+diff --git a/tools/testing/selftests/clone3/clone3_set_tid.c b/tools/testin=
+g/selftests/clone3/clone3_set_tid.c
+new file mode 100644
+index 000000000000..f2bf2e7a0ee6
+--- /dev/null
++++ b/tools/testing/selftests/clone3/clone3_set_tid.c
+@@ -0,0 +1,357 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Based on Christian Brauner's clone3() example.
++ * These tests are assuming to be running in the host's
++ * PID namespace.
++ */
++
++#define _GNU_SOURCE
++#include <errno.h>
++#include <linux/types.h>
++#include <linux/sched.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdbool.h>
++#include <sys/syscall.h>
++#include <sys/types.h>
++#include <sys/un.h>
++#include <sys/wait.h>
++#include <unistd.h>
++#include <sched.h>
++
++#include "../kselftest.h"
++#include "clone3_selftests.h"
++
++#ifndef MAX_PID_NS_LEVEL
++#define MAX_PID_NS_LEVEL 32
++#endif
++
++static int pipe_1[2];
++static int pipe_2[2];
++
++static int call_clone3_set_tid(pid_t *set_tid,
++=09=09=09       size_t set_tid_size,
++=09=09=09       int flags,
++=09=09=09       int expected_pid,
++=09=09=09       bool wait_for_it)
++{
++=09int status;
++=09pid_t pid =3D -1;
++
++=09struct clone_args args =3D {
++=09=09.flags =3D flags,
++=09=09.exit_signal =3D SIGCHLD,
++=09=09.set_tid =3D ptr_to_u64(set_tid),
++=09=09.set_tid_size =3D set_tid_size,
++=09};
++
++=09pid =3D sys_clone3(&args, sizeof(struct clone_args));
++=09if (pid < 0) {
++=09=09ksft_print_msg("%s - Failed to create new process\n",
++=09=09=09       strerror(errno));
++=09=09return -errno;
++=09}
++
++=09if (pid =3D=3D 0) {
++=09=09char tmp =3D 0;
++
++=09=09ksft_print_msg("I am the child, my PID is %d (expected %d)\n",
++=09=09=09       getpid(), set_tid[0]);
++=09=09if (wait_for_it) {
++=09=09=09ksft_print_msg("[%d] Child is ready and waiting\n",
++=09=09=09=09       getpid());
++
++=09=09=09/* Signal the parent that the child is ready */
++=09=09=09close(pipe_1[0]);
++=09=09=09write(pipe_1[1], &tmp, 1);
++=09=09=09close(pipe_1[1]);
++=09=09=09close(pipe_2[1]);
++=09=09=09read(pipe_2[0], &tmp, 1);
++=09=09=09close(pipe_2[0]);
 +=09=09}
- =09=09spin_unlock_irq(&pidmap_lock);
- =09=09idr_preload_end();
-=20
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index a6a79f85c81a..d40017e79ebe 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -26,8 +26,6 @@
-=20
- static DEFINE_MUTEX(pid_caches_mutex);
- static struct kmem_cache *pid_ns_cachep;
--/* MAX_PID_NS_LEVEL is needed for limiting size of 'struct pid' */
--#define MAX_PID_NS_LEVEL 32
- /* Write once array, filled from the beginning. */
- static struct kmem_cache *pid_cache[MAX_PID_NS_LEVEL];
-=20
-
-base-commit: 7acdfe534e726450fe8051abc2f36380fb2c2c0e
++
++=09=09if (set_tid[0] !=3D getpid())
++=09=09=09_exit(EXIT_FAILURE);
++=09=09_exit(EXIT_SUCCESS);
++=09}
++
++=09if (expected_pid =3D=3D 0 || expected_pid =3D=3D pid) {
++=09=09ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
++=09=09=09       getpid(), pid);
++=09} else {
++=09=09ksft_print_msg(
++=09=09=09"Expected child pid %d does not match actual pid %d\n",
++=09=09=09expected_pid, pid);
++=09}
++
++=09if (wait(&status) < 0) {
++=09=09ksft_print_msg("Child returned %s\n", strerror(errno));
++=09=09return -errno;
++=09}
++
++=09if (!WIFEXITED(status))
++=09=09return -1;
++
++=09return WEXITSTATUS(status);
++}
++
++static void test_clone3_set_tid(pid_t *set_tid,
++=09=09=09=09size_t set_tid_size,
++=09=09=09=09int flags,
++=09=09=09=09int expected,
++=09=09=09=09int expected_pid,
++=09=09=09=09bool wait_for_it)
++{
++=09int ret;
++
++=09ksft_print_msg(
++=09=09"[%d] Trying clone3() with CLONE_SET_TID to %d and 0x%x\n",
++=09=09getpid(), set_tid[0], flags);
++=09ret =3D call_clone3_set_tid(set_tid, set_tid_size, flags, expected_pid,
++=09=09=09=09  wait_for_it);
++=09ksft_print_msg(
++=09=09"[%d] clone3() with CLONE_SET_TID %d says :%d - expected %d\n",
++=09=09getpid(), set_tid[0], ret, expected);
++=09if (ret !=3D expected)
++=09=09ksft_test_result_fail(
++=09=09=09"[%d] Result (%d) is different than expected (%d)\n",
++=09=09=09getpid(), ret, expected);
++=09else
++=09=09ksft_test_result_pass(
++=09=09=09"[%d] Result (%d) matches expectation (%d)\n",
++=09=09=09getpid(), ret, expected);
++}
++int main(int argc, char *argv[])
++{
++=09FILE *f;
++=09char buf;
++=09char *line;
++=09int status;
++=09int ret =3D -1;
++=09size_t len =3D 0;
++=09int pid_max =3D 0;
++=09uid_t uid =3D getuid();
++=09char proc_path[100] =3D {0};
++=09pid_t pid, ns1, ns2, ns3, ns_pid;
++=09pid_t set_tid[MAX_PID_NS_LEVEL * 2];
++
++=09if (pipe(pipe_1) < 0 || pipe(pipe_2) < 0)
++=09=09ksft_exit_fail_msg("pipe() failed\n");
++
++=09ksft_print_header();
++=09ksft_set_plan(26);
++
++=09f =3D fopen("/proc/sys/kernel/pid_max", "r");
++=09if (f =3D=3D NULL)
++=09=09ksft_exit_fail_msg(
++=09=09=09"%s - Could not open /proc/sys/kernel/pid_max\n",
++=09=09=09strerror(errno));
++=09fscanf(f, "%d", &pid_max);
++=09fclose(f);
++=09ksft_print_msg("/proc/sys/kernel/pid_max %d\n", pid_max);
++
++=09/* Try invalid settings */
++=09memset(&set_tid, 0, sizeof(set_tid));
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL + 1, 0, -EINVAL, 0, 0);
++
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 2, 0, -EINVAL, 0, 0);
++
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 2 + 1, 0,
++=09=09=09-EINVAL, 0, 0);
++
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 42, 0, -EINVAL, 0, 0);
++
++=09/*
++=09 * This can actually work if this test running in a MAX_PID_NS_LEVEL - =
+1
++=09 * nested PID namespace.
++=09 */
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL - 1, 0, -EINVAL, 0, 0);
++
++=09memset(&set_tid, 0xff, sizeof(set_tid));
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL + 1, 0, -EINVAL, 0, 0);
++
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 2, 0, -EINVAL, 0, 0);
++
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 2 + 1, 0,
++=09=09=09-EINVAL, 0, 0);
++
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL * 42, 0, -EINVAL, 0, 0);
++
++=09/*
++=09 * This can actually work if this test running in a MAX_PID_NS_LEVEL - =
+1
++=09 * nested PID namespace.
++=09 */
++=09test_clone3_set_tid(set_tid, MAX_PID_NS_LEVEL - 1, 0, -EINVAL, 0, 0);
++
++=09memset(&set_tid, 0, sizeof(set_tid));
++=09/* Try with an invalid PID */
++=09set_tid[0] =3D 0;
++=09test_clone3_set_tid(set_tid, 1, 0, -EINVAL, 0, 0);
++
++=09set_tid[0] =3D -1;
++=09test_clone3_set_tid(set_tid, 1, 0, -EINVAL, 0, 0);
++
++=09/* Claim that the set_tid array actually contains 2 elements. */
++=09test_clone3_set_tid(set_tid, 2, 0, -EINVAL, 0, 0);
++
++=09/* Try it in a new PID namespace */
++=09if (uid =3D=3D 0)
++=09=09test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EINVAL, 0, 0);
++=09else
++=09=09ksft_test_result_skip("Clone3() with set_tid requires root\n");
++
++=09/* Try with a valid PID (1) this should return -EEXIST. */
++=09set_tid[0] =3D 1;
++=09if (uid =3D=3D 0)
++=09=09test_clone3_set_tid(set_tid, 1, 0, -EEXIST, 0, 0);
++=09else
++=09=09ksft_test_result_skip("Clone3() with set_tid requires root\n");
++
++=09/* Try it in a new PID namespace */
++=09if (uid =3D=3D 0)
++=09=09test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, 0, 0, 0);
++=09else
++=09=09ksft_test_result_skip("Clone3() with set_tid requires root\n");
++
++=09/* pid_max should fail everywhere */
++=09set_tid[0] =3D pid_max;
++=09test_clone3_set_tid(set_tid, 1, 0, -EINVAL, 0, 0);
++
++=09if (uid =3D=3D 0)
++=09=09test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EINVAL, 0, 0);
++=09else
++=09=09ksft_test_result_skip("Clone3() with set_tid requires root\n");
++
++=09if (uid !=3D 0) {
++=09=09/*
++=09=09 * All remaining tests require root. Tell the framework
++=09=09 * that all those tests are skipped as non-root.
++=09=09 */
++=09=09ksft_cnt.ksft_xskip +=3D ksft_plan - ksft_test_num();
++=09=09goto out;
++=09}
++
++=09/* Find the current active PID */
++=09pid =3D fork();
++=09if (pid =3D=3D 0) {
++=09=09ksft_print_msg("Child has PID %d\n", getpid());
++=09=09_exit(EXIT_SUCCESS);
++=09}
++=09(void)wait(NULL);
++
++=09/* After the child has finished, its PID should be free. */
++=09set_tid[0] =3D pid;
++=09test_clone3_set_tid(set_tid, 1, 0, 0, 0, 0);
++
++=09/* This should fail as there is no PID 1 in that namespace */
++=09test_clone3_set_tid(set_tid, 1, CLONE_NEWPID, -EINVAL, 0, 0);
++
++=09/*
++=09 * Creating a process with PID 1 in the newly created most nested
++=09 * PID namespace and PID 'pid' in the parent PID namespace. This
++=09 * needs to work.
++=09 */
++=09set_tid[0] =3D 1;
++=09set_tid[1] =3D pid;
++=09test_clone3_set_tid(set_tid, 2, CLONE_NEWPID, 0, pid, 0);
++
++=09ksft_print_msg("unshare PID namespace\n");
++=09if (unshare(CLONE_NEWPID) =3D=3D -1)
++=09=09ksft_exit_fail_msg("unshare(CLONE_NEWPID) failed: %s\n",
++=09=09=09=09strerror(errno));
++
++=09set_tid[0] =3D pid;
++
++=09/* This should fail as there is no PID 1 in that namespace */
++=09test_clone3_set_tid(set_tid, 1, 0, -EINVAL, 0, 0);
++
++=09/* Let's create a PID 1 */
++=09ns_pid =3D fork();
++=09if (ns_pid =3D=3D 0) {
++=09=09ksft_print_msg("Child in PID namespace has PID %d\n", getpid());
++=09=09set_tid[0] =3D 2;
++=09=09test_clone3_set_tid(set_tid, 1, 0, 0, 2, 0);
++
++=09=09set_tid[0] =3D 1;
++=09=09set_tid[1] =3D 42;
++=09=09set_tid[2] =3D pid;
++=09=09/*
++=09=09 * This should fail as there are not enough active PID
++=09=09 * namespaces. Again assuming this is running in the host's
++=09=09 * PID namespace. Not yet nested.
++=09=09 */
++=09=09test_clone3_set_tid(set_tid, 4, CLONE_NEWPID, -EINVAL, 0, 0);
++
++=09=09/*
++=09=09 * This should work and from the parent we should see
++=09=09 * something like 'NSpid:=09pid=0942=091'.
++=09=09 */
++=09=09test_clone3_set_tid(set_tid, 3, CLONE_NEWPID, 0, 42, true);
++
++=09=09_exit(ksft_cnt.ksft_pass);
++=09}
++
++=09close(pipe_1[1]);
++=09close(pipe_2[0]);
++=09while (read(pipe_1[0], &buf, 1) > 0) {
++=09=09ksft_print_msg("[%d] Child is ready and waiting\n", getpid());
++=09=09break;
++=09}
++
++=09snprintf(proc_path, sizeof(proc_path), "/proc/%d/status", pid);
++=09f =3D fopen(proc_path, "r");
++=09if (f =3D=3D NULL)
++=09=09ksft_exit_fail_msg(
++=09=09=09"%s - Could not open %s\n",
++=09=09=09strerror(errno), proc_path);
++
++=09while (getline(&line, &len, f) !=3D -1) {
++=09=09if (strstr(line, "NSpid")) {
++=09=09=09int i;
++
++=09=09=09/* Verify that all generated PIDs are as expected. */
++=09=09=09i =3D sscanf(line, "NSpid:\t%d\t%d\t%d",
++=09=09=09=09   &ns3, &ns2, &ns1);
++=09=09=09if (i !=3D 3)
++=09=09=09=09ns1 =3D ns2 =3D ns3 =3D 0;
++=09=09=09break;
++=09=09}
++=09}
++=09fclose(f);
++=09free(line);
++=09close(pipe_2[0]);
++
++=09/* Tell the clone3()'d child to finish. */
++=09write(pipe_2[1], &buf, 1);
++=09close(pipe_2[1]);
++
++=09if (wait(&status) < 0) {
++=09=09ksft_print_msg("Child returned %s\n", strerror(errno));
++=09=09ret =3D -errno;
++=09=09goto out;
++=09}
++
++=09if (!WIFEXITED(status))
++=09=09ksft_test_result_fail("Child error\n");
++
++=09if (WEXITSTATUS(status))
++=09=09/*
++=09=09 * Update the number of total tests with the tests from the
++=09=09 * child processes.
++=09=09 */
++=09=09ksft_cnt.ksft_pass =3D WEXITSTATUS(status);
++
++=09if (ns3 =3D=3D pid && ns2 =3D=3D 42 && ns1 =3D=3D 1)
++=09=09ksft_test_result_pass(
++=09=09=09"PIDs in all namespaces as expected (%d,%d,%d)\n",
++=09=09=09ns3, ns2, ns1);
++=09else
++=09=09ksft_test_result_fail(
++=09=09=09"PIDs in all namespaces not as expected (%d,%d,%d)\n",
++=09=09=09ns3, ns2, ns1);
++out:
++=09ret =3D 0;
++
++=09return !ret ? ksft_exit_pass() : ksft_exit_fail();
++}
 --=20
 2.23.0
 
