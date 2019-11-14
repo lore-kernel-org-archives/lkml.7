@@ -2,98 +2,115 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D21C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF93DC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DAB206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC672070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="caTKcHJI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QmKQUDdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfKNKpp (ORCPT
+        id S1726505AbfKNKrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:45:45 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:45608 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfKNKpp (ORCPT
+        Thu, 14 Nov 2019 05:47:03 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:35443 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfKNKrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:45:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+4oy2HLaun83LT5Flqp/iwtVPP42SN94CtOP9p9Fo3Q=; b=caTKcHJITSa43m/fSkvoSnVoY
-        QdCED4vkNEt2RHALHKnvVQY/ApiEbU8/KkF3K7ZnNTAikAFm24HmNtroH5RiH+7EWgOyF1Afs9v/v
-        G9Gw+qegirmul7cGXgjKXxGm/d0BvEBrMd99sV9oJlHZqSct2enySDWVG8Ly0R5NzF7hCFr7U0JGc
-        x3uBrY4Rxc+V/2n4GNXiV6R/7jox7kJwVuRU3J7SFpH38JsWEfZYjNu0hglhFXQDzyesjNAEGxWq1
-        p/xdwQylO71zJT83espFgPbxzU85uq4NLqg1SYGOgvZyak1Vdz3wGFx8rh6h7oCwwj++GuPOZuZHY
-        3S4CNfNAg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVCcx-0004lH-5b; Thu, 14 Nov 2019 10:45:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9941130018B;
-        Thu, 14 Nov 2019 11:44:17 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3C5D920187E7C; Thu, 14 Nov 2019 11:45:25 +0100 (CET)
-Date:   Thu, 14 Nov 2019 11:45:25 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v3 00/10] Optimize cgroup context switch
-Message-ID: <20191114104525.GU4131@hirez.programming.kicks-ass.net>
-References: <20191114003042.85252-1-irogers@google.com>
+        Thu, 14 Nov 2019 05:47:03 -0500
+Received: by mail-ua1-f65.google.com with SMTP id s14so1722918uad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 02:47:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+Z7zzjF1yR5HW1GmAitGOf39HmOM3mJTrajNy5woG3s=;
+        b=QmKQUDdoeOMyx6GoduNvAB+A6ByZBHDCd+m44cbjKkLycBOCHODSVbwGUtmtZnFncI
+         jBSatmf+RWZClV7+/BbAdYlKRMyyAijZM/mTIM/4AIh3nL2mbNlizGws7XFqqjSyznmX
+         Dn0gEK8v15SByp0mIgAuXm4ACcaG+8wlLEZZIjr9uDr4PeVGEzM043Uj4wVOg+qktF6d
+         PE94zBhSofxflwJqnIoljIpQNv0gzelfMX/0QBMZNpLbhBsuR9WUPo8TdZDTUPrI9b4H
+         HFDaB0Obzgblcc6SmVLw2/kbduFDbXerQRneC2C3GZMrJz5OvaV7L/qCpremwSvgrsIl
+         +o0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Z7zzjF1yR5HW1GmAitGOf39HmOM3mJTrajNy5woG3s=;
+        b=cuZSnPB7hzyjD6lSHga5ehiLsyCA5HkyuE7PYCo6EFYR3P3lFDjiOhiF+GBTbhorBr
+         rYAKawTdpvsLIoPoQsYC9Kl6qP911wIPR7lVcZ8f3aPnklvSSfR+VuEq7X27vyswYr1C
+         jAFcPUV1fW13bmy24rBkfgOdXgrfQLlIA1DQPJv0wGFqYVdyt3UUI+2wyBJ3BDOIXmaG
+         Wg+DBlQnha6v6x18x+Vo9i9CbUpeFqpn2RmfDnLv1+jfWchEjxhRYsbECXGIiqoXEXue
+         uF8swltykLTBeiqOGkYLTAx9WL1ubK4NeVJQ7CWfm9j/QnKgtur5CHmvosLLiTY778IE
+         dfow==
+X-Gm-Message-State: APjAAAVqAHFfnicFxyPIKwL2/5egHUm1CXmI1N/fk8Xvu2Sxm/IoUu/p
+        +6ptswMoU09uwWZId3Xcd+CUaRQAYY28kY4V683AhxIY
+X-Google-Smtp-Source: APXvYqzs2hzCHGhzo4MLkvjZ4GdlPj6hUM6/5I/OJ+TEn23Lr7XxbNQB98pkh3DLyHV1zrutRRH8jaIY8J3D/SKfoY0=
+X-Received: by 2002:ab0:2042:: with SMTP id g2mr4940760ual.19.1573728422241;
+ Thu, 14 Nov 2019 02:47:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114003042.85252-1-irogers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191105055015.23656-1-erosca@de.adit-jv.com> <20191105062223.GB1048@kunai>
+ <20191105083213.GA24603@vmlxhi-102.adit-jv.com> <20191107003907.GA22634@bogus>
+ <20191112211950.GB3402@kunai>
+In-Reply-To: <20191112211950.GB3402@kunai>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 14 Nov 2019 11:46:26 +0100
+Message-ID: <CAPDyKFoXT-UtO05xbHRVJTJAg+yYJK9AM7KjK18QcaGM0Bqn9g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add 'fixed-emmc-driver-type-hs{200,400}'
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Rob Herring <robh@kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Pavel Machek <pavel@ucw.cz>, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 04:30:32PM -0800, Ian Rogers wrote:
-> Avoid iterating over all per-CPU events during cgroup changing context
-> switches by organizing events by cgroup.
+[...]
 
-When last we spoke (Plumbers in Lisbon) you mentioned that this
-optimization was yielding far less than expected. You had graphs showing
-how the use of cgroups impacted event scheduling time and how this patch
-set only reduced that a little.
+> > >
+> > > One option to achieve a similar degree of flexibility by using an array
+> > > OF property (instead of several u32 properties) would be to agree on a
+> > > convention based on magic values, i.e. below DT one-liner could be an
+> > > example of providing solely the "fixed-emmc-driver-type-hs200" value
+> > > (based on the agreement that 0xFF values are discarded by the driver):
+> > >
+> > >     fixed-emmc-driver-type = <0xFF 0x1 0xFF>;
+> >
+> > I don't understand why you have 3 values instead of 2.
+>
+> Because he sketches maximum flexibility here. Have a non-HS (default)
+> value, one for HS200, and one for HS400:
+>
+>         fixed-emmc-driver-type = <[default] [HS200] [HS400]>;
+>
+> > I would just use -1 if you want to ignore an entry. If that's the common
+>
+> '-1' sounds good to me, too.
+>
+> > case, then I'd stick with what you originally proposed. If rare, then I
+> > think an array is the better route.
+>
+> What I have seen so far: setting drive strength alone is more on the
+> rare side. Setting specific values for default and HS200/400 seems even
+> more rare to me. With this patchset, it is the first time I hear about
+> it.
+>
+> Yet, my experience might be a bit limited, maybe others (Hi Ulf! ;)) can add
+> their views, too?
 
-Any update on all that? There seems to be a conspicuous lack of such
-data here.
+My experience in this field is quite limited. No input from me, sorry.
+
+Kind regards
+Uffe
