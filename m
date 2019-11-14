@@ -2,276 +2,120 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2E1C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72520C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FCE20715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499DC2071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573737332;
+	bh=oO0LVq3AgLJ4ejYpIckz8rTV2rTNGUkQ4Jb0FD5zXGE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=crmo9gYEg1JuF1As9jeWty+vSEf1T4OU6hsafwJrXoYKyJMN/FXaGNsQsKpShWmCy
+	 gZAQlz6y8V4pQ9bSfR8Yj6fy4+u1Sxi7p2gXtDOjdcoD9GEfUk4F7f3X85LcjowXJT
+	 9pGDshbW1t4HgLeXhtvBvvuyTdAd/Xonu7b4OW8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfKNNPV (ORCPT
+        id S1726962AbfKNNPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:15:21 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45580 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726139AbfKNNPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:15:21 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C4837B325;
-        Thu, 14 Nov 2019 13:15:18 +0000 (UTC)
-Message-ID: <5d706b02fb23c2dd6422306ff8d43a90910e36b8.camel@suse.de>
-Subject: Re: [PATCH 1/4] dt-bindings: pci: add bindings for brcmstb's PCIe
- device
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        mbrugger@suse.com, linux-pci@vger.kernel.org, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Thu, 14 Nov 2019 14:15:13 +0100
-In-Reply-To: <20191113041533.GA25497@bogus>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <20191106214527.18736-2-nsaenzjulienne@suse.de>
-         <20191113041533.GA25497@bogus>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-EezwcX763lm760dEcyfv"
-User-Agent: Evolution 3.34.1 
+        Thu, 14 Nov 2019 08:15:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbfKNNPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:15:30 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C51920715;
+        Thu, 14 Nov 2019 13:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573737329;
+        bh=oO0LVq3AgLJ4ejYpIckz8rTV2rTNGUkQ4Jb0FD5zXGE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=q1txG8Xg9f6m8GGV+Zb+sCvc5UcZ80yigAffnlOKjPqNZM1zBksB2YUoWVucOWFJ5
+         rxJL4fv6SQ21/0PrIY+RN+XSzyxt7n3e7FhM5f/R1KvPJMpBtsckp95AN4ZY4zMc2c
+         GwRd7WEJ9exaRu8BEtIib1CeP/AA9IzrkH/QRK/E=
+Message-ID: <cbda3a69d25b04e10332e7b3898064a93b2d04ae.camel@kernel.org>
+Subject: Re: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus
+ OSDs
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 14 Nov 2019 08:15:28 -0500
+In-Reply-To: <20191114105736.8636-1-lhenriques@suse.com>
+References: <20191114105736.8636-1-lhenriques@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2019-11-14 at 10:57 +0000, Luis Henriques wrote:
+> Hi!
+> 
+> So, after the feedback I got from v1 [1] I've sent out a pull-request
+> for the OSDs [2] which encodes require_osd_release into the OSDMap
+> client data.  This allows the client to figure out which ceph release
+> the OSDs cluster is running and decide whether or not it's safe to use
+> the copy-from Op for copy_file_range.
+> 
+> This new patchset I'm sending simply adds enough functionality to the
+> kernel client so that it can take advantage of this OSD patch:
+> 
+> 0001 - adds the ability to decode TYPE_MSGR2 addresses.  This is a
+>        required functionality for enabling SERVER_NAUTILUS in the
+>        client.  I hope I got the new format right, as I couldn't figure
+>        out what the hard-coded values (see comments) really mean.
+> 
 
---=-EezwcX763lm760dEcyfv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+nit: the first 3 patch subject lines should probably be prefixed with
+"libceph:"
 
-On Tue, 2019-11-12 at 22:15 -0600, Rob Herring wrote:
-> On Wed, Nov 06, 2019 at 10:45:23PM +0100, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
-> >=20
-> > The DT bindings description of the brcmstb PCIe device is described.
-> > This node can only be used for now on the Raspberry Pi 4.
-> >=20
-> > This was based on Jim's original submission[1], converted to yaml and
-> > adapted to the RPi4 case.
-> >=20
-> > [1] https://patchwork.kernel.org/patch/10605937/
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 116 ++++++++++++++++++
-> >  1 file changed, 116 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
-.yaml
->=20
-> I'm working on a common PCI host schema that should cut down some of the=
-=20
-> standard props.
+> 0002 - allows the client to retrieve the new require_osd_release field
+>        from the OSDMap if available.  This patch also adds SERVER_MIMIC,
+>        SERVER_NAUTILUS and SERVER_OCTOPUS to the supported features,
+>        which TBH I'm not sure if that's a safe thing to do -- the only
+>        issue I've seen was that Nautilus requires the ability to decode
+>        TYPE_MSGR2 address, but I may have missed others.
+> 
 
-Is there a way for me to have a look at it so I can rebase the binding on t=
-op
-of it?
+Yes, this needs to be done with care. We have to ensure that the server
+side isn't assuming that the client supports something that it doesn't.
+I think that means just trawling through the code and verifying whether
+this is safe.
 
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > new file mode 100644
-> > index 000000000000..0b81c26f8568
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -0,0 +1,116 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->=20
-> Dual license new bindings please:
->=20
-> # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> 0003 - debug code to add require_osd_release to the osdmap debugfs file.
+> 
+> 0004 - adds the truncate_{seq,size} fields to the 'copy-from' operation
+>        if the OSDs are >= Octopus.
+> 
+> Also note that, as suggested by Ilya, I've dropped the patch that would
+> change the default mount options to 'copyfrom'.
+> 
+> These patches have been tested with the xfstests generic test suite, and
+> with a couple of other (local) tests that exercise the cephfs
+> copy_file_range syscall.  I didn't saw any issues, but as I said above,
+> I'm not really sure if adding the SERVER_* flags to the supported
+> features have other side effects.
+> 
+> [1] https://lore.kernel.org/lkml/20191108141555.31176-1-lhenriques@suse.com/
+> [2] https://github.com/ceph/ceph/pull/31611
+> 
 
-Noted
+I'm just getting caught up on the discussion here, but why was it
+decided to do it this way instead of just adding a new OSD
+"copy-from-no-truncseq" operation? Once you tried it once and an OSD
+didn't support it, you could just give up on using it any longer? That
+seems a lot simpler than trying to monkey with feature bits.
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Brcmstb PCIe Host Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - description: PCIe host controller
-> > +      - description: builtin MSI controller
-> > +
-> > +  interrupt-names:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - const: pcie
-> > +      - const: msi
-> > +
-> > +  "#address-cells":
-> > +    const: 3
-> > +
-> > +  "#size-cells":
-> > +    const: 2
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 1
-> > +
-> > +  interrupt-map-mask: true
-> > +
-> > +  interrupt-map: true
->=20
-> 4 entries?
-
-You're right, for this specific case, as XHCI is hardwired and only uses on=
-e
-irq, we'd only need the first entry.  Although who knows, maybe they are wi=
-red
-nonetheless. I guess it's safer to assume they aren't for now.
-
-> You'll need to bracket <> each entry in the example and dts.
-
-Ok
-
-> > +
-> > +  ranges: true
->=20
-> How many entries?
-
-One, I'll update it.
-
-> > +
-> > +  dma-ranges: true
->=20
-> How many entries?
-
-One, I'll update it.
-
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: sw_pcie
-> > +
-> > +  msi-controller:
-> > +    description: Identifies the node as an MSI controller.
-> > +    type: boolean
-> > +
-> > +  msi-parent:
-> > +    description: MSI controller the device is capable of using.
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +
-> > +  linux,pci-domain:
-> > +    description: PCI domain ID. Should be unique for each host control=
-ler.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +  brcm,enable-ssc:
-> > +    description: Indicates usage of spread-spectrum clocking.
-> > +    type: boolean
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - "#interrupt-cells"
-> > +  - interrupt-map-mask
-> > +  - interrupt-map
-> > +  - ranges
-> > +  - dma-ranges
-> > +  - linux,pci-domain
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    scb {
-> > +            #address-cells =3D <2>;
-> > +            #size-cells =3D <1>;
-> > +            pcie0: pcie@7d500000 {
-> > +                    compatible =3D "brcm,bcm2711-pcie";
-> > +                    reg =3D <0x0 0x7d500000 0x9310>;
-> > +                    #address-cells =3D <3>;
-> > +                    #size-cells =3D <2>;
-> > +                    #interrupt-cells =3D <1>;
-> > +                    interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> > +                    interrupt-names =3D "pcie", "msi";
-> > +                    interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
-> > +                    interrupt-map =3D <0 0 0 1 &gicv2 GIC_SPI 143
-> > IRQ_TYPE_LEVEL_HIGH
-> > +                                     0 0 0 2 &gicv2 GIC_SPI 144
-> > IRQ_TYPE_LEVEL_HIGH
-> > +                                     0 0 0 3 &gicv2 GIC_SPI 145
-> > IRQ_TYPE_LEVEL_HIGH
-> > +                                     0 0 0 4 &gicv2 GIC_SPI 146
-> > IRQ_TYPE_LEVEL_HIGH>;
-> > +                    msi-parent =3D <&pcie0>;
-> > +                    msi-controller;
-> > +                    ranges =3D <0x02000000 0x0 0xf8000000 0x6 0x000000=
-00 0x0
-> > 0x04000000>;
-> > +                    dma-ranges =3D <0x02000000 0x0 0x00000000 0x0 0x00=
-000000
-> > 0x0 0x80000000>;
-> > +                    linux,pci-domain =3D <0>;
-> > +                    brcm,enable-ssc;
-> > +            };
-> > +    };
-> > --=20
-> > 2.23.0
-> >=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
---=-EezwcX763lm760dEcyfv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3NU2EACgkQlfZmHno8
-x/707Af/c0al+IHK9wVKSNbl43BuvRZ4DBZLfHID0a6HS5Ny3bkHWhnn2iXzj4g8
-CZWrcyzTGuS5y54dI9NORjH64zYSFPjz/wY6sB6EFb9Rd/7iT7HFbHEZZNcSosq+
-n4OAQRlGYjkK8/TGS7e/5Q+8/9aIByDftdSUPGK249n8Rj4Fd0tiJbYQE+FVfelA
-ivEScJDu0CGuwC20nzDhoden5m2qV1Sk4FAs4rKPKkTWpi1z/qh0czMTEa7i7hcf
-KPzJu3WLCIxwurXQWd6xnm6roonW81larpDkYjFuGLZ1zoZvG5Q92aobXiKQftmG
-tqRo3Bz/w9DhSHoFv7Ka50ERyTZyHQ==
-=v018
------END PGP SIGNATURE-----
-
---=-EezwcX763lm760dEcyfv--
+-- 
+Jeff Layton <jlayton@kernel.org>
 
