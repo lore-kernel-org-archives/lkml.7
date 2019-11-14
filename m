@@ -2,183 +2,142 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BD4C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45E4C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA55820709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C1F206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:32:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="TZqXmc2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfKNG3V (ORCPT
+        id S1726378AbfKNGcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:29:21 -0500
-Received: from mga05.intel.com ([192.55.52.43]:16311 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbfKNG3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:29:19 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 22:29:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
-   d="scan'208";a="355705794"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 13 Nov 2019 22:29:16 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v7 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Thu, 14 Nov 2019 14:29:07 +0800
-Message-Id: <6492745eb95964797b69456413f8b1ac96c95e7f.1573712060.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
+        Thu, 14 Nov 2019 01:32:04 -0500
+Received: from mail-eopbgr760091.outbound.protection.outlook.com ([40.107.76.91]:6663
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725935AbfKNGcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:32:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dvp+Y1c6foKhNOlJOnAhbR7uIFKkbLi8XFd1IXjp9ueEHTkPvUPzphB9px/XLwkBBHTP9DJiaxLhxJjHCHvETPFA9fq8nBP4Xx98W76e8139GnJg1VW+FgB5DnywJ6cRb9IEVRxgnT4MGoqzG0rPgjP6l/KVM7njKpjLspwVcpS/w3oufPC7iW/vKacNqIXWlRBHkG9vfEaw0lU97KTIPGBADQDJdPCNKDIdzCipvkE9DG/nC5/bZtwspU/+6EotZgkzih3gITiZPsx9UEZ2KCXGtk2/9/Z2k6X9nvekaLXMFzFSXoZJd/J4DbWsL2PnzBwjXW8i2+dNoGGBdW7l+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LDHuNW93JB973wrTc2J4fycn3UqUfXH6kgsLTkwslls=;
+ b=RYiCxIbaGyt3ySiP8l7JCAYnfjC75AIi2Gsf5+UPOspjw8ZOdD7Rb/oE+s4RYCKNqbcn9ozYjtnOqdoXOT6856rDhSrb22snVGAvylYCgKG6MEaTMPBA2I9A8eYXYXHXrfIh4pg6VjUe3X8U7RsRxq0jnGXzTTdQrwF+SavhQp+dyrEFMLd73ik+WMrjf9Ou8ZFkhyR4BvBi8u6WaC5R0IUxj3FppuB2/IIbG2C5q6VQ3iAChuVp8Gp5aqRznfdAAcIMShrc1w1OA4dSypnrpSFASaImy5OiCw5R1izrcjPAUObYKZ0BrRTPRSj/QvkPCoTLatmXY+iXuiGkBN6Bmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LDHuNW93JB973wrTc2J4fycn3UqUfXH6kgsLTkwslls=;
+ b=TZqXmc2xjLS61TXfw021F1xVTyQEH81RbYJktL/CVvgDHnmnv69wCMTW5oR/TctoQDtUSyMGOd/0/1RXpKD5Jj8S0VWh6u2n2I9VFx8l90ixHtVUBhBPH6tdOnJt8DMI4h7Z4SN30QCLTiEXcUf5IsYMGHRvIPxpw5N3il+Wznk=
+Received: from SN6PR2101MB1135.namprd21.prod.outlook.com (52.132.114.24) by
+ SN6PR2101MB1021.namprd21.prod.outlook.com (52.132.116.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.11; Thu, 14 Nov 2019 06:32:01 +0000
+Received: from SN6PR2101MB1135.namprd21.prod.outlook.com
+ ([fe80::185e:548e:7cc4:942e]) by SN6PR2101MB1135.namprd21.prod.outlook.com
+ ([fe80::185e:548e:7cc4:942e%9]) with mapi id 15.20.2474.009; Thu, 14 Nov 2019
+ 06:32:01 +0000
+Received: from mhkkerneltest.corp.microsoft.com (131.107.174.247) by CO2PR04CA0068.namprd04.prod.outlook.com (2603:10b6:102:1::36) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Thu, 14 Nov 2019 06:32:00 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH 1/1] Drivers: hv: vmbus: Fix crash handler reset of Hyper-V
+ synic
+Thread-Topic: [PATCH 1/1] Drivers: hv: vmbus: Fix crash handler reset of
+ Hyper-V synic
+Thread-Index: AQHVmrU40YXv2apLdU6NdUllgrDfPw==
+Date:   Thu, 14 Nov 2019 06:32:01 +0000
+Message-ID: <1573713076-8446-1-git-send-email-mikelley@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR04CA0068.namprd04.prod.outlook.com
+ (2603:10b6:102:1::36) To SN6PR2101MB1135.namprd21.prod.outlook.com
+ (2603:10b6:805:4::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [131.107.174.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 277eff01-04a3-4207-96ad-08d768cc5b2e
+x-ms-traffictypediagnostic: SN6PR2101MB1021:|SN6PR2101MB1021:|SN6PR2101MB1021:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SN6PR2101MB10213A71887901054848890DD7710@SN6PR2101MB1021.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 02213C82F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(366004)(376002)(396003)(136003)(346002)(39860400002)(189003)(199004)(5660300002)(4326008)(26005)(6436002)(6486002)(14444005)(256004)(66446008)(107886003)(66476007)(66946007)(66556008)(1511001)(64756008)(71200400001)(71190400001)(10090500001)(3846002)(305945005)(6116002)(25786009)(2501003)(10290500003)(36756003)(52116002)(8676002)(386003)(50226002)(102836004)(476003)(956004)(81166006)(81156014)(16526019)(7696005)(316002)(22452003)(478600001)(7736002)(66066001)(4720700003)(2906002)(110136005)(486006)(86362001)(8936002)(186003)(2616005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1021;H:SN6PR2101MB1135.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: n34+qtroTh4yk7dScZlCqHggauq5Q1TBjoIT9g3o91cv1vpiUSNZKIrVznHLCxACjzNsxys28D6GX/2MaTEv4GvXaw2zcz4FO0oXKOJdORaobiTM7iQ5yzveSLtQY/gZNetgjoOkZKJZa3sI5CrAqAh9mE0qRJ9MiPVDR2sYyPky+BzW6ykUs3vJeCqUGKNRhNXVqiq0D0qCBdhze+zQB1HAjYV3TF0YBVaTfclzvYZByPJKLaICHx+yLZFBUatCCRsS9aa/cwCjloUUAa6MjR5uiT3dgDa+oaOv2sO3b+FVDHQwN4oijwtRCB9sRLvB8del/hZ+frIr8GdbWuFg0JVY1i/sh8x7zBDexMBfIdkUhcj5pw5ftg8wmZ9lOYpvTFYnyDWsaF4Q7N0nNiWbJavJkMy0PDQ3A8gTi7xvs8adR0Grw/Tfv4oeB9PisTp4
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 277eff01-04a3-4207-96ad-08d768cc5b2e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 06:32:01.1449
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8FPPxfT8iEnG1nbHpnAnd5DkV46mq0OC0rgyWpHkk9ecfBIzaIJdfk8FLL+BMnQwdRCWkGqFMLqkpU1dFUI+oQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+The crash handler calls hv_synic_cleanup() to shutdown the
+Hyper-V synthetic interrupt controller.  But if the CPU
+that calls hv_synic_cleanup() has a VMbus channel interrupt
+assigned to it (which is likely the case in smaller VM sizes),
+hv_synic_cleanup() returns an error and the synthetic
+interrupt controller isn't shutdown.  While the lack of
+being shutdown hasn't caused a known problem, it still
+should be fixed for highest reliability.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+So directly call hv_synic_disable_regs() instead of
+hv_synic_cleanup(), which ensures that the synic is always
+shutdown.
+
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 ---
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++++++++++++++++++++
- 1 file changed, 116 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ drivers/hv/vmbus_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..73d63f858926
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,116 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lightning-mountain-io
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+
-+      bias-pull-up:
-+        type: boolean
-+
-+      bias-pull-down:
-+        type: boolean
-+
-+      drive-strength:
-+        description: |
-+          Selects the drive strength for the specified pins in mA.
-+          0: 2 mA
-+          1: 4 mA
-+          2: 8 mA
-+          3: 12 mA
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/uint32
-+          - enum: [0, 1, 2, 3]
-+
-+      slew-rate:
-+        type: boolean
-+        description: |
-+          Sets slew rate for specified pins.
-+          0: slow slew
-+          1: fast slew
-+
-+      drive-open-drain:
-+        type: boolean
-+
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+        compatible = "intel,lgm-pinctrl";
-+        reg = <0xe2880000 0x100000>;
-+
-+        uart0-pins {
-+             pins = <64>, /* UART_RX0 */
-+                    <65>; /* UART_TX0 */
-+             function = "CONSOLE_UART0";
-+             pinmux = <1>,
-+                      <1>;
-+             groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 664a415..665920d 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2305,7 +2305,7 @@ static void hv_crash_handler(struct pt_regs *regs)
+ 	vmbus_connection.conn_state =3D DISCONNECTED;
+ 	cpu =3D smp_processor_id();
+ 	hv_stimer_cleanup(cpu);
+-	hv_synic_cleanup(cpu);
++	hv_synic_disable_regs(cpu);
+ 	hyperv_cleanup();
+ };
+=20
+--=20
+1.8.3.1
 
