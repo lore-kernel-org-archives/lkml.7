@@ -1,85 +1,149 @@
-Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=JohQ=ZG=vger.kernel.org=linux-m68k-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9566C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22260C432C3
+	for <linux-m68k@archiver.kernel.org>; Thu, 14 Nov 2019 04:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56CB2071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573758020;
-	bh=UFeUbZe9ITqhihC1b3WbTVTvcBkdXYGyvR/LC0Kwpwg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LDY1EofSlCnOyRCCCMIKibbqi0Kg9TNTZRws6VbQ8DE8/aaQb7wiS+dTCiy50VQp1
-	 J3Ep8767QM9Oh6bl/7tkuGDIQ3f/QCp8os8Z7Opb22KCRjKg8fWWkRsD3fN8Yto9x1
-	 85Tf20miXP4mqVnkbQNy9fojAZ8YxgV8t8wukcbE=
+	by mail.kernel.org (Postfix) with ESMTP id 0D7BF206EC
+	for <linux-m68k@archiver.kernel.org>; Thu, 14 Nov 2019 04:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfKNTAT (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:00:19 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39288 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfKNTAT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:00:19 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w24so5330901otk.6;
-        Thu, 14 Nov 2019 11:00:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q9MEfWUdUUfPCm5vU9LQzOSz48lJcPwE7Kg/TlNRovs=;
-        b=L+vHFCSrfZ030f00L36ImvW5pu38OjPHH7XXqSeE/QbNxfT+5B3JrI7G7JOlKFK79y
-         rXrYq1mbz1jtUOgQfP8iPafaynGoaxi+HY7qupbosA4vuCt2fx24Sqs7wBK7NY7Bu/jx
-         1s3UQW6Zt+1esmInsps3OV60ofOs2G0JDcI8FqlcyFrTTt//HWjimdeVvVxz33JY+IHe
-         5d/L6GA9ukkIohWuZSwG4VrFMrqsbZ1X8ggnIzbCj5cqMK7CHJt/XtxMSIJwTIj1j86k
-         Y/SDrwQDuPwsDmVQc76kVVeFQAZSuu7TOWLcXyKtptlrbAMzeJGsxEyaWNn5M0Wkg1dg
-         UWwQ==
-X-Gm-Message-State: APjAAAX9mm/bBfBRGd9ILWhp80bTQep9Oo8giO1PpqidZX0gVrj2qAi8
-        fIiJYn2N4uVzgcit5h6Nng==
-X-Google-Smtp-Source: APXvYqwPs253ExVsUnKRmxwdF9HEpywcpmZqBHjmrgZnsSGc7MA4Jg0vyaU85b3EyxC6OBT0AAoT0Q==
-X-Received: by 2002:a9d:bf0:: with SMTP id 103mr7950999oth.372.1573758018393;
-        Thu, 14 Nov 2019 11:00:18 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m14sm2054476otl.26.2019.11.14.11.00.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 11:00:17 -0800 (PST)
-Date:   Thu, 14 Nov 2019 13:00:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        andrew@aj.id.au, joel@jms.id.au, maz@kernel.org,
-        jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH 05/12] dt-bindings: soc: Add Aspeed XDMA Engine
-Message-ID: <20191114190017.GA17283@bogus>
-References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
- <1573244313-9190-6-git-send-email-eajames@linux.ibm.com>
+        id S1727064AbfKNEuT (ORCPT <rfc822;linux-m68k@archiver.kernel.org>);
+        Wed, 13 Nov 2019 23:50:19 -0500
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:44208 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfKNEuT (ORCPT
+        <rfc822;linux-m68k@lists.linux-m68k.org>);
+        Wed, 13 Nov 2019 23:50:19 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47D8DS2831zKmdH;
+        Thu, 14 Nov 2019 05:50:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id GmtrxB8tgNO0; Thu, 14 Nov 2019 05:50:10 +0100 (CET)
+Date:   Thu, 14 Nov 2019 15:49:45 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 3/9] namei: LOOKUP_NO_XDEV: block mountpoint crossing
+Message-ID: <20191114044945.ldedzjrb4s7i7irr@yavin.dot.cyphar.com>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-4-cyphar@cyphar.com>
+ <20191113013630.GZ26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwq4fftbhkszxm4g"
+Content-Disposition: inline
+In-Reply-To: <20191113013630.GZ26530@ZenIV.linux.org.uk>
+Sender: linux-m68k-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-m68k.vger.kernel.org>
+X-Mailing-List: linux-m68k@vger.kernel.org
+Message-ID: <20191114044945.IseGsD5BJzpfl1nRnrCtzGq0g-PcV3w3I_dBE9OZNyA@z>
+
+
+--rwq4fftbhkszxm4g
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573244313-9190-6-git-send-email-eajames@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
 
-On Fri,  8 Nov 2019 14:18:26 -0600, Eddie James wrote:
-> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  .../devicetree/bindings/soc/aspeed/xdma.txt        | 24 ++++++++++++++++++++++
->  MAINTAINERS                                        |  6 ++++++
->  2 files changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-> 
+On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Tue, Nov 05, 2019 at 08:05:47PM +1100, Aleksa Sarai wrote:
+>=20
+> > @@ -862,6 +870,8 @@ static int nd_jump_root(struct nameidata *nd)
+> >  void nd_jump_link(struct path *path)
+> >  {
+> >  	struct nameidata *nd =3D current->nameidata;
+> > +
+> > +	nd->last_magiclink.same_mnt =3D (nd->path.mnt =3D=3D path->mnt);
+> >  	path_put(&nd->path);
+> > =20
+> >  	nd->path =3D *path;
+> > @@ -1082,6 +1092,10 @@ const char *get_link(struct nameidata *nd)
+> >  		if (nd->flags & LOOKUP_MAGICLINK_JUMPED) {
+> >  			if (unlikely(nd->flags & LOOKUP_NO_MAGICLINKS))
+> >  				return ERR_PTR(-ELOOP);
+> > +			if (unlikely(nd->flags & LOOKUP_NO_XDEV)) {
+> > +				if (!nd->last_magiclink.same_mnt)
+> > +					return ERR_PTR(-EXDEV);
+> > +			}
+> >  		}
+>=20
+> Ugh...  Wouldn't it be better to take that logics (some equivalent thereo=
+f)
+> into nd_jump_link()?  Or just have nd_jump_link() return an error...
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This could be done, but the reason for stashing it away in
+last_magiclink is because of the future magic-link re-opening patches
+which can't be implemented like that without putting the open_flags
+inside nameidata (which was decided to be too ugly a while ago).
+
+My point being that I could implement it this way for this series, but
+I'd have to implement something like last_magiclink when I end up
+re-posting the magic-link stuff in a few weeks.
+
+Looking at all the nd_jump_link() users, the other option is to just
+disallow magic-link crossings entirely for LOOKUP_NO_XDEV. The only
+thing allowing them permits is to resolve file descriptors that are
+pointing to the same procfs mount -- and it's unclear to me how useful
+that really is (apparmorfs and nsfs will always give -EXDEV because
+aafs_mnt and nsfs_mnt are internal kernel vfsmounts).
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--rwq4fftbhkszxm4g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXczc5gAKCRCdlLljIbnQ
+EspyAQDQkDnU2/CfvkXyKRLh2e7ycT5D4iHdCmBXbx8LlO8DlwD/S5O/FNHgyDdy
+RVaJ7aj0OZAzg7DMx3VZRiI+He4MXw0=
+=71Jv
+-----END PGP SIGNATURE-----
+
+--rwq4fftbhkszxm4g--
