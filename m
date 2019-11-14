@@ -2,223 +2,322 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A65DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F4FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744BE206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5727F206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i/g+u3zW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfKNJcH (ORCPT
+        id S1726505AbfKNJcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:32:07 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47030 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfKNJcH (ORCPT
+        Thu, 14 Nov 2019 04:32:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56544 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfKNJcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:32:07 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Thu, 14 Nov 2019 04:32:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=srjXh+T5lZpTzKxCsN4HOkBm3sqlJaY0GDF28FU/Eyc=; b=i/g+u3zWaLm+6+5EBRwPuEWog
+        yVOtSZ+Eqt9cRtkEmZzkc5dMyblsVmAlRmkfGYcGDHQcOe4VibBcq4bfMM9Nt4SXWRrEt5zFUpjl2
+        SirrKuK6xVkEyzrqNBs9pBt9lZLufvPnxdjGH+sE/4ryVO4/fBXJUyO/a4BtLXUUw/hMYvbQ4gc+s
+        E7d7HDCt+y5TGoMujrnpg3IsVRfqIwrOAKjtZu7CNUrhniqB+M6WXeKOJnheF3D19H4Mo9AQagD6F
+        HpC2J25fD1IfepHyA6qI+2xR6cgcXfoViE/xTA7tpj0w1KzSr0kprd+ViqUGxOt1bvc9pFGmSvRru
+        hqwFQYGjA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVBUR-000661-Lv; Thu, 14 Nov 2019 09:32:35 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AACB2291544;
-        Thu, 14 Nov 2019 09:32:03 +0000 (GMT)
-Date:   Thu, 14 Nov 2019 10:32:00 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] media: hantro: Cleanup format negotiation
- helpers
-Message-ID: <20191114103200.3c568c66@collabora.com>
-In-Reply-To: <20191113175603.24742-2-ezequiel@collabora.com>
-References: <20191113175603.24742-1-ezequiel@collabora.com>
-        <20191113175603.24742-2-ezequiel@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 611D6304637;
+        Thu, 14 Nov 2019 10:31:24 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D481329DF124F; Thu, 14 Nov 2019 10:32:31 +0100 (CET)
+Date:   Thu, 14 Nov 2019 10:32:31 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 02/10] lib: introduce generic min max heap
+Message-ID: <20191114093231.GM4131@hirez.programming.kicks-ass.net>
+References: <20191114003042.85252-1-irogers@google.com>
+ <20191114003042.85252-3-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114003042.85252-3-irogers@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 14:56:01 -0300
-Ezequiel Garcia <ezequiel@collabora.com> wrote:
-
-> Format negotiation helpers, hantro_find_format()
-> and hantro_get_default_fmt() can be simplified,
-> making the code a little bit clearer.
-> 
-> More importantly, this change is preparation work
-> for the post-processor usage.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
+On Wed, Nov 13, 2019 at 04:30:34PM -0800, Ian Rogers wrote:
+> Based-on-work-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  drivers/staging/media/hantro/hantro_v4l2.c | 53 ++++++++--------------
->  1 file changed, 20 insertions(+), 33 deletions(-)
+>  include/linux/min_max_heap.h | 134 ++++++++++++++++++++++++
+>  lib/Kconfig.debug            |  10 ++
+>  lib/Makefile                 |   1 +
+>  lib/test_min_max_heap.c      | 194 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 339 insertions(+)
+>  create mode 100644 include/linux/min_max_heap.h
+>  create mode 100644 lib/test_min_max_heap.c
 > 
-> diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-> index 3dae52abb96c..238e53b28f8f 100644
-> --- a/drivers/staging/media/hantro/hantro_v4l2.c
-> +++ b/drivers/staging/media/hantro/hantro_v4l2.c
-> @@ -47,23 +47,26 @@ hantro_get_formats(const struct hantro_ctx *ctx, unsigned int *num_fmts)
->  }
->  
->  static const struct hantro_fmt *
-> -hantro_find_format(const struct hantro_fmt *formats, unsigned int num_fmts,
-> -		   u32 fourcc)
-> +hantro_find_format(const struct hantro_ctx *ctx, u32 fourcc)
->  {
-> -	unsigned int i;
-> +	const struct hantro_fmt *formats;
-> +	unsigned int i, num_fmts;
->  
-> +	formats = hantro_get_formats(ctx, &num_fmts);
->  	for (i = 0; i < num_fmts; i++)
->  		if (formats[i].fourcc == fourcc)
->  			return &formats[i];
+> diff --git a/include/linux/min_max_heap.h b/include/linux/min_max_heap.h
+> new file mode 100644
+> index 000000000000..ea7764a8252a
+> --- /dev/null
+> +++ b/include/linux/min_max_heap.h
+> @@ -0,0 +1,134 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_MIN_MAX_HEAP_H
+> +#define _LINUX_MIN_MAX_HEAP_H
 > +
->  	return NULL;
->  }
->  
->  static const struct hantro_fmt *
-> -hantro_get_default_fmt(const struct hantro_fmt *formats, unsigned int num_fmts,
-> -		       bool bitstream)
-> +hantro_get_default_fmt(const struct hantro_ctx *ctx, bool bitstream)
->  {
-> -	unsigned int i;
-> +	const struct hantro_fmt *formats;
-> +	unsigned int i, num_fmts;
->  
-> +	formats = hantro_get_formats(ctx, &num_fmts);
->  	for (i = 0; i < num_fmts; i++) {
->  		if (bitstream == (formats[i].codec_mode !=
->  				  HANTRO_MODE_NONE))
-> @@ -89,8 +92,7 @@ static int vidioc_enum_framesizes(struct file *file, void *priv,
->  				  struct v4l2_frmsizeenum *fsize)
->  {
->  	struct hantro_ctx *ctx = fh_to_ctx(priv);
-> -	const struct hantro_fmt *formats, *fmt;
-> -	unsigned int num_fmts;
-> +	const struct hantro_fmt *fmt;
->  
->  	if (fsize->index != 0) {
->  		vpu_debug(0, "invalid frame size index (expected 0, got %d)\n",
-> @@ -98,8 +100,7 @@ static int vidioc_enum_framesizes(struct file *file, void *priv,
->  		return -EINVAL;
->  	}
->  
-> -	formats = hantro_get_formats(ctx, &num_fmts);
-> -	fmt = hantro_find_format(formats, num_fmts, fsize->pixel_format);
-> +	fmt = hantro_find_format(ctx, fsize->pixel_format);
->  	if (!fmt) {
->  		vpu_debug(0, "unsupported bitstream format (%08x)\n",
->  			  fsize->pixel_format);
-> @@ -196,8 +197,7 @@ static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
->  {
->  	struct hantro_ctx *ctx = fh_to_ctx(priv);
->  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
-> -	const struct hantro_fmt *formats, *fmt, *vpu_fmt;
-> -	unsigned int num_fmts;
-> +	const struct hantro_fmt *fmt, *vpu_fmt;
->  	bool coded;
->  
->  	coded = capture == hantro_is_encoder_ctx(ctx);
-> @@ -208,10 +208,9 @@ static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
->  		  (pix_mp->pixelformat >> 16) & 0x7f,
->  		  (pix_mp->pixelformat >> 24) & 0x7f);
->  
-> -	formats = hantro_get_formats(ctx, &num_fmts);
-> -	fmt = hantro_find_format(formats, num_fmts, pix_mp->pixelformat);
-> +	fmt = hantro_find_format(ctx, pix_mp->pixelformat);
->  	if (!fmt) {
-> -		fmt = hantro_get_default_fmt(formats, num_fmts, coded);
-> +		fmt = hantro_get_default_fmt(ctx, coded);
->  		f->fmt.pix_mp.pixelformat = fmt->fourcc;
->  	}
->  
-> @@ -290,12 +289,10 @@ hantro_reset_fmt(struct v4l2_pix_format_mplane *fmt,
->  static void
->  hantro_reset_encoded_fmt(struct hantro_ctx *ctx)
->  {
-> -	const struct hantro_fmt *vpu_fmt, *formats;
-> +	const struct hantro_fmt *vpu_fmt;
->  	struct v4l2_pix_format_mplane *fmt;
-> -	unsigned int num_fmts;
->  
-> -	formats = hantro_get_formats(ctx, &num_fmts);
-> -	vpu_fmt = hantro_get_default_fmt(formats, num_fmts, true);
-> +	vpu_fmt = hantro_get_default_fmt(ctx, true);
->  
->  	if (hantro_is_encoder_ctx(ctx)) {
->  		ctx->vpu_dst_fmt = vpu_fmt;
-> @@ -316,12 +313,10 @@ hantro_reset_encoded_fmt(struct hantro_ctx *ctx)
->  static void
->  hantro_reset_raw_fmt(struct hantro_ctx *ctx)
->  {
-> -	const struct hantro_fmt *raw_vpu_fmt, *formats;
-> +	const struct hantro_fmt *raw_vpu_fmt;
->  	struct v4l2_pix_format_mplane *raw_fmt, *encoded_fmt;
-> -	unsigned int num_fmts;
->  
-> -	formats = hantro_get_formats(ctx, &num_fmts);
-> -	raw_vpu_fmt = hantro_get_default_fmt(formats, num_fmts, false);
-> +	raw_vpu_fmt = hantro_get_default_fmt(ctx, false);
->  
->  	if (hantro_is_encoder_ctx(ctx)) {
->  		ctx->vpu_src_fmt = raw_vpu_fmt;
-> @@ -367,8 +362,6 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
->  {
->  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
->  	struct hantro_ctx *ctx = fh_to_ctx(priv);
-> -	const struct hantro_fmt *formats;
-> -	unsigned int num_fmts;
->  	struct vb2_queue *vq;
->  	int ret;
->  
-> @@ -395,9 +388,7 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
->  	if (ret)
->  		return ret;
->  
-> -	formats = hantro_get_formats(ctx, &num_fmts);
-> -	ctx->vpu_src_fmt = hantro_find_format(formats, num_fmts,
-> -					      pix_mp->pixelformat);
-> +	ctx->vpu_src_fmt = hantro_find_format(ctx, pix_mp->pixelformat);
->  	ctx->src_fmt = *pix_mp;
->  
->  	/*
-> @@ -431,9 +422,7 @@ static int vidioc_s_fmt_cap_mplane(struct file *file, void *priv,
->  {
->  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
->  	struct hantro_ctx *ctx = fh_to_ctx(priv);
-> -	const struct hantro_fmt *formats;
->  	struct vb2_queue *vq;
-> -	unsigned int num_fmts;
->  	int ret;
->  
->  	/* Change not allowed if queue is busy. */
-> @@ -462,9 +451,7 @@ static int vidioc_s_fmt_cap_mplane(struct file *file, void *priv,
->  	if (ret)
->  		return ret;
->  
-> -	formats = hantro_get_formats(ctx, &num_fmts);
-> -	ctx->vpu_dst_fmt = hantro_find_format(formats, num_fmts,
-> -					      pix_mp->pixelformat);
-> +	ctx->vpu_dst_fmt = hantro_find_format(ctx, pix_mp->pixelformat);
->  	ctx->dst_fmt = *pix_mp;
->  
->  	/*
+> +#include <linux/bug.h>
+> +#include <linux/string.h>
+> +
+
+Make this a kerneldoc comment and loose the comments in the structure.
+
+> +/*
+> + * Data structure used to hold a min or max heap, the number of elements varies
+> + * but the maximum size is fixed.
+> + */
+> +struct min_max_heap {
+> +	/* Start of array holding the heap elements. */
+> +	void *data;
+> +	/* Number of elements currently in min-heap. */
+> +	int size;
+> +	/* Maximum number of elements that can be held in current storage. */
+> +	int cap;
+
+You've got the naming all wrong; size is the size of the allocation, num
+is the number of elements in use.
+
+> +};
+> +
+
+Maybe do a kerneldoc comment for this structure too, that keeps the
+definition less cluttered.
+
+/**
+ * struct min_max_heap_callbacks - const data/functions to customise the minmax heap
+ * @elem_size:		the size of each element in bytes
+ * @cmp:		partial order function for this heap
+ *			'less'/'<' for min-heap, 'greater'/'>' for max-heap
+ * @swp:		swap function.
+ */
+> +struct min_max_heap_callbacks {
+> +	/* Size of elements in the heap. */
+> +	int elem_size;
+> +	/*
+> +	 * A function which returns *lhs < *rhs or *lhs > *rhs depending on
+> +	 * whether this is a min or a max heap. Note, another compare function
+> +	 * style in the kernel will return -ve, 0 and +ve and won't handle
+> +	 * minimum integer correctly if implemented as a subtract.
+> +	 */
+> +	bool (*cmp)(const void *lhs, const void *rhs);
+> +	/* Swap the element values at lhs with those at rhs. */
+> +	void (*swp)(void *lhs, void *rhs);
+> +};
+
+Personally I'd just call the whole thing a minheap and call the compare
+function less and leave it at that. Sure if you flip the order you'll
+get a maxheap but that's fairly obvious.
+
+> +
+> +/* Sift the element at pos down the heap. */
+> +static inline void heapify(struct min_max_heap *heap, int pos,
+
+Given this lives in the global namespace (this is C), maybe pick a
+slightly more specific name, like min_max_heapify().
+
+> +			const struct min_max_heap_callbacks *func) {
+
+This is against coding style. Functions get their opening brace on a new
+line. The rest of your patch has this right, why not this one?
+
+> +	void *left_child, *right_child, *parent, *large_or_smallest;
+
+I'm not a fan of excessively long variable names, they make it so much
+harder to read code.
+
+	void *left, *right, *parent, *pivot;
+
+> +	char *data = (char *)heap->data;
+
+What's the deal with that char nonsense? GCC does void* arithmetic just
+right, also C will silently cast void* to any other pointer type.
+
+> +
+> +	for (;;) {
+> +		if (pos * 2 + 1 >= heap->size)
+> +			break;
+> +
+> +		left_child = data + ((pos * 2 + 1) * func->elem_size);
+> +		parent = data + (pos * func->elem_size);
+
+You can reduce the number of multiplications here. You have 3, and IIRC
+you only need 1.
+
+Set parent before the loop, compute right as left + size, and hand
+either down as parent for the next iteration.
+
+> +		large_or_smallest = parent;
+> +		if (func->cmp(left_child, large_or_smallest))
+> +			large_or_smallest = left_child;
+> +
+> +		if (pos * 2 + 2 < heap->size) {
+> +			right_child = data + ((pos * 2 + 2) * func->elem_size);
+> +			if (func->cmp(right_child, large_or_smallest))
+> +				large_or_smallest = right_child;
+> +		}
+> +		if (large_or_smallest == parent)
+> +			break;
+> +		func->swp(large_or_smallest, parent);
+> +		if (large_or_smallest == left_child)
+> +			pos = (pos * 2) + 1;
+> +		else
+> +			pos = (pos * 2) + 2;
+> +	}
+
+I'm a little confused, normally (2*pos) is left and (2*pos+1) is right,
+you seem to have used (2*pos + 1) and (2*pos + 2).
+
+Also, I'm thinking the above can be helped with a little helper:
+
+static inline int min_max_child(int pos, bool right)
+{
+	return 2 * pos + 1 + right;
+}
+
+> +}
+> +
+> +/* Floyd's approach to heapification that is O(size). */
+> +static inline void
+> +heapify_all(struct min_max_heap *heap,
+
+min_max_heapify_all()
+
+> +	const struct min_max_heap_callbacks *func)
+> +{
+> +	int i;
+> +
+> +	for (i = heap->size / 2; i >= 0; i--)
+
+Where does that >= come from?
+
+> +		heapify(heap, i, func);
+> +}
+> +
+> +/* Remove minimum element from the heap, O(log2(size)). */
+> +static inline void
+> +heap_pop(struct min_max_heap *heap, const struct min_max_heap_callbacks *func)
+> +{
+> +	char *data = (char *)heap->data;
+
+more silly char stuff
+
+> +
+> +	if (WARN_ONCE(heap->size <= 0, "Popping an empty heap"))
+> +		return;
+> +
+> +	/* Place last element at the root (position 0) and then sift down. */
+> +	heap->size--;
+> +	memcpy(data, data + (heap->size * func->elem_size), func->elem_size);
+> +	heapify(heap, 0, func);
+> +}
+> +
+> +/*
+> + * Remove the minimum element and then push the given element. The
+> + * implementation performs 1 sift (O(log2(size))) and is therefore more
+> + * efficient than a pop followed by a push that does 2.
+> + */
+> +static void heap_pop_push(struct min_max_heap *heap,
+> +			const void *element,
+> +			const struct min_max_heap_callbacks *func)
+> +{
+> +	char *data = (char *)heap->data;
+
+delete it already
+
+> +
+> +	memcpy(data, element, func->elem_size);
+> +	heapify(heap, 0, func);
+> +}
+> +
+> +/* Push an element on to the heap, O(log2(size)). */
+> +static inline void
+> +heap_push(struct min_max_heap *heap, const void *element,
+> +	const struct min_max_heap_callbacks *func)
+> +{
+> +	void *child, *parent;
+> +	int pos;
+> +	char *data = (char *)heap->data;
+
+there are no strings here...
+
+> +
+> +	if (WARN_ONCE(heap->size >= heap->cap, "Pushing on a full heap"))
+> +		return;
+> +
+> +	/* Place at the end of data. */
+> +	pos = heap->size;
+> +	memcpy(data + (pos * func->elem_size), element, func->elem_size);
+> +	heap->size++;
+> +
+> +	/* Sift up. */
+> +	for (; pos > 0; pos = (pos - 1) / 2) {
+
+And here you have '>' in direct conflict with heapify_all()
+
+> +		child = data + (pos * func->elem_size);
+> +		parent = data + ((pos - 1) / 2) * func->elem_size;
+> +		if (func->cmp(parent, child))
+> +			break;
+> +		func->swp(parent, child);
+
+		child = parent;
+
+and loose one multiplcation.
+
+> +	}
+> +}
 
