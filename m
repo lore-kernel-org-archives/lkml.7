@@ -2,140 +2,123 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F26C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3D5C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D39120718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L8PupHaq"
+	by mail.kernel.org (Postfix) with ESMTP id 885C520718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfKNRxo (ORCPT
+        id S1726949AbfKNRxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:53:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46591 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726444AbfKNRxo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:53:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573754022;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qEEEpz4UiZrRRK6yxzZEgZbLhacFZha0lL4NHGQd9V8=;
-        b=L8PupHaq8mOh0yp1G7Pq0JpLRImdzzyxEHbocHwBwDAxZGvswQ73kz0cXipyMn2tuSjIKg
-        wZIJeO5r3MAoeE8F9pXoKnuoCa/vr6drR24EH2mEnVa1Yoe77NxohzpBB/MUHYVVcfz3J7
-        vVgplKOluh+zt8Tiu55zfebPTqJMa60=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-GZmwaodeNN6FcVuzd5K8fA-1; Thu, 14 Nov 2019 12:53:39 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09A6918A8526;
-        Thu, 14 Nov 2019 17:53:38 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D2B6A10027B9;
-        Thu, 14 Nov 2019 17:53:32 +0000 (UTC)
-Subject: Re: [PATCH] x86/speculation: Fix incorrect MDS/TAA mitigation status
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-References: <20191113193350.24511-1-longman@redhat.com>
- <20191114174553.GC7222@zn.tnic>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <8f7e0f4b-5100-67b5-fcb5-f7a968b96110@redhat.com>
-Date:   Thu, 14 Nov 2019 12:53:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 14 Nov 2019 12:53:55 -0500
+Received: from mga05.intel.com ([192.55.52.43]:8273 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726567AbfKNRxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:53:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:53:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="203132942"
+Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:53:52 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 0/6] soundwire: update ASoC interfaces
+Date:   Thu, 14 Nov 2019 11:53:39 -0600
+Message-Id: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191114174553.GC7222@zn.tnic>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: GZmwaodeNN6FcVuzd5K8fA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/14/19 12:45 PM, Borislav Petkov wrote:
-> On Wed, Nov 13, 2019 at 02:33:50PM -0500, Waiman Long wrote:
->> For MDS vulnerable processors with TSX support, enabling either MDS
->> or TAA mitigations will enable the use of VERW to flush internal
->> processor buffers at the right code path. IOW, they are either both
->> mitigated or both not mitigated. However, if the command line options
->> are inconsistent, the vulnerabilites sysfs files may not report the
->> mitigation status correctly.
->>
->> For example, with only the "mds=3Doff" option:
->>
->>   vulnerabilities/mds:Vulnerable; SMT vulnerable
->>   vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vul=
-nerable
->>
->> The mds vulnerabilities file has wrong status in this case.
->>
->> Change taa_select_mitigation() to sync up the two mitigation status
->> and have them turned off if both "mds=3Doff" and "tsx_async_abort=3Doff"
->> are present.
->>
->> Signed-off-by: Waiman Long <longman@redhat.com>
->> ---
->>  arch/x86/kernel/cpu/bugs.c | 17 +++++++++++++++--
->>  1 file changed, 15 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
->> index 4c7b0fa15a19..418d41c1fd0d 100644
->> --- a/arch/x86/kernel/cpu/bugs.c
->> +++ b/arch/x86/kernel/cpu/bugs.c
->> @@ -304,8 +304,12 @@ static void __init taa_select_mitigation(void)
->>  =09=09return;
->>  =09}
->> =20
->> -=09/* TAA mitigation is turned off on the cmdline (tsx_async_abort=3Dof=
-f) */
->> -=09if (taa_mitigation =3D=3D TAA_MITIGATION_OFF)
->> +=09/*
->> +=09 * TAA mitigation via VERW is turned off if both
->> +=09 * tsx_async_abort=3Doff and mds=3Doff are specified.
->> +=09 */
-> So this changes the dependency of switches so if anything, it should be
-> properly documented first in all three:
->
-> Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
-> Documentation/x86/tsx_async_abort.rst
-> Documentation/admin-guide/kernel-parameters.txt
->
-> However, before we do that, we need to agree on functionality:
-I agree that the documentation needs to be updated. I am going to do
-that once we have a consensus of what is the right thing to do.
-> Will the mitigations be disabled only with *both* =3Doff supplied on the
-> command line or should the mitigations be disabled when *any* of the two
-> =3Doff is supplied?
+We need new fields in existing structures to
+a) deal with race conditions on codec probe/enumeration
+b) allow for multi-step ACPI scan/probe/startup on Intel plaforms
 
-The mitigation is disabled only with BOTH =3Doff supplied or
-"mitigations=3Doff". This is the current behavior. This patch is just to
-make sure that vulnerabilities files reflect the actual behavior. Of
-course, we can change it to disable mitigation with either =3Doff if this
-is what the consensus turn out to be.
+These structures will be used by the SOF driver as well as codec
+drivers.
 
-Cheers,
-Longman
+To avoid conflicts between ASoC and Soundwire trees, these 6 patches
+are provided out-of-order, before the functionality enabled in these
+header files is added in follow-up patch series which can be applied
+separately in the ASoC and Soundwire trees. As discussed earlier,
+Vinod would need to provide an immutable tag for Mark Brown, and the
+integration on the ASoC side of SOF changes and new codecs drivers can
+proceed in parallel with SoundWire core changes.
+
+Note that the SOF changes are not provided as a v3 today due to
+conflicts with other in-flight SOF cleanups to facilitate support for
+Device Tree devices. Those changes don't impact the interface
+definition suggested here but the machine driver detection for
+SoundWire. The changes should be ready in next week.
+
+The mapping between the patches in this series and follow-up ones
+shouldn't give anyone a migraine:
+
+soundwire: sdw_slave: add probe_complete structure and new fields
+soundwire: bus: fix race condition with probe_complete signaling
+
+soundwire: sdw_slave: add enumeration_complete structure
+soundwire: bus: fix race condition with enumeration_complete signaling
+
+soundwire: sdw_slave: add initialization_complete definition
+soundwire: bus: fix race condition with initialization_complete signaling
+
+soundwire: sdw_slave: track unattach_request to handle all init sequences
+soundwire: bus: fix race condition by tracking UNATTACHED transition
+
+Changes since v2:
+Added new field to deal with a race condition leading to a timeout
+when the codec goes through a pm_runtime suspend/resume transition
+while the Master remains active.
+Clarified commit messages with detailed explanations what those race
+conditions are and why the changes were introduced.
+Reordered fields for Intel routines
+Added kernel-doc definitions for structures
+Modified the patch subjects to make the mapping between interface definition
+and implementation straightforward.
+
+Changes since v1 (no feedback received since October 23)
+additional initialization_complete utility to help codec drivers with
+their resume operation, waiting for the enumeration to complete is not
+always enough.
+
+Pierre-Louis Bossart (5):
+  soundwire: sdw_slave: add probe_complete structure and new fields
+  soundwire: sdw_slave: add enumeration_complete structure
+  soundwire: sdw_slave: add initialization_complete definition
+  soundwire: sdw_slave: track unattach_request to handle all init
+    sequences
+  soundwire: intel: update interfaces between ASoC and SoundWire
+
+Rander Wang (1):
+  soundwire: intel: update stream callbacks for hwparams/free stream
+    operations
+
+ drivers/soundwire/intel.c           |  20 +++--
+ drivers/soundwire/intel.h           |  13 ++--
+ drivers/soundwire/intel_init.c      |  31 ++------
+ include/linux/soundwire/sdw.h       |  19 +++++
+ include/linux/soundwire/sdw_intel.h | 109 +++++++++++++++++++++++++---
+ 5 files changed, 149 insertions(+), 43 deletions(-)
+
+-- 
+2.20.1
 
