@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39F9C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59320C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3AD20727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F2120727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKNSSe (ORCPT
+        id S1727678AbfKNSSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:18:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 13:18:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727568AbfKNSS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:18:27 -0500
+        id S1727577AbfKNSS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:18:28 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3162A2086E;
-        Thu, 14 Nov 2019 18:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C82C2088F;
+        Thu, 14 Nov 2019 18:18:28 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iVJhK-00017n-Da; Thu, 14 Nov 2019 13:18:26 -0500
-Message-Id: <20191114181826.298951318@goodmis.org>
+        id 1iVJhL-0001Ah-8q; Thu, 14 Nov 2019 13:18:27 -0500
+Message-Id: <20191114181827.152115842@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 14 Nov 2019 13:17:54 -0500
+Date:   Thu, 14 Nov 2019 13:18:00 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Divya Indi <divya.indi@oracle.com>
-Subject: [for-next][PATCH 20/33] tracing: Declare newly exported APIs in include/linux/trace.h
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [for-next][PATCH 26/33] lib/bsearch: Use generic type for comparator function
 References: <20191114181734.067922168@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -44,68 +44,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Divya Indi <divya.indi@oracle.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Declare the newly introduced and exported APIs in the header file -
-include/linux/trace.h. Moving previous declarations from
-kernel/trace/trace.h to include/linux/trace.h.
+Comparator function type, cmp_func_t, is defined in the types.h,
+use it in bsearch() and, thus, add more sense to the corresponding
+comment in the code.
 
-Link: http://lkml.kernel.org/r/1565805327-579-2-git-send-email-divya.indi@oracle.com
+Link: http://lkml.kernel.org/r/20191007135656.37734-2-andriy.shevchenko@linux.intel.com
 
-Signed-off-by: Divya Indi <divya.indi@oracle.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- include/linux/trace.h | 7 +++++++
- kernel/trace/trace.h  | 4 +---
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ include/linux/bsearch.h | 2 +-
+ lib/bsearch.c           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/trace.h b/include/linux/trace.h
-index b95ffb2188ab..24fcf07812ae 100644
---- a/include/linux/trace.h
-+++ b/include/linux/trace.h
-@@ -24,6 +24,13 @@ struct trace_export {
- int register_ftrace_export(struct trace_export *export);
- int unregister_ftrace_export(struct trace_export *export);
+diff --git a/include/linux/bsearch.h b/include/linux/bsearch.h
+index 62b1eb348858..8ed53d7524ea 100644
+--- a/include/linux/bsearch.h
++++ b/include/linux/bsearch.h
+@@ -5,6 +5,6 @@
+ #include <linux/types.h>
  
-+struct trace_array;
-+
-+void trace_printk_init_buffers(void);
-+int trace_array_printk(struct trace_array *tr, unsigned long ip,
-+		const char *fmt, ...);
-+struct trace_array *trace_array_create(const char *name);
-+int trace_array_destroy(struct trace_array *tr);
- #endif	/* CONFIG_TRACING */
+ void *bsearch(const void *key, const void *base, size_t num, size_t size,
+-	      int (*cmp)(const void *key, const void *elt));
++	      cmp_func_t cmp);
  
- #endif	/* _LINUX_TRACE_H */
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 718eb998c13e..90cba68c8b50 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -11,6 +11,7 @@
- #include <linux/mmiotrace.h>
- #include <linux/tracepoint.h>
- #include <linux/ftrace.h>
-+#include <linux/trace.h>
- #include <linux/hw_breakpoint.h>
- #include <linux/trace_seq.h>
- #include <linux/trace_events.h>
-@@ -873,8 +874,6 @@ trace_vprintk(unsigned long ip, const char *fmt, va_list args);
- extern int
- trace_array_vprintk(struct trace_array *tr,
- 		    unsigned long ip, const char *fmt, va_list args);
--int trace_array_printk(struct trace_array *tr,
--		       unsigned long ip, const char *fmt, ...);
- int trace_array_printk_buf(struct ring_buffer *buffer,
- 			   unsigned long ip, const char *fmt, ...);
- void trace_printk_seq(struct trace_seq *s);
-@@ -1890,7 +1889,6 @@ extern const char *__start___tracepoint_str[];
- extern const char *__stop___tracepoint_str[];
- 
- void trace_printk_control(bool enabled);
--void trace_printk_init_buffers(void);
- void trace_printk_start_comm(void);
- int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set);
- int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled);
+ #endif /* _LINUX_BSEARCH_H */
+diff --git a/lib/bsearch.c b/lib/bsearch.c
+index 8baa83968162..8b3aae5ae77a 100644
+--- a/lib/bsearch.c
++++ b/lib/bsearch.c
+@@ -29,7 +29,7 @@
+  * the same comparison function for both sort() and bsearch().
+  */
+ void *bsearch(const void *key, const void *base, size_t num, size_t size,
+-	      int (*cmp)(const void *key, const void *elt))
++	      cmp_func_t cmp)
+ {
+ 	const char *pivot;
+ 	int result;
 -- 
 2.23.0
 
