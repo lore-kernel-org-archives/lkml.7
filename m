@@ -2,144 +2,120 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A10CC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E08C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0903C2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYzvXJ92"
+	by mail.kernel.org (Postfix) with ESMTP id 27C872071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfKNSyN (ORCPT
+        id S1726674AbfKNSyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:54:13 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40121 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNSyM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:54:12 -0500
-Received: by mail-pf1-f196.google.com with SMTP id r4so4888195pfl.7;
-        Thu, 14 Nov 2019 10:54:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lv3vbSb0hoGBjroJ2Tdn1yzUDZjbGKNm38UA4zcYa4s=;
-        b=JYzvXJ92P3URGM1EZVGOx6BuS8G4Mdx15aVK361Xo3brwt7T11v6tN/M85BmixF8gm
-         x9yQqCmBVzfduyEnfCvp8OvAk6hx93Hdz2OR6cgIh01VVT+oRC/15Y6ffc5bxDSPIH+m
-         27S1Q27OQ7Oxi4IShfALB58nC8gzc6U+FByDvqh9wnV4JmJNdvXSxxlAoOLKmUdPw7Km
-         cMBy+MuOmR00vi49P8s0QN2KOrFwtwaacAeRm4lOENFwdo6f8jaqq3LOY8PSAzf5k2w6
-         lgrxioLslzBMzzYyOtWC3JQaQOGjqlMdG1lnsTx/I1ofrt3o+CF2UEEzPD4WoTP6FM0U
-         61aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lv3vbSb0hoGBjroJ2Tdn1yzUDZjbGKNm38UA4zcYa4s=;
-        b=XL2cDeLzX+o5hUJ13aoZhSV5mNTttGfqXYtZpLqSKTjtrC90zSMtIE7uGngsiNzWGk
-         leS/W1Nci60UwZG9As5b0QOExPM6k0cjNmUIbf/IIs5kPxlDgwqPAj0BlWvQWz2fwhZO
-         +YgyBmyM4RhsN/j9BxpesCSDPAxxKepk66FZPviWjVdGwfiU0PMDiznVF9E8wEA1HucD
-         raXA64JA4RS8IBg2PxajPKvIu/TlSIACi3hBQOyVjsBlv7uyfsV4XVoE2+RuyNlCCj0c
-         9hYh+JbAWRrbJrqsGtf9FY6FxcZw1TSFghhJyk2D+WolVcJmFL38rmC+Cc/ZU7FQ5qY/
-         Utpw==
-X-Gm-Message-State: APjAAAWjJWOl0CtlN3FXkP8RdJmCj3fDrYwjcKeUJxa8f06obUW0PhPq
-        8W0ycmNKxApnvLq5EMwdazb6V38Vjb8=
-X-Google-Smtp-Source: APXvYqxUcHD8QYR04zvjEfVRrevsRkXrCYCaiTtozRf4mEoOkYqRB3I7hM7yBUhdoONpAtm79wmvnw==
-X-Received: by 2002:a63:c24f:: with SMTP id l15mr4182842pgg.279.1573757651698;
-        Thu, 14 Nov 2019 10:54:11 -0800 (PST)
-Received: from localhost ([100.118.89.215])
-        by smtp.gmail.com with ESMTPSA id y123sm7220013pfg.64.2019.11.14.10.54.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 10:54:11 -0800 (PST)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm/dpu: ignore NULL clocks
-Date:   Thu, 14 Nov 2019 10:51:50 -0800
-Message-Id: <20191114185152.101059-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 14 Nov 2019 13:54:22 -0500
+Received: from mga02.intel.com ([134.134.136.20]:17663 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbfKNSyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:54:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:54:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="203149189"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 10:54:20 -0800
+Date:   Thu, 14 Nov 2019 10:54:20 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191114185420.GJ24045@linux.intel.com>
+References: <20191112211002.128278-1-jannh@google.com>
+ <20191112211002.128278-2-jannh@google.com>
+ <20191114174630.GF24045@linux.intel.com>
+ <CALCETrVmaN4BgvUdsuTJ8vdkaN1JrAfBzs+W7aS2cxxDYkqn_Q@mail.gmail.com>
+ <20191114182043.GG24045@linux.intel.com>
+ <CALCETrVOPT5Np9=4ypEipu5YtXyTRZhiYBQ1XZoDd2=_Q4s=yw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVOPT5Np9=4ypEipu5YtXyTRZhiYBQ1XZoDd2=_Q4s=yw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Thu, Nov 14, 2019 at 10:41:06AM -0800, Andy Lutomirski wrote:
+> On Thu, Nov 14, 2019 at 10:20 AM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Thu, Nov 14, 2019 at 10:00:35AM -0800, Andy Lutomirski wrote:
+> > > On Thu, Nov 14, 2019 at 9:46 AM Sean Christopherson
+> > > <sean.j.christopherson@intel.com> wrote:
+> > > > > +     /*
+> > > > > +      * For the user half, check against TASK_SIZE_MAX; this way, if the
+> > > > > +      * access crosses the canonical address boundary, we don't miss it.
+> > > > > +      */
+> > > > > +     if (addr_ref <= TASK_SIZE_MAX)
+> > > >
+> > > > Any objection to open coding the upper bound instead of using
+> > > > TASK_SIZE_MASK to make the threshold more obvious?
+> > > >
+> > > > > +             return;
+> > > > > +
+> > > > > +     pr_alert("dereferencing non-canonical address 0x%016lx\n", addr_ref);
+> > > >
+> > > > Printing the raw address will confuse users in the case where the access
+> > > > straddles the lower canonical boundary.  Maybe combine this with open
+> > > > coding the straddle case?  With a rough heuristic to hedge a bit for
+> > > > instructions whose operand size isn't accurately reflected in opnd_bytes.
+> > > >
+> > > >         if (addr_ref > __VIRTUAL_MASK)
+> > > >                 pr_alert("dereferencing non-canonical address 0x%016lx\n", addr_ref);
+> > > >         else if ((addr_ref + insn->opnd_bytes - 1) > __VIRTUAL_MASK)
+> > > >                 pr_alert("straddling non-canonical boundary 0x%016lx - 0x%016lx\n",
+> > > >                          addr_ref, addr_ref + insn->opnd_bytes - 1);
+> > > >         else if ((addr_ref + PAGE_SIZE - 1) > __VIRTUAL_MASK)
+> > > >                 pr_alert("potentially straddling non-canonical boundary 0x%016lx - 0x%016lx\n",
+> > > >                          addr_ref, addr_ref + PAGE_SIZE - 1);
+> > >
+> > > This is unnecessarily complicated, and I suspect that Jann had the
+> > > right idea but just didn't quite explain it enough.  The secret here
+> > > is that TASK_SIZE_MAX is a full page below the canonical boundary
+> > > (thanks, Intel, for screwing up SYSRET), so, if we get #GP for an
+> > > address above TASK_SIZE_MAX,
+> >
+> > Ya, I followed all that.  My point is that if "addr_ref + insn->opnd_bytes"
+> > straddles the boundary then it's extremely likely the #GP is due to a
+> > non-canonical access, i.e. the pr_alert() doesn't have to hedge (as much).
+> 
+> I suppose.  But I don't think we have a real epidemic of failed
+> accesses to user memory between TASK_SIZE_MAX and the actual boundary
+> that get #GP instead of #PF but fail for a reason other than
+> non-canonicality :)
 
-This isn't an error.  Also the clk APIs handle the NULL case, so we can
-just delete the check.
+No argument there.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_io_util.c | 26 ++++++---------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+> I think we should just go back in time and fix x86_64 to either give
+> #PF or at least give some useful page fault for a non-canonical
+> address. The only difficulties I'm aware of is that Intel CPUs would
+> either need to be redesigned better or would have slightly odd
+> semantics for jumps to non-canonical addresses -- #PF in Intel's model
+> of "RIP literally *can't* have a non-canonical value" would be a bit
+> strange.  Also, my time machine is out of commission.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_io_util.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_io_util.c
-index 27fbeb504362..ec1437b0ef75 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_io_util.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_io_util.c
-@@ -93,19 +93,12 @@ int msm_dss_enable_clk(struct dss_clk *clk_arry, int num_clk, int enable)
- 			DEV_DBG("%pS->%s: enable '%s'\n",
- 				__builtin_return_address(0), __func__,
- 				clk_arry[i].clk_name);
--			if (clk_arry[i].clk) {
--				rc = clk_prepare_enable(clk_arry[i].clk);
--				if (rc)
--					DEV_ERR("%pS->%s: %s en fail. rc=%d\n",
--						__builtin_return_address(0),
--						__func__,
--						clk_arry[i].clk_name, rc);
--			} else {
--				DEV_ERR("%pS->%s: '%s' is not available\n",
--					__builtin_return_address(0), __func__,
--					clk_arry[i].clk_name);
--				rc = -EPERM;
--			}
-+			rc = clk_prepare_enable(clk_arry[i].clk);
-+			if (rc)
-+				DEV_ERR("%pS->%s: %s en fail. rc=%d\n",
-+					__builtin_return_address(0),
-+					__func__,
-+					clk_arry[i].clk_name, rc);
- 
- 			if (rc && i) {
- 				msm_dss_enable_clk(&clk_arry[i - 1],
-@@ -119,12 +112,7 @@ int msm_dss_enable_clk(struct dss_clk *clk_arry, int num_clk, int enable)
- 				__builtin_return_address(0), __func__,
- 				clk_arry[i].clk_name);
- 
--			if (clk_arry[i].clk)
--				clk_disable_unprepare(clk_arry[i].clk);
--			else
--				DEV_ERR("%pS->%s: '%s' is not available\n",
--					__builtin_return_address(0), __func__,
--					clk_arry[i].clk_name);
-+			clk_disable_unprepare(clk_arry[i].clk);
- 		}
- 	}
- 
--- 
-2.23.0
-
+If you happen to fix your time machine, just go back a bit further and
+change protected mode to push the faulting address onto the stack.
