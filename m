@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAABC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671FEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849B120718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46BEB2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfKNRyL (ORCPT
+        id S1727054AbfKNRx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:54:11 -0500
-Received: from mga05.intel.com ([192.55.52.43]:8277 "EHLO mga05.intel.com"
+        Thu, 14 Nov 2019 12:53:59 -0500
+Received: from mga05.intel.com ([192.55.52.43]:8274 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbfKNRyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:54:07 -0500
+        id S1727001AbfKNRx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:53:58 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:54:06 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:53:58 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="203133039"
+   d="scan'208";a="203132956"
 Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:54:04 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:53:56 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v3 6/6] soundwire: intel: update stream callbacks for hwparams/free stream operations
-Date:   Thu, 14 Nov 2019 11:53:45 -0600
-Message-Id: <20191114175345.21836-7-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 2/6] soundwire: sdw_slave: add enumeration_complete structure
+Date:   Thu, 14 Nov 2019 11:53:41 -0600
+Message-Id: <20191114175345.21836-3-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
 References: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
@@ -51,164 +51,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@linux.intel.com>
+When the Master starts the bus (be it during the initial boot or
+system resume), it usually performs a HardReset to make sure
+electrical levels are correct, then enables the control channel.
 
-The SoundWire DAIs for Intel platform are created in
-drivers/soundwire/intel.c, while the communication with the Intel DSP
-is all controlled in soc/sof/intel
+While the PM framework guarantees that the Slave devices will only
+become 'active' once the Master completes the bus initialization,
+there is still a risk of a race condition: the Slave enumeration is
+handled in a separate interrupt thread triggered by hardware status
+changes, so the Slave device may not be ready to accept commands when
+the Slave driver tries to access the registers and restore settings in
+its resume or pm_runtime_resume callbacks. In those cases, any
+read/write commands from/to the Slave device will result in a timeout.
 
-When the DAI status changes, a callback is used to bridge the gap
-between the two subsystems.
+This patch adds an enumeration_complete structure. When the bus is
+goes through a HardReset sequence and restarted, the Slave will be
+marked as UNATTACHED, which will result in a call to
+init_completion().
 
-The naming of the existing 'config_stream' callback does not map well
-with any of ALSA/ASoC concepts. This patch renames it as
-'params_stream' to be more self-explanatory.
+When the Slave reports its presence during PING frames as a non-zero
+Device, the Master hardware will issue an interrupt and the bus driver
+will invoke complete(). The order between init_completion()/complete()
+is predictable since this is a Master-initiated transition.
 
-A new 'free_stream' callback is added in case any resources allocated
-in the 'params_stream' stage need to be released. In the SOF
-implementation, this is used in the hw_free case to release the DMA
-channels over IPC.
+The Slave driver may use wait_for_completion() in its resume callback.
+When regmap is used, the Slave driver will typically set its regmap in
+cache-only mode on suspend, then on resume block on
+wait_for_completion(&enumeration_complete) to guarantee it is safe to
+start read/write transactions. It may then exit the cache-only mode
+and use a regmap_sync to restore settings. All these steps are
+optional, their use completely depends on the Slave device
+capabilities and how the Slave driver is implemented.
 
-These two callbacks now rely on structures which expose the link_id
-and alh_stream_id (required by the firmware IPC), instead of a list of
-parameters. The 'void *' definitions are changed to use explicit
-types, as suggested on alsa-devel during earlier reviews.
-
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/intel.c           | 20 ++++++++++++------
- drivers/soundwire/intel.h           |  4 ++--
- drivers/soundwire/intel_init.c      |  1 +
- include/linux/soundwire/sdw_intel.h | 32 +++++++++++++++++++++++++----
- 4 files changed, 45 insertions(+), 12 deletions(-)
+ include/linux/soundwire/sdw.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 99dc61021211..0371d3d5501a 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -529,17 +529,24 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
- 	intel_writel(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id), conf);
- }
- 
--static int intel_config_stream(struct sdw_intel *sdw,
-+static int intel_params_stream(struct sdw_intel *sdw,
- 			       struct snd_pcm_substream *substream,
- 			       struct snd_soc_dai *dai,
--			       struct snd_pcm_hw_params *hw_params, int link_id)
-+			       struct snd_pcm_hw_params *hw_params,
-+			       int link_id, int alh_stream_id)
- {
- 	struct sdw_intel_link_res *res = sdw->res;
-+	struct sdw_intel_stream_params_data params_data;
- 
--	if (res->ops && res->ops->config_stream && res->arg)
--		return res->ops->config_stream(res->arg,
--				substream, dai, hw_params, link_id);
-+	params_data.substream = substream;
-+	params_data.dai = dai;
-+	params_data.hw_params = hw_params;
-+	params_data.link_id = link_id;
-+	params_data.alh_stream_id = alh_stream_id;
- 
-+	if (res->ops && res->ops->params_stream && res->dev)
-+		return res->ops->params_stream(res->dev,
-+					       &params_data);
- 	return -EIO;
- }
- 
-@@ -654,7 +661,8 @@ static int intel_hw_params(struct snd_pcm_substream *substream,
- 
- 
- 	/* Inform DSP about PDI stream number */
--	ret = intel_config_stream(sdw, substream, dai, params,
-+	ret = intel_params_stream(sdw, substream, dai, params,
-+				  sdw->instance,
- 				  pdi->intel_alh_id);
- 	if (ret)
- 		goto error;
-diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
-index e4cc1d3804ff..38b7c125fb10 100644
---- a/drivers/soundwire/intel.h
-+++ b/drivers/soundwire/intel.h
-@@ -14,7 +14,7 @@
-  * @alh: ALH (Audio Link Hub) pointer
-  * @irq: Interrupt line
-  * @ops: Shim callback ops
-- * @arg: Shim callback ops argument
-+ * @dev: device implementing hw_params and free callbacks
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index cb1db4a7475d..3fa8d875b16b 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -551,6 +551,9 @@ struct sdw_slave_ops {
+  * @probe_complete: completion utility to control potential races
+  * on startup between driver probe/initialization and SoundWire
+  * Slave state changes/implementation-defined interrupts
++ * @enumeration_complete: completion utility to control potential races
++ * on startup between device enumeration and read/write access to the
++ * Slave device
   */
- struct sdw_intel_link_res {
- 	struct platform_device *pdev;
-@@ -24,7 +24,7 @@ struct sdw_intel_link_res {
- 	void __iomem *alh;
- 	int irq;
- 	const struct sdw_intel_ops *ops;
--	void *arg;
-+	struct device *dev;
+ struct sdw_slave {
+ 	struct sdw_slave_id id;
+@@ -567,6 +570,7 @@ struct sdw_slave {
+ 	u16 dev_num;
+ 	bool probed;
+ 	struct completion probe_complete;
++	struct completion enumeration_complete;
  };
  
- #endif /* __SDW_INTEL_LOCAL_H */
-diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-index f8ae199094d3..6bc167c83b47 100644
---- a/drivers/soundwire/intel_init.c
-+++ b/drivers/soundwire/intel_init.c
-@@ -119,6 +119,7 @@ static struct sdw_intel_ctx
- 		link->alh = res->mmio_base + SDW_ALH_BASE;
- 
- 		link->ops = res->ops;
-+		link->dev = res->dev;
- 
- 		memset(&pdevinfo, 0, sizeof(pdevinfo));
- 
-diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
-index 034eca8df748..3ccb38d48eef 100644
---- a/include/linux/soundwire/sdw_intel.h
-+++ b/include/linux/soundwire/sdw_intel.h
-@@ -4,15 +4,39 @@
- #ifndef __SDW_INTEL_H
- #define __SDW_INTEL_H
- 
-+/**
-+ * struct sdw_intel_stream_params_data: configuration passed during
-+ * the @params_stream callback, e.g. for interaction with DSP
-+ * firmware.
-+ */
-+struct sdw_intel_stream_params_data {
-+	struct snd_pcm_substream *substream;
-+	struct snd_soc_dai *dai;
-+	struct snd_pcm_hw_params *hw_params;
-+	int link_id;
-+	int alh_stream_id;
-+};
-+
-+/**
-+ * struct sdw_intel_stream_free_data: configuration passed during
-+ * the @free_stream callback, e.g. for interaction with DSP
-+ * firmware.
-+ */
-+struct sdw_intel_stream_free_data {
-+	struct snd_pcm_substream *substream;
-+	struct snd_soc_dai *dai;
-+	int link_id;
-+};
-+
- /**
-  * struct sdw_intel_ops: Intel audio driver callback ops
-  *
-- * @config_stream: configure the stream with the hw_params
-- * the first argument containing the context is mandatory
-  */
- struct sdw_intel_ops {
--	int (*config_stream)(void *arg, void *substream,
--			     void *dai, void *hw_params, int stream_num);
-+	int (*params_stream)(struct device *dev,
-+			     struct sdw_intel_stream_params_data *params_data);
-+	int (*free_stream)(struct device *dev,
-+			   struct sdw_intel_stream_free_data *free_data);
- };
- 
- /**
+ #define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
 -- 
 2.20.1
 
