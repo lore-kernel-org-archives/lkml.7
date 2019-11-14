@@ -2,78 +2,175 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3367BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E016C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15386206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F140F206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:58:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZVFrWIse"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKNJ5u (ORCPT
+        id S1726750AbfKNJ6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:57:50 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34362 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfKNJ5t (ORCPT
+        Thu, 14 Nov 2019 04:58:05 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56369 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726428AbfKNJ6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:57:49 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iVBsp-0003TG-Me; Thu, 14 Nov 2019 09:57:47 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Javier F . Arias" <jarias.linux@gmail.com>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: fix indentation issue
-Date:   Thu, 14 Nov 2019 09:57:47 +0000
-Message-Id: <20191114095747.132407-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 14 Nov 2019 04:58:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573725484;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=i+ghB/wyVNL5oaMuN4UVb/xQcoBfZlXxJT0AidebzUE=;
+        b=ZVFrWIseHa6oG8+5r15kV1alVIkd8roTf6ggh41eqjWnqLhA2+qPWlQZVWCvQoDC/zMZ3G
+        b6T7QnDzlKGGdpM0Mlsu7ZD/kAteJ8AAsF7uT/Yd3Lhlp+/+5Q+3X28S4KMgz2GRX2EERI
+        Hxu4jGZU8E5Gpicz0xXDrGMFeqLuks0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-400-hkAcOLRiNvW9sTlvdhU7Sw-1; Thu, 14 Nov 2019 04:58:01 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AB44800EBE;
+        Thu, 14 Nov 2019 09:57:59 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-81.ams2.redhat.com [10.36.117.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E6E0A7F1;
+        Thu, 14 Nov 2019 09:57:50 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org
+Subject: [PATCH net-next v2 00/15] vsock: add multi-transports support
+Date:   Thu, 14 Nov 2019 10:57:35 +0100
+Message-Id: <20191114095750.59106-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: hkAcOLRiNvW9sTlvdhU7Sw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Most of the patches are reviewed by Dexuan, Stefan, and Jorgen.
+The following patches need reviews:
+- [11/15] vsock: add multi-transports support
+- [12/15] vsock/vmci: register vmci_transport only when VMCI guest/host
+          are active
+- [15/15] vhost/vsock: refuse CID assigned to the guest->host transport
 
-There is a block of statements that are indented
-too deeply, remove the extraneous tabs.
+RFC: https://patchwork.ozlabs.org/cover/1168442/
+v1: https://patchwork.ozlabs.org/cover/1181986/
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/rtl8723bs/core/rtw_security.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+v1 -> v2:
+- Patch 11:
+    + vmci_transport: sent reset when vsock_assign_transport() fails
+      [Jorgen]
+    + fixed loopback in the guests, checking if the remote_addr is the
+      same of transport_g2h->get_local_cid()
+    + virtio_transport_common: updated space available while creating
+      the new child socket during a connection request
+- Patch 12:
+    + removed 'features' variable in vmci_transport_init() [Stefan]
+    + added a flag to register only once the host [Jorgen]
+- Added patch 15 to refuse CID assigned to the guest->host transport in
+  the vhost_transport
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_security.c b/drivers/staging/rtl8723bs/core/rtw_security.c
-index 5aa5910687d1..9c4607114cea 100644
---- a/drivers/staging/rtl8723bs/core/rtw_security.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_security.c
-@@ -1621,12 +1621,12 @@ static sint aes_decipher(u8 *key, uint	hdrlen,
- 				      pn_vector, i + 1,
- 				      frtype); /*  add for CONFIG_IEEE80211W, none 11w also can use */
- 
--			aes128k128d(key, ctr_preload, aes_out);
--			bitwise_xor(aes_out, &pframe[payload_index], chain_buffer);
-+		aes128k128d(key, ctr_preload, aes_out);
-+		bitwise_xor(aes_out, &pframe[payload_index], chain_buffer);
- 
--			for (j = 0; j < 16; j++)
--				pframe[payload_index++] = chain_buffer[j];
--		}
-+		for (j = 0; j < 16; j++)
-+			pframe[payload_index++] = chain_buffer[j];
-+	}
- 
- 	if (payload_remainder > 0) {
- 		/* If there is a short final block, then pad it,*/
--- 
-2.20.1
+This series adds the multi-transports support to vsock, following
+this proposal: https://www.spinics.net/lists/netdev/msg575792.html
+
+With the multi-transports support, we can use VSOCK with nested VMs
+(using also different hypervisors) loading both guest->host and
+host->guest transports at the same time.
+Before this series, vmci_transport supported this behavior but only
+using VMware hypervisor on L0, L1, etc.
+
+The first 9 patches are cleanups and preparations, maybe some of
+these can go regardless of this series.
+
+Patch 10 changes the hvs_remote_addr_init(). setting the
+VMADDR_CID_HOST as remote CID instead of VMADDR_CID_ANY to make
+the choice of transport to be used work properly.
+
+Patch 11 adds multi-transports support.
+
+Patch 12 changes a little bit the vmci_transport and the vmci driver
+to register the vmci_transport only when there are active host/guest.
+
+Patch 13 prevents the transport modules unloading while sockets are
+assigned to them.
+
+Patch 14 fixes an issue in the bind() logic discoverable only with
+the new multi-transport support.
+
+Patch 15 refuses CID assigned to the guest->host transport in the
+vhost_transport.
+
+I've tested this series with nested KVM (vsock-transport [L0,L1],
+virtio-transport[L1,L2]) and with VMware (L0) + KVM (L1)
+(vmci-transport [L0,L1], vhost-transport [L1], virtio-transport[L2]).
+
+Dexuan successfully tested the RFC series on HyperV with a Linux guest.
+
+Stefano Garzarella (15):
+  vsock/vmci: remove unused VSOCK_DEFAULT_CONNECT_TIMEOUT
+  vsock: remove vm_sockets_get_local_cid()
+  vsock: remove include/linux/vm_sockets.h file
+  vsock: add 'transport' member in the struct vsock_sock
+  vsock/virtio: add transport parameter to the
+    virtio_transport_reset_no_sock()
+  vsock: add 'struct vsock_sock *' param to vsock_core_get_transport()
+  vsock: handle buffer_size sockopts in the core
+  vsock: add vsock_create_connected() called by transports
+  vsock: move vsock_insert_unbound() in the vsock_create()
+  hv_sock: set VMADDR_CID_HOST in the hvs_remote_addr_init()
+  vsock: add multi-transports support
+  vsock/vmci: register vmci_transport only when VMCI guest/host are
+    active
+  vsock: prevent transport modules unloading
+  vsock: fix bind() behaviour taking care of CID
+  vhost/vsock: refuse CID assigned to the guest->host transport
+
+ drivers/misc/vmw_vmci/vmci_driver.c     |  67 +++++
+ drivers/misc/vmw_vmci/vmci_driver.h     |   2 +
+ drivers/misc/vmw_vmci/vmci_guest.c      |   2 +
+ drivers/misc/vmw_vmci/vmci_host.c       |   7 +
+ drivers/vhost/vsock.c                   | 102 ++++---
+ include/linux/virtio_vsock.h            |  18 +-
+ include/linux/vm_sockets.h              |  15 -
+ include/linux/vmw_vmci_api.h            |   2 +
+ include/net/af_vsock.h                  |  45 +--
+ include/net/vsock_addr.h                |   2 +-
+ net/vmw_vsock/af_vsock.c                | 382 ++++++++++++++++++------
+ net/vmw_vsock/hyperv_transport.c        |  70 ++---
+ net/vmw_vsock/virtio_transport.c        | 177 ++++++-----
+ net/vmw_vsock/virtio_transport_common.c | 166 +++++-----
+ net/vmw_vsock/vmci_transport.c          | 140 ++++-----
+ net/vmw_vsock/vmci_transport.h          |   3 -
+ net/vmw_vsock/vmci_transport_notify.h   |   1 -
+ 17 files changed, 679 insertions(+), 522 deletions(-)
+ delete mode 100644 include/linux/vm_sockets.h
+
+--=20
+2.21.0
 
