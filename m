@@ -2,66 +2,89 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579D9C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DDAC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344F320709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A86206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfKNJFq (ORCPT
+        id S1726350AbfKNJHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:05:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42266 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725920AbfKNJFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:05:45 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3210DAE00;
-        Thu, 14 Nov 2019 09:05:44 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 10:05:42 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Steven Rostedt <rostedt@goodmis.org>
-cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 00/10] ftrace: Add register_ftrace_direct()
-In-Reply-To: <20191113113105.140fe6b6@gandalf.local.home>
-Message-ID: <alpine.LSU.2.21.1911141004420.20723@pobox.suse.cz>
-References: <20191108212834.594904349@goodmis.org> <alpine.LSU.2.21.1911131604170.18679@pobox.suse.cz> <20191113113105.140fe6b6@gandalf.local.home>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 14 Nov 2019 04:07:38 -0500
+Received: from ozlabs.org ([203.11.71.1]:34503 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfKNJHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:07:38 -0500
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 47DFxM5mVHz9sNT; Thu, 14 Nov 2019 20:07:35 +1100 (AEDT)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 4e706af3cd8e1d0503c25332b30cad33c97ed442
+In-Reply-To: <20190502210907.42375-1-gwalbon@linux.ibm.com>
+To:     Gustavo Walbon <gwalbon@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     mikey@neuling.org, maurosr@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, npiggin@gmail.com,
+        diana.craciun@nxp.com, paulus@samba.org, leitao@debian.org,
+        msuchanek@suse.de, gwalbon@linux.vnet.ibm.com
+Subject: Re: [PATCH] Fix wrong message when RFI Flush is disable
+Message-Id: <47DFxM5mVHz9sNT@ozlabs.org>
+Date:   Thu, 14 Nov 2019 20:07:35 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019, Steven Rostedt wrote:
-
-> On Wed, 13 Nov 2019 16:10:36 +0100 (CET)
-> Miroslav Benes <mbenes@suse.cz> wrote:
+On Thu, 2019-05-02 at 21:09:07 UTC, Gustavo Walbon wrote:
+> From: "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>
 > 
-> > So I tried to run the selftests and ran into the same timeout issue we had 
-> > with live patching :/
-> > 
-> > See http://lkml.kernel.org/r/20191025115041.23186-1-mbenes@suse.cz for a possible solution.
+> The issue was showing "Mitigation" message via sysfs whatever the state of
+> "RFI Flush", but it should show "Vulnerable" when it is disabled.
 > 
-> Is this when you run the all the selftests?
+> If you have "L1D private" feature enabled and not "RFI Flush" you are
+> vulnerable to meltdown attacks.
+> 
+> "RFI Flush" is the key feature to mitigate the meltdown whatever the
+> "L1D private" state.
+> 
+> SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
+> 
+> So the message should be as the truth table shows.
+> CPU | L1D private | RFI Flush |                   sysfs               |
+> ----| ----------- | --------- | ------------------------------------- |
+>  P9 |    False    |   False   | Vulnerable
+>  P9 |    False    |   True    | Mitigation: RFI Flush
+>  P9 |    True     |   False   | Vulnerable: L1D private per thread
+>  P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per
+>     |             |           | thread
+>  P8 |    False    |   False   | Vulnerable
+>  P8 |    False    |   True    | Mitigation: RFI Flush
+> 
+> Output before this fix:
+>  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+>  Mitigation: RFI Flush, L1D private per thread
+>  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+>  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+>  Mitigation: L1D private per thread
+> 
+> Output after fix:
+>  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+>  Mitigation: RFI Flush, L1D private per thread
+>  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+>  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+>  Vulnerable: L1D private per thread
+> 
+> Link: https://github.com/linuxppc/issues/issues/243
+> 
+> Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
+> Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
 
-Yes, when I run all ftrace selftests (make run_tests in 
-tools/testing/selftests/ftrace/).
+Applied to powerpc next, thanks.
 
-Miroslav
+https://git.kernel.org/powerpc/c/4e706af3cd8e1d0503c25332b30cad33c97ed442
+
+cheers
