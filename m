@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C82BC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ED7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7103A20725
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E69D20725
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:17:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfKNSRj (ORCPT
+        id S1727206AbfKNSRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:17:39 -0500
+        Thu, 14 Nov 2019 13:17:42 -0500
 Received: from mga03.intel.com ([134.134.136.65]:36355 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbfKNSRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:17:38 -0500
+        id S1727145AbfKNSRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:17:40 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:17:37 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:17:39 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="195123394"
+   d="scan'208";a="195123423"
 Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
-  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 10:17:34 -0800
+  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 10:17:38 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v3 04/22] soundwire: bus: write Slave Device Number without runtime_pm
-Date:   Thu, 14 Nov 2019 12:16:44 -0600
-Message-Id: <20191114181702.22254-5-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 06/22] soundwire: intel: Add basic power management support
+Date:   Thu, 14 Nov 2019 12:16:46 -0600
+Message-Id: <20191114181702.22254-7-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191114181702.22254-1-pierre-louis.bossart@linux.intel.com>
 References: <20191114181702.22254-1-pierre-louis.bossart@linux.intel.com>
@@ -51,29 +51,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While handling the Device0, we can safely use sdw_write_no_pm.
+Implement suspend/resume capabilities (not runtime_pm for now)
+The resume part is essentially a full-blown re-enumeration.
 
-This move will also helps us track that all other usages of
-sdw_write() happen when the Slave is already enumerated.
+When S0ix is supported, we will select clock stop mode when the ACPI
+target state is S0, and tear down the link for S3.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soundwire/intel.c | 75 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index a397d0a772b3..d0461bb2fb86 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -513,7 +513,7 @@ static int sdw_assign_device_num(struct sdw_slave *slave)
- 		slave->dev_num = 0;
- 	}
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 00fa5c3a6c1f..c15596c011de 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -1253,10 +1253,85 @@ static int intel_master_remove(struct sdw_master_device *md)
+ 	return 0;
+ }
  
--	ret = sdw_write(slave, SDW_SCP_DEVNUMBER, dev_num);
-+	ret = sdw_write_no_pm(slave, SDW_SCP_DEVNUMBER, dev_num);
- 	if (ret < 0) {
- 		dev_err(&slave->dev, "Program device_num %d failed: %d\n",
- 			dev_num, ret);
++/*
++ * PM calls
++ */
++
++#ifdef CONFIG_PM
++
++static int intel_suspend(struct device *dev)
++{
++	struct sdw_cdns *cdns = dev_get_drvdata(dev);
++	struct sdw_intel *sdw = cdns_to_intel(cdns);
++	int ret;
++
++	if (cdns->bus.prop.hw_disabled) {
++		dev_dbg(dev, "SoundWire master %d is disabled, ignoring\n",
++			cdns->bus.link_id);
++		return 0;
++	}
++
++	ret = sdw_cdns_enable_interrupt(cdns, false);
++	if (ret < 0) {
++		dev_err(dev, "cannot disable interrupts on suspend\n");
++		return ret;
++	}
++
++	ret = intel_link_power_down(sdw);
++	if (ret) {
++		dev_err(dev, "Link power down failed: %d", ret);
++		return ret;
++	}
++
++	intel_shim_wake(sdw, false);
++
++	return 0;
++}
++
++static int intel_resume(struct device *dev)
++{
++	struct sdw_cdns *cdns = dev_get_drvdata(dev);
++	struct sdw_intel *sdw = cdns_to_intel(cdns);
++	int ret;
++
++	if (cdns->bus.prop.hw_disabled) {
++		dev_dbg(dev, "SoundWire master %d is disabled, ignoring\n",
++			cdns->bus.link_id);
++		return 0;
++	}
++
++	ret = intel_init(sdw);
++	if (ret) {
++		dev_err(dev, "%s failed: %d", __func__, ret);
++		return ret;
++	}
++
++	ret = sdw_cdns_enable_interrupt(cdns, true);
++	if (ret < 0) {
++		dev_err(dev, "cannot enable interrupts during resume\n");
++		return ret;
++	}
++
++	ret = sdw_cdns_exit_reset(cdns);
++	if (ret < 0) {
++		dev_err(dev, "unable to exit bus reset sequence during resume\n");
++		return ret;
++	}
++
++	return ret;
++}
++
++#endif
++
++static const struct dev_pm_ops intel_pm = {
++	SET_SYSTEM_SLEEP_PM_OPS(intel_suspend, intel_resume)
++};
++
+ struct sdw_md_driver intel_sdw_driver = {
+ 	.driver = {
+ 		.name = "intel-sdw",
+ 		.owner = THIS_MODULE,
++		.pm = &intel_pm,
+ 	},
+ 	.probe = intel_master_probe,
+ 	.startup = intel_master_startup,
 -- 
 2.20.1
 
