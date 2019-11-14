@@ -2,136 +2,129 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CC5C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7929CC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962BC20706
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="EF0AF64K"
+	by mail.kernel.org (Postfix) with ESMTP id 4ECB02071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573772053;
+	bh=CBtm99Qp7GYxppHYypNy831WT3+kzrbGSYGzSD4xmPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vuLy4cfm+R2kv9Y7XV8DyRRxzmi9uk2kLJnywby6chRKBaMsFq9hCQhtkU7KSbXs0
+	 k8WB+KAZHLotP0nnOKHe7GELh+Qo6Nf8I9v9AcNjq0MQgCjNgcyYCi05cK5q9M9wD3
+	 nk4IXU35IJMqeIVM8GNaIg1d6nqOkqveL+lh+7SE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfKNWvh (ORCPT
+        id S1727122AbfKNWyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:51:37 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:57734 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNWvh (ORCPT
+        Thu, 14 Nov 2019 17:54:12 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44993 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfKNWyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:51:37 -0500
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 60F1420BCFAD; Thu, 14 Nov 2019 14:51:36 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 60F1420BCFAD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1573771896;
-        bh=WV644kJDTY/IDY2jipf0kW2lG8VT+H0spEuwz+hRcI0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EF0AF64K51Fm2myP0Se+Akzj+OVPw4Kxst3CpZ+l5+pC4D5Gfm0kJwXZWQv0i7j9P
-         2tsKMR55kxEgeAs7wDXb7CWoULeZlBxdMV6gh2m17DXLoN1+tmFbD4bEoGSwjfuc0L
-         bZ4xUEm7O3sRGxmkWFO3jGRVppNIL3x0SIrkAGWc=
-From:   longli@linuxonhyperv.com
-To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <keith.busch@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH] blk-mq: avoid repeatedly scheduling the same work to run hardware queue
-Date:   Thu, 14 Nov 2019 14:51:24 -0800
-Message-Id: <1573771884-38879-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 14 Nov 2019 17:54:12 -0500
+Received: by mail-qk1-f194.google.com with SMTP id m16so6539154qki.11;
+        Thu, 14 Nov 2019 14:54:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XRuK6d7TnHtLQBOfr1sWZbQMCgbijX/fPo8dKPOxUls=;
+        b=hNHpsL9SI8tkmXRDnJ6SofChw4EGguY7Ld+bMb4T6laRexKpu3RuJzK0JBK27sIkns
+         oP8bU+fX4FNl8grxlbg30jPD6X3Oi7kMqGRN9nvULSiW8PZCTVwjAyfefaISq4Po5MBw
+         gR/IYgZUI3ENRxoTml7vlWhMJtbir4YEDVxKtkrAr+hR9SJIZWXqFRAFpZ/0TIxd1xeq
+         N27Q4dHVhRxWeBTW4JVFqruSgofTf5hvUL0dC8uNFtFe6JViTTR4jBhQZNojXfUmqzDf
+         oSoqnt+Xc09OazjqQyJA6dQNNZ5FXWs6MeXDvr7KPOpQoZXwXmuHCnLx3knuTyutLIim
+         PbyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XRuK6d7TnHtLQBOfr1sWZbQMCgbijX/fPo8dKPOxUls=;
+        b=jJ9epHQ6VRGJF+vuZ6DfAN7bUp7UUDvTQoYI9Cv4ss1bf4f8cIFZ5LVd434A5tj009
+         E51SjQFZjXyX8rclWAlm0oGe323vWpQULvOv0dGN9w5LJbkhB3L7bMibcM/7GJwRGdpq
+         01jfHOTSwHzS+EyRCWBwT8wOegv1EY6ZHmEmXVY23SNF/SXILC/VXbeLnaNVtf0RNPE0
+         LLwQ5XVq3jGjW0PzafsESgFKT3CmMrqDWZBWXuIpBfSU43Zx2sc35t1GrkUD1GYlkz7j
+         eex6b5Y7e8L8kwxGmAZcwJxS3mWVh+c8q0cAVxV74y91gsm7LA+Isl8Wtq4qs4DRuiL3
+         OzTw==
+X-Gm-Message-State: APjAAAU3rJdVVxRuzjawTFvwpowQqlx4HFI06P1SjRoF4J+/Bi40bRaV
+        DCD90XU/bAyeLTg4xJi+hf4=
+X-Google-Smtp-Source: APXvYqyjgTD34TCZL6vSolXShECU4mRhrBb+CbMWDjGy5CEeF+hg9j2Lin8TabfMQIhLsPbQz10RFg==
+X-Received: by 2002:a37:6442:: with SMTP id y63mr9788888qkb.264.1573772050641;
+        Thu, 14 Nov 2019 14:54:10 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:69f2])
+        by smtp.gmail.com with ESMTPSA id t11sm3991609qtj.15.2019.11.14.14.54.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 14:54:10 -0800 (PST)
+Date:   Thu, 14 Nov 2019 14:54:08 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     cgroups@vger.kernel.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        namhyung@kernel.org, open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, kafai@fb.com,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH cgroup/for-5.5] cgroup: fix incorrect WARN_ON_ONCE() in
+ cgroup_setup_root()
+Message-ID: <20191114225408.GO4163745@devbig004.ftw2.facebook.com>
+References: <CA+G9fYviReoG+gq=Jm8yQOMd01j2opae5p+VTGGMK7aLn0xWgw@mail.gmail.com>
+ <20191114224213.GN4163745@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114224213.GN4163745@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+Never mind.  I just failed to see the warning on x86_32.  The warning
+is spurious and fixed with the following commit.  Applied to
+cgroup/for-5.5.
 
-SCSI layer calls blk_mq_run_hw_queues() in scsi_end_request(), for every
-completed I/O. blk_mq_run_hw_queues() in turn schedules some works to run
-the hardware queues.
+Thanks.
 
-The actual work is queued by mod_delayed_work_on(), it turns out the cost of
-this function is high on locking and CPU usage, when the I/O workload has
-high queue depth. Most of these calls are not necessary since the queue is
-already scheduled to run, and has not run yet.
+------ 8< ------
+From d7495343228f30d8206e92dccfd1c41adcfa142d Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Thu, 14 Nov 2019 14:46:51 -0800
 
-This patch tries to solve this problem by avoiding scheduling work when it's
-already scheduled.
+743210386c03 ("cgroup: use cgrp->kn->id as the cgroup ID") added WARN
+which triggers if cgroup_id(root_cgrp) is not 1.  This is fine on
+64bit ino archs but on 32bit archs cgroup ID is ((gen << 32) | ino)
+and gen starts at 1, so the root id is 0x1_0000_0001 instead of 1
+always triggering the WARN.
 
-Benchmark results:
-The following tests are run on a RAM backed virtual disk on Hyper-V, with 8
-FIO jobs with 4k random read I/O. The test numbers are for IOPS.
+What we wanna make sure is that the ino part is 1.  Fix it.
 
-queue_depth	pre-patch	after-patch	improvement
-16		190k		190k		0%
-64		235k		240k		2%
-256		180k		256k		42%
-1024		156k		250k		60%
-
-Signed-off-by: Long Li <longli@microsoft.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 743210386c03 ("cgroup: use cgrp->kn->id as the cgroup ID")
+Signed-off-by: Tejun Heo <tj@kernel.org>
 ---
- block/blk-mq.c         | 12 ++++++++++++
- include/linux/blk-mq.h |  1 +
- 2 files changed, 13 insertions(+)
+ kernel/cgroup/cgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ec791156e9cc..a882bd65167a 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1476,6 +1476,16 @@ static void __blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async,
- 		put_cpu();
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index c12dcf7dc432..53098c1d45e2 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -1966,7 +1966,7 @@ int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask)
+ 		goto exit_root_id;
  	}
+ 	root_cgrp->kn = root->kf_root->kn;
+-	WARN_ON_ONCE(cgroup_id(root_cgrp) != 1);
++	WARN_ON_ONCE(cgroup_ino(root_cgrp) != 1);
+ 	root_cgrp->ancestor_ids[0] = cgroup_id(root_cgrp);
  
-+	/*
-+	 * Queue a work to run queue. If this is a non-delay run and the
-+	 * work is already scheduled, avoid scheduling the same work again.
-+	 */
-+	if (!msecs) {
-+		if (test_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state))
-+			return;
-+		set_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
-+	}
-+
- 	kblockd_mod_delayed_work_on(blk_mq_hctx_next_cpu(hctx), &hctx->run_work,
- 				    msecs_to_jiffies(msecs));
- }
-@@ -1561,6 +1571,7 @@ void blk_mq_stop_hw_queue(struct blk_mq_hw_ctx *hctx)
- 	cancel_delayed_work(&hctx->run_work);
- 
- 	set_bit(BLK_MQ_S_STOPPED, &hctx->state);
-+	clear_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
- }
- EXPORT_SYMBOL(blk_mq_stop_hw_queue);
- 
-@@ -1626,6 +1637,7 @@ static void blk_mq_run_work_fn(struct work_struct *work)
- 	struct blk_mq_hw_ctx *hctx;
- 
- 	hctx = container_of(work, struct blk_mq_hw_ctx, run_work.work);
-+	clear_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
- 
- 	/*
- 	 * If we are stopped, don't run the queue.
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 0bf056de5cc3..98269d3fd141 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -234,6 +234,7 @@ enum {
- 	BLK_MQ_S_STOPPED	= 0,
- 	BLK_MQ_S_TAG_ACTIVE	= 1,
- 	BLK_MQ_S_SCHED_RESTART	= 2,
-+	BLK_MQ_S_WORK_QUEUED	= 3,
- 
- 	BLK_MQ_MAX_DEPTH	= 10240,
- 
+ 	ret = css_populate_dir(&root_cgrp->self);
 -- 
-2.20.1
+2.17.1
 
