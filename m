@@ -2,70 +2,280 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80F5C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A5EC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE2920718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6F22071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:20:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Dlliewnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfKNRUi (ORCPT
+        id S1727075AbfKNRUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:20:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbfKNRUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:20:38 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E26F2070E;
-        Thu, 14 Nov 2019 17:20:35 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 12:20:34 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Ioannis Ilkos <ilkos@google.com>,
-        minchan@google.com, primiano@google.com, fmayer@google.com,
-        hjd@google.com, joaodias@google.com, lalitm@google.com,
-        rslawik@google.com, sspatil@google.com, timmurray@google.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>, Petr Mladek <pmladek@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] rss_stat: Add support to detect RSS updates of external
- mm
-Message-ID: <20191114122034.4adeb78d@gandalf.local.home>
-In-Reply-To: <20191114164622.GC233237@google.com>
-References: <20191106024452.81923-1-joel@joelfernandes.org>
-        <20191113153816.14b95acd@gandalf.local.home>
-        <20191114164622.GC233237@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 14 Nov 2019 12:20:46 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38675 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfKNRUq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:20:46 -0500
+Received: by mail-qk1-f194.google.com with SMTP id e2so5664409qkn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:20:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=YqwdU+TFDkkxeSf2VYe9ZpBpe5HohVUl6w94HLyvpv4=;
+        b=DlliewnnkIDrzyiGW6RRf47VJWcYu9agI8oocX5cMZTL9y15bhlZQRDMvE5MT78YdP
+         zcMXIkm2lf2uixuxxrR7TpZBOro6CWVqnGOFPkIji7YlCEvYmh7Gj2c6JvYQpWiBaOue
+         uvQG5LKFugb1tu+AKQCPa5OwXYgkuGmb3yRWQ5MiN/cf72DHj0Lg9BtTfkwRH/UsulX8
+         RRv5fiZMCZpRzFhuZGsmHhX948nUNvK3m2ISbHvJ+m0mOVr1QEZQfT3mv86iPS2bRoek
+         vaeu1KA6aJ+gEuBJOxMpQTPEMQFxH/4CL5yU261QQNp5J127yMMx0GrbtLb3ZuBJCerO
+         pUAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YqwdU+TFDkkxeSf2VYe9ZpBpe5HohVUl6w94HLyvpv4=;
+        b=EzMHHeZr/GZHpEpmQrlG8bmwwHgw0MsxdJmm9WKtI8K6rDPcWu+T8bHYv68adQWxA9
+         nzxbYFWeWhUfk+Xk6XjtfhygTighG+6V1xkSB38lQo8L9WsuCo1N1f7FxPBcmtomLJPh
+         HUrHy7MI/zf/xG8JqO1vMRk83U+STshRWnQ2BUS4I8710vC1N4wJpA5Nb0UobpBPSsTd
+         maiaiAonjxQFRDTMJ4Adi95JOiqtRyo0a/9xDcwS3l7nFrmblQr4Ch/zywfe22r5XSYK
+         YOAP5y10q1gUEkXi6tutLMKb0DssvaBQygEwrYCHVmQhxpqeWJYc6uZ4Zf2SxieQATNJ
+         JgoA==
+X-Gm-Message-State: APjAAAVUqk2cOSx3OXymR0K6xlCGS37gpR01jo8wrVJhhk+zz2M4bXp1
+        yvTHuKJRtPFtJv7K0zurMWiTig==
+X-Google-Smtp-Source: APXvYqydvgsfrEZ+98C5vPABHk4+serIieb4Y3cV7B/XOTnjWmTMEvr7ItsMVDyi+jqFkW92BOmm8Q==
+X-Received: by 2002:a05:620a:999:: with SMTP id x25mr4654431qkx.189.1573752044966;
+        Thu, 14 Nov 2019 09:20:44 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id p59sm3455986qtd.2.2019.11.14.09.20.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 09:20:44 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tj@kernel.org
+Cc:     jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        axboe@kernel.dk, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] writeback: fix -Wformat compilation warnings
+Date:   Thu, 14 Nov 2019 12:17:41 -0500
+Message-Id: <1573751861-10303-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 11:46:22 -0500
-Joel Fernandes <joel@joelfernandes.org> wrote:
+The commit f05499a06fb4 ("writeback: use ino_t for inodes in
+tracepoints") introduced a lot of GCC compilation warnings on s390,
 
-> > Can we make a __ptr_to_hashval() static inline, and have
-> > ptr_to_hashval() call that, but use the static inline here, where the
-> > static_branch gets called directly here?  
-> 
-> Sure, like this?
+In file included from ./include/trace/define_trace.h:102,
+                 from ./include/trace/events/writeback.h:904,
+                 from fs/fs-writeback.c:82:
+./include/trace/events/writeback.h: In function
+'trace_raw_output_writeback_page_template':
+./include/trace/events/writeback.h:76:12: warning: format '%lu' expects
+argument of type 'long unsigned int', but argument 4 has type 'ino_t'
+{aka 'unsigned int'} [-Wformat=]
+  TP_printk("bdi %s: ino=%lu index=%lu",
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/trace/trace_events.h:360:22: note: in definition of macro
+'DECLARE_EVENT_CLASS'
+  trace_seq_printf(s, print);     \
+                      ^~~~~
+./include/trace/events/writeback.h:76:2: note: in expansion of macro
+'TP_printk'
+  TP_printk("bdi %s: ino=%lu index=%lu",
+  ^~~~~~~~~
 
-Yep.
+Fix them by adding necessary casts where ino_t could be either "unsigned
+int" or "unsigned long".
 
--- Steve
+Fixes: f05499a06fb4 ("writeback: use ino_t for inodes in tracepoints")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/trace/events/writeback.h | 48 ++++++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index b4f0ffe1817e..ef50be4e5e6c 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -75,7 +75,7 @@
+ 
+ 	TP_printk("bdi %s: ino=%lu index=%lu",
+ 		__entry->name,
+-		__entry->ino,
++		(unsigned long)__entry->ino,
+ 		__entry->index
+ 	)
+ );
+@@ -120,7 +120,7 @@
+ 
+ 	TP_printk("bdi %s: ino=%lu state=%s flags=%s",
+ 		__entry->name,
+-		__entry->ino,
++		(unsigned long)__entry->ino,
+ 		show_inode_state(__entry->state),
+ 		show_inode_state(__entry->flags)
+ 	)
+@@ -201,8 +201,8 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 
+ 	TP_printk("bdi %s: ino=%lu cgroup_ino=%lu history=0x%x",
+ 		__entry->name,
+-		__entry->ino,
+-		__entry->cgroup_ino,
++		(unsigned long)__entry->ino,
++		(unsigned long)__entry->cgroup_ino,
+ 		__entry->history
+ 	)
+ );
+@@ -230,9 +230,9 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 
+ 	TP_printk("bdi %s: ino=%lu old_cgroup_ino=%lu new_cgroup_ino=%lu",
+ 		__entry->name,
+-		__entry->ino,
+-		__entry->old_cgroup_ino,
+-		__entry->new_cgroup_ino
++		(unsigned long)__entry->ino,
++		(unsigned long)__entry->old_cgroup_ino,
++		(unsigned long)__entry->new_cgroup_ino
+ 	)
+ );
+ 
+@@ -266,10 +266,10 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 	TP_printk("bdi %s[%llu]: ino=%lu memcg_id=%u cgroup_ino=%lu page_cgroup_ino=%lu",
+ 		__entry->name,
+ 		__entry->bdi_id,
+-		__entry->ino,
++		(unsigned long)__entry->ino,
+ 		__entry->memcg_id,
+-		__entry->cgroup_ino,
+-		__entry->page_cgroup_ino
++		(unsigned long)__entry->cgroup_ino,
++		(unsigned long)__entry->page_cgroup_ino
+ 	)
+ );
+ 
+@@ -296,7 +296,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 
+ 	TP_printk("bdi %s: cgroup_ino=%lu frn_bdi_id=%u frn_memcg_id=%u",
+ 		__entry->name,
+-		__entry->cgroup_ino,
++		(unsigned long)__entry->cgroup_ino,
+ 		__entry->frn_bdi_id,
+ 		__entry->frn_memcg_id
+ 	)
+@@ -326,9 +326,9 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 
+ 	TP_printk("bdi %s: ino=%lu sync_mode=%d cgroup_ino=%lu",
+ 		__entry->name,
+-		__entry->ino,
++		(unsigned long)__entry->ino,
+ 		__entry->sync_mode,
+-		__entry->cgroup_ino
++		(unsigned long)__entry->cgroup_ino
+ 	)
+ );
+ 
+@@ -383,7 +383,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 		  __entry->range_cyclic,
+ 		  __entry->for_background,
+ 		  __print_symbolic(__entry->reason, WB_WORK_REASON),
+-		  __entry->cgroup_ino
++		  (unsigned long)__entry->cgroup_ino
+ 	)
+ );
+ #define DEFINE_WRITEBACK_WORK_EVENT(name) \
+@@ -421,7 +421,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 	),
+ 	TP_printk("bdi %s: cgroup_ino=%lu",
+ 		  __entry->name,
+-		  __entry->cgroup_ino
++		  (unsigned long)__entry->cgroup_ino
+ 	)
+ );
+ #define DEFINE_WRITEBACK_EVENT(name) \
+@@ -489,7 +489,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 		__entry->range_cyclic,
+ 		__entry->range_start,
+ 		__entry->range_end,
+-		__entry->cgroup_ino
++		(unsigned long)__entry->cgroup_ino
+ 	)
+ )
+ 
+@@ -528,7 +528,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 		__entry->age,	/* older_than_this in relative milliseconds */
+ 		__entry->moved,
+ 		__print_symbolic(__entry->reason, WB_WORK_REASON),
+-		__entry->cgroup_ino
++		(unsigned long)__entry->cgroup_ino
+ 	)
+ );
+ 
+@@ -622,7 +622,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 		  __entry->dirty_ratelimit,	/* base ratelimit */
+ 		  __entry->task_ratelimit, /* ratelimit with position control */
+ 		  __entry->balanced_dirty_ratelimit, /* the balanced ratelimit */
+-		  __entry->cgroup_ino
++		  (unsigned long)__entry->cgroup_ino
+ 	)
+ );
+ 
+@@ -707,7 +707,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 		  __entry->pause,	/* ms */
+ 		  __entry->period,	/* ms */
+ 		  __entry->think,	/* ms */
+-		  __entry->cgroup_ino
++		  (unsigned long)__entry->cgroup_ino
+ 	  )
+ );
+ 
+@@ -735,11 +735,11 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 
+ 	TP_printk("bdi %s: ino=%lu state=%s dirtied_when=%lu age=%lu cgroup_ino=%lu",
+ 		  __entry->name,
+-		  __entry->ino,
++		  (unsigned long)__entry->ino,
+ 		  show_inode_state(__entry->state),
+ 		  __entry->dirtied_when,
+ 		  (jiffies - __entry->dirtied_when) / HZ,
+-		  __entry->cgroup_ino
++		  (unsigned long)__entry->cgroup_ino
+ 	)
+ );
+ 
+@@ -813,14 +813,14 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 	TP_printk("bdi %s: ino=%lu state=%s dirtied_when=%lu age=%lu "
+ 		  "index=%lu to_write=%ld wrote=%lu cgroup_ino=%lu",
+ 		  __entry->name,
+-		  __entry->ino,
++		  (unsigned long)__entry->ino,
+ 		  show_inode_state(__entry->state),
+ 		  __entry->dirtied_when,
+ 		  (jiffies - __entry->dirtied_when) / HZ,
+ 		  __entry->writeback_index,
+ 		  __entry->nr_to_write,
+ 		  __entry->wrote,
+-		  __entry->cgroup_ino
++		  (unsigned long)__entry->cgroup_ino
+ 	)
+ );
+ 
+@@ -861,7 +861,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 
+ 	TP_printk("dev %d,%d ino %lu dirtied %lu state %s mode 0%o",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+-		  __entry->ino, __entry->dirtied_when,
++		  (unsigned long)__entry->ino, __entry->dirtied_when,
+ 		  show_inode_state(__entry->state), __entry->mode)
+ );
+ 
+-- 
+1.8.3.1
+
