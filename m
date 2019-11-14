@@ -4,196 +4,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54630C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24488C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260062070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED61D2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="JiHvYyiZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kTe0B79e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfKNONR (ORCPT
+        id S1727372AbfKNON0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:13:17 -0500
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:42410 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726812AbfKNONR (ORCPT
+        Thu, 14 Nov 2019 09:13:26 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:41886 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbfKNONZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:13:17 -0500
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 2B84A2E0AFA;
-        Thu, 14 Nov 2019 17:13:13 +0300 (MSK)
-Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id R7MDNftX9t-DCL0jej8;
-        Thu, 14 Nov 2019 17:13:13 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1573740793; bh=T+yAvGPHhC54Ai0zkddCJxsjSTzQ1zamGJyadlfR0iE=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=JiHvYyiZRsN1XQ17pFnDbh5fw49M4czRrPmrqpKm8zJ6xW9osVRA/XHZTKxdP4GXJ
-         c2PWqcj4fLds6rdVGf+mlUQHDw4Vc0X64R7ZM6VotpOQytDo1bBp7gu4TgnXmOMfJa
-         feYqTPy8Q63agSfd5z3ehFbQkiDuLap+0dtry+Xc=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8554:53c0:3d75:2e8a])
-        by vla5-2bf13a090f43.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id OZhp7enQie-DCWOiTNr;
-        Thu, 14 Nov 2019 17:13:12 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH v2] fs/splice: ignore flag SPLICE_F_GIFT in syscall vmsplice
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 14 Nov 2019 17:13:11 +0300
-Message-ID: <157374079193.8131.5211902043079599773.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 14 Nov 2019 09:13:25 -0500
+Received: by mail-ua1-f68.google.com with SMTP id o9so1894827uat.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 06:13:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FJX4pImmW+1dIAMZK03BtkAIeMegqqUoxzHSgtg4Ca4=;
+        b=kTe0B79e9Q3wfvE896/JqCWZWDPTHUnKJF3MXGJCz0VulZPNVJNms03VWhWhosu0r5
+         65u5iTmqWQfZhZU6bZ43HtCH3t9odmp08GyQa+kXxDCOH1M9z2/nD017md8ls95KA8VP
+         ScIOnZqRoEAnVGwumKypo7R1jHWTsqOLnL6eBU/RaI2+hdZynt2GBCuBi/hTtG43ri6w
+         rXa5aWAOZxBY1H9M1Y57rS3KQgGaa/rz8QLbkYvZ2P8SjOkhJh96iSXBPr0zCcnFlfWj
+         USwGVkvBZ+QWGkRyEY9OPWD6vy6WDksT8kV8rKsKHSBpk+Gwww5b9A0D0ZRiHDza1Lch
+         oI1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FJX4pImmW+1dIAMZK03BtkAIeMegqqUoxzHSgtg4Ca4=;
+        b=ptqTV7/2hTlT9F4R0nScTbOiiY+JsIJa2TInXhiL9+4D+1fzaet/4F5cRSAiXkDOQM
+         MasNraYQwnLOo2CZEkcMwjRmq/JSmcI4zcB226Vblj8kYkpbmGgpp9+2Ib4oCZAGH4ig
+         h+J2unQCxyvkhUCYOXhThE2wbziArnhEjtfiFhcJCvMlUQNcnt3igsqiqAOZzf52XT2K
+         ulRxuJl6Lw3QrfOZJc0nAWgkA9ujjPwj1PxGG84Kqx/DIClKUVODsZdlu/ckWN8J0dmm
+         DI3fH4f1oR06lj4THPJSCD4LQFX/GYC1movu0IV66Xu1Dt8JBr8ZjQLkl5My1jvX/DGw
+         cB3A==
+X-Gm-Message-State: APjAAAXwC9K2V9T2P9ibZ51WbyZL12amelZWROP0hFzDNAF5ZEUwnlQQ
+        nhvmVJJFbt6G7Q6N2GWw23oSgkmg30U0XOgxmok7Hg==
+X-Google-Smtp-Source: APXvYqx4RK4gWYtCk+erym1uLlCEMYfvmcIf3PPkVWWUkOMrPhdQcGSzRSUDsyWVm4ZWkUAyeM62b0wXUC2Rr+arkK8=
+X-Received: by 2002:ab0:3399:: with SMTP id y25mr5562495uap.100.1573740804146;
+ Thu, 14 Nov 2019 06:13:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <cover.1573122644.git.hns@goldelico.com> <c128cf34cf3858538eac8abffa02a2af8ce845b2.1573122644.git.hns@goldelico.com>
+In-Reply-To: <c128cf34cf3858538eac8abffa02a2af8ce845b2.1573122644.git.hns@goldelico.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 14 Nov 2019 15:12:48 +0100
+Message-ID: <CAPDyKFomoH5U0XevwKcaHRjf1hEyyqZfv4K_DZhCB7kpuXda2g@mail.gmail.com>
+Subject: Re: [PATCH v3 02/12] net: wireless: ti: wl1251 add device tree support
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        kernel@pyra-handheld.com,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Generic support of flag SPLICE_F_MOVE in syscall splice was removed in
-kernel 2.6.21 commit 485ddb4b9741 ("1/2 splice: dont steal").
-Infrastructure stay intact and this feature may came back.
-At least driver or filesystem could provide own implementation.
+On Thu, 7 Nov 2019 at 11:31, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> We will have the wl1251 defined as a child node of the mmc interface
+> and can read setup for gpios, interrupts and the ti,use-eeprom
+> property from there instead of pdata to be provided by pdata-quirks.
+>
+> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> ---
+>  drivers/net/wireless/ti/wl1251/sdio.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
+> index 677f1146ccf0..c54a273713ed 100644
+> --- a/drivers/net/wireless/ti/wl1251/sdio.c
+> +++ b/drivers/net/wireless/ti/wl1251/sdio.c
+> @@ -16,6 +16,9 @@
+>  #include <linux/irq.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/gpio.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_irq.h>
+>
+>  #include "wl1251.h"
+>
+> @@ -217,6 +220,7 @@ static int wl1251_sdio_probe(struct sdio_func *func,
+>         struct ieee80211_hw *hw;
+>         struct wl1251_sdio *wl_sdio;
+>         const struct wl1251_platform_data *wl1251_board_data;
+> +       struct device_node *np = func->dev.of_node;
+>
+>         hw = wl1251_alloc_hw();
+>         if (IS_ERR(hw))
+> @@ -248,6 +252,15 @@ static int wl1251_sdio_probe(struct sdio_func *func,
+>                 wl->power_gpio = wl1251_board_data->power_gpio;
+>                 wl->irq = wl1251_board_data->irq;
+>                 wl->use_eeprom = wl1251_board_data->use_eeprom;
+> +       } else if (np) {
+> +               wl->use_eeprom =of_property_read_bool(np, "ti,wl1251-has-eeprom");
+> +               wl->power_gpio = of_get_named_gpio(np, "ti,power-gpio", 0);
 
-But stealing mapped pages from userspace never worked and is very
-unlikely that will ever make sense due to unmapping overhead.
-Also lru handling is broken if gifted anon page spliced into file.
+This isn't needed as it seems. Perhaps remove or keep it as optional?
 
-Let's seal entry point for marking page as a gift in vmsplice.
+> +               wl->irq = of_irq_get(np, 0);
+> +
+> +               if (wl->power_gpio == -EPROBE_DEFER || wl->irq == -EPROBE_DEFER) {
+> +                       ret = -EPROBE_DEFER;
+> +                       goto disable;
+> +               }
+>         }
+>
+>         if (gpio_is_valid(wl->power_gpio)) {
+> --
 
-v2: remove PIPE_BUF_FLAG_GIFT and related dead code.
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Link: https://lore.kernel.org/lkml/CAHk-=wgPQutQ8d8kUCvAFi+hfNWgaNLiZPkbg-GXY2DCtD-Z5Q@mail.gmail.com/
----
- fs/fuse/dev.c             |    1 -
- fs/splice.c               |   41 +++--------------------------------------
- include/linux/pipe_fs_i.h |    1 -
- 3 files changed, 3 insertions(+), 40 deletions(-)
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index ed1abc9e33cf..aacc4fa639ba 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1987,7 +1987,6 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 				goto out_free;
- 
- 			*obuf = *ibuf;
--			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 			obuf->len = rem;
- 			ibuf->offset += obuf->len;
- 			ibuf->len -= obuf->len;
-diff --git a/fs/splice.c b/fs/splice.c
-index 98412721f056..6cc5098b164b 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -145,23 +145,6 @@ const struct pipe_buf_operations page_cache_pipe_buf_ops = {
- 	.get = generic_pipe_buf_get,
- };
- 
--static int user_page_pipe_buf_steal(struct pipe_inode_info *pipe,
--				    struct pipe_buffer *buf)
--{
--	if (!(buf->flags & PIPE_BUF_FLAG_GIFT))
--		return 1;
--
--	buf->flags |= PIPE_BUF_FLAG_LRU;
--	return generic_pipe_buf_steal(pipe, buf);
--}
--
--static const struct pipe_buf_operations user_page_pipe_buf_ops = {
--	.confirm = generic_pipe_buf_confirm,
--	.release = page_cache_pipe_buf_release,
--	.steal = user_page_pipe_buf_steal,
--	.get = generic_pipe_buf_get,
--};
--
- static void wakeup_pipe_readers(struct pipe_inode_info *pipe)
- {
- 	smp_mb();
-@@ -1197,12 +1180,10 @@ static long do_splice(struct file *in, loff_t __user *off_in,
- }
- 
- static int iter_to_pipe(struct iov_iter *from,
--			struct pipe_inode_info *pipe,
--			unsigned flags)
-+			struct pipe_inode_info *pipe)
- {
- 	struct pipe_buffer buf = {
--		.ops = &user_page_pipe_buf_ops,
--		.flags = flags
-+		.ops = &nosteal_pipe_buf_ops,
- 	};
- 	size_t total = 0;
- 	int ret = 0;
-@@ -1286,10 +1267,6 @@ static long vmsplice_to_pipe(struct file *file, struct iov_iter *iter,
- {
- 	struct pipe_inode_info *pipe;
- 	long ret = 0;
--	unsigned buf_flag = 0;
--
--	if (flags & SPLICE_F_GIFT)
--		buf_flag = PIPE_BUF_FLAG_GIFT;
- 
- 	pipe = get_pipe_info(file);
- 	if (!pipe)
-@@ -1298,7 +1275,7 @@ static long vmsplice_to_pipe(struct file *file, struct iov_iter *iter,
- 	pipe_lock(pipe);
- 	ret = wait_for_space(pipe, flags);
- 	if (!ret)
--		ret = iter_to_pipe(iter, pipe, buf_flag);
-+		ret = iter_to_pipe(iter, pipe);
- 	pipe_unlock(pipe);
- 	if (ret > 0)
- 		wakeup_pipe_readers(pipe);
-@@ -1601,12 +1578,6 @@ static int splice_pipe_to_pipe(struct pipe_inode_info *ipipe,
- 			}
- 			*obuf = *ibuf;
- 
--			/*
--			 * Don't inherit the gift flag, we need to
--			 * prevent multiple steals of this page.
--			 */
--			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
--
- 			pipe_buf_mark_unmergeable(obuf);
- 
- 			obuf->len = len;
-@@ -1681,12 +1652,6 @@ static int link_pipe(struct pipe_inode_info *ipipe,
- 		obuf = opipe->bufs + nbuf;
- 		*obuf = *ibuf;
- 
--		/*
--		 * Don't inherit the gift flag, we need to
--		 * prevent multiple steals of this page.
--		 */
--		obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
--
- 		pipe_buf_mark_unmergeable(obuf);
- 
- 		if (obuf->len > len)
-diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-index 5c626fdc10db..1a3a5efb9c6f 100644
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -6,7 +6,6 @@
- 
- #define PIPE_BUF_FLAG_LRU	0x01	/* page is on the LRU */
- #define PIPE_BUF_FLAG_ATOMIC	0x02	/* was atomically mapped */
--#define PIPE_BUF_FLAG_GIFT	0x04	/* page is a gift */
- #define PIPE_BUF_FLAG_PACKET	0x08	/* read() as a packet */
- 
- /**
-
+Kind regards
+Uffe
