@@ -2,124 +2,127 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17300C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EBCC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37AF7206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5C5206F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YlJt/Y+1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/8aGNd6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKNDMK (ORCPT
+        id S1727142AbfKNDMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:12:10 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48438 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfKNDMJ (ORCPT
+        Wed, 13 Nov 2019 22:12:33 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34913 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfKNDM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:12:09 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.159.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 38E2920B4903;
-        Wed, 13 Nov 2019 19:12:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 38E2920B4903
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573701129;
-        bh=K/agi32Oac2t+Dh8q8GVUkQ2g0EOgg71DPIGb1PJ/fQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=YlJt/Y+13ZQEMFS7ClYl9ALrQlo2sDWJNaIb9n5zLVpj1l42eP8rXbocg06qXY/xT
-         uUpHccgeJNK4Vq/IA94K1a6hUDtDz+11u/lun35Kqus0i9HXZ9KoKuTglAL2jW5cVp
-         K2Sq/kxcpTORwsDgFd2g5DoZiJ63CBttBpuNe0Ig=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 1/5] IMA: Add KEY_CHECK func to measure keys
-Date:   Wed, 13 Nov 2019 19:11:58 -0800
-Message-Id: <20191114031202.18012-2-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191114031202.18012-1-nramas@linux.microsoft.com>
-References: <20191114031202.18012-1-nramas@linux.microsoft.com>
+        Wed, 13 Nov 2019 22:12:28 -0500
+Received: by mail-ot1-f67.google.com with SMTP id z6so3629642otb.2;
+        Wed, 13 Nov 2019 19:12:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5OyV8nm4c+8EwNXMO4wd5EnSMUz5BFLyuPaD1PISKYA=;
+        b=U/8aGNd6CqCqR41sMylYXTumF/M/T9oZFyBCeqDGaQIL9LFqy/FDaeX5v4LuJjBcof
+         p0t4CnImcc5A2M6M/qAn8pUunqYUr6RSGH1tLWnXZ1oBPASvHpAib9RUmfNDZeh4ph4m
+         lW0mseTnnJX1Fy+NaooR8WicOMriD8b185z4LbxKELnEbkLLrH/EHD6kylocdb3m1bNp
+         CDM27IcUt7bJa80IuK2NK6AZmDLuxqqnfpMiLIn5QJwuYX/jWH/pS26lams+UFDjq5kD
+         j181wcs12UAlGRWXjIPLA7cs4uBi+aXZnv5zUXZaFQPEbMrLChdNWckVhR+Xlf5TIKu0
+         aybg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5OyV8nm4c+8EwNXMO4wd5EnSMUz5BFLyuPaD1PISKYA=;
+        b=Mn2BrskDOuIx3pzUyrXhSu9k5sznmW4AMOuhBO6R37Crv9v3PYWiDJvGdITzmx/+n/
+         iBSaTSyGAsHgftUHXBUZvDtGo3jvFnKbJwRCnDjJSHK/iRPFrDyYUj3VUSQyECjzxA/C
+         WrxhWadbEaIAGqZP4qqOXZTPrakRyUy8nktnt5VRer31jwikVgfO+sCNhnOQO9YNIMeL
+         JGZBDqb4kE5DcTNPpH3YCgzcTmURcuGfs5JVgnJDMgqUvbBo3dWrSlZonRTnUpqyrt53
+         QUYEADVjQAT2NdMRWw/wWBC0mUbKZhuwZafP5uh1JQ4JufPZoNJnX95H8K04/EoZE4jD
+         n7qg==
+X-Gm-Message-State: APjAAAVgUtPDtg6y27RRBEtNfyubfMnVvEb66bzZsBj7mK16HnjlaHZG
+        IhItCDMfjM3+JrW+TajeQGNLq1JnAMxpdJmLwEI=
+X-Google-Smtp-Source: APXvYqzYF8zGpMujc6l530oc/eNxy+Z0KByXWKH7T7Shx0NQ84GEE8kWIC+lE6MAjozmASXYfNM5UJ2timNTiA+vJGo=
+X-Received: by 2002:a05:6830:1d8b:: with SMTP id y11mr5277603oti.45.1573701147527;
+ Wed, 13 Nov 2019 19:12:27 -0800 (PST)
+MIME-Version: 1.0
+References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
+ <4418c734-68e1-edaf-c939-f24d041acf2e@redhat.com> <CANRm+CzK_h2E9XWFipkNpAALLCBcM2vrUkdBpumwmT9AP09hfA@mail.gmail.com>
+In-Reply-To: <CANRm+CzK_h2E9XWFipkNpAALLCBcM2vrUkdBpumwmT9AP09hfA@mail.gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 14 Nov 2019 11:12:17 +0800
+Message-ID: <CANRm+CzJ+kiVohGE=nPVw3fGUqHWyeW0hkSs2nA-Quwok8qn1w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Measure keys loaded onto any keyring.
+On Tue, 12 Nov 2019 at 09:33, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> On Tue, 12 Nov 2019 at 05:59, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> > On 09/11/19 08:05, Wanpeng Li wrote:
+> > > From: Wanpeng Li <wanpengli@tencent.com>
+> > >
+> > > This patch tries to optimize x2apic physical destination mode, fixed delivery
+> > > mode single target IPI by delivering IPI to receiver immediately after sender
+> > > writes ICR vmexit to avoid various checks when possible.
+> > >
+> > > Testing on Xeon Skylake server:
+> > >
+> > > The virtual IPI latency from sender send to receiver receive reduces more than
+> > > 330+ cpu cycles.
+> > >
+> > > Running hackbench(reschedule ipi) in the guest, the avg handle time of MSR_WRITE
+> > > caused vmexit reduces more than 1000+ cpu cycles:
+> > >
+> > > Before patch:
+> > >
+> > >   VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+> > > MSR_WRITE    5417390    90.01%    16.31%      0.69us    159.60us    1.08us
+> > >
+> > > After patch:
+> > >
+> > >   VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+> > > MSR_WRITE    6726109    90.73%    62.18%      0.48us    191.27us    0.58us
+> >
+> > Do you have retpolines enabled?  The bulk of the speedup might come just
+> > from the indirect jump.
+>
+> Adding 'mitigations=off' to the host grub parameter:
+>
+> Before patch:
+>
+>     VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+> MSR_WRITE    2681713    92.98%    77.52%      0.38us     18.54us
+> 0.73us ( +-   0.02% )
+>
+> After patch:
+>
+>     VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time   Avg time
+> MSR_WRITE    2953447    92.48%    62.47%      0.30us     59.09us
+> 0.40us ( +-   0.02% )
 
-This patch defines a new IMA policy func namely KEY_CHECK to
-measure keys. Updated ima_match_rules() to check for KEY_CHECK
-and ima_parse_rule() to handle KEY_CHECK.
+Hmm, sender side less vmexit time is due to kvm_exit tracepoint is
+still left in vmx_handle_exit, and ICR wrmsr is moved ahead, that is
+why the time between kvm_exit tracepoint and kvm_entry tracepoint is
+reduced.  But the virtual IPI latency still can reduce 330+ cycles.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- Documentation/ABI/testing/ima_policy | 7 ++++++-
- security/integrity/ima/ima.h         | 1 +
- security/integrity/ima/ima_policy.c  | 4 +++-
- 3 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-index 29aaedf33246..3823c27894c5 100644
---- a/Documentation/ABI/testing/ima_policy
-+++ b/Documentation/ABI/testing/ima_policy
-@@ -29,7 +29,7 @@ Description:
- 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
- 				[FIRMWARE_CHECK]
- 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
--				[KEXEC_CMDLINE]
-+				[KEXEC_CMDLINE] [KEY_CHECK]
- 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
- 			       [[^]MAY_EXEC]
- 			fsmagic:= hex value
-@@ -113,3 +113,8 @@ Description:
- 		Example of appraise rule allowing modsig appended signatures:
- 
- 			appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig
-+
-+		Example of measure rule using KEY_CHECK to measure all keys:
-+
-+			measure func=KEY_CHECK
-+
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index df4ca482fb53..fe6c698617bd 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -193,6 +193,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
- 	hook(KEXEC_INITRAMFS_CHECK)	\
- 	hook(POLICY_CHECK)		\
- 	hook(KEXEC_CMDLINE)		\
-+	hook(KEY_CHECK)			\
- 	hook(MAX_CHECK)
- #define __ima_hook_enumify(ENUM)	ENUM,
- 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index f19a895ad7cd..1525a28fd705 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -373,7 +373,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- {
- 	int i;
- 
--	if (func == KEXEC_CMDLINE) {
-+	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
- 		if ((rule->flags & IMA_FUNC) && (rule->func == func))
- 			return true;
- 		return false;
-@@ -997,6 +997,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->func = POLICY_CHECK;
- 			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
- 				entry->func = KEXEC_CMDLINE;
-+			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
-+				entry->func = KEY_CHECK;
- 			else
- 				result = -EINVAL;
- 			if (!result)
--- 
-2.17.1
-
+    Wanpeng
