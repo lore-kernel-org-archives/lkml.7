@@ -2,198 +2,101 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF563C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1301EC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF5720725
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:50:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L9a4l7NP"
+	by mail.kernel.org (Postfix) with ESMTP id DF09D2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:51:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573775473;
+	bh=kWQGVmrKbA8swA/pmRb+u2rPiL3PQHgJNmJFwGPtDlg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Xk212OzV7BcFB84aiVanAZNVJ+/cK2xMH6AjrAwrcDOhttgkmByWuITO2xPWvv26P
+	 qqZOKxaOzTrrv2dHXzu4hPf/PaBpIzHL6qFomlzFNH5axcSoDlfqw1ci9WHx7UnAXZ
+	 WetgDDikopbiz+yR1PetsccKrBw/wK56Jjbi8xKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfKNXuj (ORCPT
+        id S1727262AbfKNXvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:50:39 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43197 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfKNXuj (ORCPT
+        Thu, 14 Nov 2019 18:51:13 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37013 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfKNXvM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 18:50:39 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so4777117pgh.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 15:50:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3xLmV31uV8sM4q8H6KSowg3F9gbdl9L8XRHqhlyar5o=;
-        b=L9a4l7NPquiUXQMobq4Dez8ZdS8/Czp02wJHySZBb3K6sNPls2tY42E7ruHtIfh2xr
-         L8nurcUTaVZ8dRdBgXD3BJXmN253Z1asF35HHGVjECqF04SsSUF1X2QdKYYs1/PUXbxJ
-         erq4OSjRdw9Z2+8Z+d46CvuzDPxhEt4f68nvY=
+        Thu, 14 Nov 2019 18:51:12 -0500
+Received: by mail-oi1-f195.google.com with SMTP id y194so7037903oie.4;
+        Thu, 14 Nov 2019 15:51:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3xLmV31uV8sM4q8H6KSowg3F9gbdl9L8XRHqhlyar5o=;
-        b=XlgL+NK+wJ+3PV1m630cGjnLrmAaOhzYN0fJitAscADPABBCClRTyT9czOcR2rj7fj
-         2oGOIo/LU0QUs0zceYHxBT5Wey3Mb675nABj+LpZGTaGVPokIfM29T7NFJ88PNoATZs+
-         1f3nRSl4C1wt6Ey6vw57XouKMH42VwZjQzpCASwM7XRVSiRjdtpG38AE6GkBDGGSUbkG
-         T1JB6H1n2fURtHwI0Sb7xUHuHhuu9PpuG0qmtpPm+adX6h3UIgu1j7xFR2PhuDv7mAqV
-         piBUU3ht3aVUkRN6JcFIRfBbaej7GoZUIswHo+Hcwv6pO54vIlg5rSA99b8XTUu1mvCa
-         oVww==
-X-Gm-Message-State: APjAAAW9EOiVaJXehyiP0afsV2xsCkH8yKyrFdhiJQnmI3pi83bVsYjc
-        O4zq6SJEf0sgos+4hBSmrwU6tQ==
-X-Google-Smtp-Source: APXvYqx/CkE8kDEbnpvc/CMHWAp1Q3s8BWqQN6XolX6NapCaW+yRtjLdNapPsB5aJiq/tjRdLabCKA==
-X-Received: by 2002:aa7:8dd0:: with SMTP id j16mr13544458pfr.58.1573775437840;
-        Thu, 14 Nov 2019 15:50:37 -0800 (PST)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id v63sm7904458pfb.181.2019.11.14.15.50.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 14 Nov 2019 15:50:37 -0800 (PST)
-From:   Evan Green <evgreen@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>
-Cc:     Gwendal Grignou <gwendal@chromium.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Alexis Savery <asavery@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Evan Green <evgreen@chromium.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 2/2] loop: Better discard support for block devices
-Date:   Thu, 14 Nov 2019 15:50:08 -0800
-Message-Id: <20191114154903.v7.2.I4d476bddbf41a61422ad51502f4361e237d60ad4@changeid>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191114235008.185111-1-evgreen@chromium.org>
-References: <20191114235008.185111-1-evgreen@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sHfMiUUVf21vrOAowS60/ZyQjI/GeiFC0sX+7phyAMY=;
+        b=tvwCSV+VIISIAL+JVAp/7y1AL2NrYvTJpdTdzUZTzT/6heDLvYCY0f3HWs7bgjHM0k
+         ebg2/0zkV6HjGFDAccFRhL6o1jBC4UEppH4qjUKKsntXKtkieSqy5cxfufRxDJ4SJn0f
+         D8JGw7yQ+1CxUIuCkfL/2yjRbV4DpMwY4hwtCY/JLCqDGb4zH49BcBLl2ZRSSrjFzCtE
+         88wSeIB17ELoIpoTRLAqDfXAMcmfwkacj/J2Im2YfKcGVIy/tYyGlRPIwW1TlWEt5PSg
+         3KiTqAeyIeHH/RyRZNDopVl9Zs1ee7mfET9csqLg1TVpXI+NtuGJz5cYvTQqHCH7CcsU
+         ejSw==
+X-Gm-Message-State: APjAAAVfBagE0Sh708XQB6TQdCZF8Z9iPlVKrmbwyHBi9knCDjkt3uba
+        9xB0+brnPa11/Q5XiEw7QEPhoAJWoeJ6FxFEkX7crA==
+X-Google-Smtp-Source: APXvYqz1oz0mGhNU9dC3k2Q8lD0sWp3lWMkzNAFTfTfJNvknNCti3JvLc3oylbZtTJE98bbXhyca2OB2X5JMKiJFrL0=
+X-Received: by 2002:aca:d4c6:: with SMTP id l189mr5510309oig.68.1573775471571;
+ Thu, 14 Nov 2019 15:51:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <13588000.TfE7eV4KYW@kreacher> <3144686.I8R4d9A2JO@kreacher>
+In-Reply-To: <3144686.I8R4d9A2JO@kreacher>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 15 Nov 2019 00:50:59 +0100
+Message-ID: <CAJZ5v0jiBrx2xxf2EdvGrqke0ByK5YWXEw0R2rpHZYAJjgwJmg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] cpuidle: teo: Avoid expecting unrealistic idle times
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Smythies <dsmythies@telus.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the backing device for a loop device is itself a block device,
-then mirror the "write zeroes" capabilities of the underlying
-block device into the loop device. Copy this capability into both
-max_write_zeroes_sectors and max_discard_sectors of the loop device.
+On Wed, Nov 13, 2019 at 1:11 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> If an idle state shallower than the one "matching" the time till the
+> next timer event is considered for selection, expect the idle duration
+> to fall in the middle of the "bin" corresponding to that state rather
+> than at the beginning of it which is unrealistic.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/cpuidle/governors/teo.c |    9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> Index: linux-pm/drivers/cpuidle/governors/teo.c
+> ===================================================================
+> --- linux-pm.orig/drivers/cpuidle/governors/teo.c
+> +++ linux-pm/drivers/cpuidle/governors/teo.c
+> @@ -360,7 +360,14 @@ static int teo_select(struct cpuidle_dri
+>
+>                 if (max_early_idx >= 0) {
+>                         idx = max_early_idx;
+> -                       duration_ns = drv->states[idx].target_residency_ns;
+> +                       /*
+> +                        * Expect the idle duration to fall in the middle of the
+> +                        * "bin" corresponding to idx (note that the maximum
+> +                        * state index is guaranteed to be greater than idx at
+> +                        * this point).
+> +                        */
+> +                       duration_ns = (drv->states[idx].target_residency_ns +
+> +                               drv->states[idx+1].target_residency_ns) / 2;
+>                 }
+>         }
 
-The reason for this is that REQ_OP_DISCARD on a loop device translates
-into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-presents a consistent interface for loop devices (that discarded data
-is zeroed), regardless of the backing device type of the loop device.
-There should be no behavior change for loop devices backed by regular
-files.
+This change turns out to cause the governor to choose idle states that
+are too deep or too shallow too often, so I'm withdrawing it.
 
-This change fixes blktest block/003, and removes an extraneous
-error print in block/013 when testing on a loop device backed
-by a block device that does not support discard.
-
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
-
-Changes in v7:
-- Rebase on top of Darrick's patch
-- Tweak opening line of commit description (Darrick)
-
-Changes in v6: None
-Changes in v5:
-- Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)
-
-Changes in v4:
-- Mirror blkdev's write_zeroes into loopdev's discard_sectors.
-
-Changes in v3:
-- Updated commit description
-
-Changes in v2: None
-
- drivers/block/loop.c | 40 +++++++++++++++++++++++++++++-----------
- 1 file changed, 29 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 6a9fe1f9fe84..e8f23e4b78f7 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -427,11 +427,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
- 	 * information.
- 	 */
- 	struct file *file = lo->lo_backing_file;
-+	struct request_queue *q = lo->lo_queue;
- 	int ret;
- 
- 	mode |= FALLOC_FL_KEEP_SIZE;
- 
--	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-+	if (!blk_queue_discard(q)) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
- 	}
-@@ -862,6 +863,21 @@ static void loop_config_discard(struct loop_device *lo)
- 	struct file *file = lo->lo_backing_file;
- 	struct inode *inode = file->f_mapping->host;
- 	struct request_queue *q = lo->lo_queue;
-+	struct request_queue *backingq;
-+
-+	/*
-+	 * If the backing device is a block device, mirror its zeroing
-+	 * capability. REQ_OP_DISCARD translates to a zero-out even when backed
-+	 * by block devices to keep consistent behavior with file-backed loop
-+	 * devices.
-+	 */
-+	if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
-+		backingq = bdev_get_queue(inode->i_bdev);
-+		blk_queue_max_discard_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
-+
-+		blk_queue_max_write_zeroes_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
- 
- 	/*
- 	 * We use punch hole to reclaim the free space used by the
-@@ -869,22 +885,24 @@ static void loop_config_discard(struct loop_device *lo)
- 	 * encryption is enabled, because it may give an attacker
- 	 * useful information.
- 	 */
--	if ((!file->f_op->fallocate) ||
--	    lo->lo_encrypt_key_size) {
-+	} else if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
- 		q->limits.discard_granularity = 0;
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
--		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
--		return;
--	}
- 
--	q->limits.discard_granularity = inode->i_sb->s_blocksize;
--	q->limits.discard_alignment = 0;
-+	} else {
-+		q->limits.discard_granularity = inode->i_sb->s_blocksize;
-+		q->limits.discard_alignment = 0;
- 
--	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
--	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
--	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
-+		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	}
-+
-+	if (q->limits.max_write_zeroes_sectors)
-+		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	else
-+		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
- }
- 
- static void loop_unprepare_queue(struct loop_device *lo)
--- 
-2.21.0
-
+Thanks!
