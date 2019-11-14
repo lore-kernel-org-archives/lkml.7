@@ -2,146 +2,181 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1737DC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB75C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5536206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2241E206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDIaWj34"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M1cRtYqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfKNL5M (ORCPT
+        id S1726549AbfKNL7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:57:12 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33292 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfKNL5M (ORCPT
+        Thu, 14 Nov 2019 06:59:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53182 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726057AbfKNL7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:57:12 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w9so6170142wrr.0;
-        Thu, 14 Nov 2019 03:57:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=frQGlUTn9Jq9ZLUZoAjrFv3oqqQ1jMEbiU+EAO+xP6I=;
-        b=aDIaWj34ygBQSSDWD5hQ9YpeVuWwZNH7CdHj9hBxJNl/T3QsG5XMZnJ0ryTQLKBrgo
-         T13NYcReq6SkR/TjqUQrkSt2mGgvIU19vsvZZ8h9pI7khqTqo+3FToFrTrnMg6JK/Fwo
-         IDBmUPEOzM5i8rBf261yvgxU//JjXAGI/1H4f4OJfteBYGC2rB60afLcLb+aNlIdp3IW
-         FyeB6WVrZ0dqj9vSlYhw1vrlqhMQT4f7ggcX4a1jZhOE3PLHg/b7KMvOdCIASvSKCtCU
-         XWneEb8h7RK60e82NFSCykCmfWmKkK30D9+Tmw0V5k+3MdUBIA6SIU7CNs0Xe9rGCkxK
-         NDpw==
+        Thu, 14 Nov 2019 06:59:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573732740;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4US+hVaXhjSiBbdSE96WD7Ru4CXdoh15YX5CrSFyPiQ=;
+        b=M1cRtYqHgF3aZeDn4Tlthk0FAs2alcAyFtcrEntQCWAFXM+9km0yM3/LTonBTYjVnwvGhW
+        EI3D8BKGB6N6ued8DnfH7Sz6CGWBba0TCjiCLkkuesK3dxdWu/BiyifEsniEMY7gfZZ8Zs
+        Ks5JjS+N93xxLoEfY9nKYrr+AHgu9Yc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371-XuyUh46nMr2DVtIprUzxTg-1; Thu, 14 Nov 2019 06:58:57 -0500
+Received: by mail-wr1-f70.google.com with SMTP id w4so4269709wro.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 03:58:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=frQGlUTn9Jq9ZLUZoAjrFv3oqqQ1jMEbiU+EAO+xP6I=;
-        b=ayJk1pbJYorirAl99TkXTMh5S4airRNQWDTSZjWzRzEDBVDXXCVWWUOAUrn5ih/cJN
-         5KN3DjvviaiaxxmpNmFeK2ANtXItt/vpOsBEI2v+IG2QLqEqVDVz0ExWFXjf4wgymt7Q
-         pdoLSTpTkVaWyfPZp8z1anoLREWmLwgH4rE21+59yWbeLMYrbFE2pXEZvbbttMm3JUrT
-         fzIOcsijPP8lXSqHRxnBwdCIILmznLys21C3XsrdtlegUprInohW6rUsBy+MSBHJaMJJ
-         NCgbggmSpJlkHuNJWPX2PZVskyTHM7okeKXZxO0Lp/Aff/HTuES062UkFHGGmmOjmBkJ
-         I5Fg==
-X-Gm-Message-State: APjAAAXvVd06LLetqwipvIdyWTc3KjpacHvxcI3cwr2ogJHUhCnX/hwT
-        jxMSftvlj/jYHy8FoobgCzs=
-X-Google-Smtp-Source: APXvYqykuKrXCa6AZEj4dLtCbHRAgkUmLXX8ndKH3RBW3BwO5DxC/ywlyh72ZRj8FfmZbTgRIxaHsg==
-X-Received: by 2002:adf:a3d5:: with SMTP id m21mr7532379wrb.386.1573732629596;
-        Thu, 14 Nov 2019 03:57:09 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id i13sm6602719wrp.12.2019.11.14.03.57.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 03:57:08 -0800 (PST)
-Date:   Thu, 14 Nov 2019 12:56:56 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] clk: tegra: divider: Check UART's divider enable-bit
- state on rate's recalculation
-Message-ID: <20191114115656.GC5690@aiwendil>
-References: <20191030004813.9187-1-digetx@gmail.com>
- <20191113230303.726AE206E3@mail.kernel.org>
- <02df00b3-5e23-441f-b2d5-b84fdb411e98@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0g9kY8U3aDWmWJZUL7RMmE4YKOXbneFc8qmjFB/A0xY=;
+        b=Qe1yOhLaxvl2OhEbO8QqueWJfbq2VeXGWK17Bs2EIPC8bx3g3oF/4jLiK5cKTy9bei
+         xhfSGNOjGY2WtFDgk7SVMRHAzHC4RdH5Zy5E/MUxrFEr3/FDOAhk3Aw9XfY2yL6J5cmG
+         T6UKxY7JA7D1tG10h7bkysNuLdd3PEU1esddukiVCfIYr53uF18osEEOFPnKzoToqQL/
+         boAWzMH2Y2Efs1r5mRFgsbz9ARZwak1SLuwPo3n1W70VaXaq7fiQg+W3Y7uJMu4uTX8u
+         PZq3HeZzag71ECY/km6HDj+cUpd8GpGJhBkczSCKaCy/RoSmElHBwUWHTqAOqmPGjaZj
+         8gTA==
+X-Gm-Message-State: APjAAAUEt3L+7hsf96MoLLLp4oLsur62oWkaQm6sp4nOMb0InPYuTg71
+        aLGlh4dKwudl79//EiFtKfhrDxp9jDLNGI5UveiCPFdCG7U5ReTRRPxjR1HgxGJKb8gub5EE0YR
+        Ryi31375UgkMOPOS4F+Op7Kmm
+X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr7190772wmi.107.1573732736498;
+        Thu, 14 Nov 2019 03:58:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyylEnjoowHo+iG1a27HITqVo45Zcec78KDUK0v5xjWdnKee268qZqMdmqk0rsDKLg83svKyw==
+X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr7190748wmi.107.1573732736192;
+        Thu, 14 Nov 2019 03:58:56 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:a15b:f753:1ac4:56dc? ([2001:b07:6468:f312:a15b:f753:1ac4:56dc])
+        by smtp.gmail.com with ESMTPSA id z14sm6685230wrl.60.2019.11.14.03.58.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 03:58:55 -0800 (PST)
+Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <6c2c7bbb-39f4-2a77-632e-7730e9887fc5@redhat.com>
+Date:   Thu, 14 Nov 2019 12:58:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KN5l+BnMqAQyZLvT"
-Content-Disposition: inline
-In-Reply-To: <02df00b3-5e23-441f-b2d5-b84fdb411e98@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
+Content-Language: en-US
+X-MC-Unique: XuyUh46nMr2DVtIprUzxTg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ok, it's not _so_ ugly after all.
 
---KN5l+BnMqAQyZLvT
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Nov 14, 2019 at 02:29:51PM +0300, Dmitry Osipenko wrote:
-> 14.11.2019 02:03, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > Quoting Dmitry Osipenko (2019-10-29 17:48:13)
-> >> UART clock is divided using divisor values from DLM/DLL registers when
-> >> enable-bit is unset in clk register and clk's divider configuration is=
-n't
-> >> taken onto account in this case. This doesn't cause any problems, but
-> >> let's add a check for the divider's enable-bit state, for consistency.
-> >>
-> >> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >> ---
-> >=20
-> > Is this going to be picked up or should I just apply atop the tegra PR?
+> ---
+>  arch/x86/kvm/vmx/vmx.c   | 39 +++++++++++++++++++++++++++++++++++++--
+>  include/linux/kvm_host.h |  1 +
+>  2 files changed, 38 insertions(+), 2 deletions(-)
 >=20
-> Looks like this patch missed the Tegra's PR by accident.
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 5d21a4a..5c67061 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5924,7 +5924,9 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+>  =09=09}
+>  =09}
+> =20
+> -=09if (exit_reason < kvm_vmx_max_exit_handlers
+> +=09if (vcpu->fast_vmexit)
+> +=09=09return 1;
+> +=09else if (exit_reason < kvm_vmx_max_exit_handlers
+
+Instead of a separate vcpu->fast_vmexit, perhaps you can set exit_reason
+to vmx->exit_reason to -1 if the fast path succeeds.
+
+> +=09=09=09if (ret =3D=3D 0)
+> +=09=09=09=09ret =3D kvm_skip_emulated_instruction(vcpu);
+
+Please move the "kvm_skip_emulated_instruction(vcpu)" to
+vmx_handle_exit, so that this basically is
+
+#define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
+
+=09if (ret =3D=3D 0)
+=09=09vcpu->exit_reason =3D EXIT_REASON_NEED_SKIP_EMULATED_INSN;
+
+and handle_ipi_fastpath can return void.
+
+Thanks,
+
+Paolo
+
+> +=09=09};
+> +=09};
+> +
+> +=09return ret;
+> +}
+> +
+>  static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  {
+>  =09struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> @@ -6615,6 +6645,12 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  =09=09=09=09  | (1 << VCPU_EXREG_CR3));
+>  =09vcpu->arch.regs_dirty =3D 0;
+> =20
+> +=09vmx->exit_reason =3D vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON)=
+;
+> +=09vcpu->fast_vmexit =3D false;
+> +=09if (!is_guest_mode(vcpu) &&
+> +=09=09vmx->exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
+> +=09=09vcpu->fast_vmexit =3D handle_ipi_fastpath(vcpu);
+
+This should be done later, at least after kvm_put_guest_xcr0, because
+running with partially-loaded guest state is harder to audit.  The best
+place to put it actually is right after the existing vmx->exit_reason
+assignment, where we already handle EXIT_REASON_MCE_DURING_VMENTRY.
+
+>  =09pt_guest_exit(vmx);
+> =20
+>  =09/*
+> @@ -6634,7 +6670,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  =09vmx->nested.nested_run_pending =3D 0;
+>  =09vmx->idt_vectoring_info =3D 0;
+> =20
+> -=09vmx->exit_reason =3D vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON)=
+;
+>  =09if ((u16)vmx->exit_reason =3D=3D EXIT_REASON_MCE_DURING_VMENTRY)
+>  =09=09kvm_machine_check();
+> =20
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 719fc3e..7a7358b 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -319,6 +319,7 @@ struct kvm_vcpu {
+>  #endif
+>  =09bool preempted;
+>  =09bool ready;
+> +=09bool fast_vmexit;
+>  =09struct kvm_vcpu_arch arch;
+>  =09struct dentry *debugfs_dentry;
+>  };
 >=20
-> Stephen, I assume it will be easier if you could apply this patch atop.
-> The patch doesn't have any dependencies on any other patches, so it's
-> fine to apply it separately. Thanks in advance!
->=20
-> Thierry, please let us know if you have any objections.
 
-It's not so much that I missed to pick this up. It's just that it didn't
-make it in time. This was posted just a couple of days before v5.4-rc6
-and I had already finalized the branches at that point. Given that this
-doesn't fix any actual issues it didn't seem worth to force it in at
-that point.
-
-That said, I don't have any objections if Stephen wants to pick this up
-on top of the pull requests.
-
-Thierry
-
---KN5l+BnMqAQyZLvT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3NQQgACgkQ3SOs138+
-s6GN+RAAlZUaaL6lrEOCJlwJGKgjjrETnZko9J+MhX2AI2fHkqzpUYdYvN2/w9Sq
-RhMHSQfYTNuZ1fXleTQ1UhiINXS5WpRuBMWadA/Sb+3A6PZ92YQ+8/GH5I1uAxG4
-is5Fqgbg0TwOIxNNMP/j8Sh1wvKIfx0lrlKA8+sM7tKTCuH1rVgJ+WYHdLzJib/n
-Gnnickw+pryCvL83/2ZiQpxHd4gu5yZlw9uwa5rMRGaPRsbk+VVarMGonYMauMV5
-hrNkVw+Q4YesuQvXy2edLaZQtpZ509uDf6vaq4QVvdwF58SRrgEUqqp0N1Xydh0s
-DxbNK641Z+0Pk7RmgYyQl03QxoYGprEMXv+R50XDcJQ+vqpuX74Lw+vb/4LSexBf
-KteBcilGVv8oyfL3JndvePNqGf/gWiJDZktr+193EJN5NqoSc34ajFf2DFyhwevf
-a0VWFMBYePxJZ/XzZeVaBfHLzqTlIxIxiTqbdlLdb7rag9pXMMIAuaENH7kPzcne
-+UNX40y6k7VMkL3eXXDoGpIeQvuvcO/HX3SREe+x5g5CuZtHIEG4uyGuYB316cIt
-aVajRoQFWbuB40wo2L1+UsVYpUVQlZU3GxsB2L36U4rqjLgiKxai8Olp8zlTwjEv
-qZFNjfUhtnSlbzsHq4hGlj+5V35tUnsivI/L/XByshtrYKrJF9Y=
-=VQeb
------END PGP SIGNATURE-----
-
---KN5l+BnMqAQyZLvT--
