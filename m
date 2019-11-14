@@ -2,99 +2,153 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7ADC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B239C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55407206F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573689791;
-	bh=syJDZEtQZScFh/sQCA1XmB4C/+Er8yQeSAZnLGuG5No=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fhORNFbCbEzbpLtZp33rrMoECKKGZP7XR/z3ZX9lFZ28WSLZJ1MlAqKieAzsBFQwQ
-	 nx5tFfiHRs9ko8jARlziKNpZUVD84qDdNLrFYRRc+/Pi3GwCVyyUmy5Rw7Z80ftzaP
-	 i1X+4O0bybuG5TkmmdI8Mgq/1ePntgGnJzVI0zyM=
+	by mail.kernel.org (Postfix) with ESMTP id 46237206F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfKNADK (ORCPT
+        id S1726755AbfKNAEV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:03:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfKNADJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:03:09 -0500
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C2DA206F2;
-        Thu, 14 Nov 2019 00:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573689789;
-        bh=syJDZEtQZScFh/sQCA1XmB4C/+Er8yQeSAZnLGuG5No=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xha/T2/pzTnZ4wdODDmlGlQkyue/e2on1Wb4tyNoQQtPUWiRhLltt6tVIsvVxjKdq
-         2Jchwydt597A9SvOieYcdvAOuDKTwxt9ulVUOnstsKy0UdKrKSIk+EO9Zxd4c3vVeU
-         KQPeU1l7iBE0QHPcX9rxzLANqo351Tgj/gSdo2fk=
-Received: by mail-qt1-f182.google.com with SMTP id i17so4754289qtq.1;
-        Wed, 13 Nov 2019 16:03:08 -0800 (PST)
-X-Gm-Message-State: APjAAAVPbQuVbx75Rydxkz1F8Ao0F67udWtLtHrMN6V+S3E7ql5Sq88W
-        ml3Cqx1hBgICJ/emUIkaz5T0XRiUBg9BmJujkA==
-X-Google-Smtp-Source: APXvYqzh6vOO3rB2AG7i9gTuq9Xi+mhxHoVYlV+J6Jr9WEMUIr7PWOcm61D2XbYmlTxjkC7l1n2afk7Ke1UOcG5Jy8U=
-X-Received: by 2002:ac8:73ce:: with SMTP id v14mr5619806qtp.136.1573689787902;
- Wed, 13 Nov 2019 16:03:07 -0800 (PST)
+        Wed, 13 Nov 2019 19:04:21 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28600 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726409AbfKNAEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 19:04:21 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADNuR9p135080
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 19:04:20 -0500
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.82])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w8utg0ce1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 19:04:20 -0500
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <miltonm@us.ibm.com>;
+        Thu, 14 Nov 2019 00:04:19 -0000
+Received: from us1a3-smtp06.a3.dal06.isc4sb.com (10.146.103.243)
+        by smtp.notes.na.collabserv.com (10.106.227.105) with smtp.notes.na.collabserv.com ESMTP;
+        Thu, 14 Nov 2019 00:04:10 -0000
+Received: from us1a3-mail228.a3.dal06.isc4sb.com ([10.146.103.71])
+          by us1a3-smtp06.a3.dal06.isc4sb.com
+          with ESMTP id 2019111400040938-1142723 ;
+          Thu, 14 Nov 2019 00:04:09 +0000 
+In-Reply-To: <20191113155237.30646-3-i.mikhaylov@yadro.com>
+From:   "Milton Miller II" <miltonm@us.ibm.com>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
+        openbmc@lists.ozlabs.org, linux-mmc@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Thu, 14 Nov 2019 00:04:09 +0000
 MIME-Version: 1.0
-References: <20191106225527.9121-1-mihailescu2m@gmail.com> <20191107091657.GA1828@pi3>
-In-Reply-To: <20191107091657.GA1828@pi3>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 13 Nov 2019 18:02:54 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+b_7ELTp+cShPJWwAv3arJ-Fp3C+Eor2dX3O_d4pmUvA@mail.gmail.com>
-Message-ID: <CAL_Jsq+b_7ELTp+cShPJWwAv3arJ-Fp3C+Eor2dX3O_d4pmUvA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: gpu: mali-midgard: add samsung exynos
- 5420 compatible
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Marian Mihailescu <mihailescu2m@gmail.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20191113155237.30646-3-i.mikhaylov@yadro.com>,<20191113155237.30646-1-i.mikhaylov@yadro.com>
+X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
+ SCN1812108_20180501T0841_FP62 November 04, 2019 at 09:47
+X-LLNOutbound: False
+X-Disclaimed: 46159
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 19111400-9463-0000-0000-00000173B243
+X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.002686
+X-IBM-SpamModules-Versions: BY=3.00012103; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000292; SDB=6.01289727; UDB=6.00684066; IPR=6.01071925;
+ MB=3.00029520; MTD=3.00000008; XFM=3.00000015; UTC=2019-11-14 00:04:17
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2019-11-13 22:35:31 - 6.00010644
+x-cbparentid: 19111400-9464-0000-0000-000049232CB6
+Message-Id: <OF20F73C7F.F32D5A9E-ON002584B1.00836403-002584B2.0000614A@notes.na.collabserv.com>
+Subject: Re:  [PATCH 2/2] mmc: sdhci-of-aspeed: add inversion signal presence
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_06:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 3:17 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On 11/13/2019 around 09:57AM in some time zone, Ivan Mikhaylov wrote:
+>Change the default .get_cd callback. Add inverted signal card
+>detection
+>check.
 >
-> On Thu, Nov 07, 2019 at 09:25:26AM +1030, Marian Mihailescu wrote:
-> > Add "samsung,exynos5420-mali" binding
-> >
-> > Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> > index 47bc1ac36426..41b928bce4ea 100644
-> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> > @@ -38,9 +38,12 @@ properties:
-> >            - enum:
-> >               - samsung,exynos5433-mali
-> >            - const: arm,mali-t760
-> > +      - items:
-> > +          - enum:
-> > +             - samsung,exynos5420-mali
-> > +          - const: arm,mali-t628
+>Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 >
-> I would prefer to order it logically/alphabetically, so after 5250 and
-> before 5433. With that change:
+>diff --git a/drivers/mmc/host/sdhci-of-aspeed.c
+>b/drivers/mmc/host/sdhci-of-aspeed.c
+>index 8962f6664381..8eded8a6ed8d 100644
+>--- a/drivers/mmc/host/sdhci-of-aspeed.c
+>+++ b/drivers/mmc/host/sdhci-of-aspeed.c
+>@@ -31,6 +31,7 @@ struct aspeed_sdc {
+> struct aspeed_sdhci {
+> 	struct aspeed_sdc *parent;
+> 	u32 width_mask;
+>+	u8 cd_inverted;
 
-I didn't see your comment, but that's what I did. This has been
-re-ordered to be sorted by Mali part numbers (though partially to
-avoid a conflict). Good thing Arm and Samsung agree
-newer/better/faster should be higher numbers. :)
+The mmc core/host.c checks the device tree and stores the
+result as mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH
 
-Rob
+This appears to be accessale as sdhci_host->mmc->caps2.
+
+Please reuse this bit like the other drivers.
+
+> };
+> 
+> static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+>@@ -143,6 +144,21 @@ static inline int
+>aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
+> 	return (delta / 0x100) - 1;
+> }
+> 
+>+static int aspeed_get_cd(struct mmc_host *mmc)
+>+{
+>+	struct aspeed_sdhci *aspeed_sdhci;
+>+	struct sdhci_pltfm_host *pltfm_priv;
+>+	struct sdhci_host *host = mmc_priv(mmc);
+>+
+>+	int presence = !!(sdhci_readl(host, SDHCI_PRESENT_STATE)
+>+			 & SDHCI_CARD_PRESENT);
+>+
+>+	pltfm_priv = sdhci_priv(host);
+>+	aspeed_sdhci = sdhci_pltfm_priv(pltfm_priv);
+>+
+>+	return presence ^ aspeed_sdhci->cd_inverted;
+>+}
+>+
+> static int aspeed_sdhci_probe(struct platform_device *pdev)
+> {
+> 	struct sdhci_pltfm_host *pltfm_host;
+>@@ -183,6 +199,13 @@ static int aspeed_sdhci_probe(struct
+>platform_device *pdev)
+> 		goto err_pltfm_free;
+> 	}
+> 
+>+	dev->cd_inverted = 0;
+>+	host->mmc_host_ops.get_cd = aspeed_get_cd;
+>+	if (of_property_read_bool(pdev->dev.of_node, "cd-inverted")) {
+>+		dev->cd_inverted = 1;
+>+		dev_info(&pdev->dev, "aspeed: sdhci: presence signal inversion
+>enabled\n");
+>+	}
+>+
+> 	ret = mmc_of_parse(host->mmc);
+> 	if (ret)
+> 		goto err_sdhci_add;
+>-- 
+>2.20.1
+>
+>
+
