@@ -2,120 +2,111 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9919FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82AEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF8820724
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573749596;
-	bh=PTKkYOF538f1BfiJH54rPCCMJM9wzIDTNfQcUOB9nNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WTCFVsNqbyaFF8Mr3vcoKvYY7rUEtJVim3Gim/y4W4XlcHgKwKaDlHUUF46RIemiJ
-	 eeI8CQgxOyvr6z+OTDUDZgae2O2kWaguhX13P+MjjFWAT8C6ipJ9xtgBXrC0oeh99Y
-	 9O4p31bkJv7ncNrwfIaGXUAYWHnJ6vM2roStkWSw=
+	by mail.kernel.org (Postfix) with ESMTP id A74D52071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfKNQjz (ORCPT
+        id S1726949AbfKNQkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:39:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbfKNQjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:39:55 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5897206DB;
-        Thu, 14 Nov 2019 16:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573749594;
-        bh=PTKkYOF538f1BfiJH54rPCCMJM9wzIDTNfQcUOB9nNw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MWTFt5Rq2pveMB+L+QaMgeH7P0sOa0jN+pG8Sex7+EBw0TCWC/nLN039QkzIyPn9v
-         2RVcmksBs7o0gsK52BDP5B3cFFqcVNOq2zwCpb01eo4jIZ0oysPLtiYvTlX80Oo70g
-         e6EadHc1yFckWb5SJH+lyuf2CqICuueq555dKpD8=
-Date:   Thu, 14 Nov 2019 16:39:48 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        james.morse@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com,
-        maz@kernel.org
-Subject: Re: [PATCH 0/5] arm64: Add workaround for Cortex-A77 erratum 1542418
-Message-ID: <20191114163948.GA5158@willie-the-truck>
-References: <20191114145918.235339-1-suzuki.poulose@arm.com>
+        Thu, 14 Nov 2019 11:40:46 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43523 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfKNQkp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:40:45 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iVIAQ-0000ZX-V2; Thu, 14 Nov 2019 16:40:23 +0000
+Date:   Thu, 14 Nov 2019 17:40:22 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>, Oleg Nesterov <oleg@redhat.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v10 1/2] fork: extend clone3() to support setting a PID
+Message-ID: <20191114164021.zvlyjceifuusdzqm@wittgenstein>
+References: <20191114142707.1608679-1-areber@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191114145918.235339-1-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191114142707.1608679-1-areber@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+On Thu, Nov 14, 2019 at 03:27:06PM +0100, Adrian Reber wrote:
+> The main motivation to add set_tid to clone3() is CRIU.
+> 
+> To restore a process with the same PID/TID CRIU currently uses
+> /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
+> ns_last_pid and then (quickly) does a clone(). This works most of the
+> time, but it is racy. It is also slow as it requires multiple syscalls.
+> 
+> Extending clone3() to support *set_tid makes it possible restore a
+> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
+> race free (as long as the desired PID/TID is available).
+> 
+> This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
+> on clone3() with *set_tid as they are currently in place for ns_last_pid.
+> 
+> The original version of this change was using a single value for
+> set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
+> decided to change set_tid to an array to enable setting the PID of a
+> process in multiple PID namespaces at the same time. If a process is
+> created in a PID namespace it is possible to influence the PID inside
+> and outside of the PID namespace. Details also in the corresponding
+> selftest.
+> 
+> To create a process with the following PIDs:
+> 
+>       PID NS level         Requested PID
+>         0 (host)              31496
+>         1                        42
+>         2                         1
+> 
+> For that example the two newly introduced parameters to struct
+> clone_args (set_tid and set_tid_size) would need to be:
+> 
+>   set_tid[0] = 1;
+>   set_tid[1] = 42;
+>   set_tid[2] = 31496;
+>   set_tid_size = 3;
+> 
+> If only the PIDs of the two innermost nested PID namespaces should be
+> defined it would look like this:
+> 
+>   set_tid[0] = 1;
+>   set_tid[1] = 42;
+>   set_tid_size = 2;
+> 
+> The PID of the newly created process would then be the next available
+> free PID in the PID namespace level 0 (host) and 42 in the PID namespace
+> at level 1 and the PID of the process in the innermost PID namespace
+> would be 1.
+> 
+> The set_tid array is used to specify the PID of a process starting
+> from the innermost nested PID namespaces up to set_tid_size PID namespaces.
+> 
+> set_tid_size cannot be larger then the current PID namespace level.
+> 
+> Signed-off-by: Adrian Reber <areber@redhat.com>
+> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-On Thu, Nov 14, 2019 at 02:59:13PM +0000, Suzuki K Poulose wrote:
-> This series adds workaround for Arm erratum 1542418 which affects
-
-Searching for that erratum number doesn't find me a description :(
-
-> Cortex-A77 cores (r0p0 - r1p0). Affected cores may execute stale
-> instructions from the L0 macro-op cache violating the
-> prefetch-speculation-protection guaranteed by the architecture.
-> This happens when the when the branch predictor bases its predictions
-> on a branch at this address on the stale history due to ASID or VMID
-> reuse.
-
-Two immediate questions:
-
- 1. Can we disable the L0 MOP cache?
- 2. Can we invalidate the branch predictor? If Spectre-v2 taught us
-    anything it's that removing those instructions was a mistake!
-
-Moving on...
-
-Have you reproduced this at top-level? If I recall the
-prefetch-speculation-protection, it's designed to protect against the
-case where you have a direct branch:
-
-addr:	B	foo
-
-and another CPU writes out a new function:
-
-bar:
-	insn0
-	...
-	insnN
-
-before doing any necessary maintenance and then patches the original
-branch to:
-
-addr:	B	bar
-
-The idea is that a concurrently executing CPU could mispredict the original
-branch to point at 'bar', fetch the instructions before they've been written
-out and then confirm the prediction by looking at the newly written branch
-instruction. Even without the prefetch-speculation-protection, that's
-fairly difficult to achieve in practice: you'd need to be doing something
-like reusing memory to hold the instructions so that the initial
-misprediction occurs.
-
-How does A77 stop this from occurring when the ASID is not reallocated (e.g.
-the example above)? Is the MOP cache flushed somehow?
-
-With this erratum, it sounds like you have to end up reusing an ASID from
-a task that had a branch at 'addr' in its address space that branched to
-the address of 'bar' (again. in its address space). Is that right? That
-sounds super rare to me, particularly with ASLR: not only does the aliasing
-branch need to exist, but it needs to be held in the branch predictor while
-we cycle through 64k ASIDs *and* the race with the writer needs to happen
-so that we get stale instructions from the MOP cache.
-
-Is there something I'm missing that makes this remotely plausible?
-
-Will
+Applied.
+Thanks, Adrian and Oleg!
+Christian
