@@ -2,131 +2,153 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0647C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A89C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C73206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6B220409
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j34WU2ZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfKNKX5 (ORCPT
+        id S1726977AbfKNKYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:23:57 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34861 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfKNKX5 (ORCPT
+        Thu, 14 Nov 2019 05:24:10 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52238 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfKNKYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:23:57 -0500
-Received: from [79.140.120.64] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iVCI0-0004Z2-Iy; Thu, 14 Nov 2019 10:23:48 +0000
-Date:   Thu, 14 Nov 2019 11:23:47 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        alpha <linux-alpha@vger.kernel.org>, fweimer@redhat.com,
-        libc-alpha@sourceware.org
-Subject: Re: [PATCH 11/23] y2038: rusage: use __kernel_old_timeval
-Message-ID: <20191114102346.bjwsz2iup7pg7mgd@wittgenstein>
-References: <20191108210236.1296047-1-arnd@arndb.de>
- <20191108211323.1806194-2-arnd@arndb.de>
- <20191112210915.GD5130@uranus>
- <CAK8P3a03FRfTsXADH+xfLsWxCu54JXvXbb-OdyGXXf88RNP34w@mail.gmail.com>
- <20191114003822.6fjji26vm7yplaw2@wittgenstein>
- <CAK8P3a2JtyfFifSWNd2MA-J=6-NdgPd4eNva+u193bzQTX6Qig@mail.gmail.com>
+        Thu, 14 Nov 2019 05:24:09 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAEANurN005852;
+        Thu, 14 Nov 2019 04:23:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573727037;
+        bh=2tStGcP9xDBxKwRIpbRobeYLj2PF1b/AtmDfTiE4sb4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=j34WU2ZJOLmGiYCtNPaksHWKLeugq0tr5yZ3gnraSp+XSPTecplIWF65NvKXIt30H
+         BjSyVQa6nv5dngrwfh/rqaj3Tilu9/xPg36v56pN0+CFKottI8Q8nVepdWA7qVND+F
+         4SyK1LyZYhdJ9PFZy0P+tLcMtynDlSiKIB8FcF7A=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAEANuci111617
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 Nov 2019 04:23:56 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 14
+ Nov 2019 04:23:55 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 14 Nov 2019 04:23:55 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEANpg5030936;
+        Thu, 14 Nov 2019 04:23:52 -0600
+Subject: Re: [PATCH] bus: ti-sysc: Add module enable quirk for audio AESS
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191113173702.57107-1-tony@atomide.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <4188f17f-67ce-42f8-c9c0-b7d6c74173a1@ti.com>
+Date:   Thu, 14 Nov 2019 12:25:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2JtyfFifSWNd2MA-J=6-NdgPd4eNva+u193bzQTX6Qig@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191113173702.57107-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Cc Florian, libc-alpha]
 
-On Thu, Nov 14, 2019 at 11:18:15AM +0100, Arnd Bergmann wrote:
-> On Thu, Nov 14, 2019 at 1:38 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> > On Wed, Nov 13, 2019 at 11:02:12AM +0100, Arnd Bergmann wrote:
-> > > On Tue, Nov 12, 2019 at 10:09 PM Cyrill Gorcunov <gorcunov@gmail.com> wrote:
-> > > >
-> > > > On Fri, Nov 08, 2019 at 10:12:10PM +0100, Arnd Bergmann wrote:
-> > >
-> > > > > ---
-> > > > > Question: should we also rename 'struct rusage' into 'struct __kernel_rusage'
-> > > > > here, to make them completely unambiguous?
-> > > >
-> > > > The patch looks ok to me. I must confess I looked into rusage long ago
-> > > > so __kernel_timespec type used in uapi made me nervious at first,
-> > > > but then i found that we've this type defined in time_types.h uapi
-> > > > so userspace should be safe. I also like the idea of __kernel_rusage
-> > > > but definitely on top of the series.
-> > >
-> > > There are clearly too many time types at the moment, but I'm in the
-> > > process of throwing out the ones we no longer need now.
-> > >
-> > > I do have a number patches implementing other variants for the syscall,
-> > > and I suppose that if we end up adding __kernel_rusage, that would
-> > > have to go with a set of syscalls using 64-bit seconds/nanoseconds
-> > > rather than the old 32/64 microseconds. I don't know what other
-> > > changes remain that anyone would want from sys_waitid() now that
-> > > it does support pidfd.
-> > >
-> > > If there is still a need for a new waitid() replacement, that should take
-> > > that new __kernel_rusage I think, but until then I hope we are fine
-> > > with today's getrusage+waitid based on the current struct rusage.
-> >
-> > Note, that glibc does _not_ expose the rusage argument, i.e. most of
-> > userspace is unaware that waitid() does allow you to get rusage
-> > information. So users first need to know that waitid() has an rusage
-> > argument and then need to call the waitid() syscall directly.
+
+On 13/11/2019 19.37, Tony Lindgren wrote:
+> We must set the autogating bit on enable for AESS (Audio Engine SubSystem)
+> when probed with ti-sysc interconnect target module driver. Otherwise it
+> won't idle properly.
 > 
-> On architectures that don't have a wait4 syscall (riscv32 for now),
-> glibc uses waitid to implement wait4 and wait3.
+> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  drivers/bus/ti-sysc.c                 | 14 +++++++++++++-
+>  include/linux/platform_data/ti-sysc.h |  1 +
+>  2 files changed, 14 insertions(+), 1 deletion(-)
 
-Yes, and there's an ongoing discussion to implement wait4() on all
-arches through waitid(), I think. I haven't followed it too closely.
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
+> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -1248,6 +1248,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+>  		   SYSC_QUIRK_SWSUP_SIDLE),
+>  
+>  	/* Quirks that need to be set based on detected module */
+> +	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
+> +		   SYSC_MODULE_QUIRK_AESS),
+>  	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
+>  		   SYSC_MODULE_QUIRK_HDQ1W),
+>  	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
+> @@ -1276,7 +1278,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+>  #ifdef DEBUG
+>  	SYSC_QUIRK("adc", 0, 0, 0x10, -1, 0x47300001, 0xffffffff, 0),
+>  	SYSC_QUIRK("atl", 0, 0, -1, -1, 0x0a070100, 0xffffffff, 0),
+> -	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff, 0),
+>  	SYSC_QUIRK("cm", 0, 0, -1, -1, 0x40000301, 0xffffffff, 0),
+>  	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
+>  	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
+> @@ -1408,6 +1409,14 @@ static void sysc_clk_enable_quirk_hdq1w(struct sysc *ddata)
+>  	sysc_write(ddata, offset, val);
+>  }
+>  
+> +/* AESS (Audio Engine SubSystem) needs autogating set after enable */
+> +static void sysc_module_enable_quirk_aess(struct sysc *ddata)
+> +{
+> +	int offset = 0x7c;	/* AESS_AUTO_GATING_ENABLE */
+> +
+> +	sysc_write(ddata, offset, 1);
+> +}
+> +
+>  /* I2C needs extra enable bit toggling for reset */
+>  static void sysc_clk_quirk_i2c(struct sysc *ddata, bool enable)
+>  {
+> @@ -1490,6 +1499,9 @@ static void sysc_init_module_quirks(struct sysc *ddata)
+>  		return;
+>  	}
+>  
+> +	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_AESS)
+> +		ddata->module_enable_quirk = sysc_module_enable_quirk_aess;
+> +
+>  	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_SGX)
+>  		ddata->module_enable_quirk = sysc_module_enable_quirk_sgx;
+>  
+> diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
+> --- a/include/linux/platform_data/ti-sysc.h
+> +++ b/include/linux/platform_data/ti-sysc.h
+> @@ -49,6 +49,7 @@ struct sysc_regbits {
+>  	s8 emufree_shift;
+>  };
+>  
+> +#define SYSC_MODULE_QUIRK_AESS		BIT(19)
+>  #define SYSC_MODULE_QUIRK_SGX		BIT(18)
+>  #define SYSC_MODULE_QUIRK_HDQ1W		BIT(17)
+>  #define SYSC_MODULE_QUIRK_I2C		BIT(16)
 > 
-> > > BSD has wait6() to return separate rusage structures for 'self' and
-> > > 'children', but I could not find any application (using the freebsd
-> > > sources and debian code search) that actually uses that information,
-> > > so there might not be any demand for that.
-> >
-> > Speaking specifically for Linux now, I think that rusage does not
-> > actually expose the information most relevant users are interested in.
-> > On Linux nowadays it is _way_ more interesting to retrieve stats
-> > relative to the cgroup the task lived in etc.
-> > Doing a git grep -i rusage in the systemd source code shows that rusage
-> > is used _nowhere_. And I consider an init system to be the most likely
-> > candidate to be interested in rusage.
-> 
-> I looked at a couple of implementations of time(1), this is one example
-> that sometimes uses wait3(), though other implementations just call
-> getrusage() in the parent process before the fork/exec. None of them
-> actually seem to report better than millisecond resolution, so there is
-> not a strict reason to do a timespec replacement for these.
 
-Right, though I have to say that for the sake of consistency I'd much
-rather have a replacement. We're doing all this work right now so we
-might as well. But I get the point.
+- Péter
 
-	Christian
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
