@@ -2,135 +2,122 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C173BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F69C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03B9206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA69B206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:09:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f9GCQv7T"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaUsoDMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfKNGIP (ORCPT
+        id S1726335AbfKNGJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:08:15 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16008 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbfKNGIO (ORCPT
+        Thu, 14 Nov 2019 01:09:47 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42826 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfKNGJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:08:14 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dccef4c0000>; Wed, 13 Nov 2019 22:08:12 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 Nov 2019 22:08:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 Nov 2019 22:08:13 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 Nov
- 2019 06:08:12 +0000
-Subject: Re: [PATCH v4 09/23] mm/gup: introduce pin_user_pages*() and FOLL_PIN
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Jan Kara <jack@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <20191113042710.3997854-1-jhubbard@nvidia.com>
- <20191113042710.3997854-10-jhubbard@nvidia.com>
- <20191113104308.GE6367@quack2.suse.cz>
- <3850aa22-6f03-bd2b-024f-5736c4461199@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7c590a1a-25c6-a8e7-d471-8855ceea8606@nvidia.com>
-Date:   Wed, 13 Nov 2019 22:08:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 14 Nov 2019 01:09:47 -0500
+Received: by mail-pl1-f195.google.com with SMTP id j12so2139081plt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 22:09:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aw8y1jiGvDQuLoad9v02dXK5MRBBqE3yqRJRCShjhww=;
+        b=KaUsoDMkOxGtKBYv81fJMUCgETapU2RakSt6h22VwS5B3+ecb9eOhYEJFqAU6u7coF
+         4kb5d+Ozunov31XfwFnnoz+TFDqpuWPnyhQ5NOh2Kxs3JfccG8wE/SunSG1etjaVlV1j
+         x/1wP6NZ6LKtUXjHzQk2koVYBye1heoA1pZPjPcvpxvmiu64B1nE5UxTeqGgLxt4eCj1
+         b5ta7L4aWkW/vqmygbxb/Ku1N5239Ua6vJR8p2EBPEM0tey6KYECmV2MTpM4Cqsbs0sa
+         dAksZhSCR9ZbieXb+/y6d2xsCKAW+Ajbo68p6PXoc9lTpPA/Ry4N8C/dfek+uf0i5NWs
+         0RhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aw8y1jiGvDQuLoad9v02dXK5MRBBqE3yqRJRCShjhww=;
+        b=mF0wsqR/JXKvg0maEiUffhmmz38AYqzcQNiT4qtVxvZfB7MOtZm6o454AaiqYpaUuJ
+         LRNbcMYFgj4ueJN2W1TsnhxBSmTUHfH1/V1LlJLtO8SDtviHwDDbkcXmebuiabjhCqpM
+         5uRbw9t7KldciaWT1iUKGxUaTS5peSXFCyKWn9cPkeRrFDLeJghkCfZ0bGfXBtn1gy81
+         zMjyXqIQyTzUjioMOiidMvvhCFSHYIfSrV5aJnxgk/fFTg/k3rZN+clfaBll8K6bN/er
+         XwkHNqzPSzkkrTmdT/QajnhIieNdYyEcZDcw+Aw31uajV81+wcpTPWJppRopyHgRwTVI
+         R0lQ==
+X-Gm-Message-State: APjAAAWifKnaB2ClBOhyKYtO/prn4qn+gptekz7q5Cg5XpSx8EdFhLoO
+        Be1WqydwrkEWuuM+ZjaM8X9D
+X-Google-Smtp-Source: APXvYqzVItSwZLHCuH1SFvN8lnszFgvIq8ecWeEhJ4mhuw9CcYH9GPraKqjzKFczcLQSD2Wgpor8iA==
+X-Received: by 2002:a17:902:ab87:: with SMTP id f7mr8011816plr.78.1573711785394;
+        Wed, 13 Nov 2019 22:09:45 -0800 (PST)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id w11sm4579443pgp.28.2019.11.13.22.09.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Nov 2019 22:09:44 -0800 (PST)
+Date:   Thu, 14 Nov 2019 11:39:37 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     mturquette@baylibre.com, robh+dt@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com
+Subject: Re: [PATCH v6 0/7] Add Bitmain BM1880 clock driver
+Message-ID: <20191114060937.GD8459@mani>
+References: <20191026110253.18426-1-manivannan.sadhasivam@linaro.org>
+ <20191113222116.E5E9B206E3@mail.kernel.org>
+ <20191114053404.GA8459@mani>
+ <20191114055054.C280F206DA@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <3850aa22-6f03-bd2b-024f-5736c4461199@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573711692; bh=DIdS7z+upWWwriggk7xvQh6W6C7nto/Dlb+Yd8YHyyo=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=f9GCQv7TfzjvQX+YKkhiJDV/kP32g+HvR9S+vDLbLe8tqa50A8oxNI045niH9oWR6
-         Q+cRQMMuOwkhrc3UyHNB5dnYTxj30KiXA71H5zxupkKbZfd2ps9XV2bsxg1JSEMDdw
-         qf9Vcd6U4xnrGLaZQaGULc5hp7BtrN3TQq1+4QNeiyHZ0EANBdTplhxuReTGSebwB/
-         f90gLRmPU4TtSLCTxR2K8crrcttWruVUEFFlnGiNse7TapK6yl28TNAEQQYeEakb+c
-         3z6jTyDq+9/ON54Pzsd2O5eKTbjzgyBeQwB7ztFRyxIYohzwkLXX9l0JxAXtOLXL+I
-         x4TC/t1hFahNQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114055054.C280F206DA@mail.kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 3:22 PM, John Hubbard wrote:
-> On 11/13/19 2:43 AM, Jan Kara wrote:
-> ...
->> How does FOLL_PIN result in grabbing (at least normal, for now) page reference?
->> I didn't find that anywhere in this patch but it is a prerequisite to
->> converting any user to pin_user_pages() interface, right?
+On Wed, Nov 13, 2019 at 09:50:53PM -0800, Stephen Boyd wrote:
+> Quoting Manivannan Sadhasivam (2019-11-13 21:34:04)
+> > On Wed, Nov 13, 2019 at 02:21:15PM -0800, Stephen Boyd wrote:
+> > > Quoting Manivannan Sadhasivam (2019-10-26 04:02:46)
+> > > > Hello,
+> > > > 
+> > > > This patchset adds common clock driver for Bitmain BM1880 SoC clock
+> > > > controller. The clock controller consists of gate, divider, mux
+> > > > and pll clocks with different compositions. Hence, the driver uses
+> > > > composite clock structure in place where multiple clocking units are
+> > > > combined together.
+> > > > 
+> > > > This patchset also removes UART fixed clock and sources clocks from clock
+> > > > controller for Sophon Edge board where the driver has been validated.
+> > > > 
+> > > 
+> > > Are you waiting for review here? I see some kbuild reports so I assumed
+> > > you would fix and resend.
+> > 
+> > I'll fix it but I was expecting some review from you so that I can send the
+> > next revision incorporating all comments.
+> > 
 > 
+> Ok. I'm glad I broke the silence then.
 > 
-> ohhh, I messed up on this intermediate patch: it doesn't quite stand alone as
-> it should, as you noticed. To correct this, I can do one of the following:
-> 
-> a) move the new pin*() routines into the later patch 16 ("mm/gup:
-> track FOLL_PIN pages"), or
-> 
-> b) do a temporary thing here, such as setting FOLL_GET and adding a TODO,
-> within the pin*() implementations. And this switching it over to FOLL_PIN
-> in patch 16.
-> 
-> I'm thinking (a) is less error-prone, so I'm going with that unless someone
-> points out that that is stupid. :)
+> Can you please resend without any dts changes? Those don't go through
+> clk tree. 
+
+I'm the platform maintainer, so I'll take the dts changes via ARM SoC tree.
+
+> I think otherwise the patches look OK, although I was hoping
+> you could register clks by using the new way of specifying parents. Is
+> that possible?
 > 
 
-OK, just to save anyone from wasting time reading the above: (a) is, in fact,
-stupid, after all. ha. That is because pin_user_pages() is called in the 
-intervening patches.
- 
-So anyway, I'll work out an ordering to fix it up, it's not complicated.
+Eventhough I'd like to do, my time is very constrained these days. So please
+consider merging it as it is and as I promised, I'll switch to the new way of
+specifying parents soon.
 
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Thanks,
+Mani
 
