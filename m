@@ -2,107 +2,116 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2862C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0D9C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1770206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A50206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UY2+TF3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfKNAic (ORCPT
+        id S1726949AbfKNAjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:38:32 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:49113 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfKNAic (ORCPT
+        Wed, 13 Nov 2019 19:39:55 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:42792 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfKNAjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:38:32 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iV39U-0000VZ-57; Thu, 14 Nov 2019 00:38:24 +0000
-Date:   Thu, 14 Nov 2019 01:38:23 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        alpha <linux-alpha@vger.kernel.org>
-Subject: Re: [PATCH 11/23] y2038: rusage: use __kernel_old_timeval
-Message-ID: <20191114003822.6fjji26vm7yplaw2@wittgenstein>
-References: <20191108210236.1296047-1-arnd@arndb.de>
- <20191108211323.1806194-2-arnd@arndb.de>
- <20191112210915.GD5130@uranus>
- <CAK8P3a03FRfTsXADH+xfLsWxCu54JXvXbb-OdyGXXf88RNP34w@mail.gmail.com>
+        Wed, 13 Nov 2019 19:39:55 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAE0dDrM002254;
+        Thu, 14 Nov 2019 00:39:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=9d1esZB7SWlRya/YjnjIH7Q3Ck31LnlMXp8qkk7HO0s=;
+ b=UY2+TF3QyowqKfFKm+/y1PC64u7FJdcEUeOB7OM/BgFFN1/hEyIWE3Vw4ZL4Fg1/XDR2
+ Ya6VD5wt3MJx/+DV1uB99vbd4sEytDMlg6V0ALVEHaeAlcQoSSImX53+3BLW47q+cL4R
+ wQg2/vTtst4u/T4289vQZSN0wjFXE8XtKyaumTBeTtbCH6LguzvDCI7zLL42SiKQ50eD
+ LmlCZJOLPL1OTJ2Tmyhwcv8eNCdhEmF2T/Zy1MRexHWeoigZW2w8X5O09pRmFDxVzaon
+ y1Q9ihKP0i5FkU1lVhv5clbZKkMhPblJ1L2Q+ZV0mOTMmwSVj/UTajoq+ApkpRONCYvR Vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2w5p3qyy91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 00:39:50 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAE0cCl3077266;
+        Thu, 14 Nov 2019 00:39:50 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2w8g18ewpt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 00:39:49 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAE0dmTr026703;
+        Thu, 14 Nov 2019 00:39:49 GMT
+Received: from [10.159.235.45] (/10.159.235.45)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 13 Nov 2019 16:39:48 -0800
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Subject: Re: [PATCH] selftests: kvm: Simplify loop in kvm_create_max_vcpus
+ test
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
+        pbonzini@redhat.com, rkrcmar@redhat.com
+Cc:     shuah@kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191112142111.13528-1-wainersm@redhat.com>
+Message-ID: <c814d608-538d-1d1e-c3f2-92d53624cc06@oracle.com>
+Date:   Wed, 13 Nov 2019 16:39:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a03FRfTsXADH+xfLsWxCu54JXvXbb-OdyGXXf88RNP34w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191112142111.13528-1-wainersm@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9440 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911140002
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9440 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911140002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:02:12AM +0100, Arnd Bergmann wrote:
-> On Tue, Nov 12, 2019 at 10:09 PM Cyrill Gorcunov <gorcunov@gmail.com> wrote:
-> >
-> > On Fri, Nov 08, 2019 at 10:12:10PM +0100, Arnd Bergmann wrote:
-> 
-> > > ---
-> > > Question: should we also rename 'struct rusage' into 'struct __kernel_rusage'
-> > > here, to make them completely unambiguous?
-> >
-> > The patch looks ok to me. I must confess I looked into rusage long ago
-> > so __kernel_timespec type used in uapi made me nervious at first,
-> > but then i found that we've this type defined in time_types.h uapi
-> > so userspace should be safe. I also like the idea of __kernel_rusage
-> > but definitely on top of the series.
-> 
-> There are clearly too many time types at the moment, but I'm in the
-> process of throwing out the ones we no longer need now.
-> 
-> I do have a number patches implementing other variants for the syscall,
-> and I suppose that if we end up adding __kernel_rusage, that would
-> have to go with a set of syscalls using 64-bit seconds/nanoseconds
-> rather than the old 32/64 microseconds. I don't know what other
-> changes remain that anyone would want from sys_waitid() now that
-> it does support pidfd.
-> 
-> If there is still a need for a new waitid() replacement, that should take
-> that new __kernel_rusage I think, but until then I hope we are fine
-> with today's getrusage+waitid based on the current struct rusage.
 
-Note, that glibc does _not_ expose the rusage argument, i.e. most of
-userspace is unaware that waitid() does allow you to get rusage
-information. So users first need to know that waitid() has an rusage
-argument and then need to call the waitid() syscall directly.
-
-> 
-> BSD has wait6() to return separate rusage structures for 'self' and
-> 'children', but I could not find any application (using the freebsd
-> sources and debian code search) that actually uses that information,
-> so there might not be any demand for that.
-
-Speaking specifically for Linux now, I think that rusage does not
-actually expose the information most relevant users are interested in.
-On Linux nowadays it is _way_ more interesting to retrieve stats
-relative to the cgroup the task lived in etc.
-Doing a git grep -i rusage in the systemd source code shows that rusage
-is used _nowhere_. And I consider an init system to be the most likely
-candidate to be interested in rusage.
-
-	Christian
+On 11/12/19 6:21 AM, Wainer dos Santos Moschetta wrote:
+> On kvm_create_max_vcpus test remove unneeded local
+> variable in the loop that add vcpus to the VM.
+>
+> Signed-off-by: Wainer dos Santos Moschetta<wainersm@redhat.com>
+> ---
+>   tools/testing/selftests/kvm/kvm_create_max_vcpus.c | 7 ++-----
+>   1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/testing/selftests/kvm/kvm_create_max_vcpus.c b/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
+> index 231d79e57774..6f38c3dc0d56 100644
+> --- a/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
+> +++ b/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
+> @@ -29,12 +29,9 @@ void test_vcpu_creation(int first_vcpu_id, int num_vcpus)
+>   
+>   	vm = vm_create(VM_MODE_DEFAULT, DEFAULT_GUEST_PHY_PAGES, O_RDWR);
+>   
+> -	for (i = 0; i < num_vcpus; i++) {
+> -		int vcpu_id = first_vcpu_id + i;
+> -
+> +	for (i = first_vcpu_id; i < first_vcpu_id + num_vcpus; i++)
+>   		/* This asserts that the vCPU was created. */
+> -		vm_vcpu_add(vm, vcpu_id);
+> -	}
+> +		vm_vcpu_add(vm, i);
+>   
+>   	kvm_vm_free(vm);
+>   }
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
