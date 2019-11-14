@@ -2,911 +2,1336 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0775C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C392C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F88D20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573765523;
-	bh=Qbl7Q7ogeIHcL735UDbi8/lHk7D73pkNHhFd+u6iE5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SqRGRO5pfUORsKphfFV1SfsX7FVaZNIJsmdvOIzk+SfDlE79UGkgAw4L2lQGVlbLV
-	 e3wCoeko1tldV32J76bJ2tQSILzpvGQrFzaehzWyGvfDVDsr9X/wx3LlMp2PJ0mclY
-	 tJeD9pL5b0onJImHT76tO1v1AWFG7DZOPuIrYK8c=
+	by mail.kernel.org (Postfix) with ESMTP id 2E52120709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZNb/3vU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfKNVFW (ORCPT
+        id S1727122AbfKNVFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:05:22 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39811 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfKNVFW (ORCPT
+        Thu, 14 Nov 2019 16:05:34 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36576 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbfKNVFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 16:05:22 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w24so5664406otk.6;
-        Thu, 14 Nov 2019 13:05:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xqx0FILlaJXYxfmFtCbpASCIe4dojKgn4AlJiFbJlxc=;
-        b=Th7qio2tWLFuTP2mX/6No74V6IX2iUQ3gBHH0S+zNFlKnzYaVZln18PdUOALRKO1WQ
-         xn6LvD7bhQCsI6fsjL9G0Db8uHB+0nRyPREGxhHdvKfWSPsejNOJ93hZwJ/O3bmopTuB
-         3rx/BJmkX0Gc1S22pj8twMrCTneim5Utsez5Bo3FkSIehSqVsGJyhBsx51wreJ4AynET
-         twigt7NGMZuV9kA/j5LC7G88btN5fSvpYukNV0TRlfEcxsDcGqOF3SO5ekXy3AL43sHM
-         IinrN42CEQ4H8d1zrTU7UtKK3Nkz7u+IAfVyHwVSlechItenb8yA0tau93WFbs2NIIHy
-         g71w==
-X-Gm-Message-State: APjAAAU83XWVcUDO8Mnh880Z2m7NndAS4R99EwbZ2dmm+aty/NknwOPh
-        TPmHN1pDoVIAwyLGp12Z+w==
-X-Google-Smtp-Source: APXvYqyOfE1dDTaiTCWjZzTbrTYftKYX2LV9e3EFbaP+QJb2QnmfTmX4GRYn5tdjok8GfQGvhydsBA==
-X-Received: by 2002:a9d:71cc:: with SMTP id z12mr8336997otj.124.1573765518042;
-        Thu, 14 Nov 2019 13:05:18 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l13sm2147719otp.46.2019.11.14.13.05.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 13:05:17 -0800 (PST)
-Date:   Thu, 14 Nov 2019 15:05:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: Add Unisoc's SC9863A SoC support
-Message-ID: <20191114210516.GB16668@bogus>
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
- <20191111090230.3402-6-chunyan.zhang@unisoc.com>
+        Thu, 14 Nov 2019 16:05:34 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEKxDvN029797;
+        Thu, 14 Nov 2019 21:03:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=yH3v4myjtT58YhyfIq8RKQHnw6RtZ5IwYA5oiR1aIZE=;
+ b=ZNb/3vU0/wd0ePlViBkr9vGTUiXHzZvkHYddYID0gBnmPGKOrv440BSpzSPg34Lmvczq
+ OmplyU3q1lwWiavRfhqeNJH5xU9sxDmHjUdzPPXT9svt1ofiqD9SL54YucX76WNuc9eD
+ hL9AFjHFZqxc9jGO8DQTguQ0jgVBYkRR/8dOLu0cGNV4izF5X1ynUZr3HLWmEGkr8S8t
+ jj2Q0LLO/H/zA6meylm6+Vbb1RAP6LQaK+sMa7bD1Fv5omNrK0z0xiPYmfmJoWQqi9S6
+ f0/BPm3TvR4Ek5UZbRiMUHTGc7hivyZuc41Dndg5CeZWel6HI9Lzf3/5yokJEe8i+72J gw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2w5ndqntc9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 21:03:53 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEL3Wvn127871;
+        Thu, 14 Nov 2019 21:03:52 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2w8v36dh1n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 21:03:52 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAEL3ows027881;
+        Thu, 14 Nov 2019 21:03:50 GMT
+Received: from localhost (/10.145.178.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 14 Nov 2019 13:03:49 -0800
+Date:   Thu, 14 Nov 2019 13:03:47 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Dave Chinner <david@fromorbit.com>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH V2 2/2] fs: Move swap_[de]activate to file_operations
+Message-ID: <20191114210347.GI6211@magnolia>
+References: <20191113004244.9981-1-ira.weiny@intel.com>
+ <20191113004244.9981-3-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191111090230.3402-6-chunyan.zhang@unisoc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191113004244.9981-3-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911140174
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911140174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 05:02:30PM +0800, Chunyan Zhang wrote:
+On Tue, Nov 12, 2019 at 04:42:44PM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Add basic DT to support Unisoc's SC9863A, with this patch,
-> the board sp9863a-1h10 can run into console.
+> swap_activate() and swap_deactivate() have nothing to do with address
+> spaces.  We want to be able to change the address space operations on
+> the fly to allow changing inode flags dynamically.
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> Switching address space operations can be difficult to do reliably.[1]
+> Therefore, to simplify switching address space operations we reduce the
+> number of functions in those operations by moving swap_activate() and
+> swap_deactivate() out of the address space operations.
+> 
+> No functionality is changed with this patch.
+> 
+> This has been tested with XFS but not NFS, f2fs, or btrfs.
+> 
+> Also note we move some functions to facilitate compilation.  But there
+> are no functional changes are contained within those diffs.
+> 
+> [1] https://lkml.org/lkml/2019/11/11/572
+> 
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+Replace previous ack with:
+
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+--D
+
+> 
 > ---
->  arch/arm64/boot/dts/sprd/Makefile         |   3 +-
->  arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 536 ++++++++++++++++++++++
->  arch/arm64/boot/dts/sprd/sharkl3.dtsi     | 188 ++++++++
->  arch/arm64/boot/dts/sprd/sp9863a-1h10.dts |  40 ++
->  4 files changed, 766 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
->  create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
->  create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> Changes from V0:
+> 	Update cover letter.
+> 	fix btrfs as per Andrew's comments
+> 	change xfs_iomap_swapfile_activate() to xfs_file_swap_activate()
 > 
-> diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
-> index 2bdc23804f40..f4f1f5148cc2 100644
-> --- a/arch/arm64/boot/dts/sprd/Makefile
-> +++ b/arch/arm64/boot/dts/sprd/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb \
-> -			sp9860g-1h10.dtb
-> +			sp9860g-1h10.dtb	\
-> +			sp9863a-1h10.dtb
-> diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-> new file mode 100644
-> index 000000000000..578d71a932d9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-> @@ -0,0 +1,536 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+> Changes from V1:
+> 	Update recipients list
+> 
+> 
+>  fs/btrfs/file.c    | 341 +++++++++++++++++++++++++++++++++++++++++++++
+>  fs/btrfs/inode.c   | 340 --------------------------------------------
+>  fs/f2fs/data.c     | 122 ----------------
+>  fs/f2fs/file.c     | 122 ++++++++++++++++
+>  fs/nfs/file.c      |   4 +-
+>  fs/xfs/xfs_aops.c  |  13 --
+>  fs/xfs/xfs_file.c  |  12 ++
+>  include/linux/fs.h |  10 +-
+>  mm/swapfile.c      |  12 +-
+>  9 files changed, 487 insertions(+), 489 deletions(-)
+> 
+> diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+> index 0cb43b682789..117502311fe0 100644
+> --- a/fs/btrfs/file.c
+> +++ b/fs/btrfs/file.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/btrfs.h>
+>  #include <linux/uio.h>
+>  #include <linux/iversion.h>
+> +#include <linux/swap.h>
+>  #include "ctree.h"
+>  #include "disk-io.h"
+>  #include "transaction.h"
+> @@ -27,6 +28,7 @@
+>  #include "qgroup.h"
+>  #include "compression.h"
+>  #include "delalloc-space.h"
+> +#include "block-group.h"
+>  
+>  static struct kmem_cache *btrfs_inode_defrag_cachep;
+>  /*
+> @@ -3444,6 +3446,343 @@ static int btrfs_file_open(struct inode *inode, struct file *filp)
+>  	return generic_file_open(inode, filp);
+>  }
+>  
+> +#ifdef CONFIG_SWAP
 > +/*
-> + * Unisoc SC9863A SoC DTS file
-> + *
-> + * Copyright (C) 2019, Unisoc Inc.
+> + * Add an entry indicating a block group or device which is pinned by a
+> + * swapfile. Returns 0 on success, 1 if there is already an entry for it, or a
+> + * negative errno on failure.
 > + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include "sharkl3.dtsi"
-> +
-> +/ {
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&CPU0>;
-> +				};
-> +				core1 {
-> +					cpu = <&CPU1>;
-> +				};
-> +				core2 {
-> +					cpu = <&CPU2>;
-> +				};
-> +				core3 {
-> +					cpu = <&CPU3>;
-> +				};
-> +			};
-> +
-> +			cluster1 {
-> +				core0 {
-> +					cpu = <&CPU4>;
-> +				};
-> +				core1 {
-> +					cpu = <&CPU5>;
-> +				};
-> +				core2 {
-> +					cpu = <&CPU6>;
-> +				};
-> +				core3 {
-> +					cpu = <&CPU7>;
-> +				};
-> +			};
-> +		};
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CORE_PD>;
-> +		};
-> +
-> +		CPU1: cpu@100 {
-
-Your numbering seems odd. This follows the MPIDR reg? Normally a cluster 
-would share the same number in one of the bytes.
-
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0 0x100>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CORE_PD>;
-> +		};
-> +
-> +		CPU2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0 0x200>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CORE_PD>;
-> +		};
-> +
-> +		CPU3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0 0x300>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CORE_PD>;
-> +		};
-> +
-> +		CPU4: cpu@400 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0 0x400>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CORE_PD>;
-> +		};
-> +
-> +		CPU5: cpu@500 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0 0x500>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CORE_PD>;
-> +		};
-> +
-> +		CPU6: cpu@600 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0 0x600>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CORE_PD>;
-> +		};
-> +
-> +		CPU7: cpu@700 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0 0x700>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CORE_PD>;
-> +		};
-> +	};
-> +
-> +	idle-states {
-> +		entry-method = "arm,psci";
-> +		CORE_PD: core_pd {
-> +			compatible = "arm,idle-state";
-> +			entry-latency-us = <4000>;
-> +			exit-latency-us = <4000>;
-> +			min-residency-us = <10000>;
-> +			local-timer-stop;
-> +			arm,psci-suspend-param = <0x00010000>;
-> +		};
-> +	};
-> +
-> +	gic: interrupt-controller@14000000 {
-
-Should go under a bus node.
-
-> +		compatible = "arm,gic-v3";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		redistributor-stride = <0x0 0x20000>;	/* 128KB stride */
-> +		#redistributor-regions = <1>;
-> +		interrupt-controller;
-> +		reg = <0x0 0x14000000 0 0x20000>,	/* GICD */
-> +		      <0x0 0x14040000 0 0x100000>;	/* GICR */
-> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		v2m_0: v2m@0 {
-> +			compatible = "arm,gic-v2m-frame";
-
-This is a GICv2 thing...
-
-> +			msi-controller;
-
-Goes in the parent. Please run your dts file with 
-'make W=12 dtbs_check' and fix the warnings.
-
-> +			reg = <0 0 0 0x1000>;
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>, /* Physical Secure PPI */
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>, /* Physical Non-Secure PPI */
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>, /* Virtual PPI */
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>; /* Hipervisor PPI */
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	soc {
-> +		funnel@10001000 {
-> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> +			reg = <0 0x10001000 0 0x1000>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					funnel_soc_out_port: endpoint {
-> +						remote-endpoint = <&etb_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					funnel_soc_in_port: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_ca55_out_port>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etb@10003000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0x10003000 0 0x1000>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					etb_in: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_soc_out_port>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@12001000 {
-> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> +			reg = <0 0x12001000 0 0x1000>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					funnel_little_out_port: endpoint {
-> +						remote-endpoint =
-> +						<&etf_little_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					funnel_little_in_port0: endpoint {
-> +						remote-endpoint = <&etm0_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					funnel_little_in_port1: endpoint {
-> +						remote-endpoint = <&etm1_out>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					funnel_little_in_port2: endpoint {
-> +						remote-endpoint = <&etm2_out>;
-> +					};
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					funnel_little_in_port3: endpoint {
-> +						remote-endpoint = <&etm3_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@12002000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0x12002000 0 0x1000>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etf_little_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_ca55_in_port0>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-port {
-> +				port {
-> +					etf_little_in: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_little_out_port>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@12003000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0x12003000 0 0x1000>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etf_big_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_ca55_in_port1>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				port {
-> +					etf_big_in: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_big_out_port>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@12004000 {
-> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> +			reg = <0 0x12004000 0 0x1000>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					funnel_ca55_out_port: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_soc_in_port>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					funnel_ca55_in_port0: endpoint {
-> +						remote-endpoint =
-> +						<&etf_little_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					funnel_ca55_in_port1: endpoint {
-> +						remote-endpoint =
-> +						<&etf_big_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@12005000 {
-> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> +			reg = <0 0x12005000 0 0x1000>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					funnel_big_out_port: endpoint {
-> +						remote-endpoint =
-> +						<&etf_big_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					funnel_big_in_port0: endpoint {
-> +						remote-endpoint = <&etm4_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					funnel_big_in_port1: endpoint {
-> +						remote-endpoint = <&etm5_out>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					funnel_big_in_port2: endpoint {
-> +						remote-endpoint = <&etm6_out>;
-> +					};
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					funnel_big_in_port3: endpoint {
-> +						remote-endpoint = <&etm7_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@13040000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0x13040000 0 0x1000>;
-> +			cpu = <&CPU0>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etm0_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_little_in_port0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@13140000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0x13140000 0 0x1000>;
-> +			cpu = <&CPU1>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etm1_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_little_in_port1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@13240000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0x13240000 0 0x1000>;
-> +			cpu = <&CPU2>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etm2_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_little_in_port2>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@13340000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0x13340000 0 0x1000>;
-> +			cpu = <&CPU3>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etm3_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_little_in_port3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@13440000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0x13440000 0 0x1000>;
-> +			cpu = <&CPU4>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etm4_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_big_in_port0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@13540000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0x13540000 0 0x1000>;
-> +			cpu = <&CPU5>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etm5_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_big_in_port1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@13640000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0x13640000 0 0x1000>;
-> +			cpu = <&CPU6>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etm6_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_big_in_port2>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@13740000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0x13740000 0 0x1000>;
-> +			cpu = <&CPU7>;
-> +			clocks = <&ext_26m>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					etm7_out: endpoint {
-> +						remote-endpoint =
-> +						<&funnel_big_in_port3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/sprd/sharkl3.dtsi b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-> new file mode 100644
-> index 000000000000..3ef233f70dc4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-> @@ -0,0 +1,188 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Unisoc Sharkl3 platform DTS file
-> + *
-> + * Copyright (C) 2019, Unisoc Inc.
-> + */
-> +
-> +/ {
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	soc: soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		ap_ahb_regs: syscon@20e00000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x20e00000 0 0x10000>;
-> +		};
-> +
-> +		pub_apb_regs: syscon@300e0000 {
-> +			compatible = "syscon";
-
-"syscon" should also have a specific compatible. What are all these 
-blocks? Looks like placeholders. If so, just drop them.
-
-> +			reg = <0 0x300e0000 0 0x10000>;
-> +		};
-> +
-> +		pub_ahb_regs: syscon@300f0000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x300f0000 0 0x10000>;
-> +		};
-> +
-> +		aon_intc_regs: syscon@40200000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40200000 0 0x10000>;
-> +		};
-> +
-> +		pmu_regs: syscon@402b0000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x402b0000 0 0x10000>;
-> +		};
-> +
-> +		aon_apb_regs: syscon@402e0000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x402e0000 0 0x10000>;
-> +		};
-> +
-> +		anlg_phy_g1_regs: syscon@40350000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40350000 0 0x3000>;
-> +		};
-> +
-> +		anlg_phy_g2_regs: syscon@40353000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40353000 0 0x6000>;
-> +		};
-> +
-> +		anlg_phy_g4_regs: syscon@40359000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40359000 0 0x3000>;
-> +		};
-> +
-> +		anlg_phy_g5_regs: syscon@4035c000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x4035c000 0 0x3000>;
-> +		};
-> +
-> +		anlg_phy_g7_regs: syscon@40363000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40363000 0 0x3000>;
-> +		};
-> +
-> +		anlg_wrap_wcn_regs: syscon@40366000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40366000 0 0x3000>;
-> +		};
-> +
-> +		wcn_regs: syscon@403a0000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x403a0000 0 0x10000>;
-> +		};
-> +
-> +		ap_intc0_regs: syscon@40500000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40500000 0 0x10000>;
-> +		};
-> +
-> +		ap_intc1_regs: syscon@40510000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40510000 0 0x10000>;
-> +		};
-> +
-> +		ap_intc2_regs: syscon@40520000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40520000 0 0x10000>;
-> +		};
-> +
-> +		ap_intc3_regs: syscon@40530000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40530000 0 0x10000>;
-> +		};
-> +
-> +		ap_intc4_regs: syscon@40540000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40540000 0 0x10000>;
-> +		};
-> +
-> +		ap_intc5_regs: syscon@40550000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x40550000 0 0x10000>;
-> +		};
-> +
-> +		mm_ahb_regs: syscon@60800000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x60800000 0 0x10000>;
-> +		};
-> +
-> +		mm_vsp_ahb_regs: syscon@62000000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x62000000 0 0x10000>;
-> +		};
-> +
-> +		ap_apb_regs: syscon@71300000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x71300000 0 0x40000>;
-> +		};
-> +
-> +		ap-apb {
-
-apb@70000000
-
-> +			compatible = "simple-bus";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0 0x0 0x70000000 0x10000000>;
-> +
-> +			uart0: serial@0 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x0 0x100>;
-> +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart1: serial@100000 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x100000 0x100>;
-> +				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart2: serial@200000 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x200000 0x100>;
-> +				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart3: serial@300000 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x300000 0x100>;
-> +				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart4: serial@400000 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x400000 0x100>;
-> +				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +	};
-> +
-> +	ext_26m: ext-26m {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <26000000>;
-> +		clock-output-names = "ext-26m";
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-> new file mode 100644
-> index 000000000000..b6fbb5ca37e1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Unisoc SP9863A-1h10 boards DTS file
-> + *
-> + * Copyright (C) 2019, Unisoc Inc.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sc9863a.dtsi"
-> +
-> +/ {
-> +	model = "Spreadtrum SP9863A-1H10 Board";
-> +
-> +	compatible = "sprd,sp9863a-1h10", "sprd,sc9863a";
-> +
-> +	sprd,sc-id = <9863 1 0x20000>;
-
-Not documented.
-
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +	};
-> +
-> +	memory {
-
-memory@80000000
-
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000 0x0 0x80000000>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial1:115200n8";
-> +	};
+> +static int btrfs_add_swapfile_pin(struct inode *inode, void *ptr,
+> +				  bool is_block_group)
+> +{
+> +	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
+> +	struct btrfs_swapfile_pin *sp, *entry;
+> +	struct rb_node **p;
+> +	struct rb_node *parent = NULL;
+> +
+> +	sp = kmalloc(sizeof(*sp), GFP_NOFS);
+> +	if (!sp)
+> +		return -ENOMEM;
+> +	sp->ptr = ptr;
+> +	sp->inode = inode;
+> +	sp->is_block_group = is_block_group;
+> +
+> +	spin_lock(&fs_info->swapfile_pins_lock);
+> +	p = &fs_info->swapfile_pins.rb_node;
+> +	while (*p) {
+> +		parent = *p;
+> +		entry = rb_entry(parent, struct btrfs_swapfile_pin, node);
+> +		if (sp->ptr < entry->ptr ||
+> +		    (sp->ptr == entry->ptr && sp->inode < entry->inode)) {
+> +			p = &(*p)->rb_left;
+> +		} else if (sp->ptr > entry->ptr ||
+> +			   (sp->ptr == entry->ptr && sp->inode > entry->inode)) {
+> +			p = &(*p)->rb_right;
+> +		} else {
+> +			spin_unlock(&fs_info->swapfile_pins_lock);
+> +			kfree(sp);
+> +			return 1;
+> +		}
+> +	}
+> +	rb_link_node(&sp->node, parent, p);
+> +	rb_insert_color(&sp->node, &fs_info->swapfile_pins);
+> +	spin_unlock(&fs_info->swapfile_pins_lock);
+> +	return 0;
+> +}
+> +
+> +/* Free all of the entries pinned by this swapfile. */
+> +static void btrfs_free_swapfile_pins(struct inode *inode)
+> +{
+> +	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
+> +	struct btrfs_swapfile_pin *sp;
+> +	struct rb_node *node, *next;
+> +
+> +	spin_lock(&fs_info->swapfile_pins_lock);
+> +	node = rb_first(&fs_info->swapfile_pins);
+> +	while (node) {
+> +		next = rb_next(node);
+> +		sp = rb_entry(node, struct btrfs_swapfile_pin, node);
+> +		if (sp->inode == inode) {
+> +			rb_erase(&sp->node, &fs_info->swapfile_pins);
+> +			if (sp->is_block_group)
+> +				btrfs_put_block_group(sp->ptr);
+> +			kfree(sp);
+> +		}
+> +		node = next;
+> +	}
+> +	spin_unlock(&fs_info->swapfile_pins_lock);
+> +}
+> +
+> +struct btrfs_swap_info {
+> +	u64 start;
+> +	u64 block_start;
+> +	u64 block_len;
+> +	u64 lowest_ppage;
+> +	u64 highest_ppage;
+> +	unsigned long nr_pages;
+> +	int nr_extents;
 > +};
 > +
-> +&uart0 {
-> +	status = "okay";
-> +};
+> +static int btrfs_add_swap_extent(struct swap_info_struct *sis,
+> +				 struct btrfs_swap_info *bsi)
+> +{
+> +	unsigned long nr_pages;
+> +	u64 first_ppage, first_ppage_reported, next_ppage;
+> +	int ret;
 > +
-> +&uart1 {
-> +	status = "okay";
-> +};
+> +	first_ppage = ALIGN(bsi->block_start, PAGE_SIZE) >> PAGE_SHIFT;
+> +	next_ppage = ALIGN_DOWN(bsi->block_start + bsi->block_len,
+> +				PAGE_SIZE) >> PAGE_SHIFT;
+> +
+> +	if (first_ppage >= next_ppage)
+> +		return 0;
+> +	nr_pages = next_ppage - first_ppage;
+> +
+> +	first_ppage_reported = first_ppage;
+> +	if (bsi->start == 0)
+> +		first_ppage_reported++;
+> +	if (bsi->lowest_ppage > first_ppage_reported)
+> +		bsi->lowest_ppage = first_ppage_reported;
+> +	if (bsi->highest_ppage < (next_ppage - 1))
+> +		bsi->highest_ppage = next_ppage - 1;
+> +
+> +	ret = add_swap_extent(sis, bsi->nr_pages, nr_pages, first_ppage);
+> +	if (ret < 0)
+> +		return ret;
+> +	bsi->nr_extents += ret;
+> +	bsi->nr_pages += nr_pages;
+> +	return 0;
+> +}
+> +
+> +static void btrfs_swap_deactivate(struct file *file)
+> +{
+> +	struct inode *inode = file_inode(file);
+> +
+> +	btrfs_free_swapfile_pins(inode);
+> +	atomic_dec(&BTRFS_I(inode)->root->nr_swapfiles);
+> +}
+> +
+> +static int btrfs_swap_activate(struct swap_info_struct *sis, struct file *file,
+> +			       sector_t *span)
+> +{
+> +	struct inode *inode = file_inode(file);
+> +	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
+> +	struct extent_io_tree *io_tree = &BTRFS_I(inode)->io_tree;
+> +	struct extent_state *cached_state = NULL;
+> +	struct extent_map *em = NULL;
+> +	struct btrfs_device *device = NULL;
+> +	struct btrfs_swap_info bsi = {
+> +		.lowest_ppage = (sector_t)-1ULL,
+> +	};
+> +	int ret = 0;
+> +	u64 isize;
+> +	u64 start;
+> +
+> +	/*
+> +	 * If the swap file was just created, make sure delalloc is done. If the
+> +	 * file changes again after this, the user is doing something stupid and
+> +	 * we don't really care.
+> +	 */
+> +	ret = btrfs_wait_ordered_range(inode, 0, (u64)-1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * The inode is locked, so these flags won't change after we check them.
+> +	 */
+> +	if (BTRFS_I(inode)->flags & BTRFS_INODE_COMPRESS) {
+> +		btrfs_warn(fs_info, "swapfile must not be compressed");
+> +		return -EINVAL;
+> +	}
+> +	if (!(BTRFS_I(inode)->flags & BTRFS_INODE_NODATACOW)) {
+> +		btrfs_warn(fs_info, "swapfile must not be copy-on-write");
+> +		return -EINVAL;
+> +	}
+> +	if (!(BTRFS_I(inode)->flags & BTRFS_INODE_NODATASUM)) {
+> +		btrfs_warn(fs_info, "swapfile must not be checksummed");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Balance or device remove/replace/resize can move stuff around from
+> +	 * under us. The EXCL_OP flag makes sure they aren't running/won't run
+> +	 * concurrently while we are mapping the swap extents, and
+> +	 * fs_info->swapfile_pins prevents them from running while the swap file
+> +	 * is active and moving the extents. Note that this also prevents a
+> +	 * concurrent device add which isn't actually necessary, but it's not
+> +	 * really worth the trouble to allow it.
+> +	 */
+> +	if (test_and_set_bit(BTRFS_FS_EXCL_OP, &fs_info->flags)) {
+> +		btrfs_warn(fs_info,
+> +	   "cannot activate swapfile while exclusive operation is running");
+> +		return -EBUSY;
+> +	}
+> +	/*
+> +	 * Snapshots can create extents which require COW even if NODATACOW is
+> +	 * set. We use this counter to prevent snapshots. We must increment it
+> +	 * before walking the extents because we don't want a concurrent
+> +	 * snapshot to run after we've already checked the extents.
+> +	 */
+> +	atomic_inc(&BTRFS_I(inode)->root->nr_swapfiles);
+> +
+> +	isize = ALIGN_DOWN(inode->i_size, fs_info->sectorsize);
+> +
+> +	lock_extent_bits(io_tree, 0, isize - 1, &cached_state);
+> +	start = 0;
+> +	while (start < isize) {
+> +		u64 logical_block_start, physical_block_start;
+> +		struct btrfs_block_group_cache *bg;
+> +		u64 len = isize - start;
+> +
+> +		em = btrfs_get_extent(BTRFS_I(inode), NULL, 0, start, len, 0);
+> +		if (IS_ERR(em)) {
+> +			ret = PTR_ERR(em);
+> +			goto out;
+> +		}
+> +
+> +		if (em->block_start == EXTENT_MAP_HOLE) {
+> +			btrfs_warn(fs_info, "swapfile must not have holes");
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +		if (em->block_start == EXTENT_MAP_INLINE) {
+> +			/*
+> +			 * It's unlikely we'll ever actually find ourselves
+> +			 * here, as a file small enough to fit inline won't be
+> +			 * big enough to store more than the swap header, but in
+> +			 * case something changes in the future, let's catch it
+> +			 * here rather than later.
+> +			 */
+> +			btrfs_warn(fs_info, "swapfile must not be inline");
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +		if (test_bit(EXTENT_FLAG_COMPRESSED, &em->flags)) {
+> +			btrfs_warn(fs_info, "swapfile must not be compressed");
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +
+> +		logical_block_start = em->block_start + (start - em->start);
+> +		len = min(len, em->len - (start - em->start));
+> +		free_extent_map(em);
+> +		em = NULL;
+> +
+> +		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL);
+> +		if (ret < 0) {
+> +			goto out;
+> +		} else if (ret) {
+> +			ret = 0;
+> +		} else {
+> +			btrfs_warn(fs_info,
+> +				   "swapfile must not be copy-on-write");
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +
+> +		em = btrfs_get_chunk_map(fs_info, logical_block_start, len);
+> +		if (IS_ERR(em)) {
+> +			ret = PTR_ERR(em);
+> +			goto out;
+> +		}
+> +
+> +		if (em->map_lookup->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) {
+> +			btrfs_warn(fs_info,
+> +				   "swapfile must have single data profile");
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +
+> +		if (device == NULL) {
+> +			device = em->map_lookup->stripes[0].dev;
+> +			ret = btrfs_add_swapfile_pin(inode, device, false);
+> +			if (ret == 1)
+> +				ret = 0;
+> +			else if (ret)
+> +				goto out;
+> +		} else if (device != em->map_lookup->stripes[0].dev) {
+> +			btrfs_warn(fs_info, "swapfile must be on one device");
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +
+> +		physical_block_start = (em->map_lookup->stripes[0].physical +
+> +					(logical_block_start - em->start));
+> +		len = min(len, em->len - (logical_block_start - em->start));
+> +		free_extent_map(em);
+> +		em = NULL;
+> +
+> +		bg = btrfs_lookup_block_group(fs_info, logical_block_start);
+> +		if (!bg) {
+> +			btrfs_warn(fs_info,
+> +			   "could not find block group containing swapfile");
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +
+> +		ret = btrfs_add_swapfile_pin(inode, bg, true);
+> +		if (ret) {
+> +			btrfs_put_block_group(bg);
+> +			if (ret == 1)
+> +				ret = 0;
+> +			else
+> +				goto out;
+> +		}
+> +
+> +		if (bsi.block_len &&
+> +		    bsi.block_start + bsi.block_len == physical_block_start) {
+> +			bsi.block_len += len;
+> +		} else {
+> +			if (bsi.block_len) {
+> +				ret = btrfs_add_swap_extent(sis, &bsi);
+> +				if (ret)
+> +					goto out;
+> +			}
+> +			bsi.start = start;
+> +			bsi.block_start = physical_block_start;
+> +			bsi.block_len = len;
+> +		}
+> +
+> +		start += len;
+> +	}
+> +
+> +	if (bsi.block_len)
+> +		ret = btrfs_add_swap_extent(sis, &bsi);
+> +
+> +out:
+> +	if (!IS_ERR_OR_NULL(em))
+> +		free_extent_map(em);
+> +
+> +	unlock_extent_cached(io_tree, 0, isize - 1, &cached_state);
+> +
+> +	if (ret)
+> +		btrfs_swap_deactivate(file);
+> +
+> +	clear_bit(BTRFS_FS_EXCL_OP, &fs_info->flags);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (device)
+> +		sis->bdev = device->bdev;
+> +	*span = bsi.highest_ppage - bsi.lowest_ppage + 1;
+> +	sis->max = bsi.nr_pages;
+> +	sis->pages = bsi.nr_pages - 1;
+> +	sis->highest_bit = bsi.nr_pages - 1;
+> +	return bsi.nr_extents;
+> +}
+> +#else
+> +static void btrfs_swap_deactivate(struct file *file)
+> +{
+> +}
+> +
+> +static int btrfs_swap_activate(struct swap_info_struct *sis, struct file *file,
+> +			       sector_t *span)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +#endif
+> +
+>  const struct file_operations btrfs_file_operations = {
+>  	.llseek		= btrfs_file_llseek,
+>  	.read_iter      = generic_file_read_iter,
+> @@ -3459,6 +3798,8 @@ const struct file_operations btrfs_file_operations = {
+>  	.compat_ioctl	= btrfs_compat_ioctl,
+>  #endif
+>  	.remap_file_range = btrfs_remap_file_range,
+> +	.swap_activate	= btrfs_swap_activate,
+> +	.swap_deactivate = btrfs_swap_deactivate,
+>  };
+>  
+>  void __cold btrfs_auto_defrag_exit(void)
+> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> index 6d159df7b536..c11b86f2bf24 100644
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@ -27,7 +27,6 @@
+>  #include <linux/uio.h>
+>  #include <linux/magic.h>
+>  #include <linux/iversion.h>
+> -#include <linux/swap.h>
+>  #include <linux/sched/mm.h>
+>  #include <asm/unaligned.h>
+>  #include "misc.h"
+> @@ -10629,343 +10628,6 @@ void btrfs_set_range_writeback(struct extent_io_tree *tree, u64 start, u64 end)
+>  	}
+>  }
+>  
+> -#ifdef CONFIG_SWAP
+> -/*
+> - * Add an entry indicating a block group or device which is pinned by a
+> - * swapfile. Returns 0 on success, 1 if there is already an entry for it, or a
+> - * negative errno on failure.
+> - */
+> -static int btrfs_add_swapfile_pin(struct inode *inode, void *ptr,
+> -				  bool is_block_group)
+> -{
+> -	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
+> -	struct btrfs_swapfile_pin *sp, *entry;
+> -	struct rb_node **p;
+> -	struct rb_node *parent = NULL;
+> -
+> -	sp = kmalloc(sizeof(*sp), GFP_NOFS);
+> -	if (!sp)
+> -		return -ENOMEM;
+> -	sp->ptr = ptr;
+> -	sp->inode = inode;
+> -	sp->is_block_group = is_block_group;
+> -
+> -	spin_lock(&fs_info->swapfile_pins_lock);
+> -	p = &fs_info->swapfile_pins.rb_node;
+> -	while (*p) {
+> -		parent = *p;
+> -		entry = rb_entry(parent, struct btrfs_swapfile_pin, node);
+> -		if (sp->ptr < entry->ptr ||
+> -		    (sp->ptr == entry->ptr && sp->inode < entry->inode)) {
+> -			p = &(*p)->rb_left;
+> -		} else if (sp->ptr > entry->ptr ||
+> -			   (sp->ptr == entry->ptr && sp->inode > entry->inode)) {
+> -			p = &(*p)->rb_right;
+> -		} else {
+> -			spin_unlock(&fs_info->swapfile_pins_lock);
+> -			kfree(sp);
+> -			return 1;
+> -		}
+> -	}
+> -	rb_link_node(&sp->node, parent, p);
+> -	rb_insert_color(&sp->node, &fs_info->swapfile_pins);
+> -	spin_unlock(&fs_info->swapfile_pins_lock);
+> -	return 0;
+> -}
+> -
+> -/* Free all of the entries pinned by this swapfile. */
+> -static void btrfs_free_swapfile_pins(struct inode *inode)
+> -{
+> -	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
+> -	struct btrfs_swapfile_pin *sp;
+> -	struct rb_node *node, *next;
+> -
+> -	spin_lock(&fs_info->swapfile_pins_lock);
+> -	node = rb_first(&fs_info->swapfile_pins);
+> -	while (node) {
+> -		next = rb_next(node);
+> -		sp = rb_entry(node, struct btrfs_swapfile_pin, node);
+> -		if (sp->inode == inode) {
+> -			rb_erase(&sp->node, &fs_info->swapfile_pins);
+> -			if (sp->is_block_group)
+> -				btrfs_put_block_group(sp->ptr);
+> -			kfree(sp);
+> -		}
+> -		node = next;
+> -	}
+> -	spin_unlock(&fs_info->swapfile_pins_lock);
+> -}
+> -
+> -struct btrfs_swap_info {
+> -	u64 start;
+> -	u64 block_start;
+> -	u64 block_len;
+> -	u64 lowest_ppage;
+> -	u64 highest_ppage;
+> -	unsigned long nr_pages;
+> -	int nr_extents;
+> -};
+> -
+> -static int btrfs_add_swap_extent(struct swap_info_struct *sis,
+> -				 struct btrfs_swap_info *bsi)
+> -{
+> -	unsigned long nr_pages;
+> -	u64 first_ppage, first_ppage_reported, next_ppage;
+> -	int ret;
+> -
+> -	first_ppage = ALIGN(bsi->block_start, PAGE_SIZE) >> PAGE_SHIFT;
+> -	next_ppage = ALIGN_DOWN(bsi->block_start + bsi->block_len,
+> -				PAGE_SIZE) >> PAGE_SHIFT;
+> -
+> -	if (first_ppage >= next_ppage)
+> -		return 0;
+> -	nr_pages = next_ppage - first_ppage;
+> -
+> -	first_ppage_reported = first_ppage;
+> -	if (bsi->start == 0)
+> -		first_ppage_reported++;
+> -	if (bsi->lowest_ppage > first_ppage_reported)
+> -		bsi->lowest_ppage = first_ppage_reported;
+> -	if (bsi->highest_ppage < (next_ppage - 1))
+> -		bsi->highest_ppage = next_ppage - 1;
+> -
+> -	ret = add_swap_extent(sis, bsi->nr_pages, nr_pages, first_ppage);
+> -	if (ret < 0)
+> -		return ret;
+> -	bsi->nr_extents += ret;
+> -	bsi->nr_pages += nr_pages;
+> -	return 0;
+> -}
+> -
+> -static void btrfs_swap_deactivate(struct file *file)
+> -{
+> -	struct inode *inode = file_inode(file);
+> -
+> -	btrfs_free_swapfile_pins(inode);
+> -	atomic_dec(&BTRFS_I(inode)->root->nr_swapfiles);
+> -}
+> -
+> -static int btrfs_swap_activate(struct swap_info_struct *sis, struct file *file,
+> -			       sector_t *span)
+> -{
+> -	struct inode *inode = file_inode(file);
+> -	struct btrfs_fs_info *fs_info = BTRFS_I(inode)->root->fs_info;
+> -	struct extent_io_tree *io_tree = &BTRFS_I(inode)->io_tree;
+> -	struct extent_state *cached_state = NULL;
+> -	struct extent_map *em = NULL;
+> -	struct btrfs_device *device = NULL;
+> -	struct btrfs_swap_info bsi = {
+> -		.lowest_ppage = (sector_t)-1ULL,
+> -	};
+> -	int ret = 0;
+> -	u64 isize;
+> -	u64 start;
+> -
+> -	/*
+> -	 * If the swap file was just created, make sure delalloc is done. If the
+> -	 * file changes again after this, the user is doing something stupid and
+> -	 * we don't really care.
+> -	 */
+> -	ret = btrfs_wait_ordered_range(inode, 0, (u64)-1);
+> -	if (ret)
+> -		return ret;
+> -
+> -	/*
+> -	 * The inode is locked, so these flags won't change after we check them.
+> -	 */
+> -	if (BTRFS_I(inode)->flags & BTRFS_INODE_COMPRESS) {
+> -		btrfs_warn(fs_info, "swapfile must not be compressed");
+> -		return -EINVAL;
+> -	}
+> -	if (!(BTRFS_I(inode)->flags & BTRFS_INODE_NODATACOW)) {
+> -		btrfs_warn(fs_info, "swapfile must not be copy-on-write");
+> -		return -EINVAL;
+> -	}
+> -	if (!(BTRFS_I(inode)->flags & BTRFS_INODE_NODATASUM)) {
+> -		btrfs_warn(fs_info, "swapfile must not be checksummed");
+> -		return -EINVAL;
+> -	}
+> -
+> -	/*
+> -	 * Balance or device remove/replace/resize can move stuff around from
+> -	 * under us. The EXCL_OP flag makes sure they aren't running/won't run
+> -	 * concurrently while we are mapping the swap extents, and
+> -	 * fs_info->swapfile_pins prevents them from running while the swap file
+> -	 * is active and moving the extents. Note that this also prevents a
+> -	 * concurrent device add which isn't actually necessary, but it's not
+> -	 * really worth the trouble to allow it.
+> -	 */
+> -	if (test_and_set_bit(BTRFS_FS_EXCL_OP, &fs_info->flags)) {
+> -		btrfs_warn(fs_info,
+> -	   "cannot activate swapfile while exclusive operation is running");
+> -		return -EBUSY;
+> -	}
+> -	/*
+> -	 * Snapshots can create extents which require COW even if NODATACOW is
+> -	 * set. We use this counter to prevent snapshots. We must increment it
+> -	 * before walking the extents because we don't want a concurrent
+> -	 * snapshot to run after we've already checked the extents.
+> -	 */
+> -	atomic_inc(&BTRFS_I(inode)->root->nr_swapfiles);
+> -
+> -	isize = ALIGN_DOWN(inode->i_size, fs_info->sectorsize);
+> -
+> -	lock_extent_bits(io_tree, 0, isize - 1, &cached_state);
+> -	start = 0;
+> -	while (start < isize) {
+> -		u64 logical_block_start, physical_block_start;
+> -		struct btrfs_block_group_cache *bg;
+> -		u64 len = isize - start;
+> -
+> -		em = btrfs_get_extent(BTRFS_I(inode), NULL, 0, start, len, 0);
+> -		if (IS_ERR(em)) {
+> -			ret = PTR_ERR(em);
+> -			goto out;
+> -		}
+> -
+> -		if (em->block_start == EXTENT_MAP_HOLE) {
+> -			btrfs_warn(fs_info, "swapfile must not have holes");
+> -			ret = -EINVAL;
+> -			goto out;
+> -		}
+> -		if (em->block_start == EXTENT_MAP_INLINE) {
+> -			/*
+> -			 * It's unlikely we'll ever actually find ourselves
+> -			 * here, as a file small enough to fit inline won't be
+> -			 * big enough to store more than the swap header, but in
+> -			 * case something changes in the future, let's catch it
+> -			 * here rather than later.
+> -			 */
+> -			btrfs_warn(fs_info, "swapfile must not be inline");
+> -			ret = -EINVAL;
+> -			goto out;
+> -		}
+> -		if (test_bit(EXTENT_FLAG_COMPRESSED, &em->flags)) {
+> -			btrfs_warn(fs_info, "swapfile must not be compressed");
+> -			ret = -EINVAL;
+> -			goto out;
+> -		}
+> -
+> -		logical_block_start = em->block_start + (start - em->start);
+> -		len = min(len, em->len - (start - em->start));
+> -		free_extent_map(em);
+> -		em = NULL;
+> -
+> -		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL);
+> -		if (ret < 0) {
+> -			goto out;
+> -		} else if (ret) {
+> -			ret = 0;
+> -		} else {
+> -			btrfs_warn(fs_info,
+> -				   "swapfile must not be copy-on-write");
+> -			ret = -EINVAL;
+> -			goto out;
+> -		}
+> -
+> -		em = btrfs_get_chunk_map(fs_info, logical_block_start, len);
+> -		if (IS_ERR(em)) {
+> -			ret = PTR_ERR(em);
+> -			goto out;
+> -		}
+> -
+> -		if (em->map_lookup->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) {
+> -			btrfs_warn(fs_info,
+> -				   "swapfile must have single data profile");
+> -			ret = -EINVAL;
+> -			goto out;
+> -		}
+> -
+> -		if (device == NULL) {
+> -			device = em->map_lookup->stripes[0].dev;
+> -			ret = btrfs_add_swapfile_pin(inode, device, false);
+> -			if (ret == 1)
+> -				ret = 0;
+> -			else if (ret)
+> -				goto out;
+> -		} else if (device != em->map_lookup->stripes[0].dev) {
+> -			btrfs_warn(fs_info, "swapfile must be on one device");
+> -			ret = -EINVAL;
+> -			goto out;
+> -		}
+> -
+> -		physical_block_start = (em->map_lookup->stripes[0].physical +
+> -					(logical_block_start - em->start));
+> -		len = min(len, em->len - (logical_block_start - em->start));
+> -		free_extent_map(em);
+> -		em = NULL;
+> -
+> -		bg = btrfs_lookup_block_group(fs_info, logical_block_start);
+> -		if (!bg) {
+> -			btrfs_warn(fs_info,
+> -			   "could not find block group containing swapfile");
+> -			ret = -EINVAL;
+> -			goto out;
+> -		}
+> -
+> -		ret = btrfs_add_swapfile_pin(inode, bg, true);
+> -		if (ret) {
+> -			btrfs_put_block_group(bg);
+> -			if (ret == 1)
+> -				ret = 0;
+> -			else
+> -				goto out;
+> -		}
+> -
+> -		if (bsi.block_len &&
+> -		    bsi.block_start + bsi.block_len == physical_block_start) {
+> -			bsi.block_len += len;
+> -		} else {
+> -			if (bsi.block_len) {
+> -				ret = btrfs_add_swap_extent(sis, &bsi);
+> -				if (ret)
+> -					goto out;
+> -			}
+> -			bsi.start = start;
+> -			bsi.block_start = physical_block_start;
+> -			bsi.block_len = len;
+> -		}
+> -
+> -		start += len;
+> -	}
+> -
+> -	if (bsi.block_len)
+> -		ret = btrfs_add_swap_extent(sis, &bsi);
+> -
+> -out:
+> -	if (!IS_ERR_OR_NULL(em))
+> -		free_extent_map(em);
+> -
+> -	unlock_extent_cached(io_tree, 0, isize - 1, &cached_state);
+> -
+> -	if (ret)
+> -		btrfs_swap_deactivate(file);
+> -
+> -	clear_bit(BTRFS_FS_EXCL_OP, &fs_info->flags);
+> -
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (device)
+> -		sis->bdev = device->bdev;
+> -	*span = bsi.highest_ppage - bsi.lowest_ppage + 1;
+> -	sis->max = bsi.nr_pages;
+> -	sis->pages = bsi.nr_pages - 1;
+> -	sis->highest_bit = bsi.nr_pages - 1;
+> -	return bsi.nr_extents;
+> -}
+> -#else
+> -static void btrfs_swap_deactivate(struct file *file)
+> -{
+> -}
+> -
+> -static int btrfs_swap_activate(struct swap_info_struct *sis, struct file *file,
+> -			       sector_t *span)
+> -{
+> -	return -EOPNOTSUPP;
+> -}
+> -#endif
+> -
+>  static const struct inode_operations btrfs_dir_inode_operations = {
+>  	.getattr	= btrfs_getattr,
+>  	.lookup		= btrfs_lookup,
+> @@ -11032,8 +10694,6 @@ static const struct address_space_operations btrfs_aops = {
+>  	.releasepage	= btrfs_releasepage,
+>  	.set_page_dirty	= btrfs_set_page_dirty,
+>  	.error_remove_page = generic_error_remove_page,
+> -	.swap_activate	= btrfs_swap_activate,
+> -	.swap_deactivate = btrfs_swap_deactivate,
+>  };
+>  
+>  static const struct inode_operations btrfs_file_inode_operations = {
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 3c7777bfae17..04b2a8f44fa9 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/pagevec.h>
+>  #include <linux/blkdev.h>
+>  #include <linux/bio.h>
+> -#include <linux/swap.h>
+>  #include <linux/prefetch.h>
+>  #include <linux/uio.h>
+>  #include <linux/cleancache.h>
+> @@ -3142,125 +3141,6 @@ int f2fs_migrate_page(struct address_space *mapping,
+>  }
+>  #endif
+>  
+> -#ifdef CONFIG_SWAP
+> -/* Copied from generic_swapfile_activate() to check any holes */
+> -static int check_swap_activate(struct file *swap_file, unsigned int max)
+> -{
+> -	struct inode *inode = swap_file->f_mapping->host;
+> -	unsigned blocks_per_page;
+> -	unsigned long page_no;
+> -	unsigned blkbits;
+> -	sector_t probe_block;
+> -	sector_t last_block;
+> -	sector_t lowest_block = -1;
+> -	sector_t highest_block = 0;
+> -
+> -	blkbits = inode->i_blkbits;
+> -	blocks_per_page = PAGE_SIZE >> blkbits;
+> -
+> -	/*
+> -	 * Map all the blocks into the extent list.  This code doesn't try
+> -	 * to be very smart.
+> -	 */
+> -	probe_block = 0;
+> -	page_no = 0;
+> -	last_block = i_size_read(inode) >> blkbits;
+> -	while ((probe_block + blocks_per_page) <= last_block && page_no < max) {
+> -		unsigned block_in_page;
+> -		sector_t first_block;
+> -
+> -		cond_resched();
+> -
+> -		first_block = bmap(inode, probe_block);
+> -		if (first_block == 0)
+> -			goto bad_bmap;
+> -
+> -		/*
+> -		 * It must be PAGE_SIZE aligned on-disk
+> -		 */
+> -		if (first_block & (blocks_per_page - 1)) {
+> -			probe_block++;
+> -			goto reprobe;
+> -		}
+> -
+> -		for (block_in_page = 1; block_in_page < blocks_per_page;
+> -					block_in_page++) {
+> -			sector_t block;
+> -
+> -			block = bmap(inode, probe_block + block_in_page);
+> -			if (block == 0)
+> -				goto bad_bmap;
+> -			if (block != first_block + block_in_page) {
+> -				/* Discontiguity */
+> -				probe_block++;
+> -				goto reprobe;
+> -			}
+> -		}
+> -
+> -		first_block >>= (PAGE_SHIFT - blkbits);
+> -		if (page_no) {	/* exclude the header page */
+> -			if (first_block < lowest_block)
+> -				lowest_block = first_block;
+> -			if (first_block > highest_block)
+> -				highest_block = first_block;
+> -		}
+> -
+> -		page_no++;
+> -		probe_block += blocks_per_page;
+> -reprobe:
+> -		continue;
+> -	}
+> -	return 0;
+> -
+> -bad_bmap:
+> -	pr_err("swapon: swapfile has holes\n");
+> -	return -EINVAL;
+> -}
+> -
+> -static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
+> -				sector_t *span)
+> -{
+> -	struct inode *inode = file_inode(file);
+> -	int ret;
+> -
+> -	if (!S_ISREG(inode->i_mode))
+> -		return -EINVAL;
+> -
+> -	if (f2fs_readonly(F2FS_I_SB(inode)->sb))
+> -		return -EROFS;
+> -
+> -	ret = f2fs_convert_inline_inode(inode);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = check_swap_activate(file, sis->max);
+> -	if (ret)
+> -		return ret;
+> -
+> -	set_inode_flag(inode, FI_PIN_FILE);
+> -	f2fs_precache_extents(inode);
+> -	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
+> -	return 0;
+> -}
+> -
+> -static void f2fs_swap_deactivate(struct file *file)
+> -{
+> -	struct inode *inode = file_inode(file);
+> -
+> -	clear_inode_flag(inode, FI_PIN_FILE);
+> -}
+> -#else
+> -static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
+> -				sector_t *span)
+> -{
+> -	return -EOPNOTSUPP;
+> -}
+> -
+> -static void f2fs_swap_deactivate(struct file *file)
+> -{
+> -}
+> -#endif
+> -
+>  const struct address_space_operations f2fs_dblock_aops = {
+>  	.readpage	= f2fs_read_data_page,
+>  	.readpages	= f2fs_read_data_pages,
+> @@ -3273,8 +3153,6 @@ const struct address_space_operations f2fs_dblock_aops = {
+>  	.releasepage	= f2fs_release_page,
+>  	.direct_IO	= f2fs_direct_IO,
+>  	.bmap		= f2fs_bmap,
+> -	.swap_activate  = f2fs_swap_activate,
+> -	.swap_deactivate = f2fs_swap_deactivate,
+>  #ifdef CONFIG_MIGRATION
+>  	.migratepage    = f2fs_migrate_page,
+>  #endif
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 483ad22a0946..de7f9cf36689 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/uuid.h>
+>  #include <linux/file.h>
+>  #include <linux/nls.h>
+> +#include <linux/swap.h>
+>  
+>  #include "f2fs.h"
+>  #include "node.h"
+> @@ -3466,6 +3467,125 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_SWAP
+> +/* Copied from generic_swapfile_activate() to check any holes */
+> +static int check_swap_activate(struct file *swap_file, unsigned int max)
+> +{
+> +	struct inode *inode = swap_file->f_mapping->host;
+> +	unsigned blocks_per_page;
+> +	unsigned long page_no;
+> +	unsigned blkbits;
+> +	sector_t probe_block;
+> +	sector_t last_block;
+> +	sector_t lowest_block = -1;
+> +	sector_t highest_block = 0;
+> +
+> +	blkbits = inode->i_blkbits;
+> +	blocks_per_page = PAGE_SIZE >> blkbits;
+> +
+> +	/*
+> +	 * Map all the blocks into the extent list.  This code doesn't try
+> +	 * to be very smart.
+> +	 */
+> +	probe_block = 0;
+> +	page_no = 0;
+> +	last_block = i_size_read(inode) >> blkbits;
+> +	while ((probe_block + blocks_per_page) <= last_block && page_no < max) {
+> +		unsigned block_in_page;
+> +		sector_t first_block;
+> +
+> +		cond_resched();
+> +
+> +		first_block = bmap(inode, probe_block);
+> +		if (first_block == 0)
+> +			goto bad_bmap;
+> +
+> +		/*
+> +		 * It must be PAGE_SIZE aligned on-disk
+> +		 */
+> +		if (first_block & (blocks_per_page - 1)) {
+> +			probe_block++;
+> +			goto reprobe;
+> +		}
+> +
+> +		for (block_in_page = 1; block_in_page < blocks_per_page;
+> +					block_in_page++) {
+> +			sector_t block;
+> +
+> +			block = bmap(inode, probe_block + block_in_page);
+> +			if (block == 0)
+> +				goto bad_bmap;
+> +			if (block != first_block + block_in_page) {
+> +				/* Discontiguity */
+> +				probe_block++;
+> +				goto reprobe;
+> +			}
+> +		}
+> +
+> +		first_block >>= (PAGE_SHIFT - blkbits);
+> +		if (page_no) {	/* exclude the header page */
+> +			if (first_block < lowest_block)
+> +				lowest_block = first_block;
+> +			if (first_block > highest_block)
+> +				highest_block = first_block;
+> +		}
+> +
+> +		page_no++;
+> +		probe_block += blocks_per_page;
+> +reprobe:
+> +		continue;
+> +	}
+> +	return 0;
+> +
+> +bad_bmap:
+> +	pr_err("swapon: swapfile has holes\n");
+> +	return -EINVAL;
+> +}
+> +
+> +static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
+> +				sector_t *span)
+> +{
+> +	struct inode *inode = file_inode(file);
+> +	int ret;
+> +
+> +	if (!S_ISREG(inode->i_mode))
+> +		return -EINVAL;
+> +
+> +	if (f2fs_readonly(F2FS_I_SB(inode)->sb))
+> +		return -EROFS;
+> +
+> +	ret = f2fs_convert_inline_inode(inode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = check_swap_activate(file, sis->max);
+> +	if (ret)
+> +		return ret;
+> +
+> +	set_inode_flag(inode, FI_PIN_FILE);
+> +	f2fs_precache_extents(inode);
+> +	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
+> +	return 0;
+> +}
+> +
+> +static void f2fs_swap_deactivate(struct file *file)
+> +{
+> +	struct inode *inode = file_inode(file);
+> +
+> +	clear_inode_flag(inode, FI_PIN_FILE);
+> +}
+> +#else
+> +static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
+> +				sector_t *span)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static void f2fs_swap_deactivate(struct file *file)
+> +{
+> +}
+> +#endif
+> +
+>  const struct file_operations f2fs_file_operations = {
+>  	.llseek		= f2fs_llseek,
+>  	.read_iter	= generic_file_read_iter,
+> @@ -3482,4 +3602,6 @@ const struct file_operations f2fs_file_operations = {
+>  #endif
+>  	.splice_read	= generic_file_splice_read,
+>  	.splice_write	= iter_file_splice_write,
+> +	.swap_activate  = f2fs_swap_activate,
+> +	.swap_deactivate = f2fs_swap_deactivate,
+>  };
+> diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+> index 95dc90570786..1f82f92185d6 100644
+> --- a/fs/nfs/file.c
+> +++ b/fs/nfs/file.c
+> @@ -520,8 +520,6 @@ const struct address_space_operations nfs_file_aops = {
+>  	.launder_page = nfs_launder_page,
+>  	.is_dirty_writeback = nfs_check_dirty_writeback,
+>  	.error_remove_page = generic_error_remove_page,
+> -	.swap_activate = nfs_swap_activate,
+> -	.swap_deactivate = nfs_swap_deactivate,
+>  };
+>  
+>  /*
+> @@ -847,5 +845,7 @@ const struct file_operations nfs_file_operations = {
+>  	.splice_write	= iter_file_splice_write,
+>  	.check_flags	= nfs_check_flags,
+>  	.setlease	= simple_nosetlease,
+> +	.swap_activate = nfs_swap_activate,
+> +	.swap_deactivate = nfs_swap_deactivate,
+>  };
+>  EXPORT_SYMBOL_GPL(nfs_file_operations);
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index 3a688eb5c5ae..99f578a9ed90 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -631,17 +631,6 @@ xfs_vm_readpages(
+>  	return iomap_readpages(mapping, pages, nr_pages, &xfs_read_iomap_ops);
+>  }
+>  
+> -static int
+> -xfs_iomap_swapfile_activate(
+> -	struct swap_info_struct		*sis,
+> -	struct file			*swap_file,
+> -	sector_t			*span)
+> -{
+> -	sis->bdev = xfs_inode_buftarg(XFS_I(file_inode(swap_file)))->bt_bdev;
+> -	return iomap_swapfile_activate(sis, swap_file, span,
+> -			&xfs_read_iomap_ops);
+> -}
+> -
+>  const struct address_space_operations xfs_address_space_operations = {
+>  	.readpage		= xfs_vm_readpage,
+>  	.readpages		= xfs_vm_readpages,
+> @@ -655,7 +644,6 @@ const struct address_space_operations xfs_address_space_operations = {
+>  	.migratepage		= iomap_migrate_page,
+>  	.is_partially_uptodate  = iomap_is_partially_uptodate,
+>  	.error_remove_page	= generic_error_remove_page,
+> -	.swap_activate		= xfs_iomap_swapfile_activate,
+>  };
+>  
+>  const struct address_space_operations xfs_dax_aops = {
+> @@ -663,5 +651,4 @@ const struct address_space_operations xfs_dax_aops = {
+>  	.direct_IO		= noop_direct_IO,
+>  	.set_page_dirty		= noop_set_page_dirty,
+>  	.invalidatepage		= noop_invalidatepage,
+> -	.swap_activate		= xfs_iomap_swapfile_activate,
+>  };
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index 865543e41fb4..225f58561f06 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -1294,6 +1294,17 @@ xfs_file_mmap(
+>  	return 0;
+>  }
+>  
+> +static int
+> +xfs_file_swap_activate(
+> +	struct swap_info_struct		*sis,
+> +	struct file			*swap_file,
+> +	sector_t			*span)
+> +{
+> +	sis->bdev = xfs_inode_buftarg(XFS_I(file_inode(swap_file)))->bt_bdev;
+> +	return iomap_swapfile_activate(sis, swap_file, span,
+> +			&xfs_read_iomap_ops);
+> +}
+> +
+>  const struct file_operations xfs_file_operations = {
+>  	.llseek		= xfs_file_llseek,
+>  	.read_iter	= xfs_file_read_iter,
+> @@ -1314,6 +1325,7 @@ const struct file_operations xfs_file_operations = {
+>  	.fallocate	= xfs_file_fallocate,
+>  	.fadvise	= xfs_file_fadvise,
+>  	.remap_file_range = xfs_file_remap_range,
+> +	.swap_activate	= xfs_file_swap_activate,
+>  };
+>  
+>  const struct file_operations xfs_dir_file_operations = {
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 83e011e0df7f..1175815da3df 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -402,11 +402,6 @@ struct address_space_operations {
+>  					unsigned long);
+>  	void (*is_dirty_writeback) (struct page *, bool *, bool *);
+>  	int (*error_remove_page)(struct address_space *, struct page *);
+> -
+> -	/* swapfile support */
+> -	int (*swap_activate)(struct swap_info_struct *sis, struct file *file,
+> -				sector_t *span);
+> -	void (*swap_deactivate)(struct file *file);
+>  };
+>  
+>  extern const struct address_space_operations empty_aops;
+> @@ -1858,6 +1853,11 @@ struct file_operations {
+>  				   struct file *file_out, loff_t pos_out,
+>  				   loff_t len, unsigned int remap_flags);
+>  	int (*fadvise)(struct file *, loff_t, loff_t, int);
+> +
+> +	/* swapfile support */
+> +	int (*swap_activate)(struct swap_info_struct *sis, struct file *file,
+> +				sector_t *span);
+> +	void (*swap_deactivate)(struct file *file);
+>  } __randomize_layout;
+>  
+>  struct inode_operations {
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index bb3261d45b6a..d2de8d668708 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -2293,11 +2293,10 @@ static void destroy_swap_extents(struct swap_info_struct *sis)
+>  
+>  	if (sis->flags & SWP_ACTIVATED) {
+>  		struct file *swap_file = sis->swap_file;
+> -		struct address_space *mapping = swap_file->f_mapping;
+>  
+>  		sis->flags &= ~SWP_ACTIVATED;
+> -		if (mapping->a_ops->swap_deactivate)
+> -			mapping->a_ops->swap_deactivate(swap_file);
+> +		if (swap_file->f_op->swap_deactivate)
+> +			swap_file->f_op->swap_deactivate(swap_file);
+>  	}
+>  }
+>  
+> @@ -2381,8 +2380,7 @@ EXPORT_SYMBOL_GPL(add_swap_extent);
+>  static int setup_swap_extents(struct swap_info_struct *sis, sector_t *span)
+>  {
+>  	struct file *swap_file = sis->swap_file;
+> -	struct address_space *mapping = swap_file->f_mapping;
+> -	struct inode *inode = mapping->host;
+> +	struct inode *inode = swap_file->f_mapping->host;
+>  	int ret;
+>  
+>  	if (S_ISBLK(inode->i_mode)) {
+> @@ -2391,8 +2389,8 @@ static int setup_swap_extents(struct swap_info_struct *sis, sector_t *span)
+>  		return ret;
+>  	}
+>  
+> -	if (mapping->a_ops->swap_activate) {
+> -		ret = mapping->a_ops->swap_activate(sis, swap_file, span);
+> +	if (swap_file->f_op->swap_activate) {
+> +		ret = swap_file->f_op->swap_activate(sis, swap_file, span);
+>  		if (ret >= 0)
+>  			sis->flags |= SWP_ACTIVATED;
+>  		if (!ret) {
 > -- 
-> 2.20.1
-> 
+> 2.21.0
 > 
