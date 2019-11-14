@@ -2,87 +2,83 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C1C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453C3C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDDA620715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573736449;
-	bh=8CXKhgJMA2evb+0iVwECmAMsTstQn2WVya+It8E+yR8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AO/s3PBL9enxfes+RXrB7y4F1rtXg71vM07AjTAXkJaejG6ZXqaJNWbTqWO8IZJUm
-	 JXKHaOMfOudBxt5mo9BmBUbCHYMsmLwXW5XV04zCO5OK2L6s0x/y1MyuKgcqkGBXtx
-	 ex070sORLrIz+7vBuFR8NO1qmtaVYyujVnXxZ/uQ=
+	by mail.kernel.org (Postfix) with ESMTP id 208B2206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKNNAs (ORCPT
+        id S1726750AbfKNNCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:00:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33430 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 08:02:49 -0500
+Received: from mga02.intel.com ([134.134.136.20]:54517 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfKNNAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:00:47 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38BFE20709;
-        Thu, 14 Nov 2019 13:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573736447;
-        bh=8CXKhgJMA2evb+0iVwECmAMsTstQn2WVya+It8E+yR8=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=b9kEJnD7cOJ9i6QCSbSaXbaJTbKPhnS/CdzY7TQiFA8d1pDwnMjIQ6gJTfMf9lwCg
-         BRkCRZ+gxCv6v0HbGHxZVvjO8RQzkWz0TfaAKdvPYjhjqaEBK5A+4+0iyMSaKWp2sl
-         RTfELRa6OgAbKDI+FlD36r0rBQvytvBYtS8J7I9Y=
-Date:   Thu, 14 Nov 2019 14:00:43 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Jinke Fan <fanjinke@hygon.cn>
-cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] HID: quirks: Add quirk for HP MSU1465 PIXART OEM
- mouse
-In-Reply-To: <20191113033841.25174-1-fanjinke@hygon.cn>
-Message-ID: <nycvar.YFH.7.76.1911141400340.1799@cbobk.fhfr.pm>
-References: <20191113033841.25174-1-fanjinke@hygon.cn>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726214AbfKNNCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:02:48 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 05:02:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="235659969"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Nov 2019 05:02:46 -0800
+Subject: Re: [PATCH] mmc: sdhci-of-at91: fix quirk2 overwrite
+To:     Eugen.Hristev@microchip.com, Ludovic.Desroches@microchip.com,
+        ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1573736352-3597-1-git-send-email-eugen.hristev@microchip.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <48f8d20a-66ad-4c6d-b387-bdcc76fda0c0@intel.com>
+Date:   Thu, 14 Nov 2019 15:01:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1573736352-3597-1-git-send-email-eugen.hristev@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019, Jinke Fan wrote:
+On 14/11/19 2:59 PM, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> The quirks2 are parsed and set (e.g. from DT) before the quirk for broken
+> HS200 is set in the driver.
+> The driver needs to enable just this flag, not rewrite the whole quirk set.
+> 
+> Fixes: 7871aa60ae00 ("mmc: sdhci-of-at91: add quirk for broken HS200")
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 
-> The PixArt OEM mouse disconnets/reconnects every minute on
-> Linux. All contents of dmesg are repetitive:
-> 
-> [ 1465.810014] usb 1-2.2: USB disconnect, device number 20
-> [ 1467.431509] usb 1-2.2: new low-speed USB device number 21 using xhci_hcd
-> [ 1467.654982] usb 1-2.2: New USB device found, idVendor=03f0,idProduct=1f4a, bcdDevice= 1.00
-> [ 1467.654985] usb 1-2.2: New USB device strings: Mfr=1, Product=2,SerialNumber=0
-> [ 1467.654987] usb 1-2.2: Product: HP USB Optical Mouse
-> [ 1467.654988] usb 1-2.2: Manufacturer: PixArt
-> [ 1467.699722] input: PixArt HP USB Optical Mouse as /devices/pci0000:00/0000:00:07.1/0000:05:00.3/usb1/1-2/1-2.2/1-2.2:1.0/0003:03F0:1F4A.0012/input/input19
-> [ 1467.700124] hid-generic 0003:03F0:1F4A.0012: input,hidraw0: USB HID v1.11 Mouse [PixArt HP USB Optical Mouse] on usb-0000:05:00.3-2.2/input0
-> 
-> So add HID_QUIRK_ALWAYS_POLL for this one as well.
-> Test the patch, the mouse is no longer disconnected and there are no
-> duplicate logs in dmesg.
-> 
-> Reference:
-> https://github.com/sriemer/fix-linux-mouse
-> 
-> Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Applied, thanks.
-
--- 
-Jiri Kosina
-SUSE Labs
+> ---
+> 
+>  drivers/mmc/host/sdhci-of-at91.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
+> index 496844a..5fe6684 100644
+> --- a/drivers/mmc/host/sdhci-of-at91.c
+> +++ b/drivers/mmc/host/sdhci-of-at91.c
+> @@ -389,7 +389,7 @@ static int sdhci_at91_probe(struct platform_device *pdev)
+>  	pm_runtime_use_autosuspend(&pdev->dev);
+>  
+>  	/* HS200 is broken at this moment */
+> -	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
+> +	host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
+>  
+>  	ret = sdhci_add_host(host);
+>  	if (ret)
+> 
 
