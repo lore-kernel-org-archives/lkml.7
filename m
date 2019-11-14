@@ -2,114 +2,228 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF451C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F46D2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEF32070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hFiAXPqK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F6GUlB6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfKNIoL (ORCPT
+        id S1726270AbfKNIrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:44:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40252 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfKNIoK (ORCPT
+        Thu, 14 Nov 2019 03:47:19 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34059 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfKNIrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:44:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dUbZ3iEISBXsb87JG4kpEeTnsib8HLKkTuk0V23bNhM=; b=hFiAXPqKcmsJqgPyXkxxZp8hH
-        l2sixI2AQTeFV3mrF5y9vc/Y9z+gQGpFqtgmgPt9yyhCUSM0T57vdHsesi5fTzWtIFRkbgLrLEaHw
-        zvLrXDa8yffxrsgYJGazoT9AVqKNQuWgPZJ+MDGRfPRe/oNrt7/E4+ZllwAJK8nMAnqsPF/t4wfDy
-        E0QEoViDAkRznp5GJBoSvj1UlwIwqzHpjGuK3uuNTzh9vJLMOLwPCsyg1Or7AqUU/q1Bxdyg01em+
-        axEd1eKKWucZuX+XtYd9KXvBDmi+ggRh/KU7XLHRsa8ClnbvAIYl7o0MCy0tTRMUa/CBajYununJA
-        7u2e6NvAA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVAjE-0002j6-N1; Thu, 14 Nov 2019 08:43:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C7969304637;
-        Thu, 14 Nov 2019 09:42:37 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5D6C629DF1241; Thu, 14 Nov 2019 09:43:45 +0100 (CET)
-Date:   Thu, 14 Nov 2019 09:43:45 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch V3 00/20] x86/iopl: Prevent user space from using CLI/STI
- with iopl(3)
-Message-ID: <20191114084345.GK4131@hirez.programming.kicks-ass.net>
-References: <20191113204240.767922595@linutronix.de>
+        Thu, 14 Nov 2019 03:47:18 -0500
+Received: by mail-ed1-f66.google.com with SMTP id b72so4328448edf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 00:47:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uFeS+uA4c3JpCfgrQSP5W4UkQmv75ra/a0iuWSrGw8w=;
+        b=F6GUlB6iw2SB4SJnps1K+f1038Vraj5TlbOPJ3viIHEBnViOrPo1rXMIYnA/hYWUXq
+         UuV5QaciRJDPLRS9hzYNmdJewiXmJB0pTCHoGsxIZWSbfcznBC9Wp4Aaq1RBIa94v6Oj
+         iGhktZEqYhWMO1kdpDeTFv33ORLDA+36hWg1c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uFeS+uA4c3JpCfgrQSP5W4UkQmv75ra/a0iuWSrGw8w=;
+        b=tarvagiMz2UjenlzLaS1/wjFOjYKWILY9YyOt0L6Q7JlWzhAn3mW75NOCy4dx5pXS+
+         /oIMT1VoZpAtjS0BZFdoLpC7ZgewLwv2Dik1nQ7a5ZQwx2UreIz+BZ1eec1bSNOuIegP
+         HE59KRuW4AEQh5iS3/wF1FO3TKh6cDz/NxmtSVhR3pPTBJMUd7JqAajAuAs40SHHgWz4
+         vCbeYo/zCeU3+igfBz0cgAdxl2yuK5ZuKa9n9qbp2x+lafLHS7KxWzJpPaNYLo4CjBDz
+         M2NqZwgkuR73h5bffIhZuFvnBCPTSAqtqw2qJQlukZ/zohJ5xpvNmghSAa3fUxorJult
+         k4PQ==
+X-Gm-Message-State: APjAAAWlKmhdAjy9wBusPVegC+fn/JE4k3MPj7fRYqKiKxhxpoX0RUd8
+        acAUXT85gj9d4G2kM9yKQ6Kv02CbndzVxw==
+X-Google-Smtp-Source: APXvYqzU/W9M/G3/gCorKzbvmu0ppmIJ4rK4jREqPOdk0A6uJNn9CPmJlnKrofZQjfk8HxVMQpDBtA==
+X-Received: by 2002:a05:6402:1a50:: with SMTP id bf16mr8546754edb.116.1573721234312;
+        Thu, 14 Nov 2019 00:47:14 -0800 (PST)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
+        by smtp.gmail.com with ESMTPSA id d11sm77650edr.37.2019.11.14.00.47.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 00:47:13 -0800 (PST)
+Received: by mail-wm1-f49.google.com with SMTP id l17so4736922wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 00:47:12 -0800 (PST)
+X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr7174991wmi.64.1573721232315;
+ Thu, 14 Nov 2019 00:47:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113204240.767922595@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191114051242.14651-1-helen.koike@collabora.com>
+ <20191114051242.14651-3-helen.koike@collabora.com> <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
+In-Reply-To: <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 14 Nov 2019 17:47:00 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5CLhUtTAWr_zF5ZPH7kPMQxjwzUMDYWowbbbc9bLowmRQ@mail.gmail.com>
+Message-ID: <CAAFQd5CLhUtTAWr_zF5ZPH7kPMQxjwzUMDYWowbbbc9bLowmRQ@mail.gmail.com>
+Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for rkisp1
+ meta buffer format
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Eddie Cai <eddie.cai.linux@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jeffy <jeffy.chen@rock-chips.com>,
+        =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Jacob Chen <jacob-chen@iotwrt.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Jacob Chen <jacob2.chen@rock-chips.com>,
+        Jacob Chen <jacob-chen@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 09:42:40PM +0100, Thomas Gleixner wrote:
+On Thu, Nov 14, 2019 at 5:21 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> On 11/14/19 6:12 AM, Helen Koike wrote:
+> > From: Jacob Chen <jacob2.chen@rock-chips.com>
+> >
+> > This commit add document for rkisp1 meta buffer format
+> >
+> > Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
+> > [refactored for upstream]
+> > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>
+> checkpatch gives me:
+>
+> WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob Chen <jacob2.chen@rock-chips.com>'
+>
+> Looking at this series I see duplicate Signed-off-by entries for Jacob Chen and a total
+> of three different email addresses:
+>
+> jacob2.chen@rock-chips.com
+> jacob-chen@rock-chips.com
+> cc@rock-chips.com
 
-> iopl(level = 3) enables aside of access to all 65536 I/O ports also the
-> usage of CLI/STI in user space.
-> 
-> Disabling interrupts in user space can lead to system lockups and breaks
-> assumptions in the kernel that userspace always runs with interrupts
-> enabled.
-> 
-> iopl() is often preferred over ioperm() as it avoids the overhead of
-> copying the tasks I/O bitmap to the TSS bitmap on context switch. This
-> overhead can be avoided by providing a all zeroes bitmap in the TSS and
-> switching the TSS bitmap offset to this permit all IO bitmap. It's
-> marginally slower than iopl() which is a one time setup, but prevents the
-> usage of CLI/STI in user space.
+I remember there used to be two different people named Jacob Chen in
+the project. Also FWIW at least one of them
+(jacob2.chen@rock-chips.com) is not at Rockchip anymore.
 
-> ---
->  arch/x86/Kconfig                        |   18 ++
->  arch/x86/entry/common.c                 |    4 
->  arch/x86/include/asm/io_bitmap.h        |   29 ++++
->  arch/x86/include/asm/paravirt.h         |    4 
->  arch/x86/include/asm/paravirt_types.h   |    2 
->  arch/x86/include/asm/pgtable_32_types.h |    2 
->  arch/x86/include/asm/processor.h        |  113 ++++++++++-------
->  arch/x86/include/asm/ptrace.h           |    6 
->  arch/x86/include/asm/switch_to.h        |   10 +
->  arch/x86/include/asm/thread_info.h      |   14 +-
->  arch/x86/include/asm/xen/hypervisor.h   |    2 
->  arch/x86/kernel/cpu/common.c            |  188 ++++++++++++----------------
->  arch/x86/kernel/doublefault.c           |    2 
->  arch/x86/kernel/ioport.c                |  209 +++++++++++++++++++++-----------
->  arch/x86/kernel/paravirt.c              |    2 
->  arch/x86/kernel/process.c               |  200 ++++++++++++++++++++++++------
->  arch/x86/kernel/process_32.c            |   77 -----------
->  arch/x86/kernel/process_64.c            |   86 -------------
->  arch/x86/kernel/ptrace.c                |   12 +
->  arch/x86/kvm/vmx/vmx.c                  |    8 -
->  arch/x86/mm/cpu_entry_area.c            |    8 +
->  arch/x86/xen/enlighten_pv.c             |   10 -
->  tools/testing/selftests/x86/ioperm.c    |   16 ++
->  tools/testing/selftests/x86/iopl.c      |  129 ++++++++++++++++++-
->  24 files changed, 674 insertions(+), 477 deletions(-)
+Looking in my inbox, I don't see anyone matching
+jacob-chen@rock-chips.com, so that could possibly be a mistyped
+jacob2.chen@rock-chips.com?
+
+Best regards,
+Tomasz
 
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+>
+> It's confusing.
+>
+> Regards,
+>
+>         Hans
+>
+> >
+> > ---
+> >
+> > Changes in v11: None
+> > Changes in v10:
+> > - unsquash
+> >
+> > Changes in v9:
+> > - squash
+> > - migrate to staging
+> > - remove meta-formats.rst update
+> >
+> > Changes in v8:
+> > - Add SPDX in the header
+> > - Remove emacs configs
+> > - Fix doc style
+> >
+> > Changes in v7:
+> > - s/correspond/corresponding
+> > - s/use/uses
+> > - s/docuemnt/document
+> >
+> >  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
+> >  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
+> >  2 files changed, 45 insertions(+)
+> >  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> >  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> >
+> > diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> > new file mode 100644
+> > index 000000000000..103b5cb79b7c
+> > --- /dev/null
+> > +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> > @@ -0,0 +1,23 @@
+> > +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +
+> > +.. _v4l2-meta-fmt-rkisp1-params:
+> > +
+> > +============================
+> > +V4L2_META_FMT_RK_ISP1_PARAMS
+> > +============================
+> > +
+> > +Rockchip ISP1 Parameters Data
+> > +
+> > +Description
+> > +===========
+> > +
+> > +This format describes input parameters for the Rockchip ISP1.
+> > +
+> > +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
+> > +the ``linux/rkisp1-config.h`` header file.
+> > +
+> > +The parameters consist of multiple modules.
+> > +The module won't be updated if the corresponding bit was not set in module_*_update.
+> > +
+> > +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> > +   :functions: rkisp1_isp_params_cfg
+> > diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> > new file mode 100644
+> > index 000000000000..4ad303f96421
+> > --- /dev/null
+> > +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> > @@ -0,0 +1,22 @@
+> > +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +
+> > +.. _v4l2-meta-fmt-rkisp1-stat:
+> > +
+> > +=============================
+> > +V4L2_META_FMT_RK_ISP1_STAT_3A
+> > +=============================
+> > +
+> > +
+> > +Rockchip ISP1 Statistics Data
+> > +
+> > +Description
+> > +===========
+> > +
+> > +This format describes image color statistics information generated by the Rockchip
+> > +ISP1.
+> > +
+> > +It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
+> > +the ``linux/rkisp1-config.h`` header file.
+> > +
+> > +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> > +   :functions: rkisp1_stat_buffer
+> >
+>
