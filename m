@@ -2,126 +2,153 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CA0C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45365C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39ECA2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A172071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Wp40cQwC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UtbncTT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfKNHAj (ORCPT
+        id S1726469AbfKNHDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 02:00:39 -0500
-Received: from ozlabs.org ([203.11.71.1]:42553 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbfKNHAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 02:00:38 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47DC6q4xrdz9s7T;
-        Thu, 14 Nov 2019 18:00:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573714836;
-        bh=euj/0s9yXpcFqoYhD71j8Eq1U9uEbXtJxC0RlGaVYMc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Wp40cQwCzSQ/omfkQmgP4QnhTq3IlIENNc3QZJ9Z+6ELKQC+MsLMyDsuujd8GmIfK
-         35nq9zWBFCeCwL+g3XFB3ZvPSVd8PCN9+dPuxT2/PJyjzPNLLfsZaX9n2EMXYC+3C5
-         hFSqJXfb8jVOqhcvqJJouCUYaqrCgZeC2+unp9clzn4AnLK5LKIvU5rlD74lay+Rru
-         rbKK4e/3TA8VMmY0wd9EVfsj/aoDJg5A61gn3+AiDfT2XDlFzEEpPeXwtvzhbbdNbt
-         IkiCJVMiY6Amiil61V92+11+bX0x3ROrbpBrsj7UJWMnzR6Jf5e1/3eD6TEjY5C9YW
-         d/9Nce/AkapXw==
-Date:   Thu, 14 Nov 2019 18:00:21 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mohammad Nasirifar <far.nasiri.m@gmail.com>
-Subject: linux-next: manual merge of the akpm-current tree with the y2038
- tree
-Message-ID: <20191114180021.1a41c73b@canb.auug.org.au>
+        Thu, 14 Nov 2019 02:03:31 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42804 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfKNHDb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 02:03:31 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m4so4103019qke.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 23:03:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EDWEwzVGX/Z+LhLTkyUvC+5Du7NTkM6wxTPRe/Giii8=;
+        b=UtbncTT5Mcc2iIxq5EcLUpW7wJHJqWv8QO2+J5fJlVFCEKzUMU5n5sb5QktLpIhMz2
+         7KOrmoB0hBSJW7Jfarnzt6rl7JNhTDWuQNhRB231fK/g3Oq6ngxWLeoE96tVh5jJvzGm
+         zP38uDDRcefnZkkzU3OhCff95r3cUiY+6gFvPKECiCeyS3BBMbqdZK+H6VPpmQzbi4Jx
+         INOelEZ0IE4w7v5zmqQ0nQAX5XYXwfhmuC+YJbbcsqy+2dzkcLeSSg8MToX+pqMKeD9/
+         EyUGf+wYRR4BEdHvV7l2ZvyjbA0SXCWhSNrCUxjZxm5+WKiGBg/p3lgNs8QOaoQ80w8w
+         ytCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EDWEwzVGX/Z+LhLTkyUvC+5Du7NTkM6wxTPRe/Giii8=;
+        b=gjkp5112hNamaakX5V88so+5PvzzT7kX6lzkz1f8BDl3veU4yHnFYQUFW61v+9qubw
+         rD7pm0yMrUMuzcHoMFPWrZVcHjHXs0F1OkJM2gBSbRSbM7X5rwZCuxSqPzZwAprs4HrY
+         w5ZcshasgBFbCdwepXfmYJbwdYI3tJKpV8tR2ig+jFUT8BYH67gY642PJlW10iVra1rP
+         N0aKkgIu3zTi5BA2iEHIV1obC+PI4oZsIQSfVSCgctoq9EifgCu67TjmUioJii6+OGSA
+         Uk9z8opO4uQjgKy5ncR2OjDAzGz+QXhhQlSQOFcsNMoNd8cKUoIPoPtS4szl7sljkJQ4
+         410w==
+X-Gm-Message-State: APjAAAVj459nQe+xvVvkTu6V80jLnbgoPlrGR0dIPsXud1ckaoZpL/Us
+        0vFMB1W4aOS8GJ0PMgxrjR6GaIRM/4i95SRKmXLnEg==
+X-Google-Smtp-Source: APXvYqyClIXRtpHWxVwISkB81In7x8GdFSI2pOnue5OUeAsLIZcRt8sSpsoXpyBIOobz9cg4CLFmsrcvnvm7sIRqkj4=
+X-Received: by 2002:a37:5603:: with SMTP id k3mr6327873qkb.346.1573715009867;
+ Wed, 13 Nov 2019 23:03:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/odvzAu7STO0W1ww9f_42E9f";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <c60806d5480b7311ced8db07ff239aa5af7a050d.1573702497.git.viresh.kumar@linaro.org>
+In-Reply-To: <c60806d5480b7311ced8db07ff239aa5af7a050d.1573702497.git.viresh.kumar@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 14 Nov 2019 12:33:18 +0530
+Message-ID: <CAP245DXgrnkVWp2ycObP+b5MV7CT8JzQdgxe8CeWktFT-eE6GQ@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: Register cpufreq drivers only after CPU devices
+ are registered
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/odvzAu7STO0W1ww9f_42E9f
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Nov 14, 2019 at 9:06 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> The cpufreq core heavily depends on the availability of the struct
+> device for CPUs and if they aren't available at the time cpufreq driver
+> is registered, we will never succeed in making cpufreq work.
+>
+> This happens due to following sequence of events:
+>
+> - cpufreq_register_driver()
+>   - subsys_interface_register()
+>   - return 0; //successful registration of driver
+>
+> ... at a later point of time
+>
+> - register_cpu();
+>   - device_register();
+>     - bus_probe_device();
+>       - sif->add_dev();
+>         - cpufreq_add_dev();
+>           - get_cpu_device(); //FAILS
+>   - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
+>   - return 0; //CPU registered successfully
+>
+> Because the per-cpu variable cpu_sys_devices is set only after the CPU
+> device is regsitered, cpufreq will never be able to get it when
+> cpufreq_add_dev() is called.
+>
+> This patch avoids this failure by making sure device structure of at
+> least CPU0 is available when the cpufreq driver is registered, else
+> return -EPROBE_DEFER.
+>
+> Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Hi all,
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+> ---
+> @Amit: I have added your sob without asking as you were involved in
+> getting us to this patch, you did a lot of testing yesterday to find the
+> root cause.
 
-  include/linux/syscalls.h
+SoB for the SoB :-)
 
-between commit:
+> @Rafael: This fixes the issues reported by Bjorn on Amit's series and so
+> should land before Amit's series, if at all this is acceptable to you.
+> Thanks.
 
-  4ced3933226d ("y2038: syscalls: change remaining timeval to __kernel_old_=
-timeval")
+My series was going to get merged through the thermal tree. Currently
+it is hosted here[1] for linux-next testing. We could sign-off this
+patch to the thermal tree or bring the series into the PM tree. Up to
+Rafael and you.
 
-from the y2038 tree and commit:
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/log/?h=thermal/linux-next
 
-  01606a699584 ("syscalls: fix references to filenames containing syscall d=
-efs")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/syscalls.h
-index f90f1c8705fc,1dbefa5e00e5..000000000000
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@@ -731,10 -731,10 +731,10 @@@ asmlinkage long sys_prctl(int option, u
-  			unsigned long arg4, unsigned long arg5);
-  asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, s=
-truct getcpu_cache __user *cache);
- =20
-- /* kernel/time.c */
-+ /* kernel/time/time.c */
- -asmlinkage long sys_gettimeofday(struct timeval __user *tv,
- +asmlinkage long sys_gettimeofday(struct __kernel_old_timeval __user *tv,
-  				struct timezone __user *tz);
- -asmlinkage long sys_settimeofday(struct timeval __user *tv,
- +asmlinkage long sys_settimeofday(struct __kernel_old_timeval __user *tv,
-  				struct timezone __user *tz);
-  asmlinkage long sys_adjtimex(struct __kernel_timex __user *txc_p);
-  asmlinkage long sys_adjtimex_time32(struct old_timex32 __user *txc_p);
-
---Sig_/odvzAu7STO0W1ww9f_42E9f
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3M+4UACgkQAVBC80lX
-0Gz/2ggApPIv/8CUtjx2tFvfYNiKFGiaQa0IGThYq1JElMYSrtiAyOEVR6Yi8HHj
-+CfRsavd4jRtWBCjkKNmVSCU7wy0ChCe4hk8I/4p48oq9luv+x0hbD0/rWbXxir9
-iDsQVnKlx5oSDm/WXq01DBQnLoKoArdMuqW6Vv7xFOIU4GrYxMutICoZq7oiXET1
-MQnDUe7/AU/SuYQy+sRO3Sq48l52e/4tOuda2yGwf3QyWXQZlQGyBhyuUaZ6MACf
-DApU8sfJJCbXaroNF2Ovl80Z/R4tLTjwM+jojGnA8OyoyHJ4OXTPeM2PwHtbwNjY
-et2bPwBNBNJFxqj79jy6aBMlZT1U6w==
-=jp/n
------END PGP SIGNATURE-----
-
---Sig_/odvzAu7STO0W1ww9f_42E9f--
+>  drivers/cpufreq/cpufreq.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 681c1b5f0a1a..05293b43e56d 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2641,6 +2641,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+>         if (cpufreq_disabled())
+>                 return -ENODEV;
+>
+> +       /*
+> +        * The cpufreq core depends heavily on the availability of device
+> +        * structure, make sure they are available before proceeding further.
+> +        */
+> +       if (!get_cpu_device(0))
+> +               return -EPROBE_DEFER;
+> +
+>         if (!driver_data || !driver_data->verify || !driver_data->init ||
+>             !(driver_data->setpolicy || driver_data->target_index ||
+>                     driver_data->target) ||
+> --
+> 2.21.0.rc0.269.g1a574e7a288b
+>
