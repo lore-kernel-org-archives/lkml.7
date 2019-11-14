@@ -2,100 +2,82 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F068C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889C8C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BC82068F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="YUThzm3h"
+	by mail.kernel.org (Postfix) with ESMTP id 976D4206F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573690768;
+	bh=tGvFGDEK2oZKkTKzOKFp8OpdDoQrzJYalEyDYSTMIVg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qthUu2s2jUiajGkEmg0e6X6KYp6y/qeCvGHsHmz4TcMjtJ/wL9mTEiGw9BoNnsfWT
+	 dge/3kAPgHgSVxji6Otf6v9dkUOt9ylFSjR0Qcr0PprMPwtsEOR522ARpi/XZTwCo3
+	 U+ey4XDLZFpZz/KYn2JhaWy+SyxDeh8mmZDkQxfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfKNAQm (ORCPT
+        id S1727020AbfKNAT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:16:42 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35146 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfKNAQm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:16:42 -0500
-Received: by mail-pg1-f196.google.com with SMTP id q22so2467017pgk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 16:16:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=fC5YIN5NtZi/DXcKOnXzYS9mKERKZFP+XZ7Rx2pmg4o=;
-        b=YUThzm3hWkO+B3k6fmOD9jjOo22nIUdns6Nk74aoOjhQGWKp8wCMXp81efO21+PIHv
-         61haGe1mJkGBs/aEIJni/10z8i9W0DuN45uIdFEXNEotqthFlNUjXdK9zLQBBN5M7Tmr
-         Z0O+CmPg1wg9Pulrjk6ThTJyN0zr3/GNZIrKK6OCdO6loYg+X+Cm4im1X1Gu8LNmDiwn
-         A2XUoje+m/KmT68GxiFyquVHJyFS7e8edM2B3qpKsrRyWcVQznJzAEsymUTdVoXvSYm5
-         kluK8yO6qQHhdLiabAfo5cDczDWYOFGhhNSqrCEjFGo6I7oQmxeYoTTXRWWZU545C0tR
-         ccwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=fC5YIN5NtZi/DXcKOnXzYS9mKERKZFP+XZ7Rx2pmg4o=;
-        b=M0MwBUvugpcPLinLbQmwWV9flmEHhEjj34LPoaloto/mzSjnHuZ6k8YI1Q6A85ALYd
-         q/ADO0DRXRAIwc3SKjlyo5t1tORuQCkrrz+OgmEmhWTn1jxUoTAem+bDcc/fWbc57Hao
-         4QAhu63t0NU9UVWs+0hHng7lSVsFRMHbmds+manJHfIF1cKMVmhY1In+CVmQuNOnHbX3
-         D/asowfJmaPfz7F8XcckjgEw33DhY/CJ4lRIZ9+EqlAJuTXxxk/Rb/Ud2DdnsxWj5gEe
-         YyT4+QEaDLJvFG+m094AUzLiQGaBHBqcfAF8WNPCH8j0OadphGrq9Sx3QznFAf1Z8l3C
-         1A4Q==
-X-Gm-Message-State: APjAAAVcaNG6y0IDzKMoJVOeP5q/sxEw7ERSG0mNQk2yuwBn4LeYFuRr
-        xDwR7pzx943OSmrsog+xnHfeB4amc+oyRA==
-X-Google-Smtp-Source: APXvYqxNviRurndtGovBnwGXDIHYmz4ZT6TjBRz225KDObJ42eWctFiGh5td4z/a5LiJCy3brTIu/g==
-X-Received: by 2002:a63:ff46:: with SMTP id s6mr6839305pgk.337.1573690599971;
-        Wed, 13 Nov 2019 16:16:39 -0800 (PST)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.googlemail.com with ESMTPSA id j4sm3984530pfh.187.2019.11.13.16.16.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 16:16:39 -0800 (PST)
-Subject: Re: [PATCH v2] firmware_class: make firmware caching configurable
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Tim Murray <timmurray@google.com>,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-References: <20191113210124.59909-1-salyzyn@android.com>
- <20191113225429.118495-1-salyzyn@android.com>
- <20191113231602.GB11244@42.do-not-panic.com>
-From:   Mark Salyzyn <salyzyn@android.com>
-Message-ID: <33f2baa2-944a-2bfc-1c50-0e437bf11959@android.com>
-Date:   Wed, 13 Nov 2019 16:16:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 19:19:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbfKNAT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 19:19:27 -0500
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9142D206F2;
+        Thu, 14 Nov 2019 00:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573690766;
+        bh=tGvFGDEK2oZKkTKzOKFp8OpdDoQrzJYalEyDYSTMIVg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=f/aDnd9PUbLsbmDBSL4DfUkvccnDESjrH7AtRU+zGXDtwB6YkS4lRSEQ/06/z3bUZ
+         Mc7tUphoZznPcIBp6UkxdNQT0wULRKsmkns5EEPsYon/IbcDOhHDwk6XQocEEO3YV2
+         EHcQv9hIJSJha9hletYo9KRaGoRyZ/ZtQKk+prYo=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] clk: ingenic: Allow drivers to be built with COMPILE_TEST
+Date:   Wed, 13 Nov 2019 16:19:25 -0800
+Message-Id: <20191114001925.159276-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-In-Reply-To: <20191113231602.GB11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 3:16 PM, Luis Chamberlain wrote:
-> On Wed, Nov 13, 2019 at 02:54:26PM -0800, Mark Salyzyn wrote:
->> +config FW_CACHE
->> +	bool "Enable firmware caching during suspend"
->> +	depends on PM_SLEEP
->> +	default y if PM_SLEEP
-> I think the default y would suffice given you have depends on PM_SLEEP,
-> however this also works. So, again:
->
-> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
->
->    Luis
+We don't need the MIPS architecture or even a MIPS compiler to compile
+test these drivers. Let's add a COMPILE_TEST possibility on the
+menuconfig here so that we can build these drivers on more
+configurations.
 
-Worried about setting FW_CACHE w/o PM_SLEEP, this enforces it.
+Cc: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/ingenic/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---Mark
+diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+index fb7b39961703..b4555b465ea6 100644
+--- a/drivers/clk/ingenic/Kconfig
++++ b/drivers/clk/ingenic/Kconfig
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menu "Ingenic SoCs drivers"
+-	depends on MIPS
++	depends on MIPS || COMPILE_TEST
+ 
+ config INGENIC_CGU_COMMON
+ 	bool
+-- 
+Sent by a computer through tubes
 
