@@ -2,93 +2,104 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD97C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1927AC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B5A206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5PrQ1HO"
+	by mail.kernel.org (Postfix) with ESMTP id 22DA8206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKNDvW (ORCPT
+        id S1727041AbfKNDwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:51:22 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35519 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfKNDvW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:51:22 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n16so4024998oig.2;
-        Wed, 13 Nov 2019 19:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oTNGunsWbSvt43YXzCeF3NH4k2942fdpf8D5q79SgVU=;
-        b=O5PrQ1HOh6MNMvmynIQEo/A6e9bNN8fnEemRDCPzwTzD2yKvWxQKxLng92yJxCvFz/
-         qXi05MCCH87j5JQIpPBroCsdIw0T+wMw1F4W6xtyxIyibZXGX4Vx90+fj+F2uKv9fiuJ
-         +MUvoVWyZumwU6usy1VABi/N1rqD/m0JhQ8/fPDbN5coQvmDjq5pBoKtvE8MiSeyrDw1
-         xT+BRZC8evgvljgk6bFkIzNZBmoRGCT92ZJD2GrQWmdtOPYlHozpSaVfERypfl8JuBgu
-         7n97xgnsyIAwKWVdQXHyGcOZoHV98cymsiscF62QCpLo9sn+g1ltTQGh5ACreFZ9LF0f
-         iuhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oTNGunsWbSvt43YXzCeF3NH4k2942fdpf8D5q79SgVU=;
-        b=ouUIkXESd+bwE2060Z5ONd/wUTeTKYUGn8KhtWm3wlTbRyb9Xm/fldWtBgSF3mf5C/
-         WKhrxNGxmYA4vua0fJR797qQbGwFSSw1tWlYeSHrrzUM4Gk/270ifNFhL+L2xtniM6xn
-         nF7i5A+7nu12e2HV5LSWBQK3KaZ8yZD19VWgBNTAQC5qhXNeorgRLsbwHzPhjxuBfNy3
-         X4pFCkgvcdndqVhQ5elRA2u0560vubDX4jieYqMaef/E4FkX2U7PyKnCy5g4Qzlj5ePU
-         1qhEG/s01m+hvTNpoL6XcWQ4/JjjGBBCHPBlyKUU0J+9viZ1zqpQkiCGcySER1bqX2lp
-         My3A==
-X-Gm-Message-State: APjAAAUZyeBhOJQNcGniZyzjFjWCzsKZetkg1SuPz9eEDjG2Luhj/S/Z
-        DEjTzAB8kOytvrX04lYrhtuYR84DIqBfzKFP/kM=
-X-Google-Smtp-Source: APXvYqw45OVhkbExH5Ht9xrBIfcFTRS31ZX0p/sarKxNI/uKsFGLBBXd09EfpuoOJZA2zzohS12ILdfi/EdXNrjyqWg=
-X-Received: by 2002:aca:39d6:: with SMTP id g205mr1735278oia.33.1573703481267;
- Wed, 13 Nov 2019 19:51:21 -0800 (PST)
+        Wed, 13 Nov 2019 22:52:04 -0500
+Received: from mga09.intel.com ([134.134.136.24]:41327 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbfKNDwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 22:52:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 19:52:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
+   d="scan'208";a="257337629"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Nov 2019 19:52:02 -0800
+Received: from [10.226.39.46] (unknown [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id B39A858049A;
+        Wed, 13 Nov 2019 19:51:59 -0800 (PST)
+Subject: Re: [PATCH v6 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1573613534.git.eswara.kota@linux.intel.com>
+ <897ef494f39291797a92efb87a59961d36384019.1573613534.git.eswara.kota@linux.intel.com>
+ <CH2PR12MB40074C910983FF97DDCF8478DA760@CH2PR12MB4007.namprd12.prod.outlook.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <ec2e7ef1-b549-f8f7-d5f3-908c534bbd4f@linux.intel.com>
+Date:   Thu, 14 Nov 2019 11:51:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191027105243.34339-1-like.xu@linux.intel.com> <20191027105243.34339-6-like.xu@linux.intel.com>
-In-Reply-To: <20191027105243.34339-6-like.xu@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 14 Nov 2019 11:51:11 +0800
-Message-ID: <CANRm+Cz3-k6Bct0JAN=m1emT5j4NgULjURyHz0vCDabq00nk4Q@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] KVM: x86/vPMU: Reuse perf_event to avoid
- unnecessary pmc_reprogram_counter
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>, Joerg Roedel <joro@8bytes.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kan.liang@intel.com,
-        wei.w.wang@intel.com, LKML <linux-kernel@vger.kernel.org>,
-        kvm <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CH2PR12MB40074C910983FF97DDCF8478DA760@CH2PR12MB4007.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 at 21:06, Like Xu <like.xu@linux.intel.com> wrote:
+
+On 11/13/2019 5:59 PM, Gustavo Pimentel wrote:
+> On Wed, Nov 13, 2019 at 7:21:21, Dilip Kota <eswara.kota@linux.intel.com>
+> wrote:
 >
-> The perf_event_create_kernel_counter() in the pmc_reprogram_counter() is
-> a heavyweight and high-frequency operation, especially when host disables
-> the watchdog (maximum 21000000 ns) which leads to an unacceptable latency
+[...]
+> +static struct platform_driver intel_pcie_driver = {
+> +	.probe = intel_pcie_probe,
+> +	.remove = intel_pcie_remove,
+> +	.driver = {
+> +		.name = "intel-gw-pcie",
+> +		.of_match_table = of_intel_pcie_match,
+> +		.pm = &intel_pcie_pm_ops,
+> +	},
+> +};
+> +builtin_platform_driver(intel_pcie_driver);
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 29d6e93fd15e..548e22e07a52 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -673,6 +673,7 @@
+>   #define  PCI_EXP_LNKCTL2_TLS_8_0GT	0x0003 /* Supported Speed 8GT/s */
+>   #define  PCI_EXP_LNKCTL2_TLS_16_0GT	0x0004 /* Supported Speed 16GT/s */
+>   #define  PCI_EXP_LNKCTL2_TLS_32_0GT	0x0005 /* Supported Speed 32GT/s */
+> +#define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
+>   #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+>   #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+>   #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
+> -- 
+> 2.11.0
+>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Thanks for reviewing the patch.
 
-Why when host disables the watchdog,
-perf_event_create_kernel_counter() is more heavyweight and
-high-frequency operation?
-
-    Wanpeng
+Regards,
+Dilip
+>
+>
