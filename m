@@ -2,120 +2,196 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72520C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B40C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499DC2071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573737332;
-	bh=oO0LVq3AgLJ4ejYpIckz8rTV2rTNGUkQ4Jb0FD5zXGE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=crmo9gYEg1JuF1As9jeWty+vSEf1T4OU6hsafwJrXoYKyJMN/FXaGNsQsKpShWmCy
-	 gZAQlz6y8V4pQ9bSfR8Yj6fy4+u1Sxi7p2gXtDOjdcoD9GEfUk4F7f3X85LcjowXJT
-	 9pGDshbW1t4HgLeXhtvBvvuyTdAd/Xonu7b4OW8E=
+	by mail.kernel.org (Postfix) with ESMTP id 4BBCD20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKNNPb (ORCPT
+        id S1726597AbfKNNSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:15:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39594 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 08:18:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:43042 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfKNNPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:15:30 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C51920715;
-        Thu, 14 Nov 2019 13:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573737329;
-        bh=oO0LVq3AgLJ4ejYpIckz8rTV2rTNGUkQ4Jb0FD5zXGE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=q1txG8Xg9f6m8GGV+Zb+sCvc5UcZ80yigAffnlOKjPqNZM1zBksB2YUoWVucOWFJ5
-         rxJL4fv6SQ21/0PrIY+RN+XSzyxt7n3e7FhM5f/R1KvPJMpBtsckp95AN4ZY4zMc2c
-         GwRd7WEJ9exaRu8BEtIib1CeP/AA9IzrkH/QRK/E=
-Message-ID: <cbda3a69d25b04e10332e7b3898064a93b2d04ae.camel@kernel.org>
-Subject: Re: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus
- OSDs
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 14 Nov 2019 08:15:28 -0500
-In-Reply-To: <20191114105736.8636-1-lhenriques@suse.com>
-References: <20191114105736.8636-1-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        id S1726139AbfKNNSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:18:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E20E731B;
+        Thu, 14 Nov 2019 05:18:02 -0800 (PST)
+Received: from [192.168.0.21] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF30B3F52E;
+        Thu, 14 Nov 2019 05:18:00 -0800 (PST)
+Subject: Re: [PATCH 5.3 113/148] thermal: Fix use-after-free when
+ unregistering thermal zone device
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, wvw@google.com,
+        lukasz.luba@arm.com
+References: <20191010083609.660878383@linuxfoundation.org>
+ <20191010083617.967244655@linuxfoundation.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <905e26d4-76c7-555f-3b33-51fa3cf7a470@arm.com>
+Date:   Thu, 14 Nov 2019 13:17:55 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191010083617.967244655@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-11-14 at 10:57 +0000, Luis Henriques wrote:
-> Hi!
-> 
-> So, after the feedback I got from v1 [1] I've sent out a pull-request
-> for the OSDs [2] which encodes require_osd_release into the OSDMap
-> client data.  This allows the client to figure out which ceph release
-> the OSDs cluster is running and decide whether or not it's safe to use
-> the copy-from Op for copy_file_range.
-> 
-> This new patchset I'm sending simply adds enough functionality to the
-> kernel client so that it can take advantage of this OSD patch:
-> 
-> 0001 - adds the ability to decode TYPE_MSGR2 addresses.  This is a
->        required functionality for enabling SERVER_NAUTILUS in the
->        client.  I hope I got the new format right, as I couldn't figure
->        out what the hard-coded values (see comments) really mean.
-> 
+Hi Greg,
 
-nit: the first 3 patch subject lines should probably be prefixed with
-"libceph:"
+This patch causes a deadlock, the thermal framework stops. Please check
+this fix (I found it before posting exactly the same solution):
+https://lkml.org/lkml/2019/11/12/1075
 
-> 0002 - allows the client to retrieve the new require_osd_release field
->        from the OSDMap if available.  This patch also adds SERVER_MIMIC,
->        SERVER_NAUTILUS and SERVER_OCTOPUS to the supported features,
->        which TBH I'm not sure if that's a safe thing to do -- the only
->        issue I've seen was that Nautilus requires the ability to decode
->        TYPE_MSGR2 address, but I may have missed others.
-> 
+I have verified it on OdroidXU4 and it works. It needs some cleaning in
+the commit message, though.
+I have added to CC the author: Wei Wang
 
-Yes, this needs to be done with care. We have to ensure that the server
-side isn't assuming that the client supports something that it doesn't.
-I think that means just trawling through the code and verifying whether
-this is safe.
+I don't know in how many stable trees it was applied, but should be fix
+there also.
 
-> 0003 - debug code to add require_osd_release to the osdmap debugfs file.
-> 
-> 0004 - adds the truncate_{seq,size} fields to the 'copy-from' operation
->        if the OSDs are >= Octopus.
-> 
-> Also note that, as suggested by Ilya, I've dropped the patch that would
-> change the default mount options to 'copyfrom'.
-> 
-> These patches have been tested with the xfstests generic test suite, and
-> with a couple of other (local) tests that exercise the cephfs
-> copy_file_range syscall.  I didn't saw any issues, but as I said above,
-> I'm not really sure if adding the SERVER_* flags to the supported
-> features have other side effects.
-> 
-> [1] https://lore.kernel.org/lkml/20191108141555.31176-1-lhenriques@suse.com/
-> [2] https://github.com/ceph/ceph/pull/31611
-> 
+Regards,
+Lukasz Luba
 
-I'm just getting caught up on the discussion here, but why was it
-decided to do it this way instead of just adding a new OSD
-"copy-from-no-truncseq" operation? Once you tried it once and an OSD
-didn't support it, you could just give up on using it any longer? That
-seems a lot simpler than trying to monkey with feature bits.
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+On 10/10/19 9:36 AM, Greg Kroah-Hartman wrote:
+> From: Ido Schimmel <idosch@mellanox.com>
+> 
+> [ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
+> 
+> thermal_zone_device_unregister() cancels the delayed work that polls the
+> thermal zone, but it does not wait for it to finish. This is racy with
+> respect to the freeing of the thermal zone device, which can result in a
+> use-after-free [1].
+> 
+> Fix this by waiting for the delayed work to finish before freeing the
+> thermal zone device. Note that thermal_zone_device_set_polling() is
+> never invoked from an atomic context, so it is safe to call
+> cancel_delayed_work_sync() that can block.
+> 
+> [1]
+> [  +0.002221] ==================================================================
+> [  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
+> [  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
+> 
+> [  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
+> [  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+> [  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
+> [  +0.000012] Call Trace:
+> [  +0.000021]  dump_stack+0xa9/0x10e
+> [  +0.000020]  print_address_description.cold.2+0x9/0x25e
+> [  +0.000018]  __kasan_report.cold.3+0x78/0x9d
+> [  +0.000016]  kasan_report+0xe/0x20
+> [  +0.000016]  __mutex_lock+0x1076/0x11c0
+> [  +0.000014]  step_wise_throttle+0x72/0x150
+> [  +0.000018]  handle_thermal_trip+0x167/0x760
+> [  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
+> [  +0.000019]  process_one_work+0x969/0x16f0
+> [  +0.000017]  worker_thread+0x91/0xc40
+> [  +0.000014]  kthread+0x33d/0x400
+> [  +0.000015]  ret_from_fork+0x3a/0x50
+> 
+> [  +0.000020] Allocated by task 1:
+> [  +0.000015]  save_stack+0x19/0x80
+> [  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
+> [  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
+> [  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
+> [  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
+> [  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
+> [  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
+> [  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
+> [  +0.000014]  local_pci_probe+0xc3/0x150
+> [  +0.000013]  pci_device_probe+0x280/0x410
+> [  +0.000013]  really_probe+0x26a/0xbb0
+> [  +0.000013]  driver_probe_device+0x208/0x2e0
+> [  +0.000013]  device_driver_attach+0xfe/0x140
+> [  +0.000013]  __driver_attach+0x110/0x310
+> [  +0.000013]  bus_for_each_dev+0x14b/0x1d0
+> [  +0.000013]  driver_register+0x1c0/0x400
+> [  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
+> [  +0.000014]  do_one_initcall+0x239/0x4dd
+> [  +0.000013]  kernel_init_freeable+0x42b/0x4e8
+> [  +0.000012]  kernel_init+0x11/0x18b
+> [  +0.000013]  ret_from_fork+0x3a/0x50
+> 
+> [  +0.000015] Freed by task 581:
+> [  +0.000013]  save_stack+0x19/0x80
+> [  +0.000014]  __kasan_slab_free+0x125/0x170
+> [  +0.000013]  kfree+0xf3/0x310
+> [  +0.000013]  thermal_release+0xc7/0xf0
+> [  +0.000014]  device_release+0x77/0x200
+> [  +0.000014]  kobject_put+0x1a8/0x4c0
+> [  +0.000014]  device_unregister+0x38/0xc0
+> [  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
+> [  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
+> [  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
+> [  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
+> [  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
+> [  +0.000014]  genl_family_rcv_msg+0x700/0xee0
+> [  +0.000013]  genl_rcv_msg+0xca/0x170
+> [  +0.000013]  netlink_rcv_skb+0x137/0x3a0
+> [  +0.000012]  genl_rcv+0x29/0x40
+> [  +0.000013]  netlink_unicast+0x49b/0x660
+> [  +0.000013]  netlink_sendmsg+0x755/0xc90
+> [  +0.000013]  __sys_sendto+0x3de/0x430
+> [  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
+> [  +0.000013]  do_syscall_64+0xa4/0x4d0
+> [  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> [  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
+>                 which belongs to the cache kmalloc-2k of size 2048
+> [  +0.000012] The buggy address is located 1096 bytes inside of
+>                 2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
+> [  +0.000007] The buggy address belongs to the page:
+> [  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
+> [  +0.000020] flags: 0x200000000010200(slab|head)
+> [  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
+> [  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
+> [  +0.000007] page dumped because: kasan: bad access detected
+> 
+> [  +0.000012] Memory state around the buggy address:
+> [  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  +0.000008]                                                  ^
+> [  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  +0.000007] ==================================================================
+> 
+> Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
+> Reported-by: Jiri Pirko <jiri@mellanox.com>
+> Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+> Acked-by: Jiri Pirko <jiri@mellanox.com>
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   drivers/thermal/thermal_core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 6bab66e84eb58..ebe15f2cf7fc3 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -304,7 +304,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
+>   				 &tz->poll_queue,
+>   				 msecs_to_jiffies(delay));
+>   	else
+> -		cancel_delayed_work(&tz->poll_queue);
+> +		cancel_delayed_work_sync(&tz->poll_queue);
+>   }
+>   
+>   static void monitor_thermal_zone(struct thermal_zone_device *tz)
+> 
