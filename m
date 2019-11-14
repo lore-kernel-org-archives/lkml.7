@@ -2,38 +2,71 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FB3C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAF8C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722AB20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6888F20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqr9FAH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfKNK56 (ORCPT
+        id S1727149AbfKNK6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:57:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33340 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726923AbfKNK5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:57:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 014F4AD07;
-        Thu, 14 Nov 2019 10:57:40 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [RFC PATCH v2 2/4] ceph: get the require_osd_release field from the osdmap
-Date:   Thu, 14 Nov 2019 10:57:34 +0000
-Message-Id: <20191114105736.8636-3-lhenriques@suse.com>
-In-Reply-To: <20191114105736.8636-1-lhenriques@suse.com>
-References: <20191114105736.8636-1-lhenriques@suse.com>
+        Thu, 14 Nov 2019 05:58:19 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53447 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfKNK6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 05:58:19 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u18so5185517wmc.3;
+        Thu, 14 Nov 2019 02:58:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lUDQmuDK49ImgwHVLgjE9X4paiR383d/ziyJit2HbDw=;
+        b=uqr9FAH6BQ7HESVl57/IfLRJbzZXTLbF2wXTTboVQw0KZFt3nmPkyWuA3rbJ3nFooJ
+         GBBn1lAcHoEkVrUl1Px9R87ovisLn98BFe4cHyQ34IWaOOLj5kKONpgT9azV6sqf5AFQ
+         4FFwf1CDhdPxctlYTrdjZ/lpnmCyWz1nttXvgJv0E6Eunhni2s9RictuIk9p11tqoQeO
+         oEYr7RwlqfStQXgig2bZblBaYoBp1nI+M3fNBihSPD7M41fLR2YhjQgiUsat7wFCW/Bd
+         +FMoSMKrO40wztajwS1w9LAz1MXLTL15zc2Wh39+0AXmSNNtIHoWJjFSFaBz4EqHr/5L
+         OFlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lUDQmuDK49ImgwHVLgjE9X4paiR383d/ziyJit2HbDw=;
+        b=gHtO3nLYUroTqeUO+LfXy3Zr/V4hFQcQvtnRlLXscaPbOhYgG74TerwPEy11uNojKb
+         AGErRAYvl4DcNITYOGsoNrlttM/5vZiLlHUX3IDMaL/K/8WEl1q3TC4r3ErkxT8e77ak
+         NFGOoscpomo/l9brapFu2WapzlJFLAuTL+LTgud5F0GQY/U20hVa1SVhjiE2CONPrvLA
+         6Tc9MjBqudqkGIxzgf+TVrqrGVbIbNj0ckoXKWnMpGwpnsmKwunfdXUYXw8avHNBW3yx
+         ZZFEhYh8ysymcczW8M+FLb9CfANQoiwd1PZ9bWPUVs0Teu56nkKdIMjiQdwe6lCzXVwC
+         RUNQ==
+X-Gm-Message-State: APjAAAWFFfXOJfm/H8jnJJB7Jc94ioGFLiJWmGo2YWM8jJsIeVNAaKNJ
+        0vKW//nvIgo/8dTT9d/PvSk=
+X-Google-Smtp-Source: APXvYqx2jCcvlo2boZJ1P3rOWROelM+uphB4pp6k229Qk5W3qr+3NetY+PuKuVIistmjIBMc/9ubzg==
+X-Received: by 2002:a7b:c24b:: with SMTP id b11mr7571066wmj.125.1573729096886;
+        Thu, 14 Nov 2019 02:58:16 -0800 (PST)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id b66sm6042770wmh.39.2019.11.14.02.58.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 02:58:16 -0800 (PST)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH] crypto: sun4i-ss: use crypto_ahash_digestsize
+Date:   Thu, 14 Nov 2019 11:58:13 +0100
+Message-Id: <20191114105813.13171-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,106 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since Ceph Octopus, OSDs are encoding require_osd_release into the client
-data part of the osdmap.  This patch adds code to pick this extra field.
+The size of the digest is different between MD5 and SHA1 so instead of
+using the higher value (5 words), let's use crypto_ahash_digestsize().
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- include/linux/ceph/ceph_features.h | 10 ++++++++--
- include/linux/ceph/osdmap.h        |  1 +
- net/ceph/osdmap.c                  | 21 +++++++++++++++++++++
- 3 files changed, 30 insertions(+), 2 deletions(-)
+ drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/ceph/ceph_features.h b/include/linux/ceph/ceph_features.h
-index 39e6f4c57580..f329d1907dd7 100644
---- a/include/linux/ceph/ceph_features.h
-+++ b/include/linux/ceph/ceph_features.h
-@@ -9,6 +9,7 @@
-  */
- #define CEPH_FEATURE_INCARNATION_1 (0ull)
- #define CEPH_FEATURE_INCARNATION_2 (1ull<<57) // CEPH_FEATURE_SERVER_JEWEL
-+#define CEPH_FEATURE_INCARNATION_3 ((1ull<<57)|(1ull<<28)) // SERVER_MIMIC
- 
- #define DEFINE_CEPH_FEATURE(bit, incarnation, name)			\
- 	static const uint64_t CEPH_FEATURE_##name = (1ULL<<bit);		\
-@@ -76,6 +77,7 @@ DEFINE_CEPH_FEATURE( 0, 1, UID)
- DEFINE_CEPH_FEATURE( 1, 1, NOSRCADDR)
- DEFINE_CEPH_FEATURE_RETIRED( 2, 1, MONCLOCKCHECK, JEWEL, LUMINOUS)
- 
-+DEFINE_CEPH_FEATURE( 2, 3, SERVER_NAUTILUS)
- DEFINE_CEPH_FEATURE( 3, 1, FLOCK)
- DEFINE_CEPH_FEATURE( 4, 1, SUBSCRIBE2)
- DEFINE_CEPH_FEATURE( 5, 1, MONNAMES)
-@@ -92,6 +94,7 @@ DEFINE_CEPH_FEATURE(14, 2, SERVER_KRAKEN)
- DEFINE_CEPH_FEATURE(15, 1, MONENC)
- DEFINE_CEPH_FEATURE_RETIRED(16, 1, QUERY_T, JEWEL, LUMINOUS)
- 
-+DEFINE_CEPH_FEATURE(16, 3, SERVER_OCTOPUS)
- DEFINE_CEPH_FEATURE_RETIRED(17, 1, INDEP_PG_MAP, JEWEL, LUMINOUS)
- 
- DEFINE_CEPH_FEATURE(18, 1, CRUSH_TUNABLES)
-@@ -114,7 +117,7 @@ DEFINE_CEPH_FEATURE(25, 1, CRUSH_TUNABLES2)
- DEFINE_CEPH_FEATURE(26, 1, CREATEPOOLID)
- DEFINE_CEPH_FEATURE(27, 1, REPLY_CREATE_INODE)
- DEFINE_CEPH_FEATURE_RETIRED(28, 1, OSD_HBMSGS, HAMMER, JEWEL)
--DEFINE_CEPH_FEATURE(28, 2, SERVER_M)
-+DEFINE_CEPH_FEATURE(28, 2, SERVER_MIMIC)
- DEFINE_CEPH_FEATURE(29, 1, MDSENC)
- DEFINE_CEPH_FEATURE(30, 1, OSDHASHPSPOOL)
- DEFINE_CEPH_FEATURE(31, 1, MON_SINGLE_PAXOS)  // deprecate me
-@@ -212,7 +215,10 @@ DEFINE_CEPH_FEATURE_DEPRECATED(63, 1, RESERVED_BROKEN, LUMINOUS) // client-facin
- 	 CEPH_FEATURE_CRUSH_TUNABLES5 |		\
- 	 CEPH_FEATURE_NEW_OSDOPREPLY_ENCODING |	\
- 	 CEPH_FEATURE_MSG_ADDR2 |		\
--	 CEPH_FEATURE_CEPHX_V2)
-+	 CEPH_FEATURE_CEPHX_V2 |		\
-+	 CEPH_FEATURE_SERVER_MIMIC |		\
-+	 CEPH_FEATURE_SERVER_NAUTILUS |		\
-+	 CEPH_FEATURE_SERVER_OCTOPUS)
- 
- #define CEPH_FEATURES_REQUIRED_DEFAULT	0
- 
-diff --git a/include/linux/ceph/osdmap.h b/include/linux/ceph/osdmap.h
-index e081b56f1c1d..0d8e7f5e3478 100644
---- a/include/linux/ceph/osdmap.h
-+++ b/include/linux/ceph/osdmap.h
-@@ -160,6 +160,7 @@ struct ceph_osdmap {
- 
- 	u32 flags;         /* CEPH_OSDMAP_* */
- 
-+	u8 require_osd_release;
- 	u32 max_osd;       /* size of osd_state, _offload, _addr arrays */
- 	u32 *osd_state;    /* CEPH_OSD_* */
- 	u32 *osd_weight;   /* 0 = failed, 0x10000 = 100% normal */
-diff --git a/net/ceph/osdmap.c b/net/ceph/osdmap.c
-index 4e0de14f80bb..29526fd61983 100644
---- a/net/ceph/osdmap.c
-+++ b/net/ceph/osdmap.c
-@@ -1582,6 +1582,27 @@ static int osdmap_decode(void **p, void *end, struct ceph_osdmap *map)
- 		WARN_ON(!RB_EMPTY_ROOT(&map->pg_upmap_items));
+diff --git a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
+index ee518dcdba42..ec5d9ce24bb8 100644
+--- a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
+@@ -227,7 +227,7 @@ static int sun4i_hash(struct ahash_request *areq)
+ 	 */
+ 	if (op->byte_count) {
+ 		ivmode = SS_IV_ARBITRARY;
+-		for (i = 0; i < 5; i++)
++		for (i = 0; i < crypto_ahash_digestsize(tfm) / 4; i++)
+ 			writel(op->hash[i], ss->base + SS_IV0 + i * 4);
  	}
- 
-+	if (struct_v >= 6)
-+		/* crush version */
-+		ceph_decode_skip_32(p, end, e_inval);
-+	if (struct_v >= 7) {
-+		/*
-+		 * skip removed_snaps and purged_snaps
-+		 * (snap_interval_set_t = 8 + 8)
-+		 */
-+		ceph_decode_skip_set(p, end, 16, e_inval);
-+		ceph_decode_skip_set(p, end, 16, e_inval);
-+	}
-+	if (struct_v >= 9) {
-+		struct ceph_timespec ts;
-+
-+		/* last_up_change and last_in_change */
-+		ceph_decode_copy_safe(p, end, &ts, sizeof(ts), e_inval);
-+		ceph_decode_copy_safe(p, end, &ts, sizeof(ts), e_inval);
-+	}
-+	if (struct_v >= 10)
-+		ceph_decode_8_safe(p, end, map->require_osd_release, e_inval);
-+
- 	/* ignore the rest */
- 	*p = end;
- 
+ 	/* Enable the device */
+-- 
+2.23.0
+
