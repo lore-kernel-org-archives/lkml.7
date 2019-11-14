@@ -2,111 +2,185 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2966C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB421C33C9A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940C2206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAE420706
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GHDbMv47"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ml/cOiBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKNOSD (ORCPT
+        id S1726952AbfKNOTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:18:03 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25882 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727142AbfKNOSD (ORCPT
+        Thu, 14 Nov 2019 09:19:10 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:36381 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfKNOTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:18:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573741081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UgJy6SxLsqvhT1eq7XHYrbyc/XE4ntEQQsPOh9HtOQY=;
-        b=GHDbMv47TKjJoQuFxJWKIKi4KEWpcrisAh83iCD1saHjVh6P5ehVYbQYLpSnWSqm02/Dai
-        TFSfNxFS7XANKfKUHXhXPjlMaK5HuKk/7Y0bp21RDGJlH1Fm4y/wtWZ1u7usPWhXIgUVbR
-        5GyZhkKQVU5+jxD4FOeDc6u/wO5DBjc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-fsoAokqzMtq_APCNNcCn3A-1; Thu, 14 Nov 2019 09:17:58 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D54ADBCD;
-        Thu, 14 Nov 2019 14:17:57 +0000 (UTC)
-Received: from ovpn-112-22.phx2.redhat.com (ovpn-112-22.phx2.redhat.com [10.3.112.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 803CB75E51;
-        Thu, 14 Nov 2019 14:17:46 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 14:17:44 +0000 (UTC)
-From:   Sage Weil <sweil@redhat.com>
-X-X-Sender: sage@piezo.novalocal
-To:     Ilya Dryomov <idryomov@gmail.com>
-cc:     Jeff Layton <jlayton@kernel.org>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus
- OSDs
-In-Reply-To: <CAOi1vP9XaeJdqV-jMP3BM=mjHKqJW8-ynAjCi0xcDD3DtL94KQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1911141416040.17979@piezo.novalocal>
-References: <20191114105736.8636-1-lhenriques@suse.com> <cbda3a69d25b04e10332e7b3898064a93b2d04ae.camel@kernel.org> <alpine.DEB.2.21.1911141326260.17979@piezo.novalocal> <CAOi1vP9XaeJdqV-jMP3BM=mjHKqJW8-ynAjCi0xcDD3DtL94KQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 14 Nov 2019 09:19:08 -0500
+Received: by mail-vs1-f66.google.com with SMTP id q21so3956994vsg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 06:19:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mF9QJkIN8Qk+EGkxO+jVoBbFR7FMIpRA3CjmA8m3d7Y=;
+        b=Ml/cOiBysl9RO47an1PTBHLBV9w/7hUJ5RTzC9SA1Mtzt+/DhPojZxalupt6UqYxdQ
+         Z6JVbt31LezzDArBbJjiKL2Y5fmaM9zvJ7unZ4BgDdfgF9mW0AXrx+BoEeZrvPk8v4Na
+         vFp/6s+uvZ+tazuT9dOHmkygy3CCIjNpWHbDS4RdoO1Ax+9gtplcOkQGyvu+xkTNpwvf
+         BQOZDKA6W1skAgd0wkcQQjy4KYmerLP5JSisRTka6/XXrK6yecbJSVLJ+KeRGxhACdKH
+         8qTLgfs22vZ7hOJ8kyH9jH6x5yGzqyYsrJoASTpX+UbbwnAEwMt16yGMLqfSMGWl0VET
+         jivg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mF9QJkIN8Qk+EGkxO+jVoBbFR7FMIpRA3CjmA8m3d7Y=;
+        b=tOo8lRo0fBa6fWVQwuaBKjx7Ros1Xt+2JQhr6HGepGUpfd5UE+t6EwnsC//8GbU68Z
+         i0QYqW+5OLCdqO8WzzFvL3EVnFOGxXjXbH492EzxHjuTBRS3gFbmMp0FMfchLOfabQF6
+         LDvQyXJSrBuAUguV+H8Br3E+u5ML3kpKIp6w7IVKHJacAFra0nVrcZ2kg1kc5oJ4snrt
+         0500DZzkLU+d/esyFjNSmIkywuS+IVgceGtTVhb+Gfqo9TWfvuJc5bvfMDE3jzp5SmZ7
+         qY7EdkkkafQiDXlx922i2leaQB75B/w1bdtexLC09clouMfX0Vlq/l/z1olmwrtUJVll
+         bhUg==
+X-Gm-Message-State: APjAAAX0U4/3FJ+hnYhKnMP4+N9UmBX4Enk2AccdkeCbJcnnl2ZABOg7
+        vdQtyNEZRVycrc16RjFULCt1eCcODaozgT1qfp8APA==
+X-Google-Smtp-Source: APXvYqwgCmwHYSDSJ68Em4upupN+YGH3wrjpaM8fSyc24xbueo9viz0GrcVPQXBkKEvWLAXn8LtIFd6tV6myvBaAjVM=
+X-Received: by 2002:a05:6102:36d:: with SMTP id f13mr6019578vsa.34.1573741145328;
+ Thu, 14 Nov 2019 06:19:05 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: fsoAokqzMtq_APCNNcCn3A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <cover.1573122644.git.hns@goldelico.com>
+In-Reply-To: <cover.1573122644.git.hns@goldelico.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 14 Nov 2019 15:18:29 +0100
+Message-ID: <CAPDyKFrntf2Kd9Zf7uxRCUk_OrKD8B3xOKmvPaf04X21L5HwWA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] OpenPandora: make wl1251 connected to mmc3 sdio
+ port of OpenPandora work again
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019, Ilya Dryomov wrote:
-> > > I'm just getting caught up on the discussion here, but why was it
-> > > decided to do it this way instead of just adding a new OSD
-> > > "copy-from-no-truncseq" operation? Once you tried it once and an OSD
-> > > didn't support it, you could just give up on using it any longer? Tha=
-t
-> > > seems a lot simpler than trying to monkey with feature bits.
-> >
-> > I don't remember the original discussion either, but in retrospect that
-> > does seem much simpler--especially since hte client is conditioning
-> > sending this based on the the require_osd_release.  It seems like passi=
-ng
-> > a flag to the copy-from op would be more reasonable instead of conditio=
-nal
-> > feature-based behavior.
->=20
-> Yeah, I suggested adding require_osd_release to the client portion just
-> because we are running into it more and more: Objecter relies on it for
-> RESEND_ON_SPLIT for example.  It needs to be accessible so that patches
-> like that can be carried over to the kernel client without workarounds.
->=20
-> copy-from in its existing form is another example.  AFAIU the problem
-> is that copy-from op doesn't reject unknown flags.  Luis added a flag
-> in https://github.com/ceph/ceph/pull/25374, but it is simply ignored on
-> nautilus and older releases, potentially leading to data corruption.
->=20
-> Adding a new op that would be an alias for CEPH_OSD_OP_COPY_FROM with
-> CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ like Jeff is suggesting, or a new
-> copy-from2 op that would behave just like copy-from, but reject unknown
-> flags to avoid similar compatibility issues in the future is probably
-> the best thing we can do from the client perspective.
+On Thu, 7 Nov 2019 at 11:31, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+>
+> * add a revisit note for special wl1251 handling code because it should
+>   be solved more generic in mmc core - suggested by Ulf Hansson <ulf.hansson@linaro.org>
+> * remove init_card callback from platform_data/hsmmc-omap.h - suggested by Ulf Hansson <ulf.hansson@linaro.org>
+> * remove obstructive always-on for vwlan regulator - suggested by Ulf Hansson <ulf.hansson@linaro.org>
+> * rename DT node - suggested by Rob Herring <robh@kernel.org>
+> * fix ARM: dts: subject prefix - suggested by Tony Lindgren <tony@atomide.com>
+> * also remove omap2_hsmmc_info and obc-y line in Makefile - suggested by Tony Lindgren <tony@atomide.com>
 
-Yeah, I think copy-from2 is the best path.  I think that means we should=20
-revert what we merged to ceph.git a few weeks back, Luis!  Sorry we didn't=
-=20
-put all the pieces together before...
+No further comments from my side. Let's just agree on how to deal with
+the ti,power-gpio, then I can apply this.
 
-sage
+Thanks a lot for fixing all this mess!
 
+Kind regards
+Uffe
+
+>
+> PATCH V2 2019-10-19 20:41:47:
+> * added acked-by for wl1251 patches - Kalle Valo <kvalo@codeaurora.org>
+> * really removed old pdata-quirks code (not through #if 0)
+> * splited out a partial revert of
+>         efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
+>   because that was introduced after v4.19 and stops the removal of
+>   the pdata-quirks patch from cleanly applying to v4.9, v4.14, v4.19
+>   - reported by Sasha Levin <sashal@kernel.org>
+> * added a new patch to remove old omap hsmmc since pdata quirks
+>   were last user - suggested by Tony Lindgren <tony@atomide.com>
+>
+> PATCH V1 2019-10-18 22:25:39:
+> Here we have a set of scattered patches to make the OpenPandora WiFi work again.
+>
+> v4.7 did break the pdata-quirks which made the mmc3 interface
+> fail completely, because some code now assumes device tree
+> based instantiation.
+>
+> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+>
+> v4.11 did break the sdio qirks for wl1251 which made the driver no longer
+> load, although the device was found as an sdio client.
+>
+> Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+>
+> To solve these issues:
+> * we convert mmc3 and wl1251 initialization from pdata-quirks
+>   to device tree
+> * we make the wl1251 driver read properties from device tree
+> * we fix the mmc core vendor ids and quirks
+> * we fix the wl1251 (and wl1271) driver to use only vendor ids
+>   from header file instead of (potentially conflicting) local
+>   definitions
+>
+>
+> H. Nikolaus Schaller (12):
+>   Documentation: dt: wireless: update wl1251 for sdio
+>   net: wireless: ti: wl1251 add device tree support
+>   ARM: dts: pandora-common: define wl1251 as child node of mmc3
+>   mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid
+>     of pandora_wl1251_init_card
+>   omap: pdata-quirks: revert pandora specific gpiod additions
+>   omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+>   omap: remove omap2_hsmmc_info in old hsmmc.[ch] and update Makefile
+>   mmc: host: omap-hsmmc: remove init_card pdata callback from pdata
+>   mmc: sdio: fix wl1251 vendor id
+>   mmc: core: fix wl1251 sdio quirks
+>   net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
+>   net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
+>
+>  .../bindings/net/wireless/ti,wl1251.txt       |  26 +++
+>  arch/arm/boot/dts/omap3-pandora-common.dtsi   |  36 +++-
+>  arch/arm/mach-omap2/Makefile                  |   3 -
+>  arch/arm/mach-omap2/common.h                  |   1 -
+>  arch/arm/mach-omap2/hsmmc.c                   | 171 ------------------
+>  arch/arm/mach-omap2/hsmmc.h                   |  32 ----
+>  arch/arm/mach-omap2/pdata-quirks.c            | 105 -----------
+>  drivers/mmc/core/quirks.h                     |   7 +
+>  drivers/mmc/host/omap_hsmmc.c                 |  30 ++-
+>  drivers/net/wireless/ti/wl1251/sdio.c         |  23 ++-
+>  drivers/net/wireless/ti/wlcore/sdio.c         |   8 -
+>  include/linux/mmc/sdio_ids.h                  |   2 +
+>  include/linux/platform_data/hsmmc-omap.h      |   3 -
+>  13 files changed, 111 insertions(+), 336 deletions(-)
+>  delete mode 100644 arch/arm/mach-omap2/hsmmc.c
+>  delete mode 100644 arch/arm/mach-omap2/hsmmc.h
+>
+> --
+> 2.23.0
+>
