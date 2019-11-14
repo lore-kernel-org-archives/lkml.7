@@ -2,172 +2,140 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C3FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F552C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0200E206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE92B206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:46:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mOd1jL63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfKNRqb (ORCPT
+        id S1727032AbfKNRqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:46:31 -0500
-Received: from mga12.intel.com ([192.55.52.136]:48423 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfKNRqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:46:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:46:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="207868279"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 14 Nov 2019 09:46:30 -0800
-Date:   Thu, 14 Nov 2019 09:46:30 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] x86/traps: Print non-canonical address on #GP
-Message-ID: <20191114174630.GF24045@linux.intel.com>
-References: <20191112211002.128278-1-jannh@google.com>
- <20191112211002.128278-2-jannh@google.com>
+        Thu, 14 Nov 2019 12:46:53 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:25658 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfKNRqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:46:53 -0500
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xAEHkiSr031689;
+        Fri, 15 Nov 2019 02:46:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xAEHkiSr031689
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573753605;
+        bh=RnTRkKRmwGrZIBYmr069B+wqrpCe/TPtwzUT5A13c6o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mOd1jL63I1IWjvuwOJTk5mJ98bAC/VCGnSMZ9vQeKZbVGLs8m+DklEYoo7OXvW/0T
+         gMkYeVfEw+aywiRTrgnWG9+ZW37Ic3dNrrDv+15fYWfejjeTeaHCpCdF1xc/sTUQGm
+         Ak9F7vhf4dzIt/yEJCWt8RUWffKMJeyXPaVuymCQGYPuj6JJpNty59yk2GDhOB2TOv
+         LPTZ1mFXXEB32wTB18b9KgP/C1C35ljt3AbhHpn3J6ODxTkwojCsk1uzEz6jSjxyOO
+         cMYAq3PQF2duKLgVwlAdjoZVwQ8iBGNYGJgRI6yllbZ4DxatmdK2C4PntvuMRUgq+e
+         x7Fff6887qXPQ==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id k24so1686098vko.7;
+        Thu, 14 Nov 2019 09:46:45 -0800 (PST)
+X-Gm-Message-State: APjAAAW2bEOnal2h2hF4vltCXy5GvupaacE/C/GAB7hH7IiMGP0wEVc6
+        0yctYfzz4FxxMvAfbj3M8H6UgzfDd5JKViaf6fI=
+X-Google-Smtp-Source: APXvYqxCgx2Cksxrrex4Puc8fMIMYoKNsrErgHs9rWSi3zoIQdoaUCWi/iM6SBNnJoOGhnNsL9yX+m4vTWvedDQgaM4=
+X-Received: by 2002:a1f:7387:: with SMTP id o129mr5885230vkc.73.1573753604038;
+ Thu, 14 Nov 2019 09:46:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112211002.128278-2-jannh@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191114174226.7201-1-yamada.masahiro@socionext.com> <20191114174226.7201-2-yamada.masahiro@socionext.com>
+In-Reply-To: <20191114174226.7201-2-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 15 Nov 2019 02:46:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATGjv7_bmhGGpOupFpRRvvaGetvaTszE09MBKz3Ob06fQ@mail.gmail.com>
+Message-ID: <CAK7LNATGjv7_bmhGGpOupFpRRvvaGetvaTszE09MBKz3Ob06fQ@mail.gmail.com>
+Subject: Re: [PATCH 2/6] modpost: refactor namespace_from_kstrtabns() to not
+ hard-code section name
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:10:01PM +0100, Jann Horn wrote:
-> A frequent cause of #GP exceptions are memory accesses to non-canonical
-> addresses. Unlike #PF, #GP doesn't come with a fault address in CR2, so
-> the kernel doesn't currently print the fault address for #GP.
-> Luckily, we already have the necessary infrastructure for decoding X86
-> instructions and computing the memory address that is being accessed;
-> hook it up to the #GP handler so that we can figure out whether the #GP
-> looks like it was caused by a non-canonical address, and if so, print
-> that address.
-> 
-> While it is already possible to compute the faulting address manually by
-> disassembling the opcode dump and evaluating the instruction against the
-> register dump, this should make it slightly easier to identify crashes
-> at a glance.
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
+(+CC: Matthias, who might be interested)
+
+
+On Fri, Nov 15, 2019 at 2:42 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Currently, namespace_from_kstrtabns() relies on the fact that
+> namespace strings are recorded in the __ksymtab_strings section.
+> Actually, it is coded in include/linux/export.h, but modpost does
+> not need to hard-code the section name.
+>
+> Elf_Sym::st_shndx holds the section number of the relevant section.
+> Using it is a more portable way to find the namespace string.
+>
+> sym_get_value() takes care of it, so namespace_from_kstrtabns() can
+> simply wrap it. Delete the unneeded info->ksymtab_strings .
+>
+> While I was here, I added more 'const' qualifiers to pointers.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  arch/x86/kernel/traps.c | 45 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 43 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index c90312146da0..479cfc6e9507 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -56,6 +56,8 @@
->  #include <asm/mpx.h>
->  #include <asm/vm86.h>
->  #include <asm/umip.h>
-> +#include <asm/insn.h>
-> +#include <asm/insn-eval.h>
->  
->  #ifdef CONFIG_X86_64
->  #include <asm/x86_init.h>
-> @@ -509,6 +511,42 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
->  	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
+>
+>  scripts/mod/modpost.c | 10 +++-------
+>  scripts/mod/modpost.h |  1 -
+>  2 files changed, 3 insertions(+), 8 deletions(-)
+>
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index cd885573daaf..d9418c58a8c0 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -356,10 +356,10 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
+>                 return export_unknown;
 >  }
->  
-> +/*
-> + * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
-> + * address, print that address.
-> + */
-> +static void print_kernel_gp_address(struct pt_regs *regs)
-> +{
-> +#ifdef CONFIG_X86_64
-> +	u8 insn_bytes[MAX_INSN_SIZE];
-> +	struct insn insn;
-> +	unsigned long addr_ref;
-> +
-> +	if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
-> +		return;
-> +
-> +	kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
-> +	insn_get_modrm(&insn);
-> +	insn_get_sib(&insn);
-> +	addr_ref = (unsigned long)insn_get_addr_ref(&insn, regs);
-> +
-> +	/*
-> +	 * If insn_get_addr_ref() failed or we got a canonical address in the
-> +	 * kernel half, bail out.
-> +	 */
-> +	if ((addr_ref | __VIRTUAL_MASK) == ~0UL)
-> +		return;
-> +	/*
-> +	 * For the user half, check against TASK_SIZE_MAX; this way, if the
-> +	 * access crosses the canonical address boundary, we don't miss it.
-> +	 */
-> +	if (addr_ref <= TASK_SIZE_MAX)
-
-Any objection to open coding the upper bound instead of using
-TASK_SIZE_MASK to make the threshold more obvious?
-
-> +		return;
-> +
-> +	pr_alert("dereferencing non-canonical address 0x%016lx\n", addr_ref);
-
-Printing the raw address will confuse users in the case where the access
-straddles the lower canonical boundary.  Maybe combine this with open
-coding the straddle case?  With a rough heuristic to hedge a bit for
-instructions whose operand size isn't accurately reflected in opnd_bytes.
-
-	if (addr_ref > __VIRTUAL_MASK)
-		pr_alert("dereferencing non-canonical address 0x%016lx\n", addr_ref);
-	else if ((addr_ref + insn->opnd_bytes - 1) > __VIRTUAL_MASK)
-		pr_alert("straddling non-canonical boundary 0x%016lx - 0x%016lx\n",
-			 addr_ref, addr_ref + insn->opnd_bytes - 1);
-	else if ((addr_ref + PAGE_SIZE - 1) > __VIRTUAL_MASK)
-		pr_alert("potentially straddling non-canonical boundary 0x%016lx - 0x%016lx\n",
-			 addr_ref, addr_ref + PAGE_SIZE - 1);
-
-> +#endif
-> +}
-> +
->  dotraplinkage void
->  do_general_protection(struct pt_regs *regs, long error_code)
+>
+> -static const char *namespace_from_kstrtabns(struct elf_info *info,
+> -                                           Elf_Sym *kstrtabns)
+> +static const char *namespace_from_kstrtabns(const struct elf_info *info,
+> +                                           const Elf_Sym *sym)
 >  {
-> @@ -547,8 +585,11 @@ do_general_protection(struct pt_regs *regs, long error_code)
->  			return;
->  
->  		if (notify_die(DIE_GPF, desc, regs, error_code,
-> -			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
-> -			die(desc, regs, error_code);
-> +			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
-> +			return;
-> +
-> +		print_kernel_gp_address(regs);
+> -       char *value = info->ksymtab_strings + kstrtabns->st_value;
+> +       const char *value = sym_get_data(info, sym);
+>         return value[0] ? value : NULL;
+>  }
+>
+> @@ -601,10 +601,6 @@ static int parse_elf(struct elf_info *info, const char *filename)
+>                         info->export_unused_gpl_sec = i;
+>                 else if (strcmp(secname, "__ksymtab_gpl_future") == 0)
+>                         info->export_gpl_future_sec = i;
+> -               else if (strcmp(secname, "__ksymtab_strings") == 0)
+> -                       info->ksymtab_strings = (void *)hdr +
+> -                                               sechdrs[i].sh_offset -
+> -                                               sechdrs[i].sh_addr;
+>
+>                 if (sechdrs[i].sh_type == SHT_SYMTAB) {
+>                         unsigned int sh_link_idx;
+> diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+> index fe6652535e4b..64a82d2d85f6 100644
+> --- a/scripts/mod/modpost.h
+> +++ b/scripts/mod/modpost.h
+> @@ -143,7 +143,6 @@ struct elf_info {
+>         Elf_Section  export_gpl_sec;
+>         Elf_Section  export_unused_gpl_sec;
+>         Elf_Section  export_gpl_future_sec;
+> -       char         *ksymtab_strings;
+>         char         *strtab;
+>         char         *modinfo;
+>         unsigned int modinfo_len;
+> --
+> 2.17.1
+>
 
-This can be conditional on '!error_code', non-canonical faults on the
-direct access always have zero for the error code.  Doubt it will matter
-in practice, but far calls and other silly segment instructions can
-generate non-zero error codes on #GP in 64-bit mode.
 
-> +		die(desc, regs, error_code);
->  		return;
->  	}
->  
-> -- 
-> 2.24.0.432.g9d3f5f5b63-goog
-> 
+-- 
+Best Regards
+Masahiro Yamada
