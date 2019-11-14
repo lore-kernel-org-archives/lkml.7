@@ -2,96 +2,159 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3B3C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DFC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD1420409
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8A620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="RPQgdynY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="H6bk6suL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKNKa1 (ORCPT
+        id S1726452AbfKNKdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:30:27 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36534 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfKNKa0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:30:26 -0500
-Received: by mail-io1-f67.google.com with SMTP id s3so6223635ioe.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 02:30:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q0ODQMjiIKKDNHMHFmstYPQVkSDb52CtygX5wXt7a60=;
-        b=RPQgdynYquk1oX1FlJYROA3WoECoE8TuBO6QFqoYnJX2y6zQvSgSS12bmkC2MMNyVm
-         ubKNHkff9bsXOxrsS8frUFNImLf/lTOBrv4PDhNbvVsWy/jR33CM+eyXSDYWyvYXuH1R
-         SsbDaX4F8xABNuwPY3VKxmfk0hUTpSr2JPeIY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q0ODQMjiIKKDNHMHFmstYPQVkSDb52CtygX5wXt7a60=;
-        b=QR37aVeuQUHss9TK+IhKFa5M2ytu8auH3/DUZTC0XGyE74gehvOrTMrSjPqn8iwV7K
-         Y95hXJ9k5d6kR7AR6e0/sgRCiznCI5Vo6n8mtbGVvNW0JBrJtpbJ69V5cS4sVGlchQpp
-         kPuWa4w6dkQuY+7ma8tF2hIEh4Af2Cy7LVmISPzknx3NvuVM7dDfnAmLj6CHCvLeg+zG
-         H65h9qyydKpXfQ6/nD4HGnBn7gfzmhBVKVrD+0Zr4gGy/m9jxBRPLhvp/LAUh7ay1qxc
-         /RmI9kjsJPOY7zY/AmgR8DV9Cs2SA0H/mwmN7J+/QXbBZLTAREhu5AUETdWWP0iiJUio
-         OARg==
-X-Gm-Message-State: APjAAAV07FccYzii/O+fBdf4dQc5V632BQ08aG2ctxwuMfJdUtf8wbgm
-        z/8583KyeA9CN8kuQIP7VwSjGjcxe0PBynv/D3+1pw==
-X-Google-Smtp-Source: APXvYqyFB3goydsCrDzye1z3rnm33m5fU70E0wh+81ZMdqXoZNXF97wesNRGnM95NZF4bjAMv7oGDQM9lP5R7AgpLFI=
-X-Received: by 2002:a05:6638:9:: with SMTP id z9mr6880049jao.35.1573727425730;
- Thu, 14 Nov 2019 02:30:25 -0800 (PST)
+        Thu, 14 Nov 2019 05:33:33 -0500
+Received: from mx01-fr.bfs.de ([193.174.231.67]:64403 "EHLO mx01-fr.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfKNKdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 05:33:32 -0500
+Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
+        by mx01-fr.bfs.de (Postfix) with ESMTPS id 6AF3920346;
+        Thu, 14 Nov 2019 11:33:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1573727601; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cKhNKGzpQjIXpZ4KphvaUafb/xdZMCyUdnUQ1YJ5Vic=;
+        b=H6bk6suLnD4e9AdKorHz8a6XT0fRGyL1Y3ljTQKsJXuK/tiaTNrLxQkDWn6S8KmFHGy24a
+        x3MvTHlAWkcZXl7+UQTbSsmE52w9BLHviTfp0rATgm620k90hPmXq5+pEyR/r7fmgrSDLY
+        u8+nxRtEJCsriRIBoDBLSyG03lcLNjS8DlFjjR0+2wRYi3nIK0XYnGPCQNcXvnHxoS//mI
+        0fMsUO1axJyl1hPp+hmdjyFzKaXAGZ0JJRAgJZmMLAxQB4DYJD4jVCHG2W97dlhpGdonc/
+        DWlhGQpXM/YGhawoKNyTqn5BCjCOFHfatns+BiD3mH1p5PDNbsL9DgNJMNtZ2A==
+Received: from [134.92.181.33] (unknown [134.92.181.33])
+        by mail-fr.bfs.de (Postfix) with ESMTPS id F3BD6BEEBD;
+        Thu, 14 Nov 2019 11:33:10 +0100 (CET)
+Message-ID: <5DCD2D66.2050206@bfs.de>
+Date:   Thu, 14 Nov 2019 11:33:10 +0100
+From:   walter harms <wharms@bfs.de>
+Reply-To: wharms@bfs.de
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
 MIME-Version: 1.0
-References: <20191113200651.114606-1-colin.king@canonical.com>
-In-Reply-To: <20191113200651.114606-1-colin.king@canonical.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 14 Nov 2019 11:30:14 +0100
-Message-ID: <CAJfpegug-saOEigqDNKfwMR5qdzrbLnRBD=0eN5juGioFH_L_Q@mail.gmail.com>
-Subject: Re: [PATCH][V4] ovl: fix lookup failure on multi lower squashfs
-To:     Colin King <colin.king@canonical.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-kernel@vger.kernel.org
+CC:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8192u: fix indentation issue
+References: <20191114095430.132120-1-colin.king@canonical.com>
+In-Reply-To: <20191114095430.132120-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: mx01-fr.bfs.de
+X-Spamd-Result: default: False [-3.10 / 7.00];
+         ARC_NA(0.00)[];
+         HAS_REPLYTO(0.00)[wharms@bfs.de];
+         BAYES_HAM(-3.00)[100.00%];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         REPLYTO_ADDR_EQ_FROM(0.00)[];
+         RCPT_COUNT_FIVE(0.00)[5];
+         DKIM_SIGNED(0.00)[];
+         NEURAL_HAM(-0.00)[-0.999,0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 9:06 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Amir Goldstein <amir73il@gmail.com>
->
-> In the past, overlayfs required that lower fs have non null
-> uuid in order to support nfs export and decode copy up origin file handles.
->
-> Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
-> lower fs") relaxed this requirement for nfs export support, as long
-> as uuid (even if null) is unique among all lower fs.
 
-I see another corner case:
 
-n- two filesystems, A and B, both have null uuid
- - upper layer is on A
- - lower layer 1 is also on A
- - lower layer 2 is on B
+Am 14.11.2019 10:54, schrieb Colin King:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a block of statements that are indented
+> too deeply, remove the extraneous tabs.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/staging/rtl8192u/r819xU_cmdpkt.c | 25 ++++++++++++------------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8192u/r819xU_cmdpkt.c b/drivers/staging/rtl8192u/r819xU_cmdpkt.c
+> index e064f43fd8b6..bc98cdaf61ec 100644
+> --- a/drivers/staging/rtl8192u/r819xU_cmdpkt.c
+> +++ b/drivers/staging/rtl8192u/r819xU_cmdpkt.c
+> @@ -169,19 +169,20 @@ static void cmdpkt_beacontimerinterrupt_819xusb(struct net_device *dev)
+>  {
+>  	struct r8192_priv *priv = ieee80211_priv(dev);
+>  	u16 tx_rate;
+> -		/* 87B have to S/W beacon for DTM encryption_cmn. */
+> -		if (priv->ieee80211->current_network.mode == IEEE_A ||
+> -		    priv->ieee80211->current_network.mode == IEEE_N_5G ||
+> -		    (priv->ieee80211->current_network.mode == IEEE_N_24G &&
+> -		     (!priv->ieee80211->pHTInfo->bCurSuppCCK))) {
+> -			tx_rate = 60;
+> -			DMESG("send beacon frame  tx rate is 6Mbpm\n");
+> -		} else {
+> -			tx_rate = 10;
+> -			DMESG("send beacon frame  tx rate is 1Mbpm\n");
+> -		}
+>  
+> -		rtl819xusb_beacon_tx(dev, tx_rate); /* HW Beacon */
+> +	/* 87B have to S/W beacon for DTM encryption_cmn. */
+> +	if (priv->ieee80211->current_network.mode == IEEE_A ||
+> +	    priv->ieee80211->current_network.mode == IEEE_N_5G ||
+> +	    (priv->ieee80211->current_network.mode == IEEE_N_24G &&
+> +	     (!priv->ieee80211->pHTInfo->bCurSuppCCK))) {
+> +		tx_rate = 60;
+> +		DMESG("send beacon frame  tx rate is 6Mbpm\n");
+> +	} else {
+> +		tx_rate = 10;
+> +		DMESG("send beacon frame  tx rate is 1Mbpm\n");
+> +	}
+> +
+> +	rtl819xusb_beacon_tx(dev, tx_rate); /* HW Beacon */
+>  }
+>  
+>  /*-----------------------------------------------------------------------------
 
-In this case bad_uuid won't be set for B, because the check only
-involves the list of lower fs.  Hence we'll try to decode a layer 2
-origin on layer 1 and fail.
+this is hard to read in the first place.
+Maybe using switch() here is better to read (untested example below).
 
-Can we fix this without special casing lower layer fsid == 0 in
-various places?  I guess that involves using lower_fs[0] for the
-fsid=0 case (i.e. index lower_fs by fsid, rather than (fsid -1)).
-Probably warrants a separate patch.
 
-Thanks,
-Miklos
+	switch(priv->ieee80211->current_network.mode) {
+
+	case IEEE_A:
+	case IEEE_N_5G:
+	 tx_rate = 60;
+         break;
+        IEEE_N_24G:
+	     if ( !priv->ieee80211->pHTInfo->bCurSuppCCK )
+		tx_rate = 60;
+             // fall truh
+
+        default:
+		tx_rate = 10;
+
+	}	
+
+	if (txrate == 60 )
+	     DMESG("send beacon frame  tx rate is 6Mbpm\n");
+	else if (txrate == 10 )
+	     DMESG("send beacon frame  tx rate is 1Mbpm\n");
+
+JM2C
+
+re,
+ wh
