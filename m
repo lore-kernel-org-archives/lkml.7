@@ -2,103 +2,165 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF1DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A18C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D3C20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE822072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KBT/jzLX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NSKxpFUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfKNQsu (ORCPT
+        id S1727031AbfKNQtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:48:50 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42908 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfKNQst (ORCPT
+        Thu, 14 Nov 2019 11:49:14 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41666 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfKNQtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:48:49 -0500
-Received: by mail-qk1-f195.google.com with SMTP id m4so5535704qke.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:48:48 -0800 (PST)
+        Thu, 14 Nov 2019 11:49:14 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p26so4611404pfq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:49:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7GJLu0rhCy9EmDtDkFFDYoyUr1gLUzYdPkCqHHYIzfc=;
-        b=KBT/jzLXedcAjmuKV3o/ztBs23SgFvJYE5v78L/nXWv6GOSrHuU4ggZgVbi9hZNnk2
-         z4Y6EFaJJNDGXVUY5CvMmu9ZTHJu+EMf2dakAOHLlwJgrQyFLl80u3eroPCavv63JTTQ
-         4XPGIgCmOhiV6azehtmWxgBd07VwDtJ8N5GUJpT95bvFwSa/4VGM4RHLo72s+mMl3GRQ
-         OOKVNb3sRmQHi3BNJE3ljDp21+UsU1sT1yQtL3SYmwkdmMEAwwFeTsG/UI2M59RvO4LD
-         juKXQk5RRMO708m6LxxLMlVIH8H6e9OtjaZ1H4keXsoqg+ThgRK3OSUy5z1P0qmjl741
-         UnWQ==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=Lsw4NM8ilCcLsFEk3WVMlx7LY6dwCnUqw6N4RDhOWYo=;
+        b=NSKxpFUN3Ugn9srDVLslcd3E1wLcNJ9OJWAmw1RcOC2DgJVNZW7Xitu3fkRLFV+iTT
+         0QNUR4I2eb6VBkCC98XVZDpXS+J7AwrEpA7EHnW5hFiulgFS44mIr8MGatPPHDn3zpuI
+         6cCWWx1oNLikmFSv9TuQz7YOp+EPcHHUXrVNw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7GJLu0rhCy9EmDtDkFFDYoyUr1gLUzYdPkCqHHYIzfc=;
-        b=UJZmwQYKnXqO7UqN1NJpAWYrExwsswo63lpYfeGyAFkuG41xx00hL8M/v++jfineWV
-         a/bAdI1Xcj8KH9awjezOEUp76tRnoIh60jUx+WN9Ep6UTqPVd+dOfyD+FlJM7cjP1QCL
-         JeVgyeyM2ATJ/nYZPbklvSi4TKsB5vC3jTyWgxhclS0qVNkqxBDnbCTmZA7PEGvpcsd/
-         YQ+RyssCSEA/UFXyCop/Jlqt7GfhBPCo6pqWcYBEaqGrReH7ij/gbVX/zXnZbFn3Q3nD
-         V9NHi3vlrFIAy0r96KjwurY2MF39CTn/4aRHZ7d/rDiHqXxD++AUYwViab9yzzT1fQWW
-         CpKw==
-X-Gm-Message-State: APjAAAVKuTU9jyM+tHY6YVQbHm+LDtSP/90dT5rQtNfJzXt8znmD9PYX
-        UzqqqQf2d8SfocMu0INXzauAIqvxB8U=
-X-Google-Smtp-Source: APXvYqwAFNysDj7xylbnDPnfNIHmH6Ey61doLPKkZE9Pv+8qcMgfa+KBHC41utU75Sn+7VEGXGu0Ww==
-X-Received: by 2002:a37:6845:: with SMTP id d66mr7678807qkc.407.1573750127975;
-        Thu, 14 Nov 2019 08:48:47 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id p54sm3629725qta.39.2019.11.14.08.48.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 08:48:47 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iVIIZ-0003yG-12; Thu, 14 Nov 2019 12:48:47 -0400
-Date:   Thu, 14 Nov 2019 12:48:47 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dag Moxnes <dag.moxnes@oracle.com>
-Cc:     dledford@redhat.com, leon@kernel.org, parav@mellanox.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH rdma-next v2] RDMA/cma: Use ACK timeout for RoCE
- packetLifeTime
-Message-ID: <20191114164846.GA15241@ziepe.ca>
-References: <1572439440-17416-1-git-send-email-dag.moxnes@oracle.com>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=Lsw4NM8ilCcLsFEk3WVMlx7LY6dwCnUqw6N4RDhOWYo=;
+        b=ccVia3uTRN+lYgrqgSdszjVj5USzkreUYuXIZcthgZLX8XF/KLwjQWH0g44QixwcU/
+         OeEniN7pjvrryLBOVCQILMdTJgKYoJVhphQ1FPbupf6eixShEBvoFu3TA85T6F5XDB67
+         lcvMwdFWV2vUGTAYQvd97XO5mKd3Dbi+i7czJUGjY0ebeI/9gVXXu1tDbp4JStlc22TN
+         6n+t/g3PgvPfmiWFlrW53bZ6vTFIbpkginwQS50UUsE+lCTL6DyCdCH/0gr0kOIw6jLh
+         clZ7i1ZGIfq+R5GFJU4fX6n4NFPn9Giyh544HfmEDTyMD71C9+D+SnjPVXb29fNH9C0C
+         cLrg==
+X-Gm-Message-State: APjAAAWIPMZgQnXWsPhIrWYpP1VxoW+FvKnKNrbK1Bf1GbsYMB5ehgbt
+        YeVyVdD8r5xpd3A8RMSo0CMvBA==
+X-Google-Smtp-Source: APXvYqxGXLXZNqmiLg6+BlJtaLCbmznDeauL5lts/GdPdVYICcsYus3WdGS3aAfiD9MZzjC4BUUs4Q==
+X-Received: by 2002:a62:5258:: with SMTP id g85mr11585671pfb.180.1573750153174;
+        Thu, 14 Nov 2019 08:49:13 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y22sm7199564pfn.6.2019.11.14.08.49.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 08:49:12 -0800 (PST)
+Message-ID: <5dcd8588.1c69fb81.2528a.3460@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1572439440-17416-1-git-send-email-dag.moxnes@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1565197bda60573937453e95dcafbe68@codeaurora.org>
+References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org> <20191021033220.GG4500@tuxbook-pro> <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com> <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org> <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com> <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org> <1565197bda60573937453e95dcafbe68@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm-owner@vger.kernel.org
+To:     Rob Herring <robh+dt@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
+User-Agent: alot/0.8.1
+Date:   Thu, 14 Nov 2019 08:49:11 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 01:44:00PM +0100, Dag Moxnes wrote:
-> The cma is currently using a hard-coded value, CMA_IBOE_PACKET_LIFETIME,
-> for the PacketLifeTime, as it can not be determined from the network.
-> This value might not be optimal for all networks.
-> 
-> The cma module supports the function rdma_set_ack_timeout to set the
-> ACK timeout for a QP associated with a connection. As per IBTA 12.7.34
-> local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
-> Assuming a negligible local ACK delay, we can use
-> PacketLifeTime = local ACK timeout/2
-> as a reasonable approximation for RoCE networks.
-> 
-> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
-> ---
->  drivers/infiniband/core/cma.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+Quoting Sai Prakash Ranjan (2019-11-13 07:00:40)
+> Hello Rob,
+>=20
+> On 2019-10-25 13:24, Sai Prakash Ranjan wrote:
+> > On 2019-10-25 04:03, Rob Herring wrote:
+> >> On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
+> >> <saiprakash.ranjan@codeaurora.org> wrote:
+> >>>=20
+> >>> Hi Rob,
+> >>>=20
+> >>> On 2019-10-24 01:19, Rob Herring wrote:
+> >>> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
+> >>> > <bjorn.andersson@linaro.org> wrote:
+> >>> >>
+> >>> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
+> >>> >>
+> >>> >> > LLCC behaviour is controlled by the configuration data set
+> >>> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
+> >>> >> > Also convert the existing bindings to json-schema and add
+> >>> >> > the compatible for SC7180 SoC.
+> >>> >> >
+> >>> >>
+> >>> >> Thanks for the patches and thanks for the review Stephen. Series
+> >>> >> applied
+> >>> >
+> >>> > And they break dt_binding_check. Please fix.
+> >>> >
+> >>>=20
+> >>> I did check this and think that the error log from dt_binding_check=20
+> >>> is
+> >>> not valid because it says cache-level is a required property [1], but
+> >>> there is no such property in LLCC bindings.
+> >>=20
+> >> Then you should point out the issue and not just submit stuff ignoring
+> >> it. It has to be resolved one way or another.
+> >>=20
+> >=20
+> > I did not ignore it. When I ran the dt-binding check locally, it did=20
+> > not
+> > error out and just passed on [1] and it was my bad that I did not check
+> > the entire build logs to see if llcc dt binding check had some warning =
 
-This seems like a reasonable thing to do, applied to for-next
+> > or
+> > not. But this is the usual case where most of us don't look at the=20
+> > entire
+> > build logs to check if there is a warning or not. We notice if there is=
+=20
+> > an
+> > immediate exit/fail in case of some warning/error. So it would be good =
 
-Thanks,
-Jason
+> > if
+> > we fail the dt-binding check build if there is some warning/error or=20
+> > atleast
+> > provide some option to strict build to fail on warning, maybe there is =
+
+> > already
+> > a flag to do this?
+> >=20
+> > After submitting the patch, I noticed this build failure on
+> > patchwork.ozlabs.org and was waiting for your reply.
+> >=20
+> > [1] https://paste.ubuntu.com/p/jNK8yfVkMG/
+> >=20
+> >> If you refer to the DT spec[1], cache-level is required. The schema is
+> >> just enforcing that now. It's keying off the node name of
+> >> 'cache-controller'.
+> >>=20
+> >=20
+> > This is not L2 or L3 cache, this is a system cache (last level cache)=20
+> > shared by
+> > clients other than just CPU. So I don't know how do we specify=20
+> > cache-level for
+> > this, let me know if you have some pointers.
+> >=20
+>=20
+> Any ideas on specifying the cache-level for system cache? Does=20
+> dt-binding-check
+> needs to be updated for this case?
+>=20
+
+I don't see how 'cache-level' fits here. Maybe the node name should be
+changed to 'system-cache-controller' and then the schema checker can
+skip it?
+
