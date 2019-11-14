@@ -4,60 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1845C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754CEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECA620724
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5767520715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfKNJI1 (ORCPT
+        id S1727357AbfKNJIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:08:27 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49433 "EHLO ozlabs.org"
+        Thu, 14 Nov 2019 04:08:32 -0500
+Received: from ozlabs.org ([203.11.71.1]:39105 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbfKNJIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:08:24 -0500
+        id S1727295AbfKNJI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:08:28 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 47DFyD3Dj2z9sSc; Thu, 14 Nov 2019 20:08:20 +1100 (AEDT)
+        id 47DFyK2l6Jz9sSl; Thu, 14 Nov 2019 20:08:24 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 29430fae82073d39b1b881a3cd507416a56a363f
-In-Reply-To: <20191104023305.9581-2-alastair@au1.ibm.com>
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+X-powerpc-patch-commit: 2702809a4a1ab414d75c00936cda70ea77c8234e
+In-Reply-To: <e9eeee6b-b9bf-1e41-2954-61dbd6fbfbcf@linux.ibm.com>
+To:     Eric Richter <erichte@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH v5 1/6] powerpc: Allow flush_icache_range to work across ranges >4GB
-Message-Id: <47DFyD3Dj2z9sSc@ozlabs.org>
-Date:   Thu, 14 Nov 2019 20:08:20 +1100 (AEDT)
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>,
+        Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH v10a 3/9] powerpc: detect the trusted boot state of the system
+Message-Id: <47DFyK2l6Jz9sSl@ozlabs.org>
+Date:   Thu, 14 Nov 2019 20:08:24 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-11-04 at 02:32:53 UTC, "Alastair D'Silva" wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Tue, 2019-11-05 at 23:02:07 UTC, Eric Richter wrote:
+> From: Nayna Jain <nayna@linux.ibm.com>
 > 
-> When calling flush_icache_range with a size >4GB, we were masking
-> off the upper 32 bits, so we would incorrectly flush a range smaller
-> than intended.
+> While secure boot permits only properly verified signed kernels to be
+> booted, trusted boot calculates the file hash of the kernel image and
+> stores the measurement prior to boot, that can be subsequently compared
+> against good known values via attestation services.
 > 
-> This patch replaces the 32 bit shifts with 64 bit ones, so that
-> the full size is accounted for.
+> This patch reads the trusted boot state of a PowerNV system. The state
+> is used to conditionally enable additional measurement rules in the IMA
+> arch-specific policies.
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Cc: stable@vger.kernel.org
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Signed-off-by: Eric Richter <erichte@linux.ibm.com>
 
-Series applied to powerpc next, thanks.
+Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/29430fae82073d39b1b881a3cd507416a56a363f
+https://git.kernel.org/powerpc/c/2702809a4a1ab414d75c00936cda70ea77c8234e
 
 cheers
