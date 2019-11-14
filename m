@@ -4,171 +4,189 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F7DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7317CC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43431206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E084206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y7luye9D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FF70Oc4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfKNLcS (ORCPT
+        id S1726894AbfKNLc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:32:18 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23366 "EHLO
+        Thu, 14 Nov 2019 06:32:26 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26812 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726087AbfKNLcR (ORCPT
+        by vger.kernel.org with ESMTP id S1726766AbfKNLcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:32:17 -0500
+        Thu, 14 Nov 2019 06:32:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573731136;
+        s=mimecast20190719; t=1573731143;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eGPDOxJmq8wLYBcctg35/K5PZf59EHJV9VNjXKlhwZM=;
-        b=Y7luye9DT8hhH0jQI+ZRaCaak3zA5ZSfRMMRD6HGysnB9O8/AIOejLteLfh+/kWYTjrmKq
-        FHmHkWJ9iyUZ/zVZI3l5vBSC5lCGmvLDeE9kB4yKCcUDhDpF5LOllNRcWZlGK32XtBM8A+
-        8TpPb2t17u4tU5pbBsSToS6ksl4vBUE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-zUnBuLTaPKOAvuosxXLcgw-1; Thu, 14 Nov 2019 06:32:15 -0500
-Received: by mail-wm1-f69.google.com with SMTP id f16so3184072wmb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 03:32:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RZt45pQgw79xE9XzgdJC+yG0nkXIvZyJYcV8pb1nd04=;
-        b=ruQaWBmuCrCRaabZkutyua7uEFK3sSr1jZVzwAkILnwtBTkJKLD+zclrVmJ2si5wFM
-         48YC9ZTz8mWm00kOfmmvgX52ljqdV0PQI/1STnYrBQ0W5K0IIaenCJ6PWOfm00xhpnTn
-         +yHdKXDazzGwWJ76AIr7zJGW3OhGXU3P7ePB/70NkAjmH6ImJtyAmz9QUvy1jhS7JYmC
-         NGojjcj6cFgPGLy38kyjuEsY8oDyYW/El9eloV56QvE/k6xKE/qaYkQbE94JEYncHDpm
-         8e5Ur4rApGYyuWAOKX6tvK1JdBwHx7euCRn3Vvvl4jcU6rieyvhHSJlxiYCIbLNeFZ2c
-         d8QQ==
-X-Gm-Message-State: APjAAAXcy5rTvG0DdBKWNI6QS1Zqi6AXRjbV9aow7P8UCTeulFDv7/cZ
-        gGux9/UHPHmA3l1Yjy6f5csg/TsB8/mwRbVuUMdAG9a3XWqL910lVCUi6fKVdKJKMCMvkuZI+Wl
-        /pUfgiSTCw8SuVwWNfMtPhKoB
-X-Received: by 2002:a7b:c748:: with SMTP id w8mr7892861wmk.114.1573731133958;
-        Thu, 14 Nov 2019 03:32:13 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxqb+wuHoXkrqv7G9jT1s8K11NZRcID1zCY+N4NxoahPNLiVW38bJon4GNLKPoo8ktQX+wLDg==
-X-Received: by 2002:a7b:c748:: with SMTP id w8mr7892833wmk.114.1573731133769;
-        Thu, 14 Nov 2019 03:32:13 -0800 (PST)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id 205sm13554570wmb.3.2019.11.14.03.32.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 03:32:12 -0800 (PST)
-Subject: Re: [PATCH v7 4/8] firmware: Add new platform fallback mechanism and
- firmware_request_platform()
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-5-hdegoede@redhat.com>
- <20191011152920.GQ16384@42.do-not-panic.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <b09922ec-a71e-c1ca-adcc-15f7fd02c2f4@redhat.com>
-Date:   Thu, 14 Nov 2019 12:32:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ydfF/6rph5aw0S+dXQ7vAdmn1cldyijsWjA+3qHaIds=;
+        b=FF70Oc4hEF3xKikQlCqbWTTmntnVPs6Ioez5mPEqLUOoh5XFzvEmMr/tlhpfaqnZQ/9l1C
+        sqrL2nAaVBOl6aDJeywoAqvsualCyOK+O2cr5ED//6obRXVsEKXz+yqd9DHqeZH86cwE02
+        XQ410Qhxj2RY8u3uF7+Jk8sNhqw7OoU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-SvsZNX8EO-qCTEECn5opRQ-1; Thu, 14 Nov 2019 06:32:20 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 929F0190743E;
+        Thu, 14 Nov 2019 11:32:18 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-24.pek2.redhat.com [10.72.8.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EBDAA77645;
+        Thu, 14 Nov 2019 11:31:57 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 19:31:53 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jeff Moyer <jmoyer@redhat.com>, Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: single aio thread is migrated crazily by scheduler
+Message-ID: <20191114113153.GB4213@ming.t460p>
 MIME-Version: 1.0
-In-Reply-To: <20191011152920.GQ16384@42.do-not-panic.com>
-Content-Language: en-US
-X-MC-Unique: zUnBuLTaPKOAvuosxXLcgw-1
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: SvsZNX8EO-qCTEECn5opRQ-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Guys,
 
-On 11-10-2019 17:29, Luis Chamberlain wrote:
-> On Fri, Oct 04, 2019 at 04:50:52PM +0200, Hans de Goede wrote:
->> diff --git a/drivers/base/firmware_loader/Makefile b/drivers/base/firmwa=
-re_loader/Makefile
->> index 0b2dfa6259c9..fec75895faae 100644
->> --- a/drivers/base/firmware_loader/Makefile
->> +++ b/drivers/base/firmware_loader/Makefile
->> @@ -3,7 +3,7 @@
->>  =20
->>   obj-$(CONFIG_FW_LOADER_USER_HELPER) +=3D fallback_table.o
->>   obj-$(CONFIG_FW_LOADER)=09+=3D firmware_class.o
->> -firmware_class-objs :=3D main.o
->> +firmware_class-objs :=3D main.o fallback_platform.o
->>   firmware_class-$(CONFIG_FW_LOADER_USER_HELPER) +=3D fallback.o
->=20
-> Why not just:
->=20
-> firmware_class-$(CONFIG_EFI_EMBEDDED_FIRMWARE) +=3D fallback_platform.o
->=20
->>   obj-y +=3D builtin/
->> diff --git a/drivers/base/firmware_loader/fallback.h b/drivers/base/firm=
-ware_loader/fallback.h
->> index 21063503e4ea..c4350f2e7cc2 100644
->> --- a/drivers/base/firmware_loader/fallback.h
->> +++ b/drivers/base/firmware_loader/fallback.h
->> @@ -66,4 +66,6 @@ static inline void unregister_sysfs_loader(void)
->>   }
->>   #endif /* CONFIG_FW_LOADER_USER_HELPER */
->>  =20
->> +int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt=
-_flags);
->> +
->=20
-> Inline this if not defined.
->=20
->>   #endif /* __FIRMWARE_FALLBACK_H */
->> diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/=
-base/firmware_loader/fallback_platform.c
->> new file mode 100644
->> index 000000000000..7e9d730e36bf
->> --- /dev/null
->> +++ b/drivers/base/firmware_loader/fallback_platform.c
->> @@ -0,0 +1,33 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/efi_embedded_fw.h>
->> +#include <linux/property.h>
->> +#include <linux/security.h>
->> +#include <linux/vmalloc.h>
->> +
->> +#include "fallback.h"
->> +#include "firmware.h"
->> +
->> +int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt=
-_flags)
->> +{
->> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
->=20
-> And we can do away with this eyesore.
+It is found that single AIO thread is migrated crazely by scheduler, and
+the migrate period can be < 10ms. Follows the test a):
 
-Ok will fix for the next version.
+=09- run single job fio[1] for 30 seconds:
+=09./xfs_complete 512
+=09
+=09- observe fio io thread migration via bcc trace[2], and the migration
+=09times can reach 5k ~ 10K in above test. In this test, CPU utilization
+=09is 30~40% on the CPU running fio IO thread.
+=09
+=09- after applying the debug patch[3] to queue XFS completion work on
+=09other CPU(not current CPU), the above crazy fio IO thread migration
+=09can't be observed.
 
-> Otherwise looks good!
+And the similar result can be observed in the following test b) too:
 
-Thanks.
+=09- set sched parameters:
+=09=09sysctl kernel.sched_min_granularity_ns=3D10000000
+=09=09sysctl kernel.sched_wakeup_granularity_ns=3D15000000
+=09
+=09=09which is usually done by 'tuned-adm profile network-throughput'
+=09
+=09- run single job fio aio[1] for 30 seconds:
+=09  ./xfs_complete 4k=20
+=09
+=09- observe fio io thread migration[2], and similar crazy migration
+=09can be observed too. In this test, CPU utilization is close to 100%
+=09on the CPU for running fio IO thread
+=09
+=09- the debug patch[3] still makes a big difference on this test wrt.
+=09fio IO thread migration.
 
-Regards,
+For test b), I thought that load balance may be triggered when
+single fio IO thread takes the CPU by ~100%, meantime XFS's queue_work()
+schedules WQ worker thread on the current CPU, since all other CPUs
+are idle. When the fio IO thread is migrated to new CPU, the same steps
+can be repeated again.
 
-Hans
+But for test a), I have no idea why fio IO thread is still migrated so
+frequently since the CPU isn't saturated at all.
+
+IMO, it is normal for user to saturate aio thread, since this way may
+save context switch.
+
+Guys, any idea on the crazy aio thread migration?
+
+BTW, the tests are run on latest linus tree(5.4-rc7) in KVM guest, and the
+fio test is created for simulating one real performance report which is
+proved to be caused by frequent aio submission thread migration.
+
+
+[1] xfs_complete: one fio script for running single job overwrite aio on XF=
+S
+#!/bin/bash
+
+BS=3D$1
+NJOBS=3D1
+QD=3D128
+DIR=3D/mnt/xfs
+BATCH=3D1
+VERIFY=3D"sha3-512"
+
+sysctl kernel.sched_wakeup_granularity_ns
+sysctl kernel.sched_min_granularity_ns
+
+rmmod scsi_debug;modprobe scsi_debug dev_size_mb=3D6144 ndelay=3D41000 dix=
+=3D1 dif=3D2
+DEV=3D`ls -d /sys/bus/pseudo/drivers/scsi_debug/adapter*/host*/target*/*/bl=
+ock/* | head -1 | xargs basename`
+DEV=3D"/dev/"$DEV
+
+mkfs.xfs -f $DEV
+[ ! -d $DIR ] && mkdir -p $DIR
+mount $DEV $DIR
+
+fio --readwrite=3Drandwrite --filesize=3D5g \
+    --overwrite=3D1 \
+    --filename=3D$DIR/fiofile \
+    --runtime=3D30s --time_based \
+    --ioengine=3Dlibaio --direct=3D1 --bs=3D4k --iodepth=3D$QD \
+    --iodepth_batch_submit=3D$BATCH \
+    --iodepth_batch_complete_min=3D$BATCH \
+    --numjobs=3D$NJOBS \
+    --verify=3D$VERIFY \
+    --name=3D/hana/fsperf/foo
+
+umount $DEV
+rmmod scsi_debug
+
+
+[2] observe fio migration via bcc trace:
+/usr/share/bcc/tools/trace -C -t  't:sched:sched_migrate_task "%s/%d cpu %d=
+->%d", args->comm,args->pid,args->orig_cpu,args->dest_cpu' | grep fio=20
+
+[3] test patch for queuing xfs completetion on other CPU
+
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index 1fc28c2da279..bdc007a57706 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -158,9 +158,14 @@ static void iomap_dio_bio_end_io(struct bio *bio)
+ =09=09=09blk_wake_io_task(waiter);
+ =09=09} else if (dio->flags & IOMAP_DIO_WRITE) {
+ =09=09=09struct inode *inode =3D file_inode(dio->iocb->ki_filp);
++=09=09=09unsigned cpu =3D cpumask_next(smp_processor_id(),
++=09=09=09=09=09cpu_online_mask);
++
++=09=09=09if (cpu >=3D nr_cpu_ids)
++=09=09=09=09cpu =3D 0;
+=20
+ =09=09=09INIT_WORK(&dio->aio.work, iomap_dio_complete_work);
+-=09=09=09queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.work);
++=09=09=09queue_work_on(cpu, inode->i_sb->s_dio_done_wq, &dio->aio.work);
+ =09=09} else {
+ =09=09=09iomap_dio_complete_work(&dio->aio.work);
+ =09=09}
+
+Thanks,
+Ming
 
