@@ -6,55 +6,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D07C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FC9C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE3F2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2B120718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKNJHz (ORCPT
+        id S1727048AbfKNJH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:07:55 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60617 "EHLO ozlabs.org"
+        Thu, 14 Nov 2019 04:07:57 -0500
+Received: from ozlabs.org ([203.11.71.1]:50975 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbfKNJHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:07:52 -0500
+        id S1726996AbfKNJHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:07:55 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 47DFxf2Pscz9s7T; Thu, 14 Nov 2019 20:07:49 +1100 (AEDT)
+        id 47DFxj5f70z9sRm; Thu, 14 Nov 2019 20:07:53 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 39a963b457b5c6cbbdc70441c9d496e39d151582
-In-Reply-To: <1569973038-2710-1-git-send-email-nayna@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+X-powerpc-patch-commit: b811be615cb78c90fca42bbd5b958427d03ba7e0
+In-Reply-To: <20191017093204.7511-2-ravi.bangoria@linux.ibm.com>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        christophe.leroy@c-s.fr, mikey@neuling.org
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        George Wilson <gcwilson@linux.ibm.com>
-Subject: Re: [PATCH] sysfs: Fixes __BIN_ATTR_WO() macro
-Message-Id: <47DFxf2Pscz9s7T@ozlabs.org>
-Date:   Thu, 14 Nov 2019 20:07:49 +1100 (AEDT)
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, npiggin@gmail.com, paulus@samba.org,
+        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v6 1/7] Powerpc/Watchpoint: Introduce macros for watchpoint length
+Message-Id: <47DFxj5f70z9sRm@ozlabs.org>
+Date:   Thu, 14 Nov 2019 20:07:53 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-01 at 23:37:18 UTC, Nayna Jain wrote:
-> This patch fixes the size and write parameter for the macro
-> __BIN_ATTR_WO().
+On Thu, 2019-10-17 at 09:31:58 UTC, Ravi Bangoria wrote:
+> We are hadrcoding length everywhere in the watchpoint code.
+> Introduce macros for the length and use them.
 > 
-> Fixes: 7f905761e15a8 ("sysfs: add BIN_ATTR_WO() macro")
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-Applied to powerpc next, thanks.
+Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/39a963b457b5c6cbbdc70441c9d496e39d151582
+https://git.kernel.org/powerpc/c/b811be615cb78c90fca42bbd5b958427d03ba7e0
 
 cheers
