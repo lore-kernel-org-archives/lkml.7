@@ -2,134 +2,152 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1D8C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E699AC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A243B2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573721412;
-	bh=jBu/HKddn0XF3vdBy2KDoncGZ7is9C6AWQjv+21W00o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=omtRh1+cNH8z4DcfsepMIg6cRGUIBo3JU4MZkIpDVhQRnsE8+VuetpCGtLIfrv39L
-	 aCCstZqmOfBgsFil2qbKUbG0zAEpB0V9ZUhMWKCuhozxG8j4+jKh25p1IhwW2iYV+k
-	 4e0aX6uAy/VvtrRxbr1a/p6KtlJf01akH5zxGouw=
+	by mail.kernel.org (Postfix) with ESMTP id BD1612070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:51:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ondIJO+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfKNIuL (ORCPT
+        id S1726655AbfKNIu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:50:11 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34698 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNIuL (ORCPT
+        Thu, 14 Nov 2019 03:50:59 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:46422 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfKNIu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:50:11 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 5so4221554otk.1;
-        Thu, 14 Nov 2019 00:50:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/bWhLkNhHl9VIbHrV6dW8/E/cVRdOoF8TYXGOFy/2rM=;
-        b=SQ5sULUQq6HHiDqWjqWObNq+OaApC7GYWWzV0SPE1no9AM44eHaVV/8EuJBKZnLBzV
-         YVhV83mhhX8SmJf6iLS7MSZvPReRef8N8yWIGof//BCyfW3Q0/lEURLkAMoBkgWV9kgF
-         sTDZfjngp3ZBf5xtIC313lw4EfQIP5DQ7QrIDFJh+buES00KUYAQN1w18Ecj3Ajvraiu
-         1ZxKe5eFE6B4ja3bzXPP7Ixw91NB1oHd63/XJoP1zcQgCuuu/it4G+8YGKwF297XmMR4
-         zad4XqY6K5fHIfhvbohZL8YJhqiOjeaqHVYgOFNLEIk/vFK4dfAX8jUqAWY04fPTyey4
-         94bQ==
-X-Gm-Message-State: APjAAAWQIrDcmTdHGlztDoegqKRcEC+cDrZL8R2WOZkE0LhCW6oXcwxZ
-        d/iegD+5IX3bwSXVLiAU1lY/zurnbUHTtO7ODV8=
-X-Google-Smtp-Source: APXvYqxemxsnrvy+ic5ui5311TWGh+PLygVk5OF67FrT8flj6s/P4SOHtOLrIzHdBVxiJatAC6C9Ibom47ovFyQT6WQ=
-X-Received: by 2002:a9d:6b91:: with SMTP id b17mr6158857otq.189.1573721410165;
- Thu, 14 Nov 2019 00:50:10 -0800 (PST)
+        Thu, 14 Nov 2019 03:50:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1wxVpyQh0vekRMPuXPgyIq/v1OcqmGGMKosRRrc1FKM=; b=ondIJO+lfWnXDrjLEqSmurbIs
+        7SDblHUbM/2K5fI6vB3mXUS2vO3jrnCHW1xpi5HMIOcr1zi1Mr+snJ35G4ePWX1rnc+c0PqK39QP3
+        DixwCYX90/xW9szByi1vxX+/Y8r8YmYLwvVIAVbExUmfaOZ3x9CejgOQOeQuDHi0gKFNH9fEa8HG1
+        hs+3Bwdcr8yKwODDvhF+wkpubujmKzBTGt8tUpSvcEZiBw2DiNlW6T+QChrkNHtLdDO/klO70GKYh
+        emyp5vQGEUHWR6eNMYsQBotN8WTD1PxtINChrgC+x0/bE8JAZCkky4TZV/xHYjIrQCoGldsI6ya6v
+        CxVPXyGoA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVApT-0002Sk-1u; Thu, 14 Nov 2019 08:50:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CAE27301120;
+        Thu, 14 Nov 2019 09:49:03 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3540529DF1242; Thu, 14 Nov 2019 09:50:11 +0100 (CET)
+Date:   Thu, 14 Nov 2019 09:50:11 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 01/10] perf/cgroup: Reorder perf_cgroup_connect()
+Message-ID: <20191114085011.GL4131@hirez.programming.kicks-ass.net>
+References: <20191114003042.85252-1-irogers@google.com>
+ <20191114003042.85252-2-irogers@google.com>
 MIME-Version: 1.0
-References: <cc03ba18-4949-9244-639c-94f461f03361@huawei.com>
-In-Reply-To: <cc03ba18-4949-9244-639c-94f461f03361@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Nov 2019 09:49:59 +0100
-Message-ID: <CAJZ5v0j4c8o9Tnex0fcnkmTMazSGPmVPiQf1C4kqE_yLUyMz9A@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114003042.85252-2-irogers@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 8:16 AM Yunfeng Ye <yeyunfeng@huawei.com> wrote:
->
-> The commit 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel
-> parameter cover all GPEs") says:
->   "Use a bitmap of size 0xFF instead of a u64 for the GPE mask so 256
->    GPEs can be masked"
->
-> But the masking of GPE 0xFF it not supported and the check condition
-> "gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of gpe is
-> u8.
->
-> So modify the macro ACPI_MASKABLE_GPE_MAX to 0x100, and drop the "gpe >
-> ACPI_MASKABLE_GPE_MAX" check. In addition, update the docs "Format" for
-> acpi_mask_gpe parameter.
->
-> Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 
-Applying as 5.5 material, thanks!
+Hurm, you didn't fix my missing Changelog.. 
 
+On Wed, Nov 13, 2019 at 04:30:33PM -0800, Ian Rogers wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+
+Move perf_cgroup_connect() after perf_event_alloc(), such that we can
+find/use the PMU's cpu context.
+
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> v1 -> v2:
->  - drop the "gpe > ACPI_MASKABLE_GPE_MAX" check
->  - update the docs "Format" from <int> to <byte> for acpi_mask_gpe parameter
->  - update the commit comment
->
->  Documentation/admin-guide/kernel-parameters.txt | 2 +-
->  drivers/acpi/sysfs.c                            | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index a84a83f8881e..87e27186dc69 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -113,7 +113,7 @@
->                         the GPE dispatcher.
->                         This facility can be used to prevent such uncontrolled
->                         GPE floodings.
-> -                       Format: <int>
-> +                       Format: <byte>
->
->         acpi_no_auto_serialize  [HW,ACPI]
->                         Disable auto-serialization of AML methods
-> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-> index 75948a3f1a20..0a83ce186bc4 100644
-> --- a/drivers/acpi/sysfs.c
-> +++ b/drivers/acpi/sysfs.c
-> @@ -819,14 +819,14 @@ static ssize_t counter_set(struct kobject *kobj,
->   * interface:
->   *   echo unmask > /sys/firmware/acpi/interrupts/gpe00
->   */
-> -#define ACPI_MASKABLE_GPE_MAX  0xFF
-> +#define ACPI_MASKABLE_GPE_MAX  0x100
->  static DECLARE_BITMAP(acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) __initdata;
->
->  static int __init acpi_gpe_set_masked_gpes(char *val)
->  {
->         u8 gpe;
->
-> -       if (kstrtou8(val, 0, &gpe) || gpe > ACPI_MASKABLE_GPE_MAX)
-> +       if (kstrtou8(val, 0, &gpe))
->                 return -EINVAL;
->         set_bit(gpe, acpi_masked_gpes_map);
->
-> --
-> 2.7.4
->
+>  kernel/events/core.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index cfd89b4a02d8..0dce28b0aae0 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10597,12 +10597,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  	if (!has_branch_stack(event))
+>  		event->attr.branch_sample_type = 0;
+>  
+> -	if (cgroup_fd != -1) {
+> -		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+> -		if (err)
+> -			goto err_ns;
+> -	}
+> -
+>  	pmu = perf_init_event(event);
+>  	if (IS_ERR(pmu)) {
+>  		err = PTR_ERR(pmu);
+> @@ -10615,6 +10609,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  		goto err_pmu;
+>  	}
+>  
+> +	if (cgroup_fd != -1) {
+> +		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+> +		if (err)
+> +			goto err_pmu;
+> +	}
+> +
+>  	err = exclusive_event_init(event);
+>  	if (err)
+>  		goto err_pmu;
+> @@ -10675,12 +10675,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  	exclusive_event_destroy(event);
+>  
+>  err_pmu:
+> +	if (is_cgroup_event(event))
+> +		perf_detach_cgroup(event);
+>  	if (event->destroy)
+>  		event->destroy(event);
+>  	module_put(pmu->module);
+>  err_ns:
+> -	if (is_cgroup_event(event))
+> -		perf_detach_cgroup(event);
+>  	if (event->ns)
+>  		put_pid_ns(event->ns);
+>  	if (event->hw.target)
+> -- 
+> 2.24.0.432.g9d3f5f5b63-goog
+> 
