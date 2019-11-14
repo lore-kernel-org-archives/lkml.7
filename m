@@ -2,139 +2,90 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9043C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95862C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D992D206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="hZQdzgZw"
+	by mail.kernel.org (Postfix) with ESMTP id A7EC5206E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:52:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573696326;
+	bh=2wOmYkTB7nIxxQsMv+O/DcotRsnflu0uTExRFRkW+fs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b2DilYDUrhmMj1cAHz/Gy6yKZazmIl5i5a6HgOdMd/+cX6b1XXzupy0xaP2BTT+5M
+	 uY5mVtvSxyXW8pVHh67VBqlOmpIubMU4ps9D8hqTC/7tdqRxgYAJJeUhy6YpCOqere
+	 ZLVGANvUezvlHI3h0O3FyCte/CjjSVhb08YYuQEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfKNBsb (ORCPT
+        id S1726516AbfKNBwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 20:48:31 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:10612 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfKNBsb (ORCPT
+        Wed, 13 Nov 2019 20:52:05 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40879 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNBwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 20:48:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573696107;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=4ffHBB9/52/MY1Qf33VviaYK3WPUsckkWp5OkQvLBKk=;
-        b=hZQdzgZwHaGgItIc9B9grvhZCeZhYRZgT6opVmlgknaj6J5zNebynbpQOOKDWwQcF/
-        sLkq2R+NtiS3ZpnT3+JX6Y25kS43R3NcXYTpv0nZWqMRQoXkZuDxyxfp5CER4qMG8imx
-        KiXuyQYJdoWkgFOsogSnsyXnd4A3tqGm1eqhvdZ5Z6ujrdtSziESK1vwff+RH1PGYgFD
-        31pJTZJ2Kaenekgq6KTNE6qIFhs1d6VM66JWoK51qUZ8Y7pkQL/MUmhbSrUQwZEF+AkZ
-        9uihgNOCSjjM8ovrSJKINlUEnYmbZzpI8dlTOE8Q9PxdTd35i/t9VLf9NOzoBeJ7L50u
-        Unfg==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmwdNLqV/Nz7PsNPEA=="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id N09a57vAE1kfGBt
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 14 Nov 2019 02:46:41 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     "Alexander E. Patrakov" <patrakov@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v24 11/12] LRNG - add SP800-90B compliant health tests
-Date:   Thu, 14 Nov 2019 02:46:38 +0100
-Message-ID: <7132090.9rmkJY1zsi@positron.chronox.de>
-In-Reply-To: <CAN_LGv3LUjJ=8ZZxaJ=c7uDPb=ayvCNPE-UshxgBUK-Jf7qNmQ@mail.gmail.com>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <9152597.fJySsU3eCD@positron.chronox.de> <CAN_LGv3LUjJ=8ZZxaJ=c7uDPb=ayvCNPE-UshxgBUK-Jf7qNmQ@mail.gmail.com>
+        Wed, 13 Nov 2019 20:52:04 -0500
+Received: by mail-ot1-f68.google.com with SMTP id m15so3479859otq.7;
+        Wed, 13 Nov 2019 17:52:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tyy/iJPlcDNJd/yf1nrHt+l6qJbLFsBGezCH8MwXmmM=;
+        b=WjPUsnCwEGuhN+pBizL6AdvKJtJt5YwWWOaH3J42XOorD045M0DRHSqWxAg3oBwERs
+         vZfH3jmPWcU5vQ8+lz5a8aVRf//yef3vYGZQSToZQCQ/NbejTFyL/Ms2ES5tT71KlaOj
+         CykS9ipFWekFZhJzh6VvapDBhCoi2C3E/bwcOhavJjBOyeFuAICvMcCZOQ9esnmLOSrf
+         q8CkJ+A46wOBP2KuT5IJfjm+oE+et7sOA00QefGOG2wvVzKudLIOSZCZqgZkjNWPSXaG
+         iPu//lvLjGEgKD4jspdJaH62tLf8z8k5qvzp9AYX7OeOxuNZIVDq3++cPI4c8f6lK2d7
+         PYpw==
+X-Gm-Message-State: APjAAAXcoUUX25UceQyNT/9Oh6YeK+5IL3ZJFPKy7cYiiLlSkT+KDYDY
+        B63ZbqPPCokx9GWLO+AIY+Bzc8E=
+X-Google-Smtp-Source: APXvYqwo1UUZAelKrLAwuSh6trS8OhtcFC9X3B8JtWLGubj/w8/T0NRDlQJnITZxmL8ShTtFhqgOQQ==
+X-Received: by 2002:a05:6830:1d4d:: with SMTP id p13mr6025041oth.286.1573696322369;
+        Wed, 13 Nov 2019 17:52:02 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o203sm1334139oia.4.2019.11.13.17.52.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 17:52:01 -0800 (PST)
+Date:   Wed, 13 Nov 2019 19:52:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Cc:     dri-devel@lists.freedesktop.org, a.hajda@samsung.com,
+        hjc@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net, philippe.cornu@st.com,
+        yannick.fertre@st.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        heiko@sntech.de, christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: display: rockchip-dsi: document
+ external phys
+Message-ID: <20191114015201.GA22126@bogus>
+References: <20191108000253.8560-1-heiko.stuebner@theobroma-systems.com>
+ <20191108000253.8560-3-heiko.stuebner@theobroma-systems.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108000253.8560-3-heiko.stuebner@theobroma-systems.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 13. November 2019, 07:02:40 CET schrieb Alexander E. Patrakov:
+On Fri,  8 Nov 2019 01:02:50 +0100, Heiko Stuebner wrote:
+> Some dw-mipi-dsi instances in Rockchip SoCs use external dphys.
+> In these cases the needs clock will also be generated externally
+> so these don't need the ref-clock as well.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  .../bindings/display/rockchip/dw_mipi_dsi_rockchip.txt     | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
 
-Hi Alexander,
-
-> =D1=81=D1=80, 13 =D0=BD=D0=BE=D1=8F=D0=B1. 2019 =D0=B3. =D0=B2 05:38, Ste=
-phan M=C3=BCller <smueller@chronox.de>:
-> > Am Dienstag, 12. November 2019, 20:58:32 CET schrieb Alexander E.
-> > Patrakov:
-> >=20
-> > Hi Alexander,
-> >=20
-> > > > +config LRNG_HEALTH_TESTS
-> > > > +   bool "Enable noise source online health tests"
-> > > > +   help
-> > > > +     The online health tests validate the noise source at
-> > > > +     runtime for fatal errors. These tests include SP800-90B
-> > > > +     compliant tests which are invoked if the system is booted
-> > > > +     with fips=3D1. In case of fatal errors during active
-> > > > +     SP800-90B tests, the issue is logged and the noise
-> > > > +     data is discarded. These tests are required for full
-> > > > +     compliance with SP800-90B.
-> > >=20
-> > > How have you tested that these tests work at runtime? Maybe add some
-> > > code under a new CONFIG item that depends on CONFIG_BROKEN that
-> > > deliberately botches the RNG and triggers failures?
-> >=20
-> > I am unable to find sensible information about CONFIG_BROKEN in the rec=
-ent
-> > kernel tree.
-> >=20
-> > Do you happen to have a pointer on how that option is to be used?
->=20
-> This option is not used on its own. You create a new option,
-> CONFIG_TEST_LRNG_FAILURE_MODE or something like that, and put your
-> code under the ifdef guarded by that option. And then, to prevent
-> ordinary users and allyesconfig from selecting it, in Kconfig you say:
-> "depends on BROKEN". This way, the option becomes unselectable in
-> menuconfig but still works as intended when added manually to .config
-> (obviously, with the BROKEN dependency removed locally).
->=20
-> Definition:
-> https://github.com/torvalds/linux/blob/9c7db5004280767566e91a33445bf93aa4=
-79
-> ef02/init/Kconfig#L68 Example usage:
-> https://github.com/torvalds/linux/blob/c87237110f2553b4200a8b3401a01198ed=
-fc
-> f0d9/drivers/gpu/drm/i915/Kconfig.debug#L166
-
-I added such support to the LRNG.
-
-Thank you for your suggestion.
->=20
-> --
-> Alexander E. Patrakov
-
-
-Ciao
-Stephan
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
