@@ -2,168 +2,156 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EDBC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEF0C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FECC206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2347420709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:58:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Npmz04U+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5edst1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfKNM6z (ORCPT
+        id S1726960AbfKNM66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:58:55 -0500
-Received: from mail-eopbgr150078.outbound.protection.outlook.com ([40.107.15.78]:11397
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726139AbfKNM6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:58:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HPw5PH/Jp8F2XUM+lJJGiN0rUbl6K7SP1TQCLEuRVSvkQlLbClMAXA7Jq3y/+AO+axtOcMZt7p1VgaifbTLk/hEMErHwv84Lpkm5dXdi9bGZqYrcKc5oMYN5w9GRQlBBlkuLl1MrFr2Kn6v9b7gVQ79g2/35FXBvHAOoaazVpufnRZzkcAeOeWs6Py8hJTPPuI8U3MUTLtKFFv9dbltBnVceGUHeK69MaSqAAlimekiHL2ddwmZkDi4chu5YVmGPfnQtes2KqxU2YzSYpLrqVUKT+97q8ZylQLA/RimBgPBhyobRL2QqwN4M3GpriIRixR31T6SOCyqmzXdSAa6F/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9zJ//esVPodjJaoeobhXq09SRlPzNkCJW8Danz3SzhE=;
- b=BnNTKd3UzhPsQjbCZJhZTgZ1bVZwsIJJiywrU4SlE+95701H+vDZFEvzYz0cIo9ON0Q4k0K526dcBAYnjHXO9omhSoO0nMMQaIRgFQUQFPhHq57VxItuz+Pc78N+fXDtowGqUVU7z3IEiMHlQJcAon7x7y34+kcirb8VaS+J14Vf5Xu4Bq26T2CvNw9+H+ypSYy63ufhTFiIVAKdEa8b4OTUNLVr7Nztvo1SJi2pZenZZTjjakwTC7qaCa8tQSbw0JDiYGnlDIATLHq20fn0MFoRSwdNgbl1rtWY9YwZg25rYKbVCWZgG36xPn+WDD/XHIZSY1XzAKhUGztFANWMBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9zJ//esVPodjJaoeobhXq09SRlPzNkCJW8Danz3SzhE=;
- b=Npmz04U+ceYmuwA2VmJZTbZ9vxNHQS2BbRMELsotRLMJjhQFHjXXc85rtRVuAvN6zY8GgvPB6APDxK8SNTOgWHWrU7oytOaBnnmqUX763I/+uCoelLBH72UoWVgjamDV+ZaRfVdZm8/8FdWPt8o05cB7MNw52I6NwLGm/amAUME=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB5935.eurprd05.prod.outlook.com (20.178.126.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Thu, 14 Nov 2019 12:58:48 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2430.028; Thu, 14 Nov 2019
- 12:58:48 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the hmm tree
-Thread-Topic: linux-next: build failure after merge of the hmm tree
-Thread-Index: AQHVmq03k5u9m0Gc1Ei8rJpUBgOCyKeKoR+A
-Date:   Thu, 14 Nov 2019 12:58:47 +0000
-Message-ID: <20191114125841.GO21728@mellanox.com>
-References: <20191114163435.6273b6a1@canb.auug.org.au>
-In-Reply-To: <20191114163435.6273b6a1@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR02CA0002.namprd02.prod.outlook.com
- (2603:10b6:208:fc::15) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 22a1e1d4-6527-418f-e3ea-08d76902638f
-x-ms-traffictypediagnostic: VI1PR05MB5935:
-x-microsoft-antispam-prvs: <VI1PR05MB59350243302A28D95C9AF4C7CF710@VI1PR05MB5935.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 02213C82F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39850400004)(376002)(136003)(346002)(53754006)(199004)(189003)(71190400001)(186003)(54906003)(26005)(81156014)(86362001)(81166006)(76176011)(5660300002)(8936002)(4326008)(316002)(2906002)(11346002)(66946007)(66556008)(66476007)(476003)(6246003)(99286004)(6116002)(3846002)(25786009)(486006)(6512007)(2616005)(8676002)(66446008)(52116002)(64756008)(6506007)(386003)(1076003)(102836004)(446003)(6436002)(6486002)(36756003)(66066001)(14444005)(229853002)(71200400001)(7736002)(256004)(305945005)(14454004)(33656002)(6916009)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5935;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vwUDj4aKlycvfPT/eCI1ifW80u1Rr0XVqr4gMSVJKNgv34bUavLOj0g3MAIIl9pWGb+w+oAJymnlIYhCp/vwjcr5zc2nBO21wTwC9M799Yx2WCuJQD72fXur+n4vBIJDASIhxpjV9ZM4avyo0zz9zcWU3osfkyvRTR9KXjKJn0BxQgDT3AKJBE4+FFdf1qWHj8YEkjgGoVtFEEal08RUFPrGNV8dcTmUlk+wGAqG/1cbZMvr0Rux7YUVcEjgJ1aey46MGS4twm3KtSfXBwdWBWkDa+xuGE+TnsWRSNyDAW6Gi4Q4jEFF4dE+3cZksIA5pnd4GIA6h73rsU1lq9pb6aZpL6E4P1tOEAWnn6UpFffB7hxuqAiZOWqUspS4jt/TTRxmJdpXPZydGi7DClwTic9PONdtdONXsrnesDWd+1ctJY7ffzhD4xQdQGLzPTAp
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <89C6F450F1FDD8449CF24158202D94C2@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 14 Nov 2019 07:58:58 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45889 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfKNM64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 07:58:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z10so6328460wrs.12;
+        Thu, 14 Nov 2019 04:58:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5/yZewMOwSUNa5I83y+T0aelSU0qIk8Vc3mk35F3rOY=;
+        b=a5edst1XV+upr79EpSARNH1rcJkMpsPeGN84GGciH7M7yuP8Ervh7VUSJYq+WVKxLl
+         x3ofgMaRe2fgA/pSIFcPQbQ670Tr5EWECXLBtgWD3St5nKubOs1Z53ELy/18R/pYV4e1
+         fsjOb2T7iMRnEyix3y5GwW+XFZDVO62MUDXuN4ZHA8R5qXIEO9/F25XYYCTlJohA6Cls
+         kjsPKGSBO7QO36AlDPM7Rfsx0Cs2PvqDoaNC428RZ0buJODbIDvC3OtbO4Y3CgrEiDJs
+         yX2h1uoiMg4Qw6tPkAXQzFg0bc/AhzAU1fnKWTpEuiS3sFHGOQCmtsYrQphr59MTUSEb
+         AXZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5/yZewMOwSUNa5I83y+T0aelSU0qIk8Vc3mk35F3rOY=;
+        b=lclJhkgjRFvObiSu+gcPGiCa4CWbcX1E4payv4qvE1aEq6hd8DIG0LTKsBUPQV84jZ
+         j9/fLPJEJUmdc43xOYgVaahx3LaGwOT59hzZ6z/CIZP7MJ80p+9LgMKa8sDaUfYS8iTe
+         IShWy9IJaXBFUDR9/3EtUBxVTAkcFsOVRdiHRfX6OoNciNKyLBwfueH1M5q7XVlqWdOM
+         KRyO3L2lSTbbHuhbgV1zqo5lvmg4Dq0Ht3p2CwEo0nPxqlG8yWWI6Fk4qoEHr6kgOr7a
+         7qkaj/KdtuNerB2w1NGa56rzntzkT1puCQx37qzLbD7QGiAC8l105jrwEcPHU1pzMiZq
+         C1wQ==
+X-Gm-Message-State: APjAAAXaNU+Ju1EbeI5Vv7kyzFneET+L3rkTRx8mcvdp1qYrrDzDVLeb
+        svBLVMuXmtFiQKtuxtngM2w=
+X-Google-Smtp-Source: APXvYqwCsRaLS7yOkF7Xv7eprjPRs8ArvDI7XkSFkV6AXyxJaxxVH5FbEacxPkmt+Da39iMiBhecUg==
+X-Received: by 2002:adf:f18e:: with SMTP id h14mr8497661wro.348.1573736332664;
+        Thu, 14 Nov 2019 04:58:52 -0800 (PST)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id z6sm7540220wro.18.2019.11.14.04.58.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 04:58:51 -0800 (PST)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH] crypto: sun4i-ss: fix big endian issues
+Date:   Thu, 14 Nov 2019 13:58:49 +0100
+Message-Id: <20191114125849.22829-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22a1e1d4-6527-418f-e3ea-08d76902638f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 12:58:47.9938
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6FTWUYSYWq7Rr+ywIrfIaM21N0BWeTKs2f/VnnBZ/fpzywn4aYPvjoev+419QCwzqvfUFqbO6EgEaDEaY66BVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5935
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 04:34:35PM +1100, Stephen Rothwell wrote:
-> Hi all,
->=20
-> After merging the hmm tree, today's linux-next build (x86_64 allmodconfig=
-)
-> failed like this:
->=20
-> drivers/infiniband/hw/hfi1/user_exp_rcv.c: In function 'set_rcvarray_entr=
-y':
-> drivers/infiniband/hw/hfi1/user_exp_rcv.c:768:33: warning: passing argume=
-nt 2 of 'mmu_interval_notifier_insert' makes pointer from integer without a=
- cast [-Wint-conversion]
->   768 |    &node->notifier, tbuf->vaddr + (pageidx * PAGE_SIZE),
->       |                     ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
->       |                                 |
->       |                                 long unsigned int
-> In file included from include/rdma/ib_verbs.h:59,
->                  from include/rdma/ib_hdrs.h:53,
->                  from drivers/infiniband/hw/hfi1/hfi.h:68,
->                  from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
->                  from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
-> include/linux/mmu_notifier.h:295:24: note: expected 'struct mm_struct *' =
-but argument is of type 'long unsigned int'
->   295 |      struct mm_struct *mm, unsigned long start,
->       |      ~~~~~~~~~~~~~~~~~~^~
-> drivers/infiniband/hw/hfi1/user_exp_rcv.c:769:26: warning: passing argume=
-nt 4 of 'mmu_interval_notifier_insert' makes integer from pointer without a=
- cast [-Wint-conversion]
->   769 |    npages * PAGE_SIZE, fd->mm);
->       |                        ~~^~~~
->       |                          |
->       |                          struct mm_struct *
-> In file included from include/rdma/ib_verbs.h:59,
->                  from include/rdma/ib_hdrs.h:53,
->                  from drivers/infiniband/hw/hfi1/hfi.h:68,
->                  from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
->                  from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
-> include/linux/mmu_notifier.h:296:20: note: expected 'long unsigned int' b=
-ut argument is of type 'struct mm_struct *'
->   296 |      unsigned long length,
->       |      ~~~~~~~~~~~~~~^~~~~~
-> drivers/infiniband/hw/hfi1/user_exp_rcv.c:767:9: error: too few arguments=
- to function 'mmu_interval_notifier_insert'
->   767 |   ret =3D mmu_interval_notifier_insert(
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from include/rdma/ib_verbs.h:59,
->                  from include/rdma/ib_hdrs.h:53,
->                  from drivers/infiniband/hw/hfi1/hfi.h:68,
->                  from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
->                  from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
-> include/linux/mmu_notifier.h:294:5: note: declared here
->   294 | int mmu_interval_notifier_insert(struct mmu_interval_notifier *mn=
-i,
->       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> Caused by commit
->=20
->   c90dad714405 ("RDMA/hfi1: Use mmu_interval_notifier_insert for user_exp=
-_rcv")
->=20
-> I have used the hmm tree from next-20191113 for today.
+When testing BigEndian kernel, the sun4i-ss was failling all crypto
+tests.
+This patch fix endian issues with it.
 
-Another case of 0-day missing stuff, it gave this branch an OK :(=20
+Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ .../crypto/allwinner/sun4i-ss/sun4i-ss-hash.c | 21 ++++++++++---------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-I'll fix it for tomorrow
+diff --git a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
+index ec5d9ce24bb8..b233f67f491f 100644
+--- a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
+@@ -187,7 +187,7 @@ static int sun4i_hash(struct ahash_request *areq)
+ 	 */
+ 	unsigned int i = 0, end, fill, min_fill, nwait, nbw = 0, j = 0, todo;
+ 	unsigned int in_i = 0;
+-	u32 spaces, rx_cnt = SS_RX_DEFAULT, bf[32] = {0}, wb = 0, v, ivmode = 0;
++	u32 spaces, rx_cnt = SS_RX_DEFAULT, bf[32] = {0}, v, ivmode = 0;
+ 	struct sun4i_req_ctx *op = ahash_request_ctx(areq);
+ 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
+ 	struct sun4i_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
+@@ -196,6 +196,7 @@ static int sun4i_hash(struct ahash_request *areq)
+ 	struct sg_mapping_iter mi;
+ 	int in_r, err = 0;
+ 	size_t copied = 0;
++	__le32 wb = 0;
+ 
+ 	dev_dbg(ss->dev, "%s %s bc=%llu len=%u mode=%x wl=%u h0=%0x",
+ 		__func__, crypto_tfm_alg_name(areq->base.tfm),
+@@ -407,7 +408,7 @@ static int sun4i_hash(struct ahash_request *areq)
+ 
+ 		nbw = op->len - 4 * nwait;
+ 		if (nbw) {
+-			wb = *(u32 *)(op->buf + nwait * 4);
++			wb = cpu_to_le32(*(u32 *)(op->buf + nwait * 4));
+ 			wb &= GENMASK((nbw * 8) - 1, 0);
+ 
+ 			op->byte_count += nbw;
+@@ -416,7 +417,7 @@ static int sun4i_hash(struct ahash_request *areq)
+ 
+ 	/* write the remaining bytes of the nbw buffer */
+ 	wb |= ((1 << 7) << (nbw * 8));
+-	bf[j++] = wb;
++	bf[j++] = le32_to_cpu(wb);
+ 
+ 	/*
+ 	 * number of space to pad to obtain 64o minus 8(size) minus 4 (final 1)
+@@ -435,13 +436,13 @@ static int sun4i_hash(struct ahash_request *areq)
+ 
+ 	/* write the length of data */
+ 	if (op->mode == SS_OP_SHA1) {
+-		__be64 bits = cpu_to_be64(op->byte_count << 3);
+-		bf[j++] = lower_32_bits(bits);
+-		bf[j++] = upper_32_bits(bits);
++		__be64 *bits = (__be64 *)&bf[j];
++		*bits = cpu_to_be64(op->byte_count << 3);
++		j += 2;
+ 	} else {
+-		__le64 bits = op->byte_count << 3;
+-		bf[j++] = lower_32_bits(bits);
+-		bf[j++] = upper_32_bits(bits);
++		__le64 *bits = (__le64 *)&bf[j];
++		*bits = cpu_to_le64(op->byte_count << 3);
++		j += 2;
+ 	}
+ 	writesl(ss->base + SS_RXFIFO, bf, j);
+ 
+@@ -487,7 +488,7 @@ static int sun4i_hash(struct ahash_request *areq)
+ 		}
+ 	} else {
+ 		for (i = 0; i < 4; i++) {
+-			v = readl(ss->base + SS_MD0 + i * 4);
++			v = cpu_to_le32(readl(ss->base + SS_MD0 + i * 4));
+ 			memcpy(areq->result + i * 4, &v, 4);
+ 		}
+ 	}
+-- 
+2.23.0
 
-Thanks,
-Jason
