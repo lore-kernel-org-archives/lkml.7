@@ -2,163 +2,110 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ED3C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF53C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E3520706
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C3F206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="AlXsRw50"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PXwwk3aG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKNOWs (ORCPT
+        id S1726818AbfKNOYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:22:48 -0500
-Received: from mail-eopbgr20071.outbound.protection.outlook.com ([40.107.2.71]:63108
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726894AbfKNOWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:22:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YvH58/je8iUkSIp3cyHAmzbog9c6juh4k/sBtZ0EVWHIaGff7bQeQh0/XabpzE4q4bEg7XWQkbvXJNIDCWcga8shLBF7FH9Qnda4XGqVYFsetrGrSj4rjJYQeNu41/BmvEdBLgXIT1tBrtu+aCY6wuOLpaOucDEYWy7ft6utFG4Dc4XfzCa4lKWTMmLS32m4z2qwqmlqVYkfRxWcHx7LpYnOSibuVTS8d7oFSO/rxkMnxcfXGFaAR1Rbsn7zIDQqglu4QpVMx+6s14CpHhlNtrESuCWW38qhhWZrNZ7iYWwPEzzcbI3vsm7AUdepo84H9PtaI1DPDV54w8dlv04gCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G2PVr5mPwg9xTS+CYuS+/rqtZAyzFzUxEicKgIZWZG4=;
- b=BNPTgK0vxTtVNGonalsUyyAZ26ZHGeATHE2cyJa2OljZCpdOHUa8OYaddSNL8x0cuOuGJ6MMKJYCZLS60MAFnOWmYZjlHBQeJVs+4SrBLBW2JqFEe7gRbJ716D30EEx2F5IXClpayBh4iyEnabTjuJ+E2Q7ZbZAT38r/KMNosP2l22PvwgjnEaGPHF+NkuPzCuU0h6faN/5kkv/KwHd2hTTC8XDANmQmCW2t2l1X64mlWkP7Fba/ExgCS/8wi7YnQSuQTj78SFBq3hDvmpECLuy8jgLU0XjwnKbOcRSGv8V360DdoDv4KfGGTPRVlow8cDMfHZjNmH9+YpowRm5Xwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G2PVr5mPwg9xTS+CYuS+/rqtZAyzFzUxEicKgIZWZG4=;
- b=AlXsRw50yRwt5qIh0Bnv/fzAqGjLoAPDc1sCuuSs29Er/626dvugXneYPJqpCoPOwZAlEwRndTm5g/NK/Lg2t9/EISNDoue8hu1zT6XE0ey7sufxjkM55CKjmChCNclOy7Q2xOrm8M7/PM17dfIbKaSNPcKfbE6I9ClU9s7wNFM=
-Received: from AM6PR05MB4198.eurprd05.prod.outlook.com (52.135.161.31) by
- AM6PR05MB4117.eurprd05.prod.outlook.com (52.135.160.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.22; Thu, 14 Nov 2019 14:22:44 +0000
-Received: from AM6PR05MB4198.eurprd05.prod.outlook.com
- ([fe80::8435:9f63:f8da:650e]) by AM6PR05MB4198.eurprd05.prod.outlook.com
- ([fe80::8435:9f63:f8da:650e%7]) with mapi id 15.20.2430.028; Thu, 14 Nov 2019
- 14:22:44 +0000
-From:   Roi Dayan <roid@mellanox.com>
-To:     Aaron Conole <aconole@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Pravin B Shelar <pshelar@ovn.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "dev@openvswitch.org" <dev@openvswitch.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Blakey <paulb@mellanox.com>
-Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
-Thread-Topic: [PATCH net 2/2] act_ct: support asymmetric conntrack
-Thread-Index: AQHVlniNxzp9LPfrD0GENV4CQylisqeKwQAA
-Date:   Thu, 14 Nov 2019 14:22:44 +0000
-Message-ID: <6917ebfa-6361-5294-d91b-b3c6dd1e8cf5@mellanox.com>
-References: <20191108210714.12426-1-aconole@redhat.com>
- <20191108210714.12426-2-aconole@redhat.com>
-In-Reply-To: <20191108210714.12426-2-aconole@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [193.47.165.251]
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-clientproxiedby: FRYP281CA0004.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::14)
- To AM6PR05MB4198.eurprd05.prod.outlook.com (2603:10a6:209:40::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=roid@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6d4ff9c7-b459-42fc-82a1-08d7690e1d0b
-x-ms-traffictypediagnostic: AM6PR05MB4117:|AM6PR05MB4117:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR05MB4117CA8D134E2463F9BCC622B5710@AM6PR05MB4117.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:214;
-x-forefront-prvs: 02213C82F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(189003)(199004)(6116002)(99286004)(66476007)(2906002)(110136005)(4326008)(31686004)(26005)(478600001)(54906003)(66556008)(66446008)(65956001)(486006)(386003)(8676002)(476003)(2616005)(8936002)(53546011)(81166006)(5660300002)(64756008)(36756003)(6506007)(107886003)(25786009)(11346002)(6246003)(229853002)(446003)(58126008)(71200400001)(66066001)(65806001)(71190400001)(256004)(14444005)(316002)(31696002)(6512007)(81156014)(66946007)(186003)(7736002)(305945005)(6436002)(86362001)(52116002)(76176011)(2501003)(14454004)(102836004)(3846002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4117;H:AM6PR05MB4198.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OVUNG4RwfVsc9hfzDmylZHwMgX5HQfmefRmEogST6dQth5fZ4yixgFsWv0KDwnlt3uIGHeCfop3zZTS3XtJumU0OEBsZlpxI2V31+cNcCb4NDzZ2BgWPLbDcb1/dg2tE5LN6SwTwPrLYs3kcbI0Pc1dfrglY7BZJc4rf0WxZpKqkw97BIBjopNZG2xi1S5ogBdn5ZnyiVzKkDci2XcbggQW1egHRSQPlPMoZGIYM+VOc0OGkO7VAx65iqEwdTp5VDgjbXLFhpNeWxj6WwKsf3WVTZKkisqyROsvNN1uS8rOQjuEWKw1eUmqivo6Uky0KxjX1raAZApm7efdULeLn9SoBMx8hkvybww1hWxiP1pojP3l8SoTlfr8AFu8jzzGjPIbSf15cjsvza6NKxPeBaI4PoFJZE2j9S0LgdDo18LxOICMPdKJyF0FRiNdIGwRC
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <19C208C90B108349A20FC184A6A1E8A9@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 14 Nov 2019 09:24:12 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38588 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfKNOYL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 09:24:11 -0500
+Received: by mail-qt1-f196.google.com with SMTP id p20so6946848qtq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 06:24:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=YfeA14uuuPzU+N+/A63W2LLCo3IHXwSL/EjkK/pHBoA=;
+        b=PXwwk3aG8DnvtQt2WlwkDuxKtEq+rWhMjk6TRDPP6J7v2ijVF5ntwH71vv2+LPNGON
+         FkVeLzwjcEl9zzEmJcuEcNJPI0Zl7WsDbJqqfHzJx7frAIJ4S82/egMXgAlt+KAcJs5S
+         0YpEBfP/fz89eoYIu0n6MBzOFLoIJNnjToi1iA49/WI0O6XoZQkkV4XX2reLekkoZGQK
+         hEjn4cS4z2FfZfR+/wP3JKdL+Zb6WUpjELz+FQdgwysAQ0W+7Mvxhucp+WoKHgkywQuJ
+         Gn94aN6yEE/wOFmjywIASyQrf+GqPnHZOHIa0aufOfzY3JC+/kDSQvxS1fIRd78B2N8u
+         w67g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=YfeA14uuuPzU+N+/A63W2LLCo3IHXwSL/EjkK/pHBoA=;
+        b=uOy3FMpZBc1FcpNwV/xGZbJUmBblZAa6h/XJmRF+HyKCcWOauHXGzbeDvwi8nKsYl6
+         JZETLGH7ErvaCo+VevF7Em7h4gy1Wsn8ifpoB3X8+yJ4D7P1gVaMN/eOZ+2vUU7U4cBM
+         fUKgDGf4MIOgyqPi83sKDv3pMX2z7yKhoa54lC6pqvHo6FWzFoDgVaU/NI0TQpnBNK/q
+         HMR8iZzDNrpOsazi4mv6JeiaarE5lHSTy71sjcprVXFhngDCDbj1Ym5n4kzYmb+iYy0o
+         rdZjWQ0f7H8wSJSKExhgYHuECsnJvE5Bj5OIAAMaHuhPiKICpmCYEEDK8A8O4V0swQye
+         GvWg==
+X-Gm-Message-State: APjAAAWHPfQY2K4EhdlFQn+voHn1CLwMSpAGhUmZmfE8bcsj3nUWONU3
+        jSgptJAixhdKnD6o1Zm5ZdUoMw==
+X-Google-Smtp-Source: APXvYqzjYBw8Uth2zEHa9ufAHHel74INCvkgWT2GGxMJP0HHyFDLnEKNDmKisfErW5qKeEy3am6PCA==
+X-Received: by 2002:ac8:6757:: with SMTP id n23mr8291467qtp.345.1573741450490;
+        Thu, 14 Nov 2019 06:24:10 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id s42sm3125140qtk.60.2019.11.14.06.24.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Nov 2019 06:24:09 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iVG2b-0000DC-9T; Thu, 14 Nov 2019 10:24:09 -0400
+Date:   Thu, 14 Nov 2019 10:24:09 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>, Shuah Khan <shuah@kernel.org>,
+        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] mm/hmm: make full use of walk_page_range()
+Message-ID: <20191114142409.GA785@ziepe.ca>
+References: <20191104222141.5173-1-rcampbell@nvidia.com>
+ <20191104222141.5173-2-rcampbell@nvidia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d4ff9c7-b459-42fc-82a1-08d7690e1d0b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 14:22:44.3181
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5/6xh+3Y2y9WT5O3pQaqZQi9ObJRWATcu1P+JrPXhSIixcls0lYtqrUC/a1CmZhAHQ7FWZ9glKIUrAl5VaSQJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4117
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191104222141.5173-2-rcampbell@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-11-08 11:07 PM, Aaron Conole wrote:
-> The act_ct TC module shares a common conntrack and NAT infrastructure
-> exposed via netfilter.  It's possible that a packet needs both SNAT and
-> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
-> this because it runs through the NAT table twice - once on ingress and
-> again after egress.  The act_ct action doesn't have such capability.
->=20
-> Like netfilter hook infrastructure, we should run through NAT twice to
-> keep the symmetry.
->=20
-> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
->=20
-> Signed-off-by: Aaron Conole <aconole@redhat.com>
+On Mon, Nov 04, 2019 at 02:21:40PM -0800, Ralph Campbell wrote:
+> hmm_range_fault() calls find_vma() and walk_page_range() in a loop.
+> This is unnecessary duplication since walk_page_range() calls find_vma()
+> in a loop already.
+> Simplify hmm_range_fault() by defining a walk_test() callback function
+> to filter unhandled vmas.
+> This also fixes a bug where hmm_range_fault() was not checking
+> start >= vma->vm_start before checking vma->vm_flags so hmm_range_fault()
+> could return an error based on the wrong vma for the requested range.
+> It also fixes a bug when the vma has no read access and the caller did
+> not request a fault, there shouldn't be any error return code.
+> 
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
->  net/sched/act_ct.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->=20
-> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
-> index fcc46025e790..f3232a00970f 100644
-> --- a/net/sched/act_ct.c
-> +++ b/net/sched/act_ct.c
-> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
->  			  bool commit)
->  {
->  #if IS_ENABLED(CONFIG_NF_NAT)
-> +	int err;
->  	enum nf_nat_manip_type maniptype;
-> =20
->  	if (!(ct_action & TCA_CT_ACT_NAT))
-> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
->  		return NF_ACCEPT;
->  	}
-> =20
-> -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> +	err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> +	if (err =3D=3D NF_ACCEPT &&
-> +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
-> +		if (maniptype =3D=3D NF_NAT_MANIP_SRC)
-> +			maniptype =3D NF_NAT_MANIP_DST;
-> +		else
-> +			maniptype =3D NF_NAT_MANIP_SRC;
-> +
-> +		err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> +	}
-> +	return err;
->  #else
->  	return NF_ACCEPT;
->  #endif
->=20
+>  mm/hmm.c | 121 ++++++++++++++++++++++++++-----------------------------
+>  1 file changed, 58 insertions(+), 63 deletions(-)
 
-+paul
+Applied to hmm.git with Christoph's hunk merged in
+
+Thanks,
+Jason
