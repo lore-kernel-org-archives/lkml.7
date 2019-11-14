@@ -2,92 +2,103 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F25BC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF1DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06800206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D3C20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KBT/jzLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfKNQsq (ORCPT
+        id S1727002AbfKNQsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:48:46 -0500
-Received: from mga01.intel.com ([192.55.52.88]:41737 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfKNQsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:48:46 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 08:48:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="379628441"
-Received: from pkamlakx-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.10.73])
-  by orsmga005.jf.intel.com with ESMTP; 14 Nov 2019 08:48:43 -0800
-Date:   Thu, 14 Nov 2019 18:48:41 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: question about setting TPM_CHIP_FLAG_IRQ in tpm_tis_core_init
-Message-ID: <20191114164841.GD9528@linux.intel.com>
-References: <20191112033637.kxotlhm6mtr5irvd@cantor>
- <20191112200703.GB11213@linux.intel.com>
- <20191112201734.sury5nd3cptkckgb@cantor>
- <50290fc8-4d22-3eb5-c930-079f8b819a8e@linux.ibm.com>
+        Thu, 14 Nov 2019 11:48:50 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42908 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfKNQst (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:48:49 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m4so5535704qke.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7GJLu0rhCy9EmDtDkFFDYoyUr1gLUzYdPkCqHHYIzfc=;
+        b=KBT/jzLXedcAjmuKV3o/ztBs23SgFvJYE5v78L/nXWv6GOSrHuU4ggZgVbi9hZNnk2
+         z4Y6EFaJJNDGXVUY5CvMmu9ZTHJu+EMf2dakAOHLlwJgrQyFLl80u3eroPCavv63JTTQ
+         4XPGIgCmOhiV6azehtmWxgBd07VwDtJ8N5GUJpT95bvFwSa/4VGM4RHLo72s+mMl3GRQ
+         OOKVNb3sRmQHi3BNJE3ljDp21+UsU1sT1yQtL3SYmwkdmMEAwwFeTsG/UI2M59RvO4LD
+         juKXQk5RRMO708m6LxxLMlVIH8H6e9OtjaZ1H4keXsoqg+ThgRK3OSUy5z1P0qmjl741
+         UnWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7GJLu0rhCy9EmDtDkFFDYoyUr1gLUzYdPkCqHHYIzfc=;
+        b=UJZmwQYKnXqO7UqN1NJpAWYrExwsswo63lpYfeGyAFkuG41xx00hL8M/v++jfineWV
+         a/bAdI1Xcj8KH9awjezOEUp76tRnoIh60jUx+WN9Ep6UTqPVd+dOfyD+FlJM7cjP1QCL
+         JeVgyeyM2ATJ/nYZPbklvSi4TKsB5vC3jTyWgxhclS0qVNkqxBDnbCTmZA7PEGvpcsd/
+         YQ+RyssCSEA/UFXyCop/Jlqt7GfhBPCo6pqWcYBEaqGrReH7ij/gbVX/zXnZbFn3Q3nD
+         V9NHi3vlrFIAy0r96KjwurY2MF39CTn/4aRHZ7d/rDiHqXxD++AUYwViab9yzzT1fQWW
+         CpKw==
+X-Gm-Message-State: APjAAAVKuTU9jyM+tHY6YVQbHm+LDtSP/90dT5rQtNfJzXt8znmD9PYX
+        UzqqqQf2d8SfocMu0INXzauAIqvxB8U=
+X-Google-Smtp-Source: APXvYqwAFNysDj7xylbnDPnfNIHmH6Ey61doLPKkZE9Pv+8qcMgfa+KBHC41utU75Sn+7VEGXGu0Ww==
+X-Received: by 2002:a37:6845:: with SMTP id d66mr7678807qkc.407.1573750127975;
+        Thu, 14 Nov 2019 08:48:47 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id p54sm3629725qta.39.2019.11.14.08.48.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Nov 2019 08:48:47 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iVIIZ-0003yG-12; Thu, 14 Nov 2019 12:48:47 -0400
+Date:   Thu, 14 Nov 2019 12:48:47 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dag Moxnes <dag.moxnes@oracle.com>
+Cc:     dledford@redhat.com, leon@kernel.org, parav@mellanox.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH rdma-next v2] RDMA/cma: Use ACK timeout for RoCE
+ packetLifeTime
+Message-ID: <20191114164846.GA15241@ziepe.ca>
+References: <1572439440-17416-1-git-send-email-dag.moxnes@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <50290fc8-4d22-3eb5-c930-079f8b819a8e@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1572439440-17416-1-git-send-email-dag.moxnes@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 03:30:51PM -0500, Stefan Berger wrote:
-> On 11/12/19 3:17 PM, Jerry Snitselaar wrote:
-> > On Tue Nov 12 19, Jarkko Sakkinen wrote:
-> > > On Mon, Nov 11, 2019 at 08:36:37PM -0700, Jerry Snitselaar wrote:
-> > > > Question about 1ea32c83c699 ("tpm_tis_core: Set TPM_CHIP_FLAG_IRQ
-> > > > before probing for interrupts").  Doesn't tpm_tis_send set this flag,
-> > > > and setting it here in tpm_tis_core_init short circuits what
-> > > > tpm_tis_send was doing before? There is a bug report of an interrupt
-> > > > storm from a tpm on a t490s laptop with the Fedora 31 kernel (5.3),
-> > > > and I'm wondering if this change could cause that. Before they got the
-> > > > warning about interrupts not working, and using polling instead.
-> > > 
-> > > Looks like it. Stefan?
-> > > 
-> > > /Jarkko
-> > > 
-> > 
-> > Stefan is right about the condition check at the beginning of
-> > tpm_tis_send.
-> > 
-> >     if (!(chip->flags & TPM_CHIP_FLAG_IRQ) || priv->irq_tested)
-> >         return tpm_tis_send_main(chip, buf, len);
-> > 
-> > Before his change it would've gone straight to calling
-> > tpm_tis_send_main instead of jumping down and doing the irq test, due
-> > to the flag not being set. With his change it should now skip this
-> > tpm_tis_send_main call when tpm_tis_gen_interrupt is called, and then
-> > after that time through tpm_tis_send priv->irq_tested will be set, and
-> > the flag should be set as to whether or not irqs were working.
-> > 
-> > I should hopefully have access to a t490s in a few days so I can look at
-> > it,
-> > and try to figure out what is happening.
-> > 
-> I hope the t490s is an outlier. Give the patch I just posted a try.
+On Wed, Oct 30, 2019 at 01:44:00PM +0100, Dag Moxnes wrote:
+> The cma is currently using a hard-coded value, CMA_IBOE_PACKET_LIFETIME,
+> for the PacketLifeTime, as it can not be determined from the network.
+> This value might not be optimal for all networks.
+> 
+> The cma module supports the function rdma_set_ack_timeout to set the
+> ACK timeout for a QP associated with a connection. As per IBTA 12.7.34
+> local ACK timeout = (2 * PacketLifeTime + Local CAâ€™s ACK delay).
+> Assuming a negligible local ACK delay, we can use
+> PacketLifeTime = local ACK timeout/2
+> as a reasonable approximation for RoCE networks.
+> 
+> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+> ---
+>  drivers/infiniband/core/cma.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 
-First I must be first that it is the best way to fix the bug. Also,
-it did not have fixes tag.
+This seems like a reasonable thing to do, applied to for-next
 
-/Jarkko
+Thanks,
+Jason
