@@ -2,144 +2,202 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AD6C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 02:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E50C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 02:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F2A206F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 02:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mVGXWZyI"
+	by mail.kernel.org (Postfix) with ESMTP id 23FA9206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 02:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfKNCVk (ORCPT
+        id S1726628AbfKNCXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 21:21:40 -0500
-Received: from ozlabs.org ([203.11.71.1]:50351 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfKNCVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 21:21:40 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47D4wt0X4jz9sNT;
-        Thu, 14 Nov 2019 13:21:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573698096;
-        bh=shChhN5EF9KgXRXrKBtuHFrRtChjGLsebmVlDt06m7Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mVGXWZyInQ8ZghGJNyWcbcUdSEEWLCCQizt7pEjGbYO653gWawqyJ1FAbGvQCkS7L
-         JY1YndT+cXSwGCiqHeIVOqCAT8af23iPhs7if4uIFz1YLzqFzFFA37WacNN1JkfZDK
-         6+hjsHxa94WVia0ZqOEWQGJyxryGnEkNbAVkwrHmWpjzEmHDrMwL7xJGsaT57ovSf6
-         IpddjfzX7Yz1YnlY1c05Pz1xYnbXzRyNHnIuhSktJWxp91HHub7CWV8A7Htrqa0ORV
-         5KmZp8jlJIewQca4ME2k3QWka3PZXflLMYsDvKD+EJiP9i0GgoFYxvipwP4xNxYvl3
-         2wI5JjmfO7gUQ==
-Date:   Thu, 14 Nov 2019 13:21:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Wed, 13 Nov 2019 21:23:01 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:8569 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726098AbfKNCXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 21:23:00 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Ti0gV7v_1573698164;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Ti0gV7v_1573698164)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 14 Nov 2019 10:22:46 +0800
+Subject: Re: [PATCH 3/3] sched/numa: documentation for per-cgroup numa stat
+To:     Iurii Zaikin <yzaikin@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Marian Mihailescu <mihailescu2m@gmail.com>
-Subject: linux-next: manual merge of the devicetree tree with the arm-soc
- tree
-Message-ID: <20191114132131.56089c64@canb.auug.org.au>
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <896a7da3-f139-32e7-8a64-b3562df1a091@linux.alibaba.com>
+ <CAAXuY3qsckZurUHy5kJUQcmrbn-bmGHnjtPPus5=PrQ+MmJX+g@mail.gmail.com>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <b1106697-da56-ad5d-82c9-1461df0f2e35@linux.alibaba.com>
+Date:   Thu, 14 Nov 2019 10:22:44 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/BB1LBtqI5ejPny06wVC/iyM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAAXuY3qsckZurUHy5kJUQcmrbn-bmGHnjtPPus5=PrQ+MmJX+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/BB1LBtqI5ejPny06wVC/iyM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi, Iurii
 
-Hi all,
+On 2019/11/14 上午2:28, Iurii Zaikin wrote:
+> Since the documentation talks about fairly advanced concepts, every little bit
+> of readability improvement helps. I tried to make suggestions that I feel make
+> it easier to read, hopefully my nitpicking is not too annoying.
 
-Today's linux-next merge of the devicetree tree got a conflict in:
+Any comments are welcomed :-)
 
-  Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> On Tue, Nov 12, 2019 at 7:46 PM 王贇 <yun.wang@linux.alibaba.com> wrote:
+>> +On NUMA platforms, remote memory accessing always has a performance penalty,
+>> +although we have NUMA balancing working hard to maximum the local accessing
+>> +proportion, there are still situations it can't helps.
+> Nit: working hard to maximize the access locality...
+> can't helps -> can't help>> +
+>> +This could happen in modern production environment, using bunch of cgroups
+>> +to classify and control resources which introduced complex configuration on
+>> +memory policy, CPUs and NUMA node, NUMA balancing could facing the wrong
+>> +memory policy or exhausted local NUMA node, lead into the low local page
+>> +accessing proportion.
+> I find the below a bit easier to read.
+> This could happen in modern production environment. When a large
+> number of cgroups
+> are used to classify and control resources, this creates a complex
+> memory policy configuration
+> for CPUs and NUMA nodes. In such cases NUMA balancing could end up
+> with the wrong
+> memory policy or exhausted local NUMA node, which would lead to low
+> percentage of local page
+> accesses.
 
-between commit:
+Sounds better, just for the configuration part, since memory policy, CPUs
+and NUMA nodes are configured by different approach, maybe we should still
+separate them like:
 
-  577dd5de0990 ("arm64: dts: juno: add GPU subsystem")
+This could happen in modern production environment. When a large
+number of cgroups are used to classify and control resources, this
+creates a complex configuration for memory policy, CPUs and NUMA nodes.
+In such cases NUMA balancing could end up with the wrong memory policy
+or exhausted local NUMA node, which would lead to low percentage of local
+page accesses.
 
-from the arm-soc tree and commit:
+> 
+>> +We need to perceive such cases, figure out which workloads from which cgroup
+>> +has introduced the issues, then we got chance to do adjustment to avoid
+>> +performance damages.
+> Nit: perceive -> detect, got-> get, damages-> degradation
+> 
+>> +However, there are no hardware counter for per-task local/remote accessing
+>> +info, we don't know how many remote page accessing has been done for a
+>> +particular task.
+> Nit: counters.
+> Nit: we don't know how many remote page accesses have occurred for a
+> 
+>> +
+>> +Statistics
+>> +----------
+>> +
+>> +Fortunately, we have NUMA Balancing which scan task's mapping and trigger PF
+>> +periodically, give us the opportunity to record per-task page accessing info.
+> Nit: scans, triggers, gives.
+> 
+>> +By "echo 1 > /proc/sys/kernel/cg_numa_stat" on runtime or add boot parameter
+> Nit: at runtime or adding boot parameter
+>> +To be noticed, the accounting is in a hierarchy way, which means the numa
+>> +statistics representing not only the workload of this group, but also the
+>> +workloads of all it's descendants.
+> Note that the accounting is hierarchical, which means the numa
+> statistics for a given group represents not only the workload of this
+> group, but also the
+> workloads of all it's descendants.
+>> +
+>> +For example the 'cpu.numa_stat' show:
+>> +  locality 39541 60962 36842 72519 118605 721778 946553
+>> +  exectime 1220127 1458684
+>> +
+>> +The locality is sectioned into 7 regions, closely as:
+>> +  0-13% 14-27% 28-42% 43-56% 57-71% 72-85% 86-100%
+> Nit: closely -> approximately?
+> 
+>> +we can draw a line for region_bad_percent, when the line close to 0 things
+> nit: we can plot?
+>> +are good, when getting close to 100% something is wrong, we can pick a proper
+>> +watermark to trigger warning message.
+> 
+>> +You may want to drop the data if the region_all is too small, which imply
+> Nit: implies
+>> +there are not much available pages for NUMA Balancing, just ignore would be
+> Nit: not many... ingoring
+>> +fine since most likely the workload is insensitive to NUMA.
+>> +Monitoring root group help you control the overall situation, while you may
+> Nit: helps
+>> +also want to monitoring all the leaf groups which contain the workloads, this
+> Nit: monitor
+>> +help to catch the mouse.
+> Nit: helps
+>> +become too small, for NUMA node X we have:
+> Nit: becomes
+>> +try put your workload into a memory cgroup which providing per-node memory
+> Nit: try to put
+>> +These two percentage are usually matched on each node, workload should execute
+> Nit: percentages
+>> +Depends on which part of the memory accessed mostly by the workload, locality> Depending on which part of the memory is accessed.
+> "mostly by the workload" - not sure what you mean here, the majority
+> of accesses from the
+> workload fall into this part of memory or that accesses from processes
+> other than the workload
+> are rare?
 
-  3afd6389f320 ("dt-bindings: gpu: mali-midgard: add samsung exynos 5420 co=
-mpatible")
+The prev one actually, sometime the workload only access part of it's
+memory, could be a small part but as long as this part is local, things
+could be fine.
 
-from the devicetree tree.
+>> +could still be good with just a little piece of memory locally.
+> ?
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+whatabout:
 
---=20
-Cheers,
-Stephen Rothwell
+workload may only access a small part of it's memory, in such cases, although
+the majority of memory are remotely, locality could still be good.
 
-diff --cc Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-index 018f3ae4b43c,c9bdf1074305..000000000000
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-@@@ -21,11 -29,8 +29,12 @@@ properties
-        - items:
-            - enum:
-               - amlogic,meson-gxm-mali
-+              - realtek,rtd1295-mali
-            - const: arm,mali-t820
- +      - items:
- +          - enum:
- +             - arm,juno-mali
- +          - const: arm,mali-t624
-        - items:
-            - enum:
-               - rockchip,rk3288-mali
-@@@ -34,16 -40,8 +44,7 @@@
-            - enum:
-               - rockchip,rk3399-mali
-            - const: arm,mali-t860
--       - items:
--           - enum:
--              - samsung,exynos5250-mali
--           - const: arm,mali-t604
--       - items:
--           - enum:
--              - samsung,exynos5433-mali
--           - const: arm,mali-t760
- =20
--           # "arm,mali-t628"
- -          # "arm,mali-t624"
-            # "arm,mali-t830"
-            # "arm,mali-t880"
- =20
+>> +Thus to tell if things are find or not depends on the understanding of system
+> are fine
+>> +After locate which workloads introduced the bad locality, check:
+> locate -> indentifying
+>> +
+>> +1). Is the workloads bind into a particular NUMA node?
+> bind into -> bound to
+>> +2). Is there any NUMA node run out of resources?
+> Has any .. run out of resources
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index 5e27d74e2b74..220df1f0beb8 100644
+>> +                       lot's of per-cgroup workloads.
+> lots
 
---Sig_/BB1LBtqI5ejPny06wVC/iyM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks for point out all these issues, very helpful :-)
 
------BEGIN PGP SIGNATURE-----
+Should apply them in next version.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3MuisACgkQAVBC80lX
-0GzqRgf/VJZvk856gDSfif6dvyn2qDIRlIUcPqIyFw/t3FyYMGyzMFBvdeY5kgYL
-7iLDz7NSrMYfKnjUDL/HxiSAcAKUxuFu0R5hDpwnJqWda7pvWsLS5dY8+e8cIiOG
-S0XhpMwZSksWHvIekdZPtVmEDh5DYoH3NWDAVhMehrVs93IV9fe3eqcAHyYSBeZ2
-+iLBXn/j0DKW9kmRouMvk7rIAscozbgMXjH6CjZ9WzVCXnYnL134vdQu0tr4XDm+
-CCQcy3JILuVhoBxvDhqWTy1njJsKV6+zkFa3mF2rlRbm0ByIID3xS5SnJPi5MRc2
-lbja4SfiZ8hsQKel+Ga4OXIlXCAgag==
-=w8qt
------END PGP SIGNATURE-----
+Regards,
+Michael Wang
 
---Sig_/BB1LBtqI5ejPny06wVC/iyM--
+> 
