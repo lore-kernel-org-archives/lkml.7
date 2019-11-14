@@ -2,145 +2,104 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D304C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D735EC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2882071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B5D2071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:34:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573749295;
+	bh=dNceW5/2JIbHCI0Ab/8muEpZcy/gU6c3yG9FqORKNOU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gxnWZsyOcN5kyGOj0DBrq+HohNwQcLA5Az4/TMYRS91Apm9zlKwLbvcM3n0z67fDl
+	 4oNiIFKNKy3GP5UBP62bHDiQj/zvuyjNJZRc0u0w9B4eE+fz/kSVr4kIi6Qa267ccQ
+	 q6SGsXXzEWgYKwYbj+4RWI76se4MdkT21Kbrro2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfKNQeq (ORCPT
+        id S1726923AbfKNQey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:34:46 -0500
-Received: from mga03.intel.com ([134.134.136.65]:27987 "EHLO mga03.intel.com"
+        Thu, 14 Nov 2019 11:34:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfKNQeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:34:46 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 08:34:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="216798796"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga002.jf.intel.com with ESMTP; 14 Nov 2019 08:34:45 -0800
-Date:   Thu, 14 Nov 2019 08:34:45 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
-Message-ID: <20191114163444.GD24045@linux.intel.com>
-References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
- <6c2c7bbb-39f4-2a77-632e-7730e9887fc5@redhat.com>
- <20191114152235.GC24045@linux.intel.com>
- <857e6494-4ed8-be4a-c21a-577ab99a5711@redhat.com>
+        id S1726796AbfKNQew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:34:52 -0500
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 632B320724;
+        Thu, 14 Nov 2019 16:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573749292;
+        bh=dNceW5/2JIbHCI0Ab/8muEpZcy/gU6c3yG9FqORKNOU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0rrnp7YLb6ZW4Wh2jc3TY9uHPIUVLMaVk8Z6uNAziRS0qjzG0DNjonzB/VudcnhtE
+         Jrif7/VoFnAiECjZiYWl89pH3a1eFwr3k+Oo9/Ej5ArHz3klfrQqQAiRT6kefSZMOZ
+         n/dTrdQ+PjObIrMhU5/d0AJBI8zZV014QOmUl7fQ=
+Received: by mail-qk1-f173.google.com with SMTP id m4so5493860qke.9;
+        Thu, 14 Nov 2019 08:34:52 -0800 (PST)
+X-Gm-Message-State: APjAAAUWBYGuaBFvWoRYiDCqO0SwAX/16mMYd7OOwDMCtwSchi3G4gJL
+        PhS/P4VnzE9bdn+gwf3mEeMth/vUfcoa2xot+Q==
+X-Google-Smtp-Source: APXvYqyTT89qPyhwQ8HbCne8V44sYkR4vJwSLLq3suXRCO5HAxlj6sw4/AVmK4gepiW4WN6VNuNgbAUjWTH0DnkbUlg=
+X-Received: by 2002:a37:4904:: with SMTP id w4mr7612533qka.119.1573749291482;
+ Thu, 14 Nov 2019 08:34:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <857e6494-4ed8-be4a-c21a-577ab99a5711@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191113210544.1894-1-robh@kernel.org> <30b73f89-1ba1-6052-53bd-414ebdfa142c@codeaurora.org>
+In-Reply-To: <30b73f89-1ba1-6052-53bd-414ebdfa142c@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 14 Nov 2019 10:34:39 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+WFvwBy4rpZkT=_KMYzzvrsLcaTMFSydY_euuFLAsZEQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+WFvwBy4rpZkT=_KMYzzvrsLcaTMFSydY_euuFLAsZEQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Improve validation build error handling
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 04:44:33PM +0100, Paolo Bonzini wrote:
-> On 14/11/19 16:22, Sean Christopherson wrote:
-> >> Instead of a separate vcpu->fast_vmexit, perhaps you can set exit_reason
-> >> to vmx->exit_reason to -1 if the fast path succeeds.
-> > 
-> > Actually, rather than make this super special case, what about moving the
-> > handling into vmx_handle_exit_irqoff()?  Practically speaking that would
-> > only add ~50 cycles (two VMREADs) relative to the code being run right
-> > after kvm_put_guest_xcr0().  It has the advantage of restoring the host's
-> > hardware breakpoints, preserving a semi-accurate last_guest_tsc, and
-> > running with vcpu->mode set back to OUTSIDE_GUEST_MODE.  Hopefully it'd
-> > also be more intuitive for people unfamiliar with the code.
-> 
-> Yes, that's a good idea.  The expensive bit between handle_exit_irqoff
-> and handle_exit is srcu_read_lock, which has two memory barriers in it.
-
-Preaching to the choir at this point, but it'd also eliminate latency
-spikes due to interrupts.
-
-> >>> +			if (ret == 0)
-> >>> +				ret = kvm_skip_emulated_instruction(vcpu);
-> >> Please move the "kvm_skip_emulated_instruction(vcpu)" to
-> >> vmx_handle_exit, so that this basically is
-> >>
-> >> #define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
-> >>
-> >> 	if (ret == 0)
-> >> 		vcpu->exit_reason = EXIT_REASON_NEED_SKIP_EMULATED_INSN;
-> >>
-> >> and handle_ipi_fastpath can return void.
+On Thu, Nov 14, 2019 at 9:21 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>
+> On 11/13/2019 2:05 PM, Rob Herring wrote:
+> > Schema errors can cause make to exit before useful information is
+> > printed. This leaves developers wondering what's wrong. It can be
+> > overcome passing '-k' to make, but that's not an obvious solution.
+> > There's 2 scenarios where this happens.
 > >
-> > I'd rather we add a dedicated variable to say the exit has already been
-> > handled.  Overloading exit_reason is bound to cause confusion, and that's
-> > probably a best case scenario.
-> 
-> I proposed the fake exit reason to avoid a ternary return code from
-> handle_ipi_fastpath (return to guest, return to userspace, call
-> kvm_x86_ops->handle_exit), which Wanpeng's patch was mishandling.
+> > When using DT_SCHEMA_FILES to validate with a single schema, any error
+> > in the schema results in processed-schema.yaml being empty causing a
+> > make error. The result is the specific errors in the schema are never
+> > shown because processed-schema.yaml is the first target built. Simply
+> > making processed-schema.yaml last in extra-y ensures the full schema
+> > validation with detailed error messages happen first.
+> >
+> > The 2nd problem is while schema errors are ignored for
+> > processed-schema.yaml, full validation of the schema still runs in
+> > parallel and any schema validation errors will still stop the build when
+> > running validation of dts files. The fix is to not add the schema
+> > examples to extra-y in this case. This means 'dtbs_check' is no longer a
+> > superset of 'dt_binding_check'. Update the documentation to make this
+> > clear.
+> >
+> > Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> I injected a syntax error into a random binding file, and compared the
+> output with and without this patch.  This patch makes a massive
+> improvement in giving the user the necessary information to identify and
+> fix issues.  Thanks!
 
-For this case, I think we can get away with a WARN if kvm_lapic_reg_write()
-fails since it (currently) can't fail for ICR.  That would allow us to keep
-a void return for ->handle_exit_irqoff() and avoid an overloaded return
-value.
+BTW, update dtschema and you'll get better (or more at least) messages
+when 'is not valid under any of the given schemas' errors occur.
 
-And, if the fastpath is used for all ICR writes, not just FIXED+PHYSICAL,
-and is implemented for SVM, then we don't even need a a flag, e.g.
-kvm_x2apic_msr_write() can simply ignore ICR writes, similar to how
-handle_exception() ignores #MC and NMIs.
+> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 87b0fcc23ef8..d7b79f7faac1 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2615,12 +2615,11 @@ int kvm_x2apic_msr_write(struct kvm_vcpu *vcpu, u32 msr, u64 data)
-        if (!lapic_in_kernel(vcpu) || !apic_x2apic_mode(apic))
-                return 1;
+Thanks.
 
--       if (reg == APIC_ICR2)
-+
-+       /* ICR2 writes are ignored and ICR writes are handled early. */
-+       if (reg == APIC_ICR2 || reg == APIC_ICR)
-                return 1;
-
--       /* if this is ICR write vector before command */
--       if (reg == APIC_ICR)
--               kvm_lapic_reg_write(apic, APIC_ICR2, (u32)(data >> 32));
-        return kvm_lapic_reg_write(apic, reg, (u32)data);
- }
-
-Another bonus to this approach is that the refactoring for the
-exit_reason can be done in a separate series.
-
-> To ensure confusion does not become the best case scenario, perhaps it
-> is worth trying to push exit_reason into vcpu_enter_guest's stack.
-> vcpu_enter_guest can pass a pointer to it, and then it can be passed
-> back into kvm_x86_ops->handle_exit{,_irqoff}.  It could be a struct too,
-> instead of just a bare u32.
-
-On the other hand, if it's a bare u32 then kvm_x86_ops->run can simply
-return the value instead of doing out parameter shenanigans.
-
-> This would ensure at compile-time that exit_reason is not accessed
-> outside the short path from vmexit to kvm_x86_ops->handle_exit.
-
-That would be nice.  Surprisingly, the code actually appears to be fairly
-clean, I thought for sure the nested stuff would be using exit_reason all
-over the place.  The only one that needs to be fixed is handle_vmfunc(),
-which passes vmx->exit_reason when forwarding the VM-Exit instead of simply
-hardcoding EXIT_REASON_VMFUNC.
+Rob
