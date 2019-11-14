@@ -2,126 +2,143 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F5EC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8E6C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6774206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:23:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OfewOOhL"
+	by mail.kernel.org (Postfix) with ESMTP id 8E267206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfKNJX3 (ORCPT
+        id S1726881AbfKNJXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:23:29 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54439 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNJX3 (ORCPT
+        Thu, 14 Nov 2019 04:23:36 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:40426 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726010AbfKNJXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:23:29 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z26so4848513wmi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 01:23:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=BCms3BoxuxZj117QaSQEkXvp05ODrJPrbrWohMMueC4=;
-        b=OfewOOhL+QAfF96fa0GKfmUbo0q4uh91B0zalam9bWDIf8f7hioWJJ+TQrEycpqJnJ
-         vFbOE+LjWRY9hL0+FgnRlX8qYmb1DvBWaEet5HHxcrYaIOUcZShgzx1PNnUP8TQ7X923
-         P3yHaQANLW4PeEaoIEYmAWABAhDKH2yngBSJSWAivhcNtsuUhlpibrnAFcO7eYjKF8b6
-         23C4arl7O2Ahg08TUGK7qgiXcp7BKm+xAedIaavtfQni8Sf+n/Q/r1rJiz47uq9i9PfP
-         ykKpVJTKcXN+DXwei7H2kXLbt5VlQWv0d0uq6urW3dij/UV6RXBjkQyGWmd02K3nMQYF
-         KhvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=BCms3BoxuxZj117QaSQEkXvp05ODrJPrbrWohMMueC4=;
-        b=i6RaZxX5ya4hPQd9Zhg5i0pY540PlndJ5ABxBrfjm8ICl5GSR2V5XnBCrbT9gu12VC
-         UrLvAVjPBgaO1uIKkmuDVY4pAqgBjaUsZPx9qDyOObu3Zii2q+DSRT8BSkgRpQT3vC9e
-         meQyCO0Y4ug7+8hpPHbrbGknwaDIrO4wc1Kirf6ageLu7qd6tVd7SRJbUS9bIZ9+E41i
-         7ImyjubsMBXcPlmq3cq9WcucRtZjbskVUOJZ5c2sdvttubf52H+cyfnIB4gWcffn4l2L
-         jFWezkaGET4mfgUQrzMjV1VnGQJrYTEV9dL/28cgX4NtDgd2X54iFMWIwMPDjmB2Tpes
-         N18w==
-X-Gm-Message-State: APjAAAXT3ve1MWh9sNl+fUvHXcUUpArFV74QnBxKjQUPpAH6ihphSNzU
-        HEu1reiCiYT20AzbceGBME4EaQ==
-X-Google-Smtp-Source: APXvYqyESXs3BB1OOtL7G36o3hJGQSngOs3IodW8l1oVTMn2lW+q2phaKMmi4kuokbdhSaLTF70XBw==
-X-Received: by 2002:a05:600c:2307:: with SMTP id 7mr7293039wmo.154.1573723407147;
-        Thu, 14 Nov 2019 01:23:27 -0800 (PST)
-Received: from [192.168.100.210] (hipert-gw1.mat.unimo.it. [155.185.5.1])
-        by smtp.gmail.com with ESMTPSA id t133sm10806453wmb.1.2019.11.14.01.23.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 01:23:26 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH BUGFIX] block, bfq: deschedule empty bfq_queues not
- referred by any process
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <5b0b07fc8e50a1beac215230ca84d955@natalenko.name>
-Date:   Thu, 14 Nov 2019 10:23:24 +0100
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linus.walleij@linaro.org,
-        bfq-iosched@googlegroups.com, Chris Evich <cevich@redhat.com>,
-        Patrick Dung <patdung100@gmail.com>,
-        Thorsten Schubert <tschubert@bafh.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C824EC38-887E-45DB-A629-A75E99ED7454@linaro.org>
-References: <20191112074856.40433-1-paolo.valente@linaro.org>
- <bb393dcaa426786e0963cf0e70f0b062@natalenko.name>
- <2FB3736A-693E-44B9-9D1F-39AE0D016644@linaro.org>
- <65fc0bffbcb2296d121b3d5a79108e76@natalenko.name>
- <5773ff54421ccf179ef57d96e19ef042@natalenko.name>
- <69B451DE-B04B-4E0E-9464-826C4A7619AD@linaro.org>
- <5b0b07fc8e50a1beac215230ca84d955@natalenko.name>
-To:     Oleksandr Natalenko <oleksandr@natalenko.name>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Thu, 14 Nov 2019 04:23:36 -0500
+Received: from [109.168.11.45] (port=58534 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1iVBLh-001jwO-8H; Thu, 14 Nov 2019 10:23:33 +0100
+Subject: Re: [PATCH v3 2/3] i2c: smbus: use get/put_unaligned_le16 when
+ working with word data
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.orgi,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+ <20191112203132.163306-3-dmitry.torokhov@gmail.com>
+ <099e8f9c-354a-8756-a79b-e66c72d36aa7@lucaceresoli.net>
+ <20191113193937.GQ13374@dtor-ws>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <5f276a2a-4863-c81c-247f-686935b6c571@lucaceresoli.net>
+Date:   Thu, 14 Nov 2019 10:23:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191113193937.GQ13374@dtor-ws>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dmitry,
 
+On 13/11/19 20:39, Dmitry Torokhov wrote:
+> Hi Luca,
+> 
+> On Wed, Nov 13, 2019 at 10:47:42AM +0100, Luca Ceresoli wrote:
+>> Hi Dmitry,
+>>
+>> On 12/11/19 21:31, Dmitry Torokhov wrote:
+>>> It is potentially more performant, and also shows intent more clearly,
+>>> to use get_unaligned_le16() and put_unaligned_le16() when working with
+>>> word data.
+>>>
+>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>>
+>>> ---
+>>>
+>>> Changes in v3:
+>>> - split put_unaligned_le16 into a separate patch
+>>> - more call sites converted to get/put_unaligned_le16
+>>>
+>>>  drivers/i2c/i2c-core-smbus.c | 12 +++++-------
+>>>  1 file changed, 5 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+>>> index f8708409b4dbc..7b4e2270eeda1 100644
+>>> --- a/drivers/i2c/i2c-core-smbus.c
+>>> +++ b/drivers/i2c/i2c-core-smbus.c
+>>> @@ -15,6 +15,7 @@
+>>>  #include <linux/i2c.h>
+>>>  #include <linux/i2c-smbus.h>
+>>>  #include <linux/slab.h>
+>>> +#include <asm/unaligned.h>
+>>>  
+>>>  #include "i2c-core.h"
+>>>  
+>>> @@ -370,8 +371,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+>>>  			msg[1].len = 2;
+>>>  		else {
+>>>  			msg[0].len = 3;
+>>> -			msgbuf0[1] = data->word & 0xff;
+>>> -			msgbuf0[2] = data->word >> 8;
+>>> +			put_unaligned_le16(data->word, msgbuf0 + 1);
+>>>  		}
+>>>  		break;
+>>>  	case I2C_SMBUS_PROC_CALL:
+>>> @@ -379,8 +379,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+>>>  		read_write = I2C_SMBUS_READ;
+>>>  		msg[0].len = 3;
+>>>  		msg[1].len = 2;
+>>> -		msgbuf0[1] = data->word & 0xff;
+>>> -		msgbuf0[2] = data->word >> 8;
+>>> +		put_unaligned_le16(data->word, msgbuf0 + 1);
+>>>  		break;
+>>>  	case I2C_SMBUS_BLOCK_DATA:
+>>>  		if (read_write == I2C_SMBUS_READ) {
+>>> @@ -487,7 +486,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+>>>  			break;
+>>>  		case I2C_SMBUS_WORD_DATA:
+>>>  		case I2C_SMBUS_PROC_CALL:
+>>> -			data->word = msgbuf1[0] | (msgbuf1[1] << 8);
+>>> +			data->word = get_unaligned_le16(msgbuf1);
+>>
+>> Well, msgbuf1 cannot be unaligned, so it looks like you just need to
+>> convert little endian to host endian. Perhaps __le16_to_cpu(msgbuf1) is
+>> better (and equally or more efficient).
+> 
+> Well, msgbuf1 (as is any other variable unless adjusted by special
+> alignment attribute) is naturally aligned for its own data type (which
+> for u8 means it can start at any address), but that does not mean that
+> is is aligned for the purpose of storing word data. In fact, the
+> preceding msgbuf0 variable is 32 + 3 = 35 bytes long, which means that
+> msgbuf1 is starting on an odd address, and is definitely not aligned for
+> word access and using __le16_to_cpu to fetch that word will trap on some
+> architectures.
 
-> Il giorno 14 nov 2019, alle ore 09:53, Oleksandr Natalenko =
-<oleksandr@natalenko.name> ha scritto:
->=20
-> Hi.
->=20
-> On 13.11.2019 18:42, Paolo Valente wrote:
->>> Il giorno 13 nov 2019, alle ore 16:01, Oleksandr Natalenko =
-<oleksandr@natalenko.name> ha scritto:
->> Ok, you may have given me enough information, thank you very much.
->> Could you please apply the attached (compressed) patch on top of my
->> offending patch?  For review purposes, here is the simple change:
->> --- a/block/bfq-iosched.c
->> +++ b/block/bfq-iosched.c
->> @@ -2728,7 +2728,8 @@ void bfq_release_process_ref(struct bfq_data
->> *bfqd, struct bfq_queue *bfqq)
->>         * freed when dequeued from service. But this is assumed to
->>         * never happen.
->>         */
->> -       if (bfq_bfqq_busy(bfqq) && RB_EMPTY_ROOT(&bfqq->sort_list))
->> +       if (bfq_bfqq_busy(bfqq) && RB_EMPTY_ROOT(&bfqq->sort_list) &&
->> +           bfqq !=3D bfqd->in_service_queue)
->>                bfq_del_bfqq_busy(bfqd, bfqq, false);
->>        bfq_put_queue(bfqq);
->=20
-> The issue is not reproducible for me after applying this patch.
->=20
+Uhm, you're obviously right. And I was probably drunk when I wrote the
+opposite! Sorry about that...
 
-Great! I'm sending a V2 with your Tested-by.
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-Thank you,
-Paolo
-
-> Thank you.
->=20
-> --=20
->  Oleksandr Natalenko (post-factum)
-
+-- 
+Luca
