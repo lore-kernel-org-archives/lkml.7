@@ -2,160 +2,198 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6699BC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54630C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4003E20715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260062070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K29jaKnE"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="JiHvYyiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfKNONL (ORCPT
+        id S1727338AbfKNONR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:13:11 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38024 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfKNONK (ORCPT
+        Thu, 14 Nov 2019 09:13:17 -0500
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:42410 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726812AbfKNONR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:13:10 -0500
-Received: by mail-io1-f67.google.com with SMTP id i13so6935263ioj.5;
-        Thu, 14 Nov 2019 06:13:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+bvehVeToXZCo5bglAX9Z1OrRDcw161vH12UI5GchVE=;
-        b=K29jaKnEQ+NoQtdC2HC5c8oonD4CixMQACAsm/h3DH5wYYiIpr17gec7SAvgLd4vNc
-         fE4NxsGdgVP5/6XbEtBQM8wkrbirxQLezn3uHx4sR7Baeplhnu4+/Sw7plysl+gGgiwa
-         S7JEA5+TdD7N2joMs41SsJkoNSnKCaXm596eHygtt2iMSHu2B8g5/hlm33gr2GEoOQjF
-         8wRTcBcNHvNRzkkAtw8yuTrOxE/uymZQFIlwXA9aZPGqf9hZCqqlaVCS/6n/8WPD8Q/h
-         Iz7J1qldSN3LlmEFl4ZaDIgQW3onoV9t+HJ9WQbnqazjhe0SncdWjO5YUhbgJnv41Fbi
-         Bl5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+bvehVeToXZCo5bglAX9Z1OrRDcw161vH12UI5GchVE=;
-        b=VxbgWIyNbfEpvUcelQXxbEl9PGeXYe6ke8rQ5T5uIxBveiWOIgEDLR7gVyqJ4AsGTT
-         AGX0gdtB6wyRswGthov18TNSGUN8QwgVXgTvyXISAKjB8Rrt4AfVLcqx7Vh7u/te8n4g
-         RLnGSb5BTI4Txo9qq0wI60dzD43HeP39L4x6cg4Y2ZUqG4cyGjZLm/vnQkKtBbOprfaV
-         YRZxjeqyIb/LBbhUnTfZx3ExG/DF8kt/xKfxcS4PTfCa8kaKb46eMOtA6wYDoDlwV3XC
-         hbMinzLIYcMFRspkPGtFOty54Bfw5bVvIN3iVhpH8r+uUoEkgdJeiF5/D9L1zLYYPwPF
-         9jEw==
-X-Gm-Message-State: APjAAAVhqw7Y+R9qnlyYjE8wMn2ZHvOj3tzUcmNSU98qkqGVSzyYxurC
-        JsVXMVTIcULyyXbPOC6jqb5nnp6YKt2fnm2mDrE=
-X-Google-Smtp-Source: APXvYqxZm+uJFG+bIjZspCWs4mHCbJHP+3zHbcs29fsYqp/290JEK5lCBVQZjd+jy9Ii9yuRh/bC6zOjc9atfg771gI=
-X-Received: by 2002:a02:ac07:: with SMTP id a7mr7892753jao.39.1573740789403;
- Thu, 14 Nov 2019 06:13:09 -0800 (PST)
+        Thu, 14 Nov 2019 09:13:17 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 2B84A2E0AFA;
+        Thu, 14 Nov 2019 17:13:13 +0300 (MSK)
+Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id R7MDNftX9t-DCL0jej8;
+        Thu, 14 Nov 2019 17:13:13 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1573740793; bh=T+yAvGPHhC54Ai0zkddCJxsjSTzQ1zamGJyadlfR0iE=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=JiHvYyiZRsN1XQ17pFnDbh5fw49M4czRrPmrqpKm8zJ6xW9osVRA/XHZTKxdP4GXJ
+         c2PWqcj4fLds6rdVGf+mlUQHDw4Vc0X64R7ZM6VotpOQytDo1bBp7gu4TgnXmOMfJa
+         feYqTPy8Q63agSfd5z3ehFbQkiDuLap+0dtry+Xc=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8554:53c0:3d75:2e8a])
+        by vla5-2bf13a090f43.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id OZhp7enQie-DCWOiTNr;
+        Thu, 14 Nov 2019 17:13:12 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH v2] fs/splice: ignore flag SPLICE_F_GIFT in syscall vmsplice
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 14 Nov 2019 17:13:11 +0300
+Message-ID: <157374079193.8131.5211902043079599773.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20191114105736.8636-1-lhenriques@suse.com> <cbda3a69d25b04e10332e7b3898064a93b2d04ae.camel@kernel.org>
- <alpine.DEB.2.21.1911141326260.17979@piezo.novalocal>
-In-Reply-To: <alpine.DEB.2.21.1911141326260.17979@piezo.novalocal>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Thu, 14 Nov 2019 15:13:37 +0100
-Message-ID: <CAOi1vP9XaeJdqV-jMP3BM=mjHKqJW8-ynAjCi0xcDD3DtL94KQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus OSDs
-To:     Sage Weil <sweil@redhat.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 2:28 PM Sage Weil <sweil@redhat.com> wrote:
->
-> On Thu, 14 Nov 2019, Jeff Layton wrote:
-> > On Thu, 2019-11-14 at 10:57 +0000, Luis Henriques wrote:
-> > > Hi!
-> > >
-> > > So, after the feedback I got from v1 [1] I've sent out a pull-request
-> > > for the OSDs [2] which encodes require_osd_release into the OSDMap
-> > > client data.  This allows the client to figure out which ceph release
-> > > the OSDs cluster is running and decide whether or not it's safe to use
-> > > the copy-from Op for copy_file_range.
-> > >
-> > > This new patchset I'm sending simply adds enough functionality to the
-> > > kernel client so that it can take advantage of this OSD patch:
-> > >
-> > > 0001 - adds the ability to decode TYPE_MSGR2 addresses.  This is a
-> > >        required functionality for enabling SERVER_NAUTILUS in the
-> > >        client.  I hope I got the new format right, as I couldn't figure
-> > >        out what the hard-coded values (see comments) really mean.
-> > >
-> >
-> > nit: the first 3 patch subject lines should probably be prefixed with
-> > "libceph:"
-> >
-> > > 0002 - allows the client to retrieve the new require_osd_release field
-> > >        from the OSDMap if available.  This patch also adds SERVER_MIMIC,
-> > >        SERVER_NAUTILUS and SERVER_OCTOPUS to the supported features,
-> > >        which TBH I'm not sure if that's a safe thing to do -- the only
-> > >        issue I've seen was that Nautilus requires the ability to decode
-> > >        TYPE_MSGR2 address, but I may have missed others.
-> > >
-> >
-> > Yes, this needs to be done with care. We have to ensure that the server
-> > side isn't assuming that the client supports something that it doesn't.
-> > I think that means just trawling through the code and verifying whether
-> > this is safe.
-> >
-> > > 0003 - debug code to add require_osd_release to the osdmap debugfs file.
-> > >
-> > > 0004 - adds the truncate_{seq,size} fields to the 'copy-from' operation
-> > >        if the OSDs are >= Octopus.
-> > >
-> > > Also note that, as suggested by Ilya, I've dropped the patch that would
-> > > change the default mount options to 'copyfrom'.
-> > >
-> > > These patches have been tested with the xfstests generic test suite, and
-> > > with a couple of other (local) tests that exercise the cephfs
-> > > copy_file_range syscall.  I didn't saw any issues, but as I said above,
-> > > I'm not really sure if adding the SERVER_* flags to the supported
-> > > features have other side effects.
-> > >
-> > > [1] https://lore.kernel.org/lkml/20191108141555.31176-1-lhenriques@suse.com/
-> > > [2] https://github.com/ceph/ceph/pull/31611
-> > >
-> >
-> > I'm just getting caught up on the discussion here, but why was it
-> > decided to do it this way instead of just adding a new OSD
-> > "copy-from-no-truncseq" operation? Once you tried it once and an OSD
-> > didn't support it, you could just give up on using it any longer? That
-> > seems a lot simpler than trying to monkey with feature bits.
->
-> I don't remember the original discussion either, but in retrospect that
-> does seem much simpler--especially since hte client is conditioning
-> sending this based on the the require_osd_release.  It seems like passing
-> a flag to the copy-from op would be more reasonable instead of conditional
-> feature-based behavior.
+Generic support of flag SPLICE_F_MOVE in syscall splice was removed in
+kernel 2.6.21 commit 485ddb4b9741 ("1/2 splice: dont steal").
+Infrastructure stay intact and this feature may came back.
+At least driver or filesystem could provide own implementation.
 
-Yeah, I suggested adding require_osd_release to the client portion just
-because we are running into it more and more: Objecter relies on it for
-RESEND_ON_SPLIT for example.  It needs to be accessible so that patches
-like that can be carried over to the kernel client without workarounds.
+But stealing mapped pages from userspace never worked and is very
+unlikely that will ever make sense due to unmapping overhead.
+Also lru handling is broken if gifted anon page spliced into file.
 
-copy-from in its existing form is another example.  AFAIU the problem
-is that copy-from op doesn't reject unknown flags.  Luis added a flag
-in https://github.com/ceph/ceph/pull/25374, but it is simply ignored on
-nautilus and older releases, potentially leading to data corruption.
+Let's seal entry point for marking page as a gift in vmsplice.
 
-Adding a new op that would be an alias for CEPH_OSD_OP_COPY_FROM with
-CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ like Jeff is suggesting, or a new
-copy-from2 op that would behave just like copy-from, but reject unknown
-flags to avoid similar compatibility issues in the future is probably
-the best thing we can do from the client perspective.
+v2: remove PIPE_BUF_FLAG_GIFT and related dead code.
 
-Thanks,
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Link: https://lore.kernel.org/lkml/CAHk-=wgPQutQ8d8kUCvAFi+hfNWgaNLiZPkbg-GXY2DCtD-Z5Q@mail.gmail.com/
+---
+ fs/fuse/dev.c             |    1 -
+ fs/splice.c               |   41 +++--------------------------------------
+ include/linux/pipe_fs_i.h |    1 -
+ 3 files changed, 3 insertions(+), 40 deletions(-)
 
-                Ilya
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index ed1abc9e33cf..aacc4fa639ba 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1987,7 +1987,6 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
+ 				goto out_free;
+ 
+ 			*obuf = *ibuf;
+-			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
+ 			obuf->len = rem;
+ 			ibuf->offset += obuf->len;
+ 			ibuf->len -= obuf->len;
+diff --git a/fs/splice.c b/fs/splice.c
+index 98412721f056..6cc5098b164b 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -145,23 +145,6 @@ const struct pipe_buf_operations page_cache_pipe_buf_ops = {
+ 	.get = generic_pipe_buf_get,
+ };
+ 
+-static int user_page_pipe_buf_steal(struct pipe_inode_info *pipe,
+-				    struct pipe_buffer *buf)
+-{
+-	if (!(buf->flags & PIPE_BUF_FLAG_GIFT))
+-		return 1;
+-
+-	buf->flags |= PIPE_BUF_FLAG_LRU;
+-	return generic_pipe_buf_steal(pipe, buf);
+-}
+-
+-static const struct pipe_buf_operations user_page_pipe_buf_ops = {
+-	.confirm = generic_pipe_buf_confirm,
+-	.release = page_cache_pipe_buf_release,
+-	.steal = user_page_pipe_buf_steal,
+-	.get = generic_pipe_buf_get,
+-};
+-
+ static void wakeup_pipe_readers(struct pipe_inode_info *pipe)
+ {
+ 	smp_mb();
+@@ -1197,12 +1180,10 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ }
+ 
+ static int iter_to_pipe(struct iov_iter *from,
+-			struct pipe_inode_info *pipe,
+-			unsigned flags)
++			struct pipe_inode_info *pipe)
+ {
+ 	struct pipe_buffer buf = {
+-		.ops = &user_page_pipe_buf_ops,
+-		.flags = flags
++		.ops = &nosteal_pipe_buf_ops,
+ 	};
+ 	size_t total = 0;
+ 	int ret = 0;
+@@ -1286,10 +1267,6 @@ static long vmsplice_to_pipe(struct file *file, struct iov_iter *iter,
+ {
+ 	struct pipe_inode_info *pipe;
+ 	long ret = 0;
+-	unsigned buf_flag = 0;
+-
+-	if (flags & SPLICE_F_GIFT)
+-		buf_flag = PIPE_BUF_FLAG_GIFT;
+ 
+ 	pipe = get_pipe_info(file);
+ 	if (!pipe)
+@@ -1298,7 +1275,7 @@ static long vmsplice_to_pipe(struct file *file, struct iov_iter *iter,
+ 	pipe_lock(pipe);
+ 	ret = wait_for_space(pipe, flags);
+ 	if (!ret)
+-		ret = iter_to_pipe(iter, pipe, buf_flag);
++		ret = iter_to_pipe(iter, pipe);
+ 	pipe_unlock(pipe);
+ 	if (ret > 0)
+ 		wakeup_pipe_readers(pipe);
+@@ -1601,12 +1578,6 @@ static int splice_pipe_to_pipe(struct pipe_inode_info *ipipe,
+ 			}
+ 			*obuf = *ibuf;
+ 
+-			/*
+-			 * Don't inherit the gift flag, we need to
+-			 * prevent multiple steals of this page.
+-			 */
+-			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
+-
+ 			pipe_buf_mark_unmergeable(obuf);
+ 
+ 			obuf->len = len;
+@@ -1681,12 +1652,6 @@ static int link_pipe(struct pipe_inode_info *ipipe,
+ 		obuf = opipe->bufs + nbuf;
+ 		*obuf = *ibuf;
+ 
+-		/*
+-		 * Don't inherit the gift flag, we need to
+-		 * prevent multiple steals of this page.
+-		 */
+-		obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
+-
+ 		pipe_buf_mark_unmergeable(obuf);
+ 
+ 		if (obuf->len > len)
+diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
+index 5c626fdc10db..1a3a5efb9c6f 100644
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -6,7 +6,6 @@
+ 
+ #define PIPE_BUF_FLAG_LRU	0x01	/* page is on the LRU */
+ #define PIPE_BUF_FLAG_ATOMIC	0x02	/* was atomically mapped */
+-#define PIPE_BUF_FLAG_GIFT	0x04	/* page is a gift */
+ #define PIPE_BUF_FLAG_PACKET	0x08	/* read() as a packet */
+ 
+ /**
+
