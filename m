@@ -2,112 +2,97 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7EDC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D092FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0443206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573701623;
-	bh=OtP6MQL/9zqWPLBJmcEhDTenHXMX6HLpeiVYH4UmMDE=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=xPQmMgve+5tBO9x3eTz8j7x2HtpmN59/fHv/5PO6jOx640EVfbHJHk56d8VrdD2OW
-	 FYaawYy944In/TABivCUaNlu+1VPUDRGLwPNtogv3RbDDcvGOagxxOmj85FvWovUtX
-	 ZEMjwqdi84eOwQph7BzryGrsMbDRvHsrwycvsAiI=
+	by mail.kernel.org (Postfix) with ESMTP id EB838206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfKNDUW (ORCPT
+        id S1726991AbfKNDUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:20:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfKNDUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:20:22 -0500
-Received: from localhost (unknown [124.219.31.93])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBE25206F3;
-        Thu, 14 Nov 2019 03:20:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573701621;
-        bh=OtP6MQL/9zqWPLBJmcEhDTenHXMX6HLpeiVYH4UmMDE=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=gQLXWXktL91SJAhfZP1kDUlvFwg3yUAhxTlw3gEyBZm+csv1Fe3nn+RAgRYOGy8zH
-         MrSA9ov5qkWicZMsu5PnaUDmANrLHTjaP2NrEUP2gsBQBdTLLG9FbXwLZ1HPjT/uxn
-         CEEBcRjEjnPcIOLb6WihxH/e2FQ07IVp9PbR/Az4=
-Date:   Thu, 14 Nov 2019 11:20:18 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bin Liu <b-liu@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 05/13] usb: musb: create debugfs directory under usb
- root
-Message-ID: <20191114032018.GA122287@kroah.com>
-References: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
- <1573541519-28488-5-git-send-email-chunfeng.yun@mediatek.com>
- <20191112152857.GA5853@uda0271908>
+        Wed, 13 Nov 2019 22:20:53 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37344 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726491AbfKNDUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 22:20:53 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D98FDDE2C75E30DAFDA9;
+        Thu, 14 Nov 2019 11:20:51 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.96) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 11:20:42 +0800
+Subject: Re: [PATCH] debugfs: fix potential infinite loop in
+ debugfs_remove_recursive
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <oleg@redhat.com>, <jack@suse.cz>, <linux-kernel@vger.kernel.org>,
+        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>,
+        <chenxiang66@hisilicon.com>, <xiexiuqi@huawei.com>
+References: <1572528884-67565-1-git-send-email-yukuai3@huawei.com>
+ <20191113151755.7125e914@gandalf.local.home>
+ <a399ae58-a467-3ff9-5a01-a4a2cdcf4fd6@huawei.com>
+ <20191113214307.29a8d001@oasis.local.home>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <a5189922-de5f-2f56-6192-9ce160da8666@huawei.com>
+Date:   Thu, 14 Nov 2019 11:20:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112152857.GA5853@uda0271908>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191113214307.29a8d001@oasis.local.home>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 09:28:57AM -0600, Bin Liu wrote:
-> Hi,
+
+
+On 2019/11/14 10:43, Steven Rostedt wrote:
+> On Thu, 14 Nov 2019 10:01:23 +0800
+> "yukuai (C)" <yukuai3@huawei.com> wrote:
 > 
-> On Tue, Nov 12, 2019 at 02:51:51PM +0800, Chunfeng Yun wrote:
-> > Now the USB gadget subsystem can use the USB debugfs root directory,
-> > so move musb's directory from the root of the debugfs filesystem into
-> > the root of usb
 > 
-> My opinion is this move is unnecessary. I breaks existing debug tools or
-> documentation which is already published on Internet. 
+>> Do you agree with that list_empty(&chile->d_subdirs) here is not
+>> appropriate? Since it can't skip the subdirs that is not
+>> simple_positive(simple_positive() will return false), which is the
+>> reason of infinite loop.
+> 
+> I do agree that simple_empty() is wrong, for the reasons you pointed out.
+> 
+>>>> +		if (!simple_empty(child)) {
+>>>
+>>> Have you tried this with lockdep enabled? I'm thinking that you might
+>>> get a splat with holding parent->d_lock and simple_empty(child) taking
+>>> the child->d_lock.
+>> The locks are taken and released in the right order:
+>> take parent->d_lock
+>> 	take child->d_lock
+>> 		list_for_each_entry(c, &child->d_sundirs, d_child)
+>> 			take c->d_lock
+>> 			release c->d_lock
+>> 	release child->d_lock
+>> release parent->d_lock
+>> I don't see anything wrong, am I missing something?
+> 
+> It should be fine, my worry is that we may be missing a lockdep
+> annotation, that might confuse lockdep, as lockdep may see this as the
+> same type of lock being taken, and wont know the order.
+> 
+> Have you tried this patch with lockdep enabled and tried to hit this
+> code path?
+I haven't tried yet. I'll try soon and show the result.
+Thanks
+Yu Kuai
+> 
+> -- Steve
+> 
+> .
+> 
 
-Having a "root" directory for a single random driver seems like you are
-making your driver a "very important" thing in the overall scheme of the
-kernel, right?  What's wrong with using the usb subdirectory like all
-other USB drivers use (after this patch series is merged)?  That feels
-like a much more "sane" way to handle the wide-open debugfs namespace.
-
-Yes, there are no rules when it comes to debugfs file names and
-locations, but let's try to be sane please.
-
-thanks,
-
-greg k-h
