@@ -2,164 +2,146 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C9AC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4522C20718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774DF20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efZeLNh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKNQ0P (ORCPT
+        id S1726655AbfKNQ3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:26:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfKNQ0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:26:15 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD35720715;
-        Thu, 14 Nov 2019 16:26:13 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 11:26:12 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-sh@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: [PATCH v2] fgraph: Fix function type mismatches of
- ftrace_graph_return using ftrace_stub
-Message-ID: <20191114112612.3937f281@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 14 Nov 2019 11:29:54 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39472 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfKNQ3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:29:54 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 15so5498664qkh.6;
+        Thu, 14 Nov 2019 08:29:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Etq+ZZLehuQdqs1e3s2Ev3L0ve5IMuF3F+oENs00DHk=;
+        b=efZeLNh8qrmA+sLeSOthCoIYWYgM+hh3MW3YpbgA+Ee0nkWXg9PznusvGodqjefIr+
+         Vq4aVJ96nuCe4wIpJZ9EkZYUoh4XQs/t3UQAzDmSFZVrQaoC+Tib1fauHQU6rXn6/EU4
+         mGc8+cEjHU5TaTGLW21fxoOSkWfwCcHepXw8oWmAp/6szm5FSHmRAjJqWavrHyCiQ+Nm
+         NhU6s+ertjFoxYdjSg+MMprtlREBfj9O9NUDMb6RJns4lsurr1/VEPpg5Pb/ldZ3dx02
+         pLe6KKqzKVkzr+1afmCdMP+qshc0K6sge7jJb6RwSl7uDXwafZyggfLbsrK0owUJhCDb
+         JVTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Etq+ZZLehuQdqs1e3s2Ev3L0ve5IMuF3F+oENs00DHk=;
+        b=XvuP7KvEnBDVRIOXJfDAPQrK6vQ75eiOtGXPiSx2u398FXXjBrjyfMXz2ZeCW0NO/d
+         73XRNyheORVto7JZMC8YvmQK1bAqJ3aHdoKYcgntZT0o32iwXaqHftUepgSiOLozlWP3
+         6gTG4SYxbCbvc/gzIZaeAQcV87gfSFpm7uNFE8IrSBJ1eoj0V4rCLTqXS8rO3n0Uvk7d
+         a8j6qMxciKMyOmTQu0BzwbdTL+5QREnbd6gMYUWx0MthpNKITtA47IgM45hjkRknn/0t
+         oiG15Rc5hupfTSqbGZJd//O3OSb/t3cGCOfxnnA1FsspiNmK2XKACoPD17fgIb/u0gaK
+         KTvA==
+X-Gm-Message-State: APjAAAUMtKaJ7e0Qv8UV2RM2+eaRAEh66Y660nE4WAK9ud2IyomFsqMk
+        UcSVHZo7f6l+ytfZapHgN+U=
+X-Google-Smtp-Source: APXvYqzViwFybatYL+Yoq+i7GWng93cFYBn8+ugVzmW2kzmWbEhzLjXQb1HoPxY4pvW8WQcThtLr0Q==
+X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr8157689qki.336.1573748992934;
+        Thu, 14 Nov 2019 08:29:52 -0800 (PST)
+Received: from localhost.localdomain ([2001:1284:f013:e3d4::1])
+        by smtp.gmail.com with ESMTPSA id k29sm3029590qtu.70.2019.11.14.08.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 08:29:52 -0800 (PST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id A35AEC4B42; Thu, 14 Nov 2019 13:29:49 -0300 (-03)
+Date:   Thu, 14 Nov 2019 13:29:49 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Aaron Conole <aconole@redhat.com>
+Cc:     netdev@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org, paulb@mellanox.com
+Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
+Message-ID: <20191114162949.GB3419@localhost.localdomain>
+References: <20191108210714.12426-1-aconole@redhat.com>
+ <20191108210714.12426-2-aconole@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108210714.12426-2-aconole@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Fri, Nov 08, 2019 at 04:07:14PM -0500, Aaron Conole wrote:
+> The act_ct TC module shares a common conntrack and NAT infrastructure
+> exposed via netfilter.  It's possible that a packet needs both SNAT and
+> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+> this because it runs through the NAT table twice - once on ingress and
+> again after egress.  The act_ct action doesn't have such capability.
+> 
+> Like netfilter hook infrastructure, we should run through NAT twice to
+> keep the symmetry.
+> 
+> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+> 
+> Signed-off-by: Aaron Conole <aconole@redhat.com>
+> ---
+>  net/sched/act_ct.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+> index fcc46025e790..f3232a00970f 100644
+> --- a/net/sched/act_ct.c
+> +++ b/net/sched/act_ct.c
+> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+>  			  bool commit)
+>  {
+>  #if IS_ENABLED(CONFIG_NF_NAT)
+> +	int err;
+>  	enum nf_nat_manip_type maniptype;
+>  
+>  	if (!(ct_action & TCA_CT_ACT_NAT))
+> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+>  		return NF_ACCEPT;
+>  	}
+>  
+> -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> +	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> +	if (err == NF_ACCEPT &&
+> +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
+> +		if (maniptype == NF_NAT_MANIP_SRC)
+> +			maniptype = NF_NAT_MANIP_DST;
+> +		else
+> +			maniptype = NF_NAT_MANIP_SRC;
+> +
+> +		err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> +	}
 
-The C compiler is allowing more checks to make sure that function pointers
-are assigned to the correct prototype function. Unfortunately, the function
-graph tracer uses a special name with its assigned ftrace_graph_return
-function pointer that maps to a stub function used by the function tracer
-(ftrace_stub). The ftrace_graph_return variable is compared to the
-ftrace_stub in some archs to know if the function graph tracer is enabled or
-not. This means we can not just simply create a new function stub that
-compares it without modifying all the archs.
+I keep thinking about this and I'm not entirely convinced that this
+shouldn't be simpler. More like:
 
-Instead, have the linker script create a function_graph_stub that maps to
-ftrace_stub, and this way we can define the prototype for it to match the
-prototype of ftrace_graph_return, and make the compiler checks all happy!
+if (DNAT)
+	DNAT
+if (SNAT)
+	SNAT
 
-Link: http://lkml.kernel.org/r/20191015090055.789a0aed@gandalf.local.home
+So it always does DNAT before SNAT, similarly to what iptables would
+do on PRE/POSTROUTING chains.
 
-Reported-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-
-Changes from v1:
-
-  When I ran this through the ktest crosstests.conf, it failed on
-  superh, as superh uses the vmlinux.lds file from the kernel for
-  its compression, it requires that it has a ftrace_stub() function
-  defined there too.
-
-
- arch/sh/boot/compressed/misc.c    |  5 +++++
- include/asm-generic/vmlinux.lds.h | 17 ++++++++++++++---
- kernel/trace/fgraph.c             | 11 ++++++++---
- 3 files changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/arch/sh/boot/compressed/misc.c b/arch/sh/boot/compressed/misc.c
-index c15cac9251b9..e69ec12cbbe6 100644
---- a/arch/sh/boot/compressed/misc.c
-+++ b/arch/sh/boot/compressed/misc.c
-@@ -111,6 +111,11 @@ void __stack_chk_fail(void)
- 	error("stack-protector: Kernel stack is corrupted\n");
- }
- 
-+/* Needed because vmlinux.lds.h references this */
-+void ftrace_stub(void)
-+{
-+}
-+
- #ifdef CONFIG_SUPERH64
- #define stackalign	8
- #else
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index dae64600ccbf..0f358be551cd 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -111,18 +111,29 @@
- 
- #ifdef CONFIG_FTRACE_MCOUNT_RECORD
- #ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
-+/*
-+ * Need to also make ftrace_graph_stub point to ftrace_stub
-+ * so that the same stub location may have different protocols
-+ * and not mess up with C verifiers.
-+ */
- #define MCOUNT_REC()	. = ALIGN(8);				\
- 			__start_mcount_loc = .;			\
- 			KEEP(*(__patchable_function_entries))	\
--			__stop_mcount_loc = .;
-+			__stop_mcount_loc = .;			\
-+			ftrace_graph_stub = ftrace_stub;
- #else
- #define MCOUNT_REC()	. = ALIGN(8);				\
- 			__start_mcount_loc = .;			\
- 			KEEP(*(__mcount_loc))			\
--			__stop_mcount_loc = .;
-+			__stop_mcount_loc = .;			\
-+			ftrace_graph_stub = ftrace_stub;
- #endif
- #else
--#define MCOUNT_REC()
-+# ifdef CONFIG_FUNCTION_TRACER
-+#  define MCOUNT_REC()	ftrace_graph_stub = ftrace_stub;
-+# else
-+#  define MCOUNT_REC()
-+# endif
- #endif
- 
- #ifdef CONFIG_TRACE_BRANCH_PROFILING
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 7950a0356042..fa3ce10d0405 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -332,9 +332,14 @@ int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
- 	return 0;
- }
- 
-+/*
-+ * Simply points to ftrace_stub, but with the proper protocol.
-+ * Defined by the linker script in linux/vmlinux.lds.h
-+ */
-+extern void ftrace_graph_stub(struct ftrace_graph_ret *);
-+
- /* The callbacks that hook a function */
--trace_func_graph_ret_t ftrace_graph_return =
--			(trace_func_graph_ret_t)ftrace_stub;
-+trace_func_graph_ret_t ftrace_graph_return = ftrace_graph_stub;
- trace_func_graph_ent_t ftrace_graph_entry = ftrace_graph_entry_stub;
- static trace_func_graph_ent_t __ftrace_graph_entry = ftrace_graph_entry_stub;
- 
-@@ -614,7 +619,7 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 		goto out;
- 
- 	ftrace_graph_active--;
--	ftrace_graph_return = (trace_func_graph_ret_t)ftrace_stub;
-+	ftrace_graph_return = ftrace_graph_stub;
- 	ftrace_graph_entry = ftrace_graph_entry_stub;
- 	__ftrace_graph_entry = ftrace_graph_entry_stub;
- 	ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
--- 
-2.20.1
-
+> +	return err;
+>  #else
+>  	return NF_ACCEPT;
+>  #endif
+> -- 
+> 2.21.0
+> 
