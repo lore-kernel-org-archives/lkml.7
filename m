@@ -2,87 +2,92 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A5DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F25BC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E21206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06800206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKNQq4 (ORCPT
+        id S1726973AbfKNQsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:46:56 -0500
-Received: from muru.com ([72.249.23.125]:42202 "EHLO muru.com"
+        Thu, 14 Nov 2019 11:48:46 -0500
+Received: from mga01.intel.com ([192.55.52.88]:41737 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfKNQq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:46:56 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 27E9B80E7;
-        Thu, 14 Nov 2019 16:47:31 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 08:46:51 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Caleb Robey <c-robey@ti.com>
-Cc:     linux-patch-review@list.ti.com, Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [uL PATCH 2/2] ARM: dts: am5729: beaglebone-ai: dra7 reqs in dts
-Message-ID: <20191114164651.GO5610@atomide.com>
-References: <20191113221345.4795-1-c-robey@ti.com>
- <20191113221345.4795-3-c-robey@ti.com>
+        id S1726214AbfKNQsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:48:46 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 08:48:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="379628441"
+Received: from pkamlakx-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.10.73])
+  by orsmga005.jf.intel.com with ESMTP; 14 Nov 2019 08:48:43 -0800
+Date:   Thu, 14 Nov 2019 18:48:41 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: question about setting TPM_CHIP_FLAG_IRQ in tpm_tis_core_init
+Message-ID: <20191114164841.GD9528@linux.intel.com>
+References: <20191112033637.kxotlhm6mtr5irvd@cantor>
+ <20191112200703.GB11213@linux.intel.com>
+ <20191112201734.sury5nd3cptkckgb@cantor>
+ <50290fc8-4d22-3eb5-c930-079f8b819a8e@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191113221345.4795-3-c-robey@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <50290fc8-4d22-3eb5-c930-079f8b819a8e@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Caleb Robey <c-robey@ti.com> [191113 22:15]:
-> Small nomenclature change for beaglebone AI compatibility.
-> 
-> Signed-off-by: Jason Kridner <jdk@ti.com>
+On Tue, Nov 12, 2019 at 03:30:51PM -0500, Stefan Berger wrote:
+> On 11/12/19 3:17 PM, Jerry Snitselaar wrote:
+> > On Tue Nov 12 19, Jarkko Sakkinen wrote:
+> > > On Mon, Nov 11, 2019 at 08:36:37PM -0700, Jerry Snitselaar wrote:
+> > > > Question about 1ea32c83c699 ("tpm_tis_core: Set TPM_CHIP_FLAG_IRQ
+> > > > before probing for interrupts").  Doesn't tpm_tis_send set this flag,
+> > > > and setting it here in tpm_tis_core_init short circuits what
+> > > > tpm_tis_send was doing before? There is a bug report of an interrupt
+> > > > storm from a tpm on a t490s laptop with the Fedora 31 kernel (5.3),
+> > > > and I'm wondering if this change could cause that. Before they got the
+> > > > warning about interrupts not working, and using polling instead.
+> > > 
+> > > Looks like it. Stefan?
+> > > 
+> > > /Jarkko
+> > > 
+> > 
+> > Stefan is right about the condition check at the beginning of
+> > tpm_tis_send.
+> > 
+> >     if (!(chip->flags & TPM_CHIP_FLAG_IRQ) || priv->irq_tested)
+> >         return tpm_tis_send_main(chip, buf, len);
+> > 
+> > Before his change it would've gone straight to calling
+> > tpm_tis_send_main instead of jumping down and doing the irq test, due
+> > to the flag not being set. With his change it should now skip this
+> > tpm_tis_send_main call when tpm_tis_gen_interrupt is called, and then
+> > after that time through tpm_tis_send priv->irq_tested will be set, and
+> > the flag should be set as to whether or not irqs were working.
+> > 
+> > I should hopefully have access to a t490s in a few days so I can look at
+> > it,
+> > and try to figure out what is happening.
+> > 
+> I hope the t490s is an outlier. Give the patch I just posted a try.
 
-Hmm so should this patch be also "From: Jason Kridner <jdk@ti.com>"
-if Jason's patch?
+First I must be first that it is the best way to fix the bug. Also,
+it did not have fixes tag.
 
-If so, please resend, and since you're the one sending it, please
-also add your Signed-off-by.
-
-Thanks,
-
-Tony
-
->  arch/arm/boot/dts/dra7.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 953f0ffce2a9..563d64c69fd4 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -143,7 +143,7 @@
->  	 * the moment, just use a fake OCP bus entry to represent the whole bus
->  	 * hierarchy.
->  	 */
-> -	ocp {
-> +	ocp: ocp {
->  		compatible = "ti,dra7-l3-noc", "simple-bus";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> -- 
-> 2.17.1
-> 
+/Jarkko
