@@ -2,122 +2,141 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F69C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057E6C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA69B206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:09:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaUsoDMk"
+	by mail.kernel.org (Postfix) with ESMTP id E400120709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfKNGJr (ORCPT
+        id S1726541AbfKNGJw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:09:47 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42826 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfKNGJr (ORCPT
+        Thu, 14 Nov 2019 01:09:52 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:35206 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfKNGJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:09:47 -0500
-Received: by mail-pl1-f195.google.com with SMTP id j12so2139081plt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 22:09:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aw8y1jiGvDQuLoad9v02dXK5MRBBqE3yqRJRCShjhww=;
-        b=KaUsoDMkOxGtKBYv81fJMUCgETapU2RakSt6h22VwS5B3+ecb9eOhYEJFqAU6u7coF
-         4kb5d+Ozunov31XfwFnnoz+TFDqpuWPnyhQ5NOh2Kxs3JfccG8wE/SunSG1etjaVlV1j
-         x/1wP6NZ6LKtUXjHzQk2koVYBye1heoA1pZPjPcvpxvmiu64B1nE5UxTeqGgLxt4eCj1
-         b5ta7L4aWkW/vqmygbxb/Ku1N5239Ua6vJR8p2EBPEM0tey6KYECmV2MTpM4Cqsbs0sa
-         dAksZhSCR9ZbieXb+/y6d2xsCKAW+Ajbo68p6PXoc9lTpPA/Ry4N8C/dfek+uf0i5NWs
-         0RhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aw8y1jiGvDQuLoad9v02dXK5MRBBqE3yqRJRCShjhww=;
-        b=mF0wsqR/JXKvg0maEiUffhmmz38AYqzcQNiT4qtVxvZfB7MOtZm6o454AaiqYpaUuJ
-         LRNbcMYFgj4ueJN2W1TsnhxBSmTUHfH1/V1LlJLtO8SDtviHwDDbkcXmebuiabjhCqpM
-         5uRbw9t7KldciaWT1iUKGxUaTS5peSXFCyKWn9cPkeRrFDLeJghkCfZ0bGfXBtn1gy81
-         zMjyXqIQyTzUjioMOiidMvvhCFSHYIfSrV5aJnxgk/fFTg/k3rZN+clfaBll8K6bN/er
-         XwkHNqzPSzkkrTmdT/QajnhIieNdYyEcZDcw+Aw31uajV81+wcpTPWJppRopyHgRwTVI
-         R0lQ==
-X-Gm-Message-State: APjAAAWifKnaB2ClBOhyKYtO/prn4qn+gptekz7q5Cg5XpSx8EdFhLoO
-        Be1WqydwrkEWuuM+ZjaM8X9D
-X-Google-Smtp-Source: APXvYqzVItSwZLHCuH1SFvN8lnszFgvIq8ecWeEhJ4mhuw9CcYH9GPraKqjzKFczcLQSD2Wgpor8iA==
-X-Received: by 2002:a17:902:ab87:: with SMTP id f7mr8011816plr.78.1573711785394;
-        Wed, 13 Nov 2019 22:09:45 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id w11sm4579443pgp.28.2019.11.13.22.09.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Nov 2019 22:09:44 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:39:37 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     mturquette@baylibre.com, robh+dt@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        fisher.cheng@bitmain.com, alec.lin@bitmain.com
-Subject: Re: [PATCH v6 0/7] Add Bitmain BM1880 clock driver
-Message-ID: <20191114060937.GD8459@mani>
-References: <20191026110253.18426-1-manivannan.sadhasivam@linaro.org>
- <20191113222116.E5E9B206E3@mail.kernel.org>
- <20191114053404.GA8459@mani>
- <20191114055054.C280F206DA@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114055054.C280F206DA@mail.kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 14 Nov 2019 01:09:51 -0500
+Received: from marcel-macpro.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 33EBDCED06;
+        Thu, 14 Nov 2019 07:18:55 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v4 3/4] Bluetooth: hci_bcm: Support pcm params in dts
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CANFp7mUxBLGfDd+mR7R1RTK70PRhbHjV8whDJOucpap_qmgN3A@mail.gmail.com>
+Date:   Thu, 14 Nov 2019 07:09:49 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C6EE827D-4CE7-4A5F-B9FC-C10647B0B8C4@holtmann.org>
+References: <20191112230944.48716-1-abhishekpandit@chromium.org>
+ <20191112230944.48716-4-abhishekpandit@chromium.org>
+ <DCCD0A71-D696-4701-9BBB-ED6D8FECC7FB@holtmann.org>
+ <CANFp7mX0tXmBdJOkBUbar6Niwv9D60Fo9CvAcUkEKZKLnt--hQ@mail.gmail.com>
+ <102CFB68-22A0-4DF7-B5CE-F3146AA36746@holtmann.org>
+ <CANFp7mUxBLGfDd+mR7R1RTK70PRhbHjV8whDJOucpap_qmgN3A@mail.gmail.com>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 09:50:53PM -0800, Stephen Boyd wrote:
-> Quoting Manivannan Sadhasivam (2019-11-13 21:34:04)
-> > On Wed, Nov 13, 2019 at 02:21:15PM -0800, Stephen Boyd wrote:
-> > > Quoting Manivannan Sadhasivam (2019-10-26 04:02:46)
-> > > > Hello,
-> > > > 
-> > > > This patchset adds common clock driver for Bitmain BM1880 SoC clock
-> > > > controller. The clock controller consists of gate, divider, mux
-> > > > and pll clocks with different compositions. Hence, the driver uses
-> > > > composite clock structure in place where multiple clocking units are
-> > > > combined together.
-> > > > 
-> > > > This patchset also removes UART fixed clock and sources clocks from clock
-> > > > controller for Sophon Edge board where the driver has been validated.
-> > > > 
-> > > 
-> > > Are you waiting for review here? I see some kbuild reports so I assumed
-> > > you would fix and resend.
-> > 
-> > I'll fix it but I was expecting some review from you so that I can send the
-> > next revision incorporating all comments.
-> > 
+Hi Abhishek,
+
+>>>>> BCM chips may require configuration of PCM to operate correctly and
+>>>>> there is a vendor specific HCI command to do this. Add support in the
+>>>>> hci_bcm driver to parse this from devicetree and configure the chip.
+>>>>> 
+>>>>> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>>>>> ---
+>>>>> 
+>>>>> Changes in v4: None
+>>>>> Changes in v3: None
+>>>>> Changes in v2: None
+>>>>> 
+>>>>> drivers/bluetooth/hci_bcm.c | 32 ++++++++++++++++++++++++++++++++
+>>>>> 1 file changed, 32 insertions(+)
+>>>>> 
+>>>>> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+>>>>> index 6134bff58748..4ee0b45be7e2 100644
+>>>>> --- a/drivers/bluetooth/hci_bcm.c
+>>>>> +++ b/drivers/bluetooth/hci_bcm.c
+>>>>> @@ -88,6 +88,8 @@ struct bcm_device_data {
+>>>>> *    used to disable flow control during runtime suspend and system sleep
+>>>>> * @is_suspended: whether flow control is currently disabled
+>>>>> * @disallow_set_baudrate: don't allow set_baudrate
+>>>>> + * @has_pcm_params: whether PCM parameters need to be configured
+>>>>> + * @pcm_params: PCM and routing parameters
+>>>>> */
+>>>>> struct bcm_device {
+>>>>>     /* Must be the first member, hci_serdev.c expects this. */
+>>>>> @@ -122,6 +124,9 @@ struct bcm_device {
+>>>>>     bool                    is_suspended;
+>>>>> #endif
+>>>>>     bool                    disallow_set_baudrate;
+>>>>> +
+>>>>> +     bool                            has_pcm_params;
+>>>>> +     struct bcm_set_pcm_int_params   pcm_params;
+>>>>> };
+>>>>> 
+>>>>> /* generic bcm uart resources */
+>>>>> @@ -596,6 +601,16 @@ static int bcm_setup(struct hci_uart *hu)
+>>>>>                     host_set_baudrate(hu, speed);
+>>>>>     }
+>>>>> 
+>>>>> +     /* PCM parameters if any*/
+>>>>> +     if (bcm->dev && bcm->dev->has_pcm_params) {
+>>>>> +             err = btbcm_set_pcm_int_params(hu->hdev, &bcm->dev->pcm_params);
+>>>>> +
+>>>>> +             if (err) {
+>>>>> +                     bt_dev_info(hu->hdev, "BCM: Set pcm params failed (%d)",
+>>>>> +                                 err);
+>>>>> +             }
+>>>>> +     }
+>>>>> +
+>>>>> finalize:
+>>>>>     release_firmware(fw);
+>>>>> 
+>>>>> @@ -1132,7 +1147,24 @@ static int bcm_acpi_probe(struct bcm_device *dev)
+>>>>> 
+>>>>> static int bcm_of_probe(struct bcm_device *bdev)
+>>>>> {
+>>>>> +     int err;
+>>>>> +
+>>>>>     device_property_read_u32(bdev->dev, "max-speed", &bdev->oper_speed);
+>>>>> +
+>>>>> +     err = device_property_read_u8(bdev->dev, "brcm,bt-sco-routing",
+>>>>> +                                   &bdev->pcm_params.routing);
+>>>>> +     if (!err)
+>>>>> +             bdev->has_pcm_params = true;
+>>>> 
+>>>> I think in case of HCI as routing path, these should be using the default or zero values as defined by Broadcom.
+>>> 
+>>> I'm not sure what these default values should be. Wouldn't it be
+>>> reasonable to expect the user/developer to set the various brcm
+>>> parameters in device tree?
+>>> If unset, it's just 0.
+>> 
+>> if that works with the hardware I am fine with that. The other option is to actually first read the current values. And then only change the ones that are supplied by the DT.
 > 
-> Ok. I'm glad I broke the silence then.
+> I don't know of a read pcm params command (this would be nice to have).
 > 
-> Can you please resend without any dts changes? Those don't go through
-> clk tree. 
+> I think it might be prudent to default the frame_mode and clock_mode
+> to master (0x1). I'll test how the hardware responds to 0x0 and update
+> the default to 0x1 if things fail badly.
 
-I'm the platform maintainer, so I'll take the dts changes via ARM SoC tree.
+it is either one opcode down or one opcode up. Look at monitor/broadcom.c since we do actually decode some of these.
 
-> I think otherwise the patches look OK, although I was hoping
-> you could register clks by using the new way of specifying parents. Is
-> that possible?
-> 
+Regards
 
-Eventhough I'd like to do, my time is very constrained these days. So please
-consider merging it as it is and as I promised, I'll switch to the new way of
-specifying parents soon.
-
-Thanks,
-Mani
+Marcel
 
