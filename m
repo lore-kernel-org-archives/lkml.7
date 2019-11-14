@@ -2,121 +2,149 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8513C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9827C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847E7206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11EE20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uVXtAH3l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TmbEN2pT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfKNMK4 (ORCPT
+        id S1726828AbfKNMNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:10:56 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46887 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfKNMK4 (ORCPT
+        Thu, 14 Nov 2019 07:13:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60332 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726115AbfKNMNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:10:56 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e9so6380202ljp.13;
-        Thu, 14 Nov 2019 04:10:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V3iPFvICh2PC2SW0ECmSzJKHcRSxlwVfa49H/g84OtY=;
-        b=uVXtAH3lunBk6jzYEqb9f5bw4ymgYlFBH2qESmvE3ahqQE2sdkjHrv27Q9cv5iWO5/
-         tAPmEDR740oZIesch020/2cMFkf5KqNXCh7f/4iUrgw10v6XLhW5mZ0op2VpteY8opBz
-         qOl8OeiFhSeJJm899MFuC4xw+58yg6Z6saRX9xJqvD576mk9RhoQFbI0rnny+dfgX5a2
-         ezxnXc7/yEFq5JQ6xkXG7GQSRZlT+K56j5C4a63OwgwF+PsyxV3+NexKkVoxnWvmM276
-         4Ye8mIqcERvDPo7yG2lB/zTwpulEdV/M8fYJiRZdt0QRuS3uQSPQUBxoiKoN15Z2SLRi
-         NXUw==
+        Thu, 14 Nov 2019 07:13:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573733601;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GZnck4rX9SmE/n51pQrh/Xw2Zl6hoiU/UzHDNQl/qbU=;
+        b=TmbEN2pTpuV/5ZekE6bnUoeVl+4IqYFzzsWx/eDp4L6WZIH13bEjimcMdGBjgOmGrQ8lZq
+        t51JFQg8WJOO6vGQlzyZ9ohwJrxY8lx5X8S5z3IXbTbqjGkJTHO+3eEfBuQfRLpjaqCr81
+        09/xhbf8ZINiSHwWTIUoM93lIWJAvSg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-V6zreZ7nMbyvmEp4J4wXBA-1; Thu, 14 Nov 2019 07:13:20 -0500
+Received: by mail-wm1-f69.google.com with SMTP id 2so3816991wmd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 04:13:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=V3iPFvICh2PC2SW0ECmSzJKHcRSxlwVfa49H/g84OtY=;
-        b=OcBojmWh1umP8pktS7WdtAV6RpaTGOVBdRETOqiABYeiz5Eb4SUZgea5ngpdmhdrju
-         95oO49lHU5CNdHwVIB6uC/xou/s+Mg26XzskTVPNRFY3sMqM5xh7tg82Q5gpEa0MzV9D
-         adWhDvBsL8s3woT7Tx6Yf+nksvihfaWH4JIGCdFrEQAiQFbRXDM+BJFgRisiRreN3b5A
-         OVAzmo4IQ7KiYjskYlZJo8Q99pn3licGNVOnsXWK9DYJIxxYXLlmmsSuq9W5vhr14ilK
-         8cXuAaB0qs8ugY1/1e1c4vfZ6Lo2BIhxk8BW0/XK55/fSyCrGfJHVQDKl9PV/zygdwoB
-         XSNw==
-X-Gm-Message-State: APjAAAVprNJbAXNg2FbFo2PMV365O2qVh6Lz+YYL79SYobJGMveNv0nR
-        o1GcX/Wrztgzum3h11paw9JTRKAv
-X-Google-Smtp-Source: APXvYqyTvdy7St9nn1yvucJ1vFfx67G9OJX8e4xasDAfZlZ3RolkSoOA5s487+Raq3OYVxpd+EHEVQ==
-X-Received: by 2002:a2e:b5d0:: with SMTP id g16mr6541534ljn.88.1573733453562;
-        Thu, 14 Nov 2019 04:10:53 -0800 (PST)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id t13sm2067030ljo.70.2019.11.14.04.10.52
+        bh=qm2WmHmzUm5vMMu5JnWcwUEqIaPgt1IyJyPsTjQ0eyE=;
+        b=I8qH38eaPrYCIPiNfIOISwbvPamhNN1uTCUVz4zZREr3CMF31bp10dIjrMDKGQEpg0
+         iq9QLtP5+hHLJC3KGgGfT/1U/eEcgRtzg1HZToYw9GEqYLJN+x6RgCCFGW/kkeADG8la
+         uBtvX2w+uZPVAJpK36XipN3G/e6ZUfmaS09jaP6Runx2gk52WCDS/3fecsGruTQDMDA0
+         cWLR752AlJ7ddw4t5qMZ3RmiTDyk1RoyGIKrkskku5UUGGA94Nq5UdSDSinwPRuTTW4h
+         D1ZJuU9Ez3aEXUmEUGjnql5OVgIRO4EFiIgCM+OM1YF9CKYbqAq8Zm2rF0j0hGp/WZWz
+         KFdQ==
+X-Gm-Message-State: APjAAAWk0R4yCNpl8JIW1Gv7ug3eXZOO7N3Uiv+0s7TxohC2E4lCf3qc
+        6EdXYQJtacrOdS+56oGLKjn3flJs4jZV7mP5Y5lScFOwmX9bkqzbh9jlaoX+3TCDfvaNJwAJbFQ
+        dm2+7NiY3G3SBkEorgyufcKcp
+X-Received: by 2002:adf:e8ce:: with SMTP id k14mr7652730wrn.393.1573733599253;
+        Thu, 14 Nov 2019 04:13:19 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyAQfF/ixJELPI3bg1TknQFZhcvASKK15bDOHZYTUubk4Xqo3xC5XlmX6NljWPMtAhyqiBBwA==
+X-Received: by 2002:adf:e8ce:: with SMTP id k14mr7652706wrn.393.1573733598925;
+        Thu, 14 Nov 2019 04:13:18 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:a15b:f753:1ac4:56dc? ([2001:b07:6468:f312:a15b:f753:1ac4:56dc])
+        by smtp.gmail.com with ESMTPSA id l26sm5412622wme.6.2019.11.14.04.13.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 04:10:52 -0800 (PST)
-Subject: Re: [PATCH v2] clk: tegra: divider: Check UART's divider enable-bit
- state on rate's recalculation
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Thu, 14 Nov 2019 04:13:18 -0800 (PST)
+Subject: Re: [PATCH] KVM: x86/mmu: Take slots_lock when using
+ kvm_mmu_zap_all_fast()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20191030004813.9187-1-digetx@gmail.com>
- <20191113230303.726AE206E3@mail.kernel.org>
- <02df00b3-5e23-441f-b2d5-b84fdb411e98@gmail.com>
- <20191114115656.GC5690@aiwendil>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ec7062cf-a246-8b95-dca7-34e2b957d691@gmail.com>
-Date:   Thu, 14 Nov 2019 15:10:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+References: <20191113193032.12912-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d8d80118-9a8c-fb98-158d-cfd741eb0033@redhat.com>
+Date:   Thu, 14 Nov 2019 13:13:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191114115656.GC5690@aiwendil>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191113193032.12912-1-sean.j.christopherson@intel.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: V6zreZ7nMbyvmEp4J4wXBA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.11.2019 14:56, Thierry Reding пишет:
-> On Thu, Nov 14, 2019 at 02:29:51PM +0300, Dmitry Osipenko wrote:
->> 14.11.2019 02:03, Stephen Boyd пишет:
->>> Quoting Dmitry Osipenko (2019-10-29 17:48:13)
->>>> UART clock is divided using divisor values from DLM/DLL registers when
->>>> enable-bit is unset in clk register and clk's divider configuration isn't
->>>> taken onto account in this case. This doesn't cause any problems, but
->>>> let's add a check for the divider's enable-bit state, for consistency.
->>>>
->>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>
->>> Is this going to be picked up or should I just apply atop the tegra PR?
->>
->> Looks like this patch missed the Tegra's PR by accident.
->>
->> Stephen, I assume it will be easier if you could apply this patch atop.
->> The patch doesn't have any dependencies on any other patches, so it's
->> fine to apply it separately. Thanks in advance!
->>
->> Thierry, please let us know if you have any objections.
-> 
-> It's not so much that I missed to pick this up. It's just that it didn't
-> make it in time. This was posted just a couple of days before v5.4-rc6
-> and I had already finalized the branches at that point. Given that this
-> doesn't fix any actual issues it didn't seem worth to force it in at
-> that point.
-> 
-> That said, I don't have any objections if Stephen wants to pick this up
-> on top of the pull requests.
+On 13/11/19 20:30, Sean Christopherson wrote:
+> Acquire the per-VM slots_lock when zapping all shadow pages as part of
+> toggling nx_huge_pages.  The fast zap algorithm relies on exclusivity
+> (via slots_lock) to identify obsolete vs. valid shadow pages, e.g. it
+> uses a single bit for its generation number.  Holding slots_lock also
+> obviates the need to acquire a read lock on the VM's srcu.
+>=20
+> Failing to take slots_lock when toggling nx_huge_pages allows multiple
+> instances of kvm_mmu_zap_all_fast() to run concurrently, as the other
+> user, KVM_SET_USER_MEMORY_REGION, does not take the global kvm_lock.
+> Concurrent fast zap instances causes obsolete shadow pages to be
+> incorrectly identified as valid due to the single bit generation number
+> wrapping, which results in stale shadow pages being left in KVM's MMU
+> and leads to all sorts of undesirable behavior.
+>=20
+> The bug is easily confirmed by running with CONFIG_PROVE_LOCKING and
+> toggling nx_huge_pages via its module param.
+>=20
+> Note, the fast zap algorithm could use a 64-bit generation instead of
+> relying on exclusivity for correctness, but all callers except the
+> recently added set_nx_huge_pages() need to hold slots_lock anyways.
+> Given that toggling nx_huge_pages is by no means a fast path, force it
+> to conform to the current approach instead of reworking the algorithm to
+> support concurrent calls.
+>=20
+> Fixes: b8e8c8303ff28 ("kvm: mmu: ITLB_MULTIHIT mitigation")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/mmu.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> index cf718fa23dff..2ce9da58611e 100644
+> --- a/arch/x86/kvm/mmu.c
+> +++ b/arch/x86/kvm/mmu.c
+> @@ -6285,14 +6285,13 @@ static int set_nx_huge_pages(const char *val, con=
+st struct kernel_param *kp)
+> =20
+>  =09if (new_val !=3D old_val) {
+>  =09=09struct kvm *kvm;
+> -=09=09int idx;
+> =20
+>  =09=09mutex_lock(&kvm_lock);
+> =20
+>  =09=09list_for_each_entry(kvm, &vm_list, vm_list) {
+> -=09=09=09idx =3D srcu_read_lock(&kvm->srcu);
+> +=09=09=09mutex_lock(&kvm->slots_lock);
+>  =09=09=09kvm_mmu_zap_all_fast(kvm);
+> -=09=09=09srcu_read_unlock(&kvm->srcu, idx);
+> +=09=09=09mutex_unlock(&kvm->slots_lock);
+> =20
+>  =09=09=09wake_up_process(kvm->arch.nx_lpage_recovery_thread);
+>  =09=09}
+>=20
 
-Thanks!
+Queued, thanks.
+
+Paolo
+
