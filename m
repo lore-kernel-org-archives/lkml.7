@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0554AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D13CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C8E2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB052071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OXKkcg3W";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hHWj26L7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MC7sllaq";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FIOsLReJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfKNSfq (ORCPT
+        id S1727222AbfKNSfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:35:46 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:55806 "EHLO
+        Thu, 14 Nov 2019 13:35:53 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:56026 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfKNSfn (ORCPT
+        with ESMTP id S1726977AbfKNSfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:35:43 -0500
+        Thu, 14 Nov 2019 13:35:50 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4CE6361204; Thu, 14 Nov 2019 18:35:40 +0000 (UTC)
+        id AF9E460D62; Thu, 14 Nov 2019 18:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573756542;
-        bh=R1rxmSTHgqlaRZ55YLFsSuuTMYGKyL4GiFq9O9APVvY=;
+        s=default; t=1573756548;
+        bh=HWa3T7WBLldguTdBL77UhjGPppY1kGqNexVz8j95mJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OXKkcg3WJ3ldd3uYoKgFboV316H7F/0c2YWMguXy7pu5OqZ1LnMJGatJekfo7tni8
-         SP4N7YiA+GBNeqd5ToLG5z2QU28bOZpe8340UihJtIehduPhjN4b2J9UW5sdA9X4m8
-         FPb8svcC5rTwAbC11Kd7m+FN6mTwoDaoIHznlNrU=
+        b=MC7sllaqTs29s6iwUp7NdjvAhJSCTkYMzZ9eJqiSLOGf7Nn79kZYmxdaH2WcK60BK
+         UY6IhH8uQ0KDMZqzal4k8lOUTGg4vBlCS1KA2IqzA/2G1rTr5JT1mhThJzHnpu6Anv
+         z51cZ0MO6uQYXJXe4kSiTgaFxXE8ZJL+mTJcNuow=
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 54C62611AD;
-        Thu, 14 Nov 2019 18:35:37 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA55E613B7;
+        Thu, 14 Nov 2019 18:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573756538;
-        bh=R1rxmSTHgqlaRZ55YLFsSuuTMYGKyL4GiFq9O9APVvY=;
+        s=default; t=1573756543;
+        bh=HWa3T7WBLldguTdBL77UhjGPppY1kGqNexVz8j95mJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hHWj26L7rzDueRrR8a//QOmSo5A1TgyC7J1DYlvqY2ZB3qU20U7hPQjLFiBMTpSHF
-         ySmuXFhlk4vknLIDx7TvcmUJyWTcrvSt2ss8XitlCNygU2HU+sVm6b6xIQIpjRm1kX
-         rx/IHklb0+HcOkR9Ba+69BiKPaHnFGi27YgqPxnA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 54C62611AD
+        b=FIOsLReJDEVG0gGkMYRICaj9bGp1TBT1gz79A2HdgBuIPTo7kCDHYLJAwlq9HubUu
+         gD4B7guu7Gb+i31UScJ+I4nNg1cR3lTp83ETLnno2iOepi6Jzs7qieJPwviHeuoWJl
+         OqKnISeq03YkZ25rXTYpxctHNNHEJKKCCo38FJ3c=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA55E613B7
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -56,9 +56,9 @@ Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
         linux-gpio@vger.kernel.org, agross@kernel.org,
         dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH 03/12] drivers: irqchip: pdc: Do not toggle IRQ_ENABLE during mask/unmask
-Date:   Thu, 14 Nov 2019 11:35:12 -0700
-Message-Id: <1573756521-27373-4-git-send-email-ilina@codeaurora.org>
+Subject: [PATCH 06/12] genirq: Introduce irq_chip_get/set_parent_state calls
+Date:   Thu, 14 Nov 2019 11:35:15 -0700
+Message-Id: <1573756521-27373-7-git-send-email-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
 References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
@@ -67,63 +67,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an interrupt is to be serviced, the convention is to mask the
-interrupt at the chip and unmask after servicing the interrupt. Enabling
-and disabling the interrupt at the PDC irqchip causes an interrupt storm
-due to the way dual edge interrupts are handled in hardware.
+From: Maulik Shah <mkshah@codeaurora.org>
 
-Skip configuring the PDC when the IRQ is masked and unmasked, instead
-use the irq_enable/irq_disable callbacks to toggle the IRQ_ENABLE
-register at the PDC. The PDC's IRQ_ENABLE register is only used during
-the monitoring mode when the system is asleep and is not needed for
-active mode detection.
+On certain QTI chipsets some GPIOs are direct-connect interrupts to the
+GIC to be used as regular interrupt lines. When the GPIOs are not used
+for interrupt generation the interrupt line is disabled. But disabling
+the interrupt at GIC does not prevent the interrupt to be reported as
+pending at GIC_ISPEND. Later, when drivers call enable_irq() on the
+interrupt, an unwanted interrupt occurs.
 
+Introduce get and set methods for irqchip's parent to clear it's pending
+irq state. This then can be invoked by the GPIO interrupt controller on
+the parents in it hierarchy to clear the interrupt before enabling the
+interrupt.
+
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+[updated commit text and minor code fixes]
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
- drivers/irqchip/qcom-pdc.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Changes in RFC v2 -
+	- Rephrase commit text
+	- Address code review comments
+---
+ include/linux/irq.h |  6 ++++++
+ kernel/irq/chip.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 690cf10..527c29e 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -63,15 +63,25 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
- 	raw_spin_unlock(&pdc_lock);
- }
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index fb301cf..7853eb9 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -610,6 +610,12 @@ extern int irq_chip_pm_put(struct irq_data *data);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ extern void handle_fasteoi_ack_irq(struct irq_desc *desc);
+ extern void handle_fasteoi_mask_irq(struct irq_desc *desc);
++extern int irq_chip_set_parent_state(struct irq_data *data,
++				     enum irqchip_irq_state which,
++				     bool val);
++extern int irq_chip_get_parent_state(struct irq_data *data,
++				     enum irqchip_irq_state which,
++				     bool *state);
+ extern void irq_chip_enable_parent(struct irq_data *data);
+ extern void irq_chip_disable_parent(struct irq_data *data);
+ extern void irq_chip_ack_parent(struct irq_data *data);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index b76703b..b3fa2d8 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1298,6 +1298,50 @@ EXPORT_SYMBOL_GPL(handle_fasteoi_mask_irq);
+ #endif /* CONFIG_IRQ_FASTEOI_HIERARCHY_HANDLERS */
  
--static void qcom_pdc_gic_mask(struct irq_data *d)
-+static void qcom_pdc_gic_disable(struct irq_data *d)
- {
- 	pdc_enable_intr(d, false);
-+	irq_chip_disable_parent(d);
-+}
-+
-+static void qcom_pdc_gic_enable(struct irq_data *d)
+ /**
++ * irq_chip_set_parent_state - set the state of a parent interrupt.
++ *
++ * @data: Pointer to interrupt specific data
++ * @which: State to be restored (one of IRQCHIP_STATE_*)
++ * @val: Value corresponding to @which
++ *
++ * Conditional success, if the underlying irqchip does not implement it.
++ */
++int irq_chip_set_parent_state(struct irq_data *data,
++			      enum irqchip_irq_state which,
++			      bool val)
 +{
-+	pdc_enable_intr(d, true);
-+	irq_chip_enable_parent(d);
-+}
++	data = data->parent_data;
 +
-+static void qcom_pdc_gic_mask(struct irq_data *d)
++	if (!data || !data->chip->irq_set_irqchip_state)
++		return 0;
++
++	return data->chip->irq_set_irqchip_state(data, which, val);
++}
++EXPORT_SYMBOL_GPL(irq_chip_set_parent_state);
++
++/**
++ * irq_chip_get_parent_state - get the state of a parent interrupt.
++ *
++ * @data: Pointer to interrupt specific data
++ * @which: one of IRQCHIP_STATE_* the caller wants to know
++ * @state: a pointer to a boolean where the state is to be stored
++ *
++ * Conditional success, if the underlying irqchip does not implement it.
++ */
++int irq_chip_get_parent_state(struct irq_data *data,
++			      enum irqchip_irq_state which,
++			      bool *state)
 +{
- 	irq_chip_mask_parent(d);
- }
- 
- static void qcom_pdc_gic_unmask(struct irq_data *d)
- {
--	pdc_enable_intr(d, true);
- 	irq_chip_unmask_parent(d);
- }
- 
-@@ -148,6 +158,8 @@ static struct irq_chip qcom_pdc_gic_chip = {
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_mask		= qcom_pdc_gic_mask,
- 	.irq_unmask		= qcom_pdc_gic_unmask,
-+	.irq_disable		= qcom_pdc_gic_disable,
-+	.irq_enable		= qcom_pdc_gic_enable,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
++	data = data->parent_data;
++
++	if (!data || !data->chip->irq_get_irqchip_state)
++		return 0;
++
++	return data->chip->irq_get_irqchip_state(data, which, state);
++}
++EXPORT_SYMBOL_GPL(irq_chip_get_parent_state);
++
++/**
+  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
+  * NULL)
+  * @data:	Pointer to interrupt specific data
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
