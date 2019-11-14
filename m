@@ -2,144 +2,160 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855C2C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851F3C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6703E206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FCC206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDQOBZJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfKNMr3 (ORCPT
+        id S1726707AbfKNMtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:47:29 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20704 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726142AbfKNMr3 (ORCPT
+        Thu, 14 Nov 2019 07:49:19 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:33051 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfKNMtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:47:29 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAECkik5067987
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:47:27 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w962etu2q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:47:23 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Thu, 14 Nov 2019 12:47:13 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 12:47:10 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAECl9up55509086
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 12:47:09 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31B544C040;
-        Thu, 14 Nov 2019 12:47:09 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4C704C046;
-        Thu, 14 Nov 2019 12:47:08 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Nov 2019 12:47:08 +0000 (GMT)
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
-Date:   Thu, 14 Nov 2019 13:46:46 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19111412-0008-0000-0000-0000032EF93C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111412-0009-0000-0000-00004A4E07E0
-Message-Id: <20191114124646.74790-1-pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140119
+        Thu, 14 Nov 2019 07:49:19 -0500
+Received: by mail-vk1-f196.google.com with SMTP id b64so959777vkg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 04:49:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b1Q/m149A5PiemLfT6SquJYIvD0phNlImqR3A8L8/X0=;
+        b=oDQOBZJMEqbwzWlmHcUKV9gnBv6LEuxHn1x4GtULF1fRydbf3dBCCVMd1Z5cWdSNjQ
+         c1ZTfSEqLGcacYp4m6Xm4fNvVBRSarsr3C/Qo32kdAYLIvdZoIq8XnJjrKKL/EVY0hXh
+         AG+WANyP6rcYS8fVx4CvjjYVZl9VEdZT1qBZZ8G9+s37MUakC7E2nqlmdemIT13yjDak
+         0uOxTYdCgIS9sR/eXC6qNR5EHvj0AFE6c7zco+xBwItSrqedQROlEYCqCE4gT1XvImup
+         wNUFikPH3cdaqOScbjGf5gCbCledicHsIM/Zyn/bqFrDWLDWmBLqCqdwSUToAS7WCgl/
+         8fPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b1Q/m149A5PiemLfT6SquJYIvD0phNlImqR3A8L8/X0=;
+        b=OK7UEQimYQyFGpPD3HlQkZqBnujh30f+NOWxW7ii+ro6+1551LbTsCqrbvVPaGHj85
+         NlbOOw0vEZZGswKBZtPG0L3Dv1pgr8FcIhUb9Z9sXzU1bnpxnaekA7Ynuz1/UrLCehQ+
+         Ml/ehA4ed/hHeQe1HZrj/IAm5+W1//6uHX/lVIHMS3wwuZmOI6bF6vjxkx5Z41CjAR34
+         Ppcsv7cDh1t40CkOCBxcc7qkAmSoPQaqUBMjlRq36sOaBTX/lg9zQGQMVT+BJtz89XPJ
+         3D8w5/XOu060vCNjI7K3LinxyDuoTEHGzKt53YylVihqPT9x/bu5Gw3XMJKECS5FA2rp
+         SizQ==
+X-Gm-Message-State: APjAAAWmwvjmSKkrfNFeRBWuyK1m8CVP+eL3WlAIZVy3kptYIk33d/Md
+        7S5i7SlXxAP2KaKmDwXbIc9NXY5kHNDxCW9ZE1MaYA==
+X-Google-Smtp-Source: APXvYqzeR1eD9xbTpxqtVCXbvQ0errOunVTWRox8BRoqYOgFufup0NzneBdevNKkYj3L0OW3QOUm0DwWKPTS2uChrsA=
+X-Received: by 2002:a1f:fe0a:: with SMTP id l10mr4953847vki.59.1573735757811;
+ Thu, 14 Nov 2019 04:49:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20191112134808.23546-1-erosca@de.adit-jv.com> <20191112204952.GA2976@kunai>
+ <CAPDyKFq8oVk26ruNA_R8HDXhMGKhDeHnL0q82xi40g1aeo109A@mail.gmail.com> <20191114113743.GA19656@vmlxhi-102.adit-jv.com>
+In-Reply-To: <20191114113743.GA19656@vmlxhi-102.adit-jv.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 14 Nov 2019 13:48:41 +0100
+Message-ID: <CAPDyKFp5iqrFDM1EWnYBwFmQAiAA5FADDLAyuVVBgMu4Sx=x5w@mail.gmail.com>
+Subject: Re: [PATCH] mmc: renesas_sdhi_internal_dmac: Add MMC_CAP_ERASE to
+ Gen3 SoCs
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
-virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
-a very realistic scenario for guests with encrypted memory, as swiotlb
-may run out of space, depending on it's size and the I/O load.
+On Thu, 14 Nov 2019 at 12:37, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+>
+> Hi everyone,
+>
+> On Thu, Nov 14, 2019 at 11:56:23AM +0100, Ulf Hansson wrote:
+> > On Tue, 12 Nov 2019 at 21:49, Wolfram Sang <wsa@the-dreams.de> wrote:
+> > >
+> > > On Tue, Nov 12, 2019 at 02:48:08PM +0100, Eugeniu Rosca wrote:
+> > > > From: Harish Jenny K N <harish_kandiga@mentor.com>
+> > > >
+> > > > Enable MMC_CAP_ERASE capability in the driver to allow
+> > > > erase/discard/trim requests.
+> > > >
+> > > > Suggested-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+> > > > Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
+> > > > [erosca: Forward-port and test on v5.4-rc7 using H3ULCB-KF:
+> > > >          "blkdiscard /dev/mmcblk0" passes with this patch applied
+> > > >          and complains otherwise:
+> > > >        "BLKDISCARD ioctl failed: Operation not supported"]
+> > > > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> > >
+> > > Looks good to me. Just a generic question, probably more for Ulf:
+> > >
+> > > Why does this CAP_ERASE exist? As I understand, the driver only needs to
+> > > set the flag and no further handling is required. Why would a driver not
+> > > set this flag and not support erase/trim commands?
+> >
+> > I am working on removing the cap, altogether. Step by step, this is
+> > getting closer now.
+> >
+> > The main problem has been about busy detect timeouts, as an erase
+> > command may have a very long busy timeout. On the host side, they
+> > typically need to respect the cmd->busy_timeout for the request, and
+> > if it can't because of some HW limitation, it needs to set
+> > mmc->max_busy_timeout.
+>
+> FWIW we've discussed such concerns internally, based on past commits
+> which either disable [1-2] busy timeouts or increase their value [3].
+>
+> To get a feeling if this is relevant for R-Car3, I've run blkdiscard on
+> a 64 GiB eMMC without noticing any issues on v5.4-rc7. Hopefully this
+> is sufficient as testing?
 
-The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
-error, despite the fact that swiotlb full is in absence of bugs a
-recoverable condition.
+Let's first take a step back, because I don't know how the HW busy
+detection works for your controller.
 
-Let us change the return code to -ENOMEM, and make the block layer
-recover form these failures when virtio-blk encounters the condition
-described above.
+I have noticed there is TMIO_STAT_CMD_BUSY bit being set for some
+variants, which seems to cause renesas_sdhi_wait_idle() to loop for a
+pre-defined number of loops/timeout. This looks scary, but I can't
+tell if it's really a problem.
 
-Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Tested-by: Michael Mueller <mimu@linux.ibm.com>
----
+BTW, do you know what TMIO_STAT_CMD_BUSY actually is monitoring?
 
-Notes
-=====
+I have also noticed that MMC_CAP_WAIT_WHILE_BUSY isn't set for any of
+the renesas/tmio variant hosts. Is that simply because the HW doesn't
+support this? Or because implementation is missing?
 
-* When out of descriptors (which might regarded as a similar out of
-resources condition) virtio uses -ENOSPC, this however seems wrong,
-as ENOSPC is defined as -ENOSPC. Thus I choose -ENOMEM over -ENOSPC.
+If you want to run a test that stretches the behaviour on the timeout
+path, I would rather use an SD-card (the older the better). For eMMCs
+the erase likely translates to a trim/discard, which is far more
+quicker than a real erase - as is what happens on an old SD card.
 
-* In virtio_queue_rq() in virtio_blk.c both -ENOMEM and -ENOSPC are
-handled as BLK_STS_DEV_RESOURCE. Returning BLK_STS_RESOURCE however
-seems more appropriate for dma mapping failed as we are talking about
-a global, and not a device local resource. Both seem to do the trick.
+>
+> >
+> > Once that is fixed for all, we can drop CAP_ERASE.
+> >
+> > Kind regards
+> > Uffe
+>
+> [1] 93caf8e69eac76 ("omap_hsmmc: add erase capability")
+> [2] b13d1f0f9ad64b ("mmc: omap: Add erase capability")
+> [3] ec30f11e821f2d ("mmc: rtsx_usb: Use the provided busy timeout from the mmc core")
+>
+> --
+> Best Regards,
+> Eugeniu
 
-* Mimu tested the patch with virtio-blk and virtio-net (thanks!). We
-should look into how other virtio devices behave when DMA mapping fails.
----
- drivers/virtio/virtio_ring.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index a8041e451e9e..867c7ebd3f10 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -583,7 +583,7 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
- 		kfree(desc);
- 
- 	END_USE(vq);
--	return -EIO;
-+	return -ENOMEM;
- }
- 
- static bool virtqueue_kick_prepare_split(struct virtqueue *_vq)
-@@ -1085,7 +1085,7 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
- 	kfree(desc);
- 
- 	END_USE(vq);
--	return -EIO;
-+	return -ENOMEM;
- }
- 
- static inline int virtqueue_add_packed(struct virtqueue *_vq,
--- 
-2.17.1
-
+Kind regards
+Uffe
