@@ -2,79 +2,79 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD28C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCFEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347EE2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B370B2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="YYwFxPD3"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="KW8h3Za2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfKNPTR (ORCPT
+        id S1726995AbfKNPTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:19:17 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38210 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfKNPTQ (ORCPT
+        Thu, 14 Nov 2019 10:19:31 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44193 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfKNPTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:19:16 -0500
-Received: by mail-lf1-f66.google.com with SMTP id q28so5371798lfa.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:19:13 -0800 (PST)
+        Thu, 14 Nov 2019 10:19:31 -0500
+Received: by mail-io1-f66.google.com with SMTP id j20so7151196ioo.11
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:19:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0NujF1wAXF2JIet6WLIXpPzdUrZwekW5h9mwXEr+UsI=;
-        b=YYwFxPD3YUR34X4oiPjQohfpHR/s6FaTBaPnReoMP4yFgx+sgW1owlBpyNaD7rIfGC
-         dUvFhybflk2eHVZjavhYVj1WfcrmNApq6bpHyo8ZFaCaCCVJM+KgpIN6Ce+wLeFSMwnh
-         TcererLhO0iEEubqeqd2PNcozCbdt1Rb7va+s=
+        bh=tDdQmYavPXfwAMVihcceAngcVZVudc5stPylZ/TzqA4=;
+        b=KW8h3Za2bC42GqVYn+81yUge003EoXRT6bhf3lE2zZrul4V+Gkvzwr017Ci3NlD1CT
+         iCxfP5AZIwtMZ2dyTQwlJhi2TMfa9d9FQMfXg+3JCOXBbQKWSX3NoKh6yQxVi+LQyqQU
+         T2N39MKmqmYxrPGzwUHe2g1dS+xzYRd6HI3TZpRz93G9TLB+dZMcdZNJ48JgOGhCDVMd
+         8sJc/8StxjsboVRGCFYQgTnqg9KrhjhZaqBUXYC5LnCkAncavzLwdq1z/1OxE0YkmFb3
+         cdFL1kIaLDqTkiDk9aShO5sZHdEGjwb9lm3oXOxpefxZw+uxHKRopTRM9TpIVNXVibuV
+         DdIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0NujF1wAXF2JIet6WLIXpPzdUrZwekW5h9mwXEr+UsI=;
-        b=CIKeG2ybu9DZm9R3Sv9h9b6LJcILyzLyUuJfcrrkOK2+w9D1HHo6tYv+fejVBuWgk8
-         8u2qpNYJB8G7nxr+Zsa0pVZPoV4dO5fGYitnLO6EV99CqGu3eJ1G39Rf3ie5VCUpU2CL
-         KTG6WYubfeaA7Fev3SK9ZhMXTIeOQGOuV5VlyH3NTyGP90F4ihJK0BDTHOMSK3ksdtVe
-         RogcCCT3OihmMov11Xl+KcTu9t70dIVezSIHKMdlfrT1P/h7OuTu3tjvuk1NNQm3JH8n
-         1uWUu9zPtXTIXi5qDx9C5QnG+27142jp+Bgt8NqSuV2wqhA8NeA5SfHz8F86tElI1bzr
-         i58A==
-X-Gm-Message-State: APjAAAUut/5MmfOw4Ibww3MQ6svif7fYjMwPs3C0pS1LdOqeLDfdWggJ
-        ArzFYa6WCX8j7nXONjutdnJ9XA==
-X-Google-Smtp-Source: APXvYqyCZZxBaGAWE0PNQnpZXLXjGCTqU2syj2jb6dXMNZVUaDASiCUu8KHB6xHiemlcWf9LlXXKhQ==
-X-Received: by 2002:a05:6512:21e:: with SMTP id a30mr7682656lfo.76.1573744752947;
-        Thu, 14 Nov 2019 07:19:12 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id a28sm2842754lfk.29.2019.11.14.07.19.12
+        bh=tDdQmYavPXfwAMVihcceAngcVZVudc5stPylZ/TzqA4=;
+        b=NhDiObnS9o/3sk6rzsJlODB4kdzNoDwF3ziNNCNUd6gn9dosLHQRXaA4STbNut1EPg
+         xiOemXlHWTGZFlDzY/XViRb5/hKjZCUJTK9foX9tdfB9pD1o0YQBimjMnizK3UrAUXnT
+         kiZohvCGaxiEds2MuZR1Hc+wuDspdsnnRPwcNIwkf2HD0tfWS6kMU9AlzMGAS5FEIn2i
+         oyxKD0Zm9rKVskn0RKwh8vN102/2NcqS8lzJtpJOGScv+w7s7kq/XXylQJEo0wl5Bb5m
+         jlsmlvhL9XbiZk8Dv+sr5SynIxyC2DuJ5n15UOtdQP3vM05VfwT2c5Lqulz9KyKyOknO
+         uCqw==
+X-Gm-Message-State: APjAAAVmq6KHFPv+ZS5wzz4Dn8C0H5na8cU5x8dHYkEzidO9TVZSaozd
+        wAenSRPwgas0amBaJsIkv47B8A==
+X-Google-Smtp-Source: APXvYqwOocapzh/vXy7B7ZyJ8zCjfx/xWNzIdTKhoK/SsGvYxKriRPokthX4D8cafUhLCmR42mesbQ==
+X-Received: by 2002:a6b:7f43:: with SMTP id m3mr9135039ioq.72.1573744768914;
+        Thu, 14 Nov 2019 07:19:28 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id k4sm531229iof.61.2019.11.14.07.19.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 07:19:12 -0800 (PST)
-Subject: Re: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio)
- POLL
-To:     Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>
-Cc:     io-uring@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
- <58246851-fa45-a72d-2c42-7e56461ec04e@kernel.dk>
- <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
- <CAG48ez3dpphoQGy8G1-QgZpkMBA2oDjNcttQKJtw5pD62QYwhw@mail.gmail.com>
- <ea7a428d-a5bd-b48e-9680-82a26710ec83@rasmusvillemoes.dk>
- <e568a403-3712-4612-341a-a6f22af877ae@kernel.dk>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <0f74341f-76fa-93ee-c03e-554d02707053@rasmusvillemoes.dk>
-Date:   Thu, 14 Nov 2019 16:19:11 +0100
+        Thu, 14 Nov 2019 07:19:28 -0800 (PST)
+Subject: Re: [PATCH BUGFIX V2 0/1] block, bfq: deschedule empty bfq_queues not
+ referred by any process
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        tschubert@bafh.org, patdung100@gmail.com, cevich@redhat.com
+References: <20191114093311.47877-1-paolo.valente@linaro.org>
+ <0cb0a853-e036-9884-5681-f4617de5c662@kernel.dk>
+ <A2E68F00-EFEA-428E-A6C1-267E57450FF6@linaro.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <cc6d7197-2021-f86a-440a-c1d9c11ce191@kernel.dk>
+Date:   Thu, 14 Nov 2019 08:19:26 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <e568a403-3712-4612-341a-a6f22af877ae@kernel.dk>
+In-Reply-To: <A2E68F00-EFEA-428E-A6C1-267E57450FF6@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -83,33 +83,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/11/2019 16.09, Jens Axboe wrote:
-> On 11/14/19 7:12 AM, Rasmus Villemoes wrote:
-
->> So, I can't really think of anybody that might be relying on inheriting
->> a signalfd instead of just setting it up in the child, but changing the
->> semantics of it now seems rather dangerous. Also, I _can_ imagine
->> threads in a process sharing a signalfd (initial thread sets it up and
->> blocks the signals, all threads subsequently use that same fd), and for
->> that case it would be wrong for one thread to dequeue signals directed
->> at the initial thread. Plus the lifetime problems.
+On 11/14/19 8:14 AM, Paolo Valente wrote:
 > 
-> What if we just made it specific SFD_CLOEXEC?
+> 
+>> Il giorno 14 nov 2019, alle ore 15:02, Jens Axboe <axboe@kernel.dk> ha scritto:
+>>
+>> On 11/14/19 2:33 AM, Paolo Valente wrote:
+>>> Hi Jens,
+>>> change from V1: added check to correctly work only on bfq-queues
+>>> scheduled for service, and not on in-service bfq-queues (it makes no
+>>> sense, and it creates inconsistencies, to deschedule an in-service
+>>> bfq-queue).
+>>>
+>>> Differently from V1, which was still under test when I submitted it,
+>>> this version has already been tested, by those who reported V1's
+>>> failures.
+>>
+>> I'm a bit miffed that you'd send out a patch for an issue, this late
+>> in the cycle, and then it not being tested at all. That's not very
+>> confidence inspiring. I have applied this one, just letting you know
+>> that that is not acceptable at all.
+>>
+> 
+> I'm sorry for irritating you.  Yet I don't fully get your point.  I
+> have sent this fix now, simply because this bug was found ten days
+> ago, and I've tried to fix it as soon as possible.  I did test my
+> patch before sending it.  As for public testing, how could Oleksandr
+> or any other user/dev have had a chance to test this patch if I had
+> not submitted it here?
 
-O_CLOEXEC can be set and removed afterwards. Sure, we're far into
-"nobody does that" land, but having signalfd() have wildly different
-semantics based on whether it was initially created with O_CLOEXEC seems
-rather dubious.
+If that's the case, then make it clear that you don't expect it to
+be merged right now. As it stands, when you sent it out, all I know is
+that it's an issue that's crashing current kernels, and we're winding
+down this release. Hence there's a sense of urgency there, as we
+could be releasing this kernel as soon as this weekend.
 
- I don't want to break
-> existing applications, even if the use case is nonsensical, but it is
-> important to allow signalfd to be properly used with use cases that are
-> already in the kernel (aio with IOCB_CMD_POLL, io_uring with
-> IORING_OP_POLL_ADD). Alternatively, if need be, we could add a specific
-> SFD_ flag for this.
+If you have a potential fix, but it isn't tested yet, then make that
+clear by submitting it as an RFC. You'd say something like:
 
-Yeah, if you want another signalfd flavour, adding it via a new SFD_
-flag seems the way to go. Though I can't imagine the resulting code
-would be very pretty.
+"This is a potential fix for X/Y/Z, let's wait for the original reporters
+to verify this before including it."
 
-Rasmus
+And make that clear with RFC in the subject line. Your patch had none
+of that, in fact it said:
+
+[PATCH BUGFIX]
+
+and the commit message had no references to this needing any further
+testing.
+
+-- 
+Jens Axboe
+
