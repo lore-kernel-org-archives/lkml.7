@@ -2,201 +2,110 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB75C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101B2C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D2520725
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01CD2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="rXdqJ6nB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g6k1NDFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKNSRP (ORCPT
+        id S1727020AbfKNSRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 14 Nov 2019 13:17:17 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37210 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfKNSRP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Nov 2019 13:17:15 -0500
-Received: from mail-eopbgr130074.outbound.protection.outlook.com ([40.107.13.74]:3334
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726628AbfKNSRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:17:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gsRfWBvhgo+RbQOIy+9p0P+UhOWM4EXaG1HPmzYqJzPTOq3Xf0/+SFhhDl14tJgn0C7AKYtf4qW5viOFKgFmtv95r7rUOF6tkt4SIBsKuTyDvhsTRhuohoAwv4hjKFjFyMCDCii3Sm25nQ0EZNBzNJ/rHvVY9/Y4JAH48B4FzRLcFKNALcHxsE5t5hDmax/Tw3KFkoXGp0oZ84TNp1RyT4Q/UVaGY2n6gu0tu2WymRQBhglJTT65mj/X5uArfzSe9LkCmIHDLxsfoQkVEVhirk7ntH+pxnJhQkkwTuuhPDhRI2LGDElbXxpGAJIVWECrBMjPyTvWAJqtsq6o9maHgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kjpm4b9mcQobiugujjp85uT2NLqyAf1NWBJ4AYSjLZ8=;
- b=SJ5m5J0zuD12li5BF/bStF4z0AwhF7xorgpbk97bCTek03goUwQG1cEIh9wS0Xu/ttCVM14/di2RmcEYa8ekl/vMNQffWvh4qsY0cXeJvMgtu0b0DvyZN9BOnPBQmdvxU2bPTz7ixpT6S+kDMt21DK0Z9+ByEUEhmFPEXUYsVeBERzH7xODf7xhA+uzmcxv7UtKf+fNhFxR0pYDLD0mZaZ/jyBKdadjAXPhniPBfMdCWBxxCJV8rJHETBzeeXULVe/agvfCfowndgKMgc/sFlyhs/VqqvbYwLEmXXEKTtCiZFukg6H9/ExR+hvfZ6ATZQ79L5dzJi496NgqRq/rTuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kjpm4b9mcQobiugujjp85uT2NLqyAf1NWBJ4AYSjLZ8=;
- b=rXdqJ6nB7E8yLEi8Xe77eIih23G9ac7nNyVE0kzjdALw25OWGqU+0G6rhVNHQI/8CTSBgWjlLb5MfXQAEItwBTO+aIy2/2L8jv+cDU5TjBlc6gzZoK7/+Ux6zUzAbcLykooR3Kvg0pe5BF3zwZ+ejLl0cnHdJyOlJ93QPJPFbIM=
-Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com (10.172.225.17) by
- DB6PR0501MB2629.eurprd05.prod.outlook.com (10.172.225.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.27; Thu, 14 Nov 2019 18:17:09 +0000
-Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com
- ([fe80::99be:5f3a:9871:ecd1]) by DB6PR0501MB2712.eurprd05.prod.outlook.com
- ([fe80::99be:5f3a:9871:ecd1%12]) with mapi id 15.20.2451.027; Thu, 14 Nov
- 2019 18:17:09 +0000
-From:   Asmaa Mnebhi <Asmaa@mellanox.com>
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        "minyard@acm.org" <minyard@acm.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cminyard@mvista.com" <cminyard@mvista.com>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Subject: RE: [PATCH v4] drivers: ipmi: Support raw i2c packet in IPMB
-Thread-Topic: [PATCH v4] drivers: ipmi: Support raw i2c packet in IPMB
-Thread-Index: AQHVmnw2jQvA7h95R066pXtlC6V86aeKtZqAgAACfbCAAD5uAIAAA+mw
-Date:   Thu, 14 Nov 2019 18:17:09 +0000
-Message-ID: <DB6PR0501MB271210124F9EE2FF15DADB1DDA710@DB6PR0501MB2712.eurprd05.prod.outlook.com>
-References: <20191113234133.3790374-1-vijaykhemka@fb.com>
- <20191114141037.GP2882@minyard.net>
- <DB6PR0501MB27121BF4E680F14A119232B4DA710@DB6PR0501MB2712.eurprd05.prod.outlook.com>
- <953CA2BD-8FE4-442B-8A6C-6A518E46FC55@fb.com>
-In-Reply-To: <953CA2BD-8FE4-442B-8A6C-6A518E46FC55@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Asmaa@mellanox.com; 
-x-originating-ip: [216.156.69.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 519b0a28-d571-416f-9e86-08d7692edd38
-x-ms-traffictypediagnostic: DB6PR0501MB2629:
-x-microsoft-antispam-prvs: <DB6PR0501MB2629ADE569C2217A43C4F5A0DA710@DB6PR0501MB2629.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02213C82F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(366004)(376002)(189003)(199004)(13464003)(66946007)(80792005)(66476007)(66556008)(64756008)(6116002)(66446008)(476003)(3846002)(52536014)(2906002)(86362001)(486006)(8676002)(7416002)(25786009)(6246003)(229853002)(76116006)(8936002)(9686003)(55016002)(81156014)(81166006)(6436002)(186003)(26005)(5660300002)(102836004)(11346002)(6506007)(53546011)(446003)(14454004)(2501003)(305945005)(74316002)(7736002)(4326008)(76176011)(7696005)(478600001)(99286004)(14444005)(33656002)(316002)(66066001)(71200400001)(71190400001)(256004)(110136005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2629;H:DB6PR0501MB2712.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JGGi2tM8IHTjygYd0D88zsZwa8WIEVxMggZK5IL6OQ8+xtWUiHfWku4m7QhuAKL6HN4ZmDYUHDSQfOJdWk9QFi4T/5Xv5FHTD6zjVeBR8DdEMa7L6G0rMZdeRgDI7tks7chN8vzidvyEgxvjCTQ5ev5DgE0YOrhBY5lGCIDV6ot5U5faE+a+qOkoBSFA3ujb+Bt+kDtY6cDj8waHY87Wa6Z3LA7mMtb0gZEhumPdg2giUlDQXyhrT/0EK+Un7gkOvlluwKWGz/7WFQta3925b2q/BdrWLs0ScLiR9ielQ/WYZGRs/J9MMRrFyluQdYi1iG43pMkPNc4gtfRHm/Q1yFEPmOqTYKr6cjVG2kOMSAAMeMJTgXPAT3HWuA09rLhnnFvSMw7RMKveX6Wo3yC5C05/eOVb1YBqOOcwUmNwytWECz3L0ft5A56YZII/SxHd
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: by mail-wr1-f65.google.com with SMTP id t1so7610569wrv.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 10:17:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EoUpilweQjHgtXk5HCyiVUUZulfkmQsEgCa5inFkUPc=;
+        b=g6k1NDFAmLpSetMfOjhmZXPxuvchvPIgccZyzCAGLxTznMScmQMHI4nGDaCDxrO0Wg
+         4aUzCj+8EXOZrSSVf4VQPVSTZ9OSWMg6OBPFTmDLf5iwQLXYyVH35p8u8DYdbL7n/J/X
+         MM32/C5SwGBPvk5OfqJU47bOF5dGXwUBomcgIvt7h3aUFHR17rPMYiPoCvcm6vyfxzTo
+         pft2cQQdkED5fuzJDGhM/gjd3+lavfYio1Zc0jlmYKl6Spdxn0FFCvdX8Y2jgq0Z+fs+
+         zBzYVcZort8+wOasrfxTFHagUTnnppMpVR4nAZcZNXiarqg/KkaaWzan/lXS2mHTzxKK
+         nsCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EoUpilweQjHgtXk5HCyiVUUZulfkmQsEgCa5inFkUPc=;
+        b=gMMcEeh2IaFmlf8kqWum3YiK4DHQUj4iJh5csOy0T5SKYW31OJt+kQJ88clgM1Obu1
+         l2FXt+tZff+aGpV/8ivnGJIpb8+zMlEKrCJUJwpRBb02E7akqfxJAVSEMEkEoUD0VLfI
+         d5oW/lFocKi5GuPv3LmAza+Vgy6Mu+5WdcuPt+Vc41motyax5yqqcFdVeQsVcsgm8kGA
+         Si8rolWvjA3WqLSFV1VFW1QsXEHT5KjltQ32fY406+lJMdvVX6DdGOdZskoIithUJhGe
+         J27AnKevh1BHm/KEFHWOIaKZjNcvHHC6+ydwrXwn91J8yFRHpqqJeQ2Scd+FZNZmrGx1
+         hszA==
+X-Gm-Message-State: APjAAAWCn0yMSveFcIySQlHQVQxTovhvx5Kag18NHtbhpW4yF95hGZSa
+        5oDr6J0++v47ssmNHcYv/ZjVWs+WF9rGHhs0G/08xQ==
+X-Google-Smtp-Source: APXvYqzICnXzXYbCXP+hgq76DeS4is37c5xkVLtYubnoj9SiNC0fuwyMbwcWvqCbZcFPI1skMD3nuOBOxmBBQXtXbZM=
+X-Received: by 2002:adf:fe0c:: with SMTP id n12mr9461275wrr.174.1573755433567;
+ Thu, 14 Nov 2019 10:17:13 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 519b0a28-d571-416f-9e86-08d7692edd38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 18:17:09.5262
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9aN/Oxzooq1vXOVYNjWS+C4mMGKwPs3m4dtEt4lT1kn+Uq+URvzyAnboP4x4khbZ/1rSP0GcnYQqVVQBW584dg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2629
+References: <20191114003042.85252-1-irogers@google.com> <20191114104525.GU4131@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191114104525.GU4131@hirez.programming.kicks-ass.net>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 14 Nov 2019 10:17:01 -0800
+Message-ID: <CAP-5=fU9b-qTH=whjfpkPjnUJQQTmtjZ3GFT5zYEnJ69gGO4+Q@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] Optimize cgroup context switch
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U2FtZSBwYXRjaCB3b3VsZCBiZSBnb29kLg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-RnJvbTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+IA0KU2VudDogVGh1cnNkYXks
-IE5vdmVtYmVyIDE0LCAyMDE5IDE6MDMgUE0NClRvOiBBc21hYSBNbmViaGkgPEFzbWFhQG1lbGxh
-bm94LmNvbT47IG1pbnlhcmRAYWNtLm9yZw0KQ2M6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIu
-ZGU+OyBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgb3Bl
-bmlwbWktZGV2ZWxvcGVyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgY21pbnlhcmRAbXZpc3RhLmNvbTsgam9lbEBqbXMuaWQuYXU7IGxpbnV4LWFz
-cGVlZEBsaXN0cy5vemxhYnMub3JnOyBTYWkgRGFzYXJpIDxzZGFzYXJpQGZiLmNvbT4NClN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjRdIGRyaXZlcnM6IGlwbWk6IFN1cHBvcnQgcmF3IGkyYyBwYWNrZXQg
-aW4gSVBNQg0KDQpZZXMgQXNtYWEsIFRoYXQgd2FzIGFscmVhZHkgaW4gbXkgcGxhbi4gRG8geW91
-IHdhbnQgdG8gaW5jbHVkZSBpdCBpbiB0aGUgc2FtZSBwYXRjaCBvciBzZXBhcmF0ZSBwYXRjaC4N
-Cg0K77u/T24gMTEvMTQvMTksIDY6MjEgQU0sICJBc21hYSBNbmViaGkiIDxhc21hYUBtZWxsYW5v
-eC5jb20+IHdyb3RlOg0KDQogICAgVmlqYXksIGNvdWxkIHlvdSB1cGRhdGUgdGhlIGV4aXN0aW5n
-IGlwbWIgZG9jdW1lbnRhdGlvbiB0byBsaXN0IGFuZCBkZXNjcmliZSB0aGlzIG5ldyBkZXZpY2Ug
-dHJlZS9hY3BpIHZhcmlhYmxlIGkyYy1wcm90b2NvbC4NCiAgICANCiAgICAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KICAgIEZyb206IENvcmV5IE1pbnlhcmQgPHRjbWlueWFyZEBnbWFpbC5j
-b20+IE9uIEJlaGFsZiBPZiBDb3JleSBNaW55YXJkDQogICAgU2VudDogVGh1cnNkYXksIE5vdmVt
-YmVyIDE0LCAyMDE5IDk6MTEgQU0NCiAgICBUbzogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBm
-Yi5jb20+DQogICAgQ2M6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+OyBHcmVnIEtyb2Fo
-LUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgb3BlbmlwbWktZGV2ZWxvcGVy
-QGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgY21p
-bnlhcmRAbXZpc3RhLmNvbTsgQXNtYWEgTW5lYmhpIDxBc21hYUBtZWxsYW5veC5jb20+OyBqb2Vs
-QGptcy5pZC5hdTsgbGludXgtYXNwZWVkQGxpc3RzLm96bGFicy5vcmc7IHNkYXNhcmlAZmIuY29t
-DQogICAgU3ViamVjdDogUmU6IFtQQVRDSCB2NF0gZHJpdmVyczogaXBtaTogU3VwcG9ydCByYXcg
-aTJjIHBhY2tldCBpbiBJUE1CDQogICAgDQogICAgT24gV2VkLCBOb3YgMTMsIDIwMTkgYXQgMDM6
-NDE6MzNQTSAtMDgwMCwgVmlqYXkgS2hlbWthIHdyb3RlOg0KICAgID4gTWFueSBJUE1CIGRldmlj
-ZXMgZG9lc24ndCBzdXBwb3J0IHNtYnVzIHByb3RvY29sIGFuZCBjdXJyZW50IGRyaXZlciANCiAg
-ICA+IHN1cHBvcnQgb25seSBzbWJ1cyBkZXZpY2VzLiBBZGRlZCBzdXBwb3J0IGZvciByYXcgaTJj
-IHBhY2tldHMuDQogICAgPiANCiAgICA+IFVzZXIgY2FuIGRlZmluZSBpMmMtcHJvdG9jb2wgaW4g
-ZGV2aWNlIHRyZWUgdG8gdXNlIGkyYyByYXcgdHJhbnNmZXIuDQogICAgPiANCiAgICA+IFNpZ25l
-ZC1vZmYtYnk6IFZpamF5IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgIA0KICAgIFdp
-dGggQWFzbWEncyByZXNwb25zZSwgSSBhbSBvayB3aXRoIHRoaXMuDQogICAgDQogICAgT25lIHRo
-aW5nLCB0aG91Z2guICBUaGlzIGlzIHRoZSBzbGF2ZSBkZXZpY2Ugb24gdGhlIEkyQywgbm90IHRo
-ZSBtYXN0ZXIgZGV2aWNlIHRoYXQgaGFzIHRoZSBpc3N1ZSwgcmlnaHQ/ICBTbyBpdCdzIGF0IGxl
-YXN0IHRoZW9yZXRpY2FsbHkgcG9zc2libGUgdG8gaGF2ZSBvbmUgU01CdXMgYW5kIG9uZSBJMkMg
-SVBNQiBkZXZpY2Ugb24gdGhlIHNhbWUgbWFzdGVyLCByaWdodD8NCiAgICANCiAgICBGb3Igbm9y
-bWFsIEkyQywgZGV2aWNlcyBhcmUgaW4gdGhlIGRldmljZSB0cmVlIGFuZCBnZXQgYWRkZWQgdG8g
-dGhlIGtlcm5lbCBkZXZpY2UgaGFuZGxpbmcuICBJdCBsb29rcyBsaWtlIHRoYXQgaXMgbm90IGJl
-aW5nIGRvbmUgaW4geW91ciBjYXNlLiAgQnV0IHJlYWxseSwgdGhlICJyaWdodCIgd2F5IHRvIGRv
-IHRoaXMgaXMgdG8gaGF2ZSB0aGUgSVBNQiBzbGF2ZXMgYWRkZWQgYXMgTGludXggZGV2aWNlcyBh
-bmQgYWRkcmVzcyB0aGVtIHRoYXQgd2F5LiAgSSdtIG5vdCBzdXJlIHRoaXMgd2lsbCBldmVyIGJl
-IGEgcmVhbCBpc3N1ZSwgYnV0IGlmIGl0IGlzLCB0aGVyZSB3aWxsIGJlIHNvbWUgd29yayB0byBk
-byB0byBmaXggaXQuDQogICAgDQogICAgLWNvcmV5DQogICAgDQogICAgPiAtLS0NCiAgICA+ICBk
-cml2ZXJzL2NoYXIvaXBtaS9pcG1iX2Rldl9pbnQuYyB8IDMyIA0KICAgID4gKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysNCiAgICA+ICAxIGZpbGUgY2hhbmdlZCwgMzIgaW5zZXJ0aW9u
-cygrKQ0KICAgID4gDQogICAgPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jaGFyL2lwbWkvaXBtYl9k
-ZXZfaW50LmMgDQogICAgPiBiL2RyaXZlcnMvY2hhci9pcG1pL2lwbWJfZGV2X2ludC5jDQogICAg
-PiBpbmRleCBhZTNiZmJhMjc1MjYuLjEwOTA0YmVjMWRlMCAxMDA2NDQNCiAgICA+IC0tLSBhL2Ry
-aXZlcnMvY2hhci9pcG1pL2lwbWJfZGV2X2ludC5jDQogICAgPiArKysgYi9kcml2ZXJzL2NoYXIv
-aXBtaS9pcG1iX2Rldl9pbnQuYw0KICAgID4gQEAgLTYzLDYgKzYzLDcgQEAgc3RydWN0IGlwbWJf
-ZGV2IHsNCiAgICA+ICAJc3BpbmxvY2tfdCBsb2NrOw0KICAgID4gIAl3YWl0X3F1ZXVlX2hlYWRf
-dCB3YWl0X3F1ZXVlOw0KICAgID4gIAlzdHJ1Y3QgbXV0ZXggZmlsZV9tdXRleDsNCiAgICA+ICsJ
-Ym9vbCBpc19pMmNfcHJvdG9jb2w7DQogICAgPiAgfTsNCiAgICA+ICANCiAgICA+ICBzdGF0aWMg
-aW5saW5lIHN0cnVjdCBpcG1iX2RldiAqdG9faXBtYl9kZXYoc3RydWN0IGZpbGUgKmZpbGUpIEBA
-IA0KICAgID4gLTExMiw2ICsxMTMsMjUgQEAgc3RhdGljIHNzaXplX3QgaXBtYl9yZWFkKHN0cnVj
-dCBmaWxlICpmaWxlLCBjaGFyIF9fdXNlciAqYnVmLCBzaXplX3QgY291bnQsDQogICAgPiAgCXJl
-dHVybiByZXQgPCAwID8gcmV0IDogY291bnQ7DQogICAgPiAgfQ0KICAgID4gIA0KICAgID4gK3N0
-YXRpYyBpbnQgaXBtYl9pMmNfd3JpdGUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwgdTggKm1z
-Zykgew0KICAgID4gKwlzdHJ1Y3QgaTJjX21zZyBpMmNfbXNnOw0KICAgID4gKw0KICAgID4gKwkv
-Kg0KICAgID4gKwkgKiBzdWJ0cmFjdCAxIGJ5dGUgKHJxX3NhKSBmcm9tIHRoZSBsZW5ndGggb2Yg
-dGhlIG1zZyBwYXNzZWQgdG8NCiAgICA+ICsJICogcmF3IGkyY190cmFuc2Zlcg0KICAgID4gKwkg
-Ki8NCiAgICA+ICsJaTJjX21zZy5sZW4gPSBtc2dbSVBNQl9NU0dfTEVOX0lEWF0gLSAxOw0KICAg
-ID4gKw0KICAgID4gKwkvKiBBc3NpZ24gbWVzc2FnZSB0byBidWZmZXIgZXhjZXB0IGZpcnN0IDIg
-Ynl0ZXMgKGxlbmd0aCBhbmQgYWRkcmVzcykgKi8NCiAgICA+ICsJaTJjX21zZy5idWYgPSBtc2cg
-KyAyOw0KICAgID4gKw0KICAgID4gKwlpMmNfbXNnLmFkZHIgPSBHRVRfN0JJVF9BRERSKG1zZ1tS
-UV9TQV84QklUX0lEWF0pOw0KICAgID4gKwlpMmNfbXNnLmZsYWdzID0gY2xpZW50LT5mbGFncyAm
-IEkyQ19DTElFTlRfUEVDOw0KICAgID4gKw0KICAgID4gKwlyZXR1cm4gaTJjX3RyYW5zZmVyKGNs
-aWVudC0+YWRhcHRlciwgJmkyY19tc2csIDEpOyB9DQogICAgPiArDQogICAgPiAgc3RhdGljIHNz
-aXplX3QgaXBtYl93cml0ZShzdHJ1Y3QgZmlsZSAqZmlsZSwgY29uc3QgY2hhciBfX3VzZXIgKmJ1
-ZiwNCiAgICA+ICAJCQlzaXplX3QgY291bnQsIGxvZmZfdCAqcHBvcykNCiAgICA+ICB7DQogICAg
-PiBAQCAtMTMzLDYgKzE1MywxMiBAQCBzdGF0aWMgc3NpemVfdCBpcG1iX3dyaXRlKHN0cnVjdCBm
-aWxlICpmaWxlLCBjb25zdCBjaGFyIF9fdXNlciAqYnVmLA0KICAgID4gIAlycV9zYSA9IEdFVF83
-QklUX0FERFIobXNnW1JRX1NBXzhCSVRfSURYXSk7DQogICAgPiAgCW5ldGZfcnFfbHVuID0gbXNn
-W05FVEZOX0xVTl9JRFhdOw0KICAgID4gIA0KICAgID4gKwkvKiBDaGVjayBpMmMgYmxvY2sgdHJh
-bnNmZXIgdnMgc21idXMgKi8NCiAgICA+ICsJaWYgKGlwbWJfZGV2LT5pc19pMmNfcHJvdG9jb2wp
-IHsNCiAgICA+ICsJCXJldCA9IGlwbWJfaTJjX3dyaXRlKGlwbWJfZGV2LT5jbGllbnQsIG1zZyk7
-DQogICAgPiArCQlyZXR1cm4gKHJldCA9PSAxKSA/IGNvdW50IDogcmV0Ow0KICAgID4gKwl9DQog
-ICAgPiArDQogICAgPiAgCS8qDQogICAgPiAgCSAqIHN1YnRyYWN0IHJxX3NhIGFuZCBuZXRmX3Jx
-X2x1biBmcm9tIHRoZSBsZW5ndGggb2YgdGhlIG1zZyBwYXNzZWQgdG8NCiAgICA+ICAJICogaTJj
-X3NtYnVzX3hmZXINCiAgICA+IEBAIC0yNzcsNiArMzAzLDcgQEAgc3RhdGljIGludCBpcG1iX3By
-b2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQogICAgPiAgCQkJY29uc3Qgc3RydWN0IGky
-Y19kZXZpY2VfaWQgKmlkKQ0KICAgID4gIHsNCiAgICA+ICAJc3RydWN0IGlwbWJfZGV2ICppcG1i
-X2RldjsNCiAgICA+ICsJc3RydWN0IGRldmljZV9ub2RlICpucDsNCiAgICA+ICAJaW50IHJldDsN
-CiAgICA+ICANCiAgICA+ICAJaXBtYl9kZXYgPSBkZXZtX2t6YWxsb2MoJmNsaWVudC0+ZGV2LCBz
-aXplb2YoKmlwbWJfZGV2KSwgQEAgLTMwMiw2IA0KICAgID4gKzMyOSwxMSBAQCBzdGF0aWMgaW50
-IGlwbWJfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwNCiAgICA+ICAJaWYgKHJldCkN
-CiAgICA+ICAJCXJldHVybiByZXQ7DQogICAgPiAgDQogICAgPiArCS8qIENoZWNrIGlmIGkyYyBi
-bG9jayB4bWl0IG5lZWRzIHRvIHVzZSBpbnN0ZWFkIG9mIHNtYnVzICovDQogICAgPiArCW5wID0g
-Y2xpZW50LT5kZXYub2Zfbm9kZTsNCiAgICA+ICsJaWYgKG5wICYmIG9mX2dldF9wcm9wZXJ0eShu
-cCwgImkyYy1wcm90b2NvbCIsIE5VTEwpKQ0KICAgID4gKwkJaXBtYl9kZXYtPmlzX2kyY19wcm90
-b2NvbCA9IHRydWU7DQogICAgPiArDQogICAgPiAgCWlwbWJfZGV2LT5jbGllbnQgPSBjbGllbnQ7
-DQogICAgPiAgCWkyY19zZXRfY2xpZW50ZGF0YShjbGllbnQsIGlwbWJfZGV2KTsNCiAgICA+ICAJ
-cmV0ID0gaTJjX3NsYXZlX3JlZ2lzdGVyKGNsaWVudCwgaXBtYl9zbGF2ZV9jYik7DQogICAgPiAt
-LQ0KICAgID4gMi4xNy4xDQogICAgPiANCiAgICANCg0K
+On Thu, Nov 14, 2019 at 2:45 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Nov 13, 2019 at 04:30:32PM -0800, Ian Rogers wrote:
+> > Avoid iterating over all per-CPU events during cgroup changing context
+> > switches by organizing events by cgroup.
+>
+> When last we spoke (Plumbers in Lisbon) you mentioned that this
+> optimization was yielding far less than expected. You had graphs showing
+> how the use of cgroups impacted event scheduling time and how this patch
+> set only reduced that a little.
+>
+> Any update on all that? There seems to be a conspicuous lack of such
+> data here.
+
+I'm working on giving an update on the numbers but I suspect they are
+better than I'd measured ahead of LPC due to a bug in a script.
+
+Thanks,
+Ian
