@@ -2,102 +2,96 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B924C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3B3C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2F320409
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD1420409
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:30:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="RPQgdynY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfKNK1f (ORCPT
+        id S1726541AbfKNKa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:27:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:39746 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfKNK1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:27:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00FB031B;
-        Thu, 14 Nov 2019 02:27:34 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D69653F6C4;
-        Thu, 14 Nov 2019 02:27:32 -0800 (PST)
-Subject: Re: [PATCH v3 3/3] arm64: Workaround for Cortex-A55 erratum 1530923
-To:     Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-References: <20191113172252.12610-1-steven.price@arm.com>
- <20191113172252.12610-4-steven.price@arm.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <0b017ec9-5be1-90b9-be30-09462dec9e9d@arm.com>
-Date:   Thu, 14 Nov 2019 10:27:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 14 Nov 2019 05:30:27 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36534 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfKNKa0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 05:30:26 -0500
+Received: by mail-io1-f67.google.com with SMTP id s3so6223635ioe.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 02:30:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q0ODQMjiIKKDNHMHFmstYPQVkSDb52CtygX5wXt7a60=;
+        b=RPQgdynYquk1oX1FlJYROA3WoECoE8TuBO6QFqoYnJX2y6zQvSgSS12bmkC2MMNyVm
+         ubKNHkff9bsXOxrsS8frUFNImLf/lTOBrv4PDhNbvVsWy/jR33CM+eyXSDYWyvYXuH1R
+         SsbDaX4F8xABNuwPY3VKxmfk0hUTpSr2JPeIY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q0ODQMjiIKKDNHMHFmstYPQVkSDb52CtygX5wXt7a60=;
+        b=QR37aVeuQUHss9TK+IhKFa5M2ytu8auH3/DUZTC0XGyE74gehvOrTMrSjPqn8iwV7K
+         Y95hXJ9k5d6kR7AR6e0/sgRCiznCI5Vo6n8mtbGVvNW0JBrJtpbJ69V5cS4sVGlchQpp
+         kPuWa4w6dkQuY+7ma8tF2hIEh4Af2Cy7LVmISPzknx3NvuVM7dDfnAmLj6CHCvLeg+zG
+         H65h9qyydKpXfQ6/nD4HGnBn7gfzmhBVKVrD+0Zr4gGy/m9jxBRPLhvp/LAUh7ay1qxc
+         /RmI9kjsJPOY7zY/AmgR8DV9Cs2SA0H/mwmN7J+/QXbBZLTAREhu5AUETdWWP0iiJUio
+         OARg==
+X-Gm-Message-State: APjAAAV07FccYzii/O+fBdf4dQc5V632BQ08aG2ctxwuMfJdUtf8wbgm
+        z/8583KyeA9CN8kuQIP7VwSjGjcxe0PBynv/D3+1pw==
+X-Google-Smtp-Source: APXvYqyFB3goydsCrDzye1z3rnm33m5fU70E0wh+81ZMdqXoZNXF97wesNRGnM95NZF4bjAMv7oGDQM9lP5R7AgpLFI=
+X-Received: by 2002:a05:6638:9:: with SMTP id z9mr6880049jao.35.1573727425730;
+ Thu, 14 Nov 2019 02:30:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113172252.12610-4-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191113200651.114606-1-colin.king@canonical.com>
+In-Reply-To: <20191113200651.114606-1-colin.king@canonical.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 14 Nov 2019 11:30:14 +0100
+Message-ID: <CAJfpegug-saOEigqDNKfwMR5qdzrbLnRBD=0eN5juGioFH_L_Q@mail.gmail.com>
+Subject: Re: [PATCH][V4] ovl: fix lookup failure on multi lower squashfs
+To:     Colin King <colin.king@canonical.com>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/11/2019 17:22, Steven Price wrote:
-> Cortex-A55 erratum 1530923 allows TLB entries to be allocated as a
-> result of a speculative AT instruction. This may happen in the middle of
-> a guest world switch while the relevant VMSA configuration is in an
-> inconsistent state, leading to erroneous content being allocated into
-> TLBs.
-> 
-> The same workaround as is used for Cortex-A76 erratum 1165522
-> (WORKAROUND_SPECULATIVE_AT_NVE) can be used here. Note that this
-> mandates the use of VHE on affected parts.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   Documentation/arm64/silicon-errata.rst |  2 ++
->   arch/arm64/Kconfig                     | 13 +++++++++++++
->   arch/arm64/include/asm/kvm_hyp.h       |  4 ++--
->   arch/arm64/kernel/cpu_errata.c         |  6 +++++-
->   arch/arm64/kvm/hyp/switch.c            |  4 ++--
->   arch/arm64/kvm/hyp/tlb.c               |  4 ++--
->   6 files changed, 26 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
-> index 899a72570282..b40cb3e0634e 100644
-> --- a/Documentation/arm64/silicon-errata.rst
-> +++ b/Documentation/arm64/silicon-errata.rst
-> @@ -88,6 +88,8 @@ stable kernels.
->   +----------------+-----------------+-----------------+-----------------------------+
->   | ARM            | Cortex-A76      | #1463225        | ARM64_ERRATUM_1463225       |
->   +----------------+-----------------+-----------------+-----------------------------+
-> +| ARM            | Cortex-A55      | #1530923        | ARM64_ERRATUM_1530923       |
-> ++----------------+-----------------+-----------------+-----------------------------+
->   | ARM            | Neoverse-N1     | #1188873,1418040| ARM64_ERRATUM_1418040       |
->   +----------------+-----------------+-----------------+-----------------------------+
->   | ARM            | Neoverse-N1     | #1349291        | N/A                         |
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index defb68e45387..d2dd72c19560 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -532,6 +532,19 @@ config ARM64_ERRATUM_1165522
->   
->   	  If unsure, say Y.
->   
-> +config ARM64_ERRATUM_1530923
-> +	bool "Cortex-A55: Speculative AT instruction using out-of-context translation regime could cause subsequent request to generate an incorrect translation"
-> +	default y
-> +	select ARM64_WORKAROUND_SPECULATIVE_AT
+On Wed, Nov 13, 2019 at 9:06 PM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Amir Goldstein <amir73il@gmail.com>
+>
+> In the past, overlayfs required that lower fs have non null
+> uuid in order to support nfs export and decode copy up origin file handles.
+>
+> Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
+> lower fs") relaxed this requirement for nfs export support, as long
+> as uuid (even if null) is unique among all lower fs.
 
-ARM64_WORKAROUND_SPECULATIVE_AT_VHE ?
+I see another corner case:
 
-Otherwise looks good to me.
+n- two filesystems, A and B, both have null uuid
+ - upper layer is on A
+ - lower layer 1 is also on A
+ - lower layer 2 is on B
 
-Suzuki
+In this case bad_uuid won't be set for B, because the check only
+involves the list of lower fs.  Hence we'll try to decode a layer 2
+origin on layer 1 and fail.
+
+Can we fix this without special casing lower layer fsid == 0 in
+various places?  I guess that involves using lower_fs[0] for the
+fsid=0 case (i.e. index lower_fs by fsid, rather than (fsid -1)).
+Probably warrants a separate patch.
+
+Thanks,
+Miklos
