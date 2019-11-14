@@ -2,280 +2,164 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A5EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1F6C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6F22071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87654206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Dlliewnn"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="As+KnhAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfKNRUq (ORCPT
+        id S1726755AbfKNRWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:20:46 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38675 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfKNRUq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:20:46 -0500
-Received: by mail-qk1-f194.google.com with SMTP id e2so5664409qkn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:20:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=YqwdU+TFDkkxeSf2VYe9ZpBpe5HohVUl6w94HLyvpv4=;
-        b=DlliewnnkIDrzyiGW6RRf47VJWcYu9agI8oocX5cMZTL9y15bhlZQRDMvE5MT78YdP
-         zcMXIkm2lf2uixuxxrR7TpZBOro6CWVqnGOFPkIji7YlCEvYmh7Gj2c6JvYQpWiBaOue
-         uvQG5LKFugb1tu+AKQCPa5OwXYgkuGmb3yRWQ5MiN/cf72DHj0Lg9BtTfkwRH/UsulX8
-         RRv5fiZMCZpRzFhuZGsmHhX948nUNvK3m2ISbHvJ+m0mOVr1QEZQfT3mv86iPS2bRoek
-         vaeu1KA6aJ+gEuBJOxMpQTPEMQFxH/4CL5yU261QQNp5J127yMMx0GrbtLb3ZuBJCerO
-         pUAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YqwdU+TFDkkxeSf2VYe9ZpBpe5HohVUl6w94HLyvpv4=;
-        b=EzMHHeZr/GZHpEpmQrlG8bmwwHgw0MsxdJmm9WKtI8K6rDPcWu+T8bHYv68adQWxA9
-         nzxbYFWeWhUfk+Xk6XjtfhygTighG+6V1xkSB38lQo8L9WsuCo1N1f7FxPBcmtomLJPh
-         HUrHy7MI/zf/xG8JqO1vMRk83U+STshRWnQ2BUS4I8710vC1N4wJpA5Nb0UobpBPSsTd
-         maiaiAonjxQFRDTMJ4Adi95JOiqtRyo0a/9xDcwS3l7nFrmblQr4Ch/zywfe22r5XSYK
-         YOAP5y10q1gUEkXi6tutLMKb0DssvaBQygEwrYCHVmQhxpqeWJYc6uZ4Zf2SxieQATNJ
-         JgoA==
-X-Gm-Message-State: APjAAAVUqk2cOSx3OXymR0K6xlCGS37gpR01jo8wrVJhhk+zz2M4bXp1
-        yvTHuKJRtPFtJv7K0zurMWiTig==
-X-Google-Smtp-Source: APXvYqydvgsfrEZ+98C5vPABHk4+serIieb4Y3cV7B/XOTnjWmTMEvr7ItsMVDyi+jqFkW92BOmm8Q==
-X-Received: by 2002:a05:620a:999:: with SMTP id x25mr4654431qkx.189.1573752044966;
-        Thu, 14 Nov 2019 09:20:44 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id p59sm3455986qtd.2.2019.11.14.09.20.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 09:20:44 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     tj@kernel.org
-Cc:     jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        axboe@kernel.dk, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] writeback: fix -Wformat compilation warnings
-Date:   Thu, 14 Nov 2019 12:17:41 -0500
-Message-Id: <1573751861-10303-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 14 Nov 2019 12:22:09 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:58806 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbfKNRWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:22:09 -0500
+Received: from zn.tnic (p200300EC2F15E200329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f15:e200:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D83961EC0CFE;
+        Thu, 14 Nov 2019 18:22:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573752128;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=PbGZIko68f80PGyBe+EPLI/nCbCe2I6Wk5PKlvFX2Eg=;
+        b=As+KnhAm1LMxrNd+Wp+gSlW35ZMZVF2gp+dUFzThNkXe/ke8bx8a7jQvJNx6hnd/he61iz
+        wUv0TlGRn0a3uTZrOX7s1o58HRt5UGKetNDa+4TKu936livR7h2aAuPzHfh/NJA2Vuk6bc
+        0eFGQ/raLhQuBCLKuC4ZsxyPlZ28N4I=
+From:   Borislav Petkov <bp@alien8.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org
+Subject: [PATCH] x86/crash: Align function arguments on opening braces
+Date:   Thu, 14 Nov 2019 18:22:00 +0100
+Message-Id: <20191114172200.19563-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit f05499a06fb4 ("writeback: use ino_t for inodes in
-tracepoints") introduced a lot of GCC compilation warnings on s390,
+From: Borislav Petkov <bp@suse.de>
 
-In file included from ./include/trace/define_trace.h:102,
-                 from ./include/trace/events/writeback.h:904,
-                 from fs/fs-writeback.c:82:
-./include/trace/events/writeback.h: In function
-'trace_raw_output_writeback_page_template':
-./include/trace/events/writeback.h:76:12: warning: format '%lu' expects
-argument of type 'long unsigned int', but argument 4 has type 'ino_t'
-{aka 'unsigned int'} [-Wformat=]
-  TP_printk("bdi %s: ino=%lu index=%lu",
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/trace/trace_events.h:360:22: note: in definition of macro
-'DECLARE_EVENT_CLASS'
-  trace_seq_printf(s, print);     \
-                      ^~~~~
-./include/trace/events/writeback.h:76:2: note: in expansion of macro
-'TP_printk'
-  TP_printk("bdi %s: ino=%lu index=%lu",
-  ^~~~~~~~~
+... or let function calls stick out and thus remain on a single line,
+even if the 80 cols rule is violated by a couple of chars, for better
+readability.
 
-Fix them by adding necessary casts where ino_t could be either "unsigned
-int" or "unsigned long".
+No functional changes.
 
-Fixes: f05499a06fb4 ("writeback: use ino_t for inodes in tracepoints")
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: x86@kernel.org
 ---
- include/trace/events/writeback.h | 48 ++++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+ arch/x86/kernel/crash.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-index b4f0ffe1817e..ef50be4e5e6c 100644
---- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -75,7 +75,7 @@
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index a16ec92b70f5..00fc55ac7ffa 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -202,8 +202,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 	unsigned int nr_ranges = 0;
+ 	struct crash_mem *cmem;
  
- 	TP_printk("bdi %s: ino=%lu index=%lu",
- 		__entry->name,
--		__entry->ino,
-+		(unsigned long)__entry->ino,
- 		__entry->index
- 	)
- );
-@@ -120,7 +120,7 @@
+-	walk_system_ram_res(0, -1, &nr_ranges,
+-				get_nr_ram_ranges_callback);
++	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+ 	if (!nr_ranges)
+ 		return NULL;
  
- 	TP_printk("bdi %s: ino=%lu state=%s flags=%s",
- 		__entry->name,
--		__entry->ino,
-+		(unsigned long)__entry->ino,
- 		show_inode_state(__entry->state),
- 		show_inode_state(__entry->flags)
- 	)
-@@ -201,8 +201,8 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+@@ -240,10 +239,9 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
+ 	if (ret)
+ 		return ret;
  
- 	TP_printk("bdi %s: ino=%lu cgroup_ino=%lu history=0x%x",
- 		__entry->name,
--		__entry->ino,
--		__entry->cgroup_ino,
-+		(unsigned long)__entry->ino,
-+		(unsigned long)__entry->cgroup_ino,
- 		__entry->history
- 	)
- );
-@@ -230,9 +230,9 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+-	if (crashk_low_res.end) {
++	if (crashk_low_res.end)
+ 		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
+-							crashk_low_res.end);
+-	}
++					      crashk_low_res.end);
  
- 	TP_printk("bdi %s: ino=%lu old_cgroup_ino=%lu new_cgroup_ino=%lu",
- 		__entry->name,
--		__entry->ino,
--		__entry->old_cgroup_ino,
--		__entry->new_cgroup_ino
-+		(unsigned long)__entry->ino,
-+		(unsigned long)__entry->old_cgroup_ino,
-+		(unsigned long)__entry->new_cgroup_ino
- 	)
- );
+ 	return ret;
+ }
+@@ -270,8 +268,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
+ 	if (!cmem)
+ 		return -ENOMEM;
  
-@@ -266,10 +266,10 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 	TP_printk("bdi %s[%llu]: ino=%lu memcg_id=%u cgroup_ino=%lu page_cgroup_ino=%lu",
- 		__entry->name,
- 		__entry->bdi_id,
--		__entry->ino,
-+		(unsigned long)__entry->ino,
- 		__entry->memcg_id,
--		__entry->cgroup_ino,
--		__entry->page_cgroup_ino
-+		(unsigned long)__entry->cgroup_ino,
-+		(unsigned long)__entry->page_cgroup_ino
- 	)
- );
+-	ret = walk_system_ram_res(0, -1, cmem,
+-				prepare_elf64_ram_headers_callback);
++	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+ 	if (ret)
+ 		goto out;
  
-@@ -296,7 +296,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+@@ -281,8 +278,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
+ 		goto out;
  
- 	TP_printk("bdi %s: cgroup_ino=%lu frn_bdi_id=%u frn_memcg_id=%u",
- 		__entry->name,
--		__entry->cgroup_ino,
-+		(unsigned long)__entry->cgroup_ino,
- 		__entry->frn_bdi_id,
- 		__entry->frn_memcg_id
- 	)
-@@ -326,9 +326,9 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 	/* By default prepare 64bit headers */
+-	ret =  crash_prepare_elf64_headers(cmem,
+-				IS_ENABLED(CONFIG_X86_64), addr, sz);
++	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
  
- 	TP_printk("bdi %s: ino=%lu sync_mode=%d cgroup_ino=%lu",
- 		__entry->name,
--		__entry->ino,
-+		(unsigned long)__entry->ino,
- 		__entry->sync_mode,
--		__entry->cgroup_ino
-+		(unsigned long)__entry->cgroup_ino
- 	)
- );
+ out:
+ 	vfree(cmem);
+@@ -297,8 +293,7 @@ static int add_e820_entry(struct boot_params *params, struct e820_entry *entry)
+ 	if (nr_e820_entries >= E820_MAX_ENTRIES_ZEROPAGE)
+ 		return 1;
  
-@@ -383,7 +383,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 		  __entry->range_cyclic,
- 		  __entry->for_background,
- 		  __print_symbolic(__entry->reason, WB_WORK_REASON),
--		  __entry->cgroup_ino
-+		  (unsigned long)__entry->cgroup_ino
- 	)
- );
- #define DEFINE_WRITEBACK_WORK_EVENT(name) \
-@@ -421,7 +421,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 	),
- 	TP_printk("bdi %s: cgroup_ino=%lu",
- 		  __entry->name,
--		  __entry->cgroup_ino
-+		  (unsigned long)__entry->cgroup_ino
- 	)
- );
- #define DEFINE_WRITEBACK_EVENT(name) \
-@@ -489,7 +489,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 		__entry->range_cyclic,
- 		__entry->range_start,
- 		__entry->range_end,
--		__entry->cgroup_ino
-+		(unsigned long)__entry->cgroup_ino
- 	)
- )
+-	memcpy(&params->e820_table[nr_e820_entries], entry,
+-			sizeof(struct e820_entry));
++	memcpy(&params->e820_table[nr_e820_entries], entry, sizeof(struct e820_entry));
+ 	params->e820_entries++;
+ 	return 0;
+ }
+@@ -353,24 +348,24 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	cmd.type = E820_TYPE_RAM;
+ 	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+ 	walk_iomem_res_desc(IORES_DESC_NONE, flags, 0, (1<<20)-1, &cmd,
+-			memmap_entry_callback);
++			    memmap_entry_callback);
  
-@@ -528,7 +528,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 		__entry->age,	/* older_than_this in relative milliseconds */
- 		__entry->moved,
- 		__print_symbolic(__entry->reason, WB_WORK_REASON),
--		__entry->cgroup_ino
-+		(unsigned long)__entry->cgroup_ino
- 	)
- );
+ 	/* Add ACPI tables */
+ 	cmd.type = E820_TYPE_ACPI;
+ 	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+ 	walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1, &cmd,
+-		       memmap_entry_callback);
++			    memmap_entry_callback);
  
-@@ -622,7 +622,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 		  __entry->dirty_ratelimit,	/* base ratelimit */
- 		  __entry->task_ratelimit, /* ratelimit with position control */
- 		  __entry->balanced_dirty_ratelimit, /* the balanced ratelimit */
--		  __entry->cgroup_ino
-+		  (unsigned long)__entry->cgroup_ino
- 	)
- );
+ 	/* Add ACPI Non-volatile Storage */
+ 	cmd.type = E820_TYPE_NVS;
+ 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
+-			memmap_entry_callback);
++			    memmap_entry_callback);
  
-@@ -707,7 +707,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 		  __entry->pause,	/* ms */
- 		  __entry->period,	/* ms */
- 		  __entry->think,	/* ms */
--		  __entry->cgroup_ino
-+		  (unsigned long)__entry->cgroup_ino
- 	  )
- );
+ 	/* Add e820 reserved ranges */
+ 	cmd.type = E820_TYPE_RESERVED;
+ 	flags = IORESOURCE_MEM;
+ 	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
+-			   memmap_entry_callback);
++			    memmap_entry_callback);
  
-@@ -735,11 +735,11 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
+ 	/* Add crashk_low_res region */
+ 	if (crashk_low_res.end) {
+@@ -381,8 +376,7 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	}
  
- 	TP_printk("bdi %s: ino=%lu state=%s dirtied_when=%lu age=%lu cgroup_ino=%lu",
- 		  __entry->name,
--		  __entry->ino,
-+		  (unsigned long)__entry->ino,
- 		  show_inode_state(__entry->state),
- 		  __entry->dirtied_when,
- 		  (jiffies - __entry->dirtied_when) / HZ,
--		  __entry->cgroup_ino
-+		  (unsigned long)__entry->cgroup_ino
- 	)
- );
- 
-@@ -813,14 +813,14 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 	TP_printk("bdi %s: ino=%lu state=%s dirtied_when=%lu age=%lu "
- 		  "index=%lu to_write=%ld wrote=%lu cgroup_ino=%lu",
- 		  __entry->name,
--		  __entry->ino,
-+		  (unsigned long)__entry->ino,
- 		  show_inode_state(__entry->state),
- 		  __entry->dirtied_when,
- 		  (jiffies - __entry->dirtied_when) / HZ,
- 		  __entry->writeback_index,
- 		  __entry->nr_to_write,
- 		  __entry->wrote,
--		  __entry->cgroup_ino
-+		  (unsigned long)__entry->cgroup_ino
- 	)
- );
- 
-@@ -861,7 +861,7 @@ static inline ino_t __trace_wbc_assign_cgroup(struct writeback_control *wbc)
- 
- 	TP_printk("dev %d,%d ino %lu dirtied %lu state %s mode 0%o",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
--		  __entry->ino, __entry->dirtied_when,
-+		  (unsigned long)__entry->ino, __entry->dirtied_when,
- 		  show_inode_state(__entry->state), __entry->mode)
- );
+ 	/* Exclude some ranges from crashk_res and add rest to memmap */
+-	ret = memmap_exclude_ranges(image, cmem, crashk_res.start,
+-						crashk_res.end);
++	ret = memmap_exclude_ranges(image, cmem, crashk_res.start, crashk_res.end);
+ 	if (ret)
+ 		goto out;
  
 -- 
-1.8.3.1
+2.21.0
 
