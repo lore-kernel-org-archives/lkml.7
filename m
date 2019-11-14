@@ -2,132 +2,107 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D7C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4664C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB0620637
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC4120715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mugySPOo"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="16ljNnZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKNPqg (ORCPT
+        id S1726980AbfKNPrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:46:36 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37271 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfKNPqf (ORCPT
+        Thu, 14 Nov 2019 10:47:43 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38889 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfKNPrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:46:35 -0500
-Received: by mail-io1-f68.google.com with SMTP id 1so7321684iou.4;
-        Thu, 14 Nov 2019 07:46:34 -0800 (PST)
+        Thu, 14 Nov 2019 10:47:43 -0500
+Received: by mail-wm1-f66.google.com with SMTP id z19so6449117wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:47:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xOIHTfBLTMB4ZoLauAEk7jGm1OPQ6xnkIWbsYKNK/Go=;
-        b=mugySPOoxB8TWmIsctCqLuW1W60V4RQLkLr9y2CrKpWldwcbogZtAwdw4r1H7aI4GI
-         X69YpnWUU6MMvvTGzRkRxWZUJwJ63M0E5SDaTG/sNTcXVKpYsr/T74VYoY4Si3xVUU8A
-         Zv2opc76RjdF/GPIrwuQtClY24bL8EVy3Xz+eXQxS3VPmGK/Svb7aC95V4eN9tmRjEfN
-         MuUJZfE8DRfdKKiXPvBSzNo1CJBrZjvOEXtHZGk1oOxx3R/mAr9AB+yNQMMP7wv7xCO6
-         blrdskMnH+wI9nFFH9GpfhQBXh0lvMOPR0WojAnShU5SIkEjRro1DTFR5QoRlKjBkkMs
-         MCSQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=imGdJFRY185pAjfBUWLyckhXCcG52iE7peF0ICno/F4=;
+        b=16ljNnZZ3upX9VKdbIxvnGbmp3ksWorXodwuEZnI0eJMUoR/Azxa6ZKokc6j/yFYps
+         yVDo39z9pyaxVEOZxpNxgPCctOMcEjHLC4kqwORp7Sc1a93fmpMCUTxjtbe87KroWh3t
+         JNOufYpWTeBKlutEqIbAupCsod4OaDc1A4QTMCWCJeefaaOlYsP0wRVTZnKfQ6c0sBxo
+         OXUSdslWFm1yzScrWCEq7l1+fz7s0kzHL63eeQ3CfO7aPEOQQUIw2nJGoC4x+THgjrGl
+         0Yn0mnrewajEi4TZcv4v4ICQ97/j7DIFtnrNd7p4GIPVnY1eKkMSq5z3DObgHVYmdKYQ
+         WLfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xOIHTfBLTMB4ZoLauAEk7jGm1OPQ6xnkIWbsYKNK/Go=;
-        b=fj8GNgLBCZb8BAKGPudqsBcAc+wWFuk1SbaikFIrbHLOCXZMgBAEkOnjLl/YNtgymG
-         ns6oCCQDh/ELC1NI0AiA8LuqhPaFLmoh92Ozd4L+FSw/bl3nRvx9hMhKbc1X1fk719ME
-         B9fVOdtrkiSZHaNyn8yov7gVCETAH+n6st2F8prqoTZCfjBvdBktR4kOVB0GtuuhyMQT
-         5BUe4Q75KvdqBaULk999sZ1Xga7l7IQNGaXACSfTfpX+zejEh95XuRSTdm6pWg7gBv4f
-         w9cLJaoUvyNSqoDhA7w4d3nEoyYsqN/2eJgWtF+qUDeaCTkhIgBJwStNYtU8HmA1ZwMn
-         CUQg==
-X-Gm-Message-State: APjAAAUq4VVzTQVF3bmktJKfsYJMeVcjYW1uvoBNsK8ey8Q0ZlKqW1/q
-        /SU/21hz/MQcIsdIad+6zYqqMJ3EpdHKHDt8NHk=
-X-Google-Smtp-Source: APXvYqxED6h0fNFN4w1dvWOm28RohkY/9NELaLWTvjMYQmMZUqmeyBP3fL1JGc3TMdpEZ+QD6YTh4YbRNPN0P5nDU2E=
-X-Received: by 2002:a5e:9741:: with SMTP id h1mr8806846ioq.143.1573746394533;
- Thu, 14 Nov 2019 07:46:34 -0800 (PST)
-MIME-Version: 1.0
-References: <20191114105736.8636-1-lhenriques@suse.com> <cbda3a69d25b04e10332e7b3898064a93b2d04ae.camel@kernel.org>
- <alpine.DEB.2.21.1911141326260.17979@piezo.novalocal> <CAOi1vP9XaeJdqV-jMP3BM=mjHKqJW8-ynAjCi0xcDD3DtL94KQ@mail.gmail.com>
- <alpine.DEB.2.21.1911141416040.17979@piezo.novalocal> <20191114152450.GA6902@hermes.olymp>
-In-Reply-To: <20191114152450.GA6902@hermes.olymp>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Thu, 14 Nov 2019 16:47:02 +0100
-Message-ID: <CAOi1vP8YWdN=bOVcHq5j4x9iv+JuO8vd3zEkmVE_Pc-BC8dSAQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus OSDs
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Sage Weil <sweil@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=imGdJFRY185pAjfBUWLyckhXCcG52iE7peF0ICno/F4=;
+        b=HB1TbJCfCYw/MSXACVur98JP0+co8uNf/gRbQRt5JfQnwGr/+84Upck+EYZch3EwEo
+         0yQbkJZIdC0PindeIZ9Kl5b4TGi0Zx+dO4Eb3pxjd/LWITjnEJ1m29fneZsF2LvC/mTc
+         nH0xYjNJayRlDSe64o8iCgPKeLdgpm+RLWfv7szmrTt8ZNYxkPiW3mHGbQus1edxU9WQ
+         Z8O8G8Brt/1bP8br1mOCAAYicfZkkKlH8RE7zMos2T8OLcsmuHl/zMeFuF3ECf8UVnWH
+         ahEfw0CpPi0sWJox8QDVHmvbd/I41MyHENK0x3/3hJOWj8uGHs+gN6QU3nj28Z99B5Un
+         Uhow==
+X-Gm-Message-State: APjAAAWCdCTqPjjJdESF9ykg+i3x0h85XjKvtvqewekJM2HYiRD5sKaq
+        ZfmbJtRrnp/Fvjy7J/0i65cE6RLPVXM=
+X-Google-Smtp-Source: APXvYqz7knAPH/YcnLeF5r5hBN9NhdC3ua2uUlCCJ/XubBMe9FwhaqiZw1YHW/Qo3Wdwd/M0eILyoQ==
+X-Received: by 2002:a7b:cc8c:: with SMTP id p12mr8336719wma.82.1573746459863;
+        Thu, 14 Nov 2019 07:47:39 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id l4sm6428629wml.33.2019.11.14.07.47.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 14 Nov 2019 07:47:38 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v5 0/2] ARM64: dts: allwinner: Add devicetree for pineH64 modelB
+Date:   Thu, 14 Nov 2019 15:47:31 +0000
+Message-Id: <1573746453-5123-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 4:24 PM Luis Henriques <lhenriques@suse.com> wrote:
->
-> On Thu, Nov 14, 2019 at 02:17:44PM +0000, Sage Weil wrote:
-> > On Thu, 14 Nov 2019, Ilya Dryomov wrote:
-> > > > > I'm just getting caught up on the discussion here, but why was it
-> > > > > decided to do it this way instead of just adding a new OSD
-> > > > > "copy-from-no-truncseq" operation? Once you tried it once and an OSD
-> > > > > didn't support it, you could just give up on using it any longer? That
-> > > > > seems a lot simpler than trying to monkey with feature bits.
-> > > >
-> > > > I don't remember the original discussion either, but in retrospect that
-> > > > does seem much simpler--especially since hte client is conditioning
-> > > > sending this based on the the require_osd_release.  It seems like passing
-> > > > a flag to the copy-from op would be more reasonable instead of conditional
-> > > > feature-based behavior.
-> > >
-> > > Yeah, I suggested adding require_osd_release to the client portion just
-> > > because we are running into it more and more: Objecter relies on it for
-> > > RESEND_ON_SPLIT for example.  It needs to be accessible so that patches
-> > > like that can be carried over to the kernel client without workarounds.
-> > >
-> > > copy-from in its existing form is another example.  AFAIU the problem
-> > > is that copy-from op doesn't reject unknown flags.  Luis added a flag
-> > > in https://github.com/ceph/ceph/pull/25374, but it is simply ignored on
-> > > nautilus and older releases, potentially leading to data corruption.
-> > >
-> > > Adding a new op that would be an alias for CEPH_OSD_OP_COPY_FROM with
-> > > CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ like Jeff is suggesting, or a new
-> > > copy-from2 op that would behave just like copy-from, but reject unknown
-> > > flags to avoid similar compatibility issues in the future is probably
-> > > the best thing we can do from the client perspective.
-> >
-> > Yeah, I think copy-from2 is the best path.  I think that means we should
-> > revert what we merged to ceph.git a few weeks back, Luis!  Sorry we didn't
-> > put all the pieces together before...
->
-> Well, that's an unexpected turn.  I'm not disagreeing with that decision
-> but since my initial pull request was done one year ago (almost to the
-> day!), it's a bit disappointing to see that in the end I'm back to
-> square one :-)
+Hello
 
-Well, I think literally every line from that PR will still go in, just
-wrapped in a new OSD op.  Backwards compatibility is hard...
+Pineh64 have two existing model (A and B) with some hardware difference and
+so need two different DT file.
+But the current situation has only one file for both.
+This serie fix this situation by being more clear on which DT file is
+needed for both model.
 
->
-> I guess that the PR I mentioned in the cover letter can also be dropped,
-> as it's not really usable by the kernel client (at least not until it
-> fully supports all the features up to SERVER_OCTOPUS).
+Regards
 
-No, some form of https://github.com/ceph/ceph/pull/31611 should go in.
-I'm pretty certain it will come up at some point in the future, even if
-the new field isn't immediately usable today.  Someone porting a change
-to the kernel client a couple years from now will thank you for it ;)
+Changes since v4:
+- reverted compatible change for model A
+- renamed compatible of model B
 
-Thanks,
+Change since v3:
+- state the current file is model A and add a new modelB file.
 
-                Ilya
+Change since v2:
+- Added the HDMI connector node to model A
+
+Changes since v1:
+- Added the first patch for stating which model support the
+  sun50i-h6-pine-h64.dts
+
+Corentin Labbe (2):
+  ARM64: dts: sun50i-h6-pine-h64: state that the DT supports the modelA
+  ARM64: dts: allwinner: add pineh64 model B
+
+ .../devicetree/bindings/arm/sunxi.yaml        |  7 ++++++-
+ arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+ .../allwinner/sun50i-h6-pine-h64-model-b.dts  | 21 +++++++++++++++++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 17 ++++++++++++---
+ 4 files changed, 42 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-model-b.dts
+
+-- 
+2.23.0
+
