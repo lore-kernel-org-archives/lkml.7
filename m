@@ -2,72 +2,94 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BBAC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241C4C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4075D206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073A8206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfKNLBb (ORCPT
+        id S1726755AbfKNLCF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:01:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:40488 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfKNLBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:01:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 527BC31B;
-        Thu, 14 Nov 2019 03:01:30 -0800 (PST)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CA033F6C4;
-        Thu, 14 Nov 2019 03:01:29 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:01:23 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: linux-next: Fixes tag needs some work in the arm-soc tree
-Message-ID: <20191114110123.GA18036@bogus>
-References: <20191114202122.0f38eab6@canb.auug.org.au>
+        Thu, 14 Nov 2019 06:02:05 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:38931 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725977AbfKNLCF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 06:02:05 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-32-r_KPqAifMlOEtdi9ThEBSQ-1; Thu, 14 Nov 2019 11:02:01 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 14 Nov 2019 11:02:01 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 14 Nov 2019 11:02:01 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "Willy Tarreau" <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: RE: [patch V2 11/16] x86/ioperm: Share I/O bitmap if identical
+Thread-Topic: [patch V2 11/16] x86/ioperm: Share I/O bitmap if identical
+Thread-Index: AQHVmTnGMlCgX/wyC0irSyeDShf4MaeKgnHA
+Date:   Thu, 14 Nov 2019 11:02:01 +0000
+Message-ID: <a0146b86073f4b9bb858d80b4a71683e@AcuMS.aculab.com>
+References: <20191111220314.519933535@linutronix.de>
+ <20191111223052.603030685@linutronix.de>
+ <20191112091521.GX4131@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191112091521.GX4131@hirez.programming.kicks-ass.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114202122.0f38eab6@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MC-Unique: r_KPqAifMlOEtdi9ThEBSQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 08:21:22PM +1100, Stephen Rothwell wrote:
-> Hi all,
->
-> n commit
->
->   9a6edfe32f37 ("firmware: arm_scmi: Fix doorbell ring logic for !CONFIG_64BIT")
->
-> Fixes tag
->
->   Fixes: 823839571d76 ("firmware: arm_scmi: Make use SCMI v2.0 fastchannel
->
-> has these problem(s):
->
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
->
-> Please do not split Fixes tags over more than one line.
->
+From: Peter Zijlstra
+> Sent: 12 November 2019 09:15
+...
+> > +	/*
+> > +	 * If the bitmap is not shared, then nothing can take a refcount as
+> > +	 * current can obviously not fork at the same time. If it's shared
+> > +	 * duplicate it and drop the refcount on the original one.
+> > +	 */
+> > +	if (refcount_read(&iobm->refcnt) > 1) {
+> > +		iobm = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
+> > +		if (!iobm)
+> > +			return -ENOMEM;
+> > +		io_bitmap_exit();
+> 		refcount_set(&iobm->refcnd, 1);
+> >  	}
 
-My bad, and sorry for that, it was too long and hence I split it into 2 lines.
+What happens if two threads of the same process enter the above
+at the same time?
+(I've not looked for a lock, but since kmemdup() can sleep I'd suspect there isn't one.)
 
---
-Regards,
-Sudeep
+Also can another thread call fork() - eg while the kmemdup() is sleeping?
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
