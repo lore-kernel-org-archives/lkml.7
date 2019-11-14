@@ -2,119 +2,134 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C518AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FFDC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAFE206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:55:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="fmnpwAJE"
+	by mail.kernel.org (Postfix) with ESMTP id ABA8C206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfKNIz2 (ORCPT
+        id S1726473AbfKNIzn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:55:28 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34994 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNIz1 (ORCPT
+        Thu, 14 Nov 2019 03:55:43 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:52882 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfKNIzn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:55:27 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r7so5797164ljg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 00:55:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8Yha/Jq+ZFQjtGyiO5rUc6KyiAaRy2IYHugA0slnRKs=;
-        b=fmnpwAJEY8GNrGE9anOHfwVKoipdKrgLR1iOYFzBsD9kaxaEe0UKTTvstTn0CQD5Jv
-         kBlb3kU6U71mmLvUAx8y5bzM1W5GYgs91XI2PEJVPdlaoXjQUYsmi0CUn53ZT04RkXtj
-         OMIsyIx4Q3flxHoYZKaCn7Qh8bHpnYYK1XmLQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8Yha/Jq+ZFQjtGyiO5rUc6KyiAaRy2IYHugA0slnRKs=;
-        b=eU5N3yw3G3hvZjQlH0/X7WFmmGk/FDfeW5T6lHOImpUUycildgvkE92vCfmYCL1+GY
-         1D90m6zEuo04O/gixaEgKNGbeqdJDZx64qJRTOIaNj/RjISNV3EcTLjaEwHdS4WtVzGi
-         FR6nmQZf/OKe9+zC/8ArCzCt5EL1D0Y3OuxrAF4woCrkgELufRN4SzcaYpoREvi1CwIQ
-         MAP/MxUjSNgXSde3xGjrGiGKN7pvlIFqL3FuvuJLkUHChydKqZ54ont2ubqnElPavQB8
-         8z2K/hhhqML+oGDErwvHAum2ZDLCXraHQ0uxoc7xCbUzipR+3HnVYNfTvv4ksWegazWE
-         UBcQ==
-X-Gm-Message-State: APjAAAVU8TQtRhcAFJ2BY/fVtsOn3MR8Jz0QYXV5rVyESfNI5yMJcW6u
-        HujPN9VOn88LSQ1X6PD3YnAHEg==
-X-Google-Smtp-Source: APXvYqzqg3aGYow1vlq3tQPQhPBivdAM8jYV30pHK5iJmyQtydaEA/+ygPKZ92IqgkK8EwdBreBjrQ==
-X-Received: by 2002:a2e:890e:: with SMTP id d14mr5652232lji.6.1573721725489;
-        Thu, 14 Nov 2019 00:55:25 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id e14sm1984603ljb.75.2019.11.14.00.55.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 00:55:24 -0800 (PST)
-Subject: Re: [PATCH v4 04/47] soc: fsl: qe: introduce qe_io{read,write}*
- wrappers
-To:     Timur Tabi <timur@kernel.org>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Scott Wood <oss@buserror.net>, linuxppc-dev@lists.ozlabs.org,
+        Thu, 14 Nov 2019 03:55:43 -0500
+Received: from marcel-macpro.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 42657CED07;
+        Thu, 14 Nov 2019 10:04:47 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable clocks required for BT SOC
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191114081430.25427-1-bgodavar@codeaurora.org>
+Date:   Thu, 14 Nov 2019 09:55:41 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
         lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
- <20191108130123.6839-5-linux@rasmusvillemoes.dk>
- <CAOZdJXU35+G5CMrS3247mgMjQH7__MxP8wpW6yjn1_MLD-sGqw@mail.gmail.com>
- <e37d24c5-6d4f-c8bf-1c38-f3e8b8e85eeb@rasmusvillemoes.dk>
- <38d87cf8-5945-61d7-80a7-c8374cbe729b@kernel.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <4592eea6-1ba6-5c08-0500-6ccf030d7929@rasmusvillemoes.dk>
-Date:   Thu, 14 Nov 2019 09:55:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <38d87cf8-5945-61d7-80a7-c8374cbe729b@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, tientzu@chromium.org,
+        seanpaul@chromium.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <39626995-672E-4D6A-8BD5-9E5D9272553B@holtmann.org>
+References: <20191114081430.25427-1-bgodavar@codeaurora.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/11/2019 06.08, Timur Tabi wrote:
-> On 11/12/19 1:14 AM, Rasmus Villemoes wrote:
->> but that's because readl and writel by definition work on little-endian
->> registers. I.e., on a BE platform, the readl and writel implementation
->> must themselves contain a swab, so the above would end up doing two
->> swabs on a BE platform.
+Hi Balakrishna,
+
+> Instead of relying on other subsytem to turn ON clocks
+> required for BT SoC to operate, voting them from the driver.
 > 
-> Do you know whether the compiler optimizes-out the double swab?
->
-
-Depends. It's almost impossible to figure out how swab32() is defined,
-so how much visibility gcc has into how it works is hard to say. But a
-further complication is that the arch may not have, say (simplifying
-somewhat)
-
-#define readl(x) swab32(*(volatile u32*)x)
-
-but instead have readl implemented as inline asm which includes the
-byteswap. PPC being a case in point, where the readl is in_le32 which is
-done with a lwbrx instruction, and certainly gcc couldn't in any way
-change a swab32(asm("lwbrx")) into asm("lwz"). But ppc defines its own
-mmio_read32be, so that's not an issue.
-
->> (On PPC, there's a separate definition of mmio_read32be, namely
->> writel_be, which in turn does a out_be32, so on PPC that doesn't
->> actually end up doing two swabs).
->>
->> So ioread32be etc. have well-defined semantics: access a big-endian
->> register and return the result in native endianness.
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> ---
+> drivers/bluetooth/hci_qca.c | 31 +++++++++++++++++++++++++++++--
+> 1 file changed, 29 insertions(+), 2 deletions(-)
 > 
-> It seems weird that there aren't any cross-arch lightweight
-> endian-specific I/O accessors.
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index f10bdf8e1fc5..dc95e378574b 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -164,6 +164,7 @@ struct qca_serdev {
+> };
+> 
+> static int qca_regulator_enable(struct qca_serdev *qcadev);
+> +static int qca_power_on(struct qca_serdev *qcadev);
 
-Agreed, but I'm really not prepared for trying to go down that rabbit
-hole again.
+I really dislike forward declaration. Only use them if they are really really needed. That said, this driver might actually need cleanups since I just realized it has tons of forward declarations.
 
-Rasmus
+> static void qca_regulator_disable(struct qca_serdev *qcadev);
+> static void qca_power_shutdown(struct hci_uart *hu);
+> static int qca_power_off(struct hci_dev *hdev);
+> @@ -528,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
+> 		} else {
+> 			hu->init_speed = qcadev->init_speed;
+> 			hu->oper_speed = qcadev->oper_speed;
+> -			ret = qca_regulator_enable(qcadev);
+> +			ret = qca_power_on(qcadev);
+> 			if (ret) {
+> 				destroy_workqueue(qca->workqueue);
+> 				kfree_skb(qca->rx_skb);
+> @@ -1214,7 +1215,7 @@ static int qca_wcn3990_init(struct hci_uart *hu)
+> 	qcadev = serdev_device_get_drvdata(hu->serdev);
+> 	if (!qcadev->bt_power->vregs_on) {
+> 		serdev_device_close(hu->serdev);
+> -		ret = qca_regulator_enable(qcadev);
+> +		ret = qca_power_on(qcadev);
+> 		if (ret)
+> 			return ret;
+> 
+> @@ -1408,6 +1409,9 @@ static void qca_power_shutdown(struct hci_uart *hu)
+> 	host_set_baudrate(hu, 2400);
+> 	qca_send_power_pulse(hu, false);
+> 	qca_regulator_disable(qcadev);
+> +
+> +	if (qcadev->susclk)
+> +		clk_disable_unprepare(qcadev->susclk);
+> }
+> 
+> static int qca_power_off(struct hci_dev *hdev)
+> @@ -1423,6 +1427,20 @@ static int qca_power_off(struct hci_dev *hdev)
+> 	return 0;
+> }
+> 
+> +static int qca_power_on(struct qca_serdev *qcadev)
+> +{
+> +	int err;
+> +
+> +	if (qcadev->susclk) {
+> +		err = clk_prepare_enable(qcadev->susclk);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	qca_regulator_enable(qcadev);
+> +	return 0;
+> +}
+> +
+> static int qca_regulator_enable(struct qca_serdev *qcadev)
+> {
+> 	struct qca_power *power = qcadev->bt_power;
+> @@ -1523,6 +1541,15 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+> 
+> 		qcadev->bt_power->vregs_on = false;
+> 
+> +		if (qcadev->btsoc_type == QCA_WCN3990 ||
+> +		    qcadev->btsoc_type == QCA_WCN3991) {
+
+There comes a point when using a switch statement is a lot easier to read. See if that has been reached and if there are other places that would benefit from a cleanup patch.
+
+Regards
+
+Marcel
+
