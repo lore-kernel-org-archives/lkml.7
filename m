@@ -2,156 +2,112 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C2AC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DCDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9266E206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57F4206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HKz/vjir";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LB5755oW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGVxUlgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfKNIOn (ORCPT
+        id S1726534AbfKNIQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:14:43 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:34050 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfKNIOn (ORCPT
+        Thu, 14 Nov 2019 03:16:48 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57068 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726024AbfKNIQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:14:43 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 30AC0601E7; Thu, 14 Nov 2019 08:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573719282;
-        bh=UiF0+gnF4eB8dUSiLw/KMBeKnt4Fl+raj9NHWbCWzVA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HKz/vjirNKzLTHWNR7D4+jmm+6Tsmd65akG1UHLPGyfFnnM+QFufcFJHKolaOyjT1
-         eQ0rz/Gg7nT9D7o+0VdaQlaKSt/OjBY8XgxCmLGOLpTcnpl7XBuymr/WGmpIPktoRc
-         LliRLAfoQYF/+6Z5L9ofplQlzb+YmpapRfr8Hxgo=
-Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 14 Nov 2019 03:16:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573719407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7pz4h7KTvi15etsg91JTbTPY+IW6HvuoxNFsGvR7DmQ=;
+        b=dGVxUlgPyWJPXjJdKwYvVxg9Os8fsbMp3lDUGsPDnDiHTchJsQ5UocAMtdlhQ9ngl0tOWK
+        VK1ixqxQODVYc999NSSUYr+65vdBF8W416H54A0ViTYerJvB0G8OzIDwzwoe/9xUW2cgps
+        bOTiB9PUBU+x1TCWfEQ9QhbTu+vX2gY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-DvE3QywuOrGiB5fflIsqgg-1; Thu, 14 Nov 2019 03:16:43 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bgodavar@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 23A9F601E7;
-        Thu, 14 Nov 2019 08:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573719281;
-        bh=UiF0+gnF4eB8dUSiLw/KMBeKnt4Fl+raj9NHWbCWzVA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LB5755oWBSZO8HhBv1jljCwyGot9VJU6ECZXAnAGlcE5g+6Y9IlwOzsovwzvWwfoa
-         Yk09SpAd8VXUmZ+7AJeTvMJwSKh7Ga3s4k4bQS4Jv538eoLJEkjdtV33hXJHYI6i6X
-         z9Lwoatdix16BKPFInLR1F8pICL90AywX6SXjsPw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 23A9F601E7
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        tientzu@chromium.org, seanpaul@chromium.org
-Subject: [PATCH v1] Bluetooth: hci_qca: Enable clocks required for BT SOC
-Date:   Thu, 14 Nov 2019 13:44:30 +0530
-Message-Id: <20191114081430.25427-1-bgodavar@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A76D1DB20;
+        Thu, 14 Nov 2019 08:16:41 +0000 (UTC)
+Received: from localhost (ovpn-12-24.pek2.redhat.com [10.72.12.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD4595E258;
+        Thu, 14 Nov 2019 08:16:40 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 16:16:38 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] x86/mm/KASLR: Adjust the padding size for the
+ direct  mapping.
+Message-ID: <20191114081638.GH30906@MiWiFi-R3L-srv>
+References: <20191102010911.21460-1-msys.mizuma@gmail.com>
+ <20191102010911.21460-5-msys.mizuma@gmail.com>
+ <20191104004825.GK7616@MiWiFi-R3L-srv>
+ <20191112204707.jyruwkb4pbdj3jvv@gabell>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191112204707.jyruwkb4pbdj3jvv@gabell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: DvE3QywuOrGiB5fflIsqgg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of relying on other subsytem to turn ON clocks
-required for BT SoC to operate, voting them from the driver.
+On 11/12/19 at 03:47pm, Masayoshi Mizuma wrote:
+> Your suggesion makes it simpler, thanks!
+> So I'll modify calc_direct_mapping_size() as following.
+> Does it make sense?
 
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 31 +++++++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
+Yeah, it looks good to me. Thanks.
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index f10bdf8e1fc5..dc95e378574b 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -164,6 +164,7 @@ struct qca_serdev {
- };
- 
- static int qca_regulator_enable(struct qca_serdev *qcadev);
-+static int qca_power_on(struct qca_serdev *qcadev);
- static void qca_regulator_disable(struct qca_serdev *qcadev);
- static void qca_power_shutdown(struct hci_uart *hu);
- static int qca_power_off(struct hci_dev *hdev);
-@@ -528,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
- 		} else {
- 			hu->init_speed = qcadev->init_speed;
- 			hu->oper_speed = qcadev->oper_speed;
--			ret = qca_regulator_enable(qcadev);
-+			ret = qca_power_on(qcadev);
- 			if (ret) {
- 				destroy_workqueue(qca->workqueue);
- 				kfree_skb(qca->rx_skb);
-@@ -1214,7 +1215,7 @@ static int qca_wcn3990_init(struct hci_uart *hu)
- 	qcadev = serdev_device_get_drvdata(hu->serdev);
- 	if (!qcadev->bt_power->vregs_on) {
- 		serdev_device_close(hu->serdev);
--		ret = qca_regulator_enable(qcadev);
-+		ret = qca_power_on(qcadev);
- 		if (ret)
- 			return ret;
- 
-@@ -1408,6 +1409,9 @@ static void qca_power_shutdown(struct hci_uart *hu)
- 	host_set_baudrate(hu, 2400);
- 	qca_send_power_pulse(hu, false);
- 	qca_regulator_disable(qcadev);
-+
-+	if (qcadev->susclk)
-+		clk_disable_unprepare(qcadev->susclk);
- }
- 
- static int qca_power_off(struct hci_dev *hdev)
-@@ -1423,6 +1427,20 @@ static int qca_power_off(struct hci_dev *hdev)
- 	return 0;
- }
- 
-+static int qca_power_on(struct qca_serdev *qcadev)
-+{
-+	int err;
-+
-+	if (qcadev->susclk) {
-+		err = clk_prepare_enable(qcadev->susclk);
-+		if (err)
-+			return err;
-+	}
-+
-+	qca_regulator_enable(qcadev);
-+	return 0;
-+}
-+
- static int qca_regulator_enable(struct qca_serdev *qcadev)
- {
- 	struct qca_power *power = qcadev->bt_power;
-@@ -1523,6 +1541,15 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 
- 		qcadev->bt_power->vregs_on = false;
- 
-+		if (qcadev->btsoc_type == QCA_WCN3990 ||
-+		    qcadev->btsoc_type == QCA_WCN3991) {
-+			qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
-+			if (IS_ERR(qcadev->susclk)) {
-+				dev_err(&serdev->dev, "failed to acquire clk\n");
-+				return PTR_ERR(qcadev->susclk);
-+			}
-+		}
-+
- 		device_property_read_u32(&serdev->dev, "max-speed",
- 					 &qcadev->oper_speed);
- 		if (!qcadev->oper_speed)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>=20
+> static inline unsigned long calc_direct_mapping_size(void)
+> {
+>        unsigned long size_tb, memory_tb;
+>=20
+>        memory_tb =3D DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT)=
+ +
+>                CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
+>=20
+> #ifdef CONFIG_MEMORY_HOTPLUG
+>        if (boot_params.max_addr) {
+>                unsigned long maximum_tb;
+>=20
+>                maximum_tb =3D DIV_ROUND_UP(boot_params.max_addr,
+>                                1UL << TB_SHIFT);
+>=20
+>                if (maximum_tb > memory_tb)
+>                        memory_tb =3D maximum_tb;
+>        }
+> #endif
+>        size_tb =3D 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
+>=20
+>        /*
+>         * Adapt physical memory region size based on available memory
+>         */
+>        if (memory_tb < size_tb)
+>                size_tb =3D memory_tb;
+>=20
+>        return size_tb;
+> }
 
