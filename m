@@ -2,112 +2,81 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C80EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0181C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C5220727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73FAB20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfKNSUq (ORCPT
+        id S1727893AbfKNSUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:20:46 -0500
-Received: from mga04.intel.com ([192.55.52.120]:57201 "EHLO mga04.intel.com"
+        Thu, 14 Nov 2019 13:20:55 -0500
+Received: from mga03.intel.com ([134.134.136.65]:36355 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726505AbfKNSUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:20:44 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727405AbfKNSR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:17:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:20:43 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:17:57 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="208198401"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 14 Nov 2019 10:20:43 -0800
-Date:   Thu, 14 Nov 2019 10:20:43 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] x86/traps: Print non-canonical address on #GP
-Message-ID: <20191114182043.GG24045@linux.intel.com>
-References: <20191112211002.128278-1-jannh@google.com>
- <20191112211002.128278-2-jannh@google.com>
- <20191114174630.GF24045@linux.intel.com>
- <CALCETrVmaN4BgvUdsuTJ8vdkaN1JrAfBzs+W7aS2cxxDYkqn_Q@mail.gmail.com>
+   d="scan'208";a="195123544"
+Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
+  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 10:17:56 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH v3 16/22] soundwire: bus: disable pm_runtime in sdw_slave_delete
+Date:   Thu, 14 Nov 2019 12:16:56 -0600
+Message-Id: <20191114181702.22254-17-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191114181702.22254-1-pierre-louis.bossart@linux.intel.com>
+References: <20191114181702.22254-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVmaN4BgvUdsuTJ8vdkaN1JrAfBzs+W7aS2cxxDYkqn_Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 10:00:35AM -0800, Andy Lutomirski wrote:
-> On Thu, Nov 14, 2019 at 9:46 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> > > +     /*
-> > > +      * For the user half, check against TASK_SIZE_MAX; this way, if the
-> > > +      * access crosses the canonical address boundary, we don't miss it.
-> > > +      */
-> > > +     if (addr_ref <= TASK_SIZE_MAX)
-> >
-> > Any objection to open coding the upper bound instead of using
-> > TASK_SIZE_MASK to make the threshold more obvious?
-> >
-> > > +             return;
-> > > +
-> > > +     pr_alert("dereferencing non-canonical address 0x%016lx\n", addr_ref);
-> >
-> > Printing the raw address will confuse users in the case where the access
-> > straddles the lower canonical boundary.  Maybe combine this with open
-> > coding the straddle case?  With a rough heuristic to hedge a bit for
-> > instructions whose operand size isn't accurately reflected in opnd_bytes.
-> >
-> >         if (addr_ref > __VIRTUAL_MASK)
-> >                 pr_alert("dereferencing non-canonical address 0x%016lx\n", addr_ref);
-> >         else if ((addr_ref + insn->opnd_bytes - 1) > __VIRTUAL_MASK)
-> >                 pr_alert("straddling non-canonical boundary 0x%016lx - 0x%016lx\n",
-> >                          addr_ref, addr_ref + insn->opnd_bytes - 1);
-> >         else if ((addr_ref + PAGE_SIZE - 1) > __VIRTUAL_MASK)
-> >                 pr_alert("potentially straddling non-canonical boundary 0x%016lx - 0x%016lx\n",
-> >                          addr_ref, addr_ref + PAGE_SIZE - 1);
-> 
-> This is unnecessarily complicated, and I suspect that Jann had the
-> right idea but just didn't quite explain it enough.  The secret here
-> is that TASK_SIZE_MAX is a full page below the canonical boundary
-> (thanks, Intel, for screwing up SYSRET), so, if we get #GP for an
-> address above TASK_SIZE_MAX,
+Before removing the slave device, disable pm_runtime to prevent any
+race condition with the resume being executed after the bus and slave
+devices are removed.
 
-Ya, I followed all that.  My point is that if "addr_ref + insn->opnd_bytes"
-straddles the boundary then it's extremely likely the #GP is due to a
-non-canonical access, i.e. the pr_alert() doesn't have to hedge (as much).
+Since this pm_runtime_disable() is handled in common routines,
+implementations of Slave drivers do not need to call it in their
+.remove() routine.
 
-> then it's either a #GP for a different
-> reason or it's a genuine non-canonical access.
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ drivers/soundwire/bus.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Heh, "canonical || !canonical" would be the options :-D
+diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+index ddc3042e15e0..23bdcb9a468c 100644
+--- a/drivers/soundwire/bus.c
++++ b/drivers/soundwire/bus.c
+@@ -113,6 +113,8 @@ static int sdw_delete_slave(struct device *dev, void *data)
+ 	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_bus *bus = slave->bus;
+ 
++	pm_runtime_disable(dev);
++
+ 	sdw_slave_debugfs_exit(slave);
+ 
+ 	mutex_lock(&bus->bus_lock);
+-- 
+2.20.1
 
-> 
-> So I think that just a comment about this would be enough.
-> 
-> *However*, the printout should at least hedge a bit and say something
-> like "probably dereferencing non-canonical address", since there are
-> plenty of ways to get #GP with an operand that is nominally
-> non-canonical but where the actual cause of #GP is different.  And I
-> think this code should be skipped entirely if error_code != 0.
-> 
-> --Andy
