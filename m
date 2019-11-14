@@ -2,86 +2,122 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3448C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262B9C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C1720715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573712851;
-	bh=8hzwCt1v1NdUbhpvZ5TqJJzC/rhyT2NofD4G90JdjLM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xF9UY71lV3h9ctReMXDzXPixEJ2X6wDIkvlarHGSS6p8EI08rbAaEaKr+6iWaSc5d
-	 0PLw+2GCvVm2LORu2wctRawANaZ2qlTk//SlbvnHdIilFqJzQmD80uuk03uxHW14J+
-	 m2tGFyqpPW5hBpm6uY4l5kNaXIAM5aACmaFQ9sdA=
+	by mail.kernel.org (Postfix) with ESMTP id 1C8BB20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfKNG1a (ORCPT
+        id S1726428AbfKNG3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:27:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60444 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 01:29:12 -0500
+Received: from mga14.intel.com ([192.55.52.115]:33873 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfKNG13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:27:29 -0500
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58FEB20709;
-        Thu, 14 Nov 2019 06:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573712848;
-        bh=8hzwCt1v1NdUbhpvZ5TqJJzC/rhyT2NofD4G90JdjLM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cYO1tXkg7eFtMudQwH2gz+1sxd41wi5O+dYXb27KzReNitNkK2hGYvpBKBbfIlfka
-         W5oCDUvwBSb71gGh8s4FySNrNUuXK0JtfMmwt5TdA05AYDuOrMnPs8h6Y881txMUW3
-         pqU0OaVbwouBVxzBLz6eyCpHuwp1lS7W5xOsENkw=
-Received: by mail-lj1-f180.google.com with SMTP id y23so5312506ljh.10;
-        Wed, 13 Nov 2019 22:27:28 -0800 (PST)
-X-Gm-Message-State: APjAAAXYPZk2D70tYJGa/v1G0ei0n133LQFEu9BXwkTbuayK6yBnJ7Vg
-        X/JqafHeThhjfGbFf4aDwoca0VJc6V3kj3OWeEQ=
-X-Google-Smtp-Source: APXvYqxLS447eYAoTkwwrZ8NQanUwXVmQzqjcphyQAiiCVNGGA//5Ap3b/PqZTjA8RvqQCvN6M1AOyz+5i1QDL1Kr1E=
-X-Received: by 2002:a2e:9842:: with SMTP id e2mr5294560ljj.93.1573712846541;
- Wed, 13 Nov 2019 22:27:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20191113094256.1108-1-peter.ujfalusi@ti.com> <20191113094256.1108-8-peter.ujfalusi@ti.com>
-In-Reply-To: <20191113094256.1108-8-peter.ujfalusi@ti.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 14 Nov 2019 14:27:15 +0800
-X-Gmail-Original-Message-ID: <CAJKOXPe_vfDjJSbVOxFFDFO3OWPLFr_UffCqVZb4ahGF57aVYA@mail.gmail.com>
-Message-ID: <CAJKOXPe_vfDjJSbVOxFFDFO3OWPLFr_UffCqVZb4ahGF57aVYA@mail.gmail.com>
-Subject: Re: [PATCH 7/9] spi: s3c64xx: Use dma_request_chan() directly for
- channel request
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     broonie@kernel.org, radu_nicolae.pirea@upb.ro, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, linus.walleij@linaro.org,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        Andi Shyti <andi@etezian.org>, ldewangan@nvidia.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, vkoul@kernel.org,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        alexandre.belloni@bootlin.com, linux-arm-msm@vger.kernel.org,
-        kgene@kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        id S1726190AbfKNG3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:29:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 22:29:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
+   d="scan'208";a="214475381"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Nov 2019 22:29:08 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v7 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Thu, 14 Nov 2019 14:29:05 +0800
+Message-Id: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 at 17:42, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->
-> dma_request_slave_channel_reason() is:
-> #define dma_request_slave_channel_reason(dev, name) \
->         dma_request_chan(dev, name)
->
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/spi/spi-s3c64xx.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+Hi,
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-Best regards,
-Krzysztof
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+
+v7:
+- Fix code quality/style related review concerns.
+- Correct license id & data types used for some properties in dt bindings.
+- Add possible values for drive-strength & slew rate in dt bindings.
+- Rename compatible name to more self explanatory name in dt bindings.
+- Fix make dt_binding_check reported errors. Ensure make dt_binding_check
+  passes.
+
+v6:
+- Fix code quality/style/readability related review concerns.
+- Remove enum usage from pinmux property in dt bindings.
+
+v5:
+- Fix code style/readability related review concerns.
+- Change data type of groups property to uint32-array in dt bindings.
+
+v4:
+- Correct data types for some pin config properties in dt bindings.
+- Improve pattern regex as per review feedback in dt bindings.
+- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
+  do reg updates in eqbr_pinconf_set() routine itself.
+- Add locking in few ops where it was missing.
+- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
+  in variable namings so as not to confuse with GPIO descriptors.
+- Address code quality/convention/style related review concerns.
+
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 944 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 144 ++++
+ 5 files changed, 1223 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
+-- 
+2.11.0
+
