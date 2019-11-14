@@ -2,455 +2,273 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B1BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64D9C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28F8206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7306D206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcrvANUW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mGDPqCem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfKNNcZ (ORCPT
+        id S1727380AbfKNNc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:32:25 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44809 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfKNNcY (ORCPT
+        Thu, 14 Nov 2019 08:32:29 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48994 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfKNNc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:32:24 -0500
-Received: by mail-pl1-f193.google.com with SMTP id az9so2637559plb.11;
-        Thu, 14 Nov 2019 05:32:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m897Sc/TCpNfpCZcjpt3zqQuCiizN0RjeXnE+VTOhXg=;
-        b=vcrvANUW6Bth2Stll4poF0aBRK11/VFy2+WgiUtYhkecW7uril+FSHmbJv14CSMrjR
-         YZcOq4sRbPQ8PyJgvfnIBn9+6VVLvkKItfRHe5BhaPM5KY3RkJyPHtEYsysfiAB4mIPw
-         US+3NRjelv5WMjFzMCxTiNDtwxJFoepa75a9RoDulbQyrrtSZnoOmo1jgSV/jVMs3cRp
-         ffhIZ8bbUbygc5DKMdX78e7qpzxm0nxMrkXYamzHdICtEl+OdTNyOI1roOTMSOKLmoPT
-         9bV2fmbc1nthO/S8D1xvBlrdH7lVMdcJ+Ew6K5ncqyPYEwFD90m1sAADisOWULmp4mOi
-         btbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m897Sc/TCpNfpCZcjpt3zqQuCiizN0RjeXnE+VTOhXg=;
-        b=PZ8KBYIUcVo81M4q/zirlNLWvUsAFh3y2Wj7DUJgSIFtiFol6WgHHaFUiC/dip7e0o
-         LGCDYCdsP5T1gtHqb4yqSjN3U5RnXMcSLzO9HtjEj0zQet4EnjW50qU+PoKOgkGA8HvR
-         Md5WYHmedjelfoY0q2HbTtULF1Nb6/zl6NrOMFMa680Va/2mAoGSpb2piLdOYzFfo+vW
-         dZ1tldQVaYwB5Pc6FUE+oh3l97y+Sa/i1uA7avN+pLo7QTX1mMts9NSHTJwO9YhEFelJ
-         QVLhwLhIxg8zYTgarF4TQJp0q+xgL9TJle+voIWa2wSVvAPtHAZrYE0uBMTSpslDmN5n
-         BxZw==
-X-Gm-Message-State: APjAAAU0uWGC70CvdSJuWuVttgCr2UtGba52vAK5dBauCxbCWRkAvA+e
-        IFJf2pMqcyQi9b5lmqc3vkv2MyIdEpQ=
-X-Google-Smtp-Source: APXvYqwCzn1udvbXzA1aHaNnhd6owTDrqDlBljVWluXUA67p6km2KTkEu3DGvmhPoZbOLNYPo4ObNw==
-X-Received: by 2002:a17:902:9f83:: with SMTP id g3mr9340410plq.161.1573738342560;
-        Thu, 14 Nov 2019 05:32:22 -0800 (PST)
-Received: from [0.0.0.0] ([97.64.17.87])
-        by smtp.gmail.com with ESMTPSA id j5sm7316528pfe.100.2019.11.14.05.32.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 05:32:21 -0800 (PST)
-Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: add support for AD5940
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191108130946.14740-1-songqiang1304521@gmail.com>
- <20191110162608.21b40714@archlinux>
-From:   Song Qiang <songqiang1304521@gmail.com>
-Message-ID: <7ac0ec98-b405-6450-fc38-ac6a47fd6d3e@gmail.com>
-Date:   Thu, 14 Nov 2019 21:32:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 08:32:27 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAEDWOwV067474;
+        Thu, 14 Nov 2019 07:32:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573738344;
+        bh=ux3NdveofEotm2m8GimOFkGu48EX+3UN3KXdUkP71GQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=mGDPqCemInWxsrgzEtrP7f9qfEa44bS6p+EkYSFVPPaQoWrjXumxW5JZ+jPXVgh6Y
+         tZc/zmnUS+3JrnBXwRPZhQt6kkawJ04z+jD+GwuudvbVi4+ntvE+eHxbqoB+w/xFgY
+         ICCHaebUG8TFWYjgY+usWXnDn40JwbtfKTk/7/UA=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEDWOP0069400;
+        Thu, 14 Nov 2019 07:32:24 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 14
+ Nov 2019 07:32:24 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 14 Nov 2019 07:32:24 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEDWO6f080880;
+        Thu, 14 Nov 2019 07:32:24 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v17 12/19] leds: lp55xx: Convert LED class registration to devm_*
+Date:   Thu, 14 Nov 2019 07:30:16 -0600
+Message-ID: <20191114133023.32185-13-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20191114133023.32185-1-dmurphy@ti.com>
+References: <20191114133023.32185-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191110162608.21b40714@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert the LED class registration calls to the LED devm_*
+registration calls.
 
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/leds-lp5521.c        |  9 +++------
+ drivers/leds/leds-lp5523.c        |  9 +++------
+ drivers/leds/leds-lp5562.c        |  9 +++------
+ drivers/leds/leds-lp55xx-common.c | 15 +--------------
+ drivers/leds/leds-lp55xx-common.h |  2 --
+ drivers/leds/leds-lp8501.c        |  9 +++------
+ 6 files changed, 13 insertions(+), 40 deletions(-)
 
-On 11/11/19 12:26 AM, Jonathan Cameron wrote:
-> On Fri,  8 Nov 2019 21:09:44 +0800
-> Song Qiang <songqiang1304521@gmail.com> wrote:
-> 
->> Add yaml devicetree description file and a header file for
->> helping configure positive and negtive input of AD5940.
->>
->> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
-> Ouch. This is a very complex device, so I'm guessing this is the tip
-> of the iceberg when it comes to the eventual binding.
-> For reference of others this has a similarly complex DAC and
-> TIA + some excitation voltage generators (DDS).
-> 
-> Anyhow, a few comments inline but I'll definitely be looking for
-> a dt maintainer input on this one.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
+index 6f0272249dc8..6d2163c0f625 100644
+--- a/drivers/leds/leds-lp5521.c
++++ b/drivers/leds/leds-lp5521.c
+@@ -541,19 +541,17 @@ static int lp5521_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -566,7 +564,6 @@ static int lp5521_remove(struct i2c_client *client)
+ 
+ 	lp5521_stop_all_engines(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index d0b931a136b9..15e7051392f5 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -908,19 +908,17 @@ static int lp5523_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -933,7 +931,6 @@ static int lp5523_remove(struct i2c_client *client)
+ 
+ 	lp5523_stop_all_engines(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index edb57c42e8b1..1c94422408b0 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -554,19 +554,17 @@ static int lp5562_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -580,7 +578,6 @@ static int lp5562_remove(struct i2c_client *client)
+ 	lp5562_stop_engine(chip);
+ 
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 44ced02b49f9..882ef39e4965 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -181,7 +181,7 @@ static int lp55xx_init_led(struct lp55xx_led *led,
+ 		led->cdev.name = name;
+ 	}
+ 
+-	ret = led_classdev_register(dev, &led->cdev);
++	ret = devm_led_classdev_register(dev, &led->cdev);
+ 	if (ret) {
+ 		dev_err(dev, "led register err: %d\n", ret);
+ 		return ret;
+@@ -490,23 +490,10 @@ int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
+ 	return 0;
+ 
+ err_init_led:
+-	lp55xx_unregister_leds(led, chip);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(lp55xx_register_leds);
+ 
+-void lp55xx_unregister_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
+-{
+-	int i;
+-	struct lp55xx_led *each;
+-
+-	for (i = 0; i < chip->num_leds; i++) {
+-		each = led + i;
+-		led_classdev_unregister(&each->cdev);
+-	}
+-}
+-EXPORT_SYMBOL_GPL(lp55xx_unregister_leds);
+-
+ int lp55xx_register_sysfs(struct lp55xx_chip *chip)
+ {
+ 	struct device *dev = &chip->cl->dev;
+diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
+index 783ed5103ce5..b9b1041e8143 100644
+--- a/drivers/leds/leds-lp55xx-common.h
++++ b/drivers/leds/leds-lp55xx-common.h
+@@ -189,8 +189,6 @@ extern void lp55xx_deinit_device(struct lp55xx_chip *chip);
+ /* common LED class device functions */
+ extern int lp55xx_register_leds(struct lp55xx_led *led,
+ 				struct lp55xx_chip *chip);
+-extern void lp55xx_unregister_leds(struct lp55xx_led *led,
+-				struct lp55xx_chip *chip);
+ 
+ /* common device attributes functions */
+ extern int lp55xx_register_sysfs(struct lp55xx_chip *chip);
+diff --git a/drivers/leds/leds-lp8501.c b/drivers/leds/leds-lp8501.c
+index 2638dbf0e8ac..a58019cdb8c3 100644
+--- a/drivers/leds/leds-lp8501.c
++++ b/drivers/leds/leds-lp8501.c
+@@ -344,19 +344,17 @@ static int lp8501_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -369,7 +367,6 @@ static int lp8501_remove(struct i2c_client *client)
+ 
+ 	lp8501_stop_engine(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+-- 
+2.22.0.214.g8dca754b1e
 
-Thanks, this is the first part support of the driver.
-
->> ---
->>  .../bindings/iio/adc/adi,ad5940.yaml          | 240 ++++++++++++++++++
->>  include/dt-bindings/iio/adc/adi,ad5940.h      |  52 ++++
->>  2 files changed, 292 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
->>  create mode 100644 include/dt-bindings/iio/adc/adi,ad5940.h
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
->> new file mode 100644
->> index 000000000000..f7f034fdd8ec
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
->> @@ -0,0 +1,240 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> For new bindings, preference is to include a dual license
-> (GPL-2.0-only OR BSD-2-Clause)
-> 
-> If Analog is fine doing this that would be great.
-> 
-
-I'll consult my mentor about this.
-
->> +# Copyright 2019 Analog Devices Inc.
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5940.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Analog Devices AD5940 Device Tree Bindings
->> +
->> +maintainers:
->> +  - Song Qiang <songqiang1304521@gmail.com>
->> +
->> +description: |
->> +  Analog Devices AD5940 High Precision, Impedance, and Electrochemical Front End.
->> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5940.pdf
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - adi,ad5940
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  vref-supply:
->> +    description:
->> +      The regulator to be used to supply the reference voltage.
->> +    maxItems: 1
-> 
-> It's worth taking a look at similar patch reviews to pick up on things
-> that are common issues.  Rob has pointed out a few times recently that
-> vref-supply can only ever have one item, so no need for maxItems.
-> 
-
-That's right, thanks.
-
->> +
->> +  adi,interrupt-io:
->> +    description:
->> +      Output GPIO index of interrupt controller of AD5940.
->> +    maxItems: 1
-> 
-> I'm fairly sure an enum can only have one entry so don't think this is
-> needed.
-> 
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +      - enum: [0, 3, 6, 7]
->> +
->> +  '#address-cells':
->> +    const: 1
->> +
->> +  '#size-cells':
->> +    const: 0
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - adi,interrupt-io
->> +
->> +patternProperties:
->> +  # 'channel@0-255'
-> 
-> Really?  That is a lot of channels.  Superficially it looks like a much
-> smaller number of possibilities from the datasheet.
-> 
-
-This device has some positive inputs and some negative inputs. A channel
-here is a combination of one positive input and one negative input.
-These channels I listed in examples are only suggested combinations in
-the datasheet, while other combinations are all possible. So I was
-thinking to not limit the total count of channels here. I failed to find
-examples of doing this kind of stuff in the tree.
-
-yours,
-Song Qiang
-
->> +  "^channel@([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$":
->> +    type: object
->> +    description: |
->> +      Represents the external channels which are connected to the ADC.
->> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
->> +    properties:
->> +      reg:
->> +        description:
->> +          Index of this channel, must be starting from 0.
->> +        maxItems: 1
->> +
->> +      diff-channels:
->> +        description:
->> +          Positive input and negtive input of the ADC buffer of this channel.
->> +          Input candidates are defined in include/dt-bindings/iio/adc/adi,ad5940.h.
->> +        minItems: 2
->> +        maxItems: 2
->> +        items:
->> +          - description: Positive input channel
->> +          - enum:
->> +            - AD5940_ADC_INPUTP_EXCITATION
->> +            - AD5940_ADC_INPUTP_FLOATING
->> +            - AD5940_ADC_INPUTP_HSTIA
->> +            - AD5940_ADC_INPUTP_LPTIA_LP
->> +            - AD5940_ADC_INPUTP_AIN0
->> +            - AD5940_ADC_INPUTP_AIN1
->> +            - AD5940_ADC_INPUTP_AIN2
->> +            - AD5940_ADC_INPUTP_AIN3
->> +            - AD5940_ADC_INPUTP_AVDD_2
->> +            - AD5940_ADC_INPUTP_DVDD_2
->> +            - AD5940_ADC_INPUTP_AVDD_REG_2
->> +            - AD5940_ADC_INPUTP_TEMP
->> +            - AD5940_ADC_INPUTP_VBIAS_CAP
->> +            - AD5940_ADC_INPUTP_DE0
->> +            - AD5940_ADC_INPUTP_SE0
->> +            - AD5940_ADC_INPUTP_VREF_2V5_2
->> +            - AD5940_ADC_INPUTP_VREF_1V82
->> +            - AD5940_ADC_INPUTP_P_TEMP_N
->> +            - AD5940_ADC_INPUTP_AIN4
->> +            - AD5940_ADC_INPUTP_AIN6
->> +            - AD5940_ADC_INPUTP_VZERO
->> +            - AD5940_ADC_INPUTP_VBIAS0
->> +            - AD5940_ADC_INPUTP_VCE0
->> +            - AD5940_ADC_INPUTP_VRE0
->> +            - AD5940_ADC_INPUTP_VCE0_2
->> +            - AD5940_ADC_INPUTP_LPTIA
->> +            - AD5940_ADC_INPUTP_AGND_REF
->> +
->> +          - description: Negtive input channel
->> +          - enum:
->> +              # Negtive input candidates
->> +              - AD5940_ADC_INPUTN_FLOATING
->> +              - AD5940_ADC_INPUTN_HSTIA
->> +              - AD5940_ADC_INPUTN_LPTIA
->> +              - AD5940_ADC_INPUTN_AIN0
->> +              - AD5940_ADC_INPUTN_AIN1
->> +              - AD5940_ADC_INPUTN_AIN2
->> +              - AD5940_ADC_INPUTN_AIN3
->> +              - AD5940_ADC_INPUTN_VBIAS_CA8
->> +              - AD5940_ADC_INPUTN_TEMP_N
->> +              - AD5940_ADC_INPUTN_AIN4
->> +              - AD5940_ADC_INPUTN_AIN6
->> +              - AD5940_ADC_INPUTN_VZERO
->> +              - AD5940_ADC_INPUTN_VBIAS0
->> +              - AD5940_ADC_INPUTN_EXCITATION
->> +
->> +      channel-name:
->> +        description:
->> +          Any string format name you would like to assign to this channel.
->> +        maxItems: 1
->> +
->> +    required:
->> +      - reg
->> +      - diff-channels
->> +      - channel-name
->> +
->> +examples:
->> +  - |
->> +    ad5940: ad5940@0 {
->> +      compatible = "adi,ad5940";
->> +      reg = <0>;
->> +      spi-max-frequency = <16000000>;
->> +      vref-supply = <&adc_vref>;
->> +      interrupt-parent = <&gpio>;
->> +      interrupts = <24 2>;
->> +
->> +      adi,interrupt-io = <0>;
->> +
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      channel@0 {
->> +        reg = <0>;
->> +        diff-channels = <AD5940_ADC_INPUTP_VCE0
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "Vce-Vbias";
->> +      };
->> +
->> +      channel@1 {
->> +        reg = <1>;
->> +        diff-channels = <AD5940_ADC_INPUTP_VRE0
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "Vre-Vbias";
->> +      };
->> +
->> +      channel@2 {
->> +        reg = <2>;
->> +        diff-channels = <AD5940_ADC_INPUTP_SE0
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "Vse-Vbias";
->> +      };
->> +
->> +      channel@3 {
->> +        reg = <3>;
->> +        diff-channels = <AD5940_ADC_INPUTP_DE0
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "Vde-Vbias";
->> +      };
->> +
->> +      channel@4 {
->> +        reg = <4>;
->> +        diff-channels = <AD5940_ADC_INPUTP_AIN0
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "ain0-Vbias";
->> +      };
->> +
->> +      channel@5 {
->> +        reg = <5>;
->> +        diff-channels = <AD5940_ADC_INPUTP_AIN1
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "ain1-Vbias";
->> +      };
->> +
->> +      channel@6 {
->> +        reg = <6>;
->> +        diff-channels = <AD5940_ADC_INPUTP_AIN2
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "ain2-Vbias";
->> +      };
->> +
->> +      channel@7 {
->> +        reg = <7>;
->> +        diff-channels = <AD5940_ADC_INPUTP_AIN3
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "ain3-Vbias";
->> +      };
->> +
->> +      channel@8 {
->> +        reg = <8>;
->> +        diff-channels = <AD5940_ADC_INPUTP_AIN4
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "ain4-Vbias";
->> +      };
->> +
->> +      channel@9 {
->> +        reg = <9>;
->> +        diff-channels = <AD5940_ADC_INPUTP_AIN6
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "ain6-Vbias";
->> +      };
->> +
->> +      channel@10 {
->> +        reg = <10>;
->> +        diff-channels = <AD5940_ADC_INPUTP_LPTIA_LP
->> +                         AD5940_ADC_INPUTN_LPTIA>;
->> +        channel-name = "Low power TIA DC";
->> +      };
->> +
->> +      channel@11 {
->> +        reg = <11>;
->> +        diff-channels = <AD5940_ADC_INPUTP_LPTIA
->> +                         AD5940_ADC_INPUTN_LPTIA>;
->> +        channel-name = "Low power TIA AC";
->> +      };
->> +
->> +      channel@12 {
->> +        reg = <12>;
->> +        diff-channels = <AD5940_ADC_INPUTP_HSTIA
->> +                         AD5940_ADC_INPUTN_HSTIA>;
->> +        channel-name = "High Speed TIA";
->> +      };
->> +
->> +      channel@13 {
->> +        reg = <13>;
->> +        diff-channels = <AD5940_ADC_INPUTP_TEMP
->> +                         AD5940_ADC_INPUTN_VBIAS0>;
->> +        channel-name = "Temperature";
->> +      };
->> +    };
->> diff --git a/include/dt-bindings/iio/adc/adi,ad5940.h b/include/dt-bindings/iio/adc/adi,ad5940.h
->> new file mode 100644
->> index 000000000000..c17826f2f654
->> --- /dev/null
->> +++ b/include/dt-bindings/iio/adc/adi,ad5940.h
->> @@ -0,0 +1,52 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * This header provides constants for configuring the AD5940 AFE
->> + */
->> +
->> +#ifndef _DT_BINDINGS_IIO_ADC_AD5940_H
->> +#define _DT_BINDINGS_IIO_ADC_AD5940_H
->> +
->> +#define AD5940_ADC_INPUTN_FLOATING	0
->> +#define AD5940_ADC_INPUTN_HSTIA		1
->> +#define AD5940_ADC_INPUTN_LPTIA		2
->> +#define AD5940_ADC_INPUTN_AIN0		4
->> +#define AD5940_ADC_INPUTN_AIN1		5
->> +#define AD5940_ADC_INPUTN_AIN2		6
->> +#define AD5940_ADC_INPUTN_AIN3		7
->> +#define AD5940_ADC_INPUTN_VBIAS_CA8	10
->> +#define AD5940_ADC_INPUTN_TEMP_N	11
->> +#define AD5940_ADC_INPUTN_AIN4		12
->> +#define AD5940_ADC_INPUTN_AIN6		14
->> +#define AD5940_ADC_INPUTN_VZERO		16
->> +#define AD5940_ADC_INPUTN_VBIAS0	17
->> +#define AD5940_ADC_INPUTN_EXCITATION	20
->> +
->> +#define AD5940_ADC_INPUTP_FLOATING	0
->> +#define AD5940_ADC_INPUTP_HSTIA		1
->> +#define AD5940_ADC_INPUTP_LPTIA_LP	2
->> +#define AD5940_ADC_INPUTP_AIN0		4
->> +#define AD5940_ADC_INPUTP_AIN1		5
->> +#define AD5940_ADC_INPUTP_AIN2		6
->> +#define AD5940_ADC_INPUTP_AIN3		7
->> +#define AD5940_ADC_INPUTP_AVDD_2	8
->> +#define AD5940_ADC_INPUTP_DVDD_2	9
->> +#define AD5940_ADC_INPUTP_AVDD_REG_2	10
->> +#define AD5940_ADC_INPUTP_TEMP		11
->> +#define AD5940_ADC_INPUTP_VBIAS_CAP	12
->> +#define AD5940_ADC_INPUTP_DE0		13
->> +#define AD5940_ADC_INPUTP_SE0		14
->> +#define AD5940_ADC_INPUTP_VREF_2V5_2	16
->> +#define AD5940_ADC_INPUTP_VREF_1V82	18
->> +#define AD5940_ADC_INPUTP_P_TEMP_N	19
->> +#define AD5940_ADC_INPUTP_AIN4		20
->> +#define AD5940_ADC_INPUTP_AIN6		22
->> +#define AD5940_ADC_INPUTP_VZERO		23
->> +#define AD5940_ADC_INPUTP_VBIAS0	24
->> +#define AD5940_ADC_INPUTP_VCE0		25
->> +#define AD5940_ADC_INPUTP_VRE0		26
->> +#define AD5940_ADC_INPUTP_VCE0_2	31
->> +#define AD5940_ADC_INPUTP_LPTIA		33
->> +#define AD5940_ADC_INPUTP_AGND_REF	35
->> +#define AD5940_ADC_INPUTP_EXCITATION	36
->> +
->> +#endif /* _DT_BINDINGS_IIO_ADC_AD5940 */
-> 
