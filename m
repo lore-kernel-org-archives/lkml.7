@@ -2,72 +2,102 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148AAC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4ACC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B52206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7880206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="DH/8dDhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfKNN3P (ORCPT
+        id S1726992AbfKNNaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:29:15 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:51432 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfKNN3O (ORCPT <rfc822;linux-kernel@vger.kernel.orG>);
-        Thu, 14 Nov 2019 08:29:14 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iVFBB-0004nv-90; Thu, 14 Nov 2019 21:28:57 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iVFB2-0005Iu-FT; Thu, 14 Nov 2019 21:28:48 +0800
-Date:   Thu, 14 Nov 2019 21:28:48 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux@armlinux.org.uk, torvalds@linux-foundation.org,
-        catalin.marinas@arm.com, vincent.whitchurch@axis.com,
-        axboe@kernel.dk, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, rabinv@axis.com,
-        Richard.Earnshaw@arm.com
-Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
- hazard
-Message-ID: <20191114132848.55atqtjshjmi2udl@gondor.apana.org.au>
+        Thu, 14 Nov 2019 08:30:03 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25862 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfKNNaC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:30:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1573738192; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=KCydP6eIxUn2igeczZ3T8/M2Hhl/f27NTAnqr3kM9fY1+GNJow5oBqwRScCmLYSFGIuQz7lYXsWjqfZHsQpDuWqDVsvyVwi07UOM2BKBG030mR5rGAISQnAmVcaVkyhqNr18eeZZCf9dpM/TSbHnYmAvVqxRX7Yq9ssTaEam+wU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1573738192; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=tuWnqfKvsZkLU+jDJagYgAusq7Vm0YZq0abqBev2SfQ=; 
+        b=A8B5CZwkVoT4ESeUjditFj8/GlTCOWuJatnWq9a9dZqJIgqIrjKDOx0Ahmsi59tx3WBHOLK1JKmVuDpf6+tnEpUuedkKmdg/KWZR8KKkLlR8Xm/elhVXkIL2ipUtS9lXV1Ll7hIGmiQnfwEBXtZwS7XuaKD9OR+v9PiRURF7rJ8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=rS/Sv/W/XTTB732XTmLvO2SKxpu527ONZfwoMWJfPePzPb4OGQ/RXZtUZVl3dCa7qzq7+ARHheEy
+    ogEj26PAf93WhSmeZZvuw25ndr75SSEjVCuab1Wb/o68YoQB2UO3  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573738192;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=917; bh=tuWnqfKvsZkLU+jDJagYgAusq7Vm0YZq0abqBev2SfQ=;
+        b=DH/8dDhhF0N3QpP9WB0Q/2xFYY4r2ItP6b0ZgOcGLZN+Qm2ty/BOQvhv+2p+est7
+        KFJpu74qB7R7Lu4Z9sQYqv1TKh47BJyk6Lx1tQRQQvWFPOsp3PEyYHTuYv3jzMxsq+q
+        1XvTkTAPKTfiu9IYvbd3dMhPWJWGqoiaORqwhQrk=
+Received: from [192.168.10.218] (171.221.112.167 [171.221.112.167]) by mx.zohomail.com
+        with SMTPS id 1573738191942108.24330874646944; Thu, 14 Nov 2019 05:29:51 -0800 (PST)
+Subject: Re: [PATCH 1/2 v3] dt-bindings: clock: Add X1000 bindings.
+To:     Rob Herring <robh@kernel.org>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+ <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com>
+ <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
+ <20191112005544.GB7038@bogus>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, paul.burton@mips.com, sboyd@kernel.org,
+        robh+dt@kernel.org, syq@debian.org, mark.rutland@arm.com,
+        paul@crapouillou.net
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DCD56C5.1050106@zoho.com>
+Date:   Thu, 14 Nov 2019 21:29:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113104945.GC25900@willie-the-truck>
-X-Newsgroups: apana.lists.os.linux.kernel
-Organization: Core
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191112005544.GB7038@bogus>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will Deacon <will@kernel.org> wrote:
+Hi Rob,
+
+On 2019=E5=B9=B411=E6=9C=8812=E6=97=A5 08:55, Rob Herring wrote:
+> On Sun, 10 Nov 2019 17:28:21 +0800, Zhou Yanjie wrote:
+>> Add the clock bindings for the X1000 Soc from Ingenic.
+>>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>   .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
+>>   include/dt-bindings/clock/x1000-cgu.h              | 44 ++++++++++++++=
+++++++++
+>>   2 files changed, 45 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/x1000-cgu.h
+>>
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
 >
-> which is what can happen due to this erratum. It's generally good practice
-> to use READ_ONCE() when reading something which can be updated concurrently
-> because:
-> 
->        * It ensures that the value is (re-)loaded from memory
-> 
->        * It prevents the compiler from performing harmful optimisations,
->          such as merging or tearing (although in this case I suspect
->          these are ok because we're dealing with a single bit)
-> 
->        * On Alpha, it gives you a barrier so that dependency ordering
->          can be relied upon from the load
+> If a tag was not added on purpose, please state why and what changed.
 
-The Alpha barrier matters for pointers, how could it make a
-difference for individual bits?
+I'm sorry, it's my mistake, I forgot to add these tags.
+I'll pay more attention on this next time.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Best regards=EF=BC=81
+
+
