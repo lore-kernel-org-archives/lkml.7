@@ -2,89 +2,78 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17C3C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74395C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C525B20723
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJCz2v2c"
+	by mail.kernel.org (Postfix) with ESMTP id 55A6420724
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfKNU2u (ORCPT
+        id S1726991AbfKNU3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:28:50 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40394 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfKNU2t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:28:49 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f3so7637944wmc.5;
-        Thu, 14 Nov 2019 12:28:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=K5embLHTDP7uNIGocODuFu6GQnCP8W2lQWuJv19zdl8=;
-        b=oJCz2v2c5AYVz6Q6H4mdrlmjwMRXJl3QRv58ftEV+PhYZRrrjnkTSLO3STb7ZcfRgn
-         N2OLdvEU1DxyXboZFDZpSOISB7tOshCnak0Kmvoql7WD0duVFKIn6dtpQ985JtQEI+4B
-         2MoxmgIvBkQoTRhr8/ofs1F7C2qk8ec+NGHsxYFy3RUzbhF4sM4yQB53OiBj9t4uGml4
-         7s6q357K5SH9nJ/WCTb+p6Z+XSYUhBFp6S811kDcmcPrOvw8oY3ElY7IUj8IEiGV4xco
-         re2tlKjXgS0Z5vYsmtdntgVeM7iIqFDwlsO6N6StStT+9rOh8AbHHMeg/wPi7/SD2Lj4
-         AZFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=K5embLHTDP7uNIGocODuFu6GQnCP8W2lQWuJv19zdl8=;
-        b=HhX3H9q/f+XJ7kjHDOUN4bUonv7EjKBZYl5rpdQwtQjqZai0+4KPyxyjiFXBPwDLoq
-         cjwK3Jg135TuLPDr4J6uS555YHOZaVi550ymeLPBh7B+VdoeXa0vO0TWFCdOADo3GEbj
-         lo66UKXXDlkLhDIcK82O+7TK3jFQ9kEnFEtXV3aTJH0UrePN+nDBrirRj4jHwjn9NgLg
-         +tztKp51XfG5HdaxyBG5S5iZdiCBeN5d0qWNhOB2suD6XS4GWmXx6e0Tk/ibtydtQCZo
-         dOi5icoqDBaLz7s7E+hNnV7antxXSMyQJjM2NH1edAcvieU627GcSO7mVi27Ru/EsJlH
-         Tz3Q==
-X-Gm-Message-State: APjAAAWQ7qsyGMeMwfHBKSkLa+ow0MSe5GDA/7w6DRNxEaaD4Bg/xMmq
-        xfIt53dGr+SdpVI9IoSFH3o=
-X-Google-Smtp-Source: APXvYqyKPSnewY1soYVqWA6PQ+RofXvEux3LeOY/J6DXdBuJCVla8oCTl6/tXjcgmRorECdyF75imA==
-X-Received: by 2002:a05:600c:28c:: with SMTP id 12mr9819309wmk.25.1573763327200;
-        Thu, 14 Nov 2019 12:28:47 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w19sm7276899wmk.36.2019.11.14.12.28.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 12:28:46 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
-Date:   Thu, 14 Nov 2019 12:28:42 -0800
-Message-Id: <20191114202842.32505-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191106095945.22933-2-nsaenzjulienne@suse.de>
-References: <20191106095945.22933-1-nsaenzjulienne@suse.de> <20191106095945.22933-2-nsaenzjulienne@suse.de>
+        Thu, 14 Nov 2019 15:29:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:49096 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726557AbfKNU3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 15:29:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FDD431B;
+        Thu, 14 Nov 2019 12:29:01 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF2E03F534;
+        Thu, 14 Nov 2019 12:28:59 -0800 (PST)
+Date:   Thu, 14 Nov 2019 20:28:57 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, tj@kernel.org,
+        patrick.bellasi@matbug.net, surenb@google.com, qperret@google.com
+Subject: Re: [PATCH] sched/uclamp: Fix overzealous type replacement
+Message-ID: <20191114202855.64e4jnb4dcbru4w3@e107158-lin.cambridge.arm.com>
+References: <20191113165334.14291-1-valentin.schneider@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191113165334.14291-1-valentin.schneider@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 10:59:44 +0100, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
-> arm64 places the CMA in ZONE_DMA32, which is not good enough for the
-> Raspberry Pi 4 since it contains peripherals that can only address the
-> first GB of memory. Explicitly place the CMA into that area.
+On 11/13/19 16:53, Valentin Schneider wrote:
+> Some uclamp helpers had their return type changed from 'unsigned int' to
+> 'enum uclamp_id' by commit
 > 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>   0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
 > 
+> but it happens that some *actually* do return an unsigned int value. Those
+> are the helpers that return a utilization value: uclamp_rq_max_value() and
+> uclamp_eff_value(). Fix those up.
+> 
+> Note that this doesn't lead to any obj diff using a relatively recent
+> aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
+> already figures out that the return value is 11 bits (bits_per(1024)) and
+> doesn't seem to do anything funny. I'm still marking this as fixing the
+> above commit to be on the safe side.
+> 
+> Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 > ---
 
-Applied to devicetree/next, thanks!
+The changelog could be a bit simpler and more explicitly say 0413d7f33e60
+wrongly changed the return type of some functions. For a second I thought
+something weird is going inside these functions.
+
+But that could be just me :-)
+
+Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+
+Thanks!
+
 --
-Florian
+Qais Yousef
