@@ -2,92 +2,128 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA31C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA0EC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597432070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6507D206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=reply2setup-com.20150623.gappssmtp.com header.i=@reply2setup-com.20150623.gappssmtp.com header.b="VkmZOKAo"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ESvySBPf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfKNRnz (ORCPT
+        id S1726852AbfKNRpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:43:55 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35633 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNRny (ORCPT
+        Thu, 14 Nov 2019 12:45:55 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:33649 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfKNRpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:43:54 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q22so4239003pgk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:43:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=reply2setup-com.20150623.gappssmtp.com; s=20150623;
-        h=to:subject:from:message-id:disposition-notification-to:date
-         :user-agent:mime-version:content-transfer-encoding:content-language;
-        bh=AT6ku+cybKeH11LZiwN771me6TdCfWU44QMk7DxPZyY=;
-        b=VkmZOKAoPbXKe5kQ0ILhjfxkiigETwY2f2+LIeoCtSMPtvSR5ANq2X/LufLepEfCX9
-         T4Rq1EP7OgNRDqtC44Ojm7st+0uI6RBFQOMKzC9drvu5xT5mTsNn72J6CCjQw8Cal0IV
-         BNA8D8mZA0FbentOQ2r6SmvSGqAseYd7L7PlDCaoSnsov89u3Xapjj0EjQU69gcfSN7q
-         qxmOgYCUUBOTUbuaHQQhyKrespiubI4WRsUZSdKVhSOKbaPx6J9GQ5RuHc5U/wGxOpRH
-         HLF+zYbyagTCSjyli/OH3w+C4oAdcDf72Y64CqjwzU1Ef776QMdlt0r1cBW7xhIauvBU
-         oDqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:subject:from:message-id
-         :disposition-notification-to:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=AT6ku+cybKeH11LZiwN771me6TdCfWU44QMk7DxPZyY=;
-        b=k7g0GdsU9ULJAVHqgG6jgwsZ8OZ7K/Ll8RZ6HlO+O6/1SFPeBhjh63CidzdRLiygk5
-         x/jhIopBxkxrNzsFo9jsOfGxjxpFV/K0AorFeBUDnLrm+YbDtMJeoUKWjWOdl2fG64FV
-         7xUaIc0kSI35whpZ6FTZJW45Wi40d8enNUHD1Zg9oFuPFBugYKccPEXs2dJ+o33jyZcv
-         GnWmfbRIro+/yV8b0J9706GKFIW8FLBrLcCDjpiAsizDW0Qqz9kGoaqaVn++F0OviqAl
-         n6pY0U16c3FRAstj2LlcG57XojzwGUsTq2pC0FZ/jcMYIX79j6y170Dd5MA9YcrNxUMt
-         45ZA==
-X-Gm-Message-State: APjAAAUO/qmpnuqlfxYNXdrsVoqUxXsElWJKtSrieQma9km7eU8ISVgE
-        h3GQBY5WSRIzEhIjZjInR83ahSUUlyw=
-X-Google-Smtp-Source: APXvYqzHsTfnodV53wjd2HRaM3Vob7D3cwU/At844qGjrDx/M3wSFLTmVqy0bMc16Atvn2tygOuU6Q==
-X-Received: by 2002:a62:5216:: with SMTP id g22mr11904387pfb.78.1573753434006;
-        Thu, 14 Nov 2019 09:43:54 -0800 (PST)
-Received: from [192.168.0.3] ([103.16.71.221])
-        by smtp.gmail.com with ESMTPSA id y36sm6677250pgk.66.2019.11.14.09.43.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 09:43:53 -0800 (PST)
-To:     linux-kernel@vger.kernel.org
-Subject: Wine List
-From:   Cheryl Edwards <cheryle@reply2setup.com>
-Message-ID: <62c3d9aa-f29f-8d01-3dbc-cceaec273293@reply2setup.com>
-Date:   Thu, 14 Nov 2019 11:41:51 -0500
-User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 12:45:55 -0500
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id xAEHjeI1025064;
+        Fri, 15 Nov 2019 02:45:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xAEHjeI1025064
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573753541;
+        bh=BcA9yFsMlJst8ZzmTrIRKKCI279WdiORVkP8tMP3V6o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ESvySBPfR6cYtXxIYJZgL9uqvX/ZsiPk08ydHM1nywiRoM0BezB08/Ijq+smlfbzn
+         gtl9NMA7v6e6XK0CxuZe3fbKyDgCOJmo9Slv5p9fa0xyyE6Cf7y5Vx+8cv4e0SST8b
+         8x5xSeygLug4wH/gx1tmVqenFMDmfj5/2EtsKCcs6VYWEOzzr8VwJ2lD29y/69ayUb
+         x8fYqv7D4N8vcq6LX2YOWWniTuRC5zJn1teGWibT6gjyps7SdUJ1eHRaG4P8IReklT
+         Ao7BpXpel4rrIJwxCyTJcA224yXJCSHo4QSJx7/PWqt6sPgC4XGF9mGDhw7bapogZi
+         qzBTHU9XLmEng==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id o9so2143769uat.8;
+        Thu, 14 Nov 2019 09:45:40 -0800 (PST)
+X-Gm-Message-State: APjAAAVNPl/2VLXcaElEMqnF4Ay/dmcKB2Bloxb5K5BkWyCybVSel/03
+        IbhnqV4XC4owEfwlHzIGhhP8xPpxAtW08gl1aAM=
+X-Google-Smtp-Source: APXvYqz8qtbhXy/nBCYLntGkHkL+w04hSKO8KAfP1ir3qs/vxIyl2qy+kjSDCLPa14saT0vxv+DdmTv/qq/iq9ULPYI=
+X-Received: by 2002:a9f:3015:: with SMTP id h21mr6570412uab.95.1573753539427;
+ Thu, 14 Nov 2019 09:45:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Antivirus: Avast (VPS 191113-8, 11/13/2019), Outbound message
-X-Antivirus-Status: Clean
+References: <20191114174226.7201-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20191114174226.7201-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 15 Nov 2019 02:45:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASYU4K87fR-v5xmhWGww_+3xRZ7otBGooXyshjXqfrv=w@mail.gmail.com>
+Message-ID: <CAK7LNASYU4K87fR-v5xmhWGww_+3xRZ7otBGooXyshjXqfrv=w@mail.gmail.com>
+Subject: Re: [PATCH 1/6] modpost: add a helper to get data pointed by a symbol
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+(+CC: Matthias, who might be interested)
 
-Hi,
+On Fri, Nov 15, 2019 at 2:42 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> When CONFIG_MODULE_REL_CRCS is enabled, the value of __crc_* is not
+> an absolute value, but the address to the CRC data embedded in the
+> .rodata section.
+>
+> Getting the data pointed by the symbol value is somewhat complex.
+> Split it out into a new helper, sym_get_data().
+>
+> I will reuse it to refactor namespace_from_kstrtabns() in the next
+> commit.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  scripts/mod/modpost.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index 46d7f695fe7f..cd885573daaf 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -308,6 +308,18 @@ static const char *sec_name(struct elf_info *elf, int secindex)
+>         return sech_name(elf, &elf->sechdrs[secindex]);
+>  }
+>
+> +static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
+> +{
+> +       Elf_Shdr *sechdr = &info->sechdrs[sym->st_shndx];
+> +       unsigned long offset;
+> +
+> +       offset = sym->st_value;
+> +       if (info->hdr->e_type != ET_REL)
+> +               offset -= sechdr->sh_addr;
+> +
+> +       return (void *)info->hdr + sechdr->sh_offset + offset;
+> +}
+> +
+>  #define strstarts(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
+>
+>  static enum export export_from_secname(struct elf_info *elf, unsigned int sec)
+> @@ -697,10 +709,7 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
+>                         unsigned int *crcp;
+>
+>                         /* symbol points to the CRC in the ELF object */
+> -                       crcp = (void *)info->hdr + sym->st_value +
+> -                              info->sechdrs[sym->st_shndx].sh_offset -
+> -                              (info->hdr->e_type != ET_REL ?
+> -                               info->sechdrs[sym->st_shndx].sh_addr : 0);
+> +                       crcp = sym_get_data(info, sym);
+>                         crc = TO_NATIVE(*crcp);
+>                 }
+>                 sym_update_crc(symname + strlen("__crc_"), mod, crc,
+> --
+> 2.17.1
+>
 
-Would you be interested in acquiring an email list of "Wine Enthusiasts" from USA?
 
-We also have data for Beer Enthusiasts, Liquor Enthusiasts, Beverage Enthusiasts, Spa and Resort Visitors List, Food Enthusiasts, Entertainment Enthusiasts and many more.
-
-Each record in the list contains Contact Name (First, Middle and Last Name), Mailing Address, List type and Opt-in email address.
-
-Please let me know your thoughts towards procuring the Wine Enthusiasts List.
-
-Best Regards,
-Cheryl Edwards
-
-We respect your privacy, if you do not wish to receive any further emails from our end, please reply with a subject “Remove”.
-
+-- 
+Best Regards
+Masahiro Yamada
