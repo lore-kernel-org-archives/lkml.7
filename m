@@ -2,473 +2,633 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C304EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C4EC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB6E20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB77D2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IdbDDNjK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6qpTBFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfKNSLF (ORCPT
+        id S1726818AbfKNSNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:11:05 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34076 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfKNSLE (ORCPT
+        Thu, 14 Nov 2019 13:13:04 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34619 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNSNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:11:04 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191114181102euoutp027a8db65531fb48a49e5bf67f665bb837~XGeQe--r-0702407024euoutp020
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 18:11:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191114181102euoutp027a8db65531fb48a49e5bf67f665bb837~XGeQe--r-0702407024euoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573755062;
-        bh=nSZ0mbKouPogXQjKg1tS1E50s2Hv9keJH38scoNvolk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=IdbDDNjKJl5F1BN1I8+um46XsiRucuv9viIXvmwAo5uwuboXaDtW5WD7wVf0AQEvN
-         GTRLOjsU64QmhjPuHD32YRa5EiYgdwhEinaLXp4gGHu2KF3M0ndU7ICjVW7dT1FMn/
-         MZN006BjPkHmcKEOGBUbHIYtqI5L0xGqyeh+A6YA=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191114181102eucas1p28c90a8b12ddac58d23d8583a0954d6ae~XGeQM1oXp3096030960eucas1p24;
-        Thu, 14 Nov 2019 18:11:02 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id C9.0B.04374.5B89DCD5; Thu, 14
-        Nov 2019 18:11:01 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191114181101eucas1p1327a7dc61bcca949e6ebae41526ae2bb~XGePqqaJs0527305273eucas1p19;
-        Thu, 14 Nov 2019 18:11:01 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191114181101eusmtrp129e25dbaa734cb978911cb6cc032de8b~XGePp6xe62784427844eusmtrp1h;
-        Thu, 14 Nov 2019 18:11:01 +0000 (GMT)
-X-AuditID: cbfec7f5-4ddff70000001116-de-5dcd98b59b4d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 37.1D.04166.5B89DCD5; Thu, 14
-        Nov 2019 18:11:01 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191114181100eusmtip102c1f543af3ff600d7087f54ce335e5c~XGePGT2x52497824978eusmtip1J;
-        Thu, 14 Nov 2019 18:11:00 +0000 (GMT)
-Subject: Re: [PATCH 5/7] devfreq: move transition statistics to devfreq
- profile structure
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <55818555-e512-46bf-4ad5-ae9dcb27d32e@samsung.com>
-Date:   Thu, 14 Nov 2019 19:10:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 14 Nov 2019 13:13:04 -0500
+Received: by mail-wm1-f68.google.com with SMTP id j18so8087942wmk.1;
+        Thu, 14 Nov 2019 10:13:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e1YGkP3YYWvfobcdQXF349HfrSJSFS8d+634UN9nQdo=;
+        b=g6qpTBFpu7hbN0DNlhTYKEB/EDQXwzuy/rFdXLodRIcYG/Fsd0HthDmF1CTs77jOTd
+         WmPx34XSPqFujnqyajzICPgS8jZL6BiUJgkAYGjFI0Y/c2K/WFaGLYfeg6AZy8ZMXNbP
+         UIftfCSQnlKNzXJEQVaWJpXedUZDKwVMOhcZWHVgtlDm4fTevcMreIURsXkHtt37Tgqi
+         d+DmahMuDPkPKkQWEKOIcEqLN4lmefadHgmvPajbE80mMpedWQTe9t8TXEIVQSbtsDUc
+         xIqElxLzt/0yhWiKBKZpMKD2Tp/3oEdalSKfHGagzjuoe05j0FMr6BbF7M6+QWEV7NGu
+         qeRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e1YGkP3YYWvfobcdQXF349HfrSJSFS8d+634UN9nQdo=;
+        b=qewGyZxSWM+9rmnejKt7XpGYLCFlmc2UnDU8FCTPXfDs26Pj6Ertu1If6wetNRO8FW
+         6rnguU5tOX60Ch5SgaGBnIwPsLZjL2PvhMx2ZIP9cX3otJ4qiiSzWXhvd4t4RH7u1R/X
+         GReC7dyv3m/ykjbCnQP/BfIrE6jrSuEVcUnuMJfOdGMIwm54vdTDBCAWBLgrGk4mxrbn
+         m7jtHEqf8KqhoGsyE6u0bpWGhh2uHefFDwyWx/ERZmIjeJ/BJyylM/oz2b30YnGJFUUz
+         q7UaYf3g0GJ9K/AnzD0Fcs5ejmRHQMduMkAPQ/hKVAIyaynCU4xMxlvkknb5dt//MBVK
+         spLA==
+X-Gm-Message-State: APjAAAWoDd1tu+qER6FQHFNoTNHTgyMx08Ny2SwdBICTVX5YBseUgg2G
+        7rbd6/kJqx8Qoq4pekFP2YHsGq6OlD+UhdMrlQc=
+X-Google-Smtp-Source: APXvYqzOhPqpe2Ya5w6enWDgqclI9ThBE4RliZTOVi6zALagLzNnqIkwLM4vHMjAsA+1AGTmJT9bv/qlYP1a0mshPb4=
+X-Received: by 2002:a1c:ed09:: with SMTP id l9mr3913059wmh.101.1573755179254;
+ Thu, 14 Nov 2019 10:12:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <72e517d9-725d-b05d-028f-153bb6684df3@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsWy7djP87pbZ5yNNXh93Mbi+pfnrBZ9+/4z
-        Wiz4NIPV4vz5DewWZ5vesFtc3jWHzeJz7xFGi7VH7rJb3G5cwebA6bFpVSebx8F3e5g8+ras
-        YvT4vEkugCWKyyYlNSezLLVI3y6BK+PI05VMBd0pFa2XHzE1MH4L6GLk5JAQMJE4//woaxcj
-        F4eQwApGib8PH0M5XxglzkxZzAzhfGaUOL27mwmmZeH8NhaIxHJGiVu3PzJCOG8ZJebumsMC
-        UiUsEC3xfNt3dhBbRCBUYtK1ZWAdzAKzmSR2Nt0FG8UmYCUxsX0VI4jNK2An8ebADqDlHBws
-        AqoS70/ZgYRFBSIkPj04zApRIihxcuYTsPmcAvYSP99cBoszC4hL3HoynwnClpfY/nYO2NkS
-        AvvYJRatfgw2U0LAReLQg1iID4QlXh3fwg5hy0icntzDAlG/DhgAHS+gmrczSiyf/I8Nospa
-        4vDxi2CDmAU0Jdbv0ocIO0qs+L6CBWI+n8SNt4IQN/BJTNo2nRkizCvR0SYEUa0msWHZBjaY
-        tV07VzJPYFSaheSzWUi+mYXkm1kIexcwsqxiFE8tLc5NTy02zkst1ytOzC0uzUvXS87P3cQI
-        TEen/x3/uoNx35+kQ4wCHIxKPLwHRM/ECrEmlhVX5h5ilOBgVhLhnfIWKMSbklhZlVqUH19U
-        mpNafIhRmoNFSZy3muFBtJBAemJJanZqakFqEUyWiYNTqoHxVJWxk8LOKu6jAYd2HE+xTNrt
-        +VBHMNIlwH9u5aeKYjvtQP/yK/d+fY0zlAhP/dB8rJv7md3ciglpvvIlFU8LwtmDz+gvmbaz
-        fmXmrYQwrfsV9z/xPzxh8GqzzqrZk1Uu+b50u+TNv7jcZu5yxrhXM/rfHTugnhye9kur265Q
-        XXpefeU2XlklluKMREMt5qLiRADWSYZiQwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xu7pbZ5yNNWi/KGpx/ctzVou+ff8Z
-        LRZ8msFqcf78BnaLs01v2C0u75rDZvG59wijxdojd9ktbjeuYHPg9Ni0qpPN4+C7PUwefVtW
-        MXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqk
-        b5egl3Hk6Uqmgu6UitbLj5gaGL8FdDFyckgImEgsnN/G0sXIxSEksJRRYv3HDaxdjBxACRmJ
-        4+vLIGqEJf5c62KDqHnNKDH5xAtmkISwQLTE823f2UFsEYFQiVMbJ4MVMQvMZZL40v+XHaLj
-        G6PE9Ocf2ECq2ASsJCa2r2IEsXkF7CTeHNgBto1FQFXi/Sk7kLCoQITE4R2zoEoEJU7OfMIC
-        YnMK2Ev8fHOZFcRmFlCX+DPvEjOELS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYw
-        sqxiFEktLc5Nzy021CtOzC0uzUvXS87P3cQIjL9tx35u3sF4aWPwIUYBDkYlHt4DomdihVgT
-        y4orcw8xSnAwK4nwTnkLFOJNSaysSi3Kjy8qzUktPsRoCvTbRGYp0eR8YGrIK4k3NDU0t7A0
-        NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAOMO1L/X8vUOLe9yueD0ykaqUWbfj
-        8g5mf8OvKtcvRKQc/pvJUfDrvvppe/+cwCnCyiWXcuUvyDQL2ni8uqsrEqK3wcm15qfon5bH
-        6zefd1ygtn1NscS37utR0c1mE7u4MwOvC6x6ZPyyVWDXo+TOSzrZAkbltr6zRYKqK3N9//+/
-        y/7y8bY6JZbijERDLeai4kQAtQ1X+9UCAAA=
-X-CMS-MailID: 20191114181101eucas1p1327a7dc61bcca949e6ebae41526ae2bb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191113091353eucas1p283be3173c7a9ea726b4767f9cb113f0f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191113091353eucas1p283be3173c7a9ea726b4767f9cb113f0f
-References: <20191113091336.5218-1-k.konieczny@samsung.com>
-        <CGME20191113091353eucas1p283be3173c7a9ea726b4767f9cb113f0f@eucas1p2.samsung.com>
-        <20191113091336.5218-6-k.konieczny@samsung.com>
-        <72e517d9-725d-b05d-028f-153bb6684df3@samsung.com>
+References: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org> <1573726588-18897-2-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1573726588-18897-2-git-send-email-harigovi@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 14 Nov 2019 10:12:47 -0800
+Message-ID: <CAF6AEGs2VNJMMCxTRrosKaijjs2HV318Sak7vwdRyLw5kDjXTg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] drm/panel: add support for rm69299 visionox panel driver
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        nganji@codeaurora.org, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 14, 2019 at 2:17 AM Harigovindan P <harigovi@codeaurora.org> wrote:
+>
+> Add support for Visionox panel driver.
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>  drivers/gpu/drm/panel/Kconfig                  |   9 +
+>  drivers/gpu/drm/panel/Makefile                 |   1 +
+>  drivers/gpu/drm/panel/panel-visionox-rm69299.c | 478 +++++++++++++++++++++++++
+>  3 files changed, 488 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-visionox-rm69299.c
+>
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index f152bc4..c06c403 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -355,4 +355,13 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
+>         help
+>           Say Y here if you want to enable support for Truly NT35597 WQXGA Dual DSI
+>           Video Mode panel
+> +
+> +config DRM_PANEL_VISIONOX_RM69299
+> +       tristate "Visionox RM69299"
+> +       depends on OF
+> +       depends on DRM_MIPI_DSI
+> +       help
+> +         Say Y here if you want to enable support for Visionox
+> +         RM69299  DSI Video Mode panel.
+> +
+>  endmenu
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index b6cd39f..6f1e4c6 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -38,3 +38,4 @@ obj-$(CONFIG_DRM_PANEL_TPO_TD028TTEC1) += panel-tpo-td028ttec1.o
+>  obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
+>  obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
+>  obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
+> +obj-$(CONFIG_DRM_PANEL_VISIONOX_RM69299) += panel-visionox-rm69299.o
+> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> new file mode 100644
+> index 0000000..faf6d05
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> @@ -0,0 +1,478 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_print.h>
+> +
+> +#include <linux/of_gpio.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/backlight.h>
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +static const char * const regulator_names[] = {
+> +       "vdda",
+> +       "vdd3p3",
+> +};
+> +
+> +static unsigned long const regulator_enable_loads[] = {
+> +       32000,
+> +       13200,
+> +};
+> +
+> +static unsigned long const regulator_disable_loads[] = {
+> +       80,
+> +       80,
+> +};
+> +
+> +struct cmd_set {
+> +       u8 commands[4];
+> +       u8 size;
+> +};
+> +
+> +struct rm69299_config {
+> +       u32 width_mm;
+> +       u32 height_mm;
+> +       const char *panel_name;
+> +       const struct cmd_set *panel_on_cmds;
+> +       u32 num_on_cmds;
+> +       const struct drm_display_mode *dm;
+> +};
+> +
+> +struct visionox_rm69299 {
+> +       struct device *dev;
+> +       struct drm_panel panel;
+> +
+> +       struct regulator_bulk_data supplies[ARRAY_SIZE(regulator_names)];
+> +
+> +       struct gpio_desc *reset_gpio;
+> +
+> +       struct backlight_device *backlight;
+> +
+> +       struct mipi_dsi_device *dsi;
+> +       const struct rm69299_config *config;
+> +       bool prepared;
+> +       bool enabled;
+> +};
+> +
+> +static inline struct visionox_rm69299 *panel_to_ctx(struct drm_panel *panel)
+> +{
+> +       return container_of(panel, struct visionox_rm69299, panel);
+> +}
+> +
+> +static const struct cmd_set qcom_rm69299_1080p_panel_magic_cmds[] = {
+> +       { { 0xfe, 0x00 }, 2 },
+> +       { { 0xc2, 0x08 }, 2 },
+> +       { { 0x35, 0x00 }, 2 },
+> +       { { 0x51, 0xff }, 2 },
+> +};
 
-Hi Chanwoo,
+I'm not really seeing the value of a table of cmds, vs just a sequence
+of mipi_dsi_dcs_write_buffer() calls.. it is only used in one place,
+so it just seems like a level of indirection that doesn't add value,
+compared to something like:
 
-On 11/14/19 3:02 AM, Chanwoo Choi wrote:
-> Hi Kamil,
-> 
-> The devfreq_dev_profile structure have to only contain the each devfreq device
-> callback function/data which are used in the devfreq core.
-> 
-> The generated information after registered the devfreq device
-> with devfreq_add_device() should be stored in the 'struct device'.
-> 
-> The devfreq core need to split out the data between user input
-> data (struct devfreq_dev_profile) and the initialized/generated data
-> by core (struct devfreq). It is not same with cpufreq. cpufreq
+  mipi_dsi_dsc_write_buffer(dsi, (u8[]){ 0xfe, 0x00 }, 2);
 
-How's about doing it the other way around -> moving 'freq_table' and
-'max_state' from 'struct devfreq_dev_profile' to 'struct devfreq'?
+(otoh, some of the other panel so maybe Thierry is less picky)
 
-They are both initialized/generated by the core during
-devfreq_add_device()->set_freq_table() for all in-kernel drivers.
+> +
+> +static int visionox_dcs_write(struct drm_panel *panel, u32 command)
+> +{
+> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +       int i = 0, ret;
+> +
+> +       ret = mipi_dsi_dcs_write(ctx->dsi, command, NULL, 0);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "cmd 0x%x failed for dsi = %d\n",
+> +                       command, i);
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int visionox_dcs_write_buf(struct drm_panel *panel,
+> +       u32 size, const u8 *buf)
+> +{
+> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +       int ret = 0;
+> +       int i = 0;
+> +
+> +       ret = mipi_dsi_dcs_write_buffer(ctx->dsi, buf, size);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "failed to tx cmd [%d], err: %d\n", i, ret);
+> +               return ret;
+> +       }
+> +
+> +       return ret;
+> +}
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics 
+drop these two and just use mipi_dsi_dcs_write(_buffer)() directly..
+the only extra thing these seem to do is error reporting, which is
+already done at the call-sites of these.
 
-> don't require the any structure like 'devfreq_dev_profile'.
-> 
-> So, I can't agree.
-> 
-> Thanks.
-> Chanwoo Choi
-> 
-> 
-> On 11/13/19 6:13 PM, Kamil Konieczny wrote:
->> Move transition statistics to devfreq profile structure. This is for
->> preparation for moving transition statistics into separate struct.
->> It is safe to do as frequency table and maximum state information are
->> already present in devfreq profile structure and there are no devfreq
->> drivers using more than one instance of devfreq structure per devfreq
->> profile one.
->>
->> It also makes devfreq code more similar to cpufreq one.
->>
->> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
->> ---
->>  drivers/devfreq/devfreq.c | 115 +++++++++++++++++++-------------------
->>  include/linux/devfreq.h   |  25 ++++-----
->>  2 files changed, 70 insertions(+), 70 deletions(-)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->> index 6e5a17f4c92c..70533b787744 100644
->> --- a/drivers/devfreq/devfreq.c
->> +++ b/drivers/devfreq/devfreq.c
->> @@ -128,7 +128,7 @@ static int set_freq_table(struct devfreq *devfreq)
->>  
->>  	profile->max_state = count;
->>  	profile->freq_table = devm_kcalloc(devfreq->dev.parent,
->> -					profile->max_state,
->> +					count,
->>  					sizeof(*profile->freq_table),
->>  					GFP_KERNEL);
->>  	if (!profile->freq_table) {
->> @@ -157,29 +157,30 @@ static int set_freq_table(struct devfreq *devfreq)
->>   */
->>  int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
->>  {
->> -	int lev, prev_lev, ret = 0;
->> +	struct devfreq_dev_profile *profile = devfreq->profile;
->>  	unsigned long long cur_time;
->> +	int lev, prev_lev, ret = 0;
->>  
->>  	cur_time = get_jiffies_64();
->>  
->>  	/* Immediately exit if previous_freq is not initialized yet. */
->>  	if (!devfreq->previous_freq) {
->> -		spin_lock(&devfreq->stats_lock);
->> -		devfreq->last_time = cur_time;
->> -		spin_unlock(&devfreq->stats_lock);
->> +		spin_lock(&profile->stats_lock);
->> +		profile->last_time = cur_time;
->> +		spin_unlock(&profile->stats_lock);
->>  		return 0;
->>  	}
->>  
->>  	prev_lev = devfreq_get_freq_level(devfreq, devfreq->previous_freq);
->>  
->> -	spin_lock(&devfreq->stats_lock);
->> +	spin_lock(&profile->stats_lock);
->>  	if (prev_lev < 0) {
->>  		ret = prev_lev;
->>  		goto out;
->>  	}
->>  
->> -	devfreq->time_in_state[prev_lev] +=
->> -			 cur_time - devfreq->last_time;
->> +	profile->time_in_state[prev_lev] +=
->> +			 cur_time - profile->last_time;
->>  	lev = devfreq_get_freq_level(devfreq, freq);
->>  	if (lev < 0) {
->>  		ret = lev;
->> @@ -187,14 +188,14 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
->>  	}
->>  
->>  	if (lev != prev_lev) {
->> -		devfreq->trans_table[(prev_lev *
->> -				devfreq->profile->max_state) + lev]++;
->> -		devfreq->total_trans++;
->> +		profile->trans_table[(prev_lev *
->> +				profile->max_state) + lev]++;
->> +		profile->total_trans++;
->>  	}
->>  
->>  out:
->> -	devfreq->last_time = cur_time;
->> -	spin_unlock(&devfreq->stats_lock);
->> +	profile->last_time = cur_time;
->> +	spin_unlock(&profile->stats_lock);
->>  	return ret;
->>  }
->>  EXPORT_SYMBOL(devfreq_update_status);
->> @@ -474,23 +475,23 @@ EXPORT_SYMBOL(devfreq_monitor_suspend);
->>  void devfreq_monitor_resume(struct devfreq *devfreq)
->>  {
->>  	unsigned long freq;
->> +	struct devfreq_dev_profile *profile = devfreq->profile;
->>  
->>  	mutex_lock(&devfreq->lock);
->>  	if (!devfreq->stop_polling)
->>  		goto out;
->>  
->> -	if (!delayed_work_pending(&devfreq->work) &&
->> -			devfreq->profile->polling_ms)
->> +	if (!delayed_work_pending(&devfreq->work) && profile->polling_ms)
->>  		queue_delayed_work(devfreq_wq, &devfreq->work,
->> -			msecs_to_jiffies(devfreq->profile->polling_ms));
->> +			msecs_to_jiffies(profile->polling_ms));
->>  
->> -	spin_lock(&devfreq->stats_lock);
->> -	devfreq->last_time = get_jiffies_64();
->> -	spin_unlock(&devfreq->stats_lock);
->> +	spin_lock(&profile->stats_lock);
->> +	profile->last_time = get_jiffies_64();
->> +	spin_unlock(&profile->stats_lock);
->>  	devfreq->stop_polling = false;
->>  
->> -	if (devfreq->profile->get_cur_freq &&
->> -		!devfreq->profile->get_cur_freq(devfreq->dev.parent, &freq))
->> +	if (profile->get_cur_freq &&
->> +	    !profile->get_cur_freq(devfreq->dev.parent, &freq))
->>  		devfreq->previous_freq = freq;
->>  
->>  out:
->> @@ -657,7 +658,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
->>  	devfreq->data = data;
->>  	devfreq->nb.notifier_call = devfreq_notifier_call;
->>  
->> -	if (!devfreq->profile->max_state && !devfreq->profile->freq_table) {
->> +	if (!profile->max_state && !profile->freq_table) {
->>  		mutex_unlock(&devfreq->lock);
->>  		err = set_freq_table(devfreq);
->>  		if (err < 0)
->> @@ -693,29 +694,29 @@ struct devfreq *devfreq_add_device(struct device *dev,
->>  		goto err_out;
->>  	}
->>  
->> -	devfreq->trans_table = devm_kzalloc(&devfreq->dev,
->> -			array3_size(sizeof(unsigned int),
->> -				    devfreq->profile->max_state,
->> -				    devfreq->profile->max_state),
->> -			GFP_KERNEL);
->> -	if (!devfreq->trans_table) {
->> +	profile->trans_table = devm_kzalloc(&devfreq->dev,
->> +					    array3_size(sizeof(unsigned int),
->> +							profile->max_state,
->> +							profile->max_state),
->> +					    GFP_KERNEL);
->> +	if (!profile->trans_table) {
->>  		mutex_unlock(&devfreq->lock);
->>  		err = -ENOMEM;
->>  		goto err_devfreq;
->>  	}
->>  
->> -	devfreq->time_in_state = devm_kcalloc(&devfreq->dev,
->> -			devfreq->profile->max_state,
->> -			sizeof(*devfreq->time_in_state),
->> -			GFP_KERNEL);
->> -	if (!devfreq->time_in_state) {
->> +	profile->time_in_state = devm_kcalloc(&devfreq->dev,
->> +					      profile->max_state,
->> +					      sizeof(*profile->time_in_state),
->> +					      GFP_KERNEL);
->> +	if (!profile->time_in_state) {
->>  		mutex_unlock(&devfreq->lock);
->>  		err = -ENOMEM;
->>  		goto err_devfreq;
->>  	}
->>  
->> -	devfreq->last_time = get_jiffies_64();
->> -	spin_lock_init(&devfreq->stats_lock);
->> +	profile->last_time = get_jiffies_64();
->> +	spin_lock_init(&profile->stats_lock);
->>  
->>  	srcu_init_notifier_head(&devfreq->transition_notifier_list);
->>  
->> @@ -1402,9 +1403,10 @@ static ssize_t trans_stat_show(struct device *dev,
->>  			       struct device_attribute *attr, char *buf)
->>  {
->>  	struct devfreq *devfreq = to_devfreq(dev);
->> +	struct devfreq_dev_profile *profile = devfreq->profile;
->>  	ssize_t len;
->>  	int i, j;
->> -	unsigned int max_state = devfreq->profile->max_state;
->> +	unsigned int max_state = profile->max_state;
->>  
->>  	if (!devfreq->stop_polling &&
->>  			devfreq_update_status(devfreq, devfreq->previous_freq))
->> @@ -1415,46 +1417,45 @@ static ssize_t trans_stat_show(struct device *dev,
->>  	len = sprintf(buf, "     From  :   To\n");
->>  	len += sprintf(buf + len, "           :");
->>  
->> -	spin_lock(&devfreq->stats_lock);
->> +	spin_lock(&profile->stats_lock);
->>  	for (i = 0; i < max_state; i++)
->>  		len += sprintf(buf + len, "%10lu",
->> -				devfreq->profile->freq_table[i]);
->> +				profile->freq_table[i]);
->>  
->>  	len += sprintf(buf + len, "   time(ms)\n");
->>  
->>  	for (i = 0; i < max_state; i++) {
->> -		if (devfreq->profile->freq_table[i]
->> -					== devfreq->previous_freq) {
->> +		if (profile->freq_table[i] == devfreq->previous_freq)
->>  			len += sprintf(buf + len, "*");
->> -		} else {
->> +		else
->>  			len += sprintf(buf + len, " ");
->> -		}
->> +
->>  		len += sprintf(buf + len, "%10lu:",
->> -				devfreq->profile->freq_table[i]);
->> +				profile->freq_table[i]);
->>  		for (j = 0; j < max_state; j++)
->>  			len += sprintf(buf + len, "%10u",
->> -				devfreq->trans_table[(i * max_state) + j]);
->> +				profile->trans_table[(i * max_state) + j]);
->>  		len += sprintf(buf + len, "%10llu\n", (u64)
->> -			jiffies64_to_msecs(devfreq->time_in_state[i]));
->> +			jiffies64_to_msecs(profile->time_in_state[i]));
->>  	}
->>  
->>  	len += sprintf(buf + len, "Total transition : %u\n",
->> -					devfreq->total_trans);
->> -	spin_unlock(&devfreq->stats_lock);
->> +					profile->total_trans);
->> +	spin_unlock(&profile->stats_lock);
->>  	return len;
->>  }
->>  static DEVICE_ATTR_RO(trans_stat);
->>  
->> -static void defvreq_stats_clear_table(struct devfreq *devfreq)
->> +static void defvreq_stats_clear_table(struct devfreq_dev_profile *profile)
->>  {
->> -	unsigned int count = devfreq->profile->max_state;
->> -
->> -	spin_lock(&devfreq->stats_lock);
->> -	memset(devfreq->time_in_state, 0, count * sizeof(u64));
->> -	memset(devfreq->trans_table, 0, count * count * sizeof(int));
->> -	devfreq->last_time = get_jiffies_64();
->> -	devfreq->total_trans = 0;
->> -	spin_unlock(&devfreq->stats_lock);
->> +	unsigned int count = profile->max_state;
->> +
->> +	spin_lock(&profile->stats_lock);
->> +	memset(profile->time_in_state, 0, count * sizeof(u64));
->> +	memset(profile->trans_table, 0, count * count * sizeof(int));
->> +	profile->last_time = get_jiffies_64();
->> +	profile->total_trans = 0;
->> +	spin_unlock(&profile->stats_lock);
->>  }
->>  
->>  static ssize_t trans_reset_store(struct device *dev,
->> @@ -1464,7 +1465,7 @@ static ssize_t trans_reset_store(struct device *dev,
->>  {
->>  	struct devfreq *devfreq = to_devfreq(dev);
->>  
->> -	defvreq_stats_clear_table(devfreq);
->> +	defvreq_stats_clear_table(devfreq->profile);
->>  
->>  	return count;
->>  }
->> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
->> index 2ddf25993f7d..4ceb2a517a9c 100644
->> --- a/include/linux/devfreq.h
->> +++ b/include/linux/devfreq.h
->> @@ -91,6 +91,12 @@ struct devfreq_dev_status {
->>   * @freq_table:		Optional list of frequencies to support statistics
->>   *			and freq_table must be generated in ascending order.
->>   * @max_state:		The size of freq_table.
->> + * @total_trans:	Number of devfreq transitions
->> + * @trans_table:	Statistics of devfreq transitions
->> + * @time_in_state:	Statistics of devfreq states
->> + * @last_time:		The last time stats were updated
->> + * @stats_lock:		Lock protecting trans_table, time_in_state,
->> + *			last_time and total_trans used for statistics
->>   */
->>  struct devfreq_dev_profile {
->>  	unsigned long initial_freq;
->> @@ -104,6 +110,12 @@ struct devfreq_dev_profile {
->>  
->>  	unsigned long *freq_table;
->>  	unsigned int max_state;
->> +	/* information for device frequency transition */
->> +	unsigned int total_trans;
->> +	unsigned int *trans_table;
->> +	u64 *time_in_state;
->> +	unsigned long long last_time;
->> +	spinlock_t stats_lock;
->>  };
->>  
->>  /**
->> @@ -131,12 +143,6 @@ struct devfreq_dev_profile {
->>   * @suspend_freq:	 frequency of a device set during suspend phase.
->>   * @resume_freq:	 frequency of a device set in resume phase.
->>   * @suspend_count:	 suspend requests counter for a device.
->> - * @total_trans:	Number of devfreq transitions
->> - * @trans_table:	Statistics of devfreq transitions
->> - * @time_in_state:	Statistics of devfreq states
->> - * @last_time:		The last time stats were updated
->> - * @stats_lock:		Lock protecting trans_table, time_in_state, last_time
->> - *			and total_trans used for statistics
->>   * @transition_notifier_list: list head of DEVFREQ_TRANSITION_NOTIFIER notifier
->>   *
->>   * This structure stores the devfreq information for a give device.
->> @@ -173,13 +179,6 @@ struct devfreq {
->>  	unsigned long resume_freq;
->>  	atomic_t suspend_count;
->>  
->> -	/* information for device frequency transition */
->> -	unsigned int total_trans;
->> -	unsigned int *trans_table;
->> -	u64 *time_in_state;
->> -	unsigned long long last_time;
->> -	spinlock_t stats_lock;
->> -
->>  	struct srcu_notifier_head transition_notifier_list;
->>  };
->>  
->>
+> +
+> +static int visionox_35597_power_on(struct visionox_rm69299 *ctx)
+> +{
+> +       int ret, i;
+> +       for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++) {
+> +               ret = regulator_set_load(ctx->supplies[i].consumer,
+> +                                       regulator_enable_loads[i]);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       /*
+> +        * Reset sequence of visionox panel requires the panel to be
+> +        * out of reset for 10ms, followed by being held in reset
+> +        * for 10ms and then out again
+> +        */
+> +       gpiod_set_value(ctx->reset_gpio, 1);
+> +       usleep_range(10000, 20000);
+> +       gpiod_set_value(ctx->reset_gpio, 0);
+> +       usleep_range(10000, 20000);
+> +       gpiod_set_value(ctx->reset_gpio, 1);
+> +       usleep_range(10000, 20000);
+> +
+> +       return 0;
+> +}
+> +
+> +static int visionox_rm69299_power_off(struct visionox_rm69299 *ctx)
+> +{
+> +       int ret = 0;
+> +       int i;
+> +
+> +       gpiod_set_value(ctx->reset_gpio, 0);
+> +
+> +       for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++) {
+> +               ret = regulator_set_load(ctx->supplies[i].consumer,
+> +                               regulator_disable_loads[i]);
+> +               if (ret) {
+> +                       DRM_DEV_ERROR(ctx->dev,
+> +                               "regulator_set_load failed %d\n", ret);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       ret = regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +       if (ret) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "regulator_bulk_disable failed %d\n", ret);
+> +       }
+> +       return ret;
+> +}
+> +
+> +static int visionox_rm69299_disable(struct drm_panel *panel)
+> +{
+> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +       int ret;
+> +
+> +       if (!ctx->enabled)
+> +               return 0;
+> +
+> +       if (ctx->backlight) {
+> +               ret = backlight_disable(ctx->backlight);
+> +               if (ret < 0)
+> +                       DRM_DEV_ERROR(ctx->dev, "backlight disable failed %d\n",
+> +                               ret);
+> +       }
+> +
+> +       ctx->enabled = false;
+> +       return 0;
+> +}
+> +
+> +static int visionox_rm69299_unprepare(struct drm_panel *panel)
+> +{
+> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +       int ret = 0;
+> +
+> +       if (!ctx->prepared)
+> +               return 0;
+> +
+> +       ctx->dsi->mode_flags = 0;
+> +
+> +       ret = visionox_dcs_write(panel, MIPI_DCS_SET_DISPLAY_OFF);
 
+mipi_dsi_dcs_set_display_off()
+
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "set_display_off cmd failed ret = %d\n",
+> +                       ret);
+> +       }
+> +
+> +       /* 120ms delay required here as per DCS spec */
+> +       msleep(120);
+> +
+> +       ret = visionox_dcs_write(panel, MIPI_DCS_ENTER_SLEEP_MODE);
+
+mipi_dsi_dcs_enter_sleep_mode()
+
+(same comment at a few points below as well)
+
+BR,
+-R
+
+
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "enter_sleep cmd failed ret = %d\n", ret);
+> +       }
+> +
+> +       ret = visionox_rm69299_power_off(ctx);
+> +       if (ret < 0)
+> +               DRM_DEV_ERROR(ctx->dev, "power_off failed ret = %d\n", ret);
+> +
+> +       ctx->prepared = false;
+> +       return ret;
+> +}
+> +
+> +static int visionox_rm69299_prepare(struct drm_panel *panel)
+> +{
+> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +       int ret;
+> +       int i;
+> +       const struct cmd_set *panel_on_cmds;
+> +       const struct rm69299_config *config;
+> +       u32 num_cmds;
+> +
+> +       if (ctx->prepared)
+> +               return 0;
+> +
+> +       ret = visionox_35597_power_on(ctx);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ctx->dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +       config = ctx->config;
+> +       panel_on_cmds = config->panel_on_cmds;
+> +       num_cmds = config->num_on_cmds;
+> +
+> +       for (i = 0; i < num_cmds; i++) {
+> +               ret = visionox_dcs_write_buf(panel,
+> +                               panel_on_cmds[i].size,
+> +                                       panel_on_cmds[i].commands);
+> +               if (ret < 0) {
+> +                       DRM_DEV_ERROR(ctx->dev,
+> +                               "cmd set tx failed i = %d ret = %d\n",
+> +                                       i, ret);
+> +                       goto power_off;
+> +               }
+> +       }
+> +
+> +       ret = visionox_dcs_write(panel, MIPI_DCS_EXIT_SLEEP_MODE);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "exit_sleep_mode cmd failed ret = %d\n",
+> +                       ret);
+> +               goto power_off;
+> +       }
+> +
+> +       /* Per DSI spec wait 120ms after sending exit sleep DCS command */
+> +       msleep(120);
+> +
+> +       ret = visionox_dcs_write(panel, MIPI_DCS_SET_DISPLAY_ON);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "set_display_on cmd failed ret = %d\n", ret);
+> +               goto power_off;
+> +       }
+> +
+> +       /* Per DSI spec wait 120ms after sending set_display_on DCS command */
+> +       msleep(120);
+> +
+> +       ctx->prepared = true;
+> +
+> +       return 0;
+> +
+> +power_off:
+> +       if (visionox_rm69299_power_off(ctx))
+> +               DRM_DEV_ERROR(ctx->dev, "power_off failed\n");
+> +       return ret;
+> +}
+> +
+> +static int visionox_rm69299_enable(struct drm_panel *panel)
+> +{
+> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +       int ret;
+> +
+> +       if (ctx->enabled)
+> +               return 0;
+> +
+> +       if (ctx->backlight) {
+> +               ret = backlight_enable(ctx->backlight);
+> +               if (ret < 0)
+> +                       DRM_DEV_ERROR(ctx->dev, "backlight enable failed %d\n",
+> +                                                 ret);
+> +       }
+> +
+> +       ctx->enabled = true;
+> +
+> +       return 0;
+> +}
+> +
+> +static int visionox_rm69299_get_modes(struct drm_panel *panel)
+> +{
+> +       struct drm_connector *connector = panel->connector;
+> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +       struct drm_display_mode *mode;
+> +       const struct rm69299_config *config;
+> +
+> +       config = ctx->config;
+> +       mode = drm_mode_create(connector->dev);
+> +       if (!mode) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "failed to create a new display mode\n");
+> +               return 0;
+> +       }
+> +
+> +       connector->display_info.width_mm = config->width_mm;
+> +       connector->display_info.height_mm = config->height_mm;
+> +       drm_mode_copy(mode, config->dm);
+> +       mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> +       drm_mode_probed_add(connector, mode);
+> +
+> +       return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs visionox_rm69299_drm_funcs = {
+> +       .disable = visionox_rm69299_disable,
+> +       .unprepare = visionox_rm69299_unprepare,
+> +       .prepare = visionox_rm69299_prepare,
+> +       .enable = visionox_rm69299_enable,
+> +       .get_modes = visionox_rm69299_get_modes,
+> +};
+> +
+> +static int visionox_rm69299_panel_add(struct visionox_rm69299 *ctx)
+> +{
+> +       struct device *dev = ctx->dev;
+> +       int ret, i;
+> +       const struct rm69299_config *config;
+> +
+> +       config = ctx->config;
+> +       for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++)
+> +               ctx->supplies[i].supply = regulator_names[i];
+> +
+> +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+> +                                     ctx->supplies);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +       if (IS_ERR(ctx->reset_gpio)) {
+> +               DRM_DEV_ERROR(dev, "cannot get reset gpio %ld\n",
+> +                       PTR_ERR(ctx->reset_gpio));
+> +               return PTR_ERR(ctx->reset_gpio);
+> +       }
+> +
+> +       ret = gpiod_direction_output(ctx->reset_gpio, 0);
+> +       if(ret < 0) {
+> +               pr_err("direction output failed \n");
+> +       }
+> +
+> +       drm_panel_init(&ctx->panel);
+> +       ctx->panel.dev = dev;
+> +       ctx->panel.funcs = &visionox_rm69299_drm_funcs;
+> +       drm_panel_add(&ctx->panel);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct drm_display_mode qcom_sc7180_mtp_1080p_mode = {
+> +       .name = "1080x2248",
+> +       .clock = 158695,
+> +       .hdisplay = 1080,
+> +       .hsync_start = 1080 + 26,
+> +       .hsync_end = 1080 + 26 + 2,
+> +       .htotal = 1080 + 26 + 2 + 36,
+> +       .vdisplay = 2248,
+> +       .vsync_start = 2248 + 56,
+> +       .vsync_end = 2248 + 56 + 4,
+> +       .vtotal = 2248 + 56 + 4 + 4,
+> +       .vrefresh = 60,
+> +       .flags = 0,
+> +};
+> +
+> +static const struct rm69299_config rm69299_dir = {
+> +       .width_mm = 74,
+> +       .height_mm = 131,
+> +       .panel_name = "qcom_sc7180_mtp_1080p_panel",
+> +       .dm = &qcom_sc7180_mtp_1080p_mode,
+> +       .panel_on_cmds = qcom_rm69299_1080p_panel_magic_cmds,
+> +       .num_on_cmds = ARRAY_SIZE(qcom_rm69299_1080p_panel_magic_cmds),
+> +};
+> +
+> +static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
+> +{
+> +       struct device *dev = &dsi->dev;
+> +       struct visionox_rm69299 *ctx;
+> +       int ret = 0;
+> +
+> +       ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +
+> +       if (!ctx)
+> +               return -ENOMEM;
+> +
+> +       ctx->config = of_device_get_match_data(dev);
+> +
+> +       if (!ctx->config) {
+> +               dev_err(dev, "missing device configuration\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +       ctx->dev = dev;
+> +       ctx->dsi = dsi;
+> +
+> +       ret = visionox_rm69299_panel_add(ctx);
+> +       if (ret) {
+> +               DRM_DEV_ERROR(dev, "failed to add panel\n");
+> +               goto err_panel_add;
+> +       }
+> +
+> +       dsi->lanes = 4;
+> +       dsi->format = MIPI_DSI_FMT_RGB888;
+> +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_LPM |
+> +               MIPI_DSI_CLOCK_NON_CONTINUOUS;
+> +       ret = mipi_dsi_attach(dsi);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(dev,
+> +                       "dsi attach failed ret = %d\n", ret);
+> +               goto err_dsi_attach;
+> +       }
+> +
+> +       return 0;
+> +
+> +err_dsi_attach:
+> +       drm_panel_remove(&ctx->panel);
+> +err_panel_add:
+> +       mipi_dsi_device_unregister(dsi);
+> +       return ret;
+> +}
+> +
+> +static int visionox_rm69299_remove(struct mipi_dsi_device *dsi)
+> +{
+> +       struct visionox_rm69299 *ctx = mipi_dsi_get_drvdata(dsi);
+> +
+> +       if (ctx->dsi) {
+> +               mipi_dsi_detach(ctx->dsi);
+> +               mipi_dsi_device_unregister(ctx->dsi);
+> +       }
+> +
+> +       drm_panel_remove(&ctx->panel);
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id visionox_rm69299_of_match[] = {
+> +       {
+> +               .compatible = "visionox,rm69299-1080p-display",
+> +               .data = &rm69299_dir,
+> +       },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, visionox_rm69299_of_match);
+> +
+> +static struct mipi_dsi_driver visionox_rm69299_driver = {
+> +       .driver = {
+> +               .name = "panel-visionox-rm69299",
+> +               .of_match_table = visionox_rm69299_of_match,
+> +       },
+> +       .probe = visionox_rm69299_probe,
+> +       .remove = visionox_rm69299_remove,
+> +};
+> +module_mipi_dsi_driver(visionox_rm69299_driver);
+> +
+> +MODULE_DESCRIPTION("VISIONOX RM69299 DSI Panel Driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.7.4
+>
