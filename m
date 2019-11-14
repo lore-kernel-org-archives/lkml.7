@@ -7,85 +7,85 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC32EC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B84C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49E1206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F242C206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Dd727wo+"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="f6S2rAVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfKNPxG (ORCPT
+        id S1726881AbfKNPxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:53:06 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42473 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfKNPxG (ORCPT
+        Thu, 14 Nov 2019 10:53:19 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45930 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfKNPxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:53:06 -0500
-Received: by mail-qt1-f196.google.com with SMTP id t20so7272032qtn.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:53:05 -0800 (PST)
+        Thu, 14 Nov 2019 10:53:18 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 30so7248363qtz.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:53:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=tLI/gn4OSN8ZC/Du6JdVBQfUYGGcPQMSiqf5vI2eXOc=;
-        b=Dd727wo+TuDWwkH44X9N4CtBsI2dSYsENPDZa58bkPuAqqYfbwYj2r1Nk4lJhLwMtg
-         gAP8Zjtdv9AocJu8SGIIAQWMmAaG0WTWZF0Y1Qv9/RVMvHUs0aQFrpLlMUHJEkgMsFR4
-         pEhnfS8bWWut7Rk/dDx/YCO9wkwnFvFMvjy25+Teb+aMd3Mgvzq7GrSoEn1X//aptASa
-         zBHNyZgY8wk7d/1Pq10HA0IMPg9JSqbJprel0jFNaNMN0o8V+j90xs9jxJQyQ2+jmQr6
-         5zUGXxNmfIWt2387u/W9iGxHAS0orB8bAju6IPR7SmHo77BE24FPTiGhX0fOlhrcn5S9
-         uS4A==
+        bh=ei+Lg4Zw6EdGj9wGd2lTbvXb4PRXvY0S2CQJq/u3m58=;
+        b=f6S2rAVw2sC8DNXogYymtSpBW9HKuV5i9m7yY5suCgzi4X2qTIupQJsJUowOKfrEGJ
+         5lpMFo9ZFTs2tW7jbmy1YZ27B8u9PSQFdfTuICwEKMoxomzo12Ih5a3uJsVIkrIxcztX
+         YHL/hUlQ7nwQwJad/wAuFW42gZlf7i0l/3futpuacx9G92g27RE58ZsLLhbzLrCbNdII
+         0llhml5MjXUVVE/mOIW0xTNZ9ZAmfZQF0+bugSjbBd1Vh8SieHvJ7OULXLn7mOgfhNa1
+         uyjY7eVJMlQVshM+7bQLn+GNKQz+2nTqGmEVUqtnpec7YFg8roCrW3xl5+ojjyBaEcrp
+         eJsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tLI/gn4OSN8ZC/Du6JdVBQfUYGGcPQMSiqf5vI2eXOc=;
-        b=r3Vda8/Fln2nOrgd47cqKGjeN48Vd8JUCTFoAv2uufpfOo8oBnFLMpjKpv/pqbUzLa
-         O+GXsjq9De4kDtUAD4ZA6VBfS6mA30IPgAwI+vcTnYD+ZuaI8eLxh7BvtLENCzsikFT/
-         bFAE728BjFonfhIHd6R8LJ6uMi4pO/bgksmj9HL4/ZhwuF9+6DQuGwxnrxh7vqf6/pMQ
-         nRCqA8cFwYjZrxyJYdLAmWRG/Ej0IC91NFwuWVNK+41XG6IIeeTc97u1+7HJ1zWBlSeF
-         MfqJM874bQR5OSn0AM9JmLKtieNuaorAaIljmPwL6dNadvMZQ6owxB/ACvplHxv2eYbC
-         D+lA==
-X-Gm-Message-State: APjAAAUo38wZiB91gMqVlPvngkGuBFyf8J5q7BtZ+Wn0F6L+BoimGKUy
-        4S5qlkaNTWL4Xa11DvGGB3kkqg==
-X-Google-Smtp-Source: APXvYqzeUQUldqMDzsiVRmmIdb0yNx9xu3Yzfu1xZYJyiYmmV00R48O2IXGFsO96S7ICqoOTKpLtfg==
-X-Received: by 2002:ac8:1494:: with SMTP id l20mr8747839qtj.356.1573746785170;
-        Thu, 14 Nov 2019 07:53:05 -0800 (PST)
+        bh=ei+Lg4Zw6EdGj9wGd2lTbvXb4PRXvY0S2CQJq/u3m58=;
+        b=OpHDHIZdzU6K7lqQEpA1LZr+VXRZ/CuzqRiqmHEWj1258IOUBqftcAnySpI6Haql6y
+         QaXSvUqxu891J2CXW3wm/R0x9Hx5gSaFe0grzL7MhnzwvvtHwBi4L5pZqIH0ndF0jTvA
+         lAnh3DZy++R+AU3Jo5J7TcB7O0/ezNj8Adsc+MptwMYBs5IMsGkflo9G+caN9HysPCjj
+         LbJkiL91OANNShMd5gvtjo3EIX3GDHxFg7vzMBNNznors/5ZVSAwjBtCJihEy4ITZkhc
+         b/UaL1ybQk0A57zzgiwRGwEikBfJnHA71pwuu+alduWnFCFBTbRtX2RXkZkAz8Yt4fUq
+         bqtg==
+X-Gm-Message-State: APjAAAXhhaeyfJX6IiPmPABtI7FloO0F2nWQyRmFOenqSHYV5iVTQylM
+        0V2f1EB0u4FcoslSbkY1yraNxw==
+X-Google-Smtp-Source: APXvYqwW73RaazZjrkxzpl91+XvAAIGBFH3Swkun6HTKfpi0+SGY7gMgP9d7aZU+ep/eApMfNnr4PQ==
+X-Received: by 2002:ac8:1ad0:: with SMTP id h16mr9016940qtk.303.1573746797795;
+        Thu, 14 Nov 2019 07:53:17 -0800 (PST)
 Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id c27sm2592467qko.132.2019.11.14.07.53.03
+        by smtp.gmail.com with ESMTPSA id z3sm3329338qtu.83.2019.11.14.07.53.17
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 07:53:04 -0800 (PST)
+        Thu, 14 Nov 2019 07:53:17 -0800 (PST)
 Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
         (envelope-from <jgg@ziepe.ca>)
-        id 1iVHQd-0007Yv-Cq; Thu, 14 Nov 2019 11:53:03 -0400
-Date:   Thu, 14 Nov 2019 11:53:03 -0400
+        id 1iVHQq-0007Z8-O6; Thu, 14 Nov 2019 11:53:16 -0400
+Date:   Thu, 14 Nov 2019 11:53:16 -0400
 From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     Pan Bian <bianpan2016@163.com>
-Cc:     Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
+Cc:     Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
         Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/qedr: fix potential use after free
-Message-ID: <20191114155303.GA29040@ziepe.ca>
-References: <1573021434-18768-1-git-send-email-bianpan2016@163.com>
+Subject: Re: [PATCH] RDMA/i40iw: fix potential use after free
+Message-ID: <20191114155316.GB29040@ziepe.ca>
+References: <1573022651-37171-1-git-send-email-bianpan2016@163.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573021434-18768-1-git-send-email-bianpan2016@163.com>
+In-Reply-To: <1573022651-37171-1-git-send-email-bianpan2016@163.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 02:23:54PM +0800, Pan Bian wrote:
-> Move the release operation after error log to avoid possible use after
+On Wed, Nov 06, 2019 at 02:44:11PM +0800, Pan Bian wrote:
+> Release variable dst after logging dst->error to avoid possible use after
 > free.
 > 
 > Signed-off-by: Pan Bian <bianpan2016@163.com>
 > ---
->  drivers/infiniband/hw/qedr/qedr_iw_cm.c | 2 +-
+>  drivers/infiniband/hw/i40iw/i40iw_cm.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Applied to for-next, thanks
