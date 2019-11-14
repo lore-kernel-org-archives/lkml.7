@@ -3,93 +3,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B8FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B768C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711C82071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8B82071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfKNSsb (ORCPT
+        id S1727015AbfKNSsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:48:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfKNSsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:48:31 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B89206CC;
-        Thu, 14 Nov 2019 18:48:29 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 13:48:27 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 03/10] ftrace: Add register_ftrace_direct()
-Message-ID: <20191114134827.555e9b31@gandalf.local.home>
-In-Reply-To: <CAADnVQJcwyDBm7no2_wauezjkEFvgJk10FppiqRBU8p_7n0tbw@mail.gmail.com>
-References: <20191108212834.594904349@goodmis.org>
-        <20191108213450.032003836@goodmis.org>
-        <20191109022907.6zzo6orhxpt5n2sv@ast-mbp.dhcp.thefacebook.com>
-        <20191109073310.6a7a16f2@gandalf.local.home>
-        <20191114132942.2adc7aa2@gandalf.local.home>
-        <CAADnVQJcwyDBm7no2_wauezjkEFvgJk10FppiqRBU8p_7n0tbw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 14 Nov 2019 13:48:46 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41497 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfKNSsp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:48:45 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iVKAa-000180-Oa; Thu, 14 Nov 2019 19:48:40 +0100
+Date:   Thu, 14 Nov 2019 19:48:39 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Waiman Long <longman@redhat.com>
+cc:     Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH] x86/speculation: Fix incorrect MDS/TAA mitigation
+ status
+In-Reply-To: <8f7e0f4b-5100-67b5-fcb5-f7a968b96110@redhat.com>
+Message-ID: <alpine.DEB.2.21.1911141943150.29616@nanos.tec.linutronix.de>
+References: <20191113193350.24511-1-longman@redhat.com> <20191114174553.GC7222@zn.tnic> <8f7e0f4b-5100-67b5-fcb5-f7a968b96110@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 10:34:09 -0800
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-
-> > Alexei,
+On Thu, 14 Nov 2019, Waiman Long wrote:
+> On 11/14/19 12:45 PM, Borislav Petkov wrote:
+> >> -	/* TAA mitigation is turned off on the cmdline (tsx_async_abort=off) */
+> >> -	if (taa_mitigation == TAA_MITIGATION_OFF)
+> >> +	/*
+> >> +	 * TAA mitigation via VERW is turned off if both
+> >> +	 * tsx_async_abort=off and mds=off are specified.
+> >> +	 */
+> > So this changes the dependency of switches so if anything, it should be
+> > properly documented first in all three:
 > >
-> > Do you still need such a feature?
+> > Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
+> > Documentation/x86/tsx_async_abort.rst
+> > Documentation/admin-guide/kernel-parameters.txt
 > >
-> > Note, I just pushed my tree to my for-next tree, and also have a
-> > ftrace/direct branch that ends with this patch set that is the basis of
-> > the rest of the work of my code. Feel free to build against that
-> > branch if you need to have something built on the net tree.  
+> > However, before we do that, we need to agree on functionality:
+> I agree that the documentation needs to be updated. I am going to do
+> that once we have a consensus of what is the right thing to do.
+> > Will the mitigations be disabled only with *both* =off supplied on the
+> > command line or should the mitigations be disabled when *any* of the two
+> > =off is supplied?
 > 
-> I'm still trying to figure out what you meant
-> by your suggestion to implement a modify_ftrace_direct().
-> I was thinking something much simpler like
-> modify_ftrace_direct(ip, old_call, new_ca);
-> will just text poke that call addr from old to new if old matches
+> The mitigation is disabled only with BOTH =off supplied or
+> "mitigations=off". This is the current behavior. This patch is just to
+> make sure that vulnerabilities files reflect the actual behavior. Of
+> course, we can change it to disable mitigation with either =off if this
+> is what the consensus turn out to be.
 
-The main reason, is that then we need to add another arch specific
-change, where as, the solution I suggested doesn't need anything new.
-The less arch specific code we need the better.
+I think the current behaviour is correct. It's just a coincidence that both
+issues happen to use the same mitigation technology in the exactly same
+places. So if you leave one on then the other gets mitigated as a side
+effect and the sysfs file should reflect that.
 
-> and will adjust ftrace inner bookkeeping.
-> I don't understand why you want to malloc/free ftrace_ops for that.
+Thanks,
 
-We wouldn't need to allocate it, the stub could be something as simple
-as:
-
-struct ftrace_ops dummy_ops = {
-	.func = ftrace_stub;
-}
-
-And just register that, where we set the hash to it, which would
-require an malloc and free, but is that really a problem? A modify
-shouldn't be a hot path, as text poke itself is going to be slow.
-
--- Steve
+	tglx
