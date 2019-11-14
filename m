@@ -2,138 +2,169 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33469C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC46C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5E8206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="oy4eXRZB"
+	by mail.kernel.org (Postfix) with ESMTP id E6C2C206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfKNGyu (ORCPT
+        id S1726185AbfKNG7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:54:50 -0500
-Received: from mail-eopbgr720069.outbound.protection.outlook.com ([40.107.72.69]:34656
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        Thu, 14 Nov 2019 01:59:16 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60938 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725965AbfKNGyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:54:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PDQbAqXzR6Q9ZFojuhxPQeNDIJ5gSTKICV+zo510C9f8zRAsdbpirPP1AVtxcyYWrH3d5PMnsuPQB7JIkF9mW8MXSki31kH5BnOANKlW84mKZSWY5gbboj4X7UxQ8689f7lY/JRiA1SBHbbXIuZbRdHPVa0tiVFUHZc6GPSUTDdrOJIg/F/SuZYXSUjIH55Nm0AkMpk9bKAzHWS1s6/95crdkayXk3pwWB1p2ixPMSKu0ilTbBJ7GPaeswzpBxqGWwCannsXvayV1fllpae+tia7pYL4Ou55B20Yvji64bm1+4iPJvot8gGfdZvLfavgwyMkS3SbTsVO06X7n+Gecg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fGKeFAMcknn48QUJqQNKn1KH4DRhXv5+uarvQnjRSAM=;
- b=LOpcWvlfULYgGKorRzUYVDu7H672m2PEYACS15JeTD76pminA9+naIkALqDwf8E4dUIFollAmjeBVUEN77qza2qkx1ayUF3b7afkmzKHCd7NeLp2HMnsNkH5trDT5Qx80XaqXMTEM7OHhJ0dNKjpQMcox+kF8nJRHmGw75aAgoPfGYGdY5mOHC3RHInjHrVRZac2o3MN9lW6L4X1yZ1WYt4Y97wUsUBwOQbcYHm1/RpxEjh1P6lt2q4o9bqbNnQzB32cqRtje9dDC47FEDz4TDYt3vC/r27+YM1HAOHqysePYVP3uh9XE2VLz3HPbTiwgmNe/1PqX2CQVr8bGcNAWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fGKeFAMcknn48QUJqQNKn1KH4DRhXv5+uarvQnjRSAM=;
- b=oy4eXRZBXyrcS66I1ZQ4kovet61guxhqoGeqUAqDJYIte/+PKeV1K56RF/LjQTrLMQ0GWOCvgJ6AxWSzg4tYdyaNOpFaFYWAhh51EpdHPDkQHw763VHoeRfFrGiXApdZdc4M7ZWqLXlknaPfc213Imc5ouLF68uH5x97rCV/ARM=
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com (52.132.172.222) by
- MN2PR02MB7085.namprd02.prod.outlook.com (20.180.26.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Thu, 14 Nov 2019 06:54:44 +0000
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::58bc:3b1e:12cf:675e]) by MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::58bc:3b1e:12cf:675e%7]) with mapi id 15.20.2451.023; Thu, 14 Nov 2019
- 06:54:44 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jack@suse.cz" <jack@suse.cz>
-Subject: RE: DAX filesystem support on ARMv8
-Thread-Topic: DAX filesystem support on ARMv8
-Thread-Index: AdWY/Oy6C0M7BvSlQD+OiC0acLTSOwAf9TYAAAoFFgAARMFHMA==
-Date:   Thu, 14 Nov 2019 06:54:43 +0000
-Message-ID: <MN2PR02MB6336070627E66ED8AE646BACA5710@MN2PR02MB6336.namprd02.prod.outlook.com>
-References: <MN2PR02MB63362F7B019844D94D243CE2A5770@MN2PR02MB6336.namprd02.prod.outlook.com>
- <CAPcyv4j75cQ4dSqyKGuioyyf0O9r0BG0TjFgv+w=64gLah5z6w@mail.gmail.com>
- <20191112220212.GC7934@bombadil.infradead.org>
-In-Reply-To: <20191112220212.GC7934@bombadil.infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=bharatku@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 767c3825-b691-47a1-ac19-08d768cf87c6
-x-ms-traffictypediagnostic: MN2PR02MB7085:
-x-microsoft-antispam-prvs: <MN2PR02MB7085D64462E585F946286B15A5710@MN2PR02MB7085.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02213C82F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39850400004)(136003)(346002)(396003)(189003)(53754006)(199004)(478600001)(25786009)(14454004)(53546011)(102836004)(256004)(14444005)(6246003)(6116002)(99286004)(305945005)(74316002)(7736002)(2906002)(3846002)(33656002)(76116006)(446003)(11346002)(71200400001)(71190400001)(7696005)(26005)(76176011)(186003)(486006)(476003)(6506007)(52536014)(5660300002)(316002)(81156014)(6436002)(4326008)(66066001)(66446008)(86362001)(66946007)(229853002)(66476007)(9686003)(66556008)(8676002)(64756008)(110136005)(81166006)(8936002)(54906003)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB7085;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eV6g+BWUTl6iiTthaAgrnySGAbuZCXcli1t/7yMXZeK5P5sQSuMR/m88H7Pi6zVadPtrpVud7ApL6Fby8LhVvEAmSWBQdud5j3G8sUuSZ/tE7t+tuLCaZdrtmmlhfM53xb9zHET6Bp3aq4xNasbWEmfxVQL9xFzlMghhm+r3NVLvjhEflqC7iStSz5KNyRcwZ9AlIbDcPCR7D73iy6pcUVbaApajd/QhtotwPkmrwceXY9x7gQnsKmPaefDhX4D4aNE35jXGVSBeKjgqu9n61fPOlt72Pz13m3YWtI+srarBpphkumXkRWjBnc/l1CnfjDR3q7Wr7l7ordiBZL7Sdycz/VHPv+VHN5kv658dnlNiqZD79omGJoic2z5qjjMlH46o5gle3V94iKZTAUjzvKw1d/EV6Qnvz7MWSmOEtbCb6uUCvJwEhkVxSDXhlZIT
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725601AbfKNG7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:59:15 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1F858AD4A2CE2703F348;
+        Thu, 14 Nov 2019 14:59:13 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.96) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 14:59:05 +0800
+Subject: Re: [PATCH] debugfs: fix potential infinite loop in
+ debugfs_remove_recursive
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <oleg@redhat.com>, <jack@suse.cz>, <linux-kernel@vger.kernel.org>,
+        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>,
+        <chenxiang66@hisilicon.com>, <xiexiuqi@huawei.com>
+References: <1572528884-67565-1-git-send-email-yukuai3@huawei.com>
+ <20191113151755.7125e914@gandalf.local.home>
+ <a399ae58-a467-3ff9-5a01-a4a2cdcf4fd6@huawei.com>
+ <20191113214307.29a8d001@oasis.local.home>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <0ceb4529-5238-e7fc-2b5b-d2f0bdeb706e@huawei.com>
+Date:   Thu, 14 Nov 2019 14:59:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 767c3825-b691-47a1-ac19-08d768cf87c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 06:54:44.0488
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3F5Xlbo4mrKYLgQP92KMHnvrFya1J1Eo+N0Zl59HZjTngsDZ3lQb/rxJ68RnM7PJrcLJOg7mCsU6PawoalhReA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB7085
+In-Reply-To: <20191113214307.29a8d001@oasis.local.home>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> On Tue, Nov 12, 2019 at 09:15:18AM -0800, Dan Williams wrote:
-> > On Mon, Nov 11, 2019 at 6:12 PM Bharat Kumar Gogada
-> <bharatku@xilinx.com> wrote:
-> > >
-> > > Hi All,
-> > >
-> > > As per Documentation/filesystems/dax.txt
-> > >
-> > > The DAX code does not work correctly on architectures which have
-> > > virtually mapped caches such as ARM, MIPS and SPARC.
-> > >
-> > > Can anyone please shed light on dax filesystem issue w.r.t ARM archit=
-ecture
-> ?
-> >
-> > The concern is VIVT caches since the kernel will want to flush pmem
-> > addresses with different virtual addresses than what userspace is
-> > using. As far as I know, ARMv8 has VIPT caches, so should not have an
-> > issue. Willy initially wrote those restrictions, but I am assuming
-> > that the concern was managing the caches in the presence of virtual
-> > aliases.
->=20
-> The kernel will also access data at different virtual addresses from user=
-space.
-> So VIVT CPUs will be mmap/read/write incoherent, as well as being flush
-> incoherent.
-
-Thanks a lot Wilcox and Dan for clarification.=20
-So the above restriction only applies to ARM architectures with VIVT caches=
- and not=20
-for VIPT caches.=20
 
 
-Regards,
-Bharat=20
+On 2019/11/14 10:43, Steven Rostedt wrote:
+> On Thu, 14 Nov 2019 10:01:23 +0800
+> "yukuai (C)" <yukuai3@huawei.com> wrote:
+> 
+> 
+>> Do you agree with that list_empty(&chile->d_subdirs) here is not
+>> appropriate? Since it can't skip the subdirs that is not
+>> simple_positive(simple_positive() will return false), which is the
+>> reason of infinite loop.
+> 
+> I do agree that simple_empty() is wrong, for the reasons you pointed out.
+> 
+>>>> +		if (!simple_empty(child)) {
+>>>
+>>> Have you tried this with lockdep enabled? I'm thinking that you might
+>>> get a splat with holding parent->d_lock and simple_empty(child) taking
+>>> the child->d_lock.
+>> The locks are taken and released in the right order:
+>> take parent->d_lock
+>> 	take child->d_lock
+>> 		list_for_each_entry(c, &child->d_sundirs, d_child)
+>> 			take c->d_lock
+>> 			release c->d_lock
+>> 	release child->d_lock
+>> release parent->d_lock
+>> I don't see anything wrong, am I missing something?
+> 
+> It should be fine, my worry is that we may be missing a lockdep
+> annotation, that might confuse lockdep, as lockdep may see this as the
+> same type of lock being taken, and wont know the order.
+> 
+> Have you tried this patch with lockdep enabled and tried to hit this
+> code path?
+> 
+> -- Steve
+> 
+> .
+> 
+You are right, I get the results with lockdep enabled:
+[   64.314748] ============================================
+[   64.315568] WARNING: possible recursive locking detected
+[   64.316549] 5.4.0-rc7-dirty #5 Tainted: G           O
+[   64.317398] --------------------------------------------
+[   64.318230] rmmod/2607 is trying to acquire lock:
+[   64.318982] ffff88812c8d01e8 
+(&(&dentry->d_lockref.lock)->rlock){+.+.}, at: simple_empty+0x2c/0xf0
+[   64.320539]
+[   64.320539] but task is already holding lock:
+[   64.321466] ffff88812c8d00a8 
+(&(&dentry->d_lockref.lock)->rlock){+.+.}, at: 
+debugfs_remove_recursive+0x7a/0x260
+[   64.323066]
+[   64.323066] other info that might help us debug this:
+[   64.324200]  Possible unsafe locking scenario:
+[   64.324200]
+[   64.325166]        CPU0
+[   64.325569]        ----
+[   64.325966]   lock(&(&dentry->d_lockref.lock)->rlock);
+[   64.326790]   lock(&(&dentry->d_lockref.lock)->rlock);
+[   64.327604]
+[   64.327604]  *** DEADLOCK ***
+[   64.327604]
+[   64.328675]  May be due to missing lock nesting notation
+[   64.328675]
+[   64.329758] 2 locks held by rmmod/2607:
+[   64.330373]  #0: ffff88812c8ba630 (&sb->s_type->i_mutex_key#3){++++}, 
+at: debugfs_remove_recursive+0x6a/0x260
+[   64.331997]  #1: ffff88812c8d00a8 
+(&(&dentry->d_lockref.lock)->rlock){+.+.}, at: 
+debugfs_remove_recursive+0x7a/0x260
+[   64.333713]
+[   64.333713] stack backtrace:
+[   64.334412] CPU: 2 PID: 2607 Comm: rmmod Tainted: G           O 
+5.4.0-rc7-dirty #5
+[   64.335688] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
+BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+[   64.337582] Call Trace:
+[   64.337999]  dump_stack+0xd6/0x13a
+[   64.338554]  __lock_acquire+0x19b1/0x1a70
+[   64.339205]  lock_acquire+0x10a/0x2a0
+[   64.339821]  ? simple_empty+0x2c/0xf0
+[   64.340503]  _raw_spin_lock+0x50/0xd0
+[   64.341097]  ? simple_empty+0x2c/0xf0
+[   64.341693]  simple_empty+0x2c/0xf0
+[   64.342258]  debugfs_remove_recursive+0xef/0x260
+[   64.343755]  hisi_sas_test_exit+0x26/0x30 [hisi_sas_test]
+[   64.344732]  __x64_sys_delete_module+0x258/0x330
+[   64.345474]  ? do_syscall_64+0x74/0x530
+[   64.346094]  ? trace_hardirqs_on+0x6a/0x1e0
+[   64.346766]  do_syscall_64+0xcc/0x530
+[   64.347349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   64.348265] RIP: 0033:0x7f2418459fc7
+[   64.348841] Code: 73 01 c3 48 8b 0d c1 de 2b 00 f7 d8 64 89 01 48 83 
+c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 008
+[   64.351789] RSP: 002b:00007fffbc2b0ab8 EFLAGS: 00000206 ORIG_RAX: 
+00000000000000b0
+[   64.353106] RAX: ffffffffffffffda RBX: 00007fffbc2b0b18 RCX: 
+00007f2418459fc7
+[   64.354238] RDX: 000000000000000a RSI: 0000000000000800 RDI: 
+000055b1e1d84258
+[   64.355377] RBP: 000055b1e1d841f0 R08: 00007fffbc2afa31 R09: 
+0000000000000000
+[   64.356628] R10: 00007f24184cc260 R11: 0000000000000206 R12: 
+00007fffbc2b0ce0
+[   64.357760] R13: 00007fffbc2b13d6 R14: 000055b1e1d83010 R15: 
+000055b1e1d841f0
+
+The warning will disappeare by adding 
+lockdep_set_novalidate_class(&child->d_lock) before calling 
+simple_empty(child). But I'm not sure It's the right modfication.
+
+Thanks
+Yu Kuai
+
