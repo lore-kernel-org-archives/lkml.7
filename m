@@ -2,141 +2,81 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0601FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB22C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A2B206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349C5206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573745154;
+	bh=3HN4CJA/3Iu8rHfBrlxotRbLmMG3aBOp/hgOx0NMsVY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tp+T8gpV9kAYKA8StzNmCSIGSD6ThSvDabZCXk2HpIQdfokEGVRtw4zs+ItQH78sY
+	 xLl+0J4uFiPt69b22fMK6wAbUolAXpLL4D6R2O5U2UmJM2NoraNTGgp3zIqX2UJ/ue
+	 05tK3MTMV5C80jhLmkkpo5qLUQMMSkg979F+uRgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKNPY7 (ORCPT
+        id S1727122AbfKNPZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:24:59 -0500
-Received: from mga17.intel.com ([192.55.52.151]:9885 "EHLO mga17.intel.com"
+        Thu, 14 Nov 2019 10:25:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfKNPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:24:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 07:24:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="198852045"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 14 Nov 2019 07:24:58 -0800
-Received: from [10.251.18.41] (kliang2-mobl.ccr.corp.intel.com [10.251.18.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726997AbfKNPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 10:25:53 -0500
+Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id DF81E5801E3;
-        Thu, 14 Nov 2019 07:24:55 -0800 (PST)
-Subject: Re: [PATCH v3 10/10] perf/cgroup: Do not switch system-wide events in
- cgroup switch
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-References: <20191114003042.85252-1-irogers@google.com>
- <20191114003042.85252-11-irogers@google.com>
- <20191114104340.GT4131@hirez.programming.kicks-ass.net>
- <710edaf6-2562-0f53-15d6-dc50885b8e08@linux.intel.com>
- <20191114135718.GX4131@hirez.programming.kicks-ass.net>
- <97cb578c-d302-9be3-5fe6-b2030b318bcc@linux.intel.com>
-Message-ID: <4bc51bf9-1d47-063a-e811-d05fb42c8838@linux.intel.com>
-Date:   Thu, 14 Nov 2019 10:24:54 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 1399B206DC;
+        Thu, 14 Nov 2019 15:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573745152;
+        bh=3HN4CJA/3Iu8rHfBrlxotRbLmMG3aBOp/hgOx0NMsVY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2SxLeD8A1x7/szpLe9JAjdGb9xWF7gVSVYgWB8Kba1GvrQt5m8b9buOIE5tWI+9yD
+         mONY5LAaU6Wfsq7hZMSl61NIgGBVFxnjmaYXQy+S+oC0yQE3b4Jw2r4EkDOdvIL2nA
+         tXPexsq6vuvT3InlPlEAJPvFU6dtWfNtF7jfo5GM=
+Date:   Thu, 14 Nov 2019 16:25:49 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH 0/9] sched/nohz: Make the rest of kcpustat vtime aware
+Message-ID: <20191114152548.GA17724@lenoir>
+References: <20191106030807.31091-1-frederic@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <97cb578c-d302-9be3-5fe6-b2030b318bcc@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106030807.31091-1-frederic@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/14/2019 10:16 AM, Liang, Kan wrote:
+On Wed, Nov 06, 2019 at 04:07:58AM +0100, Frederic Weisbecker wrote:
+> So we fixed CPUTIME_SYSTEM on nohz_full, now is the turn for
+> CPUTIME_USER, CPUTIME_NICE, CPUTIME_GUEST and CPUTIME_GUEST_NICE.
 > 
+> The tricky piece was to handle "nice-ness" correctly. I think I addressed
+> most reviews (one year ago now) from peterz
+> (https://lore.kernel.org/lkml/20181120141754.GW2131@hirez.programming.kicks-ass.net/)
+> Among which:
 > 
-> On 11/14/2019 8:57 AM, Peter Zijlstra wrote:
->> On Thu, Nov 14, 2019 at 08:46:51AM -0500, Liang, Kan wrote:
->>>
->>>
->>> On 11/14/2019 5:43 AM, Peter Zijlstra wrote:
->>>> On Wed, Nov 13, 2019 at 04:30:42PM -0800, Ian Rogers wrote:
->>>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>>
->>>>> When counting system-wide events and cgroup events simultaneously, the
->>>>> system-wide events are always scheduled out then back in during cgroup
->>>>> switches, bringing extra overhead and possibly missing events. 
->>>>> Switching
->>>>> out system wide flexible events may be necessary if the scheduled in
->>>>> task's cgroups have pinned events that need to be scheduled in at a 
->>>>> higher
->>>>> priority than the system wide flexible events.
->>>>
->>>> I'm thinking this patch is actively broken. groups->index 'group' wide
->>>> and therefore across cpu/cgroup boundaries.
->>>>
->>>> There is no !cgroup to cgroup hierarchy as this patch seems to assume,
->>>> specifically look at how the merge sort in visit_groups_merge() allows
->>>> cgroup events to be picked before !cgroup events.
->>>
->>>
->>> No, the patch intends to avoid switch !cgroup during cgroup context 
->>> switch.
->>
->> Which is wrong.
->>
-> Why we want to switch !cgroup system-wide event in context switch?
-> 
-> How should current perf handle this case?
+> * Merge patches that didn't make sense together
+> * Clarify the changelog (I hope) and add comments
+> * Also hook nice updates on __setscheduler_params()
+> * Uninline a big function
 
-This is not a right case. I will think about more.
-Sorry for the noise.
-
-Thanks,
-Kan
-
-> For example,
-> User A: perf stat -e cycles -G cgroup1
-> User B: perf stat -e instructions -a
-> 
-> There is only one cpuctx for each CPU. So both cycles and instructions 
-> are tracked in flexible_active list.
-> When user A left, the cgroup context-switch schedule out everything 
-> including both cycles and instructions.
-> It seems that we will never switch the instructions event back for user B.
-
-
-
-
+Gentle ping :)
