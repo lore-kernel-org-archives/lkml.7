@@ -2,101 +2,168 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845AAC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EDBC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB95206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FECC206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RRjFSq/J"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Npmz04U+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfKNM5c (ORCPT
+        id S1726755AbfKNM6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:57:32 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43724 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfKNM5b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:57:31 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAECvP7i126944;
-        Thu, 14 Nov 2019 06:57:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573736245;
-        bh=bCj1LDwNUVKQlXqlbNZOR3TzhAvoi+DmugM5a3M9x+w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RRjFSq/J+GPSPvRKrdSEwBgCRZ+4YkdqV1HzSCISWQ9Buhre7RiK7FXbU4rAGaFzD
-         ibvb0jHIYkrksY/f4R/hLmmOIBm8R/txwQz1wwi7UcbWGG8GaQPlLRXY3BA2bmFLOG
-         4F4wg6Anb0tppT1c7yTj1ekVAvSlJHeD+R2emYPc=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAECvOpq099907
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 Nov 2019 06:57:24 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 14
- Nov 2019 06:57:24 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 14 Nov 2019 06:57:24 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAECvOYu106064;
-        Thu, 14 Nov 2019 06:57:24 -0600
-Subject: Re: [PATCH v16 04/19] leds: multicolor: Introduce a multicolor class
- definition
-To:     Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191104123707.31930-1-dmurphy@ti.com>
- <20191104123707.31930-5-dmurphy@ti.com>
- <a7f18f3b-c1fb-3810-8d9b-30ecdada96ff@flowbird.group>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f4c891b6-3ce7-c3d7-447a-7633b96face1@ti.com>
-Date:   Thu, 14 Nov 2019 06:56:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <a7f18f3b-c1fb-3810-8d9b-30ecdada96ff@flowbird.group>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 14 Nov 2019 07:58:55 -0500
+Received: from mail-eopbgr150078.outbound.protection.outlook.com ([40.107.15.78]:11397
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726139AbfKNM6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 07:58:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HPw5PH/Jp8F2XUM+lJJGiN0rUbl6K7SP1TQCLEuRVSvkQlLbClMAXA7Jq3y/+AO+axtOcMZt7p1VgaifbTLk/hEMErHwv84Lpkm5dXdi9bGZqYrcKc5oMYN5w9GRQlBBlkuLl1MrFr2Kn6v9b7gVQ79g2/35FXBvHAOoaazVpufnRZzkcAeOeWs6Py8hJTPPuI8U3MUTLtKFFv9dbltBnVceGUHeK69MaSqAAlimekiHL2ddwmZkDi4chu5YVmGPfnQtes2KqxU2YzSYpLrqVUKT+97q8ZylQLA/RimBgPBhyobRL2QqwN4M3GpriIRixR31T6SOCyqmzXdSAa6F/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9zJ//esVPodjJaoeobhXq09SRlPzNkCJW8Danz3SzhE=;
+ b=BnNTKd3UzhPsQjbCZJhZTgZ1bVZwsIJJiywrU4SlE+95701H+vDZFEvzYz0cIo9ON0Q4k0K526dcBAYnjHXO9omhSoO0nMMQaIRgFQUQFPhHq57VxItuz+Pc78N+fXDtowGqUVU7z3IEiMHlQJcAon7x7y34+kcirb8VaS+J14Vf5Xu4Bq26T2CvNw9+H+ypSYy63ufhTFiIVAKdEa8b4OTUNLVr7Nztvo1SJi2pZenZZTjjakwTC7qaCa8tQSbw0JDiYGnlDIATLHq20fn0MFoRSwdNgbl1rtWY9YwZg25rYKbVCWZgG36xPn+WDD/XHIZSY1XzAKhUGztFANWMBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9zJ//esVPodjJaoeobhXq09SRlPzNkCJW8Danz3SzhE=;
+ b=Npmz04U+ceYmuwA2VmJZTbZ9vxNHQS2BbRMELsotRLMJjhQFHjXXc85rtRVuAvN6zY8GgvPB6APDxK8SNTOgWHWrU7oytOaBnnmqUX763I/+uCoelLBH72UoWVgjamDV+ZaRfVdZm8/8FdWPt8o05cB7MNw52I6NwLGm/amAUME=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5935.eurprd05.prod.outlook.com (20.178.126.88) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Thu, 14 Nov 2019 12:58:48 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2430.028; Thu, 14 Nov 2019
+ 12:58:48 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the hmm tree
+Thread-Topic: linux-next: build failure after merge of the hmm tree
+Thread-Index: AQHVmq03k5u9m0Gc1Ei8rJpUBgOCyKeKoR+A
+Date:   Thu, 14 Nov 2019 12:58:47 +0000
+Message-ID: <20191114125841.GO21728@mellanox.com>
+References: <20191114163435.6273b6a1@canb.auug.org.au>
+In-Reply-To: <20191114163435.6273b6a1@canb.auug.org.au>
+Accept-Language: en-US
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR02CA0002.namprd02.prod.outlook.com
+ (2603:10b6:208:fc::15) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 22a1e1d4-6527-418f-e3ea-08d76902638f
+x-ms-traffictypediagnostic: VI1PR05MB5935:
+x-microsoft-antispam-prvs: <VI1PR05MB59350243302A28D95C9AF4C7CF710@VI1PR05MB5935.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2043;
+x-forefront-prvs: 02213C82F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39850400004)(376002)(136003)(346002)(53754006)(199004)(189003)(71190400001)(186003)(54906003)(26005)(81156014)(86362001)(81166006)(76176011)(5660300002)(8936002)(4326008)(316002)(2906002)(11346002)(66946007)(66556008)(66476007)(476003)(6246003)(99286004)(6116002)(3846002)(25786009)(486006)(6512007)(2616005)(8676002)(66446008)(52116002)(64756008)(6506007)(386003)(1076003)(102836004)(446003)(6436002)(6486002)(36756003)(66066001)(14444005)(229853002)(71200400001)(7736002)(256004)(305945005)(14454004)(33656002)(6916009)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5935;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vwUDj4aKlycvfPT/eCI1ifW80u1Rr0XVqr4gMSVJKNgv34bUavLOj0g3MAIIl9pWGb+w+oAJymnlIYhCp/vwjcr5zc2nBO21wTwC9M799Yx2WCuJQD72fXur+n4vBIJDASIhxpjV9ZM4avyo0zz9zcWU3osfkyvRTR9KXjKJn0BxQgDT3AKJBE4+FFdf1qWHj8YEkjgGoVtFEEal08RUFPrGNV8dcTmUlk+wGAqG/1cbZMvr0Rux7YUVcEjgJ1aey46MGS4twm3KtSfXBwdWBWkDa+xuGE+TnsWRSNyDAW6Gi4Q4jEFF4dE+3cZksIA5pnd4GIA6h73rsU1lq9pb6aZpL6E4P1tOEAWnn6UpFffB7hxuqAiZOWqUspS4jt/TTRxmJdpXPZydGi7DClwTic9PONdtdONXsrnesDWd+1ctJY7ffzhD4xQdQGLzPTAp
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <89C6F450F1FDD8449CF24158202D94C2@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22a1e1d4-6527-418f-e3ea-08d76902638f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 12:58:47.9938
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6FTWUYSYWq7Rr+ywIrfIaM21N0BWeTKs2f/VnnBZ/fpzywn4aYPvjoev+419QCwzqvfUFqbO6EgEaDEaY66BVw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5935
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin
+On Thu, Nov 14, 2019 at 04:34:35PM +1100, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> After merging the hmm tree, today's linux-next build (x86_64 allmodconfig=
+)
+> failed like this:
+>=20
+> drivers/infiniband/hw/hfi1/user_exp_rcv.c: In function 'set_rcvarray_entr=
+y':
+> drivers/infiniband/hw/hfi1/user_exp_rcv.c:768:33: warning: passing argume=
+nt 2 of 'mmu_interval_notifier_insert' makes pointer from integer without a=
+ cast [-Wint-conversion]
+>   768 |    &node->notifier, tbuf->vaddr + (pageidx * PAGE_SIZE),
+>       |                     ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+>       |                                 |
+>       |                                 long unsigned int
+> In file included from include/rdma/ib_verbs.h:59,
+>                  from include/rdma/ib_hdrs.h:53,
+>                  from drivers/infiniband/hw/hfi1/hfi.h:68,
+>                  from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
+>                  from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
+> include/linux/mmu_notifier.h:295:24: note: expected 'struct mm_struct *' =
+but argument is of type 'long unsigned int'
+>   295 |      struct mm_struct *mm, unsigned long start,
+>       |      ~~~~~~~~~~~~~~~~~~^~
+> drivers/infiniband/hw/hfi1/user_exp_rcv.c:769:26: warning: passing argume=
+nt 4 of 'mmu_interval_notifier_insert' makes integer from pointer without a=
+ cast [-Wint-conversion]
+>   769 |    npages * PAGE_SIZE, fd->mm);
+>       |                        ~~^~~~
+>       |                          |
+>       |                          struct mm_struct *
+> In file included from include/rdma/ib_verbs.h:59,
+>                  from include/rdma/ib_hdrs.h:53,
+>                  from drivers/infiniband/hw/hfi1/hfi.h:68,
+>                  from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
+>                  from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
+> include/linux/mmu_notifier.h:296:20: note: expected 'long unsigned int' b=
+ut argument is of type 'struct mm_struct *'
+>   296 |      unsigned long length,
+>       |      ~~~~~~~~~~~~~~^~~~~~
+> drivers/infiniband/hw/hfi1/user_exp_rcv.c:767:9: error: too few arguments=
+ to function 'mmu_interval_notifier_insert'
+>   767 |   ret =3D mmu_interval_notifier_insert(
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> In file included from include/rdma/ib_verbs.h:59,
+>                  from include/rdma/ib_hdrs.h:53,
+>                  from drivers/infiniband/hw/hfi1/hfi.h:68,
+>                  from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
+>                  from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
+> include/linux/mmu_notifier.h:294:5: note: declared here
+>   294 | int mmu_interval_notifier_insert(struct mmu_interval_notifier *mn=
+i,
+>       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> Caused by commit
+>=20
+>   c90dad714405 ("RDMA/hfi1: Use mmu_interval_notifier_insert for user_exp=
+_rcv")
+>=20
+> I have used the hmm tree from next-20191113 for today.
 
-On 11/14/19 5:24 AM, Martin Fuzzey wrote:
-> Hi Dan,
->
-> On 04/11/2019 13:36, Dan Murphy wrote:
->> +int devm_led_classdev_multicolor_register_ext(struct device *parent,
->> +                         struct led_classdev_mc *mcled_cdev,
->> +                          struct led_init_data *init_data)
->> +{
->> +    struct led_classdev_mc **dr;
->> +    int ret;
->> +
->> +    dr = devres_alloc(devm_led_classdev_multicolor_release,
->> +              sizeof(*dr), GFP_KERNEL);
->> +    if (!dr)
->> +        return -ENOMEM;
->> +
->> +    ret = led_classdev_multicolor_register(parent, mcled_cdev);
->
->
-> This drops init_data, should be led_classdev_multicolor_register_ex
->
-Thanks for the issue I will fix and send v17
+Another case of 0-day missing stuff, it gave this branch an OK :(=20
 
-Dan
+I'll fix it for tomorrow
 
-
+Thanks,
+Jason
