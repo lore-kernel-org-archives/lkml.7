@@ -2,177 +2,87 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22735C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C1C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB99020709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDDA620715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573736427;
-	bh=n3t7u572qIWkQv9fAzVsyHbXrmJi4fGpDag8PrDOscY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=JSCV23nYIMP4C+WZSoE20M5F5K5jbERjULoZbp1GSEheRJpQC9+H7RmZCs/1TiyQ4
-	 SxZVeofC5NcR6i1c/ScOtqxxV0k7CgGtevWH61Nvs1mAdcwAE7LZ/rTN54EloB05/y
-	 djy9Mxqz90nJMS7MEI6km8fOjT3KcJrifrUXtroY=
+	s=default; t=1573736449;
+	bh=8CXKhgJMA2evb+0iVwECmAMsTstQn2WVya+It8E+yR8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AO/s3PBL9enxfes+RXrB7y4F1rtXg71vM07AjTAXkJaejG6ZXqaJNWbTqWO8IZJUm
+	 JXKHaOMfOudBxt5mo9BmBUbCHYMsmLwXW5XV04zCO5OK2L6s0x/y1MyuKgcqkGBXtx
+	 ex070sORLrIz+7vBuFR8NO1qmtaVYyujVnXxZ/uQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfKNNA0 (ORCPT
+        id S1727097AbfKNNAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:00:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33186 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 08:00:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbfKNNAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:00:25 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        id S1726139AbfKNNAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:00:47 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADB48206E1;
-        Thu, 14 Nov 2019 13:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38BFE20709;
+        Thu, 14 Nov 2019 13:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573736424;
-        bh=n3t7u572qIWkQv9fAzVsyHbXrmJi4fGpDag8PrDOscY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=vyvR+VRu3c1yLTxSlueP/MKjC1Inordi+oI1d7VvdYb2yF37Tkn2poztxkaNYIuTz
-         Cw8dOpLN9TFS7J/f+GVJN1aVYpDD4qvqUuZRPl2w0A8XCQd7e+tDMmXyMTxSq88/Do
-         3/4RM0LomCwt0A2nJWfA3rfQu4SZnyoQkMYApf6k=
-Message-ID: <5faae4ebcbe0eb22dc1b7d745e9355f35a9e821b.camel@kernel.org>
-Subject: Re: [RFC PATCH v2 2/4] ceph: get the require_osd_release field from
- the osdmap
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 14 Nov 2019 08:00:22 -0500
-In-Reply-To: <20191114105736.8636-3-lhenriques@suse.com>
-References: <20191114105736.8636-1-lhenriques@suse.com>
-         <20191114105736.8636-3-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        s=default; t=1573736447;
+        bh=8CXKhgJMA2evb+0iVwECmAMsTstQn2WVya+It8E+yR8=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=b9kEJnD7cOJ9i6QCSbSaXbaJTbKPhnS/CdzY7TQiFA8d1pDwnMjIQ6gJTfMf9lwCg
+         BRkCRZ+gxCv6v0HbGHxZVvjO8RQzkWz0TfaAKdvPYjhjqaEBK5A+4+0iyMSaKWp2sl
+         RTfELRa6OgAbKDI+FlD36r0rBQvytvBYtS8J7I9Y=
+Date:   Thu, 14 Nov 2019 14:00:43 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Jinke Fan <fanjinke@hygon.cn>
+cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] HID: quirks: Add quirk for HP MSU1465 PIXART OEM
+ mouse
+In-Reply-To: <20191113033841.25174-1-fanjinke@hygon.cn>
+Message-ID: <nycvar.YFH.7.76.1911141400340.1799@cbobk.fhfr.pm>
+References: <20191113033841.25174-1-fanjinke@hygon.cn>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-11-14 at 10:57 +0000, Luis Henriques wrote:
-> Since Ceph Octopus, OSDs are encoding require_osd_release into the client
-> data part of the osdmap.  This patch adds code to pick this extra field.
+On Wed, 13 Nov 2019, Jinke Fan wrote:
+
+> The PixArt OEM mouse disconnets/reconnects every minute on
+> Linux. All contents of dmesg are repetitive:
 > 
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
->  include/linux/ceph/ceph_features.h | 10 ++++++++--
->  include/linux/ceph/osdmap.h        |  1 +
->  net/ceph/osdmap.c                  | 21 +++++++++++++++++++++
->  3 files changed, 30 insertions(+), 2 deletions(-)
+> [ 1465.810014] usb 1-2.2: USB disconnect, device number 20
+> [ 1467.431509] usb 1-2.2: new low-speed USB device number 21 using xhci_hcd
+> [ 1467.654982] usb 1-2.2: New USB device found, idVendor=03f0,idProduct=1f4a, bcdDevice= 1.00
+> [ 1467.654985] usb 1-2.2: New USB device strings: Mfr=1, Product=2,SerialNumber=0
+> [ 1467.654987] usb 1-2.2: Product: HP USB Optical Mouse
+> [ 1467.654988] usb 1-2.2: Manufacturer: PixArt
+> [ 1467.699722] input: PixArt HP USB Optical Mouse as /devices/pci0000:00/0000:00:07.1/0000:05:00.3/usb1/1-2/1-2.2/1-2.2:1.0/0003:03F0:1F4A.0012/input/input19
+> [ 1467.700124] hid-generic 0003:03F0:1F4A.0012: input,hidraw0: USB HID v1.11 Mouse [PixArt HP USB Optical Mouse] on usb-0000:05:00.3-2.2/input0
 > 
-> diff --git a/include/linux/ceph/ceph_features.h b/include/linux/ceph/ceph_features.h
-> index 39e6f4c57580..f329d1907dd7 100644
-> --- a/include/linux/ceph/ceph_features.h
-> +++ b/include/linux/ceph/ceph_features.h
-> @@ -9,6 +9,7 @@
->   */
->  #define CEPH_FEATURE_INCARNATION_1 (0ull)
->  #define CEPH_FEATURE_INCARNATION_2 (1ull<<57) // CEPH_FEATURE_SERVER_JEWEL
-> +#define CEPH_FEATURE_INCARNATION_3 ((1ull<<57)|(1ull<<28)) // SERVER_MIMIC
->  
->  #define DEFINE_CEPH_FEATURE(bit, incarnation, name)			\
->  	static const uint64_t CEPH_FEATURE_##name = (1ULL<<bit);		\
-> @@ -76,6 +77,7 @@ DEFINE_CEPH_FEATURE( 0, 1, UID)
->  DEFINE_CEPH_FEATURE( 1, 1, NOSRCADDR)
->  DEFINE_CEPH_FEATURE_RETIRED( 2, 1, MONCLOCKCHECK, JEWEL, LUMINOUS)
->  
-> +DEFINE_CEPH_FEATURE( 2, 3, SERVER_NAUTILUS)
->  DEFINE_CEPH_FEATURE( 3, 1, FLOCK)
->  DEFINE_CEPH_FEATURE( 4, 1, SUBSCRIBE2)
->  DEFINE_CEPH_FEATURE( 5, 1, MONNAMES)
-> @@ -92,6 +94,7 @@ DEFINE_CEPH_FEATURE(14, 2, SERVER_KRAKEN)
->  DEFINE_CEPH_FEATURE(15, 1, MONENC)
->  DEFINE_CEPH_FEATURE_RETIRED(16, 1, QUERY_T, JEWEL, LUMINOUS)
->  
-> +DEFINE_CEPH_FEATURE(16, 3, SERVER_OCTOPUS)
->  DEFINE_CEPH_FEATURE_RETIRED(17, 1, INDEP_PG_MAP, JEWEL, LUMINOUS)
->  
->  DEFINE_CEPH_FEATURE(18, 1, CRUSH_TUNABLES)
-> @@ -114,7 +117,7 @@ DEFINE_CEPH_FEATURE(25, 1, CRUSH_TUNABLES2)
->  DEFINE_CEPH_FEATURE(26, 1, CREATEPOOLID)
->  DEFINE_CEPH_FEATURE(27, 1, REPLY_CREATE_INODE)
->  DEFINE_CEPH_FEATURE_RETIRED(28, 1, OSD_HBMSGS, HAMMER, JEWEL)
-> -DEFINE_CEPH_FEATURE(28, 2, SERVER_M)
-> +DEFINE_CEPH_FEATURE(28, 2, SERVER_MIMIC)
->  DEFINE_CEPH_FEATURE(29, 1, MDSENC)
->  DEFINE_CEPH_FEATURE(30, 1, OSDHASHPSPOOL)
->  DEFINE_CEPH_FEATURE(31, 1, MON_SINGLE_PAXOS)  // deprecate me
-> @@ -212,7 +215,10 @@ DEFINE_CEPH_FEATURE_DEPRECATED(63, 1, RESERVED_BROKEN, LUMINOUS) // client-facin
->  	 CEPH_FEATURE_CRUSH_TUNABLES5 |		\
->  	 CEPH_FEATURE_NEW_OSDOPREPLY_ENCODING |	\
->  	 CEPH_FEATURE_MSG_ADDR2 |		\
-> -	 CEPH_FEATURE_CEPHX_V2)
-> +	 CEPH_FEATURE_CEPHX_V2 |		\
-> +	 CEPH_FEATURE_SERVER_MIMIC |		\
-> +	 CEPH_FEATURE_SERVER_NAUTILUS |		\
-> +	 CEPH_FEATURE_SERVER_OCTOPUS)
->  
+> So add HID_QUIRK_ALWAYS_POLL for this one as well.
+> Test the patch, the mouse is no longer disconnected and there are no
+> duplicate logs in dmesg.
+> 
+> Reference:
+> https://github.com/sriemer/fix-linux-mouse
+> 
+> Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
 
-As you mentioned in the cover letter, that doesn't seem likely to be
-safe to just enable like this. I'm pretty sure the kclient is missing
-some things that are encompassed by these bits.
-
-Unfortunately none of that seems to be clearly documented anywhere, so
-you're probably stuck walking through the ceph tree to see why the
-server daemons are checking these flags.
-
->  #define CEPH_FEATURES_REQUIRED_DEFAULT	0
->  
-> diff --git a/include/linux/ceph/osdmap.h b/include/linux/ceph/osdmap.h
-> index e081b56f1c1d..0d8e7f5e3478 100644
-> --- a/include/linux/ceph/osdmap.h
-> +++ b/include/linux/ceph/osdmap.h
-> @@ -160,6 +160,7 @@ struct ceph_osdmap {
->  
->  	u32 flags;         /* CEPH_OSDMAP_* */
->  
-> +	u8 require_osd_release;
->  	u32 max_osd;       /* size of osd_state, _offload, _addr arrays */
->  	u32 *osd_state;    /* CEPH_OSD_* */
->  	u32 *osd_weight;   /* 0 = failed, 0x10000 = 100% normal */
-> diff --git a/net/ceph/osdmap.c b/net/ceph/osdmap.c
-> index 4e0de14f80bb..29526fd61983 100644
-> --- a/net/ceph/osdmap.c
-> +++ b/net/ceph/osdmap.c
-> @@ -1582,6 +1582,27 @@ static int osdmap_decode(void **p, void *end, struct ceph_osdmap *map)
->  		WARN_ON(!RB_EMPTY_ROOT(&map->pg_upmap_items));
->  	}
->  
-> +	if (struct_v >= 6)
-> +		/* crush version */
-> +		ceph_decode_skip_32(p, end, e_inval);
-> +	if (struct_v >= 7) {
-> +		/*
-> +		 * skip removed_snaps and purged_snaps
-> +		 * (snap_interval_set_t = 8 + 8)
-> +		 */
-> +		ceph_decode_skip_set(p, end, 16, e_inval);
-> +		ceph_decode_skip_set(p, end, 16, e_inval);
-> +	}
-> +	if (struct_v >= 9) {
-> +		struct ceph_timespec ts;
-> +
-> +		/* last_up_change and last_in_change */
-> +		ceph_decode_copy_safe(p, end, &ts, sizeof(ts), e_inval);
-> +		ceph_decode_copy_safe(p, end, &ts, sizeof(ts), e_inval);
-> +	}
-> +	if (struct_v >= 10)
-> +		ceph_decode_8_safe(p, end, map->require_osd_release, e_inval);
-> +
->  	/* ignore the rest */
->  	*p = end;
->  
+Applied, thanks.
 
 -- 
-Jeff Layton <jlayton@kernel.org>
+Jiri Kosina
+SUSE Labs
 
