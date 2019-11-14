@@ -2,103 +2,189 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31651C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E69C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428B4206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573689998;
-	bh=4Upn+v/Ef+ac/mWELV1j3G2nQNGiE1YmdWUT6I+a/YY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZFDH8YvAVEg78Yhn3adrVQLs87NVQ+GbaEuja0uHcISqGwoZ3tb/aWL8evstWag2s
-	 EcFiW0DiSEWTwUVyAUf4vGIfm5IkyfLSKcI1fZpQYuEuylYGwLnyce7jpSQKorFomq
-	 r47whxBVyrE1xAUKCbc40jW7/QWpwxbpct++Id6M=
+	by mail.kernel.org (Postfix) with ESMTP id 4DFBA206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:09:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0LLtYrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKNAGg (ORCPT
+        id S1726953AbfKNAJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:06:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbfKNAGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:06:35 -0500
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09D45206D8;
-        Thu, 14 Nov 2019 00:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573689995;
-        bh=4Upn+v/Ef+ac/mWELV1j3G2nQNGiE1YmdWUT6I+a/YY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QPHQmVNHSaAUtsLSMbhog2Zz0T99otIqW6eG6qP9F1/Tk+TZlQmw47aixxHspcvnx
-         AgCKMKyF7KRRJpSZaLNcpBkg8Pz7UCQveCpxEP6nboMIQYXVZVfptYExce9B5g/V5D
-         YVtkuA9Iyc2ZNpL3uVPDqEwBXWI+yoNjg/4wE7rs=
-Received: by mail-qk1-f172.google.com with SMTP id m4so3457083qke.9;
-        Wed, 13 Nov 2019 16:06:34 -0800 (PST)
-X-Gm-Message-State: APjAAAXCvGar8LtoNsxCa9kwvJS+cN8+zR7j/MNkrMHhZ+1rMUdPhvt8
-        3uovndyMsdsBVr7yJJAccC23BWnsCYhOP53tTw==
-X-Google-Smtp-Source: APXvYqz5e4wLJrkAmKi09szt8TeDeO5fe8u6LM+XooNZR3qMRtLRZfSA4Jj/LlV3cQU4ZdvZYSE+xNKZ9QKMYjvYptM=
-X-Received: by 2002:a37:4904:: with SMTP id w4mr4748065qka.119.1573689993895;
- Wed, 13 Nov 2019 16:06:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
- <20191111090230.3402-5-chunyan.zhang@unisoc.com> <20191112005600.GA9055@bogus>
- <CAAfSe-uohXXHyQ7txhPmLCpyQODDHAuxjuUVbGcwYySN6G9tNQ@mail.gmail.com>
-In-Reply-To: <CAAfSe-uohXXHyQ7txhPmLCpyQODDHAuxjuUVbGcwYySN6G9tNQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 13 Nov 2019 18:06:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLUkaL=dq0Nrdcax3KG7TXW3LErHTSONa9mH2gXu4du9w@mail.gmail.com>
-Message-ID: <CAL_JsqLUkaL=dq0Nrdcax3KG7TXW3LErHTSONa9mH2gXu4du9w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] dt-bindings: serial: Add a new compatible string
- for SC9863A
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 Nov 2019 19:09:22 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38593 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfKNAJW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 19:09:22 -0500
+Received: by mail-pl1-f195.google.com with SMTP id w8so1776818plq.5;
+        Wed, 13 Nov 2019 16:09:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qfqVRrP8pJ55LNT1IzE1hrfM0Ib8N8j0mvWTAA+BXF0=;
+        b=B0LLtYrH5OZ9/iE0rY2VCiHjhY7dohyl/ZN8gPmCir77dP6fvJk+Ppc7641kDqJuDX
+         ZG9122SlxaRz2/C8pivH84LrTZozyaQIPiqtBJD43Lk0G1Gs5kAt3zmz8EXxt0aj1M1w
+         zwvTBA/i3+cAIwZk8xrlGvhWQ6Y7+vxOckOYet9HNuFrogxl5G8eH8a7fGe1hpqz955m
+         dskWAAs3Yr5B+NQnvSFRjaqIdA83H3r6IjhbEuBgJLJKNdEqAOpP/zcYelHE9rhWmLLf
+         gKCXtQoofPEcVqO/TXiPoA3TvvkWkO/ZA6kpKt6b3P4DXqVMgYAJcuWg31jhwQxe4JGv
+         B2JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qfqVRrP8pJ55LNT1IzE1hrfM0Ib8N8j0mvWTAA+BXF0=;
+        b=mBgAwoUi9w+lX5I7FWlrJcIaQOE9RWFgsYliFrE2MyjPvxioF3DLCU4zZeTHzjRKNJ
+         QFNOf9vbFc3WlbauUXO9cRQTLrA4agXWIg9AdSAwzhkEQ/i0EJKbseDi1oSLuqHGBDqe
+         aQkkmY9Q9Id890WNtXbzER1tlLIg+IZQRF7Gus3iW+LlYW6uskSDVDjq2TbgrOJ08O+Y
+         K9N81N9+tahNrJAlEIU4TFHJ8ROReRKVygya2PrqF0goN5aaUMrVU8pHr7QShhEpcbwm
+         rPsyNpMNwYAdAuuNGI0RBLXlLBxUOIF5HoP8Q2Uzm0jiM822ADuTelWbXGGv/WjTcJJN
+         PLdQ==
+X-Gm-Message-State: APjAAAUkdOn3EEsDGXFHcYOHja5DLgKY2cndRTyJU2AfMIjOjCRpNY2o
+        fG0iiZI+rt9+XMViaTAfgDrZpsS7ka8=
+X-Google-Smtp-Source: APXvYqxAifQxOkHomF5n9FJPy2V+h66J1R0rJVnFhwZjZ3clwZagFL0JJMEzGHrMBGBkcQJEmBDF8A==
+X-Received: by 2002:a17:902:b582:: with SMTP id a2mr6660607pls.103.1573690160938;
+        Wed, 13 Nov 2019 16:09:20 -0800 (PST)
+Received: from odroid.ad.adelaide.edu.au (staff-249-202.wireless.adelaide.edu.au. [129.127.249.202])
+        by smtp.googlemail.com with ESMTPSA id b1sm3298910pjw.19.2019.11.13.16.09.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 16:09:20 -0800 (PST)
+From:   Marian Mihailescu <mihailescu2m@gmail.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kgene@kernel.org
+Cc:     Marian Mihailescu <mihailescu2m@gmail.com>
+Subject: [PATCH v5] ARM: dts: exynos5420: add mali dt node and enable mali on Odroid XU3/4
+Date:   Thu, 14 Nov 2019 10:39:00 +1030
+Message-Id: <20191114000900.26962-1-mihailescu2m@gmail.com>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 7:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->
-> On Tue, 12 Nov 2019 at 08:56, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, 11 Nov 2019 17:02:29 +0800, Chunyan Zhang wrote:
-> > >
-> > > SC9863A use the same serial device which SC9836 uses.
-> > >
-> > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/serial/sprd-uart.yaml | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> >
-> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
->
-> Yes, I know.
->
-> > there's no need to repost patches *only* to add the tags. The upstream
-> > maintainer will do that for acks received on the version they apply.
-> >
-> > If a tag was not added on purpose, please state why and what changed.
->
-> The reason was that I switched to yaml rather than txt in last version
-> which recieved your Acked-by.
-> Not sure for this kind of case I can still add your Acked-by.
+Add device tree node for Mali GPU for Exynos 542x SoC.
+GPU is disabled by default, and is enabled for each board after the
+regulator is defined. Tested on Odroid-XU4.
 
-This was a semi-automated reply. I do review it first, but if the
-changelog is not in the patch I may miss the reason.
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+---
 
-Anyways,
+Changes since v4:
+- fixed so it applies for latest 5.4-rc7
 
-Acked-by: Rob Herring <robh@kernel.org>
+Changes since v3:
+- fixed compatible to match bindings
+
+Changes since v2:
+- separate patch for bindings
+- fixed bindings typo
+
+Changes since v1:
+- used generic node and label for GPU
+- added bindings for compatible
+- fixed irq indentation
+- fixed interrupt-names to match bindings
+- added cooling cells for future TMU connection
+- used generic node and label for GPU opp table
+- removed always-on from SoC GPU regulator
+
+---
+ arch/arm/boot/dts/exynos5420.dtsi             | 50 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  6 +++-
+ 2 files changed, 55 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 7d51e0f4ab79..9f30f7535c40 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -670,6 +670,56 @@
+ 			iommus = <&sysmmu_gscl1>;
+ 		};
+ 
++		gpu: gpu@11800000 {
++			compatible = "samsung,exynos5420-mali", "arm,mali-t628";
++			reg = <0x11800000 0x5000>;
++			interrupts = <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "job", "mmu", "gpu";
++
++			clocks = <&clock CLK_G3D>;
++			clock-names = "core";
++			power-domains = <&g3d_pd>;
++			operating-points-v2 = <&gpu_opp_table>;
++
++			status = "disabled";
++			#cooling-cells = <2>;
++
++			gpu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp@177000000 {
++					opp-hz = /bits/ 64 <177000000>;
++					opp-microvolt = <812500>;
++				};
++				opp@266000000 {
++					opp-hz = /bits/ 64 <266000000>;
++					opp-microvolt = <862500>;
++				};
++				opp@350000000 {
++					opp-hz = /bits/ 64 <350000000>;
++					opp-microvolt = <912500>;
++				};
++				opp-420000000 {
++					opp-hz = /bits/ 64 <420000000>;
++					opp-microvolt = <962500>;
++				};
++				opp-480000000 {
++					opp-hz = /bits/ 64 <480000000>;
++					opp-microvolt = <1000000>;
++				};
++				opp-543000000 {
++					opp-hz = /bits/ 64 <543000000>;
++					opp-microvolt = <1037500>;
++				};
++				opp-600000000 {
++					opp-hz = /bits/ 64 <600000000>;
++					opp-microvolt = <1150000>;
++				};
++			};
++		};
++
+ 		scaler_0: scaler@12800000 {
+ 			compatible = "samsung,exynos5420-scaler";
+ 			reg = <0x12800000 0x1294>;
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index 829147e320e0..f880aeccbace 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -522,7 +522,6 @@
+ 				regulator-name = "vdd_g3d";
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <1400000>;
+-				regulator-always-on;
+ 				regulator-boot-on;
+ 
+ 				regulator-state-mem {
+@@ -654,6 +653,11 @@
+ 	vtmu-supply = <&ldo7_reg>;
+ };
+ 
++&gpu {
++	mali-supply = <&buck4_reg>;
++	status = "okay";
++};
++
+ &rtc {
+ 	status = "okay";
+ 	clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
+-- 
+2.14.1
+
