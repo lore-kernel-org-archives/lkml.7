@@ -2,123 +2,121 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D25C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A848C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43F720672
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF6D20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rGdh3i0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfKNOFP (ORCPT
+        id S1727166AbfKNOGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:05:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40734 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfKNOFO (ORCPT
+        Thu, 14 Nov 2019 09:06:02 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56504 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfKNOGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:05:14 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iVFjv-0003mN-UV; Thu, 14 Nov 2019 15:04:52 +0100
-Date:   Thu, 14 Nov 2019 15:04:51 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 17/23] y2038: time: avoid timespec usage in
- settimeofday()
-In-Reply-To: <CAK8P3a2bxDZVKgcJoa99wr3tDyYckQAdk2f=RnL4vTFPjm3tXQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1911141457120.2507@nanos.tec.linutronix.de>
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-8-arnd@arndb.de> <alpine.DEB.2.21.1911132250010.2507@nanos.tec.linutronix.de> <CAK8P3a2bxDZVKgcJoa99wr3tDyYckQAdk2f=RnL4vTFPjm3tXQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 14 Nov 2019 09:06:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WzDqDpc5k/65Fo1yc0KhfHuu05DdY1dk7CfUXKh3Y7o=; b=rGdh3i0BKMkIqprcR+7b+OJ8k
+        rq/80NBOu1UhWkK/++ZrrAQ6LzhKZ/gxblHoLYBkDwg/fWeiCgvQXEM8nYGKKqDGWJ2zznTN7nCG9
+        8FrL1vVrDJbRzLKqEcxcDD15pVfHwDqug1sumjftHXz6j1BDLZ5p1G/Zq2iEHzWc77b1zjRf/p6nO
+        LbsSETwdDiNnse7WsXlCyvjULw+6ja//F4FZJZqN+Asdc0nptByM1oV9mmNqGfNM0tCjozqn4Vq4F
+        sQMMSesfYkmC+21+G5JKsAGgZ1CqGGGNSkLEO5KejcV7fNmlbmAhl04F/qKRXWNrVMmGLoXGBsnj5
+        /RgdChcsg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVFkt-0001XM-9o; Thu, 14 Nov 2019 14:05:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD1A53002B0;
+        Thu, 14 Nov 2019 15:04:41 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 55CCA203A5888; Thu, 14 Nov 2019 15:05:49 +0100 (CET)
+Date:   Thu, 14 Nov 2019 15:05:49 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org,
+        alexei.starovoitov@gmail.com
+Subject: Re: [PATCH -v5 05/17] x86/ftrace: Use text_poke()
+Message-ID: <20191114140549.GZ4131@hirez.programming.kicks-ass.net>
+References: <20191111131252.921588318@infradead.org>
+ <20191111132457.761255803@infradead.org>
+ <20191112132536.28ac1b32@gandalf.local.home>
+ <20191112222413.GB4131@hirez.programming.kicks-ass.net>
+ <20191112174816.7fb95948@gandalf.local.home>
+ <20191113090104.GF4131@hirez.programming.kicks-ass.net>
+ <20191113092741.18abd63b@gandalf.local.home>
+ <20191114131827.GV4131@hirez.programming.kicks-ass.net>
+ <20191114085628.16a942a2@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114085628.16a942a2@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019, Arnd Bergmann wrote:
-> On Wed, Nov 13, 2019 at 10:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Fri, 8 Nov 2019, Arnd Bergmann wrote:
-> > > -SYSCALL_DEFINE2(settimeofday, struct timeval __user *, tv,
-> > > +SYSCALL_DEFINE2(settimeofday, struct __kernel_old_timeval __user *, tv,
-> > >               struct timezone __user *, tz)
-> > >  {
-> > >       struct timespec64 new_ts;
-> > > -     struct timeval user_tv;
-> > >       struct timezone new_tz;
-> > >
-> > >       if (tv) {
-> > > -             if (copy_from_user(&user_tv, tv, sizeof(*tv)))
-> > > +             if (get_user(new_ts.tv_sec, &tv->tv_sec) ||
-> > > +                 get_user(new_ts.tv_nsec, &tv->tv_usec))
-> > >                       return -EFAULT;
-> >
-> > How is that supposed to be correct on a 32bit kernel?
+On Thu, Nov 14, 2019 at 08:56:28AM -0500, Steven Rostedt wrote:
+> On Thu, 14 Nov 2019 14:18:27 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> I don't see the problem you are referring to. This should behave the
-> same way on a 32-bit kernel and on a 64-bit kernel, sign-extending
-> the tv_sec field, and copying the user tv_usec field into the
-> kernel tv_nsec, to be multiplied by 1000 a few lines later.
-
-You're right. Tired brain failed to see the implicit sign extension in
-get_user().
-
-> Am I missing something?
-
-No.
-
-> > > -             if (!timeval_valid(&user_tv))
-> > > +             if (tv->tv_usec > USEC_PER_SEC)
-> > >                       return -EINVAL;
-> >
-> > That's incomplete:
-> >
-> > static inline bool timeval_valid(const struct timeval *tv)
+> > On Wed, Nov 13, 2019 at 09:27:41AM -0500, Steven Rostedt wrote:
+> > 
+> > > Yeah, let's keep it this way, but still needs a comment.  
+> > 
+> > The function now reads:
+> > 
+> > int ftrace_arch_code_modify_post_process(void)
+> >     __releases(&text_mutex)
 > > {
-> >         /* Dates before 1970 are bogus */
-> >         if (tv->tv_sec < 0)
-> >                 return false;
-> >
-> >         /* Can't have more microseconds then a second */
-> >         if (tv->tv_usec < 0 || tv->tv_usec >= USEC_PER_SEC)
-> >                 return false;
-> >
-> >         return true;
+> > 	/*
+> > 	 * ftrace_module_enable()
+> > 	 *   ftrace_arch_code_modify_prepare()
+> > 	 *   do_for_each_ftrace_rec()
+> > 	 *     __ftrace_replace_code()
+> > 	 *       ftrace_make_{call,nop}()
+> > 	 *         ftrace_modify_code_direct()
+> > 	 *           text_poke_queue()
+> > 	 *   ftrace_arch_code_modify_post_process()
+> > 	 *     text_poke_finish()
+> 
+> Perhaps just:
+> 
+> 	/*
+> 	 * ftrace_make_{call,nop}() may be called during
+> 	 * module load, and we need to finish the text_poke_queue()
+> 	 * that they do, here.
+> > 	 */
+> 
+> 
+> > 	text_poke_finish();
+> > 	ftrace_poke_late = 0;
+> > 	mutex_unlock(&text_mutex);
+> > 	return 0;
 > > }
+> > 
+> > Patch is otherwise unchanged.
 > 
-> My idea was to not duplicate the range check that is done
-> in do_sys_settimeofday64() and again in do_settimeofday64:
+> Other than that:
 > 
->         if (!timespec64_valid_settod(ts))
->                 return -EINVAL;
-> 
-> The only check we should need in addition to this is to ensure
-> that passing an invalid tv_usec number doesn't become an
-> unexpectedly valid tv_nsec after the multiplication.
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Right, but please add a proper comment as you/we are going to scratch heads
-4 weeks from now when staring at that check and wondering why it is
-incomplete.
-
-Thanks,
-
-	tglx
+Done and thanks!
