@@ -2,96 +2,108 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C1DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD92FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C323120715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gV/R4Jkg"
+	by mail.kernel.org (Postfix) with ESMTP id BBD66206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfKNJjj (ORCPT
+        id S1726541AbfKNJlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:39:39 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:46860 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfKNJjj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:39:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Wy3or+1IunO8E5xCFN6cgzorjYj3r7MZ05XdsZ7VM8g=; b=gV/R4JkglWag2kMpE/rJG6FLs
-        Uqel7qN3fiQPNoklo/zIPIAL9g94w9cKj8HGIobUxgb8VA6k7GUWIUtjFJ95hDSM5PW4aX60ed0eW
-        LpnnAFrNWB3ZfucGpn1Rv8Jv4G4R1MGdb8rm5AC5pkKG1NKgpRFr4vISDrXJDGNZGjPsIbtu4YVL/
-        yaY6tLl11PXwq2Rl4N16fWtAtpS3CobEFEsE8DpQaLFjbrOfcd6iFGrPaVUgG1I8VBN6pBjB+fmIZ
-        UjZATxBLUBWSAAkLLpRbSGzAFBb63esLCTtlfk64kUxfpR3LjeuGVFkDzcWgGpmk9xE8E6Ney1qra
-        f0mBCxfpQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVBax-00037O-8X; Thu, 14 Nov 2019 09:39:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 30419304637;
-        Thu, 14 Nov 2019 10:38:10 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9848C29DF1243; Thu, 14 Nov 2019 10:39:17 +0100 (CET)
-Date:   Thu, 14 Nov 2019 10:39:17 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v3 03/10] perf: Use min_max_heap in visit_groups_merge
-Message-ID: <20191114093917.GO4131@hirez.programming.kicks-ass.net>
-References: <20191114003042.85252-1-irogers@google.com>
- <20191114003042.85252-4-irogers@google.com>
+        Thu, 14 Nov 2019 04:41:55 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2098 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726106AbfKNJlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:41:55 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 8836451502569967E717;
+        Thu, 14 Nov 2019 09:41:53 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 14 Nov 2019 09:41:53 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 14 Nov
+ 2019 09:41:53 +0000
+Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
+To:     Hannes Reinecke <hare@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "hare@suse.com" <hare@suse.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+ <1573652209-163505-4-git-send-email-john.garry@huawei.com>
+ <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
+ <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
+ <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
+ <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
+ <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
+Date:   Thu, 14 Nov 2019 09:41:51 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114003042.85252-4-irogers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 04:30:35PM -0800, Ian Rogers wrote:
+On 13/11/2019 18:38, Hannes Reinecke wrote:
+>> Hi Hannes,
+>>
+>>> Oh, my. Indeed, that's correct.
+>>
+>> The tags could be kept in sync like this:
+>>
+>> shared_tag = blk_mq_get_tag(shared_tagset);
+>> if (shared_tag != -1)
+>>      sbitmap_set(hctx->tags, shared_tag);
+>>
+>> But that's obviously not ideal.
+>>
+> Actually, I _do_ prefer keeping both in sync.
+> We might want to check if the 'normal' tag is set (typically it would 
+> not, but then, who knows ...)
+> The beauty here is that both 'shared' and 'normal' tag are in sync, so 
+> if a driver would be wanting to use the tag as index into a command 
+> array it can do so without any surprises.
+> 
+> Why do you think it's not ideal?
 
-Changelog goes here. Mostly it's about how we want to extend the
-merge-sort from the 2 inputs we have today.
+A few points:
+- Getting a bit from one tagset and then setting it in another tagset is 
+a bit clunky.
+- There may be an atomicity of the getting the shared tag bit and 
+setting the hctx tag bit - I don't think that there is.
+- Consider that sometimes we may want to check if there is space on a hw 
+queue - checking the hctx tags is not really proper any longer, as 
+typically there would always be space on hctx, but not always the shared 
+tags. We did delete blk_mq_can_queue() yesterday, which would be an 
+example of that. Need to check if there are others.
 
-> Based-on-work-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Having said all that, the obvious advantage is performance gain, can 
+still use request.tag and so maybe less intrusive changes.
+
+I'll have a look at the implementation. The devil is mostly in the detail...
+
+Thanks,
+John
