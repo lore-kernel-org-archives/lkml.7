@@ -2,147 +2,105 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F54C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605D5C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0000205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F68206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="jtcTtrw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfKNNgW (ORCPT
+        id S1726953AbfKNNhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:36:22 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:38535 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfKNNgW (ORCPT
+        Thu, 14 Nov 2019 08:37:40 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25871 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfKNNhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:36:22 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iVFIJ-0004cC-Rw; Thu, 14 Nov 2019 13:36:19 +0000
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        openbmc@lists.ozlabs.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191108155524.170566-1-colin.king@canonical.com>
- <ea47e8e7a8663d33acb44dd4473a5a150ea51526.camel@pengutronix.de>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH][next] reset: npcm: check for NULL return from
- syscon_regmap_lookup_by_compat
-Message-ID: <33b8c69a-a2c7-b0a6-3ed0-270f921032bd@canonical.com>
-Date:   Thu, 14 Nov 2019 13:36:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 14 Nov 2019 08:37:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1573738644; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=FdOQiHFeC6aCmfyGmWisw36xuQYXQa4bK3Z1I6RlF0HbjWtTTPQmbVyaYTw7Jij1ZsTraydwLJ9Oioul/Uk23mX2pJZ8nw9gprNvxdNodtexjh473P3FSH6VhXmXvmX6o1TSpWNpjuWrPuy7a2f66SXC541tmyzho/eqJchnQQA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1573738644; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=NfiC+cinjSWRt41jD5jXQ2ueHOhgmVAdrHkxzjmGKlo=; 
+        b=Tpo7W7Pf/wO3m8cUa+1PW0oe7gHnV9eIsgkHTdmYOABxxuZ3Cm77pZeFr8okldtBDEFa+aSBn5jT1HH130Hv3RHin/U2aZC/sBvePcLHoT7BnmHfRYIPCwPVueEZ2KIvvr5SYFD8ReU7wj3QCcTrF6OoFjRvNaZ4JOtkk9gGZWc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=er0q6KMsXWMJx/9NDexN/JHCN4w07a93L/INEGkUfisGFkd5a3rnxXM6dDDB0Ues5385ZXxO5yGX
+    h7XxGVXuZZ7AF4ZsdJ1+jVk4Df7rqZDFvA7Jo+xolZ1+/tsxY7al  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573738644;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=1056; bh=NfiC+cinjSWRt41jD5jXQ2ueHOhgmVAdrHkxzjmGKlo=;
+        b=jtcTtrw1onsboQFcintNiPlH2M8TzlpO6/Fuz7E0WVXcnxjOupxuYC4XojhVtISq
+        wvovWpBafiQQsjrm0jsgtimzF6OrElCGXNa397kUjmxc04wPLMwDMGDywWwxaxG0IMf
+        0VYkGfbE1Qr+Nldbcsg5rYJpEjnbm2JJfth17TIk=
+Received: from [192.168.10.218] (171.221.112.167 [171.221.112.167]) by mx.zohomail.com
+        with SMTPS id 15737386427141007.0962792641557; Thu, 14 Nov 2019 05:37:22 -0800 (PST)
+Subject: Re: [PATCH 1/2 v3] dt-bindings: clock: Add X1000 bindings.
+To:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+ <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com>
+ <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
+ <20191112005544.GB7038@bogus> <20191113235955.927B6206EE@mail.kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, paul.burton@mips.com, robh+dt@kernel.org,
+        syq@debian.org, mark.rutland@arm.com, paul@crapouillou.net
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DCD5880.9090504@zoho.com>
+Date:   Thu, 14 Nov 2019 21:37:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-In-Reply-To: <ea47e8e7a8663d33acb44dd4473a5a150ea51526.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191113235955.927B6206EE@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/11/2019 13:22, Philipp Zabel wrote:
-> Hi Colin,
-> 
-> On Fri, 2019-11-08 at 15:55 +0000, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Function syscon_regmap_lookup_by_compat can return a NULL pointer, so
-> 
-> Could you point out where that NULL pointer would come from? As far as I
-> understand, syscon_regmap_lookup_by_compatible() should either return a
-> negative error code, or syscon->regmap, which should never be NULL.
+Hi Stephen,
 
-Maybe I was over-zealous here with the results from the static analyzer.
-Re-reading the call chain it does seem like I was mistaken. So NAK this
-patch.
-
-Apologies for the noise.
-
-> 
->> the IS_ERR check on the return is incorrect. Fix this by checking for
->> IS_ERR_OR_NULL and return -ENODEV if true.  This avoids a null pointer
->> dereference on gcr_regmap later on.
+On 2019=E5=B9=B411=E6=9C=8814=E6=97=A5 07:59, Stephen Boyd wrote:
+> Quoting Rob Herring (2019-11-11 16:55:44)
+>> On Sun, 10 Nov 2019 17:28:21 +0800, Zhou Yanjie wrote:
+>>> Add the clock bindings for the X1000 Soc from Ingenic.
+>>>
+>>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>>> ---
+>>>   .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
+>>>   include/dt-bindings/clock/x1000-cgu.h              | 44 +++++++++++++=
++++++++++
+>>>   2 files changed, 45 insertions(+)
+>>>   create mode 100644 include/dt-bindings/clock/x1000-cgu.h
+>>>
+>> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+>> there's no need to repost patches *only* to add the tags. The upstream
+>> maintainer will do that for acks received on the version they apply.
 >>
->> Addresses-Coverity: ("Dereference null return (stat)")
->> Fixes: b3f1d036f26d ("reset: npcm: add NPCM reset controller driver")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/reset/reset-npcm.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/reset/reset-npcm.c b/drivers/reset/reset-npcm.c
->> index 2ea4d3136e15..9febf8bed2f6 100644
->> --- a/drivers/reset/reset-npcm.c
->> +++ b/drivers/reset/reset-npcm.c
->> @@ -161,9 +161,9 @@ static int npcm_usb_reset(struct platform_device *pdev, struct npcm_rc_data *rc)
->>  	of_match_device(dev->driver->of_match_table, dev)->data;
->>  
->>  	gcr_regmap = syscon_regmap_lookup_by_compatible(gcr_dt);
->> -	if (IS_ERR(gcr_regmap)) {
->> +	if (IS_ERR_OR_NULL(gcr_regmap)) {
->>  		dev_err(&pdev->dev, "Failed to find %s\n", gcr_dt);
->> -		return PTR_ERR(gcr_regmap);
->> +		return -ENODEV;
->>  	}
->>  
->>  	/* checking which USB device is enabled */
-> 
-> regards
-> Philipp
-> 
+>> If a tag was not added on purpose, please state why and what changed.
+> It looks like some extra defines were added. I carried forward your
+> review tag.
+>
+
+I'm sorry that my mistake has caused you extra work,
+I'll be careful to add tags next time.
+
+Best regards!
+
 
