@@ -2,97 +2,143 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325DFC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8AAC33C9A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1832A2071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C899F2071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ks2VJ2mn";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MiP3pgpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfKNSey (ORCPT
+        id S1727054AbfKNSfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:34:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:16529 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfKNSey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:34:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:34:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="207881915"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 14 Nov 2019 10:34:53 -0800
-Date:   Thu, 14 Nov 2019 10:34:53 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 05/16] KVM: VMX: Drop initialization of
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191114183453.GI24045@linux.intel.com>
-References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
- <20191022000820.1854-1-sean.j.christopherson@intel.com>
- <59cbc79a-fb06-f689-aa24-0ba923783345@redhat.com>
- <20191022151622.GA2343@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022151622.GA2343@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 14 Nov 2019 13:35:38 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55622 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNSfi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:35:38 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DD6D360FBB; Thu, 14 Nov 2019 18:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573756537;
+        bh=SgFbpCmztnSKJcjOZEZx8rMc1JBkIjET0tzBEEjYq5s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ks2VJ2mnRXbTWTmhsisVAokjQo4+IGbAcR1PF+SRWRemihKLS4HowgWxWYtVzfR9H
+         189mBeP4114gYnrISooMQJ/9/5eJVzoVoXCyEzCpP79zEPChpOUyjR/21t4c9Nru3D
+         DAzjNMmy7IoUf8/0Mx/XIXJH7K/AHU3OTGh7+Nvg=
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0DA7E60EE5;
+        Thu, 14 Nov 2019 18:35:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573756534;
+        bh=SgFbpCmztnSKJcjOZEZx8rMc1JBkIjET0tzBEEjYq5s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MiP3pgpl5Q1miW9ZcghzZMG+YCsROKflKxVKM3Y0wmLQKIiWIgRGVaj4N5LYcwQWi
+         cAetRNeWMJxA2DeqjvLYx3ZdCjff9TdXZv+BmBEBugtesb9eQ91MBMtQZey1Envq7H
+         OgJR3jqN3IHTllbf6jTE27gWoJ1EVIAw3dcwtmiM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0DA7E60EE5
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     swboyd@chromium.org, maz@kernel.org, linus.walleij@linaro.org,
+        bjorn.andersson@linaro.org
+Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH 00/12] Support wakeup capable GPIOs
+Date:   Thu, 14 Nov 2019 11:35:09 -0700
+Message-Id: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 08:16:22AM -0700, Sean Christopherson wrote:
-> On Tue, Oct 22, 2019 at 12:51:01PM +0200, Paolo Bonzini wrote:
-> > On 22/10/19 02:08, Sean Christopherson wrote:
-> > > Remove the code to initialize IA32_FEATURE_CONTROL MSR when KVM is
-> > > loaded now that the MSR is initialized during boot on all CPUs that
-> > > support VMX, i.e. can possibly load kvm_intel.
-> > > 
-> > > Reviewed-by: Jim Mattson <jmattson@google.com>
-> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > ---
-> > >  arch/x86/kvm/vmx/vmx.c | 48 +++++++++++++++++-------------------------
-> > >  1 file changed, 19 insertions(+), 29 deletions(-)
-> > 
-> > I am still not sure about this...  Enabling VMX is adding a possible
-> > attack vector for the kernel, we should not do it unless we plan to do a
-> > VMXON.
-> 
-> An attacker would need arbitrary cpl0 access to toggle CR4.VMXE and do
-> VMXON (and VMLAUNCH), would an extra WRMSR really slow them down?
-> 
-> And practically speaking, how often do you encounter systems whose
-> firmware leaves IA32_FEATURE_CONTROL unlocked?
-> 
-> > Why is it so important to operate with locked
-> > IA32_FEATURE_CONTROL (so that KVM can enable VMX and the kernel can
-> > still enable SGX if desired).
-> 
-> For simplicity.  The alternative that comes to mind is to compute the
-> desired MSR value and write/lock the MSR on demand, e.g. add a sequence
-> similar to KVM's hardware_enable_all() for SGX, but that's a fair amount
-> of complexity for marginal benefit (IMO).
-> 
-> If a user really doesn't want VMX enabled, they can clear the feature bit
-> via the clearcpuid kernel param. 
-> 
-> That being said, enabling VMX in IA32_FEATURE_CONTROL if and only if
-> IS_ENABLED(CONFIG_KVM) is true would be an easy enhancement.
+Hi all,
 
-Paolo, any follow up thoughts on this approach?
+Thanks for all the reviews.
+
+Here is the next spin of the wakeup capable GPIO support. In order to
+facilitate basic support available in the kernel, I have dropped the SPI
+register configuration. The feature was added when this series was
+restarted based on new hierarchy support in gpiolib. But, the SPI
+configuration can be done in the firmware. This would avoid a whole lot
+of code in linux that serve little to no purpose. Users of GPIO never
+have the need to change the trigger type (level edge and vice-versa) and
+the basic configuration can be set in the firmware before boot.
+
+Changes in v1:
+	- Address review comments
+	- Add Reviewed-by tags
+	- Drop SPI config patches
+	- Rebase on top of Rajendra's PDC changes [6]
+
+Changes in RFC v2[5]:
+        - Address review comments #3, #4, #6, #7, #8, #9, #10
+        - Rebased on top of linux-next GPIO latest patches [1],[3],[4]
+        - Increase PDC max irqs in #2 (avoid merge conflicts with
+          downstream)
+        - Add Reviewed-by #5
+
+Please consider reviewing these patches.
+
+Thanks,
+Lina
+
+[1].
+https://lore.kernel.org/linux-gpio/20190808123242.5359-1-linus.walleij@linaro.org/
+[2].
+https://lkml.org/lkml/2019/5/7/1173
+[3].
+https://lore.kernel.org/r/20190819084904.30027-1-linus.walleij@linaro.org
+[4].
+https://lore.kernel.org/r/20190724083828.7496-1-linus.walleij@linaro.org
+[5].
+https://lore.kernel.org/linux-gpio/5da6b849.1c69fb81.a9b04.1b9f@mx.google.com/t/
+[6].
+https://lore.kernel.org/linux-arm-msm/d622482d92059533f03b65af26c69b9b@www.loen.fr/
+
+Lina Iyer (10):
+  irqdomain: add bus token DOMAIN_BUS_WAKEUP
+  drivers: irqchip: qcom-pdc: update max PDC interrupts
+  drivers: irqchip: pdc: Do not toggle IRQ_ENABLE during mask/unmask
+  drivers: irqchip: add PDC irqdomain for wakeup capable GPIOs
+  of: irq: document properties for wakeup interrupt parent
+  drivers: pinctrl: msm: setup GPIO chip in hierarchy
+  drivers: pinctrl: sdm845: add PDC wakeup interrupt map for GPIOs
+  arm64: dts: qcom: add PDC interrupt controller for SDM845
+  arm64: dts: qcom: setup PDC as the wakeup parent for TLMM on SDM845
+  arm64: defconfig: enable PDC interrupt controller for Qualcomm SDM845
+
+Maulik Shah (2):
+  genirq: Introduce irq_chip_get/set_parent_state calls
+  drivers: irqchip: pdc: Add irqchip set/get state calls
+
+ .../bindings/interrupt-controller/interrupts.txt   |  12 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |  10 ++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/irqchip/qcom-pdc.c                         | 147 +++++++++++++++++++--
+ drivers/pinctrl/qcom/pinctrl-msm.c                 | 113 ++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm.h                 |  16 +++
+ drivers/pinctrl/qcom/pinctrl-sdm845.c              |  23 +++-
+ include/linux/irq.h                                |   6 +
+ include/linux/irqdomain.h                          |   1 +
+ include/linux/soc/qcom/irq.h                       |  34 +++++
+ kernel/irq/chip.c                                  |  44 ++++++
+ 11 files changed, 393 insertions(+), 14 deletions(-)
+ create mode 100644 include/linux/soc/qcom/irq.h
+
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
