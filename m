@@ -2,92 +2,95 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC4FC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECBAC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A20206F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3D1E206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573702337;
+	bh=k6rDRWHF8rlDKpcD7ZAxWPg4f6vvUEyBRv/SbXMTQ6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RxVDHeCtrrLMA2lnuF87kYDPcnVOhImF8ePgidMlRbunE/cfHGhuwwq3jvkf9kDqB
+	 cxcUnYefrK3aSMImzFt0UhSBxX6MwZ6uxukjbrOmMf64A5iHPEGj0cFTnf1qWkjfrs
+	 UlMZGjllT+B+IAPc+8K2FXV/MNcDdZR2ZsB/lyiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfKND1g (ORCPT
+        id S1726755AbfKNDcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:27:36 -0500
-Received: from mga01.intel.com ([192.55.52.88]:41987 "EHLO mga01.intel.com"
+        Wed, 13 Nov 2019 22:32:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfKND1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:27:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 19:27:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
-   d="scan'208";a="235515175"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Nov 2019 19:27:34 -0800
-Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
-        by linux.intel.com (Postfix) with ESMTP id 1724F58049B;
-        Wed, 13 Nov 2019 19:27:31 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-Date:   Thu, 14 Nov 2019 11:27:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726489AbfKNDcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 22:32:16 -0500
+Received: from localhost (unknown [124.219.31.93])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54302206CC;
+        Thu, 14 Nov 2019 03:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573702335;
+        bh=k6rDRWHF8rlDKpcD7ZAxWPg4f6vvUEyBRv/SbXMTQ6g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xBDO0coB2EeMZXpW/+qOtPjC63t0L+fw3Y7r82WKI81GzdhJ0knNgan9EDg/FxO7p
+         o916uEjeVza/RyYmCL/kUpRY5SR+OyvEMq52ggec14BW/0HrSAThXaXDQBY4L7OqjH
+         16Q1z5bN5DwdBZfb3xVh7LB6x7oEOcfwEUYqxKjs=
+Date:   Thu, 14 Nov 2019 11:32:12 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spdx@vger.kernel.org
+Subject: Re: [PATCH] export,module: add SPDX GPL-2.0 license identifier to
+ headers with no license
+Message-ID: <20191114033212.GA161229@kroah.com>
+References: <20191018045053.8424-1-yamada.masahiro@socionext.com>
+ <20191018101510.GA1172290@kroah.com>
+ <CAK7LNAS3oYkaBTG+59prgu0Yqxn=2vi94mjHbKdx7TXBkPy5Xw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAS3oYkaBTG+59prgu0Yqxn=2vi94mjHbKdx7TXBkPy5Xw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 13, 2019 at 08:46:11PM +0900, Masahiro Yamada wrote:
+> On Fri, Oct 18, 2019 at 7:15 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, Oct 18, 2019 at 01:50:53PM +0900, Masahiro Yamada wrote:
+> > > Commit b24413180f56 ("License cleanup: add SPDX GPL-2.0 license
+> > > identifier to files with no license") took care of a lot of files
+> > > without any license information.
+> > >
+> > > These headers were not processed by the tool perhaps because they
+> > > contain "GPL" in the code.
+> > >
+> > > I do not see any license boilerplate in them, so they fall back to
+> > > GPL version 2 only, which is the project default.
+> > >
+> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >
+> > Ah, nice catch!
+> >
+> > I'll queue this up to my spdx tree if no one objects.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> 
+> No objection (comment) so far.
+> 
+> I think it is OK to apply this.
 
-Hi Linus,
+Ok, will go do so, thanks.
 
-On 13/11/2019 10:46 PM, Linus Walleij wrote:
-> On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
-> <rahul.tanwar@linux.intel.com> wrote:
->
->> Add dt bindings document for pinmux & GPIO controller driver of
->> Intel Lightning Mountain SoC.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> (...)
->
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-pinctrl
-> Just noted from another review where Rob noted that this name should
-> match the internal name in the datasheet for this hardware block. Is it
-> really called "lgm-pinctrl" inside Intel?
->
-> intel,lightning-mountain-io and similar are perfectly fine if that is the
-> name it has in your documentation.
-
-Our documentation does not have any specific names for these hardware
-blocks. It names it in a very generic/standard manner like GPIO, pinmux..
-
-To make the name explicit & self explanatory, i should probably change
-the name as you suggested i.e. intel,lightning-mountain-io.
-
-Regards,
-Rahul
+greg k-h
