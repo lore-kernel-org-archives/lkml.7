@@ -2,91 +2,203 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF536C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18EDC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949152070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70ECF20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:48:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PWSXtqgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfKNUnu (ORCPT
+        id S1727004AbfKNUsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:43:50 -0500
-Received: from sauhun.de ([88.99.104.3]:44848 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbfKNUnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:43:50 -0500
-Received: from localhost (x4dbf5278.dyn.telefonica.de [77.191.82.120])
-        by pokefinder.org (Postfix) with ESMTPSA id 190892C03EE;
-        Thu, 14 Nov 2019 21:43:48 +0100 (CET)
-Date:   Thu, 14 Nov 2019 21:43:47 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     ludovic.desroches@microchip.com, agross@kernel.org,
-        wsa+renesas@sang-engineering.com, ldewangan@nvidia.com,
-        vkoul@kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, digetx@gmail.com,
-        linux-tegra@vger.kernel.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, bjorn.andersson@linaro.org
-Subject: Re: [PATCH 0/4] i2c: Use dma_request_chan() directly for channel
- request
-Message-ID: <20191114204347.GB7213@kunai>
-References: <20191113092235.30440-1-peter.ujfalusi@ti.com>
+        Thu, 14 Nov 2019 15:48:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28713 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726592AbfKNUsr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 15:48:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573764524;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=f4B6rfmtv2Qt+9DfwNYqiCu2HEO09fbhcXd54eFBcgs=;
+        b=PWSXtqgmEdPdv0zWlO399PzTNcrOwg21rykf+FmJjKmBEa4EIH8mQIaDEPU/GgmVZZQWul
+        oaxQpO9rmQ876m7qPsk2azyBCRtmGm4+pVi/saPlMUYH9eO19oSJiKc9lnwmHnQnlxifOY
+        jJWZO1YN3+6Xn/zxRU8I8CfWXKdHGRg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-JtuV8etIO0eT2rXmXh_zEg-1; Thu, 14 Nov 2019 15:48:42 -0500
+Received: by mail-wr1-f72.google.com with SMTP id 92so5513609wro.14
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 12:48:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SG38e6rn6sWVYD6nEtXoWfLrsm5oi0uDjlI4qnmFxyI=;
+        b=YQhAhjTc6jzYCjspjnuU3aRZD7zzzh6Oy/ioM7XcPYESa8fL0rKYoliYnTHRKy+hrx
+         8atM8LxSIb+Uhu/UgzvJm/CZ78jgeT7U2HoP/gKskskPQDXdrC2HnjsJQ+sCX4UB5+qH
+         AMvGM7H5wVNwGDBUJaKKDnUrQVsJ2WD1nu3TN8yC3MQb/ZG84u5g33hpzwgShmJ4258l
+         rSklyHI28vWrAc2tXpuzr/by0oIIu8syYOJdIfHJXJ27Ic3+QcRQu+oCe38zuGG6BXyL
+         PWzTFric2ZPV8hGa+q9m6mGmt3IX2xM7MEvy+Z0Wi7F8WlWJ8FikN7TiQAxP+PTo8cGd
+         DXeA==
+X-Gm-Message-State: APjAAAU8xFMK/h6tLcMzdDaqlHeyrbKkHOLhLSVxsR3V7oX56aRAzuRb
+        Ew8xhDBw2OxUj88CIoWpXUWBG4RnwMvUPpAchTTmp17EQt6MgtyDk/PW8L/64maiIwvI0dF8iGC
+        8e2MBLNqXHZwyADrpWrJVPWqk
+X-Received: by 2002:adf:ffd0:: with SMTP id x16mr10084257wrs.86.1573764521111;
+        Thu, 14 Nov 2019 12:48:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxQ9pjh3RE3RyLPfgQ0X+rKHYvPgNDppJzxUIq6hmxR7oOINOPj1s5eWmXRkA4hcoyBNvT/uQ==
+X-Received: by 2002:adf:ffd0:: with SMTP id x16mr10084228wrs.86.1573764520872;
+        Thu, 14 Nov 2019 12:48:40 -0800 (PST)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id f19sm10152403wrf.23.2019.11.14.12.48.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 12:48:40 -0800 (PST)
+Subject: Re: [PATCH v7 2/8] efi: Add embedded peripheral firmware support
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-3-hdegoede@redhat.com>
+ <20191011144834.GL16384@42.do-not-panic.com>
+ <e7bd40ff-20d1-3aed-8516-9fffd4c3a207@redhat.com>
+ <20191114194233.GE11244@42.do-not-panic.com>
+ <f00804ae-e556-35e4-d0a3-cd9201fdd2d0@redhat.com>
+Message-ID: <9b0a0121-3e63-0602-6c0d-00547e389f76@redhat.com>
+Date:   Thu, 14 Nov 2019 21:48:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
-Content-Disposition: inline
-In-Reply-To: <20191113092235.30440-1-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f00804ae-e556-35e4-d0a3-cd9201fdd2d0@redhat.com>
+Content-Language: en-US
+X-MC-Unique: JtuV8etIO0eT2rXmXh_zEg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---oC1+HKm2/end4ao3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Nov 13, 2019 at 11:22:31AM +0200, Peter Ujfalusi wrote:
+On 14-11-2019 21:13, Hans de Goede wrote:
 > Hi,
 >=20
-> I'm going through the tree to remove dma_request_slave_channel_reason() a=
-s it
-> is just:
-> #define dma_request_slave_channel_reason(dev, name) \
-> 	dma_request_chan(dev, name)
+> On 14-11-2019 20:42, Luis Chamberlain wrote:
+>> On Thu, Nov 14, 2019 at 12:27:01PM +0100, Hans de Goede wrote:
+>>> Hi Luis,
+>>>
+>>> Thank you for the reviews and sorry for being a bit slow to respind.
+>>>
+>>> On 11-10-2019 16:48, Luis Chamberlain wrote:
+>>>> On Fri, Oct 04, 2019 at 04:50:50PM +0200, Hans de Goede wrote:
+>>>>> +static int __init efi_check_md_for_embedded_firmware(
+>>>>> +=A0=A0=A0 efi_memory_desc_t *md, const struct efi_embedded_fw_desc *=
+desc)
+>>>>> +{
+>>>>> +=A0=A0=A0 const u64 prefix =3D *((u64 *)desc->prefix);
+>>>>> +=A0=A0=A0 struct sha256_state sctx;
+>>>>> +=A0=A0=A0 struct embedded_fw *fw;
+>>>>> +=A0=A0=A0 u8 sha256[32];
+>>>>> +=A0=A0=A0 u64 i, size;
+>>>>> +=A0=A0=A0 void *map;
+>>>>> +
+>>>>> +=A0=A0=A0 size =3D md->num_pages << EFI_PAGE_SHIFT;
+>>>>> +=A0=A0=A0 map =3D memremap(md->phys_addr, size, MEMREMAP_WB);
+>>>>
+>>>> Since our limitaiton is the init process must have mostly finished,
+>>>> it implies early x86 boot code cannot use this, what measures can we
+>>>> take to prevent / check for such conditions to be detected and
+>>>> gracefully errored out?
+>>>
+>>> As with all (EFI) early boot code, there simply is a certain order
+>>> in which things need to be done. This needs to happen after the basic
+>>> mm is setup, but before efi_free_boot_services() gets called, there
+>>> isn't really a way to check for all these conditions. As with all
+>>> early boot code, people making changes need to be careful to not
+>>> break stuff.
+>>
+>> I rather we take a proactive measure here and add whatever it is we need
+>> to ensure the API works only when its supposed to, rather than try and
+>> fail, and then expect the user to know these things.
+>>
+>> I'd prefer if we at least try to address this.
 >=20
-> Regards,
-> Peter
+> This is purely internal x86/EFI API it is not intended for drivers
+> or anything like that. It has only one caller under arch/x86 and it is
+> not supposed to get any other callers outside of arch/* ever.
+>=20
+> Note that this all runs before even core_initcall-s get run, none
+> if the code which runs before then has any sort of ordering checks
+> and I don't see how this bit is special and thus does need ordering
+> checks; and there really is no mechanism for such checks so early
+> during boot.
+>=20
+> The drivers/firmware/efi/embedded-firmware.c file does add some API
+> which can be used normally, specifically the efi_get_embedded_fw()
+> but that has no special ordering constrains and it does not directly
+> use the function we are discussing now. It reads back data stored
+> by the earlier functions; and if somehow called before those functions
+> run (*), then it will simply return -ENOENT.
 
-Applied to for-next, thanks!
+Ok, I just realized that we may have some miscommunication here,
+when you wrote:
 
+"Since our limitation is the init process must have mostly finished,
+  it implies early x86 boot code cannot use this, what measures can we
+  take to prevent / check for such conditions to be detected and
+  gracefully errored out?"
 
---oC1+HKm2/end4ao3
-Content-Type: application/pgp-signature; name="signature.asc"
+I assumed you meant that to apply to the efi_check_md_for_embedded_firmware=
+()
+helper or its caller.
 
------BEGIN PGP SIGNATURE-----
+But I guess what you really want is some error to be thrown if someone
+calls firmware_request_platform() before we are ready.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3NvIMACgkQFA3kzBSg
-KbZ4KhAAqSIoupVPNUTy5EUS3aRgDo8MVkiIW1UWgvqLUQ0Zf1I1wOJg39JEPMg9
-mNEvOCYkNOI7W85SarY869oxjmFsKlXjyMk9791x+8cHwNqtMQ/5WW/8oxaPM4FW
-H936eUEkiqDivyXszx0lUbc/Df3a8nz71vSEyTfltMQ4ypIrOeRYHbvqmd/3lxpK
-YIkVGF2RO76ddQOMJEA7GY1o3CpBJDUDYMiziMuLSgxEdcv+LfiHTE4eqAnSbOFW
-nNkC++LLjSPNUl9OqiZTKT5R+umlMXgdRcTAOLxkOb9bYci6ETiTVtjihcLy86e4
-Zt1DQIZbyxc0bWkYUB0JpKgHfUxk7s7jk6zFMJtBdF5bpOJWSDl3yc6LNHBimeBK
-5AO042p6KsJw6ZCMpuQudrZyAn827OQd0qjffPG74fyj4nA8r1Wa3M+jcy/RnNUp
-tp/2l605JpN47LW4qJ8W23MrcTReoeJTHv/xyKQQxAclfiM7yEN7XvHOmegS/I4k
-4ehvvUvmlIV5CCB712Ci7sGJcafe7AD3aTZ/VL/up2GsakvJ0HrpSSkk3wrqW5ju
-lSf73hxh62sD6o6eZXwt8Jp1FtYCrQKkPCBXXi322d7dgzrQ+8O9T/ffkxGxNYoN
-9V420J1qtUXCWoLB+DUHE+IUPOQ5kSbn3R27WALZ4wxrAI2jfNQ=
-=LdkV
------END PGP SIGNATURE-----
+I guess I could make efi_check_for_embedded_firmwares() which scans
+for known firmwares and saved a copy set a flag that it has run.
 
---oC1+HKm2/end4ao3--
+And then combine that with making efi_get_embedded_fw() (which underpins
+firmware_request_platform()) print a warning when called if that flag
+is not set yet.
+
+That would mean though that some code which runs earlier then
+a core_initcall would, would call firmware_request_platform() and
+such code is generally expected to know what they are doing.
+
+I just checked and the cpu microcode stuff which comes to mind
+for this uses a late_initcall so runs long after efi_get_embedded_fw()
+and I have a feeling that trying to use the fw_loader before
+core_initcalls have run is going to end poorly anyways.
+
+Still if you want I can add a pr_warn or maybe even a WARN_ON
+to efi_get_embedded_fw() in case it somehow gets called before
+efi_check_for_embedded_firmwares().
+
+Regards,
+
+Hans
+
