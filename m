@@ -2,181 +2,107 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CADC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6A7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF2D206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A91206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:35:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ORDdpXq8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dn3wCVm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfKNJdf (ORCPT
+        id S1726318AbfKNJfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:33:35 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54876 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfKNJdd (ORCPT
+        Thu, 14 Nov 2019 04:35:30 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:46782 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfKNJfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:33:33 -0500
-Received: by mail-wm1-f68.google.com with SMTP id z26so4881256wmi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 01:33:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gMxHk04F3k6Cl2QlH6VuWL+3w3xnAMx199fCB+OqBGk=;
-        b=ORDdpXq8fuvjmdKFM7rMHzFzVMRo7pArVNa5VsqJ08egyC8CsXlE/ctueq8EUiLKqL
-         FoZtA7vPQLOwB+2dMd6pzATkUxyiDxWwDaI4V+Uhj+r20Uw+rm9X6tB2hoNsrwjG1WY8
-         6RzApTh5dQa/C4lRWrVlvYZXeWgNPma4rkNNqf3t/ZTnA0nCcX+PAVOUEq/UqC2WLABk
-         12X8oCSO4d+U8cYNVWCDk76gEdkqlsbV+g6ZMgZVLPN8HY9yhITMElNLlLH2jdCsGU7j
-         J04NiAm8gpRHP9GUlm0fHOaCZkrTnS+ZwL4VQ8IjLKbRSB80tRTS6Crzdt1GaUOtFBjm
-         ke7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gMxHk04F3k6Cl2QlH6VuWL+3w3xnAMx199fCB+OqBGk=;
-        b=FlIb9SShGMM35jmIrUTdzzYxQGawbyjgc94jo2AUdMRUFWX3bDQvuK6Yw3rgglTZpj
-         oO//Iw/AVV0Lgr0GOSE2uXYYa6dWbDL+/M3cHMlR+KpCKdy3CEHT6D1VHeXqjpCMRMDB
-         8QiRiukrTLAkeH6REpmTSZacaKeQEs8iTXvUF16WMEuF/l0W/WOxyV2bUTa3CSvBHGdI
-         r7ni50hFKtRA47nz+A3nPWWZjaS3ZlzbS6OethahvV6UevGgZv/YGDMLyjUkITc1WNWQ
-         4O9VCq9ICMI29o2qJYACIbPxbPmwYt7TLqzvoH+Mz9etjIkEghpdU+wlkZfd9FBerU0N
-         HM9w==
-X-Gm-Message-State: APjAAAU8zx5lyw/Xax/7QggwguvilF8qZ6Gu/PVeULVKJKxWmTJ9oBWx
-        fTNGECQ2ZAwYRkXU3iECPp/zkg==
-X-Google-Smtp-Source: APXvYqwOeXP71H3D16a9eLlpfyGMZ5nkC2myjOVWRo8oee9ndgiAsfzQzpbSxv8aywtnYw4MOsW1Nw==
-X-Received: by 2002:a1c:f20c:: with SMTP id s12mr6420046wmc.37.1573724011034;
-        Thu, 14 Nov 2019 01:33:31 -0800 (PST)
-Received: from localhost.localdomain (hipert-gw1.mat.unimo.it. [155.185.5.1])
-        by smtp.gmail.com with ESMTPSA id j22sm7523409wrd.41.2019.11.14.01.33.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 01:33:30 -0800 (PST)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        tschubert@bafh.org, patdung100@gmail.com, cevich@redhat.com,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX V2 1/1] block, bfq: deschedule empty bfq_queues not referred by any process
-Date:   Thu, 14 Nov 2019 10:33:11 +0100
-Message-Id: <20191114093311.47877-2-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191114093311.47877-1-paolo.valente@linaro.org>
-References: <20191114093311.47877-1-paolo.valente@linaro.org>
+        Thu, 14 Nov 2019 04:35:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hKpjmLesrUPpBJqtJ5Nv0zqyYUIewgBRvRBi/Ofh8CU=; b=dn3wCVm6/0qObzah1mNHHkMbz
+        DLVFgwlKaypFBsgdTLyVfEuprn9NShSgm47FmGtJLZrCxLdtbpFIy2Ol8j17K9K9ArL3ACoo5Llu6
+        8WIDZI41RZ3SmJsiR0Jha38nV2Q/rNFG6b+PUgu+p4j9VjwvtRmxdP/BXbGK1X/7SQeOfBNpBD29n
+        SmNSLFBgVNQ/uaIS/2hTjmzE+35zkFmbEe+sTNIZNqHCzsCtxUc3ydK6NlTR45nnK3oeiEs71XhrK
+        e4VL+uuMv4LhzvQquSUTwodOeXAoDCaA7ja5mdm+zDOPxo1tOQX/snWJ+sTobe5edE5FSGTTN84ga
+        gCO4Axldw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVBWs-00033G-7o; Thu, 14 Nov 2019 09:35:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8A88C301120;
+        Thu, 14 Nov 2019 10:33:53 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2A87729DF1251; Thu, 14 Nov 2019 10:35:01 +0100 (CET)
+Date:   Thu, 14 Nov 2019 10:35:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 02/10] lib: introduce generic min max heap
+Message-ID: <20191114093501.GN4131@hirez.programming.kicks-ass.net>
+References: <20191114003042.85252-1-irogers@google.com>
+ <20191114003042.85252-3-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114003042.85252-3-irogers@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 3726112ec731 ("block, bfq: re-schedule empty queues if
-they deserve I/O plugging"), to prevent the service guarantees of a
-bfq_queue from being violated, the bfq_queue may be left busy, i.e.,
-scheduled for service, even if empty (see comments in
-__bfq_bfqq_expire() for details). But, if no process will send
-requests to the bfq_queue any longer, then there is no point in
-keeping the bfq_queue scheduled for service.
+On Wed, Nov 13, 2019 at 04:30:34PM -0800, Ian Rogers wrote:
+> +/*
+> + * Remove the minimum element and then push the given element. The
+> + * implementation performs 1 sift (O(log2(size))) and is therefore more
+> + * efficient than a pop followed by a push that does 2.
+> + */
+> +static void heap_pop_push(struct min_max_heap *heap,
+> +			const void *element,
+> +			const struct min_max_heap_callbacks *func)
+> +{
+> +	char *data = (char *)heap->data;
+> +
+> +	memcpy(data, element, func->elem_size);
+> +	heapify(heap, 0, func);
+> +}
 
-In addition, keeping the bfq_queue scheduled for service, but with no
-process reference any longer, may cause the bfq_queue to be freed when
-descheduled from service. But this is assumed to never happen, and
-causes a UAF if it happens. This, in turn, caused crashes [1, 2].
-
-This commit fixes this issue by descheduling an empty bfq_queue when
-it remains with not process reference.
-
-[1] https://bugzilla.redhat.com/show_bug.cgi?id=1767539
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=205447
-
-Fixes: 3726112ec731 ("block, bfq: re-schedule empty queues if they deserve I/O plugging")
-Reported-by: Chris Evich <cevich@redhat.com>
-Reported-by: Patrick Dung <patdung100@gmail.com>
-Reported-by: Thorsten Schubert <tschubert@bafh.org>
-Tested-by: Thorsten Schubert <tschubert@bafh.org>
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
----
- block/bfq-iosched.c | 32 ++++++++++++++++++++++++++------
- 1 file changed, 26 insertions(+), 6 deletions(-)
-
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 0319d6339822..0c6214497fcc 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2713,6 +2713,28 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
- 	}
- }
- 
-+
-+static
-+void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue *bfqq)
-+{
-+	/*
-+	 * To prevent bfqq's service guarantees from being violated,
-+	 * bfqq may be left busy, i.e., queued for service, even if
-+	 * empty (see comments in __bfq_bfqq_expire() for
-+	 * details). But, if no process will send requests to bfqq any
-+	 * longer, then there is no point in keeping bfqq queued for
-+	 * service. In addition, keeping bfqq queued for service, but
-+	 * with no process ref any longer, may have caused bfqq to be
-+	 * freed when dequeued from service. But this is assumed to
-+	 * never happen.
-+	 */
-+	if (bfq_bfqq_busy(bfqq) && RB_EMPTY_ROOT(&bfqq->sort_list) &&
-+	    bfqq != bfqd->in_service_queue)
-+		bfq_del_bfqq_busy(bfqd, bfqq, false);
-+
-+	bfq_put_queue(bfqq);
-+}
-+
- static void
- bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
- 		struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
-@@ -2783,8 +2805,7 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
- 	 */
- 	new_bfqq->pid = -1;
- 	bfqq->bic = NULL;
--	/* release process reference to bfqq */
--	bfq_put_queue(bfqq);
-+	bfq_release_process_ref(bfqd, bfqq);
- }
- 
- static bool bfq_allow_bio_merge(struct request_queue *q, struct request *rq,
-@@ -4899,7 +4920,7 @@ static void bfq_exit_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- 
- 	bfq_put_cooperator(bfqq);
- 
--	bfq_put_queue(bfqq); /* release process reference */
-+	bfq_release_process_ref(bfqd, bfqq);
- }
- 
- static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
-@@ -5001,8 +5022,7 @@ static void bfq_check_ioprio_change(struct bfq_io_cq *bic, struct bio *bio)
- 
- 	bfqq = bic_to_bfqq(bic, false);
- 	if (bfqq) {
--		/* release process reference on this queue */
--		bfq_put_queue(bfqq);
-+		bfq_release_process_ref(bfqd, bfqq);
- 		bfqq = bfq_get_queue(bfqd, bio, BLK_RW_ASYNC, bic);
- 		bic_set_bfqq(bic, bfqq, false);
- 	}
-@@ -5963,7 +5983,7 @@ bfq_split_bfqq(struct bfq_io_cq *bic, struct bfq_queue *bfqq)
- 
- 	bfq_put_cooperator(bfqq);
- 
--	bfq_put_queue(bfqq);
-+	bfq_release_process_ref(bfqq->bfqd, bfqq);
- 	return NULL;
- }
- 
--- 
-2.20.1
+I'm not a fan of this operation. It has a weird name and it is utterly
+trivial.
 
