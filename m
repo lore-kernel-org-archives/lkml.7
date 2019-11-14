@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5329C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44608C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD152071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D36720709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LBfyAnWM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dVTejDTt"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QDjReYuJ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K6G0pOnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfKNSgP (ORCPT
+        id S1727421AbfKNSgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:36:15 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:56196 "EHLO
+        Thu, 14 Nov 2019 13:36:22 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55896 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727237AbfKNSfz (ORCPT
+        with ESMTP id S1726852AbfKNSfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:35:55 -0500
+        Thu, 14 Nov 2019 13:35:45 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BDF32613B7; Thu, 14 Nov 2019 18:35:48 +0000 (UTC)
+        id 38259613D1; Thu, 14 Nov 2019 18:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573756554;
-        bh=7Y5bMRJss2Ev4CyRFfq17Trlj1RSHvdmtcSH456kNAo=;
+        s=default; t=1573756544;
+        bh=Xe3y4lO0o+G7wd7o5uty7IuBxQRp8lK4R1EoiDy8RUA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LBfyAnWMJXT/x7RWh3mVT0cz59xr6+jkWdiik7ijtHP79nmdXRM0kxSrO7zrE6c97
-         kTQN+EJEasiy1GYWoFbctoVVaW4KBbyOXcbQxRY73qMKQ/P4Hb3d7tI0wXSt9GPbBQ
-         SONutXTc0bmhIO6niR8P2QGOjBuWobrMfbfk6w54=
+        b=QDjReYuJxUcuaCQCjE1xNnytaQLOBJGOqPXkzLDtjL9tGrsYgAQ5+abJ9/3D8Sa2m
+         wJ1237n5gxw+Qy2L4j1yCOrVhFlawfQOpDQppoAHVMPDm/+lF70h0/6NC3yBWXV4BB
+         52Eoo5yUWJc0HKO6InpExZnBoTKfnrS2rWDXgOyA=
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5486F61466;
-        Thu, 14 Nov 2019 18:35:46 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5CF31613E4;
+        Thu, 14 Nov 2019 18:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573756547;
-        bh=7Y5bMRJss2Ev4CyRFfq17Trlj1RSHvdmtcSH456kNAo=;
+        s=default; t=1573756541;
+        bh=Xe3y4lO0o+G7wd7o5uty7IuBxQRp8lK4R1EoiDy8RUA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVTejDTtoEBoGGGywhNr8uBRvHFHdU6Wk0LOwxOEp76p5RSBTkcfoK9jjlWe21mFG
-         FJw9ZnUVhP2LDF7m154waxQond7rZIpBwfsl/QIgI1euer8/jkwoz536zI/RtN/BCv
-         HcNlY1jMlRoZuv3+Ze+ViMdcLEWKnDMHEpAhIriE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5486F61466
+        b=K6G0pOnU+LLlzlxbBo5KXbLCH/r/X7tbVbNBniOYwp3+xJAexZIlv8B6ldEy/uX3b
+         T8ykRXPWFW5KrX4vuKF+vK8yppAp9HUBB4jAehxgFX5QFODGDciaujW6fo0pQF8xM9
+         XOHVDibsttYHxxMQcaOTRlkA9l/iJhUeiPeLjCGY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5CF31613E4
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -55,10 +55,11 @@ To:     swboyd@chromium.org, maz@kernel.org, linus.walleij@linaro.org,
 Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
         linux-gpio@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH 09/12] drivers: pinctrl: sdm845: add PDC wakeup interrupt map for GPIOs
-Date:   Thu, 14 Nov 2019 11:35:18 -0700
-Message-Id: <1573756521-27373-10-git-send-email-ilina@codeaurora.org>
+        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 05/12] of: irq: document properties for wakeup interrupt parent
+Date:   Thu, 14 Nov 2019 11:35:14 -0700
+Message-Id: <1573756521-27373-6-git-send-email-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
 References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
@@ -67,64 +68,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interrupt parents for wakeup capable GPIOs for Qualcomm SDM845 SoC.
+Some interrupt controllers in a SoC, are always powered on and have a
+select interrupts routed to them, so that they can wakeup the SoC from
+suspend. Add wakeup-parent DT property to refer to these interrupt
+controllers.
 
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-Changes in RFC v2:
-	- Rearranged GPIO wakeup parent map
+Changes in v1:
+	- Remove whitespace at end of patch
 ---
- drivers/pinctrl/qcom/pinctrl-sdm845.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/interrupt-controller/interrupts.txt  | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index ce49597..2834d2c 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/acpi.h>
-@@ -1282,6 +1282,24 @@ static const int sdm845_acpi_reserved_gpios[] = {
- 	0, 1, 2, 3, 81, 82, 83, 84, -1
- };
- 
-+static const struct msm_gpio_wakeirq_map sdm845_pdc_map[] = {
-+	{ 1, 30 }, { 3, 31 }, { 5, 32 }, { 10, 33 }, { 11, 34 },
-+	{ 20, 35 }, { 22, 36 }, { 24, 37 }, { 26, 38 }, { 30, 39 },
-+	{ 31, 117 }, { 32, 41 }, { 34, 42 }, { 36, 43 }, { 37, 44 },
-+	{ 38, 45 }, { 39, 46 }, { 40, 47 }, { 41, 115 }, { 43, 49 },
-+	{ 44, 50 }, { 46, 51 }, { 48, 52 }, { 49, 118 }, { 52, 54 },
-+	{ 53, 55 }, { 54, 56 }, { 56, 57 }, { 57, 58 }, { 58, 59 },
-+	{ 59, 60 }, { 60, 61 }, { 61, 62 }, { 62, 63 }, { 63, 64 },
-+	{ 64, 65 }, { 66, 66 }, { 68, 67 }, { 71, 68 }, { 73, 69 },
-+	{ 77, 70 }, { 78, 71 }, { 79, 72 }, { 80, 73 }, { 84, 74 },
-+	{ 85, 75 }, { 86, 76 }, { 88, 77 }, { 89, 116 }, { 91, 79 },
-+	{ 92, 80 }, { 95, 81 }, { 96, 82 }, { 97, 83 }, { 101, 84 },
-+	{ 103, 85 }, { 104, 86 }, { 115, 90 }, { 116, 91 }, { 117, 92 },
-+	{ 118, 93 }, { 119, 94 }, { 120, 95 }, { 121, 96 }, { 122, 97 },
-+	{ 123, 98 }, { 124, 99 }, { 125, 100 }, { 127, 102 }, { 128, 103 },
-+	{ 129, 104 }, { 130, 105 }, { 132, 106 }, { 133, 107 }, { 145, 108 },
-+};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+index 4a3ee25..4ebfa00 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+@@ -108,3 +108,15 @@ commonly used:
+ 			sensitivity = <7>;
+ 		};
+ 	};
 +
- static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.pins = sdm845_pins,
- 	.npins = ARRAY_SIZE(sdm845_pins),
-@@ -1290,6 +1308,9 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.groups = sdm845_groups,
- 	.ngroups = ARRAY_SIZE(sdm845_groups),
- 	.ngpios = 151,
-+	.wakeirq_map = sdm845_pdc_map,
-+	.nwakeirq_map = ARRAY_SIZE(sdm845_pdc_map),
++3) Interrupt wakeup parent
++--------------------------
 +
- };
- 
- static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
++Some interrupt controllers in a SoC, are always powered on and have a select
++interrupts routed to them, so that they can wakeup the SoC from suspend. These
++interrupt controllers do not fall into the category of a parent interrupt
++controller and can be specified by the "wakeup-parent" property and contain a
++single phandle referring to the wakeup capable interrupt controller.
++
++   Example:
++	wakeup-parent = <&pdc_intc>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
