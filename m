@@ -2,107 +2,144 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62844C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 02:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AD6C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 02:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D2B206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 02:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F2A206F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 02:21:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mVGXWZyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfKNCGO (ORCPT
+        id S1726590AbfKNCVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 21:06:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47500 "EHLO mail.kernel.org"
+        Wed, 13 Nov 2019 21:21:40 -0500
+Received: from ozlabs.org ([203.11.71.1]:50351 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfKNCGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 21:06:14 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726098AbfKNCVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 21:21:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91526206F3;
-        Thu, 14 Nov 2019 02:06:13 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 21:06:11 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, y2038@lists.linaro.org,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 21/23] y2038: itimer: change implementation to
- timespec64
-Message-ID: <20191113210611.515868a4@oasis.local.home>
-In-Reply-To: <alpine.DEB.2.21.1911132306070.2507@nanos.tec.linutronix.de>
-References: <20191108210236.1296047-1-arnd@arndb.de>
-        <20191108211323.1806194-12-arnd@arndb.de>
-        <alpine.DEB.2.21.1911132306070.2507@nanos.tec.linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47D4wt0X4jz9sNT;
+        Thu, 14 Nov 2019 13:21:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573698096;
+        bh=shChhN5EF9KgXRXrKBtuHFrRtChjGLsebmVlDt06m7Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mVGXWZyInQ8ZghGJNyWcbcUdSEEWLCCQizt7pEjGbYO653gWawqyJ1FAbGvQCkS7L
+         JY1YndT+cXSwGCiqHeIVOqCAT8af23iPhs7if4uIFz1YLzqFzFFA37WacNN1JkfZDK
+         6+hjsHxa94WVia0ZqOEWQGJyxryGnEkNbAVkwrHmWpjzEmHDrMwL7xJGsaT57ovSf6
+         IpddjfzX7Yz1YnlY1c05Pz1xYnbXzRyNHnIuhSktJWxp91HHub7CWV8A7Htrqa0ORV
+         5KmZp8jlJIewQca4ME2k3QWka3PZXflLMYsDvKD+EJiP9i0GgoFYxvipwP4xNxYvl3
+         2wI5JjmfO7gUQ==
+Date:   Thu, 14 Nov 2019 13:21:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Herring <robherring2@gmail.com>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Marian Mihailescu <mihailescu2m@gmail.com>
+Subject: linux-next: manual merge of the devicetree tree with the arm-soc
+ tree
+Message-ID: <20191114132131.56089c64@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/BB1LBtqI5ejPny06wVC/iyM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 23:28:47 +0100 (CET)
-Thomas Gleixner <tglx@linutronix.de> wrote:
+--Sig_/BB1LBtqI5ejPny06wVC/iyM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Fri, 8 Nov 2019, Arnd Bergmann wrote:
-> >  TRACE_EVENT(itimer_state,
-> >  
-> > -	TP_PROTO(int which, const struct itimerval *const value,
-> > +	TP_PROTO(int which, const struct itimerspec64 *const value,
-> >  		 unsigned long long expires),
-> >  
-> >  	TP_ARGS(which, value, expires),
-> > @@ -321,12 +321,12 @@ TRACE_EVENT(itimer_state,
-> >  		__entry->which		= which;
-> >  		__entry->expires	= expires;
-> >  		__entry->value_sec	= value->it_value.tv_sec;
-> > -		__entry->value_usec	= value->it_value.tv_usec;
-> > +		__entry->value_usec	= value->it_value.tv_nsec / NSEC_PER_USEC;
-> >  		__entry->interval_sec	= value->it_interval.tv_sec;
-> > -		__entry->interval_usec	= value->it_interval.tv_usec;
-> > +		__entry->interval_usec	= value->it_interval.tv_nsec / NSEC_PER_USEC;  
-> 
-> Hmm, having a division in a tracepoint is clearly suboptimal.
+Hi all,
 
-Right, we should move the division into the TP_printk()
+Today's linux-next merge of the devicetree tree got a conflict in:
 
-		__entry->interval_nsec = alue->it_interval.tv_nsec;
+  Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
 
-> 
-> >  	),
-> >  
-> > -	TP_printk("which=%d expires=%llu it_value=%ld.%ld it_interval=%ld.%ld",
-> > +	TP_printk("which=%d expires=%llu it_value=%ld.%06ld it_interval=%ld.%06ld",  
-> 
-> We print only 6 digits after the . so that would be even correct w/o a
-> division. But it probably does not matter much.
+between commit:
 
-Well, we still need the division in the printk, otherwise it will print
-more than 6. That's just the minimum and it will print the full number.
+  577dd5de0990 ("arm64: dts: juno: add GPU subsystem")
 
+from the arm-soc tree and commit:
 
-		__entry->interval_nsec / NSEC_PER_USEC
+  3afd6389f320 ("dt-bindings: gpu: mali-midgard: add samsung exynos 5420 co=
+mpatible")
 
+from the devicetree tree.
 
--- Steve
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-> 
-> > @@ -197,19 +207,13 @@ static void set_cpu_itimer(struct task_struct *tsk, unsigned int clock_id,
-> >  #define timeval_valid(t) \
-> >  	(((t)->tv_sec >= 0) && (((unsigned long) (t)->tv_usec) < USEC_PER_SEC))  
-> 
-> Hrm, why do we have yet another incarnation of timeval_valid()? Can we
-> please have only one (the inline version)?
-> 
-> Thanks,
-> 
-> 	tglx
+--=20
+Cheers,
+Stephen Rothwell
 
+diff --cc Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+index 018f3ae4b43c,c9bdf1074305..000000000000
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+@@@ -21,11 -29,8 +29,12 @@@ properties
+        - items:
+            - enum:
+               - amlogic,meson-gxm-mali
++              - realtek,rtd1295-mali
+            - const: arm,mali-t820
+ +      - items:
+ +          - enum:
+ +             - arm,juno-mali
+ +          - const: arm,mali-t624
+        - items:
+            - enum:
+               - rockchip,rk3288-mali
+@@@ -34,16 -40,8 +44,7 @@@
+            - enum:
+               - rockchip,rk3399-mali
+            - const: arm,mali-t860
+-       - items:
+-           - enum:
+-              - samsung,exynos5250-mali
+-           - const: arm,mali-t604
+-       - items:
+-           - enum:
+-              - samsung,exynos5433-mali
+-           - const: arm,mali-t760
+ =20
+-           # "arm,mali-t628"
+ -          # "arm,mali-t624"
+            # "arm,mali-t830"
+            # "arm,mali-t880"
+ =20
+
+--Sig_/BB1LBtqI5ejPny06wVC/iyM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3MuisACgkQAVBC80lX
+0GzqRgf/VJZvk856gDSfif6dvyn2qDIRlIUcPqIyFw/t3FyYMGyzMFBvdeY5kgYL
+7iLDz7NSrMYfKnjUDL/HxiSAcAKUxuFu0R5hDpwnJqWda7pvWsLS5dY8+e8cIiOG
+S0XhpMwZSksWHvIekdZPtVmEDh5DYoH3NWDAVhMehrVs93IV9fe3eqcAHyYSBeZ2
++iLBXn/j0DKW9kmRouMvk7rIAscozbgMXjH6CjZ9WzVCXnYnL134vdQu0tr4XDm+
+CCQcy3JILuVhoBxvDhqWTy1njJsKV6+zkFa3mF2rlRbm0ByIID3xS5SnJPi5MRc2
+lbja4SfiZ8hsQKel+Ga4OXIlXCAgag==
+=w8qt
+-----END PGP SIGNATURE-----
+
+--Sig_/BB1LBtqI5ejPny06wVC/iyM--
