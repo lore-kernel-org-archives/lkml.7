@@ -2,97 +2,133 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D092FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4ADC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB838206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048D0206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573701683;
+	bh=FmT+xIiI8fjMzRISC6E96FWJYAdkxpETep6dx0aAOFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dHsdLrPRyp3UhOr8Vj6G2oe5L+qEINiCCigSdDKIN0lguKUeV5cqnxPqiJFSbMJlp
+	 mUpBIbfTyC6tImMdowUzdFgOxP64EbX3XT/KeH3y3pfPcDbL6MybMzup5NOXUNwfKu
+	 97AYg1crPaoMLkRssMArsPPJoOb7KMwn8eTy0JWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKNDUx (ORCPT
+        id S1727031AbfKNDVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:20:53 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37344 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726491AbfKNDUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:20:53 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D98FDDE2C75E30DAFDA9;
-        Thu, 14 Nov 2019 11:20:51 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.96) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
- 11:20:42 +0800
-Subject: Re: [PATCH] debugfs: fix potential infinite loop in
- debugfs_remove_recursive
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
-        <oleg@redhat.com>, <jack@suse.cz>, <linux-kernel@vger.kernel.org>,
-        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>,
-        <chenxiang66@hisilicon.com>, <xiexiuqi@huawei.com>
-References: <1572528884-67565-1-git-send-email-yukuai3@huawei.com>
- <20191113151755.7125e914@gandalf.local.home>
- <a399ae58-a467-3ff9-5a01-a4a2cdcf4fd6@huawei.com>
- <20191113214307.29a8d001@oasis.local.home>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <a5189922-de5f-2f56-6192-9ce160da8666@huawei.com>
-Date:   Thu, 14 Nov 2019 11:20:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 13 Nov 2019 22:21:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfKNDVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 22:21:21 -0500
+Received: from localhost (unknown [124.219.31.93])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FC8A206F3;
+        Thu, 14 Nov 2019 03:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573701680;
+        bh=FmT+xIiI8fjMzRISC6E96FWJYAdkxpETep6dx0aAOFQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2ZZqboLMJesjq8BgSJ7MoVJfF7TgnYS/cpHL36P4jLxMYovM+i28jf1w3HevubntO
+         CeDfpE3nKYFUIcb2Vwhkjbuo4IYsEvU7SVWvJfBdlElMiMJ5CCs+VgGXsWTotdq/qS
+         w53jwTQdO8muQEOIrztPV0CPbjIZ2Oh5POjkNcYQ=
+Date:   Thu, 14 Nov 2019 11:21:17 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, Bin Liu <b-liu@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 12/13] usb: gadget: udc: gr_udc: create debugfs
+ directory under usb root
+Message-ID: <20191114032117.GA130252@kroah.com>
+References: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1573541519-28488-12-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20191113214307.29a8d001@oasis.local.home>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1573541519-28488-12-git-send-email-chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 02:51:58PM +0800, Chunfeng Yun wrote:
+> Now the USB gadget subsystem can use the USB debugfs root directory,
+> so move it's directory from the root of the debugfs filesystem into
+> the root of usb
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v2:
+>   1. abandon new API usb_debugfs_create_dir(), and use usb_debug_root
+> ---
+>  drivers/usb/gadget/udc/gr_udc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+> index 7a0e9a58c2d8..5faa09a6c770 100644
+> --- a/drivers/usb/gadget/udc/gr_udc.c
+> +++ b/drivers/usb/gadget/udc/gr_udc.c
+> @@ -208,7 +208,7 @@ static void gr_dfs_create(struct gr_udc *dev)
+>  {
+>  	const char *name = "gr_udc_state";
+>  
+> -	dev->dfs_root = debugfs_create_dir(dev_name(dev->dev), NULL);
+> +	dev->dfs_root = debugfs_create_dir(dev_name(dev->dev), usb_debug_root);
+>  	debugfs_create_file(name, 0444, dev->dfs_root, dev, &gr_dfs_fops);
+>  }
+>  
 
+This breaks the build:
+drivers/usb/gadget/udc/gr_udc.c: In function ‘gr_dfs_create’:
+drivers/usb/gadget/udc/gr_udc.c:211:57: error: ‘usb_debug_root’ undeclared (first use in this function)
+  211 |  dev->dfs_root = debugfs_create_dir(dev_name(dev->dev), usb_debug_root);
+      |                                                         ^~~~~~~~~~~~~~
+drivers/usb/gadget/udc/gr_udc.c:211:57: note: each undeclared identifier is reported only once for each function it appears in
+make[4]: *** [scripts/Makefile.build:265: drivers/usb/gadget/udc/gr_udc.o] Error 1
 
-On 2019/11/14 10:43, Steven Rostedt wrote:
-> On Thu, 14 Nov 2019 10:01:23 +0800
-> "yukuai (C)" <yukuai3@huawei.com> wrote:
-> 
-> 
->> Do you agree with that list_empty(&chile->d_subdirs) here is not
->> appropriate? Since it can't skip the subdirs that is not
->> simple_positive(simple_positive() will return false), which is the
->> reason of infinite loop.
-> 
-> I do agree that simple_empty() is wrong, for the reasons you pointed out.
-> 
->>>> +		if (!simple_empty(child)) {
->>>
->>> Have you tried this with lockdep enabled? I'm thinking that you might
->>> get a splat with holding parent->d_lock and simple_empty(child) taking
->>> the child->d_lock.
->> The locks are taken and released in the right order:
->> take parent->d_lock
->> 	take child->d_lock
->> 		list_for_each_entry(c, &child->d_sundirs, d_child)
->> 			take c->d_lock
->> 			release c->d_lock
->> 	release child->d_lock
->> release parent->d_lock
->> I don't see anything wrong, am I missing something?
-> 
-> It should be fine, my worry is that we may be missing a lockdep
-> annotation, that might confuse lockdep, as lockdep may see this as the
-> same type of lock being taken, and wont know the order.
-> 
-> Have you tried this patch with lockdep enabled and tried to hit this
-> code path?
-I haven't tried yet. I'll try soon and show the result.
-Thanks
-Yu Kuai
-> 
-> -- Steve
-> 
-> .
-> 
+so I've dropped it from the patch series.
 
+Please fix up and resend.
+
+And of course, always test-build your patches before you send them
+out...
+
+greg k-h
