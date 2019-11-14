@@ -2,114 +2,107 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F31C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2862C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB97206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:31:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hlj6rDrl"
+	by mail.kernel.org (Postfix) with ESMTP id E1770206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfKNAbo (ORCPT
+        id S1726557AbfKNAic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:31:44 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40716 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKNAbn (ORCPT
+        Wed, 13 Nov 2019 19:38:32 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:49113 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfKNAic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:31:43 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 15so2473335pgt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 16:31:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9sAWI1/WyVUJMv+/9lzXmr/UTEtbsKqgfoRGVLEnFt8=;
-        b=Hlj6rDrliTvU/cepY3VqIv8iG73LNRL7563tZytDrLShqFopNYrRCLMIQdo9EA6jDE
-         FInBRd96HhgghlpO3VGkTnv17MaY+PkaVo6Vpr8glXkHGY3k+2KW690kk3LBlh3tLN/K
-         QHzIckFi5j/6rdruMb2CNBcJ8fpyccBBCzhrw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9sAWI1/WyVUJMv+/9lzXmr/UTEtbsKqgfoRGVLEnFt8=;
-        b=F6ezoEC+q7MlAqpGnE+UFMTwiBRDRZJTk3uPxCghyskI32QfL0Cy1kQI/hWb4i5vl2
-         AtTpJQ1ExAILM/TuCnshaM54Av/d0VdF/Od6JoBfbGyO6LnJJPjPkXgRmKjZaatsmrpp
-         dpR/BDzwb3mdI77KEpausrTEsKWJGITmY0XqYfuNkV+zMCkraza2h1lpKezc4yH/dlbz
-         9iDTc1hue0e2MXd8PQUxsbNFrgNGJB2IX73DzTKN6FCZZYgbzbNIdhQADjRWPOOlGepb
-         1lgONhbd9f37twonuZvHtVIfZ5ih16FE+9E7YkRiEhRZMKDCl4D1+68LWZL3L9iDZlf/
-         Ca8Q==
-X-Gm-Message-State: APjAAAVsBTYU5Oa8ZNZIIAhs8uO64Hil/SI9ns0zfCEZzVOwnEeaZ+0h
-        H0g1CWPj11l03SYPJWJHgnoa1K9UGo4=
-X-Google-Smtp-Source: APXvYqy73l8AcMr+AtoYg+/uiIszTaLYGFq4eHui1Ai1uiPyzjRywtbILY5sc/7uW/xNvwGKPlOrWQ==
-X-Received: by 2002:a17:90a:a898:: with SMTP id h24mr8777377pjq.48.1573691502087;
-        Wed, 13 Nov 2019 16:31:42 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d22sm3672614pjd.2.2019.11.13.16.31.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 16:31:41 -0800 (PST)
-Date:   Wed, 13 Nov 2019 16:31:40 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: print proper warning on dst underflow
-Message-ID: <201911131625.8B0F0BAEDE@keescook>
-References: <20190924090937.13001-1-Jason@zx2c4.com>
+        Wed, 13 Nov 2019 19:38:32 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iV39U-0000VZ-57; Thu, 14 Nov 2019 00:38:24 +0000
+Date:   Thu, 14 Nov 2019 01:38:23 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        alpha <linux-alpha@vger.kernel.org>
+Subject: Re: [PATCH 11/23] y2038: rusage: use __kernel_old_timeval
+Message-ID: <20191114003822.6fjji26vm7yplaw2@wittgenstein>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+ <20191108211323.1806194-2-arnd@arndb.de>
+ <20191112210915.GD5130@uranus>
+ <CAK8P3a03FRfTsXADH+xfLsWxCu54JXvXbb-OdyGXXf88RNP34w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190924090937.13001-1-Jason@zx2c4.com>
+In-Reply-To: <CAK8P3a03FRfTsXADH+xfLsWxCu54JXvXbb-OdyGXXf88RNP34w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 11:09:37AM +0200, Jason A. Donenfeld wrote:
-> Proper warnings with stack traces make it much easier to figure out
-> what's doing the double free and create more meaningful bug reports from
-> users.
+On Wed, Nov 13, 2019 at 11:02:12AM +0100, Arnd Bergmann wrote:
+> On Tue, Nov 12, 2019 at 10:09 PM Cyrill Gorcunov <gorcunov@gmail.com> wrote:
+> >
+> > On Fri, Nov 08, 2019 at 10:12:10PM +0100, Arnd Bergmann wrote:
 > 
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
->  net/core/dst.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > ---
+> > > Question: should we also rename 'struct rusage' into 'struct __kernel_rusage'
+> > > here, to make them completely unambiguous?
+> >
+> > The patch looks ok to me. I must confess I looked into rusage long ago
+> > so __kernel_timespec type used in uapi made me nervious at first,
+> > but then i found that we've this type defined in time_types.h uapi
+> > so userspace should be safe. I also like the idea of __kernel_rusage
+> > but definitely on top of the series.
 > 
-> diff --git a/net/core/dst.c b/net/core/dst.c
-> index 1325316d9eab..193af526e908 100644
-> --- a/net/core/dst.c
-> +++ b/net/core/dst.c
-> @@ -172,7 +172,7 @@ void dst_release(struct dst_entry *dst)
->  		int newrefcnt;
->  
->  		newrefcnt = atomic_dec_return(&dst->__refcnt);
-> -		if (unlikely(newrefcnt < 0))
-> +		if (WARN_ONCE(newrefcnt < 0, "dst_release underflow"))
->  			net_warn_ratelimited("%s: dst:%p refcnt:%d\n",
->  					     __func__, dst, newrefcnt);
-
-Should __refcnt be a refcount_t to gain saturation protection? It seems
-like going negative is bad...
-
--Kees
-
->  		if (!newrefcnt)
-> @@ -187,7 +187,7 @@ void dst_release_immediate(struct dst_entry *dst)
->  		int newrefcnt;
->  
->  		newrefcnt = atomic_dec_return(&dst->__refcnt);
-> -		if (unlikely(newrefcnt < 0))
-> +		if (WARN_ONCE(newrefcnt < 0, "dst_release_immediate underflow"))
->  			net_warn_ratelimited("%s: dst:%p refcnt:%d\n",
->  					     __func__, dst, newrefcnt);
->  		if (!newrefcnt)
-> -- 
-> 2.21.0
+> There are clearly too many time types at the moment, but I'm in the
+> process of throwing out the ones we no longer need now.
 > 
+> I do have a number patches implementing other variants for the syscall,
+> and I suppose that if we end up adding __kernel_rusage, that would
+> have to go with a set of syscalls using 64-bit seconds/nanoseconds
+> rather than the old 32/64 microseconds. I don't know what other
+> changes remain that anyone would want from sys_waitid() now that
+> it does support pidfd.
+> 
+> If there is still a need for a new waitid() replacement, that should take
+> that new __kernel_rusage I think, but until then I hope we are fine
+> with today's getrusage+waitid based on the current struct rusage.
 
--- 
-Kees Cook
+Note, that glibc does _not_ expose the rusage argument, i.e. most of
+userspace is unaware that waitid() does allow you to get rusage
+information. So users first need to know that waitid() has an rusage
+argument and then need to call the waitid() syscall directly.
+
+> 
+> BSD has wait6() to return separate rusage structures for 'self' and
+> 'children', but I could not find any application (using the freebsd
+> sources and debian code search) that actually uses that information,
+> so there might not be any demand for that.
+
+Speaking specifically for Linux now, I think that rusage does not
+actually expose the information most relevant users are interested in.
+On Linux nowadays it is _way_ more interesting to retrieve stats
+relative to the cgroup the task lived in etc.
+Doing a git grep -i rusage in the systemd source code shows that rusage
+is used _nowhere_. And I consider an init system to be the most likely
+candidate to be interested in rusage.
+
+	Christian
