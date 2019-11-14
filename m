@@ -2,157 +2,128 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F92C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F22C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E99206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CBA206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bdZRlULc"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UwZVJT0P";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AL/Phc4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKNBCS (ORCPT
+        id S1727049AbfKNBDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 20:02:18 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34928 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbfKNBCS (ORCPT
+        Wed, 13 Nov 2019 20:03:14 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:59954 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfKNBDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 20:02:18 -0500
-Received: by mail-pl1-f193.google.com with SMTP id s10so1842482plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 17:02:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gDhQr0yPumU3571o48l1UHCnEyjmNkoXyne7z8thvVU=;
-        b=bdZRlULcki8VPthzSPxdbcpDxwbmCSxYCRaUD0ZDuZdN5Fp9/Qflw30G2H2j49ZAt6
-         JZKxC0cCv5DbDB6BEXIsWMMKV9KNge9+c1hoTmXp2ZWeeHqwfkNJqNp7a/TFX7aeJJVK
-         sJFjS+C7XOj67RQG5+WeWEGaPpci6Y4An3lDs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gDhQr0yPumU3571o48l1UHCnEyjmNkoXyne7z8thvVU=;
-        b=ltj1XCHqsXGlmGsZq0USkWD+B/WrYEPn+y99rm8XrCIaM2k7FNQyYkRrPJfaiP0Jlk
-         e+B+FcbXBxuivAHSd0bfHOGs5prGDaKohH+uMzYpQzshZuxOM7CyadJ3xiTHdkN6+RNT
-         ChqQTbrxG/ueyLphFME+wTERmPXPkeV2Vmz4EyyIN93dZjufgvdqZ4wh5x91cKs6/aSp
-         DLIZzx38XBaUNikcZxJAV7901jUyagLQeY1a4eOeKNl9tOHHK9mj6J1EQZGz1IJETJ/c
-         f9WX+/qtuIlRLZGAKtfV1Ki4sK/KhtHv5fK2cuqsq5PMLaf0eZlTaOrKcqDhuW/0EQnb
-         YYMA==
-X-Gm-Message-State: APjAAAWed42ttsc/zP2eJVN988jzUukVA9BSA2D2cMX5K3DznJKr+Oie
-        YPgnwQ3PO5FMAR0LnGkhYUkmoQ==
-X-Google-Smtp-Source: APXvYqxIMjMZt+ozUS0xSeGDM8fOb36CEX2OYMCtrISufmtFKixqjvKYzDD00RzwR1DJY6Oadd47VA==
-X-Received: by 2002:a17:902:7c07:: with SMTP id x7mr6769661pll.124.1573693335780;
-        Wed, 13 Nov 2019 17:02:15 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id m19sm3823065pgh.31.2019.11.13.17.02.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 17:02:14 -0800 (PST)
-Date:   Wed, 13 Nov 2019 17:02:10 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Message-ID: <20191114010210.GF27773@google.com>
-References: <20191014102308.27441-6-tdas@codeaurora.org>
- <20191029175941.GA27773@google.com>
- <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org>
- <20191031174149.GD27773@google.com>
- <20191107210606.E536F21D79@mail.kernel.org>
- <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com>
- <20191108063543.0262921882@mail.kernel.org>
- <CAJs_Fx5trp2B7uOMTFZNUsYoKrO1-MWsNECKp-hz+1qCOCeU8A@mail.gmail.com>
- <20191108184207.334DD21848@mail.kernel.org>
- <CAJs_Fx6KCirGMtQxE=xA-A=bd5LeuYWviee0+KqO5OtGT9GKEw@mail.gmail.com>
+        Wed, 13 Nov 2019 20:03:14 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A76FC60DAE; Thu, 14 Nov 2019 01:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573693392;
+        bh=mtDzRp609jVa8P6rGZmHkR8KyMo+8LG+VpVhw6EWN3c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UwZVJT0PbYWh5sPRHorsWeFIUEErNjMBLMQKMZTS1kcF9JP1t+qG65ByLDTyV4A/a
+         C33jMTKXSVUViLFHQOsywMSG2WJUEOmQO/W1g9MhZV7zPggZtJdTOVWvE06xSZGPjM
+         Q944WJzOaTU0rIxZqakPFoiaZWkbzbrfJa51uMgc=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id C31856092C;
+        Thu, 14 Nov 2019 01:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573693390;
+        bh=mtDzRp609jVa8P6rGZmHkR8KyMo+8LG+VpVhw6EWN3c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AL/Phc4bSaB4DjALScQ96lTPexLPY8Ovl2HcEXO6p+5X+w7pOLOBi2m048aFeZIGE
+         OllJw4kGKpdnBTML0OoAlmi+SdNgyhnRQCFLr1WWJlyLxj37rwp5/DxqizB7SjaPTA
+         3vGrZktpBiTyRf03/4Vizc1eVh2K8cSY+AX2kb7w=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJs_Fx6KCirGMtQxE=xA-A=bd5LeuYWviee0+KqO5OtGT9GKEw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 14 Nov 2019 09:03:10 +0800
+From:   cang@codeaurora.org
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Can Guo <cang@codeaurora.org>
+Subject: Re: [EXT] [PATCH v1 5/5] scsi: ufs: Complete pending requests in host
+ reset and restore path
+In-Reply-To: <BN7PR08MB56849EEE83414549F4787BCEDB760@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1573200932-384-1-git-send-email-cang@codeaurora.org>
+ <1573200932-384-6-git-send-email-cang@codeaurora.org>
+ <BN7PR08MB56849EEE83414549F4787BCEDB760@BN7PR08MB5684.namprd08.prod.outlook.com>
+Message-ID: <0dc202a1decb6bbc103253b8c3c8c8ce@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 11:40:53AM -0800, Rob Clark wrote:
-> On Fri, Nov 8, 2019 at 10:42 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Rob Clark (2019-11-08 08:54:23)
-> > > On Thu, Nov 7, 2019 at 10:35 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > >
-> > > > Quoting Rob Clark (2019-11-07 18:06:19)
-> > > > > On Thu, Nov 7, 2019 at 1:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > > > >
-> > > > > >
-> > > > > > NULL is a valid clk pointer returned by clk_get(). What is the display
-> > > > > > driver doing that makes it consider NULL an error?
-> > > > > >
-> > > > >
-> > > > > do we not have an iface clk?  I think the driver assumes we should
-> > > > > have one, rather than it being an optional thing.. we could ofc change
-> > > > > that
-> > > >
-> > > > I think some sort of AHB clk is always enabled so the plan is to just
-> > > > hand back NULL to the caller when they call clk_get() on it and nobody
-> > > > should be the wiser when calling clk APIs with a NULL iface clk. The
-> > > > common clk APIs typically just return 0 and move along. Of course, we'll
-> > > > also turn the clk on in the clk driver so that hardware can function
-> > > > properly, but we don't need to expose it as a clk object and all that
-> > > > stuff if we're literally just slamming a bit somewhere and never looking
-> > > > back.
-> > > >
-> > > > But it sounds like we can't return NULL for this clk for some reason? I
-> > > > haven't tried to track it down yet but I think Matthias has found it
-> > > > causes some sort of problem in the display driver.
-> > > >
-> > >
-> > > ok, I guess we can change the dpu code to allow NULL..  but what would
-> > > the return be, for example on a different SoC where we do have an
-> > > iface clk, but the clk driver isn't enabled?  Would that also return
-> > > NULL?  I guess it would be nice to differentiate between those cases..
-> > >
-> >
-> > So the scenario is DT describes the clk
-> >
-> >  dpu_node {
-> >      clocks = <&cc AHB_CLK>;
-> >      clock-names = "iface";
-> >  }
-> >
-> > but the &cc node has a driver that doesn't probe?
-> >
-> > I believe in this scenario we return -EPROBE_DEFER because we assume we
-> > should wait for the clk driver to probe and provide the iface clk. See
-> > of_clk_get_hw_from_clkspec() and how it looks through a list of clk
-> > providers and tries to match the &cc phandle to some provider.
-> >
-> > Once the driver probes, the match will happen and we'll be able to look
-> > up the clk in the provider with __of_clk_get_hw_from_provider(). If
-> > the clk provider decides that there isn't a clk object, it will return
-> > NULL and then eventually clk_hw_create_clk() will turn the NULL return
-> > value into a NULL pointer to return from clk_get().
-> >
+On 2019-11-14 06:04, Bean Huo (beanhuo) wrote:
+>> 
+>> In UFS host reset and restore path, before probe, we stop and start 
+>> the host
+>> controller once. After host controller is stopped, the pending 
+>> requests, if any,
+>> are cleared from the doorbell, but no completion IRQ would be raised 
+>> due to the
+>> hba is stopped.
+>> These pending requests shall be completed along with the first NOP_OUT
+>> command(as it is the first command which can raise a transfer 
+>> completion
+>> IRQ) sent during probe.
 > 
-> ok, that was the scenario I was worried about (since unclk'd register
-> access tends to be insta-reboot and hard to debug)..  so I think it
-> should be ok to make dpu just ignore NULL clks.
+> Hi, Can
+> I am not sure for this point, because there is HW/SW device reset
+> before or after host reset/restore.
+> Device HW/SW reset also will clear the pended tasks in device side.
+> That will be better.
+> I think Qcom platform already enabled HW reset.
 > 
-> From a quick look, I think something like the attached (untested).
+> //Bean
+> 
 
-The driver appears to be happy with it, at least at probe() time.
+Hi Bean,
+
+By pending tasks here, it means the requests sent down from scsi/block 
+layer,
+but have not yet been handled by ufs driver(cmd->scsi_done() have not 
+been called yet for these requests).
+For these requests, although removed by host and UFS device in their HW 
+queues(doorbell),
+UFS driver still needs to complete them from SW side(call 
+cmd->scsi_done() for each one of them) to
+let upper layer know that they are finished(although not successfully) 
+to avoid hitting
+timeout of these pending tasks. I hope I make my explanation clearly.
+
+Best Regards,
+Can Guo.
+
+>> Since the OCSs of these pending requests are not SUCCESS(because they 
+>> are not
+>> yet literally finished), their UPIUs shall be dumped. When there are 
+>> multiple
+>> pending requests, the UPIU dump can be overwhelming and may lead to 
+>> stability
+>> issues because it is in atomic context.
+>> Therefore, before probe, complete these pending requests right after 
+>> host
+>> controller is stopped.
