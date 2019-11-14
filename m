@@ -2,169 +2,174 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F681C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A65C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D37E2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:50:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AVxDQJqs"
+	by mail.kernel.org (Postfix) with ESMTP id AFC0F206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfKNOuA (ORCPT
+        id S1726592AbfKNOyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:50:00 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35922 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfKNOt7 (ORCPT
+        Thu, 14 Nov 2019 09:54:37 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52400 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726444AbfKNOyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:49:59 -0500
-Received: by mail-vs1-f68.google.com with SMTP id q21so4030877vsg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 06:49:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=O7wapv4EE4G+0Gc1i2jjis8KTbTPULbvSuyjxNMdOtM=;
-        b=AVxDQJqsoylkSQmx08lzQrUBZCxelJXskce1tNwhtJqrv1m/adiDXhfzeb/LLtfBmP
-         9J1MdAGXQYOU9lve3TdlhlSPCWYIik4z3gbcbniH/2ZP/ZXc2kJetKj4I6hyBbDXALnt
-         iKgDNTMw7gO1UcDjUwYeFQTYgymS3hwkbr6BYeprE9le1g2rtD7363gMpJaobyJD2GCh
-         gPfFepXZyZOTSZe8PbbwFXolc3mrqQPUCjmh109X07tuR9ew5b1b8Jf0XUoKppFBALdL
-         lykqOOtEIukCrxxKeAwPCpErBEAHgDQIf7n8jAKX4QF8oNgh1YmEKac+5Hot/3WZQEHA
-         V5uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=O7wapv4EE4G+0Gc1i2jjis8KTbTPULbvSuyjxNMdOtM=;
-        b=rJ0jR48pJdGCHExdT2ERV6N7/8wAi9HRtUcrMusSJ0NviFSB8cgz0qyoNmAEfaxIMY
-         7NXg8/pVeBzSBHwAPv+5wNUmaW0Uy1sh8Oc9NTBPuVPV1gA578S0T2EgyzS+Xk7V0Jxq
-         /6fCxOn97AvyoukXmjUgrP2a8zw981hFIv1/kroZ0Q0YVmXKjhkI1qTmQqUmfVZ/QLXk
-         e3NEmuTVgJ0B4iE51LfiIoalG9e9L02pCn3c4PUlZSFCqWgOGL8tGV7AJIdINl0rdLOx
-         X+gdq+nQHW3TFg9cL2PitfoVgNIq6mCzhnm08TQErTzpd1/Pwz9fz46hCEo0+AATFBnR
-         0qIw==
-X-Gm-Message-State: APjAAAXu9DWCjfVTL3SJ1mzbK4/jykmgueBr0rn5WOdqTR3+t6+Em6DP
-        yAzqOTYH3Csrm8bTWFqPRF6Ki2D4/FN28fgZdg3GNg==
-X-Google-Smtp-Source: APXvYqzcyR0y7F+ha4XEbI+5EzDrdrJyK1AZpIJppA2pHa1tvpOnu8Gvhe0K17/wE+Byt8XJXfmdlVGMNecJ5wVu/x0=
-X-Received: by 2002:a05:6102:36d:: with SMTP id f13mr6134394vsa.34.1573742998082;
- Thu, 14 Nov 2019 06:49:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20191011131502.29579-1-ludovic.Barre@st.com> <20191011131502.29579-2-ludovic.Barre@st.com>
- <CAPDyKFqE09nqdev_qewwNzjjUuhm0UUC03tgvY=ZukYY4az7wg@mail.gmail.com> <d8d82f39-319b-c8f8-255a-a02a81980671@st.com>
-In-Reply-To: <d8d82f39-319b-c8f8-255a-a02a81980671@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 14 Nov 2019 15:49:21 +0100
-Message-ID: <CAPDyKFpvOdwnwNa94ppF_Gum26ML52oeXDSeR1qKtSaH_wQU+g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mmc: add unstuck function if host is in deadlock state
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+        Thu, 14 Nov 2019 09:54:37 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEEdAkj098125
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:54:35 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w962eybwy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:54:35 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 14 Nov 2019 14:54:33 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Nov 2019 14:54:30 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEEsTiB35192900
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 14:54:29 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 08DB342041;
+        Thu, 14 Nov 2019 14:54:29 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD0714203F;
+        Thu, 14 Nov 2019 14:54:27 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.133.147])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Nov 2019 14:54:27 +0000 (GMT)
+Subject: Re: [PATCH v7 3/5] KEYS: Call the IMA hook to measure keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 14 Nov 2019 09:54:27 -0500
+In-Reply-To: <20191114031202.18012-4-nramas@linux.microsoft.com>
+References: <20191114031202.18012-1-nramas@linux.microsoft.com>
+         <20191114031202.18012-4-nramas@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111414-0028-0000-0000-000003B6DFC2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111414-0029-0000-0000-00002479EDB6
+Message-Id: <1573743267.4793.43.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911140136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 at 17:54, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
->
->
-> Le 10/21/19 =C3=A0 3:35 PM, Ulf Hansson a =C3=A9crit :
-> > On Fri, 11 Oct 2019 at 15:15, Ludovic Barre <ludovic.Barre@st.com> wrot=
-e:
-> >>
-> >> From: Ludovic Barre <ludovic.barre@st.com>
-> >>
-> >> After a request a host may be in deadlock state, and wait
-> >> a specific action to unstuck the hardware block before
-> >> re-sending a new command.
-> >
-> > Rather than talking about "unstuck" and "deadlock", how about instead
-> > describing that an MMC controller, may end up in an non-functional
-> > state hanging on something. Then to allow it to serve new requests it
-> > needs to be reset.
-> >
->
-> Ok, deadlock naming is perhaps too stronght and scary.
->
-> >>
-> >> This patch adds an optional callback mmc_hw_unstuck which
-> >> allows the host to unstuck the controller. In order to avoid
-> >> a critical context, this callback must be called when the
-> >> request is completed. Depending the mmc request, the completion
-> >> function is defined by mrq->done and could be in block.c or core.c.
-> >
-> > I think it's important to state exactly what is expected from the core
-> > perspective, by the mmc host driver when it calls this new host ops.
-> > We need to clarify that.
-> >
-> >>
-> >> mmc_hw_unstuck is called if the host returns an cmd/sbc/stop/data
-> >> DEADLK error.
-> >
-> > To me, this approach seems a bit upside-down. Although, I have to
-> > admit that I haven't thought through this completely yet.
-> >
-> > The thing is, to make this useful for host drivers in general, I
-> > instead think we need to add timeout to each request that the core
-> > sends to the host driver. In other words, rather than waiting forever
-> > in the core for the completion variable to be set, via calling
-> > wait_for_completion() we could call wait_for_completion_timeout(). The
-> > tricky part is to figure out what timeout to use for each request.
-> > Perhaps that is even why you picked the approach as implemented in
-> > @subject patch instead?
->
-> On STM32 SDMMC variant, If datatimeout occurs on R1B request the Data
-> Path State Machine stays in busy and only the DPSM is non-functional.
-> The hardware block waits a software action to abort the DPSM.
->
-> Like the CPSM stay alive, the framework can sent some requests
-> (without data, example cmd13:status) before to had this
-> timeout issue.
->
-> POV framework I understand the possibility to have a completion_timeout,
-> for more safety. But for this specific sdmmc case, I'm not fan, because
-> the completion timeout error will occur several requests after the real
-> issue (which put the DPSM non-functional). when the completion timeout
-> occurs we can't know if it's due to R1B timeout or an other issue.
+On Wed, 2019-11-13 at 19:12 -0800, Lakshmi Ramasubramanian wrote:
+> Call the IMA hook from key_create_or_update function to measure
+> the key when a new key is created or an existing key is updated.
+> 
+> This patch adds the call to the IMA hook from key_create_or_update
+> function to measure the key on key create or update.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-Right, I see what you are saying. So let's drop the approach suggested
-in $subject series.
+No need to Cc David Howells on the entire patch set.  Just Cc him,
+here, after your tag.
 
->
-> To resolve the SDMMC's specificity, I can proposed you to add a threaded
-> irq in mmci drivers to abort the DPSM and terminate the request.
+With this patch, keys are now being measured.  With the boot command
+line, we can verify the measurement entry against /proc/cmdline.  How
+can the key measurement entry be verified?  Please include that
+information, here, in this patch description.
 
-Okay, so the threaded IRQ handler is needed, because the reset
-operation may sleep (can't be executed in atomic context). Right?
+Also, can the key data, now included in the measurement list, be used
+to verify signatures in the ima-sig or ima-modsig templates?  Is there
+a way of correlating a signature with a key?  Perhaps include a
+kselftest as an example.
 
-That should work, but... let's move the discussion to that patch instead.
+Mimi
 
->
-> >
-> > Anyway, the typical scenario I see, is that the host driver is
-> > hanging, likely waiting for an IRQ that never get raised. So, unless
-> > it implements it own variant of a "request timeout" mechanism, it
-> > simple isn't able to call mmc_request_done() to inform the core about
-> > that the request has failed.
-> >
-> > For comments to the code, I defer that to the next step, when we have
-> > agreed on the way forward.
-> >
-> > Kind regards
-> > Uffe
-> >
+> ---
+>  include/linux/ima.h | 13 +++++++++++++
+>  security/keys/key.c |  7 +++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 6d904754d858..0af88b781ab6 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -25,6 +25,12 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>  extern void ima_post_path_mknod(struct dentry *dentry);
+>  extern void ima_kexec_cmdline(const void *buf, int size);
+>  
+> +#ifdef CONFIG_KEYS
+> +extern void ima_post_key_create_or_update(struct key *keyring,
+> +					  struct key *key,
+> +					  unsigned long flags, bool create);
+> +#endif
+> +
+>  #ifdef CONFIG_IMA_KEXEC
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+>  #endif
+> @@ -101,6 +107,13 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
+>  {}
+>  #endif
+>  
+> +#ifndef CONFIG_KEYS
+> +static inline void ima_post_key_create_or_update(struct key *keyring,
+> +						 struct key *key,
+> +						 unsigned long flags,
+> +						 bool create) {}
+> +#endif
+> +
+>  #ifdef CONFIG_IMA_APPRAISE
+>  extern bool is_ima_appraise_enabled(void);
+>  extern void ima_inode_post_setattr(struct dentry *dentry);
+> diff --git a/security/keys/key.c b/security/keys/key.c
+> index 764f4c57913e..a0f1e7b3b8b9 100644
+> --- a/security/keys/key.c
+> +++ b/security/keys/key.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/security.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/random.h>
+> +#include <linux/ima.h>
+>  #include <linux/err.h>
+>  #include "internal.h"
+>  
+> @@ -936,6 +937,8 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
+>  		goto error_link_end;
+>  	}
+>  
+> +	ima_post_key_create_or_update(keyring, key, flags, true);
+> +
+>  	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
+>  
+>  error_link_end:
+> @@ -965,6 +968,10 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
+>  	}
+>  
+>  	key_ref = __key_update(key_ref, &prep);
+> +
+> +	if (!IS_ERR(key_ref))
+> +		ima_post_key_create_or_update(keyring, key, flags, false);
+> +
+>  	goto error_free_prep;
+>  }
+>  EXPORT_SYMBOL(key_create_or_update);
 
-Kind regards
-Uffe
