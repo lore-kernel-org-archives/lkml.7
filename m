@@ -2,107 +2,98 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B74C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34C7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAA120724
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48BD20723
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfKNNWZ (ORCPT
+        id S1726605AbfKNNWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:22:25 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:41225 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfKNNWZ (ORCPT
+        Thu, 14 Nov 2019 08:22:35 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34968 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726190AbfKNNWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:22:25 -0500
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MTiDV-1iIpxy2h3N-00U07p for <linux-kernel@vger.kernel.org>; Thu, 14 Nov
- 2019 14:22:23 +0100
-Received: by mail-qk1-f182.google.com with SMTP id z16so4915008qkg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 05:22:23 -0800 (PST)
-X-Gm-Message-State: APjAAAVqC1ouxnZnMA+zA6nadCb6gTLqIRSvDTD2mSsQ4ByhMup/d5vj
-        jXgHPdg+xTyuxLJsSz6AL+vVZxnwl0Mkd/C8inA=
-X-Google-Smtp-Source: APXvYqxkA653TpKbCOAo1OlXn8jz4vIqRdu+4eROsKb0/kmqznIrTiegFm4QccKPaGRs8v/9JhgDx15SS8QhNIuD05U=
-X-Received: by 2002:a37:44d:: with SMTP id 74mr7154394qke.3.1573737742525;
- Thu, 14 Nov 2019 05:22:22 -0800 (PST)
+        Thu, 14 Nov 2019 08:22:35 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAED9GAg093343
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:22:34 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w96mj2vth-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:22:34 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Thu, 14 Nov 2019 13:22:32 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Nov 2019 13:22:28 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEDMR4q38142172
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 13:22:27 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BDCEA4040;
+        Thu, 14 Nov 2019 13:22:27 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C039A4051;
+        Thu, 14 Nov 2019 13:22:24 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.57.87])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Nov 2019 13:22:23 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     jolsa@redhat.com, kan.liang@intel.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        ak@linux.intel.com, yao.jin@linux.intel.com,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v2 0/3] perf report: Few fixes
+Date:   Thu, 14 Nov 2019 18:52:10 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <0000000000007ce85705974c50e5@google.com> <alpine.DEB.2.21.1911141210410.2507@nanos.tec.linutronix.de>
- <CACT4Y+aBLAWOQn4Mosd2Ymvmpbg9E2Lk7PhuziiL8fzM7LT-6g@mail.gmail.com> <CACT4Y+ap9wFaOq-3WhO3-QnW7dCFWArvozQHKxBcmzR3wppvFQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+ap9wFaOq-3WhO3-QnW7dCFWArvozQHKxBcmzR3wppvFQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 14 Nov 2019 14:22:06 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1ybsTEgBd_oOeReTppO=mDBu+6rGufA8Lf+UGK+SgA-A@mail.gmail.com>
-Message-ID: <CAK8P3a1ybsTEgBd_oOeReTppO=mDBu+6rGufA8Lf+UGK+SgA-A@mail.gmail.com>
-Subject: Re: linux-next boot error: general protection fault in __x64_sys_settimeofday
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+dccce9b26ba09ca49966@syzkaller.appspotmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:zUnzouuFyq0aeWgijQjTK2KBVoDRAotH/EGrgzUJ3bOWykx88Jr
- Q1Hd83bA+vg+dKo9Njj5bdeKdRt6/k0/3i8IDxW40ge0wvNJLO9Ut430WcB1gMgX64384zj
- gpoGqE/jzS0n3qaM3bxn1Zx4NwHQlYOiZi141V10v8z+hSeoHom9nAzJsKYJ5JRitDjFelZ
- 4y6i/t14fwW7NiOmVbbPQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wXl9+c9dfLo=:9e/4TQCIYe+7g0RKo4mck2
- yf2Lgx1+mEr9GIsfFNBwZnD0Qj07cPwx9pgfsnkyB/AkXFNhqj5w/S/ZNLdWUWxfiyPIBm7mn
- +nj5PsRfXPRasLydESMzlgmZJnM3wkAXy5hI2nCKw2x+F8NNCD47PUL7fPpEfbfPLdqyYDvy8
- 56v1yGoV7S5HFMrZxktyzxJRJS/9UI8ZmQfOwX4+7PrXsJlweqr4Sc2WzzarRqry0HDbzQHVw
- tr4po22Slb/R1ThOgdkaJm27KseBdJQk6aFhF/RIRhWYfmgiJGOuUNwZIRoahfOKxy6HTlcJc
- X+hQWRBq83F5IWAsHoStJzcoifPc6oZa6D8YmJXq6ikG/UOWTwPIvsJ3oL6cRL6puZJioG+zh
- 6ZqGgszGU/kVUP7Rjvbq/SMTCP+gbcAKBddhQ+UTGJRF3Bl6+TWtfXQn8y4AJRSr9kCZBN9/V
- Le7YRjwcdi46rfscIh3y7Y1uyYzsoKDkh/Ls8W+eqmHrHauZaZvsH5Lj93GKRl3/pajpFVwAD
- 6mgYlf34NjCT3DhOVpo9KI/1QygH5ClBaCaaOBhqbPkBNrT+9M32+s6SkXGi4++6sd8KZNp9T
- 9IDbgW4G/Y2kPoOoci9XRrIf7C8XExBobOR/DucZJkk2uG73WEHgaPrlRxsSkBRH+H1rK+1l5
- 30kH6UF4I9L0wQInq6TiCaG8lz9hTmhtBOCbS4nWzjEk2Z8XXb33tPbchFqrm9kJiiHuve1GH
- lQI2R04jOon7civjvRC97DqzXCSBiibqIbWd1XPPJl35BPXoE3csazMr0aVe1HRSQ639OmuVm
- BrsUnmaoMr6h10AMy4GUfmixQeMaH6QRTIaoMKzCoMTVUTJq57Ij+grgHrOHTpbk0ig8Ye3Ib
- hSqut7wNykyISSAIWi+A==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111413-0016-0000-0000-000002C39C59
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111413-0017-0000-0000-000033253E57
+Message-Id: <20191114132213.5419-1-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=588 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911140123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 1:43 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Thu, Nov 14, 2019 at 1:42 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > On Thu, Nov 14, 2019 at 1:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >
-> > > On Thu, 14 Nov 2019, syzbot wrote:
-> > >
-> > > From the full console output:
+v1: https://lore.kernel.org/r/20191112054946.5869-1-ravi.bangoria@linux.ibm.com
 
-> >
-> > Urgently need +Jann's patch to better explain these things!
->
-> +Arnd, this does not look right:
->
-> commit adde74306a4b05c04dc51f31a08240faf6e97aa9
-> Author: Arnd Bergmann <arnd@arndb.de>
-> Date:   Wed Aug 15 20:04:11 2018 +0200
->
->     y2038: time: avoid timespec usage in settimeofday()
-> ...
->
-> -               if (!timeval_valid(&user_tv))
-> +               if (tv->tv_usec > USEC_PER_SEC)
->                         return -EINVAL;
+v1 fixed a segfault when -F phys_daddr is used in perf report without
+--mem-mode. Arnaldo suggested to bail out the option completely in
+such case instead of showing 0 values.
 
-Thanks for the report!
+Ravi Bangoria (3):
+  perf hists: Replace pr_err with ui__error
+  perf report: Make -F more strict like -s
+  perf report: Error out for mem mode fields if mem info is not
+    available
 
-I was checking the wrong variable, fixed now,
-should push it out to my y2038 branch in a bit.
+ tools/perf/builtin-report.c |  8 ++++++++
+ tools/perf/util/sort.c      | 16 +++++++++++-----
+ 2 files changed, 19 insertions(+), 5 deletions(-)
 
-      Arnd
+-- 
+2.21.0
+
