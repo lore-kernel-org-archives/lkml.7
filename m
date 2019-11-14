@@ -2,123 +2,130 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1950AC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56614C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C3E20706
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:46:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UahwqbSq"
+	by mail.kernel.org (Postfix) with ESMTP id 319872077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKNNq5 (ORCPT
+        id S1726505AbfKNNvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:46:57 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44621 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfKNNq5 (ORCPT
+        Thu, 14 Nov 2019 08:51:39 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:44525 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfKNNvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:46:57 -0500
-Received: by mail-ot1-f67.google.com with SMTP id c19so4851310otr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 05:46:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uI8XwCq8heWQgz9mOCei/A4zlcNK1RwWtVyxWKPoyCY=;
-        b=UahwqbSqvtof4ApznsHyp0AlKHLFzHrxsamAv0VQY+oZJtqKA78BYD2h5x/M/+1WNB
-         MO+4SiP6gjREXogK6tfVKyF/jAFocNey9Op4uCU+L2U2AmZDLu9J8JbOrwV6nBqwTo6z
-         xL039E7/kDRBfwveQp/13PSOuzm6DCMWu0J2Y0FxiXNGrvatHAppgJNfrbPWjw/mHj+l
-         SDnr1+6056C4QCRQid8YH9FasMJzNfCDPQj5oclNE2IqPhngj4fHqu4jKRWY6YTvxxn3
-         xvv671DVE21gaGobdem64IJEZNue8NNMRiWDl7H8OOrPVf4eRwu5iApOcrrLwVTGG+pa
-         GiUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uI8XwCq8heWQgz9mOCei/A4zlcNK1RwWtVyxWKPoyCY=;
-        b=dT5ItCJkzK5hiF1sMQTudgQx0IYeG+WxC5Ilth6nD1CvKgM+QNoQYm3BHtsdx9/xTU
-         dxaOxd0VN3AaF2bR6wN4TjCyQnGFZWZ78I2ko/vBWZTuYTQsIIDHmrSsO00ETjFxGP/1
-         ZObZlizXupdE2CWfe6V3UBQLZeiKpesU21LzsTUVW6EuFgiHqDQW4SOVRvdh/p1Iwk/Y
-         VVZI52Su/D8b6qnJdXzCaKmm5n/pMRuF0y2Gm4B2ZaG50lH7cL5aMrpYs54mXJly+4PR
-         WNb4H8tUV5UP4RpW2udcSE8NcWCZG2GZAFajeKgXlCiYoB8Bco8ueXPtGdU5J+qfg/6F
-         aM4Q==
-X-Gm-Message-State: APjAAAWNzJv/RsJFvDS5xOGL05lw6pmoOdIzxAvr081MD9ik5WVaq6wq
-        FJFBoDlJuAmj40BG1Lu8f4D4acvPwFSYqWShp8ck9A==
-X-Google-Smtp-Source: APXvYqwDZBkC3ZCnLaE6JyJHavd4O4J7fjyTaIFp+mvp+beXg9Dgi+Sa3lj0dJf2RuzfQII2ljxRH9p+6FWYUlXZ01Y=
-X-Received: by 2002:a9d:328:: with SMTP id 37mr6858344otv.228.1573739215541;
- Thu, 14 Nov 2019 05:46:55 -0800 (PST)
+        Thu, 14 Nov 2019 08:51:38 -0500
+Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MWjQU-1iOabh1crI-00X86c for <linux-kernel@vger.kernel.org>; Thu, 14 Nov
+ 2019 14:51:37 +0100
+Received: by mail-qk1-f176.google.com with SMTP id e2so5004593qkn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 05:51:37 -0800 (PST)
+X-Gm-Message-State: APjAAAUlUyTTSX7yFwcl/Kz5LJIrqxLM3xsSKs9U8s5hr/B2NKKKm9Rg
+        Wx2JDLj1CRa44Y8f7/prQOPrEoibdOMg8ji6Jas=
+X-Google-Smtp-Source: APXvYqxxVGk9D827yoegWYgUUayNyWuP7iTgVXSRBR9HP6ppKymhiwc52XEvlgI34kzct3ul42INS+FfI+MXScwfBz8=
+X-Received: by 2002:a37:58d:: with SMTP id 135mr7491492qkf.394.1573739496258;
+ Thu, 14 Nov 2019 05:51:36 -0800 (PST)
 MIME-Version: 1.0
-References: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
- <58246851-fa45-a72d-2c42-7e56461ec04e@kernel.dk> <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
-In-Reply-To: <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 14 Nov 2019 14:46:29 +0100
-Message-ID: <CAG48ez3dpphoQGy8G1-QgZpkMBA2oDjNcttQKJtw5pD62QYwhw@mail.gmail.com>
-Subject: Re: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio) POLL
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
+References: <0000000000007ce85705974c50e5@google.com> <alpine.DEB.2.21.1911141210410.2507@nanos.tec.linutronix.de>
+ <CACT4Y+aBLAWOQn4Mosd2Ymvmpbg9E2Lk7PhuziiL8fzM7LT-6g@mail.gmail.com>
+ <CACT4Y+ap9wFaOq-3WhO3-QnW7dCFWArvozQHKxBcmzR3wppvFQ@mail.gmail.com>
+ <CAK8P3a1ybsTEgBd_oOeReTppO=mDBu+6rGufA8Lf+UGK+SgA-A@mail.gmail.com>
+ <CACT4Y+YnaFf+PmhDT5JRpCZ9pqjca6VeyN4PMTPbCt7F9-eFZw@mail.gmail.com>
+ <CAK8P3a1viWDOHPxzvciDt8fPCm3XkbLJxAy1OjtJ_-vuP-86bw@mail.gmail.com> <CACT4Y+YsC7yX5d8Gw=C7pm_4xcZ1wjzb_=AoPOL1k5FEPERbzw@mail.gmail.com>
+In-Reply-To: <CACT4Y+YsC7yX5d8Gw=C7pm_4xcZ1wjzb_=AoPOL1k5FEPERbzw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 14 Nov 2019 14:51:20 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2BX==aF7LezgxxtPbRX=GY09Bug+jPH+qL5kam13mjmg@mail.gmail.com>
+Message-ID: <CAK8P3a2BX==aF7LezgxxtPbRX=GY09Bug+jPH+qL5kam13mjmg@mail.gmail.com>
+Subject: Re: linux-next boot error: general protection fault in __x64_sys_settimeofday
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        syzbot <syzbot+dccce9b26ba09ca49966@syzkaller.appspotmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Jann Horn <jannh@google.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:7zQYjX3LuQYBw0hHkIFyAvR0IJhRq0UWEFwsrcXAdp8Uxv1avzK
+ cQEzUedJoV2YqwTrM4SiTQOBir5Ddk+Z70cVhl+z5aA12D5BxYvl0PnEkEX6B0OvlRbQmBc
+ fjmRGDTj5dsammj3XU7K1w9jaT8WA4wmt7ZdMEHqJf97y9HhICSwhin3L/pfP90zQgeykEn
+ ZvRq06Y+hDnG4vyyAciYQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:c7DP1bcOy6c=:/UR/63emNwmpSNPdGXXSrY
+ h4gBf8ytrwhFaaTak0gXXJ7CW7pramS0CqAu3uRZtbhaNQy/wJIsQvAu0jKxZpr2n9W8gKjzq
+ VZtASKFxkSvNE9Q4cmb1i0bSkMMKxRxaSnqVtXESJa4vz9eTDFDxe4jZbYNm95BsvpMsfySF0
+ NNNdrafSXMSULnQb0uHQM2ukw7+ltfdh1EJ81NVyn+KeAaXbRZZh3/DnnzSv9C7LYknnhCLdj
+ 7wXaoRlLEreATKBOCotmGb8autzCVRC9g8e90hHs2qOowWeA9iOUxhfksq7Jr9exVNW4UoTZt
+ oghVWfFGxqwhAk/Nt8dwFTNtnhSWsZA7LDbQhiTcniHG3Bi3OvENZTVlYmheq66JF6b4/yz3e
+ VYJVqOIIWR/s50sqHy+Mf55fea1vRejyqh8du32G2mbrSLUOEr03iM6Tnont/lBnRVpAxb321
+ fcr4veStkfPXVHdKjQ5DNt6AjFC5Bz9GK+VTcAvVehUjRrE3f7YTknlJsQLSI29Y/pRMpYyQv
+ IZKhzw+1yjVo2IIzc9LLXFeZWq2ayngBI5nIrzJqOK/oqZot9xA1uB11B+c987b0em8eFxVTb
+ a5jofGSdHnpZwis3iNcYqSYzhyEmVjf/cijpgx/Roff8nFIodm/tGzEjciHBYiIvhfEmeLuqd
+ 8gr/wFhIPvCLBrMIVBrDbpGLEovJAiTDjwRUGd+MRJ8oERUNQuF/oY3CO4EFQA1cIWyp+t+38
+ TbxxArPw/IsWmc+ZAYZ1PJvh9wL088kzWfjtx2ks/Ic4L1q5nf0zsyL5WFetUtJ+qCCXjI6eg
+ iIjE5ERclPyj4Ykv7IX+HBLKufreG9P9C0fcziz0HLhkF2YHiTJr3UQ4oHKML3sPL5LNNc3TG
+ sIYoRiCNHi/N2jSNJE/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 10:20 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
-> On 14/11/2019 05.49, Jens Axboe wrote:
-> > On 11/13/19 9:31 PM, Jens Axboe wrote:
-> >> This is a case of "I don't really know what I'm doing, but this works
-> >> for me". Caveat emptor, but I'd love some input on this.
-> >>
-> >> I got a bug report that using the poll command with signalfd doesn't
-> >> work for io_uring. The reporter also noted that it doesn't work with the
-> >> aio poll implementation either. So I took a look at it.
-> >>
-> >> What happens is that the original task issues the poll request, we call
-> >> ->poll() (which ends up with signalfd for this fd), and find that
-> >> nothing is pending. Then we wait, and the poll is passed to async
-> >> context. When the requested signal comes in, that worker is woken up,
-> >> and proceeds to call ->poll() again, and signalfd unsurprisingly finds
-> >> no signals pending, since it's the async worker calling it.
-> >>
-> >> That's obviously no good. The below allows you to pass in the task in
-> >> the poll_table, and it does the right thing for me, signal is delivered
-> >> and the correct mask is checked in signalfd_poll().
-> >>
-> >> Similar patch for aio would be trivial, of course.
-> >
-> > From the probably-less-nasty category, Jann Horn helpfully pointed out
-> > that it'd be easier if signalfd just looked at the task that originally
-> > created the fd instead. That looks like the below, and works equally
-> > well for the test case at hand.
+On Thu, Nov 14, 2019 at 2:39 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> On Thu, Nov 14, 2019 at 2:38 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Thu, Nov 14, 2019 at 2:28 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > On Thu, Nov 14, 2019 at 2:22 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > On Thu, Nov 14, 2019 at 1:43 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > > > On Thu, Nov 14, 2019 at 1:42 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > > > > On Thu, Nov 14, 2019 at 1:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > > > > >
+> > > > > > > On Thu, 14 Nov 2019, syzbot wrote:
+> > > > > > >
+> > > > > > > From the full console output:
+> > > >
+> > > > > >
+> > > > > > Urgently need +Jann's patch to better explain these things!
+> > > > >
+> > > > > +Arnd, this does not look right:
+> > > > >
+> > > > > commit adde74306a4b05c04dc51f31a08240faf6e97aa9
+> > > > > Author: Arnd Bergmann <arnd@arndb.de>
+> > > > > Date:   Wed Aug 15 20:04:11 2018 +0200
+> > > > >
+> > > > >     y2038: time: avoid timespec usage in settimeofday()
+> > > > > ...
+> > > > >
+> > > > > -               if (!timeval_valid(&user_tv))
+> > > > > +               if (tv->tv_usec > USEC_PER_SEC)
+> > > > >                         return -EINVAL;
+> > > >
+> > > > Thanks for the report!
+> > > >
+> > > > I was checking the wrong variable, fixed now,
+> > > > should push it out to my y2038 branch in a bit.
+> > > >
+> > > >       Arnd
+> > >
+> > >
+> > > This part from the original reporter was lost along the way:
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+dccce9b26ba09ca49966@syzkaller.appspotmail.com
+> > >
+> > > https://github.com/google/syzkaller/blob/master/docs/syzbot.md#rebuilt-treesamended-patches
 >
-> Eh, how should that work? If I create a signalfd() and fork(), the
-> child's signalfd should only be concerned with signals sent to the
-> child. Not to mention what happens after the parent dies and the child
-> polls its fd.
->
-> Or am I completely confused?
+> /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+> this
 
-I think the child should not be getting signals for the child when
-it's reading from the parent's signalfd. read() and write() aren't
-supposed to look at properties of `current`. If I send an fd to some
-daemon via SCM_RIGHTS, and the daemon does a read() on it, that should
-never cause signals to disappear from the daemon's signal queue.
+Ok, got it. Now pushed out with a
 
-Of course, if someone does rely on the current (silly) semantics, this
-might break stuff.
+Tested-by: syzbot+dccce9b26ba09ca49966@syzkaller.appspotmail.com
 
-And we probably also don't want to just let the signalfd keep a
-reference to a task, because then if the task later goes through a
-setuid transition, you'd still be able to dequeue its signals. So it'd
-have to also check against ->self_exec_id or something like that.
+     Arnd
