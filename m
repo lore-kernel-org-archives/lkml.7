@@ -2,207 +2,188 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD69AC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835CAC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DCF206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56845206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:27:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TeN+6SIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfKNL04 (ORCPT
+        id S1726549AbfKNL1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:26:56 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43652 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725977AbfKNL0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:26:55 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 44CA1140E50BECD4D86A;
-        Thu, 14 Nov 2019 19:26:52 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
- 19:26:44 +0800
-Date:   Thu, 14 Nov 2019 11:26:37 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Tao Xu <tao3.xu@intel.com>, Linux MM <linux-mm@kvack.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>, "Keith Busch" <keith.busch@intel.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linuxarm <linuxarm@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
-Message-ID: <20191114112504.00005b61@huawei.com>
-In-Reply-To: <CAPcyv4g5xUBp871+T26+se8WH9154g7V81qsToYAbXAALMuhKQ@mail.gmail.com>
-References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
-        <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
-        <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
-        <20191113094742.00000dc4@huawei.com>
-        <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
-        <20191113174845.000009d3@huawei.com>
-        <CAPcyv4g5xUBp871+T26+se8WH9154g7V81qsToYAbXAALMuhKQ@mail.gmail.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Thu, 14 Nov 2019 06:27:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22074 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726452AbfKNL1H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 06:27:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573730825;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=L/gwESRRR03S0wRJMnaNaIygulhbwzzIij7KolEFnN8=;
+        b=TeN+6SIlw6MdiIQzTKSvB+v0Q40/jrWPu9gYdbjjA4pffKibqgzUy7oHd9wVsK4CzjEE0y
+        rBLYsqjMffo1xl75u/EcIqbeQfMQiO9DVeAYYcZ47NDbjWqBzwKeI3TcwHU5N/YAVNLEEV
+        tHbSXKZBbUOTTeo57jYIPmdP2HhQx6I=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-FJcM29aRPAKx9fSLIfdTVQ-1; Thu, 14 Nov 2019 06:27:04 -0500
+Received: by mail-wm1-f71.google.com with SMTP id x16so3727404wmk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 03:27:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5jWJINQzU7DIjSgJJ1kpu7evn0eK8lUV8vqPcpC4Jlw=;
+        b=RPvm39mtILfTuYPWlfisZsd4vFsOYyxhpszKGO4VhNPmDXnwTSgcjAcYYtM0qUHX3W
+         UhEKZM08t1ON08wvBrdYUcMlNTXag4aZhacCLVYVy8qxps8Lhl+707WH45x8cPemC2Xc
+         1qmhpVelNzIV+lAhidyYJY2Dfauo2U+CLS2D74hCKepmy4afhO5RL2afuFs/g2mlJZPl
+         25ez6beqDSq2Q35tIgTL2yqaIn4cGWs28gG570U6F1rN4Icfo8AXYQB9H9ISAWPN52KQ
+         1B13cEruRdhafjSL3pV+hRpidOKbJhCCjpAaSYIRRCwgdxrhUefgrDcEIMXzJpkmdppV
+         LMKA==
+X-Gm-Message-State: APjAAAX354I/9tagGr1WcmuN/fWuG+HICJMZeImnqlGjpt/IYQlQLpGk
+        f7LHqGpVc74YFeXDDgS6rvEzc1inmwWfvMx/v/2VOGZ1Le5ibKktQfxMWkloJmjqWhb1mMRrRbn
+        UcrgrJzDbXb3G4mLH2v5AlBBy
+X-Received: by 2002:a1c:3b05:: with SMTP id i5mr7655056wma.8.1573730822918;
+        Thu, 14 Nov 2019 03:27:02 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzNadAhb3uVoWTx1LAhrlTsop88HOIAwDGjG+zbVgrV8lStQGTeYoYWPW0Kneg5Vd1CAyJU+g==
+X-Received: by 2002:a1c:3b05:: with SMTP id i5mr7655029wma.8.1573730822681;
+        Thu, 14 Nov 2019 03:27:02 -0800 (PST)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id z4sm6280823wmf.36.2019.11.14.03.27.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 03:27:02 -0800 (PST)
+Subject: Re: [PATCH v7 2/8] efi: Add embedded peripheral firmware support
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-3-hdegoede@redhat.com>
+ <20191011144834.GL16384@42.do-not-panic.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e7bd40ff-20d1-3aed-8516-9fffd4c3a207@redhat.com>
+Date:   Thu, 14 Nov 2019 12:27:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191011144834.GL16384@42.do-not-panic.com>
+Content-Language: en-US
+X-MC-Unique: FJcM29aRPAKx9fSLIfdTVQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 15:20:01 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+Hi Luis,
 
-> On Wed, Nov 13, 2019 at 9:49 AM Jonathan Cameron
-> <jonathan.cameron@huawei.com> wrote:
-> >
-> > On Wed, 13 Nov 2019 21:57:24 +0800
-> > Tao Xu <tao3.xu@intel.com> wrote:
-> >  
-> > > On 11/13/2019 5:47 PM, Jonathan Cameron wrote:  
-> > > > On Tue, 12 Nov 2019 09:55:17 -0800
-> > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >  
-> > > >> [ add Tao Xu ]
-> > > >>
-> > > >> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
-> > > >> <Jonathan.Cameron@huawei.com> wrote:  
-> > > >>>
-> > > >>> Generic Initiators are a new ACPI concept that allows for the
-> > > >>> description of proximity domains that contain a device which
-> > > >>> performs memory access (such as a network card) but neither
-> > > >>> host CPU nor Memory.
-> > > >>>
-> > > >>> This patch has the parsing code and provides the infrastructure
-> > > >>> for an architecture to associate these new domains with their
-> > > >>> nearest memory processing node.  
-> > > >>
-> > > >> Thanks for this Jonathan. May I ask how this was tested? Tao has been
-> > > >> working on qemu support for HMAT [1]. I have not checked if it already
-> > > >> supports generic initiator entries, but it would be helpful to include
-> > > >> an example of how the kernel sees these configurations in practice.
-> > > >>
-> > > >> [1]: http://patchwork.ozlabs.org/cover/1096737/  
-> > > >
-> > > > Tested against qemu with SRAT and SLIT table overrides from an
-> > > > initrd to actually create the node and give it distances
-> > > > (those all turn up correctly in the normal places).  DSDT override
-> > > > used to move an emulated network card into the GI numa node.  That
-> > > > currently requires the PCI patch referred to in the cover letter.
-> > > > On arm64 tested both on qemu and real hardware (overrides on tables
-> > > > even for real hardware as I can't persuade our BIOS team to implement
-> > > > Generic Initiators until an OS is actually using them.)
-> > > >
-> > > > Main real requirement is memory allocations then occur from one of
-> > > > the nodes at the minimal distance when you are do a devm_ allocation
-> > > > from a device assigned. Also need to be able to query the distances
-> > > > to allow load balancing etc.  All that works as expected.
-> > > >
-> > > > It only has a fairly tangential connection to HMAT in that HMAT
-> > > > can provide information on GI nodes.  Given HMAT code is quite happy
-> > > > with memoryless nodes anyway it should work.  QEMU doesn't currently
-> > > > have support to create GI SRAT entries let alone HMAT using them.
-> > > >
-> > > > Whilst I could look at adding such support to QEMU, it's not
-> > > > exactly high priority to emulate something we can test easily
-> > > > by overriding the tables before the kernel reads them.
-> > > >
-> > > > I'll look at how hard it is to build an HMAT tables for my test
-> > > > configs based on the ones I used to test your HMAT patches a while
-> > > > back.  Should be easy if tedious.
-> > > >
-> > > > Jonathan
-> > > >  
-> > > Indeed, HMAT can support Generic Initiator, but as far as I know, QEMU
-> > > only can emulate a node with cpu and memory, or memory-only. Even if we
-> > > assign a node with cpu only, qemu will raise error. Considering
-> > > compatibility, there are lots of work to do for QEMU if we change NUMA
-> > > or SRAT table.
-> > >  
-> >
-> > I faked up a quick HMAT table.
-> >
-> > Used a configuration with 3x CPU and memory nodes, 1x memory only node
-> > and 1x GI node.  Two test cases, one where the GI initiator is further than
-> > the CPU containing nodes from the memory only node (realistic case for
-> > existing hardware). That behaves as expected and there are no
-> > /sys/node/bus/nodeX/access0 entries for the GI node
-> > + appropriate ones for the memory only node as normal.
-> >
-> > The other case is more interesting we have the memory only node nearer
-> > to the GI node than to any of the CPUs.  In that case for x86 at least
-> > the HMAT code is happy to put an access0 directory GI in the GI node
-> > with empty access0/initiators and the memory node under access0/targets
-> >
-> > The memory only node is node4 and the GI node node3.
-> >
-> > So relevant dirs under /sys/bus/nodes/devices
-> >
-> > node3/access0/initators/ Empty
-> > node3/access0/targets/node4  
-> 
-> This makes sense node3 is an initiator, no other nodes can initiate to it.
-> 
-> > node4/access0/initators/[node3 read_bandwidth write_bandwith etc]
-> > node4/access0/targets/ Empty
-> >
-> > So the result current (I think - the HMAT interface still confuses
-> > me :) is that a GI node is treated like a CPU node.  This might mean
-> > there is no useful information available if you want to figure out
-> > which CPU containing node is nearest to Memory when the GI node is
-> > nearer still.
-> >
-> > Is this a problem?  I'm not sure...
-> >
-> > If we don't want to include GI nodes then we can possibly
-> > use the node_state(N_CPU, x) method to check before considering
-> > them, or I guess parse SRAT to extract that info directly.
-> >
-> > I tried this and it seems to work so can add patch doing this
-> > next version if we think this is the 'right' thing to do.
-> >
-> > So what do you think 'should' happen?  
-> 
-> I think this might be our first case for adding an "access1" instance
-> by default. I.e. in the case when access0 is not a cpu, then access1
-> is there to at least show the "local" cpu and let userspace see the
-> performance difference of cpu vs a specific-initiator access.
+Thank you for the reviews and sorry for being a bit slow to respind.
 
+On 11-10-2019 16:48, Luis Chamberlain wrote:
+> On Fri, Oct 04, 2019 at 04:50:50PM +0200, Hans de Goede wrote:
+>> +static int __init efi_check_md_for_embedded_firmware(
+>> +=09efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
+>> +{
+>> +=09const u64 prefix =3D *((u64 *)desc->prefix);
+>> +=09struct sha256_state sctx;
+>> +=09struct embedded_fw *fw;
+>> +=09u8 sha256[32];
+>> +=09u64 i, size;
+>> +=09void *map;
+>> +
+>> +=09size =3D md->num_pages << EFI_PAGE_SHIFT;
+>> +=09map =3D memremap(md->phys_addr, size, MEMREMAP_WB);
+>=20
+> Since our limitaiton is the init process must have mostly finished,
+> it implies early x86 boot code cannot use this, what measures can we
+> take to prevent / check for such conditions to be detected and
+> gracefully errored out?
 
-Hi Dan,
+As with all (EFI) early boot code, there simply is a certain order
+in which things need to be done. This needs to happen after the basic
+mm is setup, but before efi_free_boot_services() gets called, there
+isn't really a way to check for all these conditions. As with all
+early boot code, people making changes need to be careful to not
+break stuff.
 
-Agreed that it makes sense to expand how we describe these cases a bit.
-To make sure I've understood correctly let me paraphrase what you
-are proposing (and tweak it a bit ;)
+>=20
+>> +=09if (!map) {
+>> +=09=09pr_err("Error mapping EFI mem at %#llx\n", md->phys_addr);
+>> +=09=09return -ENOMEM;
+>> +=09}
+>> +
+>> +=09size -=3D desc->length;
+>=20
+> Remind me again, why we decrement the size here?
 
-Assuming for this purpose we don't put GIs in CPU nodes as that makes
-for really fiddly explanation. In reality the code will need to handle
-that.
+Basically this is another way of writing:
 
-1) Leave access0 as it currently is with this series - so continue to
-   not distinguish between CPU nodes and Generic Initator containing ones?
-2) Add access 1 which is effectively access0 ignoring Generic Initiators?
+=09for (i =3D 0; (i + desc->length) < size; i +=3D 8) {
 
-My feeling is that any existing users of access0 are definitely not going
-to be expecting generic initiators, so we might want to do this the other
-way around. access0 is only CPUs and memory, access1 is including
-generic initiators.  If there are no GIs don't expose access1 at all?
+> I was going to ask if we didn't need a:
+>=20
+> if (desc->length > size) {
+> =09memunmap(map);
+> =09return -EINVAL;
+> }
 
-For now we could simply block the GI visibility in access0 and deal
-with access1 as a separate series.  I suspect we will get push back
-as there are no known users of our new access1 so it may take a while
-to prove utility and get it accepted.
+That is a good point, unlikely but still a good point,
+so I guess that writing:
 
-Thanks,
+=09for (i =3D 0; (i + desc->length) < size; i +=3D 8) {
 
-Jonathan
+Instead would better as that avoids the need for that check.
+I will fix this for the next version.
+
+Regards,
+
+Hans
+
+>=20
+>> +=09for (i =3D 0; i < size; i +=3D 8) {
+>> +=09=09u64 *mem =3D map + i;
+>> +
+>> +=09=09if (*mem !=3D prefix)
+>> +=09=09=09continue;
+>> +
+>> +=09=09sha256_init(&sctx);
+>> +=09=09sha256_update(&sctx, map + i, desc->length);
+>> +=09=09sha256_final(&sctx, sha256);
+>> +=09=09if (memcmp(sha256, desc->sha256, 32) =3D=3D 0)
+>> +=09=09=09break;
+>> +=09}
+>> +=09if (i >=3D size) {
+>> +=09=09memunmap(map);
+>> +=09=09return -ENOENT;
+>> +=09}
+>> +
+>> +=09pr_info("Found EFI embedded fw '%s'\n", desc->name);
+>=20
+> Otherwise looks good.
+>=20
+>    Luis
+>=20
 
