@@ -2,216 +2,214 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3796C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122ABC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3319206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E23206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoX51meU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IQttiHaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfKNWrP (ORCPT
+        id S1727063AbfKNWuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:47:15 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42274 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNWrP (ORCPT
+        Thu, 14 Nov 2019 17:50:22 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41204 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNWuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:47:15 -0500
-Received: by mail-wr1-f65.google.com with SMTP id a15so8717246wrf.9;
-        Thu, 14 Nov 2019 14:47:13 -0800 (PST)
+        Thu, 14 Nov 2019 17:50:21 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h4so4706471pgv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:50:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JGRlcMeoKAOOhjcDJOF5DFr5u4BH2xeU+rJMkirYWaY=;
-        b=eoX51meUHmLR8wQIfteVxzkvSZri+BeLozXZmXDuNhJcArpEX+XUjnEc506JaWySMF
-         fvfTvmAQPASJqGPozMCGBtFSbhzGbCjWqUf5lEc9CFOS/S4CNSyVFPebOVza2DnCJ+Jc
-         nivEEojQyUnOkHQV/qTkqlr31rG86Qver7ATIhE1o3SVN3YaFUUke59puk/mNRsDvi1L
-         743tCms9wMdlL3+oXMxB3JymLJbpIGtsel0gDu0efrr/npXxjoPi4ScrRX4FX5XlEALV
-         r++Sfbs/rw2znawKFhrfSeNb0rfkBzWPA0NPnExU6BhIcHPccLYQvxNPoJFG4pOj0Vd8
-         OUJQ==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=fV40oETXjKcGlIr1gGKnzSoiYzzgILYSSWxjfebyNP8=;
+        b=IQttiHaAJGKACK5iLQHgc60JB1JPMzLpLI1DfqpXl7axGbV2ULuY8eJUGc9Qoado47
+         UGVaSRRH1bnSNoxedmuguxdiav53vPa3kaEGVLaAQ3wkPsnqskxDHoBu+bPY/30ZD8PK
+         nr9n7pQ3Ltf+Jy66JShXkhoWL328ExLRzYYu4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JGRlcMeoKAOOhjcDJOF5DFr5u4BH2xeU+rJMkirYWaY=;
-        b=T7RYs0hnQAn3nWkMCYhe+2JEirn701YtDTRL3NNBRVJsFXxKNDKuetRTvL67M+4WbA
-         /spfzu8kPgcxH/wLi1IZzWtuSFLFUdK+fii1Qdz02L2cl845thpYoTgokOTVBBMAQst6
-         +4t5ksnV+gfqEYeDItsq/n1m2K23vXHMr5RnMQqgrXyBb+G46fDu5GD/CKaqvQ4L/2Z7
-         tgaBVBmC3LcVdj4kluXx0QTozLdp7fOpwgPYHFq52CTPWLQDXan+/lBQ44pztewsSKUc
-         9HSfncigNilJx9ja1FcIoNm9h1jUjIXkdXulAObRAvD8Cl93+ys1j0QpBJ2awvun5OnE
-         ZaWA==
-X-Gm-Message-State: APjAAAVZXFMrvH5cpzuGBbjJPR8o7RRvj0caGWXSkomJAlc7K2sSmS8n
-        4UMna6L/lXycJbQSdI3XFEwr7zaDkkRDjj+rcfg=
-X-Google-Smtp-Source: APXvYqwuKMxsXT28TKbuQooL9rQ1QVttKzL0StbnqApJLFSD/gam1Od9P5ARGt5yH6+H78iilIRoigLLmxYsdIh2VJ4=
-X-Received: by 2002:adf:ef0c:: with SMTP id e12mr11270259wro.270.1573771632171;
- Thu, 14 Nov 2019 14:47:12 -0800 (PST)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=fV40oETXjKcGlIr1gGKnzSoiYzzgILYSSWxjfebyNP8=;
+        b=Fm0aHEHHXkxeSP0KWoAKunI0VS5ajNOm/JWwSw6bDLE5G37NS0ZBGdqvK/kxBOwjUp
+         iElCmhCnyyUGx78/uYf6nsAzfjkZjUy2letLDJtUsWluGIUke49wpjcnchhrreOpjkyp
+         /70L7v397v5LLiNjR2MLb6AzBwPA6jAbM1GxJyZpp/SOFlluEQMWqbVVNOAeRndwahfS
+         92g+A6kLtd1X/HVxac2CJ942irVvxsBqI0Dwp0c5u2YtuiXMd5ae7LPY3IHq12uWc2rE
+         rDLEu/viNXMmY+m0wCe50kLy16SU/r1a3H1QNv4WRqfFONNM1je5cvCUC7IwdFZM9N4a
+         oy9w==
+X-Gm-Message-State: APjAAAU7bqEoDV1/O2UMdTYuyw1fcmXLspBtmJ26Or/6x6k2r/XkShh6
+        28LIHXQEwEXtkyMufYSWTmUYIQ==
+X-Google-Smtp-Source: APXvYqwGZF0CNHJX1S5Aa2rAAxaMTnHOr5W0JJN8PB1EeZukU4bqr9Ehf1A2qoVMQcXBra2LOY9T8Q==
+X-Received: by 2002:a17:90b:d8e:: with SMTP id bg14mr14990905pjb.26.1573771818995;
+        Thu, 14 Nov 2019 14:50:18 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u207sm9215633pfc.127.2019.11.14.14.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 14:50:18 -0800 (PST)
+Message-ID: <5dcdda2a.1c69fb81.27852.ac35@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191108084517.21617-1-peron.clem@gmail.com> <20191108084517.21617-5-peron.clem@gmail.com>
- <20191113085858.76rad3vpszknu4cp@pengutronix.de>
-In-Reply-To: <20191113085858.76rad3vpszknu4cp@pengutronix.de>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 14 Nov 2019 23:47:00 +0100
-Message-ID: <CAJiuCceYg7WC=peHYeC=eE-HOsKH_SdsKyWwkWY5VpeY+uzaKA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] pwm: sun4i: Add support to output source clock directly
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
+References: <cover.1573499020.git.amit.kucheria@linaro.org> <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
+        edubezval@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sivaa@codeaurora.org
+Subject: Re: [PATCH 1/3] drivers: thermal: tsens: Add critical interrupt support
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 14 Nov 2019 14:50:17 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+Quoting Amit Kucheria (2019-11-11 11:21:27)
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
+sens-common.c
+> index 4359a4247ac3..2989cb952cdb 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -321,6 +357,65 @@ static inline u32 masked_irq(u32 hw_id, u32 mask, en=
+um tsens_ver ver)
+>         return 0;
+>  }
+> =20
+> +/**
+> + * tsens_critical_irq_thread - Threaded interrupt handler for critical i=
+nterrupts
+> + * @irq: irq number
+> + * @data: tsens controller private data
+> + *
+> + * Check all sensors to find ones that violated their critical threshold=
+ limits.
+> + * Clear and then re-enable the interrupt.
+> + *
+> + * The level-triggered interrupt might deassert if the temperature retur=
+ned to
+> + * within the threshold limits by the time the handler got scheduled. We
+> + * consider the irq to have been handled in that case.
+> + *
+> + * Return: IRQ_HANDLED
+> + */
+> +irqreturn_t tsens_critical_irq_thread(int irq, void *data)
+> +{
+> +       struct tsens_priv *priv =3D data;
+> +       struct tsens_irq_data d;
+> +       bool enable =3D true, disable =3D false;
 
-On Wed, 13 Nov 2019 at 09:58, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Fri, Nov 08, 2019 at 09:45:14AM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > PWM core has an option to bypass whole logic and output unchanged sourc=
-e
-> > clock as PWM output. This is achieved by enabling bypass bit.
-> >
-> > Note that when bypass is enabled, no other setting has any meaning, not
-> > even enable bit.
-> >
-> > This mode of operation is needed to achieve high enough frequency to
-> > serve as clock source for AC200 chip which is integrated into same
-> > package as H6 SoC.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-sun4i.c | 44 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> >
-> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > index a10022d6c0fd..9cc928ab47bc 100644
-> > --- a/drivers/pwm/pwm-sun4i.c
-> > +++ b/drivers/pwm/pwm-sun4i.c
-> > @@ -3,6 +3,10 @@
-> >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
-> >   *
-> >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electr=
-ons.com>
-> > + *
-> > + * Limitations:
-> > + * - When outputing the source clock directly, the PWM logic will be b=
-ypassed
-> > + *   and the currently running period is not guaranteed to be complete=
-d
-> >   */
-> >
-> >  #include <linux/bitops.h>
-> > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
-> >
-> >  struct sun4i_pwm_data {
-> >       bool has_prescaler_bypass;
-> > +     bool has_direct_mod_clk_output;
-> >       unsigned int npwm;
-> >  };
-> >
-> > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *c=
-hip,
-> >
-> >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> >
-> > +     /*
-> > +      * PWM chapter in H6 manual has a diagram which explains that if =
-bypass
-> > +      * bit is set, no other setting has any meaning. Even more, exper=
-iment
-> > +      * proved that also enable bit is ignored in this case.
-> > +      */
-> > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> > +         sun4i_pwm->data->has_direct_mod_clk_output) {
-> > +             state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate=
+Why not just use true and false in the one place these variables are
+used?
+
+> +       unsigned long flags;
+> +       int temp, ret, i;
+> +
+> +       for (i =3D 0; i < priv->num_sensors; i++) {
+> +               struct tsens_sensor *s =3D &priv->sensor[i];
+
+Maybe make this const?
+
+> +               u32 hw_id =3D s->hw_id;
+> +
+> +               if (IS_ERR(priv->sensor[i].tzd))
+
+IS_ERR(s->tzd)?
+
+> +                       continue;
+> +               if (!tsens_threshold_violated(priv, hw_id, &d))
+> +                       continue;
+> +               ret =3D get_temp_tsens_valid(s, &temp);
+
+Can this accept a const 's'?
+
+> +               if (ret) {
+> +                       dev_err(priv->dev, "[%u] %s: error reading sensor=
+\n", hw_id, __func__);
+> +                       continue;
+> +               }
+> +
+> +               spin_lock_irqsave(&priv->ul_lock, flags);
+> +
+> +               tsens_read_irq_state(priv, hw_id, s, &d);
+> +
+> +               if (d.crit_viol &&
+> +                   !masked_irq(hw_id, d.crit_irq_mask, tsens_version(pri=
+v))) {
+> +                       tsens_set_interrupt(priv, hw_id, CRITICAL, disabl=
+e);
+> +                       if (d.crit_thresh > temp) {
+> +                               dev_dbg(priv->dev, "[%u] %s: re-arm upper=
+\n",
+> +                                       priv->sensor[i].hw_id, __func__);
+
+hw_id instead of priv->sensor...?
+
+> +                       } else {
+> +                               dev_dbg(priv->dev, "[%u] %s: TZ update tr=
+igger (%d mC)\n",
+> +                                       hw_id, __func__, temp);
+> +                       }
+> +                       tsens_set_interrupt(priv, hw_id, CRITICAL, enable=
 );
-> > +             state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period, 2);
->
-> I first thought you're losing precision here by reusing state->period
-> here, but with a divisor of 2 everything is fine.
->
-> > +             state->polarity =3D PWM_POLARITY_NORMAL;
-> > +             state->enabled =3D true;
-> > +             return;
-> > +     }
-> > +
-> >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
-> >           sun4i_pwm->data->has_prescaler_bypass)
-> >               prescaler =3D 1;
-> > @@ -204,6 +223,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
-> >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
-> >       struct pwm_state cstate;
-> >       u32 ctrl;
-> > +     bool bypass =3D false;
-> >       int ret;
-> >       unsigned int delay_us;
-> >       unsigned long now;
-> > @@ -218,9 +238,24 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, =
-struct pwm_device *pwm,
-> >               }
-> >       }
-> >
-> > +     /*
-> > +      * Although it would make much more sense to check for bypass in
-> > +      * sun4i_pwm_calculate(), value of bypass bit also depends on "en=
-abled".
->
-> I don't understand this reasoning. sun4i_pwm_calculate knows about
-> .enabled and also sun4i_pwm->data->has_direct_mod_clk_output. Maybe just
-> add a bool *bypass as parameter and move the logic there?
+> +               }
+> +
+> +               spin_unlock_irqrestore(&priv->crit_lock, flags);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+>  /**
+>   * tsens_irq_thread - Threaded interrupt handler for uplow interrupts
+>   * @irq: irq number
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 7d317660211e..784c4976c4f9 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -121,6 +121,27 @@ static int tsens_register(struct tsens_priv *priv)
+> =20
+>         enable_irq_wake(irq);
+> =20
+> +       if (tsens_version(priv) > VER_1_X) {
+> +               irq =3D platform_get_irq_byname(pdev, "critical");
+> +               if (irq < 0) {
+> +                       ret =3D irq;
+> +                       goto err_put_device;
+> +               }
+> +
+> +               ret =3D devm_request_threaded_irq(&pdev->dev, irq,
+> +                                               NULL, tsens_critical_irq_=
+thread,
+> +                                               IRQF_TRIGGER_HIGH | IRQF_=
+ONESHOT,
+> +                                               dev_name(&pdev->dev), pri=
+v);
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "%s: failed to get critical i=
+rq\n", __func__);
+> +                       goto err_put_device;
 
-I asked myself the same question, however the sun4i_pwm_calculate is
-only called when period or duty_cycle is updated not when state is
-toggled between disabled / enabled.
+Do we need to disable_irq_wake() for the previous irq here?
 
-Should we also call it when the state is switched to enabled ?
-
-Regards,
-Cl=C3=A9ment
-
->
-> > +      */
-> > +     if (state->enabled) {
-> > +             u32 clk_rate =3D clk_get_rate(sun4i_pwm->clk);
-> > +             bypass =3D (state->period * clk_rate >=3D NSEC_PER_SEC) &=
-&
-> > +                      (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
-> > +                      (state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_=
-SEC);
-> > +     }
-> > +
->
-> This looks right now.
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+> +               }
+> +
+> +               enable_irq_wake(irq);
+> +       }
+> +
+> +       return 0;
+> +
+>  err_put_device:
+>         put_device(&pdev->dev);
+>         return ret;
