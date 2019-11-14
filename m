@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A2FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC08FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D85206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39BF206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573722804;
-	bh=Hk86kKaoCoS8zdFOMF04BeVBX66otvLaHK8cVofGazs=;
+	s=default; t=1573722943;
+	bh=zFwXImjcFRfGHmSnvZE9pSw9T7T9INupTUsHGTNq4Xo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e35kIeRR6os+CwWWgfxPVHnS/WV5crzM3PePHmbsUBSo49zjny8mgGf4ylq1OdFv6
-	 5Bpo1EO8dY2rQVK2hXMxNmOaW++5w36X5zJ9LMAHJArJuuJas/9jnI69yBYH7GJCDY
-	 frZQGYHCYiKLupgnvk72E6RnCQwPtzR+JCzJpGGA=
+	b=1Mf2a3RuwkssltOfO5yJpDSo5aKdbKxv7zyjCJ+UedrU6ECV4n8S4IBOuFJMdPmKW
+	 3pKF61u/kC4WVv9hVTU3Ngd+70PxJhH7PzoGMpDbZ0CmcXkh+PeLSxif5NOwI5PKkG
+	 Wza3W3+OGkrKaKBTsIvNCcPaIthptug4yXtMLKGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfKNJNX (ORCPT
+        id S1726598AbfKNJPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:13:23 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38898 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfKNJNW (ORCPT
+        Thu, 14 Nov 2019 04:15:42 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34034 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfKNJPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:13:22 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z25so4260025oti.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 01:13:21 -0800 (PST)
+        Thu, 14 Nov 2019 04:15:41 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so4663212oig.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 01:15:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xgD/BMuR46VjQez3zISCSv4fnHdI/4XP1QKHZKo2puA=;
-        b=C+K5gDfCBdiae4KcfzHZwCDYzXhoWKxGUDIGW4dWVTWz7thqu5rCu4TCdwzZH2ayFo
-         Gte3Exg31nRpz+2xX6vYgkrmOYe6DuOnJfotZ6xAgVWxdhWMRDLSz+UVpXx62Wnb6vTE
-         voBBs+rAFyW9u1GdGj4u7rLn4uy6XdDSNbtzsYNbtpOYH06Imu/AkvWYnrE0nQwxxu9p
-         mIKyvO4dFNtQ1WoTLfpzX6c1UPR8S+DTaCVsntNTS50TTS+iDL/KtkbwoAIIkopU2sMG
-         K/voMJKyQ6TJwns4nm9o6aFCbdHA2leew2FJEVcYNitVLmoht0V58SNSP7ZaxjLW3mqt
-         4img==
-X-Gm-Message-State: APjAAAWY97ZYea0h2oK/G4WOj1i0NG0V4aUKWDSlNUDl1HxCOAP8yV7h
-        g/L9Za2M5md3xVVwZvHFra1jy1XyEzDdClE9GvA=
-X-Google-Smtp-Source: APXvYqw7pZA8I1p2Z3xXf6iFKv5gGUxbFhl/J9psNXrNfox8A2LIxC5i5b1RZIV27Se5v75pQgL4xl8cksnNt2wnOAU=
-X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr6937615oth.266.1573722801134;
- Thu, 14 Nov 2019 01:13:21 -0800 (PST)
+        bh=nTF6C0MneBCzQ2l+W5YCH3xv4kzAkH/1kcgnxi3HaUw=;
+        b=sEiX8P3WHTXpl11oyOnl6+gffICj59wq70TqlErOqhu2M5E6F8qqL/TRdYIQ+wu/3E
+         sOs4gvj/gW69nKCSZGkx5m1qpoaEEiwcWaDpH6xFOg+HQ5eWnV87wyjuF0fD5NLz/1Ey
+         5heWi9CmnQB1rkbvqpTrM3Pv4iMWn6xUqALM1+bSU4eMiewheiweBOyxknu+uzhvNZKA
+         efG33+U6BrpFVDrxHOl6GwkFc2mTQzVwhFKKENNrCgGhTCratZFOtELS8ZDLie0KE4EZ
+         cop8s87dH+T7hhR46/6A1hnpFTtWscCjb9b8gR+kVmxuDmXlw7I1lkIPHeylqqTjGDHL
+         GAxQ==
+X-Gm-Message-State: APjAAAXmR115hsIs01/YgXo3K1Uu7aGR1tCtoD28qydKu9Y4sa5nfuh3
+        6OJoR+pN4ncAOP5TC/HLTYf1x1F160fYhtxehSs=
+X-Google-Smtp-Source: APXvYqwaPmPNiopmza19ilOiY6XJsUuMHsjEvH+Vvl7ihA5WrIlM7Jpc38y1XLn6RswluefJOG+wBuQMgLdMeHL/VUI=
+X-Received: by 2002:a05:6808:901:: with SMTP id w1mr2729017oih.57.1573722941190;
+ Thu, 14 Nov 2019 01:15:41 -0800 (PST)
 MIME-Version: 1.0
 References: <20191113023559.62295-1-saravanak@google.com>
 In-Reply-To: <20191113023559.62295-1-saravanak@google.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Nov 2019 10:13:10 +0100
-Message-ID: <CAJZ5v0hZZzq=U+6Tpja+hsZOhPMDVik5E+9kX=q2nSCbE8Lf4Q@mail.gmail.com>
+Date:   Thu, 14 Nov 2019 10:15:30 +0100
+Message-ID: <CAJZ5v0iURLDQFEvVwvt3hRokLRkJ5C8iEXOcR9mS7cgC9dQrQQ@mail.gmail.com>
 Subject: Re: [PATCH v1] driver core: Allow device link operations inside sync_state()
 To:     Saravana Kannan <saravanak@google.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -122,104 +122,5 @@ On Wed, Nov 13, 2019 at 3:36 AM Saravana Kannan <saravanak@google.com> wrote:
 > -               dev->driver->sync_state(dev);
 > -
 >         dev->state_synced = true;
-> +
-> +       mutex_lock(&sync_lock);
 
-Total nit: I add empty lines around lock/unlock as a rule to make them
-more visible.
-
-> +       WARN_ON(!list_empty(&dev->links.defer_sync));
-> +       if (list_empty(&dev->links.defer_sync)) {
-
-Do you really need to duplicate that check?
-
-> +               get_device(dev);
-> +               list_add_tail(&dev->links.defer_sync, &sync_list);
-> +       }
-> +       mutex_unlock(&sync_lock);
-> +}
-
-What about adding
-
-} else {
-        WARN_ON(1);
-}
-
-here instead?
-
-> +
-
-Kerneldoc?
-
-> +static void device_links_flush_sync_list(void)
-> +{
-> +       struct device *dev, *tmp;
-> +
-> +       mutex_lock(&sync_lock);
-> +
-> +       list_for_each_entry_safe(dev, tmp, &sync_list, links.defer_sync) {
-> +               list_del_init(&dev->links.defer_sync);
-> +               device_lock(dev);
-> +               if (dev->bus->sync_state)
-> +                       dev->bus->sync_state(dev);
-> +               else if (dev->driver && dev->driver->sync_state)
-> +                       dev->driver->sync_state(dev);
-> +               device_unlock(dev);
-> +               put_device(dev);
-> +       }
-> +
-> +       mutex_unlock(&sync_lock);
->  }
->
->  void device_links_supplier_sync_state_pause(void)
-> @@ -738,11 +779,16 @@ void device_links_supplier_sync_state_resume(void)
->                 goto out;
->
->         list_for_each_entry_safe(dev, tmp, &deferred_sync, links.defer_sync) {
-> -               __device_links_supplier_sync_state(dev);
-> +               /*
-> +                * Delete from deferred_sync list before queuing it to
-> +                * sync_list because defer_sync is used for both lists.
-> +                */
->                 list_del_init(&dev->links.defer_sync);
-> +               __device_links_queue_sync_state(dev);
->         }
->  out:
->         device_links_write_unlock();
-> +       device_links_flush_sync_list();
-
-Wouldn't it be better to use a local list in this function instead of
-the global sync_list?
-
-I guess the idea is that you wouldn't be able to do the flush in
-device_links_driver_bound() below, but do you really need that flush?
-
-It looks like this is the only place calling
-__device_links_queue_sync_state() and you do a flush right away after
-the loop, so why is the extra flush in device_links_driver_bound()
-needed?
-
->  }
->
->  static int sync_state_resume_initcall(void)
-> @@ -815,12 +861,13 @@ void device_links_driver_bound(struct device *dev)
->                 if (defer_sync_state_count)
->                         __device_links_supplier_defer_sync(link->supplier);
->                 else
-> -                       __device_links_supplier_sync_state(link->supplier);
-> +                       __device_links_queue_sync_state(link->supplier);
->         }
->
->         dev->links.status = DL_DEV_DRIVER_BOUND;
->
->         device_links_write_unlock();
-> +       device_links_flush_sync_list();
-
-It looks like devices can be added to sync_list in parallel with each
-other and so is it always OK to always flush all of them after one of
-them has been bound to a driver?
-
->  }
->
->  static void device_link_drop_managed(struct device_link *link)
-> --
+BTW, this should go into device_links_flush_sync_list() too, shouldn't it?
