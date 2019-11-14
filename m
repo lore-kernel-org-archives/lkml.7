@@ -2,97 +2,116 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5FAC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2513C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90207206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:10:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oFVyXwVM"
+	by mail.kernel.org (Postfix) with ESMTP id B66A420709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfKNNKD (ORCPT
+        id S1726750AbfKNNLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:10:03 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:49194 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfKNNKD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:10:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fWiCKNd8qqolkwWPpYS48TGmI6aZh6dg+5K5Y26jJuU=; b=oFVyXwVMI4YMjExNDNcMY8JmJ
-        vwJJM9zngyfOVi+zLs0Hgyu9La4qk9lE3fs5ldidmrkRiO2XHUkUIZmRA5c5ZYZ/n/vP7JrI0ueMv
-        iFABHjGe0hXdMDylhClKp5Xenxb8ofbJQXRhQpeoWBSerno9yxYu238qwGhflNJOqInlOgLikO2Sg
-        ChdyM+sBImn4mqaH8fremM0elEvo8nJ8MZIWkNCi+/iICJbSGvas33FIKu6e0xmTAmx4g5M+S3EBq
-        PBiFPJK4I7diUrvasiPTupU2C9/YPmFeZrnQfhsPiliINFG8lR+izix0kAooVwAtfi/fdzsJNHIrR
-        21Ht9AQiA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVEsM-0006rz-8x; Thu, 14 Nov 2019 13:09:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 40AC9301120;
-        Thu, 14 Nov 2019 14:08:19 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DABF229DEC948; Thu, 14 Nov 2019 14:09:26 +0100 (CET)
-Date:   Thu, 14 Nov 2019 14:09:26 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch V2 11/16] x86/ioperm: Share I/O bitmap if identical
-Message-ID: <20191114130926.GP4114@hirez.programming.kicks-ass.net>
-References: <20191111220314.519933535@linutronix.de>
- <20191111223052.603030685@linutronix.de>
- <20191112091521.GX4131@hirez.programming.kicks-ass.net>
- <a0146b86073f4b9bb858d80b4a71683e@AcuMS.aculab.com>
+        Thu, 14 Nov 2019 08:11:04 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:34068 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbfKNNLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:11:04 -0500
+Received: from wf0530.dip.tu-dresden.de ([141.76.182.18] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iVEtU-0002Qj-R0; Thu, 14 Nov 2019 14:10:40 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com,
+        devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        linux-kernel@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-rockchip@lists.infradead.org,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Randy Li <ayaka@soulik.info>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Subject: Re: arm64: dts: rockchip: Disable HS400 for mmc on rk3399-roc-pc
+Date:   Thu, 14 Nov 2019 14:10:39 +0100
+Message-ID: <2766673.iMURPl8gB5@phil>
+In-Reply-To: <367bf78a-f079-f0b4-68fe-52c86823c174@fivetechno.de>
+References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com> <20190301153348.29870-2-christoph.muellner@theobroma-systems.com> <367bf78a-f079-f0b4-68fe-52c86823c174@fivetechno.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a0146b86073f4b9bb858d80b4a71683e@AcuMS.aculab.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:02:01AM +0000, David Laight wrote:
-> From: Peter Zijlstra
-> > Sent: 12 November 2019 09:15
-> ...
-> > > +	/*
-> > > +	 * If the bitmap is not shared, then nothing can take a refcount as
-> > > +	 * current can obviously not fork at the same time. If it's shared
-> > > +	 * duplicate it and drop the refcount on the original one.
-> > > +	 */
-> > > +	if (refcount_read(&iobm->refcnt) > 1) {
-> > > +		iobm = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
-> > > +		if (!iobm)
-> > > +			return -ENOMEM;
-> > > +		io_bitmap_exit();
-> > 		refcount_set(&iobm->refcnd, 1);
-> > >  	}
-> 
-> What happens if two threads of the same process enter the above
-> at the same time?
+Hi Markus,
 
-Suppose there's just the two threads, and both will change it. Then both
-do copy-on-write and the original gets freed.
+$subject is missing the [PATCH] prefix
+
+Am Montag, 11. November 2019, 10:51:04 CET schrieb Markus Reichl:
+> Working with rootfs on two 128GB mmcs on rk3399-roc-pc.
+> 
+> One (mmc name 128G72, one screw hole) works fine in HS400 mode.
+> Other (mmc name DJNB4R, firefly on pcb, two screw holes) gets lots of
+> mmc1: "running CQE recovery", even hangs with damaged fs,
+> when running under heavy load, e.g. compiling kernel.
+> Both run fine with HS200.
+> 
+> Disabling CQ with patch mmc: core: Add MMC Command Queue Support kernel parameter [0] did not help.
+> [0] https://gitlab.com/ayufan-repos/rock64/linux-mainline-kernel/commit/54e264154b87dfe32a8359b2726e2d5611adbaf3
+
+I'm hoping for some input from other people in Cc but your mail headers
+also referenced the drive-impendance series from Christoph [0], which
+it seems we need to poke the phy maintainer again.
+
+Did you check if changing the impedance helped (like the signal dampening
+Philipp described in one of the replies there).
+
+[0] https://patchwork.kernel.org/patch/10835567/
+most current v2 it seems is https://patchwork.kernel.org/patch/10842421/
+
+> Therefore I propose to disable HS400 mode on roc-pc for now.
+
+Hoping for more input :-)
+
+
+Heiko
+
+
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> index 29a50a083c42..33df95e384b4 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> @@ -660,8 +660,6 @@
+>  
+>  &sdhci {
+>  	bus-width = <8>;
+> -	mmc-hs400-1_8v;
+> -	mmc-hs400-enhanced-strobe;
+>  	non-removable;
+>  	status = "okay";
+>  };
+> 
+
+
 
 
