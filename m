@@ -2,242 +2,221 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65753C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D4FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6AB20729
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573761050;
-	bh=1ABanbOYD26kBQVaeu/qDUnt6KJkNmJdkzCHmVzodI0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=izeWUtIgAV6ytqB1uQmwQskQ2os8uIqceT7NCrIf54FrDiqDoMvylQEYZD62V2xmx
-	 fBpE+rC57osPJbMufRCQJpwm96X14Gev65CoV9EHOwh8us2jgYwxPikhUBNEQXhGMw
-	 N+MiRief1nxcmowkUSwjCceTjdY282VGiGkMKdp8=
+	by mail.kernel.org (Postfix) with ESMTP id C730D206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:54:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fmUXBPg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfKNTut (ORCPT
+        id S1726674AbfKNTyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:50:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbfKNTus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:50:48 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8BF420724;
-        Thu, 14 Nov 2019 19:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573761046;
-        bh=1ABanbOYD26kBQVaeu/qDUnt6KJkNmJdkzCHmVzodI0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=C2AGRCgtrKhkBetGWdjch+Z2IAWrzYfQtwzSHwSB5PbCo4q5pZvpBZXKWgF50aqUx
-         6Y5oHq06CBkAJs5x9D0Cd3hGqsP3+V1MLT/TNw57PZNDa5z1AFnkWyoJbOscWKyGBe
-         kzO3uPGadX5naLrFF1gJZKemzgqia7+1a+hDPB/Y=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7365535227FC; Thu, 14 Nov 2019 11:50:46 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:50:46 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, mark.rutland@arm.com,
-        npiggin@gmail.com, peterz@infradead.org, tglx@linutronix.de,
-        will@kernel.org, edumazet@google.com, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 00/10] Add Kernel Concurrency Sanitizer (KCSAN)
-Message-ID: <20191114195046.GP2865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191114180303.66955-1-elver@google.com>
+        Thu, 14 Nov 2019 14:54:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56749 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726098AbfKNTyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 14:54:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573761278;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ipOfIuZv4n7OMTuT05ttv+XiU0MiZdbWkcgUyU+rx/Q=;
+        b=fmUXBPg8Zr1oKF8gZ7LEfuLnqor+S26BYNqNz7pjTDOis6EFk1AKX8IdNjiC5j9z8xnlJo
+        Wy5FdQqXv5aVVufziVFBOEHIwYjD9yPvO6d2p82kelFIkENm+TlHLZCUVbh6sKEbvOhNBz
+        pgrUVALA/hz/CP/42VXWpUi+Id2m9f4=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-C3Kv_C9RMLusc_lu8uq9jw-1; Thu, 14 Nov 2019 14:54:37 -0500
+Received: by mail-lj1-f198.google.com with SMTP id o20so980110ljg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:54:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=MDqH19kOOKY+TUPNPG0CxeBoBcGPMQfXKESSJwySm9E=;
+        b=jgDT7hWfsHX5DiiuwBV93zxnJ1JRRhB1csx/CQMU32f03mQp7oCSxdqHxcU39yE5px
+         QapNhXrF+US2riuCeWAoszMIZQLOL3o/HQQIUTPlvSk6Nt/cWZqW2RrR7Eo2OEZEej3t
+         ZHn+7yu9lmvE6inI4Knsf4Ut5nIUQEerNMOENT3BuMxKLrhv9Tc8qaoddxB5f339/who
+         3/8KRrmJG8lc1osIH48B3ojic+2nWOCleLlmYl22XaVLpCKWmvOqf/k7FM7/iSzltEsS
+         YTt6Jd9DZeIN+lCgLC5KLFyR7x54OebZ+WELOiKRnXIR4sMBxeKA1vZBZIaxl4ycTbEN
+         UeRg==
+X-Gm-Message-State: APjAAAUxyHNdxIPNnSyt+lC62N6lNWSFCa2vY5tAlB3QMSWzp6U9Y2GF
+        1Fe8ZjmgC74jJLWn7jfnjykx0xr+oNBIsB0doaohzDXNL8Lx9zY6pcGDZ87we9WnVeXuvbPujfr
+        WUNQruQKWUnDBhsYfKG/d60elfrWPo9TAl6E/2QaN
+X-Received: by 2002:a2e:9695:: with SMTP id q21mr7771487lji.206.1573761275770;
+        Thu, 14 Nov 2019 11:54:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyvZP1Wg9zN6nJYQIloLkjVhepGTmfmXrp4BqyWB295YviNhYt2NN6gtXuLQLlI9WPMoiGos+kqPi2No7ektKQ=
+X-Received: by 2002:a2e:9695:: with SMTP id q21mr7771458lji.206.1573761275378;
+ Thu, 14 Nov 2019 11:54:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114180303.66955-1-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1573459282-26989-1-git-send-email-bhsharma@redhat.com> <20191113063858.GE22427@linaro.org>
+In-Reply-To: <20191113063858.GE22427@linaro.org>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Fri, 15 Nov 2019 01:24:17 +0530
+Message-ID: <CACi5LpP54d9DKW63G5W6X4euBjAm2NwkHOiM01dB7g8d60s=4w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
+ for arm64 and MAX_PHYSMEM_BITS for all archs)
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
+        Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        kexec mailing list <kexec@lists.infradead.org>
+X-MC-Unique: C3Kv_C9RMLusc_lu8uq9jw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 07:02:53PM +0100, Marco Elver wrote:
-> This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
-> KCSAN is a sampling watchpoint-based *data race detector*. More details
-> are included in **Documentation/dev-tools/kcsan.rst**. This patch-series
-> only enables KCSAN for x86, but we expect adding support for other
-> architectures is relatively straightforward (we are aware of
-> experimental ARM64 and POWER support).
-> 
-> To gather early feedback, we announced KCSAN back in September, and have
-> integrated the feedback where possible:
-> http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
-> 
-> The current list of known upstream fixes for data races found by KCSAN
-> can be found here:
-> https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
-> 
-> We want to point out and acknowledge the work surrounding the LKMM,
-> including several articles that motivate why data races are dangerous
-> [1, 2], justifying a data race detector such as KCSAN.
-> 
-> [1] https://lwn.net/Articles/793253/
-> [2] https://lwn.net/Articles/799218/
+Hi Akashi,
 
-I queued this and ran a quick rcutorture on it, which completed
-successfully with quite a few reports.
+On Wed, Nov 13, 2019 at 12:11 PM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+>
+> Hi Bhupesh,
+>
+> Do you have a corresponding patch for userspace tools,
+> including crash util and/or makedumpfile?
+> Otherwise, we can't verify that a generated core file is
+> correctly handled.
 
-							Thanx, Paul
+Sure. I am still working on the crash-utility related changes, but you
+can find the makedumpfile changes I posted a couple of days ago here
+(see [0]) and the github link for the makedumpfile changes can be seen
+via [1].
 
-> Race conditions vs. data races
-> ------------------------------
-> 
-> Race conditions are logic bugs, where unexpected interleaving of racing
-> concurrent operations result in an erroneous state.
-> 
-> Data races on the other hand are defined at the *memory model/language
-> level*.  Many data races are also harmful race conditions, which a tool
-> like KCSAN reports!  However, not all data races are race conditions and
-> vice-versa.  KCSAN's intent is to report data races according to the
-> LKMM. A data race detector can only work at the memory model/language
-> level.
-> 
-> Deeper analysis, to find high-level race conditions only, requires
-> conveying the intended kernel logic to a tool. This requires (1) the
-> developer writing a specification or model of their code, and then (2)
-> the tool verifying that the implementation matches. This has been done
-> for small bits of code using model checkers and other formal methods,
-> but does not scale to the level of what can be covered with a dynamic
-> analysis based data race detector such as KCSAN.
-> 
-> For reasons outlined in [1, 2], data races can be much more subtle, but
-> can cause no less harm than high-level race conditions.
-> 
-> Changelog
-> ---------
-> v4:
-> * Major changes:
->  - Optimizations resulting in performance improvement of 33% (on
->    microbenchmark).
->  - Deal with nested interrupts for atomic_next.
->  - Simplify report.c (removing double-locking as well), in preparation
->    for KCSAN_REPORT_VALUE_CHANGE_ONLY.
->  - Add patch to introduce "data_race(expr)" macro.
->  - Introduce KCSAN_REPORT_VALUE_CHANGE_ONLY option for further filtering of data
->    races: if a conflicting write was observed via a watchpoint, only report the
->    data race if a value change was observed as well. The option will be enabled
->    by default on syzbot. (rcu-functions will be excluded from this filter at
->    request of Paul McKenney.) Context:
->    http://lkml.kernel.org/r/CANpmjNOepvb6+zJmDePxj21n2rctM4Sp4rJ66x_J-L1UmNK54A@mail.gmail.com
-> 
-> v3: http://lkml.kernel.org/r/20191104142745.14722-1-elver@google.com
-> * Major changes:
->  - Add microbenchmark.
->  - Add instruction watchpoint skip randomization.
->  - Refactor API and core runtime fast-path and slow-path. Compared to
->    the previous version, with a default config and benchmarked using the
->    added microbenchmark, this version is 3.8x faster.
->  - Make __tsan_unaligned __alias of generic accesses.
->  - Rename kcsan_{begin,end}_atomic ->
->    kcsan_{nestable,flat}_atomic_{begin,end}
->  - For filter list in debugfs.c use kmalloc+krealloc instead of
->    kvmalloc.
->  - Split Documentation into separate patch.
-> 
-> v2: http://lkml.kernel.org/r/20191017141305.146193-1-elver@google.com
-> * Major changes:
->  - Replace kcsan_check_access(.., {true, false}) with
->    kcsan_check_{read,write}.
->  - Change atomic-instrumented.h to use __atomic_check_{read,write}.
->  - Use common struct kcsan_ctx in task_struct and for per-CPU interrupt
->    contexts.
-> 
-> v1: http://lkml.kernel.org/r/20191016083959.186860-1-elver@google.com
-> 
-> Marco Elver (10):
->   kcsan: Add Kernel Concurrency Sanitizer infrastructure
->   include/linux/compiler.h: Introduce data_race(expr) macro
->   kcsan: Add Documentation entry in dev-tools
->   objtool, kcsan: Add KCSAN runtime functions to whitelist
->   build, kcsan: Add KCSAN build exceptions
->   seqlock, kcsan: Add annotations for KCSAN
->   seqlock: Require WRITE_ONCE surrounding raw_seqcount_barrier
->   asm-generic, kcsan: Add KCSAN instrumentation for bitops
->   locking/atomics, kcsan: Add KCSAN instrumentation
->   x86, kcsan: Enable KCSAN for x86
-> 
->  Documentation/dev-tools/index.rst         |   1 +
->  Documentation/dev-tools/kcsan.rst         | 256 +++++++++
->  MAINTAINERS                               |  11 +
->  Makefile                                  |   3 +-
->  arch/x86/Kconfig                          |   1 +
->  arch/x86/boot/Makefile                    |   2 +
->  arch/x86/boot/compressed/Makefile         |   2 +
->  arch/x86/entry/vdso/Makefile              |   3 +
->  arch/x86/include/asm/bitops.h             |   6 +-
->  arch/x86/kernel/Makefile                  |   4 +
->  arch/x86/kernel/cpu/Makefile              |   3 +
->  arch/x86/lib/Makefile                     |   4 +
->  arch/x86/mm/Makefile                      |   4 +
->  arch/x86/purgatory/Makefile               |   2 +
->  arch/x86/realmode/Makefile                |   3 +
->  arch/x86/realmode/rm/Makefile             |   3 +
->  drivers/firmware/efi/libstub/Makefile     |   2 +
->  include/asm-generic/atomic-instrumented.h | 393 +++++++-------
->  include/asm-generic/bitops-instrumented.h |  18 +
->  include/linux/compiler-clang.h            |   9 +
->  include/linux/compiler-gcc.h              |   7 +
->  include/linux/compiler.h                  |  57 +-
->  include/linux/kcsan-checks.h              |  97 ++++
->  include/linux/kcsan.h                     | 115 ++++
->  include/linux/sched.h                     |   4 +
->  include/linux/seqlock.h                   |  51 +-
->  init/init_task.c                          |   8 +
->  init/main.c                               |   2 +
->  kernel/Makefile                           |   6 +
->  kernel/kcsan/Makefile                     |  11 +
->  kernel/kcsan/atomic.h                     |  27 +
->  kernel/kcsan/core.c                       | 626 ++++++++++++++++++++++
->  kernel/kcsan/debugfs.c                    | 275 ++++++++++
->  kernel/kcsan/encoding.h                   |  94 ++++
->  kernel/kcsan/kcsan.h                      | 108 ++++
->  kernel/kcsan/report.c                     | 320 +++++++++++
->  kernel/kcsan/test.c                       | 121 +++++
->  kernel/sched/Makefile                     |   6 +
->  lib/Kconfig.debug                         |   2 +
->  lib/Kconfig.kcsan                         | 118 ++++
->  lib/Makefile                              |   3 +
->  mm/Makefile                               |   8 +
->  scripts/Makefile.kcsan                    |   6 +
->  scripts/Makefile.lib                      |  10 +
->  scripts/atomic/gen-atomic-instrumented.sh |  17 +-
->  tools/objtool/check.c                     |  18 +
->  46 files changed, 2641 insertions(+), 206 deletions(-)
->  create mode 100644 Documentation/dev-tools/kcsan.rst
->  create mode 100644 include/linux/kcsan-checks.h
->  create mode 100644 include/linux/kcsan.h
->  create mode 100644 kernel/kcsan/Makefile
->  create mode 100644 kernel/kcsan/atomic.h
->  create mode 100644 kernel/kcsan/core.c
->  create mode 100644 kernel/kcsan/debugfs.c
->  create mode 100644 kernel/kcsan/encoding.h
->  create mode 100644 kernel/kcsan/kcsan.h
->  create mode 100644 kernel/kcsan/report.c
->  create mode 100644 kernel/kcsan/test.c
->  create mode 100644 lib/Kconfig.kcsan
->  create mode 100644 scripts/Makefile.kcsan
-> 
-> -- 
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
-> 
+I will post the crash-util changes shortly as well.
+Thanks for having a look at the same.
+
+[0]. http://lists.infradead.org/pipermail/kexec/2019-November/023963.html
+[1]. https://github.com/bhupesh-sharma/makedumpfile/tree/52-bit-va-support-=
+via-vmcore-upstream-v4
+
+Regards,
+Bhupesh
+
+>
+> Thanks,
+> -Takahiro Akashi
+>
+> On Mon, Nov 11, 2019 at 01:31:19PM +0530, Bhupesh Sharma wrote:
+> > Changes since v3:
+> > ----------------
+> > - v3 can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
+> > - Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
+> >   instead of PTRS_PER_PGD.
+> > - Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
+> >   'Documentation/arm64/memory.rst'
+> >
+> > Changes since v2:
+> > ----------------
+> > - v2 can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+> > - Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEM=
+EM
+> >   ifdef sections, as suggested by Kazu.
+> > - Updated vmcoreinfo documentation to add description about
+> >   'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
+> >
+> > Changes since v1:
+> > ----------------
+> > - v1 was sent out as a single patch which can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+> >
+> > - v2 breaks the single patch into two independent patches:
+> >   [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, wher=
+eas
+> >   [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel c=
+ode (all archs)
+> >
+> > This patchset primarily fixes the regression reported in user-space
+> > utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+> > with the availability of 52-bit address space feature in underlying
+> > kernel. These regressions have been reported both on CPUs which don't
+> > support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernel=
+s
+> > and also on prototype platforms (like ARMv8 FVP simulator model) which
+> > support ARMv8.2 extensions and are running newer kernels.
+> >
+> > The reason for these regressions is that right now user-space tools
+> > have no direct access to these values (since these are not exported
+> > from the kernel) and hence need to rely on a best-guess method of
+> > determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
+> > by underlying kernel.
+> >
+> > Exporting these values via vmcoreinfo will help user-land in such cases=
+.
+> > In addition, as per suggestion from makedumpfile maintainer (Kazu),
+> > it makes more sense to append 'MAX_PHYSMEM_BITS' to
+> > vmcoreinfo in the core code itself rather than in arm64 arch-specific
+> > code, so that the user-space code for other archs can also benefit from
+> > this addition to the vmcoreinfo and use it as a standard way of
+> > determining 'SECTIONS_SHIFT' value in user-land.
+> >
+> > Cc: Boris Petkov <bp@alien8.de>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: James Morse <james.morse@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Steve Capper <steve.capper@arm.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Paul Mackerras <paulus@samba.org>
+> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Cc: Dave Anderson <anderson@redhat.com>
+> > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> > Cc: x86@kernel.org
+> > Cc: linuxppc-dev@lists.ozlabs.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-doc@vger.kernel.org
+> > Cc: kexec@lists.infradead.org
+> >
+> > Bhupesh Sharma (3):
+> >   crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+> >   arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+> >   Documentation/arm64: Fix a simple typo in memory.rst
+> >
+> >  Documentation/arm64/memory.rst         | 2 +-
+> >  arch/arm64/include/asm/pgtable-hwdef.h | 1 +
+> >  arch/arm64/kernel/crash_core.c         | 9 +++++++++
+> >  kernel/crash_core.c                    | 1 +
+> >  4 files changed, 12 insertions(+), 1 deletion(-)
+> >
+> > --
+> > 2.7.4
+> >
+>
+
