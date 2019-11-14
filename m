@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66427C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A21C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E34C20729
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A8A20729
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfKNSSE (ORCPT
+        id S1727496AbfKNSSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:18:04 -0500
+        Thu, 14 Nov 2019 13:18:08 -0500
 Received: from mga03.intel.com ([134.134.136.65]:36355 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727437AbfKNSSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:18:02 -0500
+        id S1727480AbfKNSSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:18:07 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:18:01 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:18:07 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="195123577"
+   d="scan'208";a="195123610"
 Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
-  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 10:18:00 -0800
+  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 10:18:05 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -37,12 +37,10 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Rander Wang <rander.wang@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org (open list:DOCUMENTATION)
-Subject: [PATCH v3 18/22] soundwire: stream: update state machine and add state checks
-Date:   Thu, 14 Nov 2019 12:16:58 -0600
-Message-Id: <20191114181702.22254-19-pierre-louis.bossart@linux.intel.com>
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH v3 21/22] soundwire: intel: reinitialize IP+DSP in .prepare(), but only when resuming
+Date:   Thu, 14 Nov 2019 12:17:01 -0600
+Message-Id: <20191114181702.22254-22-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191114181702.22254-1-pierre-louis.bossart@linux.intel.com>
 References: <20191114181702.22254-1-pierre-louis.bossart@linux.intel.com>
@@ -53,210 +51,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The state machine and notes don't accurately explain or allow
-transitions from STREAM_DEPREPARED and STREAM_DISABLED.
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-Add more explanations and allow for more transitions as a result of a
-trigger_stop(), trigger_suspend() and prepare(), depending on the
-ALSA/ASoC layer behavior defined by the INFO_RESUME and INFO_PAUSE
-flags.
+The .prepare() callback is invoked for normal streaming, underflows or
+during the system resume transition. In the latter case, the context
+for the ALH PDIs is lost, and the DSP is not initialized properly
+either, but the bus parameters don't need to be recomputed.
 
-Also add basic checks to help debug inconsistent states and illegal
-state machine transitions.
+Conversely, when doing a regular .prepare() during an underflow, the
+ALH/SHIM registers shall not be changed as the hardware cannot be
+reprogrammed after the DMA started (hardware spec requirement).
 
+This patch adds storage of PDI and hw_params in the DAI dma context,
+and the difference between the types of .prepare() usages is handled
+via a simple boolean, updated when suspending, and tested for in the
+.prepare() case.
+
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- Documentation/driver-api/soundwire/stream.rst | 63 +++++++++++++------
- drivers/soundwire/stream.c                    | 37 +++++++++++
- 2 files changed, 82 insertions(+), 18 deletions(-)
+ drivers/soundwire/cadence_master.h |  4 ++
+ drivers/soundwire/intel.c          | 69 +++++++++++++++++++++++++++++-
+ 2 files changed, 72 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/driver-api/soundwire/stream.rst b/Documentation/driver-api/soundwire/stream.rst
-index 5351bd2f34a8..9b7418ff8d59 100644
---- a/Documentation/driver-api/soundwire/stream.rst
-+++ b/Documentation/driver-api/soundwire/stream.rst
-@@ -156,22 +156,27 @@ Below shows the SoundWire stream states and state transition diagram. ::
- 	+-----------+     +------------+     +----------+     +----------+
- 	| ALLOCATED +---->| CONFIGURED +---->| PREPARED +---->| ENABLED  |
- 	|   STATE   |     |    STATE   |     |  STATE   |     |  STATE   |
--	+-----------+     +------------+     +----------+     +----+-----+
--	                                                           ^
--	                                                           |
--	                                                           |
--	                                                           v
--	         +----------+           +------------+        +----+-----+
-+	+-----------+     +------------+     +---+--+---+     +----+-----+
-+	                                         ^  ^              ^
-+				                 |  |              |
-+				               __|  |___________   |
-+				              |                 |  |
-+	                                      v                 |  v
-+	         +----------+           +-----+------+        +-+--+-----+
- 	         | RELEASED |<----------+ DEPREPARED |<-------+ DISABLED |
- 	         |  STATE   |           |   STATE    |        |  STATE   |
- 	         +----------+           +------------+        +----------+
+diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
+index 0f108fd31fd9..cd4feef0b900 100644
+--- a/drivers/soundwire/cadence_master.h
++++ b/drivers/soundwire/cadence_master.h
+@@ -81,6 +81,8 @@ struct sdw_cdns_stream_config {
+  * @bus: Bus handle
+  * @stream_type: Stream type
+  * @link_id: Master link id
++ * @hw_params: hw_params to be applied in .prepare step
++ * @suspended: status set when suspended, to be used in .prepare
+  */
+ struct sdw_cdns_dma_data {
+ 	char *name;
+@@ -89,6 +91,8 @@ struct sdw_cdns_dma_data {
+ 	struct sdw_bus *bus;
+ 	enum sdw_stream_type stream_type;
+ 	int link_id;
++	struct snd_pcm_hw_params *hw_params;
++	bool suspended;
+ };
  
--NOTE: State transition between prepare and deprepare is supported in Spec
--but not in the software (subsystem)
-+NOTE: State transitions between ``SDW_STREAM_ENABLED`` and
-+``SDW_STREAM_DISABLED`` are only relevant when then INFO_PAUSE flag is
-+supported at the ALSA/ASoC level. Likewise the transition between
-+``SDW_DISABLED_STATE`` and ``SDW_PREPARED_STATE`` depends on the
-+INFO_RESUME flag.
+ /**
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 460e2d8cf80d..b114e9a72fdc 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -813,6 +813,10 @@ static int intel_hw_params(struct snd_pcm_substream *substream,
+ 	intel_pdi_alh_configure(sdw, pdi);
+ 	sdw_cdns_config_stream(cdns, ch, dir, pdi);
  
--NOTE2: Stream state transition checks need to be handled by caller
--framework, for example ALSA/ASoC. No checks for stream transition exist in
--SoundWire subsystem.
-+NOTE2: The framework implements basic state transition checks, but
-+does not e.g. check if a transition from DISABLED to ENABLED is valid
-+on a specific platform. Such tests need to be added at the ALSA/ASoC
-+level.
++	/* store pdi and hw_params, may be needed in prepare step */
++	dma->suspended = false;
++	dma->pdi = pdi;
++	dma->hw_params = params;
  
- Stream State Operations
- -----------------------
-@@ -246,6 +251,9 @@ SDW_STREAM_PREPARED
+ 	/* Inform DSP about PDI stream number */
+ 	ret = intel_params_stream(sdw, substream, dai, params,
+@@ -856,7 +860,11 @@ static int intel_hw_params(struct snd_pcm_substream *substream,
+ static int intel_prepare(struct snd_pcm_substream *substream,
+ 			 struct snd_soc_dai *dai)
+ {
++	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
++	struct sdw_intel *sdw = cdns_to_intel(cdns);
+ 	struct sdw_cdns_dma_data *dma;
++	int ch, dir;
++	int ret;
  
- Prepare state of stream. Operations performed before entering in this state:
- 
-+  (0) Steps 1 and 2 are omitted in the case of a resume operation,
-+      where the bus bandwidth is known.
-+
-   (1) Bus parameters such as bandwidth, frame shape, clock frequency,
-       are computed based on current stream as well as already active
-       stream(s) on Bus. Re-computation is required to accommodate current
-@@ -270,13 +278,15 @@ Prepare state of stream. Operations performed before entering in this state:
- After all above operations are successful, stream state is set to
- ``SDW_STREAM_PREPARED``.
- 
--Bus implements below API for PREPARE state which needs to be called once per
--stream. From ASoC DPCM framework, this stream state is linked to
--.prepare() operation.
-+Bus implements below API for PREPARE state which needs to be called
-+once per stream. From ASoC DPCM framework, this stream state is linked
-+to .prepare() operation. Since the .trigger() operations may not
-+follow the .prepare(), a direct transitions from
-+``SDW_STREAM_PREPARED`` to ``SDW_STREAM_DEPREPARED`` is allowed.
- 
- .. code-block:: c
- 
--  int sdw_prepare_stream(struct sdw_stream_runtime * stream);
-+  int sdw_prepare_stream(struct sdw_stream_runtime * stream, bool resume);
- 
- 
- SDW_STREAM_ENABLED
-@@ -332,6 +342,14 @@ Bus implements below API for DISABLED state which needs to be called once
- per stream. From ASoC DPCM framework, this stream state is linked to
- .trigger() stop operation.
- 
-+When the INFO_PAUSE flag is supported, a direct transition to
-+``SDW_STREAM_ENABLED`` is allowed.
-+
-+For resume operations where ASoC will use the .prepare() callback, the
-+stream can transition from ``SDW_STREAM_DISABLED`` to
-+``SDW_STREAM_PREPARED``, with all required settings restored but
-+without updating the bandwidth and bit allocation.
-+
- .. code-block:: c
- 
-   int sdw_disable_stream(struct sdw_stream_runtime * stream);
-@@ -353,9 +371,18 @@ state:
- After all above operations are successful, stream state is set to
- ``SDW_STREAM_DEPREPARED``.
- 
--Bus implements below API for DEPREPARED state which needs to be called once
--per stream. From ASoC DPCM framework, this stream state is linked to
--.trigger() stop operation.
-+Bus implements below API for DEPREPARED state which needs to be called
-+once per stream. ALSA/ASoC do not have a concept of 'deprepare', and
-+the mapping from this stream state to ALSA/ASoC operation may be
-+implementation specific.
-+
-+When the INFO_PAUSE flag is supported, the stream state is linked to
-+the .hw_free() operation - the stream is not deprepared on a
-+TRIGGER_STOP.
-+
-+Other implementations may transition to the ``SDW_STREAM_DEPREPARED``
-+state on TRIGGER_STOP, should they require a transition through the
-+``SDW_STREAM_PREPARED`` state.
- 
- .. code-block:: c
- 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index 178ae92b8cc1..6aa0b5d370c0 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -1553,8 +1553,18 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 
- 	sdw_acquire_bus_lock(stream);
- 
-+	if (stream->state != SDW_STREAM_CONFIGURED &&
-+	    stream->state != SDW_STREAM_DEPREPARED &&
-+	    stream->state != SDW_STREAM_DISABLED) {
-+		pr_err("%s: %s: inconsistent state state %d\n",
-+		       __func__, stream->name, stream->state);
-+		ret = -EINVAL;
-+		goto state_err;
-+	}
-+
- 	ret = _sdw_prepare_stream(stream);
- 
-+state_err:
- 	sdw_release_bus_lock(stream);
- 	return ret;
- }
-@@ -1619,8 +1629,17 @@ int sdw_enable_stream(struct sdw_stream_runtime *stream)
- 
- 	sdw_acquire_bus_lock(stream);
- 
-+	if (stream->state != SDW_STREAM_PREPARED &&
-+	    stream->state != SDW_STREAM_DISABLED) {
-+		pr_err("%s: %s: inconsistent state state %d\n",
-+		       __func__, stream->name, stream->state);
-+		ret = -EINVAL;
-+		goto state_err;
-+	}
-+
- 	ret = _sdw_enable_stream(stream);
- 
-+state_err:
- 	sdw_release_bus_lock(stream);
- 	return ret;
- }
-@@ -1693,8 +1712,16 @@ int sdw_disable_stream(struct sdw_stream_runtime *stream)
- 
- 	sdw_acquire_bus_lock(stream);
- 
-+	if (stream->state != SDW_STREAM_ENABLED) {
-+		pr_err("%s: %s: inconsistent state state %d\n",
-+		       __func__, stream->name, stream->state);
-+		ret = -EINVAL;
-+		goto state_err;
-+	}
-+
- 	ret = _sdw_disable_stream(stream);
- 
-+state_err:
- 	sdw_release_bus_lock(stream);
- 	return ret;
- }
-@@ -1749,8 +1776,18 @@ int sdw_deprepare_stream(struct sdw_stream_runtime *stream)
+ 	dma = snd_soc_dai_get_dma_data(dai, substream);
+ 	if (!dma) {
+@@ -865,7 +873,42 @@ static int intel_prepare(struct snd_pcm_substream *substream,
+ 		return -EIO;
  	}
  
- 	sdw_acquire_bus_lock(stream);
+-	return sdw_prepare_stream(dma->stream);
++	if (dma->suspended) {
 +
-+	if (stream->state != SDW_STREAM_PREPARED &&
-+	    stream->state != SDW_STREAM_DISABLED) {
-+		pr_err("%s: %s: inconsistent state state %d\n",
-+		       __func__, stream->name, stream->state);
-+		ret = -EINVAL;
-+		goto state_err;
++		dma->suspended = false;
++
++		/*
++		 * .prepare() is called after system resume, where we
++		 * need to reinitialize the SHIM/ALH/Cadence IP.
++		 * .prepare() is also called to deal with underflows,
++		 * but in those cases we cannot touch ALH/SHIM
++		 * registers
++		 */
++
++		/* configure stream */
++		ch = params_channels(dma->hw_params);
++		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
++			dir = SDW_DATA_DIR_RX;
++		else
++			dir = SDW_DATA_DIR_TX;
++
++		intel_pdi_shim_configure(sdw, dma->pdi);
++		intel_pdi_alh_configure(sdw, dma->pdi);
++		sdw_cdns_config_stream(cdns, ch, dir, dma->pdi);
++
++		/* Inform DSP about PDI stream number */
++		ret = intel_params_stream(sdw, substream, dai,
++					  dma->hw_params,
++					  sdw->instance,
++					  dma->pdi->intel_alh_id);
++		if (ret)
++			goto err;
 +	}
 +
- 	ret = _sdw_deprepare_stream(stream);
- 
-+state_err:
- 	sdw_release_bus_lock(stream);
- 	return ret;
++	ret = sdw_prepare_stream(dma->stream);
++
++err:
++	return ret;
  }
+ 
+ static int intel_trigger(struct snd_pcm_substream *substream, int cmd,
+@@ -936,6 +979,8 @@ intel_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
+ 		return ret;
+ 	}
+ 
++	dma->hw_params = NULL;
++	dma->pdi = NULL;
+ 	sdw_release_stream(dma->stream);
+ 
+ 	return 0;
+@@ -958,6 +1003,26 @@ static void intel_shutdown(struct snd_pcm_substream *substream,
+ 	pm_runtime_put_autosuspend(cdns->dev);
+ }
+ 
++static int intel_dai_suspend(struct snd_soc_dai *dai)
++{
++	struct sdw_cdns_dma_data *dma;
++
++	/*
++	 * we don't have a .suspend dai_ops, and we don't have access
++	 * to the substream, so let's mark both capture and playback
++	 * DMA contexts as suspended
++	 */
++	dma = dai->playback_dma_data;
++	if (dma)
++		dma->suspended = true;
++
++	dma = dai->capture_dma_data;
++	if (dma)
++		dma->suspended = true;
++
++	return 0;
++}
++
+ static int intel_pcm_set_sdw_stream(struct snd_soc_dai *dai,
+ 				    void *stream, int direction)
+ {
+@@ -1029,6 +1094,8 @@ static int intel_create_dai(struct sdw_cdns *cdns,
+ 			dais[i].ops = &intel_pcm_dai_ops;
+ 		else
+ 			dais[i].ops = &intel_pdm_dai_ops;
++
++		dais[i].suspend = intel_dai_suspend;
+ 	}
+ 
+ 	return 0;
 -- 
 2.20.1
 
