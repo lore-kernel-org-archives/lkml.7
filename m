@@ -2,105 +2,120 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5312FC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773AFC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398CA20721
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nMldFydG"
+	by mail.kernel.org (Postfix) with ESMTP id 6B3B720723
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfKNFXM (ORCPT
+        id S1726632AbfKNF00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 00:23:12 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50231 "EHLO ozlabs.org"
+        Thu, 14 Nov 2019 00:26:26 -0500
+Received: from mga04.intel.com ([192.55.52.120]:58904 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfKNFXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 00:23:11 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47D8yM28wwz9s7T;
-        Thu, 14 Nov 2019 16:23:07 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573708989;
-        bh=kVIA/Cvj5N5Onr6PfKTRRp26lzLZ0YxhUn1dPy3BKlY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nMldFydGhuVjvGJGKU6txsB3yxCB+oekEoTQPGaG8onaylLfdxyBULpH9RK+GWqgf
-         NPtn6IUmZ4KoqJebJJUmINF8iRjQnDW+em2wlSChhJaf5llQSjN8L7SvtyNwWzs5hE
-         su6T+GhuMLaXhQo9HBkUxsY1LLc4Ruauo+pf+RaZLIQ/GQZ2mFn/IUjo6mt6X6B8RX
-         5/JCyyi6TFTAf/t70iryAdxMzQmsNqHPdTOzWmywJ/OLCkt6wKTXT07e2q5bTc9ihR
-         9G8WN0Ur1+SMtEvK7G83ASGhe8c77yY6/HzbZwjTbll9AkF7lf0if1a5CQK4kvnnzu
-         pX2XGhdYzwJmw==
-Date:   Thu, 14 Nov 2019 16:23:06 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Gunthorpe <jgg@mellanox.com>, Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: linux-next: manual merge of the hmm tree with the drm tree
-Message-ID: <20191114162306.6d66211b@canb.auug.org.au>
+        id S1725601AbfKNF00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 00:26:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 21:26:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
+   d="scan'208";a="208018135"
+Received: from rlin99-mobl.gar.corp.intel.com (HELO [10.251.23.44]) ([10.251.23.44])
+  by orsmga006.jf.intel.com with ESMTP; 13 Nov 2019 21:26:24 -0800
+Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        "Gupta, Pawan Kumar" <pawan.kumar.gupta@intel.com>
+References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+ <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
+ <ea5a084b-e047-6677-b8fe-d7bb6f8c0ef8@redhat.com>
+ <dffb19ab-daa2-a513-531e-c43279d8a4bf@intel.com>
+ <6C0513A5-6C73-4F17-B73B-6F19E7D9EAF0@gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <6a317558-44c0-5a21-0310-4ae49048134f@intel.com>
+Date:   Wed, 13 Nov 2019 21:26:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/FWnSSU+bu4ka/a7xyuFdAf3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <6C0513A5-6C73-4F17-B73B-6F19E7D9EAF0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/FWnSSU+bu4ka/a7xyuFdAf3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 11/13/19 5:17 PM, Nadav Amit wrote:
+> But is it always the case? Looking at __split_large_page(), it seems that the
+> TLB invalidation is only done after the PMD is changed. Can't this leave a
+> small time window in which a malicious actor triggers a machine-check on 
+> another core than the one that runs __split_large_page()?
 
-Hi all,
+It's not just a split.  It has to be a change that results in
+inconsistencies between two entries in the TLB.  A normal split doesn't
+change the resulting final translations and is never inconsistent
+between the two translations.
 
-Today's linux-next merge of the hmm tree got a conflict in:
+To have an inconsistency, you need to change the backing physical
+address (or cache attributes?).  I'd need to go double-check the erratum
+to be sure about the cache attributes.
 
-  drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
+In any case, that's why we decided that normal kernel mapping
+split/merges don't need to be mitigated.  But, we should probably
+document this somewhere if it's not clear.
 
-between commit:
-
-  4d8e54d2b9d3 ("drm/amdgpu/mn: fix documentation for amdgpu_mn_read_lock")
-
-from the drm tree and commit:
-
-  a2849b5dcc9e ("drm/amdgpu: Use mmu_interval_insert instead of hmm_mirror")
-
-from the hmm tree.
-
-I fixed it up (the latter removed the code updated by the former, so I
-did that) and can carry the fix as necessary. This is now fixed as far as
-linux-next is concerned, but any non trivial conflicts should be mentioned
-to your upstream maintainer when your tree is submitted for merging.
-You may also want to consider cooperating with the maintainer of the
-conflicting tree to minimise any particularly complex conflicts.
-
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/FWnSSU+bu4ka/a7xyuFdAf3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3M5LoACgkQAVBC80lX
-0GxjAgf8CgzHIOinx88yr2qPH9/zJRciNOlKcHtNcS186Q9JD1D1fxIaS+OqS4R3
-dGLrhg++Gpt3MDh2iJ9g7mEN1Fb4OR16HZXBvlxITtEe9ll6uFJhRWbKLTf1lmdF
-xgtgwvZzhed5WlH8/C2z+WiK+RDOf49brkAoJn6aUDCx6oRHGWERDP2wqgwWkIHP
-znQ/xzVQLpXzy251vLCe9EwvaJstVQctc83YWCAG2uPlTl/eyACn+MSVJVk8hBWI
-pbg24L55a3GvQutrPvHmFjS9Mnf3ciIv3MF/V9tDUo0wH0IgPvHM0leTDS5pp4MP
-xFNm97dTSx/viOEfg3rUZb7Wm04K4w==
-=Bxwk
------END PGP SIGNATURE-----
-
---Sig_/FWnSSU+bu4ka/a7xyuFdAf3--
+Pawan, did we document the results of the audit you did anywhere?
