@@ -2,165 +2,110 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A18C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FDFC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE822072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:49:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NSKxpFUN"
+	by mail.kernel.org (Postfix) with ESMTP id 47650206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKNQtO (ORCPT
+        id S1727050AbfKNQt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:49:14 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41666 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfKNQtO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:49:14 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p26so4611404pfq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:49:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:from:subject:user-agent:date;
-        bh=Lsw4NM8ilCcLsFEk3WVMlx7LY6dwCnUqw6N4RDhOWYo=;
-        b=NSKxpFUN3Ugn9srDVLslcd3E1wLcNJ9OJWAmw1RcOC2DgJVNZW7Xitu3fkRLFV+iTT
-         0QNUR4I2eb6VBkCC98XVZDpXS+J7AwrEpA7EHnW5hFiulgFS44mIr8MGatPPHDn3zpuI
-         6cCWWx1oNLikmFSv9TuQz7YOp+EPcHHUXrVNw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
-         :user-agent:date;
-        bh=Lsw4NM8ilCcLsFEk3WVMlx7LY6dwCnUqw6N4RDhOWYo=;
-        b=ccVia3uTRN+lYgrqgSdszjVj5USzkreUYuXIZcthgZLX8XF/KLwjQWH0g44QixwcU/
-         OeEniN7pjvrryLBOVCQILMdTJgKYoJVhphQ1FPbupf6eixShEBvoFu3TA85T6F5XDB67
-         lcvMwdFWV2vUGTAYQvd97XO5mKd3Dbi+i7czJUGjY0ebeI/9gVXXu1tDbp4JStlc22TN
-         6n+t/g3PgvPfmiWFlrW53bZ6vTFIbpkginwQS50UUsE+lCTL6DyCdCH/0gr0kOIw6jLh
-         clZ7i1ZGIfq+R5GFJU4fX6n4NFPn9Giyh544HfmEDTyMD71C9+D+SnjPVXb29fNH9C0C
-         cLrg==
-X-Gm-Message-State: APjAAAWIPMZgQnXWsPhIrWYpP1VxoW+FvKnKNrbK1Bf1GbsYMB5ehgbt
-        YeVyVdD8r5xpd3A8RMSo0CMvBA==
-X-Google-Smtp-Source: APXvYqxGXLXZNqmiLg6+BlJtaLCbmznDeauL5lts/GdPdVYICcsYus3WdGS3aAfiD9MZzjC4BUUs4Q==
-X-Received: by 2002:a62:5258:: with SMTP id g85mr11585671pfb.180.1573750153174;
-        Thu, 14 Nov 2019 08:49:13 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y22sm7199564pfn.6.2019.11.14.08.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 08:49:12 -0800 (PST)
-Message-ID: <5dcd8588.1c69fb81.2528a.3460@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 14 Nov 2019 11:49:56 -0500
+Received: from mga04.intel.com ([192.55.52.120]:49138 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726528AbfKNQtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:49:55 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 08:49:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="195095968"
+Received: from pkamlakx-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.10.73])
+  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 08:49:51 -0800
+Date:   Thu, 14 Nov 2019 18:49:49 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-stable@vger.kernel.org,
+        Christian Bundy <christianbundy@fraction.io>
+Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
+Message-ID: <20191114164949.GE9528@linux.intel.com>
+References: <20191111233418.17676-1-jsnitsel@redhat.com>
+ <20191112200328.GA11213@linux.intel.com>
+ <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
+ <20191112202623.GB5584@ziepe.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1565197bda60573937453e95dcafbe68@codeaurora.org>
-References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org> <20191021033220.GG4500@tuxbook-pro> <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com> <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org> <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com> <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org> <1565197bda60573937453e95dcafbe68@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-To:     Rob Herring <robh+dt@kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
-User-Agent: alot/0.8.1
-Date:   Thu, 14 Nov 2019 08:49:11 -0800
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112202623.GB5584@ziepe.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sai Prakash Ranjan (2019-11-13 07:00:40)
-> Hello Rob,
->=20
-> On 2019-10-25 13:24, Sai Prakash Ranjan wrote:
-> > On 2019-10-25 04:03, Rob Herring wrote:
-> >> On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
-> >> <saiprakash.ranjan@codeaurora.org> wrote:
-> >>>=20
-> >>> Hi Rob,
-> >>>=20
-> >>> On 2019-10-24 01:19, Rob Herring wrote:
-> >>> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
-> >>> > <bjorn.andersson@linaro.org> wrote:
-> >>> >>
-> >>> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
-> >>> >>
-> >>> >> > LLCC behaviour is controlled by the configuration data set
-> >>> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
-> >>> >> > Also convert the existing bindings to json-schema and add
-> >>> >> > the compatible for SC7180 SoC.
-> >>> >> >
-> >>> >>
-> >>> >> Thanks for the patches and thanks for the review Stephen. Series
-> >>> >> applied
-> >>> >
-> >>> > And they break dt_binding_check. Please fix.
-> >>> >
-> >>>=20
-> >>> I did check this and think that the error log from dt_binding_check=20
-> >>> is
-> >>> not valid because it says cache-level is a required property [1], but
-> >>> there is no such property in LLCC bindings.
-> >>=20
-> >> Then you should point out the issue and not just submit stuff ignoring
-> >> it. It has to be resolved one way or another.
-> >>=20
-> >=20
-> > I did not ignore it. When I ran the dt-binding check locally, it did=20
-> > not
-> > error out and just passed on [1] and it was my bad that I did not check
-> > the entire build logs to see if llcc dt binding check had some warning =
+On Tue, Nov 12, 2019 at 04:26:23PM -0400, Jason Gunthorpe wrote:
+> On Tue, Nov 12, 2019 at 01:23:33PM -0700, Jerry Snitselaar wrote:
+> > On Tue, Nov 12, 2019 at 1:03 PM Jarkko Sakkinen
+> > <jarkko.sakkinen@linux.intel.com> wrote:
+> > >
+> > > On Mon, Nov 11, 2019 at 04:34:18PM -0700, Jerry Snitselaar wrote:
+> > > > With power gating moved out of the tpm_transmit code we need
+> > > > to power on the TPM prior to calling tpm_get_timeouts.
+> > > >
+> > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > Cc: Peter Huewe <peterhuewe@gmx.de>
+> > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > Cc: linux-stable@vger.kernel.org
+> > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+> > > > Reported-by: Christian Bundy <christianbundy@fraction.io>
+> > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > > >  drivers/char/tpm/tpm_tis_core.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> > > > index 270f43acbb77..cb101cec8f8b 100644
+> > > > +++ b/drivers/char/tpm/tpm_tis_core.c
+> > > > @@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+> > > >                * to make sure it works. May as well use that command to set the
+> > > >                * proper timeouts for the driver.
+> > > >                */
+> > > > +             tpm_chip_start(chip);
+> > > >               if (tpm_get_timeouts(chip)) {
+> > > >                       dev_err(dev, "Could not get TPM timeouts and durations\n");
+> > > >                       rc = -ENODEV;
+> > > > +                     tpm_stop_chip(chip);
+> > > >                       goto out_err;
+> > > >               }
+> > >
+> > > Couldn't this call just be removed?
+> > >
+> > > /Jarkko
+> > >
+> > 
+> > Probably. It will eventually get called when tpm_chip_register
+> > happens. I don't know what the reason was for trying it prior to the
+> > irq probe.
+> 
+> At least tis once needed the timeouts before registration because it
+> was issuing TPM commands to complete its setup.
+> 
+> If timeouts have not been set then no TPM command should be executed.
 
-> > or
-> > not. But this is the usual case where most of us don't look at the=20
-> > entire
-> > build logs to check if there is a warning or not. We notice if there is=
-=20
-> > an
-> > immediate exit/fail in case of some warning/error. So it would be good =
+Not true since you need a TPM command to set them. That is why they
+have been set initially to maximum possible values.
 
-> > if
-> > we fail the dt-binding check build if there is some warning/error or=20
-> > atleast
-> > provide some option to strict build to fail on warning, maybe there is =
-
-> > already
-> > a flag to do this?
-> >=20
-> > After submitting the patch, I noticed this build failure on
-> > patchwork.ozlabs.org and was waiting for your reply.
-> >=20
-> > [1] https://paste.ubuntu.com/p/jNK8yfVkMG/
-> >=20
-> >> If you refer to the DT spec[1], cache-level is required. The schema is
-> >> just enforcing that now. It's keying off the node name of
-> >> 'cache-controller'.
-> >>=20
-> >=20
-> > This is not L2 or L3 cache, this is a system cache (last level cache)=20
-> > shared by
-> > clients other than just CPU. So I don't know how do we specify=20
-> > cache-level for
-> > this, let me know if you have some pointers.
-> >=20
->=20
-> Any ideas on specifying the cache-level for system cache? Does=20
-> dt-binding-check
-> needs to be updated for this case?
->=20
-
-I don't see how 'cache-level' fits here. Maybe the node name should be
-changed to 'system-cache-controller' and then the schema checker can
-skip it?
-
+/Jarkko
