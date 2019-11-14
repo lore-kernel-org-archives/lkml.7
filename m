@@ -2,143 +2,218 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8E6C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5314EC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E267206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2039D206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:24:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="dT+kTu6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfKNJXg (ORCPT
+        id S1726378AbfKNJYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:23:36 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:40426 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbfKNJXg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:23:36 -0500
-Received: from [109.168.11.45] (port=58534 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1iVBLh-001jwO-8H; Thu, 14 Nov 2019 10:23:33 +0100
-Subject: Re: [PATCH v3 2/3] i2c: smbus: use get/put_unaligned_le16 when
- working with word data
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.orgi,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
- <20191112203132.163306-3-dmitry.torokhov@gmail.com>
- <099e8f9c-354a-8756-a79b-e66c72d36aa7@lucaceresoli.net>
- <20191113193937.GQ13374@dtor-ws>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <5f276a2a-4863-c81c-247f-686935b6c571@lucaceresoli.net>
-Date:   Thu, 14 Nov 2019 10:23:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 04:24:48 -0500
+Received: from ozlabs.org ([203.11.71.1]:58785 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfKNJYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:24:48 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47DGK86mv8z9s7T;
+        Thu, 14 Nov 2019 20:24:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1573723485;
+        bh=Dq7NW4klV4GxHT1oNqdnPAGrN68C+hoVfrP2Pb0IXcs=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=dT+kTu6+/7TIMNxlEx1NDQPpULL2+1zfqJ+NHNsr7R31lqunFGgaL3emKJ6s8u5CL
+         QYjFXnpzEg+8t5UF1g1VJPPMczqTpGmfb6CI8Y0FmeXPjS6A4GiDKRQCheG08f8ppb
+         ihU47C4OvatTXUjjTtw95ACCJjoaTkDhHDi5lXLkUbj490cPMgrNGH9+Gx5bYBSjkb
+         +6mi2t3QOty39wiT9BugiOXMKmuBjwaa56STR2a76ZTnXicXFLLSq/uyvU/SmtX+aq
+         Wqp2EUOGhtXw0Zhckr05x1oovqMnrZgtaV5JJw2PS/Ffkg1Q+mRt9UMDU207AP9lbb
+         OBdQsF4GuVMKA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, ravi.bangoria@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 2/2] powerpc/hw_breakpoints: Rewrite 8xx breakpoints to allow any address range size.
+In-Reply-To: <1ed0de54ce6021fa0fdf50e938365546a4f5e316.1566925030.git.christophe.leroy@c-s.fr>
+References: <b1142845c040b9702d1609d5ec473d97595dc0c3.1566925029.git.christophe.leroy@c-s.fr> <1ed0de54ce6021fa0fdf50e938365546a4f5e316.1566925030.git.christophe.leroy@c-s.fr>
+Date:   Thu, 14 Nov 2019 20:24:41 +1100
+Message-ID: <87zhgyzu7a.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20191113193937.GQ13374@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Unlike standard powerpc, Powerpc 8xx doesn't have SPRN_DABR, but
+> it has a breakpoint support based on a set of comparators which
+> allow more flexibility.
+>
+> Commit 4ad8622dc548 ("powerpc/8xx: Implement hw_breakpoint")
+> implemented breakpoints by emulating the DABR behaviour. It did
+> this by setting one comparator the match 4 bytes at breakpoint address
+> and the other comparator to match 4 bytes at breakpoint address + 4.
+>
+> Rewrite 8xx hw_breakpoint to make breakpoints match all addresses
+> defined by the breakpoint address and length by making full use of
+> comparators.
+>
+> Now, comparator E is set to match any address greater than breakpoint
+> address minus one. Comparator F is set to match any address lower than
+> breakpoint address plus breakpoint length.
+>
+> When the breakpoint range starts at address 0, the breakpoint is set
+> to match comparator F only. When the breakpoint range end at address
+> 0xffffffff, the breakpoint is set to match comparator E only.
+> Otherwise the breakpoint is set to match comparator E and F.
+>
+> At the same time, use registers bit names instead of hardcode values.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/reg_8xx.h  | 14 ++++++++++
+>  arch/powerpc/kernel/hw_breakpoint.c |  3 ++
+>  arch/powerpc/kernel/process.c       | 55 ++++++++++++++++++++++---------------
+>  3 files changed, 50 insertions(+), 22 deletions(-)
 
-On 13/11/19 20:39, Dmitry Torokhov wrote:
-> Hi Luca,
-> 
-> On Wed, Nov 13, 2019 at 10:47:42AM +0100, Luca Ceresoli wrote:
->> Hi Dmitry,
->>
->> On 12/11/19 21:31, Dmitry Torokhov wrote:
->>> It is potentially more performant, and also shows intent more clearly,
->>> to use get_unaligned_le16() and put_unaligned_le16() when working with
->>> word data.
->>>
->>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>>
->>> ---
->>>
->>> Changes in v3:
->>> - split put_unaligned_le16 into a separate patch
->>> - more call sites converted to get/put_unaligned_le16
->>>
->>>  drivers/i2c/i2c-core-smbus.c | 12 +++++-------
->>>  1 file changed, 5 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
->>> index f8708409b4dbc..7b4e2270eeda1 100644
->>> --- a/drivers/i2c/i2c-core-smbus.c
->>> +++ b/drivers/i2c/i2c-core-smbus.c
->>> @@ -15,6 +15,7 @@
->>>  #include <linux/i2c.h>
->>>  #include <linux/i2c-smbus.h>
->>>  #include <linux/slab.h>
->>> +#include <asm/unaligned.h>
->>>  
->>>  #include "i2c-core.h"
->>>  
->>> @@ -370,8 +371,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
->>>  			msg[1].len = 2;
->>>  		else {
->>>  			msg[0].len = 3;
->>> -			msgbuf0[1] = data->word & 0xff;
->>> -			msgbuf0[2] = data->word >> 8;
->>> +			put_unaligned_le16(data->word, msgbuf0 + 1);
->>>  		}
->>>  		break;
->>>  	case I2C_SMBUS_PROC_CALL:
->>> @@ -379,8 +379,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
->>>  		read_write = I2C_SMBUS_READ;
->>>  		msg[0].len = 3;
->>>  		msg[1].len = 2;
->>> -		msgbuf0[1] = data->word & 0xff;
->>> -		msgbuf0[2] = data->word >> 8;
->>> +		put_unaligned_le16(data->word, msgbuf0 + 1);
->>>  		break;
->>>  	case I2C_SMBUS_BLOCK_DATA:
->>>  		if (read_write == I2C_SMBUS_READ) {
->>> @@ -487,7 +486,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
->>>  			break;
->>>  		case I2C_SMBUS_WORD_DATA:
->>>  		case I2C_SMBUS_PROC_CALL:
->>> -			data->word = msgbuf1[0] | (msgbuf1[1] << 8);
->>> +			data->word = get_unaligned_le16(msgbuf1);
->>
->> Well, msgbuf1 cannot be unaligned, so it looks like you just need to
->> convert little endian to host endian. Perhaps __le16_to_cpu(msgbuf1) is
->> better (and equally or more efficient).
-> 
-> Well, msgbuf1 (as is any other variable unless adjusted by special
-> alignment attribute) is naturally aligned for its own data type (which
-> for u8 means it can start at any address), but that does not mean that
-> is is aligned for the purpose of storing word data. In fact, the
-> preceding msgbuf0 variable is 32 + 3 = 35 bytes long, which means that
-> msgbuf1 is starting on an odd address, and is definitely not aligned for
-> word access and using __le16_to_cpu to fetch that word will trap on some
-> architectures.
+I thought Ravi was going to pick this up in his series, but seems not.
+So now this no longer applies since I merged that series.
 
-Uhm, you're obviously right. And I was probably drunk when I wrote the
-opposite! Sorry about that...
+Can one of you rebase and resend please?
 
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+cheers
 
--- 
-Luca
+> diff --git a/arch/powerpc/include/asm/reg_8xx.h b/arch/powerpc/include/asm/reg_8xx.h
+> index abc663c0f1db..98e97c22df8b 100644
+> --- a/arch/powerpc/include/asm/reg_8xx.h
+> +++ b/arch/powerpc/include/asm/reg_8xx.h
+> @@ -37,7 +37,21 @@
+>  #define SPRN_CMPE	152
+>  #define SPRN_CMPF	153
+>  #define SPRN_LCTRL1	156
+> +#define   LCTRL1_CTE_GT		0xc0000000
+> +#define   LCTRL1_CTF_LT		0x14000000
+> +#define   LCTRL1_CRWE_RW	0x00000000
+> +#define   LCTRL1_CRWE_RO	0x00040000
+> +#define   LCTRL1_CRWE_WO	0x000c0000
+> +#define   LCTRL1_CRWF_RW	0x00000000
+> +#define   LCTRL1_CRWF_RO	0x00010000
+> +#define   LCTRL1_CRWF_WO	0x00030000
+>  #define SPRN_LCTRL2	157
+> +#define   LCTRL2_LW0EN		0x80000000
+> +#define   LCTRL2_LW0LA_E	0x00000000
+> +#define   LCTRL2_LW0LA_F	0x04000000
+> +#define   LCTRL2_LW0LA_EandF	0x08000000
+> +#define   LCTRL2_LW0LADC	0x02000000
+> +#define   LCTRL2_SLW0EN		0x00000002
+>  #ifdef CONFIG_PPC_8xx
+>  #define SPRN_ICTRL	158
+>  #endif
+> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+> index 28ad3171bb82..d8bd4dbef561 100644
+> --- a/arch/powerpc/kernel/hw_breakpoint.c
+> +++ b/arch/powerpc/kernel/hw_breakpoint.c
+> @@ -163,6 +163,9 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+>  	 */
+>  	if (!ppc_breakpoint_available())
+>  		return -ENODEV;
+> +	/* 8xx can setup a range without limitation */
+> +	if (IS_ENABLED(CONFIG_PPC_8xx))
+> +		return 0;
+>  	length_max = 8; /* DABR */
+>  	if (dawr_enabled()) {
+>  		length_max = 512 ; /* 64 doublewords */
+> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+> index 8fc4de0d22b4..79e4f072a746 100644
+> --- a/arch/powerpc/kernel/process.c
+> +++ b/arch/powerpc/kernel/process.c
+> @@ -751,28 +751,6 @@ static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
+>  		mtspr(SPRN_DABRX, dabrx);
+>  	return 0;
+>  }
+> -#elif defined(CONFIG_PPC_8xx)
+> -static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
+> -{
+> -	unsigned long addr = dabr & ~HW_BRK_TYPE_DABR;
+> -	unsigned long lctrl1 = 0x90000000; /* compare type: equal on E & F */
+> -	unsigned long lctrl2 = 0x8e000002; /* watchpoint 1 on cmp E | F */
+> -
+> -	if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
+> -		lctrl1 |= 0xa0000;
+> -	else if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
+> -		lctrl1 |= 0xf0000;
+> -	else if ((dabr & HW_BRK_TYPE_RDWR) == 0)
+> -		lctrl2 = 0;
+> -
+> -	mtspr(SPRN_LCTRL2, 0);
+> -	mtspr(SPRN_CMPE, addr);
+> -	mtspr(SPRN_CMPF, addr + 4);
+> -	mtspr(SPRN_LCTRL1, lctrl1);
+> -	mtspr(SPRN_LCTRL2, lctrl2);
+> -
+> -	return 0;
+> -}
+>  #else
+>  static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
+>  {
+> @@ -793,6 +771,37 @@ static inline int set_dabr(struct arch_hw_breakpoint *brk)
+>  	return __set_dabr(dabr, dabrx);
+>  }
+>  
+> +static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
+> +{
+> +	unsigned long lctrl1 = LCTRL1_CTE_GT | LCTRL1_CTF_LT | LCTRL1_CRWE_RW |
+> +			       LCTRL1_CRWF_RW;
+> +	unsigned long lctrl2 = LCTRL2_LW0EN | LCTRL2_LW0LADC | LCTRL2_SLW0EN;
+> +
+> +	if (brk->address == 0)
+> +		lctrl2 |= LCTRL2_LW0LA_F;
+> +	else if (brk->address + brk->len == 0)
+> +		lctrl2 |= LCTRL2_LW0LA_E;
+> +	else
+> +		lctrl2 |= LCTRL2_LW0LA_EandF;
+> +
+> +	mtspr(SPRN_LCTRL2, 0);
+> +
+> +	if ((brk->type & HW_BRK_TYPE_RDWR) == 0)
+> +		return 0;
+> +
+> +	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
+> +		lctrl1 |= LCTRL1_CRWE_RO | LCTRL1_CRWF_RO;
+> +	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
+> +		lctrl1 |= LCTRL1_CRWE_WO | LCTRL1_CRWF_WO;
+> +
+> +	mtspr(SPRN_CMPE, brk->address - 1);
+> +	mtspr(SPRN_CMPF, brk->address + brk->len);
+> +	mtspr(SPRN_LCTRL1, lctrl1);
+> +	mtspr(SPRN_LCTRL2, lctrl2);
+> +
+> +	return 0;
+> +}
+> +
+>  void __set_breakpoint(struct arch_hw_breakpoint *brk)
+>  {
+>  	memcpy(this_cpu_ptr(&current_brk), brk, sizeof(*brk));
+> @@ -800,6 +809,8 @@ void __set_breakpoint(struct arch_hw_breakpoint *brk)
+>  	if (dawr_enabled())
+>  		// Power8 or later
+>  		set_dawr(brk);
+> +	else if (IS_ENABLED(CONFIG_PPC_8xx))
+> +		set_breakpoint_8xx(brk);
+>  	else if (!cpu_has_feature(CPU_FTR_ARCH_207S))
+>  		// Power7 or earlier
+>  		set_dabr(brk);
+> -- 
+> 2.13.3
