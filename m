@@ -2,120 +2,131 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DC2C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0647C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA29320409
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C73206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfKNKXK (ORCPT
+        id S1726923AbfKNKX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:23:10 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:64096 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbfKNKXJ (ORCPT
+        Thu, 14 Nov 2019 05:23:57 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:34861 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfKNKX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:23:09 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Nov 2019 15:46:57 +0530
-IronPort-SDR: lkhLyskng5J0klG/9RWVxN2nL6fyRmJw97v05Gn7Mvg5rotW1gGDf6vfUsRrU2EfFh47YXFMQp
- LGZdt8IUHa1PNQGY/sWDmj4X9soz9gZvB2jUHg/VyEgUG/DCPZH3ZrNSvrkORbycjQ515yY6Y9
- wG7vHS4qplpgxHiB0JYy4bjonIT8WdXqwq627BdQFPhyIG6tvG54qDNTtUpZAyyfOPrHkFaq8d
- DBfwo7otXOKB6O87w188qq3yLCxFC1VzA2Y4ecef2NosgBal4GQ/+zOcwmNydg6GVpXEVe/spe
- t/1Yd/+i1U5+dRyqYUOmDPa3
-Received: from harigovi-linux.qualcomm.com ([10.204.66.147])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 14 Nov 2019 15:46:39 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 026CF2704; Thu, 14 Nov 2019 15:46:37 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-Subject: [PATCH v1 2/2] drm/msm: add DSI config changes to support DSI version
-Date:   Thu, 14 Nov 2019 15:46:28 +0530
-Message-Id: <1573726588-18897-3-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org>
-References: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org>
+        Thu, 14 Nov 2019 05:23:57 -0500
+Received: from [79.140.120.64] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iVCI0-0004Z2-Iy; Thu, 14 Nov 2019 10:23:48 +0000
+Date:   Thu, 14 Nov 2019 11:23:47 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        alpha <linux-alpha@vger.kernel.org>, fweimer@redhat.com,
+        libc-alpha@sourceware.org
+Subject: Re: [PATCH 11/23] y2038: rusage: use __kernel_old_timeval
+Message-ID: <20191114102346.bjwsz2iup7pg7mgd@wittgenstein>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+ <20191108211323.1806194-2-arnd@arndb.de>
+ <20191112210915.GD5130@uranus>
+ <CAK8P3a03FRfTsXADH+xfLsWxCu54JXvXbb-OdyGXXf88RNP34w@mail.gmail.com>
+ <20191114003822.6fjji26vm7yplaw2@wittgenstein>
+ <CAK8P3a2JtyfFifSWNd2MA-J=6-NdgPd4eNva+u193bzQTX6Qig@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2JtyfFifSWNd2MA-J=6-NdgPd4eNva+u193bzQTX6Qig@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DSI config changes to support DSI version.
+[+Cc Florian, libc-alpha]
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
- drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
- 2 files changed, 22 insertions(+)
+On Thu, Nov 14, 2019 at 11:18:15AM +0100, Arnd Bergmann wrote:
+> On Thu, Nov 14, 2019 at 1:38 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > On Wed, Nov 13, 2019 at 11:02:12AM +0100, Arnd Bergmann wrote:
+> > > On Tue, Nov 12, 2019 at 10:09 PM Cyrill Gorcunov <gorcunov@gmail.com> wrote:
+> > > >
+> > > > On Fri, Nov 08, 2019 at 10:12:10PM +0100, Arnd Bergmann wrote:
+> > >
+> > > > > ---
+> > > > > Question: should we also rename 'struct rusage' into 'struct __kernel_rusage'
+> > > > > here, to make them completely unambiguous?
+> > > >
+> > > > The patch looks ok to me. I must confess I looked into rusage long ago
+> > > > so __kernel_timespec type used in uapi made me nervious at first,
+> > > > but then i found that we've this type defined in time_types.h uapi
+> > > > so userspace should be safe. I also like the idea of __kernel_rusage
+> > > > but definitely on top of the series.
+> > >
+> > > There are clearly too many time types at the moment, but I'm in the
+> > > process of throwing out the ones we no longer need now.
+> > >
+> > > I do have a number patches implementing other variants for the syscall,
+> > > and I suppose that if we end up adding __kernel_rusage, that would
+> > > have to go with a set of syscalls using 64-bit seconds/nanoseconds
+> > > rather than the old 32/64 microseconds. I don't know what other
+> > > changes remain that anyone would want from sys_waitid() now that
+> > > it does support pidfd.
+> > >
+> > > If there is still a need for a new waitid() replacement, that should take
+> > > that new __kernel_rusage I think, but until then I hope we are fine
+> > > with today's getrusage+waitid based on the current struct rusage.
+> >
+> > Note, that glibc does _not_ expose the rusage argument, i.e. most of
+> > userspace is unaware that waitid() does allow you to get rusage
+> > information. So users first need to know that waitid() has an rusage
+> > argument and then need to call the waitid() syscall directly.
+> 
+> On architectures that don't have a wait4 syscall (riscv32 for now),
+> glibc uses waitid to implement wait4 and wait3.
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-index b7b7c1a..d2c4592 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-@@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
- 	"iface", "bus",
- };
- 
-+static const char * const dsi_sc7180_bus_clk_names[] = {
-+        "iface", "bus",
-+};
-+
- static const struct msm_dsi_config sdm845_dsi_cfg = {
- 	.io_offset = DSI_6G_REG_SHIFT,
- 	.reg_cfg = {
-@@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
- 	.num_dsi = 2,
- };
- 
-+static const struct msm_dsi_config sc7180_dsi_cfg = {
-+	.io_offset = DSI_6G_REG_SHIFT,
-+	.reg_cfg = {
-+		.num = 1,
-+		.regs = {
-+			{"vdda", 21800, 4 },	/* 1.2 V */
-+		},
-+	},
-+	.bus_clk_names = dsi_sc7180_bus_clk_names,
-+	.num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
-+	.io_start = { 0xae94000 },
-+	.num_dsi = 1,
-+};
-+
- const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
- 	.link_clk_enable = dsi_link_clk_enable_v2,
- 	.link_clk_disable = dsi_link_clk_disable_v2,
-@@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
- 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
- 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
- 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-+	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
-+		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-+
- };
- 
- const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-index e2b7a7d..9919536 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-@@ -19,6 +19,7 @@
- #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
- #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
- #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
-+#define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
- 
- #define MSM_DSI_V2_VER_MINOR_8064	0x0
- 
--- 
-2.7.4
+Yes, and there's an ongoing discussion to implement wait4() on all
+arches through waitid(), I think. I haven't followed it too closely.
 
+> 
+> > > BSD has wait6() to return separate rusage structures for 'self' and
+> > > 'children', but I could not find any application (using the freebsd
+> > > sources and debian code search) that actually uses that information,
+> > > so there might not be any demand for that.
+> >
+> > Speaking specifically for Linux now, I think that rusage does not
+> > actually expose the information most relevant users are interested in.
+> > On Linux nowadays it is _way_ more interesting to retrieve stats
+> > relative to the cgroup the task lived in etc.
+> > Doing a git grep -i rusage in the systemd source code shows that rusage
+> > is used _nowhere_. And I consider an init system to be the most likely
+> > candidate to be interested in rusage.
+> 
+> I looked at a couple of implementations of time(1), this is one example
+> that sometimes uses wait3(), though other implementations just call
+> getrusage() in the parent process before the fork/exec. None of them
+> actually seem to report better than millisecond resolution, so there is
+> not a strict reason to do a timespec replacement for these.
+
+Right, though I have to say that for the sake of consistency I'd much
+rather have a replacement. We're doing all this work right now so we
+might as well. But I get the point.
+
+	Christian
