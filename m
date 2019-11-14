@@ -2,123 +2,188 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3D5C432C3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE549C43141
 	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885C520718
+	by mail.kernel.org (Postfix) with ESMTP id A600020725
 	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573754036;
+	bh=FoOAY9hvViKgsLTmMcUUrky6j/lBk2/WL9cdhbynSys=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eGgNu53Keq6BS9ot7p1g/KxfA0Wfsi24rFkmv0ruy8Omn6S4nQcrhWRxzRp9auuwg
+	 n+Dye3ghxnxu2UnunrzAI6nyg4Ru9QqVYuNV5M8tEbZ2oz0W/xtS72TekBMQ2A86QC
+	 9iLjzbXpUzIrxePbhcDcaccurK7hWvhL/6UVhEUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfKNRxz (ORCPT
+        id S1726991AbfKNRxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 14 Nov 2019 12:53:55 -0500
-Received: from mga05.intel.com ([192.55.52.43]:8273 "EHLO mga05.intel.com"
+Received: from mail.kernel.org ([198.145.29.99]:55184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbfKNRxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:53:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:53:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="203132942"
-Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:53:52 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH v3 0/6] soundwire: update ASoC interfaces
-Date:   Thu, 14 Nov 2019 11:53:39 -0600
-Message-Id: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726444AbfKNRxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:53:55 -0500
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87F1820727;
+        Thu, 14 Nov 2019 17:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573754033;
+        bh=FoOAY9hvViKgsLTmMcUUrky6j/lBk2/WL9cdhbynSys=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pPnZ1tFP/zb5Uf2eZitrrBr8+RHnAG6QVR8CxikW4VkVO1PQH5mYV+oXMOM6ld38T
+         YIVr5/twVsXxuIgPVQCnP0xAutIdwUNJZ2xec42lOyGSrfE7vgFvjAMsNYqtZZ/0aF
+         hEvOg0fKelyt6wpN22J/RyxKzwUpHKEPbh2L1f0w=
+Received: by mail-qv1-f42.google.com with SMTP id x14so2720318qvu.0;
+        Thu, 14 Nov 2019 09:53:53 -0800 (PST)
+X-Gm-Message-State: APjAAAXWXTRVBQM6CWboTRV//sk+7waxIBKaYOqyVMaJ5uTNnqg+nGU7
+        tbH7daUoZxTYADmYuypB5CqkkFA7zNZfyCs45A==
+X-Google-Smtp-Source: APXvYqxn0/HOay449gy4df/pZe6Fvu/CaSWw8Nv4yCJSz4K/ab7BUtNCox5hzRHIyowoAHUW18uT482SqJVnK3bZG+o=
+X-Received: by 2002:ad4:42b4:: with SMTP id e20mr9393130qvr.85.1573754032554;
+ Thu, 14 Nov 2019 09:53:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com> <20191101084135.14811-9-peter.ujfalusi@ti.com>
+ <20191105021900.GA17829@bogus> <fc1ea525-54f1-ff1a-7e1c-61b54f5be862@ti.com>
+In-Reply-To: <fc1ea525-54f1-ff1a-7e1c-61b54f5be862@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 14 Nov 2019 11:53:41 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
+Message-ID: <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
+Subject: Re: [PATCH v4 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need new fields in existing structures to
-a) deal with race conditions on codec probe/enumeration
-b) allow for multi-step ACPI scan/probe/startup on Intel plaforms
+On Tue, Nov 5, 2019 at 4:07 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote=
+:
+>
+>
+>
+> On 05/11/2019 4.19, Rob Herring wrote:
+> > On Fri, Nov 01, 2019 at 10:41:28AM +0200, Peter Ujfalusi wrote:
+> >> New binding document for
+> >> Texas Instruments K3 NAVSS Unified DMA =E2=80=93 Peripheral Root Compl=
+ex (UDMA-P).
+> >>
+> >> UDMA-P is introduced as part of the K3 architecture and can be found i=
+n
+> >> AM654 and j721e.
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >> ---
+> >> Rob,
+> >>
+> >> can you give me some hint on how to fix these two warnings from dt_bin=
+ding_check:
+> >>
+> >>   DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.=
+yaml
+> >> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dts:23.13-72:=
+ Warning (ranges_format): /example-0/interconnect@30800000:ranges: "ranges"=
+ property has invalid length (24 bytes) (parent #address-cells =3D=3D 1, ch=
+ild #address-cells =3D=3D 2, #size-cells =3D=3D 2)
+> >>   CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.=
+yaml
+> >
+> > The default #address-cells is 1 for examples. So you need to
+> > either override it or change ranges parent address size.
+>
+> wrapping the cbass_main_navss inside:
+> cbass_main {
+>     #address-cells =3D <2>;
+>     #size-cells =3D <2>;
+>     ...
+> };
+>
+> fixes it.
+>
+> >>
+> >> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml: inte=
+rconnect@30800000: $nodename:0: 'interconnect@30800000' does not match '^(b=
+us|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> >
+> > Use 'bus' for the node name of 'simple-bus'.
+>
+> I took the navss node from the upstream dts (I'm going to fix it there
+> as well).
+> It has simple-bus for the navss, which is not quite right as NAVSS is
+> not a bus, but a big subsystem with multiple components (UDMAP, ringacc,
+> INTA, INTR, timers, etc).
+>
+> What about to change the binding doc to simple-mfd like this
 
-These structures will be used by the SOF driver as well as codec
-drivers.
+That's really for things not memory-mapped (I'm sure you can probably
+find an example to contradict me), so better to keep simple-bus if all
+the child nodes have addresses.
 
-To avoid conflicts between ASoC and Soundwire trees, these 6 patches
-are provided out-of-order, before the functionality enabled in these
-header files is added in follow-up patch series which can be applied
-separately in the ASoC and Soundwire trees. As discussed earlier,
-Vinod would need to provide an immutable tag for Mark Brown, and the
-integration on the ASoC side of SOF changes and new codecs drivers can
-proceed in parallel with SoundWire core changes.
+Do you need the node name to be 'navss' for some reason? If so, then
+better have a compatible string in there to identify it. If not, just
+use 'bus' and be done with it.
 
-Note that the SOF changes are not provided as a v3 today due to
-conflicts with other in-flight SOF cleanups to facilitate support for
-Device Tree devices. Those changes don't impact the interface
-definition suggested here but the machine driver detection for
-SoundWire. The changes should be ready in next week.
+> cbass_main_navss: navss@30800000 {
+>     compatible =3D "simple-mfd";
+>     #address-cells =3D <2>;
+>     #size-cells =3D <2>;
+>     ...
+> };
+>
+> and fix up the DT when I got to the point when I can send the patches to
+> enable DMA for am654 and j721e?
 
-The mapping between the patches in this series and follow-up ones
-shouldn't give anyone a migraine:
+There's no requirement yet for DTS files to not have warnings.
 
-soundwire: sdw_slave: add probe_complete structure and new fields
-soundwire: bus: fix race condition with probe_complete signaling
+> >> +  compatible:
+> >> +    oneOf:
+> >> +      - const: ti,am654-navss-main-udmap
+> >> +      - const: ti,am654-navss-mcu-udmap
+> >> +      - const: ti,j721e-navss-main-udmap
+> >> +      - const: ti,j721e-navss-mcu-udmap
+> >
+> > enum works better than oneOf+const. Better error messages.
+>
+> Like this:
+>   compatible:
+>     oneOf:
+>       - description: for AM654
+>         items:
+>           - enum:
+>               - ti,am654-navss-main-udmap
+>               - ti,am654-navss-mcu-udmap
+>
+>       - description: for J721E
+>         items:
+>           - enum:
+>               - ti,j721e-navss-main-udmap
+>               - ti,j721e-navss-mcu-udmap
 
-soundwire: sdw_slave: add enumeration_complete structure
-soundwire: bus: fix race condition with enumeration_complete signaling
+If the 'description' was useful, but it's not. Just:
 
-soundwire: sdw_slave: add initialization_complete definition
-soundwire: bus: fix race condition with initialization_complete signaling
+compatible:
+  enum:
+    - ti,am654-navss-main-udmap
+    - ti,am654-navss-mcu-udmap
+    - ti,j721e-navss-main-udmap
+    - ti,j721e-navss-mcu-udmap
 
-soundwire: sdw_slave: track unattach_request to handle all init sequences
-soundwire: bus: fix race condition by tracking UNATTACHED transition
 
-Changes since v2:
-Added new field to deal with a race condition leading to a timeout
-when the codec goes through a pm_runtime suspend/resume transition
-while the Master remains active.
-Clarified commit messages with detailed explanations what those race
-conditions are and why the changes were introduced.
-Reordered fields for Intel routines
-Added kernel-doc definitions for structures
-Modified the patch subjects to make the mapping between interface definition
-and implementation straightforward.
-
-Changes since v1 (no feedback received since October 23)
-additional initialization_complete utility to help codec drivers with
-their resume operation, waiting for the enumeration to complete is not
-always enough.
-
-Pierre-Louis Bossart (5):
-  soundwire: sdw_slave: add probe_complete structure and new fields
-  soundwire: sdw_slave: add enumeration_complete structure
-  soundwire: sdw_slave: add initialization_complete definition
-  soundwire: sdw_slave: track unattach_request to handle all init
-    sequences
-  soundwire: intel: update interfaces between ASoC and SoundWire
-
-Rander Wang (1):
-  soundwire: intel: update stream callbacks for hwparams/free stream
-    operations
-
- drivers/soundwire/intel.c           |  20 +++--
- drivers/soundwire/intel.h           |  13 ++--
- drivers/soundwire/intel_init.c      |  31 ++------
- include/linux/soundwire/sdw.h       |  19 +++++
- include/linux/soundwire/sdw_intel.h | 109 +++++++++++++++++++++++++---
- 5 files changed, 149 insertions(+), 43 deletions(-)
-
--- 
-2.20.1
-
+Rob
