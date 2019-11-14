@@ -2,150 +2,104 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9024C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B9AC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90C820715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3BB206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TRASm3Bg"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pF/DGxdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKNPJu (ORCPT
+        id S1726985AbfKNPJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:09:50 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36991 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfKNPJt (ORCPT
+        Thu, 14 Nov 2019 10:09:53 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:40702 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfKNPJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:09:49 -0500
-Received: by mail-ot1-f66.google.com with SMTP id d5so5118330otp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:09:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hIZW0Esa7rqGtB6CSWRu4KOQZWOLmeyw5FeK9CvEfA4=;
-        b=TRASm3BggwuJeevcb/vtQgsYoy8+/r/OSQhVDCZuQAiZnRARScWROeyc4OlZdblYa1
-         ki+7izxAdJeD0n1bahv0tQPRSKMI7Sm97AqNaY4lzDf0+ElCE0+McGOSErSG/H7r1WO8
-         k2R5cFtJxHUdfjdSGdJdhFUFkPCUa0vsQ7rMZBe3UIC1mSZbbUp2htHsxp3xhVIMq3Ho
-         /WHcZba0pTMgyi0QlHpmEMj2KDCarQquuZNv0J751OuUOT6kDy3kgUWAfh2f7SyGRRqf
-         axNBnaIGdr/W2YXKi0lz4xFtJuZPdDgGH0s6KD5eVICeh2SlP5aAykq20tRt9DlEQ/dr
-         yE9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hIZW0Esa7rqGtB6CSWRu4KOQZWOLmeyw5FeK9CvEfA4=;
-        b=ggDZv643OWf7war03NXU7EpHrbkl0f7QVkt6u9c2RmP5BOStLkIn8dxd6kVdDnL63l
-         NxZIGOKSdnbMyk9bRYEk4w+kL/tkruQdNZFNovctSATPka01y0POUjlkGb7r/Y0vZUsE
-         LNCH7FE5VLCWAhpvmUkuutxHphkUqcXUZtCiFu16rJRzGp0/wx2selaYZ2AYOn/SECLb
-         tajgHQdNy21voriabQdFBbmCm0tF4IXUCi+c5gHrfi2rljUooAuF6AeJg6THR0wNJLth
-         gRb4B3EIwbDGKX9FDswJQT71JOXLar0Zp0+GRbnTfb0bPtbGrfKbfS7ooUlV1GPmkMlU
-         kfig==
-X-Gm-Message-State: APjAAAXzTu61Bh/qWtqpMIyoO/Utf8D8az8IfT5VUyHH7IH9ypoMYbr4
-        9ToRIu4v+YMWQ8WSfeUMuJL3GDaITAqLj5IzRDJZcw==
-X-Google-Smtp-Source: APXvYqytglgsbxJvsvkunntFXpXa75nV5VN0ZKbQ66UUQcd6A+CDP4d4RpgnTOYVhjL1ieiGSkb43T0JdxIDN1CxfSo=
-X-Received: by 2002:a9d:37e6:: with SMTP id x93mr8205287otb.183.1573744187224;
- Thu, 14 Nov 2019 07:09:47 -0800 (PST)
+        Thu, 14 Nov 2019 10:09:52 -0500
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id xAEF9W9o025244;
+        Fri, 15 Nov 2019 00:09:33 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xAEF9W9o025244
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573744173;
+        bh=qT+oeFIy/euq0pjgKwdV5q+AmMmXgB5IsDUm3nbRMug=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pF/DGxdKF/kgm6vFSo1CHhtEqThJ5MNkv65P+tsPx1MUaA6zLRxEBfhn7EUyY0hcu
+         gQwOZRtWB5zx/nE5y3Kk+QRD+0QyPVtqLygvMj+kBXYGXarkXQEKkNtGbSOKgm/L0U
+         6mINbu0Tgb3RGQqfhzJ+FAZnJhyPIUi6D8+7ksyC38oXIolSbnPPY1xSa2PM0w0uGl
+         yCzKotAPea5zVM/88o5t3AKHRlerOE3sOmO51b0IInIArm20mQQfgGYk35l5p556jH
+         DWIlp7aJ+OaYYjlUWdn27zOxY3h8l0toqERkm7J0F1JyaSmTbdmXQGv0vxAiFMaxQs
+         jpUMfjbJhT1YQ==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id i13so1960109uaq.7;
+        Thu, 14 Nov 2019 07:09:32 -0800 (PST)
+X-Gm-Message-State: APjAAAWBku/hg7p370pFdJ6l0eUhyB/uFJaRQTazBo1ic/TjJ92jLFQD
+        LNbJJsOPPwxDKuwQP2K5OXPJcIRzGZbC7FWg/xw=
+X-Google-Smtp-Source: APXvYqxP6fimCUjd9UUjSmw3gNS/GNK41A1+OJKsdwGXeZ9QlASqiVEwdOwyGiSacAGc3X2E5Gf9FatJh03k0eQJhAA=
+X-Received: by 2002:a9f:262d:: with SMTP id 42mr5173143uag.109.1573744171503;
+ Thu, 14 Nov 2019 07:09:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20191112211002.128278-1-jannh@google.com> <20191112211002.128278-3-jannh@google.com>
- <CACT4Y+aojSsss3+Y2FB9Rw=OPxXgsFrGF0YiAJ9eo2wJM0ruWg@mail.gmail.com>
-In-Reply-To: <CACT4Y+aojSsss3+Y2FB9Rw=OPxXgsFrGF0YiAJ9eo2wJM0ruWg@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 14 Nov 2019 16:09:20 +0100
-Message-ID: <CAG48ez11Bhd+76T2L9xF64TZQOeezJ9+9GApG2A7eA1hVfG3eA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/kasan: Print original address on #GP
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
+References: <20190922113436.10396-1-yamada.masahiro@socionext.com>
+ <201911131558.6B0778229@keescook> <20191113.162157.111707512627631395.davem@davemloft.net>
+In-Reply-To: <20191113.162157.111707512627631395.davem@davemloft.net>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 15 Nov 2019 00:08:55 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQtmy8p2GJooX_8dgp3ipC0Kp6x4e1tfiOay3_0qLhhvg@mail.gmail.com>
+Message-ID: <CAK7LNAQtmy8p2GJooX_8dgp3ipC0Kp6x4e1tfiOay3_0qLhhvg@mail.gmail.com>
+Subject: Re: [PATCH] sparc: vdso: fix build error of vdso32
+To:     David Miller <davem@davemloft.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:11 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> On Tue, Nov 12, 2019 at 10:10 PM 'Jann Horn' via kasan-dev
-> <kasan-dev@googlegroups.com> wrote:
-> > Make #GP exceptions caused by out-of-bounds KASAN shadow accesses easier
-> > to understand by computing the address of the original access and
-> > printing that. More details are in the comments in the patch.
-[...]
-> +Andrey, do you see any issues for TAGS mode? Or, Jann, did you test
-> it by any chance?
-
-No, I didn't - I don't have anything set up for upstream arm64 testing here.
-
-> > +void kasan_general_protection_hook(unsigned long addr)
-> >  {
-> > -       if (val == DIE_GPF) {
-> > -               pr_emerg("CONFIG_KASAN_INLINE enabled\n");
-> > -               pr_emerg("GPF could be caused by NULL-ptr deref or user memory access\n");
-> > -       }
-> > -       return NOTIFY_OK;
-> > -}
-> > +       unsigned long orig_addr;
-> > +       const char *addr_type;
-> > +
-> > +       if (addr < KASAN_SHADOW_OFFSET)
-> > +               return;
+On Thu, Nov 14, 2019 at 9:22 AM David Miller <davem@davemloft.net> wrote:
 >
-> Thinking how much sense it makes to compare addr with KASAN_SHADOW_END...
-> If the addr is > KASAN_SHADOW_END, we know it's not a KASAN access,
-> but do we ever get GP on canonical addresses?
-
-#GP can occur for various reasons, but on x86-64, if it occurs because
-of an invalid address, as far as I know it's always non-canonical. The
-#GP handler I wrote will check the address and only call the KASAN
-hook if the address is noncanonical (because otherwise the #GP
-occurred for some other reason).
-
-> > -static struct notifier_block kasan_die_notifier = {
-> > -       .notifier_call = kasan_die_handler,
-> > -};
-> > +       orig_addr = (addr - KASAN_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT;
-> > +       /*
-> > +        * For faults near the shadow address for NULL, we can be fairly certain
-> > +        * that this is a KASAN shadow memory access.
-> > +        * For faults that correspond to shadow for low canonical addresses, we
-> > +        * can still be pretty sure - that shadow region is a fairly narrow
-> > +        * chunk of the non-canonical address space.
-> > +        * But faults that look like shadow for non-canonical addresses are a
-> > +        * really large chunk of the address space. In that case, we still
-> > +        * print the decoded address, but make it clear that this is not
-> > +        * necessarily what's actually going on.
-> > +        */
-> > +       if (orig_addr < PAGE_SIZE)
-> > +               addr_type = "dereferencing kernel NULL pointer";
-> > +       else if (orig_addr < TASK_SIZE_MAX)
-> > +               addr_type = "probably dereferencing invalid pointer";
+> From: Kees Cook <keescook@chromium.org>
+> Date: Wed, 13 Nov 2019 15:59:27 -0800
 >
-> This is access to user memory, right? In outline mode we call it
-> "user-memory-access". We could say about "user" part here as well.
-
-Okay, I'll copy that naming.
-
-> > +       else
-> > +               addr_type = "maybe dereferencing invalid pointer";
-> > +       pr_alert("%s in range [0x%016lx-0x%016lx]\n", addr_type,
-> > +                orig_addr, orig_addr + (1 << KASAN_SHADOW_SCALE_SHIFT) - 1);
+> > On Sun, Sep 22, 2019 at 08:34:36PM +0900, Masahiro Yamada wrote:
+> >> Since commit 54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to
+> >> take the path relative to $(obj)"), sparc allmodconfig fails to build
+> >> as follows:
+> >>
+> >>   CC      arch/sparc/vdso/vdso32/vclock_gettime.o
+> >> unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
+> >> arch/sparc/vdso/vdso32/vclock_gettime.o: failed
+> >>
+> >> The cause of the breakage is that -pg flag not being dropped.
+> >>
+> >> The vdso32 files are located in the vdso32/ subdirectory, but I missed
+> >> to update the Makefile.
+> >>
+> >> Fixes: 54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
+> >> Reported-by: Anatoly Pugachev <matorola@gmail.com>
+> >> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >
+> > I've tripped over this as well. Since no one has picked this up, can you
+> > take it via your tree Masahiro?
 >
-> "(1 << KASAN_SHADOW_SCALE_SHIFT) - 1)" part may be replaced with
-> KASAN_SHADOW_MASK.
-> Overall it can make sense to move this mm/kasan/report.c b/c we are
-> open-coding a number of things here (e.g. reverse address mapping). If
-> another arch will do the same, it will need all of this code too (?).
+> Yes, please do.  Sorry, I haven't had a lot of time for Sparc work lately.
+>
+> Acked-by: David S. Miller <davem@davemloft.net>
 
-Alright, I'll try to move it over.
+
+Applied to linux-kbuild.
+
+-- 
+Best Regards
+Masahiro Yamada
