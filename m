@@ -2,111 +2,62 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82AEC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07300C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74D52071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7BC206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfKNQkq (ORCPT
+        id S1727001AbfKNQlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:40:46 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:43523 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfKNQkp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:40:45 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iVIAQ-0000ZX-V2; Thu, 14 Nov 2019 16:40:23 +0000
-Date:   Thu, 14 Nov 2019 17:40:22 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Adrian Reber <areber@redhat.com>, Oleg Nesterov <oleg@redhat.com>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v10 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191114164021.zvlyjceifuusdzqm@wittgenstein>
-References: <20191114142707.1608679-1-areber@redhat.com>
+        Thu, 14 Nov 2019 11:41:14 -0500
+Received: from mga03.intel.com ([134.134.136.65]:28581 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726962AbfKNQlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:41:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 08:41:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="406378419"
+Received: from pkamlakx-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.10.73])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Nov 2019 08:41:10 -0800
+Date:   Thu, 14 Nov 2019 18:41:07 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, jmorris@namei.org
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.5
+Message-ID: <20191114164047.GA9528@linux.intel.com>
+References: <20191112195542.GA10619@linux.intel.com>
+ <20191112195826.GA5584@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191114142707.1608679-1-areber@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191112195826.GA5584@ziepe.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 03:27:06PM +0100, Adrian Reber wrote:
-> The main motivation to add set_tid to clone3() is CRIU.
+On Tue, Nov 12, 2019 at 03:58:26PM -0400, Jason Gunthorpe wrote:
+> On Tue, Nov 12, 2019 at 09:55:42PM +0200, Jarkko Sakkinen wrote:
+> > 1. Support for Cr50 fTPM.
+> > 2. Support for fTPM on AMD Zen+ CPUs.
+> > 3. TPM 2.0 trusted keys code relocated from drivers/char/tpm to
+> >    security/keys.
 > 
-> To restore a process with the same PID/TID CRIU currently uses
-> /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-> ns_last_pid and then (quickly) does a clone(). This works most of the
-> time, but it is racy. It is also slow as it requires multiple syscalls.
-> 
-> Extending clone3() to support *set_tid makes it possible restore a
-> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> race free (as long as the desired PID/TID is available).
-> 
-> This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-> on clone3() with *set_tid as they are currently in place for ns_last_pid.
-> 
-> The original version of this change was using a single value for
-> set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
-> decided to change set_tid to an array to enable setting the PID of a
-> process in multiple PID namespaces at the same time. If a process is
-> created in a PID namespace it is possible to influence the PID inside
-> and outside of the PID namespace. Details also in the corresponding
-> selftest.
-> 
-> To create a process with the following PIDs:
-> 
->       PID NS level         Requested PID
->         0 (host)              31496
->         1                        42
->         2                         1
-> 
-> For that example the two newly introduced parameters to struct
-> clone_args (set_tid and set_tid_size) would need to be:
-> 
->   set_tid[0] = 1;
->   set_tid[1] = 42;
->   set_tid[2] = 31496;
->   set_tid_size = 3;
-> 
-> If only the PIDs of the two innermost nested PID namespaces should be
-> defined it would look like this:
-> 
->   set_tid[0] = 1;
->   set_tid[1] = 42;
->   set_tid_size = 2;
-> 
-> The PID of the newly created process would then be the next available
-> free PID in the PID namespace level 0 (host) and 42 in the PID namespace
-> at level 1 and the PID of the process in the innermost PID namespace
-> would be 1.
-> 
-> The set_tid array is used to specify the PID of a process starting
-> from the innermost nested PID namespaces up to set_tid_size PID namespaces.
-> 
-> set_tid_size cannot be larger then the current PID namespace level.
-> 
-> Signed-off-by: Adrian Reber <areber@redhat.com>
-> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Just to be clear, this is for the next merge window right?
 
-Applied.
-Thanks, Adrian and Oleg!
-Christian
+v5.5-rc1
+
+/Jarkko
