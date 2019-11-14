@@ -2,218 +2,152 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5314EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E71C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2039D206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE012206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="dT+kTu6+"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="KEDpqlKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfKNJYs (ORCPT
+        id S1726548AbfKNJY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:24:48 -0500
-Received: from ozlabs.org ([203.11.71.1]:58785 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfKNJYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:24:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47DGK86mv8z9s7T;
-        Thu, 14 Nov 2019 20:24:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1573723485;
-        bh=Dq7NW4klV4GxHT1oNqdnPAGrN68C+hoVfrP2Pb0IXcs=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=dT+kTu6+/7TIMNxlEx1NDQPpULL2+1zfqJ+NHNsr7R31lqunFGgaL3emKJ6s8u5CL
-         QYjFXnpzEg+8t5UF1g1VJPPMczqTpGmfb6CI8Y0FmeXPjS6A4GiDKRQCheG08f8ppb
-         ihU47C4OvatTXUjjTtw95ACCJjoaTkDhHDi5lXLkUbj490cPMgrNGH9+Gx5bYBSjkb
-         +6mi2t3QOty39wiT9BugiOXMKmuBjwaa56STR2a76ZTnXicXFLLSq/uyvU/SmtX+aq
-         Wqp2EUOGhtXw0Zhckr05x1oovqMnrZgtaV5JJw2PS/Ffkg1Q+mRt9UMDU207AP9lbb
-         OBdQsF4GuVMKA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, ravi.bangoria@linux.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 2/2] powerpc/hw_breakpoints: Rewrite 8xx breakpoints to allow any address range size.
-In-Reply-To: <1ed0de54ce6021fa0fdf50e938365546a4f5e316.1566925030.git.christophe.leroy@c-s.fr>
-References: <b1142845c040b9702d1609d5ec473d97595dc0c3.1566925029.git.christophe.leroy@c-s.fr> <1ed0de54ce6021fa0fdf50e938365546a4f5e316.1566925030.git.christophe.leroy@c-s.fr>
-Date:   Thu, 14 Nov 2019 20:24:41 +1100
-Message-ID: <87zhgyzu7a.fsf@mpe.ellerman.id.au>
+        Thu, 14 Nov 2019 04:24:58 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:4508 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726000AbfKNJY6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:24:58 -0500
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAE9D6Ll021810;
+        Thu, 14 Nov 2019 04:24:42 -0500
+Received: from nam05-co1-obe.outbound.protection.outlook.com (mail-co1nam05lp2059.outbound.protection.outlook.com [104.47.48.59])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2w7pr6p2r7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Nov 2019 04:24:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UgsTuBuuIABYjso1zPWOgf0ahwRftxkB+A3Xkyas91yrt0VYi0qAsczarFXhKE0DADhbNyANxtyGJ12g/g4EZNMvCGfBrr5ilGMox6I6DNkyvp0D5HtwVQuBbhxpcSUQWx4NfYL0G0bjDDWjicdPnMosk+ozDVY6WZ3YY9S2sRThEZ95Zw+i7m/d5+eSvwUqKg95T64Nwg8sEqyr/+l5/BNmPuXd1nuly+kt8APp6T9TdPjLOLSf0HyiJUoKyJ63rXkSJ+OSRnhhJX6G2745luuuCn1hqL/NtJFggVOLTw0JuKTEOiGhSjYdTe1eUbcZUnduLngrZG3WQk9TdNNv/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jog2xaRT5G0BUc0nVr50QPsWLs570j4XoNScteKxPro=;
+ b=WxrdSogM+Y7f9IW2nZNQiz3rPULYFpujvWkGuKqri5mi5/A/kT/oaxDwN5QjMknoPR8eYGTUNx7iic+25vcCE7IwXioXSpCI3ThhwO1es4Dz+5wRxck/WB2Ei6/B4E6bVkDGGPp97aIsnA3SJIFq/szX0Ey54I4IeA17phFKj5ILBS+uIoqUETVJgUER1u/l45aDmggF8QNuwqwAwsCYUCECheCBlRKxgewVAbEO9ETyuQ2ReT0ZL7gYGmaI4YJ7KcYJwW3zMQQLBEAbY4PEqpZP3fiLNLsCz8OBgrREPXejxPwzziaeAoopyDkQn0HVKqeLz48LdaJ3wIFF8F7N+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=metafoo.de smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jog2xaRT5G0BUc0nVr50QPsWLs570j4XoNScteKxPro=;
+ b=KEDpqlKvJiIGC7Yd8NHBhSCdmPzGctEdgeaW7LNbP7cahZ0qhKpsI1m2YqqtZAyJ94Jaw8Ha23OCd1PAL/ehGVzKUbFOK95zFmiiePAIrZ3UJb01FVf7pwu0kXi5xLoGOr7X7t/cffKSxUncGp1Up4AMYXOX16yUFtlZySEc6mA=
+Received: from BN6PR03CA0109.namprd03.prod.outlook.com (2603:10b6:404:10::23)
+ by MN2PR03MB4877.namprd03.prod.outlook.com (2603:10b6:208:aa::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.25; Thu, 14 Nov
+ 2019 09:24:40 +0000
+Received: from SN1NAM02FT020.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::207) by BN6PR03CA0109.outlook.office365.com
+ (2603:10b6:404:10::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23 via Frontend
+ Transport; Thu, 14 Nov 2019 09:24:40 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT020.mail.protection.outlook.com (10.152.72.139) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2451.23
+ via Frontend Transport; Thu, 14 Nov 2019 09:24:39 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xAE9OUrE019064
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Thu, 14 Nov 2019 01:24:30 -0800
+Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.116) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 14 Nov 2019 04:24:38 -0500
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH] iio: adc: ad7124: Enable internal reference
+Date:   Thu, 14 Nov 2019 11:24:26 +0200
+Message-ID: <20191114092426.21631-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(39860400002)(189003)(199004)(50226002)(16586007)(54906003)(305945005)(7636002)(14444005)(106002)(5660300002)(4326008)(2351001)(478600001)(316002)(6916009)(70586007)(47776003)(1076003)(70206006)(51416003)(7696005)(86362001)(2906002)(486006)(426003)(126002)(476003)(26005)(2616005)(246002)(44832011)(186003)(48376002)(8676002)(36756003)(107886003)(336012)(50466002)(356004)(8936002)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB4877;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a8e9dec8-a03a-4e07-5f8a-08d768e479b8
+X-MS-TrafficTypeDiagnostic: MN2PR03MB4877:
+X-Microsoft-Antispam-PRVS: <MN2PR03MB487721904832D6965664765681710@MN2PR03MB4877.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:989;
+X-Forefront-PRVS: 02213C82F8
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: B0rxkOc8JfaXvy+Z8EXpHRgiLDChimMGdZyuIjPHfkWToaggqHNcXGRjrupkkIfDaeB/l8YcoU05XL/vpw8/2GZYR8vo6L+EhiDznadC9iphqG2ttm5DwN6IZMUGjaj43UEOjGshncAca2wgJlKnuLXRvtfRCiP6dGsP96EFZXDwo/DOJKfBzZD14phtfxISg8qYy5h/tvGOS4hNL26pE6mlcnNLyuTt4iULpOvvAqOoNeMYGgXUnKKNbEMSFR+bSFn+pndy171e2hAGMVU15SWGh/rgl7HE17gRe8D5vfSYgPnKA5JS56TqIZF7/4/xgap71CrNc1xh1fInmZmEqxvZIc5RjtMkoj+vQZ8NGpNf2yqQgeeqbBMR+xJ9760MHP1U7Oj3clqkcq7BZMpz2rxxucQjvXzEkCDGffoVUt6xd8aw/4yuKNTtbdkzjnAB
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2019 09:24:39.8981
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8e9dec8-a03a-4e07-5f8a-08d768e479b8
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB4877
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-14_01:2019-11-13,2019-11-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ priorityscore=1501 suspectscore=1 phishscore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=807 malwarescore=0 adultscore=0
+ impostorscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911140086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Unlike standard powerpc, Powerpc 8xx doesn't have SPRN_DABR, but
-> it has a breakpoint support based on a set of comparators which
-> allow more flexibility.
->
-> Commit 4ad8622dc548 ("powerpc/8xx: Implement hw_breakpoint")
-> implemented breakpoints by emulating the DABR behaviour. It did
-> this by setting one comparator the match 4 bytes at breakpoint address
-> and the other comparator to match 4 bytes at breakpoint address + 4.
->
-> Rewrite 8xx hw_breakpoint to make breakpoints match all addresses
-> defined by the breakpoint address and length by making full use of
-> comparators.
->
-> Now, comparator E is set to match any address greater than breakpoint
-> address minus one. Comparator F is set to match any address lower than
-> breakpoint address plus breakpoint length.
->
-> When the breakpoint range starts at address 0, the breakpoint is set
-> to match comparator F only. When the breakpoint range end at address
-> 0xffffffff, the breakpoint is set to match comparator E only.
-> Otherwise the breakpoint is set to match comparator E and F.
->
-> At the same time, use registers bit names instead of hardcode values.
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/reg_8xx.h  | 14 ++++++++++
->  arch/powerpc/kernel/hw_breakpoint.c |  3 ++
->  arch/powerpc/kernel/process.c       | 55 ++++++++++++++++++++++---------------
->  3 files changed, 50 insertions(+), 22 deletions(-)
+When the internal reference was selected by a channel it was not enabled.
+This patch fixes that and enables it.
 
-I thought Ravi was going to pick this up in his series, but seems not.
-So now this no longer applies since I merged that series.
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
+ drivers/iio/adc/ad7124.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Can one of you rebase and resend please?
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index edc6f1cc90b2..3f03abf100b5 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -39,6 +39,8 @@
+ #define AD7124_STATUS_POR_FLAG_MSK	BIT(4)
+ 
+ /* AD7124_ADC_CONTROL */
++#define AD7124_ADC_CTRL_REF_EN_MSK	BIT(8)
++#define AD7124_ADC_CTRL_REF_EN(x)	FIELD_PREP(AD7124_ADC_CTRL_REF_EN_MSK, x)
+ #define AD7124_ADC_CTRL_PWR_MSK	GENMASK(7, 6)
+ #define AD7124_ADC_CTRL_PWR(x)		FIELD_PREP(AD7124_ADC_CTRL_PWR_MSK, x)
+ #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
+@@ -424,7 +426,10 @@ static int ad7124_init_channel_vref(struct ad7124_state *st,
+ 		break;
+ 	case AD7124_INT_REF:
+ 		st->channel_config[channel_number].vref_mv = 2500;
+-		break;
++		st->adc_control &= ~AD7124_ADC_CTRL_REF_EN_MSK;
++		st->adc_control |= AD7124_ADC_CTRL_REF_EN(1);
++		return ad_sd_write_reg(&st->sd, AD7124_ADC_CONTROL,
++				      2, st->adc_control);
+ 	default:
+ 		dev_err(&st->sd.spi->dev, "Invalid reference %d\n", refsel);
+ 		return -EINVAL;
+-- 
+2.17.1
 
-cheers
-
-> diff --git a/arch/powerpc/include/asm/reg_8xx.h b/arch/powerpc/include/asm/reg_8xx.h
-> index abc663c0f1db..98e97c22df8b 100644
-> --- a/arch/powerpc/include/asm/reg_8xx.h
-> +++ b/arch/powerpc/include/asm/reg_8xx.h
-> @@ -37,7 +37,21 @@
->  #define SPRN_CMPE	152
->  #define SPRN_CMPF	153
->  #define SPRN_LCTRL1	156
-> +#define   LCTRL1_CTE_GT		0xc0000000
-> +#define   LCTRL1_CTF_LT		0x14000000
-> +#define   LCTRL1_CRWE_RW	0x00000000
-> +#define   LCTRL1_CRWE_RO	0x00040000
-> +#define   LCTRL1_CRWE_WO	0x000c0000
-> +#define   LCTRL1_CRWF_RW	0x00000000
-> +#define   LCTRL1_CRWF_RO	0x00010000
-> +#define   LCTRL1_CRWF_WO	0x00030000
->  #define SPRN_LCTRL2	157
-> +#define   LCTRL2_LW0EN		0x80000000
-> +#define   LCTRL2_LW0LA_E	0x00000000
-> +#define   LCTRL2_LW0LA_F	0x04000000
-> +#define   LCTRL2_LW0LA_EandF	0x08000000
-> +#define   LCTRL2_LW0LADC	0x02000000
-> +#define   LCTRL2_SLW0EN		0x00000002
->  #ifdef CONFIG_PPC_8xx
->  #define SPRN_ICTRL	158
->  #endif
-> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-> index 28ad3171bb82..d8bd4dbef561 100644
-> --- a/arch/powerpc/kernel/hw_breakpoint.c
-> +++ b/arch/powerpc/kernel/hw_breakpoint.c
-> @@ -163,6 +163,9 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
->  	 */
->  	if (!ppc_breakpoint_available())
->  		return -ENODEV;
-> +	/* 8xx can setup a range without limitation */
-> +	if (IS_ENABLED(CONFIG_PPC_8xx))
-> +		return 0;
->  	length_max = 8; /* DABR */
->  	if (dawr_enabled()) {
->  		length_max = 512 ; /* 64 doublewords */
-> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-> index 8fc4de0d22b4..79e4f072a746 100644
-> --- a/arch/powerpc/kernel/process.c
-> +++ b/arch/powerpc/kernel/process.c
-> @@ -751,28 +751,6 @@ static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
->  		mtspr(SPRN_DABRX, dabrx);
->  	return 0;
->  }
-> -#elif defined(CONFIG_PPC_8xx)
-> -static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
-> -{
-> -	unsigned long addr = dabr & ~HW_BRK_TYPE_DABR;
-> -	unsigned long lctrl1 = 0x90000000; /* compare type: equal on E & F */
-> -	unsigned long lctrl2 = 0x8e000002; /* watchpoint 1 on cmp E | F */
-> -
-> -	if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
-> -		lctrl1 |= 0xa0000;
-> -	else if ((dabr & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
-> -		lctrl1 |= 0xf0000;
-> -	else if ((dabr & HW_BRK_TYPE_RDWR) == 0)
-> -		lctrl2 = 0;
-> -
-> -	mtspr(SPRN_LCTRL2, 0);
-> -	mtspr(SPRN_CMPE, addr);
-> -	mtspr(SPRN_CMPF, addr + 4);
-> -	mtspr(SPRN_LCTRL1, lctrl1);
-> -	mtspr(SPRN_LCTRL2, lctrl2);
-> -
-> -	return 0;
-> -}
->  #else
->  static inline int __set_dabr(unsigned long dabr, unsigned long dabrx)
->  {
-> @@ -793,6 +771,37 @@ static inline int set_dabr(struct arch_hw_breakpoint *brk)
->  	return __set_dabr(dabr, dabrx);
->  }
->  
-> +static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
-> +{
-> +	unsigned long lctrl1 = LCTRL1_CTE_GT | LCTRL1_CTF_LT | LCTRL1_CRWE_RW |
-> +			       LCTRL1_CRWF_RW;
-> +	unsigned long lctrl2 = LCTRL2_LW0EN | LCTRL2_LW0LADC | LCTRL2_SLW0EN;
-> +
-> +	if (brk->address == 0)
-> +		lctrl2 |= LCTRL2_LW0LA_F;
-> +	else if (brk->address + brk->len == 0)
-> +		lctrl2 |= LCTRL2_LW0LA_E;
-> +	else
-> +		lctrl2 |= LCTRL2_LW0LA_EandF;
-> +
-> +	mtspr(SPRN_LCTRL2, 0);
-> +
-> +	if ((brk->type & HW_BRK_TYPE_RDWR) == 0)
-> +		return 0;
-> +
-> +	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_READ)
-> +		lctrl1 |= LCTRL1_CRWE_RO | LCTRL1_CRWF_RO;
-> +	if ((brk->type & HW_BRK_TYPE_RDWR) == HW_BRK_TYPE_WRITE)
-> +		lctrl1 |= LCTRL1_CRWE_WO | LCTRL1_CRWF_WO;
-> +
-> +	mtspr(SPRN_CMPE, brk->address - 1);
-> +	mtspr(SPRN_CMPF, brk->address + brk->len);
-> +	mtspr(SPRN_LCTRL1, lctrl1);
-> +	mtspr(SPRN_LCTRL2, lctrl2);
-> +
-> +	return 0;
-> +}
-> +
->  void __set_breakpoint(struct arch_hw_breakpoint *brk)
->  {
->  	memcpy(this_cpu_ptr(&current_brk), brk, sizeof(*brk));
-> @@ -800,6 +809,8 @@ void __set_breakpoint(struct arch_hw_breakpoint *brk)
->  	if (dawr_enabled())
->  		// Power8 or later
->  		set_dawr(brk);
-> +	else if (IS_ENABLED(CONFIG_PPC_8xx))
-> +		set_breakpoint_8xx(brk);
->  	else if (!cpu_has_feature(CPU_FTR_ARCH_207S))
->  		// Power7 or earlier
->  		set_dabr(brk);
-> -- 
-> 2.13.3
