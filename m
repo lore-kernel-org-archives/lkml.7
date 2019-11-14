@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEBDC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17300C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCD9206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37AF7206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sxfYy0ZM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YlJt/Y+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfKNDMV (ORCPT
+        id S1726957AbfKNDMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:12:21 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48454 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfKNDMK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Nov 2019 22:12:10 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:48438 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfKNDMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 22:12:09 -0500
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.159.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5FBDC20B4904;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 38E2920B4903;
         Wed, 13 Nov 2019 19:12:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5FBDC20B4904
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 38E2920B4903
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1573701129;
-        bh=DcjuEGpDue6hzcYPER7yA0s/bwWCNqk95yOKVyIqy7s=;
+        bh=K/agi32Oac2t+Dh8q8GVUkQ2g0EOgg71DPIGb1PJ/fQ=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=sxfYy0ZM+8fA3PgmgbpQ+/pxtjIdIbWB6zXljPg8GkIpFpgv3vsTWz8RWY7cXe8WX
-         K/8A/1JXdEWTEDKkDsqz2eCRQdpTWv6wjI6UNyLdTPTOhjZuQBAGZMFIOJ12XlT1b9
-         3OR2lpoCCxNYpVP4Tg8+cw7Rhfiqj2z7w2xDAaBo=
+        b=YlJt/Y+13ZQEMFS7ClYl9ALrQlo2sDWJNaIb9n5zLVpj1l42eP8rXbocg06qXY/xT
+         uUpHccgeJNK4Vq/IA94K1a6hUDtDz+11u/lun35Kqus0i9HXZ9KoKuTglAL2jW5cVp
+         K2Sq/kxcpTORwsDgFd2g5DoZiJ63CBttBpuNe0Ig=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, dhowells@redhat.com,
         matthewgarrett@google.com, sashal@kernel.org,
         jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 2/5] IMA: Define an IMA hook to measure keys
-Date:   Wed, 13 Nov 2019 19:11:59 -0800
-Message-Id: <20191114031202.18012-3-nramas@linux.microsoft.com>
+Subject: [PATCH v7 1/5] IMA: Add KEY_CHECK func to measure keys
+Date:   Wed, 13 Nov 2019 19:11:58 -0800
+Message-Id: <20191114031202.18012-2-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191114031202.18012-1-nramas@linux.microsoft.com>
 References: <20191114031202.18012-1-nramas@linux.microsoft.com>
@@ -51,88 +51,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Measure asymmetric keys used for verifying file signatures,
-certificates, etc.
+Measure keys loaded onto any keyring.
 
-This patch defines a new IMA hook namely ima_post_key_create_or_update()
-to measure asymmetric keys.
-
-The IMA hook is defined in a new file namely ima_asymmetric_keys.c
-which is built only if CONFIG_KEYS is enabled.
+This patch defines a new IMA policy func namely KEY_CHECK to
+measure keys. Updated ima_match_rules() to check for KEY_CHECK
+and ima_parse_rule() to handle KEY_CHECK.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- security/integrity/ima/Makefile              |  1 +
- security/integrity/ima/ima_asymmetric_keys.c | 51 ++++++++++++++++++++
- 2 files changed, 52 insertions(+)
- create mode 100644 security/integrity/ima/ima_asymmetric_keys.c
+ Documentation/ABI/testing/ima_policy | 7 ++++++-
+ security/integrity/ima/ima.h         | 1 +
+ security/integrity/ima/ima_policy.c  | 4 +++-
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-index 31d57cdf2421..3c796664be8a 100644
---- a/security/integrity/ima/Makefile
-+++ b/security/integrity/ima/Makefile
-@@ -12,3 +12,4 @@ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
- ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
- ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
- obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
-+obj-$(CONFIG_KEYS) += ima_asymmetric_keys.o
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-new file mode 100644
-index 000000000000..f6884641a622
---- /dev/null
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 Microsoft Corporation
-+ *
-+ * Author: Lakshmi Ramasubramanian (nramas@linux.microsoft.com)
-+ *
-+ * File: ima_asymmetric_keys.c
-+ *       Defines an IMA hook to measure asymmetric keys on key
-+ *       create or update.
-+ */
+diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+index 29aaedf33246..3823c27894c5 100644
+--- a/Documentation/ABI/testing/ima_policy
++++ b/Documentation/ABI/testing/ima_policy
+@@ -29,7 +29,7 @@ Description:
+ 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
+ 				[FIRMWARE_CHECK]
+ 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+-				[KEXEC_CMDLINE]
++				[KEXEC_CMDLINE] [KEY_CHECK]
+ 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+ 			       [[^]MAY_EXEC]
+ 			fsmagic:= hex value
+@@ -113,3 +113,8 @@ Description:
+ 		Example of appraise rule allowing modsig appended signatures:
+ 
+ 			appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++		Example of measure rule using KEY_CHECK to measure all keys:
 +
-+#include <crypto/public_key.h>
-+#include <keys/asymmetric-type.h>
-+#include "ima.h"
++			measure func=KEY_CHECK
 +
-+/**
-+ * ima_post_key_create_or_update - measure asymmetric keys
-+ * @keyring: keyring to which the key is linked to
-+ * @key: created or updated key
-+ * @flags: key flags
-+ * @create: flag indicating whether the key was created or updated
-+ *
-+ * Keys can only be measured, not appraised.
-+ */
-+void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-+				   unsigned long flags, bool create)
-+{
-+	const struct public_key *pk;
-+
-+	/* Only asymmetric keys are handled by this hook. */
-+	if (key->type != &key_type_asymmetric)
-+		return;
-+
-+	/* Get the public_key of the given asymmetric key to measure. */
-+	pk = key->payload.data[asym_crypto];
-+
-+	/*
-+	 * keyring->description points to the name of the keyring
-+	 * (such as ".builtin_trusted_keys", ".ima", etc.) to
-+	 * which the given key is linked to.
-+	 *
-+	 * The name of the keyring is passed in the "eventname"
-+	 * parameter to process_buffer_measurement() and is set
-+	 * in the "eventname" field in ima_event_data for
-+	 * the key measurement IMA event.
-+	 */
-+	process_buffer_measurement(pk->key, pk->keylen,
-+				   keyring->description, KEY_CHECK, 0);
-+}
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index df4ca482fb53..fe6c698617bd 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -193,6 +193,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
+ 	hook(KEXEC_INITRAMFS_CHECK)	\
+ 	hook(POLICY_CHECK)		\
+ 	hook(KEXEC_CMDLINE)		\
++	hook(KEY_CHECK)			\
+ 	hook(MAX_CHECK)
+ #define __ima_hook_enumify(ENUM)	ENUM,
+ 
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index f19a895ad7cd..1525a28fd705 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -373,7 +373,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+ {
+ 	int i;
+ 
+-	if (func == KEXEC_CMDLINE) {
++	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
+ 		if ((rule->flags & IMA_FUNC) && (rule->func == func))
+ 			return true;
+ 		return false;
+@@ -997,6 +997,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 				entry->func = POLICY_CHECK;
+ 			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
+ 				entry->func = KEXEC_CMDLINE;
++			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
++				entry->func = KEY_CHECK;
+ 			else
+ 				result = -EINVAL;
+ 			if (!result)
 -- 
 2.17.1
 
