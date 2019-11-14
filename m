@@ -2,154 +2,106 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80012C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A06EC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1B8206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759C020715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfKNPWh (ORCPT
+        id S1726796AbfKNPYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:22:37 -0500
-Received: from mga12.intel.com ([192.55.52.136]:34667 "EHLO mga12.intel.com"
+        Thu, 14 Nov 2019 10:24:37 -0500
+Received: from mga18.intel.com ([134.134.136.126]:53782 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbfKNPWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:22:36 -0500
+        id S1726339AbfKNPYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 10:24:37 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 07:22:36 -0800
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 07:24:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="214560663"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Nov 2019 07:22:35 -0800
-Date:   Thu, 14 Nov 2019 07:22:35 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
-Message-ID: <20191114152235.GC24045@linux.intel.com>
-References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
- <6c2c7bbb-39f4-2a77-632e-7730e9887fc5@redhat.com>
+   d="scan'208";a="214560986"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 14 Nov 2019 07:24:33 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 14 Nov 2019 17:24:32 +0200
+Date:   Thu, 14 Nov 2019 17:24:32 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Jon Flatley <jflat@chromium.org>
+Cc:     Benson Leung <bleung@google.com>, enric.balletbo@collabora.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>, groeck@chromium.org,
+        sre@kernel.org, Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH 0/3] ChromeOS EC USB-C Connector Class
+Message-ID: <20191114152432.GD4013@kuha.fi.intel.com>
+References: <20191113031044.136232-1-jflat@chromium.org>
+ <20191113175127.GA171004@google.com>
+ <20191113182537.GC4013@kuha.fi.intel.com>
+ <CACJJ=pxba6=SR=kWO-vgqU=wkj7gnVAm62b2tcYf2K+1ucySRg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6c2c7bbb-39f4-2a77-632e-7730e9887fc5@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CACJJ=pxba6=SR=kWO-vgqU=wkj7gnVAm62b2tcYf2K+1ucySRg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 12:58:56PM +0100, Paolo Bonzini wrote:
-> Ok, it's not _so_ ugly after all.
-> 
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c   | 39 +++++++++++++++++++++++++++++++++++++--
-> >  include/linux/kvm_host.h |  1 +
-> >  2 files changed, 38 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 5d21a4a..5c67061 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -5924,7 +5924,9 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
-> >  		}
-> >  	}
-> >  
-> > -	if (exit_reason < kvm_vmx_max_exit_handlers
-> > +	if (vcpu->fast_vmexit)
-> > +		return 1;
-> > +	else if (exit_reason < kvm_vmx_max_exit_handlers
-> 
-> Instead of a separate vcpu->fast_vmexit, perhaps you can set exit_reason
-> to vmx->exit_reason to -1 if the fast path succeeds.
+Hi Jon,
 
-Actually, rather than make this super special case, what about moving the
-handling into vmx_handle_exit_irqoff()?  Practically speaking that would
-only add ~50 cycles (two VMREADs) relative to the code being run right
-after kvm_put_guest_xcr0().  It has the advantage of restoring the host's
-hardware breakpoints, preserving a semi-accurate last_guest_tsc, and
-running with vcpu->mode set back to OUTSIDE_GUEST_MODE.  Hopefully it'd
-also be more intuitive for people unfamiliar with the code.
+On Wed, Nov 13, 2019 at 05:09:56PM -0800, Jon Flatley wrote:
+> > I'll go over these tomorrow, but I have one question already. Can you
+> > guys influence what goes to the ACPI tables?
+> >
+> > Ideally every Type-C connector is always described in its own ACPI
+> > node (or DT node if DT is used). Otherwise getting the correct
+> > capabilities and especially connections to other devices (like the
+> > muxes) for every port may get difficult.
+> 
+> Hey Heikki, thank you for your quick response!
+> 
+> In general we do have control over the ACPI tables and over DT. The
+> difference for ChromeOS is that the PD implementation and policy
+> decisions are handled by the embedded controller. This includes
+> alternate mode transitions and control over the muxes. I don't believe
+> there is any information about port capabilities in ACPI or DT, that's
+> all handled by the EC. With current EC firmware we are mostly limited
+> to querying the EC for port capabilities and state. There may be some
+> exceptions to this, such as with Rockchip platforms, but even then the
+> EC is largely in control.
 
-> 
+The capabilities here mean things like is the port: source, sink or
+DRP; host, device or DRD; etc. So static information.
 
-> > +			if (ret == 0)
-> > +				ret = kvm_skip_emulated_instruction(vcpu);
-> 
-> Please move the "kvm_skip_emulated_instruction(vcpu)" to
-> vmx_handle_exit, so that this basically is
-> 
-> #define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
-> 
-> 	if (ret == 0)
-> 		vcpu->exit_reason = EXIT_REASON_NEED_SKIP_EMULATED_INSN;
-> 
-> and handle_ipi_fastpath can return void.
+I do understand that the EC is in control of the Port Controller (or
+PD controller), the muxes, the policy decisions and what have you, and
+that is fine. My point is that the operating system should not have to
+get also the hardware description from the EC. That part should always
+come from ACPI tables or DT, even when the components are attached to
+the EC instead of the host CPU. Otherwise we loose scalability for no
+good reason.
 
-I'd rather we add a dedicated variable to say the exit has already been
-handled.  Overloading exit_reason is bound to cause confusion, and that's
-probably a best case scenario.
+Note. The device properties for the port capabilities are already
+documented in kernel:
+Documentation/devicetree/bindings/connector/usb-connector.txt (the
+same properties work in ACPI as well).
 
-> > +		};
-> > +	};
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  {
-> >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > @@ -6615,6 +6645,12 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  				  | (1 << VCPU_EXREG_CR3));
-> >  	vcpu->arch.regs_dirty = 0;
-> >  
-> > +	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
-> > +	vcpu->fast_vmexit = false;
-> > +	if (!is_guest_mode(vcpu) &&
-> > +		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
-> > +		vcpu->fast_vmexit = handle_ipi_fastpath(vcpu);
-> 
-> This should be done later, at least after kvm_put_guest_xcr0, because
-> running with partially-loaded guest state is harder to audit.  The best
-> place to put it actually is right after the existing vmx->exit_reason
-> assignment, where we already handle EXIT_REASON_MCE_DURING_VMENTRY.
-> 
-> >  	pt_guest_exit(vmx);
-> >  
-> >  	/*
-> > @@ -6634,7 +6670,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  	vmx->nested.nested_run_pending = 0;
-> >  	vmx->idt_vectoring_info = 0;
-> >  
-> > -	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
-> >  	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
-> >  		kvm_machine_check();
-> >  
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index 719fc3e..7a7358b 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -319,6 +319,7 @@ struct kvm_vcpu {
-> >  #endif
-> >  	bool preempted;
-> >  	bool ready;
-> > +	bool fast_vmexit;
-> >  	struct kvm_vcpu_arch arch;
-> >  	struct dentry *debugfs_dentry;
-> >  };
-> > 
-> 
+> I think you raise a valid point, but such a change is probably out of
+> scope for this implementation.
+
+This implementation should already be made so that it works with a
+properly prepared ACPI tables or DT. If there are already boards that
+don't supply the nodes in ACPI tables for the ports, then software
+nodes can be used with those, but all new boards really should have a
+real firmware node represeting every Type-C port.
+
+thanks,
+
+-- 
+heikki
