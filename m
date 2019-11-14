@@ -2,129 +2,98 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E5BC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E010206E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C78206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573696398;
+	bh=HU9Jz4jf4H5sBM80OlgQbD6/rJi/CznrtVCfuFoSNaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lq7a6zGkI/EnO0RTHNg7za569hPzuITW1p926xuF3S7WRuO3wSDRm9pvDU8nmBwpo
+	 Stk9VKNYQ35QOd3n/NH00zi6oweWSCIcMH6eJ/kIIvEU3SdO3vP77CZN2IUVw+ndYh
+	 0aKD7vYH8SDCBybIIf0jtcM/RMOyVpYo9EVpZRkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKNBws (ORCPT
+        id S1727022AbfKNBxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 20:52:48 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:55764 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbfKNBws (ORCPT
+        Wed, 13 Nov 2019 20:53:17 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45554 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNBxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 20:52:48 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Ti0ZFre_1573696360;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Ti0ZFre_1573696360)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 14 Nov 2019 09:52:43 +0800
-Subject: Re: [PATCH 3/3] sched/numa: documentation for per-cgroup numa stat
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <896a7da3-f139-32e7-8a64-b3562df1a091@linux.alibaba.com>
- <20191113080912.041918ce@lwn.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <359ef90a-aecc-c382-0dd2-2ad7445fb821@linux.alibaba.com>
-Date:   Thu, 14 Nov 2019 09:52:10 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Wed, 13 Nov 2019 20:53:17 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 14so3761377oir.12;
+        Wed, 13 Nov 2019 17:53:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YzMRKwOAeyLEJgS4ZedeWkKapXjgaDKadOBSenofCOI=;
+        b=Q5SqW621pMEXWFOxlj47GluyaeyhBM47KNH2cdm83i0CxQqOZhVqKibh5SCSyKVkYr
+         hRkv9X+bQgMYskVp+Eq5G4c/QdnrXeBQqnddSz0G8muUWq6v4cD7eL4XVgDoU56RpKfn
+         EeYhlfCrcRPKvjEkrDezTsTj3a+CeAQJemruMriKuphnYstBlm1u9x4HfO5q6KOHPkTq
+         tQaS3Q4yKMqrUMD+slYGa8XB2jl7+mpPhdwUKwBUKCIN2I1nXJuHaegxtQMbwBMjVJhm
+         l/oHkoIwo9l21ma4vrwZuCNzcNrcCwQ5xixHlm3IXy73BQyEAO0ijtVt9NT6XQ0Wj48K
+         rr4g==
+X-Gm-Message-State: APjAAAVfNLEmR/yc5YysIFZRi444+FoOZznEKWDtaclZdQab8bmIzby/
+        of7Y0D3VgXqvS7+81egmvA==
+X-Google-Smtp-Source: APXvYqwoPjq8G5QC+rJOSL3DpKhW/ooUFfVo8fZnHTp3oTWVQOIRPmWDGvOgzhuvR+EDBaTL0DpXUQ==
+X-Received: by 2002:aca:6706:: with SMTP id z6mr1288414oix.89.1573696395971;
+        Wed, 13 Nov 2019 17:53:15 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l18sm1345873oti.11.2019.11.13.17.53.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 17:53:15 -0800 (PST)
+Date:   Wed, 13 Nov 2019 19:53:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        bivvy.bi@rock-chips.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: drop #clock-cells from
+ rockchip,px30-dsi-dphy
+Message-ID: <20191114015314.GA24328@bogus>
+References: <20191108000640.8775-1-heiko.stuebner@theobroma-systems.com>
 MIME-Version: 1.0
-In-Reply-To: <20191113080912.041918ce@lwn.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108000640.8775-1-heiko.stuebner@theobroma-systems.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jonathan
+On Fri,  8 Nov 2019 01:06:39 +0100, Heiko Stuebner wrote:
+> Further review of the dsi components for the px30 revealed that the
+> phy shouldn't expose the pll as clock but instead handle settings
+> via phy parameters.
+> 
+> As the phy binding is new and not used anywhere yet, just drop them
+> so they don't get used.
+> 
+> Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+> Hi Kishon,
+> 
+> this should ideally get into 5.5 as a fix for the previous change
+> so that the binding doesn't accidentially get used.
+> 
+> Thanks
+> Heiko
+> 
+>  .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
 
-On 2019/11/13 下午11:09, Jonathan Corbet wrote:
-> On Wed, 13 Nov 2019 11:45:59 +0800
-> 王贇 <yun.wang@linux.alibaba.com> wrote:
-> 
->> Add the description for 'cg_numa_stat', also a new doc to explain
->> the details on how to deal with the per-cgroup numa statistics.
->>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Michal Koutný <mkoutny@suse.com>
->> Cc: Mel Gorman <mgorman@suse.de>
->> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
->> ---
->>  Documentation/admin-guide/cg-numa-stat.rst      | 161 ++++++++++++++++++++++++
->>  Documentation/admin-guide/kernel-parameters.txt |   4 +
->>  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
->>  3 files changed, 174 insertions(+)
->>  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
-> 
-> Thanks for adding documentation for your new feature!  When you add a new
-> RST file, though, you should also add it to index.rst so that it becomes a
-> part of the docs build.
-
-Thanks for pointing out :-) will fix this in next version.
-
-> 
-> A couple of nits below...
-> 
->> diff --git a/Documentation/admin-guide/cg-numa-stat.rst b/Documentation/admin-guide/cg-numa-stat.rst
->> new file mode 100644
->> index 000000000000..87b716c51e16
->> --- /dev/null
-[snip]
->> +For example the 'cpu.numa_stat' show:
->> +  locality 39541 60962 36842 72519 118605 721778 946553
->> +  exectime 1220127 1458684
-> 
-> You almost certainly want that rendered as a literal block, so say
-> "show::".  There are other places where you'll want to do that as well. 
-
-I see, will fix such cases.
-
-> 
->> +The locality is sectioned into 7 regions, closely as:
->> +  0-13% 14-27% 28-42% 43-56% 57-71% 72-85% 86-100%
->> +
->> +And exectime is sectioned into 2 nodes, 0 and 1 in this case.
->> +
->> +Thus we know the workload of this group and it's descendants have totally
->> +executed 1220127ms on node_0 and 1458684ms on node_1, tasks with locality
->> +around 0~13% executed for 39541 ms, and tasks with locality around 87~100%
->> +executed for 946553 ms, which imply most of the memory access are local.
->> +
->> +Monitoring
->> +-----------------
-> 
-> A slightly long underline :)
-
-Aha, will fix this too.
-
-Regards,
-Michael Wang
-
-> 
-> I'll stop here; thanks again for adding documentation.
-> 
-> jon
-> 
+Acked-by: Rob Herring <robh@kernel.org>
