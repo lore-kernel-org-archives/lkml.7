@@ -2,110 +2,218 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FA5C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E80FC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F69206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:56:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Ln3NbCfy"
+	by mail.kernel.org (Postfix) with ESMTP id 50D8820724
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573750601;
+	bh=3oWY04fxi1KO9G9WAcSUTTpcgTOi0Y8RWTVhAJDin5Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=IsBOgyMY2EXFvh0fXnnJld8nMTrlT0TDrFX/jVNxgbOx4JLUZA+N8NUgvXDshi/iU
+	 UeWGheidAq0IHQeIGpYRbMYyzAX2RBl0jPVQeJCU3Q4cF4/3bQgIFsUlHd/XBPqYfi
+	 bsBA/Wvc+MMP2+xa4FalQcdVw3kYf9fxbDDHxPBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKNQ4b (ORCPT
+        id S1727064AbfKNQ4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:56:31 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39289 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfKNQ4b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:56:31 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 15so5579074qkh.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:56:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LEt7mE3NlmcSAYBrfWxXnm5oc1z08XQBzX7blFZW3YM=;
-        b=Ln3NbCfyyphUGctMBJPN1Evy417y1ng2dQdPseF+6NAmTNHhXfiLYSSYq8f06fkIpr
-         MbyAqVa5yVDn1Cu9ukeg2CoNrPRQP9jzws0w8malWAqGe345/FP/lZpuk7iQUDYHchJY
-         obluI9BCLAoJA5ics3DqOTe07uO7+JAxpLKiwmxZwLycwfNbH3AmvCw9ZBvyfjRX8OJX
-         7eSKd3mbJRSBEUlhAzO3E2p4I+oa/lF6OFHqXrdXT279oiut1So/+fshDGXK+/P6L8QA
-         wgWNz9l1LcJwow1YGMIYM9kqKI7o6rRlJ1nCUUiNWmTAYyKkfMdBCBxNfKJoLGQ4ZEKZ
-         TgZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LEt7mE3NlmcSAYBrfWxXnm5oc1z08XQBzX7blFZW3YM=;
-        b=ukLCXdR5r7TCtpGWx8XBqBNuNehgXwJ7s6shx9WCGd1WWTQLrnL/rnY1VsY7q/uVsf
-         TEs70YSQCb8t9M7ahqDrkVIrZeokyP7Z8En+uvIoXGgkDSisHbFPQS9U1Mc57vWDcDUO
-         4+3C9xAE2oJlxHhmN0pXS7Vm65kzBNVSfLmARgXyULUlUF7d9+kdDCwpEgUWld6FBuA0
-         v1Z5FjQ+I6C85eovwD42vseE+Q+xtfnPHrJFRm/O6yS6U2ytpFEAqNy4MNFRh1Fo1hyw
-         te0CzqyUVHgGJdpIHyAWBXB+myEIjcUP0qQPqr6jZEaYF0CXt6vRnj44mMgTLuofUYUU
-         d5sQ==
-X-Gm-Message-State: APjAAAVKJv/l56+GySF4uAF64qd6f9yTSSjeHyjgweQs9f58np+GgFiX
-        yW51KV4/mZmnAJdofDPzv/ot9ZM1wGo=
-X-Google-Smtp-Source: APXvYqxQE8WRBdBn+hiiaggtDJLmt7PKFZoGbqsJ3pDo6paBnbA6yB0zHjIFvPCFefq7Mjd0Dfp+ag==
-X-Received: by 2002:a37:6189:: with SMTP id v131mr7847602qkb.489.1573750590124;
-        Thu, 14 Nov 2019 08:56:30 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id 27sm3554067qtu.71.2019.11.14.08.56.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 08:56:29 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iVIQ1-00044H-Av; Thu, 14 Nov 2019 12:56:29 -0400
-Date:   Thu, 14 Nov 2019 12:56:29 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>
-Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
-Message-ID: <20191114165629.GC26068@ziepe.ca>
-References: <20191111233418.17676-1-jsnitsel@redhat.com>
- <20191112200328.GA11213@linux.intel.com>
- <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
- <20191112202623.GB5584@ziepe.ca>
- <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
- <20191114165357.GA11107@linux.intel.com>
+        Thu, 14 Nov 2019 11:56:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726214AbfKNQ4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:56:40 -0500
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAA14206D3;
+        Thu, 14 Nov 2019 16:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573750598;
+        bh=3oWY04fxi1KO9G9WAcSUTTpcgTOi0Y8RWTVhAJDin5Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mVMh+DwvftxCz1udb5Ei9W6SiIdOXk6udJ8xl0ltip+g3h9iC2VnIHD2nytKhIkQB
+         Xd6w/5k9Sl+YuHErgLGUzukrhy6Om/6uD1jHhBCTMOvDgr2xvnfhLibMTtmtze6BEy
+         ghtkhL2s00/MK94bkLI4gNGdo/rD5+qdNj/hwLtU=
+Date:   Thu, 14 Nov 2019 10:56:37 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Message-ID: <20191114165637.GA210407@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191114165357.GA11107@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <PS2P216MB075563AA6AD242AA666EDC6A80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 06:55:06PM +0200, Jarkko Sakkinen wrote:
-> > Would it function with the timeout values set at the beginning of
-> > tpm_tis_core_init (max values)?
+On Wed, Nov 13, 2019 at 03:25:28PM +0000, Nicholas Johnson wrote:
+> Currently, the kernel can sometimes assign the MMIO_PREF window
+> additional size into the MMIO window, resulting in extra MMIO additional
+> size, despite the MMIO_PREF additional size being assigned successfully
+> into the MMIO_PREF window.
 > 
-> tpm_get_timeouts() should be replaced with:
+> This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
+> fails. In the next pass, because MMIO_PREF is already assigned, the
+> attempt to assign MMIO_PREF returns an error code instead of success
+> (nothing more to do, already allocated). Hence, the size which is
+> actually allocated, but thought to have failed, is placed in the MMIO
+> window.
 > 
-> if (tpm_chip_start()) {
-> 	dev_err(dev, "Could not get TPM timeouts and durations\n");
-> 	rc = -ENODEV;
-> 	goto out_err;
-> }
+> Example of problem (more context can be found in the bug report URL):
 > 
-> tpm_stop_chip(chip);
+> Mainline kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
 > 
-> tpm_get_timeouts() is called by tpm_auto_startup(). Also the function
-> should be moved to tpm_chip.c and converted to a static function so
-> that it won't be called from random cal sites like above.
+> Patched kernel:
+> pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
+> pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
+> 
+> This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
+> with the same configuration, with a Ubuntu mainline kernel and a kernel
+> patched with this patch.
+> 
+> The bug results in the MMIO_PREF being added to the MMIO window, which
+> means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
+> the MMIO window will likely fail to be assigned altogether due to lack
+> of 32-bit address space.
+> 
+> Change find_free_bus_resource() to do the following:
+> - Return first unassigned resource of the correct type.
+> - If none of the above, return first assigned resource of the correct type.
+> - If none of the above, return NULL.
+> 
+> Returning an assigned resource of the correct type allows the caller to
+> distinguish between already assigned and no resource of the correct type.
+> 
+> Rename find_free_bus_resource to find_bus_resource_of_type().
+> 
+> Add checks in pbus_size_io() and pbus_size_mem() to return success if
+> resource returned from find_free_bus_resource() is already allocated.
+> 
+> This avoids pbus_size_io() and pbus_size_mem() returning error code to
+> __pci_bus_size_bridges() when a resource has been successfully assigned
+> in a previous pass. This fixes the existing behaviour where space for a
+> resource could be reserved multiple times in different parent bridge
+> windows.
+> 
+> Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
+> 
+> Reported-by: Kit Chow <kchow@gigaio.com>
+> Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Careful, the design here was to allow a driver to do only
-get_timeouts, then additional setup work, then do auto_startup()
+Applied with reviewed-by from Mika and Logan to pci/resource for v5.5,
+thanks!
 
-Forcing a driver to do auto_startup too early may not be good.
-
-Jason
+> ---
+>  drivers/pci/setup-bus.c | 38 +++++++++++++++++++++++++++-----------
+>  1 file changed, 27 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 6b64bf909..f382f449b 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -752,24 +752,32 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+>  }
+>  
+>  /*
+> - * Helper function for sizing routines: find first available bus resource
+> - * of a given type.  Note: we intentionally skip the bus resources which
+> - * have already been assigned (that is, have non-NULL parent resource).
+> + * Helper function for sizing routines.
+> + * Assigned resources have non-NULL parent resource.
+> + *
+> + * Return first unassigned resource of the correct type.
+> + * If none of the above, return first assigned resource of the correct type.
+> + * If none of the above, return NULL.
+> + *
+> + * Returning an assigned resource of the correct type allows the caller to
+> + * distinguish between already assigned and no resource of the correct type.
+>   */
+> -static struct resource *find_free_bus_resource(struct pci_bus *bus,
+> -					       unsigned long type_mask,
+> -					       unsigned long type)
+> +static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
+> +						  unsigned long type_mask,
+> +						  unsigned long type)
+>  {
+> +	struct resource *r, *r_assigned = NULL;
+>  	int i;
+> -	struct resource *r;
+>  
+>  	pci_bus_for_each_resource(bus, r, i) {
+>  		if (r == &ioport_resource || r == &iomem_resource)
+>  			continue;
+>  		if (r && (r->flags & type_mask) == type && !r->parent)
+>  			return r;
+> +		if (r && (r->flags & type_mask) == type && !r_assigned)
+> +			r_assigned = r;
+>  	}
+> -	return NULL;
+> +	return r_assigned;
+>  }
+>  
+>  static resource_size_t calculate_iosize(resource_size_t size,
+> @@ -866,8 +874,8 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+>  			 struct list_head *realloc_head)
+>  {
+>  	struct pci_dev *dev;
+> -	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
+> -							IORESOURCE_IO);
+> +	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
+> +								IORESOURCE_IO);
+>  	resource_size_t size = 0, size0 = 0, size1 = 0;
+>  	resource_size_t children_add_size = 0;
+>  	resource_size_t min_align, align;
+> @@ -875,6 +883,10 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+>  	if (!b_res)
+>  		return;
+>  
+> +	/* If resource is already assigned, nothing more to do. */
+> +	if (b_res->parent)
+> +		return;
+> +
+>  	min_align = window_alignment(bus, IORESOURCE_IO);
+>  	list_for_each_entry(dev, &bus->devices, bus_list) {
+>  		int i;
+> @@ -978,7 +990,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  	resource_size_t min_align, align, size, size0, size1;
+>  	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
+>  	int order, max_order;
+> -	struct resource *b_res = find_free_bus_resource(bus,
+> +	struct resource *b_res = find_bus_resource_of_type(bus,
+>  					mask | IORESOURCE_PREFETCH, type);
+>  	resource_size_t children_add_size = 0;
+>  	resource_size_t children_add_align = 0;
+> @@ -987,6 +999,10 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  	if (!b_res)
+>  		return -ENOSPC;
+>  
+> +	/* If resource is already assigned, nothing more to do. */
+> +	if (b_res->parent)
+> +		return 0;
+> +
+>  	memset(aligns, 0, sizeof(aligns));
+>  	max_order = 0;
+>  	size = 0;
+> -- 
+> 2.24.0
+> 
