@@ -2,190 +2,106 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B460C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E77C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18592206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FF3206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iotEtJ/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfKNSoS (ORCPT
+        id S1726992AbfKNSpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:44:18 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35604 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725976AbfKNSoR (ORCPT
+        Thu, 14 Nov 2019 13:45:07 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:40118 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfKNSpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:44:17 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEIhiW5041171;
-        Thu, 14 Nov 2019 13:44:05 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w9bhcaasm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Nov 2019 13:44:05 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAEIejrd014729;
-        Thu, 14 Nov 2019 18:44:08 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01wdc.us.ibm.com with ESMTP id 2w5n373v2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Nov 2019 18:44:08 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEIi2jc40173880
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 18:44:03 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF4C6BE05A;
-        Thu, 14 Nov 2019 18:44:02 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87F83BE051;
-        Thu, 14 Nov 2019 18:44:01 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.137])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Nov 2019 18:44:01 +0000 (GMT)
-Message-ID: <c792fdc629d87f452d4348d33ab179df01d42017.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/4] powerpc/kvm/book3s: Fixes possible 'use after
- release' of kvm
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Date:   Thu, 14 Nov 2019 15:43:57 -0300
-In-Reply-To: <87mud13d4r.fsf@mpe.ellerman.id.au>
-References: <20191107170258.36379-1-leonardo@linux.ibm.com>
-         <20191107170258.36379-2-leonardo@linux.ibm.com>
-         <87mud13d4r.fsf@mpe.ellerman.id.au>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-zmSym6hLOrd0Lb87qEYc"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Thu, 14 Nov 2019 13:45:07 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 6BE9820110C5;
+        Thu, 14 Nov 2019 10:45:06 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6BE9820110C5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573757106;
+        bh=nT4IO+CWu2bRiTtDpcO+b4y7oYNV0E1iPqumup/LrHc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iotEtJ/XIqAF3q7j3QPuh7LCcFit74EAEzsq08vINI1+90+Mjghnff2hxY+MSQ+O3
+         VttqkrTk6ez8B+0isSwd+yavPOWWYM/yTF7cWY7aH9h3gexKIV7t2RPHh0qMI2Wtgb
+         8f+nAKiP19QeLlqvJS9fhCwtFAQq8broiSkOwIOg=
+Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
+To:     Patrick Callaghan <patrickc@linux.vnet.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Patrick Callaghan <patrickc@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+References: <20191111192348.30535-1-patrickc@linux.ibm.com>
+ <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
+ <1573578841.17949.48.camel@linux.ibm.com>
+ <c6a57c24-2f30-f252-0f42-8d748ede65af@linux.microsoft.com>
+ <1573582344.17949.67.camel@linux.ibm.com>
+ <abdf66fb39d4c8ee08e0b52c34fb81b93bd33006.camel@linux.vnet.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <4e1c0c6b-a5e1-a95a-8a0b-c5a7f0a253cf@linux.microsoft.com>
+Date:   Thu, 14 Nov 2019 10:45:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140157
+In-Reply-To: <abdf66fb39d4c8ee08e0b52c34fb81b93bd33006.camel@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/14/19 5:55 AM, Patrick Callaghan wrote:
 
---=-zmSym6hLOrd0Lb87qEYc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Patrick,
 
-On Tue, 2019-11-12 at 15:57 +1100, Michael Ellerman wrote:
-> Hi Leonardo,
+> Hello Laks,
+> You suggested that the if statement of the patch change to the
+> following:
+> 
+> if ((rbuf_len == 0) || (offset + rbuf_len >= i_size)) {
+> 
+> Unless the file size changed between the time that i_size was set in
+> ima_calc_file_hash_tfm() and an i_size_read() call was subsequently
+> issued in a function downstream of the integrity_kernel_read() call,
+> the rbuf_len returned on the integrity_kernel_read() call will not be
+> more than i_size - offset. I do not think that it is possible for the
+> file size to change during this window but nonetheless, if it can, this
+> would be a different problem and I would not want to include this in my
+> patch. That said, I do appreciate you taking time to review this patch.
 
-Hello Micheal, thanks for the feedback!
+You are right - unless the file size changes between the calls this 
+problem would not occur. I agree - that issue, even if it can occur, 
+should be addressed separately.
 
->=20
-> Leonardo Bras <leonardo@linux.ibm.com> writes:
-> > Fixes a possible 'use after free' of kvm variable in
-> > kvm_vm_ioctl_create_spapr_tce, where it does a mutex_unlock(&kvm-
-> > >lock)
-> > after a kvm_put_kvm(kvm).
->=20
-> There is no potential for an actual use after free here AFAICS.
->=20
-> > diff --git a/arch/powerpc/kvm/book3s_64_vio.c
-> > b/arch/powerpc/kvm/book3s_64_vio.c
-> > index 5834db0a54c6..a402ead833b6 100644
-> > --- a/arch/powerpc/kvm/book3s_64_vio.c
-> > +++ b/arch/powerpc/kvm/book3s_64_vio.c
->=20
-> The preceeding context is:
->=20
-> 	mutex_lock(&kvm->lock);
->=20
-> 	/* Check this LIOBN hasn't been previously allocated */
-> 	ret =3D 0;
-> 	list_for_each_entry(siter, &kvm->arch.spapr_tce_tables, list) {
-> 		if (siter->liobn =3D=3D args->liobn) {
-> 			ret =3D -EBUSY;
-> 			break;
-> 		}
-> 	}
->=20
-> 	kvm_get_kvm(kvm);
-> 	if (!ret)
-> 		ret =3D anon_inode_getfd("kvm-spapr-tce",
-> &kvm_spapr_tce_fops,
-> 				       stt, O_RDWR | O_CLOEXEC);
->=20
-> > @@ -316,14 +316,13 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm
-> > *kvm,
-> > =20
-> >  	if (ret >=3D 0)
-> >  		list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
-> > -	else
-> > -		kvm_put_kvm(kvm);
-> > =20
-> >  	mutex_unlock(&kvm->lock);
-> > =20
-> >  	if (ret >=3D 0)
-> >  		return ret;
-> > =20
-> > +	kvm_put_kvm(kvm);
-> >  	kfree(stt);
-> >   fail_acct:
-> >  	account_locked_vm(current->mm, kvmppc_stt_pages(npages),
-> > false);
->=20
-> If the kvm_put_kvm() you've moved actually caused the last reference
-> to
-> be dropped that would mean that our caller had passed us a kvm struct
-> without holding a reference to it, and that would be a bug in our
-> caller.
->=20
+Another one (again - am not saying this needs to be addressed in this 
+patch, but just wanted to point out)
 
-So, there is no chance that between this function's kvm_get_kvm() and=20
-kvm_put_kvm(), another thread can decrease this reference counter?
+	rbuf = kzalloc(PAGE_SIZE, GFP_KERNEL);
+	...
+	rbuf_len = integrity_kernel_read(file, offset, rbuf, PAGE_SIZE);
+	...
+	rc = crypto_shash_update(shash, rbuf, rbuf_len);
 
-> Or put another way, it would mean the mutex_lock() above could
-> already
-> be operating on a freed kvm struct.
->=20
-> The kvm_get_kvm() prior to the anon_inode_getfd() is to account for
-> the
-> reference that's held by the `stt` struct, and dropped in
-> kvm_spapr_tce_release().
->=20
-> So although this patch isn't wrong, the explanation is not accurate.
->=20
-> cheers
+rbuf is of size PAGE_SIZE, but rbuf_len, returned by 
+integrity_kernel_read() is passed as buffer size to 
+crypto_shash_update() without any validation (rbuf_len <= PAGE_SIZE)
 
-Kind regards
+It is assumed here that integrity_kernel_read() would not return a 
+length greater than rbuf size and hence crypto_shash_update() would 
+never access beyond the given buffer.
 
---=-zmSym6hLOrd0Lb87qEYc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+thanks,
+  -lakshmi
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3NoG0ACgkQlQYWtz9S
-ttT2MBAAw0s38wOkqRjRWeoZ0TV3qd7Gkqzy4gGKHiDNL82fHh6O6X4JSLTYP11u
-co3J9O1jORkIG7AAHQh68iiGJZY6MB5ZUJkUsn3XVH2gMWcQ/547HpcgCCMkrL8k
-keCqL7CKz5B7WxKK+8daUvMaTPAY5AaSEOHIHG/In4vEeHuUWJEgBN60tGxvhc1m
-7VIEBySrLqKeAgs70rThjBVaqg+66SbLZb7ToVIcoRu3Jc/3O4HHG+f6SnD3tqDM
-E3BrLge33ZTBt32TdKyogJ6RMUC+SXQXbXfUeNwjXuQIkH3D/zekc31o1GjcenCU
-Sv0z3Bmcgz2av0FxrA36K7Ch8Mgcnt7Yk5oHwF76kzOMSYyZMw9mJgTwrOHUsxnQ
-pH73v2e9ol1vDD+bdqkGBpusQae25A3/CDLZPXKvRdSqyaaI3yhwNMJ4deh8Glix
-bMpjCaUO+Q1o+VuhujYvmB7+tDYSEjWhOgo7m4yuffBu/MDtbaMkbkuqm66mrqrf
-3582+Kxt8nEWePhyVBKuJTC+IBqqZEIFO7VCR/XPnac7dYhIOUug4hj2QuYuMStF
-Bgsqa9pPIECX07kZR4LUVaEfV+uKadq5DcbdAhfR6NlFBgrJn+XBiuCSIalD7G3D
-bC6v7rRE4tjEoO12FYm165cYeD8I30YqLqkR7/z5OmbB9KkSAj8=
-=alk4
------END PGP SIGNATURE-----
-
---=-zmSym6hLOrd0Lb87qEYc--
 
