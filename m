@@ -4,94 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30522C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6061C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078AA206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C876206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hIJ4WdJ5"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nzh5H/Rr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKNPyQ (ORCPT
+        id S1726997AbfKNPy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:54:16 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43163 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfKNPyP (ORCPT
+        Thu, 14 Nov 2019 10:54:28 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44765 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfKNPy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:54:15 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z23so5357410qkj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:54:15 -0800 (PST)
+        Thu, 14 Nov 2019 10:54:28 -0500
+Received: by mail-qt1-f194.google.com with SMTP id o11so7249028qtr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:54:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=myBRwdIDZM+Djx89Bjwq7BC5pRJnKbB6UM2UOeE1ngM=;
-        b=hIJ4WdJ5jLRRBKUeeeQYewM0jfBPnGo2ACjOPRADok7azxxt/mq+Xu0ZcrHBEURYx5
-         ahJpC1hjBbHDu4genHAKTCpFr4ZdFDdWB30DzFHfUtjBxk8Pak1MA1+2zYI+ZIHo59si
-         uYQd2/mjzJUvpYm46EsyViPmpkRYxll9vWL0o3qz0YZDUto0u42GLl3Dw9C+TvtWK9gP
-         HoidKjHn5rbZzxrd4Pha7PAhjBgSgqP/eP0UzbNS30JBp9uCcfAN6tnxQAbF6LlcaNKh
-         2xnq6RLNunTsrQDvF3FRvsDRN6ho8dqVUz8UntG4rqZsJn4a6wU5nMIYgm7lN+xYDtbW
-         uCOA==
+        bh=hHBp9Rngr0/24i035bFFf44VR2vxrTAay1OWpjjtXY0=;
+        b=nzh5H/Rr4bG7FuXZ1Xz4g+iI0YNPS96ATAeGOknO8oj5zdPPXlt4R8PgYwVWRp6K0Y
+         E1f943NVvvgL/oqVEfEQ/3uTi3qSOC6bnwnboZSY0I4OrztM+aSsFA8Tu4Q16iBh+xWJ
+         TVJQbp3DGcacD7t9jV+2MggnZ7SxZI/aVoV02RgmV0IoJB8EcokprRnlOmcmyq3N6JCn
+         /PwgdQpZViou3rjvQx+B1UHrh6skYu2olQUPJYobLEKtZEWM6wGmYHHLz81QqA8T65lc
+         qWPmKSIx7CHXE5CzEHwGLUGl/Imp3zgExvdYC9UarSsE+G4QhgeAFueRQ7RELmL9y6LF
+         hk/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=myBRwdIDZM+Djx89Bjwq7BC5pRJnKbB6UM2UOeE1ngM=;
-        b=pwj+qrY+i9Yz5jQR0tpLSL044YgMvUUrJQubSXlZFJAH+w33ui+lOCzcT54OVgZyFU
-         dQk9yEqim8rkuu8rIwB2YL/1aBNS+YdY/utfozOsGRnOjNGYbOuBR3ObFAodBNDd+4Eq
-         pSsdWS3rsBszVosKVE+QwYnWeT/V7+4rg9YdLeQHciwE7yHfQ7JaO97VyX0CSYCpRhQS
-         VkAqe3QPpxqIxt98p/aGOostn/nNAp22QdOxWVXRvMXU0hKf0qncD2gKm345rBv3LymU
-         GnTbbu929G7L68+c1QZ/uZ3LgM7baFMxTjCad6bsiszqVEEu4DjFrqRS9pdYpcSrenjg
-         V1Ng==
-X-Gm-Message-State: APjAAAWPiQK/ZGnZ8lB4e1RwoEBy1dAjzvWLLV2Y0k9QFOZvVodFHJy3
-        LqGtyhdZXgr7qnnuFNl7s1LSzg==
-X-Google-Smtp-Source: APXvYqwBG7oO5AQ60VNus1jTs0EnXEv8zPuEped9XQRtFUTUc+wX8i+pnFxeVhu9jneS34v/MggT9A==
-X-Received: by 2002:a37:a104:: with SMTP id k4mr8108780qke.412.1573746854820;
-        Thu, 14 Nov 2019 07:54:14 -0800 (PST)
+        bh=hHBp9Rngr0/24i035bFFf44VR2vxrTAay1OWpjjtXY0=;
+        b=YXbPy7eQjyHOlgruoiURgo2XiaU3llXzv3s9Ntt7yID86U43x/R66QHOk8+xIwEVrQ
+         mSaCrQjGvB/cDLLRgsfZqPBxM4Q7vKWLSWYQTI0WeQD2dmNshqZSK/4eEnpeoJdgFwFe
+         MhIb0zSfVPdGNPrgTYg/1TQ/dYCM5hTE4/UJSZcoxpD6JLGaACGd7uYs/fflxMb71a3D
+         x63nla+PKuRZ7tFdWyfmvyIt9u85GMlCnINQnbB90VN1PKF+b4ucnBrCjbft7BUSq6hv
+         JQunZd6zWy1AzxtZjlg/wviO7vQsKYVYrwMN7ffguKrMzA8C4HaOWVd61wzDgAa4fLoU
+         J+0w==
+X-Gm-Message-State: APjAAAXykuK8AQqwAzHJLSG3gxKpuMKLRBm+s5Cl818hViW+3I6B+mST
+        UByAp9ClJmnjxcpx42TpLYPFuw==
+X-Google-Smtp-Source: APXvYqwpiXaK+rzDkvrMcpYhzU2ua+Ir1CVwJPJkiVyvP/2Ol1ns8TMFrdkZS8ztCtW8brsIYIbrQg==
+X-Received: by 2002:ac8:2441:: with SMTP id d1mr8981400qtd.386.1573746867195;
+        Thu, 14 Nov 2019 07:54:27 -0800 (PST)
 Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id t26sm3468891qta.75.2019.11.14.07.54.14
+        by smtp.gmail.com with ESMTPSA id s42sm3253153qtk.60.2019.11.14.07.54.26
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 07:54:14 -0800 (PST)
+        Thu, 14 Nov 2019 07:54:26 -0800 (PST)
 Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
         (envelope-from <jgg@ziepe.ca>)
-        id 1iVHRl-0007bZ-SW; Thu, 14 Nov 2019 11:54:13 -0400
-Date:   Thu, 14 Nov 2019 11:54:13 -0400
+        id 1iVHRy-0007br-8c; Thu, 14 Nov 2019 11:54:26 -0400
+Date:   Thu, 14 Nov 2019 11:54:26 -0400
 From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] IB/qib: Validate ->show()/store() callbacks before
- calling them
-Message-ID: <20191114155413.GA29207@ziepe.ca>
-References: <d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] infiniband: ocrdma: fix spelling mistake in variable name
+Message-ID: <20191114155426.GB29207@ziepe.ca>
+References: <20191107224855.417647-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org>
+In-Reply-To: <20191107224855.417647-1-colin.king@canonical.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 08:50:25AM +0530, Viresh Kumar wrote:
-> The permissions of the read-only or write-only sysfs files can be
-> changed (as root) and the user can then try to read a write-only file or
-> write to a read-only file which will lead to kernel crash here.
+On Thu, Nov 07, 2019 at 10:48:55PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Protect against that by always validating the show/store callbacks.
+> There is a spelling mistake in the variable nak_invalid_requst_errors,
+> rename it to nak_invalid_request_errors.
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->  drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/infiniband/hw/ocrdma/ocrdma_sli.h   | 2 +-
+>  drivers/infiniband/hw/ocrdma/ocrdma_stats.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
 Applied to for-next, thanks
 
