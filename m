@@ -2,140 +2,68 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F552C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485EFC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE92B206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:46:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mOd1jL63"
+	by mail.kernel.org (Postfix) with ESMTP id 25A162070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKNRqx (ORCPT
+        id S1727056AbfKNRrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:46:53 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:25658 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNRqx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:46:53 -0500
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xAEHkiSr031689;
-        Fri, 15 Nov 2019 02:46:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xAEHkiSr031689
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573753605;
-        bh=RnTRkKRmwGrZIBYmr069B+wqrpCe/TPtwzUT5A13c6o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mOd1jL63I1IWjvuwOJTk5mJ98bAC/VCGnSMZ9vQeKZbVGLs8m+DklEYoo7OXvW/0T
-         gMkYeVfEw+aywiRTrgnWG9+ZW37Ic3dNrrDv+15fYWfejjeTeaHCpCdF1xc/sTUQGm
-         Ak9F7vhf4dzIt/yEJCWt8RUWffKMJeyXPaVuymCQGYPuj6JJpNty59yk2GDhOB2TOv
-         LPTZ1mFXXEB32wTB18b9KgP/C1C35ljt3AbhHpn3J6ODxTkwojCsk1uzEz6jSjxyOO
-         cMYAq3PQF2duKLgVwlAdjoZVwQ8iBGNYGJgRI6yllbZ4DxatmdK2C4PntvuMRUgq+e
-         x7Fff6887qXPQ==
-X-Nifty-SrcIP: [209.85.221.170]
-Received: by mail-vk1-f170.google.com with SMTP id k24so1686098vko.7;
-        Thu, 14 Nov 2019 09:46:45 -0800 (PST)
-X-Gm-Message-State: APjAAAW2bEOnal2h2hF4vltCXy5GvupaacE/C/GAB7hH7IiMGP0wEVc6
-        0yctYfzz4FxxMvAfbj3M8H6UgzfDd5JKViaf6fI=
-X-Google-Smtp-Source: APXvYqxCgx2Cksxrrex4Puc8fMIMYoKNsrErgHs9rWSi3zoIQdoaUCWi/iM6SBNnJoOGhnNsL9yX+m4vTWvedDQgaM4=
-X-Received: by 2002:a1f:7387:: with SMTP id o129mr5885230vkc.73.1573753604038;
- Thu, 14 Nov 2019 09:46:44 -0800 (PST)
+        Thu, 14 Nov 2019 12:47:10 -0500
+Received: from muru.com ([72.249.23.125]:42292 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbfKNRrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:47:10 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 13CEC80E7;
+        Thu, 14 Nov 2019 17:47:44 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 09:47:05 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Caleb Robey <c-robey@ti.com>
+Cc:     linux-omap@vger.kernel.org, Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tom Rini <trini@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ARM: dts: am5729: beaglebone-ai: dra7 reqs in dts
+Message-ID: <20191114174705.GV5610@atomide.com>
+References: <20191114170933.12623-1-c-robey@ti.com>
+ <20191114170933.12623-2-c-robey@ti.com>
 MIME-Version: 1.0
-References: <20191114174226.7201-1-yamada.masahiro@socionext.com> <20191114174226.7201-2-yamada.masahiro@socionext.com>
-In-Reply-To: <20191114174226.7201-2-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 15 Nov 2019 02:46:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATGjv7_bmhGGpOupFpRRvvaGetvaTszE09MBKz3Ob06fQ@mail.gmail.com>
-Message-ID: <CAK7LNATGjv7_bmhGGpOupFpRRvvaGetvaTszE09MBKz3Ob06fQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] modpost: refactor namespace_from_kstrtabns() to not
- hard-code section name
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Maennich <maennich@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114170933.12623-2-c-robey@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+CC: Matthias, who might be interested)
+* Caleb Robey <c-robey@ti.com> [191114 17:11]:
 
+Hmm I think this one is still missing
 
-On Fri, Nov 15, 2019 at 2:42 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Currently, namespace_from_kstrtabns() relies on the fact that
-> namespace strings are recorded in the __ksymtab_strings section.
-> Actually, it is coded in include/linux/export.h, but modpost does
-> not need to hard-code the section name.
->
-> Elf_Sym::st_shndx holds the section number of the relevant section.
-> Using it is a more portable way to find the namespace string.
->
-> sym_get_value() takes care of it, so namespace_from_kstrtabns() can
-> simply wrap it. Delete the unneeded info->ksymtab_strings .
->
-> While I was here, I added more 'const' qualifiers to pointers.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  scripts/mod/modpost.c | 10 +++-------
->  scripts/mod/modpost.h |  1 -
->  2 files changed, 3 insertions(+), 8 deletions(-)
->
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index cd885573daaf..d9418c58a8c0 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -356,10 +356,10 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
->                 return export_unknown;
->  }
->
-> -static const char *namespace_from_kstrtabns(struct elf_info *info,
-> -                                           Elf_Sym *kstrtabns)
-> +static const char *namespace_from_kstrtabns(const struct elf_info *info,
-> +                                           const Elf_Sym *sym)
->  {
-> -       char *value = info->ksymtab_strings + kstrtabns->st_value;
-> +       const char *value = sym_get_data(info, sym);
->         return value[0] ? value : NULL;
->  }
->
-> @@ -601,10 +601,6 @@ static int parse_elf(struct elf_info *info, const char *filename)
->                         info->export_unused_gpl_sec = i;
->                 else if (strcmp(secname, "__ksymtab_gpl_future") == 0)
->                         info->export_gpl_future_sec = i;
-> -               else if (strcmp(secname, "__ksymtab_strings") == 0)
-> -                       info->ksymtab_strings = (void *)hdr +
-> -                                               sechdrs[i].sh_offset -
-> -                                               sechdrs[i].sh_addr;
->
->                 if (sechdrs[i].sh_type == SHT_SYMTAB) {
->                         unsigned int sh_link_idx;
-> diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-> index fe6652535e4b..64a82d2d85f6 100644
-> --- a/scripts/mod/modpost.h
-> +++ b/scripts/mod/modpost.h
-> @@ -143,7 +143,6 @@ struct elf_info {
->         Elf_Section  export_gpl_sec;
->         Elf_Section  export_unused_gpl_sec;
->         Elf_Section  export_gpl_future_sec;
-> -       char         *ksymtab_strings;
->         char         *strtab;
->         char         *modinfo;
->         unsigned int modinfo_len;
-> --
-> 2.17.1
->
+From: Jason Kridner <jdk@ti.com>
 
+If this too is Jason's patch? This happens if you apply a patch
+manually instead of applying an email with git am.
 
--- 
-Best Regards
-Masahiro Yamada
+You might be able to just change the From: line with
+git commit --amend.
+
+Regards,
+
+Tony
