@@ -2,68 +2,161 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485EFC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40967C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A162070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A4820718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rw6xzVmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfKNRrK (ORCPT
+        id S1727089AbfKNRrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:47:10 -0500
-Received: from muru.com ([72.249.23.125]:42292 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfKNRrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:47:10 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 13CEC80E7;
-        Thu, 14 Nov 2019 17:47:44 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 09:47:05 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Caleb Robey <c-robey@ti.com>
-Cc:     linux-omap@vger.kernel.org, Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tom Rini <trini@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ARM: dts: am5729: beaglebone-ai: dra7 reqs in dts
-Message-ID: <20191114174705.GV5610@atomide.com>
-References: <20191114170933.12623-1-c-robey@ti.com>
- <20191114170933.12623-2-c-robey@ti.com>
+        Thu, 14 Nov 2019 12:47:19 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37792 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfKNRrS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:47:18 -0500
+Received: by mail-ed1-f65.google.com with SMTP id k14so5801601eds.4;
+        Thu, 14 Nov 2019 09:47:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uIo531B/cUq75IiN6qR4DNybSGADhsaWaGA4/dANrUU=;
+        b=rw6xzVmS7zdh8IO41zKmyH1EwS5ub484ZDfPzqMFnsZ8/bNOCwpsqUJT3eapWamnoa
+         hRE3otsinYDkEiNefw82XE+uOulf3MvWrhYEfNyY7RFgYcmWNcyS/yvHKJpQpenMAgLM
+         OD4hNu5S8VQ6WRXzgydzo0hjCt3n4IYDjIc9OYPRlSLy0Q5wGmBEhYZ1KLElSAnxuk4d
+         LWiULGeDyeTj3t8PP+E9iAPFSqc5jjeaUG9F3W0rEzd8rIu5HXHvb6X0nfY0Cz3eSSEj
+         t7aWD0smLhxLrybsj8804sTrjcFhPRFAbZdOCdNXQIwjN0lZiRGqA2mKWsppRsa4E9aE
+         UdAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uIo531B/cUq75IiN6qR4DNybSGADhsaWaGA4/dANrUU=;
+        b=CEGQHxgwxcUm88TPR9QdaeO4ywvm0tPnU2CqdMF6iVjAYj/+/NEiLEUkkZ6wtiXNU+
+         L0JW3dDmFcveydUyedpuyUwhGhGr+27rI2YMHbwnripDyqlJoWkeTqBpQxbyuzg+qWBM
+         /C16Nm+Vr9/SYOKtR9TnEOBD5iYcjaSDZh/HnEDmuw2yHdn5/cTVgXpCyXmlbmExkMDv
+         jnfOYsEtUXJSzDbsf9/wQeHjB+BO6qE+pxx2vcsTyJmZhnHvRolNpVHFzU4n8HvT6c5D
+         c7QuOwolxmE2TS0HcEqbCP1V5YeSd58e/0AqD5JismS+s/Pq+vDp8Ii2z5c6G54RluP2
+         KvkA==
+X-Gm-Message-State: APjAAAUx7hzG9rFIoJzGuZQxfGRv3Hrj/K4+OYfChTqWwIvOA3ol111F
+        ByxNyb2Z5vxxddtMoiCKRMXgF5ayvvom7urm8z4=
+X-Google-Smtp-Source: APXvYqw3CejNmaVz5GldVr/MDvSo09GNjIMxV6cGEH5VCjX8kpYok2NSUnjdMbIQdf5qOmCQs3bB2RJx5SRQqmEzN2w=
+X-Received: by 2002:a17:906:f209:: with SMTP id gt9mr9586553ejb.241.1573753634099;
+ Thu, 14 Nov 2019 09:47:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114170933.12623-2-c-robey@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org> <1573726588-18897-3-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1573726588-18897-3-git-send-email-harigovi@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 14 Nov 2019 09:47:02 -0800
+Message-ID: <CAF6AEGurmTxwhBeWf1Q2U7_jSwmofBq49G5dsZN0qRmAFfvDNQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] drm/msm: add DSI config changes to support DSI version
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Caleb Robey <c-robey@ti.com> [191114 17:11]:
+On Thu, Nov 14, 2019 at 2:16 AM Harigovindan P <harigovi@codeaurora.org> wrote:
+>
+> Add DSI config changes to support DSI version.
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 
-Hmm I think this one is still missing
+Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-From: Jason Kridner <jdk@ti.com>
+For patch 1/2 with the panel driver, probably best to split that out
+into a different patch(set), since panel drivers are merged into
+drm-next via a different tree
 
-If this too is Jason's patch? This happens if you apply a patch
-manually instead of applying an email with git am.
+BR,
+-R
 
-You might be able to just change the From: line with
-git commit --amend.
-
-Regards,
-
-Tony
+> ---
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+>  2 files changed, 22 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> index b7b7c1a..d2c4592 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> @@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
+>         "iface", "bus",
+>  };
+>
+> +static const char * const dsi_sc7180_bus_clk_names[] = {
+> +        "iface", "bus",
+> +};
+> +
+>  static const struct msm_dsi_config sdm845_dsi_cfg = {
+>         .io_offset = DSI_6G_REG_SHIFT,
+>         .reg_cfg = {
+> @@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
+>         .num_dsi = 2,
+>  };
+>
+> +static const struct msm_dsi_config sc7180_dsi_cfg = {
+> +       .io_offset = DSI_6G_REG_SHIFT,
+> +       .reg_cfg = {
+> +               .num = 1,
+> +               .regs = {
+> +                       {"vdda", 21800, 4 },    /* 1.2 V */
+> +               },
+> +       },
+> +       .bus_clk_names = dsi_sc7180_bus_clk_names,
+> +       .num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
+> +       .io_start = { 0xae94000 },
+> +       .num_dsi = 1,
+> +};
+> +
+>  const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
+>         .link_clk_enable = dsi_link_clk_enable_v2,
+>         .link_clk_disable = dsi_link_clk_disable_v2,
+> @@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+>                 &msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+>         {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+>                 &sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> +       {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
+> +               &sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> +
+>  };
+>
+>  const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> index e2b7a7d..9919536 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> @@ -19,6 +19,7 @@
+>  #define MSM_DSI_6G_VER_MINOR_V1_4_1    0x10040001
+>  #define MSM_DSI_6G_VER_MINOR_V2_2_0    0x20000000
+>  #define MSM_DSI_6G_VER_MINOR_V2_2_1    0x20020001
+> +#define MSM_DSI_6G_VER_MINOR_V2_4_1    0x20040001
+>
+>  #define MSM_DSI_V2_VER_MINOR_8064      0x0
+>
+> --
+> 2.7.4
+>
