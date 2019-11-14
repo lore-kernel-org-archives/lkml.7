@@ -2,151 +2,115 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B742C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD06DC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44B4206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A350F206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfKNMBn (ORCPT
+        id S1726409AbfKNMKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:01:43 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50882 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfKNMBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:01:43 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 50BCC23F07ECCC0C5F4B;
-        Thu, 14 Nov 2019 20:01:40 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.224) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
- 20:01:36 +0800
-Subject: Re: [PATCH] jffs2: Fix mounting under new mount API
-To:     Han Xu <xhnjupt@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Richard Weinberger <richard@nod.at>
-CC:     David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        <viro@zeniv.linux.org.uk>, <linux-kernel@vger.kernel.org>
-References: <156950767876.30879.17024491763471689960.stgit@warthog.procyon.org.uk>
- <f34aaf61-955a-7867-ef93-f22d3d8732c3@cogentembedded.com>
- <CA+EcR22=7F7X-9qYXb94dAp6w0_3FoKJPMRhFht+VWgKonoing@mail.gmail.com>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <2758feea-8d6e-c690-5cac-d42213f2024b@huawei.com>
-Date:   Thu, 14 Nov 2019 20:01:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Thu, 14 Nov 2019 07:10:30 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:43553 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfKNMKa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 07:10:30 -0500
+Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M7KG2-1iWLTk3ZqG-007jRg; Thu, 14 Nov 2019 13:10:29 +0100
+Received: by mail-qk1-f169.google.com with SMTP id 205so4750486qkk.1;
+        Thu, 14 Nov 2019 04:10:28 -0800 (PST)
+X-Gm-Message-State: APjAAAWzD3T/H4O6OAmEIVTVzS1KUglGojFWpePLt7wIvxHJB0gXvzF4
+        /ziJ6KBRpJVSVu54DkW2QdmsVbvoBkT4cX53Z6o=
+X-Google-Smtp-Source: APXvYqwH3ImYA6idvrUy4s0YnVGkfNSxydHJRkPK4OjgDVN/gCLA9akkaakLFb4EwY/uC0H7RI8F34p6AfRs3f0kaQA=
+X-Received: by 2002:a37:4f0a:: with SMTP id d10mr7182492qkb.286.1573733427609;
+ Thu, 14 Nov 2019 04:10:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CA+EcR22=7F7X-9qYXb94dAp6w0_3FoKJPMRhFht+VWgKonoing@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.224]
-X-CFilter-Loop: Reflected
+References: <20191114153810.55d937af@canb.auug.org.au>
+In-Reply-To: <20191114153810.55d937af@canb.auug.org.au>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 14 Nov 2019 13:10:10 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a19MuYrrk_TZq5Jz-4AH0U5NYX1=WZZHcdyD+G+Rz8n2A@mail.gmail.com>
+Message-ID: <CAK8P3a19MuYrrk_TZq5Jz-4AH0U5NYX1=WZZHcdyD+G+Rz8n2A@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the y2038 tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:f6q/srZqJ+R4axATfWdpSRS5KTmcTI8IclwszzAvjY8sxX8zOfL
+ mpvhiVkzqcJUL/oZs0wikoxEfKVFoQ5XXRH7z2K8+IxVc9BEgMYOtcoO3X1LbF1s1q/ioqZ
+ Kv8dqNFoWgNK/Io7bv7EQPuWr6rhmdYC/raEqDvBGOPDgU/mQ83HeZCHuJrYAmF55UW8zkr
+ hxxKF9Spy/L80iKxxyGXA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+UifpYRhZek=:7mMsloH2NHEb8vpwx+yugo
+ FetTM4kmTHRGJtejuJO8+2G8My2eNHLlWrekJXMlQAdkr4o3hrWF6xyyS7ikvXJubNXPncmuf
+ nEzYWjbe6qv73KZK9YFo295kvPumFx7X4v82IBv+yi60MaHIDWko+px7SEcWgsFa1EH1ZenQY
+ o6UJxrfLusiz3jLkbeslY2KEqrT2APxKzjqjfPHw+Au37rOkBxhh0JdaaYVYnwNm+tygbz76c
+ 1OZCqXlGrbSfWRhxlievgS1oCJ5Jgmv3jgx5+qXfSf8CKnPVqW+YxfU0qEec7LmcpXulKV3i4
+ aOtqHz3LmMExVylJ51Oupq4BWTUywnYotvkPR6XIH0BuU3k9ZkxbBHZkAKA5cVXyaIwUKNTu1
+ lq2oWgTce6F8ifig3dfXB1aYC2jPZErKc4THexOdCresBk3d+gQ+6w/rFDLgiHXcgc30j3GNf
+ GHWN2PbsM+0jfxxE7wG1j2Enr9iONNOM7WPEsFAmParFwmYwyPqEyrtE7sETXqdkJfwZqxmE5
+ gT7W3ov8mZ+fUM591Dr7/skkvRYsKOASgyCWeJs7excIvE5BJ/BP5Nlbkw53XRqSwYsGZ7oYo
+ zgoP+GKnq7pUuV5UJ+IXmRZiNSbAN00aUt3gtcIad7gCgANVLwsxM6q+z+gTeuTL4kQti9nNX
+ sDX0jcS0O6XXNweF1ryIY+NUs+m/ChFg5EzE7XaStKMqfClZoFftOHiatGSipDXHb+hBdW9ic
+ Cdg1LewXkwA0/90/Gq38v/c0HwgcYAgtENoXjEOsmBQCByrki1nIcT0jyxppnuRtHxx9RT/q+
+ iQGd9GaF+otKOyfDqBChrcGednPcmqk4HW1SubWW1Ixzp0wCU3Wayld+elI3T20fPsNV2rwSo
+ CnponLfLY4FoSWsI0mKg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Nov 14, 2019 at 5:38 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the y2038 tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+>
+> arch/powerpc/kernel/time.c: In function 'update_vsyscall':
+> arch/powerpc/kernel/time.c:960:33: error: 'struct timespec64' has no member named 'sec'
+>   960 |  vdso_data->stamp_xtime_sec = xt.sec;
+>       |                                 ^
+> arch/powerpc/kernel/time.c:961:34: error: 'struct timespec64' has no member named 'nsec'
+>   961 |  vdso_data->stamp_xtime_nsec = xt.nsec;
+>       |                                  ^
+>
+> Caused by commit
+>
+>   009a81339beb ("y2038: vdso: powerpc: avoid timespec references")
+>
+> I have added the following patch for today.
+>
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Thu, 14 Nov 2019 15:28:13 +1100
+> Subject: [PATCH] fix up for "y2038: vdso: powerpc: avoid timespec references"
+>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-On 2019/11/14 4:38, Han Xu wrote:
-> Tested the JFFS2 on 5.4 kernel as the instruction said, still got some
-> errors, any ideas?
-> 
+Folded into my patch, thanks!
 
-> 
-> With the patch,
-> 
-> root@imx8mmevk:~# cat /proc/mtd
-> dev:    size   erasesize  name
-> mtd0: 00400000 00020000 "mtdram test device"
-> mtd1: 04000000 00020000 "5d120000.spi"
-> root@imx8mmevk:~# mtd_debug info /dev/mtd0
-> mtd.type = MTD_RAM
-> mtd.flags = MTD_CAP_RAM
-> mtd.size = 4194304 (4M)
-> mtd.erasesize = 131072 (128K)
-> mtd.writesize = 1
-> mtd.oobsize = 0
-> regions = 0
-> 
-> root@imx8mmevk:~# flash_erase /dev/mtd0 0 0
-> Erasing 128 Kibyte @ 3e0000 -- 100 % complete
-> root@imx8mmevk:~# mount -t jffs2 /dev/mtdblock0 test_dir/
-> root@imx8mmevk:~# mount
-> /dev/mtdblock0 on /home/root/test_dir type jffs2 (rw,relatime)
-> 
-> BUT, it's not writable.
+> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+> index ee9ba3a48c76..2d13cea13954 100644
+> --- a/arch/powerpc/kernel/time.c
+> +++ b/arch/powerpc/kernel/time.c
+> @@ -957,8 +957,8 @@ void update_vsyscall(struct timekeeper *tk)
+>         vdso_data->tb_to_xs = new_tb_to_xs;
+>         vdso_data->wtom_clock_sec = tk->wall_to_monotonic.tv_sec;
+>         vdso_data->wtom_clock_nsec = tk->wall_to_monotonic.tv_nsec;
+> -       vdso_data->stamp_xtime_sec = xt.sec;
+> -       vdso_data->stamp_xtime_nsec = xt.nsec;
+> +       vdso_data->stamp_xtime_sec = xt.tv_sec;
+> +       vdso_data->stamp_xtime_nsec = xt.tv_nsec;
+>         vdso_data->stamp_sec_fraction = frac_sec;
+>         smp_wmb();
+>         ++(vdso_data->tb_update_count);
 
-You should revert the following commit to make it work:
+I was sure I had at least build-tested this, but looking at 'git reflog -p',
+I only see the same broken version that never worked, so I clearly did not.
 
-commit f2538f999345405f7d2e1194c0c8efa4e11f7b3a
-Author: Jia-Ju Bai <baijiaju1990@gmail.com>
-Date:   Wed Jul 24 10:46:58 2019 +0800
-
-    jffs2: Fix possible null-pointer dereferences in jffs2_add_frag_to_fragtree()
-
-The revert needs to get into v5.4. Maybe Richard has forget about it ?
-
-Regards,
-Tao
-
-> 
-> root@imx8mmevk:~# cp test_file test_dir/
-> cp: error writing 'test_dir/test_file': Invalid argument
-> 
-> root@imx8mmevk:~# dd if=/dev/urandom of=test_dir/test_file bs=1k count=1
-> dd: error writing 'test_dir/test_file': Invalid argument
-> 1+0 records in
-> 0+0 records out
-> 0 bytes copied, 0.000855156 s, 0.0 kB/s
-> 
-> 
-> On Fri, Sep 27, 2019 at 3:38 AM Sergei Shtylyov
-> <sergei.shtylyov@cogentembedded.com> wrote:
->>
->> Hello!
->>
->> On 26.09.2019 17:21, David Howells wrote:
->>
->>> The mounting of jffs2 is broken due to the changes from the new mount API
->>> because it specifies a "source" operation, but then doesn't actually
->>> process it.  But because it specified it, it doesn't return -ENOPARAM and
->>
->>     What specified what? Too many "it"'s to figure that out. :-)
->>
->>> the caller doesn't process it either and the source gets lost.
->>>
->>> Fix this by simply removing the source parameter from jffs2 and letting the
->>> VFS deal with it in the default manner.
->>>
->>> To test it, enable CONFIG_MTD_MTDRAM and allow the default size and erase
->>> block size parameters, then try and mount the /dev/mtdblock<N> file that
->>> that creates as jffs2.  No need to initialise it.
->>
->>     One "that" should be enough. :-)
->>
->>> Fixes: ec10a24f10c8 ("vfs: Convert jffs2 to use the new mount API")
->>> Reported-by: Al Viro <viro@zeniv.linux.org.uk>
->>> Signed-off-by: David Howells <dhowells@redhat.com>
->>> cc: David Woodhouse <dwmw2@infradead.org>
->>> cc: Richard Weinberger <richard@nod.at>
->>> cc: linux-mtd@lists.infradead.org
->> [...]
->>
->> MBR, Sergei
->>
->> ______________________________________________________
->> Linux MTD discussion mailing list
->> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> 
-> 
-> 
-
+     Arnd
