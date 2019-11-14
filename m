@@ -2,173 +2,189 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773F2C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95544C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C71F20715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7227120718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:49:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rt/a7IWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfKNUtf (ORCPT
+        id S1727080AbfKNUtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:49:35 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:40500 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727016AbfKNUtc (ORCPT
+        Thu, 14 Nov 2019 15:49:31 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36802 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfKNUt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:49:32 -0500
-Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D942B3A2217;
-        Fri, 15 Nov 2019 07:49:27 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iVM3S-0003Bn-PF; Fri, 15 Nov 2019 07:49:26 +1100
-Date:   Fri, 15 Nov 2019 07:49:26 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/28] mm: directed shrinker work deferral
-Message-ID: <20191114204926.GC4614@dread.disaster.area>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-10-david@fromorbit.com>
- <20191104152525.GA10665@bfoster>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104152525.GA10665@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=pB-_RQp5JTZhIYxYDT0A:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Thu, 14 Nov 2019 15:49:28 -0500
+Received: by mail-wr1-f68.google.com with SMTP id r10so8303086wrx.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 12:49:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=oWWPOw6fdrBRTkuHcbjpSalRr8DpkMzBATp+Y4u/Wi8=;
+        b=rt/a7IWypW4wtkJoudbYLho4zeXLAf5IPNd5Ze8W+5q2lq5CjFfKrbC9nzmJDaH7Jx
+         gaSXhhoNvyRV9+UBxVZViFNnyAXWrGEg3R4UHApBO2w3VKJvtvnfB0o68MDspdYPOigj
+         5CGSBySyeqlk5kaeuhWx364d5OxKrB6fufaP3Owj6N79t7/i7L8+5lWG8hQyd+ahfrnd
+         UZuTb7d7K2MbsBcPT5ta5ebG37ckCpzIxTxK0zgliAEi4S4zhAtYbhH1BdraLWCVw6bz
+         OXQjYt68pcve1IejybTh3R5+0zdJlvdqzaotZrokJWC6y2ztJBlzUnZpkc0LqwRvKm3n
+         9DdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oWWPOw6fdrBRTkuHcbjpSalRr8DpkMzBATp+Y4u/Wi8=;
+        b=TGVvy8hZ0vuKMffSTWaGKmACl2GujFK7iPLBhvZaC7w7foy9TVSCpoU4bqSVn7Dz8L
+         N6oDkhbjoOHEzvLU7w6mbWv8BuDqzBKQiCPRwIrJq99ynbXDq0qzJJG1EMcgNu/k1xgV
+         PaV9Rpfx6m36LiPx/mrkCm/m26R6h/IAG8jFKywCKBkZrZg2RGXIXWzh0GptubLqcZ7M
+         bL+p2y3z0wDrPPc7TjzHhG/8UxDXaKlkAhcJEMqZaS7fHAvYcEK59Q4rXVdetXH2FaPR
+         7Fo9+LFAGzJWXBh0wL8+Pvyu47GIav4Mq03Uxty3/HEqqYhbxKXIUPDINSJ26WLSjDHy
+         UbUQ==
+X-Gm-Message-State: APjAAAW/VUma1s5f2bMPECTG763PRiCny3mll8+aRFS2SrWf3U3htOcG
+        EUj4lGbcwf4S4k7U6RjcRDdJWA==
+X-Google-Smtp-Source: APXvYqytmE5xfwxigB2kpreMFO7j8tebwVLiY0a9RA5TWaq+pNFy4tQzBX6ZEZkJIgvBUvH51Fnm6g==
+X-Received: by 2002:a5d:6607:: with SMTP id n7mr8014390wru.133.1573764564226;
+        Thu, 14 Nov 2019 12:49:24 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:3115:aefb:2495:829a])
+        by smtp.gmail.com with ESMTPSA id a206sm7954485wmf.15.2019.11.14.12.49.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 12:49:23 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rafael@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org
+Subject: [PATCH V1 1/3] cpuidle: Replace use_deepest_state flag by forced_idle_latency_limit_ns
+Date:   Thu, 14 Nov 2019 21:49:12 +0100
+Message-Id: <20191114204914.21206-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 10:25:25AM -0500, Brian Foster wrote:
-> On Fri, Nov 01, 2019 at 10:45:59AM +1100, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > Introduce a mechanism for ->count_objects() to indicate to the
-> > shrinker infrastructure that the reclaim context will not allow
-> > scanning work to be done and so the work it decides is necessary
-> > needs to be deferred.
-> > 
-> > This simplifies the code by separating out the accounting of
-> > deferred work from the actual doing of the work, and allows better
-> > decisions to be made by the shrinekr control logic on what action it
-> > can take.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > ---
-> 
-> My understanding from the previous discussion(s) is that this is not
-> tied directly to the gfp mask because that is not the only intended use.
-> While it is currently a boolean tied to the the entire shrinker call,
-> the longer term objective is per-object granularity.
+We want to specify a latency constraint when choosing an idle state at
+play_idle time. Instead of duplicating the information in the
+structure or propagate the latency in the call stack, change the
+use_deepest_state by forced_latency_limit_ns to introduce this
+constraint. The idea being that when it is set, idle is forced
+(i.e. no governors), but there is a latency limit for the state to
+use.
 
-Longer term, yes, but right now such things are not possible as the
-shrinker needs more context to be able to make sane per-object
-decisions. shrinker policy decisions that affect the entire run
-scope should be handled by the ->count operation - it's the one that
-says whether the scan loop should run or not, and right now GFP_NOFS
-for all filesystem shrinkers is a pure boolean policy
-implementation.
+A zero latency constraint means "do not use the deepest idle state
+path" as the 'use_deepest_state' boolean was used in the
+cpuidle_idle_call.
 
-The next future step is to provide a superblock context with
-GFP_NOFS to indicate which filesystem we cannot recurse into. That
-is also a shrinker instance wide check, so again it's something that
-->count should be deciding.
+Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/cpuidle/cpuidle.c | 10 +++++-----
+ include/linux/cpuidle.h   |  6 +++---
+ kernel/sched/idle.c       |  6 +++---
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-i.e. ->count determines what is to be done, ->scan iterates the work
-that has to be done until we are done.
-
-> I find the argument reasonable enough, but if the above is true, why do
-> we move these checks from ->scan_objects() to ->count_objects() (in the
-> next patch) when per-object decisions will ultimately need to be made by
-> the former?
-
-Because run/no-run policy belongs in one place, and things like
-GFP_NOFS do no change across calls to the ->scan loop. i.e. after
-the first ->scan call in a loop that calls it hundreds to thousands
-of times, the GFP_NOFS run/no-run check is completely redundant.
-
-Once we introduce a new policy that allows the fs shrinker to do
-careful reclaim in GFP_NOFS conditions, we need to do substantial
-rework the shrinker scan loop and how it accounts the work that is
-done - we now have at least 3 or 4 different return counters
-(skipped because locked, skipped because referenced,
-reclaimed, deferred reclaim because couldn't lock/recursion) and
-the accounting and decisions to be made are a lot more complex.
-
-In that case, the ->count function will drop the GFP_NOFS check, but
-still do all the other things is needs to do. The GFP_NOFS check
-will go deep in the guts of the shrinker scan implementation where
-the per-object recursion problem exists. But for most shrinkers,
-it's still going to be a global boolean check...
-
-> That seems like unnecessary churn and inconsistent with the
-> argument against just temporarily doing something like what Christoph
-> suggested in the previous version, particularly since IIRC the only use
-> in this series was for gfp mask purposes.
-
-If people want to call avoiding repeated, unnecessary evaluation of
-the same condition hundreds of times instead of once "unnecessary
-churn", then I'll drop it.
-
-> >  include/linux/shrinker.h | 7 +++++++
-> >  mm/vmscan.c              | 8 ++++++++
-> >  2 files changed, 15 insertions(+)
-> > 
-> > diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
-> > index 0f80123650e2..3405c39ab92c 100644
-> > --- a/include/linux/shrinker.h
-> > +++ b/include/linux/shrinker.h
-> > @@ -31,6 +31,13 @@ struct shrink_control {
-> >  
-> >  	/* current memcg being shrunk (for memcg aware shrinkers) */
-> >  	struct mem_cgroup *memcg;
-> > +
-> > +	/*
-> > +	 * set by ->count_objects if reclaim context prevents reclaim from
-> > +	 * occurring. This allows the shrinker to immediately defer all the
-> > +	 * work and not even attempt to scan the cache.
-> > +	 */
-> > +	bool defer_work;
-> >  };
-> >  
-> >  #define SHRINK_STOP (~0UL)
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index ee4eecc7e1c2..a215d71d9d4b 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -536,6 +536,13 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
-> >  	trace_mm_shrink_slab_start(shrinker, shrinkctl, nr,
-> >  				   freeable, delta, total_scan, priority);
-> >  
-> > +	/*
-> > +	 * If the shrinker can't run (e.g. due to gfp_mask constraints), then
-> > +	 * defer the work to a context that can scan the cache.
-> > +	 */
-> > +	if (shrinkctl->defer_work)
-> > +		goto done;
-> > +
-> 
-> I still find the fact that this per-shrinker invocation field is never
-> reset unnecessarily fragile, and I don't see any good reason not to
-> reset it prior to the shrinker callback that potentially sets it.
-
-I missed that when updating. I'll reset it in the next version.
-
--Dave.
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index 44ae39f2b47a..62226fadc02d 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -100,19 +100,19 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+ 
+ /**
+  * cpuidle_use_deepest_state - Set/clear governor override flag.
+- * @enable: New value of the flag.
++ * @latency_limit_ns: A latency limit constraint
+  *
+- * Set/unset the current CPU to use the deepest idle state (override governors
+- * going forward if set).
++ * Set/unset the current CPU to use the deepest idle state with the exit
++ * latency within @latency_limit_ns
+  */
+-void cpuidle_use_deepest_state(bool enable)
++void cpuidle_use_deepest_state(u64 latency_limit_ns)
+ {
+ 	struct cpuidle_device *dev;
+ 
+ 	preempt_disable();
+ 	dev = cpuidle_get_device();
+ 	if (dev)
+-		dev->use_deepest_state = enable;
++		dev->forced_idle_latency_limit_ns = latency_limit_ns;
+ 	preempt_enable();
+ }
+ 
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index d23a3b1ddcf6..1f3f4dd01e48 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -83,7 +83,6 @@ struct cpuidle_driver_kobj;
+ struct cpuidle_device {
+ 	unsigned int		registered:1;
+ 	unsigned int		enabled:1;
+-	unsigned int		use_deepest_state:1;
+ 	unsigned int		poll_time_limit:1;
+ 	unsigned int		cpu;
+ 	ktime_t			next_hrtimer;
+@@ -91,6 +90,7 @@ struct cpuidle_device {
+ 	int			last_state_idx;
+ 	int			last_residency;
+ 	u64			poll_limit_ns;
++	u64			forced_idle_latency_limit_ns;
+ 	struct cpuidle_state_usage	states_usage[CPUIDLE_STATE_MAX];
+ 	struct cpuidle_state_kobj *kobjs[CPUIDLE_STATE_MAX];
+ 	struct cpuidle_driver_kobj *kobj_driver;
+@@ -210,7 +210,7 @@ extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+ 				      struct cpuidle_device *dev);
+ extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+ 				struct cpuidle_device *dev);
+-extern void cpuidle_use_deepest_state(bool enable);
++extern void cpuidle_use_deepest_state(u64 latency_limit_ns);
+ #else
+ static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+ 					     struct cpuidle_device *dev)
+@@ -218,7 +218,7 @@ static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+ static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+ 				       struct cpuidle_device *dev)
+ {return -ENODEV; }
+-static inline void cpuidle_use_deepest_state(bool enable)
++static inline void cpuidle_use_deepest_state(u64 latency_limit_ns)
+ {
+ }
+ #endif
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 8dad5aa600ea..d4681b3d7074 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -165,7 +165,7 @@ static void cpuidle_idle_call(void)
+ 	 * until a proper wakeup interrupt happens.
+ 	 */
+ 
+-	if (idle_should_enter_s2idle() || dev->use_deepest_state) {
++	if (idle_should_enter_s2idle() || dev->forced_idle_latency_limit_ns) {
+ 		if (idle_should_enter_s2idle()) {
+ 			rcu_idle_enter();
+ 
+@@ -328,7 +328,7 @@ void play_idle(unsigned long duration_us)
+ 	rcu_sleep_check();
+ 	preempt_disable();
+ 	current->flags |= PF_IDLE;
+-	cpuidle_use_deepest_state(true);
++	cpuidle_use_deepest_state(1);
+ 
+ 	it.done = 0;
+ 	hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+@@ -339,7 +339,7 @@ void play_idle(unsigned long duration_us)
+ 	while (!READ_ONCE(it.done))
+ 		do_idle();
+ 
+-	cpuidle_use_deepest_state(false);
++	cpuidle_use_deepest_state(0);
+ 	current->flags &= ~PF_IDLE;
+ 
+ 	preempt_fold_need_resched();
 -- 
-Dave Chinner
-david@fromorbit.com
+2.17.1
+
