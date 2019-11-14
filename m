@@ -2,94 +2,190 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993B0C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B460C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77305206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:43:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OWtGNSoK"
+	by mail.kernel.org (Postfix) with ESMTP id 18592206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfKNSn6 (ORCPT
+        id S1726956AbfKNSoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:43:58 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38436 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfKNSn6 (ORCPT
+        Thu, 14 Nov 2019 13:44:18 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35604 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725976AbfKNSoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:43:58 -0500
-Received: by mail-lj1-f196.google.com with SMTP id v8so7815246ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 10:43:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0akErYpVPfvA95ks+ZVK153tf+Gz8y9EaErbWtVlmI4=;
-        b=OWtGNSoKK0V3J02veluyxQWSi82ISrP2cFU0v00xGFsDqP5uCRLsRSU12PZN0pHXZe
-         NSPvOXGxGPVUJXT5FpEfQXPlxEJvx4b3IXbSJf3sb49wtuP2ZjmMfdgaTAeONOtAj8Zm
-         6aaMq0yT1w5IJhuiFyl9BIpNQtjyeS8Uc2cDKpsPHGxgP8I5rtUnAaCEfu6BxdDkTGYo
-         Matdu/uURSvuMhjmGnKat+vRucBCB9EgwsOJYFuPbHDpPY/icndFOXScl7kM9M3IXU9B
-         P+BtwbcSht22xxU2k83z3ZCHHMKuYD47Tw4rCY6bHywGS8TCqM+RTa5d/b+2Dkp3OvoU
-         gxqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0akErYpVPfvA95ks+ZVK153tf+Gz8y9EaErbWtVlmI4=;
-        b=Y5uTb3u6a68AGt9VXDKt4AqFtSwXLjPr42Svvw3rthlbGIGRx34u/gFIkCnSvBe1pp
-         4XsGpCkluPc+eFzC1MPiDR5DUMKf6kuQZ9F4qJKrQihynOofltvWjJKROaPR3hhgiTjs
-         XN3jBwirMrOiI/GO24vN6A0t3cxfmODRN4rVmQsdNCj5TaF8xk8UzVyhVFAHWDx5vWkz
-         R9Js6cZ4GPoJvlVnA7y0N5DF3st4QqLM5tV6z4T2iNFgtoXtqBhh3LcqldmZSnuxX92D
-         voPo9ymk5/M6IiFOEFWsR1wiU6XEqKEt/8t6x/Av2w1Kf6NzHLM8ZlVEliFO94OVGcqy
-         s8Lw==
-X-Gm-Message-State: APjAAAUl2jc44xirey6ObgyuznVMv5I6URjcWbmFOri30IPx3v0cG2hl
-        M+1ouI6SIP8GQ44s+jNeX30pElvVU4FQOorVgo7lUg==
-X-Google-Smtp-Source: APXvYqztdULr6zBxq7zLFJnIfqPSSqTjnXCgz4FraVOChcfBeCHK0oETCJeBhuCVU21yNsx8uAJjJ9A8j+SNA4YTOKE=
-X-Received: by 2002:a2e:5c46:: with SMTP id q67mr7506336ljb.42.1573757036127;
- Thu, 14 Nov 2019 10:43:56 -0800 (PST)
+        Thu, 14 Nov 2019 13:44:17 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEIhiW5041171;
+        Thu, 14 Nov 2019 13:44:05 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w9bhcaasm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Nov 2019 13:44:05 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAEIejrd014729;
+        Thu, 14 Nov 2019 18:44:08 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01wdc.us.ibm.com with ESMTP id 2w5n373v2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Nov 2019 18:44:08 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEIi2jc40173880
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 18:44:03 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF4C6BE05A;
+        Thu, 14 Nov 2019 18:44:02 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87F83BE051;
+        Thu, 14 Nov 2019 18:44:01 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.137])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Nov 2019 18:44:01 +0000 (GMT)
+Message-ID: <c792fdc629d87f452d4348d33ab179df01d42017.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/4] powerpc/kvm/book3s: Fixes possible 'use after
+ release' of kvm
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date:   Thu, 14 Nov 2019 15:43:57 -0300
+In-Reply-To: <87mud13d4r.fsf@mpe.ellerman.id.au>
+References: <20191107170258.36379-1-leonardo@linux.ibm.com>
+         <20191107170258.36379-2-leonardo@linux.ibm.com>
+         <87mud13d4r.fsf@mpe.ellerman.id.au>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-zmSym6hLOrd0Lb87qEYc"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-9-git-send-email-ilina@codeaurora.org>
-In-Reply-To: <1573756521-27373-9-git-send-email-ilina@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 14 Nov 2019 19:43:44 +0100
-Message-ID: <CACRpkdYZoAnFno630Fxazz_Kvz4fEmKd-wohprdQqeM44f3tAg@mail.gmail.com>
-Subject: Re: [PATCH 08/12] drivers: pinctrl: msm: setup GPIO chip in hierarchy
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Marc Zyngier <maz@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Doug Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911140157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 7:35 PM Lina Iyer <ilina@codeaurora.org> wrote:
 
-> Some GPIOs are marked as wakeup capable and are routed to another
-> interrupt controller that is an always-domain and can detect interrupts
-> even most of the SoC is powered off. The wakeup interrupt controller
-> wakes up the GIC and replays the interrupt at the GIC.
->
-> Setup the TLMM irqchip in hierarchy with the wakeup interrupt controller
-> and ensure the wakeup GPIOs are handled correctly.
->
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+--=-zmSym6hLOrd0Lb87qEYc
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This looks finished, and elegant.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Tue, 2019-11-12 at 15:57 +1100, Michael Ellerman wrote:
+> Hi Leonardo,
 
-Yours,
-Linus Walleij
+Hello Micheal, thanks for the feedback!
+
+>=20
+> Leonardo Bras <leonardo@linux.ibm.com> writes:
+> > Fixes a possible 'use after free' of kvm variable in
+> > kvm_vm_ioctl_create_spapr_tce, where it does a mutex_unlock(&kvm-
+> > >lock)
+> > after a kvm_put_kvm(kvm).
+>=20
+> There is no potential for an actual use after free here AFAICS.
+>=20
+> > diff --git a/arch/powerpc/kvm/book3s_64_vio.c
+> > b/arch/powerpc/kvm/book3s_64_vio.c
+> > index 5834db0a54c6..a402ead833b6 100644
+> > --- a/arch/powerpc/kvm/book3s_64_vio.c
+> > +++ b/arch/powerpc/kvm/book3s_64_vio.c
+>=20
+> The preceeding context is:
+>=20
+> 	mutex_lock(&kvm->lock);
+>=20
+> 	/* Check this LIOBN hasn't been previously allocated */
+> 	ret =3D 0;
+> 	list_for_each_entry(siter, &kvm->arch.spapr_tce_tables, list) {
+> 		if (siter->liobn =3D=3D args->liobn) {
+> 			ret =3D -EBUSY;
+> 			break;
+> 		}
+> 	}
+>=20
+> 	kvm_get_kvm(kvm);
+> 	if (!ret)
+> 		ret =3D anon_inode_getfd("kvm-spapr-tce",
+> &kvm_spapr_tce_fops,
+> 				       stt, O_RDWR | O_CLOEXEC);
+>=20
+> > @@ -316,14 +316,13 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm
+> > *kvm,
+> > =20
+> >  	if (ret >=3D 0)
+> >  		list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
+> > -	else
+> > -		kvm_put_kvm(kvm);
+> > =20
+> >  	mutex_unlock(&kvm->lock);
+> > =20
+> >  	if (ret >=3D 0)
+> >  		return ret;
+> > =20
+> > +	kvm_put_kvm(kvm);
+> >  	kfree(stt);
+> >   fail_acct:
+> >  	account_locked_vm(current->mm, kvmppc_stt_pages(npages),
+> > false);
+>=20
+> If the kvm_put_kvm() you've moved actually caused the last reference
+> to
+> be dropped that would mean that our caller had passed us a kvm struct
+> without holding a reference to it, and that would be a bug in our
+> caller.
+>=20
+
+So, there is no chance that between this function's kvm_get_kvm() and=20
+kvm_put_kvm(), another thread can decrease this reference counter?
+
+> Or put another way, it would mean the mutex_lock() above could
+> already
+> be operating on a freed kvm struct.
+>=20
+> The kvm_get_kvm() prior to the anon_inode_getfd() is to account for
+> the
+> reference that's held by the `stt` struct, and dropped in
+> kvm_spapr_tce_release().
+>=20
+> So although this patch isn't wrong, the explanation is not accurate.
+>=20
+> cheers
+
+Kind regards
+
+--=-zmSym6hLOrd0Lb87qEYc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3NoG0ACgkQlQYWtz9S
+ttT2MBAAw0s38wOkqRjRWeoZ0TV3qd7Gkqzy4gGKHiDNL82fHh6O6X4JSLTYP11u
+co3J9O1jORkIG7AAHQh68iiGJZY6MB5ZUJkUsn3XVH2gMWcQ/547HpcgCCMkrL8k
+keCqL7CKz5B7WxKK+8daUvMaTPAY5AaSEOHIHG/In4vEeHuUWJEgBN60tGxvhc1m
+7VIEBySrLqKeAgs70rThjBVaqg+66SbLZb7ToVIcoRu3Jc/3O4HHG+f6SnD3tqDM
+E3BrLge33ZTBt32TdKyogJ6RMUC+SXQXbXfUeNwjXuQIkH3D/zekc31o1GjcenCU
+Sv0z3Bmcgz2av0FxrA36K7Ch8Mgcnt7Yk5oHwF76kzOMSYyZMw9mJgTwrOHUsxnQ
+pH73v2e9ol1vDD+bdqkGBpusQae25A3/CDLZPXKvRdSqyaaI3yhwNMJ4deh8Glix
+bMpjCaUO+Q1o+VuhujYvmB7+tDYSEjWhOgo7m4yuffBu/MDtbaMkbkuqm66mrqrf
+3582+Kxt8nEWePhyVBKuJTC+IBqqZEIFO7VCR/XPnac7dYhIOUug4hj2QuYuMStF
+Bgsqa9pPIECX07kZR4LUVaEfV+uKadq5DcbdAhfR6NlFBgrJn+XBiuCSIalD7G3D
+bC6v7rRE4tjEoO12FYm165cYeD8I30YqLqkR7/z5OmbB9KkSAj8=
+=alk4
+-----END PGP SIGNATURE-----
+
+--=-zmSym6hLOrd0Lb87qEYc--
+
