@@ -2,218 +2,126 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8B0C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A575C33C9A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEB22070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C71C20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:38:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9vKR2GW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R5r44sic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKNWgb (ORCPT
+        id S1727116AbfKNWiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:36:31 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39708 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNWgb (ORCPT
+        Thu, 14 Nov 2019 17:38:14 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41241 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNWiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:36:31 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t26so8159292wmi.4;
-        Thu, 14 Nov 2019 14:36:28 -0800 (PST)
+        Thu, 14 Nov 2019 17:38:13 -0500
+Received: by mail-pg1-f194.google.com with SMTP id h4so4690850pgv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:38:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RVuenm9Qi2pw+STW4ZtMyXnbY+dRwGZQd6cok8GsC1M=;
-        b=P9vKR2GWHbPY7STfXXInk+UIPKLvMJfeivMHW7HZGEMbjb15YJ1xDERjzAeqnoF4tU
-         SRh7rAuY7x1sUzF30nhAS3cqIHus5guXb1IVBXgXRUGtaQaizyed0p0GMr1TXtCwdMI6
-         pwQC7ANmkxp64rgZkLmZtYbIL3c5W9PE4Fir8yw0LeNYj4iWTSnGws7mX9iFqwkqH0L9
-         5RxEIJNUojdI72q9Cq496qwe/v54onHciEGhAH9PA0Knb7Q4CEW+zZMS6/P/sqhPy2br
-         oDg7QM1wX9w+UrMwqUhgZhMZI55QqDjbe+2pIK7DorvfYkO+vmMTEgjE16JmfEoQnkiZ
-         q3mg==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=p4y/u0pJZ4ht/TVnTh39A/nft5VvdZ/DB4gpmQC3eKE=;
+        b=R5r44sicHCxyOg50fkAynKsN7Vct8b4lVY3vLt/krsrcaSxBxuEOssTswUgaCguWrX
+         Tr/1JgiVI6HEfXHF1XdM4QNG5NwEWwhNGArtpxFPCgeQg9T/JUcLWWU+Z0fKERu1fyWF
+         YHeuDO1ycha3/W1d+56fpvv1NhnbCHZfnNoKE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RVuenm9Qi2pw+STW4ZtMyXnbY+dRwGZQd6cok8GsC1M=;
-        b=sN0rGs5uT4glCURPa6lRzyK9f8ifgDp9sXj1gbC4qMs2qWFN//VJVwv1dvZPwNRDKH
-         UUbTq6kyG9LrYRvCbz+2vLBGV48790iX15zpRTYQ7wYFyXtG8jmMny7/XkeGDKDNtSTK
-         P1Id7f2YtQxZkLpjwNo7Clq3+j+6tXNXe3otzWOxf2ZabSIRGm+DMR8bR6RYhKW5IHIc
-         /p0HquvEdtsUEnwVKa9rxHnC6xvRRbnc/jbQtUeq6+7WZE5ipLbkPTZWrE7biLk+LBxe
-         HXOyYLs/sg72xC1dNZyyB4lvwpZsc3/lstQJc5qyP+Z/SOs7f1gXMSrS+WAjwaZ8vpLW
-         vDbg==
-X-Gm-Message-State: APjAAAXbo+PogTRlYFrp6Kqkyd0kd9d6X1uBlZvNlxkRo87VwZYIBWmr
-        lWwaM/3y5PcreUWbQNo7fg3XeeUEVrYWf6Y+/Jg=
-X-Google-Smtp-Source: APXvYqydkqVGAsZY/QfQUfncgiKmd2qGu81mlw7Lyn/j6hx/Zt8E9beVOYAmq795PN88N0QMg3qiHr5bP6gMpLIuoQw=
-X-Received: by 2002:a1c:6405:: with SMTP id y5mr11626914wmb.175.1573770987981;
- Thu, 14 Nov 2019 14:36:27 -0800 (PST)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=p4y/u0pJZ4ht/TVnTh39A/nft5VvdZ/DB4gpmQC3eKE=;
+        b=Z1CSXXyGOZiqeCCeVPJI6ecbJKh0P95qmFsdSkdQnt28SOPhqU045nzM9l+MxlA774
+         2e4yXTC2/n5wI1FFCYwv9xSNQ2mheRsa2musOoYToOdH88GFE1iwSVdxQJ/lHbOtuJVt
+         PUI//4C5jr/d8I4+7bF+DDJdxKBtLr9jj3zUH1UBRhc+4vpRKhWmXSeCUgFON1DvzNpt
+         bsmpJ6gFm1m6zix+bBRjz0TDb9ZKtMbaBsYdDP0JjKqlDCeGFlydIf6iP7EI1t73BUOI
+         50ftY53+mbOpHr19URIQGTBYyIGeqy0QyXhDixhLaY3XRY8ImAwlG45zxyQuNEO4LIxo
+         +w+A==
+X-Gm-Message-State: APjAAAUkVjMnV4+z9U5XSIqPGpPKzdBwXBTyN7Y92XOnhT5+b6Med0vy
+        cuzrUIFpMPlp/tT0UIzAJvK29g==
+X-Google-Smtp-Source: APXvYqyfHmCJR7t2KTVkw2EmAY2DsVM1nVcn+H7AqIvcJSrHnpqB5L2ob+YwQadE1CBnl57hyUOmaQ==
+X-Received: by 2002:a17:90a:bcf:: with SMTP id x15mr16023012pjd.0.1573771092936;
+        Thu, 14 Nov 2019 14:38:12 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b82sm7853038pfb.33.2019.11.14.14.38.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 14:38:12 -0800 (PST)
+Message-ID: <5dcdd754.1c69fb81.27caf.7022@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191108084517.21617-1-peron.clem@gmail.com> <20191108084517.21617-4-peron.clem@gmail.com>
- <20191113083524.aqtf2ed4ltuiazjg@pengutronix.de>
-In-Reply-To: <20191113083524.aqtf2ed4ltuiazjg@pengutronix.de>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 14 Nov 2019 23:36:16 +0100
-Message-ID: <CAJiuCccqyPbxRLjv1NRy6eukMnma8OUJGKvVHHDSKwybNJgKrg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] pwm: sun4i: Add an optional probe for bus clock
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c08cf285b8696c4fd00706b85cd3c88d12f97df3.1573499020.git.amit.kucheria@linaro.org>
+References: <cover.1573499020.git.amit.kucheria@linaro.org> <c08cf285b8696c4fd00706b85cd3c88d12f97df3.1573499020.git.amit.kucheria@linaro.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
+        edubezval@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sivaa@codeaurora.org
+Subject: Re: [PATCH 2/3] drivers: thermal: tsens: Add watchdog support
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 14 Nov 2019 14:38:11 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+Quoting Amit Kucheria (2019-11-11 11:21:28)
+> TSENS IP v2.3 onwards adds support for a watchdog to detect if the TSENS
+> HW FSM is frozen. Add support to detect and restart the FSM in the
 
-On Wed, 13 Nov 2019 at 09:35, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Fri, Nov 08, 2019 at 09:45:13AM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 PWM core needs bus clock to be enabled in order to work.
-> >
-> > Add an optional probe for it and a fallback for previous
-> > bindings without name on module clock.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 46 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > index 2b9a2a78591f..a10022d6c0fd 100644
-> > --- a/drivers/pwm/pwm-sun4i.c
-> > +++ b/drivers/pwm/pwm-sun4i.c
-> > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> >
-> >  struct sun4i_pwm_chip {
-> >       struct pwm_chip chip;
-> > +     struct clk *bus_clk;
-> >       struct clk *clk;
-> >       struct reset_control *rst;
-> >       void __iomem *base;
-> > @@ -363,9 +364,38 @@ static int sun4i_pwm_probe(struct platform_device =
-*pdev)
-> >       if (IS_ERR(pwm->base))
-> >               return PTR_ERR(pwm->base);
-> >
-> > -     pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > -     if (IS_ERR(pwm->clk))
-> > +     /* Get all clocks and reset line */
-> > +     pwm->clk =3D devm_clk_get_optional(&pdev->dev, "mod");
-> > +     if (IS_ERR(pwm->clk)) {
-> > +             if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
-> > +                     dev_err(&pdev->dev, "get clock failed %pe\n",
-> > +                             pwm->clk);
-> >               return PTR_ERR(pwm->clk);
-> > +     }
-> > +
-> > +     /*
-> > +      * Fallback for old dtbs with a single clock and no name.
-> > +      * If a parent has a clock-name called "mod" whereas the
-> > +      * current node is unnamed the clock reference will be
-> > +      * incorrectly obtained and will not go into this fallback.
->
-> For me "old dtbs" suggests that today a device tree should have a "mod"
-> clock. Is this true also for machines other than H6? And I'd put the
-> comment before the acquisition of the "mod" clock. Something like:
+Maybe 'frozen' is an ambiguous term? Maybe 'stuck' or 'has stopped
+making progress'?
 
-Agree to remove the "old dtbs" but specifying the SoC instead
-of the reason is less clear for me.
+> driver. The watchdog is configured by the bootloader, we just enable the
+> feature in the kernel.
 
-I would prefer to have something like this:
+Does it work to enable it if we don't configure it in the bootloader?
 
-A clock is explicitly called "mod" when several clocks are referenced.
-However, when only one clock is declared this one is unamed.
-So we request "mod" first (and ignore the corner case that a parent
-provides a "mod" clock)
-and if this is not found we fall back to the first clock of the PWM.
+>=20
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/qcom/tsens-common.c | 41 +++++++++++++++++++++++++++++
+>  drivers/thermal/qcom/tsens-v2.c     | 10 +++++++
+>  drivers/thermal/qcom/tsens.h        | 12 +++++++++
+>  3 files changed, 63 insertions(+)
+>=20
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
+sens-common.c
+> index 2989cb952cdb..9432518502a7 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -794,6 +820,21 @@ int __init init_common(struct tsens_priv *priv)
+>                 }
+>         }
+> =20
+> +       if (tsens_version(priv) > VER_1_X &&  ver_minor > 2) {
+> +               /* Watchdog is present only on v2.3+ */
+> +               for (i =3D 0, j =3D WDOG_BARK_STATUS; j <=3D CC_MON_MASK;=
+ i++, j++) {
 
-What do you think?
+The variable 'i' is not actually used in this loop. What's going on?
 
->
->         /*
->          * A clock called "mod" is only required on H6 (for now) and on
->          * other SoCs we expect an unnamed clock. So we request "mod"
->          * first (and ignore the corner case that a parent provides a
->          * "mod" clock) and if this is not found we fall back to the
->          * first clock of the PWM.
->          */
->
-> > +      */
-> > +     if (!pwm->clk) {
-> > +             pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > +             if (IS_ERR(pwm->clk)) {
-> > +                     if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
-> > +                             dev_err(&pdev->dev, "get clock failed %pe=
-\n",
-> > +                                     pwm->clk);
-> > +                     return PTR_ERR(pwm->clk);
-> > +             }
-> > +     }
-> > +
-> > +     pwm->bus_clk =3D devm_clk_get_optional(&pdev->dev, "bus");
-> > +     if (IS_ERR(pwm->bus_clk)) {
-> > +             if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
-> > +                     dev_err(&pdev->dev, "get bus_clock failed %pe\n",
-> > +                             pwm->bus_clk);
-> > +             return PTR_ERR(pwm->bus_clk);
-> > +     }
-> >
-> >       pwm->rst =3D devm_reset_control_get_optional_shared(&pdev->dev, N=
-ULL);
-> >       if (IS_ERR(pwm->rst)) {
-> > @@ -382,6 +412,17 @@ static int sun4i_pwm_probe(struct platform_device =
-*pdev)
-> >               return ret;
-> >       }
-> >
-> > +     /*
-> > +      * We're keeping the bus clock on for the sake of simplicity.
-> > +      * Actually it only needs to be on for hardware register
-> > +      * accesses.
-> > +      */
-> > +     ret =3D clk_prepare_enable(pwm->bus_clk);
-> > +     if (ret) {
-> > +             dev_err(&pdev->dev, "Cannot prepare and enable bus_clk\n"=
-);
-> > +             goto err_bus;
-> > +     }
-> > +
->
-> Would it make sense to split this patch into "Prefer "mod" clock to
-> (unnamed) clock" and "Introduce optional bus clock"?
-
-Yes I will do in v5,
-
-Regards,
-Cl=C3=A9ment
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+> +                       priv->rf[j] =3D devm_regmap_field_alloc(dev, priv=
+->tm_map,
+> +                                                             priv->field=
+s[j]);
+> +                       if (IS_ERR(priv->rf[j])) {
+> +                               ret =3D PTR_ERR(priv->rf[j]);
+> +                               goto err_put_device;
+> +                       }
+> +               }
+> +               /* Enable WDOG and disable cycle completion monitoring */
+> +               regmap_field_write(priv->rf[WDOG_BARK_MASK], 0);
+> +               regmap_field_write(priv->rf[CC_MON_MASK], 1);
+> +       }
