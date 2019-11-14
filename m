@@ -2,102 +2,146 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4E3C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC387C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1B220709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B1A20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6pquKxI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bSs4UdzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfKNVCn (ORCPT
+        id S1727059AbfKNVEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:02:43 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35300 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfKNVCm (ORCPT
+        Thu, 14 Nov 2019 16:04:55 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:52214 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfKNVEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 16:02:42 -0500
-Received: by mail-io1-f67.google.com with SMTP id x21so8460421ior.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 13:02:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yJBKOKwM5iW599/3PXPapFgko2uf1vvK5qJNHvXkEvA=;
-        b=m6pquKxI4tETRrClr728OIAj7DTVhy29VH8PJJnNux08Ye4bolkgPRVFsBD8+AXlgf
-         GdR+UACzBDaQs+1VNv5McBiMGmHUPYhI7e3StEwAuoQLoxndNoy7eUwosL0ZwCc2g/IF
-         XRCjKwRaprlcahHNv4vCZMnn1mC36vklMsd1uEwVUWw5eL2+PixU+6dB/TPgTSa2Mx7H
-         W7OdSU6Aqa0vqFD95FOoR9vq+w9gh0BdFS5jX+LHTokw6qXIvpnIEWZ55jDn8iuAmx03
-         56S9vmiD0TQGGRoqIZvjMszL3KZzq82MAgu1AANUsopCj8I91sp+yLlnYV7dIYpQpca8
-         FT/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yJBKOKwM5iW599/3PXPapFgko2uf1vvK5qJNHvXkEvA=;
-        b=Jy8nFqk2i/TTKhigCpbR6aSPVbkaBATW00zTvZijz9HXELN9Sp8ItmTBq4SamV/IcI
-         bdzOXA6bhHsNSf8JvtQds7JPgUA0+oUzrtX2z8d6jzB6ngmDueNUHaO02/jhAINpZSaJ
-         RzbjaYcI1UYotceQd2MpY/SB4CZ/XbxxDDHcmDJFsC0INZiYGwe72Xgj0VetOSpX8yOy
-         F8apAvprycNYSVzWMtOSd5//ta3alPs9D4tYpAbzUwDUNmWLwp0YqApyMpMkOrAyPvv1
-         +YNwVGL5JERFuk1kH3L6WP9KOKWbBuFQAoPqCluf8biD/LgMvzwCYrVtTTk48WpFVy2o
-         2Iqg==
-X-Gm-Message-State: APjAAAX5RkVFgdaFfvANW2DDxNyGHO5McMo32B/0Og+j+oGoWX3ImFeY
-        IpNBjXjW2QPHamCfsqp3ak0DyHuhO6jjn+6+V+PTyQ==
-X-Google-Smtp-Source: APXvYqxynaYSurYk47xcjrOqbqAQBuVKxdYBSiGXLLrIBieS6FdrGnE361Q6RfBMXentbWd450Oxj+nrUALkwZBgnjc=
-X-Received: by 2002:a6b:8d8f:: with SMTP id p137mr822567iod.53.1573765359791;
- Thu, 14 Nov 2019 13:02:39 -0800 (PST)
+        Thu, 14 Nov 2019 16:04:55 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEKxF1f037497;
+        Thu, 14 Nov 2019 21:02:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=dnfYmXtuTFJ/DUGz8VaA60fPJFIOkGVYuPayfZf2++o=;
+ b=bSs4UdzJaRXd5w6u7NH8KvOryp4qDuqBl2QKOnfFkm8e+GUSzUxMrW5W5ne7/6ajmZcy
+ JuPT4eXbme/Hdi0n6qZ3q/oBSozKpcPwSyrlzx5iEsnW3pIZxcmr5+sLSnU78MdEqARA
+ BPvkxJxP90K0jm0IWz0kTqFeY1DkZaNz8u2LSQK0kIhMldgKNru7dKPeNSSGeV/bOquf
+ jFiW5Cken3iYojwgMF6D8TM4z9dokFr2r8OSFdNywM8T6BZeK/VlG6Nm4YYcoF90vwWZ
+ uiz+H4Grq4upRp3EXXcyPRb7+RX+6ege7kvb5zXRgjV4zvMLzd9Ihd6mjsQgU9IFR6jt lw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2w5mvu5tpv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 21:02:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAEKsGXS001815;
+        Thu, 14 Nov 2019 21:02:47 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2w8g1a1ve1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 21:02:46 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAEL2fo9007838;
+        Thu, 14 Nov 2019 21:02:41 GMT
+Received: from localhost (/10.145.178.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 14 Nov 2019 13:02:41 -0800
+Date:   Thu, 14 Nov 2019 13:02:39 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH V2 1/2] fs: Clean up mapping variable
+Message-ID: <20191114210239.GH6211@magnolia>
+References: <20191113004244.9981-1-ira.weiny@intel.com>
+ <20191113004244.9981-2-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-6-brijesh.singh@amd.com>
-In-Reply-To: <20190710201244.25195-6-brijesh.singh@amd.com>
-From:   Peter Gonda <pgonda@google.com>
-Date:   Thu, 14 Nov 2019 13:02:28 -0800
-Message-ID: <CAMkAt6rwbq6XC_K64arBUmqsTzSWk7Zoazq-YcqLvjc-rmW8BA@mail.gmail.com>
-Subject: Re: [PATCH v3 05/11] KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113004244.9981-2-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911140173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911140174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +
-> +       /* Check if we are crossing the page boundry */
-> +       offset = params.guest_uaddr & (PAGE_SIZE - 1);
-> +       if ((params.guest_len + offset > PAGE_SIZE))
-> +               return -EINVAL;
+On Tue, Nov 12, 2019 at 04:42:43PM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> The mapping variable is not directly used in these functions.  Just
+> remove the additional variable.
+> 
+> Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Just curious spec only says that "System physical of the guest memory
-region. Must be 16 B aligned with the C-bit set." and "Length of guest
-memory region. Must be a multiple of 16 B and no more than 16 kB". Why
-do we want to avoid crossing a page boundary?
+Please upgrade this to:
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Also is there an overflow concern in the conditional because
-params.guest_len is not checked before this?
+--D
 
-> +
-> +       data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       hdr = psp_copy_user_blob(params.hdr_uaddr, params.hdr_len);
-> +       if (IS_ERR(hdr)) {
-> +               ret = PTR_ERR(hdr);
-> +               goto e_free;
-> +       }
-> +
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+> Changes from V1
+> 	Update recipients list
+> 
+>  fs/f2fs/data.c      | 3 +--
+>  fs/iomap/swapfile.c | 3 +--
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index ba3bcf4c7889..3c7777bfae17 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -3146,8 +3146,7 @@ int f2fs_migrate_page(struct address_space *mapping,
+>  /* Copied from generic_swapfile_activate() to check any holes */
+>  static int check_swap_activate(struct file *swap_file, unsigned int max)
+>  {
+> -	struct address_space *mapping = swap_file->f_mapping;
+> -	struct inode *inode = mapping->host;
+> +	struct inode *inode = swap_file->f_mapping->host;
+>  	unsigned blocks_per_page;
+>  	unsigned long page_no;
+>  	unsigned blkbits;
+> diff --git a/fs/iomap/swapfile.c b/fs/iomap/swapfile.c
+> index a648dbf6991e..80571add0180 100644
+> --- a/fs/iomap/swapfile.c
+> +++ b/fs/iomap/swapfile.c
+> @@ -140,8 +140,7 @@ int iomap_swapfile_activate(struct swap_info_struct *sis,
+>  		.sis = sis,
+>  		.lowest_ppage = (sector_t)-1ULL,
+>  	};
+> -	struct address_space *mapping = swap_file->f_mapping;
+> -	struct inode *inode = mapping->host;
+> +	struct inode *inode = swap_file->f_mapping->host;
+>  	loff_t pos = 0;
+>  	loff_t len = ALIGN_DOWN(i_size_read(inode), PAGE_SIZE);
+>  	loff_t ret;
+> -- 
+> 2.21.0
+> 
