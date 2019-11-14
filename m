@@ -2,143 +2,96 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F9AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D367C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3702620724
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827CC20723
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKNNXC (ORCPT
+        id S1727063AbfKNNXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:23:02 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41648 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726958AbfKNNXB (ORCPT
+        Thu, 14 Nov 2019 08:23:06 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36175 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfKNNXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:23:01 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAED9M5m121388
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:23:00 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w94yk7av1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:22:44 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Thu, 14 Nov 2019 13:22:36 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 13:22:31 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEDMUk841681314
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 13:22:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8423EA4040;
-        Thu, 14 Nov 2019 13:22:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 897D4A404D;
-        Thu, 14 Nov 2019 13:22:27 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.57.87])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Nov 2019 13:22:27 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     jolsa@redhat.com, kan.liang@intel.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        ak@linux.intel.com, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH v2 1/3] perf hists: Replace pr_err with ui__error
-Date:   Thu, 14 Nov 2019 18:52:11 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191114132213.5419-1-ravi.bangoria@linux.ibm.com>
-References: <20191114132213.5419-1-ravi.bangoria@linux.ibm.com>
+        Thu, 14 Nov 2019 08:23:05 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iVF5M-0005Uk-R9; Thu, 14 Nov 2019 14:22:56 +0100
+Message-ID: <ea47e8e7a8663d33acb44dd4473a5a150ea51526.camel@pengutronix.de>
+Subject: Re: [PATCH][next] reset: npcm: check for NULL return from
+ syscon_regmap_lookup_by_compat
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Colin King <colin.king@canonical.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        openbmc@lists.ozlabs.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 14 Nov 2019 14:22:56 +0100
+In-Reply-To: <20191108155524.170566-1-colin.king@canonical.com>
+References: <20191108155524.170566-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111413-0020-0000-0000-00000386262A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111413-0021-0000-0000-000021DC3D10
-Message-Id: <20191114132213.5419-2-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=892 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140123
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pr_err() in tui mode does not print anyting on the screen and
-just quits. Replace such pr_err with ui__error.
+Hi Colin,
 
-Before:
-  $ ./perf report -s +
-  $
+On Fri, 2019-11-08 at 15:55 +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Function syscon_regmap_lookup_by_compat can return a NULL pointer, so
 
-After:
-  $ ./perf report -s +
+Could you point out where that NULL pointer would come from? As far as I
+understand, syscon_regmap_lookup_by_compatible() should either return a
+negative error code, or syscon->regmap, which should never be NULL.
 
-    ┌─Error:────────────────┐
-    │Invalid --sort key: `+'│
-    │                       │
-    │Press any key...       │
-    └───────────────────────┘
+> the IS_ERR check on the return is incorrect. Fix this by checking for
+> IS_ERR_OR_NULL and return -ENODEV if true.  This avoids a null pointer
+> dereference on gcr_regmap later on.
+> 
+> Addresses-Coverity: ("Dereference null return (stat)")
+> Fixes: b3f1d036f26d ("reset: npcm: add NPCM reset controller driver")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/reset/reset-npcm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/reset/reset-npcm.c b/drivers/reset/reset-npcm.c
+> index 2ea4d3136e15..9febf8bed2f6 100644
+> --- a/drivers/reset/reset-npcm.c
+> +++ b/drivers/reset/reset-npcm.c
+> @@ -161,9 +161,9 @@ static int npcm_usb_reset(struct platform_device *pdev, struct npcm_rc_data *rc)
+>  	of_match_device(dev->driver->of_match_table, dev)->data;
+>  
+>  	gcr_regmap = syscon_regmap_lookup_by_compatible(gcr_dt);
+> -	if (IS_ERR(gcr_regmap)) {
+> +	if (IS_ERR_OR_NULL(gcr_regmap)) {
+>  		dev_err(&pdev->dev, "Failed to find %s\n", gcr_dt);
+> -		return PTR_ERR(gcr_regmap);
+> +		return -ENODEV;
+>  	}
+>  
+>  	/* checking which USB device is enabled */
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- tools/perf/util/sort.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 43d1d410854a..cba8f22e4ffb 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2696,12 +2696,12 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
- 			ret = sort_dimension__add(list, tok, evlist, level);
- 			if (ret == -EINVAL) {
- 				if (!cacheline_size() && !strncasecmp(tok, "dcacheline", strlen(tok)))
--					pr_err("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
-+					ui__error("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
- 				else
--					pr_err("Invalid --sort key: `%s'", tok);
-+					ui__error("Invalid --sort key: `%s'", tok);
- 				break;
- 			} else if (ret == -ESRCH) {
--				pr_err("Unknown --sort key: `%s'", tok);
-+				ui__error("Unknown --sort key: `%s'", tok);
- 				break;
- 			}
- 		}
-@@ -2758,7 +2758,7 @@ static int setup_sort_order(struct evlist *evlist)
- 		return 0;
- 
- 	if (sort_order[1] == '\0') {
--		pr_err("Invalid --sort key: `+'");
-+		ui__error("Invalid --sort key: `+'");
- 		return -EINVAL;
- 	}
- 
-@@ -3049,7 +3049,7 @@ static int __setup_output_field(void)
- 		strp++;
- 
- 	if (!strlen(strp)) {
--		pr_err("Invalid --fields key: `+'");
-+		ui__error("Invalid --fields key: `+'");
- 		goto out;
- 	}
- 
--- 
-2.21.0
+regards
+Philipp
 
