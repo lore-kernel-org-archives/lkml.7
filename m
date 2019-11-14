@@ -2,177 +2,212 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2407C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5626AC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83AF92070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E452070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="MNDMnmZz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="pSyCIHS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfKNPQR (ORCPT
+        id S1727020AbfKNPQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:16:17 -0500
-Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:16442
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726528AbfKNPQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:16:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ntbDyHSpxsJE1ulK6Rye8eeB22apZLyiYB3rQt+ibCVBaxJKnT3pmwmJ9OPX+GzVyrxAZifvRy60zgezZjhY5DjiHmk1GgpGns1N2IU0Ig7VlMPOsWDJ4RlnnNx7owsSRKc0cxEJcFJBugdGGmFCTJXhCsUNEqC5Tvt6oABMsqdD5rJ3kDJoz+LC3WYZC2UNCC6v/o3sizoOuFr36Tv/0XFhE3gqxeqaLcrTJv9k5cDU0XlytAawEr8NDkEC2IQ2v71iIOJ0UoRY2YSPongRBm4mko1viBmCOMBw448HUKLI+xez8A8C9lDbRa4fvoZvuKUxfq4lmwYBdQtTMrlRNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yNbUgpTzOZgAEIQh2Hs0+B8OwrOG04NwCirijog0e0o=;
- b=m4xJOZG/c1eiwzsHrTlI8iHFXLm+ol74GO7d1uFlYjpuD7ziOqzFfadtSs96jY7sAc1l7FfBrdBkzOdJ8XFhSIgYbKPXH7MsFK7RvpneFfaQp7+MNNO1B3v68klgs4V53s+QIKj27VMebzbF8thns5ZA7YWIjX+mCvh1RzoTt59Bdya18YwodIRodfO+rz1XrpfcNmjyVeRfFQK9cABYhKl1wg6KZV2ieS3mNKzbALLtzHd9xDrTKEACeCYM4j0aC2DTbnOR0SnIgR0jNDDlGbuTo1qec628is0OAfppBPRO+UnQJPLQncqZntvW2Mhl08tBNy7M0pDpOh8ka73N5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yNbUgpTzOZgAEIQh2Hs0+B8OwrOG04NwCirijog0e0o=;
- b=MNDMnmZzabTKZiahDNq0CdZeZfgQ2902SMWC/13fr4zf14py3nQzrTw2uykIAZPNqk4Dp/r0Ky88+p1WweIn638X7+AK/iulf9svfB2ogRGMtcfgyNNX3ZGyLP/q8rP4ifbNEpZgoY05Ak2TIoeEkVRKXUA3caRAa1G+o53UwlM=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4542.eurprd05.prod.outlook.com (20.176.4.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Thu, 14 Nov 2019 15:16:13 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2430.028; Thu, 14 Nov 2019
- 15:16:13 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Index: AQHVmv5z4tDo6IGeNEiw2DaY1UuNbQ==
-Date:   Thu, 14 Nov 2019 15:16:13 +0000
-Message-ID: <20191114151609.GA14855@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR02CA0133.namprd02.prod.outlook.com
- (2603:10b6:208:35::38) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d6619511-ae03-415a-2cbd-08d769159624
-x-ms-traffictypediagnostic: VI1PR05MB4542:
-x-microsoft-antispam-prvs: <VI1PR05MB4542AA45BCDED7CF0714218ECF710@VI1PR05MB4542.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:785;
-x-forefront-prvs: 02213C82F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(346002)(136003)(376002)(189003)(199004)(81166006)(1076003)(81156014)(8936002)(6512007)(6506007)(25786009)(486006)(8676002)(386003)(9686003)(7736002)(33656002)(36756003)(26005)(52116002)(14454004)(5660300002)(99286004)(2906002)(4326008)(476003)(66446008)(6486002)(6116002)(305945005)(66556008)(66476007)(66616009)(66946007)(66066001)(186003)(86362001)(54906003)(3846002)(316002)(6436002)(71190400001)(478600001)(110136005)(71200400001)(256004)(14444005)(64756008)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4542;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 67oPQxmUq9vce47IUdEgp7Jx/CKJvDpeHdYd6T7QoazRVu5U+aJmkrEolAwfr/9C+9svxbA1rbciNh7/kcNR4ngUQVyAsjZUIJdDo07VR4wR0LmiKFBdAQZmfQfesucwts4Gvhq5yEn7rhRXiwvXfof77si2zdAZFpqt1X4AvFLdOyGlmdtplwlmDs0TeK/Z0vc1xBQKwl/60X2SeMC5K+UOCJTA9BEBjQQtW36xjd/ojL0j7zzzbu2jToG20m3hgbnY80v/mCJV9qQKLTYqbQJrk/DCX9rlV8D6YOpSAFH8Ahyd+Oz1E8Av4umFWtQS/Z/SwXlmRA2hCox1eqgeMf75V++QzdGCMXbD+m9eCqgBfuXt+hp7/LadmEVuei+csU2Jn9gpKyaxwlTYbEO9ojTX5od1krzNyEYVVAuZ0adfqI4vnsOKqk7Budh5RYWs
-x-ms-exchange-transport-forked: True
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6619511-ae03-415a-2cbd-08d769159624
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 15:16:13.2556
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NP/MKnaEOMg/lpU1C8h15Fr8g6mYAWdNzJr7aHTdNXwoPldFKhb2DfXE7sYRMd1QRjLqDEwX/Aw8gpQRiyWJTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4542
+        Thu, 14 Nov 2019 10:16:22 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:23193 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfKNPQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 10:16:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573744577;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=dIdO6+wWmfeQm+EP9ocIN+ER7iLsR+gearCu29RvDj8=;
+        b=pSyCIHS8/1KAKUVF1Jiyz1A47gb8fTEjSqtwUEo7ExOs/5Fojli+GIOemZfPtJshkm
+        NOPgUius99rQk5SvaDJFOSAeKVpeNISEZYsWGgLew78IjpfNtNhgJta6uw1Q2j0zZZaz
+        +deiCAxzmTmP/A7bBXPAjs5Zy00FqK1IaG2dQ1R4xcsAruzTb/IfQoBEI4DlInxUKwBZ
+        bcjxIFs9mF1odJdj9gKUV7Vf/HNfWZFoknnySx/ggnevKH2P2bQqzEpR5PK2sigsCcVG
+        lBpIuhJ33KrsSvZKyfDXzormoy4NTJE9m8g+oGP7+zXALJ2qPaMHytpV5dSgk3PbVIPZ
+        XbIg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCbXA4F8vU="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id L09db3vAEFFiEyY
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 14 Nov 2019 16:15:44 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v3 00/12] OpenPandora: make wl1251 connected to mmc3 sdio port of OpenPandora work again
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAPDyKFrntf2Kd9Zf7uxRCUk_OrKD8B3xOKmvPaf04X21L5HwWA@mail.gmail.com>
+Date:   Thu, 14 Nov 2019 16:15:44 +0100
+Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5F5A5FC0-8F91-4D5B-9EF6-AF36FE38B588@goldelico.com>
+References: <cover.1573122644.git.hns@goldelico.com> <CAPDyKFrntf2Kd9Zf7uxRCUk_OrKD8B3xOKmvPaf04X21L5HwWA@mail.gmail.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Ulf,
 
-Hi Linus,
+> Am 14.11.2019 um 15:18 schrieb Ulf Hansson <ulf.hansson@linaro.org>:
+>=20
+> On Thu, 7 Nov 2019 at 11:31, H. Nikolaus Schaller <hns@goldelico.com> =
+wrote:
+>>=20
+>>=20
+>> * add a revisit note for special wl1251 handling code because it =
+should
+>>  be solved more generic in mmc core - suggested by Ulf Hansson =
+<ulf.hansson@linaro.org>
+>> * remove init_card callback from platform_data/hsmmc-omap.h - =
+suggested by Ulf Hansson <ulf.hansson@linaro.org>
+>> * remove obstructive always-on for vwlan regulator - suggested by Ulf =
+Hansson <ulf.hansson@linaro.org>
+>> * rename DT node - suggested by Rob Herring <robh@kernel.org>
+>> * fix ARM: dts: subject prefix - suggested by Tony Lindgren =
+<tony@atomide.com>
+>> * also remove omap2_hsmmc_info and obc-y line in Makefile - suggested =
+by Tony Lindgren <tony@atomide.com>
+>=20
+> No further comments from my side. Let's just agree on how to deal with
+> the ti,power-gpio, then I can apply this.
 
-Third rc pull request
+I'd say it can be a separate patch since it does not fix the Pandora
+issues, but is a new and independent optimization.
 
-A small set of bug fixes for the hfi and hns drivers.
+And in case someone complains and uses it for some out-of tree purpose
+it can be discussed or even be reverted easier if it is a separate =
+patch.
 
-The following changes since commit a99d8080aaf358d5d23581244e5da23b35e340b9:
+I can do it in the next days.
 
-  Linux 5.4-rc6 (2019-11-03 14:07:26 -0800)
+> Thanks a lot for fixing all this mess!
 
-are available in the Git repository at:
+I hope the users also appreciate our work.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+Best regards,
+Nikolaus
 
-for you to fetch changes up to 411c1e6774e2e1f96b1ccce4f119376b94ade3e4:
+>=20
+> Kind regards
+> Uffe
+>=20
+>>=20
+>> PATCH V2 2019-10-19 20:41:47:
+>> * added acked-by for wl1251 patches - Kalle Valo =
+<kvalo@codeaurora.org>
+>> * really removed old pdata-quirks code (not through #if 0)
+>> * splited out a partial revert of
+>>        efdfeb079cc3b ("regulator: fixed: Convert to use GPIO =
+descriptor only")
+>>  because that was introduced after v4.19 and stops the removal of
+>>  the pdata-quirks patch from cleanly applying to v4.9, v4.14, v4.19
+>>  - reported by Sasha Levin <sashal@kernel.org>
+>> * added a new patch to remove old omap hsmmc since pdata quirks
+>>  were last user - suggested by Tony Lindgren <tony@atomide.com>
+>>=20
+>> PATCH V1 2019-10-18 22:25:39:
+>> Here we have a set of scattered patches to make the OpenPandora WiFi =
+work again.
+>>=20
+>> v4.7 did break the pdata-quirks which made the mmc3 interface
+>> fail completely, because some code now assumes device tree
+>> based instantiation.
+>>=20
+>> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for =
+requesting DMA channel")
+>>=20
+>> v4.11 did break the sdio qirks for wl1251 which made the driver no =
+longer
+>> load, although the device was found as an sdio client.
+>>=20
+>> Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks =
+file")
+>>=20
+>> To solve these issues:
+>> * we convert mmc3 and wl1251 initialization from pdata-quirks
+>>  to device tree
+>> * we make the wl1251 driver read properties from device tree
+>> * we fix the mmc core vendor ids and quirks
+>> * we fix the wl1251 (and wl1271) driver to use only vendor ids
+>>  from header file instead of (potentially conflicting) local
+>>  definitions
+>>=20
+>>=20
+>> H. Nikolaus Schaller (12):
+>>  Documentation: dt: wireless: update wl1251 for sdio
+>>  net: wireless: ti: wl1251 add device tree support
+>>  ARM: dts: pandora-common: define wl1251 as child node of mmc3
+>>  mmc: host: omap_hsmmc: add code for special init of wl1251 to get =
+rid
+>>    of pandora_wl1251_init_card
+>>  omap: pdata-quirks: revert pandora specific gpiod additions
+>>  omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+>>  omap: remove omap2_hsmmc_info in old hsmmc.[ch] and update Makefile
+>>  mmc: host: omap-hsmmc: remove init_card pdata callback from pdata
+>>  mmc: sdio: fix wl1251 vendor id
+>>  mmc: core: fix wl1251 sdio quirks
+>>  net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 =
+definition
+>>  net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
+>>=20
+>> .../bindings/net/wireless/ti,wl1251.txt       |  26 +++
+>> arch/arm/boot/dts/omap3-pandora-common.dtsi   |  36 +++-
+>> arch/arm/mach-omap2/Makefile                  |   3 -
+>> arch/arm/mach-omap2/common.h                  |   1 -
+>> arch/arm/mach-omap2/hsmmc.c                   | 171 =
+------------------
+>> arch/arm/mach-omap2/hsmmc.h                   |  32 ----
+>> arch/arm/mach-omap2/pdata-quirks.c            | 105 -----------
+>> drivers/mmc/core/quirks.h                     |   7 +
+>> drivers/mmc/host/omap_hsmmc.c                 |  30 ++-
+>> drivers/net/wireless/ti/wl1251/sdio.c         |  23 ++-
+>> drivers/net/wireless/ti/wlcore/sdio.c         |   8 -
+>> include/linux/mmc/sdio_ids.h                  |   2 +
+>> include/linux/platform_data/hsmmc-omap.h      |   3 -
+>> 13 files changed, 111 insertions(+), 336 deletions(-)
+>> delete mode 100644 arch/arm/mach-omap2/hsmmc.c
+>> delete mode 100644 arch/arm/mach-omap2/hsmmc.h
+>>=20
+>> --
+>> 2.23.0
+>>=20
 
-  RDMA/hns: Correct the value of srq_desc_size (2019-11-06 13:37:02 -0400)
-
-----------------------------------------------------------------
-RDMA subsystem updates for 5.4-rc
-
-Bug fixes for old bugs in the hns and hfi1 drivers:
-
-- Calculate various values in hns properly to avoid over/underflows in
-  some cases
-
-- Fix an oops, PCI negotiation on Gen4 systems, and bugs related to
-  retries
-
-----------------------------------------------------------------
-James Erwin (1):
-      IB/hfi1: Ensure full Gen3 speed in a Gen4 system
-
-Kaike Wan (3):
-      IB/hfi1: Ensure r_tid_ack is valid before building TID RDMA ACK packet
-      IB/hfi1: Calculate flow weight based on QP MTU for TID RDMA
-      IB/hfi1: TID RDMA WRITE should not return IB_WC_RNR_RETRY_EXC_ERR
-
-Sirong Wang (1):
-      RDMA/hns: Correct the value of HNS_ROCE_HEM_CHUNK_LEN
-
-Wenpeng Liang (1):
-      RDMA/hns: Correct the value of srq_desc_size
-
- drivers/infiniband/hw/hfi1/init.c        |  1 -
- drivers/infiniband/hw/hfi1/pcie.c        |  4 ++-
- drivers/infiniband/hw/hfi1/rc.c          | 16 ++++-----
- drivers/infiniband/hw/hfi1/tid_rdma.c    | 57 ++++++++++++++++++--------------
- drivers/infiniband/hw/hfi1/tid_rdma.h    |  3 +-
- drivers/infiniband/hw/hns/hns_roce_hem.h |  2 +-
- drivers/infiniband/hw/hns/hns_roce_srq.c |  2 +-
- 7 files changed, 46 insertions(+), 39 deletions(-)
-
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl3Nb7YACgkQOG33FX4g
-mxpTtg/+M8SaISD6YKYjhuBMhNvUtnRKjxwwKt5s6hP1+8C04CY+eQykeHKFy7wM
-wx4cYiWjuyYgVDeT6m7H4wYQIIqCJqUqGFsfpyEpHKYOKZCj5lk+/94/s9ommvNd
-ollogA43qzHTBZ6HLLRbH3DwR7EqXVMdzL/bHoKDDTYxceriXz326lBIrVV4eTRC
-4HWKagQEUzj05gbV2+eTo4t0xFBoSm4p4mqq0MkqD3aViWZZs5bQ/PGd3JKcGlxH
-sn8vLxltUMLsJ1WurVjjSdJAaeYcJ5exbl0O1U12y89tT+reIiMnQ5rr4dc1S1GW
-fwtRfTswliX1IMDZo/yICtFoO2FsHlWUjQj/NeuXEi6QOnATTEO1pHfUFFP7FLlt
-44bEqoYxIdzo64YJ4tqcdxvzjTQiftK8CxzcpOava5uYdw2wNEzyHVqVHiKJc99i
-fe90IropcVLRACOobJODRe2ozLJnFTFsHh4VgjlVKesYFwF+t4tXC8NgCVngX1+V
-RiCcr0jplvoVatcdM5T16hwbaCmN6FEHUK9cOKVJ8xtYvsct0P4CXhJuhYeqfCsu
-nTiDgY63VlH3tKGi8r/azagSU/eCnQkXR0Ucl/CyAU+V7jcflk4Ad5VVD1lokEUw
-oAwTM32pAzHy5qwKcGR7bJwK2C3HNT5cRTGPrgU0TUPjABHH8Uc=
-=6acZ
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
