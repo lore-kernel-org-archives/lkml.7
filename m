@@ -2,129 +2,151 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7929CC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB2AC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECB02071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573772053;
-	bh=CBtm99Qp7GYxppHYypNy831WT3+kzrbGSYGzSD4xmPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vuLy4cfm+R2kv9Y7XV8DyRRxzmi9uk2kLJnywby6chRKBaMsFq9hCQhtkU7KSbXs0
-	 k8WB+KAZHLotP0nnOKHe7GELh+Qo6Nf8I9v9AcNjq0MQgCjNgcyYCi05cK5q9M9wD3
-	 nk4IXU35IJMqeIVM8GNaIg1d6nqOkqveL+lh+7SE=
+	by mail.kernel.org (Postfix) with ESMTP id 8400F20706
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NbYoUKwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfKNWyM (ORCPT
+        id S1727151AbfKNWzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:54:12 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44993 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfKNWyM (ORCPT
+        Thu, 14 Nov 2019 17:55:17 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36450 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfKNWzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:54:12 -0500
-Received: by mail-qk1-f194.google.com with SMTP id m16so6539154qki.11;
-        Thu, 14 Nov 2019 14:54:11 -0800 (PST)
+        Thu, 14 Nov 2019 17:55:16 -0500
+Received: by mail-ot1-f66.google.com with SMTP id f10so6404005oto.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:55:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XRuK6d7TnHtLQBOfr1sWZbQMCgbijX/fPo8dKPOxUls=;
-        b=hNHpsL9SI8tkmXRDnJ6SofChw4EGguY7Ld+bMb4T6laRexKpu3RuJzK0JBK27sIkns
-         oP8bU+fX4FNl8grxlbg30jPD6X3Oi7kMqGRN9nvULSiW8PZCTVwjAyfefaISq4Po5MBw
-         gR/IYgZUI3ENRxoTml7vlWhMJtbir4YEDVxKtkrAr+hR9SJIZWXqFRAFpZ/0TIxd1xeq
-         N27Q4dHVhRxWeBTW4JVFqruSgofTf5hvUL0dC8uNFtFe6JViTTR4jBhQZNojXfUmqzDf
-         oSoqnt+Xc09OazjqQyJA6dQNNZ5FXWs6MeXDvr7KPOpQoZXwXmuHCnLx3knuTyutLIim
-         PbyA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KxZ1Ibqc+KUsdUu40X3MgsOVQYNN79f6M4asQUu3LOU=;
+        b=NbYoUKwoIt40q3gfcxeer7WRQUMWbljMK0KnWPm5GUlT0n0+O9uc5PejgfIe5T59/v
+         bocswU66sav+NK8orfQMo61JlIR8pJEX7UMy+avligm+By1P3vcdRs5jVmDRDQ8/zbwz
+         IJUcLzvkUvM2K4s83uH+m1JVjZfZ7d9HuioWDtH+nqxPcyv0Hwb6hfVhB18qRjLITIkM
+         wQtCQI/6FKE20hWr5HpkwXyNpMBLEiaPOWZhpj//KGI0ByeDDwLeIv3GzqcsTu9Nwh8A
+         /e4CZrgdm3X0CaOM3rfkx8pfOClHUsvfcBlNxUQcAFR65GA3myAcMMXUZeE4ytr5QLFN
+         nfyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XRuK6d7TnHtLQBOfr1sWZbQMCgbijX/fPo8dKPOxUls=;
-        b=jJ9epHQ6VRGJF+vuZ6DfAN7bUp7UUDvTQoYI9Cv4ss1bf4f8cIFZ5LVd434A5tj009
-         E51SjQFZjXyX8rclWAlm0oGe323vWpQULvOv0dGN9w5LJbkhB3L7bMibcM/7GJwRGdpq
-         01jfHOTSwHzS+EyRCWBwT8wOegv1EY6ZHmEmXVY23SNF/SXILC/VXbeLnaNVtf0RNPE0
-         LLwQ5XVq3jGjW0PzafsESgFKT3CmMrqDWZBWXuIpBfSU43Zx2sc35t1GrkUD1GYlkz7j
-         eex6b5Y7e8L8kwxGmAZcwJxS3mWVh+c8q0cAVxV74y91gsm7LA+Isl8Wtq4qs4DRuiL3
-         OzTw==
-X-Gm-Message-State: APjAAAU3rJdVVxRuzjawTFvwpowQqlx4HFI06P1SjRoF4J+/Bi40bRaV
-        DCD90XU/bAyeLTg4xJi+hf4=
-X-Google-Smtp-Source: APXvYqyjgTD34TCZL6vSolXShECU4mRhrBb+CbMWDjGy5CEeF+hg9j2Lin8TabfMQIhLsPbQz10RFg==
-X-Received: by 2002:a37:6442:: with SMTP id y63mr9788888qkb.264.1573772050641;
-        Thu, 14 Nov 2019 14:54:10 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:69f2])
-        by smtp.gmail.com with ESMTPSA id t11sm3991609qtj.15.2019.11.14.14.54.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 14:54:10 -0800 (PST)
-Date:   Thu, 14 Nov 2019 14:54:08 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     cgroups@vger.kernel.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        namhyung@kernel.org, open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, lizefan@huawei.com,
-        hannes@cmpxchg.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, kafai@fb.com,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH cgroup/for-5.5] cgroup: fix incorrect WARN_ON_ONCE() in
- cgroup_setup_root()
-Message-ID: <20191114225408.GO4163745@devbig004.ftw2.facebook.com>
-References: <CA+G9fYviReoG+gq=Jm8yQOMd01j2opae5p+VTGGMK7aLn0xWgw@mail.gmail.com>
- <20191114224213.GN4163745@devbig004.ftw2.facebook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KxZ1Ibqc+KUsdUu40X3MgsOVQYNN79f6M4asQUu3LOU=;
+        b=M2oJmSKyX3d9oNjE7QR7A4Am1J0V9IHdugdC8bGm+nwGUNA/I96tKPOKCOJOcqFjpU
+         pQ20qZHhj9tADqTBtAILJJ0QIpGU8jMd2K4IqtinLEI4TxRzZ6w67PoEeefJpDqFeF4R
+         aEmcY4PccNDD0oWJjwTEbD5Ef1XJwvSGQeAas1aDGJmaKHM1FUkBc+Hv95JGfXb191KJ
+         vzcxttUZmL8yjAo2lmPACtf2SKfmy0Dy8SZ+yIgw/KObiALmd13DSn320FIoaKmfvtDu
+         QgL7FpOp5ywkA1BZ8unXkpmRPGzuihm56mKKCWqOCrkv6BGBL5NnkfBxX720cQoFGAbB
+         faYw==
+X-Gm-Message-State: APjAAAWo0N4IMbt0TjUvyjhF7/0olnc/KxPqgwdi55UJjy7Da15OMEoV
+        u3p0BLoqcyb66wGhI1UTKfO2F9nt+uIvuVD9PI/oOhFzcAQ=
+X-Google-Smtp-Source: APXvYqyKW+MrDuxMaUQjJlQAMLr1M8M9YrO+dcOtXg7N+PijYw1bovZT8Tk4L98sptfZt8akRCT4cAAvzuPH7vYKeSU=
+X-Received: by 2002:a9d:6f15:: with SMTP id n21mr9701011otq.231.1573772115532;
+ Thu, 14 Nov 2019 14:55:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114224213.GN4163745@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20191114222348.226355-1-saravanak@google.com> <CAJZ5v0gFUmNd1JNNV+KdQLZ6Zw0VTjtEumbBpy20=0Py0q=OKQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gFUmNd1JNNV+KdQLZ6Zw0VTjtEumbBpy20=0Py0q=OKQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 14 Nov 2019 14:54:39 -0800
+Message-ID: <CAGETcx8EFMzjoMjeernyGPGSKg_nTE1os_SYGmwLnRBw7nVVkA@mail.gmail.com>
+Subject: Re: [PATCH v3] driver core: Allow device link operations inside sync_state()
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Never mind.  I just failed to see the warning on x86_32.  The warning
-is spurious and fixed with the following commit.  Applied to
-cgroup/for-5.5.
+On Thu, Nov 14, 2019 at 2:45 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Nov 14, 2019 at 11:23 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > Some sync_state() implementations might need to call APIs that in turn
+> > make calls to device link APIs. So, do the sync_state() callbacks
+> > without holding the device link lock.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/base/core.c | 80 ++++++++++++++++++++++++++++++++++++++++-----
+> >  1 file changed, 72 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index e6d3e6d485da..9a88bcfd5d33 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -695,7 +695,26 @@ int device_links_check_suppliers(struct device *dev)
+> >         return ret;
+> >  }
+> >
+> > -static void __device_links_supplier_sync_state(struct device *dev)
+> > +/**
+> > + * __device_links_queue_sync_state - Queue a device for sync_state() callback
+> > + * @dev: Device to call sync_state() on
+> > + * @list: List head to queue the @dev on
+> > + *
+> > + * Queues a device for a sync_state() callback when the device links write lock
+> > + * isn't held. This allows the sync_state() execution flow to use device links
+> > + * APIs.  The caller must ensure this function is called with
+> > + * device_links_write_lock() held.
+> > + *
+> > + * This function does a get_device() to make sure the device is not freed while
+> > + * on this list.
+> > + *
+> > + * So the caller must also ensure that device_links_flush_sync_list() is called
+> > + * as soon as the caller releases device_links_write_lock().  This is necessary
+> > + * to make sure the sync_state() is called in a timely fashion and the
+> > + * put_device() is called on this device.
+> > + */
+> > +static void __device_links_queue_sync_state(struct device *dev,
+> > +                                           struct list_head *list)
+> >  {
+> >         struct device_link *link;
+> >
+> > @@ -709,12 +728,46 @@ static void __device_links_supplier_sync_state(struct device *dev)
+> >                         return;
+> >         }
+> >
+> > -       if (dev->bus->sync_state)
+> > -               dev->bus->sync_state(dev);
+> > -       else if (dev->driver && dev->driver->sync_state)
+> > -               dev->driver->sync_state(dev);
+> > -
+> > +       /*
+> > +        * Set the flag here to avoid adding the same device to a list more
+> > +        * than once. This can happen if new consumers get added to the device
+> > +        * and probed before the list is flushed.
+> > +        */
+> >         dev->state_synced = true;
+> > +
+> > +       if (list_empty(&dev->links.defer_sync)) {
+> > +               get_device(dev);
+> > +               list_add_tail(&dev->links.defer_sync, list);
+> > +       } else {
+> > +               WARN_ON(1);
+> > +       }
+>
+> Now you can do:
+>
+>         if (WARN_ON(!list_empty(&dev->links.defer_sync)))
+>                 return;
+>
+>         get_device(dev);
+>         list_add_tail(&dev->links.defer_sync, list);
+>
+> The rest of the patch LGTM.
 
-Thanks.
+Sending the patch right away in hopes of getting a reviewed-by or ack :)
 
------- 8< ------
-From d7495343228f30d8206e92dccfd1c41adcfa142d Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Thu, 14 Nov 2019 14:46:51 -0800
-
-743210386c03 ("cgroup: use cgrp->kn->id as the cgroup ID") added WARN
-which triggers if cgroup_id(root_cgrp) is not 1.  This is fine on
-64bit ino archs but on 32bit archs cgroup ID is ((gen << 32) | ino)
-and gen starts at 1, so the root id is 0x1_0000_0001 instead of 1
-always triggering the WARN.
-
-What we wanna make sure is that the ino part is 1.  Fix it.
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Fixes: 743210386c03 ("cgroup: use cgrp->kn->id as the cgroup ID")
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- kernel/cgroup/cgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index c12dcf7dc432..53098c1d45e2 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -1966,7 +1966,7 @@ int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask)
- 		goto exit_root_id;
- 	}
- 	root_cgrp->kn = root->kf_root->kn;
--	WARN_ON_ONCE(cgroup_id(root_cgrp) != 1);
-+	WARN_ON_ONCE(cgroup_ino(root_cgrp) != 1);
- 	root_cgrp->ancestor_ids[0] = cgroup_id(root_cgrp);
- 
- 	ret = css_populate_dir(&root_cgrp->self);
--- 
-2.17.1
-
+-Saravana
