@@ -2,113 +2,172 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861F4C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685AAC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E50120709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438142070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ElTRMVV5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yc4VleT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfKNUVC (ORCPT
+        id S1727020AbfKNUWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:21:02 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39068 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfKNUVC (ORCPT
+        Thu, 14 Nov 2019 15:22:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56160 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726655AbfKNUWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:21:02 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 29so4499110pgm.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 12:21:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X9HJcC+dDI+SMIjHb3TSTTEdvzoA4CpSNR8pt2+xQ9g=;
-        b=ElTRMVV53tLxyamUmm5DqL/W3Istv4Uiy/Q1mKVmgCoTyNRjIOAI28alvfINoPTaKT
-         ddIdonmcp67HXtp+LPSAaeHdhy6c5L5ZPLxZ8U7pxlVeHdGB146Z7JfN2ia7z3fFVWRi
-         kS2M4+ccb1TvLkWTSx596GrajOg55/ZgoL6ow=
+        Thu, 14 Nov 2019 15:22:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573762943;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uy3A6U6GvNwW+cUqKR9ufgvAvkKicayB8WolhnR61T4=;
+        b=Yc4VleT2gORxMiQVVE6ft9ooUFtCKVymp9BBEOOxbREi6RDG3SMgQ2Pq0X+3xWF4u/+Bgw
+        rUYDcJ+aniW8/MYu7u2wklzptS+yw8Rhl4WluZM5ZiQZZjAXpBg18rqkmlRK56NQESv6n2
+        teiWg4/E++7QqI2fk5Z+rrbqT8LogV0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-7dJxjltsOdag6e8NYpYJ4Q-1; Thu, 14 Nov 2019 15:22:19 -0500
+Received: by mail-wm1-f70.google.com with SMTP id g14so4805915wmk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 12:22:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X9HJcC+dDI+SMIjHb3TSTTEdvzoA4CpSNR8pt2+xQ9g=;
-        b=QjvaUATnSrRxUNM9RAPL9LOE/FKflfTCPJJv5WybyGxcRNnRt+kSu41U8L7fM6fYCK
-         gt6M/A4Z2YikC/W6TEhYYTQlueODbBhDwhMv/9GMdXfHL7xV9XHqdpSUTordibYfdzUD
-         3tggvODZM4GUy70WX67MudNa4pBj2ilYbVfOuQ4Vj7upEQvw/RS2/Xcd+ZQd3jGF/i2+
-         WR9kSf/Ow3W/24ScYhMb67Uvh7qHsPx33tJcXpqAvQTEQDazfv1cC2wU2x7YbqynqYYj
-         AM+SMvjjxdkkqC0yJTYidIkTHOtFQNymCcBVhiynBJHjMsnRyu1BNygIxLdpjf9o1Y5L
-         MqpA==
-X-Gm-Message-State: APjAAAWd0h/uPVZAuBN4HF6ypJ/ja9H7d1xVfwdzGE1Uzs13+3npMHDy
-        67iMzCh8j6yxSgh/ookxnWsPFg==
-X-Google-Smtp-Source: APXvYqzTq1VOazEL+8iLqVK2oIGJkKAQy0KwKQaSFyK8gFQBdJmCUDZ2sXLkLsVQ6H93AgBeXZdFew==
-X-Received: by 2002:aa7:87c5:: with SMTP id i5mr12945500pfo.60.1573762861161;
-        Thu, 14 Nov 2019 12:21:01 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v189sm8084763pfv.133.2019.11.14.12.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 12:21:00 -0800 (PST)
-Date:   Thu, 14 Nov 2019 15:20:59 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saiprakash.ranjan@codeaurora.org
-Subject: Re: [RFC 1/2] docs: ftrace: Clarify the RAM impact of buffer_size_kb
-Message-ID: <20191114202059.GC186056@google.com>
-References: <cover.1573661658.git.frank@generalsoftwareinc.com>
- <0e4a803c3e24140172855748b4a275c31920e208.1573661658.git.frank@generalsoftwareinc.com>
- <20191113113730.213ddd72@gandalf.local.home>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0SJkjpv2HDiNEvyxxMCbTsKg4OElpw2hmJNuwbm1+Ww=;
+        b=XZZBWUy5Q98YqLL9+PFJtJPgpdL4f/PQu0ts94pyKy7MmlvPFIAnWz3nt/q/Z01ocy
+         blXe6Ottdn8QOU/pIvtIHxl8gh9aephG9PFg7O4QARG5ZdjMjAJSRHJnHuJOoYdKY8SH
+         elR0XBuKplBnsWMG7jZS9XrLzMVoFhUGxR49siYiYwlsLFXbpbuOhytiqs4dG5PplFZY
+         Uq5zUgwsuP+Y17QPVuWh4gzxM0uuxS4QNPzJVMvPjXhChw44Cyh/lsBxWENctDpl9bd0
+         9NPaQU2zAuW5TIuz7+dXrDVBFm1/h2EkTXHXdWIrIgkZWYPJ/MFOszeOKyNWRL8aFKd3
+         8wCw==
+X-Gm-Message-State: APjAAAUdZfswsXTMDgsPJH4uurxoA48+WF1kAgrfkD/k52X80SmTklxp
+        1WcZOqzH+Du3agBTusKqey875bjOu5uJKsiH7UAfKWGbmIALF2nsNRL+3npeLZmk0ySjCvVk9nf
+        sUDQM88Gexo0e6/NhvaC6ogBE
+X-Received: by 2002:adf:ec4b:: with SMTP id w11mr10102318wrn.243.1573762938819;
+        Thu, 14 Nov 2019 12:22:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqygsYdJkry0Z47hzZeZ3TwxuZ7J/7WDsvabqCKzND6L18gyI7cuvLtuHwYFk1oQ9yauwGVucw==
+X-Received: by 2002:adf:ec4b:: with SMTP id w11mr10102293wrn.243.1573762938627;
+        Thu, 14 Nov 2019 12:22:18 -0800 (PST)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id a11sm7617992wmh.40.2019.11.14.12.22.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 12:22:17 -0800 (PST)
+Subject: Re: [PATCH v7 3/8] firmware: Rename FW_OPT_NOFALLBACK to
+ FW_OPT_NOFALLBACK_SYSFS
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-4-hdegoede@redhat.com>
+ <20191011150227.GO16384@42.do-not-panic.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d7956159-87b9-06ec-4f8b-291389324178@redhat.com>
+Date:   Thu, 14 Nov 2019 21:22:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113113730.213ddd72@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011150227.GO16384@42.do-not-panic.com>
+Content-Language: en-US
+X-MC-Unique: 7dJxjltsOdag6e8NYpYJ4Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:37:30AM -0500, Steven Rostedt wrote:
-> On Wed, 13 Nov 2019 11:32:36 -0500
-> "Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
-[snip]
-> > +
-> > +        The number of pages allocated for each CPU buffer may not
-> > +        be the same than the round up of the division:
-> > +        buffer_size_kb / PAGE_SIZE. This is because part of each page is
-> > +        used to store a page header with metadata. E.g. with
-> > +        buffer_size_kb=4096 (kilobytes), a PAGE_SIZE=4096 bytes and a
-> > +        BUF_PAGE_HDR_SIZE=16 bytes (BUF_PAGE_HDR_SIZE is the size of the
-> > +        page header with metadata) the number of pages allocated for each
-> > +        CPU buffer is 1029, not 1024. The formula for calculating the
-> > +        number of pages allocated for each CPU buffer is the round up of:
-> > +        buffer_size_kb / (PAGE_SIZE - BUF_PAGE_HDR_SIZE).
-> 
-> I have no problem with this patch, but the concern of documenting the
-> implementation here, which will most likely not be updated if the
-> implementation is ever changed, which is why I was vague to begin with.
-> 
-> But it may never be changed as that code has been like that for a
-> decade now.
+Hi,
 
-Agreed. To give some context, Frank is an outreachy intern I am working with and
-one of his starter tasks was to understand the ring buffer's basics.  I asked
-him to send a patch since I thought he mentioned there was an error in the
-documnentation. It looks like all that was missing is some explanation which
-the deleted text in brackets above should already cover.
+On 11-10-2019 17:02, Luis Chamberlain wrote:
+> On Fri, Oct 04, 2019 at 04:50:51PM +0200, Hans de Goede wrote:
+>> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firm=
+ware_loader/fallback.c
+>> index 62ee90b4db56..665b350419cb 100644
+>> --- a/drivers/base/firmware_loader/fallback.c
+>> +++ b/drivers/base/firmware_loader/fallback.c
+>> @@ -606,7 +606,7 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_fl=
+ags)
+>>   =09=09return false;
+>>   =09}
+>>  =20
+>> -=09if ((opt_flags & FW_OPT_NOFALLBACK))
+>> +=09if ((opt_flags & FW_OPT_NOFALLBACK_SYSFS))
+>>   =09=09return false;
+>>  =20
+>>   =09/* Also permit LSMs and IMA to fail firmware sysfs fallback */
+>> @@ -630,10 +630,11 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_=
+flags)
+>>    * interface. Userspace is in charge of loading the firmware through t=
+he sysfs
+>>    * loading interface. This sysfs fallback mechanism may be disabled co=
+mpletely
+>>    * on a system by setting the proc sysctl value ignore_sysfs_fallback =
+to true.
+>> - * If this false we check if the internal API caller set the @FW_OPT_NO=
+FALLBACK
+>> - * flag, if so it would also disable the fallback mechanism. A system m=
+ay want
+>> - * to enfoce the sysfs fallback mechanism at all times, it can do this =
+by
+>> - * setting ignore_sysfs_fallback to false and force_sysfs_fallback to t=
+rue.
+>> + * If this false we check if the internal API caller set the
+>           ignore_sysfs_fallback set to true or force_sysfs_fallback is
+> =09 set to false
 
-Steve, your call if you want this patch. Looks like Frank understands the
-page header taking up some space, so one of the goals of the exercise is
-accomplished ;-)
+I do not think that that is correct, looking at the code the order of
+checks is:
 
-thanks,
+=09if (fw_fallback_config.ignore_sysfs_fallback)
+=09=09BAIL
 
- - Joel
+=09if (opt_flags & FW_OPT_NOFALLBACK_SYSFS)
+=09=09BAIL
+
+=09if (fw_fallback_config.force_sysfs_fallback)
+=09=09DO_FALLBACK (and return)
+
+=09if (!(opt_flags & FW_OPT_USERHELPER))
+=09=09BAIL
+
+=09DO_FALLBACK
+
+So the original comment seems correct as FW_OPT_NOFALLBACK trumps / has
+higher prio then force_sysfs_fallback.
+
+Anyways I do not believe that fixing up/rewording this comment (if it needs
+fixing) belongs in the commit/patch. This patch is purely about renaming
+FW_OPT_NOFALLBACK to FW_OPT_NOFALLBACK_SYSFS, the lines changed in this
+chunk are not changed, they are merely re-word/line-wrapped with the
+exception of fixing the enfoce typo to enforce, as mentioned in the
+commit message.
+
+Regards,
+
+Hans
 
