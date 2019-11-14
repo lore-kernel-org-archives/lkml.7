@@ -2,176 +2,145 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22295C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC52C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F260220715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:45:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UYjojj0B"
+	by mail.kernel.org (Postfix) with ESMTP id AAB7C20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfKNGpC (ORCPT
+        id S1726605AbfKNGp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:45:02 -0500
-Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:46754
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        Thu, 14 Nov 2019 01:45:29 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43136 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfKNGpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:45:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=myrPNloSgODuDVF+Lxy8Rys8OoeP9l7Bco0IQeUPbc9b1ceNsLSxILF8gy1spJBOo0eNJQssedntEBomFeJlVY7kJl59rAbbUfW48d/XXBhBByzhTDz4H5rpIYTkqPlGEqK+xHgIf3/4V3Y/9HieLDk8a7nmhmcTcDJ8o2lSIncqSc+OzXmRSBfYi6d4u72hU4wfcJlMfV0aoFC5ngcFzD2cxj+qUTF+5eROTMYM2g9+hOoVaQpCZKEch7LWo5tifeRBVrqOxCTDFgeOhFpAN5hxjyPiD2ovxhaxU1Axd6VvLuAoSUhUZwMHcXyahLSuIOyWZVVsXrtZOp663dN+gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c90VjeDbT9GrWbIefYagslXlWp0qzbIYDp2utrm7agg=;
- b=OqxkQXUtwYWObzMiwNsKRuUER2scUIz5NpqtBgf5A7SC8FHjSBu0KcTB0mDl7c85PYKfO6fxw4K08q6Q8ykp7soksvPIINGI/WWuUw/K/HDZ+bEkFenluRBxv9c7/aKKhDWYkIdcVkoxb937ruCpPn31vXNzpFzAxYCZPC2YNOsu0Byw3bhOlD0qp+YPDn2F29wTtDHp3gKO0SeMot2CM91/GigEwtYJq0R6qzroa/hBryuUqGnkVE5Az2EGCr+DyRP9510CJayfUNSgLc66vvG4jemALTPrXz0BxQYRSKk29Z0x6nrgKWpWBeR5VbH0rBCi+51bN15vaAwWE4z+Jw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c90VjeDbT9GrWbIefYagslXlWp0qzbIYDp2utrm7agg=;
- b=UYjojj0BPM70smIw7BjjjMXRYs7BDwFaYsN8c/0Tog5P1OCDu+cwMjKtOLu8tm2mKReZTi1cRUXdiQRp2f6q1/19K+/09mHqx6WY6h9ciFj/uAK+MqDijmNd094KaUYZmNLEdmOyupENDRP/E22K/W7paPPds83YzNVUnGZguiE=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB5072.eurprd04.prod.outlook.com (20.177.50.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Thu, 14 Nov 2019 06:44:58 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::cd33:501f:b25:51a9]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::cd33:501f:b25:51a9%7]) with mapi id 15.20.2451.027; Thu, 14 Nov 2019
- 06:44:58 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: RE: [PATCH 4.19 093/125] usb: gadget: configfs: fix concurrent issue
- between composite APIs
-Thread-Topic: [PATCH 4.19 093/125] usb: gadget: configfs: fix concurrent issue
- between composite APIs
-Thread-Index: AQHVmMAk0+NCuNSe+0SwjLKirLuN5KeJIN4AgAEXLnA=
-Date:   Thu, 14 Nov 2019 06:44:58 +0000
-Message-ID: <VI1PR04MB532778F3728AB7465D0892F38B710@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <20191111181438.945353076@linuxfoundation.org>
- <20191111181452.322265396@linuxfoundation.org>
- <20191113134935.GA20980@duo.ucw.cz>
-In-Reply-To: <20191113134935.GA20980@duo.ucw.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 76415925-ab42-4310-cc05-08d768ce2a7e
-x-ms-traffictypediagnostic: VI1PR04MB5072:
-x-microsoft-antispam-prvs: <VI1PR04MB50727A5890F0315BC8E8B71C8B710@VI1PR04MB5072.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02213C82F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(346002)(136003)(376002)(199004)(189003)(54906003)(6246003)(110136005)(33656002)(186003)(99286004)(7696005)(256004)(76176011)(52536014)(14444005)(478600001)(5660300002)(14454004)(316002)(74316002)(102836004)(66066001)(26005)(25786009)(7736002)(305945005)(4326008)(71200400001)(71190400001)(6506007)(229853002)(44832011)(476003)(81166006)(76116006)(486006)(2906002)(8676002)(66556008)(3846002)(64756008)(81156014)(6116002)(66476007)(66946007)(66446008)(8936002)(86362001)(55016002)(9686003)(11346002)(6436002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5072;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dcHlKmuWV3QGS+2rJLQfu42C7W/iQlC5phX/7/QKb0aR7S+CgyAZAgKrADs+zzqKlvlw+H2BXZiVYObQnFWT0AR8kb6QzIgyIK4RGVVt6KWyTWvueBlgVMIVl7VWoiZXDs0nJkaSPhl1cgYqUOeOa68s7SikTEdqfwsaZX7Xmoc8ntdrzOG6aW5eGLvFu+J0x3e2wPdTZKwb2gRO5jph5j/HlFlib6bLVIVN4h4rL1ltv7H0UhO9gFmEwi6xtrockJg74QU9j6CnFr/AQIYaz/+swwx0CyoDCX4kEIBKfs8yiohbKXq45L2y/2ux25uxgOBqpD4Tron31guoKnzvZwSQto8WPiUdM1X8AXrA27k60oFz13tYyAMoTrCd5CK7cbL15VYm/kBhPIdjAkFH0wiSapAkR2LEIzqvZVINwA8hiooX3fW5xv0vEE2+d19A
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725807AbfKNGp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:45:29 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8463BDDCDDA6BFBF7016;
+        Thu, 14 Nov 2019 14:45:26 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 14:45:16 +0800
+Subject: Re: [PATCH] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+References: <8bdc7a86-e464-9c46-3d40-4f3c75111ce6@huawei.com>
+ <2931286.GRae9fBGx2@kreacher>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <2af56bf7-aff8-b4f5-b4cf-06743e906695@huawei.com>
+Date:   Thu, 14 Nov 2019 14:45:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76415925-ab42-4310-cc05-08d768ce2a7e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 06:44:58.0739
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C+JMv2OFLWx8cgrzEUx9sYHngxwydcfIAKKrUANT9vLZuzOEXwzwbiBeQps/7P58pjlMwu6iYruy/ZXplBJqSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5072
+In-Reply-To: <2931286.GRae9fBGx2@kreacher>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
-> >
-> > We meet several NULL pointer issues if configfs_composite_unbind and
-> > composite_setup (or composite_disconnect) are running together.
-> > These issues occur when do the function switch stress test, the
-> > configfs_compsoite_unbind is called from user mode by echo "" to
-> > /sys/../UDC entry, and meanwhile, the setup interrupt or disconnect
-> > interrupt occurs by hardware. The composite_setup
->=20
-> > +++ b/drivers/usb/gadget/configfs.c
-> > @@ -61,6 +61,8 @@ struct gadget_info {
-> >  	bool use_os_desc;
-> >  	char b_vendor_code;
-> >  	char qw_sign[OS_STRING_QW_SIGN_LEN];
-> > +	spinlock_t spinlock;
-> > +	bool unbind;
-> >  };
-> >
-> >  static inline struct gadget_info *to_gadget_info(struct config_item
-> > *item) @@ -1244,6 +1246,7 @@ static int configfs_composite_bind(struct
-> usb_gadget *gadget,
-> >  	int				ret;
-> >
-> >  	/* the gi->lock is hold by the caller */
-> > +	gi->unbind =3D 0;
-> >  	cdev->gadget =3D gadget;
->=20
-> Since variable is bool, I'd expect "=3D false" here?
->=20
-> > +	unsigned long flags;
-> >
-> >  	/* the gi->lock is hold by the caller */
->=20
-> "is held".
->=20
-> >  	cdev =3D get_gadget_data(gadget);
-> >  	gi =3D container_of(cdev, struct gadget_info, cdev);
-> > +	spin_lock_irqsave(&gi->spinlock, flags);
-> > +	gi->unbind =3D 1;
->=20
-> =3D true;
->=20
-> > +static int configfs_composite_setup(struct usb_gadget *gadget,
-> > +		const struct usb_ctrlrequest *ctrl) {
-> > +	struct usb_composite_dev *cdev;
-> > +	struct gadget_info *gi;
-> > +	unsigned long flags;
-> > +	int ret;
-> > +
-> > +	cdev =3D get_gadget_data(gadget);
-> > +	if (!cdev)
-> > +		return 0;
-> > +
-> > +	gi =3D container_of(cdev, struct gadget_info, cdev);
-> > +	spin_lock_irqsave(&gi->spinlock, flags);
-> > +	cdev =3D get_gadget_data(gadget);
->=20
-> cdev already contains required value, why get it second time? (If it need=
-s to be
-> done under lock, comment might be useful...)
->=20
 
-Hi Pavel,
 
-Thanks for comment.
+On 2019/11/14 7:21, Rafael J. Wysocki wrote:
+> On Tuesday, November 5, 2019 3:35:25 PM CET Yunfeng Ye wrote:
+>> There are two problems after commit 0f27cff8597d ("ACPI: sysfs: Make
+>> ACPI GPE mask kernel parameter cover all GPEs"):
+>>
+>> 1. ACPI_MASKABLE_GPE_MAX is changed from 0x80 to 0xff, so the check
+>> condition "gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of
+>> gpe is u8.
+>>
+>> 2. The size of bitmap is ACPI_MASKABLE_GPE_MAX, so it is not support the
+>> num 255 for gpe.
+>>
+>> Update the macro ACPI_MASKABLE_GPE_MAX to 0x100, and change the type of
+>> gpe to u32, also modify the checking condition for gpe.
+>>
+>> Bye the way, update the docs for kernel parameter acpi_mask_gpe.
+>>
+>> Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> 
+> AFAICS this really is about supporting the masking of GPE 0xFF.
+>>> ---
+>>  Documentation/admin-guide/kernel-parameters.txt | 1 +
+>>  drivers/acpi/sysfs.c                            | 8 ++++----
+>>  2 files changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index a84a83f8881e..dd878e2491e1 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -114,6 +114,7 @@
+>>  			This facility can be used to prevent such uncontrolled
+>>  			GPE floodings.
+>>  			Format: <int>
+>> +			Support masking of GPEs numbered from 0x00 to 0xff
+> 
+> Why not just say "Format: <byte>" ?
+> 
+ok, thanks.
 
-The reason is the cdev may be set to NULL by configfs_composite_unbind thro=
-ugh
-another process, eg, the user wants to disable current USB gadget function,=
-=20
-this patch tries to fix such kinds of concurrent issue.
+>>
+>>  	acpi_no_auto_serialize	[HW,ACPI]
+>>  			Disable auto-serialization of AML methods
+>> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+>> index 75948a3f1a20..3c3302583d78 100644
+>> --- a/drivers/acpi/sysfs.c
+>> +++ b/drivers/acpi/sysfs.c
+>> @@ -819,14 +819,14 @@ static ssize_t counter_set(struct kobject *kobj,
+>>   * interface:
+>>   *   echo unmask > /sys/firmware/acpi/interrupts/gpe00
+>>   */
+>> -#define ACPI_MASKABLE_GPE_MAX	0xFF
+>> +#define ACPI_MASKABLE_GPE_MAX	0x100
+> 
+> So this is the only change that's necessary AFAICS.
+> 
+>>  static DECLARE_BITMAP(acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) __initdata;
+>>
+>>  static int __init acpi_gpe_set_masked_gpes(char *val)
+>>  {
+>> -	u8 gpe;
+>> +	u32 gpe;
+>>
+>> -	if (kstrtou8(val, 0, &gpe) || gpe > ACPI_MASKABLE_GPE_MAX)
+> 
+> And here you can drop the ACPI_MASKABLE_GPE_MAX check and the rest can remain
+> as is.
+> 
+I will modify as your suggestion, thanks.
 
-Peter
-=20
-=20
+>> +	if (kstrtouint(val, 0, &gpe) || gpe >= ACPI_MASKABLE_GPE_MAX)
+>>  		return -EINVAL;
+>>  	set_bit(gpe, acpi_masked_gpes_map);
+>>
+>> @@ -838,7 +838,7 @@ void __init acpi_gpe_apply_masked_gpes(void)
+>>  {
+>>  	acpi_handle handle;
+>>  	acpi_status status;
+>> -	u8 gpe;
+>> +	u32 gpe;
+>>
+>>  	for_each_set_bit(gpe, acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) {
+>>  		status = acpi_get_gpe_device(gpe, &handle);
+>>
+> 
+> 
+> 
+> 
+> 
+> .
+> 
+
