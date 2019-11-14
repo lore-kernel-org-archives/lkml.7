@@ -2,107 +2,60 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9A4C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D4DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77AB2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:59:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhuwTSo1"
+	by mail.kernel.org (Postfix) with ESMTP id 79368206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfKNJ7c (ORCPT
+        id S1726534AbfKNKA6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:59:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45142 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727480AbfKNJ7Z (ORCPT
+        Thu, 14 Nov 2019 05:00:58 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:53869 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfKNKA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:59:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573725564;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f6p99asKfS17+1LG2xwN+D8QSOUVOyNnDSLD47Fl13g=;
-        b=HhuwTSo190V5F3kOY+ahS505OfUvxP+4PdXzqo3vo0b4pR/eWq//+IvuPZU2ZYof31Pxvf
-        TbWIBiCYBouxd1KeKPd7lkzaPALXeewysioSIGjKiTfKFi3YaCzUifT1ZYn5k05MS+v40R
-        3TRg0dFyzI5HK5YbhReT81ZUMGwOZTM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-e3OCytPZPqa2rbdTCFHZcQ-1; Thu, 14 Nov 2019 04:59:21 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F308E800052;
-        Thu, 14 Nov 2019 09:59:19 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-81.ams2.redhat.com [10.36.117.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D826165DB;
-        Thu, 14 Nov 2019 09:59:14 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org
-Subject: [PATCH net-next v2 15/15] vhost/vsock: refuse CID assigned to the guest->host transport
-Date:   Thu, 14 Nov 2019 10:57:50 +0100
-Message-Id: <20191114095750.59106-16-sgarzare@redhat.com>
-In-Reply-To: <20191114095750.59106-1-sgarzare@redhat.com>
-References: <20191114095750.59106-1-sgarzare@redhat.com>
+        Thu, 14 Nov 2019 05:00:58 -0500
+Received: from xps13 (lfbn-tou-1-421-123.w86-206.abo.wanadoo.fr [86.206.246.123])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id B1ABC24000E;
+        Thu, 14 Nov 2019 10:00:54 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 11:00:53 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <gregkh@linuxfoundation.org>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] ubi: remove unused variable 'err'
+Message-ID: <20191114110053.4fbeb918@xps13>
+In-Reply-To: <20191114072236.15104-1-yuehaibing@huawei.com>
+References: <20191114072236.15104-1-yuehaibing@huawei.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: e3OCytPZPqa2rbdTCFHZcQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a nested VM environment, we have to refuse to assign to a nested
-guest the same CID assigned to our guest->host transport.
-In this way, the user can use the local CID for loopback.
+Hi Yue,
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- drivers/vhost/vsock.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+YueHaibing <yuehaibing@huawei.com> wrote on Thu, 14 Nov 2019 15:22:36
++0800:
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index fdda9ec625ad..dde392b91bb3 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -718,6 +718,12 @@ static int vhost_vsock_set_cid(struct vhost_vsock *vso=
-ck, u64 guest_cid)
- =09if (guest_cid > U32_MAX)
- =09=09return -EINVAL;
-=20
-+=09/* Refuse if CID is assigned to the guest->host transport (i.e. nested
-+=09 * VM), to make the loopback work.
-+=09 */
-+=09if (vsock_find_cid(guest_cid))
-+=09=09return -EADDRINUSE;
-+
- =09/* Refuse if CID is already in use */
- =09mutex_lock(&vhost_vsock_mutex);
- =09other =3D vhost_vsock_get(guest_cid);
---=20
-2.21.0
+> drivers/mtd/ubi/debug.c:512:6: warning: unused variable 'err' [-Wunused-variable]
+> 
+> commit 3427dd213259 ("mtd: no need to check return value
+> of debugfs_create functions") leave this variable not used.
 
+Thanks for the fix but I already fixed this trivial issue, I just
+did not had time yesterday night to push it, now it is done. It will
+be part of tomorrow's linux-next release.
+
+Cheers,
+Miquèl
