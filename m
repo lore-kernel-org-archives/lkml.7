@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60423C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2726C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B492071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C825D20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKNRyE (ORCPT
+        id S1727168AbfKNRyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:54:04 -0500
+        Thu, 14 Nov 2019 12:54:09 -0500
 Received: from mga05.intel.com ([192.55.52.43]:8277 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727118AbfKNRyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:54:02 -0500
+        id S1727145AbfKNRyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:54:04 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:54:02 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:54:04 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="203133014"
+   d="scan'208";a="203133029"
 Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:54:00 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:54:02 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v3 4/6] soundwire: sdw_slave: track unattach_request to handle all init sequences
-Date:   Thu, 14 Nov 2019 11:53:43 -0600
-Message-Id: <20191114175345.21836-5-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 5/6] soundwire: intel: update interfaces between ASoC and SoundWire
+Date:   Thu, 14 Nov 2019 11:53:44 -0600
+Message-Id: <20191114175345.21836-6-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
 References: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
@@ -51,70 +51,251 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Slave device initialization can be split in 4 different cases:
+The current interfaces between ASoC and SoundWire are limited by the
+platform_device infrastructure to an init() and exit() (mapped to the
+platform driver.probe and .remove)
 
-1. Master-initiated hardware reset, system suspend-resume and
-pm_runtime based on clock-stop mode1. To avoid timeouts and a bad
-audio experience, the Slave device resume operations need to wait for
-the Slave device to be re-enumerated and its settings restored.
+To help with the platform detection, machine driver selection and
+management of power dependencies between DSP and SoundWire IP, the
+ASoC side requires:
 
-2. Exit from clock-stop mode0. In this case, the Slave device is
-required to remain enumerated and its context preserved while the
-clock is stopped, so no re-initialization or wait_for_completion() is
-necessary.
+a) an ACPI scan helper, to report if any devices are exposed in the
+DSDT tables, and if any links are disabled by the BIOS.
 
-3. Slave-initiated pm_runtime D3 transition. With the parent child
-relationship, it is possible that a Slave device becomes 'suspended'
-while its parent is still 'active' with the bus clock still
-toggling. In this case, during the pm_runtime resume operation, there
-is no need to wait for any settings to be restored.
+b) a probe helper that allocates the resources without actually
+starting the bus.
 
-4. Slave reset (sync loss or implementation-defined). In that case the
-bus remains operational and the Slave device will be re-initialized
-when it becomes ATTACHED again.
+c) a startup helper which does start the bus when all power
+dependencies are settled.
 
-In previous patches, we suggested the use of wait_for_completion() to
-deal with the case #1, but case #2 and #3 do not need any wait.
+d) an exit helper to free all resources
 
-To account for those differences, this patch adds an unattach_request
-field. The field is explicitly set by the Master for the case #1, and
-if non-zero the Slave device shall wait on resume. In all other cases,
-the Slave resume operations can proceed without wait.
+e) an interrupt_enable/disable helper, typically invoked after the
+startup helper but also used in suspend routines.
 
-The only request tracked so far is Master HardReset, but the request
-is declared as a bit mask for future extensions (if needed). The
-definition for this value is added in bus.h and does not need to be
-exposed in sdw.h
+This patch moves all required interfaces to sdw_intel.h, mainly to
+allow SoundWire and ASoC parts to be merged separately once the header
+files are shared between trees.
+
+To avoid compilation issues, the conflicts in intel_init.c are blindly
+removed. This would in theory prevent the code from working, but since
+there are no users of the Intel Soundwire driver this has no
+impact. Functionality will be restored when the removal of platform
+devices is complete.
+
+Support for SoundWire + SOF builds will only be provided once all the
+required pieces are upstream.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- include/linux/soundwire/sdw.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/soundwire/intel.h           |  9 ++--
+ drivers/soundwire/intel_init.c      | 30 +++--------
+ include/linux/soundwire/sdw_intel.h | 77 +++++++++++++++++++++++++++--
+ 3 files changed, 85 insertions(+), 31 deletions(-)
 
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index ed42cd79eab7..b7c9eca4332a 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -556,6 +556,11 @@ struct sdw_slave_ops {
-  * Slave device
-  * @initialization_complete: completion utility to control potential races
-  * on startup between device enumeration and settings being restored
-+ * @unattach_request: mask field to keep track why the Slave re-attached and
-+ * was re-initialized. This is useful to deal with potential race conditions
-+ * between the Master suspending and the codec resuming, and make sure that
-+ * when the Master triggered a reset the Slave is properly enumerated and
-+ * initialized
+diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
+index d923b6262330..e4cc1d3804ff 100644
+--- a/drivers/soundwire/intel.h
++++ b/drivers/soundwire/intel.h
+@@ -5,17 +5,20 @@
+ #define __SDW_INTEL_LOCAL_H
+ 
+ /**
+- * struct sdw_intel_link_res - Soundwire link resources
++ * struct sdw_intel_link_res - Soundwire Intel link resource structure,
++ * typically populated by the controller driver.
++ * @pdev: platform_device
++ * @mmio_base: mmio base of SoundWire registers
+  * @registers: Link IO registers base
+  * @shim: Audio shim pointer
+  * @alh: ALH (Audio Link Hub) pointer
+  * @irq: Interrupt line
+  * @ops: Shim callback ops
+  * @arg: Shim callback ops argument
+- *
+- * This is set as pdata for each link instance.
   */
- struct sdw_slave {
- 	struct sdw_slave_id id;
-@@ -574,6 +579,7 @@ struct sdw_slave {
- 	struct completion probe_complete;
- 	struct completion enumeration_complete;
- 	struct completion initialization_complete;
-+	u32 unattach_request;
+ struct sdw_intel_link_res {
++	struct platform_device *pdev;
++	void __iomem *mmio_base; /* not strictly needed, useful for debug */
+ 	void __iomem *registers;
+ 	void __iomem *shim;
+ 	void __iomem *alh;
+diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+index 2a2b4d8df462..f8ae199094d3 100644
+--- a/drivers/soundwire/intel_init.c
++++ b/drivers/soundwire/intel_init.c
+@@ -27,19 +27,9 @@ static int link_mask;
+ module_param_named(sdw_link_mask, link_mask, int, 0444);
+ MODULE_PARM_DESC(sdw_link_mask, "Intel link mask (one bit per link)");
+ 
+-struct sdw_link_data {
+-	struct sdw_intel_link_res res;
+-	struct platform_device *pdev;
+-};
+-
+-struct sdw_intel_ctx {
+-	int count;
+-	struct sdw_link_data *links;
+-};
+-
+ static int sdw_intel_cleanup_pdev(struct sdw_intel_ctx *ctx)
+ {
+-	struct sdw_link_data *link = ctx->links;
++	struct sdw_intel_link_res *link = ctx->links;
+ 	int i;
+ 
+ 	if (!link)
+@@ -62,7 +52,7 @@ static struct sdw_intel_ctx
+ {
+ 	struct platform_device_info pdevinfo;
+ 	struct platform_device *pdev;
+-	struct sdw_link_data *link;
++	struct sdw_intel_link_res *link;
+ 	struct sdw_intel_ctx *ctx;
+ 	struct acpi_device *adev;
+ 	int ret, i;
+@@ -123,14 +113,12 @@ static struct sdw_intel_ctx
+ 			continue;
+ 		}
+ 
+-		link->res.irq = res->irq;
+-		link->res.registers = res->mmio_base + SDW_LINK_BASE
++		link->registers = res->mmio_base + SDW_LINK_BASE
+ 					+ (SDW_LINK_SIZE * i);
+-		link->res.shim = res->mmio_base + SDW_SHIM_BASE;
+-		link->res.alh = res->mmio_base + SDW_ALH_BASE;
++		link->shim = res->mmio_base + SDW_SHIM_BASE;
++		link->alh = res->mmio_base + SDW_ALH_BASE;
+ 
+-		link->res.ops = res->ops;
+-		link->res.arg = res->arg;
++		link->ops = res->ops;
+ 
+ 		memset(&pdevinfo, 0, sizeof(pdevinfo));
+ 
+@@ -138,8 +126,6 @@ static struct sdw_intel_ctx
+ 		pdevinfo.name = "int-sdw";
+ 		pdevinfo.id = i;
+ 		pdevinfo.fwnode = acpi_fwnode_handle(adev);
+-		pdevinfo.data = &link->res;
+-		pdevinfo.size_data = sizeof(link->res);
+ 
+ 		pdev = platform_device_register_full(&pdevinfo);
+ 		if (IS_ERR(pdev)) {
+@@ -224,10 +210,8 @@ EXPORT_SYMBOL(sdw_intel_init);
+  *
+  * Delete the controller instances created and cleanup
+  */
+-void sdw_intel_exit(void *arg)
++void sdw_intel_exit(struct sdw_intel_ctx *ctx)
+ {
+-	struct sdw_intel_ctx *ctx = arg;
+-
+ 	sdw_intel_cleanup_pdev(ctx);
+ 	kfree(ctx);
+ }
+diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
+index c9427cb6020b..034eca8df748 100644
+--- a/include/linux/soundwire/sdw_intel.h
++++ b/include/linux/soundwire/sdw_intel.h
+@@ -16,24 +16,91 @@ struct sdw_intel_ops {
  };
  
- #define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
+ /**
+- * struct sdw_intel_res - Soundwire Intel resource structure
++ * struct sdw_intel_acpi_info - Soundwire Intel information found in ACPI tables
++ * @handle: ACPI controller handle
++ * @count: link count found with "sdw-master-count" property
++ * @link_mask: bit-wise mask listing links enabled by BIOS menu
++ *
++ * this structure could be expanded to e.g. provide all the _ADR
++ * information in case the link_mask is not sufficient to identify
++ * platform capabilities.
++ */
++struct sdw_intel_acpi_info {
++	acpi_handle handle;
++	int count;
++	u32 link_mask;
++};
++
++struct sdw_intel_link_res;
++
++/**
++ * struct sdw_intel_ctx - context allocated by the controller
++ * driver probe
++ * @count: link count
++ * @mmio_base: mmio base of SoundWire registers, only used to check
++ * hardware capabilities after all power dependencies are settled.
++ * @link_mask: bit-wise mask listing SoundWire links reported by the
++ * Controller
++ * @handle: ACPI parent handle
++ * @links: information for each link (controller-specific and kept
++ * opaque here)
++ */
++struct sdw_intel_ctx {
++	int count;
++	void __iomem *mmio_base;
++	u32 link_mask;
++	acpi_handle handle;
++	struct sdw_intel_link_res *links;
++};
++
++/**
++ * struct sdw_intel_res - Soundwire Intel global resource structure,
++ * typically populated by the DSP driver
++ *
++ * @count: link count
+  * @mmio_base: mmio base of SoundWire registers
+  * @irq: interrupt number
+  * @handle: ACPI parent handle
+  * @parent: parent device
+  * @ops: callback ops
+- * @arg: callback arg
++ * @dev: device implementing hwparams and free callbacks
++ * @link_mask: bit-wise mask listing links selected by the DSP driver
++ * This mask may be a subset of the one reported by the controller since
++ * machine-specific quirks are handled in the DSP driver.
+  */
+ struct sdw_intel_res {
++	int count;
+ 	void __iomem *mmio_base;
+ 	int irq;
+ 	acpi_handle handle;
+ 	struct device *parent;
+ 	const struct sdw_intel_ops *ops;
+-	void *arg;
++	struct device *dev;
++	u32 link_mask;
+ };
+ 
+-void *sdw_intel_init(acpi_handle *parent_handle, struct sdw_intel_res *res);
+-void sdw_intel_exit(void *arg);
++/*
++ * On Intel platforms, the SoundWire IP has dependencies on power
++ * rails shared with the DSP, and the initialization steps are split
++ * in three. First an ACPI scan to check what the firmware describes
++ * in DSDT tables, then an allocation step (with no hardware
++ * configuration but with all the relevant devices created) and last
++ * the actual hardware configuration. The final stage is a global
++ * interrupt enable which is controlled by the DSP driver. Splitting
++ * these phases helps simplify the boot flow and make early decisions
++ * on e.g. which machine driver to select (I2S mode, HDaudio or
++ * SoundWire).
++ */
++int sdw_intel_acpi_scan(acpi_handle *parent_handle,
++			struct sdw_intel_acpi_info *info);
++
++struct sdw_intel_ctx *
++sdw_intel_probe(struct sdw_intel_res *res);
++
++int sdw_intel_startup(struct sdw_intel_ctx *ctx);
++
++void sdw_intel_exit(struct sdw_intel_ctx *ctx);
++
++void sdw_intel_enable_irq(void __iomem *mmio_base, bool enable);
+ 
+ #endif
 -- 
 2.20.1
 
