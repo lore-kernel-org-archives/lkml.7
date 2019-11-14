@@ -2,165 +2,190 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD00C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0208EC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C35206E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573704886;
-	bh=OhClmUW9q2p5vazL+PPl6LPUsbvP6Yq/wBursDlyo9Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IhwPKwiCEmaX7Dacuj2U7S9nZmc+P5AP/ny33YWXgQuk59HAvHadzD9rp3kTVN2Ic
-	 CbQCZ+Ry7ABQdJEnOaq5HUNnxRpVPNYmsM0hnZbZazDpVxxjDEzGLrjKwSQm3wVJNi
-	 4Ooi+aemQ8LJTMi+LZojHdp82UmxUrDq8Wc2rEx0=
+	by mail.kernel.org (Postfix) with ESMTP id DD639206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RLZ3Ddrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKNEOo (ORCPT
+        id S1726923AbfKNEbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 23:14:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfKNEOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 23:14:44 -0500
-Received: from devnote2 (unknown [147.50.43.59])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E70206D7;
-        Thu, 14 Nov 2019 04:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573704883;
-        bh=OhClmUW9q2p5vazL+PPl6LPUsbvP6Yq/wBursDlyo9Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MD3fYvTKkiyX2oQcdao84RyGV0x8kzuETF0IE9VafIkFjekyxl/OPpBh8TZ8B4FLE
-         JN2WwZsm+1Xt76Po5qwadp88F02tlYuRlUlFErSRE4jwdZCrI3JV29GG3rzIEIoAnc
-         oytuVrK/TVePlA8kO2MFLnbQ5xH8bz17wt2SLEsU=
-Date:   Thu, 14 Nov 2019 11:14:36 +0700
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v2 1/4] perf probe: Generate event name with line number
-Message-Id: <20191114111436.c02d60d9b9e42e8f86df7696@kernel.org>
-In-Reply-To: <20191113120927.GA14646@kernel.org>
-References: <157314406866.4063.16995747442215702109.stgit@devnote2>
-        <157314407850.4063.2307803945694526578.stgit@devnote2>
-        <20191111140450.GB9365@kernel.org>
-        <20191111140625.GC9365@kernel.org>
-        <20191111140733.GD9365@kernel.org>
-        <20191112173131.e484666a4ae1bbd7708ccf15@kernel.org>
-        <20191113080157.9d6316e9826dd5aed874537e@kernel.org>
-        <20191113120927.GA14646@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 13 Nov 2019 23:31:12 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36069 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfKNEbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 23:31:12 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k13so2868938pgh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 20:31:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=ATcCOvPgaDxDdfb/2fmiaxeweoZIFDGlDDkWkjQsyvY=;
+        b=RLZ3DdrzvnlpKn78eg7PLlkgOiwaq/1jGHecsmEGH08sCwiSEyiJIHWQVQosVurRAz
+         8drBb1+jSOJHM3kkew5ancydBlYeV0wM/r6eafY/ZQn5vBKAG/x4tQ2Gj908mvMXFLCf
+         mqzgpWxUdzpinHuYY/3+Dbkgoq+W2pl/z0E0WHMEdNfu97C2DsJHsJd+sHJMOS4iv8as
+         vzmiveQRoT2t0QgKXq8k3V831DxPctrdOrxZ21uIp+f2pliDtnlLtzuF7EWiHncJZ4sU
+         yzfaBEcmbGsQhQlTV/9RqtpYBQedd6PHhKse6r5k1r60QM9ZnpPJcBdve/Yx+THGQ3SN
+         ZWaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=ATcCOvPgaDxDdfb/2fmiaxeweoZIFDGlDDkWkjQsyvY=;
+        b=RPXjWlOXxkxOpG/Em8Wdy2zZmU6HeUJcvD06W+yTzRMly+6QjXH02NEskRtdTQVLfe
+         oZV43mB25rVw7q6t16SgtUrhw/c51ccXrZHa9aofcIMCoFfFgFNNPUnu00sTkCEi30hp
+         HfYc1FkcffcuDSVxQ0QYsjRrGWs2H/ch+BXYlcVbUTW7Fd3vA80eMXeu19nBaHlngu9E
+         behmZHF6lj59f8ghO7Q1dEqrVbFCVhPAgedPheHvzXCdrmrceU0tNe91uuFKdnb4XjLD
+         ZS6raeRS2LjlnM5MbzogEUDkufV6raWV5AetJLZl3iJJr44N/IsGdo3JfPrCpjLrs9+G
+         Vu7g==
+X-Gm-Message-State: APjAAAUGc0WN4BX9hY6lc6DDGUQTD4OL60MwFmZXvDCrlbREAZ43iHBF
+        e/jnWC3N883iEbhasMJ75kpXYg==
+X-Google-Smtp-Source: APXvYqxT2qEUiCoLd/ZcoKmq/Ca+QIL1lDVpHdDad0BcRpMCe3PoHcHKGE+wGWSN2EdDOvkKnYqWOQ==
+X-Received: by 2002:a63:f441:: with SMTP id p1mr7746477pgk.362.1573705869452;
+        Wed, 13 Nov 2019 20:31:09 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id 129sm3179960pfd.174.2019.11.13.20.31.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 20:31:08 -0800 (PST)
+To:     io-uring@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio) POLL
+Message-ID: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
+Date:   Wed, 13 Nov 2019 21:31:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 09:09:27 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+This is a case of "I don't really know what I'm doing, but this works
+for me". Caveat emptor, but I'd love some input on this.
 
-> Em Wed, Nov 13, 2019 at 08:01:57AM +0700, Masami Hiramatsu escreveu:
-> > Hi Arnaldo,
-> > 
-> > On Tue, 12 Nov 2019 17:31:31 +0700
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > > > > > # perf probe --list
-> > > > > >   probe:kernel_read_l1 (on kernel_read@fs/read_write.c)
-> > > > > >   probe:kernel_read_l2 (on kernel_read:1@fs/read_write.c)
-> > > > > 
-> > > > > 
-> > > > > Also look above at the listing, I would expect this instead:
-> > > > > 
-> > > > > # perf probe --list
-> > > > >   probe:kernel_read_l1 (on kernel_read:1@fs/read_write.c)
-> > > > >   probe:kernel_read_l2 (on kernel_read:2@fs/read_write.c)
-> > > > > 
-> > > > > Right?
-> > > 
-> > > Yes, it should be so.
-> > 
-> > Hmm, this looks the limiation of debuginfo generated by gcc.
-> > Let me explain what happens. So, here is the decoded Line info in
-> > debuginfo for kernel_read (is defined in fs/read_write.c:423)
-> > 
-> > ---
-> > $ readelf -wL /usr/lib/debug/boot/vmlinux-5.0.0-32-generic 
-> > ...
-> > read_write.c                                 444  0xffffffff812b435d        
->                                                ^^^
-> 					       424, right?
+I got a bug report that using the poll command with signalfd doesn't
+work for io_uring. The reporter also noted that it doesn't work with the
+aio poll implementation either. So I took a look at it.
 
-No, the line info is sorted by address. This seems strange, but happens sometimes :)
+What happens is that the original task issues the poll request, we call
+->poll() (which ends up with signalfd for this fd), and find that
+nothing is pending. Then we wait, and the poll is passed to async
+context. When the requested signal comes in, that worker is woken up,
+and proceeds to call ->poll() again, and signalfd unsurprisingly finds
+no signals pending, since it's the async worker calling it.
 
-> > read_write.c                                 424  0xffffffff812b4370               x
-> > read_write.c                                 425  0xffffffff812b4375               x
-> > read_write.c                                 426  0xffffffff812b4375       1       x
-> > read_write.c                                 428  0xffffffff812b4375       2       x
-> > 
-> > ---
-> > This shows the line number info points the kernel_read entry address is
-> > on #424, this means we can not distinguish kernel_read:0 and kernel_read:1
-> > from only the address information.cw
-> 
-> If both 0xffffffff812b435d and 0xffffffff812b4370 are associated with
-> line 424, then we should present on 'perf probe -L' just the first one
-> and do the same when converting from address to name when presenting
-> with 'perf probe -l'?
+That's obviously no good. The below allows you to pass in the task in
+the poll_table, and it does the right thing for me, signal is delivered
+and the correct mask is checked in signalfd_poll().
 
-OK, so we can pick only one of them (the first "statement" line among
-several lines which shares same address), and show only that line can
-be probed by perf probe -L.
+Similar patch for aio would be trivial, of course.
 
-> 
-> > (maybe huristically we can distinguish it by the "_L1" suffix. But if
-> > user gives another event name, it doesn't work.)
-> 
-> > ---
-> > 
-> > /build/linux-pvZVvI/linux-5.0.0/arch/x86/include/asm/current.h:
-> > current.h                                     13  0xffffffff812b4375       3       x
-> > current.h                                     15  0xffffffff812b4375       4       x
-> > current.h                                     15  0xffffffff812b4375       5       x
-> > current.h                                     15  0xffffffff812b4375       6       x
-> > current.h                                     15  0xffffffff812b4375       7       x
-> > 
-> > /build/linux-pvZVvI/linux-5.0.0/fs/read_write.c:
-> > read_write.c                                 424  0xffffffff812b4375       8
-> > 
-> > ---
-> > And it seems that the dwarf_getsrc_die() returns the last line info
-> > correspoinding to given address (0xffffffff812b4375) even if it is
-> > not a stetement line. This is why probe:kernel_read_l2 is 
-> > on kernel_read:1. I will fix that.
-> 
-> by going backwards from what dwarf_getsrc_die() returns till it finds a
-> statement line?
+Not-really-signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-Moreover, going backward and forward until it finds the smallest line
-number which is a statement. Because it uses a binary search, it can
-find non-statement lines.
+---
 
->  
-> > However, again, as long as the different lines are encoded in same
-> 
-> It is possible as well to have different addresses associated with the
-> same source code line.
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index d8ea9b4f83a7..d9a4c9aac958 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -299,6 +299,7 @@ struct io_poll_iocb {
+ 	bool				done;
+ 	bool				canceled;
+ 	struct wait_queue_entry		wait;
++	struct task_struct		*task;
+ };
+ 
+ struct io_timeout {
+@@ -2021,7 +2022,10 @@ static void io_poll_complete_work(struct io_wq_work **workptr)
+ 	struct io_wq_work *work = *workptr;
+ 	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
+ 	struct io_poll_iocb *poll = &req->poll;
+-	struct poll_table_struct pt = { ._key = poll->events };
++	struct poll_table_struct pt = {
++		._key = poll->events,
++		.task = poll->task
++	};
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 	struct io_kiocb *nxt = NULL;
+ 	__poll_t mask = 0;
+@@ -2139,9 +2143,11 @@ static int io_poll_add(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 	poll->head = NULL;
+ 	poll->done = false;
+ 	poll->canceled = false;
++	poll->task = current;
+ 
+ 	ipt.pt._qproc = io_poll_queue_proc;
+ 	ipt.pt._key = poll->events;
++	ipt.pt.task = poll->task;
+ 	ipt.req = req;
+ 	ipt.error = -EINVAL; /* same as no support for IOCB_CMD_POLL */
+ 
+diff --git a/fs/signalfd.c b/fs/signalfd.c
+index 44b6845b071c..a7f31758db1a 100644
+--- a/fs/signalfd.c
++++ b/fs/signalfd.c
+@@ -61,16 +61,17 @@ static int signalfd_release(struct inode *inode, struct file *file)
+ static __poll_t signalfd_poll(struct file *file, poll_table *wait)
+ {
+ 	struct signalfd_ctx *ctx = file->private_data;
++	struct task_struct *tsk = wait->task ?: current;
+ 	__poll_t events = 0;
+ 
+-	poll_wait(file, &current->sighand->signalfd_wqh, wait);
++	poll_wait(file, &tsk->sighand->signalfd_wqh, wait);
+ 
+-	spin_lock_irq(&current->sighand->siglock);
+-	if (next_signal(&current->pending, &ctx->sigmask) ||
+-	    next_signal(&current->signal->shared_pending,
++	spin_lock_irq(&tsk->sighand->siglock);
++	if (next_signal(&tsk->pending, &ctx->sigmask) ||
++	    next_signal(&tsk->signal->shared_pending,
+ 			&ctx->sigmask))
+ 		events |= EPOLLIN;
+-	spin_unlock_irq(&current->sighand->siglock);
++	spin_unlock_irq(&tsk->sighand->siglock);
+ 
+ 	return events;
+ }
+diff --git a/include/linux/poll.h b/include/linux/poll.h
+index 1cdc32b1f1b0..6d2b6d923b2b 100644
+--- a/include/linux/poll.h
++++ b/include/linux/poll.h
+@@ -43,6 +43,7 @@ typedef void (*poll_queue_proc)(struct file *, wait_queue_head_t *, struct poll_
+ typedef struct poll_table_struct {
+ 	poll_queue_proc _qproc;
+ 	__poll_t _key;
++	struct task_struct *task;
+ } poll_table;
+ 
+ static inline void poll_wait(struct file * filp, wait_queue_head_t * wait_address, poll_table *p)
+@@ -76,6 +77,7 @@ static inline void init_poll_funcptr(poll_table *pt, poll_queue_proc qproc)
+ {
+ 	pt->_qproc = qproc;
+ 	pt->_key   = ~(__poll_t)0; /* all events enabled */
++	pt->task = NULL;
+ }
+ 
+ static inline bool file_can_poll(struct file *file)
 
-That is OK, since we now support multiprobes. We can put probes on
-different addresses on same line (but different column).
-
-Thank you,
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Jens Axboe
+
