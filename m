@@ -2,188 +2,106 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835CAC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CA2C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56845206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F34D206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TeN+6SIl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xa1BlFbi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfKNL1I (ORCPT
+        id S1726330AbfKNL35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:27:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22074 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726452AbfKNL1H (ORCPT
+        Thu, 14 Nov 2019 06:29:57 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46884 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfKNL35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:27:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573730825;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L/gwESRRR03S0wRJMnaNaIygulhbwzzIij7KolEFnN8=;
-        b=TeN+6SIlw6MdiIQzTKSvB+v0Q40/jrWPu9gYdbjjA4pffKibqgzUy7oHd9wVsK4CzjEE0y
-        rBLYsqjMffo1xl75u/EcIqbeQfMQiO9DVeAYYcZ47NDbjWqBzwKeI3TcwHU5N/YAVNLEEV
-        tHbSXKZBbUOTTeo57jYIPmdP2HhQx6I=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-FJcM29aRPAKx9fSLIfdTVQ-1; Thu, 14 Nov 2019 06:27:04 -0500
-Received: by mail-wm1-f71.google.com with SMTP id x16so3727404wmk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 03:27:04 -0800 (PST)
+        Thu, 14 Nov 2019 06:29:57 -0500
+Received: by mail-lj1-f193.google.com with SMTP id e9so6248719ljp.13;
+        Thu, 14 Nov 2019 03:29:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=B44Ms18JM2//6Zq8Edna/1bqfmnjwOIzYlPZT73xt9c=;
+        b=Xa1BlFbimY3Jv4IpcdMRdnpxqDMU3ZlFdiEGHUFhCAoLXO/qIe+fXzYR9BP6bks1Z6
+         fyx3PQ6WqvukmdGT9bJVQ1NBzuO6RSwy/VtKNlGP5lHrwPpQ1aKcw1HhjsNbhZ7mSozp
+         7PZxImMNOVBECdUpuXkdlrH5ENfxAHyeu6WMJ7GeceK8MlUtuKQ3SZQN0Ny9o2dfs2ko
+         kuJ4oQnIjP/o4twpXM+VKLWic3eOMmTxlZ+4KdbQlfKde9en60PHoE83TxN1AHHnzX2B
+         wgh0iMVmPA4aqqmoFZInveB0vMHPCauxGniNkWMfJabfbwtN3mwFiW94C1BnyoIZgjDR
+         Gyfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=5jWJINQzU7DIjSgJJ1kpu7evn0eK8lUV8vqPcpC4Jlw=;
-        b=RPvm39mtILfTuYPWlfisZsd4vFsOYyxhpszKGO4VhNPmDXnwTSgcjAcYYtM0qUHX3W
-         UhEKZM08t1ON08wvBrdYUcMlNTXag4aZhacCLVYVy8qxps8Lhl+707WH45x8cPemC2Xc
-         1qmhpVelNzIV+lAhidyYJY2Dfauo2U+CLS2D74hCKepmy4afhO5RL2afuFs/g2mlJZPl
-         25ez6beqDSq2Q35tIgTL2yqaIn4cGWs28gG570U6F1rN4Icfo8AXYQB9H9ISAWPN52KQ
-         1B13cEruRdhafjSL3pV+hRpidOKbJhCCjpAaSYIRRCwgdxrhUefgrDcEIMXzJpkmdppV
-         LMKA==
-X-Gm-Message-State: APjAAAX354I/9tagGr1WcmuN/fWuG+HICJMZeImnqlGjpt/IYQlQLpGk
-        f7LHqGpVc74YFeXDDgS6rvEzc1inmwWfvMx/v/2VOGZ1Le5ibKktQfxMWkloJmjqWhb1mMRrRbn
-        UcrgrJzDbXb3G4mLH2v5AlBBy
-X-Received: by 2002:a1c:3b05:: with SMTP id i5mr7655056wma.8.1573730822918;
-        Thu, 14 Nov 2019 03:27:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzNadAhb3uVoWTx1LAhrlTsop88HOIAwDGjG+zbVgrV8lStQGTeYoYWPW0Kneg5Vd1CAyJU+g==
-X-Received: by 2002:a1c:3b05:: with SMTP id i5mr7655029wma.8.1573730822681;
-        Thu, 14 Nov 2019 03:27:02 -0800 (PST)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id z4sm6280823wmf.36.2019.11.14.03.27.01
+        bh=B44Ms18JM2//6Zq8Edna/1bqfmnjwOIzYlPZT73xt9c=;
+        b=sy7q8DhCikHGSejuk4Cxth+zeyR2Gw0sqlSq2O3GlJXN+ITyzKMLVL8ppn48QkquDL
+         m6tNK/Xxpmx8mSF5yV3AI/uruKRYBieg3QMuhT8pWEb1kqmC96U104D/9Oyv6My9Tpa+
+         k9JwkRvjQY4xVDT+j8FfnUCteSyR/2SalEO3otJvu4EBR27Oi+zdQqoZcBMqp/2MlW+n
+         gVRVxp77TGymu2ghaKOl+48PiT450E/E9rB+ScfKWdSW2PulUP+llRpT3+pkFkjoGOCt
+         2Aq2Dk8drLza506uVN5QuG7h8cKR0Y7+aX/s5dG84zcU9uku1kbGtq/n5k49nnP1Kem4
+         QP/A==
+X-Gm-Message-State: APjAAAWETHHzjSbhJjbTWI5b0m3rCM34PpQld1FXNggVJpDpoG9g0mG+
+        pEjC1r8zQiQAd1fR207A6mZwuRWe
+X-Google-Smtp-Source: APXvYqxand9AZBEiL1o1WGVeiytoXCIr1yxxdeQXDfbqWwdo1/KSOKiym9tizzjfZKIlXrjBoRZfTQ==
+X-Received: by 2002:a2e:a410:: with SMTP id p16mr6373113ljn.46.1573730993054;
+        Thu, 14 Nov 2019 03:29:53 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id m20sm2546230lfj.35.2019.11.14.03.29.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 03:27:02 -0800 (PST)
-Subject: Re: [PATCH v7 2/8] efi: Add embedded peripheral firmware support
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-3-hdegoede@redhat.com>
- <20191011144834.GL16384@42.do-not-panic.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e7bd40ff-20d1-3aed-8516-9fffd4c3a207@redhat.com>
-Date:   Thu, 14 Nov 2019 12:27:01 +0100
+        Thu, 14 Nov 2019 03:29:52 -0800 (PST)
+Subject: Re: [PATCH v2] clk: tegra: divider: Check UART's divider enable-bit
+ state on rate's recalculation
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191030004813.9187-1-digetx@gmail.com>
+ <20191113230303.726AE206E3@mail.kernel.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <02df00b3-5e23-441f-b2d5-b84fdb411e98@gmail.com>
+Date:   Thu, 14 Nov 2019 14:29:51 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191011144834.GL16384@42.do-not-panic.com>
+In-Reply-To: <20191113230303.726AE206E3@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MC-Unique: FJcM29aRPAKx9fSLIfdTVQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+14.11.2019 02:03, Stephen Boyd пишет:
+> Quoting Dmitry Osipenko (2019-10-29 17:48:13)
+>> UART clock is divided using divisor values from DLM/DLL registers when
+>> enable-bit is unset in clk register and clk's divider configuration isn't
+>> taken onto account in this case. This doesn't cause any problems, but
+>> let's add a check for the divider's enable-bit state, for consistency.
+>>
+>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+> 
+> Is this going to be picked up or should I just apply atop the tegra PR?
 
-Thank you for the reviews and sorry for being a bit slow to respind.
+Looks like this patch missed the Tegra's PR by accident.
 
-On 11-10-2019 16:48, Luis Chamberlain wrote:
-> On Fri, Oct 04, 2019 at 04:50:50PM +0200, Hans de Goede wrote:
->> +static int __init efi_check_md_for_embedded_firmware(
->> +=09efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
->> +{
->> +=09const u64 prefix =3D *((u64 *)desc->prefix);
->> +=09struct sha256_state sctx;
->> +=09struct embedded_fw *fw;
->> +=09u8 sha256[32];
->> +=09u64 i, size;
->> +=09void *map;
->> +
->> +=09size =3D md->num_pages << EFI_PAGE_SHIFT;
->> +=09map =3D memremap(md->phys_addr, size, MEMREMAP_WB);
->=20
-> Since our limitaiton is the init process must have mostly finished,
-> it implies early x86 boot code cannot use this, what measures can we
-> take to prevent / check for such conditions to be detected and
-> gracefully errored out?
+Stephen, I assume it will be easier if you could apply this patch atop.
+The patch doesn't have any dependencies on any other patches, so it's
+fine to apply it separately. Thanks in advance!
 
-As with all (EFI) early boot code, there simply is a certain order
-in which things need to be done. This needs to happen after the basic
-mm is setup, but before efi_free_boot_services() gets called, there
-isn't really a way to check for all these conditions. As with all
-early boot code, people making changes need to be careful to not
-break stuff.
-
->=20
->> +=09if (!map) {
->> +=09=09pr_err("Error mapping EFI mem at %#llx\n", md->phys_addr);
->> +=09=09return -ENOMEM;
->> +=09}
->> +
->> +=09size -=3D desc->length;
->=20
-> Remind me again, why we decrement the size here?
-
-Basically this is another way of writing:
-
-=09for (i =3D 0; (i + desc->length) < size; i +=3D 8) {
-
-> I was going to ask if we didn't need a:
->=20
-> if (desc->length > size) {
-> =09memunmap(map);
-> =09return -EINVAL;
-> }
-
-That is a good point, unlikely but still a good point,
-so I guess that writing:
-
-=09for (i =3D 0; (i + desc->length) < size; i +=3D 8) {
-
-Instead would better as that avoids the need for that check.
-I will fix this for the next version.
-
-Regards,
-
-Hans
-
->=20
->> +=09for (i =3D 0; i < size; i +=3D 8) {
->> +=09=09u64 *mem =3D map + i;
->> +
->> +=09=09if (*mem !=3D prefix)
->> +=09=09=09continue;
->> +
->> +=09=09sha256_init(&sctx);
->> +=09=09sha256_update(&sctx, map + i, desc->length);
->> +=09=09sha256_final(&sctx, sha256);
->> +=09=09if (memcmp(sha256, desc->sha256, 32) =3D=3D 0)
->> +=09=09=09break;
->> +=09}
->> +=09if (i >=3D size) {
->> +=09=09memunmap(map);
->> +=09=09return -ENOENT;
->> +=09}
->> +
->> +=09pr_info("Found EFI embedded fw '%s'\n", desc->name);
->=20
-> Otherwise looks good.
->=20
->    Luis
->=20
-
+Thierry, please let us know if you have any objections.
