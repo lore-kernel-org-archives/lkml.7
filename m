@@ -2,175 +2,111 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48176C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8003D2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CA4206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573752694;
+	bh=7dikuczrcWVg4MCKyky6m+W6D4uCIF0WJCu5otmTE7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=00V3R2UPpOk3Y62Y7P3hotsKw27LfBCLoPR6MEDhePnymNS1xnVVSYXSgQ81Wrtnh
+	 SpKECzbICqg3tkW0zq2jpLoDdheWb6YrneA7caLTME/Odg16e4e/ngT+n6E+j1PSOx
+	 ujAM3a+Nk5wV6WcFEI7pSdICmhEuBwVv/N3GXJQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfKNRaE (ORCPT
+        id S1727015AbfKNRbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:30:04 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41209 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfKNRaE (ORCPT
+        Thu, 14 Nov 2019 12:31:33 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36929 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfKNRbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:30:04 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVIwQ-0007W6-LM; Thu, 14 Nov 2019 18:29:58 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2F08D1C0090;
-        Thu, 14 Nov 2019 18:29:58 +0100 (CET)
-Date:   Thu, 14 Nov 2019 17:29:57 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kdump] x86/crash: Align function arguments on opening braces
-Cc:     Borislav Petkov <bp@suse.de>, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191114172200.19563-1-bp@alien8.de>
-References: <20191114172200.19563-1-bp@alien8.de>
+        Thu, 14 Nov 2019 12:31:32 -0500
+Received: by mail-oi1-f195.google.com with SMTP id y194so6031925oie.4;
+        Thu, 14 Nov 2019 09:31:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3G1UrTKYq6h7EeCf3xtk9ByNRfqNtMiSs5YT8e3r4Hw=;
+        b=eS5yEwbnuVBbDQBYjzVfMgJAK3auLxE/WxBGyCZbdA5LrVZl36NA+i4ZuddlAidTTy
+         LoG5nRmyEtMDELckh++qOgYYkZZhJ2XOp1FojntwMSMLLSziOmtFmzKQm/6lI9SdUwLD
+         L0VH+WaVgHPzYmY2BJ/dEbYXXiMr66m9fGPBOg13Jq5rKlDVFc5XpqLzl+4A4g10Dhc4
+         e3xpIVWg9mnW3vhM+Bid1ULCAqpYQHaxVSbomtAC3cxWQP2I1YIZ73tZFI2j8pvmzunG
+         fNDDxsMElqGxvPw77oXQnAqY3eD0lQRYXKe1ZGI/FMcTozoWmqxrYVID8/PJ1HNwJq10
+         vUQA==
+X-Gm-Message-State: APjAAAWshox70p1VUW4hGicSuI+i7WADQ+67/eRWZPe71VpuXjdRxDv7
+        +BdJyQGwx/xcPo2JG2E4GQ==
+X-Google-Smtp-Source: APXvYqwyclOEvGyBTY6vREWnjvU+4uvkYPxZcorcMlSKeYf3ZPoZJUiEVybWjLsGdKUcmAP2Hril7Q==
+X-Received: by 2002:aca:5e04:: with SMTP id s4mr4533315oib.159.1573752690884;
+        Thu, 14 Nov 2019 09:31:30 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o4sm2019336ota.57.2019.11.14.09.31.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 09:31:30 -0800 (PST)
+Date:   Thu, 14 Nov 2019 11:31:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com,
+        fabrice.gasnier@st.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        benjamin.gaignard@st.com, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stm32 timers bindings to
+ json-schema
+Message-ID: <20191114173129.GA25237@bogus>
+References: <20191114101823.23144-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Message-ID: <157375259774.29376.17108399184829392884.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114101823.23144-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/kdump branch of tip:
+On Thu, 14 Nov 2019 11:18:23 +0100, Benjamin Gaignard wrote:
+> Convert the STM32 timers binding to DT schema format using json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+> version 3:
+> - correctly use enum for dma-names and remove additionalItems: true
+> - provide a range of values for reg property
+> 
+> version 2:
+> - merge all (mfd, iio, pwm, counter) bindings in one file
+> - fix typo and trailing spaces
+> - rework dmas and dma-names properties to allow schemas like:
+>   ch1 , ch2, ch4
+>   ch2, up, com
+> - use patternProperties to describe timer subnode
+> - improve st,breakinput property definition to be able to check the values
+>   inside de tuple
+> 
+>  .../bindings/counter/stm32-timer-cnt.txt           |  31 ----
+>  .../bindings/iio/timer/stm32-timer-trigger.txt     |  25 ----
+>  .../devicetree/bindings/mfd/st,stm32-timers.yaml   | 159 +++++++++++++++++++++
+>  .../devicetree/bindings/mfd/stm32-timers.txt       |  73 ----------
+>  .../devicetree/bindings/pwm/pwm-stm32.txt          |  38 -----
+>  5 files changed, 159 insertions(+), 167 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+>  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+> 
 
-Commit-ID:     9eff303725da6530b615e9258f696149baa51df6
-Gitweb:        https://git.kernel.org/tip/9eff303725da6530b615e9258f696149baa51df6
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Thu, 14 Nov 2019 16:11:50 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 14 Nov 2019 18:24:55 +01:00
+Applied, thanks.
 
-x86/crash: Align function arguments on opening braces
-
-... or let function calls stick out and thus remain on a single line,
-even if the 80 cols rule is violated by a couple of chars, for better
-readability.
-
-No functional changes.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: x86@kernel.org
-Link: https://lkml.kernel.org/r/20191114172200.19563-1-bp@alien8.de
----
- arch/x86/kernel/crash.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index a16ec92..00fc55a 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -202,8 +202,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 	unsigned int nr_ranges = 0;
- 	struct crash_mem *cmem;
- 
--	walk_system_ram_res(0, -1, &nr_ranges,
--				get_nr_ram_ranges_callback);
-+	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
- 	if (!nr_ranges)
- 		return NULL;
- 
-@@ -240,10 +239,9 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
- 	if (ret)
- 		return ret;
- 
--	if (crashk_low_res.end) {
-+	if (crashk_low_res.end)
- 		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
--							crashk_low_res.end);
--	}
-+					      crashk_low_res.end);
- 
- 	return ret;
- }
-@@ -270,8 +268,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 	if (!cmem)
- 		return -ENOMEM;
- 
--	ret = walk_system_ram_res(0, -1, cmem,
--				prepare_elf64_ram_headers_callback);
-+	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
- 	if (ret)
- 		goto out;
- 
-@@ -281,8 +278,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 		goto out;
- 
- 	/* By default prepare 64bit headers */
--	ret =  crash_prepare_elf64_headers(cmem,
--				IS_ENABLED(CONFIG_X86_64), addr, sz);
-+	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
- 
- out:
- 	vfree(cmem);
-@@ -297,8 +293,7 @@ static int add_e820_entry(struct boot_params *params, struct e820_entry *entry)
- 	if (nr_e820_entries >= E820_MAX_ENTRIES_ZEROPAGE)
- 		return 1;
- 
--	memcpy(&params->e820_table[nr_e820_entries], entry,
--			sizeof(struct e820_entry));
-+	memcpy(&params->e820_table[nr_e820_entries], entry, sizeof(struct e820_entry));
- 	params->e820_entries++;
- 	return 0;
- }
-@@ -353,24 +348,24 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	cmd.type = E820_TYPE_RAM;
- 	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
- 	walk_iomem_res_desc(IORES_DESC_NONE, flags, 0, (1<<20)-1, &cmd,
--			memmap_entry_callback);
-+			    memmap_entry_callback);
- 
- 	/* Add ACPI tables */
- 	cmd.type = E820_TYPE_ACPI;
- 	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
- 	walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1, &cmd,
--		       memmap_entry_callback);
-+			    memmap_entry_callback);
- 
- 	/* Add ACPI Non-volatile Storage */
- 	cmd.type = E820_TYPE_NVS;
- 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
--			memmap_entry_callback);
-+			    memmap_entry_callback);
- 
- 	/* Add e820 reserved ranges */
- 	cmd.type = E820_TYPE_RESERVED;
- 	flags = IORESOURCE_MEM;
- 	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
--			   memmap_entry_callback);
-+			    memmap_entry_callback);
- 
- 	/* Add crashk_low_res region */
- 	if (crashk_low_res.end) {
-@@ -381,8 +376,7 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	}
- 
- 	/* Exclude some ranges from crashk_res and add rest to memmap */
--	ret = memmap_exclude_ranges(image, cmem, crashk_res.start,
--						crashk_res.end);
-+	ret = memmap_exclude_ranges(image, cmem, crashk_res.start, crashk_res.end);
- 	if (ret)
- 		goto out;
- 
+Rob
