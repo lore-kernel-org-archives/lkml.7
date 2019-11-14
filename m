@@ -2,214 +2,419 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122ABC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C459DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E23206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942A8206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:51:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IQttiHaA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NYolwvAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfKNWuW (ORCPT
+        id S1727134AbfKNWvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:50:22 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41204 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNWuV (ORCPT
+        Thu, 14 Nov 2019 17:51:20 -0500
+Received: from mail-qv1-f73.google.com ([209.85.219.73]:48059 "EHLO
+        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNWvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:50:21 -0500
-Received: by mail-pg1-f193.google.com with SMTP id h4so4706471pgv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:50:19 -0800 (PST)
+        Thu, 14 Nov 2019 17:51:20 -0500
+Received: by mail-qv1-f73.google.com with SMTP id i16so5238405qvm.14
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:51:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:subject:from:user-agent:date;
-        bh=fV40oETXjKcGlIr1gGKnzSoiYzzgILYSSWxjfebyNP8=;
-        b=IQttiHaAJGKACK5iLQHgc60JB1JPMzLpLI1DfqpXl7axGbV2ULuY8eJUGc9Qoado47
-         UGVaSRRH1bnSNoxedmuguxdiav53vPa3kaEGVLaAQ3wkPsnqskxDHoBu+bPY/30ZD8PK
-         nr9n7pQ3Ltf+Jy66JShXkhoWL328ExLRzYYu4=
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=Z82FviZ10GPuSN7k4gwEKpenqifKlX+EGzH91RqIPos=;
+        b=NYolwvAVckZOEVXGzRMSA3huu6nW7kd03/8Cj4LDA+Z7b7xrDAbyfkJWru5Ryl71ic
+         ogmfo6kv5oZPXJjXh1Qs01zbiDKy6s44nBtlmJnhNVc9/ftCib7TmMM1PYLX2zJJ0AaI
+         WMaciwdQHgHMSQ8kWVytQlZtmOOnUTXX6VUxXwSAbwfMce+zbPtKzxH89PCibk2bVgYH
+         1+YHissm1C6Lt1KJkhpJuoQgnYzQZvbW0tgIfc3EMHV8J2Vjh/CDkVKrLhjrUgqSGeS3
+         MJqcSMRO4TDwUGSMEloArocLdSGULI7xZhdQJXEnhPDbjjb6ZZqvvEeJxGbBawZPoRC/
+         QYhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
-         :user-agent:date;
-        bh=fV40oETXjKcGlIr1gGKnzSoiYzzgILYSSWxjfebyNP8=;
-        b=Fm0aHEHHXkxeSP0KWoAKunI0VS5ajNOm/JWwSw6bDLE5G37NS0ZBGdqvK/kxBOwjUp
-         iElCmhCnyyUGx78/uYf6nsAzfjkZjUy2letLDJtUsWluGIUke49wpjcnchhrreOpjkyp
-         /70L7v397v5LLiNjR2MLb6AzBwPA6jAbM1GxJyZpp/SOFlluEQMWqbVVNOAeRndwahfS
-         92g+A6kLtd1X/HVxac2CJ942irVvxsBqI0Dwp0c5u2YtuiXMd5ae7LPY3IHq12uWc2rE
-         rDLEu/viNXMmY+m0wCe50kLy16SU/r1a3H1QNv4WRqfFONNM1je5cvCUC7IwdFZM9N4a
-         oy9w==
-X-Gm-Message-State: APjAAAU7bqEoDV1/O2UMdTYuyw1fcmXLspBtmJ26Or/6x6k2r/XkShh6
-        28LIHXQEwEXtkyMufYSWTmUYIQ==
-X-Google-Smtp-Source: APXvYqwGZF0CNHJX1S5Aa2rAAxaMTnHOr5W0JJN8PB1EeZukU4bqr9Ehf1A2qoVMQcXBra2LOY9T8Q==
-X-Received: by 2002:a17:90b:d8e:: with SMTP id bg14mr14990905pjb.26.1573771818995;
-        Thu, 14 Nov 2019 14:50:18 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u207sm9215633pfc.127.2019.11.14.14.50.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 14:50:18 -0800 (PST)
-Message-ID: <5dcdda2a.1c69fb81.27852.ac35@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
-References: <cover.1573499020.git.amit.kucheria@linaro.org> <4b949a4f401a7f9d403ed0f0c16c7feb083f3524.1573499020.git.amit.kucheria@linaro.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
-        edubezval@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaa@codeaurora.org
-Subject: Re: [PATCH 1/3] drivers: thermal: tsens: Add critical interrupt support
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 14 Nov 2019 14:50:17 -0800
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Z82FviZ10GPuSN7k4gwEKpenqifKlX+EGzH91RqIPos=;
+        b=Om53dYESCG/oPxgnTpNZiBDFENdD2xlFQ52oCE27RBOzWPGTeOKbDBZ+CwEwwqwJAO
+         nPIXwro8x5fLlsjGz8yQGnezutqa9otRPB7Ebm8kIyCc4+KEPyne31hJj7ED4H+KxkoD
+         ZcrxiR6ixxNW/WTShPPN5rOZ8cwdjfTJ0am6OA18PHhWe5lwYJHQceQqLs52/zz4o9Nk
+         5L2nQT0i/gImI6/PKL3ItfakPxUbLPgZ8tV2cpTSBjFiSdpu5a9U88RkazcaBFPcaDdm
+         7w5ts/AF1Hi1rG6DMkd+nGU/NeqCIkTQ/5r2462TqNlDh24ipq+hVnKiDmyNDMuRBUe7
+         GlMw==
+X-Gm-Message-State: APjAAAURhfSf1kCXkl8h9fikkWZ0StiAa/LanOZ7tF/f8WlT0U/PRk++
+        Ulip0GRKD4wCIPqgxS75Rl3D+DHLhhvs10WwbFY=
+X-Google-Smtp-Source: APXvYqzdwQZFdraUhts5HllVbfYwkHVkKZDbBSvP58XiuRXl9A9wCuH5rs8UVvMRBB5js6/vw+hKNzSWAiC+Kfan/mA=
+X-Received: by 2002:a0c:fe8c:: with SMTP id d12mr10791589qvs.146.1573771876916;
+ Thu, 14 Nov 2019 14:51:16 -0800 (PST)
+Date:   Thu, 14 Nov 2019 14:51:13 -0800
+In-Reply-To: <20191112223046.176097-1-samitolvanen@google.com>
+Message-Id: <20191114225113.155143-1-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20191112223046.176097-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v2] crypto: arm64/sha: fix function types
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Biggers <ebiggers@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-11-11 11:21:27)
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
-sens-common.c
-> index 4359a4247ac3..2989cb952cdb 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -321,6 +357,65 @@ static inline u32 masked_irq(u32 hw_id, u32 mask, en=
-um tsens_ver ver)
->         return 0;
->  }
-> =20
-> +/**
-> + * tsens_critical_irq_thread - Threaded interrupt handler for critical i=
-nterrupts
-> + * @irq: irq number
-> + * @data: tsens controller private data
-> + *
-> + * Check all sensors to find ones that violated their critical threshold=
- limits.
-> + * Clear and then re-enable the interrupt.
-> + *
-> + * The level-triggered interrupt might deassert if the temperature retur=
-ned to
-> + * within the threshold limits by the time the handler got scheduled. We
-> + * consider the irq to have been handled in that case.
-> + *
-> + * Return: IRQ_HANDLED
-> + */
-> +irqreturn_t tsens_critical_irq_thread(int irq, void *data)
-> +{
-> +       struct tsens_priv *priv =3D data;
-> +       struct tsens_irq_data d;
-> +       bool enable =3D true, disable =3D false;
+Instead of casting pointers to callback functions, add C wrappers
+to avoid type mismatch failures with Control-Flow Integrity (CFI)
+checking.
 
-Why not just use true and false in the one place these variables are
-used?
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+---
+ arch/arm64/crypto/sha1-ce-glue.c   | 17 +++++++++------
+ arch/arm64/crypto/sha2-ce-glue.c   | 34 ++++++++++++++++++------------
+ arch/arm64/crypto/sha256-glue.c    | 32 +++++++++++++++++-----------
+ arch/arm64/crypto/sha512-ce-glue.c | 26 ++++++++++++-----------
+ arch/arm64/crypto/sha512-glue.c    | 15 ++++++++-----
+ 5 files changed, 76 insertions(+), 48 deletions(-)
 
-> +       unsigned long flags;
-> +       int temp, ret, i;
-> +
-> +       for (i =3D 0; i < priv->num_sensors; i++) {
-> +               struct tsens_sensor *s =3D &priv->sensor[i];
+diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
+index bdc1b6d7aff7..76a951ce2a7b 100644
+--- a/arch/arm64/crypto/sha1-ce-glue.c
++++ b/arch/arm64/crypto/sha1-ce-glue.c
+@@ -28,6 +28,13 @@ struct sha1_ce_state {
+ asmlinkage void sha1_ce_transform(struct sha1_ce_state *sst, u8 const *src,
+ 				  int blocks);
+ 
++static inline void __sha1_ce_transform(struct sha1_state *sst, u8 const *src,
++				       int blocks)
++{
++	return sha1_ce_transform(container_of(sst, struct sha1_ce_state, sst),
++				 src, blocks);
++}
++
+ const u32 sha1_ce_offsetof_count = offsetof(struct sha1_ce_state, sst.count);
+ const u32 sha1_ce_offsetof_finalize = offsetof(struct sha1_ce_state, finalize);
+ 
+@@ -41,8 +48,7 @@ static int sha1_ce_update(struct shash_desc *desc, const u8 *data,
+ 
+ 	sctx->finalize = 0;
+ 	kernel_neon_begin();
+-	sha1_base_do_update(desc, data, len,
+-			    (sha1_block_fn *)sha1_ce_transform);
++	sha1_base_do_update(desc, data, len, __sha1_ce_transform);
+ 	kernel_neon_end();
+ 
+ 	return 0;
+@@ -64,10 +70,9 @@ static int sha1_ce_finup(struct shash_desc *desc, const u8 *data,
+ 	sctx->finalize = finalize;
+ 
+ 	kernel_neon_begin();
+-	sha1_base_do_update(desc, data, len,
+-			    (sha1_block_fn *)sha1_ce_transform);
++	sha1_base_do_update(desc, data, len, __sha1_ce_transform);
+ 	if (!finalize)
+-		sha1_base_do_finalize(desc, (sha1_block_fn *)sha1_ce_transform);
++		sha1_base_do_finalize(desc, __sha1_ce_transform);
+ 	kernel_neon_end();
+ 	return sha1_base_finish(desc, out);
+ }
+@@ -81,7 +86,7 @@ static int sha1_ce_final(struct shash_desc *desc, u8 *out)
+ 
+ 	sctx->finalize = 0;
+ 	kernel_neon_begin();
+-	sha1_base_do_finalize(desc, (sha1_block_fn *)sha1_ce_transform);
++	sha1_base_do_finalize(desc, __sha1_ce_transform);
+ 	kernel_neon_end();
+ 	return sha1_base_finish(desc, out);
+ }
+diff --git a/arch/arm64/crypto/sha2-ce-glue.c b/arch/arm64/crypto/sha2-ce-glue.c
+index 604a01a4ede6..6042555517b0 100644
+--- a/arch/arm64/crypto/sha2-ce-glue.c
++++ b/arch/arm64/crypto/sha2-ce-glue.c
+@@ -28,6 +28,13 @@ struct sha256_ce_state {
+ asmlinkage void sha2_ce_transform(struct sha256_ce_state *sst, u8 const *src,
+ 				  int blocks);
+ 
++static inline void __sha2_ce_transform(struct sha256_state *sst, u8 const *src,
++				       int blocks)
++{
++	return sha2_ce_transform(container_of(sst, struct sha256_ce_state, sst),
++				 src, blocks);
++}
++
+ const u32 sha256_ce_offsetof_count = offsetof(struct sha256_ce_state,
+ 					      sst.count);
+ const u32 sha256_ce_offsetof_finalize = offsetof(struct sha256_ce_state,
+@@ -35,6 +42,12 @@ const u32 sha256_ce_offsetof_finalize = offsetof(struct sha256_ce_state,
+ 
+ asmlinkage void sha256_block_data_order(u32 *digest, u8 const *src, int blocks);
+ 
++static inline void __sha256_block_data_order(struct sha256_state *sst,
++					     u8 const *src, int blocks)
++{
++	return sha256_block_data_order(sst->state, src, blocks);
++}
++
+ static int sha256_ce_update(struct shash_desc *desc, const u8 *data,
+ 			    unsigned int len)
+ {
+@@ -42,12 +55,11 @@ static int sha256_ce_update(struct shash_desc *desc, const u8 *data,
+ 
+ 	if (!crypto_simd_usable())
+ 		return sha256_base_do_update(desc, data, len,
+-				(sha256_block_fn *)sha256_block_data_order);
++				__sha256_block_data_order);
+ 
+ 	sctx->finalize = 0;
+ 	kernel_neon_begin();
+-	sha256_base_do_update(desc, data, len,
+-			      (sha256_block_fn *)sha2_ce_transform);
++	sha256_base_do_update(desc, data, len, __sha2_ce_transform);
+ 	kernel_neon_end();
+ 
+ 	return 0;
+@@ -62,9 +74,8 @@ static int sha256_ce_finup(struct shash_desc *desc, const u8 *data,
+ 	if (!crypto_simd_usable()) {
+ 		if (len)
+ 			sha256_base_do_update(desc, data, len,
+-				(sha256_block_fn *)sha256_block_data_order);
+-		sha256_base_do_finalize(desc,
+-				(sha256_block_fn *)sha256_block_data_order);
++				__sha256_block_data_order);
++		sha256_base_do_finalize(desc, __sha256_block_data_order);
+ 		return sha256_base_finish(desc, out);
+ 	}
+ 
+@@ -75,11 +86,9 @@ static int sha256_ce_finup(struct shash_desc *desc, const u8 *data,
+ 	sctx->finalize = finalize;
+ 
+ 	kernel_neon_begin();
+-	sha256_base_do_update(desc, data, len,
+-			      (sha256_block_fn *)sha2_ce_transform);
++	sha256_base_do_update(desc, data, len, __sha2_ce_transform);
+ 	if (!finalize)
+-		sha256_base_do_finalize(desc,
+-					(sha256_block_fn *)sha2_ce_transform);
++		sha256_base_do_finalize(desc, __sha2_ce_transform);
+ 	kernel_neon_end();
+ 	return sha256_base_finish(desc, out);
+ }
+@@ -89,14 +98,13 @@ static int sha256_ce_final(struct shash_desc *desc, u8 *out)
+ 	struct sha256_ce_state *sctx = shash_desc_ctx(desc);
+ 
+ 	if (!crypto_simd_usable()) {
+-		sha256_base_do_finalize(desc,
+-				(sha256_block_fn *)sha256_block_data_order);
++		sha256_base_do_finalize(desc, __sha256_block_data_order);
+ 		return sha256_base_finish(desc, out);
+ 	}
+ 
+ 	sctx->finalize = 0;
+ 	kernel_neon_begin();
+-	sha256_base_do_finalize(desc, (sha256_block_fn *)sha2_ce_transform);
++	sha256_base_do_finalize(desc, __sha2_ce_transform);
+ 	kernel_neon_end();
+ 	return sha256_base_finish(desc, out);
+ }
+diff --git a/arch/arm64/crypto/sha256-glue.c b/arch/arm64/crypto/sha256-glue.c
+index e273faca924f..bb0f89382d70 100644
+--- a/arch/arm64/crypto/sha256-glue.c
++++ b/arch/arm64/crypto/sha256-glue.c
+@@ -27,14 +27,26 @@ asmlinkage void sha256_block_data_order(u32 *digest, const void *data,
+ 					unsigned int num_blks);
+ EXPORT_SYMBOL(sha256_block_data_order);
+ 
++static inline void __sha256_block_data_order(struct sha256_state *sst,
++					     u8 const *src, int blocks)
++{
++	return sha256_block_data_order(sst->state, src, blocks);
++}
++
+ asmlinkage void sha256_block_neon(u32 *digest, const void *data,
+ 				  unsigned int num_blks);
+ 
++static inline void __sha256_block_neon(struct sha256_state *sst,
++				       u8 const *src, int blocks)
++{
++	return sha256_block_neon(sst->state, src, blocks);
++}
++
+ static int crypto_sha256_arm64_update(struct shash_desc *desc, const u8 *data,
+ 				      unsigned int len)
+ {
+ 	return sha256_base_do_update(desc, data, len,
+-				(sha256_block_fn *)sha256_block_data_order);
++				     __sha256_block_data_order);
+ }
+ 
+ static int crypto_sha256_arm64_finup(struct shash_desc *desc, const u8 *data,
+@@ -42,9 +54,8 @@ static int crypto_sha256_arm64_finup(struct shash_desc *desc, const u8 *data,
+ {
+ 	if (len)
+ 		sha256_base_do_update(desc, data, len,
+-				(sha256_block_fn *)sha256_block_data_order);
+-	sha256_base_do_finalize(desc,
+-				(sha256_block_fn *)sha256_block_data_order);
++				      __sha256_block_data_order);
++	sha256_base_do_finalize(desc, __sha256_block_data_order);
+ 
+ 	return sha256_base_finish(desc, out);
+ }
+@@ -87,7 +98,7 @@ static int sha256_update_neon(struct shash_desc *desc, const u8 *data,
+ 
+ 	if (!crypto_simd_usable())
+ 		return sha256_base_do_update(desc, data, len,
+-				(sha256_block_fn *)sha256_block_data_order);
++				__sha256_block_data_order);
+ 
+ 	while (len > 0) {
+ 		unsigned int chunk = len;
+@@ -103,8 +114,7 @@ static int sha256_update_neon(struct shash_desc *desc, const u8 *data,
+ 				sctx->count % SHA256_BLOCK_SIZE;
+ 
+ 		kernel_neon_begin();
+-		sha256_base_do_update(desc, data, chunk,
+-				      (sha256_block_fn *)sha256_block_neon);
++		sha256_base_do_update(desc, data, chunk, __sha256_block_neon);
+ 		kernel_neon_end();
+ 		data += chunk;
+ 		len -= chunk;
+@@ -118,15 +128,13 @@ static int sha256_finup_neon(struct shash_desc *desc, const u8 *data,
+ 	if (!crypto_simd_usable()) {
+ 		if (len)
+ 			sha256_base_do_update(desc, data, len,
+-				(sha256_block_fn *)sha256_block_data_order);
+-		sha256_base_do_finalize(desc,
+-				(sha256_block_fn *)sha256_block_data_order);
++				__sha256_block_data_order);
++		sha256_base_do_finalize(desc, __sha256_block_data_order);
+ 	} else {
+ 		if (len)
+ 			sha256_update_neon(desc, data, len);
+ 		kernel_neon_begin();
+-		sha256_base_do_finalize(desc,
+-				(sha256_block_fn *)sha256_block_neon);
++		sha256_base_do_finalize(desc, __sha256_block_neon);
+ 		kernel_neon_end();
+ 	}
+ 	return sha256_base_finish(desc, out);
+diff --git a/arch/arm64/crypto/sha512-ce-glue.c b/arch/arm64/crypto/sha512-ce-glue.c
+index 2369540040aa..076fcae454e0 100644
+--- a/arch/arm64/crypto/sha512-ce-glue.c
++++ b/arch/arm64/crypto/sha512-ce-glue.c
+@@ -29,16 +29,21 @@ asmlinkage void sha512_ce_transform(struct sha512_state *sst, u8 const *src,
+ 
+ asmlinkage void sha512_block_data_order(u64 *digest, u8 const *src, int blocks);
+ 
++static inline void __sha512_block_data_order(struct sha512_state *sst,
++					     u8 const *src, int blocks)
++{
++	return sha512_block_data_order(sst->state, src, blocks);
++}
++
+ static int sha512_ce_update(struct shash_desc *desc, const u8 *data,
+ 			    unsigned int len)
+ {
+ 	if (!crypto_simd_usable())
+ 		return sha512_base_do_update(desc, data, len,
+-				(sha512_block_fn *)sha512_block_data_order);
++					     __sha512_block_data_order);
+ 
+ 	kernel_neon_begin();
+-	sha512_base_do_update(desc, data, len,
+-			      (sha512_block_fn *)sha512_ce_transform);
++	sha512_base_do_update(desc, data, len, sha512_ce_transform);
+ 	kernel_neon_end();
+ 
+ 	return 0;
+@@ -50,16 +55,14 @@ static int sha512_ce_finup(struct shash_desc *desc, const u8 *data,
+ 	if (!crypto_simd_usable()) {
+ 		if (len)
+ 			sha512_base_do_update(desc, data, len,
+-				(sha512_block_fn *)sha512_block_data_order);
+-		sha512_base_do_finalize(desc,
+-				(sha512_block_fn *)sha512_block_data_order);
++					      __sha512_block_data_order);
++		sha512_base_do_finalize(desc, __sha512_block_data_order);
+ 		return sha512_base_finish(desc, out);
+ 	}
+ 
+ 	kernel_neon_begin();
+-	sha512_base_do_update(desc, data, len,
+-			      (sha512_block_fn *)sha512_ce_transform);
+-	sha512_base_do_finalize(desc, (sha512_block_fn *)sha512_ce_transform);
++	sha512_base_do_update(desc, data, len, sha512_ce_transform);
++	sha512_base_do_finalize(desc, sha512_ce_transform);
+ 	kernel_neon_end();
+ 	return sha512_base_finish(desc, out);
+ }
+@@ -67,13 +70,12 @@ static int sha512_ce_finup(struct shash_desc *desc, const u8 *data,
+ static int sha512_ce_final(struct shash_desc *desc, u8 *out)
+ {
+ 	if (!crypto_simd_usable()) {
+-		sha512_base_do_finalize(desc,
+-				(sha512_block_fn *)sha512_block_data_order);
++		sha512_base_do_finalize(desc, __sha512_block_data_order);
+ 		return sha512_base_finish(desc, out);
+ 	}
+ 
+ 	kernel_neon_begin();
+-	sha512_base_do_finalize(desc, (sha512_block_fn *)sha512_ce_transform);
++	sha512_base_do_finalize(desc, sha512_ce_transform);
+ 	kernel_neon_end();
+ 	return sha512_base_finish(desc, out);
+ }
+diff --git a/arch/arm64/crypto/sha512-glue.c b/arch/arm64/crypto/sha512-glue.c
+index d915c656e5fe..125aac89c3c4 100644
+--- a/arch/arm64/crypto/sha512-glue.c
++++ b/arch/arm64/crypto/sha512-glue.c
+@@ -20,15 +20,21 @@ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS_CRYPTO("sha384");
+ MODULE_ALIAS_CRYPTO("sha512");
+ 
+-asmlinkage void sha512_block_data_order(u32 *digest, const void *data,
++asmlinkage void sha512_block_data_order(u64 *digest, const void *data,
+ 					unsigned int num_blks);
+ EXPORT_SYMBOL(sha512_block_data_order);
+ 
++static inline void __sha512_block_data_order(struct sha512_state *sst,
++					     u8 const *src, int blocks)
++{
++	return sha512_block_data_order(sst->state, src, blocks);
++}
++
+ static int sha512_update(struct shash_desc *desc, const u8 *data,
+ 			 unsigned int len)
+ {
+ 	return sha512_base_do_update(desc, data, len,
+-			(sha512_block_fn *)sha512_block_data_order);
++				     __sha512_block_data_order);
+ }
+ 
+ static int sha512_finup(struct shash_desc *desc, const u8 *data,
+@@ -36,9 +42,8 @@ static int sha512_finup(struct shash_desc *desc, const u8 *data,
+ {
+ 	if (len)
+ 		sha512_base_do_update(desc, data, len,
+-			(sha512_block_fn *)sha512_block_data_order);
+-	sha512_base_do_finalize(desc,
+-			(sha512_block_fn *)sha512_block_data_order);
++				      __sha512_block_data_order);
++	sha512_base_do_finalize(desc, __sha512_block_data_order);
+ 
+ 	return sha512_base_finish(desc, out);
+ }
 
-Maybe make this const?
+base-commit: 96b95eff4a591dbac582c2590d067e356a18aacb
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
-> +               u32 hw_id =3D s->hw_id;
-> +
-> +               if (IS_ERR(priv->sensor[i].tzd))
-
-IS_ERR(s->tzd)?
-
-> +                       continue;
-> +               if (!tsens_threshold_violated(priv, hw_id, &d))
-> +                       continue;
-> +               ret =3D get_temp_tsens_valid(s, &temp);
-
-Can this accept a const 's'?
-
-> +               if (ret) {
-> +                       dev_err(priv->dev, "[%u] %s: error reading sensor=
-\n", hw_id, __func__);
-> +                       continue;
-> +               }
-> +
-> +               spin_lock_irqsave(&priv->ul_lock, flags);
-> +
-> +               tsens_read_irq_state(priv, hw_id, s, &d);
-> +
-> +               if (d.crit_viol &&
-> +                   !masked_irq(hw_id, d.crit_irq_mask, tsens_version(pri=
-v))) {
-> +                       tsens_set_interrupt(priv, hw_id, CRITICAL, disabl=
-e);
-> +                       if (d.crit_thresh > temp) {
-> +                               dev_dbg(priv->dev, "[%u] %s: re-arm upper=
-\n",
-> +                                       priv->sensor[i].hw_id, __func__);
-
-hw_id instead of priv->sensor...?
-
-> +                       } else {
-> +                               dev_dbg(priv->dev, "[%u] %s: TZ update tr=
-igger (%d mC)\n",
-> +                                       hw_id, __func__, temp);
-> +                       }
-> +                       tsens_set_interrupt(priv, hw_id, CRITICAL, enable=
-);
-> +               }
-> +
-> +               spin_unlock_irqrestore(&priv->crit_lock, flags);
-> +       }
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
->  /**
->   * tsens_irq_thread - Threaded interrupt handler for uplow interrupts
->   * @irq: irq number
-> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-> index 7d317660211e..784c4976c4f9 100644
-> --- a/drivers/thermal/qcom/tsens.c
-> +++ b/drivers/thermal/qcom/tsens.c
-> @@ -121,6 +121,27 @@ static int tsens_register(struct tsens_priv *priv)
-> =20
->         enable_irq_wake(irq);
-> =20
-> +       if (tsens_version(priv) > VER_1_X) {
-> +               irq =3D platform_get_irq_byname(pdev, "critical");
-> +               if (irq < 0) {
-> +                       ret =3D irq;
-> +                       goto err_put_device;
-> +               }
-> +
-> +               ret =3D devm_request_threaded_irq(&pdev->dev, irq,
-> +                                               NULL, tsens_critical_irq_=
-thread,
-> +                                               IRQF_TRIGGER_HIGH | IRQF_=
-ONESHOT,
-> +                                               dev_name(&pdev->dev), pri=
-v);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "%s: failed to get critical i=
-rq\n", __func__);
-> +                       goto err_put_device;
-
-Do we need to disable_irq_wake() for the previous irq here?
-
-> +               }
-> +
-> +               enable_irq_wake(irq);
-> +       }
-> +
-> +       return 0;
-> +
->  err_put_device:
->         put_device(&pdev->dev);
->         return ret;
