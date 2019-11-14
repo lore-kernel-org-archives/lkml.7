@@ -6,38 +6,36 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3433CC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39F9C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165A420871
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3AD20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfKNSSc (ORCPT
+        id S1727646AbfKNSSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:18:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35598 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 13:18:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbfKNSSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:18:25 -0500
+        id S1727568AbfKNSS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:18:27 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97DE920729;
-        Thu, 14 Nov 2019 18:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3162A2086E;
+        Thu, 14 Nov 2019 18:18:27 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iVJhH-0000yI-M6; Thu, 14 Nov 2019 13:18:23 -0500
-Message-Id: <20191114181823.564906442@goodmis.org>
+        id 1iVJhK-00017n-Da; Thu, 14 Nov 2019 13:18:26 -0500
+Message-Id: <20191114181826.298951318@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 14 Nov 2019 13:17:35 -0500
+Date:   Thu, 14 Nov 2019 13:17:54 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: [for-next][PATCH 01/33] ftrace: Introduce PERMANENT ftrace_ops flag
+        Divya Indi <divya.indi@oracle.com>
+Subject: [for-next][PATCH 20/33] tracing: Declare newly exported APIs in include/linux/trace.h
 References: <20191114181734.067922168@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,163 +44,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Benes <mbenes@suse.cz>
+From: Divya Indi <divya.indi@oracle.com>
 
-Livepatch uses ftrace for redirection to new patched functions. It means
-that if ftrace is disabled, all live patched functions are disabled as
-well. Toggling global 'ftrace_enabled' sysctl thus affect it directly.
-It is not a problem per se, because only administrator can set sysctl
-values, but it still may be surprising.
+Declare the newly introduced and exported APIs in the header file -
+include/linux/trace.h. Moving previous declarations from
+kernel/trace/trace.h to include/linux/trace.h.
 
-Introduce PERMANENT ftrace_ops flag to amend this. If the
-FTRACE_OPS_FL_PERMANENT is set on any ftrace ops, the tracing cannot be
-disabled by disabling ftrace_enabled. Equally, a callback with the flag
-set cannot be registered if ftrace_enabled is disabled.
+Link: http://lkml.kernel.org/r/1565805327-579-2-git-send-email-divya.indi@oracle.com
 
-Link: http://lkml.kernel.org/r/20191016113316.13415-2-mbenes@suse.cz
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Divya Indi <divya.indi@oracle.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- Documentation/trace/ftrace-uses.rst |  8 ++++++++
- Documentation/trace/ftrace.rst      |  4 +++-
- include/linux/ftrace.h              |  3 +++
- kernel/livepatch/patch.c            |  3 ++-
- kernel/trace/ftrace.c               | 23 +++++++++++++++++++++--
- 5 files changed, 37 insertions(+), 4 deletions(-)
+ include/linux/trace.h | 7 +++++++
+ kernel/trace/trace.h  | 4 +---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/trace/ftrace-uses.rst b/Documentation/trace/ftrace-uses.rst
-index 1fbc69894eed..740bd0224d35 100644
---- a/Documentation/trace/ftrace-uses.rst
-+++ b/Documentation/trace/ftrace-uses.rst
-@@ -170,6 +170,14 @@ FTRACE_OPS_FL_RCU
- 	a callback may be executed and RCU synchronization will not protect
- 	it.
+diff --git a/include/linux/trace.h b/include/linux/trace.h
+index b95ffb2188ab..24fcf07812ae 100644
+--- a/include/linux/trace.h
++++ b/include/linux/trace.h
+@@ -24,6 +24,13 @@ struct trace_export {
+ int register_ftrace_export(struct trace_export *export);
+ int unregister_ftrace_export(struct trace_export *export);
  
-+FTRACE_OPS_FL_PERMANENT
-+        If this is set on any ftrace ops, then the tracing cannot disabled by
-+        writing 0 to the proc sysctl ftrace_enabled. Equally, a callback with
-+        the flag set cannot be registered if ftrace_enabled is 0.
++struct trace_array;
 +
-+        Livepatch uses it not to lose the function redirection, so the system
-+        stays protected.
-+
++void trace_printk_init_buffers(void);
++int trace_array_printk(struct trace_array *tr, unsigned long ip,
++		const char *fmt, ...);
++struct trace_array *trace_array_create(const char *name);
++int trace_array_destroy(struct trace_array *tr);
+ #endif	/* CONFIG_TRACING */
  
- Filtering which functions to trace
- ==================================
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index e3060eedb22d..d2b5657ed33e 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -2976,7 +2976,9 @@ Note, the proc sysctl ftrace_enable is a big on/off switch for the
- function tracer. By default it is enabled (when function tracing is
- enabled in the kernel). If it is disabled, all function tracing is
- disabled. This includes not only the function tracers for ftrace, but
--also for any other uses (perf, kprobes, stack tracing, profiling, etc).
-+also for any other uses (perf, kprobes, stack tracing, profiling, etc). It
-+cannot be disabled if there is a callback with FTRACE_OPS_FL_PERMANENT set
-+registered.
+ #endif	/* _LINUX_TRACE_H */
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 718eb998c13e..90cba68c8b50 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -11,6 +11,7 @@
+ #include <linux/mmiotrace.h>
+ #include <linux/tracepoint.h>
+ #include <linux/ftrace.h>
++#include <linux/trace.h>
+ #include <linux/hw_breakpoint.h>
+ #include <linux/trace_seq.h>
+ #include <linux/trace_events.h>
+@@ -873,8 +874,6 @@ trace_vprintk(unsigned long ip, const char *fmt, va_list args);
+ extern int
+ trace_array_vprintk(struct trace_array *tr,
+ 		    unsigned long ip, const char *fmt, va_list args);
+-int trace_array_printk(struct trace_array *tr,
+-		       unsigned long ip, const char *fmt, ...);
+ int trace_array_printk_buf(struct ring_buffer *buffer,
+ 			   unsigned long ip, const char *fmt, ...);
+ void trace_printk_seq(struct trace_seq *s);
+@@ -1890,7 +1889,6 @@ extern const char *__start___tracepoint_str[];
+ extern const char *__stop___tracepoint_str[];
  
- Please disable this with care.
- 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 8a8cb3c401b2..8385cafe4f9f 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -142,6 +142,8 @@ ftrace_func_t ftrace_ops_get_func(struct ftrace_ops *ops);
-  * PID     - Is affected by set_ftrace_pid (allows filtering on those pids)
-  * RCU     - Set when the ops can only be called when RCU is watching.
-  * TRACE_ARRAY - The ops->private points to a trace_array descriptor.
-+ * PERMANENT - Set when the ops is permanent and should not be affected by
-+ *             ftrace_enabled.
-  */
- enum {
- 	FTRACE_OPS_FL_ENABLED			= 1 << 0,
-@@ -160,6 +162,7 @@ enum {
- 	FTRACE_OPS_FL_PID			= 1 << 13,
- 	FTRACE_OPS_FL_RCU			= 1 << 14,
- 	FTRACE_OPS_FL_TRACE_ARRAY		= 1 << 15,
-+	FTRACE_OPS_FL_PERMANENT                 = 1 << 16,
- };
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
-diff --git a/kernel/livepatch/patch.c b/kernel/livepatch/patch.c
-index bd43537702bd..b552cf2d85f8 100644
---- a/kernel/livepatch/patch.c
-+++ b/kernel/livepatch/patch.c
-@@ -196,7 +196,8 @@ static int klp_patch_func(struct klp_func *func)
- 		ops->fops.func = klp_ftrace_handler;
- 		ops->fops.flags = FTRACE_OPS_FL_SAVE_REGS |
- 				  FTRACE_OPS_FL_DYNAMIC |
--				  FTRACE_OPS_FL_IPMODIFY;
-+				  FTRACE_OPS_FL_IPMODIFY |
-+				  FTRACE_OPS_FL_PERMANENT;
- 
- 		list_add(&ops->node, &klp_ops);
- 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f296d89be757..89e9128652ef 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -326,6 +326,8 @@ int __register_ftrace_function(struct ftrace_ops *ops)
- 	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS_IF_SUPPORTED)
- 		ops->flags |= FTRACE_OPS_FL_SAVE_REGS;
- #endif
-+	if (!ftrace_enabled && (ops->flags & FTRACE_OPS_FL_PERMANENT))
-+		return -EBUSY;
- 
- 	if (!core_kernel_data((unsigned long)ops))
- 		ops->flags |= FTRACE_OPS_FL_DYNAMIC;
-@@ -6754,6 +6756,18 @@ int unregister_ftrace_function(struct ftrace_ops *ops)
- }
- EXPORT_SYMBOL_GPL(unregister_ftrace_function);
- 
-+static bool is_permanent_ops_registered(void)
-+{
-+	struct ftrace_ops *op;
-+
-+	do_for_each_ftrace_op(op, ftrace_ops_list) {
-+		if (op->flags & FTRACE_OPS_FL_PERMANENT)
-+			return true;
-+	} while_for_each_ftrace_op(op);
-+
-+	return false;
-+}
-+
- int
- ftrace_enable_sysctl(struct ctl_table *table, int write,
- 		     void __user *buffer, size_t *lenp,
-@@ -6771,8 +6785,6 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
- 	if (ret || !write || (last_ftrace_enabled == !!ftrace_enabled))
- 		goto out;
- 
--	last_ftrace_enabled = !!ftrace_enabled;
--
- 	if (ftrace_enabled) {
- 
- 		/* we are starting ftrace again */
-@@ -6783,12 +6795,19 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
- 		ftrace_startup_sysctl();
- 
- 	} else {
-+		if (is_permanent_ops_registered()) {
-+			ftrace_enabled = true;
-+			ret = -EBUSY;
-+			goto out;
-+		}
-+
- 		/* stopping ftrace calls (just send to ftrace_stub) */
- 		ftrace_trace_function = ftrace_stub;
- 
- 		ftrace_shutdown_sysctl();
- 	}
- 
-+	last_ftrace_enabled = !!ftrace_enabled;
-  out:
- 	mutex_unlock(&ftrace_lock);
- 	return ret;
+ void trace_printk_control(bool enabled);
+-void trace_printk_init_buffers(void);
+ void trace_printk_start_comm(void);
+ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set);
+ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled);
 -- 
 2.23.0
 
