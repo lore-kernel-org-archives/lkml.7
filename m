@@ -2,149 +2,145 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95672C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F92C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2BC20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED9720643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:43:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mfj+mls9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iO1A/b4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKNAmE (ORCPT
+        id S1727049AbfKNAnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:42:04 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18192 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfKNAmD (ORCPT
+        Wed, 13 Nov 2019 19:43:10 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40014 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfKNAnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:42:03 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcca2da0000>; Wed, 13 Nov 2019 16:42:02 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 Nov 2019 16:42:03 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 Nov 2019 16:42:03 -0800
-Received: from [10.2.160.107] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 Nov
- 2019 00:42:02 +0000
-Subject: Re: [PATCH] mm: Cleanup __put_devmap_managed_page() vs ->page_free()
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        <linux-nvdimm@lists.01.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>
-References: <157368992671.2974225.13512647385398246617.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <913133b7-58d8-9645-fc89-c2819825e1ee@nvidia.com>
-Date:   Wed, 13 Nov 2019 16:39:17 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 13 Nov 2019 19:43:10 -0500
+Received: by mail-wr1-f67.google.com with SMTP id i10so4476648wrs.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 16:43:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZJ2vg6lRpb9kWQ2Ir+kHNao0DW/EVUTH+nPIta6hjcA=;
+        b=iO1A/b4l4fmDbaFMKCddNT/e+qOJnr8YjRadRCA1SnbBt6E0iKMiPDlg8+hkcGWPhk
+         V4NJAu2hFV9lp8pfeR4jxrI+BNxmeYJGaLz+xBxcMIL5KgGjtrELpDgqECUhiHlSAORS
+         YjOrD43x7G06OHpXfNaCAs4c6fxA0iIzJ4TaXNDiAgoWNEjXRQfyasUkeT5rbYYunxkE
+         XjvT0S6ZV73KJXSUWXoYAHuybYMy8Jt81ZDRM/FJ9Upj4AqTJL78G0fWLHcc2/CktY5T
+         e8o3a7ci3niNXnmNzGbDuS5wYlZT1ItLbAt3gNM9xa+aLMza9CTLJdF2fgZqip5EM/92
+         c9jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZJ2vg6lRpb9kWQ2Ir+kHNao0DW/EVUTH+nPIta6hjcA=;
+        b=NprIpYKrVOwWJ5RF/r+do21eoYxlwnYgHePPsg2egcTRsGmggKntk/9c0MPAmekdhi
+         l8W1JoEuKNNa5YqQMJTlwPQ68NzNOc+SBqX+91spSh5P7Kw0DlSRyMxm5Jl8Mhf0LAtd
+         PN9zBqCNDVo00Parvdmxjw/8IyVVJO4R5Cxw7OL+0//OUj3Al//eECdyrpiSikj3tC/E
+         sSRPsnQTk7ZFFKkasr6nnwNjspet46eglJDvdw+HU2JKFAQOJlwKLdHoixB26tQeXdsa
+         CK7ijmfE7vssBvWjFS37V6G8Q5Nr0Dy29ehrVGmfGJbmw1PCgtWzWky7KC9B0NX4WgTJ
+         BAVA==
+X-Gm-Message-State: APjAAAU4Ylt3BPoPcthbDFFsZS4kkP1zbxwgsTLEX3YIrUjpHA0Ttrl1
+        8+07rw37ZI1f/gL5CVHw0JZcnC7zMEeQIc4qc8fOCA==
+X-Google-Smtp-Source: APXvYqww9MDo/oLjckfKZftNJgoOA354m5+zaC4lhMjhE3aBPbc8lwnrhI7EtMw33h9S7JjEDRUCAuNJbiEpH8uaySY=
+X-Received: by 2002:adf:f1c7:: with SMTP id z7mr5866675wro.355.1573692186564;
+ Wed, 13 Nov 2019 16:43:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <157368992671.2974225.13512647385398246617.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573692122; bh=nHBqKFuyS3Jqi47A+b+7bCsdLPkBjyfHLHVyQVlH5s4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mfj+mls9Md6loxbYBg0RKUGTHWE83J7r/HTza4FSYS/5NJpTEpg2CWpo40dqRX44+
-         ajl43OHTFYsQowjpTzBH7ZG1pTO8SEok2b2z6W9HC0AEQFF5y+7ki4ZiCjuAmJhSUr
-         9145t48pXQ16RpzNBRlEsbqImCl8QHDCSXJVmguYGxAxx7q3iSEy9ByUVyfDVBNq71
-         aqkHuqQyRRpBigl9VkMvUrwWr/3fmaRqMIns6aKSWPne9X5LHUJKn05kH8ejTwpgaC
-         UQKKSqa3O0YFIGHAms67s2H1FHY6cwFQ/zBsA72LKnaD5bDaMSzkNvOJRvU456t2A+
-         JWCL34W+vVxBA==
+References: <20191114003042.85252-1-irogers@google.com>
+In-Reply-To: <20191114003042.85252-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 13 Nov 2019 16:42:55 -0800
+Message-ID: <CAP-5=fUSYpy97VWLb4nLnkiZ-0D1uP4nnRLhLL3=E6gYWv2UZQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] Optimize cgroup context switch
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 4:07 PM, Dan Williams wrote:
-> After the removal of the device-public infrastructure there are only 2
-> ->page_free() call backs in the kernel. One of those is a device-private
-> callback in the nouveau driver, the other is a generic wakeup needed in
-> the DAX case. In the hopes that all ->page_free() callbacks can be
-> migrated to common core kernel functionality, move the device-private
-> specific actions in __put_devmap_managed_page() under the
-> is_device_private_page() conditional, including the ->page_free()
-> callback. For the other page types just open-code the generic wakeup.
->=20
-> Yes, the wakeup is only needed in the MEMORY_DEVICE_FSDAX case, but it
-> does no harm in the MEMORY_DEVICE_DEVDAX and MEMORY_DEVICE_PCI_P2PDMA
-> case.
->=20
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
-> Hi John,
->=20
-> This applies on top of today's linux-next and passes my nvdimm unit
-> tests. That testing noticed that devmap_managed_enable_get() needed a
-> small fixup as well.
+Apologies, I missed the in-reply-to
+<20190724223746.153620-1-irogers@google.com>.
 
-Got it. This will appear in the next posted version of my "mm/gup: track
-dma-pinned pages: FOLL_PIN, FOLL_LONGTERM" patchset.
+Ian
 
-
->=20
->   drivers/nvdimm/pmem.c |    6 ------
->   mm/memremap.c         |   22 ++++++++++++----------
->   2 files changed, 12 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-> index f9f76f6ba07b..21db1ce8c0ae 100644
-> --- a/drivers/nvdimm/pmem.c
-> +++ b/drivers/nvdimm/pmem.c
-> @@ -338,13 +338,7 @@ static void pmem_release_disk(void *__pmem)
->   	put_disk(pmem->disk);
->   }
->  =20
-> -static void pmem_pagemap_page_free(struct page *page)
-> -{
-> -	wake_up_var(&page->_refcount);
-> -}
-> -
->   static const struct dev_pagemap_ops fsdax_pagemap_ops =3D {
-> -	.page_free		=3D pmem_pagemap_page_free,
->   	.kill			=3D pmem_pagemap_kill,
->   	.cleanup		=3D pmem_pagemap_cleanup,
->   };
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index 022e78e68ea0..6e6f3d6fdb73 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -27,7 +27,8 @@ static void devmap_managed_enable_put(void)
->  =20
->   static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
->   {
-> -	if (!pgmap->ops || !pgmap->ops->page_free) {
-> +	if (!pgmap->ops || (pgmap->type =3D=3D MEMORY_DEVICE_PRIVATE
-> +				&& !pgmap->ops->page_free)) {
-
-
-OK, so only MEMORY_DEVICE_PRIVATE has .page_free ops. That looks
-correct to me, based on looking at the .page_free setters--I
-only see Nouveau setting it.
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
+On Wed, Nov 13, 2019 at 4:30 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Avoid iterating over all per-CPU events during cgroup changing context
+> switches by organizing events by cgroup.
+>
+> To make an efficient set of iterators, introduce a min max heap
+> utility with test.
+>
+> These patches include a caching algorithm to improve the search for
+> the first event in a group by Kan Liang <kan.liang@linux.intel.com> as
+> well as rebasing hit "optimize event_filter_match during sched_in"
+> from https://lkml.org/lkml/2019/8/7/771.
+>
+> The v2 patch set was modified by Peter Zijlstra in his perf/cgroup
+> branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git
+>
+> These patches follow Peter's reorganization and his fixes to the
+> perf_cpu_context min_heap storage code.
+>
+> Ian Rogers (8):
+>   lib: introduce generic min max heap
+>   perf: Use min_max_heap in visit_groups_merge
+>   perf: Add per perf_cpu_context min_heap storage
+>   perf/cgroup: Grow per perf_cpu_context heap storage
+>   perf/cgroup: Order events in RB tree by cgroup id
+>   perf: simplify and rename visit_groups_merge
+>   perf: cache perf_event_groups_first for cgroups
+>   perf: optimize event_filter_match during sched_in
+>
+> Kan Liang (1):
+>   perf/cgroup: Do not switch system-wide events in cgroup switch
+>
+> Peter Zijlstra (1):
+>   perf/cgroup: Reorder perf_cgroup_connect()
+>
+>  include/linux/min_max_heap.h | 134 +++++++++
+>  include/linux/perf_event.h   |  14 +
+>  kernel/events/core.c         | 512 ++++++++++++++++++++++++++++-------
+>  lib/Kconfig.debug            |  10 +
+>  lib/Makefile                 |   1 +
+>  lib/test_min_max_heap.c      | 194 +++++++++++++
+>  6 files changed, 769 insertions(+), 96 deletions(-)
+>  create mode 100644 include/linux/min_max_heap.h
+>  create mode 100644 lib/test_min_max_heap.c
+>
+> --
+> 2.24.0.432.g9d3f5f5b63-goog
+>
