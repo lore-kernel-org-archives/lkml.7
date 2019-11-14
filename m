@@ -2,121 +2,74 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE6DC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AE0C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E395D206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:15:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dZpObk7s"
+	by mail.kernel.org (Postfix) with ESMTP id C0557206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573751748;
+	bh=wqXw2GU/fWqyagYIshMsfzEUSC9I5oHEjWnEEo4D/6I=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=ykJYUopVT9QXkTE5I+sLpI+4rYj8Tyawbtdi+Xn0K79WFFVEfvDn63qbgctLuSF+3
+	 hpJFSPf55YuVm63bur5mWA/iYLoVy/24sqT40uB6/qygqwNDvvJ8z7mK7JHRWxEOsr
+	 rRUmmZwEkOIDyPiEO5hU//PiIDqUCoZUdr32P4B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKNRPn (ORCPT
+        id S1726983AbfKNRPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:15:43 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26373 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726410AbfKNRPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:15:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573751741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=gbTdjtPW0MKQv7Yl30zpGVmoWK5fxqvC+dh3W0bxxkg=;
-        b=dZpObk7slTJptKcEM6/twMH0MUVKRww9vvglVA8lf5vVoEZpBgNGmCRz/qMG+FhVpLn1bD
-        XCbRUUsptZpIhxP2shoysPLv/605z1OsBdb/eX47YjKbpaslrq1F6hjl9Vv1mjO5Bpe9Xa
-        Qp/7lTsnSYs7k56BP6uh2f10hnVSdgk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-428-YHmy6cM1OVa-smqFjLkBdA-1; Thu, 14 Nov 2019 12:15:39 -0500
-Received: by mail-wr1-f69.google.com with SMTP id m17so4730257wrn.23
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:15:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jpEt4kcWqvPkXm7gNvgLa7mz6uUYuQ+o9Pau2fsorwc=;
-        b=dKoEXJOOnmGhy8EGihJBVeeDkj/n2KybAbDT5vN45LMwyXMhFYtBAopNJCyxgRAat5
-         anuBRlPVWby7YcNCtoOFunF7Z+EnQXtYMfiraiwTYhLRBEx4rm9BAzfgDYV7cLSJY4sS
-         O5zRwaAt8e53fAIsj6vfZpJoPvDpWV6Ugdn4olbs6fc8CiLznMXHi53S2l6lV0emijEL
-         9TsZsBRqxpMNyU9g+lW28braRDQskZl/DrIRwSFA6DkCMWbHPeLCNwImD1TeygcMLfcp
-         wNBqeafHGsq//L06K2U6qDfCb4wbLbQHF6xEyokVHRQM/mU4xArH6Z9CQ0QlmPN+UeV8
-         LP1Q==
-X-Gm-Message-State: APjAAAXMPPaacHByOYLw62Tcy5G3YbC2nPlOfj4htQWjgMx9003zdRu+
-        9A/Mn9agAb0gvQaHSwTMjw4/K7Hk1OBHmzxx8/iwXawRni0slkVpLXkNwopd2dESG7kErtX80zW
-        Nu+7Ezt74PgqAutbOPMM7um0S
-X-Received: by 2002:a1c:98c5:: with SMTP id a188mr8945117wme.133.1573751738553;
-        Thu, 14 Nov 2019 09:15:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzHamP9QriNwl6Ugw+S5huM16LiGTkmJeWuW/47AoXKLopL+QzkB/RXwKrqbj48LRbRjH6EPA==
-X-Received: by 2002:a1c:98c5:: with SMTP id a188mr8945087wme.133.1573751738265;
-        Thu, 14 Nov 2019 09:15:38 -0800 (PST)
-Received: from [192.168.43.81] (mob-109-112-119-76.net.vodafone.it. [109.112.119.76])
-        by smtp.gmail.com with ESMTPSA id w18sm7973435wrp.31.2019.11.14.09.15.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 09:15:37 -0800 (PST)
-Subject: Re: [PATCH] KVM: x86/mmu: Take slots_lock when using
- kvm_mmu_zap_all_fast()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191113193032.12912-1-sean.j.christopherson@intel.com>
- <1b46d531-6423-3ccc-fc5f-df6fbaa02557@redhat.com>
- <20191114151051.GB24045@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <7f710a08-b207-e9a8-bc42-cb67113a7c8a@redhat.com>
-Date:   Thu, 14 Nov 2019 18:15:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 14 Nov 2019 12:15:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726984AbfKNRPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:15:47 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77870206F4;
+        Thu, 14 Nov 2019 17:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573751746;
+        bh=wqXw2GU/fWqyagYIshMsfzEUSC9I5oHEjWnEEo4D/6I=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=DDu+wkPJH5/e9q5cXcoO5DV4uFX6hDP8XyQRYx6WyPXASmYL0i5uR5v6SxXjYrFRL
+         5nvbU4bOmJgcFa3FDyFo7HD6pbfeeS8rw6Td8R4h6+IEILsNzfouASCg4VN8x4oUEo
+         muQi2TXUUAWkAAFbGZONRt8LasK6fh7gsdchQXx4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191114151051.GB24045@linux.intel.com>
-Content-Language: en-US
-X-MC-Unique: YHmy6cM1OVa-smqFjLkBdA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org>
+References: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+To:     Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v1 0/2] Add suppport for rm69299 Visionox panel driver and add DSI config to support DSI version
+User-Agent: alot/0.8.1
+Date:   Thu, 14 Nov 2019 09:15:45 -0800
+Message-Id: <20191114171546.77870206F4@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/11/19 16:10, Sean Christopherson wrote:
-> On Thu, Nov 14, 2019 at 01:16:21PM +0100, Paolo Bonzini wrote:
->> On 13/11/19 20:30, Sean Christopherson wrote:
->>> Failing to take slots_lock when toggling nx_huge_pages allows multiple
->>> instances of kvm_mmu_zap_all_fast() to run concurrently, as the other
->>> user, KVM_SET_USER_MEMORY_REGION, does not take the global kvm_lock.
->>> Concurrent fast zap instances causes obsolete shadow pages to be
->>> incorrectly identified as valid due to the single bit generation number
->>> wrapping, which results in stale shadow pages being left in KVM's MMU
->>> and leads to all sorts of undesirable behavior.
->>
->> Indeed the current code fails lockdep miserably, but isn't the whole
->> body of kvm_mmu_zap_all_fast() covered by kvm->mmu_lock?  What kind of
->> badness can happen if kvm->slots_lock isn't taken?
+Quoting Harigovindan P (2019-11-14 02:16:26)
+> Current patchset adds support for rm69299 visionox panel driver used in M=
+SM reference platforms=20
+> and also adds DSI config that supports the respective DSI version.
 >=20
-> kvm_zap_obsolete_pages() temporarily drops mmu_lock and reschedules so
-> that it doesn't block other vCPUS from inserting shadow pages into the ne=
-w
-> generation of the mmu.
+> The visionox panel driver supports a resolution of 1080x2248 with 4 lanes=
+ and supports only single DSI mode.
+>=20
+> Current patchset is tested on actual panel.
 
-Oh, of course.  I've worked on all this on the pre-5.4 MMU and that does
-not have commit ca333add693 ("KVM: x86/mmu: Explicitly track only a
-single invalid mmu generation").
-
-I queued this patch with a small tweak to the commit message, to explain
-why it doesn't need a stable backport.
-
-Paolo
+Do you have the DT binding patch?
 
