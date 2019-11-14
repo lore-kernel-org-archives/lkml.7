@@ -2,108 +2,95 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6031AC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33444C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 340D9206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573753194;
-	bh=VzKteWn1F/CosCCsd6C4IKUCGWE4H5oQV8jGARZ48tc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pwDx16oxNLMECknXV4cBSM8aFcd0F1mZIbBj5XmdhpmJd8ZI4PjwBKszMYmsfuizU
-	 C2FjuDTMh2WlVaePlDEOEy2Xh080jfd9MOg32fVGYFoXmnqaDHfCySpqC5iAh2bb5w
-	 hm97IGKVFol6urLuQes3XMKVS40/aC4b40Gui2Y8=
+	by mail.kernel.org (Postfix) with ESMTP id E62AB206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ifhmGmVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfKNRjx (ORCPT
+        id S1726912AbfKNRme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:39:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfKNRjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:39:53 -0500
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B0120718;
-        Thu, 14 Nov 2019 17:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573753192;
-        bh=VzKteWn1F/CosCCsd6C4IKUCGWE4H5oQV8jGARZ48tc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qN2v5wV095fAUbYtR5P6fE7B5vGnb+vx313xCT936CPIndi5UGPzUwBJ4RrLRuJ3x
-         doWz3mevftGogNgXftWdpHE1RIm0Y5J6GvK5tLIDIKNpwQIF4FFify2At4paexUm3K
-         4SIxI+snb5+OFz1v88ytyKBaUGmq/kZP83rqrNBI=
-Received: by mail-qv1-f48.google.com with SMTP id s18so2698307qvr.4;
-        Thu, 14 Nov 2019 09:39:52 -0800 (PST)
-X-Gm-Message-State: APjAAAWU3N45mXI3Ud44Pp4vYPoEZm/VZN9MOpL5LaaVCp0AL7a7LjP+
-        ZR2aMon3mU4pSQ46aeWgIpGYozdnZqVv/a9nCw==
-X-Google-Smtp-Source: APXvYqxjXzdKzRE0EK2pcCqMsxPiZ4eYz6WenDnilDBfvtuJZs9Eo9skkMhiHprH/vEA4CI6gl4l72fI4G+D1tx4Ce4=
-X-Received: by 2002:a0c:d2b4:: with SMTP id q49mr8873666qvh.135.1573753191385;
- Thu, 14 Nov 2019 09:39:51 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com> <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-In-Reply-To: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 14 Nov 2019 11:39:40 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
-Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin zhu <yixin.zhu@linux.intel.com>,
-        cheol.yong.kim@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 Nov 2019 12:42:34 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:64706 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfKNRmd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:42:33 -0500
+Received: from grover.flets-west.jp (softbank126021098169.bbtec.net [126.21.98.169]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id xAEHgSo3028428;
+        Fri, 15 Nov 2019 02:42:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xAEHgSo3028428
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573753350;
+        bh=hD5s6ssP8dZQZE8/9P7xQCgsdQSDXm2EH1M7tYSApOw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ifhmGmVuudFMgB3vHiQXBnrvLtcIZ9Nlh1wHNO67OvAukdevVIYWDCrLXApxix151
+         2u3oHfKOrB4v320O67MMooe1vhNlxQQk1IYJkv0KdxwrcErvbOUUCjzDX2JoqGsqFh
+         6Uh1M6PFTxtk/52cMD/U6VOm9X6bfSQMDzCwwG8UNObHPwMU1qkxk9beRKY7WtTDyN
+         hnV968SKvI4xd2PRmrGMtROrBzyU3VJsPrQGouylkSFqhOvjzb3vlH67+s+1Lovr+E
+         IrVHq9owCxQYXCq5w0Bu0bma1/7T+agp7fwDnxzHsd/UbVMUVu+QYR1EqUTIRF1RT2
+         4eSIYJoe4FtmQ==
+X-Nifty-SrcIP: [126.21.98.169]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/6] modpost: rename handle_modversions() to handle_symbol()
+Date:   Fri, 15 Nov 2019 02:42:23 +0900
+Message-Id: <20191114174226.7201-3-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191114174226.7201-1-yamada.masahiro@socionext.com>
+References: <20191114174226.7201-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 9:27 PM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
->
->
-> Hi Linus,
->
-> On 13/11/2019 10:46 PM, Linus Walleij wrote:
-> > On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
-> > <rahul.tanwar@linux.intel.com> wrote:
-> >
-> >> Add dt bindings document for pinmux & GPIO controller driver of
-> >> Intel Lightning Mountain SoC.
-> >>
-> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> > (...)
-> >
-> >> +properties:
-> >> +  compatible:
-> >> +    const: intel,lgm-pinctrl
-> > Just noted from another review where Rob noted that this name should
-> > match the internal name in the datasheet for this hardware block. Is it
-> > really called "lgm-pinctrl" inside Intel?
-> >
-> > intel,lightning-mountain-io and similar are perfectly fine if that is the
-> > name it has in your documentation.
->
-> Our documentation does not have any specific names for these hardware
-> blocks. It names it in a very generic/standard manner like GPIO, pinmux..
->
-> To make the name explicit & self explanatory, i should probably change
-> the name as you suggested i.e. intel,lightning-mountain-io.
+This function handles not only modversions, but also unresolved
+symbols, export symbols, etc.
 
-You should also be consistent with 'lgm' vs. 'lightning-mountain' use
-across bindings some of which I think have already been accepted.
+Rename it to a more proper function name.
 
-Rob
+While I was here, I also added the 'const' qualifier to *sym.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ scripts/mod/modpost.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index d9418c58a8c0..6735ae3da4c2 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -683,8 +683,8 @@ static int ignore_undef_symbol(struct elf_info *info, const char *symname)
+ 	return 0;
+ }
+ 
+-static void handle_modversions(struct module *mod, struct elf_info *info,
+-			       Elf_Sym *sym, const char *symname)
++static void handle_symbol(struct module *mod, struct elf_info *info,
++			  const Elf_Sym *sym, const char *symname)
+ {
+ 	unsigned int crc;
+ 	enum export export;
+@@ -2051,7 +2051,7 @@ static void read_symbols(const char *modname)
+ 	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
+ 		symname = remove_dot(info.strtab + sym->st_name);
+ 
+-		handle_modversions(mod, &info, sym, symname);
++		handle_symbol(mod, &info, sym, symname);
+ 		handle_moddevtable(mod, &info, sym, symname);
+ 	}
+ 
+-- 
+2.17.1
+
