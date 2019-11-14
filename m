@@ -2,114 +2,173 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671FEC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFECC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BEB2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E37020718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:56:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BczWzv8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfKNRx7 (ORCPT
+        id S1726958AbfKNR4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:53:59 -0500
-Received: from mga05.intel.com ([192.55.52.43]:8274 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfKNRx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:53:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:53:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="203132956"
-Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:53:56 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v3 2/6] soundwire: sdw_slave: add enumeration_complete structure
-Date:   Thu, 14 Nov 2019 11:53:41 -0600
-Message-Id: <20191114175345.21836-3-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
-References: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
+        Thu, 14 Nov 2019 12:56:31 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34082 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfKNR4b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:56:31 -0500
+Received: by mail-io1-f68.google.com with SMTP id q83so7855855iod.1;
+        Thu, 14 Nov 2019 09:56:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UgW4SMrfbhKMi9qgc5xZl0sjORDDULnrm3lI/5KuzN0=;
+        b=BczWzv8BWuFkYr/ez120JhoXDON9V4jr1e7a7X3bdDZVaKAdeRUisMvpsO6UOKUThy
+         WHcapILnkRuitE6uypIu0Rpz28ncsMLnRbIZMasKEHHY6UkhRcIaLLRFjZy3SxbVw9KO
+         T5gkCjFGNPFk6GWgEiaR8f73EdzS3XnZ5u/mpYT9X/f5woxNI7V1v8yhKe9pIlhiVWL5
+         7ftq3UhAgKkwCw8Hs0QSb7O97cFczFYDLGna7JMT3/cvPry3KXrx0bLnm8sCnun1SuyK
+         FfbkaO7tj8Ig26mqxTqwYWUWr3V54VYodL/2keCogdeQtii18b5eerO78TBX8ZyQaH0+
+         LvpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UgW4SMrfbhKMi9qgc5xZl0sjORDDULnrm3lI/5KuzN0=;
+        b=G1mBBMRdYFAG8eLNBU17mASEAs7S24jGv3IF7aIm4tyGjMZ5xfjXmosuiWD5sSWSNB
+         SW+cqavtG0H4pAo4BfsRXrfNq9/xQGdxZ6f5mrM8fX4qVA2ILA/bJHJpDIGu3vVW7xun
+         93C1sjipa7AkekXDp1sMslRrI6sGL45/Tk2bdwEgv6f4Fl/shP+EPvk5MiwOZJJv9oQ6
+         LYC1XqOkzasVWiqX2Fk0NmAEyv28NBWM1OaPSTat88cBPxRwdpsx99kYU6Ip1nPEQvUl
+         ZMf3QuG3bMyZMV5tLWgKqA64uLMU1bh8WviVUDxIcKQvnF4Weve6uQzvQMmwczWjFbyT
+         IvtQ==
+X-Gm-Message-State: APjAAAVJ7oOpf1Y7D3bGvv3e121sISG01yQ6cX0pRYwhkt1V1v9F6NY2
+        8E/aZDuNSwr1Z6ARv/PaYS0rRSrtrCFaizgOj2s=
+X-Google-Smtp-Source: APXvYqw/g3NqxOMX1Y/5RG0gnLKeBCaPRdyjqw6TZ9tiex96r00vefgQDZsKLpLgHA+e/Cm+l6/QF1d2um7ELXwke5s=
+X-Received: by 2002:a5e:8a04:: with SMTP id d4mr7856754iok.42.1573754190499;
+ Thu, 14 Nov 2019 09:56:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org>
+ <1573726588-18897-3-git-send-email-harigovi@codeaurora.org> <CAF6AEGurmTxwhBeWf1Q2U7_jSwmofBq49G5dsZN0qRmAFfvDNQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGurmTxwhBeWf1Q2U7_jSwmofBq49G5dsZN0qRmAFfvDNQ@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 14 Nov 2019 10:56:19 -0700
+Message-ID: <CAOCk7Nrap3y_NS8RMuqeLr+E5CP94xyqEBZfHBCtvocaTM1VVA@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v1 2/2] drm/msm: add DSI config changes to
+ support DSI version
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the Master starts the bus (be it during the initial boot or
-system resume), it usually performs a HardReset to make sure
-electrical levels are correct, then enables the control channel.
+On Thu, Nov 14, 2019 at 10:47 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Thu, Nov 14, 2019 at 2:16 AM Harigovindan P <harigovi@codeaurora.org> wrote:
+> >
+> > Add DSI config changes to support DSI version.
+> >
+> > Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+>
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-While the PM framework guarantees that the Slave devices will only
-become 'active' once the Master completes the bus initialization,
-there is still a risk of a race condition: the Slave enumeration is
-handled in a separate interrupt thread triggered by hardware status
-changes, so the Slave device may not be ready to accept commands when
-the Slave driver tries to access the registers and restore settings in
-its resume or pm_runtime_resume callbacks. In those cases, any
-read/write commands from/to the Slave device will result in a timeout.
+Can we fix the subject/commit text for this to indicate what DSI
+version and/or SoC this is for?  This is a SoC enablement patch, but
+at first I thought this was some bug fix or something.
 
-This patch adds an enumeration_complete structure. When the bus is
-goes through a HardReset sequence and restarted, the Slave will be
-marked as UNATTACHED, which will result in a call to
-init_completion().
-
-When the Slave reports its presence during PING frames as a non-zero
-Device, the Master hardware will issue an interrupt and the bus driver
-will invoke complete(). The order between init_completion()/complete()
-is predictable since this is a Master-initiated transition.
-
-The Slave driver may use wait_for_completion() in its resume callback.
-When regmap is used, the Slave driver will typically set its regmap in
-cache-only mode on suspend, then on resume block on
-wait_for_completion(&enumeration_complete) to guarantee it is safe to
-start read/write transactions. It may then exit the cache-only mode
-and use a regmap_sync to restore settings. All these steps are
-optional, their use completely depends on the Slave device
-capabilities and how the Slave driver is implemented.
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- include/linux/soundwire/sdw.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index cb1db4a7475d..3fa8d875b16b 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -551,6 +551,9 @@ struct sdw_slave_ops {
-  * @probe_complete: completion utility to control potential races
-  * on startup between driver probe/initialization and SoundWire
-  * Slave state changes/implementation-defined interrupts
-+ * @enumeration_complete: completion utility to control potential races
-+ * on startup between device enumeration and read/write access to the
-+ * Slave device
-  */
- struct sdw_slave {
- 	struct sdw_slave_id id;
-@@ -567,6 +570,7 @@ struct sdw_slave {
- 	u16 dev_num;
- 	bool probed;
- 	struct completion probe_complete;
-+	struct completion enumeration_complete;
- };
- 
- #define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
--- 
-2.20.1
-
+>
+> For patch 1/2 with the panel driver, probably best to split that out
+> into a different patch(set), since panel drivers are merged into
+> drm-next via a different tree
+>
+> BR,
+> -R
+>
+> > ---
+> >  drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+> >  drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+> >  2 files changed, 22 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> > index b7b7c1a..d2c4592 100644
+> > --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> > +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+> > @@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
+> >         "iface", "bus",
+> >  };
+> >
+> > +static const char * const dsi_sc7180_bus_clk_names[] = {
+> > +        "iface", "bus",
+> > +};
+> > +
+> >  static const struct msm_dsi_config sdm845_dsi_cfg = {
+> >         .io_offset = DSI_6G_REG_SHIFT,
+> >         .reg_cfg = {
+> > @@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
+> >         .num_dsi = 2,
+> >  };
+> >
+> > +static const struct msm_dsi_config sc7180_dsi_cfg = {
+> > +       .io_offset = DSI_6G_REG_SHIFT,
+> > +       .reg_cfg = {
+> > +               .num = 1,
+> > +               .regs = {
+> > +                       {"vdda", 21800, 4 },    /* 1.2 V */
+> > +               },
+> > +       },
+> > +       .bus_clk_names = dsi_sc7180_bus_clk_names,
+> > +       .num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
+> > +       .io_start = { 0xae94000 },
+> > +       .num_dsi = 1,
+> > +};
+> > +
+> >  const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
+> >         .link_clk_enable = dsi_link_clk_enable_v2,
+> >         .link_clk_disable = dsi_link_clk_disable_v2,
+> > @@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+> >                 &msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> >         {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+> >                 &sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> > +       {MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
+> > +               &sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+> > +
+> >  };
+> >
+> >  const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
+> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> > index e2b7a7d..9919536 100644
+> > --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> > +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+> > @@ -19,6 +19,7 @@
+> >  #define MSM_DSI_6G_VER_MINOR_V1_4_1    0x10040001
+> >  #define MSM_DSI_6G_VER_MINOR_V2_2_0    0x20000000
+> >  #define MSM_DSI_6G_VER_MINOR_V2_2_1    0x20020001
+> > +#define MSM_DSI_6G_VER_MINOR_V2_4_1    0x20040001
+> >
+> >  #define MSM_DSI_V2_VER_MINOR_8064      0x0
+> >
+> > --
+> > 2.7.4
+> >
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
