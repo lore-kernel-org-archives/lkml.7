@@ -2,224 +2,257 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B598FC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E46C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88259206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LvqeDdWj"
+	by mail.kernel.org (Postfix) with ESMTP id 6C3B0206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:07:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573769279;
+	bh=nPvE5iRI9oeFBuVCR7FRwxyrrVDdSptxmqqrURrPtgU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eQ20M4/amVEcZvM7amjju0njxE6ZtDhLbWCKXbsTr9jYkVeE4KeQyxggdbN06yVFB
+	 9Y9rrwmC0l7ss+L/eMnzN58ml2WOg7Jz3HfOwWsQvxBpc1E1KWssMjbFONzG55X4jr
+	 dLoSPM5BHYApDNXwE8J3OA+Yld0CyMGKoZ4cfoyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfKNWFt (ORCPT
+        id S1727004AbfKNWH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:05:49 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46895 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfKNWFs (ORCPT
+        Thu, 14 Nov 2019 17:07:58 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36499 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfKNWH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:05:48 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 193so5198534pfc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:05:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PUB/MflXzCJMG7Y2M0r0tuE4n+oLMmgrXK9Lt9807D8=;
-        b=LvqeDdWj4/BvmlCJtUczgpCAZ/S1nczS+iFKbFLDS1G4JiiacIQh5AF3nVq1WdR/mk
-         QJK1r46xfNrokg5Pl3xNjKO+c8ITdvqKffKTEWkP4qYSo/lN6vdwR2fpu769g4FtUHEP
-         DIdSm+3HHQbqeXN5QAAA+5+W46uYGsSH1+Y7nj9MDkPomeX8CXKdjL5EKcqUHA+0UnVZ
-         JQd5IAP5Yf3yNnQmIcFycHbmE8BddReimJfqlttqMaLk3t2Y3K6nN7TllXlCGRvJFUGv
-         8+zg2TpENXotCecZPZsTMu5+MKOU9MUazHSC1VIIl3HV01YOrJlPH3DOXwk/8q8iBBMy
-         R6qQ==
+        Thu, 14 Nov 2019 17:07:58 -0500
+Received: by mail-ot1-f67.google.com with SMTP id f10so6301676oto.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:07:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PUB/MflXzCJMG7Y2M0r0tuE4n+oLMmgrXK9Lt9807D8=;
-        b=kUeSReJO/y8WmmAQ/iAOQ/AwSlbJjdhRKDvZtpmIuML02YsM2L+xlnw6UZEWCY3aBR
-         2otLbSmnN0ekGGgP4RGvNF7Bj0sdqsLGbOJ9vDwCO28pGv0PzbXNS2IWvkEoUH5QZqnw
-         IgmmVAo1VBVWqrQ4fZGbD4HPFweT9664AbojtlZNyXlBJkPrMw2T+NIAmbNOf3uJF+CL
-         HMu4LK4LbVHduH8dbZWvfkmQjy3iKduJoPDuEAgPTXJmfFmLLtPt1KeS+cgCgB8HdCEf
-         iewTniFk9MkXEVWLQCYfpHyjUZFvqSmEV+kAg6BuLzTJAXDZ29I5mtbnIt/TZijPvaVM
-         TT0g==
-X-Gm-Message-State: APjAAAUqcmm/PH7MAYQazDMSxmsJLJzMsGqL/ESLzSKVtKtfbKpk4gHv
-        1KJJsmYPlexDYNqYvnwXpQrxgovEmQwA2IZsoTGJTA==
-X-Google-Smtp-Source: APXvYqxeHKt2jaGM/C2bqfmau+yuCpw0lKb5aGNis1EqWTGVYXbjSOtTjbZIlvJaYLskYN1vYrwdSdEo/swVvRGXK3Y=
-X-Received: by 2002:a63:4721:: with SMTP id u33mr4321514pga.159.1573769147313;
- Thu, 14 Nov 2019 14:05:47 -0800 (PST)
+        bh=lbHcmmT+K7/6Dz8UTlhzAfwajNR/U9qce79LxD5PYpM=;
+        b=Cx3wEd+/5SwNOwRvqKqZTRsZEO5R/R2GRyH596pAbV+qSy3SWTUxpifEXsJLfn5c75
+         NJ/BQxIMJoJBjpjsUQwa76DVSSiTddXPVTVJtj/tteIZ2la7/wgoH21ivFJF+sMTAJZ6
+         B7g2gH/sX7bz5YBWIKyDsQCv9AyPLvWUWr4q4iRr283gtV0ZTumyJdpf4CKfeDHqs6NU
+         3VoXc/cMomqQKL3Y6jtrsNT4xV57Hfdarjqx9ThMzCxV90fpV4bpqHAmcLLEWAGf8QCp
+         nBsry/wQ8+Rq+UQsVvJtfXIjA1VgalDNDoVH0enrDoEHD1gxYEnfb2jeUxHE7ZoUxikM
+         J7/A==
+X-Gm-Message-State: APjAAAVdBqclNnTfxlYbRLqWWf1URg1KUXhsYQ2cR2u7wZbKApGG3877
+        YkBrOIikGBphShQqUGIob4xDvIjlcMU4f+J+bRI=
+X-Google-Smtp-Source: APXvYqyAf/wr3mQU3LIWfRQEhPg/EMgYf/J0J6/O/He8x2Mj1w5u+z6edEnrnhi8QMpFNL9+ub6ffLZYUVeyx2E81F4=
+X-Received: by 2002:a05:6830:232a:: with SMTP id q10mr9360487otg.262.1573769276711;
+ Thu, 14 Nov 2019 14:07:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191113012746.52804-1-brendanhiggins@google.com> <CABVgOS=3AXS1=rpGyNiNYu8hU+t=gQG9JongHXir=76ENnrnnA@mail.gmail.com>
-In-Reply-To: <CABVgOS=3AXS1=rpGyNiNYu8hU+t=gQG9JongHXir=76ENnrnnA@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 14 Nov 2019 14:05:36 -0800
-Message-ID: <CAFd5g45jxFgxPSaamT3EQB5W_HMbM5-FPyRppqTb-HFTn+oGow@mail.gmail.com>
-Subject: Re: [PATCH linux-kselftest/test v1] Documentation: kunit: add
- documentation for kunit_tool
-To:     David Gow <davidgow@google.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Theodore Ts'o" <tytso@mit.edu>
+References: <20191114194205.21730-1-saravanak@google.com> <CAJZ5v0gfW9z87Q9K45Jih7mUqJDVPsdTatg7a13JxJvEP0GCAg@mail.gmail.com>
+ <CAGETcx_GHhCwzKP+0GTQ-p6WahKBBWwsMGJORj9rzQSoVx0CEA@mail.gmail.com>
+In-Reply-To: <CAGETcx_GHhCwzKP+0GTQ-p6WahKBBWwsMGJORj9rzQSoVx0CEA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 14 Nov 2019 23:07:45 +0100
+Message-ID: <CAJZ5v0jTbqgEhU6XJAv88i+6dW6Zwu9hELvpriN88OpR2cCv+w@mail.gmail.com>
+Subject: Re: [PATCH v2] driver core: Allow device link operations inside sync_state()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 10:12 AM David Gow <davidgow@google.com> wrote:
+On Thu, Nov 14, 2019 at 10:59 PM Saravana Kannan <saravanak@google.com> wrote:
 >
-> On Tue, Nov 12, 2019 at 5:28 PM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
+> On Thu, Nov 14, 2019 at 1:56 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
 > >
-> > Add documentation for the Python script used to build, run, and collect
-> > results from the kernel known as kunit_tool. kunit_tool
-> > (tools/testing/kunit/kunit.py) was already added in previous commits.
+> > On Thu, Nov 14, 2019 at 8:42 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > Some sync_state() implementations might need to call APIs that in turn
+> > > make calls to device link APIs. So, do the sync_state() callbacks
+> > > without holding the device link lock.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
 > >
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
-> >  Documentation/dev-tools/kunit/index.rst      |  1 +
-> >  Documentation/dev-tools/kunit/kunit-tool.rst | 57 ++++++++++++++++++++
-> >  Documentation/dev-tools/kunit/start.rst      |  3 ++
-> >  3 files changed, 61 insertions(+)
-> >  create mode 100644 Documentation/dev-tools/kunit/kunit-tool.rst
+> > It would have been kind of nice to let me respond to your last reply
+> > before sending this.  Oh well.
 > >
-> > diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
-> > index 26ffb46bdf99d..c60d760a0eed1 100644
-> > --- a/Documentation/dev-tools/kunit/index.rst
-> > +++ b/Documentation/dev-tools/kunit/index.rst
-> > @@ -9,6 +9,7 @@ KUnit - Unit Testing for the Linux Kernel
+> > > ---
+> > >  drivers/base/core.c | 76 ++++++++++++++++++++++++++++++++++++++++-----
+> > >  1 file changed, 68 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > index e6d3e6d485da..2f14d4bf1472 100644
+> > > --- a/drivers/base/core.c
+> > > +++ b/drivers/base/core.c
+> > > @@ -48,6 +48,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
+> > >  static LIST_HEAD(wait_for_suppliers);
+> > >  static DEFINE_MUTEX(wfs_lock);
+> > >  static LIST_HEAD(deferred_sync);
+> > > +static LIST_HEAD(sync_list);
+> > > +static DEFINE_MUTEX(sync_lock);
 > >
-> >         start
-> >         usage
-> > +       kunit-tool
-> >         api/index
-> >         faq
+> > The two items above are not needed AFAICS.
 > >
-> > diff --git a/Documentation/dev-tools/kunit/kunit-tool.rst b/Documentation/dev-tools/kunit/kunit-tool.rst
-> > new file mode 100644
-> > index 0000000000000..aa1a93649a45a
-> > --- /dev/null
-> > +++ b/Documentation/dev-tools/kunit/kunit-tool.rst
-> > @@ -0,0 +1,57 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=================
-> > +kunit_tool How-To
-> > +=================
-> > +
-> > +What is kunit_tool?
-> > +===================
-> > +
-> > +kunit_tool is a set of scripts that aid in building the Linux kernel as UML
-> > +(`User Mode Linux <http://user-mode-linux.sourceforge.net/old/>`_), running
-> > +KUnit tests, parsing the test results and displaying them in a user friendly
-> > +manner.
+> > >  static unsigned int defer_sync_state_count = 1;
+> > >
+> > >  #ifdef CONFIG_SRCU
+> > > @@ -695,7 +697,23 @@ int device_links_check_suppliers(struct device *dev)
+> > >         return ret;
+> > >  }
+> > >
+> > > -static void __device_links_supplier_sync_state(struct device *dev)
+> > > +/** __device_links_queue_sync_state - Queue a device for sync_state() callback
+> >
+> > This should be
+> >
+> > /**
+> >  * __device_links_queue_sync_state - Queue a device for sync_state() callback
+> >
+> > > + * @dev: Device to call sync_state() on
+> > > + *
+> > > + * Queues a device for a sync_state() callback when the device links write lock
+> > > + * isn't held. This allows the sync_state() execution flow to use device links
+> > > + * APIs.  The caller must ensure this function is called with
+> > > + * device_links_write_lock() held.
+> > > + *
+> > > + * This function does a get_device() to make sure the device is not freed while
+> > > + * on this list.
+> > > + *
+> > > + * So the caller must also ensure that device_links_flush_sync_list() is called
+> > > + * as soon as the caller releases device_links_write_lock().  This is necessary
+> > > + * to make sure the sync_state() is called in a timely fashion and the
+> > > + * put_device() is called on this device.
+> > > + */
+> > > +static void __device_links_queue_sync_state(struct device *dev)
+> >
+> > Pass a list head as a second arg.
+> >
+> > >  {
+> > >         struct device_link *link;
+> > >
+> > > @@ -709,12 +727,48 @@ static void __device_links_supplier_sync_state(struct device *dev)
+> > >                         return;
+> > >         }
+> > >
+> > > -       if (dev->bus->sync_state)
+> > > -               dev->bus->sync_state(dev);
+> > > -       else if (dev->driver && dev->driver->sync_state)
+> > > -               dev->driver->sync_state(dev);
+> > > -
+> > > +       /*
+> > > +        * Set the flag here to avoid adding the same device to the sync_list
+> > > +        * more than once. This can happen if new consumers get added to the
+> > > +        * device before the sync_list is flushed.
+> > > +        */
+> > >         dev->state_synced = true;
+> > > +
+> > > +       mutex_lock(&sync_lock);
+> > > +
+> > > +       if (list_empty(&dev->links.defer_sync)) {
+> > > +               get_device(dev);
+> > > +               list_add_tail(&dev->links.defer_sync, &sync_list);
+> >
+> > Add it to the list that you have passed as the second arg.  No locking.
+> >
+> > > +       } else {
+> > > +               WARN_ON(1);
+> > > +       }
+> > > +
+> > > +       mutex_unlock(&sync_lock);
+> > > +}
+> > > +
+> > > +/** device_links_flush_sync_list - Call sync_state() on devices queued for it
+> > > + *
+> > > + * Calls sync_state() on all the devices that have been queued for it. This
+> > > + * function is used in conjunction with __device_links_queue_sync_state().
+> > > + */
+> > > +static void device_links_flush_sync_list(void)
+> >
+> > Make it take a list to flush as an arg.
+> >
+> > > +{
+> > > +       struct device *dev, *tmp;
+> > > +
+> > > +       mutex_lock(&sync_lock);
+> >
+> > This isn't necessary.
+> >
+> > > +
+> > > +       list_for_each_entry_safe(dev, tmp, &sync_list, links.defer_sync) {
+> > > +               list_del_init(&dev->links.defer_sync);
+> > > +               device_lock(dev);
+> >
+> > Empty lines around this?
+> >
+> > > +               if (dev->bus->sync_state)
+> > > +                       dev->bus->sync_state(dev);
+> > > +               else if (dev->driver && dev->driver->sync_state)
+> > > +                       dev->driver->sync_state(dev);
+> > > +               device_unlock(dev);
+> >
+> > And this?
+> >
+> > > +               put_device(dev);
+> > > +       }
+> > > +
+> > > +       mutex_unlock(&sync_lock);
+> >
+> > This isn't necessary.
+> >
+> > >  }
+> > >
+> > >  void device_links_supplier_sync_state_pause(void)
+> > > @@ -738,11 +792,16 @@ void device_links_supplier_sync_state_resume(void)
+> > >                 goto out;
+> > >
+> > >         list_for_each_entry_safe(dev, tmp, &deferred_sync, links.defer_sync) {
+> > > -               __device_links_supplier_sync_state(dev);
+> > > +               /*
+> > > +                * Delete from deferred_sync list before queuing it to
+> > > +                * sync_list because defer_sync is used for both lists.
+> > > +                */
+> > >                 list_del_init(&dev->links.defer_sync);
+> > > +               __device_links_queue_sync_state(dev);
+> >
+> > Use a local list (initially empty) in this function and pass it to the above.
+> >
+> > >         }
+> > >  out:
+> > >         device_links_write_unlock();
+> > > +       device_links_flush_sync_list();
+> >
+> > Pass the local list here too.
+> >
+> > >  }
+> > >
+> > >  static int sync_state_resume_initcall(void)
+> > > @@ -815,12 +874,13 @@ void device_links_driver_bound(struct device *dev)
+> > >                 if (defer_sync_state_count)
+> > >                         __device_links_supplier_defer_sync(link->supplier);
+> > >                 else
+> > > -                       __device_links_supplier_sync_state(link->supplier);
+> > > +                       __device_links_queue_sync_state(link->supplier);
+> >
+> > Like in the previous case, use a local list (initially empty) in this
+> > function and pass it to the above.
+> >
+> > >         }
+> > >
+> > >         dev->links.status = DL_DEV_DRIVER_BOUND;
+> > >
+> > >         device_links_write_unlock();
+> > > +       device_links_flush_sync_list();
+> >
+> > And pass that list here too.
+> >
+> > >  }
+> > >
+> > >  static void device_link_drop_managed(struct device_link *link)
+> > > --
 >
-> Calling this a "set of scripts" is a bit confusing, as the only script
-> described is tools/testing/kunit/kunit.py, which isn't mentioned in
-> this section.
+> Ok, I'll move it to a local list, add the blank lines and send out a patch?
 
-Fair enough. Sorry, I think of it as a set of scripts since there is
-more than one file, but I guess that probably doesn't make too much
-sense to anyone else.
-
-> Also, it may be worth linking to the new version of the UML website
-> (even if the old one has more content).
-
-No complaints here. I just linked to what I thought is more helpful.
-It isn't immediately obvious to click on the old site (however, you
-probably want to since it has way more useful content), but the old
-site *is* discoverable from the new site, and the inverse is not true.
-
-> > +
-> > +What is a kunitconfig?
-> > +======================
-> > +
-> > +It's just a defconfig that kunit_tool looks for in the base directory.
-> > +kunit_tool uses it to generate a .config as you might expect. In addition, it
-> > +verifies that the generated .config contains the CONFIG options in the
-> > +kunitconfig; the reason it does this is so that it is easy to be sure that a
-> > +CONFIG that enables a test actually ends up in the .config.
-> > +
-> > +How do I use kunit_tool?
-> > +=================================
-> > +
-> > +If a kunitconfig is present at the root directory, all you have to do is:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +       ./tools/testing/kunit/kunit.py run
-> > +
-> > +However, you most likely want to use it with the following options:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +       ./tools/testing/kunit/kunit.py run --timeout=30 --jobs=8
-> > +
-> > +- ``--timeout`` sets a maximum amount of time to allow tests to run.
-> > +- ``--jobs`` sets the number of threads to use to build the kernel.
-> > +
->
-> Not directly an issue with the documentation, but this does raise the
-> question of why we don't have better defaults. Alternatively, maybe
-
-Better defaults, yes-ish: I think Ted's suggestion that we should make
-it possible to run KUnit tests from make[1] is correct, and if I
-remember correctly, make *does* have a way to set reasonable
-system-wide defaults for this (I just don't think anybody takes
-advantage of it), so in that case, we should just respect whatever
-make wants to do. Consequently, I think the logic in the script should
-probably be pretty dumb.
-
-> this doc could suggest --jobs=`nproc` or similar?
-
-Good suggestion, although I would do --jobs=`nproc --all `.
-
-> > +If you just want to use the defconfig that ships with the kernel, you can
-> > +append the ``--defconfig`` flag as well:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +       ./tools/testing/kunit/kunit.py run --timeout=30 --jobs=8 --defconfig
-> > +
-> > +.. note::
-> > +       This command is particularly helpful for getting started because it
-> > +       just works. No kunitconfig needs to be present.
-> > +
->
-> Should we use this in the getting started section below, then?
-> Particularly since we're already going over kunitconfigs there
-> separately.
-
-I think that makes sense.
-
-> > +For a list of all the flags supported by kunit_tool, you can run:
-> > +
-> > +.. code-block:: bash
-> > +
->
-> Do you think it's worth documenting the remaining two (--build_dir and
-> --raw_output) here too?
-
-No. I don't know that I want to set the precedent to document all
-flags here. We already document the flags in the code and I don't want
-the two to get out of sync. However, it might be feasible to have the
-documentation automagically execute the --help command every time it
-is built keeping it in sync. I am not sure how much value that would
-provide.
-
-> > +       ./tools/testing/kunit/kunit.py run --help
-[...]
-
-Cheers!
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=205535
+Works for me. :-)
