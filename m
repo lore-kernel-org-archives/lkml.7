@@ -5,118 +5,153 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D0EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BA5C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB63A206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34BFB206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NxMGYSTt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iMlPJ+NJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKNR3o (ORCPT
+        id S1726985AbfKNR3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:29:44 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34169 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfKNR3o (ORCPT
+        Thu, 14 Nov 2019 12:29:48 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41285 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfKNR3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:29:44 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z188so4214513pgb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:29:42 -0800 (PST)
+        Thu, 14 Nov 2019 12:29:46 -0500
+Received: by mail-io1-f65.google.com with SMTP id r144so7681242iod.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:29:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:from:subject:to:user-agent:date;
-        bh=CcYQV1LmmMin4KfNUQWfqXUn7x+pyW1iTl5f3vQ+Lhw=;
-        b=NxMGYSTtBK4i5RPqbguGXItXdVNjv2nYm1/iGpCOqRIVhhVH6vf7946u7XMPm25GJA
-         q7nWJkt3+Xf/XDjNbHKHgXjXTbJHCI69Wm000ian3oAhz2GlGBNz1DTe9WXQgjh7aurH
-         DMoXuOTRdgV6nuAZHMYwbqnm9praYO+bqeVas=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RftPJC/z3aKe9Z2EQoJhnzZgJpMcylstQtfS6pNT5zM=;
+        b=iMlPJ+NJiZRBpDqEg1HSfcU3t5/w56CFqZq6rf17WXZtLre8hZjCjdf2fMoa0PRE9R
+         /RbNAy4ORogOiWqA8tDWCzhZo1WcPdQi5GyBEhjRPBqylco9vrfdCSM0R0mvB4WpUKZQ
+         EK8xlGCBJpsP+VtQqf6/0uzWYpwacWeZji/VM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:from:subject:to
-         :user-agent:date;
-        bh=CcYQV1LmmMin4KfNUQWfqXUn7x+pyW1iTl5f3vQ+Lhw=;
-        b=jiZVWooO7h1c/PcD3B1joFUHPQo1yt9AAAcNjhtNZk843flfyYAYV3ExZT0KSshqDG
-         cn6Kroxx/tcVAge/vBOK0EgXotqKUncuDpqN3VP4mRHChv5mF8WrGT+DMkSL23afqu40
-         cK5KH8BOJhuU8cawbdBJs5BNj5iafO3u1d6pUQJB3x5Zm/D1zcGTZ5g3JNb1z4wNh8/2
-         GfhV47Fb5k7peQ7qgGFc974RBUnPgmr4ct1D2zqfKMphFOQyLhg549wVmU4J2pkNSnpN
-         rEVsBguD92IyGh0LbTk4Qton0fpCYl0xVbSOwrqJ1iULrZ+gZJB4xwyNGW4mTaHjQ/CJ
-         Uxtw==
-X-Gm-Message-State: APjAAAUh9QKwYgijJ4mLNoqP9TdQ3Vy6/I7+qU9jE0c65g8QPPEr0suv
-        rMOUQd62tJRPrxibSdU3Clo4UylJNE8=
-X-Google-Smtp-Source: APXvYqzty8fGyHYZm9ySVIF8pi9T97dNqEd99tGhmW7ag+BB8smmNExV5fwEnlcaxmxVHJRlf+vtew==
-X-Received: by 2002:aa7:8256:: with SMTP id e22mr12167282pfn.247.1573752582247;
-        Thu, 14 Nov 2019 09:29:42 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i71sm6900213pfe.103.2019.11.14.09.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 09:29:41 -0800 (PST)
-Message-ID: <5dcd8f05.1c69fb81.bdd4.2b0a@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RftPJC/z3aKe9Z2EQoJhnzZgJpMcylstQtfS6pNT5zM=;
+        b=KKe+Bx+IMmrAyhByXpCmgwNkfWMEnfV1bm0fctcMXV8GE3LZtT/kjSgBQXPhoVwTXb
+         R0DQEuCcRwrzKJN9THGTYXoTgDsEBvumYnDUkR3vNYyiI6NeLNYZBnLmg3zdTMXA5FGc
+         BnxnzsZg3GPpVC2MzKt6Z1M+YnYZQozfSyQxTEv/4fi0/3BMxaaHwinHCZd/lirmBQdU
+         pcL8kAAj0U8JhFdRgpqpg0ijyEXVz83k8FXZzdGpvxbm4E831v85PhF3GCNDmS1kXOj4
+         CpOCeyV5FkqhdHnqYI8lRHm16t6qiV/heNFifdlLqllvaH/znHfwYbgsUKIsSgmJcZkx
+         yhTw==
+X-Gm-Message-State: APjAAAXfTpZ/9abHtGnsb+OniB8ilHOxnyGXyR0itLgnabXrfj0Rbjhp
+        oY0StK2HdOLjR581MMGKkvfR6OXTxU0=
+X-Google-Smtp-Source: APXvYqxedY3vpUdlzZ118GvsBKNfpn7pi3AG+lEIkyMYuB/5cpEb/W7RCctmKhm5m+gHjnJtpPuoPQ==
+X-Received: by 2002:a02:880c:: with SMTP id r12mr8741612jai.100.1573752585084;
+        Thu, 14 Nov 2019 09:29:45 -0800 (PST)
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com. [209.85.166.50])
+        by smtp.gmail.com with ESMTPSA id z69sm813669ilc.30.2019.11.14.09.29.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 09:29:44 -0800 (PST)
+Received: by mail-io1-f50.google.com with SMTP id k13so7691046ioa.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:29:44 -0800 (PST)
+X-Received: by 2002:a02:a813:: with SMTP id f19mr8324725jaj.12.1573752583817;
+ Thu, 14 Nov 2019 09:29:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573710976-27551-1-git-send-email-dhar@codeaurora.org>
-References: <1573710976-27551-1-git-send-email-dhar@codeaurora.org>
-Cc:     Shubhashree Dhar <dhar@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [v2] msm: disp: dpu1: add support to access hw irqs regs depending on revision
-To:     Shubhashree Dhar <dhar@codeaurora.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Thu, 14 Nov 2019 09:29:40 -0800
+References: <20191112230944.48716-1-abhishekpandit@chromium.org> <20191112230944.48716-5-abhishekpandit@chromium.org>
+In-Reply-To: <20191112230944.48716-5-abhishekpandit@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 14 Nov 2019 09:29:29 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UfGDAtePrDmsEsdCNsHQZwDkU8z6E=qzSu=opht7evpQ@mail.gmail.com>
+Message-ID: <CAD=FV=UfGDAtePrDmsEsdCNsHQZwDkU8z6E=qzSu=opht7evpQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Shubhashree Dhar (2019-11-13 21:56:16)
-> Current code assumes that all the irqs registers offsets can be
-> accessed in all the hw revisions; this is not the case for some
-> targets that should not access some of the irq registers.
+Hi,
 
-What happens if we read the irq registers that we "should not access"?
-Does the system reset? It would be easier to make those registers return
-0 when read indicating no interrupt and ignore writes so that everything
-keeps working without having to skip registers.
-
-> This change adds the support to selectively remove the irqs that
-> are not supported in some of the hw revisions.
->=20
-> Change-Id: I6052b8237b703a1a9edd53893e04f7bd72223da1
-
-Please remove these before sending upstream.
-
-> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+On Tue, Nov 12, 2019 at 3:10 PM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
+>
+> Add documentation for pcm parameters.
+>
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>
 > ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    |  1 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |  3 +++
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c | 22 +++++++++++++++++=
------
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h |  1 +
->  4 files changed, 22 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu=
-/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> index ec76b868..def8a3f 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> @@ -646,6 +646,7 @@ struct dpu_perf_cfg {
->   * @dma_formats        Supported formats for dma pipe
->   * @cursor_formats     Supported formats for cursor pipe
->   * @vig_formats        Supported formats for vig pipe
-> + * @mdss_irqs          Bitmap with the irqs supported by the target
+>
+> Changes in v4:
+> - Fix incorrect function name in hci_bcm
+>
+> Changes in v3:
+> - Change disallow baudrate setting to return -EBUSY if called before
+>   ready. bcm_proto is no longer modified and is back to being const.
+> - Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
+> - Changed brcm,sco-routing to brcm,bt-sco-routing
+>
+> Changes in v2:
+> - Use match data to disallow baudrate setting
+> - Parse pcm parameters by name instead of as a byte string
+> - Fix prefix for dt-bindings commit
+>
+>  .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> index c749dc297624..42fb2fa8143d 100644
+> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> @@ -29,6 +29,11 @@ Optional properties:
+>     - "lpo": external low power 32.768 kHz clock
+>   - vbat-supply: phandle to regulator supply for VBAT
+>   - vddio-supply: phandle to regulator supply for VDDIO
+> + - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
+> + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
+> + - brcm,pcm-frame-type: 0-1 (short, long)
+> + - brcm,pcm-sync-mode: 0-1 (slave, master)
+> + - brcm,pcm-clock-mode: 0-1 (slave, master)
 
-Hmm pretty sure there needs to be a colon so that kernel-doc can match
-this but maybe I'm wrong.
+Since these are optional your patch should describe what happens if
+they are not present.  I think in patch #3 of the series you guys are
+discussing it, but whatever you end up with should be documented here.
 
->   */
->  struct dpu_mdss_cfg {
->         u32 hwversion;
+That actually made me realize that this is patch #4 in the series.  To
+be pedantic, bindings are supposed to be _earlier_ in the series than
+the code that implements them.
+
+
+>  Example:
+> @@ -40,5 +45,11 @@ Example:
+>         bluetooth {
+>                 compatible = "brcm,bcm43438-bt";
+>                 max-speed = <921600>;
+> +
+> +               brcm,bt-sco-routing = [01];
+> +               brcm,pcm-interface-rate = [02];
+> +               brcm,pcm-frame-type = [00];
+> +               brcm,pcm-sync-mode = [01];
+> +               brcm,pcm-clock-mode = [01];
+
+I'm at least marginally curious why your example has a leading 0 for
+all numbers.  It makes me think you intend them to be represented in
+octal, though I don't know offhand if dtc uses that format for octal.
+I guess it doesn't matter since all your numbers are between 0 and 5,
+but it does seem strange.
+
+-Doug
