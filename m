@@ -2,192 +2,122 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D65C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D4BC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33C720709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573768214;
-	bh=GfYyyvXQ099yZhVoGYWZdx0pcRqNpFrPKr6BbeLx6F4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=El5uZAlYN20wB+3Y8b2xxqPcC7TnMTu5xZ8aD/zF5eN1VV5iH4OsANYbAj7wM3MVw
-	 rlDC5d7DlikQlC+3fYThJzX965/088QnYIF77jxzk83drGS4jNR/RWRzf0RbyVCcC8
-	 XmzAGispIFfIP2RMHgCXEp3Cb3SZ8ZfixStCujdQ=
+	by mail.kernel.org (Postfix) with ESMTP id 86FDD206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGuOw0pE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfKNVuN (ORCPT
+        id S1726977AbfKNVv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:50:13 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40813 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKNVuN (ORCPT
+        Thu, 14 Nov 2019 16:51:58 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36930 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKNVv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 16:50:13 -0500
-Received: by mail-pl1-f194.google.com with SMTP id e3so3259353plt.7;
-        Thu, 14 Nov 2019 13:50:12 -0800 (PST)
+        Thu, 14 Nov 2019 16:51:57 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t1so8555609wrv.4;
+        Thu, 14 Nov 2019 13:51:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=haBGKl+ANQR4zXT0STzQg1STB7t7ktHMtbdYa5MVzdc=;
+        b=WGuOw0pEFyVoZj3a8m0LSSx0eryuJMYi82HOfCwqg7FoTovJNSwdbMQG71tBwJXpvq
+         cXfoyyWx6oGD2G8n8IlKwoKH32PwE9GyuXDEwZoWScnBL2rCfixVC1Ntt9nxER6aP2ry
+         91HnmSKDa38xIxHRTlY6SFcFE2rXkPr9rDB5+cSk1Gkhtmf0t0lWhxCfyXTsE+q00xrh
+         ZpWfQhHESrTqUTgVdyv1A3TWe+RoG3fWgj/BX/91Eyjo5RGjoR2tMHEKGaXDNyeZD2R9
+         SLqhYaAD+BESU3KJqlCmQT6kFr0JSi+DLguHlkz6ek8nnEmbP/OOqc7EPoAB1J/jHZAB
+         /LOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5zMHwUOo/2U4wTRnnNuzptX3ll72MK4baxH2uMM1XNw=;
-        b=HlNKU0+W0fRBgy+CvKyNpM/ODMBTouSBLf6Y0YWbGEIa+x3anPCoU4iqxoK90OSpBu
-         U1w7dlIc0n35tyxghxBnyEHgQ2BCyxw+as3BPg5rRi4OaVZn5OTrfJ7Dpx5z2BnJDzPk
-         4Thstk76JNZPVXpOZl9v8/qaMoz7hYr+ulHknJrGY1/AVbOQ8QrjSjV3x58HvV7NzEFs
-         JAvkRuIxMrD9bo699sYfg8SRewYnR1P+g3kFZqhPI+LXCtZQ8z+hdg3asoybnJYzQ3f/
-         eDRpCoR8mkqfCtVB+eV6Ue1CaSV9CnphyY9ueroCPbGgSMhukg6IyqK28AIA9MxenvDt
-         M9qg==
-X-Gm-Message-State: APjAAAVjFEUn0rraWjefHKeQzD08aFV8vFNMUIQq21QHzrJ8AIF7O0mh
-        cWTi65CE7VAgpRDMincqPpk=
-X-Google-Smtp-Source: APXvYqydj/PhwGbb7+FBeWT/qX73FpfeKzIGfeaJLVypBktgbTiIoqJ5tWmafcGyCmnkRQDn0qoNOA==
-X-Received: by 2002:a17:902:6946:: with SMTP id k6mr11133218plt.164.1573768211636;
-        Thu, 14 Nov 2019 13:50:11 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id f31sm10455021pjg.31.2019.11.14.13.50.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 13:50:09 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 3DCB6403DC; Thu, 14 Nov 2019 21:50:09 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 21:50:09 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7 2/8] efi: Add embedded peripheral firmware support
-Message-ID: <20191114215009.GF11244@42.do-not-panic.com>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-3-hdegoede@redhat.com>
- <20191011144834.GL16384@42.do-not-panic.com>
- <e7bd40ff-20d1-3aed-8516-9fffd4c3a207@redhat.com>
- <20191114194233.GE11244@42.do-not-panic.com>
- <f00804ae-e556-35e4-d0a3-cd9201fdd2d0@redhat.com>
- <9b0a0121-3e63-0602-6c0d-00547e389f76@redhat.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=haBGKl+ANQR4zXT0STzQg1STB7t7ktHMtbdYa5MVzdc=;
+        b=hayd93AfukCZBFKP1pBRZBFQ4mUUkqlWvb8bdt0xH8Z3pYJC7L8Gayo99BES/SiyW6
+         HVX76y8NuKN2Og1xidKr4XbSdYDCoiK2V5VZzk2Lg68SuyENEx+K++TATf33ed7vBoAA
+         cisUOTSDgu+OaQs4YD+a/GZMxSaWhLax4OspoNw3WCs0FojERQ+B8y0tAbhFUyXxhKkk
+         XKnbZGYLYTyswzIZNQK+V5kSYUv1OaSxL5aG6+njDJgi4pFEptjAzdB5T3leC8mu4kgP
+         A7hM8KG+RDDEzUxhV93cbroaukrEx+XksoFAQjEaAGZppOsHjki+rEv0D3Cjxbck8vwu
+         g7Tg==
+X-Gm-Message-State: APjAAAXPCRI0nKy8QeDfjneFvHojxUAaOPAfKs2UzoYMhiCiI46D851q
+        0X2mASfVHScwGKoniiKcdvzk7+wO
+X-Google-Smtp-Source: APXvYqzMcD2UZl3Oa97YDQxkjGNc3eorc9Qb9+xhZn4zNo6EVpBSIEqmfhJdwW2Fn0rlYKR/erhIYQ==
+X-Received: by 2002:adf:fbc1:: with SMTP id d1mr11422029wrs.267.1573768316062;
+        Thu, 14 Nov 2019 13:51:56 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id z17sm8324627wrh.57.2019.11.14.13.51.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Nov 2019 13:51:55 -0800 (PST)
+Date:   Thu, 14 Nov 2019 22:51:54 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Giovanni Mascellani <gio@debian.org>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (dell-smm-hwmon) Disable BIOS fan control on
+ SET_FAN
+Message-ID: <20191114215154.hze2avicv7pwiksp@pali>
+References: <20191114211408.22123-1-gio@debian.org>
+ <20191114213901.GA28532@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qyg2dmvyfnwsnflo"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9b0a0121-3e63-0602-6c0d-00547e389f76@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191114213901.GA28532@roeck-us.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 09:48:38PM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 14-11-2019 21:13, Hans de Goede wrote:
-> > Hi,
-> > 
-> > On 14-11-2019 20:42, Luis Chamberlain wrote:
-> > > On Thu, Nov 14, 2019 at 12:27:01PM +0100, Hans de Goede wrote:
-> > > > Hi Luis,
-> > > > 
-> > > > Thank you for the reviews and sorry for being a bit slow to respind.
-> > > > 
-> > > > On 11-10-2019 16:48, Luis Chamberlain wrote:
-> > > > > On Fri, Oct 04, 2019 at 04:50:50PM +0200, Hans de Goede wrote:
-> > > > > > +static int __init efi_check_md_for_embedded_firmware(
-> > > > > > +    efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
-> > > > > > +{
-> > > > > > +    const u64 prefix = *((u64 *)desc->prefix);
-> > > > > > +    struct sha256_state sctx;
-> > > > > > +    struct embedded_fw *fw;
-> > > > > > +    u8 sha256[32];
-> > > > > > +    u64 i, size;
-> > > > > > +    void *map;
-> > > > > > +
-> > > > > > +    size = md->num_pages << EFI_PAGE_SHIFT;
-> > > > > > +    map = memremap(md->phys_addr, size, MEMREMAP_WB);
-> > > > > 
-> > > > > Since our limitaiton is the init process must have mostly finished,
-> > > > > it implies early x86 boot code cannot use this, what measures can we
-> > > > > take to prevent / check for such conditions to be detected and
-> > > > > gracefully errored out?
-> > > > 
-> > > > As with all (EFI) early boot code, there simply is a certain order
-> > > > in which things need to be done. This needs to happen after the basic
-> > > > mm is setup, but before efi_free_boot_services() gets called, there
-> > > > isn't really a way to check for all these conditions. As with all
-> > > > early boot code, people making changes need to be careful to not
-> > > > break stuff.
-> > > 
-> > > I rather we take a proactive measure here and add whatever it is we need
-> > > to ensure the API works only when its supposed to, rather than try and
-> > > fail, and then expect the user to know these things.
-> > > 
-> > > I'd prefer if we at least try to address this.
-> > 
-> > This is purely internal x86/EFI API it is not intended for drivers
-> > or anything like that. It has only one caller under arch/x86 and it is
-> > not supposed to get any other callers outside of arch/* ever.
-> > 
-> > Note that this all runs before even core_initcall-s get run, none
-> > if the code which runs before then has any sort of ordering checks
-> > and I don't see how this bit is special and thus does need ordering
-> > checks; and there really is no mechanism for such checks so early
-> > during boot.
-> > 
-> > The drivers/firmware/efi/embedded-firmware.c file does add some API
-> > which can be used normally, specifically the efi_get_embedded_fw()
-> > but that has no special ordering constrains and it does not directly
-> > use the function we are discussing now. It reads back data stored
-> > by the earlier functions; and if somehow called before those functions
-> > run (*), then it will simply return -ENOENT.
-> 
-> Ok, I just realized that we may have some miscommunication here,
-> when you wrote:
-> 
-> "Since our limitation is the init process must have mostly finished,
->  it implies early x86 boot code cannot use this, what measures can we
->  take to prevent / check for such conditions to be detected and
->  gracefully errored out?"
-> 
-> I assumed you meant that to apply to the efi_check_md_for_embedded_firmware()
-> helper or its caller.
-> 
-> But I guess what you really want is some error to be thrown if someone
-> calls firmware_request_platform() before we are ready.
 
-Yes.
+--qyg2dmvyfnwsnflo
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I guess I could make efi_check_for_embedded_firmwares() which scans
-> for known firmwares and saved a copy set a flag that it has run.
-> 
-> And then combine that with making efi_get_embedded_fw() (which underpins
-> firmware_request_platform()) print a warning when called if that flag
-> is not set yet.
-> 
-> That would mean though that some code which runs earlier then
-> a core_initcall would, would call firmware_request_platform() and
-> such code is generally expected to know what they are doing.
-> 
-> I just checked and the cpu microcode stuff which comes to mind
-> for this uses a late_initcall so runs long after efi_get_embedded_fw()
-> and I have a feeling that trying to use the fw_loader before
-> core_initcalls have run is going to end poorly anyways.
->
-> Still if you want I can add a pr_warn or maybe even a WARN_ON
-> to efi_get_embedded_fw() in case it somehow gets called before
-> efi_check_for_embedded_firmwares().
+On Thursday 14 November 2019 13:39:01 Guenter Roeck wrote:
+> I can see two possibilities: Either add a pwm1_enable attribute to
+> be able to set manual/automatic fan control,
 
-That'd be great.
+I already proposed such patch in past:
+https://patchwork.kernel.org/patch/9130921/
 
-  Luis
+> > @@ -43,6 +49,8 @@
+> >  #define I8K_SMM_GET_TEMP_TYPE	0x11a3
+> >  #define I8K_SMM_GET_DELL_SIG1	0xfea3
+> >  #define I8K_SMM_GET_DELL_SIG2	0xffa3
+> > +#define I8K_SMM_DISABLE_BIOS	0x30a3
+> > +#define I8K_SMM_ENABLE_BIOS	0x31a3
+
+This is model or BIOS specific. For example on E6440 are used 0x34a3 /
+0x35a3 SMM calls. Because of these platform specific problems we have
+never incorporated this patch into mainline kernel.
+
+Also note that userspace can issue those SMM commands on its own (via
+sys_iopl or sys_ioperm), fully bypassing such "protection" proposed in
+this new patch.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--qyg2dmvyfnwsnflo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXc3MeAAKCRCL8Mk9A+RD
+UvWYAJ9O9wwQgkPz8MsClELRJDVyVIhAqwCgtdzteh/xzor3GbpmAGf4IvDv9j4=
+=j2gv
+-----END PGP SIGNATURE-----
+
+--qyg2dmvyfnwsnflo--
