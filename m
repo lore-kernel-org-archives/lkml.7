@@ -2,125 +2,123 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B76C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAD3C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAC120725
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F118220727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bkTP4tD0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RcNSGWc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfKNT1v (ORCPT
+        id S1726956AbfKNTaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:27:51 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41948 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfKNT1u (ORCPT
+        Thu, 14 Nov 2019 14:30:02 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36687 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfKNTaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:27:50 -0500
-Received: by mail-io1-f68.google.com with SMTP id r144so8093996iod.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:27:50 -0800 (PST)
+        Thu, 14 Nov 2019 14:30:01 -0500
+Received: by mail-il1-f193.google.com with SMTP id s75so6419882ilc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:30:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=REvJGBqtN17t/Kpi8Drm01nVRUzEJ8Px9ug31PYdiig=;
-        b=bkTP4tD0KoFK5EgiU/VRa4wtv5URuKzQYq/mSCkaNkwZRGNrlBTY4nexeB3QjYsjC+
-         +DrqwgaRpf2MRrIb7uYqqkBS/uNsISF5wamKF3c/JLjW60AYHfZBMJgvfKTNbPwU9RlI
-         7i35g0V9NQwaK0uKoaxzkEKWpxXhjhSoe/0C0QQv7VqiDsRJKzYn4GzgV3Wd9ufDAim9
-         8rEeU0Ew93wfJ32ZkgoUuXAhA3X/Db41Ag3gp58sM0xEPizKgv6Q9i7BwhjUPwr0fWHv
-         UpSnBhXjQnmLsO06mTSI3zF9GRbclW8AWNWjV2EHNh8Xf0TaqL7UpgGbwH+OK0PetAi0
-         jyhw==
+        bh=C9I8Z4v8szG7Sk2RVim/tFozyJuElI2LAeZNFm3LQmo=;
+        b=RcNSGWc9oIJ3wGGS7RicxqKlvRj2R4x+H9oboiSA1Cm0mBhmMmbgDqCWPxJChGth66
+         ZFUKlnwNVHNplfw2KPwNZwhaYLIz5AGb92S2fHN2dV8xXaZTXPgKd4i/kLeZYKG9Gmsg
+         838ibPi+oAkSKBSx2tsHkIl99sh6cUwcmQpco=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=REvJGBqtN17t/Kpi8Drm01nVRUzEJ8Px9ug31PYdiig=;
-        b=Jx8LnDMjMbgTqgyPv8X9OCn9x4bvGV+opea97NBEbW7mLwU7MJULLkkT4snl6NXPrF
-         NIEUFaNlhxcqbJJHgK1bRyVaNGJd3LWiP+aTk/zlfeRBc52gWHt1JQO9Ebr7BFTKkHHm
-         A7hvKtUXAdtqYpPFXuz3+1cbLagPzEQ6VaoSq+pNMMQtwloOv/i5upW9KE1iFy7OhNru
-         3RC4A2bttqftgrajKzDybDV6kNGLXDl1eM0EQJm8E6F61OimXX8oplMYGtqBU85hCmyc
-         C7/ZmfWLXNq9D5Ue006/R2xoYqim9svw3IgvHsNyGNWcowZqWbIvjxkbaJm3eHWav7Zj
-         4aMA==
-X-Gm-Message-State: APjAAAWCuf4nm3ORS3HanfLM/724A3fdLLiLvFPQI/fMh07WrEUvqSo3
-        e3VwIlMsrVBCGBy2Scsbq/8pN/YxZDeYPXBLoQxywA==
-X-Google-Smtp-Source: APXvYqyRnFZszxqERekTTfb9VacIRa+G5RpC59jH+JXd4EJy8Rt6mj6evr+Y29HBgmxCSNBJDvoLO8uq125KAQD14h4=
-X-Received: by 2002:a6b:6a17:: with SMTP id x23mr9873142iog.193.1573759669802;
- Thu, 14 Nov 2019 11:27:49 -0800 (PST)
+        bh=C9I8Z4v8szG7Sk2RVim/tFozyJuElI2LAeZNFm3LQmo=;
+        b=QCFJSAVLCPLpQcM6s3P/RiTRiK4lDu/WT1Mhne8ZWrWFXlCygKL49UvL9jbGMXUZRL
+         mCZblswnRLah9uqutBtSesrGU+7+93AAtaQGztcXlkymrX58QkGqrXcsDmGz174MMjC8
+         QaNhKacurTzusLOhLxe6VRelo03u39HZD5eRrcsSVRVxKCXRQ2QAhAYRKKoSpUUP/+TO
+         fXo90NfggThx5nNENFWPjGS0G96pGi+EZ42U2KWWAJmY26rNUUQOIfTcfecCxfgU/zkF
+         nyUMa80h3Tcrih/LsBRwfPspvyx1Vvpn9FxmbbAfx69dztc1XhwNYFeMxVCNurcsT4JE
+         iV4g==
+X-Gm-Message-State: APjAAAUNwa8vR52icWYdrlon8n/mtPqFuQzczNjWNlrzFdYcuWw/k8Du
+        a1qPc6wDZtsDICoj65tG7bZDy++KHE8=
+X-Google-Smtp-Source: APXvYqwiGIy9Ai0m4WZsseUkb0hNGoWfmuyHRUfmk0KhOOQ6nHBn18Vt31k013qMZMRUt/04T3PE/A==
+X-Received: by 2002:a92:9c16:: with SMTP id h22mr11403124ili.67.1573759800611;
+        Thu, 14 Nov 2019 11:30:00 -0800 (PST)
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com. [209.85.166.180])
+        by smtp.gmail.com with ESMTPSA id y5sm896893ilk.83.2019.11.14.11.29.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 11:29:59 -0800 (PST)
+Received: by mail-il1-f180.google.com with SMTP id p6so6425133ilp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:29:59 -0800 (PST)
+X-Received: by 2002:a92:ba1b:: with SMTP id o27mr12281795ili.269.1573759799235;
+ Thu, 14 Nov 2019 11:29:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-2-brijesh.singh@amd.com>
- <CAMkAt6pzXrZw1TZgcX-G0wDNZBjf=1bQdErAJTxfzYQ2MJDZvw@mail.gmail.com> <4f509f43-a576-144d-efd4-ab0362f1d667@amd.com>
-In-Reply-To: <4f509f43-a576-144d-efd4-ab0362f1d667@amd.com>
-From:   Peter Gonda <pgonda@google.com>
-Date:   Thu, 14 Nov 2019 11:27:38 -0800
-Message-ID: <CAMkAt6qfPyqGuNv9gKirote=zj6Vha=9Vu1HSFkxx334s-GV1g@mail.gmail.com>
-Subject: Re: [PATCH v3 01/11] KVM: SVM: Add KVM_SEV SEND_START command
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191112230944.48716-1-abhishekpandit@chromium.org>
+ <20191112230944.48716-5-abhishekpandit@chromium.org> <CAD=FV=UfGDAtePrDmsEsdCNsHQZwDkU8z6E=qzSu=opht7evpQ@mail.gmail.com>
+ <CANFp7mWT2GwkSEcE5SkxRnfOebHq2aYLoLh6dmCZ-HktUe+mYQ@mail.gmail.com>
+In-Reply-To: <CANFp7mWT2GwkSEcE5SkxRnfOebHq2aYLoLh6dmCZ-HktUe+mYQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 14 Nov 2019 11:29:47 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XPK9YHBCRWnksgeqPQ3v8Tmm413oie-x6ESzpTFtezqQ@mail.gmail.com>
+Message-ID: <CAD=FV=XPK9YHBCRWnksgeqPQ3v8Tmm413oie-x6ESzpTFtezqQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 2:27 PM Brijesh Singh <brijesh.singh@amd.com> wrote:
->
->
-> On 11/12/19 12:35 PM, Peter Gonda wrote:
-> > On Wed, Jul 10, 2019 at 1:13 PM Singh, Brijesh <brijesh.singh@amd.com> wrote:
-> >> +static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> >> +{
-> >> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> >> +       void *amd_cert = NULL, *session_data = NULL;
-> >> +       void *pdh_cert = NULL, *plat_cert = NULL;
-> >> +       struct sev_data_send_start *data = NULL;
-> >> +       struct kvm_sev_send_start params;
-> >> +       int ret;
-> >> +
-> >> +       if (!sev_guest(kvm))
-> >> +               return -ENOTTY;
-> >> +
-> >> +       if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-> >> +                               sizeof(struct kvm_sev_send_start)))
-> >> +               return -EFAULT;
-> >> +
-> >> +       data = kzalloc(sizeof(*data), GFP_KERNEL);
-> >> +       if (!data)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       /* userspace wants to query the session length */
-> >> +       if (!params.session_len)
-> >> +               goto cmd;
-> >> +
-> >> +       if (!params.pdh_cert_uaddr || !params.pdh_cert_len ||
-> >> +           !params.session_uaddr)
-> >> +               return -EINVAL;
-> > I think pdh_cert is only required if the guest policy SEV bit is set.
-> > Can pdh_cert be optional?
->
->
-> We don't cache the policy information in kernel, having said so we can
-> try caching it during the LAUNCH_START to optimize this case. I have to
-> check with FW folks but I believe all those fields are required. IIRC,
-> When I passed NULL then SEND_START failed for me. But I double check it
-> and update you on this.
+Hi,
 
+On Thu, Nov 14, 2019 at 11:20 AM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
+>
+> > >  Example:
+> > > @@ -40,5 +45,11 @@ Example:
+> > >         bluetooth {
+> > >                 compatible = "brcm,bcm43438-bt";
+> > >                 max-speed = <921600>;
+> > > +
+> > > +               brcm,bt-sco-routing = [01];
+> > > +               brcm,pcm-interface-rate = [02];
+> > > +               brcm,pcm-frame-type = [00];
+> > > +               brcm,pcm-sync-mode = [01];
+> > > +               brcm,pcm-clock-mode = [01];
+> >
+> > I'm at least marginally curious why your example has a leading 0 for
+> > all numbers.  It makes me think you intend them to be represented in
+> > octal, though I don't know offhand if dtc uses that format for octal.
+> > I guess it doesn't matter since all your numbers are between 0 and 5,
+> > but it does seem strange.
+>
+> It's a bytestring with a length of 1. See bytestrings under
+> https://devicetree-specification.readthedocs.io/en/latest/source-language.html#node-and-property-definitions
 
-I must have misinterpreted the this line of the spec:
-"If GCTX.POLICY.SEV is 1, the PDH, PEK, CEK, ASK, and ARK certificates
-are validated."
-I thought that since they were not validated they were not needed.
+Oh, right!  ...except that now it's just one value and not an array of
+values, just make it a normal number.  Don't worry about the fact that
+it'll take up 4 bytes instead of 1--it's clearer for it to just be a
+normal number.
+
+...I would also note that the definition of the properties talks
+nothing about them being a bytestring.  ;-)
+
+-Doug
