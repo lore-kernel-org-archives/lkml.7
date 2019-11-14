@@ -2,101 +2,112 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAABAC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD5020706
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A5620706
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:06:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oFJOV++E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfKNXDr (ORCPT
+        id S1727141AbfKNXGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:03:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41919 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNXDr (ORCPT
+        Thu, 14 Nov 2019 18:06:09 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:7439 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNXGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 18:03:47 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iVO9I-0004qZ-8n; Fri, 15 Nov 2019 00:03:36 +0100
-Date:   Fri, 15 Nov 2019 00:03:35 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Waiman Long <longman@redhat.com>
-cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH] x86/speculation: Fix incorrect MDS/TAA mitigation
- status
-In-Reply-To: <71de9e2b-19b6-161a-2f78-093c71d9391d@redhat.com>
-Message-ID: <alpine.DEB.2.21.1911142358460.29616@nanos.tec.linutronix.de>
-References: <20191113193350.24511-1-longman@redhat.com> <20191114201258.GA18745@guptapadev.amr> <71de9e2b-19b6-161a-2f78-093c71d9391d@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 14 Nov 2019 18:06:09 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcddda90000>; Thu, 14 Nov 2019 15:05:13 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 14 Nov 2019 15:06:08 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 14 Nov 2019 15:06:08 -0800
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 Nov
+ 2019 23:06:05 +0000
+Subject: Re: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
+To:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@mellanox.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+References: <20191104222141.5173-1-rcampbell@nvidia.com>
+ <20191104222141.5173-3-rcampbell@nvidia.com> <20191112152521.GC12550@lst.de>
+ <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
+ <20191112234549.GX21728@mellanox.com> <20191113135115.GA10688@lst.de>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <21d6b69c-3167-e60d-eed2-65bb1f8515ae@nvidia.com>
+Date:   Thu, 14 Nov 2019 15:06:05 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191113135115.GA10688@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573772713; bh=B7TOYH1oGC7u+umXh4N1/gSiAG/BcpUtpnIfDaTAGGs=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=oFJOV++Eska9iFN5ZhKxMBTjRKi8JF1c4HhevVI8pPNuS5t7MtzmYfvOgVfcpByUR
+         fJaX6cTnVCLhFEFTYsU5rTtSUs0KslB9IdJkuhy4B4L8wxaT32kLpmM93ENybg3fWJ
+         xrjb7/GDA8EdaxcUzOTJhqrf2xAJQKr2efRt0lO9JVRmzrBn/1ZNan8ghaePlkc8+f
+         AbSoMxaEoDeq9UZTG0HOz8Qb6j67Ng+9TPQ3P4XABedJSMmVAVLLTsa0YjGD2Cq1HX
+         NiFqgMNiYEQudfJXYaT7i7qDM6DlXfSwbRWl1D14+WVDRhtSdB73GLYltc8yac6ncU
+         1JjDg+lgEI9fg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019, Waiman Long wrote:
-> On 11/14/19 3:12 PM, Pawan Gupta wrote:
-> > On Wed, Nov 13, 2019 at 02:33:50PM -0500, Waiman Long wrote:
 
-Folks, please trim your replies ....
-
-> >> +	/*
-> >> +	 * Update MDS mitigation, if necessary, as the mds_user_clear is
-> >> +	 * now enabled for TAA mitigation.
-> >> +	 */
-> >> +	if (mds_mitigation == MDS_MITIGATION_OFF &&
-> >> +	    boot_cpu_has_bug(X86_BUG_MDS)) {
-> >> +		mds_mitigation = MDS_MITIGATION_FULL;
-> >> +		mds_select_mitigation();
-> > This will cause a confusing print in dmesg from previous and this call
-> > to mds_select_mitigation().
-> >
-> > 	"MDS: Vulnerable"
-> > 	"MDS: Mitigation: Clear CPU buffers"
->
-> Yes, that is the side effect of this patch. It is the last message that
-> is relevant. We saw this kind of messages all the time with early
-> loading of microcode. A message showing a hardware vulnerability as
-> vulnerable and then another message showing it as mitigated after the
-> loading of microcode.
-> >
-> > Maybe delay MDS mitigation print till TAA is evaluated.
+On 11/13/19 5:51 AM, Christoph Hellwig wrote:
+> On Tue, Nov 12, 2019 at 11:45:52PM +0000, Jason Gunthorpe wrote:
+>>> Well, it would mean registering for the whole process address space.
+>>> I'll give it a try.
+>>
+>> I'm not sure it makes much sense that this testing is essentially
+>> modeled after nouveau's usage which is very strange compared to the
+>> other drivers.
 > 
-> I will see what can be done about that. However, this is not a critical
-> issue and I may not change it if there is no easy solution.
+> Which means we really should make the test cases fit the proper usage.
+> Maybe defer the tests for 5.5 and just merge the first patch for now?
+> 
 
-Right. There is nothing wrong with these two messages coming after each
-other. They are both correct and due to the ordering they also make sense.
+I think this a good point to discuss.
+Some devices will want to register for all changes to the process address
+space because there is no requirement to preregister regions that the
+device can access verses devices like InfiniBand where a range of addresses
+have to be registered before the device can access those addresses.
+So for nouveau and the hmm-test driver, the mmu_range_notifier_insert()
+and mmu_range_notifier_remove() are only used long enough to get a
+stable copy of a small part of the process address space and copy it to
+the device's page table. Then the regular process wide invalidations are
+required to keep the device's page tables consistent with the process
+page table.
 
-> > 	"MDS: Vulnerable"
-> > 	"MDS: Mitigation: Clear CPU buffers"
+The "hacky" part of the current design is the interaction between the
+short term narrow address range invalidations verses the long term
+process wide invalidations. (double callbacks, double locking of the
+device page table)
 
-CPU is vulnerable and then the next printk tells that mitigation is in
-effect. So really nothing to worry about.
-
-The important part is that the ordering of these messages is correct which
-is the case and that the sysfs file corresponds with the last printk.
-
-We really have more urgent problems than bikeshed painting these printks.
-
-Thanks,
-
-	tglx
-
+Both types of invalidate callbacks seem useful to me so forcing a
+driver to use only one type doesn't make sense to me.
