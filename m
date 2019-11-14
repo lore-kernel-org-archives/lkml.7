@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7421FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E77C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E8220729
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D432620729
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfKNSST (ORCPT
+        id S1727531AbfKNSSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:18:19 -0500
+        Thu, 14 Nov 2019 13:18:23 -0500
 Received: from mga03.intel.com ([134.134.136.65]:36355 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727437AbfKNSSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:18:05 -0500
+        id S1727442AbfKNSSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:18:04 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:18:05 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:18:03 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="195123601"
+   d="scan'208";a="195123591"
 Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
-  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 10:18:03 -0800
+  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 10:18:02 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v3 20/22] soundwire: stream: do not update parameters during DISABLED-PREPARED transition
-Date:   Thu, 14 Nov 2019 12:17:00 -0600
-Message-Id: <20191114181702.22254-21-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 19/22] soundwire: stream: only prepare stream when it is configured.
+Date:   Thu, 14 Nov 2019 12:16:59 -0600
+Message-Id: <20191114181702.22254-20-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191114181702.22254-1-pierre-louis.bossart@linux.intel.com>
 References: <20191114181702.22254-1-pierre-louis.bossart@linux.intel.com>
@@ -51,78 +51,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After a system suspend, the ALSA/ASoC core will invoke the .prepare()
-callback and a TRIGGER_START when INFO_RESUME is not supported.
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-Likewise, when an underflow occurs, the .prepare callback will be invoked.
+We don't need to prepare the stream again if the stream is already
+prepared.
 
-In both cases, the stream can be in DISABLED mode, and will transition
-into the PREPARED mode. We however don't want the bus bandwidth to be
-recomputed.
+sdw_prepare_stream() could be called multiple times without calling
+sdw_deprepare_stream(). We call sdw_prepare_stream() in the prepare
+dai ops and sdw_deprepare_stream() in the hw_free dai ops. If an xrun
+happens, sdw_prepare_stream() will be called but
+sdw_deprepare_stream() will not, which results in an imbalance and an
+invalid total bandwidth.
 
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/stream.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/soundwire/stream.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index bd0bddf73830..c28ce7f0d742 100644
+index 6aa0b5d370c0..bd0bddf73830 100644
 --- a/drivers/soundwire/stream.c
 +++ b/drivers/soundwire/stream.c
-@@ -1460,7 +1460,8 @@ static void sdw_release_bus_lock(struct sdw_stream_runtime *stream)
- 	}
- }
- 
--static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
-+static int _sdw_prepare_stream(struct sdw_stream_runtime *stream,
-+			       bool update_params)
- {
- 	struct sdw_master_runtime *m_rt;
- 	struct sdw_bus *bus = NULL;
-@@ -1480,6 +1481,9 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 			return -EINVAL;
- 		}
- 
-+		if (!update_params)
-+			goto program_params;
-+
- 		/* Increment cumulative bus bandwidth */
- 		/* TODO: Update this during Device-Device support */
- 		bus->params.bandwidth += m_rt->stream->params.rate *
-@@ -1495,6 +1499,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 			}
- 		}
- 
-+program_params:
- 		/* Program params */
- 		ret = sdw_program_params(bus);
- 		if (ret < 0) {
-@@ -1544,6 +1549,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
+@@ -1544,7 +1544,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
   */
  int sdw_prepare_stream(struct sdw_stream_runtime *stream)
  {
-+	bool update_params = true;
- 	int ret;
+-	int ret = 0;
++	int ret;
  
  	if (!stream) {
-@@ -1567,7 +1573,16 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 		goto state_err;
- 	}
+ 		pr_err("SoundWire: Handle not found for stream\n");
+@@ -1553,6 +1553,11 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
  
--	ret = _sdw_prepare_stream(stream);
-+	/*
-+	 * when the stream is DISABLED, this means sdw_prepare_stream()
-+	 * is called as a result of an underflow or a resume operation.
-+	 * In this case, the bus parameters shall not be recomputed, but
-+	 * still need to be re-applied
-+	 */
-+	if (stream->state == SDW_STREAM_DISABLED)
-+		update_params = false;
+ 	sdw_acquire_bus_lock(stream);
+ 
++	if (stream->state == SDW_STREAM_PREPARED) {
++		ret = 0;
++		goto state_err;
++	}
 +
-+	ret = _sdw_prepare_stream(stream, update_params);
- 
- state_err:
- 	sdw_release_bus_lock(stream);
+ 	if (stream->state != SDW_STREAM_CONFIGURED &&
+ 	    stream->state != SDW_STREAM_DEPREPARED &&
+ 	    stream->state != SDW_STREAM_DISABLED) {
 -- 
 2.20.1
 
