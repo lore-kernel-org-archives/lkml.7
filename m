@@ -2,98 +2,138 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6DCC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE6BC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B36206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573691173;
-	bh=WtL7aiuZseF/2Lo8jL3TCUd++OBOX5m98Opc9vYuDo4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=urJ0Eph0QoEpWFZBG2qzRtB0gm42/yuryNWGskTD13GV3+pxpsj1um+jUDp3O2Bws
-	 Ssd/nSW+Kp7f95azRR9Oeyp+X6vFvVCXjC13xpQDLAq2UjjVrDkGErDecMdrLcgX86
-	 OzLbNa3carC6ZkXBILxGEuGzezn37Hte4Pmgvh+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 9C73C206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:30:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h4mMEIaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfKNA0M (ORCPT
+        id S1726473AbfKNAat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:26:12 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35947 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfKNA0M (ORCPT
+        Wed, 13 Nov 2019 19:30:49 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:40552 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfKNAas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:26:12 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k13so2476765pgh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 16:26:11 -0800 (PST)
+        Wed, 13 Nov 2019 19:30:48 -0500
+Received: by mail-pg1-f202.google.com with SMTP id q1so3162280pgl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 16:30:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=VnJePqFNQKWZpRIOr4e8YrOk73ffsduTxdMikg1QHq0=;
+        b=h4mMEIaYy+DDwd11rkZOUYKmBgU+lTA/0yfezvdMukeApN8KOP2qGRfMFmcocejBic
+         3GiMMx8KQudLKHMaIj6w/putbaGP6INYEG9FNJKS+VjUAWX9g+VBAl27NONtqF38Mc5/
+         cfe4mkvs0ckObKg80YhUWq0mglWVBxjsI79FzorKhI41TZXui/9c+Yn9riwr2AxWJqF6
+         htVfc0B+gQQ+8f9SGU1FQYnXtUnxapG/PquCfdQHA9go00fS0quZGDIb/XskznruxYO3
+         n6Q5k9wpbLdekBhwB8zzYXrX0TywNsy+5RaGqFZkF8AHWvEW0Ya0Fsm1fiWcjn/aCCpx
+         UYFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wbA9LJyHfmL8JOWFOa0vSA8aoWEs4lz4urE7q+emuws=;
-        b=sLyN2j7T26sNjPregNE61IHWMLyN+I5AWe8kUecKwVyZpR8roU6myoFAC8SGexOzpo
-         BSmDUE7n//RWMm7ApC17GES7IVJRMxxzaczQmRDv62eoN6dpNXKSI/fNObMw7NFunHO7
-         PmAs63lmZCVdFFCYzx37/ZQklbCulVU3Da2kSMrsozzE13AKxNLy4NHZgwrs5rDljXrD
-         XHGy6K5Ge9C3C6vg+THDWl8w3ELaF3YSX5bQRXOh/t3SeHuD/ZmCHU61OXVBOgqyHamY
-         0nkR0vovqd0n00ghnYBQx+oYCvSdL7SDSHfMpWjATrqFoLnHw8T+zfe1Y2NjyqKeILOt
-         MwVQ==
-X-Gm-Message-State: APjAAAUpxcFuefOErU4zL2OuGnRA746W0EMuvINwqSOnrWEoZw/F4xgA
-        W529OgaWm91WkOgczspnDyQ=
-X-Google-Smtp-Source: APXvYqysJoIW33FxtPXED/zzoC2eM/qLkJe1e+uQ7ZywkJf7bQqVg871jvl4PxMu5TzA/SYF5rywtw==
-X-Received: by 2002:a62:e811:: with SMTP id c17mr7710859pfi.136.1573691171052;
-        Wed, 13 Nov 2019 16:26:11 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id j11sm3605922pgk.3.2019.11.13.16.26.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 16:26:10 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 60605403DC; Thu, 14 Nov 2019 00:26:09 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 00:26:09 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Tim Murray <timmurray@google.com>,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2] firmware_class: make firmware caching configurable
-Message-ID: <20191114002609.GC11244@42.do-not-panic.com>
-References: <20191113210124.59909-1-salyzyn@android.com>
- <20191113225429.118495-1-salyzyn@android.com>
- <20191113231602.GB11244@42.do-not-panic.com>
- <33f2baa2-944a-2bfc-1c50-0e437bf11959@android.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33f2baa2-944a-2bfc-1c50-0e437bf11959@android.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=VnJePqFNQKWZpRIOr4e8YrOk73ffsduTxdMikg1QHq0=;
+        b=rI9q4p7OUAIn0F917MrBdc/NYoJeh/8dn1nnlTqolhiOwfBEmI017Afa3XCvc7mz+1
+         pSmCvd+0JSmwyjReRzNM8wnOVk6KLQ8FQtff9cU3F6kgb0edS5lySNCNqNykwFFrr0Ua
+         7goS/k/K8JyrB8NRfY07me6h0E9xOyg2rmChU6J9jjbpueDH/lJVyCVuVca33BT8nEGD
+         FcQkh+YukEqh4SAfgqa4m0wAsZtXp9yuIYv9ooLjOlm7MZv7hGOdvvF4bjIU5bDVCFFz
+         wZXlnYYQEc6I/BZBhxgqgPQ/ERuGH/N0Du77xsdUCdGKkLK7FpR1JDLhMi44kSBcqst2
+         hYIw==
+X-Gm-Message-State: APjAAAXOUhAgEwztZkDUycDXJ/fopFXRN2BrQc7FbOydTzSwoEZ0ZtCf
+        UDGOImMEi885FMB1/yErb4m/HnbTSfIQ
+X-Google-Smtp-Source: APXvYqwopzHcKvKHJ8hz00r9XQFx2UnaKQyo1LSYRdDeM8hNquvKqTNShGDFGl4vbR1t38V2ozW7qCgviUG3
+X-Received: by 2002:a63:b22:: with SMTP id 34mr6890849pgl.90.1573691446181;
+ Wed, 13 Nov 2019 16:30:46 -0800 (PST)
+Date:   Wed, 13 Nov 2019 16:30:32 -0800
+Message-Id: <20191114003042.85252-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v3 00/10] Optimize cgroup context switch
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 04:16:38PM -0800, Mark Salyzyn wrote:
-> On 11/13/19 3:16 PM, Luis Chamberlain wrote:
-> > On Wed, Nov 13, 2019 at 02:54:26PM -0800, Mark Salyzyn wrote:
-> > > +config FW_CACHE
-> > > +	bool "Enable firmware caching during suspend"
-> > > +	depends on PM_SLEEP
-> > > +	default y if PM_SLEEP
-> > I think the default y would suffice given you have depends on PM_SLEEP,
-> > however this also works. So, again:
-> > 
-> > Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-> > 
-> >    Luis
-> 
-> Worried about setting FW_CACHE w/o PM_SLEEP, this enforces it.
+Avoid iterating over all per-CPU events during cgroup changing context
+switches by organizing events by cgroup.
 
-I understand, but its an impossibility to turn on FW_CACHE without
-PM_SLEEP since it depends on it. How would one do that?
+To make an efficient set of iterators, introduce a min max heap
+utility with test.
 
-However, since it makes no difference we can leave it.
+These patches include a caching algorithm to improve the search for
+the first event in a group by Kan Liang <kan.liang@linux.intel.com> as
+well as rebasing hit "optimize event_filter_match during sched_in"
+from https://lkml.org/lkml/2019/8/7/771.
 
-  Luis
+The v2 patch set was modified by Peter Zijlstra in his perf/cgroup
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git
+
+These patches follow Peter's reorganization and his fixes to the
+perf_cpu_context min_heap storage code.
+
+Ian Rogers (8):
+  lib: introduce generic min max heap
+  perf: Use min_max_heap in visit_groups_merge
+  perf: Add per perf_cpu_context min_heap storage
+  perf/cgroup: Grow per perf_cpu_context heap storage
+  perf/cgroup: Order events in RB tree by cgroup id
+  perf: simplify and rename visit_groups_merge
+  perf: cache perf_event_groups_first for cgroups
+  perf: optimize event_filter_match during sched_in
+
+Kan Liang (1):
+  perf/cgroup: Do not switch system-wide events in cgroup switch
+
+Peter Zijlstra (1):
+  perf/cgroup: Reorder perf_cgroup_connect()
+
+ include/linux/min_max_heap.h | 134 +++++++++
+ include/linux/perf_event.h   |  14 +
+ kernel/events/core.c         | 512 ++++++++++++++++++++++++++++-------
+ lib/Kconfig.debug            |  10 +
+ lib/Makefile                 |   1 +
+ lib/test_min_max_heap.c      | 194 +++++++++++++
+ 6 files changed, 769 insertions(+), 96 deletions(-)
+ create mode 100644 include/linux/min_max_heap.h
+ create mode 100644 lib/test_min_max_heap.c
+
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
