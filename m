@@ -2,124 +2,97 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518E1C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14148C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292ED2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573773937;
-	bh=iYEYxa/KYnEGZnHkV/MPol/IXRLNQIV4TbRxYLhEIpI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=X37/og4y+E0CffTX5R15GbUMqdE79n6zN7Jk9jfC5SLRcMNs4sJB3Uu22yYZJU9zQ
-	 J/BvoPB1NJMu5uR9vbu7bqeGIANyr1KTtKFNxh1LoWjvE/Iub0ZssI1PPXDQWd3ykN
-	 22Z0vxDl30LXBgdrJQCvae8rA/JzBlcKXuPV9JfA=
+	by mail.kernel.org (Postfix) with ESMTP id DFD6620718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:26:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fsPJNeng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfKNXZg (ORCPT
+        id S1727159AbfKNX0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:25:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfKNXZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 18:25:35 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C5A20718;
-        Thu, 14 Nov 2019 23:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573773935;
-        bh=iYEYxa/KYnEGZnHkV/MPol/IXRLNQIV4TbRxYLhEIpI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=U4i9hKv58WqOCfNJZhT1ihvk7Gg8/2Ytz+o0V7vNiIb4XJ57ASjCx+5pzBL4Fl6jd
-         ZeJNHcPIsT8oUWxx9IOXWOcLVI15SqVgiiOjJqZLQIssckk0QHuF2+SwD1Ya4VAfyL
-         6jED2a6k4JpMr5VhsU+EQ3Ia2fR6iZ8zBTSxbTUo=
-Date:   Thu, 14 Nov 2019 17:25:15 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] PCI: Add missing link delays
-Message-ID: <20191114232515.GA13757@google.com>
+        Thu, 14 Nov 2019 18:26:33 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37869 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKNX0c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 18:26:32 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b20so6507248lfp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 15:26:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dh355UxLWVUsAWtwLkdueim4hUviJNMSeVlOVRSiyyU=;
+        b=fsPJNeng02AwnnNHtwtXoe3riey1s/OJrERM+5JLecji6GA9zq4JM5sHWvCJyNKnWC
+         6xvVpy3wgwf6hGgp3N3H+WuDv2r8poG8kCEbS5fXQkeIZ3eugGRcYDmTu6nCr9g/hqW8
+         GyeJopyeU9cHUKn7On5e4xnwapZTvRaUCO9Xq533CLFKtNyceG8bg2DwwTb7FPPgzTJ8
+         wVKTtqRx7FUrs9cUbhUP/RwggYxF5sy0lwWOeRytpjajYFmsTO+KX+VqTQf6LJFkpIp3
+         aNoAjxE448K3Tj09rXpE55JYCFFKXJlCLZd2+sVubjWjTJ1odWk3FpoPjoDu7D52yTqh
+         gZpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dh355UxLWVUsAWtwLkdueim4hUviJNMSeVlOVRSiyyU=;
+        b=pnXK6JMeY3FNirEkhdjmfR886HxjFjkCVzUbsvQIJE/j1el0U79K8Fjm0CaynwoISX
+         m7vSyvXl+IHL5+L0LW7w1DZXg+cYMpuOiPJ7v69wYhE3ipspu+2xcKocjxJYoyIIYp7x
+         EgFKHFNqBrakdxSTQzg6GkqjgsVIrZJQ6ZcGsmlPAhpA3bM+lX2frVamz6HXZkFzlp53
+         kCv2qQdT7BOZIYDkP68omazJzpWAV83v/zrbdsUNK+czl5LTcYXg7RK/ARqbAq/wRZcO
+         tHV+6rxdAtREFQLxwuVq2Mvm7kfqXbB3LHdS6TGjaSSnPsPrc4WHksyaCETCTBl+5T6k
+         skzg==
+X-Gm-Message-State: APjAAAXnp4AQD/MM8NvOYLUdnSc2IYYHSb1kb1g1ZdRbWDMfNTv5ppvi
+        vgCnCEQJ2ThlP3bgWgEyfhTmKe4BbqZfVb/o67SrWjNccaE=
+X-Google-Smtp-Source: APXvYqzLk+KhD3Sj2zIb1agtuRx8FqBh+eeYu3cNtIavQb53WVkpwyRNOE71sOo8/sYqRoHw9clCFk4qt3Trn3pUKVk=
+X-Received: by 2002:a19:651b:: with SMTP id z27mr8714521lfb.117.1573773990709;
+ Thu, 14 Nov 2019 15:26:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112091617.70282-1-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191114185152.101059-1-robdclark@gmail.com>
+In-Reply-To: <20191114185152.101059-1-robdclark@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 15 Nov 2019 00:26:18 +0100
+Message-ID: <CACRpkdYwBp59wGPbs4+4rNmYPJMXDF0g8qbmhf3_XDHAmFkjcQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: ignore NULL clocks
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 12:16:15PM +0300, Mika Westerberg wrote:
-> Hi,
-> 
-> This is fourth version of the reworked PCIe link delay patch posted earlier
-> here:
-> 
->   v3: https://www.spinics.net/lists/linux-pci/msg88760.html
->   v2: https://lore.kernel.org/linux-pci/20191004123947.11087-1-mika.westerberg@linux.intel.com/
->   v1: https://patchwork.kernel.org/patch/11106611/
-> 
-> Changes from v3:
-> 
->   * Add tag from Rafael.
->   * Hold pci_bus_sem when accessing bus->devices list.
-> 
-> Changes from v2:
-> 
->   * Rebased on top of pci.git/pci/pm.
->   * Update references to PCIe 5.0 spec.
->   * Take d3cold_delay if child devices into account. This allows ACPI _DSM
->     to lower the delay.
->   * Check for pci_dev->skip_bus_pm in pci_pm_resume_noirq().
->   * Drop comment that mentions pciehp where
->     pci_bridge_wait_for_secondary_bus() is called.
->   * Use pcie_downstream_port() in pci_bridge_wait_for_secondary_bus().
-> 
-> Based on the discussion around v2 there is a potential issue when restoring
-> PCI_EXP_LNKCTL2 (regardless these patches) that we may need to retrain the
-> link. This series does not include fix for that since it is not yet clear
-> how we solve it. I can do that as a separate patch once we agree on the
-> solution.
-> 
-> I'm submitting these two now in hopes that we can get them included for
-> v5.5 because there are systems out there that need them in order to
-> function properly.
-> 
-> Changes from v1:
-> 
->   * Introduce pcie_wait_for_link_delay() in a separate patch
->   * Tidy up changelog, remove some debug output
->   * Rename pcie_wait_downstream_accessible() to
->     pci_bridge_wait_for_secondary_bus() and make it generic to all PCI
->     bridges.
->   * Handle Tpvrh + Trhfa for conventional PCI even though we don't do PM
->     for them right now.
->   * Use pci_dbg() instead of dev_dbg().
->   * Dropped check for pm_suspend_no_platform() and only check for D3cold.
->   * Drop pcie_get_downstream_delay(), same delay applies equally to all
->     devices (it is not entirely clear from the spec).
-> 
-> Mika Westerberg (2):
->   PCI: Introduce pcie_wait_for_link_delay()
->   PCI: Add missing link delays required by the PCIe spec
-> 
->  drivers/pci/pci-driver.c |  11 ++-
->  drivers/pci/pci.c        | 148 ++++++++++++++++++++++++++++++++++++---
->  drivers/pci/pci.h        |   1 +
->  3 files changed, 150 insertions(+), 10 deletions(-)
+On Thu, Nov 14, 2019 at 7:54 PM Rob Clark <robdclark@gmail.com> wrote:
 
-Applied to pci/pm for v5.5, thanks, Mika!
+> From: Rob Clark <robdclark@chromium.org>
+>
+> This isn't an error.  Also the clk APIs handle the NULL case, so we can
+> just delete the check.
+>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Tested-by: Matthias Kaehlcke <mka@chromium.org>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
