@@ -2,94 +2,125 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262C5C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319A4C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A04206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2C42070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:49:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOcHHWgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfKNKsS (ORCPT
+        id S1726528AbfKNKtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:48:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40235 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfKNKsR (ORCPT
+        Thu, 14 Nov 2019 05:49:25 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39804 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfKNKtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:48:17 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iVCfZ-00087p-3k; Thu, 14 Nov 2019 11:48:09 +0100
-Date:   Thu, 14 Nov 2019 11:48:08 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-cc:     Arnd Bergmann <arnd@arndb.de>, y2038@lists.linaro.org,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 21/23] y2038: itimer: change implementation to
- timespec64
-In-Reply-To: <20191113210611.515868a4@oasis.local.home>
-Message-ID: <alpine.DEB.2.21.1911141147220.2507@nanos.tec.linutronix.de>
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-12-arnd@arndb.de> <alpine.DEB.2.21.1911132306070.2507@nanos.tec.linutronix.de> <20191113210611.515868a4@oasis.local.home>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 14 Nov 2019 05:49:25 -0500
+Received: by mail-wr1-f68.google.com with SMTP id l7so5891311wrp.6;
+        Thu, 14 Nov 2019 02:49:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PsHKqqY8IP1kGma0cvoxtMrhEOwaSBiNr+WZYaEGu0g=;
+        b=NOcHHWglfoKO58skQZauX0HJysJ9mN4S6+/mfw7RSDHMs8+6clX4CVpTzVYOz8R7dO
+         rBXc73FjmFa3n3a1Er6eaHQiAew4lci0+BOEzL8aq6lEvv0OVq6tJBqX58wCKBnYfUnN
+         /SeIUC20vxg7pm6jnlJKsf+8rqnfrNqglyC1N2+3zJjmUKpiW/DXD6sCtHuKAV0gxibc
+         LCwmj4J6LiSkPjn0l3YU2aZNkzGpxokdbcZuc2id8DKoQKm9jBjpfgALJ9uyQ9naKv39
+         NARuO18x4XX2ng9JxlMUgZYrQbscQ3HCnlSrEkXok7fCR9l7bSv0n92PDtqmYd3uruy/
+         NNrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PsHKqqY8IP1kGma0cvoxtMrhEOwaSBiNr+WZYaEGu0g=;
+        b=uRYDG6k9P92ZbIUGlA3DGyPNx161yhTNDyq6GYCRXgPb1Ve5hA7u3QsPBxDLOoimn+
+         q9L09+Ji/8UN9/KpZCjVowWZLSZoHgxdjbAQDNOghk+nGVgCDvipXqbfK6JZeYJ0TmFc
+         F8dVYkajoOoeytGH17eXkS9HDHc6xXlxdAi2BpLioXMMdoBiEr67Q3iJ1gI+AP1PACDM
+         i3V3N9tOOicpWTAIiekfbwO99r54e/2vItq5xZ1BMmJBbe6Aw3TGpYwrjUi0nemUH5uM
+         YYNO8B0B9IXaSAtbLprdXZrQu8muH/4awP5KGKve0I7WO+wUBzSuJPyVx+6yOoM2CPgd
+         xr5w==
+X-Gm-Message-State: APjAAAVemMRJkXtq2Db8/qi0sir+s+N59m2m1r7JVGQSOqOSmqT3Echn
+        7MpiUhne89vDHthNEOwkALE=
+X-Google-Smtp-Source: APXvYqzW70DVjuUaihSTDR9YctsEX5FZ+s1gUJ7ISZDeUN6w5dhrMPFEcE91FgX+8CB+6kXYCTA1CA==
+X-Received: by 2002:a5d:6b51:: with SMTP id x17mr8043604wrw.148.1573728563385;
+        Thu, 14 Nov 2019 02:49:23 -0800 (PST)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id k14sm7229301wrw.46.2019.11.14.02.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 02:49:22 -0800 (PST)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH 1/2] crypto: sun4i-ss: Fix 64-bit size_t warnings on sun4i-ss-hash.c
+Date:   Thu, 14 Nov 2019 11:49:06 +0100
+Message-Id: <20191114104907.10645-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019, Steven Rostedt wrote:
-> On Wed, 13 Nov 2019 23:28:47 +0100 (CET)
-> Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> > On Fri, 8 Nov 2019, Arnd Bergmann wrote:
-> > >  TRACE_EVENT(itimer_state,
-> > >  
-> > > -	TP_PROTO(int which, const struct itimerval *const value,
-> > > +	TP_PROTO(int which, const struct itimerspec64 *const value,
-> > >  		 unsigned long long expires),
-> > >  
-> > >  	TP_ARGS(which, value, expires),
-> > > @@ -321,12 +321,12 @@ TRACE_EVENT(itimer_state,
-> > >  		__entry->which		= which;
-> > >  		__entry->expires	= expires;
-> > >  		__entry->value_sec	= value->it_value.tv_sec;
-> > > -		__entry->value_usec	= value->it_value.tv_usec;
-> > > +		__entry->value_usec	= value->it_value.tv_nsec / NSEC_PER_USEC;
-> > >  		__entry->interval_sec	= value->it_interval.tv_sec;
-> > > -		__entry->interval_usec	= value->it_interval.tv_usec;
-> > > +		__entry->interval_usec	= value->it_interval.tv_nsec / NSEC_PER_USEC;  
-> > 
-> > Hmm, having a division in a tracepoint is clearly suboptimal.
-> 
-> Right, we should move the division into the TP_printk()
-> 
-> 		__entry->interval_nsec = alue->it_interval.tv_nsec;
-> 
-> > 
-> > >  	),
-> > >  
-> > > -	TP_printk("which=%d expires=%llu it_value=%ld.%ld it_interval=%ld.%ld",
-> > > +	TP_printk("which=%d expires=%llu it_value=%ld.%06ld it_interval=%ld.%06ld",  
-> > 
-> > We print only 6 digits after the . so that would be even correct w/o a
-> > division. But it probably does not matter much.
-> 
-> Well, we still need the division in the printk, otherwise it will print
-> more than 6. That's just the minimum and it will print the full number.
+If you try to compile this driver on a 64-bit platform then you
+will get warnings because it mixes size_t with unsigned int which
+only works on 32-bit.
 
-That's fine. The print is not really timing critical, the tracepoint very
-much so.
+This patch fixes all of the warnings on sun4i-ss-hash.c.
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Thanks,
+diff --git a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
+index 9930c9ce8971..91cf58db3845 100644
+--- a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
+@@ -284,8 +284,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 			 */
+ 			while (op->len < 64 && i < end) {
+ 				/* how many bytes we can read from current SG */
+-				in_r = min3(mi.length - in_i, end - i,
+-					    64 - op->len);
++				in_r = min(end - i, 64 - op->len);
++				in_r = min_t(size_t, mi.length - in_i, in_r);
+ 				memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 				op->len += in_r;
+ 				i += in_r;
+@@ -305,8 +305,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 		}
+ 		if (mi.length - in_i > 3 && i < end) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    ((mi.length - in_i) / 4) * 4);
++			in_r = min_t(size_t, mi.length - in_i, areq->nbytes - i);
++			in_r = min_t(size_t, ((mi.length - in_i) / 4) * 4, in_r);
+ 			/* how many bytes we can write in the device*/
+ 			todo = min3((u32)(end - i) / 4, rx_cnt, (u32)in_r / 4);
+ 			writesl(ss->base + SS_RXFIFO, mi.addr + in_i, todo);
+@@ -332,8 +332,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 	if ((areq->nbytes - i) < 64) {
+ 		while (i < areq->nbytes && in_i < mi.length && op->len < 64) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    64 - op->len);
++			in_r = min(areq->nbytes - i, 64 - op->len);
++			in_r = min_t(size_t, mi.length - in_i, in_r);
+ 			memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 			op->len += in_r;
+ 			i += in_r;
+-- 
+2.23.0
 
-	tglx
