@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCA5C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60423C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72B12071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B492071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKNRyB (ORCPT
+        id S1727142AbfKNRyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:54:01 -0500
-Received: from mga05.intel.com ([192.55.52.43]:8273 "EHLO mga05.intel.com"
+        Thu, 14 Nov 2019 12:54:04 -0500
+Received: from mga05.intel.com ([192.55.52.43]:8277 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfKNRx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:53:56 -0500
+        id S1727118AbfKNRyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:54:02 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:53:56 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 09:54:02 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="203132948"
+   d="scan'208";a="203133014"
 Received: from chiahuil-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.228.77])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:53:54 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 14 Nov 2019 09:54:00 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v3 1/6] soundwire: sdw_slave: add probe_complete structure and new fields
-Date:   Thu, 14 Nov 2019 11:53:40 -0600
-Message-Id: <20191114175345.21836-2-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 4/6] soundwire: sdw_slave: track unattach_request to handle all init sequences
+Date:   Thu, 14 Nov 2019 11:53:43 -0600
+Message-Id: <20191114175345.21836-5-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
 References: <20191114175345.21836-1-pierre-louis.bossart@linux.intel.com>
@@ -51,49 +51,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a Slave device becomes synchronized with the bus, it may report
-its presence in PING frames, as well as optionally asserting an
-in-band PREQ signal.
+The Slave device initialization can be split in 4 different cases:
 
-The bus driver will detect a new Device0, start the enumeration
-process and assign it a non-zero device number. The SoundWire
-enumeration provides an arbitration to deal with multiple Slaves
-reporting ATTACHED at the same time. The bus driver will also invoke
-the driver .probe() callback associated with this device. The probe()
-depends on the Linux device core, which handles the match operations
-and may result in modules being loaded.
+1. Master-initiated hardware reset, system suspend-resume and
+pm_runtime based on clock-stop mode1. To avoid timeouts and a bad
+audio experience, the Slave device resume operations need to wait for
+the Slave device to be re-enumerated and its settings restored.
 
-Once the non-zero device number is programmed, the Slave will report
-its new status in PING frames and the Master hardware will typically
-report this status change with an interrupt. At this point, the
-.update_status() callback of the codec driver will be invoked (usually
-from an interrupt thread or workqueue scheduled from the interrupt
-thread).
+2. Exit from clock-stop mode0. In this case, the Slave device is
+required to remain enumerated and its context preserved while the
+clock is stopped, so no re-initialization or wait_for_completion() is
+necessary.
 
-The first race condition which can happen is between the .probe(),
-which allocates the resources, and .update_status() where
-initializations are typically handled. The .probe() is only called
-once during the initial boot, while .update_status() will be called
-for every bus hardware reset and if the Slave device loses
-synchronization (an unlikely event but with non-zero probability).
+3. Slave-initiated pm_runtime D3 transition. With the parent child
+relationship, it is possible that a Slave device becomes 'suspended'
+while its parent is still 'active' with the bus clock still
+toggling. In this case, during the pm_runtime resume operation, there
+is no need to wait for any settings to be restored.
 
-The time difference between the end of the enumeration process and a
-change of status reported by the hardware may be as small as one
-SoundWire PING frame. The scheduling of the interrupt thread, which
-invokes .update_status() is not deterministic, but can be small enough
-to create a race condition. With a 48 kHz frame rate and ideal
-scheduling cases, the .probe() may be pre-empted within double-digit
-microseconds.
+4. Slave reset (sync loss or implementation-defined). In that case the
+bus remains operational and the Slave device will be re-initialized
+when it becomes ATTACHED again.
 
-Since there is no guarantee that the .probe() completes by the time
-.update_status() is invoked as a result of an interrupt, it's not
-unusual for the .update_status() to rely on data structures that have
-not been allocated yet, leading to kernel oopses.
+In previous patches, we suggested the use of wait_for_completion() to
+deal with the case #1, but case #2 and #3 do not need any wait.
 
-This patch adds a probe_complete utility, which is used in the
-sdw_update_slave_status() routine. The codec driver does not need to
-do anything and can safely assume all resources are allocated in its
-update_status() callback.
+To account for those differences, this patch adds an unattach_request
+field. The field is explicitly set by the Master for the case #1, and
+if non-zero the Slave device shall wait on resume. In all other cases,
+the Slave resume operations can proceed without wait.
+
+The only request tracked so far is Master HardReset, but the request
+is declared as a bit mask for future extensions (if needed). The
+definition for this value is added in bus.h and does not need to be
+exposed in sdw.h
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
@@ -101,26 +92,26 @@ Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
  1 file changed, 6 insertions(+)
 
 diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index 28745b9ba279..cb1db4a7475d 100644
+index ed42cd79eab7..b7c9eca4332a 100644
 --- a/include/linux/soundwire/sdw.h
 +++ b/include/linux/soundwire/sdw.h
-@@ -547,6 +547,10 @@ struct sdw_slave_ops {
-  * @node: node for bus list
-  * @port_ready: Port ready completion flag for each Slave port
-  * @dev_num: Device Number assigned by Bus
-+ * @probed: boolean tracking driver state
-+ * @probe_complete: completion utility to control potential races
-+ * on startup between driver probe/initialization and SoundWire
-+ * Slave state changes/implementation-defined interrupts
+@@ -556,6 +556,11 @@ struct sdw_slave_ops {
+  * Slave device
+  * @initialization_complete: completion utility to control potential races
+  * on startup between device enumeration and settings being restored
++ * @unattach_request: mask field to keep track why the Slave re-attached and
++ * was re-initialized. This is useful to deal with potential race conditions
++ * between the Master suspending and the codec resuming, and make sure that
++ * when the Master triggered a reset the Slave is properly enumerated and
++ * initialized
   */
  struct sdw_slave {
  	struct sdw_slave_id id;
-@@ -561,6 +565,8 @@ struct sdw_slave {
- 	struct list_head node;
- 	struct completion *port_ready;
- 	u16 dev_num;
-+	bool probed;
-+	struct completion probe_complete;
+@@ -574,6 +579,7 @@ struct sdw_slave {
+ 	struct completion probe_complete;
+ 	struct completion enumeration_complete;
+ 	struct completion initialization_complete;
++	u32 unattach_request;
  };
  
  #define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
