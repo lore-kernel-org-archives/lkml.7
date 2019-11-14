@@ -2,145 +2,93 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F92C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417C3C33C8C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED9720643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:43:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iO1A/b4l"
+	by mail.kernel.org (Postfix) with ESMTP id 4EAAA20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfKNAnK (ORCPT
+        id S1727063AbfKNAoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:43:10 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40014 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfKNAnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:43:10 -0500
-Received: by mail-wr1-f67.google.com with SMTP id i10so4476648wrs.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 16:43:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZJ2vg6lRpb9kWQ2Ir+kHNao0DW/EVUTH+nPIta6hjcA=;
-        b=iO1A/b4l4fmDbaFMKCddNT/e+qOJnr8YjRadRCA1SnbBt6E0iKMiPDlg8+hkcGWPhk
-         V4NJAu2hFV9lp8pfeR4jxrI+BNxmeYJGaLz+xBxcMIL5KgGjtrELpDgqECUhiHlSAORS
-         YjOrD43x7G06OHpXfNaCAs4c6fxA0iIzJ4TaXNDiAgoWNEjXRQfyasUkeT5rbYYunxkE
-         XjvT0S6ZV73KJXSUWXoYAHuybYMy8Jt81ZDRM/FJ9Upj4AqTJL78G0fWLHcc2/CktY5T
-         e8o3a7ci3niNXnmNzGbDuS5wYlZT1ItLbAt3gNM9xa+aLMza9CTLJdF2fgZqip5EM/92
-         c9jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZJ2vg6lRpb9kWQ2Ir+kHNao0DW/EVUTH+nPIta6hjcA=;
-        b=NprIpYKrVOwWJ5RF/r+do21eoYxlwnYgHePPsg2egcTRsGmggKntk/9c0MPAmekdhi
-         l8W1JoEuKNNa5YqQMJTlwPQ68NzNOc+SBqX+91spSh5P7Kw0DlSRyMxm5Jl8Mhf0LAtd
-         PN9zBqCNDVo00Parvdmxjw/8IyVVJO4R5Cxw7OL+0//OUj3Al//eECdyrpiSikj3tC/E
-         sSRPsnQTk7ZFFKkasr6nnwNjspet46eglJDvdw+HU2JKFAQOJlwKLdHoixB26tQeXdsa
-         CK7ijmfE7vssBvWjFS37V6G8Q5Nr0Dy29ehrVGmfGJbmw1PCgtWzWky7KC9B0NX4WgTJ
-         BAVA==
-X-Gm-Message-State: APjAAAU4Ylt3BPoPcthbDFFsZS4kkP1zbxwgsTLEX3YIrUjpHA0Ttrl1
-        8+07rw37ZI1f/gL5CVHw0JZcnC7zMEeQIc4qc8fOCA==
-X-Google-Smtp-Source: APXvYqww9MDo/oLjckfKZftNJgoOA354m5+zaC4lhMjhE3aBPbc8lwnrhI7EtMw33h9S7JjEDRUCAuNJbiEpH8uaySY=
-X-Received: by 2002:adf:f1c7:: with SMTP id z7mr5866675wro.355.1573692186564;
- Wed, 13 Nov 2019 16:43:06 -0800 (PST)
+        Wed, 13 Nov 2019 19:44:25 -0500
+Received: from mga02.intel.com ([134.134.136.20]:34916 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbfKNAoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 19:44:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 16:44:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
+   d="scan'208";a="229942902"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Nov 2019 16:44:20 -0800
+Subject: Re: [LTP] [xfs] 73e5fff98b: kmsg.dev/zero:Can't_open_blockdev
+To:     Jan Stancek <jstancek@redhat.com>, Ian Kent <raven@themaw.net>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
+        lkp@lists.01.org, ltp@lists.linux.it,
+        DavidHowells <dhowells@redhat.com>,
+        AlViro <viro@ZenIV.linux.org.uk>
+References: <20191111010022.GH29418@shao2-debian>
+ <3fb8b1b04dd7808b45caf5262ee629c09c71e0b6.camel@themaw.net>
+ <1108442397.11662343.1573560143066.JavaMail.zimbra@redhat.com>
+ <20191112120818.GA8858@lst.de>
+ <5f758be455bb8f761d028ea078b3e2a618dfd4b1.camel@themaw.net>
+ <e38bc7a8505571bbb750fc0198ec85c892ac7b3a.camel@themaw.net>
+ <975334005.11814790.1573625805426.JavaMail.zimbra@redhat.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <d0db75cc-440d-6de8-f6d2-ddf399a3bdb7@intel.com>
+Date:   Thu, 14 Nov 2019 08:44:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20191114003042.85252-1-irogers@google.com>
-In-Reply-To: <20191114003042.85252-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 13 Nov 2019 16:42:55 -0800
-Message-ID: <CAP-5=fUSYpy97VWLb4nLnkiZ-0D1uP4nnRLhLL3=E6gYWv2UZQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] Optimize cgroup context switch
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <975334005.11814790.1573625805426.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apologies, I missed the in-reply-to
-<20190724223746.153620-1-irogers@google.com>.
 
-Ian
 
-On Wed, Nov 13, 2019 at 4:30 PM Ian Rogers <irogers@google.com> wrote:
+On 11/13/19 2:16 PM, Jan Stancek wrote:
 >
-> Avoid iterating over all per-CPU events during cgroup changing context
-> switches by organizing events by cgroup.
+> ----- Original Message -----
+>>>>> # mount -t xfs /dev/zero /mnt/xfs
+>>> Assuming that is what is being done ...
+>> Arrrh, of course, a difference between get_tree_bdev() and
+>> mount_bdev() is that get_tree_bdev() prints this message when
+>> blkdev_get_by_path() fails whereas mount_bdev() doesn't.
+>>
+>> Both however do return an error in this case so the behaviour
+>> is the same.
+>>
+>> So I'm calling this not a problem with the subject patch.
+>>
+>> What needs to be done to resolve this in ltp I don't know?
+> I think that's question for kernel test robot, which has this extra
+> check built on top. ltp itself doesn't treat this extra message as FAIL.
 >
-> To make an efficient set of iterators, introduce a min max heap
-> utility with test.
+> Jan
 >
-> These patches include a caching algorithm to improve the search for
-> the first event in a group by Kan Liang <kan.liang@linux.intel.com> as
-> well as rebasing hit "optimize event_filter_match during sched_in"
-> from https://lkml.org/lkml/2019/8/7/771.
->
-> The v2 patch set was modified by Peter Zijlstra in his perf/cgroup
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git
->
-> These patches follow Peter's reorganization and his fixes to the
-> perf_cpu_context min_heap storage code.
->
-> Ian Rogers (8):
->   lib: introduce generic min max heap
->   perf: Use min_max_heap in visit_groups_merge
->   perf: Add per perf_cpu_context min_heap storage
->   perf/cgroup: Grow per perf_cpu_context heap storage
->   perf/cgroup: Order events in RB tree by cgroup id
->   perf: simplify and rename visit_groups_merge
->   perf: cache perf_event_groups_first for cgroups
->   perf: optimize event_filter_match during sched_in
->
-> Kan Liang (1):
->   perf/cgroup: Do not switch system-wide events in cgroup switch
->
-> Peter Zijlstra (1):
->   perf/cgroup: Reorder perf_cgroup_connect()
->
->  include/linux/min_max_heap.h | 134 +++++++++
->  include/linux/perf_event.h   |  14 +
->  kernel/events/core.c         | 512 ++++++++++++++++++++++++++++-------
->  lib/Kconfig.debug            |  10 +
->  lib/Makefile                 |   1 +
->  lib/test_min_max_heap.c      | 194 +++++++++++++
->  6 files changed, 769 insertions(+), 96 deletions(-)
->  create mode 100644 include/linux/min_max_heap.h
->  create mode 100644 lib/test_min_max_heap.c
->
-> --
-> 2.24.0.432.g9d3f5f5b63-goog
->
+
+Hi all,
+
+Thanks for your help, kernel test robot bisected automatically for new 
+error:
+
+    kern  :err   : [  135.993912] /dev/zero: Can't open blockdev
+
+Please ignore the report if it's not a problem.
+
+Best Regards,
+Rong Chen
