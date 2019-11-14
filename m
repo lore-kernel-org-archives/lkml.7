@@ -2,112 +2,144 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAABAC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B534C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A5620706
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4702206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oFJOV++E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zcddy4m/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfKNXGJ (ORCPT
+        id S1727089AbfKNXJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:06:09 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7439 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNXGJ (ORCPT
+        Thu, 14 Nov 2019 18:09:09 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42546 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfKNXJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 18:06:09 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dcddda90000>; Thu, 14 Nov 2019 15:05:13 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 14 Nov 2019 15:06:08 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 14 Nov 2019 15:06:08 -0800
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 Nov
- 2019 23:06:05 +0000
-Subject: Re: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
-To:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@mellanox.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Shuah Khan <shuah@kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-References: <20191104222141.5173-1-rcampbell@nvidia.com>
- <20191104222141.5173-3-rcampbell@nvidia.com> <20191112152521.GC12550@lst.de>
- <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
- <20191112234549.GX21728@mellanox.com> <20191113135115.GA10688@lst.de>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <21d6b69c-3167-e60d-eed2-65bb1f8515ae@nvidia.com>
-Date:   Thu, 14 Nov 2019 15:06:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 14 Nov 2019 18:09:08 -0500
+Received: by mail-il1-f196.google.com with SMTP id n18so6995575ilt.9;
+        Thu, 14 Nov 2019 15:09:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B+ZSU/anVETJxDtIO+tJlt7OeoRyRDm1nl7XDr1Osps=;
+        b=Zcddy4m/9nwvl3i1c0CdByq4GvKc02waL58snhLIPrYHpDJfVu7dJ8eAJRxCOfsSaP
+         JDAOi1EFjUENiX2uc66oO7nr6cDFUdO8W6J6ZA977u6+GKPnoWzxATzh4FUK4731nzz2
+         Zytsvymc+nOBEJf0N2SZ6saxSqUW2m+clVZD3SOzRHNOe/T/1nESVksNBpz4xHy7qKoR
+         R8qNAz5RTQddaka3LDp2P/U9LRvKwry9XkCPH8mwuUCU2fEtSyTl9vOLSWv9Qo4x3UJD
+         IsG8qG0eF2s52ZGcXBJvnSKLKQ9woQjXDBylwhCaNTM1aY8WD3WHQo+6eBgQII7sosOa
+         pV9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B+ZSU/anVETJxDtIO+tJlt7OeoRyRDm1nl7XDr1Osps=;
+        b=U0/eKkh5grmdWkcdEA/y/qKFCSTJY2ac5F//KrveDEIVjgqyuEcQ6SaUhiaFnLgQe4
+         E+vyWsVzG9n8E8Ake7Ys3KeQWVYuz9YBGSDSi3MYqcSbqNpIJt7/a1s7bmK5623xjam4
+         /g6vTiqA8x5GjTX1+y/Q+yvOcL86P53T3AYiT56/3XpuPa148rc5w7isgk0N+8KtkYll
+         z7oyHfkRJVWCHuIq/D9vxMQM5qF6IPc/aDpra4x1NOoQC8sJDJouMa+In9nusrdex/sY
+         sF5b6VBkzbD/uFtQoomZSePTLfS+yE5w7q+Z5M3kq9giCoCw4L3rSFLZ45dOWyz/ZXDj
+         TSeA==
+X-Gm-Message-State: APjAAAW+tMWgegvcZkmbiziJYohsMM2VqMrobAYX9bRbQogwz6xtcWr1
+        94oozcQmJ2by6EffcjsNv3hA8F9lkChjkkJRGCw=
+X-Google-Smtp-Source: APXvYqyYvoeU2pvH/llzhsbCSX/Z/jehjr4vrHK+EDflCWW58RqtMvmmhhpT1iQezdc9WgIfR/sQO642qa/Ar5q8LgQ=
+X-Received: by 2002:a02:ac0a:: with SMTP id a10mr10294488jao.53.1573772945552;
+ Thu, 14 Nov 2019 15:09:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113135115.GA10688@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573772713; bh=B7TOYH1oGC7u+umXh4N1/gSiAG/BcpUtpnIfDaTAGGs=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=oFJOV++Eska9iFN5ZhKxMBTjRKi8JF1c4HhevVI8pPNuS5t7MtzmYfvOgVfcpByUR
-         fJaX6cTnVCLhFEFTYsU5rTtSUs0KslB9IdJkuhy4B4L8wxaT32kLpmM93ENybg3fWJ
-         xrjb7/GDA8EdaxcUzOTJhqrf2xAJQKr2efRt0lO9JVRmzrBn/1ZNan8ghaePlkc8+f
-         AbSoMxaEoDeq9UZTG0HOz8Qb6j67Ng+9TPQ3P4XABedJSMmVAVLLTsa0YjGD2Cq1HX
-         NiFqgMNiYEQudfJXYaT7i7qDM6DlXfSwbRWl1D14+WVDRhtSdB73GLYltc8yac6ncU
-         1JjDg+lgEI9fg==
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com> <20191112120307.GB5195@sirena.co.uk>
+ <20191112190328.GA199853@dtor-ws> <20191112191547.GK5195@sirena.co.uk>
+ <20191112193653.GB13374@dtor-ws> <20191114222652.GA7517@bogus>
+In-Reply-To: <20191114222652.GA7517@bogus>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Thu, 14 Nov 2019 15:08:54 -0800
+Message-ID: <CAKdAkRQBrKOUTW8puakA26ODYW9=0H4VhwFhGQAqMs-cMmj3CQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 14, 2019 at 2:26 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Nov 12, 2019 at 11:36:53AM -0800, Dmitry Torokhov wrote:
+> > On Tue, Nov 12, 2019 at 07:15:47PM +0000, Mark Brown wrote:
+> > > On Tue, Nov 12, 2019 at 11:03:28AM -0800, Dmitry Torokhov wrote:
+> > > > On Tue, Nov 12, 2019 at 12:03:07PM +0000, Mark Brown wrote:
+> > > > > On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
+> > >
+> > > > > > +      interrupts:
+> > > > > > +        items:
+> > > > > > +          - description: main interrupt (attention) line.
+> > > > > > +          - description: dedicated wakeup interrupt.
+> > > > > > +        minItems: 1 # The wakeup interrupt is optional.
+> > >
+> > > > > > +      interrupt-names:
+> > > > > > +        items:
+> > > > > > +          - const: irq
+> > > > > > +          - const: wakeup
+> > > > > > +        minItems: 1
+> > >
+> > > > > How will this interact with a SPI device that defines interrupts at the
+> > > > > device level, possibly more than one of them?  Especially if the device
+> > > > > has its own idea what the interrupts should be called.
+> > >
+> > > > My understanding that individual drivers should be able to override
+> > > > whatever the default behavior core has configured, and the device can
+> > > > establish their own mapping. We have this in I2C and I believe this
+> > > > works well.
+> > >
+> > > > Is the concern about the device tree scheme or SPI core handling?
+> > >
+> > > Both really.
+> >
+> > So as I mentioned, the driver is not forced to use the interrupt
+> > supplied by the SPI core, and the worst thing is that the core
+> > configures the main IRQ as wakeirq and driver would need to call
+> > dev_pm_clear_wake_irq() before switching to correct one. I expect there
+> > will be just a few drivers needing that and many more would benefit from
+> > the default behavior and not needing to repeat the same boilerplate
+> > code.
+> >
+> > As far as scheme goes - I hope that Rob could confirm that we can
+> > override number of interrupts and names in consumers of the binding, as
+> > needed.
+>
+> This won't work. A device schema doesn't override what's defined here,
+> but just further constrains this schema.
+>
+> You could define a "spi irq" schema which devices can include if they
+> want to, but I don't think this pattern is that common to SPI devices.
+> There's not any spec behind compared to say alert irq for SMBus.
+>
+> The 'wakeup' irq name is standardized (for DT), but that's not SPI
+> specific. About all we could define there is 'wakeup-source' is boolean
+> and if there is more than one interrupt, one should be named 'wakeup'.
 
-On 11/13/19 5:51 AM, Christoph Hellwig wrote:
-> On Tue, Nov 12, 2019 at 11:45:52PM +0000, Jason Gunthorpe wrote:
->>> Well, it would mean registering for the whole process address space.
->>> I'll give it a try.
->>
->> I'm not sure it makes much sense that this testing is essentially
->> modeled after nouveau's usage which is very strange compared to the
->> other drivers.
-> 
-> Which means we really should make the test cases fit the proper usage.
-> Maybe defer the tests for 5.5 and just merge the first patch for now?
-> 
+OK, so what I am hearing is "interrupt"/"interrupt-names" properties
+should be defined in individual device's bindings, and wakeup-source
+can stay in spi-controller.yaml, right?
 
-I think this a good point to discuss.
-Some devices will want to register for all changes to the process address
-space because there is no requirement to preregister regions that the
-device can access verses devices like InfiniBand where a range of addresses
-have to be registered before the device can access those addresses.
-So for nouveau and the hmm-test driver, the mmu_range_notifier_insert()
-and mmu_range_notifier_remove() are only used long enough to get a
-stable copy of a small part of the process address space and copy it to
-the device's page table. Then the regular process wide invalidations are
-required to keep the device's page tables consistent with the process
-page table.
+And as far as SPI core goes, we can still do what I proposed, because
+we already handle "first" interrupt as the default one and the drivers
+can override as needed anyway...
 
-The "hacky" part of the current design is the interaction between the
-short term narrow address range invalidations verses the long term
-process wide invalidations. (double callbacks, double locking of the
-device page table)
+Thanks.
 
-Both types of invalidate callbacks seem useful to me so forcing a
-driver to use only one type doesn't make sense to me.
+-- 
+Dmitry
