@@ -2,99 +2,72 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22454C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5849C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0549D206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98FF206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfKNHXG (ORCPT
+        id S1726655AbfKNHXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 02:23:06 -0500
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:41887 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725838AbfKNHXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 02:23:05 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id V9Sti8HvZ5b4MV9Swimr8r; Thu, 14 Nov 2019 08:23:03 +0100
-Subject: Re: [PATCH v11 00/11] Rockchip ISP Driver
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
-        zhengsq@rock-chips.com
-References: <20191114051242.14651-1-helen.koike@collabora.com>
- <20191114051722.GA316916@kroah.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <835e058f-59b7-32e8-8fc9-d5adeacfe021@xs4all.nl>
-Date:   Thu, 14 Nov 2019 08:22:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 02:23:10 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60188 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbfKNHXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 02:23:09 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C91C8E836E6A38782C59;
+        Thu, 14 Nov 2019 15:23:07 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 15:22:58 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ubi: remove unused variable 'err'
+Date:   Thu, 14 Nov 2019 15:22:36 +0800
+Message-ID: <20191114072236.15104-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20191114051722.GA316916@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfI3GlCbcBMayGg/klLN5FyDQG84A1RgsYbiEg9uA16/LV3+EqUHoZg0tkqv+XfUdnHqxFiujQbQ3G/7OMMMBGzw4rF20cRBB+tz3F9fKOOkErIqHV6i6
- IMFdoCJqMAeHc77G7PaZnfkTSShQb8FatH40pGaAi/dC2hng91vpPBiAb9fqhw6y7lKdgizL2QxfkUJ64CpDS1x6hFRHSL9wnHwNBByAQ8/4dkkELjHN/tGP
- GLdSnRlmXkuMGD9fLZlIXBnH9+GCd2pPTsQ+MNVhlhyUXi0/CWwonLvGaP4E+YBi4JOE+c+WhXTLnxpntEcPaYgJNnmDpbk1/8OqCcpj+1KLKQNMn6Ova8fj
- v9HyC6NRGhhkNsO/XU1saX5MGI7d6/bas0eoPLrvWaDZBTNHiS3G1Mhcob8OT53AvayR3qy/gp/IsEve37TEoSBk0mFKjApoBzo1iII0/wdzZ5GH1LAb/+bu
- tfCk7F/wJ4hWfkl0wFHrzbqB19tloyGLaEHvvPczy7pjtQmTHjuzoUPXqmE7pjuJrajn0HAZx39iL8FaYybg9RZaMzieMtN/0QGyijGMHCbKPMyK3jqOCsaI
- TW7IxyDQKF0g69q06Ma2EkTyugMAaAbGO5cjR+aVfl1Yh9lXaB4NEMGY95NjtG0WiJbcTnjfZqbyGQVmd5R+HTql0+bJ0Ouh5BHW61q/ZQcHkvTn49aOBQOe
- mQNcIxFIjSAbc1CHhU9D5clOmVN+7f3gh/fTdD5QnVEMFkoPz0wz5x48cXdDkT+UKhpmC6yBD3TN3hAHjWJ4qa51RBgQkw1sQbbxb9USb3pAiUs8Jrc2YLT/
- nIyAGiRYzG25zrsWVpQMrCBj28xKKSqSJA8tTCSsK2ff6e1qQshIjF27mSYYLUQXtYCBioMfAFgOb/t45L7hhqQcg3VgJm0NoAgpbg5+4Pt2PycBnCVkiqRh
- sIrsqA==
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/14/19 6:17 AM, Greg KH wrote:
-> On Thu, Nov 14, 2019 at 02:12:31AM -0300, Helen Koike wrote:
->> Hello,
->>
->> This series adds the Rockchip Image Signal Processing Unit v1 driver to
->> staging.
->>
->> The main reason to be in staging is that people are already using it from the
->> mailing list (including libcamera), and having it in mainline makes the workflow
->> easier. Also, it is easier for other people to contribute back (with code
->> or testing the driver).
->>
->> We plan to actively work on this driver to get it our of staging.
->>
->> This patchset is also available at:
->> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v11
->>
->> Libcamera patched to work with this version:
->> https://gitlab.collabora.com/koike/libcamera
->> (also sent to the mailing list)
->>
->> The major difference in v11 are:
->> - Fixed compiling warnings found with W=1
->> - Fixed checkpatch errors
->> - Add clock-names values in dt-bindings
->>
->> This series only touches MAINTAINERS file and drivers/staging/
-> 
-> Looks sane, but as this is drivers/staging/media I am guessing this will
-> go through the media kernel tree, not my staging tree, right?
+drivers/mtd/ubi/debug.c:512:6: warning: unused variable 'err' [-Wunused-variable]
 
-Right, I'll take care of this.
+commit 3427dd213259 ("mtd: no need to check return value
+of debugfs_create functions") leave this variable not used.
 
-Regards,
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/mtd/ubi/debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Hans
+diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
+index f8d3752..8dba1b5 100644
+--- a/drivers/mtd/ubi/debug.c
++++ b/drivers/mtd/ubi/debug.c
+@@ -509,7 +509,7 @@ static const struct file_operations eraseblk_count_fops = {
+  */
+ int ubi_debugfs_init_dev(struct ubi_device *ubi)
+ {
+-	int err, n;
++	int n;
+ 	unsigned long ubi_num = ubi->ubi_num;
+ 	struct ubi_debug_info *d = &ubi->dbg;
+ 
+-- 
+2.7.4
+
+
