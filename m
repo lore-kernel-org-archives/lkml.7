@@ -2,99 +2,115 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D5BC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26F5C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8970D206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC5F206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:57:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hoeZrow+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfKNKzI (ORCPT
+        id S1726534AbfKNK5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:55:08 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:32918 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfKNKzI (ORCPT
+        Thu, 14 Nov 2019 05:57:02 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:40705 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfKNK5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:55:08 -0500
-Received: by mail-il1-f198.google.com with SMTP id s14so4842555ila.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 02:55:07 -0800 (PST)
+        Thu, 14 Nov 2019 05:57:02 -0500
+Received: by mail-vs1-f66.google.com with SMTP id m9so3559019vsq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 02:57:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WeEnAyy7qQpCSp7RUf5vRqqgRBjs74WC3kZmLk7/Ets=;
+        b=hoeZrow+SCevu622cFh3TszkhCUOxa3lUQgjfUCIWC4BX/gNASmzS9cGhMXa4zNzKo
+         +PERA2StHl/qsusa2pLHZSgkZPwoiECiBZcmKTTXMhJvLVnFBrIDWJxyv3t/BeGkiO0+
+         tvEsYEmPc2swbb5vv+8SZQ7EK/BazbhLRQiOdBduH6DOYm/JOKqt18MH4D6VPtraUvku
+         YLxxdMMG2HzwW9+302wLEGbodoqDcZA709B/SebE9PM2kwaTMSqK2lLJGxB2lnf7Y9bV
+         970SL3Q3RFGvV2mfFl3M3E6iqr5Wj75p2WkXF+xehF2JxAhKe3Ewn7DGz7XF0XUVNtVu
+         zZuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=2KN02+Hret5K9XJ8RO/6pyt3/Tr7SyBVb2KlAk6KGjw=;
-        b=iyuHvG1WgJu3hfY6u00OSGkrLZyY4Jv+QJYArzC47R14KvxB2B4MHrG9SewjNvcPL5
-         BKkc+qPGL9eAhl1/uaJaa5E3Uy0tgfgm0vBOKzAEZaJGbZO5iOko5Fu0f0WFHO8ZVNju
-         LS+TDSujQQcTj6x/hE6ZGW/hlwThBSXHk3c1kWyQpLk3iz3oDzOrbk8NU4nRE9WMsJfU
-         iAWqWSjfAoDDjw1O9n4Hci4vCcBGjmsGBSkMV4hkp92SiJB9sjrpJBKUAS8l8lIVGj5b
-         5knGg52bh+6Cds0RJmv5KSbGj8T52OkUcht/se8RFv9rd9jEPeyOhZFLFE6SwWL+Zf79
-         235A==
-X-Gm-Message-State: APjAAAXnIg4FgkhijBmnAPG+BSFPLR9X9V1ioLOIrRzjZ08zLm+85UyY
-        ugPwBxCitwAunfscoIo6VupQSsZMDovq4kFeEtJqVvYbbAWJ
-X-Google-Smtp-Source: APXvYqxK8mY709YzkgWnRDEj/oJ4emxV7cF5cnkLUTN4QdWcP8hpDKDHCnXOi0fCi6D+VtjDFmeOrjH7r4IrNk8kp+zA83gi8wNM
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WeEnAyy7qQpCSp7RUf5vRqqgRBjs74WC3kZmLk7/Ets=;
+        b=Bj76E12d8FKZHRt1a+YANjCYsM5tBpf/nny42eeE9z87HeeMoUSXFReunEuwNXNrWY
+         Khgd6JMjJjd9DsAnnhUrONck+fj6CaWNjIh8Wr5xN8cYcZ42DLmg5DKwjywrfnTE5YSk
+         waOqFAi+ilMXI3Ee1mlD993CBf8QJvEIuvWPE7CK+FWkXgwQ3gnPyETwM+N1Ylzu8Mup
+         wc1XMxEQlVygK3S1MmPm0jCHSRTf2+8xZGJQxQRknW5NHdyMwT4wOS+Qk1lScRVm1v/H
+         PQet01HNiHlbMxoiH9AX38HLGoiiWzpAz2QKdsQpd9bbmN3BGr8+uew9qV2CA7If6ByF
+         iPJA==
+X-Gm-Message-State: APjAAAWayeyEr4FY6HbscwgJOshYFJux6oN1919oDkEePOGwGBfaHANL
+        noz7PsVjfT/0VqXKtBi2164fT04gbcOHHpKJKHXi2A==
+X-Google-Smtp-Source: APXvYqzOQq0UWfeeYjSHzzZXhI40LLsR/zrXlGUA890HQ1DWvHEp6xuek4vuAejASyAVhkmYw01lMEF15EypZPUQORk=
+X-Received: by 2002:a67:fc04:: with SMTP id o4mr4992340vsq.35.1573729019802;
+ Thu, 14 Nov 2019 02:56:59 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:660e:: with SMTP id a14mr9321475ilc.235.1573728907222;
- Thu, 14 Nov 2019 02:55:07 -0800 (PST)
-Date:   Thu, 14 Nov 2019 02:55:07 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007ce85705974c50e5@google.com>
-Subject: linux-next boot error: general protection fault in __x64_sys_settimeofday
-From:   syzbot <syzbot+dccce9b26ba09ca49966@syzkaller.appspotmail.com>
-To:     john.stultz@linaro.org, linux-kernel@vger.kernel.org,
-        sboyd@kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+References: <20191112134808.23546-1-erosca@de.adit-jv.com> <20191112204952.GA2976@kunai>
+In-Reply-To: <20191112204952.GA2976@kunai>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 14 Nov 2019 11:56:23 +0100
+Message-ID: <CAPDyKFq8oVk26ruNA_R8HDXhMGKhDeHnL0q82xi40g1aeo109A@mail.gmail.com>
+Subject: Re: [PATCH] mmc: renesas_sdhi_internal_dmac: Add MMC_CAP_ERASE to
+ Gen3 SoCs
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgODQ2NmQyM2UgQWRkIGxpbnV4LW5leHQgc3BlY2lmaWMgZmlsZXMgZm9yIDIwMTkx
-MTE0DQpnaXQgdHJlZTogICAgICAgbGludXgtbmV4dA0KY29uc29sZSBvdXRwdXQ6IGh0dHBzOi8v
-c3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvbG9nLnR4dD94PTEwNTdhYTFjZTAwMDAwDQprZXJuZWwg
-Y29uZmlnOiAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC8uY29uZmlnP3g9N2I3ZTc3
-NGFlNDg0Nzc2MA0KZGFzaGJvYXJkIGxpbms6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29t
-L2J1Zz9leHRpZD1kY2NjZTliMjZiYTA5Y2E0OTk2Ng0KY29tcGlsZXI6ICAgICAgIGdjYyAoR0ND
-KSA5LjAuMCAyMDE4MTIzMSAoZXhwZXJpbWVudGFsKQ0KDQpVbmZvcnR1bmF0ZWx5LCBJIGRvbid0
-IGhhdmUgYW55IHJlcHJvZHVjZXIgZm9yIHRoaXMgY3Jhc2ggeWV0Lg0KDQpJTVBPUlRBTlQ6IGlm
-IHlvdSBmaXggdGhlIGJ1ZywgcGxlYXNlIGFkZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29t
-bWl0Og0KUmVwb3J0ZWQtYnk6IHN5emJvdCtkY2NjZTliMjZiYTA5Y2E0OTk2NkBzeXprYWxsZXIu
-YXBwc3BvdG1haWwuY29tDQoNClsbWzM2bWluZm8bWzM5OzQ5bV0gVXNpbmcgbWFrZWZpbGUtc3R5
-bGUgY29uY3VycmVudCBib290IGluIHJ1bmxldmVsIFMuDQpbLi4uLl0gU3RhcnRpbmcgdGhlIGhv
-dHBsdWcgZXZlbnRzIGRpc3BhdGNoZXI6IHVkZXZkWyAgIDEzLjY0NjI1Ml1bIFQ0MDA0XSAgDQp1
-ZGV2ZFs0MDA0XTogc3RhcnRpbmcgdmVyc2lvbiAxNzUNChtbPzI1bBtbPzFjGzcbWzFHWxtbMzJt
-IG9rIBtbMzk7NDltGzgbWz8yNWgbWz8wYy4NClsuLi4uXSBTeW50aGVzaXppbmcgdGhlIGluaXRp
-YWwgaG90cGx1ZyBldmVudHMuLi51ZGV2ZFs0MDQwXTogIA0KcmVuYW1lICcvZGV2L3Y0bC9ieS1w
-YXRoL3BsYXRmb3JtLXZpdmlkLjAtdmlkZW8taW5kZXgzLnVkZXYtdG1wJyAnL2Rldi92NGwvYnkt
-cGF0aC9wbGF0Zm9ybS12aXZpZC4wLXZpZGVvLWluZGV4MycgIA0KZmFpbGVkOiBObyBzdWNoIGZp
-bGUgb3IgZGlyZWN0b3J5DQoNChtbPzI1bBtbPzFjGzdbICAgMjAuODU2NDY5XVsgVDQzNTBdIGdl
-bmVyYWwgcHJvdGVjdGlvbiBmYXVsdDogMDAwMCBbIzFdICANClBSRUVNUFQgU01QIEtBU0FODQpb
-G1sxRyAgIDIwLjg3MjA0OF1bIFQ0MzUwXSBIYXJkd2FyZSBuYW1lOiBHb29nbGUgR29vZ2xlIENv
-bXB1dFsbWzMybSBvayAgDQobWzM5OzQ5bWUgRW5naW5lL0dvb2dsZSBDb21wdXRlIEVuZ2luZSwg
-QklPUyBHb29nbGUgMDEvMDEvMjAxMQ0KGzhbIBtbPzI1aBtbPzBjICBkb25lLg0KMjAuODkwMTk3
-XVsgVDQzNTBdIENvZGU6IDg1IDUwIGZmIGZmIGZmIDg1IGMwIDBmIDg1IDUwIDAxIDAwIDAwIGU4
-IGI4IGNkIDEwICANCjAwIDQ4IDhiIDg1IDQ4IGZmIGZmIGZmIDQ4IGMxIGU4IDAzIDQ4IDg5IGMy
-IDQ4IGI4IDAwIDAwIDAwIDAwIDAwIGZjIGZmIGRmICANCjw4MD4gM2MgMDIgMDAgMGYgODUgOGEg
-MDEgMDAgMDAgNDkgOGIgNzQgMjQgMDggYmYgNDAgNDIgMGYgMDAgNDggODkNClsuLi4uXSBXYWl0
-aW5nIGZbICAgMjEuNTIyNTYzXVsgVDQzNTBdIFJJUDogMDAxMDpfX2RvX3N5c19zZXR0aW1lb2Zk
-YXkgIA0Ka2VybmVsL3RpbWUvdGltZS5jOjIxMCBbaW5saW5lXQ0KWy4uLi5dIFdhaXRpbmcgZlsg
-ICAyMS41MjI1NjNdWyBUNDM1MF0gUklQOiAwMDEwOl9fc2Vfc3lzX3NldHRpbWVvZmRheSAgDQpr
-ZXJuZWwvdGltZS90aW1lLmM6MTk5IFtpbmxpbmVdDQpbLi4uLl0gV2FpdGluZyBmWyAgIDIxLjUy
-MjU2M11bIFQ0MzUwXSBSSVA6ICANCjAwMTA6X194NjRfc3lzX3NldHRpbWVvZmRheSsweDE3MC8w
-eDMyMCBrZXJuZWwvdGltZS90aW1lLmM6MTk5DQpvciAvZGV2IHRvIGJlIGZ1WyAgIDIxLjU1MDA3
-Nl1bIFQ0MzUwXSBSU1A6IDAwMTg6ZmZmZjg4ODA5M2QwZmU1OCBFRkxBR1M6ICANCjAwMDEwMjA2
-DQpsbHkgcG9wdWxhdGVkLi4uWyAgIDIxLjU1NzQ5OF1bIFQ0MzUwXSBSQVg6IGRmZmZmYzAwMDAw
-MDAwMDAgUkJYOiAgDQoxZmZmZjExMDEyN2ExZmNkIFJDWDogZmZmZmZmZmY4MTYyZTkxNQ0KDQoN
-Ci0tLQ0KVGhpcyBidWcgaXMgZ2VuZXJhdGVkIGJ5IGEgYm90LiBJdCBtYXkgY29udGFpbiBlcnJv
-cnMuDQpTZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0
-IHN5emJvdC4NCnN5emJvdCBlbmdpbmVlcnMgY2FuIGJlIHJlYWNoZWQgYXQgc3l6a2FsbGVyQGdv
-b2dsZWdyb3Vwcy5jb20uDQoNCnN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2YgdGhpcyBidWcgcmVw
-b3J0LiBTZWU6DQpodHRwczovL2dvby5nbC90cHNtRUojc3RhdHVzIGZvciBob3cgdG8gY29tbXVu
-aWNhdGUgd2l0aCBzeXpib3QuDQo=
+On Tue, 12 Nov 2019 at 21:49, Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+> On Tue, Nov 12, 2019 at 02:48:08PM +0100, Eugeniu Rosca wrote:
+> > From: Harish Jenny K N <harish_kandiga@mentor.com>
+> >
+> > Enable MMC_CAP_ERASE capability in the driver to allow
+> > erase/discard/trim requests.
+> >
+> > Suggested-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+> > Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
+> > [erosca: Forward-port and test on v5.4-rc7 using H3ULCB-KF:
+> >          "blkdiscard /dev/mmcblk0" passes with this patch applied
+> >          and complains otherwise:
+> >        "BLKDISCARD ioctl failed: Operation not supported"]
+> > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+>
+> Looks good to me. Just a generic question, probably more for Ulf:
+>
+> Why does this CAP_ERASE exist? As I understand, the driver only needs to
+> set the flag and no further handling is required. Why would a driver not
+> set this flag and not support erase/trim commands?
+
+I am working on removing the cap, altogether. Step by step, this is
+getting closer now.
+
+The main problem has been about busy detect timeouts, as an erase
+command may have a very long busy timeout. On the host side, they
+typically need to respect the cmd->busy_timeout for the request, and
+if it can't because of some HW limitation, it needs to set
+mmc->max_busy_timeout.
+
+Once that is fixed for all, we can drop CAP_ERASE.
+
+Kind regards
+Uffe
