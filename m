@@ -2,232 +2,154 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4C1C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2350DC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E752071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRypMVOj"
+	by mail.kernel.org (Postfix) with ESMTP id F3DC220718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573759171;
+	bh=0nzQppvn8eeRtspGJTnosUaDukolKvY2fmZcM8MyR4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gzKAd+Akd8aPm1+XkdKzWP7Ej5E0snDER3px3x+1GZomDKbjcW86kE5w7rsxZ50m6
+	 wyeWWK5XkPe9g0w4bAhYNivZRaUcVQQnenxZnYBCpEJhB9SQHIX8Mii64OL61EYOU6
+	 dzX8Wl4T93D7fOIjtniV+dxI0jUyHk3ZJOJpAulA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfKNTRs (ORCPT
+        id S1726949AbfKNTT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:17:48 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55209 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726098AbfKNTRr (ORCPT
+        Thu, 14 Nov 2019 14:19:29 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43113 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfKNTT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:17:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573759065;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iO7IjIFxA01AP12H/14msCUb1F6tFNp4BMry0uJ072A=;
-        b=HRypMVOjexCJwVILTCJwj8G1ru7R+Q2La/eG+ix+Cmi5Gbd3hJOE3EH0azpFirJfKq1FjF
-        6uDzvHrf8tyi5+u1S/43TQH4FuMTdfQ6PBqutrTygNoiF2FMWTHjL21aBDF2fsSP/slsn0
-        Eb3yici3jQ1yjLkW91EcD/ul+XhCCuE=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-195-IvCL-xL1PKGhG9_j6hb5tg-1; Thu, 14 Nov 2019 14:17:44 -0500
-Received: by mail-qt1-f200.google.com with SMTP id i1so4684470qtj.19
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:17:43 -0800 (PST)
+        Thu, 14 Nov 2019 14:19:29 -0500
+Received: by mail-ot1-f66.google.com with SMTP id l14so5850758oti.10;
+        Thu, 14 Nov 2019 11:19:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yzU2orsV1IQ0b605t7GrUNqdH9lGit9QLMaD0lmIB5c=;
-        b=kIkr0uyx9hDufl+oyfO83KRy7eCi1eYWv5yVotYvYWb371FU2FB28sdugCovlucv6j
-         z8l5oDMRXYUCV4gC/ugoS+Aqm2Mc0AkJUPO8LeH8AplcLiKk0rGzJS23j/i/HyESm0hu
-         D9RYI5M+nsVsqNLpBP1Y2bzI/U3fXJgSxgIBZjsZpcUwC95VsHNnwJh/kCL3NtMC8PcH
-         EWwRsr5gmurafjCMLmy7053ZH7s3HbrX62Y1/TlZxFypFbSG1aIpiLQslE/XMPl/ESoG
-         GWolzdQqwDaG869qJzA5EzJJvsOsPruqt9dWYvSJVLa4HSyHnMjZOotGJN2SCMEUDwDY
-         xOmw==
-X-Gm-Message-State: APjAAAXxUrKhzQ8I3j5+IQDUtrRuPsDDVm9PZSla55uFJK9vhefbb5ky
-        x+KJDuFWAodbRl3/p9qBkSVyyUbYVDTFzUMZoAg9CwLbONLt5aGXalfTD93P9WVZE7OyfdPrcn4
-        BTnAWDWbZ25U6/gA7wGcss5ZsNOvmVGOY2sIHtAAt
-X-Received: by 2002:ac8:75ce:: with SMTP id z14mr9911914qtq.130.1573759062327;
-        Thu, 14 Nov 2019 11:17:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyBzlpxS0u5QYAn3+7xHyAlZnhB1xo77FSDY0Sd/oCUw4ff3cxInd+1N0Ly/+l1puO3E0enij5HXFW6Mn/Bh7c=
-X-Received: by 2002:ac8:75ce:: with SMTP id z14mr9911890qtq.130.1573759062129;
- Thu, 14 Nov 2019 11:17:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4IsLNh9XMoQBdvulmO/iuC5KMTdNRjARPKR6yxL0CXE=;
+        b=OdqkIjoDBl9FTaVlGrtmWZhftlMjHycKHf8cDGDo21D4PUS6JWw9UceGEPEdO/Mo0w
+         byPQhV0mCIWXXm4xKL7SJL3VSwc7TjdwkD+Q+5NW/auskARhEDNjaYqREnk8ATOjqEul
+         816ySVj6XCoBQymtNiCUVxdEwNRYWlgYoyor9TVkZ+i5mn53zk6CeLpo0HeQj5dce4hr
+         H8MBPVCMjtWusvuZ332GGkdWPp8PLeJTQ61gI5IxbQ7hhY3IGI449bDufTbxmzapJvqr
+         YjJX8hUrQFDQiV69rMB5PtDREZFp9Gi0QrbcrzAU8dJgxCpmIs0Duff8s2j28ZVuQN/h
+         YPbA==
+X-Gm-Message-State: APjAAAXo+rbHVAFhzxWtQ3TZg0tu+4lCBWN45hiDpz5i5n98UFudpry8
+        BynGzT1IifoWAzEeJW99sg==
+X-Google-Smtp-Source: APXvYqxy6xLFgw2Vf9ni3fg2riXq41C/XY5uv0o+qX+3pnZF5b8XhVjvliB2Nwyhkb/rsiwXorlYng==
+X-Received: by 2002:a9d:1b70:: with SMTP id l103mr9142804otl.154.1573759168337;
+        Thu, 14 Nov 2019 11:19:28 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t2sm2065500otm.75.2019.11.14.11.19.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 11:19:27 -0800 (PST)
+Date:   Thu, 14 Nov 2019 13:19:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: arm: Convert sprd board/soc bindings
+ to json-schema
+Message-ID: <20191114191927.GA12025@bogus>
+References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
+ <20191111090230.3402-2-chunyan.zhang@unisoc.com>
 MIME-Version: 1.0
-References: <20191017121901.13699-1-kherbst@redhat.com>
-In-Reply-To: <20191017121901.13699-1-kherbst@redhat.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Thu, 14 Nov 2019 20:17:30 +0100
-Message-ID: <CACO55tuMvHtPSHmU_G_0f5P6O3Ao0OqVMDPvaaRCYrMSd29NMQ@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>
-X-MC-Unique: IvCL-xL1PKGhG9_j6hb5tg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111090230.3402-2-chunyan.zhang@unisoc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping on the patch.
-
-I wasn't able to verify this issue on any other bridge controller, so
-it really might be only this one.
-
-On Thu, Oct 17, 2019 at 2:19 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher dev=
-ice
-> states.
->
-> v2: convert to pci_dev quirk
->     put a proper technical explanation of the issue as a in-code comment
-> v3: disable it only for certain combinations of intel and nvidia hardware
-> v4: simplify quirk by setting flag on the GPU itself
->
-> Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Mika Westerberg <mika.westerberg@intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: nouveau@lists.freedesktop.org
+On Mon, Nov 11, 2019 at 05:02:26PM +0800, Chunyan Zhang wrote:
+> 
+> Convert Unisoc (formerly Spreadtrum) SoC bindings to DT schema format
+> using json-schema.
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  drivers/pci/pci.c    |  7 ++++++
->  drivers/pci/quirks.c | 53 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h  |  1 +
->  3 files changed, 61 insertions(+)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b97d9e10c9cc..02e71e0bcdd7 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -850,6 +850,13 @@ static int pci_raw_set_power_state(struct pci_dev *d=
-ev, pci_power_t state)
->            || (state =3D=3D PCI_D2 && !dev->d2_support))
->                 return -EIO;
->
-> +       /*
-> +        * check if we have a bad combination of bridge controller and nv=
-idia
-> +         * GPU, see quirk_broken_nv_runpm for more info
-> +        */
-> +       if (state !=3D PCI_D0 && dev->broken_nv_runpm)
-> +               return 0;
-> +
->         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->
->         /*
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 44c4ae1abd00..0006c9e37b6f 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5268,3 +5268,56 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(=
-struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
->                               PCI_CLASS_DISPLAY_VGA, 8,
->                               quirk_reset_lenovo_thinkpad_p50_nvgpu);
-> +
-> +/*
-> + * Some Intel PCIe bridges cause devices to disappear from the PCIe bus =
-after
-> + * those were put into D3cold state if they were put into a non D0 PCI P=
-M
-> + * device state before doing so.
-> + *
-> + * This leads to various issue different issues which all manifest diffe=
-rently,
-> + * but have the same root cause:
-> + *  - AIML code execution hits an infinite loop (as the coe waits on dev=
-ice
-> + *    memory to change).
-> + *  - kernel crashes, as all pci reads return -1, which most code isn't =
-able
-> + *    to handle well enough.
-> + *  - sudden shutdowns, as the kernel identified an unrecoverable error =
-after
-> + *    userspace tries to access the GPU.
-> + *
-> + * In all cases dmesg will contain at least one line like this:
-> + * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3=
-'
-> + * followed by a lot of nouveau timeouts.
-> + *
-> + * ACPI code writes bit 0x80 to the not documented PCI register 0x248 of=
- the
-> + * PCIe bridge controller in order to power down the GPU.
-> + * Nonetheless, there are other code paths inside the ACPI firmware whic=
-h use
-> + * other registers, which seem to work fine:
-> + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-> + *  - 0xb0 bit 0x10 (link disable)
-> + * Changing the conditions inside the firmware by poking into the releva=
-nt
-> + * addresses does resolve the issue, but it seemed to be ACPI private me=
-mory
-> + * and not any device accessible memory at all, so there is no portable =
-way of
-> + * changing the conditions.
-> + *
-> + * The only systems where this behavior can be seen are hybrid graphics =
-laptops
-> + * with a secondary Nvidia Pascal GPU. It cannot be ruled out that this =
-issue
-> + * only occurs in combination with listed Intel PCIe bridge controllers =
-and
-> + * the mentioned GPUs or if it's only a hw bug in the bridge controller.
-> + *
-> + * But because this issue was NOT seen on laptops with an Nvidia Pascal =
-GPU
-> + * and an Intel Coffee Lake SoC, there is a higher chance of there being=
- a bug
-> + * in the bridge controller rather than in the GPU.
-> + *
-> + * This issue was not able to be reproduced on non laptop systems.
-> + */
-> +
-> +static void quirk_broken_nv_runpm(struct pci_dev *dev)
-> +{
-> +       struct pci_dev *bridge =3D pci_upstream_bridge(dev);
-> +
-> +       if (bridge->vendor =3D=3D PCI_VENDOR_ID_INTEL &&
-> +           bridge->device =3D=3D 0x1901)
-> +               dev->broken_nv_runpm =3D 1;
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-> +                             PCI_BASE_CLASS_DISPLAY, 16,
-> +                             quirk_broken_nv_runpm);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index ac8a6c4e1792..903a0b3a39ec 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -416,6 +416,7 @@ struct pci_dev {
->         unsigned int    __aer_firmware_first_valid:1;
->         unsigned int    __aer_firmware_first:1;
->         unsigned int    broken_intx_masking:1;  /* INTx masking can't be =
-used */
-> +       unsigned int    broken_nv_runpm:1;      /* some combinations of i=
-ntel bridge controller and nvidia GPUs break rtd3 */
->         unsigned int    io_window_1k:1;         /* Intel bridge 1K I/O wi=
-ndows */
->         unsigned int    irq_managed:1;
->         unsigned int    has_secondary_link:1;
-> --
-> 2.21.0
->
+>  .../devicetree/bindings/arm/sprd.txt          | 14 ---------
+>  .../devicetree/bindings/arm/sprd.yaml         | 29 +++++++++++++++++++
+>  2 files changed, 29 insertions(+), 14 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/sprd.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
+> deleted file mode 100644
+> index 3df034b13e28..000000000000
+> --- a/Documentation/devicetree/bindings/arm/sprd.txt
+> +++ /dev/null
+> @@ -1,14 +0,0 @@
+> -Spreadtrum SoC Platforms Device Tree Bindings
+> -----------------------------------------------------
+> -
+> -SC9836 openphone Board
+> -Required root node properties:
+> -	- compatible = "sprd,sc9836-openphone", "sprd,sc9836";
+> -
+> -SC9860 SoC
+> -Required root node properties:
+> -	- compatible = "sprd,sc9860"
+> -
+> -SP9860G 3GFHD Board
+> -Required root node properties:
+> -	- compatible = "sprd,sp9860g-1h10", "sprd,sc9860";
+> diff --git a/Documentation/devicetree/bindings/arm/sprd.yaml b/Documentation/devicetree/bindings/arm/sprd.yaml
+> new file mode 100644
+> index 000000000000..8540758188d8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/sprd.yaml
+> @@ -0,0 +1,29 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
+You made all the commits to the old file, so can you dual license:
+
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+
+With that:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +# Copyright 2019 Unisoc Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/sprd.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Unisoc platforms device tree bindings
+> +
+> +maintainers:
+> +  - Orson Zhai <orsonzhai@gmail.com>
+> +  - Baolin Wang <baolin.wang7@gmail.com>
+> +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - sprd,sc9836-openphone
+> +          - const: sprd,sc9836
+> +      - items:
+> +          - enum:
+> +              - sprd,sp9860g-1h10
+> +          - const: sprd,sc9860
+> +
+> +...
+> -- 
+> 2.20.1
+> 
+> 
