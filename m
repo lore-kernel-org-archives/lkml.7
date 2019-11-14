@@ -2,68 +2,105 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC69AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A959C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07A1206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F464206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfKNJ0Q (ORCPT
+        id S1726276AbfKNJbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:26:16 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45359 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfKNJ0Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:26:16 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iVBOD-0001dz-N3; Thu, 14 Nov 2019 10:26:09 +0100
-Message-ID: <4797d07a4e51a509a866733cd46aeec49c0222f6.camel@pengutronix.de>
-Subject: Re: [PATCH v3 1/3] media: hantro: Cleanup format negotiation helpers
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Date:   Thu, 14 Nov 2019 10:26:05 +0100
-In-Reply-To: <20191113175603.24742-2-ezequiel@collabora.com>
-References: <20191113175603.24742-1-ezequiel@collabora.com>
-         <20191113175603.24742-2-ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 14 Nov 2019 04:31:42 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56578 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725977AbfKNJbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:31:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 012FDAD2B;
+        Thu, 14 Nov 2019 09:31:39 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 10:31:38 +0100
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     Gustavo Walbon <gwalbon@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, mikey@neuling.org,
+        maurosr@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, diana.craciun@nxp.com, paulus@samba.org,
+        leitao@debian.org, gwalbon@linux.vnet.ibm.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] Fix wrong message when RFI Flush is disable
+Message-ID: <20191114093138.GF11661@kitsune.suse.cz>
+References: <20190502210907.42375-1-gwalbon@linux.ibm.com>
+ <47DFxM5mVHz9sNT@ozlabs.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47DFxM5mVHz9sNT@ozlabs.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-13 at 14:56 -0300, Ezequiel Garcia wrote:
-> Format negotiation helpers, hantro_find_format()
-> and hantro_get_default_fmt() can be simplified,
-> making the code a little bit clearer.
+On Thu, Nov 14, 2019 at 08:07:35PM +1100, Michael Ellerman wrote:
+> On Thu, 2019-05-02 at 21:09:07 UTC, Gustavo Walbon wrote:
+> > From: "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>
+> > 
+> > The issue was showing "Mitigation" message via sysfs whatever the state of
+> > "RFI Flush", but it should show "Vulnerable" when it is disabled.
+> > 
+> > If you have "L1D private" feature enabled and not "RFI Flush" you are
+> > vulnerable to meltdown attacks.
+> > 
+> > "RFI Flush" is the key feature to mitigate the meltdown whatever the
+> > "L1D private" state.
+> > 
+> > SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
+> > 
+> > So the message should be as the truth table shows.
+> > CPU | L1D private | RFI Flush |                   sysfs               |
+> > ----| ----------- | --------- | ------------------------------------- |
+> >  P9 |    False    |   False   | Vulnerable
+> >  P9 |    False    |   True    | Mitigation: RFI Flush
+> >  P9 |    True     |   False   | Vulnerable: L1D private per thread
+> >  P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per
+> >     |             |           | thread
+> >  P8 |    False    |   False   | Vulnerable
+> >  P8 |    False    |   True    | Mitigation: RFI Flush
+> > 
+> > Output before this fix:
+> >  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+> >  Mitigation: RFI Flush, L1D private per thread
+> >  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+> >  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+> >  Mitigation: L1D private per thread
+> > 
+> > Output after fix:
+> >  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+> >  Mitigation: RFI Flush, L1D private per thread
+> >  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+> >  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+> >  Vulnerable: L1D private per thread
+> > 
+> > Link: https://github.com/linuxppc/issues/issues/243
+> > 
+> > Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
+> > Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
 > 
-> More importantly, this change is preparation work
-> for the post-processor usage.
+> Applied to powerpc next, thanks.
 > 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> https://git.kernel.org/powerpc/c/4e706af3cd8e1d0503c25332b30cad33c97ed442
+> 
+> cheers
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: ff348355e9c7 ("powerpc/64s: Enhance the information in
+cpu_show_meltdown()")
 
-regards
-Philipp
+Thanks
 
+Michal
