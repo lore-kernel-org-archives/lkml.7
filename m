@@ -2,325 +2,218 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107FFC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745FFC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81A720727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:22:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573755738;
-	bh=2MZ7JeBchv6kObO/ttO+Ym4v4mxQGBZeKyg59h8kaDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CrZpE1JjZuCybIRz4QpMcuNaAfuGDu62BChKre1+Rg0GWtrwPglquNqhmUo3uY5k/
-	 IvPqBn50B6o+v1RdK8TF11AWWXUTEZ7RhhV7j75cF6urMhiLPHsgpW2uXzDMNVHEaw
-	 broRlevNM8Tf45+QOlg6NiLWGoENtc2K0xrAn9pg=
+	by mail.kernel.org (Postfix) with ESMTP id 48A052071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:23:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Se0pyxUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfKNSWS (ORCPT
+        id S1727485AbfKNSXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:22:18 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33644 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfKNSWR (ORCPT
+        Thu, 14 Nov 2019 13:23:07 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:35470 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfKNSXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:22:17 -0500
-Received: by mail-oi1-f195.google.com with SMTP id m193so6189110oig.0;
-        Thu, 14 Nov 2019 10:22:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3ZM0l7/aVkkc7/tbWYVkGWwf0qSsYfEVwIFWdU8EXKQ=;
-        b=bage/SXe4HFKGVqSoIBg4HxZBBI9sM+/38vNPYqbir9bagw7WaAv59NSlqMF49sjz6
-         ObEdhGLfwxDyIrjuR/OYczCt+Z9LjXMQ+9bTxRwDIUeMTKLlvGdP8YwIcewESpbTkTgP
-         btiyfXBQqPFtD9tW+O4uxWaUKBoHLis3/CEaTYHlF8Z2BpQW53/XfYz0pHoflSpZTPDo
-         m0BKGgrNDO0bPKvLiYuS768a/JW2ntgcZ4Z94rGYq/M9D6ajqavAO39L34CMs7cRf2WG
-         eBVchjHFj24K674ICYjaGdP8npRJIlOVFquMfgiIfVzc5mhqzYZJ9yRVB6wrCs/R9obG
-         sFAA==
-X-Gm-Message-State: APjAAAVSPA+X2cjdfe40XrqIKzONOj4noRbRbzuX9XePxFPMCCsqbS0b
-        /yGfIMXLLw3SY1DZ5p8YoQ==
-X-Google-Smtp-Source: APXvYqxgQRQdrim9O091TB59rW3d/3ojEsp/TMb0NUApED2QTgVSziIztxDUDPJ0tpPU7uU0F7UhOA==
-X-Received: by 2002:aca:4891:: with SMTP id v139mr2287416oia.175.1573755735866;
-        Thu, 14 Nov 2019 10:22:15 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i12sm2079082ota.10.2019.11.14.10.22.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 10:22:15 -0800 (PST)
-Date:   Thu, 14 Nov 2019 12:22:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Christophe Roullier <christophe.roullier@st.com>
-Cc:     davem@davemloft.net, mark.rutland@arm.com, mripard@kernel.org,
-        martin.blumenstingl@googlemail.com, alexandru.ardelean@analog.com,
-        narmstrong@baylibre.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH  2/2] dt-bindings: net: dwmac: Convert stm32 dwmac to DT
- schema
-Message-ID: <20191114182214.GA22693@bogus>
-References: <20191108103526.22254-1-christophe.roullier@st.com>
- <20191108103526.22254-3-christophe.roullier@st.com>
+        Thu, 14 Nov 2019 13:23:06 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191114182305euoutp026a0d04f5a4a16c4e3426314e0675c2cf~XGoxn6etw1508815088euoutp02P
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 18:23:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191114182305euoutp026a0d04f5a4a16c4e3426314e0675c2cf~XGoxn6etw1508815088euoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1573755785;
+        bh=8A8cbdxqtvyWnHtbwa/FzjfQ0uga80SIYlE1UAGn4Bo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Se0pyxUNX33A4vCsulk3XeiE94gCRHRXu6cXMVV698S+So9xwycj7ZPMiGBemhZns
+         VxbAinpG9CDArD7MB/R9eOF3mlZdSEqkNkKQdnimpsuid4C64ksf+miDCsbuQl8Xn5
+         yL+9nMQgSspbmP+gIDQRGQJPLOsU4SzhcohhZJv0=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191114182304eucas1p199982b52337f7c7e01e6535ca746e204~XGoxI_2M53104331043eucas1p1r;
+        Thu, 14 Nov 2019 18:23:04 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 57.AC.04309.88B9DCD5; Thu, 14
+        Nov 2019 18:23:04 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191114182304eucas1p1953894d6757259534b521aa26bb2277a~XGowlQMfs3104431044eucas1p1r;
+        Thu, 14 Nov 2019 18:23:04 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191114182304eusmtrp27c2723dbef2e2b81fd1cb8fa1d4407c7~XGowkkBgx3098030980eusmtrp2D;
+        Thu, 14 Nov 2019 18:23:04 +0000 (GMT)
+X-AuditID: cbfec7f4-afbff700000010d5-53-5dcd9b88dc75
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 0C.6D.04166.78B9DCD5; Thu, 14
+        Nov 2019 18:23:03 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191114182303eusmtip2a8a1af312e7bd253d1f0bc6bd4643b37~XGowCjFyO0346003460eusmtip2Z;
+        Thu, 14 Nov 2019 18:23:03 +0000 (GMT)
+Subject: Re: [PATCH 3/7] devfreq: add clearing transitions stats in sysfs
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Kamil Konieczny <k.konieczny@partner.samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <95813188-be4f-d3b3-459a-597be775f035@samsung.com>
+Date:   Thu, 14 Nov 2019 19:23:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108103526.22254-3-christophe.roullier@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3a5096c3-03d2-fd5d-852a-6a19c5b262a5@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTURjGPbvbvXezyXVae9E+cFRkpGZUXCwtoWBakP9EUmitvEzRbbKr
+        lkW1LHWOlDLJmqJG4VdZNkRzlOL8SvwqirR0tD+EvlzoFEGcmtc7yf+e85zfc973gUNiskZR
+        AJmizWD0WlWaApcIm3vmh0OMZYMJew1fg+iR2R8iuqhtGdFVrkcieni4kaAHcyYJ+pO1HKdn
+        CrsQ3dBlJ+ixW7X4UbHSUl+AKzv+vhUoi5rqkXLGsjVOeFZyOIlJS8li9GFRFyTJ722jgvQh
+        uNJtDzOgfH8TEpNA7QeTZYwwIQkpo2oRuJ1GEX+YRTB324LxhxkEkxWFxFrEbnB5IjUIXlSW
+        eygnglFDg4Cj/KgYyCkbwDjtT52G4i/VQg7CqDIBtObYVyGcioD7+fWI01IqCr7nPl/VQmoH
+        jFa+W2U2UvHgcnSKeMYX+h5PrDxEkmLqCIyMh3A2Rsnh20SlgNfboMXJLwSUlYCC6RYhv/Yx
+        uGt1YLz2g9+9TZ46m2G5lQtzgZcIFo0/PekWBDUPlnCeOgSdvR9F3GSMCoZX1jDejobPU6Wr
+        NlA+MOr05ZfwgeLmUoy3pWDMk/H0TmisbsTXxppa67B7SGFe18y8ro55XR3z/7lVSFiP5Ewm
+        q1Ez7D4tczmUVWnYTK069JJOY0Er/6h/qXf2DbK6L9oQRSLFBinAQIJMpMpiszU2BCSm8JeW
+        OFcsaZIq+yqj153XZ6YxrA0FkkKFXHrNy3FORqlVGUwqw6Qz+rVbASkOMKCy7htQWToeN9gx
+        daJ04oPjWeSupwfxvMTr7XbxibmTslh193y8n7m/LzqiztvRlnCq4wyRIRhy10oYS1W7bu5O
+        uFyt0MUEbprADlQExvocH4qMTF1YtHp3bs+q8br5Jyh2OnHLr4f4Qm42EayNG1lCrxdcPSXN
+        5mGrcU/dE7dCyCarwndjelb1DxzRcFRDAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xe7rts8/GGtw+Z2lx/ctzVou+ff8Z
+        LRZ8msFqcf78BnaLs01v2C0u75rDZvG59wijxdojd9ktbjeuYHPg9Ni0qpPN4+C7PUwefVtW
+        MXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqk
+        b5egl3Hi0A2mgnMSFUfv6jcwtot0MXJySAiYSNxt+MTexcjFISSwlFHi9YY9LF2MHEAJGYnj
+        68sgaoQl/lzrYoOoec0o0bX5PBtIQljAU6Jp9hlmEFtEIFTi1MbJYEXMAnOZJL70/4Wa+o1R
+        YvKCdawgVWwCVhIT21cxgti8AnYS91tXg9ksAqoSN+bvZQKxRQUiJA7vmAVVIyhxcuYTsIs4
+        Bewlrt/RBQkzC6hL/Jl3iRnCFpe49WQ+E4QtL7H97RzmCYxCs5B0z0LSMgtJyywkLQsYWVYx
+        iqSWFuem5xYb6hUn5haX5qXrJefnbmIERt+2Yz8372C8tDH4EKMAB6MSD+8B0TOxQqyJZcWV
+        uYcYJTiYlUR4p7wFCvGmJFZWpRblxxeV5qQWH2I0BfptIrOUaHI+MDHklcQbmhqaW1gamhub
+        G5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpg5HcsfnDQ7qbf9L6dTJwbdrj+yhVcIH5r
+        6se5wili0VorFkXc+7S1QECt4vGph4LFqb2NYbe/2na8XZ37yy14g+gx1uQQl8auLr76sNu+
+        31dYHjb3fFSw+eXM7XaLDQTne6rsqGtdvb7/gy1j2/pHTm9OMPl/lf324nbftcsR4tcOdzNW
+        tS6tUWIpzkg01GIuKk4EAIHgh2vUAgAA
+X-CMS-MailID: 20191114182304eucas1p1953894d6757259534b521aa26bb2277a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191113091352eucas1p2c30c8a73a8362aff872e3cd9312eb24b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191113091352eucas1p2c30c8a73a8362aff872e3cd9312eb24b
+References: <20191113091336.5218-1-k.konieczny@samsung.com>
+        <CGME20191113091352eucas1p2c30c8a73a8362aff872e3cd9312eb24b@eucas1p2.samsung.com>
+        <20191113091336.5218-4-k.konieczny@samsung.com>
+        <3a5096c3-03d2-fd5d-852a-6a19c5b262a5@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 11:35:26AM +0100, Christophe Roullier wrote:
-> Convert stm32 dwmac to DT schema.
 
-Lots of checkpatch errors with trailing WS.
+Hi Chanwoo,
 
+On 11/13/19 10:41 AM, Chanwoo Choi wrote:
+> Hi,
 > 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> ---
->  .../devicetree/bindings/net/stm32-dwmac.txt   |  44 -----
->  .../devicetree/bindings/net/stm32-dwmac.yaml  | 161 ++++++++++++++++++
->  2 files changed, 161 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
->  create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> If user only want to use the transitions stats information
+> from now, the user just read the sysfs twice and then
+> can calculate them between the read data. It is enough
+
+IOW you are suggesting that user should invest his valuable time
+into actually doing such calculations (or implementing some extra
+script to do the data parsing and calculations automatically)
+instead of doing simple write to special sysfs file?
+
+Also similar patch for cpufreq has been applied not so long ago:
+
+commit ee7930ee27fe5240398cc302fa8eb4454725f188
+Author: Markus Mayer <mmayer@broadcom.com>
+Date:   Mon Nov 7 10:02:23 2016 -0800
+
+    cpufreq: stats: New sysfs attribute for clearing statistics
+    
+    Allow CPUfreq statistics to be cleared by writing anything to
+    /sys/.../cpufreq/stats/reset.
+    
+    Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+    Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+    Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+...
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> to get the existing sysfs information. 
 > 
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> deleted file mode 100644
-> index a90eef11dc46..000000000000
-> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> +++ /dev/null
-> @@ -1,44 +0,0 @@
-> -STMicroelectronics STM32 / MCU DWMAC glue layer controller
-> -
-> -This file documents platform glue layer for stmmac.
-> -Please see stmmac.txt for the other unchanged properties.
-> -
-> -The device node has following properties.
-> -
-> -Required properties:
-> -- compatible:  For MCU family should be "st,stm32-dwmac" to select glue, and
-> -	       "snps,dwmac-3.50a" to select IP version.
-> -	       For MPU family should be "st,stm32mp1-dwmac" to select
-> -	       glue, and "snps,dwmac-4.20a" to select IP version.
-> -- clocks: Must contain a phandle for each entry in clock-names.
-> -- clock-names: Should be "stmmaceth" for the host clock.
-> -	       Should be "mac-clk-tx" for the MAC TX clock.
-> -	       Should be "mac-clk-rx" for the MAC RX clock.
-> -	       For MPU family need to add also "ethstp" for power mode clock
-> -- interrupt-names: Should contain a list of interrupt names corresponding to
-> -           the interrupts in the interrupts property, if available.
-> -		   Should be "macirq" for the main MAC IRQ
-> -		   Should be "eth_wake_irq" for the IT which wake up system
-> -- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
-> -	       encompases the glue register, and the offset of the control register.
-> -
-> -Optional properties:
-> -- clock-names:     For MPU family "eth-ck" for PHY without quartz
-> -- st,eth-clk-sel (boolean) : set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-> -- st,eth-ref-clk-sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
-> -
-> -Example:
-> -
-> -	ethernet@40028000 {
-> -		compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-> -		reg = <0x40028000 0x8000>;
-> -		reg-names = "stmmaceth";
-> -		interrupts = <0 61 0>, <0 62 0>;
-> -		interrupt-names = "macirq", "eth_wake_irq";
-> -		clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-> -		clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-> -		st,syscon = <&syscfg 0x4>;
-> -		snps,pbl = <8>;
-> -		snps,mixed-burst;
-> -		dma-ranges;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> new file mode 100644
-> index 000000000000..eb0fd831f59d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> @@ -0,0 +1,161 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/net/stm32-dwmac.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: STMicroelectronics STM32 / MCU DWMAC glue layer controller
-> +
-> +maintainers:
-> +  - Alexandre Torgue <alexandre.torgue@st.com>
-> +  - Christophe Roullier <christophe.roullier@st.com>
-> +
-> +description:
-> +  This file documents platform glue layer for stmmac.
-> +
-> +# We need a select here so we don't match all nodes with 'snps,dwmac'
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - st,stm32-dwmac
-> +          - st,stm32mp1-dwmac
-> +  required:
-> +    - compatible
-> +
-> +allOf:
-> +  - $ref: "snps,dwmac.yaml#"
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - st,stm32-dwmac
-> +              - st,stm32mp1-dwmac
-> +    then:
-> +      properties:
-> +       clocks:
-> +         minItems: 3 
-> +         maxItems: 5
-> +         items:
-> +          - description: GMAC main clock
-> +          - description: MAC TX clock
-> +          - description: MAC RX clock
-> +          - description: For MPU family, used for power mode
-
-What does 'power mode' mean? IIRC, some DW MACs have a clock for WoL 
-called LPI or something. Are you sure this is ST specific and not DW 
-config or version specific?
-
-> +          - description: For MPU family, used for PHY without quartz
-
-It would be cleaner to define the clock always present and use a 
-fixed-clock when you have an external quartz. 
-
-> +
-> +       clock-names:
-> +         minItems: 3          
-> +         maxItems: 5
-> +         contains:
-> +          enum:
-> +            - stmmaceth
-> +            - mac-clk-tx
-> +            - mac-clk-rx
-> +            - ethstp
-> +            - eth-ck     
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - st,stm32mp1-dwmac
-> +          - const: snps,dwmac-4.20a
-> +      - items:
-> +          - enum:
-> +              - st,stm32-dwmac
-> +          - const: snps,dwmac-4.10a
-> +      - items:
-> +          - enum:
-> +              - st,stm32-dwmac
-> +          - const: snps,dwmac-3.50a            
-> +
-> +  st,syscon:
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      Should be phandle/offset pair. The phandle to the syscon node which
-> +      encompases the glue register, and the offset of the control register
-> +
-> +  st,eth-clk-sel:
-> +    description:
-> +      set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-> +    type: boolean
-> +    
-> +  st,eth-ref-clk-sel:
-> +    description:
-> +      set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
-
-Wrap lines.
-
-> +    type: boolean   
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - st,syscon
-> +
-> +examples:
-> + - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    #include <dt-bindings/mfd/stm32h7-rcc.h>  
-> +    //Example 1
-> +     ethernet0: ethernet@5800a000 {
-> +       compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
-> +       reg = <0x5800a000 0x2000>;
-> +       reg-names = "stmmaceth";
-> +       interrupts = <&intc GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +       interrupt-names = "macirq";
-> +       clock-names = "stmmaceth",
-> +                     "mac-clk-tx",
-> +                     "mac-clk-rx",
-> +                     "ethstp",
-> +                     "eth-ck";				      
-> +       clocks = <&rcc ETHMAC>,
-> +                <&rcc ETHTX>,
-> +                <&rcc ETHRX>,
-> +                <&rcc ETHSTP>,
-> +                <&rcc ETHCK_K>;	
-> +       st,syscon = <&syscfg 0x4>;
-> +       snps,pbl = <2>;
-> +       snps,axi-config = <&stmmac_axi_config_0>;
-> +       snps,tso;
-> +       status = "disabled";
-> +       phy-mode = "rgmii";       
-> +       };
-> +
-> +    //Example 1 (MCU example)
-
-2 Example 1's?
-
-> +     ethernet1: ethernet@40028000 {
-> +       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-> +       reg = <0x40028000 0x8000>;
-> +       reg-names = "stmmaceth";
-> +       interrupts = <0 61 0>, <0 62 0>;
-> +       interrupt-names = "macirq", "eth_wake_irq";
-> +       clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-> +       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-> +       st,syscon = <&syscfg 0x4>;
-> +       snps,pbl = <8>;
-> +       snps,mixed-burst;
-> +       dma-ranges;
-> +       phy-mode = "mii";       
-> +       };
-> +
-> +    //Example 2 
-> +     ethernet2: ethernet@40027000 {
-> +       compatible = "st,stm32-dwmac", "snps,dwmac-4.10a";
-> +       reg = <0x40028000 0x8000>;
-> +       reg-names = "stmmaceth";
-> +       interrupts = <61>;
-> +       interrupt-names = "macirq";
-> +       clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-> +       clocks = <&rcc 62>, <&rcc 61>, <&rcc 60>;
-> +       st,syscon = <&syscfg 0x4>;
-> +       snps,pbl = <8>;
-> +       status = "disabled";
-> +       phy-mode = "mii";        
-> +       };
-> +
-> +       
-> -- 
-> 2.17.1
+> And I don't know the any other reason. So, I can't agree this patch.
+> So, Not ack.
 > 
+> Regards,
+> Chanwoo Choi
+> 
+> 
+> On 11/13/19 6:13 PM, Kamil Konieczny wrote:
+>> Add new function trans_reset in sysfs for clearing transition
+>> table and time in states devfreq statistics.> 
+>> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+>> ---
+>>  drivers/devfreq/devfreq.c | 26 ++++++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index ac04b5baef70..0a88055d1362 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -1445,6 +1445,31 @@ static ssize_t trans_stat_show(struct device *dev,
+>>  }
+>>  static DEVICE_ATTR_RO(trans_stat);
+>>  
+>> +static void defvreq_stats_clear_table(struct devfreq *devfreq)
+>> +{
+>> +	unsigned int count = devfreq->profile->max_state;
+>> +
+>> +	spin_lock(&devfreq->stats_lock);
+>> +	memset(devfreq->time_in_state, 0, count * sizeof(u64));
+>> +	memset(devfreq->trans_table, 0, count * count * sizeof(int));
+>> +	devfreq->last_stat_updated = get_jiffies_64();
+>> +	devfreq->total_trans = 0;
+>> +	spin_unlock(&devfreq->stats_lock);
+>> +}
+>> +
+>> +static ssize_t trans_reset_store(struct device *dev,
+>> +				 struct device_attribute *attr,
+>> +				 const char *buf,
+>> +				 size_t count)
+>> +{
+>> +	struct devfreq *devfreq = to_devfreq(dev);
+>> +
+>> +	defvreq_stats_clear_table(devfreq);
+>> +
+>> +	return count;
+>> +}
+>> +static DEVICE_ATTR_WO(trans_reset);
+>> +
+>>  static struct attribute *devfreq_attrs[] = {
+>>  	&dev_attr_governor.attr,
+>>  	&dev_attr_available_governors.attr,
+>> @@ -1455,6 +1480,7 @@ static struct attribute *devfreq_attrs[] = {
+>>  	&dev_attr_min_freq.attr,
+>>  	&dev_attr_max_freq.attr,
+>>  	&dev_attr_trans_stat.attr,
+>> +	&dev_attr_trans_reset.attr,
+>>  	NULL,
+>>  };
+>>  ATTRIBUTE_GROUPS(devfreq);
+
