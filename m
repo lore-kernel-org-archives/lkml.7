@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93581C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F3EC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E6C206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D479A206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kk+svtXN"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dWb14nDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfKNLm5 (ORCPT
+        id S1726960AbfKNLm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:42:57 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:56924 "EHLO
+        Thu, 14 Nov 2019 06:42:58 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:56990 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726106AbfKNLm4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726057AbfKNLm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:42:56 -0500
+        Thu, 14 Nov 2019 06:42:58 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E8972C04CE;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B6FE9C04C2;
         Thu, 14 Nov 2019 11:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573731775; bh=YXLJfn/0yUG2/3omTVU/b/Ru9qVL71FIWquDK8WQkNM=;
+        t=1573731777; bh=RkTzmSnfUcfP/b47ooybjfWnSVm+09bi58sAsWhDWA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=kk+svtXN+TKjI5uygnNbtb3Rq0IxEStC1fuV8WYCmKGh5hMm9ssaVuddopzyv93zA
-         ezsFOfvvVgZQmZq2F4j3phQfj1xMopK6hIZnwio/yTPaGBkWxxqG5gImrp0ainrFb9
-         XLI4FrcCbR+brVNM/pL+ju74wZCUiisN0G55/BBXcELLu1Ty8c5BBrlRt/x3DMKe1f
-         MqQV9c7Oo15SMY8La4VqwCwXUVpnnTi6Rbyn9Sg8JWjBQhoABx8uEEjqv88j3wW9wl
-         USnD/rKaslxA464Z1zextNK6IwCqg+rn/B7usFM2rUntMsATUVa/SRcocUxSs9cinH
-         qxiFDkGJ3QhHA==
+        b=dWb14nDpOP0in8blqVn5IlVU9RSsRgfrEUedNhcwPxb7V4LA51IIWRO2IP++vO9vH
+         obn+8QwlCqmOyZOtHYMWyzm/C7EgyBjQd9xmjAH2uNMOAOjriHdOiCbBLUD7hyjpmS
+         g+exKlKIUsSOP9d+7lpWcopSMocwAY3JW6n2RDRf1IuZWCWoDjVL6dKK6O7MNC1zMD
+         N5Ee8M4Goo3C6a946O00vetBL+nRZvKXTwMsM4PqaC0PFav0t89U5aF/U4wj79JqaW
+         xex/pquw+itLqAKB04tu6NNW6b/cn3+ukmSVTTdMps2ZUUQZoWPUjmx4CZX03TuWEb
+         1AmiGlHZIGcBQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id A336CA009A;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 54633A0084;
         Thu, 14 Nov 2019 11:42:53 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 7/7] net: stmmac: xgmac: Do not enable TBU interrupt
-Date:   Thu, 14 Nov 2019 12:42:51 +0100
-Message-Id: <8b462f80863dc66f2b14e0db9e9e309b4870d4ba.1573731453.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH v2 net-next 2/7] net: stmmac: Setup a default RX Coalesce value instead of the minimum
+Date:   Thu, 14 Nov 2019 12:42:46 +0100
+Message-Id: <d47c38c59dc923cb021a435ffd956bbf7a0a48de.1573731453.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1573731453.git.Jose.Abreu@synopsys.com>
 References: <cover.1573731453.git.Jose.Abreu@synopsys.com>
@@ -65,8 +65,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that TX Coalesce has been rewritten we no longer need this
-additional interrupt enabled. This reduces CPU usage.
+For performance reasons, sometimes using the minimum RX Coalesce value
+is not optimal. Lets setup a default value that is optimal in most of
+the use cases.
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -81,22 +82,40 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/common.h      | 1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 ++++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 99037386080a..e908d80a1d6f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -360,7 +360,7 @@
- #define XGMAC_TBUE			BIT(2)
- #define XGMAC_TIE			BIT(0)
- #define XGMAC_DMA_INT_DEFAULT_EN	(XGMAC_NIE | XGMAC_AIE | XGMAC_RBUE | \
--					XGMAC_RIE | XGMAC_TBUE | XGMAC_TIE)
-+					XGMAC_RIE | XGMAC_TIE)
- #define XGMAC_DMA_CH_Rx_WATCHDOG(x)	(0x0000313c + (0x80 * (x)))
- #define XGMAC_RWT			GENMASK(7, 0)
- #define XGMAC_DMA_CH_STATUS(x)		(0x00003160 + (0x80 * (x)))
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 912bbb6515b2..309ea12ea61f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -248,6 +248,7 @@ struct stmmac_safety_stats {
+ /* Max/Min RI Watchdog Timer count value */
+ #define MAX_DMA_RIWT		0xff
+ #define MIN_DMA_RIWT		0x10
++#define DEF_DMA_RIWT		0xa0
+ /* Tx coalesce parameters */
+ #define STMMAC_COAL_TX_TIMER	1000
+ #define STMMAC_MAX_COAL_TX_TICK	100000
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 7939ef7e23b7..400fbb727fd5 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2605,9 +2605,10 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
+ 	priv->tx_lpi_timer = STMMAC_DEFAULT_TWT_LS;
+ 
+ 	if (priv->use_riwt) {
+-		ret = stmmac_rx_watchdog(priv, priv->ioaddr, MIN_DMA_RIWT, rx_cnt);
+-		if (!ret)
+-			priv->rx_riwt = MIN_DMA_RIWT;
++		if (!priv->rx_riwt)
++			priv->rx_riwt = DEF_DMA_RIWT;
++
++		ret = stmmac_rx_watchdog(priv, priv->ioaddr, priv->rx_riwt, rx_cnt);
+ 	}
+ 
+ 	if (priv->hw->pcs)
 -- 
 2.7.4
 
