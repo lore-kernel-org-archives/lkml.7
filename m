@@ -2,121 +2,91 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE4C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4FDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E7A20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:45:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRq3dG1d"
+	by mail.kernel.org (Postfix) with ESMTP id 52E5E20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfKNJpT (ORCPT
+        id S1726838AbfKNJqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:45:19 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39478 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfKNJpS (ORCPT
+        Thu, 14 Nov 2019 04:46:05 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47204 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbfKNJqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:45:18 -0500
-Received: by mail-wr1-f65.google.com with SMTP id l7so5656521wrp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 01:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bhvzp5b+Q4a3/0oVBXiXpioibMrQjz/TpooATE3bWZA=;
-        b=FRq3dG1d6Uc9go+BHE9dRYlgxm27TAnBxLKzGjuZ3yaZVQcY47huQPCgrKiEA+vQyZ
-         gnkCiCD6RsSG+sOD5K7C88cYC7VTN5SNn/gFYioXG1S7mBIoK55zINU57SmF133BB5SB
-         T5IIjsBXNZJwZwmzfSDyKgCR9i9MPBxkZ5EHRkof1ydCBQ3WzaY1ZWS26GU218U7RbZe
-         V47xLggJ3QJ7sEzKDBFHTsKxVV9yagwoN4oWqADLFcsYLQQT/sVXb2hXdzOkRPvgCLa/
-         Fk9rN4bVSNvqxTpqPpXu4A6yfnxnW1/ywsO5+FW/Payabj6CngpZg/41xWpl0hZeAN6a
-         QvLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bhvzp5b+Q4a3/0oVBXiXpioibMrQjz/TpooATE3bWZA=;
-        b=eLsmT848h0gDZgg7VHaA0GQM9W7fiX7cEuejKajfcJ2LjAzER+VZytPCYUeAhc8960
-         qc5UKJmQEkIUHectLeiGkNc06Vk40Q/hX7u3qBMIoHwQYff8ra4+8fZPKywoiRQhRHrt
-         eAqQnscdKWRHOMgS9AMXoNta2YeKI/ACD6N1VhFRna2cMgKpQOPPeJmINZmmRfn49MGv
-         862laEGXRazgqToAlro0hwiORiLiTr/+EBTyn1+SRJUO+wHFS+KCfnNS+q8gmCX9nCVc
-         BzvtZZy/SEGZyGhxmocjg9VRuwW/4e5O94EQqrPYtSvJM0VUrcZRuG0eFcWa5JZievlX
-         3RPg==
-X-Gm-Message-State: APjAAAVvmEBC67SMzWKeNBo/NfOyX711DxRNYJrd8h5iPgvmoHuw8B0F
-        6wyVT3JcLSYkO8cfQbBzLXmCU0iLGz9D7R+Q04tC2g==
-X-Google-Smtp-Source: APXvYqxyGDZLLSdO7iFFPhCbyuFwYfQ2O45xwAZvkApwZrLzKIl7bERQR2BXJZAlRkzAJg02ZY/qIbP0G6b7FHE6kC0=
-X-Received: by 2002:adf:f743:: with SMTP id z3mr6981129wrp.200.1573724714881;
- Thu, 14 Nov 2019 01:45:14 -0800 (PST)
+        Thu, 14 Nov 2019 04:46:05 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7504B28DADD;
+        Thu, 14 Nov 2019 09:46:03 +0000 (GMT)
+Date:   Thu, 14 Nov 2019 10:46:00 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] media: hantro: Support color conversion via
+ post-processing
+Message-ID: <20191114104600.5c6c3e26@collabora.com>
+In-Reply-To: <20191113175603.24742-3-ezequiel@collabora.com>
+References: <20191113175603.24742-1-ezequiel@collabora.com>
+        <20191113175603.24742-3-ezequiel@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20191112223046.176097-1-samitolvanen@google.com>
- <20191113200419.GE221701@gmail.com> <CABCJKudoBHo6rZoGMFproXjmexu16gonVKDPdnq9XDCmO2J2cw@mail.gmail.com>
-In-Reply-To: <CABCJKudoBHo6rZoGMFproXjmexu16gonVKDPdnq9XDCmO2J2cw@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 14 Nov 2019 09:45:05 +0000
-Message-ID: <CAKv+Gu85PY+A_XxB9DcmcoV8+nAJZGfAc59sj6XnOGyhDedNQA@mail.gmail.com>
-Subject: Re: [PATCH] crypto: arm64/sha: fix function types
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Kees Cook <keescook@chromium.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 at 22:28, Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> On Wed, Nov 13, 2019 at 12:04 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Tue, Nov 12, 2019 at 02:30:46PM -0800, Sami Tolvanen wrote:
-> > > Declare assembly functions with the expected function type
-> > > instead of casting pointers in C to avoid type mismatch failures
-> > > with Control-Flow Integrity (CFI) checking.
-> > >
-> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > > ---
-> > >  arch/arm64/crypto/sha1-ce-glue.c   | 12 +++++-------
-> > >  arch/arm64/crypto/sha2-ce-glue.c   | 26 +++++++++++---------------
-> > >  arch/arm64/crypto/sha256-glue.c    | 30 ++++++++++++------------------
-> > >  arch/arm64/crypto/sha512-ce-glue.c | 23 ++++++++++-------------
-> > >  arch/arm64/crypto/sha512-glue.c    | 13 +++++--------
-> > >  5 files changed, 43 insertions(+), 61 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
-> > > index bdc1b6d7aff7..3153a9bbb683 100644
-> > > --- a/arch/arm64/crypto/sha1-ce-glue.c
-> > > +++ b/arch/arm64/crypto/sha1-ce-glue.c
-> > > @@ -25,7 +25,7 @@ struct sha1_ce_state {
-> > >       u32                     finalize;
-> > >  };
-> > >
-> > > -asmlinkage void sha1_ce_transform(struct sha1_ce_state *sst, u8 const *src,
-> > > +asmlinkage void sha1_ce_transform(struct sha1_state *sst, u8 const *src,
-> > >                                 int blocks);
-> >
-> > Please update the comments in the corresponding assembly files too.
-> >
-> > Also, this change doesn't really make sense because the assembly functions still
-> > expect struct sha1_ce_state, and they access sha1_ce_state::finalize which is
-> > not present in struct sha1_state.  There should either be wrapper functions that
-> > explicitly do the cast from sha1_state to sha1_ce_state, or there should be
-> > comments in the assembly files that very clearly explain that although the
-> > function prototype takes sha1_state, it's really assumed to be a sha1_ce_state.
->
-> Agreed, this needs a comment explaining the type mismatch. I'm also
-> fine with using wrapper functions and explicitly casting the
-> parameters instead of changing function declarations. Herbert, Ard,
-> any preferences?
->
+Hi Ezequiel,
 
-I guess the former would be cleaner, using container_of() rather than
-a blind cast to make the code more self-documenting. The extra branch
-shouldn't really matter.
+On Wed, 13 Nov 2019 14:56:02 -0300
+Ezequiel Garcia <ezequiel@collabora.com> wrote:
+
+> +
+> +int hantro_postproc_alloc(struct hantro_ctx *ctx)
+> +{
+> +	struct hantro_dev *vpu = ctx->dev;
+> +	unsigned int i, buf_size;
+> +
+> +	buf_size = ctx->dst_fmt.plane_fmt[0].sizeimage;
+> +
+> +	for (i = 0; i < VB2_MAX_FRAME; ++i) {
+
+Don't we know at that point how big the queue is (vq->num_buffers)?
+Sounds a bit expensive to always allocate VB2_MAX_FRAME aux buffers.
+
+> +		struct hantro_aux_buf *priv = &ctx->postproc.dec_q[i];
+> +
+> +		/*
+> +		 * The buffers on this queue are meant as intermediate
+> +		 * buffers for the decoder, so no mapping is needed.
+> +		 */
+> +		priv->attrs = DMA_ATTR_NO_KERNEL_MAPPING;
+> +		priv->cpu = dma_alloc_attrs(vpu->dev, buf_size, &priv->dma,
+> +					    GFP_KERNEL, priv->attrs);
+> +		if (!priv->cpu)
+> +			return -ENOMEM;
+> +		priv->size = buf_size;
+> +	}
+> +	return 0;
+> +}
+
+Other than that, the post-proc extension looks pretty good. Thought it
+would be much more invasive than that.
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
