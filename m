@@ -2,95 +2,85 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54581C33C9A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 786B8C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD17206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574DA20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfKNHfG (ORCPT
+        id S1726335AbfKNHi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 02:35:06 -0500
-Received: from verein.lst.de ([213.95.11.211]:38005 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfKNHfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 02:35:05 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 910B768AFE; Thu, 14 Nov 2019 08:34:59 +0100 (CET)
-Date:   Thu, 14 Nov 2019 08:34:59 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, phil@raspberrypi.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-Message-ID: <20191114073459.GB26546@lst.de>
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+        Thu, 14 Nov 2019 02:38:58 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49486 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725852AbfKNHi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 02:38:57 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0BAAB6E6A2A03142BDCB;
+        Thu, 14 Nov 2019 15:38:56 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 15:38:48 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <freude@linux.ibm.com>,
+        <ifranzki@linux.ibm.com>, <jschmidb@de.ibm.com>
+CC:     <linux-crypto@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] s390/crypto: Fix unsigned variable compared with zero
+Date:   Thu, 14 Nov 2019 15:30:05 +0800
+Message-ID: <20191114073005.47000-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 05:13:39PM +0100, Nicolas Saenz Julienne wrote:
-> Using a mask to represent bus DMA constraints has a set of limitations.
-> The biggest one being it can only hold a power of two (minus one). The
-> DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> as a limit. This quirk is already used by some architectures although
-> still rare.
-> 
-> With the introduction of the Raspberry Pi 4 we've found a new contender
-> for the use of bus DMA limits, as its PCIe bus can only address the
-> lower 3GB of memory (of a total of 4GB). This is impossible to represent
-> with a mask. To make things worse the device-tree code rounds non power
-> of two bus DMA limits to the next power of two, which is unacceptable in
-> this case.
-> 
-> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
-> over the tree and treat it as such. Note that dev->bus_dma_limit is
-> meant to contain the higher accesible DMA address.
+s390_crypto_shash_parmsize() return type is int, it
+should not be stored in a unsigned variable, which
+compared with zero.
 
-This looks sensible modulo the minor comments in this thread.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 3c2eb6b76cab ("s390/crypto: Support for SHA3 via CPACF (MSA6)")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ arch/s390/crypto/sha_common.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> 
-> ---
-> 
-> Note this is rebased on top of Christoph's latest DMA series:
-> https://www.spinics.net/lists/arm-kernel/msg768600.html
+diff --git a/arch/s390/crypto/sha_common.c b/arch/s390/crypto/sha_common.c
+index d39e0f0..686fe7a 100644
+--- a/arch/s390/crypto/sha_common.c
++++ b/arch/s390/crypto/sha_common.c
+@@ -74,14 +74,17 @@ int s390_sha_final(struct shash_desc *desc, u8 *out)
+ 	struct s390_sha_ctx *ctx = shash_desc_ctx(desc);
+ 	unsigned int bsize = crypto_shash_blocksize(desc->tfm);
+ 	u64 bits;
+-	unsigned int n, mbl_offset;
++	unsigned int n;
++	int mbl_offset;
+ 
+ 	n = ctx->count % bsize;
+ 	bits = ctx->count * 8;
+-	mbl_offset = s390_crypto_shash_parmsize(ctx->func) / sizeof(u32);
++	mbl_offset = s390_crypto_shash_parmsize(ctx->func);
+ 	if (mbl_offset < 0)
+ 		return -EINVAL;
+ 
++	mbl_offset = mbl_offset / sizeof(u32);
++
+ 	/* set total msg bit length (mbl) in CPACF parmblock */
+ 	switch (ctx->func) {
+ 	case CPACF_KLMD_SHA_1:
+-- 
+2.7.4
 
-FYI, I'll plan to merge those tonight unless anyone screams.
+
