@@ -2,145 +2,106 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC52C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A3FC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB7C20718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716E92071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573713937;
+	bh=NI0BNW4CQQr9LgH0Ss7MkLNdKC1BPofEObcRVGKZmt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jAKqJYTfaNsGiw7BO9nVe3b/hk6Q47zWbeHXfa0TvIXzsnBwx1x40jRAB8oN9N1Xp
+	 bafwpvGk88wlXLli1O7HBKG/NUc5H1FnJOrTfzKWGQmpTA/gF6OAkiuu9KABEocAF7
+	 YwHRAMvdSsOqsX0R5ufV6dPOeXKNFv5rMu39AiBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfKNGp3 (ORCPT
+        id S1726796AbfKNGpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:45:29 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43136 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfKNGp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:45:29 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8463BDDCDDA6BFBF7016;
-        Thu, 14 Nov 2019 14:45:26 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
- 14:45:16 +0800
-Subject: Re: [PATCH] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-References: <8bdc7a86-e464-9c46-3d40-4f3c75111ce6@huawei.com>
- <2931286.GRae9fBGx2@kreacher>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <2af56bf7-aff8-b4f5-b4cf-06743e906695@huawei.com>
-Date:   Thu, 14 Nov 2019 14:45:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 14 Nov 2019 01:45:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbfKNGpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:45:35 -0500
+Received: from localhost (unknown [223.226.110.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F6E120715;
+        Thu, 14 Nov 2019 06:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573713935;
+        bh=NI0BNW4CQQr9LgH0Ss7MkLNdKC1BPofEObcRVGKZmt4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bqXeNC0DK2IP2Jbg/fJB5IV14pqzVRXIiibVY2ax6OzPt/nNx3u8jEjUnYXiHyFRi
+         LJJoi5dih3QXTuvxshKCSXPDKgGTMDaq0RJ/wINppuudc93MHdLusa1tISYkw5YiCM
+         tUAOCCa9eTvSR9vyXZRtMWEZV95l6c9DidPLzLWA=
+Date:   Thu, 14 Nov 2019 12:15:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pan Bian <bianpan2016@163.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: sun6i: Fix use after free
+Message-ID: <20191114064514.GO952516@vkoul-mobl>
+References: <1573126013-17609-1-git-send-email-bianpan2016@163.com>
 MIME-Version: 1.0
-In-Reply-To: <2931286.GRae9fBGx2@kreacher>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573126013-17609-1-git-send-email-bianpan2016@163.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07-11-19, 19:26, Pan Bian wrote:
+> The members in the LLI list is released in an incorrect way. Read and
+> store the next member before releasing it to avoid accessing the freed
+> memory.
+> 
+> Fixes: a90e173f3faf ("dmaengine: sun6i: Add cyclic capability")
+> 
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> ---
+>  drivers/dma/sun6i-dma.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index 06cd7f867f7c..096aad7e75bb 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
+> @@ -687,7 +687,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+>  	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(chan->device);
+>  	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
+>  	struct dma_slave_config *sconfig = &vchan->cfg;
+> -	struct sun6i_dma_lli *v_lli, *prev = NULL;
+> +	struct sun6i_dma_lli *v_lli, *next, *prev = NULL;
+>  	struct sun6i_desc *txd;
+>  	struct scatterlist *sg;
+>  	dma_addr_t p_lli;
+> @@ -752,8 +752,12 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+>  	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+>  
+>  err_lli_free:
+> -	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+> -		dma_pool_free(sdev->pool, prev, virt_to_phys(prev));
+> +	v_lli = txd->v_lli;
+> +	while (v_lli) {
+> +		next = v_lli->v_lli_next;
+> +		dma_pool_free(sdev->pool, v_lli, virt_to_phys(v_lli));
+> +		v_lli = next;
 
+Have you seen this issue, a panic trace? Has some static checker flagged
+this?
 
-On 2019/11/14 7:21, Rafael J. Wysocki wrote:
-> On Tuesday, November 5, 2019 3:35:25 PM CET Yunfeng Ye wrote:
->> There are two problems after commit 0f27cff8597d ("ACPI: sysfs: Make
->> ACPI GPE mask kernel parameter cover all GPEs"):
->>
->> 1. ACPI_MASKABLE_GPE_MAX is changed from 0x80 to 0xff, so the check
->> condition "gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of
->> gpe is u8.
->>
->> 2. The size of bitmap is ACPI_MASKABLE_GPE_MAX, so it is not support the
->> num 255 for gpe.
->>
->> Update the macro ACPI_MASKABLE_GPE_MAX to 0x100, and change the type of
->> gpe to u32, also modify the checking condition for gpe.
->>
->> Bye the way, update the docs for kernel parameter acpi_mask_gpe.
->>
->> Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> 
-> AFAICS this really is about supporting the masking of GPE 0xFF.
->>> ---
->>  Documentation/admin-guide/kernel-parameters.txt | 1 +
->>  drivers/acpi/sysfs.c                            | 8 ++++----
->>  2 files changed, 5 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index a84a83f8881e..dd878e2491e1 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -114,6 +114,7 @@
->>  			This facility can be used to prevent such uncontrolled
->>  			GPE floodings.
->>  			Format: <int>
->> +			Support masking of GPEs numbered from 0x00 to 0xff
-> 
-> Why not just say "Format: <byte>" ?
-> 
-ok, thanks.
+I see the code *seems* equivalent. The prev is assigned to txd->v_lli,
+checked and then code block will be executed and updated. When do you
+see the case when we access freed memory?
 
->>
->>  	acpi_no_auto_serialize	[HW,ACPI]
->>  			Disable auto-serialization of AML methods
->> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
->> index 75948a3f1a20..3c3302583d78 100644
->> --- a/drivers/acpi/sysfs.c
->> +++ b/drivers/acpi/sysfs.c
->> @@ -819,14 +819,14 @@ static ssize_t counter_set(struct kobject *kobj,
->>   * interface:
->>   *   echo unmask > /sys/firmware/acpi/interrupts/gpe00
->>   */
->> -#define ACPI_MASKABLE_GPE_MAX	0xFF
->> +#define ACPI_MASKABLE_GPE_MAX	0x100
-> 
-> So this is the only change that's necessary AFAICS.
-> 
->>  static DECLARE_BITMAP(acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) __initdata;
->>
->>  static int __init acpi_gpe_set_masked_gpes(char *val)
->>  {
->> -	u8 gpe;
->> +	u32 gpe;
->>
->> -	if (kstrtou8(val, 0, &gpe) || gpe > ACPI_MASKABLE_GPE_MAX)
-> 
-> And here you can drop the ACPI_MASKABLE_GPE_MAX check and the rest can remain
-> as is.
-> 
-I will modify as your suggestion, thanks.
-
->> +	if (kstrtouint(val, 0, &gpe) || gpe >= ACPI_MASKABLE_GPE_MAX)
->>  		return -EINVAL;
->>  	set_bit(gpe, acpi_masked_gpes_map);
->>
->> @@ -838,7 +838,7 @@ void __init acpi_gpe_apply_masked_gpes(void)
->>  {
->>  	acpi_handle handle;
->>  	acpi_status status;
->> -	u8 gpe;
->> +	u32 gpe;
->>
->>  	for_each_set_bit(gpe, acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) {
->>  		status = acpi_get_gpe_device(gpe, &handle);
->>
-> 
-> 
-> 
-> 
-> 
-> .
-> 
-
+-- 
+~Vinod
