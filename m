@@ -6,86 +6,64 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E63CC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C3AC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C44F20718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8FE206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfKNINg (ORCPT
+        id S1726339AbfKNIOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:13:36 -0500
-Received: from thoth.sbs.de ([192.35.17.2]:39146 "EHLO thoth.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfKNINg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:13:36 -0500
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id xAE8DNNI008618
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 09:13:23 +0100
-Received: from [167.87.46.11] ([167.87.46.11])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id xAE8DM5G023544;
-        Thu, 14 Nov 2019 09:13:22 +0100
-Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
-To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        "Gupta, Pawan Kumar" <pawan.kumar.gupta@intel.com>
-References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
- <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
- <ea5a084b-e047-6677-b8fe-d7bb6f8c0ef8@redhat.com>
- <20191113232510.GB891@guptapadev.amr>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <671b49ab-f65d-8b44-4da6-137d05cd1b9c@siemens.com>
-Date:   Thu, 14 Nov 2019 09:13:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 14 Nov 2019 03:14:20 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:60198 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfKNIOU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 03:14:20 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iVAGP-00078t-4y; Thu, 14 Nov 2019 08:14:01 +0000
+Date:   Thu, 14 Nov 2019 09:14:00 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v9 1/2] fork: extend clone3() to support setting a PID
+Message-ID: <20191114081359.axnoioa25grf3ffv@wittgenstein>
+References: <20191114070709.1504202-1-areber@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191113232510.GB891@guptapadev.amr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191114070709.1504202-1-areber@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.11.19 00:25, Pawan Gupta wrote:
-> On Wed, Nov 13, 2019 at 09:23:30AM +0100, Paolo Bonzini wrote:
->> On 13/11/19 07:38, Jan Kiszka wrote:
->>> When reading MCE, error code 0150h, ie. SRAR, I was wondering if that
->>> couldn't simply be handled by the host. But I suppose the symptom of
->>> that erratum is not "just" regular recoverable MCE, rather
->>> sometimes/always an unrecoverable CPU state, despite the error code, right?
->>
->> The erratum documentation talks explicitly about hanging the system, but
->> it's not clear if it's just a result of the OS mishandling the MCE, or
->> something worse.  So I don't know. :(  Pawan, do you?
-> 
-> As Dave mentioned in the other email its "something worse".
-> 
-> Although this erratum results in a machine check with the same MCACOD
-> signature as an SRAR error (0x150) the MCi_STATUS.PCC bit will be set to
-> one. The Intel Software Developers manual says that PCC=1 errors are
-> fatal and cannot be recovered.
-> 
-> 	15.10.4.1 Machine-Check Exception Handler for Error Recovery [1]
-> 
-> 	[...]
-> 	The PCC flag in each IA32_MCi_STATUS register indicates whether recovery
-> 	from the error is possible for uncorrected errors (UC=1). If the PCC
-> 	flag is set for enabled uncorrected errors (UC=1 and EN=1), recovery is
-> 	not possible.
-> 
+On Thu, Nov 14, 2019 at 08:07:08AM +0100, Adrian Reber wrote:
+>   * The structure is versioned by size and thus extensible.
+>   * New struct members must go at the end of the struct and
+> @@ -71,6 +85,8 @@ struct clone_args {
+>  	__aligned_u64 stack;
+>  	__aligned_u64 stack_size;
+>  	__aligned_u64 tls;
+> +	__aligned_u64 set_tid;
+> +	__aligned_u64 set_tid_size;
 
-And, as Dave observed, even that event is not delivered to software 
-(maybe just logged by firmware for post-reset analysis) but can or does 
-cause a machine lock-up, right?
+Oh, one thing that is missing is the addition of
 
-Thanks,
-Jan
++#define CLONE_ARGS_SIZE_VER1 80 /* sizeof second published struct */
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+in sched.h. Please add that, when you resend.
+
+Thanks!
+Christian
