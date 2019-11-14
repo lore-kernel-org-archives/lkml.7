@@ -2,154 +2,155 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2350DC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFDCC33C9B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DC220718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573759171;
-	bh=0nzQppvn8eeRtspGJTnosUaDukolKvY2fmZcM8MyR4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gzKAd+Akd8aPm1+XkdKzWP7Ej5E0snDER3px3x+1GZomDKbjcW86kE5w7rsxZ50m6
-	 wyeWWK5XkPe9g0w4bAhYNivZRaUcVQQnenxZnYBCpEJhB9SQHIX8Mii64OL61EYOU6
-	 dzX8Wl4T93D7fOIjtniV+dxI0jUyHk3ZJOJpAulA=
+	by mail.kernel.org (Postfix) with ESMTP id A708D206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:20:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TLe7YGlj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfKNTT3 (ORCPT
+        id S1727059AbfKNTU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:19:29 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43113 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfKNTT3 (ORCPT
+        Thu, 14 Nov 2019 14:20:29 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43253 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbfKNTU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:19:29 -0500
-Received: by mail-ot1-f66.google.com with SMTP id l14so5850758oti.10;
-        Thu, 14 Nov 2019 11:19:28 -0800 (PST)
+        Thu, 14 Nov 2019 14:20:27 -0500
+Received: by mail-qt1-f194.google.com with SMTP id j5so6604492qtn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:20:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kkwRFJ8JxVgdpo/nC/ABdKBnp89T/DEojTkPf4HtCKM=;
+        b=TLe7YGlj6WJefOzGFhO0G5c7NeQYJ1fI2d+sMS/QqoLjZaFilDPuds3IbV3kE37lVo
+         CO/4LU6qfDO9dK9JYgsyVrB4x0i6I92khIntTjM8VlNQ4HlB9/KNpynBSRuZVvSQYTLh
+         3IliyjzdXxiq9qvK9rdA3UveqIMBO/wqDlrXU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4IsLNh9XMoQBdvulmO/iuC5KMTdNRjARPKR6yxL0CXE=;
-        b=OdqkIjoDBl9FTaVlGrtmWZhftlMjHycKHf8cDGDo21D4PUS6JWw9UceGEPEdO/Mo0w
-         byPQhV0mCIWXXm4xKL7SJL3VSwc7TjdwkD+Q+5NW/auskARhEDNjaYqREnk8ATOjqEul
-         816ySVj6XCoBQymtNiCUVxdEwNRYWlgYoyor9TVkZ+i5mn53zk6CeLpo0HeQj5dce4hr
-         H8MBPVCMjtWusvuZ332GGkdWPp8PLeJTQ61gI5IxbQ7hhY3IGI449bDufTbxmzapJvqr
-         YjJX8hUrQFDQiV69rMB5PtDREZFp9Gi0QrbcrzAU8dJgxCpmIs0Duff8s2j28ZVuQN/h
-         YPbA==
-X-Gm-Message-State: APjAAAXo+rbHVAFhzxWtQ3TZg0tu+4lCBWN45hiDpz5i5n98UFudpry8
-        BynGzT1IifoWAzEeJW99sg==
-X-Google-Smtp-Source: APXvYqxy6xLFgw2Vf9ni3fg2riXq41C/XY5uv0o+qX+3pnZF5b8XhVjvliB2Nwyhkb/rsiwXorlYng==
-X-Received: by 2002:a9d:1b70:: with SMTP id l103mr9142804otl.154.1573759168337;
-        Thu, 14 Nov 2019 11:19:28 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t2sm2065500otm.75.2019.11.14.11.19.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 11:19:27 -0800 (PST)
-Date:   Thu, 14 Nov 2019 13:19:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: arm: Convert sprd board/soc bindings
- to json-schema
-Message-ID: <20191114191927.GA12025@bogus>
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
- <20191111090230.3402-2-chunyan.zhang@unisoc.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kkwRFJ8JxVgdpo/nC/ABdKBnp89T/DEojTkPf4HtCKM=;
+        b=YCXPyJgayP8Rqy75JV9Xd6KEiFVXdSQgOZpd2cXc3X3npFfzZ/W/RGQ2eOO/ys18qc
+         xe/KKSkYb8bab+zuvALGXu8f4kXZzbliSnZeUSzPUpwNOHNfZpTnsUVwSgs8grhZDVaf
+         dOwwAkvLcaWBAbK51g7g4Y2zZp4FPjeKyPyZIdao4XC4wDPMlvM5bkMzedfFksAKuMZ7
+         WWrBafrlWgB5hYT5W6XfX1hn12Mq/ZOxcUMNyplaco4tazCJ+r4M9sWXNh2fxyX5wGOn
+         6s7hM/9TDFrHnxzowNAqVNRik3/8ph2uJG+Ix4TwZ0pNPnXYhPgL0vFk0h3oFLv0tU/u
+         osgw==
+X-Gm-Message-State: APjAAAUIeEBcAv6YhHTXVFw2qxWfOXn934tCLYsluv502sdIclvIZKOQ
+        r25zZvfpsvqyzL+fmQ/Dup4aUyfRSRga4VxYz8TEFA==
+X-Google-Smtp-Source: APXvYqw1+jL9umsKndVRoE+d6jN4cpPkyHVFWUdzXu6CuGu8nopPMMAfao566XJYRUR0bHl2IAsw/1Oxc1hJMtnnnas=
+X-Received: by 2002:ac8:754c:: with SMTP id b12mr9891870qtr.291.1573759225207;
+ Thu, 14 Nov 2019 11:20:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111090230.3402-2-chunyan.zhang@unisoc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191112230944.48716-1-abhishekpandit@chromium.org>
+ <20191112230944.48716-5-abhishekpandit@chromium.org> <CAD=FV=UfGDAtePrDmsEsdCNsHQZwDkU8z6E=qzSu=opht7evpQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=UfGDAtePrDmsEsdCNsHQZwDkU8z6E=qzSu=opht7evpQ@mail.gmail.com>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Thu, 14 Nov 2019 11:20:14 -0800
+Message-ID: <CANFp7mWT2GwkSEcE5SkxRnfOebHq2aYLoLh6dmCZ-HktUe+mYQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 05:02:26PM +0800, Chunyan Zhang wrote:
-> 
-> Convert Unisoc (formerly Spreadtrum) SoC bindings to DT schema format
-> using json-schema.
-> 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
->  .../devicetree/bindings/arm/sprd.txt          | 14 ---------
->  .../devicetree/bindings/arm/sprd.yaml         | 29 +++++++++++++++++++
->  2 files changed, 29 insertions(+), 14 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/sprd.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
-> deleted file mode 100644
-> index 3df034b13e28..000000000000
-> --- a/Documentation/devicetree/bindings/arm/sprd.txt
-> +++ /dev/null
-> @@ -1,14 +0,0 @@
-> -Spreadtrum SoC Platforms Device Tree Bindings
-> -----------------------------------------------------
-> -
-> -SC9836 openphone Board
-> -Required root node properties:
-> -	- compatible = "sprd,sc9836-openphone", "sprd,sc9836";
-> -
-> -SC9860 SoC
-> -Required root node properties:
-> -	- compatible = "sprd,sc9860"
-> -
-> -SP9860G 3GFHD Board
-> -Required root node properties:
-> -	- compatible = "sprd,sp9860g-1h10", "sprd,sc9860";
-> diff --git a/Documentation/devicetree/bindings/arm/sprd.yaml b/Documentation/devicetree/bindings/arm/sprd.yaml
-> new file mode 100644
-> index 000000000000..8540758188d8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/sprd.yaml
-> @@ -0,0 +1,29 @@
-> +# SPDX-License-Identifier: GPL-2.0
+On Thu, Nov 14, 2019 at 9:29 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Tue, Nov 12, 2019 at 3:10 PM Abhishek Pandit-Subedi
+> <abhishekpandit@chromium.org> wrote:
+> >
+> > Add documentation for pcm parameters.
+> >
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> >
+> > ---
+> >
+> > Changes in v4:
+> > - Fix incorrect function name in hci_bcm
+> >
+> > Changes in v3:
+> > - Change disallow baudrate setting to return -EBUSY if called before
+> >   ready. bcm_proto is no longer modified and is back to being const.
+> > - Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
+> > - Changed brcm,sco-routing to brcm,bt-sco-routing
+> >
+> > Changes in v2:
+> > - Use match data to disallow baudrate setting
+> > - Parse pcm parameters by name instead of as a byte string
+> > - Fix prefix for dt-bindings commit
+> >
+> >  .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > index c749dc297624..42fb2fa8143d 100644
+> > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > @@ -29,6 +29,11 @@ Optional properties:
+> >     - "lpo": external low power 32.768 kHz clock
+> >   - vbat-supply: phandle to regulator supply for VBAT
+> >   - vddio-supply: phandle to regulator supply for VDDIO
+> > + - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
+> > + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
+> > + - brcm,pcm-frame-type: 0-1 (short, long)
+> > + - brcm,pcm-sync-mode: 0-1 (slave, master)
+> > + - brcm,pcm-clock-mode: 0-1 (slave, master)
+>
+> Since these are optional your patch should describe what happens if
+> they are not present.  I think in patch #3 of the series you guys are
+> discussing it, but whatever you end up with should be documented here.
+>
+Yes, I think I will document the default values here as well.
 
-You made all the commits to the old file, so can you dual license:
+> That actually made me realize that this is patch #4 in the series.  To
+> be pedantic, bindings are supposed to be _earlier_ in the series than
+> the code that implements them.
+>
+>
+> >  Example:
+> > @@ -40,5 +45,11 @@ Example:
+> >         bluetooth {
+> >                 compatible = "brcm,bcm43438-bt";
+> >                 max-speed = <921600>;
+> > +
+> > +               brcm,bt-sco-routing = [01];
+> > +               brcm,pcm-interface-rate = [02];
+> > +               brcm,pcm-frame-type = [00];
+> > +               brcm,pcm-sync-mode = [01];
+> > +               brcm,pcm-clock-mode = [01];
+>
+> I'm at least marginally curious why your example has a leading 0 for
+> all numbers.  It makes me think you intend them to be represented in
+> octal, though I don't know offhand if dtc uses that format for octal.
+> I guess it doesn't matter since all your numbers are between 0 and 5,
+> but it does seem strange.
 
-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+It's a bytestring with a length of 1. See bytestrings under
+https://devicetree-specification.readthedocs.io/en/latest/source-language.html#node-and-property-definitions
 
-With that:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +# Copyright 2019 Unisoc Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/sprd.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Unisoc platforms device tree bindings
-> +
-> +maintainers:
-> +  - Orson Zhai <orsonzhai@gmail.com>
-> +  - Baolin Wang <baolin.wang7@gmail.com>
-> +  - Chunyan Zhang <zhang.lyra@gmail.com>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - sprd,sc9836-openphone
-> +          - const: sprd,sc9836
-> +      - items:
-> +          - enum:
-> +              - sprd,sp9860g-1h10
-> +          - const: sprd,sc9860
-> +
-> +...
-> -- 
-> 2.20.1
-> 
-> 
+>
+> -Doug
