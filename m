@@ -2,129 +2,111 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6A2C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D858DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA512070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573742602;
-	bh=vs4o9uhBZ8ZZarCFGMsrxyCFr4QaYvMaNYpXSmY+IJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zgb6R3MbOMBkhrfED9wziE4MGaL0Y54B5oTWwOEl2p8bjkcJSrYxXugs+9Q2akvq6
-	 BIUMpiDskzapeee3f98rkBA0MDf6cX/zOoydOTFD+Jx6Uo20W/tOxN35vpW3sQkyvM
-	 AzmKcC3GLnJIZuRil18dVXGyJLD/eDvVNCzUxcIw=
+	by mail.kernel.org (Postfix) with ESMTP id AE908206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFMJ5VH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfKNOnU (ORCPT
+        id S1726828AbfKNOnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:43:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56294 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726276AbfKNOnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:43:20 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 755A8ADFB;
-        Thu, 14 Nov 2019 14:43:18 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 15:43:17 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     linux-kernel@vger.kernel.org, yuqi jin <jinyuqi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v3] lib: optimize cpumask_local_spread()
-Message-ID: <20191114144317.GJ20866@dhcp22.suse.cz>
-References: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191108103102.GF15658@dhcp22.suse.cz>
- <c6f24942-c8d6-e46a-f433-152d29af8c71@hisilicon.com>
- <20191112115630.GD2763@dhcp22.suse.cz>
- <00856999-739f-fd73-eddd-d71e4e94962e@hisilicon.com>
+        Thu, 14 Nov 2019 09:43:39 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:41864 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfKNOnj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 09:43:39 -0500
+Received: by mail-yb1-f196.google.com with SMTP id d95so2614043ybi.8;
+        Thu, 14 Nov 2019 06:43:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4pgB+Cd8IZTdSBIGkWqDsTXRY6q97RGvQ71jVJ4qlw0=;
+        b=gFMJ5VH+kIMU2+hoWNAqr/eIhXNqrLV6mmSvpfpSXWg/SsvYydSoI0gWeiIV17plLP
+         n+fYi/7BL7mCmhWtF2dTasgXKEqfVhMjN3/CeEsyJNIyObqLewtioIUcjrAejEZYrhwc
+         XtAIv1BcI8lxhT/x9wNGob8nIij/8QiEjox8WW9rI9u6dqMtUFEu4LR6jijCELn7jU/n
+         bDGRe0fgvhar0f0BoBoFnwgJ+dxhwowUjfPsBcY32KSLnYPUDi4FV5/OLwSpO79QGOn6
+         SmUTon9X2b8EvMeRXQTnXmr89jC8iF29kY6PHfsxK46414NozpsEbnNyF+dr5VLzJfiY
+         MSkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4pgB+Cd8IZTdSBIGkWqDsTXRY6q97RGvQ71jVJ4qlw0=;
+        b=Cx6SGk2xAi8lgQX/i6uOlcTo9thJ3YIoNOUlfGttnaa81mkVD5RIjuwMBQjYJW+yDI
+         VTmRood+2k+olChYYoszBCZKwXAG8JzZF90KA5u+Zg+oMhZ6ef//uh8nL6nvFB3xao8X
+         V7QpwXvQCWh0hddnhKxytl9Aw3VUWZNX8s/NQ4w1oCR1LhfiZ5SS/zMt3KjVWQGohh/s
+         8+TgFBem2qhlabo7BTBZI7xV2ku0PfNv5zk48MWZc0CCTMe9lPd8z5f8gvvr0+XkmJVL
+         cZO7oKfJS0fb2xR1qcbwBHxamEeFxObuDI3fmCr694MS4GkNTZxlHhxQ3cZ8mESg7WWr
+         GJwQ==
+X-Gm-Message-State: APjAAAU41YODAczWD5A511+I47kwzr1x3gMl8h06irBjvM3mpagYT8wo
+        d74Pa4bs0H7SjXjwx/SKheH6LXa8jKqvOXrbHRk=
+X-Google-Smtp-Source: APXvYqzzjtMYZbdlQQuoAVP38gmtj54lHfp9b0FuWN5Kc0nv3H7D8KhIeKeMXWqAQmvWXhUUgOZrdVtUsQwZHIIGiHM=
+X-Received: by 2002:a25:383:: with SMTP id 125mr7270645ybd.45.1573742617997;
+ Thu, 14 Nov 2019 06:43:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00856999-739f-fd73-eddd-d71e4e94962e@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191113200651.114606-1-colin.king@canonical.com> <CAJfpegug-saOEigqDNKfwMR5qdzrbLnRBD=0eN5juGioFH_L_Q@mail.gmail.com>
+In-Reply-To: <CAJfpegug-saOEigqDNKfwMR5qdzrbLnRBD=0eN5juGioFH_L_Q@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 14 Nov 2019 16:43:26 +0200
+Message-ID: <CAOQ4uxgf5KAq7VoHVNVUD9QtA7Y++-_TdwOe6=icHLgJvyrg1A@mail.gmail.com>
+Subject: Re: [PATCH][V4] ovl: fix lookup failure on multi lower squashfs
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Colin King <colin.king@canonical.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 13-11-19 10:46:05, Shaokun Zhang wrote:
-[...]
-> >> available: 4 nodes (0-3)
-> >> node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-> >> node 0 size: 63379 MB
-> >> node 0 free: 61899 MB
-> >> node 1 cpus: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
-> >> node 1 size: 64509 MB
-> >> node 1 free: 63942 MB
-> >> node 2 cpus: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
-> >> node 2 size: 64509 MB
-> >> node 2 free: 63056 MB
-> >> node 3 cpus: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
-> >> node 3 size: 63997 MB
-> >> node 3 free: 63420 MB
-> >> node distances:
-> >> node   0   1   2   3
-> >>   0:  10  16  32  33
-> >>   1:  16  10  25  32
-> >>   2:  32  25  10  16
-> >>   3:  33  32  16  10
-[...]
-> before patch
-> Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
-> 2
-> Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
-> 48
+On Thu, Nov 14, 2019 at 12:30 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> On Wed, Nov 13, 2019 at 9:06 PM Colin King <colin.king@canonical.com> wrote:
+> >
+> > From: Amir Goldstein <amir73il@gmail.com>
+> >
+> > In the past, overlayfs required that lower fs have non null
+> > uuid in order to support nfs export and decode copy up origin file handles.
+> >
+> > Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
+> > lower fs") relaxed this requirement for nfs export support, as long
+> > as uuid (even if null) is unique among all lower fs.
+>
+> I see another corner case:
+>
+> n- two filesystems, A and B, both have null uuid
+>  - upper layer is on A
+>  - lower layer 1 is also on A
+>  - lower layer 2 is on B
+>
+> In this case bad_uuid won't be set for B, because the check only
+> involves the list of lower fs.  Hence we'll try to decode a layer 2
+> origin on layer 1 and fail.
 
-node 2
+Right.
 
-> Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
-> 0
+>
+> Can we fix this without special casing lower layer fsid == 0 in
+> various places?  I guess that involves using lower_fs[0] for the
+> fsid=0 case (i.e. index lower_fs by fsid, rather than (fsid -1)).
+> Probably warrants a separate patch.
+>
 
-node 0
+I guess we should.
+I do hate that special casing.
+I can work of that, but would you like to hold back this patch now?
+Or just fix that corner case later?
 
-> Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
-> 24
-
-node 1
-
-> Euler:/sys/bus/pci #
-> 
-> after patch
-> Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
-> 2
-> Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
-> 48
-
-node 2
-
-> Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
-> 72
-
-node 3
-
-> Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
-> 24
-
-node 1
-
-So few more questions. The only difference seems to be IRQ369
-moving from 0 to 3 and having the device affinity to node 2
-makes some sense because node 3 is closer. So far so good.
-I still have a large gap to get the whole picture. Namely why those
-other IRQs are not using any of the existing CPUs on the node 2.
-Could you explain that please?
-
-Btw. this all should be in the changelog.
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+Amir.
