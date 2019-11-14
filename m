@@ -2,102 +2,134 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4ACC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAA0C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7880206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73177206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="DH/8dDhh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RwnHzEIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKNNaD (ORCPT
+        id S1727044AbfKNNbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:30:03 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25862 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfKNNaC (ORCPT
+        Thu, 14 Nov 2019 08:31:38 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40536 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfKNNbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:30:02 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1573738192; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=KCydP6eIxUn2igeczZ3T8/M2Hhl/f27NTAnqr3kM9fY1+GNJow5oBqwRScCmLYSFGIuQz7lYXsWjqfZHsQpDuWqDVsvyVwi07UOM2BKBG030mR5rGAISQnAmVcaVkyhqNr18eeZZCf9dpM/TSbHnYmAvVqxRX7Yq9ssTaEam+wU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1573738192; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=tuWnqfKvsZkLU+jDJagYgAusq7Vm0YZq0abqBev2SfQ=; 
-        b=A8B5CZwkVoT4ESeUjditFj8/GlTCOWuJatnWq9a9dZqJIgqIrjKDOx0Ahmsi59tx3WBHOLK1JKmVuDpf6+tnEpUuedkKmdg/KWZR8KKkLlR8Xm/elhVXkIL2ipUtS9lXV1Ll7hIGmiQnfwEBXtZwS7XuaKD9OR+v9PiRURF7rJ8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=rS/Sv/W/XTTB732XTmLvO2SKxpu527ONZfwoMWJfPePzPb4OGQ/RXZtUZVl3dCa7qzq7+ARHheEy
-    ogEj26PAf93WhSmeZZvuw25ndr75SSEjVCuab1Wb/o68YoQB2UO3  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573738192;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=917; bh=tuWnqfKvsZkLU+jDJagYgAusq7Vm0YZq0abqBev2SfQ=;
-        b=DH/8dDhhF0N3QpP9WB0Q/2xFYY4r2ItP6b0ZgOcGLZN+Qm2ty/BOQvhv+2p+est7
-        KFJpu74qB7R7Lu4Z9sQYqv1TKh47BJyk6Lx1tQRQQvWFPOsp3PEyYHTuYv3jzMxsq+q
-        1XvTkTAPKTfiu9IYvbd3dMhPWJWGqoiaORqwhQrk=
-Received: from [192.168.10.218] (171.221.112.167 [171.221.112.167]) by mx.zohomail.com
-        with SMTPS id 1573738191942108.24330874646944; Thu, 14 Nov 2019 05:29:51 -0800 (PST)
-Subject: Re: [PATCH 1/2 v3] dt-bindings: clock: Add X1000 bindings.
-To:     Rob Herring <robh@kernel.org>
-References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
- <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com>
- <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
- <20191112005544.GB7038@bogus>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, paul.burton@mips.com, sboyd@kernel.org,
-        robh+dt@kernel.org, syq@debian.org, mark.rutland@arm.com,
-        paul@crapouillou.net
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DCD56C5.1050106@zoho.com>
-Date:   Thu, 14 Nov 2019 21:29:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Thu, 14 Nov 2019 08:31:36 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAEDVVOg103614;
+        Thu, 14 Nov 2019 07:31:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573738291;
+        bh=8/wDtcVdVvs/3Umxwe1T1r5l+aLgUb89v9tZMmz7QOg=;
+        h=From:To:CC:Subject:Date;
+        b=RwnHzEIwdzmGjys3ZG55uaMqTpvMZyZM19yAN4OIRRPVMcMIQTKUUK33LmcYFPYLW
+         i096IYlrwKkuiLZFU6vEVINCwrpwFuSr7WVS9K8CWcxRaTi1SPzDjDMe8/L9vaDzbT
+         HyELQpoQXcefA7+KLVIesPrZ+bozcT3+NtzNSgvg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAEDVVUK019254
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 Nov 2019 07:31:31 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 14
+ Nov 2019 07:31:30 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 14 Nov 2019 07:31:30 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEDVUPb079289;
+        Thu, 14 Nov 2019 07:31:30 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v17 00/19] Multicolor Framework
+Date:   Thu, 14 Nov 2019 07:30:04 -0600
+Message-ID: <20191114133023.32185-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 MIME-Version: 1.0
-In-Reply-To: <20191112005544.GB7038@bogus>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hello
 
-On 2019=E5=B9=B411=E6=9C=8812=E6=97=A5 08:55, Rob Herring wrote:
-> On Sun, 10 Nov 2019 17:28:21 +0800, Zhou Yanjie wrote:
->> Add the clock bindings for the X1000 Soc from Ingenic.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>   .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
->>   include/dt-bindings/clock/x1000-cgu.h              | 44 ++++++++++++++=
-++++++++
->>   2 files changed, 45 insertions(+)
->>   create mode 100644 include/dt-bindings/clock/x1000-cgu.h
->>
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->
-> If a tag was not added on purpose, please state why and what changed.
+Simple fix in the multicolor code where the extended registration call was not
+called in the devm_* function
 
-I'm sorry, it's my mistake, I forgot to add these tags.
-I'll pay more attention on this next time.
+Thanks Martin F. for finding this issue.
 
-Best regards=EF=BC=81
+Hopefully this will be pulled in for the 5.5 merge window.
 
+Dan
+
+Dan Murphy (19):
+  dt: bindings: Add multicolor class dt bindings documention
+  dt-bindings: leds: Add multicolor ID to the color ID list
+  leds: Add multicolor ID to the color ID list
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt: bindings: lp55xx: Be consistent in the document with LED acronym
+  dt: bindings: lp55xx: Update binding for Multicolor Framework
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  leds: lp55xx: Fix checkpatch file permissions issues
+  leds: lp5523: Fix checkpatch issues in the code
+  dt: bindings: Update lp55xx binding to recommended LED naming
+  leds: lp55xx-common: Remove extern from lp55xx-common header
+
+ .../ABI/testing/sysfs-class-led-multicolor    |  36 +
+ .../bindings/leds/leds-class-multicolor.txt   |  98 +++
+ .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 163 +++-
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  | 100 +++
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ drivers/leds/Kconfig                          |  22 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 272 ++++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 799 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  62 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 235 ++++--
+ drivers/leds/leds-lp55xx-common.h             |  36 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          | 139 +++
+ include/linux/platform_data/leds-lp55xx.h     |   8 +
+ 23 files changed, 2106 insertions(+), 172 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
+
+-- 
+2.22.0.214.g8dca754b1e
 
