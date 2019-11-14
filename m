@@ -2,55 +2,55 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6605DC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E11C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B864206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E323E2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g67SqDXK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u1LJvWhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfKNRGx (ORCPT
+        id S1727133AbfKNRGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:06:53 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41326 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfKNRGw (ORCPT
+        Thu, 14 Nov 2019 12:06:54 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58910 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfKNRGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:06:52 -0500
+        Thu, 14 Nov 2019 12:06:53 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAEH6jrF040997;
-        Thu, 14 Nov 2019 11:06:45 -0600
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAEH6kO1034141;
+        Thu, 14 Nov 2019 11:06:46 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573751205;
-        bh=TOFk+n55SR5E+wa8imt9kvjhp3LFM8oZ8Xc6S2tLXn8=;
-        h=From:To:CC:Subject:Date;
-        b=g67SqDXKC4JaLIxtCp4gXWNdIaP3Kwr6xbwjmvsfQWynuUIHAK+iof3UufTqr8HuM
-         +mkOfufcWNtXUOw4bryY328oHE3NDE1QeIk4lOzssFp/91+YooGKljx/z7HJPsiiSV
-         NSN3QFnP7ZotWrBIMMkGkUSEUwmi3xJoAAgr+GeA=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAEH6jOT101802
+        s=ti-com-17Q1; t=1573751206;
+        bh=nHrdcDw7lSz9s3P1r6oW2Qp28u77dyRK98Mqysr0DAo=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=u1LJvWhMlfSdtZFXVQEYH1XcgsMU6n13Lxm0ZrmjP5Q0S9sLJu64e54Kiviuh7aMk
+         UNIH9NH2yUvrk2DoMkFYEfgAgPzmr1ndKOduYP70cHsxcJIMauXiarGq9fUQpMDObg
+         JDBUWITAb0uyh8qoKsHVB2M/4qitKf1wp0jhUfx8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAEH6jZr101824
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Thu, 14 Nov 2019 11:06:45 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 14
- Nov 2019 11:06:42 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 11:06:45 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 14 Nov 2019 11:06:42 -0600
+ Frontend Transport; Thu, 14 Nov 2019 11:06:45 -0600
 Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEH6gle035666;
-        Thu, 14 Nov 2019 11:06:42 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEH6joC078115;
+        Thu, 14 Nov 2019 11:06:45 -0600
 Received: from localhost (ulb0232989.dhcp.ti.com [172.25.137.130])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xAEH6fu08400;
-        Thu, 14 Nov 2019 11:06:41 -0600 (CST)
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xAEH6ju08454;
+        Thu, 14 Nov 2019 11:06:45 -0600 (CST)
 From:   Caleb Robey <c-robey@ti.com>
 To:     <linux_omap@vger.kernel.org>
 CC:     Jason Kridner <jkridner@gmail.com>,
@@ -68,10 +68,12 @@ CC:     Jason Kridner <jkridner@gmail.com>,
         =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
         Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-Subject: [PATCH 0/2] ARM: dts: am5729: beaglebone-ai: Enable BeagleBone AI
-Date:   Thu, 14 Nov 2019 11:06:17 -0600
-Message-ID: <20191114170620.12346-1-c-robey@ti.com>
+Subject: [PATCH 1/2] ARM: dts: am5729: beaglebone-ai: dra7 reqs in dts
+Date:   Thu, 14 Nov 2019 11:06:18 -0600
+Message-ID: <20191114170620.12346-2-c-robey@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191114170620.12346-1-c-robey@ti.com>
+References: <20191114170620.12346-1-c-robey@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -80,23 +82,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following patches
-1) Minor change to dra7.dtsi
-2) Add device tree file for BeagleBone AI
+Small nomenclature change for beaglebone AI compatibility.
 
-update: moved dra7.dtsi changes before dts addition to prevent
-compilation breaks
+Signed-off-by: Jason Kridner <jdk@ti.com>
+Signed-off-by: Caleb Robey <c-robey@ti.com>
 
-Caleb Robey (2):
-  ARM: dts: am5729: beaglebone-ai: dra7 reqs in dts
-  ARM: dts: am5729: beaglebone-ai: adding device tree
+---
+ arch/arm/boot/dts/dra7.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/am5729-beagleboneai.dts | 733 ++++++++++++++++++++++
- arch/arm/boot/dts/dra7.dtsi               |   2 +-
- 3 files changed, 735 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
-
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 953f0ffce2a9..563d64c69fd4 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -143,7 +143,7 @@
+ 	 * the moment, just use a fake OCP bus entry to represent the whole bus
+ 	 * hierarchy.
+ 	 */
+-	ocp {
++	ocp: ocp {
+ 		compatible = "ti,dra7-l3-noc", "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.17.1
 
