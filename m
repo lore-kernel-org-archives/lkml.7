@@ -2,192 +2,215 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56601C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF931C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212B2206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573769886;
-	bh=WpcmM7PvoG7vfHURvov3xdJHVUkrfJTlQ2J7pfeba7c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RGxWOl2z4JA0DDdfNUI+OqE6uGPn/HkJEHrINOLonrWzl11vqjZv+EIBsPpEhSvWc
-	 oeJXBTUFKIWOv8mDNu1CRzsak7ZpFfD8Ljs7flOhNZ+2KKqKuAEunqUcOY2MPEmGk0
-	 TknwR93Q8SsSRyerOGNtWyqH1HTaWWyV0IyObR+U=
+	by mail.kernel.org (Postfix) with ESMTP id B44962071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:24:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sUMwx+xL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKNWSF (ORCPT
+        id S1727002AbfKNWYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:18:05 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46427 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfKNWSE (ORCPT
+        Thu, 14 Nov 2019 17:24:00 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:36436 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNWYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:18:04 -0500
-Received: by mail-oi1-f193.google.com with SMTP id n14so6778504oie.13;
-        Thu, 14 Nov 2019 14:18:03 -0800 (PST)
+        Thu, 14 Nov 2019 17:24:00 -0500
+Received: by mail-pf1-f201.google.com with SMTP id f21so5930843pfa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:23:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=b6U6slm4w2TTC9uTYmfvzZw1H8jHw9pJ122PMPOdkGU=;
+        b=sUMwx+xLJ29ogeKaGX45fuqum+jqv8BMVvsWujoygzA0FqxjkBL8pHYghuQcB8mfWQ
+         XAypanXZTp9v/Sun6ITwMiJsp1bIEVvh2a89PWxiA8AgNhS2WNlH2urUHRUKQxC8EBFd
+         lPzrVYXZ4cRygULSI3PN98n6rDF/vw3TPoPcRXVxx88cCh5YjcqzErwSFOLHjqWqzDKB
+         fSgPPZxZrpToajqxV3UWw56eONNeFV4JoGIjR+UrWYPgTRTW3MyXnKxiCb3tmat7RajN
+         VhbLtE2SzOFtluWWGQL1u+HeDK0V09KCQA6MMIfgRRXWBSeJLYurmq835bf9zq7IOJlJ
+         gFLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bvaIXmyjkpLo8dw69tP+rWKaaoE3Lzk6tMGk7heZwRg=;
-        b=gQauNC0wiLdiA381knU7UBewKdSum8muOypnCmCbH5qsiUoCpNfk4jEFGRUKvs+bHg
-         sFSeMasrVcOaoXunP1thtomJ4fyqEGS47KngoEjz/OmBsCEs/cWgrEMjy16gd5wOqQog
-         ikmlMN4190x1E6O624QO8uTGd8mYEWJHV8D50TKrCxrWg2fH/SY84La86/B74akry6nZ
-         cFrVNfuKZiWeA3xK7bd7VlBZeqgttk5oZAgUkNIsbzg6bllOxJY8MywlGeUkTwd8JqQ8
-         142UVY/Fyd1uhhcSdM2+A+epATLkf8K9qrtAxRwPLOV0wS0dOzunEZgnf/9vlmsW1+Oo
-         nOvQ==
-X-Gm-Message-State: APjAAAVWQPXEpXEWzPVuRGKgasX11X7vTSvKJaBy5YeRFsv7GdAtCfLN
-        CXX+14pX6ut6nKAnnDuodCOJtEBqHUiB+2NCnPM=
-X-Google-Smtp-Source: APXvYqyN/BifFeHZOmj/U1xV2A+uIjeMTaXFtyUp9OTDS9tnC8cvy7HwaNh2lJCTtzTLS9KfQVPhQquagUJQrMK0qrc=
-X-Received: by 2002:aca:c753:: with SMTP id x80mr5127204oif.115.1573769883243;
- Thu, 14 Nov 2019 14:18:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20191114204914.21206-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20191114204914.21206-1-daniel.lezcano@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Nov 2019 23:17:52 +0100
-Message-ID: <CAJZ5v0jE=wODwwMTPx6J8+A60asR5ZAcX2ezbYo8-1-BU3ru5w@mail.gmail.com>
-Subject: Re: [PATCH V1 1/3] cpuidle: Replace use_deepest_state flag by forced_idle_latency_limit_ns
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=b6U6slm4w2TTC9uTYmfvzZw1H8jHw9pJ122PMPOdkGU=;
+        b=afJfc3aeuGVj3jVOzSt2BDcIAFx61e5p4A9Ou2KDc8T06w3UTAuj2RrXSUDTzt8pUM
+         9tAKn2lT1chpCQFzMkOA2Ya8sau+AzavVN9ecmdZjmlTfJSD3lGYuIx2GzeOW0z0POYz
+         VFcc8xpeimQX1LU0lQM330pZvSrGB4YAjVVjF5UmOA0JiJsfqVhsXM/YUmkO/VUlfz77
+         9JHKbujcgHrYwhWzpWgPK+3Dt81C4FRAZxqDhOUu7uROPUkxiehIGdkK2h88f9Um7O6P
+         o3/Ij31gdvZwJq8g46Np4Aj4vwIM/Z79t+bexyLdpivs1qfiF4RtZMG/WmE/7UqM2OAb
+         pn2g==
+X-Gm-Message-State: APjAAAXiHMB0RwkMRkJjo0q49bw3PH5uR1U7wk8s/JBVHY7oYbBKCeL/
+        dxo4454tQs1hmsisH8oP952hbB+z7CeUDX0=
+X-Google-Smtp-Source: APXvYqwpb7tFKstuTKdGcosADXNJ2n0mc/S/imfqXloTmUWALuKFKLjJBQwK+h4f5wiPbof6ARvGblwN6Kzu6oQ=
+X-Received: by 2002:a63:1624:: with SMTP id w36mr11853264pgl.404.1573770237263;
+ Thu, 14 Nov 2019 14:23:57 -0800 (PST)
+Date:   Thu, 14 Nov 2019 14:23:48 -0800
+Message-Id: <20191114222348.226355-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v3] driver core: Allow device link operations inside sync_state()
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 9:49 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> We want to specify a latency constraint when choosing an idle state at
-> play_idle time. Instead of duplicating the information in the
-> structure or propagate the latency in the call stack, change the
-> use_deepest_state by forced_latency_limit_ns to introduce this
-> constraint. The idea being that when it is set, idle is forced
-> (i.e. no governors), but there is a latency limit for the state to
-> use.
->
-> A zero latency constraint means "do not use the deepest idle state
-> path" as the 'use_deepest_state' boolean was used in the
-> cpuidle_idle_call.
->
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/cpuidle/cpuidle.c | 10 +++++-----
->  include/linux/cpuidle.h   |  6 +++---
->  kernel/sched/idle.c       |  6 +++---
->  3 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index 44ae39f2b47a..62226fadc02d 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -100,19 +100,19 @@ static int find_deepest_state(struct cpuidle_driver *drv,
->
->  /**
->   * cpuidle_use_deepest_state - Set/clear governor override flag.
-> - * @enable: New value of the flag.
-> + * @latency_limit_ns: A latency limit constraint
->   *
-> - * Set/unset the current CPU to use the deepest idle state (override governors
-> - * going forward if set).
-> + * Set/unset the current CPU to use the deepest idle state with the exit
-> + * latency within @latency_limit_ns
->   */
-> -void cpuidle_use_deepest_state(bool enable)
-> +void cpuidle_use_deepest_state(u64 latency_limit_ns)
->  {
->         struct cpuidle_device *dev;
->
->         preempt_disable();
->         dev = cpuidle_get_device();
->         if (dev)
-> -               dev->use_deepest_state = enable;
-> +               dev->forced_idle_latency_limit_ns = latency_limit_ns;
->         preempt_enable();
->  }
->
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index d23a3b1ddcf6..1f3f4dd01e48 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -83,7 +83,6 @@ struct cpuidle_driver_kobj;
->  struct cpuidle_device {
->         unsigned int            registered:1;
->         unsigned int            enabled:1;
-> -       unsigned int            use_deepest_state:1;
->         unsigned int            poll_time_limit:1;
->         unsigned int            cpu;
->         ktime_t                 next_hrtimer;
-> @@ -91,6 +90,7 @@ struct cpuidle_device {
->         int                     last_state_idx;
->         int                     last_residency;
->         u64                     poll_limit_ns;
-> +       u64                     forced_idle_latency_limit_ns;
->         struct cpuidle_state_usage      states_usage[CPUIDLE_STATE_MAX];
->         struct cpuidle_state_kobj *kobjs[CPUIDLE_STATE_MAX];
->         struct cpuidle_driver_kobj *kobj_driver;
-> @@ -210,7 +210,7 @@ extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->                                       struct cpuidle_device *dev);
->  extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->                                 struct cpuidle_device *dev);
-> -extern void cpuidle_use_deepest_state(bool enable);
-> +extern void cpuidle_use_deepest_state(u64 latency_limit_ns);
->  #else
->  static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->                                              struct cpuidle_device *dev)
-> @@ -218,7 +218,7 @@ static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->  static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->                                        struct cpuidle_device *dev)
->  {return -ENODEV; }
-> -static inline void cpuidle_use_deepest_state(bool enable)
-> +static inline void cpuidle_use_deepest_state(u64 latency_limit_ns)
->  {
->  }
->  #endif
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index 8dad5aa600ea..d4681b3d7074 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -165,7 +165,7 @@ static void cpuidle_idle_call(void)
->          * until a proper wakeup interrupt happens.
->          */
->
-> -       if (idle_should_enter_s2idle() || dev->use_deepest_state) {
-> +       if (idle_should_enter_s2idle() || dev->forced_idle_latency_limit_ns) {
->                 if (idle_should_enter_s2idle()) {
->                         rcu_idle_enter();
->
-> @@ -328,7 +328,7 @@ void play_idle(unsigned long duration_us)
->         rcu_sleep_check();
->         preempt_disable();
->         current->flags |= PF_IDLE;
-> -       cpuidle_use_deepest_state(true);
-> +       cpuidle_use_deepest_state(1);
+Some sync_state() implementations might need to call APIs that in turn
+make calls to device link APIs. So, do the sync_state() callbacks
+without holding the device link lock.
 
-This is kind of artificial without the changes in the second patch, so
-I would fold the [2/3] into this one.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/core.c | 80 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 72 insertions(+), 8 deletions(-)
 
-Apart from that the patches look reasonable to me.
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index e6d3e6d485da..9a88bcfd5d33 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -695,7 +695,26 @@ int device_links_check_suppliers(struct device *dev)
+ 	return ret;
+ }
+ 
+-static void __device_links_supplier_sync_state(struct device *dev)
++/**
++ * __device_links_queue_sync_state - Queue a device for sync_state() callback
++ * @dev: Device to call sync_state() on
++ * @list: List head to queue the @dev on
++ *
++ * Queues a device for a sync_state() callback when the device links write lock
++ * isn't held. This allows the sync_state() execution flow to use device links
++ * APIs.  The caller must ensure this function is called with
++ * device_links_write_lock() held.
++ *
++ * This function does a get_device() to make sure the device is not freed while
++ * on this list.
++ *
++ * So the caller must also ensure that device_links_flush_sync_list() is called
++ * as soon as the caller releases device_links_write_lock().  This is necessary
++ * to make sure the sync_state() is called in a timely fashion and the
++ * put_device() is called on this device.
++ */
++static void __device_links_queue_sync_state(struct device *dev,
++					    struct list_head *list)
+ {
+ 	struct device_link *link;
+ 
+@@ -709,12 +728,46 @@ static void __device_links_supplier_sync_state(struct device *dev)
+ 			return;
+ 	}
+ 
+-	if (dev->bus->sync_state)
+-		dev->bus->sync_state(dev);
+-	else if (dev->driver && dev->driver->sync_state)
+-		dev->driver->sync_state(dev);
+-
++	/*
++	 * Set the flag here to avoid adding the same device to a list more
++	 * than once. This can happen if new consumers get added to the device
++	 * and probed before the list is flushed.
++	 */
+ 	dev->state_synced = true;
++
++	if (list_empty(&dev->links.defer_sync)) {
++		get_device(dev);
++		list_add_tail(&dev->links.defer_sync, list);
++	} else {
++		WARN_ON(1);
++	}
++}
++
++/**
++ * device_links_flush_sync_list - Call sync_state() on a list of devices
++ * @list: List of devices to call sync_state() on
++ *
++ * Calls sync_state() on all the devices that have been queued for it. This
++ * function is used in conjunction with __device_links_queue_sync_state().
++ */
++static void device_links_flush_sync_list(struct list_head *list)
++{
++	struct device *dev, *tmp;
++
++	list_for_each_entry_safe(dev, tmp, list, links.defer_sync) {
++		list_del_init(&dev->links.defer_sync);
++
++		device_lock(dev);
++
++		if (dev->bus->sync_state)
++			dev->bus->sync_state(dev);
++		else if (dev->driver && dev->driver->sync_state)
++			dev->driver->sync_state(dev);
++
++		device_unlock(dev);
++
++		put_device(dev);
++	}
+ }
+ 
+ void device_links_supplier_sync_state_pause(void)
+@@ -727,6 +780,7 @@ void device_links_supplier_sync_state_pause(void)
+ void device_links_supplier_sync_state_resume(void)
+ {
+ 	struct device *dev, *tmp;
++	LIST_HEAD(sync_list);
+ 
+ 	device_links_write_lock();
+ 	if (!defer_sync_state_count) {
+@@ -738,11 +792,17 @@ void device_links_supplier_sync_state_resume(void)
+ 		goto out;
+ 
+ 	list_for_each_entry_safe(dev, tmp, &deferred_sync, links.defer_sync) {
+-		__device_links_supplier_sync_state(dev);
++		/*
++		 * Delete from deferred_sync list before queuing it to
++		 * sync_list because defer_sync is used for both lists.
++		 */
+ 		list_del_init(&dev->links.defer_sync);
++		__device_links_queue_sync_state(dev, &sync_list);
+ 	}
+ out:
+ 	device_links_write_unlock();
++
++	device_links_flush_sync_list(&sync_list);
+ }
+ 
+ static int sync_state_resume_initcall(void)
+@@ -772,6 +832,7 @@ static void __device_links_supplier_defer_sync(struct device *sup)
+ void device_links_driver_bound(struct device *dev)
+ {
+ 	struct device_link *link;
++	LIST_HEAD(sync_list);
+ 
+ 	/*
+ 	 * If a device probes successfully, it's expected to have created all
+@@ -815,12 +876,15 @@ void device_links_driver_bound(struct device *dev)
+ 		if (defer_sync_state_count)
+ 			__device_links_supplier_defer_sync(link->supplier);
+ 		else
+-			__device_links_supplier_sync_state(link->supplier);
++			__device_links_queue_sync_state(link->supplier,
++							&sync_list);
+ 	}
+ 
+ 	dev->links.status = DL_DEV_DRIVER_BOUND;
+ 
+ 	device_links_write_unlock();
++
++	device_links_flush_sync_list(&sync_list);
+ }
+ 
+ static void device_link_drop_managed(struct device_link *link)
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
->
->         it.done = 0;
->         hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> @@ -339,7 +339,7 @@ void play_idle(unsigned long duration_us)
->         while (!READ_ONCE(it.done))
->                 do_idle();
->
-> -       cpuidle_use_deepest_state(false);
-> +       cpuidle_use_deepest_state(0);
->         current->flags &= ~PF_IDLE;
->
->         preempt_fold_need_resched();
-> --
