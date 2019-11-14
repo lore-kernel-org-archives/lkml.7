@@ -2,84 +2,106 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F475C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD979C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E48F1206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFE120718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:39:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IuUuIkAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfKNMjX (ORCPT
+        id S1726533AbfKNMj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:39:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40496 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfKNMjX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:39:23 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iVEP2-0001xD-GQ; Thu, 14 Nov 2019 13:39:12 +0100
-Date:   Thu, 14 Nov 2019 13:39:11 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     David Laight <David.Laight@ACULAB.COM>
-cc:     'Peter Zijlstra' <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: RE: [patch V2 11/16] x86/ioperm: Share I/O bitmap if identical
-In-Reply-To: <a0146b86073f4b9bb858d80b4a71683e@AcuMS.aculab.com>
-Message-ID: <alpine.DEB.2.21.1911141335550.2507@nanos.tec.linutronix.de>
-References: <20191111220314.519933535@linutronix.de> <20191111223052.603030685@linutronix.de> <20191112091521.GX4131@hirez.programming.kicks-ass.net> <a0146b86073f4b9bb858d80b4a71683e@AcuMS.aculab.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 14 Nov 2019 07:39:27 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:43870 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfKNMj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 07:39:26 -0500
+Received: from zn.tnic (p200300EC2F15E200B4C5AF24BE56B25A.dip0.t-ipconnect.de [IPv6:2003:ec:2f15:e200:b4c5:af24:be56:b25a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D28681EC0B7A;
+        Thu, 14 Nov 2019 13:39:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573735165;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j4j6rmVxFfDJZKk6jcTn3vOttBjEGTLRErAikwgc27A=;
+        b=IuUuIkAPLkD1yQxAnzZ40CcwE9xTT2Ik6BhArfh7AI8oB7QRillk0U/SIBlFgVJTGAVjT8
+        uSnNpqbu9nCsvsdptznJ1Jq4iybiZ2BWi9FpOXvLBDjL9pFTIMyjn1pCZ8xLeD8EYMnYB0
+        4if61EIrJZg8NL9r26J1nsq7VBFlh/8=
+Date:   Thu, 14 Nov 2019 13:39:20 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, bhe@redhat.com, dyoung@redhat.com,
+        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
+        horms@verge.net.au, kexec@lists.infradead.org
+Subject: Re: [PATCH 3/3 v9] kexec: Fix i386 build warnings that missed
+ declaration of struct kimage
+Message-ID: <20191114123920.GA7222@zn.tnic>
+References: <20191108090027.11082-1-lijiang@redhat.com>
+ <20191108090027.11082-4-lijiang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191108090027.11082-4-lijiang@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019, David Laight wrote:
-> From: Peter Zijlstra
-> > Sent: 12 November 2019 09:15
-> ...
-> > > +	/*
-> > > +	 * If the bitmap is not shared, then nothing can take a refcount as
-> > > +	 * current can obviously not fork at the same time. If it's shared
-> > > +	 * duplicate it and drop the refcount on the original one.
-> > > +	 */
-> > > +	if (refcount_read(&iobm->refcnt) > 1) {
-> > > +		iobm = kmemdup(iobm, sizeof(*iobm), GFP_KERNEL);
-> > > +		if (!iobm)
-> > > +			return -ENOMEM;
-> > > +		io_bitmap_exit();
-> > 		refcount_set(&iobm->refcnt, 1);
-> > >  	}
+On Fri, Nov 08, 2019 at 05:00:27PM +0800, Lianbo Jiang wrote:
+> Kbuild test robot reported some build warnings as follow:
 > 
-> What happens if two threads of the same process enter the above
-> at the same time?
-> (I've not looked for a lock, but since kmemdup() can sleep I'd suspect there isn't one.)
+> arch/x86/include/asm/crash.h:5:32: warning: 'struct kimage' declared
+> inside parameter list will not be visible outside of this definition
+> or declaration
+>     int crash_load_segments(struct kimage *image);
+>                                    ^~~~~~
+>     int crash_copy_backup_region(struct kimage *image);
+>                                         ^~~~~~
+>     int crash_setup_memmap_entries(struct kimage *image,
+>                                           ^~~~~~
+> The 'struct kimage' is defined in the header file include/linux/kexec.h,
+> before using it, need to include its header file or make a declaration.
+> Otherwise the above warnings may be triggered.
 > 
-> Also can another thread call fork() - eg while the kmemdup() is sleeping?
+> Add a declaration of struct kimage to the file arch/x86/include/asm/
+> crash.h, that will solve these compile warnings.
+> 
+> Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
 
-That's not a problem at all. The io bitmap which is duplicated can neither
-be modified nor freed while the duplication is in progress. That's what the
-refcount is for. The threads drop their refcount _after_ duplication.
+This is, of course, wrong. Your *first* patch is introducing those
+warnings and I'm wondering how did you not see them during building?
 
-And fork is not a problem either because that just increments the refcount.
+In file included from arch/x86/realmode/init.c:11:
+./arch/x86/include/asm/crash.h:5:32: warning: ‘struct kimage’ declared inside parameter list will not be visible outside of this definition or declaration
+    5 | int crash_load_segments(struct kimage *image);
+      |                                ^~~~~~
+./arch/x86/include/asm/crash.h:6:37: warning: ‘struct kimage’ declared inside parameter list will not be visible outside of this definition or declaration
+    6 | int crash_copy_backup_region(struct kimage *image);
+      |                                     ^~~~~~
+./arch/x86/include/asm/crash.h:7:39: warning: ‘struct kimage’ declared inside parameter list will not be visible outside of this definition or declaration
+    7 | int crash_setup_memmap_entries(struct kimage *image,
+      |
 
-Thanks,
 
-	tglx
+And that happens because you've included asm/crash.h in
+arch/x86/realmode/init.c and it of course complains because it hasn't
+seen that struct yet.
 
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
