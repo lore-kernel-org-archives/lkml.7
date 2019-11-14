@@ -2,110 +2,94 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FDFC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B76FC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47650206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65323206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKNQt4 (ORCPT
+        id S1727069AbfKNQuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:49:56 -0500
-Received: from mga04.intel.com ([192.55.52.120]:49138 "EHLO mga04.intel.com"
+        Thu, 14 Nov 2019 11:50:19 -0500
+Received: from muru.com ([72.249.23.125]:42222 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbfKNQtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:49:55 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 08:49:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="195095968"
-Received: from pkamlakx-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.10.73])
-  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2019 08:49:51 -0800
-Date:   Thu, 14 Nov 2019 18:49:49 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>
-Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
-Message-ID: <20191114164949.GE9528@linux.intel.com>
-References: <20191111233418.17676-1-jsnitsel@redhat.com>
- <20191112200328.GA11213@linux.intel.com>
- <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
- <20191112202623.GB5584@ziepe.ca>
+        id S1726491AbfKNQuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:50:19 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6886080E7;
+        Thu, 14 Nov 2019 16:50:53 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 08:50:13 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Caleb Robey <c-robey@ti.com>
+Cc:     linux-patch-review@list.ti.com, Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [uL PATCH 1/2] ARM: dts: am5729: beaglebone-ai: adding device
+ tree
+Message-ID: <20191114165013.GP5610@atomide.com>
+References: <20191113221345.4795-1-c-robey@ti.com>
+ <20191113221345.4795-2-c-robey@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112202623.GB5584@ziepe.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191113221345.4795-2-c-robey@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:26:23PM -0400, Jason Gunthorpe wrote:
-> On Tue, Nov 12, 2019 at 01:23:33PM -0700, Jerry Snitselaar wrote:
-> > On Tue, Nov 12, 2019 at 1:03 PM Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> > >
-> > > On Mon, Nov 11, 2019 at 04:34:18PM -0700, Jerry Snitselaar wrote:
-> > > > With power gating moved out of the tpm_transmit code we need
-> > > > to power on the TPM prior to calling tpm_get_timeouts.
-> > > >
-> > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > Cc: linux-kernel@vger.kernel.org
-> > > > Cc: linux-stable@vger.kernel.org
-> > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> > > > Reported-by: Christian Bundy <christianbundy@fraction.io>
-> > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > >  drivers/char/tpm/tpm_tis_core.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-> > > > index 270f43acbb77..cb101cec8f8b 100644
-> > > > +++ b/drivers/char/tpm/tpm_tis_core.c
-> > > > @@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
-> > > >                * to make sure it works. May as well use that command to set the
-> > > >                * proper timeouts for the driver.
-> > > >                */
-> > > > +             tpm_chip_start(chip);
-> > > >               if (tpm_get_timeouts(chip)) {
-> > > >                       dev_err(dev, "Could not get TPM timeouts and durations\n");
-> > > >                       rc = -ENODEV;
-> > > > +                     tpm_stop_chip(chip);
-> > > >                       goto out_err;
-> > > >               }
-> > >
-> > > Couldn't this call just be removed?
-> > >
-> > > /Jarkko
-> > >
-> > 
-> > Probably. It will eventually get called when tpm_chip_register
-> > happens. I don't know what the reason was for trying it prior to the
-> > irq probe.
+* Caleb Robey <c-robey@ti.com> [191113 22:15]:
+> From: Jason Kridner <jdk@ti.com>
 > 
-> At least tis once needed the timeouts before registration because it
-> was issuing TPM commands to complete its setup.
+> BeagleBoard.org BeagleBone AI is an open source hardware single
+> board computer based on the Texas Instruments AM5729 SoC featuring
+> dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+> signal processor (DSP), quad-core embedded vision engine (EVE),
+> Arm Cortex-M4 processors, dual programmable realtime unit
+> industrial control subsystems and more. The board features 1GB
+> DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+> 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+> headers.
 > 
-> If timeouts have not been set then no TPM command should be executed.
+> For more information, refer to:
+> https://beaglebone.ai
+> 
+> This patch introduces the BeagleBone AI device tree.
+> 
+> Note that the device use the "ti,tpd12s016" component which is
+> software compatible with "ti,tpd12s015". Thus we only use the
+> latter driver.
+> 
+> Signed-off-by: Jason Kridner <jdk@ti.com>
+> Cc: Robert Nelson <robertcnelson@gmail.com>
+> Cc: Caleb Robey <c-robey@ti.com>
 
-Not true since you need a TPM command to set them. That is why they
-have been set initially to maximum possible values.
+Hmm so this one has "From: Jason Kridner <jdk@ti.com>", but
+seems like you may have updated it and are sending it out,
+so it probably should also have your Signed-off-by.
 
-/Jarkko
+Note that you can summarize your additions with something like:
+
+Signed-off-by: Jason Kridner <jdk@ti.com>
+[c-robey@ti.com: fixed up xyz against mainline kernel]
+Signed-off-by: ...
+
+Regards,
+
+Tony
