@@ -2,122 +2,169 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D4BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FFEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86FDD206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:51:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGuOw0pE"
+	by mail.kernel.org (Postfix) with ESMTP id 9ABD0206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKNVv6 (ORCPT
+        id S1727053AbfKNVwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:51:58 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36930 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKNVv5 (ORCPT
+        Thu, 14 Nov 2019 16:52:03 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:57444 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726613AbfKNVwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 16:51:57 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t1so8555609wrv.4;
-        Thu, 14 Nov 2019 13:51:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=haBGKl+ANQR4zXT0STzQg1STB7t7ktHMtbdYa5MVzdc=;
-        b=WGuOw0pEFyVoZj3a8m0LSSx0eryuJMYi82HOfCwqg7FoTovJNSwdbMQG71tBwJXpvq
-         cXfoyyWx6oGD2G8n8IlKwoKH32PwE9GyuXDEwZoWScnBL2rCfixVC1Ntt9nxER6aP2ry
-         91HnmSKDa38xIxHRTlY6SFcFE2rXkPr9rDB5+cSk1Gkhtmf0t0lWhxCfyXTsE+q00xrh
-         ZpWfQhHESrTqUTgVdyv1A3TWe+RoG3fWgj/BX/91Eyjo5RGjoR2tMHEKGaXDNyeZD2R9
-         SLqhYaAD+BESU3KJqlCmQT6kFr0JSi+DLguHlkz6ek8nnEmbP/OOqc7EPoAB1J/jHZAB
-         /LOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=haBGKl+ANQR4zXT0STzQg1STB7t7ktHMtbdYa5MVzdc=;
-        b=hayd93AfukCZBFKP1pBRZBFQ4mUUkqlWvb8bdt0xH8Z3pYJC7L8Gayo99BES/SiyW6
-         HVX76y8NuKN2Og1xidKr4XbSdYDCoiK2V5VZzk2Lg68SuyENEx+K++TATf33ed7vBoAA
-         cisUOTSDgu+OaQs4YD+a/GZMxSaWhLax4OspoNw3WCs0FojERQ+B8y0tAbhFUyXxhKkk
-         XKnbZGYLYTyswzIZNQK+V5kSYUv1OaSxL5aG6+njDJgi4pFEptjAzdB5T3leC8mu4kgP
-         A7hM8KG+RDDEzUxhV93cbroaukrEx+XksoFAQjEaAGZppOsHjki+rEv0D3Cjxbck8vwu
-         g7Tg==
-X-Gm-Message-State: APjAAAXPCRI0nKy8QeDfjneFvHojxUAaOPAfKs2UzoYMhiCiI46D851q
-        0X2mASfVHScwGKoniiKcdvzk7+wO
-X-Google-Smtp-Source: APXvYqzMcD2UZl3Oa97YDQxkjGNc3eorc9Qb9+xhZn4zNo6EVpBSIEqmfhJdwW2Fn0rlYKR/erhIYQ==
-X-Received: by 2002:adf:fbc1:: with SMTP id d1mr11422029wrs.267.1573768316062;
-        Thu, 14 Nov 2019 13:51:56 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id z17sm8324627wrh.57.2019.11.14.13.51.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 13:51:55 -0800 (PST)
-Date:   Thu, 14 Nov 2019 22:51:54 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Giovanni Mascellani <gio@debian.org>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (dell-smm-hwmon) Disable BIOS fan control on
- SET_FAN
-Message-ID: <20191114215154.hze2avicv7pwiksp@pali>
-References: <20191114211408.22123-1-gio@debian.org>
- <20191114213901.GA28532@roeck-us.net>
+        Thu, 14 Nov 2019 16:52:03 -0500
+Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id C973D43FE93;
+        Fri, 15 Nov 2019 08:51:57 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iVN1w-0003fs-HT; Fri, 15 Nov 2019 08:51:56 +1100
+Date:   Fri, 15 Nov 2019 08:51:56 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 24/28] xfs: reclaim inodes from the LRU
+Message-ID: <20191114215156.GH4614@dread.disaster.area>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-25-david@fromorbit.com>
+ <20191106172104.GB37080@bfoster>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qyg2dmvyfnwsnflo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191114213901.GA28532@roeck-us.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191106172104.GB37080@bfoster>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=7-415B0cAAAA:8 a=kI0OJltd-DUvDqvnONAA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 06, 2019 at 12:21:04PM -0500, Brian Foster wrote:
+> On Fri, Nov 01, 2019 at 10:46:14AM +1100, Dave Chinner wrote:
+> > -	struct xfs_inode	*ip,
+> > -	int			flags,
+> > -	xfs_lsn_t		*lsn)
+> > +enum lru_status
+> > +xfs_inode_reclaim_isolate(
+> > +	struct list_head	*item,
+> > +	struct list_lru_one	*lru,
+> > +	spinlock_t		*lru_lock,
+> 
+> Did we ever establish whether we should cycle the lru_lock during long
+> running scans?
 
---qyg2dmvyfnwsnflo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm still evaluating this.
 
-On Thursday 14 November 2019 13:39:01 Guenter Roeck wrote:
-> I can see two possibilities: Either add a pwm1_enable attribute to
-> be able to set manual/automatic fan control,
+In theory, because it's non-blocking, the lock hold time isn't huge,
+but OTOH I think the hold time is causing lock contention problems on
+unlink workloads.  I've found a bunch of perf/blocking problems in
+the last few days, and each one of them I sort out puts more
+pressure on the lru list lock on unlinks.
 
-I already proposed such patch in past:
-https://patchwork.kernel.org/patch/9130921/
+> > -	/*
+> > -	 * Do unlocked checks to see if the inode already is being flushed or in
+> > -	 * reclaim to avoid lock traffic. If the inode is not clean, return the
+> > -	 * position in the AIL for the caller to push to.
+> > -	 */
+> > -	if (!xfs_inode_clean(ip)) {
+> > -		*lsn = ip->i_itemp->ili_item.li_lsn;
+> > -		return false;
+> > +	if (!__xfs_iflock_nowait(ip)) {
+> > +		lsn = ip->i_itemp->ili_item.li_lsn;
+> 
+> This looks like a potential crash vector if we ever got here with a
+> clean inode.
 
-> > @@ -43,6 +49,8 @@
-> >  #define I8K_SMM_GET_TEMP_TYPE	0x11a3
-> >  #define I8K_SMM_GET_DELL_SIG1	0xfea3
-> >  #define I8K_SMM_GET_DELL_SIG2	0xffa3
-> > +#define I8K_SMM_DISABLE_BIOS	0x30a3
-> > +#define I8K_SMM_ENABLE_BIOS	0x31a3
+I'm not sure we can ever fail a flush lock attempt on a clean inode.
+But I'll rework the lsn grabbing, I think.
 
-This is model or BIOS specific. For example on E6440 are used 0x34a3 /
-0x35a3 SMM calls. Because of these platform specific problems we have
-never incorporated this patch into mainline kernel.
+> > +		ra->dirty_skipped++;
+> > +		goto out_unlock_inode;
+> >  	}
+> >  
+> > -	if (__xfs_iflags_test(ip, XFS_IFLOCK | XFS_IRECLAIM))
+> > -		return false;
+> > +	if (XFS_FORCED_SHUTDOWN(ip->i_mount))
+> > +		goto reclaim;
+> >  
+> >  	/*
+> > -	 * The radix tree lock here protects a thread in xfs_iget from racing
+> > -	 * with us starting reclaim on the inode.  Once we have the
+> > -	 * XFS_IRECLAIM flag set it will not touch us.
+> > -	 *
+> > -	 * Due to RCU lookup, we may find inodes that have been freed and only
+> > -	 * have XFS_IRECLAIM set.  Indeed, we may see reallocated inodes that
+> > -	 * aren't candidates for reclaim at all, so we must check the
+> > -	 * XFS_IRECLAIMABLE is set first before proceeding to reclaim.
+> > +	 * Now the inode is locked, we can actually determine if it is dirty
+> > +	 * without racing with anything.
+> >  	 */
+> > -	spin_lock(&ip->i_flags_lock);
+> > -	if (!__xfs_iflags_test(ip, XFS_IRECLAIMABLE) ||
+> > -	    __xfs_iflags_test(ip, XFS_IRECLAIM)) {
+> > -		/* not a reclaim candidate. */
+> > -		spin_unlock(&ip->i_flags_lock);
+> > -		return false;
+> > +	ret = LRU_ROTATE;
+> > +	if (xfs_ipincount(ip)) {
+> > +		ra->dirty_skipped++;
+> 
+> Hmm.. didn't we have an LSN check here?
 
-Also note that userspace can issue those SMM commands on its own (via
-sys_iopl or sys_ioperm), fully bypassing such "protection" proposed in
-this new patch.
+Yes, but if the inode was not in the AIL, it would crash, so I
+removed it :P
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+> Altogether, I think the logic in this function would be a lot more
+> simple if we had something like the following:
+> 
+> 	...
+> 	/* ret == LRU_SKIP */
+>         if (!xfs_inode_clean(ip)) {
+> 		ret = LRU_ROTATE;
+>                 lsn = ip->i_itemp->ili_item.li_lsn;
+>                 ra->dirty_skipped++;
+>         }
+>         if (lsn && XFS_LSN_CMP(lsn, ra->lowest_lsn) < 0)
+>                 ra->lowest_lsn = lsn;
+>         return ret;
+> 
+> ... as the non-reclaim exit path.
 
---qyg2dmvyfnwsnflo
-Content-Type: application/pgp-signature; name="signature.asc"
+Yeah, that was what I was thinking when you pointed out the
+iflock_nowait issue above. I'll end up with something like this, I
+think....
 
------BEGIN PGP SIGNATURE-----
+> >  void
+> >  xfs_reclaim_all_inodes(
+> >  	struct xfs_mount	*mp)
+> >  {
+> ...
+> > +	while (list_lru_count(&mp->m_inode_lru)) {
+> 
+> It seems unnecessary to call this twice per-iter:
+> 
+> 	while ((to_free = list_lru_count(&mp->m_inode_lru))) {
+> 		...
+> 	}
 
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXc3MeAAKCRCL8Mk9A+RD
-UvWYAJ9O9wwQgkPz8MsClELRJDVyVIhAqwCgtdzteh/xzor3GbpmAGf4IvDv9j4=
-=j2gv
------END PGP SIGNATURE-----
+*nod*.
 
---qyg2dmvyfnwsnflo--
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
