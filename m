@@ -2,156 +2,106 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3992BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50786C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF5B206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A32206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HKCk8MF6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLdhF2Pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfKNBIA (ORCPT
+        id S1726613AbfKNBIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 20:08:00 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:32793 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfKNBIA (ORCPT
+        Wed, 13 Nov 2019 20:08:46 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44604 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfKNBIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 20:08:00 -0500
-Received: by mail-yw1-f65.google.com with SMTP id q140so1332641ywg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 17:07:59 -0800 (PST)
+        Wed, 13 Nov 2019 20:08:46 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z188so3516960lfa.11;
+        Wed, 13 Nov 2019 17:08:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ydnaeANHQEhicw8ps/5ADrrzqJDVC8ehSIKm3ZEsYec=;
-        b=HKCk8MF62E0LPOPcdetRcNdW6RmmuPalngquz1nXz5j4SDf+aD5YdFAa93vQnYM3DA
-         9Nt8QP1etU9tQQ549wGvpEKT8j1GdazwVbVkk/wV4AXewlsAadX5pzB9IXjcNWrRQlSA
-         IrZlP9lzEQrnH896VQfy0x+0KBvdGY5azLmRlnW2CNxeMCfGSBbIKFmMAILtsX1WjkiN
-         Fd0IUdJeNDxOBne86+cxeprIaOssd7/U20EOMIxVGA7ubkRdznfWba+/zeK8KqbsZrsj
-         zWBprnQkJ3nKQ9AVGedKVu7BXmZ9CkwFoChVwCXMAjuL6klbpBjhqL5uj4Y3sWO7dTnW
-         /dsQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wBQHB2EzlG/RSRWYzzXHGHn7Pgw3gzypxOnIpXuT5fc=;
+        b=dLdhF2PzyQ/jFoL4zrJ4qhDA2R7hCREOwWVwawyuVHALBhJHtbEXnCQz1uUxkzTNLq
+         wCyutaWHNPjDEhXkiQn8T65OcpDyFgntNJWyA9noEO11ZSotKuO8nD+93Q+0PS/BMbYD
+         JF+fT85rjf2Z0MQfsES+fuUDd5zXynLC9SCN8gKCYXwzdfNUnQRZNJLTgOch7duW1qyU
+         6X31e2ITWOiWXpzgnOrTxuO9KfNtX7z6XWxKSt17khUaC/c68B05BjDz5rhqOdIUuXHy
+         ZOY9HXj8XNP4Ox8HFRpuAZaoE/ALG4L6YOVT7bqNFoE0bxAJ/IiJeUggbYcKtM4roz5S
+         pw2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ydnaeANHQEhicw8ps/5ADrrzqJDVC8ehSIKm3ZEsYec=;
-        b=KlW/O4q4e6+tD5koq+JbCqTXaDwWwlDrOKBbMiL8tCc68ttJBk1/XiuvplOTNxt3MV
-         5wSjFr8weEVueCQ/FbJJp+InuUq5v3tJS9wOoskVTHhdsRj5oeCfU2WEwwZ30s/+blKt
-         k1/+KIZ05NwAuYZAwkHzG1jjASbvG9NyKDGcjrsqmBRty9CiQLNNM6xDi/WoI6hSlr1J
-         M0qVyiIfY+4r/ToBYntpa75rYBcRFZi+rg4b85yfnY7unGy1Csd8Hx/RT4Uu72vPy+zN
-         UHYWc/Azfcyhfi1Hz7ceuWwAdBTBrStmZ1sZ0iT+i82zfdXuMOsuD1hmZPpy3xmgVatT
-         TwUA==
-X-Gm-Message-State: APjAAAUEbYUsje5MjqW3FzDIfReyVzR/xtWTvm6NRevfISCbT9U2y7bu
-        iI/4DN2rJZ64TiHS2FeEDcwoxEMI84me5tKqJpmmGQ==
-X-Google-Smtp-Source: APXvYqydep/2MYS1JMR436w88tkI4ovAWbRCP7vaGBLM0llAd8aWhREHtQEULOgEqbP98VIYUTpZBY9VTqZoxJsX4PY=
-X-Received: by 2002:a0d:e891:: with SMTP id r139mr4379793ywe.232.1573693678724;
- Wed, 13 Nov 2019 17:07:58 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wBQHB2EzlG/RSRWYzzXHGHn7Pgw3gzypxOnIpXuT5fc=;
+        b=pEQ9AsWrOo5q89uX/8rtrqgwemvp8sPJhOgO5NX8XvhVrBUlUEJXB33SDX0ixVH4dY
+         Vv27gFxURPeWV9o4JXhYf69arYGRrMtf4z7E9osULssEyd3mHyBBy623NE3LTp1X/VCr
+         kT6xXHQAb7J3wecFfaaY+FCwG8PhZAMcYkMVGyISXE/RSkS0I7WxJlllriGPjBe6TPl+
+         +coKehksw7DGhaoZTxTqp1ytODRyFtotiFhSuhkf7ELzXFK1u6yaNE0wmW6PYwhmaIAv
+         sdzE4ltObhsuka2Pl/1rjVAetkbwXzRuX+esqkaPONhI01s1/uPbvK8EtktbxcCPn7l8
+         yUHw==
+X-Gm-Message-State: APjAAAU1DcTJW71IssO3gVJ5NMUzCEspRRd6mLAI85Ze1Phu5TAOefgR
+        kIE0uD8Z1QSfzZ6yHGa/pEY=
+X-Google-Smtp-Source: APXvYqyjODrUidyRiNtKsHWwCmupyjlQdwCeGsh09cvSNBIORfw8Pm8KVk1OyhKrkpCWYVOWGegIsg==
+X-Received: by 2002:a19:ee17:: with SMTP id g23mr4590004lfb.121.1573693723677;
+        Wed, 13 Nov 2019 17:08:43 -0800 (PST)
+Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id b14sm1726678lfa.14.2019.11.13.17.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 17:08:43 -0800 (PST)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     linux-xtensa@linux-xtensa.org
+Cc:     Chris Zankel <chris@zankel.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] xtensa: use MEMBLOCK_ALLOC_ANYWHERE for KASAN shadow map
+Date:   Wed, 13 Nov 2019 17:08:24 -0800
+Message-Id: <20191114010824.29540-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191113031044.136232-4-jflat@chromium.org> <201911132033.3UoCbltt%lkp@intel.com>
- <CACJJ=pzyn2DX0fcAjzNs-ZXMByt=GcH5005+Ki28uoW1AeQ-yg@mail.gmail.com>
-In-Reply-To: <CACJJ=pzyn2DX0fcAjzNs-ZXMByt=GcH5005+Ki28uoW1AeQ-yg@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Wed, 13 Nov 2019 17:07:47 -0800
-Message-ID: <CABXOdTeTxfQ1=5iE0f_0ZMspag5uHYmTJkrzyLS2yBhbLOdBiQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] platform: chrome: Added cros-ec-typec driver
-To:     Jon Flatley <jflat@chromium.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Sebastian Reichel <sre@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 9:23 AM Jon Flatley <jflat@chromium.org> wrote:
->
-> On Wed, Nov 13, 2019 at 4:55 AM kbuild test robot <lkp@intel.com> wrote:
-> >
-> > Hi Jon,
-> >
-> > Thank you for the patch! Perhaps something to improve:
-> >
-> > [auto build test WARNING on ljones-mfd/for-mfd-next]
-> > [cannot apply to v5.4-rc7 next-20191113]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/Jon-Flatley/ChromeOS-EC-USB-C-Connector-Class/20191113-193504
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >
-> >
-> > coccinelle warnings: (new ones prefixed by >>)
-> >
-> > >> drivers/platform/chrome/cros_ec_typec.c:223:9-16: ERROR: PTR_ERR applied after initialization to constant on line 222
-> >
-> > vim +223 drivers/platform/chrome/cros_ec_typec.c
-> >
-> >    206
-> >    207  static int cros_typec_add_partner(struct typec_data *typec, int port_num,
-> >    208                  bool pd_enabled)
-> >    209  {
-> >    210          struct port_data *port;
-> >    211          struct typec_partner_desc p_desc;
-> >    212          int ret;
-> >    213
-> >    214          port = typec->ports[port_num];
-> >    215          p_desc.usb_pd = pd_enabled;
-> >    216          p_desc.identity = &port->p_identity;
-> >    217
-> >    218          port->partner = typec_register_partner(port->port, &p_desc);
-> >    219          if (IS_ERR_OR_NULL(port->partner)) {
-> >    220                  dev_err(typec->dev, "Port %d partner register failed\n",
-> >    221                                  port_num);
-> >  > 222                  port->partner = NULL;
-> >  > 223                  return PTR_ERR(port->partner);
-> >    224          }
-> >    225
-> >    226          ret = cros_typec_query_pd_info(typec, port_num);
-> >    227          if (ret < 0) {
-> >    228                  dev_err(typec->dev, "Port %d PD query failed\n", port_num);
-> >    229                  typec_unregister_partner(port->partner);
-> >    230                  port->partner = NULL;
-> >    231                  return ret;
-> >    232          }
-> >    233
-> >    234          ret = typec_partner_set_identity(port->partner);
-> >    235          return ret;
-> >    236  }
-> >    237
-> >
-> > ---
-> > 0-DAY kernel test infrastructure                 Open Source Technology Center
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
->
-> This patch is based off of the chrome-platform for-next branch.
->
-> base: https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
-> for-next
->
-> Is this incorrect? I'm happy to rebase if necessary.
->
+KASAN shadow map doesn't need to be accessible through the linear kernel
+mapping, allocate its pages with MEMBLOCK_ALLOC_ANYWHERE so that high
+memory can be used. This frees up to ~100MB of low memory on xtensa
+configurations with KASAN and high memory.
 
-You are missing the problem.
+Cc: stable@vger.kernel.org # v5.1+
+Fixes: f240ec09bb8a ("memblock: replace memblock_alloc_base(ANYWHERE)
+		     with memblock_phys_alloc")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+---
+ arch/xtensa/mm/kasan_init.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-              port->partner = NULL;
-              return PTR_ERR(port->partner);
+diff --git a/arch/xtensa/mm/kasan_init.c b/arch/xtensa/mm/kasan_init.c
+index 9c957791bb33..e3baa21ff24c 100644
+--- a/arch/xtensa/mm/kasan_init.c
++++ b/arch/xtensa/mm/kasan_init.c
+@@ -60,7 +60,9 @@ static void __init populate(void *start, void *end)
+ 
+ 		for (k = 0; k < PTRS_PER_PTE; ++k, ++j) {
+ 			phys_addr_t phys =
+-				memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
++				memblock_phys_alloc_range(PAGE_SIZE, PAGE_SIZE,
++							  0,
++							  MEMBLOCK_ALLOC_ANYWHERE);
+ 
+ 			if (!phys)
+ 				panic("Failed to allocate page table page\n");
+-- 
+2.20.1
 
-Does not make sense, and always returns 0 (no error).
-
-Guenter
-
-> Thanks,
-> -Jon
