@@ -2,155 +2,65 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24488C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79421C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED61D2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kTe0B79e"
+	by mail.kernel.org (Postfix) with ESMTP id 59DC72070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfKNON0 (ORCPT
+        id S1727403AbfKNONb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:13:26 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:41886 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbfKNONZ (ORCPT
+        Thu, 14 Nov 2019 09:13:31 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:40268 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbfKNONa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:13:25 -0500
-Received: by mail-ua1-f68.google.com with SMTP id o9so1894827uat.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 06:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FJX4pImmW+1dIAMZK03BtkAIeMegqqUoxzHSgtg4Ca4=;
-        b=kTe0B79e9Q3wfvE896/JqCWZWDPTHUnKJF3MXGJCz0VulZPNVJNms03VWhWhosu0r5
-         65u5iTmqWQfZhZU6bZ43HtCH3t9odmp08GyQa+kXxDCOH1M9z2/nD017md8ls95KA8VP
-         ScIOnZqRoEAnVGwumKypo7R1jHWTsqOLnL6eBU/RaI2+hdZynt2GBCuBi/hTtG43ri6w
-         rXa5aWAOZxBY1H9M1Y57rS3KQgGaa/rz8QLbkYvZ2P8SjOkhJh96iSXBPr0zCcnFlfWj
-         USwGVkvBZ+QWGkRyEY9OPWD6vy6WDksT8kV8rKsKHSBpk+Gwww5b9A0D0ZRiHDza1Lch
-         oI1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FJX4pImmW+1dIAMZK03BtkAIeMegqqUoxzHSgtg4Ca4=;
-        b=ptqTV7/2hTlT9F4R0nScTbOiiY+JsIJa2TInXhiL9+4D+1fzaet/4F5cRSAiXkDOQM
-         MasNraYQwnLOo2CZEkcMwjRmq/JSmcI4zcB226Vblj8kYkpbmGgpp9+2Ib4oCZAGH4ig
-         h+J2unQCxyvkhUCYOXhThE2wbziArnhEjtfiFhcJCvMlUQNcnt3igsqiqAOZzf52XT2K
-         ulRxuJl6Lw3QrfOZJc0nAWgkA9ujjPwj1PxGG84Kqx/DIClKUVODsZdlu/ckWN8J0dmm
-         DI3fH4f1oR06lj4THPJSCD4LQFX/GYC1movu0IV66Xu1Dt8JBr8ZjQLkl5My1jvX/DGw
-         cB3A==
-X-Gm-Message-State: APjAAAXwC9K2V9T2P9ibZ51WbyZL12amelZWROP0hFzDNAF5ZEUwnlQQ
-        nhvmVJJFbt6G7Q6N2GWw23oSgkmg30U0XOgxmok7Hg==
-X-Google-Smtp-Source: APXvYqx4RK4gWYtCk+erym1uLlCEMYfvmcIf3PPkVWWUkOMrPhdQcGSzRSUDsyWVm4ZWkUAyeM62b0wXUC2Rr+arkK8=
-X-Received: by 2002:ab0:3399:: with SMTP id y25mr5562495uap.100.1573740804146;
- Thu, 14 Nov 2019 06:13:24 -0800 (PST)
+        Thu, 14 Nov 2019 09:13:30 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVFs8-0004Zd-4C; Thu, 14 Nov 2019 14:13:20 +0000
+Date:   Thu, 14 Nov 2019 14:13:20 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Andrei Vagin <avagin@gmail.com>
+Subject: Re: [PATCH v2] fs: add new O_MNT flag for opening mount root from
+ mountpoint fd
+Message-ID: <20191114141320.GI26530@ZenIV.linux.org.uk>
+References: <20191114090454.27903-1-ptikhomirov@virtuozzo.com>
 MIME-Version: 1.0
-References: <cover.1573122644.git.hns@goldelico.com> <c128cf34cf3858538eac8abffa02a2af8ce845b2.1573122644.git.hns@goldelico.com>
-In-Reply-To: <c128cf34cf3858538eac8abffa02a2af8ce845b2.1573122644.git.hns@goldelico.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 14 Nov 2019 15:12:48 +0100
-Message-ID: <CAPDyKFomoH5U0XevwKcaHRjf1hEyyqZfv4K_DZhCB7kpuXda2g@mail.gmail.com>
-Subject: Re: [PATCH v3 02/12] net: wireless: ti: wl1251 add device tree support
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114090454.27903-1-ptikhomirov@virtuozzo.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 at 11:31, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> We will have the wl1251 defined as a child node of the mmc interface
-> and can read setup for gpios, interrupts and the ti,use-eeprom
-> property from there instead of pdata to be provided by pdata-quirks.
->
-> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
->
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Acked-by: Kalle Valo <kvalo@codeaurora.org>
-> ---
->  drivers/net/wireless/ti/wl1251/sdio.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
-> index 677f1146ccf0..c54a273713ed 100644
-> --- a/drivers/net/wireless/ti/wl1251/sdio.c
-> +++ b/drivers/net/wireless/ti/wl1251/sdio.c
-> @@ -16,6 +16,9 @@
->  #include <linux/irq.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/gpio.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/of_irq.h>
->
->  #include "wl1251.h"
->
-> @@ -217,6 +220,7 @@ static int wl1251_sdio_probe(struct sdio_func *func,
->         struct ieee80211_hw *hw;
->         struct wl1251_sdio *wl_sdio;
->         const struct wl1251_platform_data *wl1251_board_data;
-> +       struct device_node *np = func->dev.of_node;
->
->         hw = wl1251_alloc_hw();
->         if (IS_ERR(hw))
-> @@ -248,6 +252,15 @@ static int wl1251_sdio_probe(struct sdio_func *func,
->                 wl->power_gpio = wl1251_board_data->power_gpio;
->                 wl->irq = wl1251_board_data->irq;
->                 wl->use_eeprom = wl1251_board_data->use_eeprom;
-> +       } else if (np) {
-> +               wl->use_eeprom =of_property_read_bool(np, "ti,wl1251-has-eeprom");
-> +               wl->power_gpio = of_get_named_gpio(np, "ti,power-gpio", 0);
+On Thu, Nov 14, 2019 at 12:04:54PM +0300, Pavel Tikhomirov wrote:
 
-This isn't needed as it seems. Perhaps remove or keep it as optional?
+> More precisely the algorithm is:
+> a) openat mpfd to a new mountpoint through parent mount's root -
+> p_rootfd (which we already have) or mountpoint fd under a sibling mount
+> - s_mpfd if our mountpoint is already overmounted.
+> b) create a new mount on mpfd via /proc/<pid>/fd/<N> interface
+> c) openat it's rootfd via O_MNT from mpfd
+> 
+> If we have mpfd and rootfd for each mount through /proc/<pid>/fd/<N>
+> interface we will be able to bindmount any part of each of already
+> created mounts to restore other mounts  and we will be able to configure
+> mounts, e.g. change sharing or other options even if mounts are
+> invisible from fs-root.
 
-> +               wl->irq = of_irq_get(np, 0);
-> +
-> +               if (wl->power_gpio == -EPROBE_DEFER || wl->irq == -EPROBE_DEFER) {
-> +                       ret = -EPROBE_DEFER;
-> +                       goto disable;
-> +               }
->         }
->
->         if (gpio_is_valid(wl->power_gpio)) {
-> --
-
-Kind regards
-Uffe
+Everything else aside (and I'm not thrilled about the idea in general),
+you are not handling the situation when that overmount is, in turn,
+overmounted.  Or when there's an automount set on top of it, etc.
