@@ -2,110 +2,175 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF53C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC70C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C3F206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6647E20706
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PXwwk3aG"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="cbJtVbv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfKNOYM (ORCPT
+        id S1727053AbfKNOY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:24:12 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38588 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfKNOYL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:24:11 -0500
-Received: by mail-qt1-f196.google.com with SMTP id p20so6946848qtq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 06:24:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=YfeA14uuuPzU+N+/A63W2LLCo3IHXwSL/EjkK/pHBoA=;
-        b=PXwwk3aG8DnvtQt2WlwkDuxKtEq+rWhMjk6TRDPP6J7v2ijVF5ntwH71vv2+LPNGON
-         FkVeLzwjcEl9zzEmJcuEcNJPI0Zl7WsDbJqqfHzJx7frAIJ4S82/egMXgAlt+KAcJs5S
-         0YpEBfP/fz89eoYIu0n6MBzOFLoIJNnjToi1iA49/WI0O6XoZQkkV4XX2reLekkoZGQK
-         hEjn4cS4z2FfZfR+/wP3JKdL+Zb6WUpjELz+FQdgwysAQ0W+7Mvxhucp+WoKHgkywQuJ
-         Gn94aN6yEE/wOFmjywIASyQrf+GqPnHZOHIa0aufOfzY3JC+/kDSQvxS1fIRd78B2N8u
-         w67g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YfeA14uuuPzU+N+/A63W2LLCo3IHXwSL/EjkK/pHBoA=;
-        b=uOy3FMpZBc1FcpNwV/xGZbJUmBblZAa6h/XJmRF+HyKCcWOauHXGzbeDvwi8nKsYl6
-         JZETLGH7ErvaCo+VevF7Em7h4gy1Wsn8ifpoB3X8+yJ4D7P1gVaMN/eOZ+2vUU7U4cBM
-         fUKgDGf4MIOgyqPi83sKDv3pMX2z7yKhoa54lC6pqvHo6FWzFoDgVaU/NI0TQpnBNK/q
-         HMR8iZzDNrpOsazi4mv6JeiaarE5lHSTy71sjcprVXFhngDCDbj1Ym5n4kzYmb+iYy0o
-         rdZjWQ0f7H8wSJSKExhgYHuECsnJvE5Bj5OIAAMaHuhPiKICpmCYEEDK8A8O4V0swQye
-         GvWg==
-X-Gm-Message-State: APjAAAWHPfQY2K4EhdlFQn+voHn1CLwMSpAGhUmZmfE8bcsj3nUWONU3
-        jSgptJAixhdKnD6o1Zm5ZdUoMw==
-X-Google-Smtp-Source: APXvYqzjYBw8Uth2zEHa9ufAHHel74INCvkgWT2GGxMJP0HHyFDLnEKNDmKisfErW5qKeEy3am6PCA==
-X-Received: by 2002:ac8:6757:: with SMTP id n23mr8291467qtp.345.1573741450490;
-        Thu, 14 Nov 2019 06:24:10 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id s42sm3125140qtk.60.2019.11.14.06.24.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 06:24:09 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iVG2b-0000DC-9T; Thu, 14 Nov 2019 10:24:09 -0400
-Date:   Thu, 14 Nov 2019 10:24:09 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>, Shuah Khan <shuah@kernel.org>,
-        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] mm/hmm: make full use of walk_page_range()
-Message-ID: <20191114142409.GA785@ziepe.ca>
-References: <20191104222141.5173-1-rcampbell@nvidia.com>
- <20191104222141.5173-2-rcampbell@nvidia.com>
+        Thu, 14 Nov 2019 09:24:26 -0500
+Received: from mail-eopbgr00062.outbound.protection.outlook.com ([40.107.0.62]:34428
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726516AbfKNOYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 09:24:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nBxzPlPOpfbO4oNfl2kOELjWalZx6Q2ujcWXD8PmKKPqpc0Prdwhm4hG7zXe0KocOSJ1JvU0gK3bYEhbSTI2qngv5Fy66C/gUZBCXjc6HYxbO2ctqhxWswU0mB0IndkKjhVcbN6CRJjuqdkQrD3Yuuxwq4jeAJagLxGZTilFLxK/kwVdf/wlA4ZiqbmYMiAEuQSUFQnKgAjpKcc/VqDKs1FblmQtcItv0a5D9tFdu5RP8nvNVz+fiaQ78arj1g2OytlNkMqfEzCCGP6Iz6qvzku8PXgNaKjiQVdi6X0hyROnKq4AHumKHfPMQweJT0F1Y5u6YThk37MZfwS6nnylEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mvj1tshMyPRe2Mj/4FPUKVpXM2acXIZhFLChFSagnpM=;
+ b=dUiI5Xamd1fJ2Aq+gn3zU7kJDSL1JcghB/HooZNEiBtjFsyzZf3FUAwCCeN6uonUJ5MYFkqpzj0FTxHc086ssiZsVN4ozPy/kzECSAyLvlZgekk1VmCkYWECDK8Ea/uxDnCf5g6iQ0YD4bcX0fEg/atEPmwFhMaihKeBKmff5gLfpU1MpqShcLIGWB/eiiwwPBrJjTXa1JDhKwWdbpO7XCWvzGXmEPRQMnrAKQKzwxqI2/SIfB9BKxgbvnFo9TJ1B25bpAX54KS00o+iCPFJqZEq0qP2FH5x0tugfZnfhuUrx9VqmSLnPK8JGpo1rzlqit/a5BlHU+X9FEnkuntJKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mvj1tshMyPRe2Mj/4FPUKVpXM2acXIZhFLChFSagnpM=;
+ b=cbJtVbv5ezFnkxVtdRvVHYNqNu9cJsp19yopxFTvR52sIGkygX9joVdyi4lwBgtCd2Jc4PUfp7mQSvjj/OpdaJd70+rWagvucK23tZNFchPt4iGnRIVF2CBbNi8nd8iLcdfdA9n4iezgGCgUTatHO3J/NW3Ig/ql2TgbwluSUzI=
+Received: from AM4PR05MB3411.eurprd05.prod.outlook.com (10.171.190.30) by
+ AM4PR05MB3473.eurprd05.prod.outlook.com (10.170.126.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Thu, 14 Nov 2019 14:24:21 +0000
+Received: from AM4PR05MB3411.eurprd05.prod.outlook.com
+ ([fe80::2cc0:1303:718d:2e9c]) by AM4PR05MB3411.eurprd05.prod.outlook.com
+ ([fe80::2cc0:1303:718d:2e9c%7]) with mapi id 15.20.2451.023; Thu, 14 Nov 2019
+ 14:24:21 +0000
+From:   Paul Blakey <paulb@mellanox.com>
+To:     Roi Dayan <roid@mellanox.com>, Aaron Conole <aconole@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "dev@openvswitch.org" <dev@openvswitch.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
+Thread-Topic: [PATCH net 2/2] act_ct: support asymmetric conntrack
+Thread-Index: AQHVmvb7TMewQ/3jDU63p12bNulUv6eKuHSA
+Date:   Thu, 14 Nov 2019 14:24:21 +0000
+Message-ID: <80993518-9481-02ca-7705-7417717365c1@mellanox.com>
+References: <20191108210714.12426-1-aconole@redhat.com>
+ <20191108210714.12426-2-aconole@redhat.com>
+ <6917ebfa-6361-5294-d91b-b3c6dd1e8cf5@mellanox.com>
+In-Reply-To: <6917ebfa-6361-5294-d91b-b3c6dd1e8cf5@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR01CA0116.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:168::21) To AM4PR05MB3411.eurprd05.prod.outlook.com
+ (2603:10a6:205:b::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=paulb@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2d549cbd-75bc-4ad0-f640-08d7690e561c
+x-ms-traffictypediagnostic: AM4PR05MB3473:|AM4PR05MB3473:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM4PR05MB34737E54AE9E08257DAEE33ECF710@AM4PR05MB3473.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:291;
+x-forefront-prvs: 02213C82F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(396003)(39850400004)(376002)(189003)(199004)(386003)(71200400001)(446003)(31696002)(86362001)(7736002)(52116002)(76176011)(6512007)(229853002)(6486002)(14444005)(6246003)(71190400001)(11346002)(6436002)(305945005)(2501003)(478600001)(25786009)(476003)(486006)(2616005)(66066001)(4326008)(256004)(3846002)(2906002)(6116002)(110136005)(64756008)(66446008)(66946007)(66476007)(66556008)(31686004)(5660300002)(102836004)(99286004)(186003)(14454004)(53546011)(6506007)(26005)(316002)(54906003)(8936002)(36756003)(8676002)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3473;H:AM4PR05MB3411.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: A9sCDFo8O5n2OqCLnugQoL6RVNjQ6NGCVZMwFhp4u+7lR+FeA2twA7sm0SwIkrvhMfroWq/HWXaDdwp1gDfSIHzs0/PA7joVWAfT/9wIcYU7i2nEyX84mkdvmYeONlTmEqzWxS3HDEDycdDSe75hhmEuXR58TFxEpnZsW8lkBIiKGXXEQjg3OgvKGWJLgVWbwvssMRTlTkYPgb8JEUFqmS7W7UB0LRRC44wtrEb7tl13wuOiZ+SgIb4sT3bkxJJ2fW1zISaHUWHz5SgSP1Klc9P61+Pb4BeF6f3W/ICpp4uqSwPKBQYOk+mhxbuLX0gZCs8B0adQYvt8p3XlnQCI9L92Pd2TwV9T6Hz9T/3nV2jx1HGoazOTBX04Ztomgb+jd/iExL0KiaUj1Nlg/125+vk0ZrjlWxy+O4PWIrQq12ylLQFjmHACZVDJZH+Hr2Vy
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <A0A8BDAD30E8EC43965DB091E59A9266@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191104222141.5173-2-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d549cbd-75bc-4ad0-f640-08d7690e561c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 14:24:21.3978
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4S/pY2gSCjK2DaWFStCDgWDH/hV4dCMkfy1oQo9CGJKIvow2Zpzvp6WgSkA6ECbObTnxcf1ZzwTFf8nbyMWNmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3473
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 02:21:40PM -0800, Ralph Campbell wrote:
-> hmm_range_fault() calls find_vma() and walk_page_range() in a loop.
-> This is unnecessary duplication since walk_page_range() calls find_vma()
-> in a loop already.
-> Simplify hmm_range_fault() by defining a walk_test() callback function
-> to filter unhandled vmas.
-> This also fixes a bug where hmm_range_fault() was not checking
-> start >= vma->vm_start before checking vma->vm_flags so hmm_range_fault()
-> could return an error based on the wrong vma for the requested range.
-> It also fixes a bug when the vma has no read access and the caller did
-> not request a fault, there shouldn't be any error return code.
-> 
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  mm/hmm.c | 121 ++++++++++++++++++++++++++-----------------------------
->  1 file changed, 58 insertions(+), 63 deletions(-)
+On 11/14/2019 4:22 PM, Roi Dayan wrote:
+>
+> On 2019-11-08 11:07 PM, Aaron Conole wrote:
+>> The act_ct TC module shares a common conntrack and NAT infrastructure
+>> exposed via netfilter.  It's possible that a packet needs both SNAT and
+>> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+>> this because it runs through the NAT table twice - once on ingress and
+>> again after egress.  The act_ct action doesn't have such capability.
+>>
+>> Like netfilter hook infrastructure, we should run through NAT twice to
+>> keep the symmetry.
+>>
+>> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+>>
+>> Signed-off-by: Aaron Conole <aconole@redhat.com>
+>> ---
+>>   net/sched/act_ct.c | 13 ++++++++++++-
+>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+>> index fcc46025e790..f3232a00970f 100644
+>> --- a/net/sched/act_ct.c
+>> +++ b/net/sched/act_ct.c
+>> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+>>   			  bool commit)
+>>   {
+>>   #if IS_ENABLED(CONFIG_NF_NAT)
+>> +	int err;
+>>   	enum nf_nat_manip_type maniptype;
+>>  =20
+>>   	if (!(ct_action & TCA_CT_ACT_NAT))
+>> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+>>   		return NF_ACCEPT;
+>>   	}
+>>  =20
+>> -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>> +	err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>> +	if (err =3D=3D NF_ACCEPT &&
+>> +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
+>> +		if (maniptype =3D=3D NF_NAT_MANIP_SRC)
+>> +			maniptype =3D NF_NAT_MANIP_DST;
+>> +		else
+>> +			maniptype =3D NF_NAT_MANIP_SRC;
+>> +
+>> +		err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>> +	}
+>> +	return err;
+>>   #else
+>>   	return NF_ACCEPT;
+>>   #endif
+>>
+> +paul
 
-Applied to hmm.git with Christoph's hunk merged in
+Hi Aaron,
+
+I think I understand the issue and this looks good,
+
+Can you describe the scenario to reproduce this?
+
 
 Thanks,
-Jason
+
+Paul.
+
+
+
