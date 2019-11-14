@@ -2,88 +2,444 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A73CC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1D2C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4187B206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="sk59Sxa2"
+	by mail.kernel.org (Postfix) with ESMTP id F0913206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKNRA4 (ORCPT
+        id S1727002AbfKNRBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:00:56 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45751 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfKNRAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:00:55 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k1so2830687pgg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:00:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=6bO7e6hWYl53t03anT/Z1zUE/FznVpwaBWq+FDBPOFw=;
-        b=sk59Sxa2ql+seW2RmX9NyqQTrkbW9s/bSh8AA1Z5jYFL/X7vqVEwE93ZDDJ/q8Ymbj
-         Fmu1zUaUHdrvARX7jQ53KEP23AgKmakA97LTT01nZdvxL9+qWFff/I0gdTt3ITzqu4Ny
-         4r/sWDtJg054Fhg90F1n3K+hTuI6KqA9ax4gUQTWvaSGsJlPK5qgZr1nouxPjuE14qof
-         9f8jmkityB8eL0Kw7oTGeVuecjfmoLzbj7V1zb5TC0Rc5PPOz3HDoPWEc6SY2LmsqRmQ
-         30WOdXNzT63MinUon6Zf/uGxvAfk0FNL+Eiegcbf1KVwmvgpBlpCueVTOja6xctBQ7sa
-         +log==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=6bO7e6hWYl53t03anT/Z1zUE/FznVpwaBWq+FDBPOFw=;
-        b=mG4aMwgRLqAwkIcExYV6SSQFRhm84bgJPhax1cIz3Yb0Z66ATSvq+6C4zTQMtJEriz
-         gdj2kxMAJ6jSeJC+gbdVa3tJi7Km7fEflnVOmI+SZqi4Lk/OeHWLt+3k0LrNKYFcpRRF
-         G4YvGoYQ+zU6EIQJcBkMfS+GteDZB9d223byf50DWOGBRBAydIhnCnz/BWI/apVwsonY
-         sYGBy2RWHq1sztKdmVPU2aEns56yZphpj7/mlgDRtSqtr5MS8LjZ/eY1aIIlrLAHRYqR
-         4/J5jS6XxONthzs2SJGTmUjyi2lq2zdw/V3Cb/YA8W3mZN53MKUXpDoftUwP4cW68BUi
-         +F9g==
-X-Gm-Message-State: APjAAAVJx3Ld4YeK068bOamfvm82LOtollq26+U2ZGzP14E2s8CwlgYC
-        ToA36iN0QPvT5HUJlfePTlxfrQ==
-X-Google-Smtp-Source: APXvYqx8uPXf4czd3iKUV0VVk5MDGgysrPrpM6yFUYmtbUIKVtFNriO8qzyTyMZgTmgiZz3P1aI5bQ==
-X-Received: by 2002:a63:cc56:: with SMTP id q22mr11217252pgi.439.1573750854560;
-        Thu, 14 Nov 2019 09:00:54 -0800 (PST)
-Received: from cakuba.netronome.com ([2601:646:8e00:e18::3])
-        by smtp.gmail.com with ESMTPSA id d25sm8101407pfq.70.2019.11.14.09.00.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 09:00:54 -0800 (PST)
-Date:   Thu, 14 Nov 2019 09:00:49 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <borisp@mellanox.com>, <aviadye@mellanox.com>,
-        <john.fastabend@gmail.com>, <daniel@iogearbox.net>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net/tls: Fix unused function warning
-Message-ID: <20191114090049.47cfee19@cakuba.netronome.com>
-In-Reply-To: <20191114073946.46340-1-yuehaibing@huawei.com>
-References: <20191114073946.46340-1-yuehaibing@huawei.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 14 Nov 2019 12:01:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46974 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726632AbfKNRBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:01:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3649FACC1;
+        Thu, 14 Nov 2019 17:00:58 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 18:00:58 +0100
+Message-ID: <s5h7e42l7ed.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Chih-Yang Hsia <paulhsia@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 0/2] ALSA: pcm: Fix race condition in runtime access
+In-Reply-To: <CAJaf1TbOqOeRqN6jfAeHVu6drTZ9wBUHf5J9uy4-Ng1Pkr5nww@mail.gmail.com>
+References: <20191112171715.128727-1-paulhsia@chromium.org>
+        <s5h1rud7yel.wl-tiwai@suse.de>
+        <CAJaf1TaZzsPdydcMZMemVSkjRvhYvx7ZxY2JEvExQ56B+MjQLQ@mail.gmail.com>
+        <s5h7e446raw.wl-tiwai@suse.de>
+        <s5hftisnh3s.wl-tiwai@suse.de>
+        <CAJaf1TYwbsuNZ_RmRfo7ZcVPJ04e4Dh3G1e3kVYPQh_sX9TgWQ@mail.gmail.com>
+        <s5h36eqmtf3.wl-tiwai@suse.de>
+        <CAJaf1TbOqOeRqN6jfAeHVu6drTZ9wBUHf5J9uy4-Ng1Pkr5nww@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: multipart/mixed;
+ boundary="Multipart_Thu_Nov_14_18:00:58_2019-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 15:39:46 +0800, YueHaibing wrote:
-> If PROC_FS is not set, gcc warning this:
-> 
-> net/tls/tls_proc.c:23:12: warning:
->  'tls_statistics_seq_show' defined but not used [-Wunused-function]
-> 
-> Use #ifdef to guard this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+--Multipart_Thu_Nov_14_18:00:58_2019-1
+Content-Type: text/plain; charset=US-ASCII
 
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+On Thu, 14 Nov 2019 17:37:54 +0100,
+Chih-Yang Hsia wrote:
+> 
+> On Thu, Nov 14, 2019 at 10:20 PM Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > On Thu, 14 Nov 2019 15:16:04 +0100,
+> > Chih-Yang Hsia wrote:
+> > >
+> > > On Wed, Nov 13, 2019 at 7:36 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > > >
+> > > > On Wed, 13 Nov 2019 10:47:51 +0100,
+> > > > Takashi Iwai wrote:
+> > > > >
+> > > > > On Wed, 13 Nov 2019 08:24:41 +0100,
+> > > > > Chih-Yang Hsia wrote:
+> > > > > >
+> > > > > > On Wed, Nov 13, 2019 at 2:16 AM Takashi Iwai <tiwai@suse.de> wrote:
+> > > > > > >
+> > > > > > > On Tue, 12 Nov 2019 18:17:13 +0100,
+> > > > > > > paulhsia wrote:
+> > > > > > > >
+> > > > > > > > Since
+> > > > > > > > - snd_pcm_detach_substream sets runtime to null without stream lock and
+> > > > > > > > - snd_pcm_period_elapsed checks the nullity of the runtime outside of
+> > > > > > > >   stream lock.
+> > > > > > > >
+> > > > > > > > This will trigger null memory access in snd_pcm_running() call in
+> > > > > > > > snd_pcm_period_elapsed.
+> > > > > > >
+> > > > > > > Well, if a stream is detached, it means that the stream must have been
+> > > > > > > already closed; i.e. it's already a clear bug in the driver that
+> > > > > > > snd_pcm_period_elapsed() is called against such a stream.
+> > > > > > >
+> > > > > > > Or am I missing other possible case?
+> > > > > > >
+> > > > > > >
+> > > > > > > thanks,
+> > > > > > >
+> > > > > > > Takashi
+> > > > > > >
+> > > > > >
+> > > > > > In multithreaded environment, it is possible to have to access both
+> > > > > > `interrupt_handler` (from irq) and `substream close` (from
+> > > > > > snd_pcm_release) at the same time.
+> > > > > > Therefore, in driver implementation, if "substream close function" and
+> > > > > > the "code section where snd_pcm_period_elapsed() in" do not hold the
+> > > > > > same lock, then the following things can happen:
+> > > > > >
+> > > > > > 1. interrupt_handler -> goes into snd_pcm_period_elapsed with a valid
+> > > > > > sustream pointer
+> > > > > > 2. snd_pcm_release_substream: call close without blocking
+> > > > > > 3. snd_pcm_release_substream: call snd_pcm_detache_substream and set
+> > > > > > substream->runtime to NULL
+> > > > > > 4. interrupt_handler -> call snd_pcm_runtime() and crash while
+> > > > > > accessing fields in `substream->runtime`
+> > > > > >
+> > > > > > e.g. In intel8x0.c driver for ac97 device,
+> > > > > > In driver intel8x0.c, `snd_pcm_period_elapsed` is called after
+> > > > > > checking `ichdev->substream` in `snd_intel8x0_update`.
+> > > > > > And if a `snd_pcm_release` call from alsa-lib and pass through close()
+> > > > > > and run to snd_pcm_detach_substream() in another thread, it's possible
+> > > > > > to trigger a crash.
+> > > > > > I can reproduce the issue within a multithread VM easily.
+> > > > > >
+> > > > > > My patches are trying to provide a basic protection for this situation
+> > > > > > (and internal pcm lock between detach and elapsed), since
+> > > > > > - the usage of `snd_pcm_period_elapsed` does not warn callers about
+> > > > > > the possible race if the driver does not  force the order for `calling
+> > > > > > snd_pcm_period_elapsed` and `close` by lock and
+> > > > > > - lots of drivers already have this hidden issue and I can't fix them
+> > > > > > one by one (You can check the "snd_pcm_period_elapsed usage" and the
+> > > > > > "close implementation" within all the drivers). The most common
+> > > > > > mistake is that
+> > > > > >   - Checking if the substream is null and call into snd_pcm_period_elapsed
+> > > > > >   - But `close` can happen anytime, pass without block and
+> > > > > > snd_pcm_detach_substream will be trigger right after it
+> > > > >
+> > > > > Thanks, point taken.  While this argument is valid and it's good to
+> > > > > harden the PCM core side, the concurrent calls are basically a bug,
+> > > > > and we'd need another fix in anyway.  Also, the patch 2 makes little
+> > > > > sense; there can't be multiple close calls racing with each other.  So
+> > > > > I'll go for taking your fix but only the first patch.
+> > > > >
+> > > > > Back to this race: the surfaced issue is, as you pointed out, the race
+> > > > > between snd_pcm_period_elapsed() vs close call.  However, the
+> > > > > fundamental problem is the pending action after the PCM trigger-stop
+> > > > > call.  Since the PCM trigger doesn't block nor wait until the hardware
+> > > > > actually stops the things, the driver may go to the other step even
+> > > > > after this "supposed-to-be-stopped" point.  In your case, it goes up
+> > > > > to close, and crashes.  If we had a sync-stop operation, the interrupt
+> > > > > handler should have finished before moving to the close stage, hence
+> > > > > such a race could be avoided.
+> > > > >
+> > > > > It's been a long known problem, and some drivers have the own
+> > > > > implementation for stop-sync.  I think it's time to investigate and
+> > > > > start implementing the fundamental solution.
+> > > >
+> > > > BTW, what we need essentially for intel8x0 is to just call
+> > > > synchronize_irq() before closing, at best in hw_free procedure:
+> > > >
+> > > > --- a/sound/pci/intel8x0.c
+> > > > +++ b/sound/pci/intel8x0.c
+> > > > @@ -923,8 +923,10 @@ static int snd_intel8x0_hw_params(struct snd_pcm_substream *substream,
+> > > >
+> > > >  static int snd_intel8x0_hw_free(struct snd_pcm_substream *substream)
+> > > >  {
+> > > > +       struct intel8x0 *chip = snd_pcm_substream_chip(substream);
+> > > >         struct ichdev *ichdev = get_ichdev(substream);
+> > > >
+> > > > +       synchronize_irq(chip->irq);
+> > > >         if (ichdev->pcm_open_flag) {
+> > > >                 snd_ac97_pcm_close(ichdev->pcm);
+> > > >                 ichdev->pcm_open_flag = 0;
+> > > >
+> > > >
+> > > > The same would be needed also at the beginning of the prepare, as the
+> > > > application may restart the stream without release.
+> > > >
+> > > > My idea is to add sync_stop PCM ops and call it from PCM core at
+> > > > snd_pcm_prepare() and snd_pcm_hw_free().
+> > > >
+> > > Will adding synchronize_irq() in snd_pcm_hw_free there fix the race issue?
+> > > Is it possible to have sequence like the following steps ?
+> > > - [Thread 1] snd_pcm_hw_free: just pass synchronize_irq()
+> > > - [Thread 2] another interrupt come -> snd_intel8x0_update() -> goes
+> > > into the lock region of snd_pcm_period_elapsed() and passes the
+> > > PCM_RUNTIME_CHECK (right before snd_pcm_running())
+> >
+> > This shouldn't happen because at the point snd_pcm_hw_free() the
+> > stream has been already in the SETUP state, i.e. with trigger PCM
+> > callback, the hardware has been programmed not to generate the PCM
+> > stream IRQ.
+> >
+> Thanks for pointing that out.
+> snd_pcm_drop() will be called right before accessing `opts->hw_free`
+> and device dma will be stopped by SNDRV_PCM_TRIGGER_STOP.
+> And snd_pcm_prepare() will be called when the device is not running.
+> So synchronize_irq() should be enough for both of them.
+> 
+> I have a patch like this now in intel8x0:
+> 
+> diff --git a/sound/pci/intel8x0.c b/sound/pci/intel8x0.c
+> index 6ff94d8ad86e..728588937673 100644
+> --- a/sound/pci/intel8x0.c
+> +++ b/sound/pci/intel8x0.c
+> @@ -923,8 +923,10 @@ static int snd_intel8x0_hw_params(struct
+> snd_pcm_substream *substream,
+> 
+>  static int snd_intel8x0_hw_free(struct snd_pcm_substream *substream)
+>  {
+> +       struct intel8x0 *chip = snd_pcm_substream_chip(substream);
+>         struct ichdev *ichdev = get_ichdev(substream);
+> 
+> +       synchronize_irq(chip->irq);
+>         if (ichdev->pcm_open_flag) {
+>                 snd_ac97_pcm_close(ichdev->pcm);
+>                 ichdev->pcm_open_flag = 0;
+> @@ -993,6 +995,7 @@ static int snd_intel8x0_pcm_prepare(struct
+> snd_pcm_substream *substream)
+>         struct snd_pcm_runtime *runtime = substream->runtime;
+>         struct ichdev *ichdev = get_ichdev(substream);
+> 
+> +       synchronize_irq(chip->irq);
+>         ichdev->physbuf = runtime->dma_addr;
+>         ichdev->size = snd_pcm_lib_buffer_bytes(substream);
+>         ichdev->fragsize = snd_pcm_lib_period_bytes(substream);
+> 
+> If that looks good to you, I can upload the patch to pw as well.
+> Then we can upstream the intel8x0 patch and the first change I made in
+> this series (the elapse one).
+> Does that sound good to you?
+
+I already have a patch set that adds the irq-sync commonly, as this
+problem is seen on various drivers as you already pointed.
+
+Below two patches add the support in PCM core side, and the rest need in
+intel8x0.c is something like:
+
+--- a/sound/pci/intel8x0.c
++++ b/sound/pci/intel8x0.c
+@@ -3092,6 +3092,7 @@ static int snd_intel8x0_create(struct snd_card *card,
+ 		return -EBUSY;
+ 	}
+ 	chip->irq = pci->irq;
++	card->sync_irq = chip->irq;
+ 
+ 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
+ 		snd_intel8x0_free(chip);
+
+
+(The intel8x0 does re-acquire IRQ, so it'll need a bit more lines, but
+ you get the idea.)
+
+My plan is to merge the whole changes after 5.5-rc1, destined for
+5.6.
+
+
+thanks,
+
+Takashi
+
+
+--Multipart_Thu_Nov_14_18:00:58_2019-1
+Content-Type: application/octet-stream; type=patch
+Content-Disposition: attachment; filename="0001-ALSA-pcm-Add-the-support-for-sync-stop-operation.patch"
+Content-Transfer-Encoding: 7bit
+
+From a2ba786d9dcbd92b9d0f2fcc408fa80168484c0a Mon Sep 17 00:00:00 2001
+From: Takashi Iwai <tiwai@suse.de>
+Date: Wed, 13 Nov 2019 15:43:41 +0100
+Subject: [PATCH] ALSA: pcm: Add the support for sync-stop operation
+
+The standard programming model of a PCM sound driver is to process
+snd_pcm_period_elapsed() from an interrupt handler.  When a running
+stream is stopped, PCM core calls the trigger-STOP PCM ops, sets the
+stream state to SETUP, and moves on to the next step.  This is
+performed in an atomic manner -- this could be called from the interrupt
+context, after all.
+
+The problem is that, if the stream goes further and reaches to the
+CLOSE state immediately, the stream might be still being processed in
+snd_pcm_period_elapsed() in the interrupt context, and hits a NULL
+dereference.  Such a crash happens because of the atomic operation,
+and we can't wait until the stream-stop finishes.
+
+For addressing such a problem, this commit adds a new PCM ops,
+sync_stop.  This gets called at the appropriate places that need a
+sync with the stream-stop, i.e. at hw_params, prepare and hw_free.
+
+Some drivers already have a similar mechanism implemented locally, and
+we'll refactor the code later.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ include/sound/pcm.h     |  2 ++
+ sound/core/pcm_native.c | 15 +++++++++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/include/sound/pcm.h b/include/sound/pcm.h
+index 9b1accfd9413..76053d9deb07 100644
+--- a/include/sound/pcm.h
++++ b/include/sound/pcm.h
+@@ -59,6 +59,7 @@ struct snd_pcm_ops {
+ 	int (*hw_free)(struct snd_pcm_substream *substream);
+ 	int (*prepare)(struct snd_pcm_substream *substream);
+ 	int (*trigger)(struct snd_pcm_substream *substream, int cmd);
++	int (*sync_stop)(struct snd_pcm_substream *substream);
+ 	snd_pcm_uframes_t (*pointer)(struct snd_pcm_substream *substream);
+ 	int (*get_time_info)(struct snd_pcm_substream *substream,
+ 			struct timespec *system_ts, struct timespec *audio_ts,
+@@ -395,6 +396,7 @@ struct snd_pcm_runtime {
+ 	wait_queue_head_t sleep;	/* poll sleep */
+ 	wait_queue_head_t tsleep;	/* transfer sleep */
+ 	struct fasync_struct *fasync;
++	bool stop_operating;		/* sync_stop will be called */
+ 
+ 	/* -- private section -- */
+ 	void *private_data;
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index 704ea75199e4..163d621ff238 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -568,6 +568,15 @@ static inline void snd_pcm_timer_notify(struct snd_pcm_substream *substream,
+ #endif
+ }
+ 
++static void snd_pcm_sync_stop(struct snd_pcm_substream *substream)
++{
++	if (substream->runtime->stop_operating) {
++		substream->runtime->stop_operating = false;
++		if (substream->ops->sync_stop)
++			substream->ops->sync_stop(substream);
++	}
++}
++
+ /**
+  * snd_pcm_hw_param_choose - choose a configuration defined by @params
+  * @pcm: PCM instance
+@@ -660,6 +669,8 @@ static int snd_pcm_hw_params(struct snd_pcm_substream *substream,
+ 		if (atomic_read(&substream->mmap_count))
+ 			return -EBADFD;
+ 
++	snd_pcm_sync_stop(substream);
++
+ 	params->rmask = ~0U;
+ 	err = snd_pcm_hw_refine(substream, params);
+ 	if (err < 0)
+@@ -788,6 +799,7 @@ static int snd_pcm_hw_free(struct snd_pcm_substream *substream)
+ 	snd_pcm_stream_unlock_irq(substream);
+ 	if (atomic_read(&substream->mmap_count))
+ 		return -EBADFD;
++	snd_pcm_sync_stop(substream);
+ 	if (substream->ops->hw_free)
+ 		result = substream->ops->hw_free(substream);
+ 	if (substream->managed_buffer_alloc)
+@@ -1313,6 +1325,7 @@ static void snd_pcm_post_stop(struct snd_pcm_substream *substream, int state)
+ 		runtime->status->state = state;
+ 		snd_pcm_timer_notify(substream, SNDRV_TIMER_EVENT_MSTOP);
+ 	}
++	runtime->stop_operating = true;
+ 	wake_up(&runtime->sleep);
+ 	wake_up(&runtime->tsleep);
+ }
+@@ -1589,6 +1602,7 @@ static void snd_pcm_post_resume(struct snd_pcm_substream *substream, int state)
+ 	snd_pcm_trigger_tstamp(substream);
+ 	runtime->status->state = runtime->status->suspended_state;
+ 	snd_pcm_timer_notify(substream, SNDRV_TIMER_EVENT_MRESUME);
++	snd_pcm_sync_stop(substream);
+ }
+ 
+ static const struct action_ops snd_pcm_action_resume = {
+@@ -1709,6 +1723,7 @@ static int snd_pcm_pre_prepare(struct snd_pcm_substream *substream,
+ static int snd_pcm_do_prepare(struct snd_pcm_substream *substream, int state)
+ {
+ 	int err;
++	snd_pcm_sync_stop(substream);
+ 	err = substream->ops->prepare(substream);
+ 	if (err < 0)
+ 		return err;
+-- 
+2.16.4
+
+
+--Multipart_Thu_Nov_14_18:00:58_2019-1
+Content-Type: application/octet-stream; type=patch
+Content-Disposition: attachment; filename="0002-ALSA-pcm-Add-card-sync_irq-field.patch"
+Content-Transfer-Encoding: 7bit
+
+From 66e5ee3821e3072ce6c308e0ad12a3667ee3bcc9 Mon Sep 17 00:00:00 2001
+From: Takashi Iwai <tiwai@suse.de>
+Date: Thu, 14 Nov 2019 12:47:27 +0100
+Subject: [PATCH] ALSA: pcm: Add card sync_irq field
+
+Many PCI and other drivers performs snd_pcm_period_elapsed() simply in
+its interrupt handler, so the sync_stop operation is just to call
+synchronize_irq().  Instead of putting this call multiple times,
+introduce the common card->sync_irq field.  When this field is set,
+PCM core performs synchronize_irq() for sync-stop operation.  Each
+driver just needs to copy its local IRQ number to card->sync_irq, and
+that's all we need.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ include/sound/core.h    | 1 +
+ sound/core/init.c       | 1 +
+ sound/core/pcm_native.c | 2 ++
+ 3 files changed, 4 insertions(+)
+
+diff --git a/include/sound/core.h b/include/sound/core.h
+index ee238f100f73..af3dce956c17 100644
+--- a/include/sound/core.h
++++ b/include/sound/core.h
+@@ -117,6 +117,7 @@ struct snd_card {
+ 	struct device card_dev;		/* cardX object for sysfs */
+ 	const struct attribute_group *dev_groups[4]; /* assigned sysfs attr */
+ 	bool registered;		/* card_dev is registered? */
++	int sync_irq;			/* assigned irq, used for PCM sync */
+ 	wait_queue_head_t remove_sleep;
+ 
+ #ifdef CONFIG_PM
+diff --git a/sound/core/init.c b/sound/core/init.c
+index db99b7fad6ad..faa9f03c01ca 100644
+--- a/sound/core/init.c
++++ b/sound/core/init.c
+@@ -215,6 +215,7 @@ int snd_card_new(struct device *parent, int idx, const char *xid,
+ 	init_waitqueue_head(&card->power_sleep);
+ #endif
+ 	init_waitqueue_head(&card->remove_sleep);
++	card->sync_irq = -1;
+ 
+ 	device_initialize(&card->card_dev);
+ 	card->card_dev.parent = parent;
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index 163d621ff238..1fe581167b7b 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -574,6 +574,8 @@ static void snd_pcm_sync_stop(struct snd_pcm_substream *substream)
+ 		substream->runtime->stop_operating = false;
+ 		if (substream->ops->sync_stop)
+ 			substream->ops->sync_stop(substream);
++		else if (substream->pcm->card->sync_irq > 0)
++			synchronize_irq(substream->pcm->card->sync_irq);
+ 	}
+ }
+ 
+-- 
+2.16.4
+
+
+--Multipart_Thu_Nov_14_18:00:58_2019-1--
