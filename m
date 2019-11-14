@@ -2,95 +2,165 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C66C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD00C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB22206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C35206E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573704886;
+	bh=OhClmUW9q2p5vazL+PPl6LPUsbvP6Yq/wBursDlyo9Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IhwPKwiCEmaX7Dacuj2U7S9nZmc+P5AP/ny33YWXgQuk59HAvHadzD9rp3kTVN2Ic
+	 CbQCZ+Ry7ABQdJEnOaq5HUNnxRpVPNYmsM0hnZbZazDpVxxjDEzGLrjKwSQm3wVJNi
+	 4Ooi+aemQ8LJTMi+LZojHdp82UmxUrDq8Wc2rEx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfKNDww (ORCPT
+        id S1726613AbfKNEOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:52:52 -0500
-Received: from mga11.intel.com ([192.55.52.93]:8089 "EHLO mga11.intel.com"
+        Wed, 13 Nov 2019 23:14:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbfKNDww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:52:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 19:52:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
-   d="scan'208";a="404840603"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Nov 2019 19:52:51 -0800
-Received: from [10.226.39.46] (unknown [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 734FE58049A;
-        Wed, 13 Nov 2019 19:52:48 -0800 (PST)
-Subject: Re: [PATCH v6 2/3] dwc: PCI: intel: PCIe RC controller driver
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1573613534.git.eswara.kota@linux.intel.com>
- <897ef494f39291797a92efb87a59961d36384019.1573613534.git.eswara.kota@linux.intel.com>
- <20191113110009.GC32742@smile.fi.intel.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <b369d6b9-004b-66fa-6add-322aba9c806b@linux.intel.com>
-Date:   Thu, 14 Nov 2019 11:52:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191113110009.GC32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        id S1726489AbfKNEOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 23:14:44 -0500
+Received: from devnote2 (unknown [147.50.43.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0E70206D7;
+        Thu, 14 Nov 2019 04:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573704883;
+        bh=OhClmUW9q2p5vazL+PPl6LPUsbvP6Yq/wBursDlyo9Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MD3fYvTKkiyX2oQcdao84RyGV0x8kzuETF0IE9VafIkFjekyxl/OPpBh8TZ8B4FLE
+         JN2WwZsm+1Xt76Po5qwadp88F02tlYuRlUlFErSRE4jwdZCrI3JV29GG3rzIEIoAnc
+         oytuVrK/TVePlA8kO2MFLnbQ5xH8bz17wt2SLEsU=
+Date:   Thu, 14 Nov 2019 11:14:36 +0700
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v2 1/4] perf probe: Generate event name with line number
+Message-Id: <20191114111436.c02d60d9b9e42e8f86df7696@kernel.org>
+In-Reply-To: <20191113120927.GA14646@kernel.org>
+References: <157314406866.4063.16995747442215702109.stgit@devnote2>
+        <157314407850.4063.2307803945694526578.stgit@devnote2>
+        <20191111140450.GB9365@kernel.org>
+        <20191111140625.GC9365@kernel.org>
+        <20191111140733.GD9365@kernel.org>
+        <20191112173131.e484666a4ae1bbd7708ccf15@kernel.org>
+        <20191113080157.9d6316e9826dd5aed874537e@kernel.org>
+        <20191113120927.GA14646@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/2019 7:00 PM, Andy Shevchenko wrote:
-> On Wed, Nov 13, 2019 at 03:21:21PM +0800, Dilip Kota wrote:
->> Add support to PCIe RC controller on Intel Gateway SoCs.
->> PCIe controller is based of Synopsys DesignWare PCIe core.
->>
->> Intel PCIe driver requires Upconfigure support, Fast Training
->> Sequence and link speed configurations. So adding the respective
->> helper functions in the PCIe DesignWare framework.
->> It also programs hardware autonomous speed during speed
->> configuration so defining it in pci_regs.h.
->> +#include <linux/of_irq.h>
->> +#include <linux/of_platform.h>
-> I hardly see the use of above...
-Thanks for pointing it. Yes, it can be removed. I have again cross 
-checked all the header files , i see below files can also be removed.
-#include <linux/interrupt.h>
-#include <linux/of_irq.h>
-#include <linux/of_pci.h>
+On Wed, 13 Nov 2019 09:09:27 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
->> +	if (device_property_read_u32(dev, "reset-assert-ms", &lpp->rst_intrvl))
->> +		lpp->rst_intrvl = RESET_INTERVAL_MS;
-> ...perhaps you need to add
->
-> #include <linux/property.h>
->
-> instead.
+> Em Wed, Nov 13, 2019 at 08:01:57AM +0700, Masami Hiramatsu escreveu:
+> > Hi Arnaldo,
+> > 
+> > On Tue, 12 Nov 2019 17:31:31 +0700
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > > > > # perf probe --list
+> > > > > >   probe:kernel_read_l1 (on kernel_read@fs/read_write.c)
+> > > > > >   probe:kernel_read_l2 (on kernel_read:1@fs/read_write.c)
+> > > > > 
+> > > > > 
+> > > > > Also look above at the listing, I would expect this instead:
+> > > > > 
+> > > > > # perf probe --list
+> > > > >   probe:kernel_read_l1 (on kernel_read:1@fs/read_write.c)
+> > > > >   probe:kernel_read_l2 (on kernel_read:2@fs/read_write.c)
+> > > > > 
+> > > > > Right?
+> > > 
+> > > Yes, it should be so.
+> > 
+> > Hmm, this looks the limiation of debuginfo generated by gcc.
+> > Let me explain what happens. So, here is the decoded Line info in
+> > debuginfo for kernel_read (is defined in fs/read_write.c:423)
+> > 
+> > ---
+> > $ readelf -wL /usr/lib/debug/boot/vmlinux-5.0.0-32-generic 
+> > ...
+> > read_write.c                                 444  0xffffffff812b435d        
+>                                                ^^^
+> 					       424, right?
 
-I see this header file is  already getting included in the driver 
-through linux/phy/phy.h => linux/of.h (of.h has #include <linux/property.h>)
+No, the line info is sorted by address. This seems strange, but happens sometimes :)
 
-Thanks for reviewing the patch, i will update the driver and submit the 
-next patch version.
+> > read_write.c                                 424  0xffffffff812b4370               x
+> > read_write.c                                 425  0xffffffff812b4375               x
+> > read_write.c                                 426  0xffffffff812b4375       1       x
+> > read_write.c                                 428  0xffffffff812b4375       2       x
+> > 
+> > ---
+> > This shows the line number info points the kernel_read entry address is
+> > on #424, this means we can not distinguish kernel_read:0 and kernel_read:1
+> > from only the address information.cw
+> 
+> If both 0xffffffff812b435d and 0xffffffff812b4370 are associated with
+> line 424, then we should present on 'perf probe -L' just the first one
+> and do the same when converting from address to name when presenting
+> with 'perf probe -l'?
 
-Regards,
-Dilip
+OK, so we can pick only one of them (the first "statement" line among
+several lines which shares same address), and show only that line can
+be probed by perf probe -L.
 
->
+> 
+> > (maybe huristically we can distinguish it by the "_L1" suffix. But if
+> > user gives another event name, it doesn't work.)
+> 
+> > ---
+> > 
+> > /build/linux-pvZVvI/linux-5.0.0/arch/x86/include/asm/current.h:
+> > current.h                                     13  0xffffffff812b4375       3       x
+> > current.h                                     15  0xffffffff812b4375       4       x
+> > current.h                                     15  0xffffffff812b4375       5       x
+> > current.h                                     15  0xffffffff812b4375       6       x
+> > current.h                                     15  0xffffffff812b4375       7       x
+> > 
+> > /build/linux-pvZVvI/linux-5.0.0/fs/read_write.c:
+> > read_write.c                                 424  0xffffffff812b4375       8
+> > 
+> > ---
+> > And it seems that the dwarf_getsrc_die() returns the last line info
+> > correspoinding to given address (0xffffffff812b4375) even if it is
+> > not a stetement line. This is why probe:kernel_read_l2 is 
+> > on kernel_read:1. I will fix that.
+> 
+> by going backwards from what dwarf_getsrc_die() returns till it finds a
+> statement line?
+
+Moreover, going backward and forward until it finds the smallest line
+number which is a statement. Because it uses a binary search, it can
+find non-statement lines.
+
+>  
+> > However, again, as long as the different lines are encoded in same
+> 
+> It is possible as well to have different addresses associated with the
+> same source code line.
+
+That is OK, since we now support multiprobes. We can put probes on
+different addresses on same line (but different column).
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
