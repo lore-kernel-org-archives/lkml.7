@@ -2,47 +2,72 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEE7C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFBEC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16537206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AC920723
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:20:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vy6GA8dd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfKNXTt (ORCPT
+        id S1727265AbfKNXUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:19:49 -0500
-Received: from mga18.intel.com ([134.134.136.126]:23503 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfKNXTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 18:19:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 15:19:47 -0800
-X-IronPort-AV: E=Sophos;i="5.68,306,1569308400"; 
-   d="scan'208";a="199003287"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 15:19:46 -0800
-From:   ira.weiny@intel.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH] Documentation/fs: Move swap_[de]activate() to file_operations
-Date:   Thu, 14 Nov 2019 15:19:43 -0800
-Message-Id: <20191114231943.11220-1-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 14 Nov 2019 18:20:17 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36318 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727239AbfKNXUR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 18:20:17 -0500
+Received: by mail-il1-f193.google.com with SMTP id s75so7062757ilc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 15:20:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kFs5XbPF3HYTosWYp06fmiVryxSTFoWBcu4a+ZdX1+A=;
+        b=Vy6GA8ddbLbjLQ0/vxsC1OSA5VAU5monEtQPIKzqFbxFLBEu5W07DTGCEUNuxvMCoT
+         nsfLyheQYO63ApFFBM9PBav2L3dtOhJJNPH9orYwGwiKZNoPCURhAucodOQEyLdNXVdc
+         qgi6uNyeIjrgrzGiU92WPrD4S2PRg2KHsuxZA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kFs5XbPF3HYTosWYp06fmiVryxSTFoWBcu4a+ZdX1+A=;
+        b=LCx3Bh2Q29KFQJa74csMRllh+Xv7ktSbUQqTlVJVLW2dDRpqrf8oqGM5vUp3cL/pki
+         HSUNsyae3dvKsckpmaOw+eTsk9q3vSqVJhhOExpyUbrZSqZsIB/Ae1k2hkUenkYqALK9
+         jrWKzSIiuvvdHn4Te8qPjsBb8eZXXRZy34TPCnPpIK6OF+NpxFhdPz/tSZcdFz8itbF/
+         xtcfU2CfqGYvYH2fjl/hKdGWC1CRNZvfwQTtqVvNQCRafBGg52QbRCwlSz8LpWVOS9L8
+         Sz746oH284Mzw1VLh/qeYtrTHqaui/LB1xv91VAZRwOIqO5IVwQnTD9VB9DD3YX7sFkz
+         foNw==
+X-Gm-Message-State: APjAAAUXvO81FAVjQewXzUzDDu1nuVkDtLsrtSoE0Fg9KtdPR1Mou4o9
+        rCYTv2tljZUNCeA6wAqGZFdZvBZq0T8=
+X-Google-Smtp-Source: APXvYqyYK3wJiqqhy/FBkuHJZyqIoqryDSG+Bdm4KNKKICytbtzzTrU2P8ejRbTFDQceewqACfSslw==
+X-Received: by 2002:a5d:88c6:: with SMTP id i6mr3528170iol.251.1573773616389;
+        Thu, 14 Nov 2019 15:20:16 -0800 (PST)
+Received: from localhost ([2620:15c:183:200:2bde:b0e1:a0d8:ffc6])
+        by smtp.gmail.com with ESMTPSA id q3sm1018269ill.0.2019.11.14.15.20.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 15:20:15 -0800 (PST)
+From:   Jacob Rasmussen <jacobraz@chromium.org>
+X-Google-Original-From: Jacob Rasmussen <jacobraz@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jacob Rasmussen <jacobraz@google.com>,
+        Bard Liao <bardliao@realtek.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Ross Zwisler <zwisler@google.com>, stable@vger.kernel.org
+Subject: [PATCH v2] ASoC: rt5645: Fixed typo for buddy jack support.
+Date:   Thu, 14 Nov 2019 16:20:11 -0700
+Message-Id: <20191114232011.165762-1-jacobraz@google.com>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,75 +75,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Had a typo in e7cfd867fd98 that resulted in buddy jack support not being
+fixed.
 
-Update the documentation for the move of the swap_* functions out of
-address_space_operations and into file_operations.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Fixes: e7cfd867fd98 ("ASoC: rt5645: Fixed buddy jack support.")
+Signed-off-by: Jacob Rasmussen <jacobraz@google.com>
+Reviewed-by: Ross Zwisler <zwisler@google.com>
+Cc: <jacobraz@google.com>
+CC: stable@vger.kernel.org
 ---
-Follow on to the V2 series sent earlier.  If I need to spin a V3 I will squash
-this into patch 2/2 "fs: Move swap_[de]activate to file_operations"
+ sound/soc/codecs/rt5645.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Documentation/filesystems/vfs.rst | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index 7d4d09dd5e6d..03a740d7faa4 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -731,8 +731,6 @@ cache in your filesystem.  The following members are defined:
- 					      unsigned long);
- 		void (*is_dirty_writeback) (struct page *, bool *, bool *);
- 		int (*error_remove_page) (struct mapping *mapping, struct page *page);
--		int (*swap_activate)(struct file *);
--		int (*swap_deactivate)(struct file *);
- 	};
- 
- ``writepage``
-@@ -924,16 +922,6 @@ cache in your filesystem.  The following members are defined:
- 	Setting this implies you deal with pages going away under you,
- 	unless you have them locked or reference counts increased.
- 
--``swap_activate``
--	Called when swapon is used on a file to allocate space if
--	necessary and pin the block lookup information in memory.  A
--	return value of zero indicates success, in which case this file
--	can be used to back swapspace.
--
--``swap_deactivate``
--	Called during swapoff on files where swap_activate was
--	successful.
--
- 
- The File Object
- ===============
-@@ -988,6 +976,8 @@ This describes how the VFS can manipulate an open file.  As of kernel
- 					   struct file *file_out, loff_t pos_out,
- 					   loff_t len, unsigned int remap_flags);
- 		int (*fadvise)(struct file *, loff_t, loff_t, int);
-+		int (*swap_activate)(struct file *);
-+		int (*swap_deactivate)(struct file *);
- 	};
- 
- Again, all methods are called without any locks being held, unless
-@@ -1108,6 +1098,16 @@ otherwise noted.
- ``fadvise``
- 	possibly called by the fadvise64() system call.
- 
-+``swap_activate``
-+	Called when swapon is used on a file to allocate space if
-+	necessary and pin the block lookup information in memory.  A
-+	return value of zero indicates success, in which case this file
-+	can be used to back swapspace.
-+
-+``swap_deactivate``
-+	Called during swapoff on files where swap_activate was
-+	successful.
-+
- Note that the file operations are implemented by the specific
- filesystem in which the inode resides.  When opening a device node
- (character or block special) most filesystems will call special
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 902ac98a3fbe..19662ee330d6 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3271,7 +3271,7 @@ static void rt5645_jack_detect_work(struct work_struct *work)
+ 				    report, SND_JACK_MICROPHONE);
+ 		return;
+ 	case 4:
+-		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x002;
++		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x0020;
+ 		break;
+ 	default: /* read rt5645 jd1_1 status */
+ 		val = snd_soc_component_read32(rt5645->component, RT5645_INT_IRQ_ST) & 0x1000;
 -- 
 2.21.0
 
