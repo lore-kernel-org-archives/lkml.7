@@ -2,112 +2,103 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DCDC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9617AC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57F4206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69888206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGVxUlgP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ru/B8kdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfKNIQs (ORCPT
+        id S1726270AbfKNITc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:16:48 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57068 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbfKNIQs (ORCPT
+        Thu, 14 Nov 2019 03:19:32 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39668 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfKNITc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:16:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573719407;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7pz4h7KTvi15etsg91JTbTPY+IW6HvuoxNFsGvR7DmQ=;
-        b=dGVxUlgPyWJPXjJdKwYvVxg9Os8fsbMp3lDUGsPDnDiHTchJsQ5UocAMtdlhQ9ngl0tOWK
-        VK1ixqxQODVYc999NSSUYr+65vdBF8W416H54A0ViTYerJvB0G8OzIDwzwoe/9xUW2cgps
-        bOTiB9PUBU+x1TCWfEQ9QhbTu+vX2gY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-DvE3QywuOrGiB5fflIsqgg-1; Thu, 14 Nov 2019 03:16:43 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A76D1DB20;
-        Thu, 14 Nov 2019 08:16:41 +0000 (UTC)
-Received: from localhost (ovpn-12-24.pek2.redhat.com [10.72.12.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD4595E258;
-        Thu, 14 Nov 2019 08:16:40 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 16:16:38 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] x86/mm/KASLR: Adjust the padding size for the
- direct  mapping.
-Message-ID: <20191114081638.GH30906@MiWiFi-R3L-srv>
-References: <20191102010911.21460-1-msys.mizuma@gmail.com>
- <20191102010911.21460-5-msys.mizuma@gmail.com>
- <20191104004825.GK7616@MiWiFi-R3L-srv>
- <20191112204707.jyruwkb4pbdj3jvv@gabell>
+        Thu, 14 Nov 2019 03:19:32 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v138so4501806oif.6
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 00:19:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JaJ/24ug8EOdA634pqQxtCQHNaGQDoT5QO/cUZAPyN8=;
+        b=ru/B8kdyEF+8X/F+RYI6XxfAscZ4dA2WpcMuSnAZQ7WAJSxwzRdMQvN0jzwHqC9gN9
+         MNdMczMdLpc/WgDZiKA0LV/xvQbjtogEuJPVtriyZpBxNVtMzJlI+oRt+niwdo/rLmJq
+         SQkLAyb+/Oxth0R0eRylxl43ZOHalSyElhvjecGxdIgxSnmH1HD73n0n3ItBzlLN4kzP
+         8xwpxzUDXL1C1A9HfYAWkdt+JGwVSfciyg18trUIu7EJzLAzcpqQDEvqrLrwU2hKN7Zm
+         0i71MX8xdta7xrSfgL1OLgWdJxIfsJyLI53J1jF2ZetcJHtkcJFN8uC5GF5LIY8Ixv2D
+         NC1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JaJ/24ug8EOdA634pqQxtCQHNaGQDoT5QO/cUZAPyN8=;
+        b=CGSmwYpt7o8iK3bCSPeU/EIA8vmG6TWfio1aUKklZrv0d9J8olNU1EkQXdL7bsxOJL
+         JwVbgdAWW7pTJ9+WFjqX2ZjFydRKZ3booythMioJhygTJQ8Izx7qkRgxOQuruf3SKFjk
+         Lgc8BPOo/QpNK+niwVqMr00hNCZqekpbT33Zjsbnn5DpC8NUER81BBicRH9Ms6Si7u64
+         mKmxQKuN+Ik3wFosJDuVO453M5Z1tcgCkYfsrqLFix0RnUTiLgt54YKaQsa264kJWxn8
+         G6/h6vlnKqi2IyoPebrqXG+1k95PBZ2VLI+yfpcMqlWN8mc8HYwEloixyDmFZhMcndK1
+         JSmA==
+X-Gm-Message-State: APjAAAU50idJ+goT97DyNIA9IR64NFIFM9P6dlzVz4cb9mWfZp7dnLrv
+        Jx24HDtDmt2njZdP4a6/q1trzqBj79+F4cpFILs=
+X-Google-Smtp-Source: APXvYqx8D9GlJ385oYygjCaMSvLMvmBz7OT2vUysUTVFxuEaxfasZyDjLfPaArprQ3D6hB+O99WzCUmlXvxlMWh3J2U=
+X-Received: by 2002:aca:3f87:: with SMTP id m129mr2587853oia.30.1573719569553;
+ Thu, 14 Nov 2019 00:19:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191112204707.jyruwkb4pbdj3jvv@gabell>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: DvE3QywuOrGiB5fflIsqgg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191110052104.5502-1-gch981213@gmail.com> <201911121507.ANXNexIL%lkp@intel.com>
+In-Reply-To: <201911121507.ANXNexIL%lkp@intel.com>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Thu, 14 Nov 2019 16:19:18 +0800
+Message-ID: <CAJsYDV+nGHtvmnfY8jN+fR8E8m2vh7OTe7Y0zQvSX8HKBidszA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mtd: mtk-quadspi: add support for DMA reading
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-mtd@lists.infradead.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 at 03:47pm, Masayoshi Mizuma wrote:
-> Your suggesion makes it simpler, thanks!
-> So I'll modify calc_direct_mapping_size() as following.
-> Does it make sense?
+Hi all!
 
-Yeah, it looks good to me. Thanks.
+On Tue, Nov 12, 2019 at 3:29 PM kbuild test robot <lkp@intel.com> wrote:
+> [...]
+> All warnings (new ones prefixed by >>):
+>
+>    drivers/mtd/spi-nor/mtk-quadspi.c: In function 'mtk_nor_read_dma_bounce':
+> >> drivers/mtd/spi-nor/mtk-quadspi.c:349:22: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>      mem_unaligned_len = (u32)buf % MTK_NOR_DMA_ALIGN;
+>                          ^
+>    drivers/mtd/spi-nor/mtk-quadspi.c: In function 'mtk_nor_read':
+>    drivers/mtd/spi-nor/mtk-quadspi.c:369:6: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>          (u32)buffer % MTK_NOR_DMA_ALIGN || from % MTK_NOR_DMA_ALIGN)
+>          ^
+>
 
->=20
-> static inline unsigned long calc_direct_mapping_size(void)
-> {
->        unsigned long size_tb, memory_tb;
->=20
->        memory_tb =3D DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT)=
- +
->                CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
->=20
-> #ifdef CONFIG_MEMORY_HOTPLUG
->        if (boot_params.max_addr) {
->                unsigned long maximum_tb;
->=20
->                maximum_tb =3D DIV_ROUND_UP(boot_params.max_addr,
->                                1UL << TB_SHIFT);
->=20
->                if (maximum_tb > memory_tb)
->                        memory_tb =3D maximum_tb;
->        }
-> #endif
->        size_tb =3D 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
->=20
->        /*
->         * Adapt physical memory region size based on available memory
->         */
->        if (memory_tb < size_tb)
->                size_tb =3D memory_tb;
->=20
->        return size_tb;
-> }
+DMA mode on this controller requires that source address, destination
+address and reading
+length should all be 16-byte aligned. And because of this, I didn't
+use the bounce buffer
+provided by spi-nor framework and allocate its own one.
+Should I just cast all these pointers to ulong or are there better
+ways to check for address
+alignments and/or obtain an aligned buffer?
 
+Regards,
+Chuanhong Guo
