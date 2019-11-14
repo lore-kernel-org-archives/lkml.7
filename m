@@ -2,91 +2,154 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0DCC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E6DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DF0206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="M42MiLqF"
+	by mail.kernel.org (Postfix) with ESMTP id 9EDEE20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfKNSam (ORCPT
+        id S1726865AbfKNSck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:30:42 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:34982 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfKNSam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:30:42 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6DD0F20110C5;
-        Thu, 14 Nov 2019 10:30:41 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6DD0F20110C5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573756241;
-        bh=e34wBcGrkzium9S0nLXTM8zcP/I7IMpdThpV/SvpLXo=;
-        h=Subject:From:To:References:Date:In-Reply-To:From;
-        b=M42MiLqFiMb/kxpyHFHubuIHG1d4k97HJDOUGJ2iRF7z7rl1MmPhT11Jye515ar9u
-         6m6yhmTvqsCDlLdkP1gpISLKpiPUnRdBA9YYvQduQ4sRJpTEkZGh7I40dzeEJOeWj+
-         hPj3TIitM/qY0QN16gxwz9U6JnCW89ukk/hjIyA8=
-Subject: Re: [PATCH v7 2/5] IMA: Define an IMA hook to measure keys
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191114031202.18012-1-nramas@linux.microsoft.com>
- <20191114031202.18012-3-nramas@linux.microsoft.com>
-Message-ID: <56718c81-86db-c72b-19b7-c563838838d6@linux.microsoft.com>
-Date:   Thu, 14 Nov 2019 10:30:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 13:32:40 -0500
+Received: from mga06.intel.com ([134.134.136.31]:51485 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfKNSck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:32:40 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 10:32:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="216836229"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 14 Nov 2019 10:32:39 -0800
+Date:   Thu, 14 Nov 2019 10:32:38 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 06/16] x86/cpu: Clear VMX feature flag if VMX is not
+ fully enabled
+Message-ID: <20191114183238.GH24045@linux.intel.com>
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+ <20191022000836.1907-1-sean.j.christopherson@intel.com>
+ <20191025163858.GF6483@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20191114031202.18012-3-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191025163858.GF6483@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 7:11 PM, Lakshmi Ramasubramanian wrote:
+On Fri, Oct 25, 2019 at 06:38:58PM +0200, Borislav Petkov wrote:
+> On Mon, Oct 21, 2019 at 05:08:36PM -0700, Sean Christopherson wrote:
+> > Now that the IA32_FEATURE_CONTROL MSR is guaranteed to be configured and
+> > locked, clear the VMX capability flag if the IA32_FEATURE_CONTROL MSR is
+> > not supported or if BIOS disabled VMX, i.e. locked IA32_FEATURE_CONTROL
+> > and did not set the appropriate VMX enable bit.
+> > 
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Cc: Wanpeng Li <wanpengli@tencent.com>
+> > Cc: Jim Mattson <jmattson@google.com>
+> > Cc: kvm@vger.kernel.org
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kernel/cpu/feature_control.c | 23 ++++++++++++++++++++---
+> >  1 file changed, 20 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
+> > index 57b928e64cf5..74c76159a046 100644
+> > --- a/arch/x86/kernel/cpu/feature_control.c
+> > +++ b/arch/x86/kernel/cpu/feature_control.c
+> > @@ -7,13 +7,19 @@
+> >  
+> >  void init_feature_control_msr(struct cpuinfo_x86 *c)
+> >  {
+> > +	bool tboot = tboot_enabled();
+> >  	u64 msr;
+> >  
+> > -	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
+> > +	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr)) {
+> > +		if (cpu_has(c, X86_FEATURE_VMX)) {
+> > +			pr_err_once("x86/cpu: VMX disabled, IA32_FEATURE_CONTROL MSR unsupported\n");
+> 				     ^^^^^^^^
+> 
+> pr_fmt
+> 
+> But, before that: do we really wanna know about this or there's nothing
+> the user can do? If she can reenable VMX in the BIOS, or otherwise do
+> something about it, maybe we should say that above... Otherwise, this
+> message is useless.
 
-> The IMA hook is defined in a new file namely ima_asymmetric_keys.c
-> which is built only if CONFIG_KEYS is enabled.
+My thought for having the print was to alert the user that something is
+royally borked with their system.  There's nothing the user can do to fix
+it per se, but it does indicate that either their hardware or the VMM
+hosting their virtual machine is broken.  So maybe be more explicit about
+it being a likely hardware/VMM issue?
 
-I think instead of CONFIG_KEYS I should use 
-CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE for ima_asymmetric_keys.c since 
-this config is enabled only when both CONFIG_ASYMMETRIC_KEY_TYPE and 
-CONFIG_KEYS are enabled.
+> > +			clear_cpu_cap(c, X86_FEATURE_VMX);
+> > +		}
+> >  		return;
+> > +	}
+> >  
+> >  	if (msr & FEATURE_CONTROL_LOCKED)
+> > -		return;
+> > +		goto update_caps;
+> >  
+> >  	/*
+> >  	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
+> > @@ -23,8 +29,19 @@ void init_feature_control_msr(struct cpuinfo_x86 *c)
+> >  
+> >  	if (cpu_has(c, X86_FEATURE_VMX)) {
+> >  		msr |= FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX;
+> > -		if (tboot_enabled())
+> > +		if (tboot)
+> >  			msr |= FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX;
+> >  	}
+> >  	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
+> > +
+> > +update_caps:
+> > +	if (!cpu_has(c, X86_FEATURE_VMX))
+> > +		return;
+> 
+> If this test is just so we can save us the below code, I'd say remove it
+> for the sake of having less code in that function. The test is cheap and
+> not on a fast path so who cares if we clear an alrady cleared bit. But
+> maybe this evolves in the later patches...
 
-Please see below taken from "crypto/asymmetric_keys/Kconfig"
-
-# SPDX-License-Identifier: GPL-2.0
-menuconfig ASYMMETRIC_KEY_TYPE
-         bool "Asymmetric (public-key cryptographic) key type"
-         depends on KEYS
-         help
-           This option provides support for a key type that holds the 
-data for
-           the asymmetric keys used for public key cryptographic 
-operations such
-           as encryption, decryption, signature generation and signature
-           verification.
-
-if ASYMMETRIC_KEY_TYPE
-
-config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-         tristate "Asymmetric public-key crypto algorithm subtype"
-
-endif # ASYMMETRIC_KEY_TYPE
-
-thanks,
-  -lakshmi
+I didn't want to print the "VMX disabled by BIOS..." message if VMX isn't
+supported in the first place.  Later patches also add more code in this
+flow, but avoiding the print message is the main motiviation.
+ 
+> > +
+> > +	if ((tboot && !(msr & FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX)) ||
+> > +	    (!tboot && !(msr & FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX))) {
+> > +		pr_err_once("x86/cpu: VMX disabled by BIOS (TXT %s)\n",
+> > +			    tboot ? "enabled" : "disabled");
+> > +		clear_cpu_cap(c, X86_FEATURE_VMX);
+> > +	}
+> >  }
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
