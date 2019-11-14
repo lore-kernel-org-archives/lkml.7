@@ -2,153 +2,188 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F4AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D77C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 941E9206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:18:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BwgecA2I";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VFhyJjum"
+	by mail.kernel.org (Postfix) with ESMTP id 90733206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 01:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573694417;
+	bh=zDO9Js3j0YNxL31th55daw42XoRTkC6MaVj3ds3HBdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eA81ZB9/2Gb+N9smtwuFfs7DcPQUiBoKkGTs0h2j2SpUNwGuPpzdl+dtFsKHVlSAp
+	 bPgnUHatjK8hoYbfxo25rWi1DdnoSFUZoOoyeb5BVKIxyEJ6kVI1NUIvMDuizt6i07
+	 9lpJAwEYYQgfTR8GMk3FVogs3aXdgRHUNC3x1DUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKNBSU (ORCPT
+        id S1726957AbfKNBUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 20:18:20 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:37136 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfKNBST (ORCPT
+        Wed, 13 Nov 2019 20:20:16 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45971 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKNBUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 20:18:19 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6F74260D85; Thu, 14 Nov 2019 01:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573694298;
-        bh=u5vRIXV5qHvRwmoVSfcZHp7ushgdb7aZN/PjAN8IygQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BwgecA2IyMHTv/JlRDzVRZS+QD32i5hOe0I9ZVBgB93DUPwt9SqHdVqdEWmXQTOvA
-         axTUhsHksXCBVQbFgMTD0QrIZQcJwiVwkdd0MJ0esIfaAJDFfg6zD6ccFhQPUye7Tm
-         W7QdONdCd713u62SpPMtyKkUOrrOVcpUw2p6xn/8=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 30954602F7;
-        Thu, 14 Nov 2019 01:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573694296;
-        bh=u5vRIXV5qHvRwmoVSfcZHp7ushgdb7aZN/PjAN8IygQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VFhyJjum3Ca3bmZFsw62G/rOUVPPRD69EbvSn7E2tfKfAZ33ShEmdwq4WVzBL48FC
-         NXbEuEJz/QHoeSgydsll0HCyiNTZxCNgh40qFnGOoku91MIlFj9ODyzTR9aISMoigD
-         xfJEqqiTyajCCB4TMUx/wCrY/mcIjrDY+34O1IRA=
+        Wed, 13 Nov 2019 20:20:16 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 14so3700986oir.12;
+        Wed, 13 Nov 2019 17:20:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/K5jnJYkn2AvQdcmqwZlI7+QyjIXXZrWLvpnHt8x5XA=;
+        b=Tz+FxUkH6xMvUTga8czsWe7dnoNSyGaqJQaQAvFpCcCpW089RkVPcUkw7mCi/JyvUK
+         BafSuMyw8HRn5opofA4FBSKJsHODtxr6aB4SIQ4IKTZfePfqgQD8RO8o56AI1YhQqewh
+         2qBuSie0h1kIAK6Q5J4LoFQ+5WELIaRcsAZyL5ggktr8H76NcC7wcnraGzaCfdRjiVIz
+         nmFLiq0mxM4GjmIjUJ5KJB+fZX/levNczpjqmMgAq4RNalnaWirqUXXY+ZhGUVmb+D+a
+         K17DkQzWlzdqKuMlWlRuXXiNuClbdVyWQB0xR6usWkOnmkLuUqiXmQMi8HV22MXj/LAo
+         K86A==
+X-Gm-Message-State: APjAAAWnRgIKuiNtjB1ip8TZ7Eto/BKRiPQaCVZgEKqN5IGuPFs3NP+r
+        xZz3/LCpCRuoGLCJ8Dd9Iw==
+X-Google-Smtp-Source: APXvYqyEIOl8lwb4tjxfJzJO7GYF8YSZw8Qlvayg5mTnoyRtLO6AIrgKiwBF/MtTFld693lhmoQU9A==
+X-Received: by 2002:aca:a8d4:: with SMTP id r203mr1428225oie.12.1573694414787;
+        Wed, 13 Nov 2019 17:20:14 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u1sm1267887oie.37.2019.11.13.17.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 17:20:14 -0800 (PST)
+Date:   Wed, 13 Nov 2019 19:20:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH 06/13] dt-bindings: Add Broadcom STB USB PHY binding
+ document
+Message-ID: <20191114012013.GA25050@bogus>
+References: <20191107141339.6079-1-alcooperx@gmail.com>
+ <20191107141339.6079-7-alcooperx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 14 Nov 2019 09:18:16 +0800
-From:   cang@codeaurora.org
-To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Can Guo <cang@codeaurora.org>
-Subject: Re: [EXT] [PATCH v1 5/5] scsi: ufs: Complete pending requests in host
- reset and restore path
-In-Reply-To: <0dc202a1decb6bbc103253b8c3c8c8ce@codeaurora.org>
-References: <1573200932-384-1-git-send-email-cang@codeaurora.org>
- <1573200932-384-6-git-send-email-cang@codeaurora.org>
- <BN7PR08MB56849EEE83414549F4787BCEDB760@BN7PR08MB5684.namprd08.prod.outlook.com>
- <0dc202a1decb6bbc103253b8c3c8c8ce@codeaurora.org>
-Message-ID: <760d101a874e934f205701d282b3cc6f@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107141339.6079-7-alcooperx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-14 09:03, cang@codeaurora.org wrote:
-> On 2019-11-14 06:04, Bean Huo (beanhuo) wrote:
->>> 
->>> In UFS host reset and restore path, before probe, we stop and start 
->>> the host
->>> controller once. After host controller is stopped, the pending 
->>> requests, if any,
->>> are cleared from the doorbell, but no completion IRQ would be raised 
->>> due to the
->>> hba is stopped.
->>> These pending requests shall be completed along with the first 
->>> NOP_OUT
->>> command(as it is the first command which can raise a transfer 
->>> completion
->>> IRQ) sent during probe.
->> 
->> Hi, Can
->> I am not sure for this point, because there is HW/SW device reset
->> before or after host reset/restore.
->> Device HW/SW reset also will clear the pended tasks in device side.
->> That will be better.
->> I think Qcom platform already enabled HW reset.
->> 
->> //Bean
->> 
+On Thu, Nov 07, 2019 at 09:13:32AM -0500, Al Cooper wrote:
+> Add support for bcm7216 and bcm7211
 > 
-> Hi Bean,
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> ---
+>  .../bindings/phy/brcm,brcmstb-usb-phy.txt     | 69 +++++++++++++++----
+>  1 file changed, 56 insertions(+), 13 deletions(-)
 > 
-> By pending tasks here, it means the requests sent down from scsi/block 
-> layer,
-> but have not yet been handled by ufs driver(cmd->scsi_done() have not
-> been called yet for these requests).
-> For these requests, although removed by host and UFS device in their
-> HW queues(doorbell),
-> UFS driver still needs to complete them from SW side(call
-> cmd->scsi_done() for each one of them) to
-> let upper layer know that they are finished(although not successfully)
-> to avoid hitting
-> timeout of these pending tasks. I hope I make my explanation clearly.
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> index 24a0d06acd1d..14184cec15dc 100644
+> --- a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> @@ -1,30 +1,49 @@
+>  Broadcom STB USB PHY
+>  
+>  Required properties:
+> - - compatible: brcm,brcmstb-usb-phy
+> - - reg: two offset and length pairs.
+> -	The first pair specifies a manditory set of memory mapped
+> -	registers used for general control of the PHY.
+> -	The second pair specifies optional registers used by some of
+> -	the SoCs that support USB 3.x
+> - - #phy-cells: Shall be 1 as it expects one argument for setting
+> -	       the type of the PHY. Possible values are:
+> -	       - PHY_TYPE_USB2 for USB1.1/2.0 PHY
+> -	       - PHY_TYPE_USB3 for USB3.x PHY
+> +- compatible: should be one of
+> +	"brcm,brcmstb-usb-phy"
+> +	"brcm,bcm7216-usb-phy"
+> +	"brcm,bcm7211-usb-phy"
+> +
+> +- reg and reg-names properties requirements are specific to the
+> +  compatible string.
+> +  "brcm,brcmstb-usb-phy":
+> +    - reg: 1 or 2 offset and length pairs. One for the base CTRL registers
+> +           and an optional pair for systems with USB 3.x support
+> +    - reg-names: not specified
+> +  "brcm,bcm7216-usb-phy":
+> +    - reg: 3 offset and length pairs for CTRL, XHCI_EC and XHCI_GBL
+> +           registers
+> +    - reg-names: "ctrl", "xhci_ec", "xhci_gbl"
+> +  "brcm,bcm7211-usb-phy":
+> +    - reg: 5 offset and length pairs for CTRL, XHCI_EC, XHCI_GBL,
+> +           USB_PHY and USB_MDIO registers and an optional pair
+> +	   for the BDC registers
+> +    - reg-names: "ctrl", "xhci_ec", "xhci_gbl", "usb_phy", "usb_mdio", "bdc_ec"
+> +
+> +- #phy-cells: Shall be 1 as it expects one argument for setting
+> +	      the type of the PHY. Possible values are:
+> +	      - PHY_TYPE_USB2 for USB1.1/2.0 PHY
+> +	      - PHY_TYPE_USB3 for USB3.x PHY
+>  
+>  Optional Properties:
+>  - clocks : clock phandles.
+>  - clock-names: String, clock name.
+> +- interrupts: wake interrupt
+> +- interrupt-names: "wake"
+
+If a wakeup source, the standard name is 'wakeup'.
+
+>  - brcm,ipp: Boolean, Invert Port Power.
+>    Possible values are: 0 (Don't invert), 1 (Invert)
+>  - brcm,ioc: Boolean, Invert Over Current detection.
+>    Possible values are: 0 (Don't invert), 1 (Invert)
+> -NOTE: one or both of the following two properties must be set
+> -- brcm,has-xhci: Boolean indicating the phy has an XHCI phy.
+> -- brcm,has-eohci: Boolean indicating the phy has an EHCI/OHCI phy.
+>  - dr_mode: String, PHY Device mode.
+>    Possible values are: "host", "peripheral ", "drd" or "typec-pd"
+>    If this property is not defined, the phy will default to "host" mode.
+> +- syscon-piarbctl: phandle to syscon for handling config registers
+
+Needs vendor prefix.
+
+> +NOTE: one or both of the following two properties must be set
+> +- brcm,has-xhci: Boolean indicating the phy has an XHCI phy.
+> +- brcm,has-eohci: Boolean indicating the phy has an EHCI/OHCI phy.
+> +
+>  
+>  Example:
+>  
+> @@ -41,3 +60,27 @@ usbphy_0: usb-phy@f0470200 {
+>  	clocks = <&usb20>, <&usb30>;
+>  	clock-names = "sw_usb", "sw_usb3";
+>  };
+> +
+> +usb-phy@29f0200 {
+> +	reg = <0x29f0200 0x200>,
+> +		<0x29c0880 0x30>,
+> +		<0x29cc100 0x534>,
+> +		<0x2808000 0x24>,
+> +		<0x2980080 0x8>;
+> +	reg-names = "ctrl",
+> +		"xhci_ec",
+> +		"xhci_gbl",
+> +		"usb_phy",
+> +		"usb_mdio";
+> +	brcm,ioc = <0x0>;
+> +	brcm,ipp = <0x0>;
+> +	compatible = "brcm,bcm7211-usb-phy";
+> +	interrupts = <0x30>;
+> +	interrupt-parent = <&vpu_intr1_nosec_intc>;
+> +	interrupt-names = "wake";
+> +	#phy-cells = <0x1>;
+> +	brcm,has-xhci;
+> +	syscon-piarbctl = <&syscon_piarbctl>;
+> +	clocks = <&scmi_clk 256>;
+> +	clock-names = "sw_usb";
+> +};
+> -- 
+> 2.17.1
 > 
-> Best Regards,
-> Can Guo.
-> 
-
-Hi Bean,
-
-Just want to add up more phrases. We do have HW/SW reset.
-Sorry about below lines which make you confused. Here I am just 
-describing what
-is like with previous code. Since these pending requests does not have
-a chance to be handled in their IRQ handler after hba is stopped, and as
-they have been cleared from doorbell already, then once there is an 
-available
-transfer completion IRQ, these requests will be handled in the IRQ 
-handler,
-no matter what is the transfer completion IRQ fired for. And NOP_OUT is 
-just
-the first command that can fire a transer completion IRQ.
-
-Can Guo.
-
-These pending requests shall be completed along with the first NOP_OUT
-command(as it is the first command which can raise a transfer completion
-IRQ) sent during probe.
-
->>> Since the OCSs of these pending requests are not SUCCESS(because they 
->>> are not
->>> yet literally finished), their UPIUs shall be dumped. When there are 
->>> multiple
->>> pending requests, the UPIU dump can be overwhelming and may lead to 
->>> stability
->>> issues because it is in atomic context.
->>> Therefore, before probe, complete these pending requests right after 
->>> host
->>> controller is stopped.
