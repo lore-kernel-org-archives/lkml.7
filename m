@@ -2,92 +2,192 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FB9C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D65C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2876620723
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMEmD0eY"
+	by mail.kernel.org (Postfix) with ESMTP id A33C720709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573768214;
+	bh=GfYyyvXQ099yZhVoGYWZdx0pcRqNpFrPKr6BbeLx6F4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=El5uZAlYN20wB+3Y8b2xxqPcC7TnMTu5xZ8aD/zF5eN1VV5iH4OsANYbAj7wM3MVw
+	 rlDC5d7DlikQlC+3fYThJzX965/088QnYIF77jxzk83drGS4jNR/RWRzf0RbyVCcC8
+	 XmzAGispIFfIP2RMHgCXEp3Cb3SZ8ZfixStCujdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKNVsY (ORCPT
+        id S1727021AbfKNVuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:48:24 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39087 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKNVsW (ORCPT
+        Thu, 14 Nov 2019 16:50:13 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40813 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKNVuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 16:48:22 -0500
-Received: by mail-il1-f195.google.com with SMTP id a7so6752706ild.6;
-        Thu, 14 Nov 2019 13:48:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sexaIzCDI72jsVJxExi8lQFIs/U5W+efqtxY85Cg1hU=;
-        b=fMEmD0eYIcrNcE9Iw9yXKgo2gMjc4hItMu5SC0O6dq0Q39XwkU9FyFgD2+ugtqmnGP
-         T/wAMY4X02FhRK5lJAxGHr2FmQfPth66TJ54u1YVk+pLBGYeEEev//q7Cm2CSakQSHY3
-         LAIhWEy2J9CAO46IdBod5HpAfpHCUuLSaUDuZ5jNzqtkcB+s7lpbenmjaKHca2AAONhk
-         s+X9jdFL6ihTe9G41vSKpO6Op2XCwDYhMkbE7pB9qvS1NwXMEayV9WUWs/qgARRTPfO/
-         OtGtiWobRSNiC3IuwwsEi3JhG6UbDugE/tBycOyj41E1TU0RAZB2SAjam6GHqiZdo3o+
-         /ISQ==
+        Thu, 14 Nov 2019 16:50:13 -0500
+Received: by mail-pl1-f194.google.com with SMTP id e3so3259353plt.7;
+        Thu, 14 Nov 2019 13:50:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sexaIzCDI72jsVJxExi8lQFIs/U5W+efqtxY85Cg1hU=;
-        b=WrvEN2LazxLj7TT/3xBYQfgkbUde+I4O1uKmjhkXApMxfPoLXWdqGhf9/u1Hzh159a
-         +UBNAuWjOkWSKuVA07r6pYKHbyZaEYRpEQk085xFpRPFUk7y3w3B6xnrODt8MF21ULyv
-         j49lu9AhjoZP8Wy0uVFlJCIkEnzUUTFxixAO/0p8FMmy2pUjk3+c7+pYiKh3Khz0qmod
-         voZni93DsGE6JdD0WIuFc1hKR8fx7zk7DSIkTr8YT6gUgrxHSuW6EMVKMyjnZPvPxBB4
-         7dqY82KYbxrUEnP1ePSNwasbw8JcHxrc+5cN6XXf4+UT8ko73ZJzevQKUnOV6Rp/wRX2
-         94cQ==
-X-Gm-Message-State: APjAAAXCL/PXhVcX7pGiJ5+QbYratQB8KkllRF7sTzG4bDLeeP9Q4CbW
-        H1YOeNisG0wrxswlA8j7RsPXcCJJ10GJguUmdomr00Gx
-X-Google-Smtp-Source: APXvYqyR7VGoqn2+u27JO5/8UIa+JGjRZmHMjN6LZ+93dsdoVRCpSDsbp0nqbKFjMxh1glOSgB6CbaVvPXM+iqi3zp4=
-X-Received: by 2002:a92:8b4e:: with SMTP id i75mr11891991ild.5.1573768101297;
- Thu, 14 Nov 2019 13:48:21 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=5zMHwUOo/2U4wTRnnNuzptX3ll72MK4baxH2uMM1XNw=;
+        b=HlNKU0+W0fRBgy+CvKyNpM/ODMBTouSBLf6Y0YWbGEIa+x3anPCoU4iqxoK90OSpBu
+         U1w7dlIc0n35tyxghxBnyEHgQ2BCyxw+as3BPg5rRi4OaVZn5OTrfJ7Dpx5z2BnJDzPk
+         4Thstk76JNZPVXpOZl9v8/qaMoz7hYr+ulHknJrGY1/AVbOQ8QrjSjV3x58HvV7NzEFs
+         JAvkRuIxMrD9bo699sYfg8SRewYnR1P+g3kFZqhPI+LXCtZQ8z+hdg3asoybnJYzQ3f/
+         eDRpCoR8mkqfCtVB+eV6Ue1CaSV9CnphyY9ueroCPbGgSMhukg6IyqK28AIA9MxenvDt
+         M9qg==
+X-Gm-Message-State: APjAAAVjFEUn0rraWjefHKeQzD08aFV8vFNMUIQq21QHzrJ8AIF7O0mh
+        cWTi65CE7VAgpRDMincqPpk=
+X-Google-Smtp-Source: APXvYqydj/PhwGbb7+FBeWT/qX73FpfeKzIGfeaJLVypBktgbTiIoqJ5tWmafcGyCmnkRQDn0qoNOA==
+X-Received: by 2002:a17:902:6946:: with SMTP id k6mr11133218plt.164.1573768211636;
+        Thu, 14 Nov 2019 13:50:11 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id f31sm10455021pjg.31.2019.11.14.13.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 13:50:09 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 3DCB6403DC; Thu, 14 Nov 2019 21:50:09 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 21:50:09 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 2/8] efi: Add embedded peripheral firmware support
+Message-ID: <20191114215009.GF11244@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-3-hdegoede@redhat.com>
+ <20191011144834.GL16384@42.do-not-panic.com>
+ <e7bd40ff-20d1-3aed-8516-9fffd4c3a207@redhat.com>
+ <20191114194233.GE11244@42.do-not-panic.com>
+ <f00804ae-e556-35e4-d0a3-cd9201fdd2d0@redhat.com>
+ <9b0a0121-3e63-0602-6c0d-00547e389f76@redhat.com>
 MIME-Version: 1.0
-References: <20191115071038.7ac29202@canb.auug.org.au>
-In-Reply-To: <20191115071038.7ac29202@canb.auug.org.au>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 14 Nov 2019 15:48:10 -0600
-Message-ID: <CAH2r5mtq0xX7PTSWFoi46hr+Xh6Z6NC2uuxDQp7Rn5bjki3Qeg@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9b0a0121-3e63-0602-6c0d-00547e389f76@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed, repushed to cifs-2.6.git for-next
+On Thu, Nov 14, 2019 at 09:48:38PM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 14-11-2019 21:13, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 14-11-2019 20:42, Luis Chamberlain wrote:
+> > > On Thu, Nov 14, 2019 at 12:27:01PM +0100, Hans de Goede wrote:
+> > > > Hi Luis,
+> > > > 
+> > > > Thank you for the reviews and sorry for being a bit slow to respind.
+> > > > 
+> > > > On 11-10-2019 16:48, Luis Chamberlain wrote:
+> > > > > On Fri, Oct 04, 2019 at 04:50:50PM +0200, Hans de Goede wrote:
+> > > > > > +static int __init efi_check_md_for_embedded_firmware(
+> > > > > > +    efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
+> > > > > > +{
+> > > > > > +    const u64 prefix = *((u64 *)desc->prefix);
+> > > > > > +    struct sha256_state sctx;
+> > > > > > +    struct embedded_fw *fw;
+> > > > > > +    u8 sha256[32];
+> > > > > > +    u64 i, size;
+> > > > > > +    void *map;
+> > > > > > +
+> > > > > > +    size = md->num_pages << EFI_PAGE_SHIFT;
+> > > > > > +    map = memremap(md->phys_addr, size, MEMREMAP_WB);
+> > > > > 
+> > > > > Since our limitaiton is the init process must have mostly finished,
+> > > > > it implies early x86 boot code cannot use this, what measures can we
+> > > > > take to prevent / check for such conditions to be detected and
+> > > > > gracefully errored out?
+> > > > 
+> > > > As with all (EFI) early boot code, there simply is a certain order
+> > > > in which things need to be done. This needs to happen after the basic
+> > > > mm is setup, but before efi_free_boot_services() gets called, there
+> > > > isn't really a way to check for all these conditions. As with all
+> > > > early boot code, people making changes need to be careful to not
+> > > > break stuff.
+> > > 
+> > > I rather we take a proactive measure here and add whatever it is we need
+> > > to ensure the API works only when its supposed to, rather than try and
+> > > fail, and then expect the user to know these things.
+> > > 
+> > > I'd prefer if we at least try to address this.
+> > 
+> > This is purely internal x86/EFI API it is not intended for drivers
+> > or anything like that. It has only one caller under arch/x86 and it is
+> > not supposed to get any other callers outside of arch/* ever.
+> > 
+> > Note that this all runs before even core_initcall-s get run, none
+> > if the code which runs before then has any sort of ordering checks
+> > and I don't see how this bit is special and thus does need ordering
+> > checks; and there really is no mechanism for such checks so early
+> > during boot.
+> > 
+> > The drivers/firmware/efi/embedded-firmware.c file does add some API
+> > which can be used normally, specifically the efi_get_embedded_fw()
+> > but that has no special ordering constrains and it does not directly
+> > use the function we are discussing now. It reads back data stored
+> > by the earlier functions; and if somehow called before those functions
+> > run (*), then it will simply return -ENOENT.
+> 
+> Ok, I just realized that we may have some miscommunication here,
+> when you wrote:
+> 
+> "Since our limitation is the init process must have mostly finished,
+>  it implies early x86 boot code cannot use this, what measures can we
+>  take to prevent / check for such conditions to be detected and
+>  gracefully errored out?"
+> 
+> I assumed you meant that to apply to the efi_check_md_for_embedded_firmware()
+> helper or its caller.
+> 
+> But I guess what you really want is some error to be thrown if someone
+> calls firmware_request_platform() before we are ready.
 
-On Thu, Nov 14, 2019 at 2:10 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   6eb36a327ea3 ("smb3: add debug messages for closing unmatched open")
->
-> is missing a Signed-off-by from its committer.
->
-> --
-> Cheers,
-> Stephen Rothwell
+Yes.
 
+> I guess I could make efi_check_for_embedded_firmwares() which scans
+> for known firmwares and saved a copy set a flag that it has run.
+> 
+> And then combine that with making efi_get_embedded_fw() (which underpins
+> firmware_request_platform()) print a warning when called if that flag
+> is not set yet.
+> 
+> That would mean though that some code which runs earlier then
+> a core_initcall would, would call firmware_request_platform() and
+> such code is generally expected to know what they are doing.
+> 
+> I just checked and the cpu microcode stuff which comes to mind
+> for this uses a late_initcall so runs long after efi_get_embedded_fw()
+> and I have a feeling that trying to use the fw_loader before
+> core_initcalls have run is going to end poorly anyways.
+>
+> Still if you want I can add a pr_warn or maybe even a WARN_ON
+> to efi_get_embedded_fw() in case it somehow gets called before
+> efi_check_for_embedded_firmwares().
 
+That'd be great.
 
--- 
-Thanks,
-
-Steve
+  Luis
