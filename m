@@ -6,111 +6,85 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8215C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D54CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4502070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697212070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfKNH6N (ORCPT
+        id S1726428AbfKNIAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 02:58:13 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59497 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfKNH6M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 02:58:12 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iVA0v-0006DG-3f; Thu, 14 Nov 2019 07:58:01 +0000
-Date:   Thu, 14 Nov 2019 08:58:00 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v9 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191114075759.3cdil2rh3dz4ozvs@wittgenstein>
-References: <20191114070709.1504202-1-areber@redhat.com>
+        Thu, 14 Nov 2019 03:00:45 -0500
+Received: from mga03.intel.com ([134.134.136.65]:54828 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbfKNIAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 03:00:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 00:00:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
+   d="scan'208";a="288142205"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.237.137.172]) ([10.237.137.172])
+  by orsmga001.jf.intel.com with ESMTP; 14 Nov 2019 00:00:41 -0800
+Subject: Re: [PATCH v2 1/2] seq_buf: Add printing formatted hex dumps
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        andriy.shevchenko@intel.com, gustaw.lewandowski@intel.com
+References: <1573130738-29390-1-git-send-email-piotrx.maziarz@linux.intel.com>
+ <20191113160237.6b8efe12@gandalf.local.home>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <8d937230-9890-aabc-b268-c3a2e1f799b0@intel.com>
+Date:   Thu, 14 Nov 2019 09:00:40 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191114070709.1504202-1-areber@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191113160237.6b8efe12@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 08:07:08AM +0100, Adrian Reber wrote:
-> The main motivation to add set_tid to clone3() is CRIU.
+On 2019-11-13 22:02, Steven Rostedt wrote:
+> On Thu,  7 Nov 2019 13:45:37 +0100
+> Piotr Maziarz <piotrx.maziarz@linux.intel.com> wrote:
 > 
-> To restore a process with the same PID/TID CRIU currently uses
-> /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-> ns_last_pid and then (quickly) does a clone(). This works most of the
-> time, but it is racy. It is also slow as it requires multiple syscalls.
+>> Provided function is an analogue of print_hex_dump().
+>>
+>> Implementing this function in seq_buf allows using for multiple
+>> purposes (e.g. for tracing) and therefore prevents from code duplication
+>> in every layer that uses seq_buf.
+>>
+>> print_hex_dump() is an essential part of logging data to dmesg. Adding
+>> similar capability for other purposes is beneficial to all users.
+>>
+>> Example usage:
+>> seq_buf_hex_dump(seq, "", DUMP_PREFIX_OFFSET, 16, 4, buf,
+>> 		 ARRAY_SIZE(buf), true);
+>> Example output:
+>> 00000000: 00000000 ffffff10 ffffff32 ffff3210  ........2....2..
+>> 00000010: ffff3210 83d00437 c0700000 00000000  .2..7.....p.....
+>> 00000020: 02010004 0000000f 0000000f 00004002  .............@..
+>> 00000030: 00000fff 00000000                    ........
+>>
+>> Signed-off-by: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
+>> Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
 > 
-> Extending clone3() to support *set_tid makes it possible restore a
-> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> race free (as long as the desired PID/TID is available).
+> I'm curious about the two signed off bys? Was Cezary a co-author?
 > 
-> This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-> on clone3() with *set_tid as they are currently in place for ns_last_pid.
-> 
-> The original version of this change was using a single value for
-> set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
-> decided to change set_tid to an array to enable setting the PID of a
-> process in multiple PID namespaces at the same time. If a process is
-> created in a PID namespace it is possible to influence the PID inside
-> and outside of the PID namespace. Details also in the corresponding
-> selftest.
-> 
-> To create a process with the following PIDs:
-> 
->       PID NS level         Requested PID
->         0 (host)              31496
->         1                        42
->         2                         1
-> 
-> For that example the two newly introduced parameters to struct
-> clone_args (set_tid and set_tid_size) would need to be:
-> 
->   set_tid[0] = 1;
->   set_tid[1] = 42;
->   set_tid[2] = 31496;
->   set_tid_size = 3;
-> 
-> If only the PIDs of the two innermost nested PID namespaces should be
-> defined it would look like this:
-> 
->   set_tid[0] = 1;
->   set_tid[1] = 42;
->   set_tid_size = 2;
-> 
-> The PID of the newly created process would then be the next available
-> free PID in the PID namespace level 0 (host) and 42 in the PID namespace
-> at level 1 and the PID of the process in the innermost PID namespace
-> would be 1.
-> 
-> The set_tid array is used to specify the PID of a process starting
-> from the innermost nested PID namespaces up to set_tid_size PID namespaces.
-> 
-> set_tid_size cannot be larger then the current PID namespace level.
-> 
-> Signed-off-by: Adrian Reber <areber@redhat.com>
 
-I have no quarrels with the core patch anymore.
-Note, once Oleg has said he's fine with this patch too I will likely
-reword the kernel-doc and the comment in alloc_pid() and the commit
-message a little before applying; but really just minor things that are
-not worth resending for.
+Hello Steven,
 
-Thanks!
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+Code is done by Piotr. I merely took part in shaping this idea and doing 
+initial reviews. Kudos to Andy for helping us out here.
+
+As a dev lead and maintainer for Intel ASoC team, patches coming from my 
+team are also being signed off me so any reviewer has a person to 
+complain to in case of any issues for extended period of time.
+
+Czarek
