@@ -2,167 +2,177 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89251C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E31A0C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63226206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C047920725
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:13:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GOIBZ4+M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4Oe2CWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfKNUN3 (ORCPT
+        id S1727065AbfKNUNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:13:29 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26723 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726549AbfKNUN2 (ORCPT
+        Thu, 14 Nov 2019 15:13:47 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41934 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfKNUNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:13:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573762407;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zeOvreoiDJiJznC6pgddXng3TgtdBC/uHEqj3GGY24g=;
-        b=GOIBZ4+M74vwTjKaq0ckA93ZbvKT+RlFBAHkmwrjUHZvEnct/NCI8kjHgxZcK6VV5xr3on
-        nvB8tGpF8Ow2n+gcD5+3DDNoH1qCsQ0e2dewPCRHw7InrJTJYk6Xl9jGD1LqHp5KAwhbrQ
-        /FfaDg8o2XL12bhENWx16hLfiliLcxg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-kIdCwd-vNsiLYwxjJWRb0g-1; Thu, 14 Nov 2019 15:13:26 -0500
-Received: by mail-wm1-f69.google.com with SMTP id f11so4806712wmc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 12:13:25 -0800 (PST)
+        Thu, 14 Nov 2019 15:13:47 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m4so3158480ljj.8;
+        Thu, 14 Nov 2019 12:13:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x3CgdEWITSo+eK6gV+uLZAjDWDJyETiK4+Drplq4PgM=;
+        b=I4Oe2CWqf6WzpiT58ihacjjFdQVcsZGaku/MrdMLdhug9o+MkkeARlGOfSwnYvL+1Y
+         xQ90kNke49Ta2j1cU1NfuK2eR6M20DOL18QpZyHicNes1K2P45rMf501zcaREyNO/rre
+         0VQ1N8MTuKgaE0r+bheA7UC0bSY0dyqZ8QlUHl1LD4I/GOoE9BOXfpIkHiJY1VoqgSY5
+         ASb4jDdjcW3IQbqaaemGhyp3tbwyvgpRiYcGAigwfWfe9YwJ9lb1rZLrf/cyku7hAN89
+         fzm1sbQsrM8kRJsUEzJmdv8Y146Iy3D3cwm35a3MTxUhggxQyHPPjc6CCLyM1jUYwhCT
+         53pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kwk2SObMZHFa0y+X6pAt/3dq8Wi+ovXi2eZNEpP7b1o=;
-        b=VCJ2fgUOUuaP66KT4Sr8DT5aQ7Y8mTRGOy9AZj+rVq0ePs4TM6o3fekkppg12VMaW/
-         SiDDuSGfw3uzJcOJmTbZqWi4DP4vCp5jEh41HYPGq/WnXbMhOqnnpOg+1FuFnzegnAM+
-         uP0t/lcBrKwNWtcHNydW7BD/Zjs0aoQ7K5ZaWYcKcmaRqIH+fPTxZxGM2nnOure8dYWX
-         QvEYNMGKtdw0bb3dVxXNnLhi9qnGUSSaPrp6XYYpNv4RrSIpUKkEYPoJICOqQdYG02G+
-         I0IaKbstR47BqZoloEwWmdO1+w8uK/+c72UDTIWLSJhMQK/nBAQb0xT4ZStQs507fBmm
-         4ojg==
-X-Gm-Message-State: APjAAAWmFC/Rb0Xm9yJcRFPnauKZglOWW0KW6ER0HxoLVbf+Z5/aCn2F
-        wBvE/gZo1AU3yFmL6qvlHSa31M6KZiTcWnZ+zTWcK6qE/EjF/kJ1tY5f6b651sSsT4SNbGNnMvn
-        BnpJR+b/aySSooqXmoRzu7bWm
-X-Received: by 2002:a1c:a9cb:: with SMTP id s194mr10653861wme.92.1573762404993;
-        Thu, 14 Nov 2019 12:13:24 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxYg+h1HBpJaDU9hPX/MpQYH0wFtF669+nHobvHa152/M/2ldKc/DiHPX6bUeLLg5ZnBKKPdg==
-X-Received: by 2002:a1c:a9cb:: with SMTP id s194mr10653824wme.92.1573762404762;
-        Thu, 14 Nov 2019 12:13:24 -0800 (PST)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id 19sm10336706wrc.47.2019.11.14.12.13.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 12:13:23 -0800 (PST)
-Subject: Re: [PATCH v7 2/8] efi: Add embedded peripheral firmware support
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-3-hdegoede@redhat.com>
- <20191011144834.GL16384@42.do-not-panic.com>
- <e7bd40ff-20d1-3aed-8516-9fffd4c3a207@redhat.com>
- <20191114194233.GE11244@42.do-not-panic.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f00804ae-e556-35e4-d0a3-cd9201fdd2d0@redhat.com>
-Date:   Thu, 14 Nov 2019 21:13:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x3CgdEWITSo+eK6gV+uLZAjDWDJyETiK4+Drplq4PgM=;
+        b=I8MO8FkpqVFl+c94igoFCycP4vIQV98bazlqDwuruWPqnb5JbPHYtlQWGObMiI5Y9Z
+         GIAoxG1gYSu8qptDcKhknQtwzJhZKing49/N+PxT+mHjan+k5RTugufCQuMh+8Xd/1qY
+         PFmzxqUjXRTdw34gBTfbS85WsOa+e7qfnTIf8sv3Z2NCZ8EKv5KaF9xZmn91nlR0ZXPa
+         7c3a09HSHtK4jp0WJcStZLaFh7HuAEv4zta/uIBvye5MXXMc23ey8e0ozgokubUrnxBP
+         5jIra5lqmfwwQTzxvdjMSZjDxfZ9CbTA6fp1EV0235tkNaRafrEpdPt/lV0QD2GxW0O9
+         BMlA==
+X-Gm-Message-State: APjAAAWSSlQ8YixSFQbXk2PWw0h8SvMuNcl/eAqn9t/zYJHiMFtqs7yO
+        Y3FasJjnaHaNIz8obNGv0zqdq741Jft2Km7ZnV0=
+X-Google-Smtp-Source: APXvYqzTjpV2EGEx/nI9p8C44bLQO2CDArK63nzLyG4ISo69VQudOUoP1ds4/e1SnqQp779vUeEPYry/A8MnnGZP4hs=
+X-Received: by 2002:a2e:2c1a:: with SMTP id s26mr5219843ljs.239.1573762425328;
+ Thu, 14 Nov 2019 12:13:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191114194233.GE11244@42.do-not-panic.com>
-Content-Language: en-US
-X-MC-Unique: kIdCwd-vNsiLYwxjJWRb0g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20191114195609.30222-1-marco.franchi@nxp.com>
+In-Reply-To: <20191114195609.30222-1-marco.franchi@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 14 Nov 2019 17:13:36 -0300
+Message-ID: <CAOMZO5Asp-m7zyY6dp72_VKZs0OisxX4B-PJtP4=GuE_-XDBsg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: freescale: add initial support for Google
+ i.MX 8MQ Phanbell
+To:     Marco Antonio Franchi <marco.franchi@nxp.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marcofrk@gmail.com" <marcofrk@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Marco,
 
-On 14-11-2019 20:42, Luis Chamberlain wrote:
-> On Thu, Nov 14, 2019 at 12:27:01PM +0100, Hans de Goede wrote:
->> Hi Luis,
->>
->> Thank you for the reviews and sorry for being a bit slow to respind.
->>
->> On 11-10-2019 16:48, Luis Chamberlain wrote:
->>> On Fri, Oct 04, 2019 at 04:50:50PM +0200, Hans de Goede wrote:
->>>> +static int __init efi_check_md_for_embedded_firmware(
->>>> +=09efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
->>>> +{
->>>> +=09const u64 prefix =3D *((u64 *)desc->prefix);
->>>> +=09struct sha256_state sctx;
->>>> +=09struct embedded_fw *fw;
->>>> +=09u8 sha256[32];
->>>> +=09u64 i, size;
->>>> +=09void *map;
->>>> +
->>>> +=09size =3D md->num_pages << EFI_PAGE_SHIFT;
->>>> +=09map =3D memremap(md->phys_addr, size, MEMREMAP_WB);
->>>
->>> Since our limitaiton is the init process must have mostly finished,
->>> it implies early x86 boot code cannot use this, what measures can we
->>> take to prevent / check for such conditions to be detected and
->>> gracefully errored out?
->>
->> As with all (EFI) early boot code, there simply is a certain order
->> in which things need to be done. This needs to happen after the basic
->> mm is setup, but before efi_free_boot_services() gets called, there
->> isn't really a way to check for all these conditions. As with all
->> early boot code, people making changes need to be careful to not
->> break stuff.
->=20
-> I rather we take a proactive measure here and add whatever it is we need
-> to ensure the API works only when its supposed to, rather than try and
-> fail, and then expect the user to know these things.
->=20
-> I'd prefer if we at least try to address this.
+On Thu, Nov 14, 2019 at 4:56 PM Marco Antonio Franchi
+<marco.franchi@nxp.com> wrote:
+>
+> This patch adds the device tree to support Google Coral Edge TPU,
+> historicaly named as fsl-imx8mq-phanbell, a computer on module
+> which can be used for AI/ML propose.
+>
+> It introduces a minimal enablement support for this module and
 
-This is purely internal x86/EFI API it is not intended for drivers
-or anything like that. It has only one caller under arch/x86 and it is
-not supposed to get any other callers outside of arch/* ever.
+What are the features that have been tested?
 
-Note that this all runs before even core_initcall-s get run, none
-if the code which runs before then has any sort of ordering checks
-and I don't see how this bit is special and thus does need ordering
-checks; and there really is no mechanism for such checks so early
-during boot.
+Also, is the schematics available?
 
-The drivers/firmware/efi/embedded-firmware.c file does add some API
-which can be used normally, specifically the efi_get_embedded_fw()
-but that has no special ordering constrains and it does not directly
-use the function we are discussing now. It reads back data stored
-by the earlier functions; and if somehow called before those functions
-run (*), then it will simply return -ENOENT.
+> was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
+> Google Source Code for Coral Edge TPU Mendel release:
+> https://coral.googlesource.com/linux-imx/
+>
+> This patch was tested using the U-Boot 2017-03-1-release-chef,
+> which is supported by the Coral Edge TPU Mendel release:
+> https://coral.googlesource.com/uboot-imx/
+
+I would suggest removing this paragraph from the commit log as it is
+not relevant to the dts itself.
+
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 38e344a2f0ff..cc7e02a30ed1 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+>
+> +dtb-$(CONFIG_ARCH_MXC) += fsl-imx8mq-phanbell.dtb
+
+Please remove the fsl prefix and call it mx8mq-phanbell.dtb instead to
+align with the other imx8mq dtbs.
+
+> +&i2c1 {
+> +       clock-frequency = <400000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c1>;
+> +       status = "okay";
+> +
+> +       pmic: pmic@4b {
+> +               reg = <0x4b>;
+> +               compatible = "rohm,bd71837";
+> +               pinctrl-0 = <&pinctrl_pmic>;
+> +               gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
+
+This property does not exist upstream.
+
+You should describe the interrupt like this instead:
+
+interrupt-parent = <&gpio1>;
+interrupts = <3 GPIO_ACTIVE_LOW>;
+
+> +
+> +               gpo {
+> +                       rohm,drv = <0x0C>;
+
+This property does not exist upstream.
+
+> +&sai2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_sai2>;
+> +       assigned-clocks =
+> +               <&clk IMX8MQ_AUDIO_PLL1_BYPASS>, <&clk IMX8MQ_CLK_SAI2>;
+
+Please don't split the lines as it gets harder to read.
+
+> +       assigned-clock-parents =
+> +               <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+
+Same here.
+
+> +       assigned-clock-rates = <0>, <24576000>;
+> +       status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_wdog>;
+> +       fsl,ext-reset-output;
+> +       status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +       pinctrl-names = "default";
+> +
+> +       imx8mq-evk {
+
+No need for this imx8mq-evk container.
+
+> +               pinctrl_pmic: pmicirq {
+> +                       fsl,pins = <
+> +                               MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3       0x41 /*0x17059*/
+
+This comment looks confusing. I would suggest removing it.
 
 Regards,
 
-Hans
-
-
-
-*)  which would mean before core_initcalls run so really really early
-
+Fabio Estevam
