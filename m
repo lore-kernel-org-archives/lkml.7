@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F19CC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE546C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EF3206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3F02070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RYV8mXWk"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="uEncBA+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfKNRmj (ORCPT
+        id S1726786AbfKNRmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:42:39 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:64769 "EHLO
+        Thu, 14 Nov 2019 12:42:33 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:64704 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfKNRmh (ORCPT
+        with ESMTP id S1726444AbfKNRmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:42:37 -0500
+        Thu, 14 Nov 2019 12:42:33 -0500
 Received: from grover.flets-west.jp (softbank126021098169.bbtec.net [126.21.98.169]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id xAEHgSo5028428;
-        Fri, 15 Nov 2019 02:42:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xAEHgSo5028428
+        by conuserg-09.nifty.com with ESMTP id xAEHgSo2028428;
+        Fri, 15 Nov 2019 02:42:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xAEHgSo2028428
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573753351;
-        bh=7sWrVrerKjQiDhUBDmeGbSq4bDTJ+Bje+3qlC+uY3K4=;
+        s=dec2015msa; t=1573753349;
+        bh=nOkFN6j7wUXdObUwKpD/Qbkrxvoi6EK7nlyZ3Mg/dAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYV8mXWkF+Wk3CX/SWhnM2IhCdR6GZvStWrJh6VBrX0EfGhlE1FoRjAKhHssIr9me
-         jScCY2jt0fbs7avzxNTAGhrCjLmpH7Fg1co6JRFFioq9kSDViLywlAfjve3SqjARN1
-         ovZx2lB1PKCwOlAmg2PnOHMH4kobjMVs0CZHxRskKIMOBZRf1S0bUbK1WdrVGlRCiM
-         8lioqRlyNSQcRxdkrTXdgvtAWe2cOG+JnY8IePBcwZBCp8+PVjaEdTLzLUSaBVOpM3
-         P3aWR3PVDfbAZaX08pVViNJ7J9iRwgumhOJL2o9ldZnMgApOsXMLHQUAbdQaV1Q7VY
-         uY/dt0gFUCoPw==
+        b=uEncBA+O3SNqUdvvNlH3dEgHHVCmaxWlnm27jkPch+McdgAj0vqYkUbKn+0Caq4v2
+         kCQ0irvT3KAOYSlobPeVMLWlY7CpjvOjKNnH3wN1fUGlxxXzry+jnooYyDymAQDicL
+         f8Bu+C62B+7wHbIIqK7sVO2Y5WMXdjOieoh3ptxZmzZeDp0C/7BqmjBp0af1ZZArGq
+         eCi1tZ+o80cyRRhphOeIJzgYKHlXD7DJelGt0++ZkI7GA60zm+YVqsjun4zoPzzTF8
+         Q1yLJafPe55oRAvsRxoIrtUOfKIsCT7SWHcT65Hjw4y3bfSNpotKUWB44cS1La4Kyc
+         Ne5+izeRz9SEA==
 X-Nifty-SrcIP: [126.21.98.169]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] modpost: do not set ->preloaded for symbols from Module.symvers
-Date:   Fri, 15 Nov 2019 02:42:25 +0900
-Message-Id: <20191114174226.7201-5-yamada.masahiro@socionext.com>
+Subject: [PATCH 2/6] modpost: refactor namespace_from_kstrtabns() to not hard-code section name
+Date:   Fri, 15 Nov 2019 02:42:22 +0900
+Message-Id: <20191114174226.7201-2-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191114174226.7201-1-yamada.masahiro@socionext.com>
 References: <20191114174226.7201-1-yamada.masahiro@socionext.com>
@@ -54,71 +54,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that there is no overwrap between symbols from ELF files and
-ones from Module.symvers.
+Currently, namespace_from_kstrtabns() relies on the fact that
+namespace strings are recorded in the __ksymtab_strings section.
+Actually, it is coded in include/linux/export.h, but modpost does
+not need to hard-code the section name.
 
-So, the 'exported twice' warning should be reported irrespective
-of where the symbol in question came from.
+Elf_Sym::st_shndx holds the section number of the relevant section.
+Using it is a more portable way to find the namespace string.
 
-The exceptional case is external module; in some cases, we build
-an external module to provide a different version/variant of the
-corresponding in-kernel module, overriding the same set of exported
-symbols.
+sym_get_value() takes care of it, so namespace_from_kstrtabns() can
+simply wrap it. Delete the unneeded info->ksymtab_strings .
 
-You can see this use-case in upstream; tools/testing/nvdimm/libnvdimm.ko
-replaces drivers/nvdimm/libnvdimm.ko in order to link it against mocked
-version of core kernel symbols.
-
-So, let's relax the 'exported twice' warning when building external
-modules. The multiple export from external modules is warned only
-when the previous one is from vmlinux or itself.
-
-With this refactoring, the ugly preloading goes away.
+While I was here, I added more 'const' qualifiers to pointers.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/mod/modpost.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ scripts/mod/modpost.c | 10 +++-------
+ scripts/mod/modpost.h |  1 -
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 73bdf27c41fe..06086105011f 100644
+index cd885573daaf..d9418c58a8c0 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -169,7 +169,6 @@ struct symbol {
- 	unsigned int vmlinux:1;    /* 1 if symbol is defined in vmlinux */
- 	unsigned int kernel:1;     /* 1 if symbol is from kernel
- 				    *  (only for external modules) **/
--	unsigned int preloaded:1;  /* 1 if symbol from Module.symvers */
- 	unsigned int is_static:1;  /* 1 if symbol is not global */
- 	enum export  export;       /* Type of export */
- 	char name[0];
-@@ -394,7 +393,8 @@ static struct symbol *sym_add_exported(const char *name, struct module *mod,
- 	if (!s) {
- 		s = new_symbol(name, mod, export);
- 	} else {
--		if (!s->preloaded) {
-+		if (!external_module || is_vmlinux(s->module->name) ||
-+		    s->module == mod) {
- 			warn("%s: '%s' exported twice. Previous export was in %s%s\n",
- 			     mod->name, name, s->module->name,
- 			     is_vmlinux(s->module->name) ? "" : ".ko");
-@@ -403,7 +403,6 @@ static struct symbol *sym_add_exported(const char *name, struct module *mod,
- 			s->module = mod;
- 		}
- 	}
--	s->preloaded = 0;
- 	s->vmlinux   = is_vmlinux(mod->name);
- 	s->kernel    = 0;
- 	s->export    = export;
-@@ -2480,7 +2479,6 @@ static void read_dump(const char *fname, unsigned int kernel)
- 		}
- 		s = sym_add_exported(symname, mod, export_no(export));
- 		s->kernel    = kernel;
--		s->preloaded = 1;
- 		s->is_static = 0;
- 		sym_set_crc(symname, mod, crc);
- 		sym_update_namespace(symname, namespace);
+@@ -356,10 +356,10 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
+ 		return export_unknown;
+ }
+ 
+-static const char *namespace_from_kstrtabns(struct elf_info *info,
+-					    Elf_Sym *kstrtabns)
++static const char *namespace_from_kstrtabns(const struct elf_info *info,
++					    const Elf_Sym *sym)
+ {
+-	char *value = info->ksymtab_strings + kstrtabns->st_value;
++	const char *value = sym_get_data(info, sym);
+ 	return value[0] ? value : NULL;
+ }
+ 
+@@ -601,10 +601,6 @@ static int parse_elf(struct elf_info *info, const char *filename)
+ 			info->export_unused_gpl_sec = i;
+ 		else if (strcmp(secname, "__ksymtab_gpl_future") == 0)
+ 			info->export_gpl_future_sec = i;
+-		else if (strcmp(secname, "__ksymtab_strings") == 0)
+-			info->ksymtab_strings = (void *)hdr +
+-						sechdrs[i].sh_offset -
+-						sechdrs[i].sh_addr;
+ 
+ 		if (sechdrs[i].sh_type == SHT_SYMTAB) {
+ 			unsigned int sh_link_idx;
+diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+index fe6652535e4b..64a82d2d85f6 100644
+--- a/scripts/mod/modpost.h
++++ b/scripts/mod/modpost.h
+@@ -143,7 +143,6 @@ struct elf_info {
+ 	Elf_Section  export_gpl_sec;
+ 	Elf_Section  export_unused_gpl_sec;
+ 	Elf_Section  export_gpl_future_sec;
+-	char	     *ksymtab_strings;
+ 	char         *strtab;
+ 	char	     *modinfo;
+ 	unsigned int modinfo_len;
 -- 
 2.17.1
 
