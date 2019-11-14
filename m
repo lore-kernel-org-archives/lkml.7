@@ -2,172 +2,88 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E453BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45ADC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99A12071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAB52071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YNxH8NbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKNU7R (ORCPT
+        id S1727020AbfKNVAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:59:17 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:46010 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726567AbfKNU7R (ORCPT
+        Thu, 14 Nov 2019 16:00:06 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38264 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfKNVAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:59:17 -0500
-Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 972823A19FB;
-        Fri, 15 Nov 2019 07:59:13 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iVMCu-0003MN-5U; Fri, 15 Nov 2019 07:59:12 +1100
-Date:   Fri, 15 Nov 2019 07:59:12 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/28] mm: factor shrinker work calculations
-Message-ID: <20191114205912.GD4614@dread.disaster.area>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-12-david@fromorbit.com>
- <20191104152939.GB10665@bfoster>
+        Thu, 14 Nov 2019 16:00:06 -0500
+Received: by mail-io1-f68.google.com with SMTP id i13so8431057ioj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 13:00:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2RCRd1zRoSH07b5v7RL4RafxXdTJJZiUPEj/afSVw78=;
+        b=YNxH8NbMhwUYGitY/Ab8r0DUqNgvVIm+bEuphpLo4NQUawxmvKxQdtjh5EVC7g05Em
+         XU3dcRrNdA9cJKW9th++xAF+ZnMP3PXXJPaPp0bE+jMSC8C2f1TpqM8t4Kx6LkWo7mNi
+         HYgOG4woNprQRTUpNR+QbrpPj+7ta6SvBoPF3OBKzJrN1QfjyGx9DCBljki0QcgAQ+tB
+         R0T7g6HLXCSOuHLmK+lzgNAZzYTJNIntLSSTJ/JhW+pPj8m5zX9poDn2HBZIif0iTJDL
+         N9TV1sUphiHaYpnPzYUrQrB/iuRhFfJRjUuvc/m3huhfkkqhqBXkD1rgQCtDFPziwuEP
+         gyIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2RCRd1zRoSH07b5v7RL4RafxXdTJJZiUPEj/afSVw78=;
+        b=nqMfdOp4CFNCareZtrxCOjhQ+s954vd6DZPAXxLvdBm3UUSYGnBCmPtUur4+QhHJlt
+         XIiX/JGDMadispThGkxoZbPKgL8vrGnQvstiK9Dj8aWP2gmecVhjfBb6ufBLwZNAdh1d
+         J92tKGIIWUpZIN757d95Sz3duUkbXxm48NrH1+5M9knc9MkYKaaxgWgMm6kzu8QyP8wS
+         HrSOjE+1lulhP68AFHvwL7A2W8fjjzCLec21LGpHYqy5ardFeub3ovOrSDubylyLaLLA
+         K2VfKVBriIj1c4rjgy/ZnzrmBBOXbcVjXmWYawrQCE+pYbIZ1FMwxSBGrNhem5TjzbZ4
+         VspA==
+X-Gm-Message-State: APjAAAXqEjl3TskAGjrP1rVAIKzKkkzSExJ2tN8hl5R558VEfaqMl6lT
+        ivAhvf2ntzv48Syl7+V737qnT6es3pA=
+X-Google-Smtp-Source: APXvYqwTnCXgTkvagONxVq1I+5EreygE7ahwByoW7h7MTQrjplHcn1zXO756wXIUf7Ii9eGO864khA==
+X-Received: by 2002:a6b:7f03:: with SMTP id l3mr10489243ioq.271.1573765204738;
+        Thu, 14 Nov 2019 13:00:04 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id x1sm682137ioh.59.2019.11.14.13.00.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 13:00:03 -0800 (PST)
+Subject: Re: [PATCH] rsxx: add missed destroy_workqueue calls in remove
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191113063847.8955-1-hslester96@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <cb36f877-f508-ca15-36c0-f4d56651b97f@kernel.dk>
+Date:   Thu, 14 Nov 2019 14:00:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104152939.GB10665@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=XO7XY2mVLG3Fmeu3Gs4A:9
-        a=FyWulrztHRHRZgDo:21 a=54HOyl8hHVm350sv:21 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20191113063847.8955-1-hslester96@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 10:29:39AM -0500, Brian Foster wrote:
-> On Fri, Nov 01, 2019 at 10:46:01AM +1100, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > Start to clean up the shrinker code by factoring out the calculation
-> > that determines how much work to do. This separates the calculation
-> > from clamping and other adjustments that are done before the
-> > shrinker work is run. Document the scan batch size calculation
-> > better while we are there.
-> > 
-> > Also convert the calculation for the amount of work to be done to
-> > use 64 bit logic so we don't have to keep jumping through hoops to
-> > keep calculations within 32 bits on 32 bit systems.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > ---
-> 
-> I assume the kbuild warning thing will be fixed up...
-> 
-> >  mm/vmscan.c | 97 ++++++++++++++++++++++++++++++++++++++---------------
-> >  1 file changed, 70 insertions(+), 27 deletions(-)
-> > 
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index a215d71d9d4b..2d39ec37c04d 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -459,13 +459,68 @@ EXPORT_SYMBOL(unregister_shrinker);
-> >  
-> >  #define SHRINK_BATCH 128
-> >  
-> > +/*
-> > + * Calculate the number of new objects to scan this time around. Return
-> > + * the work to be done. If there are freeable objects, return that number in
-> > + * @freeable_objects.
-> > + */
-> > +static int64_t shrink_scan_count(struct shrink_control *shrinkctl,
-> > +			    struct shrinker *shrinker, int priority,
-> > +			    int64_t *freeable_objects)
-> > +{
-> > +	int64_t delta;
-> > +	int64_t freeable;
-> > +
-> > +	freeable = shrinker->count_objects(shrinker, shrinkctl);
-> > +	if (freeable == 0 || freeable == SHRINK_EMPTY)
-> > +		return freeable;
-> > +
-> > +	if (shrinker->seeks) {
-> > +		/*
-> > +		 * shrinker->seeks is a measure of how much IO is required to
-> > +		 * reinstantiate the object in memory. The default value is 2
-> > +		 * which is typical for a cold inode requiring a directory read
-> > +		 * and an inode read to re-instantiate.
-> > +		 *
-> > +		 * The scan batch size is defined by the shrinker priority, but
-> > +		 * to be able to bias the reclaim we increase the default batch
-> > +		 * size by 4. Hence we end up with a scan batch multipler that
-> > +		 * scales like so:
-> > +		 *
-> > +		 * ->seeks	scan batch multiplier
-> > +		 *    1		      4.00x
-> > +		 *    2               2.00x
-> > +		 *    3               1.33x
-> > +		 *    4               1.00x
-> > +		 *    8               0.50x
-> > +		 *
-> > +		 * IOWs, the more seeks it takes to pull the item into cache,
-> > +		 * the smaller the reclaim scan batch. Hence we put more reclaim
-> > +		 * pressure on caches that are fast to repopulate and to keep a
-> > +		 * rough balance between caches that have different costs.
-> > +		 */
-> > +		delta = freeable >> (priority - 2);
-> 
-> Does anything prevent priority < 2 here?
+On 11/12/19 11:38 PM, Chuhong Yuan wrote:
+> The driver misses calling destroy_workqueue in remove like what is done
+> when probe fails.
+> Add the missed calls to fix it.
 
-Nope. I regularly see priority 1 here when the OOM killer is about
-to strike. Doesn't appear to have caused any problems - the scan
-counts have all come out correct (i.e. ends up as a >> 0) according
-to the tracing, but I'll fix this up to avoid hitting this.
+Applied, thanks.
 
-> 
-> > -		delta = freeable >> priority;
-> > -		delta *= 4;
-> > -		do_div(delta, shrinker->seeks);
-> > -	} else {
-> > -		/*
-> > -		 * These objects don't require any IO to create. Trim
-> > -		 * them aggressively under memory pressure to keep
-> > -		 * them from causing refetches in the IO caches.
-> > -		 */
-> > -		delta = freeable / 2;
-> > -	}
-> > -
-> > -	total_scan += delta;
-> > +	total_scan = nr + scan_count;
-> >  	if (total_scan < 0) {
-> >  		pr_err("shrink_slab: %pS negative objects to delete nr=%ld\n",
-> >  		       shrinker->scan_objects, total_scan);
-> > -		total_scan = freeable;
-> > +		total_scan = scan_count;
-> 
-> Same question as before: why the change in assignment? freeable was the
-> ->count_objects() return value, which is now stored in freeable_objects.
-
-we don't want to try to free the entire cache on an 64-bit integer
-overflow. scan_count is the work we calculated we need to do this
-shrinker invocation, so if we overflow because of other factors then
-we should just do the work we need to do in this scan.
-
-> FWIW, the change seems to make sense in that it just factors out the
-> deferred count, but it's not clear if it's intentional...
-
-It was intentional.
-
--Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Jens Axboe
+
