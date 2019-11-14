@@ -2,150 +2,133 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6F0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D16C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1BF20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:16:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zap2DWwK"
+	by mail.kernel.org (Postfix) with ESMTP id E802320725
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573762786;
+	bh=Ms+2LTB1+DESJrOdQdCv2D3DR/a6flmiLsM96V8C2E4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=iLeecOYEVLCWvxUjSM1N42ixUkZwx8KGSFKI3AGux2E05wnUoz9lM1teM9FKuQSsw
+	 FCjgKdSZTckN7/SxBNgQl/Om616vFaX4fo+lasLnfre1oDm+XZoB+UNGAg1ORLgPPP
+	 mwk15WgXJnSggDfq/MdoC5YkP3SAnx7Wmt4k+7Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfKNUQu (ORCPT
+        id S1726818AbfKNUTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:16:50 -0500
-Received: from mail-eopbgr730059.outbound.protection.outlook.com ([40.107.73.59]:60877
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727185AbfKNUPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:15:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K8Po6JFwoSGPqFuYLXo/Fodb3GPUFrFYlNmgnZj9/aYpK92edeojA5HC/h3NGN0d+KWsD3ZxlJXKDKaZP4iOj9RwDzy/gCW0G/QGKjCRR9ws/jJQqPgxTZ6OIxSLnuAAe7BMfviUxN/RtzqnXhrRQKBlwmNvwpBdsDrm/mRE5FQg1qeFBSFaROenUsvQabzmBCF+rVa/9B2znKs2LTU4BqTdNhtKqZMBjrxGJFBgdi/f0+4FZVeSLQp6eebWHwMtVb9DXvkcsge6SAKeGtlmACEKoyN7t0FAzl+M6nbGHsP0+VzL+MlINUzEGYASS3j2tDB3joOZaSTJABtFQ+HLyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=71CgcQ3TewjjKfr3f8+9ZcCEmaQBjCjOXiCFS6EZmPE=;
- b=bDlC/Usy7AxPRI/aGjGxJj+lx2dLukHCqYfYB30Tm31zhfilKj1mi997j/sM19OZBeG+z84/9b73CWzvAZBLriIUf1rZy+AbA0mAvY6AYdD3SYYYOZMvzWZnnYQJmGnKdNMzaSzu9j5yHrXg+byzdGFOeeBdb30dPeYvd92vmMklwQvHB+f0uTNbGGVzA9DpSpxAl7QLQswv5g+SJBysEmO9VsVhdYMWlsgzPRjTpNpZUAE/uB1K+ijdzQPHBOiH5cFSQ7jRCrUt8mCYFLP4R41mr5ifPJXzKiLEonlFbbHP6EilTl67YfH0NvPuw0ZdlkhZVICN7WZkdif9hwYL7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=71CgcQ3TewjjKfr3f8+9ZcCEmaQBjCjOXiCFS6EZmPE=;
- b=zap2DWwKDMKnyqMjdgXqvQ81/3kT844xswS0q5sAfptZOiNUgVjjgsua6ao4cNHO5zxh5YwWajRG1iIOLYmeSBX7xgTcJgy6IFT0pTupalnULVGssH3r+xqIm6+6MWZhlIRLsQYh95bu3VOPXIS6Z+vRZjQ3LUyJiwFdB7XI6ow=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.173.210) by
- DM6PR12MB3739.namprd12.prod.outlook.com (10.255.172.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Thu, 14 Nov 2019 20:15:40 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::4898:93e0:3c0c:d862]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::4898:93e0:3c0c:d862%6]) with mapi id 15.20.2451.027; Thu, 14 Nov 2019
- 20:15:40 +0000
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, joro@8bytes.org,
-        vkuznets@redhat.com, rkagan@virtuozzo.com, graf@amazon.com,
-        jschoenh@amazon.de, karahmed@amazon.de, rimasluk@amazon.com,
-        jon.grimm@amd.com,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: [PATCH v5 07/18] svm: Add support for setup/destroy virutal APIC backing page for AVIC
-Date:   Thu, 14 Nov 2019 14:15:09 -0600
-Message-Id: <1573762520-80328-8-git-send-email-suravee.suthikulpanit@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573762520-80328-1-git-send-email-suravee.suthikulpanit@amd.com>
-References: <1573762520-80328-1-git-send-email-suravee.suthikulpanit@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SN1PR12CA0099.namprd12.prod.outlook.com
- (2603:10b6:802:21::34) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c8::18)
+        Thu, 14 Nov 2019 15:19:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbfKNUTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 15:19:44 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2443A20709;
+        Thu, 14 Nov 2019 20:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573762783;
+        bh=Ms+2LTB1+DESJrOdQdCv2D3DR/a6flmiLsM96V8C2E4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nACZ0IrSrZ/AlXj+jZQQZqliQSFvUsfLm7y5kYUBBF5csAwpMtCtZFbVPjaojtxqv
+         35VtNXdJxtyLA/LfY0wty1jGbnOrLtrNLb2bMoOkyvb1OeKiQWOHweYXDWknNfPm5B
+         U8gdqWhghK3nPrvW8oJflow7c0LsEAKkU7BbeGaM=
+Date:   Thu, 14 Nov 2019 14:19:41 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v2 0/3] PCI: Add PCI_ERROR_RESPONSE, check for errors
+Message-ID: <20191114201941.GA242410@google.com>
 MIME-Version: 1.0
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [165.204.78.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c53ddb08-f8a2-4ff5-5761-08d7693f6b24
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3739:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB37397EF7DC70E1607645C5BBF3710@DM6PR12MB3739.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 02213C82F8
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(39860400002)(346002)(136003)(189003)(199004)(6506007)(25786009)(86362001)(6512007)(6436002)(8676002)(47776003)(7416002)(66066001)(6486002)(50226002)(4326008)(3846002)(8936002)(4720700003)(81156014)(2906002)(16586007)(7736002)(66556008)(305945005)(66476007)(2616005)(6116002)(66946007)(186003)(316002)(14454004)(486006)(478600001)(99286004)(81166006)(26005)(14444005)(476003)(5660300002)(44832011)(386003)(446003)(52116002)(51416003)(76176011)(50466002)(6666004)(36756003)(11346002)(48376002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3739;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: K+4k7UoJzadGiv3DrxqEzZv0EEAXFdrBsMN0nnkcTO9qMgoyyIAIyIh46cLNlxJrQW4lHEi7wL5D+hUrTYgXNIImZ6w6PcaAMpBE7nN4nqFRD8pvK2h45zSKGOMfjU/fFvyJawMlnymQcEVYnPUg6JgOY52V81V+p+3HOIA8Qz+cS6KjYmLaqBuUS5e4ADZDX/06zRgk8KCDEK17pAP+okRyKsm0qs5UpnO+C9snCH9IFFsT9dUOx25qi+kSwWRToeOselmGoHFzzx+bQGnJgPs981SbjdhZYCWEOlAXzwiVP7jcfr84dL+5NpwZc0dgw1ZEqRp+UivRDHeAQd2L/z/jlwIdl+kk/sBDYhRJUur8t+AubWEKRX1vbLTnCjjmxipxTrQlmBhJgTTxv+1jcYKoszvgQJMKSIE+xF96V9/xmHmLDMKG8hi8ZaVwMV3q
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c53ddb08-f8a2-4ff5-5761-08d7693f6b24
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2019 20:15:40.1232
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BJUzNMmLSYIq+T50X+F1t4WbH83dhLYJL7gB0oTvU4YxgyosCkWcWqoNxP/vQWBcJihknRy4PYlDMWI+cltVnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3739
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822200551.129039-1-helgaas@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-factor avic_init_access_page() to avic_update_access_page() since
-activate/deactivate AVIC requires setting/unsetting the memory region used
-for virtual APIC backing page (APIC_ACCESS_PAGE_PRIVATE_MEMSLOT).
+[+cc Andrew]
 
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
----
- arch/x86/kvm/svm.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+On Thu, Aug 22, 2019 at 03:05:48PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Reads from a PCI device may fail if the device has been turned off (put
+> into D3cold), removed, or if some other error occurs.  The PCI host bridge
+> typically fabricates ~0 data to complete the CPU's read.
+> 
+> We check for that in a few places, but not in a consistent way.  This
+> series adds a PCI_ERROR_RESPONSE definition to make the checks more
+> consistent and easier to find.  Note that ~0 may indicate a PCI error, but
+> it may also be valid read data, so you need more information (such as
+> knowing that a register can never contain ~0) before concluding that it's
+> an error.
+> 
+> This series also adds a new check for PCI_ERROR_RESPONSE in the power
+> management code because that code frequently encounters devices in D3cold,
+> where we previously misinterpreted ~0 data.  It also uses pci_power_name()
+> to print D-state names more consistently.
+> 
+> Rafael, I didn't add your Reviewed-by to "PCI / PM: Return error when
+> changing power state from D3cold" because I made small changes to try to
+> make the messages more consistent, and I didn't want to presume they'd be
+> OK with you.
+> 
+> Changes since v1:
+>   - Add Rafael's Reviewed-By to the first two patches
+>   - Drop "PCI / PM: Check for error when reading PME status" because Rafael
+>     pointed out that some devices can signal PME even when in D3cold, so
+>     this would require additional rework
+>   - Drop "PCI / PM: Check for error when reading Power State" because
+>     Rafael thinks it's mostly redundant
+> 
+> Bjorn Helgaas (3):
+>   PCI: Add PCI_ERROR_RESPONSE definition
+>   PCI / PM: Decode D3cold power state correctly
+>   PCI / PM: Return error when changing power state from D3cold
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 38401f9..3ffb437 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1673,23 +1673,22 @@ static u64 *avic_get_physical_id_entry(struct kvm_vcpu *vcpu,
-  * field of the VMCB. Therefore, we set up the
-  * APIC_ACCESS_PAGE_PRIVATE_MEMSLOT (4KB) here.
-  */
--static int avic_init_access_page(struct kvm_vcpu *vcpu)
-+static int avic_update_access_page(struct kvm *kvm, bool activate)
- {
--	struct kvm *kvm = vcpu->kvm;
- 	int ret = 0;
- 
- 	mutex_lock(&kvm->slots_lock);
--	if (kvm->arch.apic_access_page_done)
-+	if (kvm->arch.apic_access_page_done == activate)
- 		goto out;
- 
- 	ret = __x86_set_memory_region(kvm,
- 				      APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
- 				      APIC_DEFAULT_PHYS_BASE,
--				      PAGE_SIZE);
-+				      activate ? PAGE_SIZE : 0);
- 	if (ret)
- 		goto out;
- 
--	kvm->arch.apic_access_page_done = true;
-+	kvm->arch.apic_access_page_done = activate;
- out:
- 	mutex_unlock(&kvm->slots_lock);
- 	return ret;
-@@ -1702,7 +1701,7 @@ static int avic_init_backing_page(struct kvm_vcpu *vcpu)
- 	int id = vcpu->vcpu_id;
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 
--	ret = avic_init_access_page(vcpu);
-+	ret = avic_update_access_page(vcpu->kvm, true);
- 	if (ret)
- 		return ret;
- 
--- 
-1.8.3.1
+I applied patches 2 & 3 (tweaked to not depend on the
+PCI_ERROR_RESPONSE definition) with reviewed-by from Rafael, Keith,
+and Mika to pci/pm for v5.5, thanks everybody for taking a look.
 
+Andrew had good ideas for improving the PCI_ERROR_RESPONSE part, so
+it's gone for now but not forgotten.
+
+>  drivers/pci/access.c                          | 13 ++++----
+>  .../pci/controller/dwc/pcie-designware-host.c |  2 +-
+>  drivers/pci/controller/pci-aardvark.c         |  2 +-
+>  drivers/pci/controller/pci-mvebu.c            |  4 +--
+>  drivers/pci/controller/pci-thunder-ecam.c     | 20 ++++++------
+>  drivers/pci/controller/pci-thunder-pem.c      |  2 +-
+>  drivers/pci/controller/pcie-altera.c          |  2 +-
+>  drivers/pci/controller/pcie-iproc.c           |  2 +-
+>  drivers/pci/controller/pcie-mediatek.c        |  4 +--
+>  drivers/pci/controller/pcie-rcar.c            |  2 +-
+>  drivers/pci/controller/pcie-rockchip-host.c   |  2 +-
+>  drivers/pci/controller/vmd.c                  |  2 +-
+>  drivers/pci/hotplug/cpqphp_ctrl.c             | 12 +++----
+>  drivers/pci/hotplug/cpqphp_pci.c              | 20 ++++++------
+>  drivers/pci/hotplug/pciehp_hpc.c              |  6 ++--
+>  drivers/pci/pci.c                             | 31 ++++++++++++-------
+>  drivers/pci/pcie/dpc.c                        |  3 +-
+>  drivers/pci/pcie/pme.c                        |  4 +--
+>  drivers/pci/probe.c                           |  4 +--
+>  drivers/pci/quirks.c                          |  2 +-
+>  include/linux/pci.h                           |  7 +++++
+>  21 files changed, 81 insertions(+), 65 deletions(-)
+> 
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
