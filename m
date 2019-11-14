@@ -5,39 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA05C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F46CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B8B2071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4AB2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TX+k93Rj"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eap7G/NV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKNKmF (ORCPT
+        id S1727118AbfKNKmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:42:05 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62822 "EHLO
+        Thu, 14 Nov 2019 05:42:08 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:42059 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726953AbfKNKlz (ORCPT
+        with ESMTP id S1726983AbfKNKl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:41:55 -0500
-X-UUID: afa82fdb906646cd9c5102070d6fd392-20191114
+        Thu, 14 Nov 2019 05:41:58 -0500
+X-UUID: 744dca403fdd4e1e855ad41f91a2f7d3-20191114
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3avob40MkcAGOskk3JFHlOYbQJoLQ/YiEjDDcd4xlgs=;
-        b=TX+k93RjAy3SdL4tY5YjW8Cj7fOWd/TZV0exm8MC6NejRHJhfuyfx9A5XTXMFRTsW2NQIsm/CK2CZ9rRTbvF0Mtg+ELGUuB3aakhkN7YPEo3XJaLU3Xm37Hw20PE9GENEvolz33zZBDaFEcCue3hD1KrOprqUKBpjKwiuvTRZWU=;
-X-UUID: afa82fdb906646cd9c5102070d6fd392-20191114
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=/v3ZAT8MMQQn1PPsfQoog57z7OcnmZ7w9uOMGarZugY=;
+        b=eap7G/NVuy9vJuwCgJ8lFLXvSvWTTAMnIs+sxZ8hfdw/o693knpzrYo4rLSob4715mhnjagrjXDy7e/hwObz91K0gK7sLcnaNiqRPC39tHHzT6Vsz1iVsPt8wu9OySnZ4EgSi5yoXCFOsbb/ndjZokyfXL15S+wl9jH7s6Lti2A=;
+X-UUID: 744dca403fdd4e1e855ad41f91a2f7d3-20191114
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 640366206; Thu, 14 Nov 2019 18:41:50 +0800
+        with ESMTP id 1787366391; Thu, 14 Nov 2019 18:41:54 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 14 Nov 2019 18:41:46 +0800
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 14 Nov 2019 18:41:53 +0800
 Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 14 Nov 2019 18:41:44 +0800
+ Transport; Thu, 14 Nov 2019 18:41:48 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Felipe Balbi <balbi@kernel.org>
@@ -73,14 +74,15 @@ CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         <linux-usb@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v3 08/13] usb: gadget: bcm63xx_udc: create debugfs directory under usb root
-Date:   Thu, 14 Nov 2019 18:41:20 +0800
-Message-ID: <1573728085-29016-8-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 10/13] usb: gadget: udc: renesas_usb3: create debugfs directory under usb root
+Date:   Thu, 14 Nov 2019 18:41:22 +0800
+Message-ID: <1573728085-29016-10-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1573728085-29016-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1573728085-29016-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 662CFFC5D757F574D8AD256B9DEA6AC1A087CE590745DB105BB6C8C4E4FE39652000:8
 X-MTK:  N
 Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,24 +93,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Tm93IHRoZSBVU0IgZ2FkZ2V0IHN1YnN5c3RlbSBjYW4gdXNlIHRoZSBVU0IgZGVidWdmcyByb290
 IGRpcmVjdG9yeSwNCnNvIG1vdmUgaXQncyBkaXJlY3RvcnkgZnJvbSB0aGUgcm9vdCBvZiB0aGUg
 ZGVidWdmcyBmaWxlc3lzdGVtIGludG8NCnRoZSByb290IG9mIHVzYg0KDQpTaWduZWQtb2ZmLWJ5
-OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQotLS0NCnYzOg0KICAx
-LiBmaXggdXAgYnVpbGQgZXJyb3Igb2YgdW5kZWZpbmVkIHVzYl9kZWJ1Z19yb290DQoNCnYyOg0K
-ICAxLiBhYmFuZG9uIG5ldyBBUEkgdXNiX2RlYnVnZnNfY3JlYXRlX2RpcigpLCBhbmQgdXNlIHVz
-Yl9kZWJ1Z19yb290DQotLS0NCiBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JjbTYzeHhfdWRjLmMg
-fCAzICsrLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkN
-Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmNtNjN4eF91ZGMuYyBiL2Ry
-aXZlcnMvdXNiL2dhZGdldC91ZGMvYmNtNjN4eF91ZGMuYw0KaW5kZXggOTdiMTY0NjNmM2VmLi4x
-NjdkNDE2MThlY2YgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JjbTYzeHhf
-dWRjLmMNCisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmNtNjN4eF91ZGMuYw0KQEAgLTI2
-LDYgKzI2LDcgQEANCiAjaW5jbHVkZSA8bGludXgvc2VxX2ZpbGUuaD4NCiAjaW5jbHVkZSA8bGlu
-dXgvc2xhYi5oPg0KICNpbmNsdWRlIDxsaW51eC90aW1lci5oPg0KKyNpbmNsdWRlIDxsaW51eC91
-c2IuaD4NCiAjaW5jbHVkZSA8bGludXgvdXNiL2NoOS5oPg0KICNpbmNsdWRlIDxsaW51eC91c2Iv
-Z2FkZ2V0Lmg+DQogI2luY2x1ZGUgPGxpbnV4L3dvcmtxdWV1ZS5oPg0KQEAgLTIyNDgsNyArMjI0
-OSw3IEBAIHN0YXRpYyB2b2lkIGJjbTYzeHhfdWRjX2luaXRfZGVidWdmcyhzdHJ1Y3QgYmNtNjN4
-eF91ZGMgKnVkYykNCiAJaWYgKCFJU19FTkFCTEVEKENPTkZJR19VU0JfR0FER0VUX0RFQlVHX0ZT
-KSkNCiAJCXJldHVybjsNCiANCi0Jcm9vdCA9IGRlYnVnZnNfY3JlYXRlX2Rpcih1ZGMtPmdhZGdl
-dC5uYW1lLCBOVUxMKTsNCisJcm9vdCA9IGRlYnVnZnNfY3JlYXRlX2Rpcih1ZGMtPmdhZGdldC5u
-YW1lLCB1c2JfZGVidWdfcm9vdCk7DQogCXVkYy0+ZGVidWdmc19yb290ID0gcm9vdDsNCiANCiAJ
-ZGVidWdmc19jcmVhdGVfZmlsZSgidXNiZCIsIDA0MDAsIHJvb3QsIHVkYywgJmJjbTYzeHhfdXNi
-ZF9kYmdfZm9wcyk7DQotLSANCjIuMjMuMA0K
+OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQotLS0NCnYzOiBubyBj
+aGFuZ2VzDQoNCnYyOg0KICAxLiBhYmFuZG9uIG5ldyBBUEkgdXNiX2RlYnVnZnNfY3JlYXRlX2Rp
+cigpLCBhbmQgdXNlIHVzYl9kZWJ1Z19yb290DQotLS0NCiBkcml2ZXJzL3VzYi9nYWRnZXQvdWRj
+L3JlbmVzYXNfdXNiMy5jIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
+MSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9yZW5l
+c2FzX3VzYjMuYyBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvcmVuZXNhc191c2IzLmMNCmluZGV4
+IGUwOThmMTZjMDFjYi4uNGRkZTY5ZTdmNmIxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2Fk
+Z2V0L3VkYy9yZW5lc2FzX3VzYjMuYw0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9yZW5l
+c2FzX3VzYjMuYw0KQEAgLTI1MzUsNyArMjUzNSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZmls
+ZV9vcGVyYXRpb25zIHJlbmVzYXNfdXNiM19iX2RldmljZV9mb3BzID0gew0KIHN0YXRpYyB2b2lk
+IHJlbmVzYXNfdXNiM19kZWJ1Z2ZzX2luaXQoc3RydWN0IHJlbmVzYXNfdXNiMyAqdXNiMywNCiAJ
+CQkJICAgICAgc3RydWN0IGRldmljZSAqZGV2KQ0KIHsNCi0JdXNiMy0+ZGVudHJ5ID0gZGVidWdm
+c19jcmVhdGVfZGlyKGRldl9uYW1lKGRldiksIE5VTEwpOw0KKwl1c2IzLT5kZW50cnkgPSBkZWJ1
+Z2ZzX2NyZWF0ZV9kaXIoZGV2X25hbWUoZGV2KSwgdXNiX2RlYnVnX3Jvb3QpOw0KIA0KIAlkZWJ1
+Z2ZzX2NyZWF0ZV9maWxlKCJiX2RldmljZSIsIDA2NDQsIHVzYjMtPmRlbnRyeSwgdXNiMywNCiAJ
+CQkgICAgJnJlbmVzYXNfdXNiM19iX2RldmljZV9mb3BzKTsNCi0tIA0KMi4yMy4wDQo=
 
