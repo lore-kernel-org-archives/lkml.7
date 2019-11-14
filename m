@@ -2,130 +2,137 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AB1C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3459C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5AF32075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:54:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="f2w2YgBG"
+	by mail.kernel.org (Postfix) with ESMTP id B64632075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKNNyp (ORCPT
+        id S1726992AbfKNNzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:54:45 -0500
-Received: from mail-eopbgr150042.outbound.protection.outlook.com ([40.107.15.42]:61207
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbfKNNyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:54:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mxOY6Rg84cp2mNyNYe5DgQMD7fBqeYSMFUelR+377EZPBaGRy2lWoLvRTjBk1b+7O8xGNJNlSLCXPlMBI1XPmYISGxrgMCoiSYP6TV/O2fBm+SK9gjy5DLVvkyBtiSgT4Z8NAeOdSsm2nF0neVQCN3IC4ttECGfoqqUjfNcInRHvKwqJuToTvTVt5XPqc0MC+Gx/aBH39tlTAW1yWAkepOL4flLW+EqX/dKIQD7UluFrEabaVdGVWR8HSWAeXbLKqOPTVUqdMlX3LJ7zpko00Y00I1U+UiR79ToqxzvN3ExRwE8Q181nFIR/W99Pl32DOeFNf6i4DhpbVBfD4PKB5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2NrOv0znuVIkF41QXRr6d4ayL/TTTNPze19Cw70Rr+g=;
- b=XCqxFI6dTINBKss+3tPLPMcjdirLG8cxY232uYTaiYOxVVwAAVutXC4UgUqUu8HIIM8UxUNBs/EacWOpXLOf1KBT+TElWe3tz89EKO0j0UXfY9JuvdO727LtNbM/snH6ThXIMFL0/8PaGF6UCNAPxKP5L86nmh/8hz4o1NCpfI6aYfbgW+k4/eATs5TTon/dQ1rbX9IsZe4EBRUvxc5Gtdb05PTyxa9QcdB60R790cQrJrnT4CNeDQya0N70/q2zEPFZqoGyDXFCFgs5MHgZk6Kt/i5HjQW7v6UxN6A1fNVrL8QHRz6YLAPWG8Ro1ZD5kQ3riV5rE8aLZ/gQS4bzZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2NrOv0znuVIkF41QXRr6d4ayL/TTTNPze19Cw70Rr+g=;
- b=f2w2YgBGe9pVLOeKHZ98dV2WqFaw4t1SK3jucIpnsbXJ6mNuTcGnK/cPzL8PETvhc/jJH3dkB0vMxrCYD4P284Cc2x1AwrWtIOrhn3CoRyE2oYovZYtUHzqyZ3P1+AYrdzb7JxEr21mI2VfdUntJLRofAWOX9QeJVt78+0bFPBI=
-Received: from DB7PR05MB5338.eurprd05.prod.outlook.com (20.178.41.21) by
- DB7PR05MB6202.eurprd05.prod.outlook.com (20.178.106.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.24; Thu, 14 Nov 2019 13:54:41 +0000
-Received: from DB7PR05MB5338.eurprd05.prod.outlook.com
- ([fe80::3c5a:1339:33db:2df3]) by DB7PR05MB5338.eurprd05.prod.outlook.com
- ([fe80::3c5a:1339:33db:2df3%5]) with mapi id 15.20.2430.027; Thu, 14 Nov 2019
- 13:54:41 +0000
-From:   Ido Schimmel <idosch@mellanox.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "wvw@google.com" <wvw@google.com>
-Subject: Re: [PATCH 5.3 113/148] thermal: Fix use-after-free when
- unregistering thermal zone device
-Thread-Topic: [PATCH 5.3 113/148] thermal: Fix use-after-free when
- unregistering thermal zone device
-Thread-Index: AQHVf0aszjDzBkRVak64VD2aSjHdS6eK/tOA///ovIA=
-Date:   Thu, 14 Nov 2019 13:54:41 +0000
-Message-ID: <20191114135439.GA3448@splinter>
-References: <20191010083609.660878383@linuxfoundation.org>
- <20191010083617.967244655@linuxfoundation.org>
- <905e26d4-76c7-555f-3b33-51fa3cf7a470@arm.com>
-In-Reply-To: <905e26d4-76c7-555f-3b33-51fa3cf7a470@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0102CA0011.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:14::24) To DB7PR05MB5338.eurprd05.prod.outlook.com
- (2603:10a6:10:64::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=idosch@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8e7b9cab-74db-45ae-cf37-08d7690a3272
-x-ms-traffictypediagnostic: DB7PR05MB6202:|DB7PR05MB6202:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR05MB620252D52D378EC35E82585BBF710@DB7PR05MB6202.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 02213C82F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(189003)(199004)(76176011)(11346002)(66946007)(6506007)(99286004)(66556008)(64756008)(102836004)(66476007)(66446008)(1076003)(6306002)(4326008)(386003)(9686003)(6512007)(54906003)(316002)(26005)(6916009)(4744005)(186003)(256004)(3846002)(5660300002)(6116002)(6246003)(6436002)(71200400001)(71190400001)(478600001)(966005)(7736002)(25786009)(14454004)(6486002)(66066001)(2906002)(305945005)(33656002)(476003)(8936002)(52116002)(446003)(81156014)(8676002)(229853002)(81166006)(33716001)(86362001)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR05MB6202;H:DB7PR05MB5338.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6VYvAxJUd8vwQ0D5H1nt5lMcD77dSHVNuaGz/D7p42XctqdZdE99KG2G2UGu+hRCDpOSfLo02b23XOilud2x5mqFq0vKcIBbbDyjxRNFS3O+Rj2hfQuvCknKbRCX48coQttyZOhjYuQzfRbYJ5EZBphEkaiUqn6spdkswwoiuKz2QrAKfLS3j2dX5HFZSM90hBH/ftM1j4O8uPPFLlHBVs94BURWc4mc+xDnsM8j0sUgMjxbWavQzEpQQ3dA+o/UhAjDCf9f2lJ3TKeqD6Za6sNfHxQTc7NNosFuMWDny1XASsdNJOe5b980y6HAKEH6VneUYCisbTIl297Xebs2WTDVHbdt+jFx5gbzdJd9ZPmUlHB+q8U8HCLPTOSXTScy1+XwT2HmObl8JcZvMK71z9uQFWUI8xW6nGxMldUZYFDwn26GQ+aTa0Eg5DqhSZD31yCOM5com3Qn8+SGtEoTIy/8mJ6bgj93qXfdw4Sdvx4=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8E6AC4D9A779084F837631E6E7FFFC4D@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e7b9cab-74db-45ae-cf37-08d7690a3272
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 13:54:41.4408
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: U1iiTAFnCEu4R5of2m5zYoOgw14On8ViWT9b0A1M8nOUiM9XwqES91fGMFPFALl+XMK/HuAjMGT8JpY26ranaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR05MB6202
+        Thu, 14 Nov 2019 08:55:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726254AbfKNNzr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:55:47 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEDqtkw006323;
+        Thu, 14 Nov 2019 08:55:40 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w976htusu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Nov 2019 08:55:39 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAEDpdeP005289;
+        Thu, 14 Nov 2019 13:55:38 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04wdc.us.ibm.com with ESMTP id 2w5n36hk4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Nov 2019 13:55:38 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEDtZvE43909560
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 13:55:35 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FE57B2064;
+        Thu, 14 Nov 2019 13:55:35 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B046B205F;
+        Thu, 14 Nov 2019 13:55:35 +0000 (GMT)
+Received: from oc3746452103.endicott.ibm.com (unknown [9.60.73.196])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Nov 2019 13:55:35 +0000 (GMT)
+Message-ID: <abdf66fb39d4c8ee08e0b52c34fb81b93bd33006.camel@linux.vnet.ibm.com>
+Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
+From:   Patrick Callaghan <patrickc@linux.vnet.ibm.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Patrick Callaghan <patrickc@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+Date:   Thu, 14 Nov 2019 08:55:34 -0500
+In-Reply-To: <1573582344.17949.67.camel@linux.ibm.com>
+References: <20191111192348.30535-1-patrickc@linux.ibm.com>
+         <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
+         <1573578841.17949.48.camel@linux.ibm.com>
+         <c6a57c24-2f30-f252-0f42-8d748ede65af@linux.microsoft.com>
+         <1573582344.17949.67.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-5.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=844 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911140129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 01:17:55PM +0000, Lukasz Luba wrote:
-> Hi Greg,
->=20
-> This patch causes a deadlock, the thermal framework stops. Please check
-> this fix (I found it before posting exactly the same solution):
-> https://lkml.org/lkml/2019/11/12/1075
+On Tue, 2019-11-12 at 13:12 -0500, Mimi Zohar wrote:
+> On Tue, 2019-11-12 at 09:33 -0800, Lakshmi Ramasubramanian wrote:
+> > On 11/12/2019 9:14 AM, Mimi Zohar wrote:
+> > 
+> > > On Mon, 2019-11-11 at 14:29 -0800, Lakshmi Ramasubramanian wrote:
+> > > > On 11/11/19 11:23 AM, Patrick Callaghan wrote:
+> > > > 
+> > > > > -		if (rbuf_len == 0)
+> > > > > +		if (rbuf_len == 0) {	/* unexpected EOF */
+> > > > > +			rc = -EINVAL;
+> > > > >    			break;
+> > > > > +		}
+> > > > >    		offset += rbuf_len;
+> > > > 
+> > > > Should there be an additional check to validate that (offset +
+> > > > rbuf_len)
+> > > > is less than i_size before calling cypto_shash_update (since
+> > > > rbuf_len is
+> > > > one of the parameters for this call)?
+> > > 
+> > > The "while" statement enforces that.
+> > > 
+> > > Mimi
+> > 
+> > Yes - but that check happens after the call to
+> > crypto_shash_update().
+> > 
+> > Perhaps integrity_kernel_read() will never return (rbuf_len) that
+> > will
+> >   => violate the check in the "while" statement.
+> >   => number of bytes read that is greater than the memory allocated
+> > for 
+> > rbuf even in error conditions.
+> > 
+> > Just making sure.
+> 
+> integrity_kernel_read() returns an error (< 0) or the number of bytes
+> read.  The while statement ensures that there is more data to read,
+> so
+> returning 0 is always an error.
+> 
+> Mimi
+Hello Laks,
+You suggested that the if statement of the patch change to the
+following:
 
-Sorry about that.
+if ((rbuf_len == 0) || (offset + rbuf_len >= i_size)) {
 
-> I have verified it on OdroidXU4 and it works. It needs some cleaning in
-> the commit message, though.
-> I have added to CC the author: Wei Wang
->=20
-> I don't know in how many stable trees it was applied, but should be fix
-> there also.
+Unless the file size changed between the time that i_size was set in
+ima_calc_file_hash_tfm() and an i_size_read() call was subsequently
+issued in a function downstream of the integrity_kernel_read() call,
+the rbuf_len returned on the integrity_kernel_read() call will not be
+more than i_size - offset. I do not think that it is possible for the
+file size to change during this window but nonetheless, if it can, this
+would be a different problem and I would not want to include this in my
+patch. That said, I do appreciate you taking time to review this patch.
 
-I checked my mailbox and it seems it was backported to: 4.4, 4.9, 4.14,
-4.19, 5.2 (EOL) and 5.3
-
-Thanks
