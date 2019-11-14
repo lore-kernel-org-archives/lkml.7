@@ -2,84 +2,131 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19213C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6246C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED983206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC016206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfKNVK6 (ORCPT
+        id S1726997AbfKNVLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:10:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:49456 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726592AbfKNVK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 16:10:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FA42328;
-        Thu, 14 Nov 2019 13:10:57 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A049D3F52E;
-        Thu, 14 Nov 2019 13:10:55 -0800 (PST)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/core: uclamp: fix wrong condition
-Date:   Thu, 14 Nov 2019 21:10:52 +0000
-Message-Id: <20191114211052.15116-1-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 Nov 2019 16:11:55 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33970 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726592AbfKNVLy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 16:11:54 -0500
+Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 37AD943EA9F;
+        Fri, 15 Nov 2019 08:11:50 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iVMP8-0003Oh-7P; Fri, 15 Nov 2019 08:11:50 +1100
+Date:   Fri, 15 Nov 2019 08:11:50 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/28] shrinker: defer work only to kswapd
+Message-ID: <20191114211150.GE4614@dread.disaster.area>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-13-david@fromorbit.com>
+ <20191104152954.GC10665@bfoster>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104152954.GC10665@bfoster>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
+        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=7-415B0cAAAA:8 a=5X_tDGEKKelVXH1UxT4A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uclamp_update_active() should perform the update when
-p->uclamp[clamp_id].active is true. But when the logic was inverted in
-[1], the if condition wasn't inverted correctly too.
+On Mon, Nov 04, 2019 at 10:29:54AM -0500, Brian Foster wrote:
+> On Fri, Nov 01, 2019 at 10:46:02AM +1100, Dave Chinner wrote:
+> > @@ -601,10 +605,10 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+> >  	 * scanning at high prio and therefore should try to reclaim as much as
+> >  	 * possible.
+> >  	 */
+> > -	while (total_scan >= batch_size ||
+> > -	       total_scan >= freeable_objects) {
+> > +	while (scan_count >= batch_size ||
+> > +	       scan_count >= freeable_objects) {
+> >  		unsigned long ret;
+> > -		unsigned long nr_to_scan = min(batch_size, total_scan);
+> > +		unsigned long nr_to_scan = min_t(long, batch_size, scan_count);
+> >  
+> >  		shrinkctl->nr_to_scan = nr_to_scan;
+> >  		shrinkctl->nr_scanned = nr_to_scan;
+> > @@ -614,29 +618,29 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+> >  		freed += ret;
+> >  
+> >  		count_vm_events(SLABS_SCANNED, shrinkctl->nr_scanned);
+> > -		total_scan -= shrinkctl->nr_scanned;
+> > -		scanned += shrinkctl->nr_scanned;
+> > +		scan_count -= shrinkctl->nr_scanned;
+> > +		scanned_objects += shrinkctl->nr_scanned;
+> >  
+> >  		cond_resched();
+> >  	}
+> > -
+> >  done:
+> > -	if (next_deferred >= scanned)
+> > -		next_deferred -= scanned;
+> > +	if (deferred_count)
+> > +		next_deferred = deferred_count - scanned_objects;
+> >  	else
+> > -		next_deferred = 0;
+> > +		next_deferred = scan_count;
+> 
+> Hmm.. so if there was no deferred count on this cycle, we set
+> next_deferred to whatever is left from scan_count and add that back into
+> the shrinker struct below. If there was a pending deferred count on this
+> cycle, we subtract what we scanned from that and add that value back.
+> But what happens to the remaining scan_count in the latter case? Is it
+> lost, or am I missing something?
 
-[1] https://lore.kernel.org/lkml/20190902073836.GO2369@hirez.programming.kicks-ass.net/
+if deferred_count is not zero, then it is kswapd that is running. It
+does the deferred work, and if it doesn't make progress then adding
+it's scan count to the deferred work doesn't matter. That's because
+it will come back with an increased priority in a short while and
+try to scan more of the deferred count plus it's larger scan count.
 
-Fixes: babbe170e053 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
-Reported-by: Suren Baghdasaryan <surenb@google.com>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Juri Lelli <juri.lelli@redhat.com>
-CC: Vincent Guittot <vincent.guittot@linaro.org>
-CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
-CC: Steven Rostedt <rostedt@goodmis.org>
-CC: Ben Segall <bsegall@google.com>
-CC: Mel Gorman <mgorman@suse.de>
-CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-CC: linux-kernel@vger.kernel.org
----
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+IOWs, if we defer kswapd unused scan count, we effectively increase
+the pressure as the priority goes up, potentially making the
+deferred count increase out of control. i.e. kswapd can make
+progress and free items, but the result is that it increased the
+deferred scan count rather than reducing it. This leads to excessive
+reclaim of the slab caches and kswapd can trash the caches long
+after the memory pressure has gone away...
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0f2eb3629070..2de53489c909 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1065,7 +1065,7 @@ uclamp_update_active(struct task_struct *p, enum uclamp_id clamp_id)
- 	 * affecting a valid clamp bucket, the next time it's enqueued,
- 	 * it will already see the updated clamp bucket value.
- 	 */
--	if (!p->uclamp[clamp_id].active) {
-+	if (p->uclamp[clamp_id].active) {
- 		uclamp_rq_dec_id(rq, p, clamp_id);
- 		uclamp_rq_inc_id(rq, p, clamp_id);
- 	}
+> For example, suppose we start this cycle with a large scan_count and
+> ->scan_objects() returned SHRINK_STOP before doing much work. In that
+> scenario, it looks like whether ->nr_deferred is 0 or not is the only
+> thing that determines whether we defer the entire remaining scan_count
+> or just what is left from the previous ->nr_deferred. The existing code
+> appears to consistently factor in what is left from the current scan
+> with the previous deferred count. Hm?
+
+If kswapd doesn't have any deferred work, then it's largely no
+different in behaviour to direct reclaim. If it has no deferred
+work, then the shrinker is not getting stopped early in direct
+reclaim, so it's unlikely that kswapd is going to get stopped early,
+either....
+
+Cheers,
+
+Dave.
 -- 
-2.17.1
-
+Dave Chinner
+david@fromorbit.com
