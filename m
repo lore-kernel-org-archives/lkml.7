@@ -2,187 +2,147 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42057C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F54C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6A4205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0000205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfKNNdm (ORCPT
+        id S1726534AbfKNNgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:33:42 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:21264 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfKNNdl (ORCPT
+        Thu, 14 Nov 2019 08:36:22 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:38535 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfKNNgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:33:41 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47DMrH5rJDzQl9x;
-        Thu, 14 Nov 2019 14:33:35 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id Wtrcg9lX2PUE; Thu, 14 Nov 2019 14:33:30 +0100 (CET)
-Date:   Fri, 15 Nov 2019 00:33:00 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 3/9] namei: LOOKUP_NO_XDEV: block mountpoint crossing
-Message-ID: <20191114133300.soxnzmufwbt2ddid@yavin.dot.cyphar.com>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-4-cyphar@cyphar.com>
- <20191113013630.GZ26530@ZenIV.linux.org.uk>
- <20191114044945.ldedzjrb4s7i7irr@yavin.dot.cyphar.com>
- <20191114054348.GH26530@ZenIV.linux.org.uk>
+        Thu, 14 Nov 2019 08:36:22 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iVFIJ-0004cC-Rw; Thu, 14 Nov 2019 13:36:19 +0000
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        openbmc@lists.ozlabs.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191108155524.170566-1-colin.king@canonical.com>
+ <ea47e8e7a8663d33acb44dd4473a5a150ea51526.camel@pengutronix.de>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH][next] reset: npcm: check for NULL return from
+ syscon_regmap_lookup_by_compat
+Message-ID: <33b8c69a-a2c7-b0a6-3ed0-270f921032bd@canonical.com>
+Date:   Thu, 14 Nov 2019 13:36:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zoh3k636biknnjmo"
-Content-Disposition: inline
-In-Reply-To: <20191114054348.GH26530@ZenIV.linux.org.uk>
+In-Reply-To: <ea47e8e7a8663d33acb44dd4473a5a150ea51526.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 14/11/2019 13:22, Philipp Zabel wrote:
+> Hi Colin,
+> 
+> On Fri, 2019-11-08 at 15:55 +0000, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> Function syscon_regmap_lookup_by_compat can return a NULL pointer, so
+> 
+> Could you point out where that NULL pointer would come from? As far as I
+> understand, syscon_regmap_lookup_by_compatible() should either return a
+> negative error code, or syscon->regmap, which should never be NULL.
 
---zoh3k636biknnjmo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Maybe I was over-zealous here with the results from the static analyzer.
+Re-reading the call chain it does seem like I was mistaken. So NAK this
+patch.
 
-On 2019-11-14, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Thu, Nov 14, 2019 at 03:49:45PM +1100, Aleksa Sarai wrote:
-> > On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > > On Tue, Nov 05, 2019 at 08:05:47PM +1100, Aleksa Sarai wrote:
-> > >=20
-> > > > @@ -862,6 +870,8 @@ static int nd_jump_root(struct nameidata *nd)
-> > > >  void nd_jump_link(struct path *path)
-> > > >  {
-> > > >  	struct nameidata *nd =3D current->nameidata;
-> > > > +
-> > > > +	nd->last_magiclink.same_mnt =3D (nd->path.mnt =3D=3D path->mnt);
-> > > >  	path_put(&nd->path);
-> > > > =20
-> > > >  	nd->path =3D *path;
-> > > > @@ -1082,6 +1092,10 @@ const char *get_link(struct nameidata *nd)
-> > > >  		if (nd->flags & LOOKUP_MAGICLINK_JUMPED) {
-> > > >  			if (unlikely(nd->flags & LOOKUP_NO_MAGICLINKS))
-> > > >  				return ERR_PTR(-ELOOP);
-> > > > +			if (unlikely(nd->flags & LOOKUP_NO_XDEV)) {
-> > > > +				if (!nd->last_magiclink.same_mnt)
-> > > > +					return ERR_PTR(-EXDEV);
-> > > > +			}
-> > > >  		}
-> > >=20
-> > > Ugh...  Wouldn't it be better to take that logics (some equivalent th=
-ereof)
-> > > into nd_jump_link()?  Or just have nd_jump_link() return an error...
-> >=20
-> > This could be done, but the reason for stashing it away in
-> > last_magiclink is because of the future magic-link re-opening patches
-> > which can't be implemented like that without putting the open_flags
-> > inside nameidata (which was decided to be too ugly a while ago).
-> >=20
-> > My point being that I could implement it this way for this series, but
-> > I'd have to implement something like last_magiclink when I end up
-> > re-posting the magic-link stuff in a few weeks.
-> >=20
-> > Looking at all the nd_jump_link() users, the other option is to just
-> > disallow magic-link crossings entirely for LOOKUP_NO_XDEV. The only
-> > thing allowing them permits is to resolve file descriptors that are
-> > pointing to the same procfs mount -- and it's unclear to me how useful
-> > that really is (apparmorfs and nsfs will always give -EXDEV because
-> > aafs_mnt and nsfs_mnt are internal kernel vfsmounts).
->=20
-> I would rather keep the entire if (nd->flags & LOOKUP_MAGICLINK_JUMPED)
-> out of the get_link().  If you want to generate some error if
-> nd_jump_link() has been called, just do it right there.  The fewer
-> pieces of state need to be carried around, the better...
+Apologies for the noise.
 
-Sure, I can make nd_jump_link() give -ELOOP and drop the current need
-for LOOKUP_MAGICLINK_JUMPED -- if necessary we can re-add it for the
-magic-link reopening patches.
+> 
+>> the IS_ERR check on the return is incorrect. Fix this by checking for
+>> IS_ERR_OR_NULL and return -ENODEV if true.  This avoids a null pointer
+>> dereference on gcr_regmap later on.
+>>
+>> Addresses-Coverity: ("Dereference null return (stat)")
+>> Fixes: b3f1d036f26d ("reset: npcm: add NPCM reset controller driver")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>  drivers/reset/reset-npcm.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/reset/reset-npcm.c b/drivers/reset/reset-npcm.c
+>> index 2ea4d3136e15..9febf8bed2f6 100644
+>> --- a/drivers/reset/reset-npcm.c
+>> +++ b/drivers/reset/reset-npcm.c
+>> @@ -161,9 +161,9 @@ static int npcm_usb_reset(struct platform_device *pdev, struct npcm_rc_data *rc)
+>>  	of_match_device(dev->driver->of_match_table, dev)->data;
+>>  
+>>  	gcr_regmap = syscon_regmap_lookup_by_compatible(gcr_dt);
+>> -	if (IS_ERR(gcr_regmap)) {
+>> +	if (IS_ERR_OR_NULL(gcr_regmap)) {
+>>  		dev_err(&pdev->dev, "Failed to find %s\n", gcr_dt);
+>> -		return PTR_ERR(gcr_regmap);
+>> +		return -ENODEV;
+>>  	}
+>>  
+>>  	/* checking which USB device is enabled */
+> 
+> regards
+> Philipp
+> 
 
-> And as for opening them...  Why would you need full open_flags in there?
-> Details, please...
-
-I was referring to [1] which has been dropped from this series. I
-misspoke -- you don't need the full open_flags, you just need acc_mode
-in nameidata -- but from memory you (understandably) weren't in favour
-of that either because it further muddled the open semantics with namei.
-
-So the solution I went with was to stash away the i_mode of the
-magiclink in nd->last_magiclink.mode (though to avoid a race which Jann
-found, you actually need to recalculate it when you call nd_jump_link()
-but that's a different topic) and then check it in trailing_magiclink().
-
-However, I've since figured out that we need to restrict things like
-bind-mounts and truncate() because they can be used to get around the
-restrictions. I dropped that patch from this series so that I could work
-on implementing the restrictions for the other relevant VFS syscalls
-separately from openat2 (upgrade_mask will be re-added to open_how with
-those patches).
-
-My point was that AFAICS we will either have to have nd->acc_mode (or
-something similar) or have nd->last_magiclink in order to implement the
-magic-link reopening hardening.
-
-[1]: https://lore.kernel.org/lkml/20190930183316.10190-2-cyphar@cyphar.com/
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---zoh3k636biknnjmo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXc1XiQAKCRCdlLljIbnQ
-EgEVAQDde9bpKjJAbLEIt4D/9cw3B8CHqEBeW8SnIT4PqQNQUQD/TtE4FY5p3N1d
-gPZFRde/N3ihwtWscDvPXctFNxykJAQ=
-=TSKH
------END PGP SIGNATURE-----
-
---zoh3k636biknnjmo--
