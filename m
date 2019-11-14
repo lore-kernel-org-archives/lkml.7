@@ -2,253 +2,103 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED49C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEB7C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34ED120723
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573760372;
-	bh=DsI1RSwndsveNAp8+Gor7YBttjCuFo60teB/1FjaWQM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PN3l1AnT6r8Svk624VZ+vjyLnOIVB+3yDkFd9eHqJstBglYtQLoIi9yxI5F6lEbQq
-	 2MDODoGBMwv0E4g5airw18dU7pZBhiCmdt6buhYm9C0PwvMfUliQKF3iUfaQyTNtXm
-	 pUPLj2eZgN58a5r7ZMZB5UNRS6NG4zur0A3HFNaA=
+	by mail.kernel.org (Postfix) with ESMTP id DB57420729
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:39:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hHhiugik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfKNTjb (ORCPT
+        id S1726977AbfKNTjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:39:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57536 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726098AbfKNTjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:39:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7941ACA3;
-        Thu, 14 Nov 2019 19:39:27 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 20:39:26 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2 1/2] mm: remove the memory isolate notifier
-Message-ID: <20191114193925.GB24848@dhcp22.suse.cz>
-References: <20191114131911.11783-1-david@redhat.com>
- <20191114131911.11783-2-david@redhat.com>
+        Thu, 14 Nov 2019 14:39:44 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40237 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfKNTjn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 14:39:43 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 22so6384464oip.7
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:39:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0qaQkNh+GwkOF+p4ly8ErfnaN1DdWL0XCLZl3cfnx0U=;
+        b=hHhiugikMlvmnXY5OlPpArh17lbPea4isMp4gtfpQVX0k1giOLMErHW7H/USxzM3h/
+         jOQcKrFZNTOTuT+89N0iSB1mRtJRzmb60d2eKp8TGgbav6sVp7nnwOV4PtWkU6oydc3p
+         iy80YEdHK54gK3kWYSJOOOgumGhCXZB+Gt9f1n0Wlv1anT2AbI4d4NJDzagXxEUr7EGr
+         RyPk20WvXOee+EYrxxcZDcM8c757d8l8vlwKKer+SnXUSBJa3MgEj0SMw7r6Kv7vQ+O3
+         jJm01sKIsxqgYKTeJ/yS0eGvLjTXI4mSI+xzujNOGtlrW9v2ASsZUAWsRvuc/wk2e7/i
+         9QMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0qaQkNh+GwkOF+p4ly8ErfnaN1DdWL0XCLZl3cfnx0U=;
+        b=SG1tgQctgZDLFzgvESNE4316a49Z60uyubzQJBmWT5dIHHO9jgsDCdHjpafEaufF1Q
+         WKbKul6zHA90Mkf0uGZozi/UuiWyGycA0VBIWasDzXWJEgCE1a0Tb5W+z9GBNKE5KQ75
+         BsB6ZvG6eMwvZru7OwmcnGeICJMgyuS2KsfeZ0X1BzEXf+8vJuI5hVZqhh3fgXwAbl7H
+         axAE4GQgN1qoueDW2wIesbh4jibnAnHuIo189xr7JTvSElZvRwh+6DOqG7b9uJfiO1Gt
+         GhdEqrtYxl6Ow+X9U2BvTSXK/ZI+NKkBEsDMY0+SsTgB1n03LKTGzQtgBGlpCp3AFV7I
+         xUkw==
+X-Gm-Message-State: APjAAAVvn1BJNlGTvkgGi+JCx6kE01zHDwDMpYmY3ajmTxtH58kdKSfK
+        JLJvz4AHdQ6++2DvASV0wEPiRfq4lawRfUJzJzDSWQ==
+X-Google-Smtp-Source: APXvYqx3fXNqkZI16D4D5lPb7+21HLSvnaDSZr50dgUF+ElE4iLArszfeHeTjd+60PQkHrdyr4vkZoVyG160Ab8Cb58=
+X-Received: by 2002:aca:d558:: with SMTP id m85mr4669663oig.43.1573760382147;
+ Thu, 14 Nov 2019 11:39:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114131911.11783-2-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20190724014230epcas5p371a5fdee330f91a646d619fbcc024acf@epcas5p3.samsung.com>
+ <20190724014222.110767-1-saravanak@google.com> <cb0d4aad-81e4-0b8d-40f2-7f58ef1e38d9@samsung.com>
+ <CAGETcx-tUtnX0T47YGdf7-cgp6e8K9Rgb34Mfe5Za9L4YMGS1g@mail.gmail.com> <20191114083532.vmccmqgj2uj73tcn@vireshk-i7>
+In-Reply-To: <20191114083532.vmccmqgj2uj73tcn@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 14 Nov 2019 11:39:06 -0800
+Message-ID: <CAGETcx9ccBgH2cjHMuecLRNJzTZTC_WZSGiWT-476Dqf2vADkQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] Add required-opps support to devfreq passive gov
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14-11-19 14:19:10, David Hildenbrand wrote:
-> Luckily, we have no users left, so we can get rid of it. Cleanup
-> set_migratetype_isolate() a little bit.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Thu, Nov 14, 2019 at 12:35 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 14-11-19, 00:23, Saravana Kannan wrote:
+> > Thanks for checking. I haven't abandoned this patch series. This patch
+> > series depends on "lazy linking" of required-opps to avoid a cyclic
+> > dependency between devfreq and OPP table population. But Viresh wasn't
+> > happy with my implementation of the lazy liking for reasonable
+> > reasons.
+> >
+> > I had a chat with Viresh during one of the several conferences that I
+> > met him at. To fix the lazy linking in the way he wanted it meant we
+> > had to fix other issues in the OPP framework that arise when OPP
+> > tables are shared in DT but not in memory. So he was kind enough to
+> > sign up to add lazy linking support to OPPs so that I won't have to do
+> > it. So, I'm waiting on that. So once that's added, I should be able to
+> > drop a few patches in this series, do some minor updates and then this
+> > will be good to go.
+>
+> I am fixing few other issues in OPP core right now and lazy linking
+> is next in the list :)
 
-\o/
-Acked-by: Michal Hocko <mhocko@suse.com>
+Thanks Viresh! Glad the offer still stands :)
 
-There is some potential on a further cleanups but this is definitely a
-great step
-
-> ---
->  drivers/base/memory.c  | 19 -------------------
->  include/linux/memory.h | 27 ---------------------------
->  mm/page_isolation.c    | 38 ++++----------------------------------
->  3 files changed, 4 insertions(+), 80 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index a757d9ed88a7..03c18c97c2bf 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -73,20 +73,6 @@ void unregister_memory_notifier(struct notifier_block *nb)
->  }
->  EXPORT_SYMBOL(unregister_memory_notifier);
->  
-> -static ATOMIC_NOTIFIER_HEAD(memory_isolate_chain);
-> -
-> -int register_memory_isolate_notifier(struct notifier_block *nb)
-> -{
-> -	return atomic_notifier_chain_register(&memory_isolate_chain, nb);
-> -}
-> -EXPORT_SYMBOL(register_memory_isolate_notifier);
-> -
-> -void unregister_memory_isolate_notifier(struct notifier_block *nb)
-> -{
-> -	atomic_notifier_chain_unregister(&memory_isolate_chain, nb);
-> -}
-> -EXPORT_SYMBOL(unregister_memory_isolate_notifier);
-> -
->  static void memory_block_release(struct device *dev)
->  {
->  	struct memory_block *mem = to_memory_block(dev);
-> @@ -178,11 +164,6 @@ int memory_notify(unsigned long val, void *v)
->  	return blocking_notifier_call_chain(&memory_chain, val, v);
->  }
->  
-> -int memory_isolate_notify(unsigned long val, void *v)
-> -{
-> -	return atomic_notifier_call_chain(&memory_isolate_chain, val, v);
-> -}
-> -
->  /*
->   * The probe routines leave the pages uninitialized, just as the bootmem code
->   * does. Make sure we do not access them, but instead use only information from
-> diff --git a/include/linux/memory.h b/include/linux/memory.h
-> index 0ebb105eb261..d3fde2d0d94b 100644
-> --- a/include/linux/memory.h
-> +++ b/include/linux/memory.h
-> @@ -55,19 +55,6 @@ struct memory_notify {
->  	int status_change_nid;
->  };
->  
-> -/*
-> - * During pageblock isolation, count the number of pages within the
-> - * range [start_pfn, start_pfn + nr_pages) which are owned by code
-> - * in the notifier chain.
-> - */
-> -#define MEM_ISOLATE_COUNT	(1<<0)
-> -
-> -struct memory_isolate_notify {
-> -	unsigned long start_pfn;	/* Start of range to check */
-> -	unsigned int nr_pages;		/* # pages in range to check */
-> -	unsigned int pages_found;	/* # pages owned found by callbacks */
-> -};
-> -
->  struct notifier_block;
->  struct mem_section;
->  
-> @@ -94,27 +81,13 @@ static inline int memory_notify(unsigned long val, void *v)
->  {
->  	return 0;
->  }
-> -static inline int register_memory_isolate_notifier(struct notifier_block *nb)
-> -{
-> -	return 0;
-> -}
-> -static inline void unregister_memory_isolate_notifier(struct notifier_block *nb)
-> -{
-> -}
-> -static inline int memory_isolate_notify(unsigned long val, void *v)
-> -{
-> -	return 0;
-> -}
->  #else
->  extern int register_memory_notifier(struct notifier_block *nb);
->  extern void unregister_memory_notifier(struct notifier_block *nb);
-> -extern int register_memory_isolate_notifier(struct notifier_block *nb);
-> -extern void unregister_memory_isolate_notifier(struct notifier_block *nb);
->  int create_memory_block_devices(unsigned long start, unsigned long size);
->  void remove_memory_block_devices(unsigned long start, unsigned long size);
->  extern void memory_dev_init(void);
->  extern int memory_notify(unsigned long val, void *v);
-> -extern int memory_isolate_notify(unsigned long val, void *v);
->  extern struct memory_block *find_memory_block(struct mem_section *);
->  typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void *);
->  extern int walk_memory_blocks(unsigned long start, unsigned long size,
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index 04ee1663cdbe..21af88b718aa 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -18,9 +18,7 @@
->  static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags)
->  {
->  	struct zone *zone;
-> -	unsigned long flags, pfn;
-> -	struct memory_isolate_notify arg;
-> -	int notifier_ret;
-> +	unsigned long flags;
->  	int ret = -EBUSY;
->  
->  	zone = page_zone(page);
-> @@ -35,41 +33,11 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
->  	if (is_migrate_isolate_page(page))
->  		goto out;
->  
-> -	pfn = page_to_pfn(page);
-> -	arg.start_pfn = pfn;
-> -	arg.nr_pages = pageblock_nr_pages;
-> -	arg.pages_found = 0;
-> -
-> -	/*
-> -	 * It may be possible to isolate a pageblock even if the
-> -	 * migratetype is not MIGRATE_MOVABLE. The memory isolation
-> -	 * notifier chain is used by balloon drivers to return the
-> -	 * number of pages in a range that are held by the balloon
-> -	 * driver to shrink memory. If all the pages are accounted for
-> -	 * by balloons, are free, or on the LRU, isolation can continue.
-> -	 * Later, for example, when memory hotplug notifier runs, these
-> -	 * pages reported as "can be isolated" should be isolated(freed)
-> -	 * by the balloon driver through the memory notifier chain.
-> -	 */
-> -	notifier_ret = memory_isolate_notify(MEM_ISOLATE_COUNT, &arg);
-> -	notifier_ret = notifier_to_errno(notifier_ret);
-> -	if (notifier_ret)
-> -		goto out;
->  	/*
->  	 * FIXME: Now, memory hotplug doesn't call shrink_slab() by itself.
->  	 * We just check MOVABLE pages.
->  	 */
-> -	if (!has_unmovable_pages(zone, page, arg.pages_found, migratetype,
-> -				 isol_flags))
-> -		ret = 0;
-> -
-> -	/*
-> -	 * immobile means "not-on-lru" pages. If immobile is larger than
-> -	 * removable-by-driver pages reported by notifier, we'll fail.
-> -	 */
-> -
-> -out:
-> -	if (!ret) {
-> +	if (!has_unmovable_pages(zone, page, 0, migratetype, isol_flags)) {
->  		unsigned long nr_pages;
->  		int mt = get_pageblock_migratetype(page);
->  
-> @@ -79,8 +47,10 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
->  									NULL);
->  
->  		__mod_zone_freepage_state(zone, -nr_pages, mt);
-> +		ret = 0;
->  	}
->  
-> +out:
->  	spin_unlock_irqrestore(&zone->lock, flags);
->  	if (!ret)
->  		drain_all_pages(zone);
-> -- 
-> 2.21.0
-
--- 
-Michal Hocko
-SUSE Labs
+-Saravana
