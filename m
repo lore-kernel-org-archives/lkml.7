@@ -2,104 +2,207 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A10C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD69AC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7546206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:24:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="XzKnS/Zl"
+	by mail.kernel.org (Postfix) with ESMTP id A8DCF206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfKNLYy (ORCPT
+        id S1726409AbfKNL04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:24:54 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34744 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfKNLYy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:24:54 -0500
-Received: by mail-wm1-f68.google.com with SMTP id j18so7223350wmk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 03:24:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=M7cm+fLydaE7vlZimi8Trm6gsX1LXO9Kv4DMDE9E2a4=;
-        b=XzKnS/ZlZ5mnyKPhJ3ZRsgZJx3bd8m1dDrS+3vnADo8LkOTj6Jfli87r/jpkrWImiy
-         qHL7W8hjCSvkga9PfWzIiAkzyp+GYg7D8sNx0XQZ7t1ML8LBHgHJrqaAUzVUBJyPgPmK
-         ZPvaGTf0MFtGFQV5goJuoMcGPTH3vdvCuJDhnwZtEZYvDPNkhg007wZBwD2LnFQhmxXJ
-         LDPAwl+zigBI7PfJG144K2G+qK2r+LAdR/RDGdxVwKcDzGR8SqbeBNuvjYDx1C9PCHYs
-         k4S5iycZfMLoUShDmPEku3NSkyRZvOutMMBUXVnY2cYmywj0HJxbVh/+gbsSfNpsLBvE
-         Ji1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=M7cm+fLydaE7vlZimi8Trm6gsX1LXO9Kv4DMDE9E2a4=;
-        b=POUl2KGC3otJ0at94GpW4gKH1SrXju2FiVv/+EjxHUcvez+p8w5vXnIxmPMesubg9x
-         S+uwmI+BF+0SbdHM+uePrUBY0Wg7BIta9FN9IZWkQdyU0ZU040Pq7XkEk1Lp67tl9qhI
-         PNXgugyU0E85iTpzSDquGCIHKGCKqwJK3XJKVCBxvZvfB/PgsApvEhD0AFjqXTz6RZcw
-         XT+H2vDM6zI0TWydc0Hiw2x2fpnUXqirp8eRAzb4g4UAOa8gcFJYpu+Cw88dHT6+h6Bs
-         T0r7rXDGIBS48P2BU32tPQ3kuWYEXYRGkpU+6Zxmi27qORvIdlrI8lO7awwzo/kP4bIH
-         j/LQ==
-X-Gm-Message-State: APjAAAVtgb+1A3nUKiWgzIWUwM2L3sJ6/tTcZpdAsgxQM1rrwEYdi/1U
-        UqNVq9x3aX6AUtFMX7wkIYXi3tt88n6gXg==
-X-Google-Smtp-Source: APXvYqwkHaDLIrBB2ahBogSdVlv0JY5yaRiYNBcNunBMV00UbkQodqHpIzZqO/WQFF/MWnMIYUX27A==
-X-Received: by 2002:a05:600c:cb:: with SMTP id u11mr7280243wmm.5.1573730691206;
-        Thu, 14 Nov 2019 03:24:51 -0800 (PST)
-Received: from [10.32.51.158] ([185.149.63.251])
-        by smtp.gmail.com with ESMTPSA id b1sm6346761wrs.74.2019.11.14.03.24.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 03:24:50 -0800 (PST)
-Subject: Re: [PATCH v16 04/19] leds: multicolor: Introduce a multicolor class
- definition
-To:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191104123707.31930-1-dmurphy@ti.com>
- <20191104123707.31930-5-dmurphy@ti.com>
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-Message-ID: <a7f18f3b-c1fb-3810-8d9b-30ecdada96ff@flowbird.group>
-Date:   Thu, 14 Nov 2019 12:24:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 14 Nov 2019 06:26:56 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43652 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725977AbfKNL0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 06:26:55 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 44CA1140E50BECD4D86A;
+        Thu, 14 Nov 2019 19:26:52 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 19:26:44 +0800
+Date:   Thu, 14 Nov 2019 11:26:37 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Tao Xu <tao3.xu@intel.com>, Linux MM <linux-mm@kvack.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, "Keith Busch" <keith.busch@intel.com>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linuxarm <linuxarm@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
+Message-ID: <20191114112504.00005b61@huawei.com>
+In-Reply-To: <CAPcyv4g5xUBp871+T26+se8WH9154g7V81qsToYAbXAALMuhKQ@mail.gmail.com>
+References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+        <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
+        <CAPcyv4jZG-5s6NsS-_-oNG45y0Qb1mVD_s8cCGqLYtzvHqEo+Q@mail.gmail.com>
+        <20191113094742.00000dc4@huawei.com>
+        <77b6a6e8-9d44-1e1c-3bf0-a8d04833598d@intel.com>
+        <20191113174845.000009d3@huawei.com>
+        <CAPcyv4g5xUBp871+T26+se8WH9154g7V81qsToYAbXAALMuhKQ@mail.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20191104123707.31930-5-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Content-Language: fr
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 13 Nov 2019 15:20:01 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> On Wed, Nov 13, 2019 at 9:49 AM Jonathan Cameron
+> <jonathan.cameron@huawei.com> wrote:
+> >
+> > On Wed, 13 Nov 2019 21:57:24 +0800
+> > Tao Xu <tao3.xu@intel.com> wrote:
+> >  
+> > > On 11/13/2019 5:47 PM, Jonathan Cameron wrote:  
+> > > > On Tue, 12 Nov 2019 09:55:17 -0800
+> > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >  
+> > > >> [ add Tao Xu ]
+> > > >>
+> > > >> On Fri, Oct 4, 2019 at 4:45 AM Jonathan Cameron
+> > > >> <Jonathan.Cameron@huawei.com> wrote:  
+> > > >>>
+> > > >>> Generic Initiators are a new ACPI concept that allows for the
+> > > >>> description of proximity domains that contain a device which
+> > > >>> performs memory access (such as a network card) but neither
+> > > >>> host CPU nor Memory.
+> > > >>>
+> > > >>> This patch has the parsing code and provides the infrastructure
+> > > >>> for an architecture to associate these new domains with their
+> > > >>> nearest memory processing node.  
+> > > >>
+> > > >> Thanks for this Jonathan. May I ask how this was tested? Tao has been
+> > > >> working on qemu support for HMAT [1]. I have not checked if it already
+> > > >> supports generic initiator entries, but it would be helpful to include
+> > > >> an example of how the kernel sees these configurations in practice.
+> > > >>
+> > > >> [1]: http://patchwork.ozlabs.org/cover/1096737/  
+> > > >
+> > > > Tested against qemu with SRAT and SLIT table overrides from an
+> > > > initrd to actually create the node and give it distances
+> > > > (those all turn up correctly in the normal places).  DSDT override
+> > > > used to move an emulated network card into the GI numa node.  That
+> > > > currently requires the PCI patch referred to in the cover letter.
+> > > > On arm64 tested both on qemu and real hardware (overrides on tables
+> > > > even for real hardware as I can't persuade our BIOS team to implement
+> > > > Generic Initiators until an OS is actually using them.)
+> > > >
+> > > > Main real requirement is memory allocations then occur from one of
+> > > > the nodes at the minimal distance when you are do a devm_ allocation
+> > > > from a device assigned. Also need to be able to query the distances
+> > > > to allow load balancing etc.  All that works as expected.
+> > > >
+> > > > It only has a fairly tangential connection to HMAT in that HMAT
+> > > > can provide information on GI nodes.  Given HMAT code is quite happy
+> > > > with memoryless nodes anyway it should work.  QEMU doesn't currently
+> > > > have support to create GI SRAT entries let alone HMAT using them.
+> > > >
+> > > > Whilst I could look at adding such support to QEMU, it's not
+> > > > exactly high priority to emulate something we can test easily
+> > > > by overriding the tables before the kernel reads them.
+> > > >
+> > > > I'll look at how hard it is to build an HMAT tables for my test
+> > > > configs based on the ones I used to test your HMAT patches a while
+> > > > back.  Should be easy if tedious.
+> > > >
+> > > > Jonathan
+> > > >  
+> > > Indeed, HMAT can support Generic Initiator, but as far as I know, QEMU
+> > > only can emulate a node with cpu and memory, or memory-only. Even if we
+> > > assign a node with cpu only, qemu will raise error. Considering
+> > > compatibility, there are lots of work to do for QEMU if we change NUMA
+> > > or SRAT table.
+> > >  
+> >
+> > I faked up a quick HMAT table.
+> >
+> > Used a configuration with 3x CPU and memory nodes, 1x memory only node
+> > and 1x GI node.  Two test cases, one where the GI initiator is further than
+> > the CPU containing nodes from the memory only node (realistic case for
+> > existing hardware). That behaves as expected and there are no
+> > /sys/node/bus/nodeX/access0 entries for the GI node
+> > + appropriate ones for the memory only node as normal.
+> >
+> > The other case is more interesting we have the memory only node nearer
+> > to the GI node than to any of the CPUs.  In that case for x86 at least
+> > the HMAT code is happy to put an access0 directory GI in the GI node
+> > with empty access0/initiators and the memory node under access0/targets
+> >
+> > The memory only node is node4 and the GI node node3.
+> >
+> > So relevant dirs under /sys/bus/nodes/devices
+> >
+> > node3/access0/initators/ Empty
+> > node3/access0/targets/node4  
+> 
+> This makes sense node3 is an initiator, no other nodes can initiate to it.
+> 
+> > node4/access0/initators/[node3 read_bandwidth write_bandwith etc]
+> > node4/access0/targets/ Empty
+> >
+> > So the result current (I think - the HMAT interface still confuses
+> > me :) is that a GI node is treated like a CPU node.  This might mean
+> > there is no useful information available if you want to figure out
+> > which CPU containing node is nearest to Memory when the GI node is
+> > nearer still.
+> >
+> > Is this a problem?  I'm not sure...
+> >
+> > If we don't want to include GI nodes then we can possibly
+> > use the node_state(N_CPU, x) method to check before considering
+> > them, or I guess parse SRAT to extract that info directly.
+> >
+> > I tried this and it seems to work so can add patch doing this
+> > next version if we think this is the 'right' thing to do.
+> >
+> > So what do you think 'should' happen?  
+> 
+> I think this might be our first case for adding an "access1" instance
+> by default. I.e. in the case when access0 is not a cpu, then access1
+> is there to at least show the "local" cpu and let userspace see the
+> performance difference of cpu vs a specific-initiator access.
+
+
 Hi Dan,
 
-On 04/11/2019 13:36, Dan Murphy wrote:
-> +int devm_led_classdev_multicolor_register_ext(struct device *parent,
-> +					     struct led_classdev_mc *mcled_cdev,
-> +					      struct led_init_data *init_data)
-> +{
-> +	struct led_classdev_mc **dr;
-> +	int ret;
-> +
-> +	dr = devres_alloc(devm_led_classdev_multicolor_release,
-> +			  sizeof(*dr), GFP_KERNEL);
-> +	if (!dr)
-> +		return -ENOMEM;
-> +
-> +	ret = led_classdev_multicolor_register(parent, mcled_cdev);
+Agreed that it makes sense to expand how we describe these cases a bit.
+To make sure I've understood correctly let me paraphrase what you
+are proposing (and tweak it a bit ;)
 
+Assuming for this purpose we don't put GIs in CPU nodes as that makes
+for really fiddly explanation. In reality the code will need to handle
+that.
 
-This drops init_data, should be led_classdev_multicolor_register_ex
+1) Leave access0 as it currently is with this series - so continue to
+   not distinguish between CPU nodes and Generic Initator containing ones?
+2) Add access 1 which is effectively access0 ignoring Generic Initiators?
 
+My feeling is that any existing users of access0 are definitely not going
+to be expecting generic initiators, so we might want to do this the other
+way around. access0 is only CPUs and memory, access1 is including
+generic initiators.  If there are no GIs don't expose access1 at all?
 
-Regards,
+For now we could simply block the GI visibility in access0 and deal
+with access1 as a separate series.  I suspect we will get push back
+as there are no known users of our new access1 so it may take a while
+to prove utility and get it accepted.
 
-Martin
+Thanks,
+
+Jonathan
 
