@@ -2,266 +2,118 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AC7C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDB5C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA162070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:37:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vx7gNwBI"
+	by mail.kernel.org (Postfix) with ESMTP id 72BAA20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfKNOhs (ORCPT
+        id S1726592AbfKNOkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:37:48 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:45940 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfKNOhr (ORCPT
+        Thu, 14 Nov 2019 09:40:33 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:59432 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726263AbfKNOkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:37:47 -0500
-Received: by mail-yw1-f65.google.com with SMTP id j137so1897889ywa.12;
-        Thu, 14 Nov 2019 06:37:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=adlNbWJT++8x84LHedpmwcETz3O3BWzq6McgCf8yRb0=;
-        b=Vx7gNwBI7WuKupMBhpYwqln09RBXdzMPiAFHsF6GxBaQpcu64ynUiidGBXYwCIF8Bu
-         i+4x6jRaUAzC2CzLr5BHxqy1sKNP+vX8moutVUeHFzzDZL/n5/UETtW4ml4wz2PqNBhn
-         u7upv8UWpRsKwdHqPamKYCSZHekVim2XAe1mLwmkB1EBEcteDis8+J0TFyOlLEnIxulX
-         M5z145L3qCAXbnaNdHN5n1HU5AyQ4nZA9R285KVWxx7c2IY0gCEVPOBAWYD33UBRfOO0
-         c7b4nFkdEQDG3AF/81eejYFfoPCKV8n4ULnb6Oz1kK6e+CbUurG2Gm0KbRFeI4EvdldU
-         v9Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=adlNbWJT++8x84LHedpmwcETz3O3BWzq6McgCf8yRb0=;
-        b=KtxDFwpsjCB4rLRzLHCr5s+c6Y1lRBKQp/OGPDHV2Ybem2H2CHZgb30ypQEqvfazAT
-         aNqGPjrcrHn9Y0SW9/inzLosRhl+Z2ksbioT0qQGpQDccOF8gVpW5yX51/xE0o1df1gF
-         yaMkIeqRznY0tSewGvOadZ9u25kVz+MGdX5Q2DcJOvj7Jiujdu2uesbe3Qj0xdlYD8ho
-         5DGiJTEYoCEg5TqsYVVN25m4XaX5NHiV6k3/VY1yUY0gBOvu7n7GfBKWF8ZzgkFke92X
-         7E9UWaACkKAEChkuDCrFjBzLtDbkJ3V1c0tkopfO/G8qpR9jJh5un8lTvgbM3sj58mIr
-         PqrA==
-X-Gm-Message-State: APjAAAUepPbAePdHub+wbvau4p6oJqkwyTEJhktliJd4rYzfTc/qJ1tC
-        ofzcay7yW5anhMUwRY64+bWok0rEL4KV9Ujt1EemMnrE
-X-Google-Smtp-Source: APXvYqypGwJizPbAtIFNtfF9F16+gEKUX1tqhtofapxN8DOGmK+1PIfkktOsNhpPshlC7JgJWq7zZoio52tUJWYfh+4=
-X-Received: by 2002:a0d:f305:: with SMTP id c5mr5905050ywf.31.1573742266309;
- Thu, 14 Nov 2019 06:37:46 -0800 (PST)
+        Thu, 14 Nov 2019 09:40:33 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Ti3zzN0_1573742422;
+Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Ti3zzN0_1573742422)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 14 Nov 2019 22:40:23 +0800
+Subject: Re: [PATCH] mm/vmalloc: Fix regression caused by needless
+ vmalloc_sync_all()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20191113095530.228959-1-shile.zhang@linux.alibaba.com>
+ <20191114135641.GA1356@dhcp22.suse.cz>
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+Message-ID: <83a39694-373b-da16-3be1-22108ace0107@linux.alibaba.com>
+Date:   Thu, 14 Nov 2019 22:40:22 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191107104957.306383-1-colin.king@canonical.com>
- <CAJfpegtr_xg_VG2npTfaxC+vD7B8bKa_0n9pu5vyfU-XQ9oV9Q@mail.gmail.com>
- <CAOQ4uxhnpeyK6xW-c5NOQZ_h1uhAOUn_BbVVVYhUgZ74KSKDKQ@mail.gmail.com> <CAJfpegu7egxf=BVyVQKKW_icjMbjdLcLdd1FEw5hXLvDaiLNVQ@mail.gmail.com>
-In-Reply-To: <CAJfpegu7egxf=BVyVQKKW_icjMbjdLcLdd1FEw5hXLvDaiLNVQ@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 14 Nov 2019 16:37:35 +0200
-Message-ID: <CAOQ4uxh8n-QW+zTe3Y56suyaQf8Tcascj337AbMmKF7jf9=sjw@mail.gmail.com>
-Subject: Re: [PATCH][V2] ovl: fix lookup failure on multi lower squashfs
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Colin King <colin.king@canonical.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191114135641.GA1356@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 4:12 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+
+
+On 2019/11/14 21:56, Michal Hocko wrote:
+> On Wed 13-11-19 17:55:30, Shile Zhang wrote:
+>> vmalloc_sync_all() was put in the common path in
+>> __purge_vmap_area_lazy(), for one sync issue only happened on X86_32
+>> with PTI enabled. It is needless for X86_64, which caused a big regression
+>> in UnixBench Shell8 testing on X86_64.
+>> Similar regression also reported by 0-day kernel test robot in reaim
+>> benchmarking:
+>> https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/4D3JPPHBNOSPFK2KEPC6KGKS6J25AIDB/
+>>
+>> Fix it by adding more conditions.
+> This doesn't really explain a lot. Could you explain why the syncing
+> should be limited only to PAE and !SHARED_KERNEL_PMD?
+
+Thanks for your review!
+Sorry for that, I'm not clear about the original issue the patch
+3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()")
+fixed.
+
+I just get that limitation info from the commit log as following:
+"
+This is only needed x86-32 with !SHARED_KERNEL_PMD, which is the case on 
+a PAE kernel with PTI enabled. On affected systems the missing sync 
+causes old mappings to persist in some page-tables, causing data 
+corruption and other undefined behavior.
+"
+https://patchwork.kernel.org/cover/11050511/
+
+Hi, Joerg
+Could you please help to recall the original issue you encountered before?
+Thanks!
+
 >
-> On Wed, Nov 13, 2019 at 5:34 PM Amir Goldstein <amir73il@gmail.com> wrote:
-> >
-> > On Wed, Nov 13, 2019 at 6:02 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > >
-> > > On Thu, Nov 7, 2019 at 11:50 AM Colin King <colin.king@canonical.com> wrote:
-> > > >
-> > > > From: Colin Ian King <colin.king@canonical.com>
-> > > >
-> > > > In the past, overlayfs required that lower fs have non null uuid in
-> > > > order to support nfs export and decode copy up origin file handles.
-> > > >
-> > > > Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
-> > > > lower fs") relaxed this requirement for nfs export support, as long
-> > > > as uuid (even if null) is unique among all lower fs.
-> > > >
-> > > > However, said commit unintentionally also relaxed the non null uuid
-> > > > requirement for decoding copy up origin file handles, regardless of
-> > > > the unique uuid requirement.
-> > > >
-> > > > Amend this mistake by disabling decoding of copy up origin file handle
-> > > > from lower fs with a conflicting uuid.
-> > > >
-> > > > We still encode copy up origin file handles from those fs, because
-> > > > file handles like those already exist in the wild and because they
-> > > > might provide useful information in the future.
-> > > >
-> > > > Reported-by: Colin Ian King <colin.king@canonical.com>
-> > > > Link: https://lore.kernel.org/lkml/20191106234301.283006-1-colin.king@canonical.com/
-> > > > Fixes: 9df085f3c9a2 ("ovl: relax requirement for non null uuid ...")
-> > > > Cc: stable@vger.kernel.org # v4.20+
-> > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > > > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > > > ---
-> > > >  fs/overlayfs/namei.c     |  8 ++++++++
-> > > >  fs/overlayfs/ovl_entry.h |  2 ++
-> > > >  fs/overlayfs/super.c     | 16 ++++++++++------
-> > > >  3 files changed, 20 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-> > > > index e9717c2f7d45..f47c591402d7 100644
-> > > > --- a/fs/overlayfs/namei.c
-> > > > +++ b/fs/overlayfs/namei.c
-> > > > @@ -325,6 +325,14 @@ int ovl_check_origin_fh(struct ovl_fs *ofs, struct ovl_fh *fh, bool connected,
-> > > >         int i;
-> > > >
-> > > >         for (i = 0; i < ofs->numlower; i++) {
-> > > > +               /*
-> > > > +                * If lower fs uuid is not unique among lower fs we cannot match
-> > > > +                * fh->uuid to layer.
-> > > > +                */
-> > > > +               if (ofs->lower_layers[i].fsid &&
-> > > > +                   ofs->lower_layers[i].fs->bad_uuid)
-> > > > +                       continue;
-> > > > +
-> > > >                 origin = ovl_decode_real_fh(fh, ofs->lower_layers[i].mnt,
-> > > >                                             connected);
-> > > >                 if (origin)
-> > > > diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
-> > > > index a8279280e88d..28348c44ea5b 100644
-> > > > --- a/fs/overlayfs/ovl_entry.h
-> > > > +++ b/fs/overlayfs/ovl_entry.h
-> > > > @@ -22,6 +22,8 @@ struct ovl_config {
-> > > >  struct ovl_sb {
-> > > >         struct super_block *sb;
-> > > >         dev_t pseudo_dev;
-> > > > +       /* Unusable (conflicting) uuid */
-> > > > +       bool bad_uuid;
-> > > >  };
-> > > >
-> > > >  struct ovl_layer {
-> > > > diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-> > > > index afbcb116a7f1..5d4faab57ba0 100644
-> > > > --- a/fs/overlayfs/super.c
-> > > > +++ b/fs/overlayfs/super.c
-> > > > @@ -1255,17 +1255,18 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
-> > > >  {
-> > > >         unsigned int i;
-> > > >
-> > > > -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
-> > > > -               return true;
-> > > > -
-> >
-> > Colin, I mislead you, this should be (I think):
-> >
-> >        if (!ofs->config.nfs_export && !ofs->upper_mnt)
-> >                return true;
-> >
-> > > >         for (i = 0; i < ofs->numlowerfs; i++) {
-> > > >                 /*
-> > > >                  * We use uuid to associate an overlay lower file handle with a
-> > > >                  * lower layer, so we can accept lower fs with null uuid as long
-> > > >                  * as all lower layers with null uuid are on the same fs.
-> > > > +                * if we detect multiple lower fs with the same uuid, we
-> > > > +                * disable lower file handle decoding on all of them.
-> > > >                  */
-> > > > -               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid))
-> > > > +               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid)) {
-> > > > +                       ofs->lower_fs[i].bad_uuid = true;
-> > > >                         return false;
-> > > > +               }
-> > > >         }
-> > > >         return true;
-> > > >  }
-> > > > @@ -1277,6 +1278,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
-> > > >         unsigned int i;
-> > > >         dev_t dev;
-> > > >         int err;
-> > > > +       bool bad_uuid = false;
-> > > >
-> > > >         /* fsid 0 is reserved for upper fs even with non upper overlay */
-> > > >         if (ofs->upper_mnt && ofs->upper_mnt->mnt_sb == sb)
-> > > > @@ -1287,10 +1289,11 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
-> > > >                         return i + 1;
-> > > >         }
-> > > >
-> > > > -       if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
-> > > > +       if (ofs->upper_mnt && !ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
-> > >
-> > > This seems bogus: why only check conflicting lower layers if there's
-> > > an upper layer?
-> >
-> > It is bogus - it was my (wrong) suggestion.
-> > The thinking was that we only decode origin fh if we have an upper layer
-> > and index only valid with upper layer.
-> > I forgot the case of nfs_export and lower-only setup.
-> > Suggested fix above.
-> >
-> > >
-> > > > +               bad_uuid = true;
-> > > >                 ofs->config.index = false;
-> > > >                 ofs->config.nfs_export = false;
-> > > > -               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', falling back to index=off,nfs_export=off.\n",
-> > > > +               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', enforcing index=off,nfs_export=off.\n",
-> > >
-> > > And this while this makes sense, it doesn't really fit into this patch
-> > > (no change of behavior regarding how index and nfs_export are
-> > > handled).
-> > >
-> >
-> > Again, this was my (not wrong?) suggestion.
-> > What this patch changes is that ovl_lower_uuid_ok() can now return false
-> > and we get to this print although user did not ask for index nor nfs_export.
-> > So the "falling back" language no longer makes sense.
->
-> But does "enforcing" makes sense in this light?  That's not what the
-> detected bad_uuid condition is about, it's about failing to utilize
-> origin markings to make inode numbers persistent for filesystems that
-> have null uuid.   Is that correct?
+>> Fixes: 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()")
+>>
+>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+>> ---
+>>   mm/vmalloc.c | 8 +++++++-
+>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+>> index a3c70e275f4e..7b9fc7966da6 100644
+>> --- a/mm/vmalloc.c
+>> +++ b/mm/vmalloc.c
+>> @@ -1255,11 +1255,17 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
+>>   	if (unlikely(valist == NULL))
+>>   		return false;
+>>   
+>> +#if defined(CONFIG_X86_32) && defined(CONFIG_X86_PAE)
+>>   	/*
+>>   	 * First make sure the mappings are removed from all page-tables
+>>   	 * before they are freed.
+>> +	 *
+>> +	 * This is only needed on x86-32 with !SHARED_KERNEL_PMD, which is
+>> +	 * the case on a PAE kernel with PTI enabled.
+>>   	 */
+>> -	vmalloc_sync_all();
+>> +	if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
+>> +		vmalloc_sync_all();
+>> +#endif
+>>   
+>>   	/*
+>>   	 * TODO: to calculate a flush range without looping.
+>> -- 
+>> 2.24.0.rc2
+>>
 
-That is not exactly how I would describe bad_uuid.
-ovl_lower_uuid_ok() had already existed for a while
-it was requires for decoding lower file handles, which is
-a requirement of both index and nfs_export.
-
-What Colin has now reported brings to light the fact that
-decoding lower file handles was also required for making inode
-numbers persistent.
-
-So the bad_uuid condition is required for all of the above, not
-just for decoding origin.
-
-> Can we do a message that makes
-> that somewhat more clearer?
->
-
-What about the logs:
-
-                pr_warn("overlayfs: upper fs does not support xattr,
-falling back to index=off and metacopy=off.\n");
-                pr_warn("overlayfs: upper fs does not support file
-handles, falling back to index=off.\n");
-                pr_warn("overlayfs: fs on '%s' does not support file
-handles, falling back to index=off,nfs_export=off.\n",
-
-Should we also change them to reflect the fact the decoding origin
-is not supported???
-
-Seems like a lot of hassle that will end up writing too much information
-that most people won't understand.
-
-IIRC, we also do not guaranty persistent inode numbers for hardlinks
-when index=off.
-
-As for the change in question (falling back => enforcing), if that bothers you,
-we can get rid of this change by testing emitting the print only if
-(ofs->config.nfs_export || ofs->config.index).
-
-Thanks,
-Amir.
