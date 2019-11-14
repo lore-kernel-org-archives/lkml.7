@@ -2,145 +2,160 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49D8C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6699BC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914102070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4003E20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="OZAvCUki"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K29jaKnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfKNOMi (ORCPT
+        id S1727315AbfKNONL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:12:38 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36130 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727237AbfKNOMi (ORCPT
+        Thu, 14 Nov 2019 09:13:11 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38024 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfKNONK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:12:38 -0500
-Received: by mail-lf1-f68.google.com with SMTP id x22so1037315lfa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 06:12:36 -0800 (PST)
+        Thu, 14 Nov 2019 09:13:10 -0500
+Received: by mail-io1-f67.google.com with SMTP id i13so6935263ioj.5;
+        Thu, 14 Nov 2019 06:13:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EmOEKPkWsDxJa2wDMuLQCZmoxOFNjV+aIVNikHtlQFg=;
-        b=OZAvCUkinGNJMi0yfM5j380tLkdf3Nvf9dXfwD53dRIWfqgy9w1GQ5ZtYSasJ7qEZq
-         HTE+5qbBejQYkgBWdCQhKLgoL+7O2wunQlgX+mJaWL7AN8ebe+2tv2ORKqj4ibYB3Hmg
-         Qrnc1CNXFv/7qAPW/KW95kqh2eZ/cUaSZZUzM=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+bvehVeToXZCo5bglAX9Z1OrRDcw161vH12UI5GchVE=;
+        b=K29jaKnEQ+NoQtdC2HC5c8oonD4CixMQACAsm/h3DH5wYYiIpr17gec7SAvgLd4vNc
+         fE4NxsGdgVP5/6XbEtBQM8wkrbirxQLezn3uHx4sR7Baeplhnu4+/Sw7plysl+gGgiwa
+         S7JEA5+TdD7N2joMs41SsJkoNSnKCaXm596eHygtt2iMSHu2B8g5/hlm33gr2GEoOQjF
+         8wRTcBcNHvNRzkkAtw8yuTrOxE/uymZQFIlwXA9aZPGqf9hZCqqlaVCS/6n/8WPD8Q/h
+         Iz7J1qldSN3LlmEFl4ZaDIgQW3onoV9t+HJ9WQbnqazjhe0SncdWjO5YUhbgJnv41Fbi
+         Bl5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EmOEKPkWsDxJa2wDMuLQCZmoxOFNjV+aIVNikHtlQFg=;
-        b=ZpwlP5OgP93pTefiDExBhjZElRz3gUg+Yf9mn2MnWncsw7s34uE/XpxqT1qy1CsLR2
-         9Eebv1p8iILbu7sK4VtUDyDr9PfTXhulIC/0NOi959dJAT+qPvQdMjNUQTzo+GoAPiqc
-         ZVF/mUAHKxu8szMYAH7ZX52SE1KZaxbMFMPmerScIxKEnw0bRmMboX58e6YRuMwF3pNU
-         heAT7OTnWreIHeao2nBFhuj6mwwNmJfJ0eygtJ5aG7KdDU6a2UjOcMvgvcxkvcYEpVGy
-         +VtRmAPzqFfmaRfUfpy3Ab/MIk5PP+sAjML2jX/Dmek+wpYLKeyQXcv6tl512nDDsvC2
-         SVQg==
-X-Gm-Message-State: APjAAAUxF8QHJ9ifA9YtSZzUpNPfK9JCdNRhNdxSxrMidrWM/JJ+jBOD
-        TbmBLF0LhqqpgrJB34NLSoqV5A==
-X-Google-Smtp-Source: APXvYqwxuf2Qn4SVRaNeTz1TqaUUZWOYLdFBOkRFoPorfnqZB0bn32yxhdQM6hE0Q3CW2gfKsMGZUQ==
-X-Received: by 2002:ac2:4c2b:: with SMTP id u11mr6961692lfq.171.1573740755398;
-        Thu, 14 Nov 2019 06:12:35 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id g21sm2437151ljh.2.2019.11.14.06.12.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 06:12:34 -0800 (PST)
-Subject: Re: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio)
- POLL
-To:     Jann Horn <jannh@google.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
- <58246851-fa45-a72d-2c42-7e56461ec04e@kernel.dk>
- <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
- <CAG48ez3dpphoQGy8G1-QgZpkMBA2oDjNcttQKJtw5pD62QYwhw@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <ea7a428d-a5bd-b48e-9680-82a26710ec83@rasmusvillemoes.dk>
-Date:   Thu, 14 Nov 2019 15:12:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+bvehVeToXZCo5bglAX9Z1OrRDcw161vH12UI5GchVE=;
+        b=VxbgWIyNbfEpvUcelQXxbEl9PGeXYe6ke8rQ5T5uIxBveiWOIgEDLR7gVyqJ4AsGTT
+         AGX0gdtB6wyRswGthov18TNSGUN8QwgVXgTvyXISAKjB8Rrt4AfVLcqx7Vh7u/te8n4g
+         RLnGSb5BTI4Txo9qq0wI60dzD43HeP39L4x6cg4Y2ZUqG4cyGjZLm/vnQkKtBbOprfaV
+         YRZxjeqyIb/LBbhUnTfZx3ExG/DF8kt/xKfxcS4PTfCa8kaKb46eMOtA6wYDoDlwV3XC
+         hbMinzLIYcMFRspkPGtFOty54Bfw5bVvIN3iVhpH8r+uUoEkgdJeiF5/D9L1zLYYPwPF
+         9jEw==
+X-Gm-Message-State: APjAAAVhqw7Y+R9qnlyYjE8wMn2ZHvOj3tzUcmNSU98qkqGVSzyYxurC
+        JsVXMVTIcULyyXbPOC6jqb5nnp6YKt2fnm2mDrE=
+X-Google-Smtp-Source: APXvYqxZm+uJFG+bIjZspCWs4mHCbJHP+3zHbcs29fsYqp/290JEK5lCBVQZjd+jy9Ii9yuRh/bC6zOjc9atfg771gI=
+X-Received: by 2002:a02:ac07:: with SMTP id a7mr7892753jao.39.1573740789403;
+ Thu, 14 Nov 2019 06:13:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez3dpphoQGy8G1-QgZpkMBA2oDjNcttQKJtw5pD62QYwhw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191114105736.8636-1-lhenriques@suse.com> <cbda3a69d25b04e10332e7b3898064a93b2d04ae.camel@kernel.org>
+ <alpine.DEB.2.21.1911141326260.17979@piezo.novalocal>
+In-Reply-To: <alpine.DEB.2.21.1911141326260.17979@piezo.novalocal>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Thu, 14 Nov 2019 15:13:37 +0100
+Message-ID: <CAOi1vP9XaeJdqV-jMP3BM=mjHKqJW8-ynAjCi0xcDD3DtL94KQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus OSDs
+To:     Sage Weil <sweil@redhat.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Luis Henriques <lhenriques@suse.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/11/2019 14.46, Jann Horn wrote:
-> On Thu, Nov 14, 2019 at 10:20 AM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->> On 14/11/2019 05.49, Jens Axboe wrote:
->>> On 11/13/19 9:31 PM, Jens Axboe wrote:
->>>> This is a case of "I don't really know what I'm doing, but this works
->>>> for me". Caveat emptor, but I'd love some input on this.
->>>>
->>>> I got a bug report that using the poll command with signalfd doesn't
->>>> work for io_uring. The reporter also noted that it doesn't work with the
->>>> aio poll implementation either. So I took a look at it.
->>>>
->>>> What happens is that the original task issues the poll request, we call
->>>> ->poll() (which ends up with signalfd for this fd), and find that
->>>> nothing is pending. Then we wait, and the poll is passed to async
->>>> context. When the requested signal comes in, that worker is woken up,
->>>> and proceeds to call ->poll() again, and signalfd unsurprisingly finds
->>>> no signals pending, since it's the async worker calling it.
->>>>
->>>> That's obviously no good. The below allows you to pass in the task in
->>>> the poll_table, and it does the right thing for me, signal is delivered
->>>> and the correct mask is checked in signalfd_poll().
->>>>
->>>> Similar patch for aio would be trivial, of course.
->>>
->>> From the probably-less-nasty category, Jann Horn helpfully pointed out
->>> that it'd be easier if signalfd just looked at the task that originally
->>> created the fd instead. That looks like the below, and works equally
->>> well for the test case at hand.
->>
->> Eh, how should that work? If I create a signalfd() and fork(), the
->> child's signalfd should only be concerned with signals sent to the
->> child. Not to mention what happens after the parent dies and the child
->> polls its fd.
->>
->> Or am I completely confused?
-> 
-> I think the child should not be getting signals for the child when
-> it's reading from the parent's signalfd. read() and write() aren't
-> supposed to look at properties of `current`.
+On Thu, Nov 14, 2019 at 2:28 PM Sage Weil <sweil@redhat.com> wrote:
+>
+> On Thu, 14 Nov 2019, Jeff Layton wrote:
+> > On Thu, 2019-11-14 at 10:57 +0000, Luis Henriques wrote:
+> > > Hi!
+> > >
+> > > So, after the feedback I got from v1 [1] I've sent out a pull-request
+> > > for the OSDs [2] which encodes require_osd_release into the OSDMap
+> > > client data.  This allows the client to figure out which ceph release
+> > > the OSDs cluster is running and decide whether or not it's safe to use
+> > > the copy-from Op for copy_file_range.
+> > >
+> > > This new patchset I'm sending simply adds enough functionality to the
+> > > kernel client so that it can take advantage of this OSD patch:
+> > >
+> > > 0001 - adds the ability to decode TYPE_MSGR2 addresses.  This is a
+> > >        required functionality for enabling SERVER_NAUTILUS in the
+> > >        client.  I hope I got the new format right, as I couldn't figure
+> > >        out what the hard-coded values (see comments) really mean.
+> > >
+> >
+> > nit: the first 3 patch subject lines should probably be prefixed with
+> > "libceph:"
+> >
+> > > 0002 - allows the client to retrieve the new require_osd_release field
+> > >        from the OSDMap if available.  This patch also adds SERVER_MIMIC,
+> > >        SERVER_NAUTILUS and SERVER_OCTOPUS to the supported features,
+> > >        which TBH I'm not sure if that's a safe thing to do -- the only
+> > >        issue I've seen was that Nautilus requires the ability to decode
+> > >        TYPE_MSGR2 address, but I may have missed others.
+> > >
+> >
+> > Yes, this needs to be done with care. We have to ensure that the server
+> > side isn't assuming that the client supports something that it doesn't.
+> > I think that means just trawling through the code and verifying whether
+> > this is safe.
+> >
+> > > 0003 - debug code to add require_osd_release to the osdmap debugfs file.
+> > >
+> > > 0004 - adds the truncate_{seq,size} fields to the 'copy-from' operation
+> > >        if the OSDs are >= Octopus.
+> > >
+> > > Also note that, as suggested by Ilya, I've dropped the patch that would
+> > > change the default mount options to 'copyfrom'.
+> > >
+> > > These patches have been tested with the xfstests generic test suite, and
+> > > with a couple of other (local) tests that exercise the cephfs
+> > > copy_file_range syscall.  I didn't saw any issues, but as I said above,
+> > > I'm not really sure if adding the SERVER_* flags to the supported
+> > > features have other side effects.
+> > >
+> > > [1] https://lore.kernel.org/lkml/20191108141555.31176-1-lhenriques@suse.com/
+> > > [2] https://github.com/ceph/ceph/pull/31611
+> > >
+> >
+> > I'm just getting caught up on the discussion here, but why was it
+> > decided to do it this way instead of just adding a new OSD
+> > "copy-from-no-truncseq" operation? Once you tried it once and an OSD
+> > didn't support it, you could just give up on using it any longer? That
+> > seems a lot simpler than trying to monkey with feature bits.
+>
+> I don't remember the original discussion either, but in retrospect that
+> does seem much simpler--especially since hte client is conditioning
+> sending this based on the the require_osd_release.  It seems like passing
+> a flag to the copy-from op would be more reasonable instead of conditional
+> feature-based behavior.
 
-That may be, but this has always been the semantics of signalfd(), quite
-clearly documented in 'man signalfd'.
+Yeah, I suggested adding require_osd_release to the client portion just
+because we are running into it more and more: Objecter relies on it for
+RESEND_ON_SPLIT for example.  It needs to be accessible so that patches
+like that can be carried over to the kernel client without workarounds.
 
-> Of course, if someone does rely on the current (silly) semantics, this
-> might break stuff.
+copy-from in its existing form is another example.  AFAIU the problem
+is that copy-from op doesn't reject unknown flags.  Luis added a flag
+in https://github.com/ceph/ceph/pull/25374, but it is simply ignored on
+nautilus and older releases, potentially leading to data corruption.
 
-That, and Jens' patch only seemed to change the poll callback, so the
-child (or whoever else got a hand on that signalfd) would wait for the
-parent to get a signal, but then a subsequent read would attempt to
-dequeue from the child itself.
+Adding a new op that would be an alias for CEPH_OSD_OP_COPY_FROM with
+CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ like Jeff is suggesting, or a new
+copy-from2 op that would behave just like copy-from, but reject unknown
+flags to avoid similar compatibility issues in the future is probably
+the best thing we can do from the client perspective.
 
-So, I can't really think of anybody that might be relying on inheriting
-a signalfd instead of just setting it up in the child, but changing the
-semantics of it now seems rather dangerous. Also, I _can_ imagine
-threads in a process sharing a signalfd (initial thread sets it up and
-blocks the signals, all threads subsequently use that same fd), and for
-that case it would be wrong for one thread to dequeue signals directed
-at the initial thread. Plus the lifetime problems.
+Thanks,
 
-Rasmus
-
+                Ilya
