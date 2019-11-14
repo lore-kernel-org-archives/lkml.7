@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A99EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6F0C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A6420709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1BF20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vd7dmuaG"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zap2DWwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfKNUQv (ORCPT
+        id S1727507AbfKNUQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:16:51 -0500
+        Thu, 14 Nov 2019 15:16:50 -0500
 Received: from mail-eopbgr730059.outbound.protection.outlook.com ([40.107.73.59]:60877
         "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726632AbfKNUPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:15:44 -0500
+        id S1727185AbfKNUPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 15:15:48 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c7QrABf+pefIas/MdGMfxs1E1C+VTlQrK4KQgeIp+zZz7RvVcJbNNya2YvBThAa3sbeSAp18DPlMc7onkBGfodlQBcusAAkHwwK3YNGGiOF5lzcL2NlT08Fao+H1WWN7yMI86Bg8PuWnMU2RyS2j/SjU26FnBbIVw4wDGv9isymmzd26pm5Sl812lXpbBvzFZ9WCxN9AgnUo393KzzycOYvBYK+D+c/FBP91XbWK3MndaTSGrWVOPuguhBaaZF1QaID/9teKsa302UJBt9qviLgGLimz96ZxNzY7JmOqn+784YfxG189KECI8bNKo7FZ36KBh/ffKONQ54kwcCwE8Q==
+ b=K8Po6JFwoSGPqFuYLXo/Fodb3GPUFrFYlNmgnZj9/aYpK92edeojA5HC/h3NGN0d+KWsD3ZxlJXKDKaZP4iOj9RwDzy/gCW0G/QGKjCRR9ws/jJQqPgxTZ6OIxSLnuAAe7BMfviUxN/RtzqnXhrRQKBlwmNvwpBdsDrm/mRE5FQg1qeFBSFaROenUsvQabzmBCF+rVa/9B2znKs2LTU4BqTdNhtKqZMBjrxGJFBgdi/f0+4FZVeSLQp6eebWHwMtVb9DXvkcsge6SAKeGtlmACEKoyN7t0FAzl+M6nbGHsP0+VzL+MlINUzEGYASS3j2tDB3joOZaSTJABtFQ+HLyA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4AuqmR7REphcdfmlCgLMe+WTCv2hNUzoFWypm5p1MHY=;
- b=PJ88By36zlmrcvl0MpgPrjOtJobu6bo2hN70aQ2kgFqkVmO2tc/yGLPHz/rScujXocq2nlHO7nR+M5pYd1irMHPFM+3JjjGZS6YC7lO6h49cTthfzUvATeBst6q5y2HTpkVJPUogtSrYvKaDXTytBuHAzE+qsTf9aNIACvDSZmG2UwB7IUQNA4AmL0qYxVJW2Bu4ZUJXDP+h6hKcSS1LZ9grAvRJ4PB1GdYUIYBjZEM0MLzaXW6ZtBdzi1FgK4lOHHYsaK5xIzwu1BlOqeiIutRjR5XUCGPzr1Id+1kQIcWlFJv79JMHGYH4dL1EV/AdUdAd40Xh3MF/7whpEN5K+A==
+ bh=71CgcQ3TewjjKfr3f8+9ZcCEmaQBjCjOXiCFS6EZmPE=;
+ b=bDlC/Usy7AxPRI/aGjGxJj+lx2dLukHCqYfYB30Tm31zhfilKj1mi997j/sM19OZBeG+z84/9b73CWzvAZBLriIUf1rZy+AbA0mAvY6AYdD3SYYYOZMvzWZnnYQJmGnKdNMzaSzu9j5yHrXg+byzdGFOeeBdb30dPeYvd92vmMklwQvHB+f0uTNbGGVzA9DpSpxAl7QLQswv5g+SJBysEmO9VsVhdYMWlsgzPRjTpNpZUAE/uB1K+ijdzQPHBOiH5cFSQ7jRCrUt8mCYFLP4R41mr5ifPJXzKiLEonlFbbHP6EilTl67YfH0NvPuw0ZdlkhZVICN7WZkdif9hwYL7g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4AuqmR7REphcdfmlCgLMe+WTCv2hNUzoFWypm5p1MHY=;
- b=vd7dmuaGHMZcq8Yexe81xypdJEuMxqor4opoLBNgvZK6vb/61zHKz3lWvrWfr9+5zGM/ohkbV8K8fh6A43IGu4ZIezyyGnXL92iDuZahMVxf83uLGKlW9PHiNc71i7CAsBnLWil66okPJuSl6RUHdoPZZgBG8taoZsMriSwdjsE=
+ bh=71CgcQ3TewjjKfr3f8+9ZcCEmaQBjCjOXiCFS6EZmPE=;
+ b=zap2DWwKDMKnyqMjdgXqvQ81/3kT844xswS0q5sAfptZOiNUgVjjgsua6ao4cNHO5zxh5YwWajRG1iIOLYmeSBX7xgTcJgy6IFT0pTupalnULVGssH3r+xqIm6+6MWZhlIRLsQYh95bu3VOPXIS6Z+vRZjQ3LUyJiwFdB7XI6ow=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
 Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.173.210) by
  DM6PR12MB3739.namprd12.prod.outlook.com (10.255.172.140) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Thu, 14 Nov 2019 20:15:37 +0000
+ 15.20.2451.23; Thu, 14 Nov 2019 20:15:40 +0000
 Received: from DM6PR12MB3865.namprd12.prod.outlook.com
  ([fe80::4898:93e0:3c0c:d862]) by DM6PR12MB3865.namprd12.prod.outlook.com
  ([fe80::4898:93e0:3c0c:d862%6]) with mapi id 15.20.2451.027; Thu, 14 Nov 2019
- 20:15:37 +0000
+ 20:15:40 +0000
 From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, joro@8bytes.org,
@@ -55,9 +55,9 @@ Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, joro@8bytes.org,
         jschoenh@amazon.de, karahmed@amazon.de, rimasluk@amazon.com,
         jon.grimm@amd.com,
         Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: [PATCH v5 05/18] kvm: x86: Add APICv (de)activate request trace points
-Date:   Thu, 14 Nov 2019 14:15:07 -0600
-Message-Id: <1573762520-80328-6-git-send-email-suravee.suthikulpanit@amd.com>
+Subject: [PATCH v5 07/18] svm: Add support for setup/destroy virutal APIC backing page for AVIC
+Date:   Thu, 14 Nov 2019 14:15:09 -0600
+Message-Id: <1573762520-80328-8-git-send-email-suravee.suthikulpanit@amd.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1573762520-80328-1-git-send-email-suravee.suthikulpanit@amd.com>
 References: <1573762520-80328-1-git-send-email-suravee.suthikulpanit@amd.com>
@@ -70,88 +70,82 @@ X-Mailer: git-send-email 1.8.3.1
 X-Originating-IP: [165.204.78.1]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d490e39c-7727-4048-2fca-08d7693f69b6
+X-MS-Office365-Filtering-Correlation-Id: c53ddb08-f8a2-4ff5-5761-08d7693f6b24
 X-MS-TrafficTypeDiagnostic: DM6PR12MB3739:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB37397148D72EDDCD341E449DF3710@DM6PR12MB3739.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
+X-Microsoft-Antispam-PRVS: <DM6PR12MB37397EF7DC70E1607645C5BBF3710@DM6PR12MB3739.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
 X-Forefront-PRVS: 02213C82F8
 X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(39860400002)(346002)(136003)(189003)(199004)(6506007)(25786009)(86362001)(6512007)(6436002)(8676002)(47776003)(7416002)(66066001)(6486002)(50226002)(4326008)(3846002)(8936002)(4720700003)(81156014)(2906002)(16586007)(7736002)(66556008)(305945005)(66476007)(2616005)(6116002)(66946007)(186003)(316002)(14454004)(486006)(478600001)(99286004)(81166006)(26005)(14444005)(476003)(5660300002)(44832011)(386003)(446003)(52116002)(51416003)(76176011)(50466002)(6666004)(36756003)(11346002)(48376002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3739;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eeo1EEhzoF/lKLUsK75ONdhd7bJC3fvyjuJi6m1gdb+m+uv2X/KybHnDg+J7aBNoEfE0BxOrFljW8VvJdnOUqQKNATsErE0dZUNp0yHET0yg18rpxbEo50XAsbVFqbETSG6S6aJv3HlORe0/ZWaI8DV78DpYTP1ibHPMzTHDJj+IGy8iWbmXuTnrBOw35zlfvIkysac9aROTVx1hJw/I9ObbaKYP0uxiFWGExtnblZomN4EOjn385fF9HlCHiqja59fURj0P6NHdzJOsS4/njJr644aihtenENlGJ/OvVY6n51sRrKO6ZgvyrdTuiDDGbI2Fk6yq6xHoJxb2DsRtjh3WA38xOC6+RqxTgfRm2Py7XdvKlyoKWmFZjMJMzMRx+SgjOMzlf6OL0aGHyLVaxJ5C/Q81szTv297epD6JH40tkd/EdoxQ5Zmw6rcogNAu
+X-Microsoft-Antispam-Message-Info: K+4k7UoJzadGiv3DrxqEzZv0EEAXFdrBsMN0nnkcTO9qMgoyyIAIyIh46cLNlxJrQW4lHEi7wL5D+hUrTYgXNIImZ6w6PcaAMpBE7nN4nqFRD8pvK2h45zSKGOMfjU/fFvyJawMlnymQcEVYnPUg6JgOY52V81V+p+3HOIA8Qz+cS6KjYmLaqBuUS5e4ADZDX/06zRgk8KCDEK17pAP+okRyKsm0qs5UpnO+C9snCH9IFFsT9dUOx25qi+kSwWRToeOselmGoHFzzx+bQGnJgPs981SbjdhZYCWEOlAXzwiVP7jcfr84dL+5NpwZc0dgw1ZEqRp+UivRDHeAQd2L/z/jlwIdl+kk/sBDYhRJUur8t+AubWEKRX1vbLTnCjjmxipxTrQlmBhJgTTxv+1jcYKoszvgQJMKSIE+xF96V9/xmHmLDMKG8hi8ZaVwMV3q
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d490e39c-7727-4048-2fca-08d7693f69b6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2019 20:15:37.6966
+X-MS-Exchange-CrossTenant-Network-Message-Id: c53ddb08-f8a2-4ff5-5761-08d7693f6b24
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2019 20:15:40.1232
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3Ap6a+7QL5EHbSJFu1zOEVybkFTC4FHndb0MkJUmI7IeyHLNXL71uMJXDU9S2an610nK/5BvIvEJBRtvol+9fA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: BJUzNMmLSYIq+T50X+F1t4WbH83dhLYJL7gB0oTvU4YxgyosCkWcWqoNxP/vQWBcJihknRy4PYlDMWI+cltVnw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3739
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add trace points when sending request to (de)activate APICv.
+Re-factor avic_init_access_page() to avic_update_access_page() since
+activate/deactivate AVIC requires setting/unsetting the memory region used
+for virtual APIC backing page (APIC_ACCESS_PAGE_PRIVATE_MEMSLOT).
 
-Suggested-by: Alexander Graf <graf@amazon.com>
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- arch/x86/kvm/trace.h | 19 +++++++++++++++++++
- arch/x86/kvm/x86.c   |  2 ++
- 2 files changed, 21 insertions(+)
+ arch/x86/kvm/svm.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index 7c741a0..f194dd0 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -1291,6 +1291,25 @@
- 		  __entry->vcpu_id, __entry->timer_index)
- );
- 
-+TRACE_EVENT(kvm_apicv_update_request,
-+	    TP_PROTO(bool activate, unsigned long bit),
-+	    TP_ARGS(activate, bit),
-+
-+	TP_STRUCT__entry(
-+		__field(bool, activate)
-+		__field(unsigned long, bit)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->activate = activate;
-+		__entry->bit = bit;
-+	),
-+
-+	TP_printk("%s bit=%lu",
-+		  __entry->activate ? "activate" : "deactivate",
-+		  __entry->bit)
-+);
-+
- /*
-  * Tracepoint for AMD AVIC
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 38401f9..3ffb437 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1673,23 +1673,22 @@ static u64 *avic_get_physical_id_entry(struct kvm_vcpu *vcpu,
+  * field of the VMCB. Therefore, we set up the
+  * APIC_ACCESS_PAGE_PRIVATE_MEMSLOT (4KB) here.
   */
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 03318a2..044c628 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7892,6 +7892,7 @@ void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
- 			return;
- 	}
+-static int avic_init_access_page(struct kvm_vcpu *vcpu)
++static int avic_update_access_page(struct kvm *kvm, bool activate)
+ {
+-	struct kvm *kvm = vcpu->kvm;
+ 	int ret = 0;
  
-+	trace_kvm_apicv_update_request(activate, bit);
- 	kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_UPDATE);
- }
- EXPORT_SYMBOL_GPL(kvm_request_apicv_update);
-@@ -10282,3 +10283,4 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pi_irte_update);
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_unaccelerated_access);
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_incomplete_ipi);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_apicv_update_request);
+ 	mutex_lock(&kvm->slots_lock);
+-	if (kvm->arch.apic_access_page_done)
++	if (kvm->arch.apic_access_page_done == activate)
+ 		goto out;
+ 
+ 	ret = __x86_set_memory_region(kvm,
+ 				      APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
+ 				      APIC_DEFAULT_PHYS_BASE,
+-				      PAGE_SIZE);
++				      activate ? PAGE_SIZE : 0);
+ 	if (ret)
+ 		goto out;
+ 
+-	kvm->arch.apic_access_page_done = true;
++	kvm->arch.apic_access_page_done = activate;
+ out:
+ 	mutex_unlock(&kvm->slots_lock);
+ 	return ret;
+@@ -1702,7 +1701,7 @@ static int avic_init_backing_page(struct kvm_vcpu *vcpu)
+ 	int id = vcpu->vcpu_id;
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 
+-	ret = avic_init_access_page(vcpu);
++	ret = avic_update_access_page(vcpu->kvm, true);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 1.8.3.1
 
