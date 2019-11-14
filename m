@@ -2,81 +2,213 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB22C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE39C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349C5206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573745154;
-	bh=3HN4CJA/3Iu8rHfBrlxotRbLmMG3aBOp/hgOx0NMsVY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tp+T8gpV9kAYKA8StzNmCSIGSD6ThSvDabZCXk2HpIQdfokEGVRtw4zs+ItQH78sY
-	 xLl+0J4uFiPt69b22fMK6wAbUolAXpLL4D6R2O5U2UmJM2NoraNTGgp3zIqX2UJ/ue
-	 05tK3MTMV5C80jhLmkkpo5qLUQMMSkg979F+uRgk=
+	by mail.kernel.org (Postfix) with ESMTP id DFDB3206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="rDovllyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfKNPZx (ORCPT
+        id S1727004AbfKNP1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:25:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfKNPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:25:53 -0500
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1399B206DC;
-        Thu, 14 Nov 2019 15:25:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573745152;
-        bh=3HN4CJA/3Iu8rHfBrlxotRbLmMG3aBOp/hgOx0NMsVY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2SxLeD8A1x7/szpLe9JAjdGb9xWF7gVSVYgWB8Kba1GvrQt5m8b9buOIE5tWI+9yD
-         mONY5LAaU6Wfsq7hZMSl61NIgGBVFxnjmaYXQy+S+oC0yQE3b4Jw2r4EkDOdvIL2nA
-         tXPexsq6vuvT3InlPlEAJPvFU6dtWfNtF7jfo5GM=
-Date:   Thu, 14 Nov 2019 16:25:49 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH 0/9] sched/nohz: Make the rest of kcpustat vtime aware
-Message-ID: <20191114152548.GA17724@lenoir>
-References: <20191106030807.31091-1-frederic@kernel.org>
+        Thu, 14 Nov 2019 10:27:06 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45119 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfKNP1G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 10:27:06 -0500
+Received: by mail-io1-f66.google.com with SMTP id v17so7183233iol.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:27:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Pb54/52KiePo49EfwninY5VWqB/XGPD0qnr9bLS7S8k=;
+        b=rDovllybZqP1ZDWSHLZO6REyTT9oYLVsCxmcdg0WVk1ON7+4YYdxZU+I7l/0XAUoJF
+         tmcEP6qLPv2dEzCfH04xvQpTf5Sbw85Kpn3OnVNT5YgESlrv20DxTucx6+EeAT8w3r9z
+         lNMBxbUVDl4tQZx6P/rmmzppXh/cBEWrh/zOuc68bss/MPoI1B9xRWUiLM6wJUiXe9uo
+         TpjdAI0/OSvNka5ShdqM5Wkzc6gRP60UGMC3IfA6llkqWpnRZRZKukjE/ohBrdK6qTrI
+         e4gfzoFBUvL3r2A7PyfoAjpCphwcunR48nIaKrIJIKE+ml7Bnf1orU/t4tvyjQNVNbK1
+         sjPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Pb54/52KiePo49EfwninY5VWqB/XGPD0qnr9bLS7S8k=;
+        b=Kd4rSs/I36i+aaezv2SUbJBk+nwqsrq10WVM/reEDNoWLQHHMZs+T/7Evz6rBWWQk7
+         M0hSRKv5Vc71AaZ5GGVxKMAI06OBqCPVKksnFjxGVqn+YHfYxNLqTOOW3JGLa8Kxovn2
+         ZX4OPMWPDGpl2o4fgdkLNlkX2j9KAWPZ4Z1jd+5Azw83ZCI9l9bOZR3eHFsMe9wtl7BR
+         9jcdCYCKGXt3u4wHQaYlf3LLb/gtZXFTP+t5L2PrqBKnLE4+VQWr+KXm8fsba8mUCa0t
+         hon9KAGzUqxt/4D30MFKiOlLhDM13GQCHX+DeqsTxt7k4WGvqh2YBKXt0nzp4y+4+KlC
+         admg==
+X-Gm-Message-State: APjAAAXJ2T21OSgynkp+o4U2P81Q5oCM4LvSrndS0cvhEBG0mmp88j4n
+        vNRjZ3sv49Ls2tIi0fRV2OST5Q==
+X-Google-Smtp-Source: APXvYqx1+iuEaN6EUrTxHKiCZEEYpCjAm3a95rr/NdSaR3TjFHN0j33g5FebNu1FhXcgleCf8DQBxQ==
+X-Received: by 2002:a02:a086:: with SMTP id g6mr8065764jah.56.1573745223480;
+        Thu, 14 Nov 2019 07:27:03 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id l63sm505052ioa.19.2019.11.14.07.27.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 07:27:02 -0800 (PST)
+Subject: Re: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio)
+ POLL
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jann Horn <jannh@google.com>
+Cc:     io-uring@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
+ <58246851-fa45-a72d-2c42-7e56461ec04e@kernel.dk>
+ <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
+ <CAG48ez3dpphoQGy8G1-QgZpkMBA2oDjNcttQKJtw5pD62QYwhw@mail.gmail.com>
+ <ea7a428d-a5bd-b48e-9680-82a26710ec83@rasmusvillemoes.dk>
+ <e568a403-3712-4612-341a-a6f22af877ae@kernel.dk>
+ <0f74341f-76fa-93ee-c03e-554d02707053@rasmusvillemoes.dk>
+ <6243eb59-3340-deb5-d4b8-08501be01f34@kernel.dk>
+Message-ID: <85e8e954-d09c-f0b4-0944-598208098c8c@kernel.dk>
+Date:   Thu, 14 Nov 2019 08:27:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106030807.31091-1-frederic@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <6243eb59-3340-deb5-d4b8-08501be01f34@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 04:07:58AM +0100, Frederic Weisbecker wrote:
-> So we fixed CPUTIME_SYSTEM on nohz_full, now is the turn for
-> CPUTIME_USER, CPUTIME_NICE, CPUTIME_GUEST and CPUTIME_GUEST_NICE.
+On 11/14/19 8:20 AM, Jens Axboe wrote:
+> On 11/14/19 8:19 AM, Rasmus Villemoes wrote:
+>> On 14/11/2019 16.09, Jens Axboe wrote:
+>>> On 11/14/19 7:12 AM, Rasmus Villemoes wrote:
+>>
+>>>> So, I can't really think of anybody that might be relying on inheriting
+>>>> a signalfd instead of just setting it up in the child, but changing the
+>>>> semantics of it now seems rather dangerous. Also, I _can_ imagine
+>>>> threads in a process sharing a signalfd (initial thread sets it up and
+>>>> blocks the signals, all threads subsequently use that same fd), and for
+>>>> that case it would be wrong for one thread to dequeue signals directed
+>>>> at the initial thread. Plus the lifetime problems.
+>>>
+>>> What if we just made it specific SFD_CLOEXEC?
+>>
+>> O_CLOEXEC can be set and removed afterwards. Sure, we're far into
+>> "nobody does that" land, but having signalfd() have wildly different
+>> semantics based on whether it was initially created with O_CLOEXEC seems
+>> rather dubious.
+>>
+>>    I don't want to break
+>>> existing applications, even if the use case is nonsensical, but it is
+>>> important to allow signalfd to be properly used with use cases that are
+>>> already in the kernel (aio with IOCB_CMD_POLL, io_uring with
+>>> IORING_OP_POLL_ADD). Alternatively, if need be, we could add a specific
+>>> SFD_ flag for this.
+>>
+>> Yeah, if you want another signalfd flavour, adding it via a new SFD_
+>> flag seems the way to go. Though I can't imagine the resulting code
+>> would be very pretty.
 > 
-> The tricky piece was to handle "nice-ness" correctly. I think I addressed
-> most reviews (one year ago now) from peterz
-> (https://lore.kernel.org/lkml/20181120141754.GW2131@hirez.programming.kicks-ass.net/)
-> Among which:
-> 
-> * Merge patches that didn't make sense together
-> * Clarify the changelog (I hope) and add comments
-> * Also hook nice updates on __setscheduler_params()
-> * Uninline a big function
+> Well, it's currently _broken_ for the listed in-kernel use cases, so
+> I think making it work is the first priority here.
 
-Gentle ping :)
+How about something like this, then? Not tested.
+
+diff --git a/fs/signalfd.c b/fs/signalfd.c
+index 44b6845b071c..d8b183ec1d4e 100644
+--- a/fs/signalfd.c
++++ b/fs/signalfd.c
+@@ -50,6 +50,8 @@ void signalfd_cleanup(struct sighand_struct *sighand)
+ 
+ struct signalfd_ctx {
+ 	sigset_t sigmask;
++	struct task_struct *task;
++	u32 task_exec_id;
+ };
+ 
+ static int signalfd_release(struct inode *inode, struct file *file)
+@@ -61,16 +63,22 @@ static int signalfd_release(struct inode *inode, struct file *file)
+ static __poll_t signalfd_poll(struct file *file, poll_table *wait)
+ {
+ 	struct signalfd_ctx *ctx = file->private_data;
++	struct task_struct *tsk = ctx->task ?: current;
+ 	__poll_t events = 0;
+ 
+-	poll_wait(file, &current->sighand->signalfd_wqh, wait);
++	if (ctx->task && ctx->task->self_exec_id == ctx->task_exec_id)
++		tsk = ctx->task;
++	else
++		tsk = current;
+ 
+-	spin_lock_irq(&current->sighand->siglock);
+-	if (next_signal(&current->pending, &ctx->sigmask) ||
+-	    next_signal(&current->signal->shared_pending,
++	poll_wait(file, &tsk->sighand->signalfd_wqh, wait);
++
++	spin_lock_irq(&tsk->sighand->siglock);
++	if (next_signal(&tsk->pending, &ctx->sigmask) ||
++	    next_signal(&tsk->signal->shared_pending,
+ 			&ctx->sigmask))
+ 		events |= EPOLLIN;
+-	spin_unlock_irq(&current->sighand->siglock);
++	spin_unlock_irq(&tsk->sighand->siglock);
+ 
+ 	return events;
+ }
+@@ -267,19 +275,26 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
+ 	/* Check the SFD_* constants for consistency.  */
+ 	BUILD_BUG_ON(SFD_CLOEXEC != O_CLOEXEC);
+ 	BUILD_BUG_ON(SFD_NONBLOCK != O_NONBLOCK);
++	BUILD_BUG_ON(SFD_TASK & (SFD_CLOEXEC | SFD_NONBLOCK));
+ 
+-	if (flags & ~(SFD_CLOEXEC | SFD_NONBLOCK))
++	if (flags & ~(SFD_CLOEXEC | SFD_NONBLOCK | SFD_TASK))
++		return -EINVAL;
++	if ((flags & (SFD_CLOEXEC | SFD_TASK)) == SFD_TASK)
+ 		return -EINVAL;
+ 
+ 	sigdelsetmask(mask, sigmask(SIGKILL) | sigmask(SIGSTOP));
+ 	signotset(mask);
+ 
+ 	if (ufd == -1) {
+-		ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
++		ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 		if (!ctx)
+ 			return -ENOMEM;
+ 
+ 		ctx->sigmask = *mask;
++		if (flags & SFD_TASK) {
++			ctx->task = current;
++			ctx->task_exec_id = current->self_exec_id;
++		}
+ 
+ 		/*
+ 		 * When we call this, the initialization must be complete, since
+diff --git a/include/uapi/linux/signalfd.h b/include/uapi/linux/signalfd.h
+index 83429a05b698..064c5dc3eb99 100644
+--- a/include/uapi/linux/signalfd.h
++++ b/include/uapi/linux/signalfd.h
+@@ -16,6 +16,7 @@
+ /* Flags for signalfd4.  */
+ #define SFD_CLOEXEC O_CLOEXEC
+ #define SFD_NONBLOCK O_NONBLOCK
++#define SFD_TASK 00000001
+ 
+ struct signalfd_siginfo {
+ 	__u32 ssi_signo;
+
+-- 
+Jens Axboe
+
