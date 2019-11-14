@@ -2,159 +2,194 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985D7C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7473C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F8A20715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:33:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WnCLHXJv"
+	by mail.kernel.org (Postfix) with ESMTP id BFAC3206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfKNIdY (ORCPT
+        id S1726541AbfKNIea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:33:24 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:18299 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfKNIdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:33:23 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191114083320epoutp03bab99a695eba8f835c5cd62e79af62a0~W_l3SYs8Q2681626816epoutp035
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 08:33:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191114083320epoutp03bab99a695eba8f835c5cd62e79af62a0~W_l3SYs8Q2681626816epoutp035
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573720400;
-        bh=I6Y8cSsjoOp8g/yBAlaiwUPcDkiaowW9hTnA9+NGhVY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=WnCLHXJv3KQAjsP5EvcgfqpRFi+YKSRQPp28Ea5xuIEKyGDjD1k2Z7rVqZQ9WehIU
-         J83a1YFvsdUVcSeQUIAlVOIlLrNBH1IQsGkAWc70WG6yzWi+a9n3r9OIY7SzdIET9c
-         WRm66SfkVhQiuQZnPajGElDZpOp2JBA7kFhY1y8I=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191114083320epcas1p353fe177c22d30e7120f597a70caa9e8e~W_l2wX0mJ3141431414epcas1p3B;
-        Thu, 14 Nov 2019 08:33:20 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47DF9n524PzMqYkd; Thu, 14 Nov
-        2019 08:33:17 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        09.3E.04085.D411DCD5; Thu, 14 Nov 2019 17:33:17 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191114083316epcas1p40975d359d19194b3d40fd29e2aa189d0~W_lz0tcFK1810418104epcas1p4f;
-        Thu, 14 Nov 2019 08:33:16 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191114083316epsmtrp2bc26688328f4588556f59345244eff80~W_lzz47vT2132521325epsmtrp2B;
-        Thu, 14 Nov 2019 08:33:16 +0000 (GMT)
-X-AuditID: b6c32a37-e19ff70000000ff5-42-5dcd114da2cc
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4F.AF.24756.C411DCD5; Thu, 14 Nov 2019 17:33:16 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191114083316epsmtip15147a8f4b8f85af66a76ba5a2b5e0b0c~W_lzY27xN0672206722epsmtip1u;
-        Thu, 14 Nov 2019 08:33:16 +0000 (GMT)
-Subject: Re: [PATCH v4 0/5] Add required-opps support to devfreq passive gov
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <754ec843-eb8f-5149-bf7f-ec4abf938821@samsung.com>
-Date:   Thu, 14 Nov 2019 17:39:01 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Thu, 14 Nov 2019 03:34:30 -0500
+Received: from mga11.intel.com ([192.55.52.93]:30256 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfKNIea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 03:34:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 00:34:29 -0800
+X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
+   d="scan'208";a="208060570"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 00:34:29 -0800
+Subject: [PATCH v2] mm: Cleanup __put_devmap_managed_page() vs ->page_free()
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     jhubbard@nvidia.com
+Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        =?utf-8?b?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Date:   Thu, 14 Nov 2019 00:20:13 -0800
+Message-ID: <157371938291.3055029.12105459405251950438.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-In-Reply-To: <CAGETcx-tUtnX0T47YGdf7-cgp6e8K9Rgb34Mfe5Za9L4YMGS1g@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0hTYRjHeXfOjsdsdVyaT9JFTwRqajut2SlSi6wGGVh+6YLYQU86tp2N
-        nS26EFhBXsoo7EKjq2GlX8o51IxhrcxMF5W4bgSWhlJqF7PbyDrbMfLb7/0//4f3+b8XElPf
-        J2JJg2DnbQJnookpeOPdxNSUDZG+PE1gIIFtbopifQeGwtjulrMEO1p5D7Gv9l8j2KEfPgXb
-        1flUyVZ4fxPsuL8eZ/2XPirZht77xMoIfeOtRqW++2ilQn/R5dC76soJvbunFNcfddchffvz
-        JoV+1DU3h9xqXFHMc4W8LY4XCiyFBqEonV6fm786X5emYVKYZexSOk7gzHw6nZWdk7LWYJLm
-        pON2ciaHJOVwokgvylhhszjsfFyxRbSn07y10GRdZk0VObPoEIpSCyzm5YxGs1gnGbcbi7/0
-        VymsZeG7+q/8wUtQRVgFCieBWgIfRipRBZpCqqlmBNfe+pXy4guCka93MHnxDYG/vVL5r6Wq
-        zUnIBQ8C97vaiZaPCG77n4RcM6hsGLzsDHEUlQQufx8eNGHUIQzuHu5CwQIhFVoHnxNBnk7F
-        Q8+PvpCuojLgpO9ASMepBXDu9ROJSTKa2gydY5xsiYSOM/14kMOpjRD43RYKhFEx8LL/gkLm
-        edA0fBaTp64Og77qKJmz4M34r4kDmAHv290THAujIx5C5r1Q23EvlBKoMill6+OJ+FporalS
-        BOfBqES43rJIluPhZuAckvedBiNjR5RBC1AqKDukli3zobv3tULmWXC5tJw4hmjnpDTOSQmc
-        kxI4/292EeF1aCZvFc1FvMhYtZNv24VCbzhpaTO68SjbiygS0VNVt6O78tRKbqe42+xFQGJ0
-        lOrEsCSpCrnde3ibJd/mMPGiF+mksz6OxUYXWKQfIdjzGd1irVbLLmHSdAxDx6hWXa3JU1NF
-        nJ038ryVt/3rU5DhsSUoed3D8m0HS14MXPn8LNK8LyHmV0Kqx5ouBAaXnzQFHmw7bH9hrpld
-        8/2TeXRzJLfw1PipsUxfcmttrjtp5a2sQUvKhpYMz5zzwtveaYltJ9ZkNh3xGBs+BdoPGmZn
-        GoRNpxsy5iWaLsy5etpiIks3bunxpqmSs3c01xvX/tQMR6gjaFws5pgkzCZyfwG1JPpd2QMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEIsWRmVeSWpSXmKPExsWy7bCSnK6P4NlYgzmXdS12bBexONv0ht3i
-        8q45bBafe48wWtxuXMFm8ebHWSaLM6cvsVp0HfrLZvHv2kYWi2sL37NabH5wjM2B22Pb7m2s
-        Hpf7epk8Fmwq9di0qpPNY8vVdhaPvi2rGD2O39jO5PF5k1wARxSXTUpqTmZZapG+XQJXxqcn
-        k5kKOjgrniz7z9LA2MXexcjJISFgIjH56Cy2LkYuDiGB3YwSOz8uhEpISky7eJS5i5EDyBaW
-        OHy4GKLmLaPE/vkvGUFqhAV8JF4snsUKYosIaElsuvaYBaSIWaCDWWLh/K9MEB1dTBJv258z
-        g1SxAVXtf3GDDcTmF1CUuPrjMdgkXgE7ialnm8DiLAKqEnPvXgSzRQUiJJ5vvwFVIyhxcuYT
-        FhCbUyBQ4vffo2CXMguoS/yZd4kZwhaXuPVkPhOELS+x/e0c5gmMwrOQtM9C0jILScssJC0L
-        GFlWMUqmFhTnpucWGxYY5qWW6xUn5haX5qXrJefnbmIEx6SW5g7Gy0viDzEKcDAq8fAeED0T
-        K8SaWFZcmXuIUYKDWUmEd8pboBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHep3nHIoUE0hNLUrNT
-        UwtSi2CyTBycUg2M1h8L0hzzdq8QbUjc9Tn91KZpblMqZjpd+7YyikOiaabaojOHZR4+EnGY
-        Uq7QG18Wn+76PEpASlOAoUb+4YqmZom0js6zpzZemf1Z93LCr10cmgfOcU8MSLu+fvHFlTO4
-        DikdWrg4P571z/cZkxKWO59rdDsWeydjptP63DT5Zc+YNswyfOk8TYmlOCPRUIu5qDgRAKT9
-        YenFAgAA
-X-CMS-MailID: 20191114083316epcas1p40975d359d19194b3d40fd29e2aa189d0
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190724014230epcas5p371a5fdee330f91a646d619fbcc024acf
-References: <CGME20190724014230epcas5p371a5fdee330f91a646d619fbcc024acf@epcas5p3.samsung.com>
-        <20190724014222.110767-1-saravanak@google.com>
-        <cb0d4aad-81e4-0b8d-40f2-7f58ef1e38d9@samsung.com>
-        <CAGETcx-tUtnX0T47YGdf7-cgp6e8K9Rgb34Mfe5Za9L4YMGS1g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
+After the removal of the device-public infrastructure there are only 2
+->page_free() call backs in the kernel. One of those is a device-private
+callback in the nouveau driver, the other is a generic wakeup needed in
+the DAX case. In the hopes that all ->page_free() callbacks can be
+migrated to common core kernel functionality, move the device-private
+specific actions in __put_devmap_managed_page() under the
+is_device_private_page() conditional, including the ->page_free()
+callback. For the other page types just open-code the generic wakeup.
 
-On 11/14/19 5:23 PM, Saravana Kannan wrote:
-> On Wed, Nov 13, 2019 at 11:48 PM Chanwoo Choi <cw00.choi@samsung.com> wrote:
->>
->> Dear Saravana,
->>
->> Any other progress of this series?
-> 
-> Hi Chanwoo,
-> 
-> Thanks for checking. I haven't abandoned this patch series. This patch
-> series depends on "lazy linking" of required-opps to avoid a cyclic
-> dependency between devfreq and OPP table population. But Viresh wasn't
-> happy with my implementation of the lazy liking for reasonable
-> reasons.
-> 
-> I had a chat with Viresh during one of the several conferences that I
-> met him at. To fix the lazy linking in the way he wanted it meant we
-> had to fix other issues in the OPP framework that arise when OPP
-> tables are shared in DT but not in memory. So he was kind enough to
-> sign up to add lazy linking support to OPPs so that I won't have to do
-> it. So, I'm waiting on that. So once that's added, I should be able to
-> drop a few patches in this series, do some minor updates and then this
-> will be good to go.
+Yes, the wakeup is only needed in the MEMORY_DEVICE_FSDAX case, but it
+does no harm in the MEMORY_DEVICE_DEVDAX and MEMORY_DEVICE_PCI_P2PDMA
+case.
 
-Thanks for the detailed explanation. I'll expect the your next version.
+Cc: Jan Kara <jack@suse.cz>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes in v2:
+- Stop requiring pgmap->ops for fsdax (Christoph)
+- Clean up the indenting and organization in
+  __put_devmap_managed_page(). (Christoph)
 
-Thanks,
-Chanwoo Choi
+
+ drivers/nvdimm/pmem.c |    6 ----
+ mm/memremap.c         |   77 ++++++++++++++++++++++++++-----------------------
+ 2 files changed, 41 insertions(+), 42 deletions(-)
+
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index f9f76f6ba07b..21db1ce8c0ae 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -338,13 +338,7 @@ static void pmem_release_disk(void *__pmem)
+ 	put_disk(pmem->disk);
+ }
+ 
+-static void pmem_pagemap_page_free(struct page *page)
+-{
+-	wake_up_var(&page->_refcount);
+-}
+-
+ static const struct dev_pagemap_ops fsdax_pagemap_ops = {
+-	.page_free		= pmem_pagemap_page_free,
+ 	.kill			= pmem_pagemap_kill,
+ 	.cleanup		= pmem_pagemap_cleanup,
+ };
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 022e78e68ea0..b52dc566efd2 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -27,7 +27,8 @@ static void devmap_managed_enable_put(void)
+ 
+ static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
+ {
+-	if (!pgmap->ops || !pgmap->ops->page_free) {
++	if (pgmap->type == MEMORY_DEVICE_PRIVATE &&
++	    (!pgmap->ops || !pgmap->ops->page_free)) {
+ 		WARN(1, "Missing page_free method\n");
+ 		return -EINVAL;
+ 	}
+@@ -444,44 +445,48 @@ void __put_devmap_managed_page(struct page *page)
+ {
+ 	int count = page_ref_dec_return(page);
+ 
+-	/*
+-	 * If refcount is 1 then page is freed and refcount is stable as nobody
+-	 * holds a reference on the page.
+-	 */
+-	if (count == 1) {
+-		/* Clear Active bit in case of parallel mark_page_accessed */
+-		__ClearPageActive(page);
+-		__ClearPageWaiters(page);
++	if (count > 1) {
++		/* still busy */
++		return;
++	} else if (count == 0) {
++		/* only triggered by the dev_pagemap shutdown path */
++		__put_page(page);
++		return;
++	} else if (!is_device_private_page(page)) {
++		/* notify page idle for dax */
++		wake_up_var(&page->_refcount);
++		return;
++	}
+ 
+-		mem_cgroup_uncharge(page);
++	/* Clear Active bit in case of parallel mark_page_accessed */
++	__ClearPageActive(page);
++	__ClearPageWaiters(page);
+ 
+-		/*
+-		 * When a device_private page is freed, the page->mapping field
+-		 * may still contain a (stale) mapping value. For example, the
+-		 * lower bits of page->mapping may still identify the page as
+-		 * an anonymous page. Ultimately, this entire field is just
+-		 * stale and wrong, and it will cause errors if not cleared.
+-		 * One example is:
+-		 *
+-		 *  migrate_vma_pages()
+-		 *    migrate_vma_insert_page()
+-		 *      page_add_new_anon_rmap()
+-		 *        __page_set_anon_rmap()
+-		 *          ...checks page->mapping, via PageAnon(page) call,
+-		 *            and incorrectly concludes that the page is an
+-		 *            anonymous page. Therefore, it incorrectly,
+-		 *            silently fails to set up the new anon rmap.
+-		 *
+-		 * For other types of ZONE_DEVICE pages, migration is either
+-		 * handled differently or not done at all, so there is no need
+-		 * to clear page->mapping.
+-		 */
+-		if (is_device_private_page(page))
+-			page->mapping = NULL;
++	mem_cgroup_uncharge(page);
+ 
+-		page->pgmap->ops->page_free(page);
+-	} else if (!count)
+-		__put_page(page);
++	/*
++	 * When a device_private page is freed, the page->mapping field
++	 * may still contain a (stale) mapping value. For example, the
++	 * lower bits of page->mapping may still identify the page as an
++	 * anonymous page. Ultimately, this entire field is just stale
++	 * and wrong, and it will cause errors if not cleared.  One
++	 * example is:
++	 *
++	 *  migrate_vma_pages()
++	 *    migrate_vma_insert_page()
++	 *      page_add_new_anon_rmap()
++	 *        __page_set_anon_rmap()
++	 *          ...checks page->mapping, via PageAnon(page) call,
++	 *            and incorrectly concludes that the page is an
++	 *            anonymous page. Therefore, it incorrectly,
++	 *            silently fails to set up the new anon rmap.
++	 *
++	 * For other types of ZONE_DEVICE pages, migration is either
++	 * handled differently or not done at all, so there is no need
++	 * to clear page->mapping.
++	 */
++	page->mapping = NULL;
++	page->pgmap->ops->page_free(page);
+ }
+ EXPORT_SYMBOL(__put_devmap_managed_page);
+ #endif /* CONFIG_DEV_PAGEMAP_OPS */
+
