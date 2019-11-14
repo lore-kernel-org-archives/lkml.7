@@ -2,100 +2,115 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5464C47410
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C09C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11EB20740
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527AE206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573759223;
-	bh=ozhgM3/BMV79ezyK2OY830zCjRiLznJO8H538jUE0BQ=;
+	s=default; t=1573759283;
+	bh=gNbeR9BM7MxYZGNN3sBCjdTm3nruEH2o+fD3s6cTwsM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aZI71od6iQgUWQLzWWoudUuhiXJbEVOEU7GnxQ3UClCkkRWlhGjr36Hx80YcZrgga
-	 bwXg7CeHQZhKYOxa1HrZuNQY6gtzPsc8oqrQIbqWTLcCS5o6u35B05SMrBUG2aEXQF
-	 Fg9rkibSmuBC7iRGbTT0GDkPSVnwhFdp1yaOn2bQ=
+	b=vzp9Lvg5PlTDYeQZDqL4MAacXLnTmhUBW+Wjw0efpxhPRdw3ElELAl4Ra6MXskFNZ
+	 cSMQtJFiIxfLrI87Y6fCr5iI5yKTS/U8WXDbhc31tp7l/LRGFtz76DlKdr/t6laQd3
+	 rVITTjhgBrbpPBdYeChH0vI2HrU657fBdybLdgyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKNTUW (ORCPT
+        id S1727073AbfKNTVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:20:22 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33216 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfKNTUW (ORCPT
+        Thu, 14 Nov 2019 14:21:22 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41314 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfKNTVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:20:22 -0500
-Received: by mail-qk1-f196.google.com with SMTP id 71so6035049qkl.0;
-        Thu, 14 Nov 2019 11:20:21 -0800 (PST)
+        Thu, 14 Nov 2019 14:21:21 -0500
+Received: by mail-qt1-f195.google.com with SMTP id o3so8030927qtj.8;
+        Thu, 14 Nov 2019 11:21:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Ad+hImqgLDxypIEINMZpS4Tr/4Mgv7yIFC4Nbt2V9kg=;
-        b=byTtSXKQQYePQfHDLVfvtbTfxb+feN2Rw10WG0dnLqlQHjnp6ZqhpFGPYiTJtn9lDD
-         6SrXLdyjN+S+8zKLupJ0J6AOFKhKFCdKMEB0XC3KSHz3eaXrxnWfHgS8f5fTJbaHzaBw
-         nICTABqMxTHdOrmtN6iofLY9mxUzOMb2zmHAp8FT4UsTjOojgCJymb3q1NuHBdnFW9Li
-         Uiq6x+NEu+2qVNn+pQXfevOoGLxsvDTu+ti1pPhty9u+5ujN/s/K1Sb/phspRfgXDRWZ
-         9oZChaZKJI2FU49/FO/+OCDXzbOaw5PJmWhv/qzB+P/UWgcL+2sDK8CpqPNYJ0QyXAJ6
-         Y2bA==
+        bh=V8JOYrhFKJZsjLpy3zbICgm56f832zoaBb4LCM6R/wE=;
+        b=SSPWq/TOhRhkWt64BoCNntBWMb/TucJ3AIdHYBXY2nyWahkTra09hFT8GSEsnolfnM
+         xD4C/j9iKWF72fTVou2+nt+/RsWRC+pDpOOaOTEmLX/TiN06RAsPWbN1SGpX2IGMDH+A
+         5WlVvsj2+2L0ufhWln/MYkO13Ie8z2hOaGr6N6H1Sw3QVcIaSwEbn/pxeaKEc8NZMTIq
+         5xmtxuj3Rk2WBNAhicO9mPb+pg7s8lub70oiaCN0Kwe6rdb92t+SjQvGsMiyB2THTDrc
+         uSN/dNw4lQuOeskHze8uTQtjD5stAKCzHc0EPVaiszH2k3oZ1IH0C37Lguc88/qZe+wV
+         R6vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ad+hImqgLDxypIEINMZpS4Tr/4Mgv7yIFC4Nbt2V9kg=;
-        b=OpZ4/sLy29V0A8WrBiqJX2o7GbQRG/vn6JNLB0Eg8jbnbTUYW2Dma7M3JZT9gL9Ud8
-         eI6TD3238UW2bgmz7WdOnV/+f0jowrZUL1kiXaK1NQqJPdzUkhjV2D5yGLvRCqbnBkIx
-         61wcs7DHF3BRUKpxtEgDBBavp56kKIr7e7gk1LNl9jpbbCg8CTHm7HN5x3lgD+U776gg
-         Ri2LeTdNjvxUW74TPh8wCcKnkyDZWDMFyn4RZvEmG9FwTEZKwW4nkt9G4Uz/ESeYymTH
-         5spH9spU1Cr8eHF3cgMR+MYT6oPOpl96SvvXR9Ztq723E4aIn+pAYHCsbRVDpoqWtJx6
-         jdeQ==
-X-Gm-Message-State: APjAAAWVtNd/wqUIZu8b2AI+6/MIVh8ULzFe/zO75IV7uGvB0s8rkrYt
-        tGSO1y6kym7k/Q5vRmFrtT8=
-X-Google-Smtp-Source: APXvYqxOQ9m72MaS9qncxYQiHkIHq6EHGB9gkSaUGXeDTWotePoS+TGDokUWUtCHpKn4SSzGsUSXEg==
-X-Received: by 2002:ae9:eb94:: with SMTP id b142mr9178344qkg.450.1573759221143;
-        Thu, 14 Nov 2019 11:20:21 -0800 (PST)
+        bh=V8JOYrhFKJZsjLpy3zbICgm56f832zoaBb4LCM6R/wE=;
+        b=Rf+4J2z7DIg7bnJI7n2umYXkPS/m3ckbAAqnfXPqEfGGgZtf/c+dGOFEDPBYU2Z1nh
+         mYNpMFZM79J8qq2sh6YrwIlKI7UgnotTGCT9pyUMBfXB2Fs3aFAPlXYIRnMUFQWdmIg7
+         ijC1gh7hu6wSRELHUMU0VsiYsPOdMxCl7ebJfE8XblqDrjf+QWppYrx5/tHxxKyhogvI
+         xQVOXQyFwHJ0FtZIAAobBIkMjglzCleDh2yT6g9fhPqdJKg0McVWtJ0IUwjO0CyjlHga
+         gmkeSm+UioIAiwtwMWv/yW59v2lnJua175GddHLBNqqDUT57fCq6IN+H5fQou7jaKh89
+         tfug==
+X-Gm-Message-State: APjAAAVJMJhUOhErReQLjuYdGHkVc1YkbMEHlKT2xzxWEZxlJhXaN84q
+        B0siGNxRUNemq3rF0t+j85ZxxumK
+X-Google-Smtp-Source: APXvYqxVA9c1jZyC24DjlRcVync5U+FaGqLYy/aPEeYMXGzICKoGfSyzC9htmCREvDbO5rhSKYBOgQ==
+X-Received: by 2002:ac8:698d:: with SMTP id o13mr9863131qtq.68.1573759280316;
+        Thu, 14 Nov 2019 11:21:20 -0800 (PST)
 Received: from localhost ([2620:10d:c091:500::2:69f2])
-        by smtp.gmail.com with ESMTPSA id h25sm2893772qka.117.2019.11.14.11.20.19
+        by smtp.gmail.com with ESMTPSA id 130sm3062273qkd.33.2019.11.14.11.21.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 11:20:20 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:20:18 -0800
+        Thu, 14 Nov 2019 11:21:19 -0800 (PST)
+Date:   Thu, 14 Nov 2019 11:21:18 -0800
 From:   Tejun Heo <tj@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
- get_mem_cgroup_from_mm()
-Message-ID: <20191114192018.GJ4163745@devbig004.ftw2.facebook.com>
-References: <20191106225131.3543616-1-guro@fb.com>
- <20191113162934.GF19372@blackbody.suse.cz>
- <20191113170823.GA12464@castle.DHCP.thefacebook.com>
- <20191114191657.GN20866@dhcp22.suse.cz>
+To:     Qian Cai <cai@lca.pw>
+Cc:     jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        axboe@kernel.dk, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] writeback: fix -Wformat compilation warnings
+Message-ID: <20191114192118.GK4163745@devbig004.ftw2.facebook.com>
+References: <1573751861-10303-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191114191657.GN20866@dhcp22.suse.cz>
+In-Reply-To: <1573751861-10303-1-git-send-email-cai@lca.pw>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Nov 14, 2019 at 12:17:41PM -0500, Qian Cai wrote:
+> The commit f05499a06fb4 ("writeback: use ino_t for inodes in
+> tracepoints") introduced a lot of GCC compilation warnings on s390,
+> 
+> In file included from ./include/trace/define_trace.h:102,
+>                  from ./include/trace/events/writeback.h:904,
+>                  from fs/fs-writeback.c:82:
+> ./include/trace/events/writeback.h: In function
+> 'trace_raw_output_writeback_page_template':
+> ./include/trace/events/writeback.h:76:12: warning: format '%lu' expects
+> argument of type 'long unsigned int', but argument 4 has type 'ino_t'
+> {aka 'unsigned int'} [-Wformat=]
+>   TP_printk("bdi %s: ino=%lu index=%lu",
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/trace/trace_events.h:360:22: note: in definition of macro
+> 'DECLARE_EVENT_CLASS'
+>   trace_seq_printf(s, print);     \
+>                       ^~~~~
+> ./include/trace/events/writeback.h:76:2: note: in expansion of macro
+> 'TP_printk'
+>   TP_printk("bdi %s: ino=%lu index=%lu",
+>   ^~~~~~~~~
+> 
+> Fix them by adding necessary casts where ino_t could be either "unsigned
+> int" or "unsigned long".
+> 
+> Fixes: f05499a06fb4 ("writeback: use ino_t for inodes in tracepoints")
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-On Thu, Nov 14, 2019 at 08:16:57PM +0100, Michal Hocko wrote:
-> Then what is the point of this function and what about all other users?
-
-It is useful for controlling admissions of new userspace visible uses
-- e.g. a tracepoint shouldn't be allowed to be attached to a cgroup
-which has already been deleted.  We're just using it too liberally.
+Acked-by: Tejun Heo <tj@kernel.org>
 
 Thanks.
 
