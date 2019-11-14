@@ -2,133 +2,119 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D16C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9B5C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E802320725
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573762786;
-	bh=Ms+2LTB1+DESJrOdQdCv2D3DR/a6flmiLsM96V8C2E4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=iLeecOYEVLCWvxUjSM1N42ixUkZwx8KGSFKI3AGux2E05wnUoz9lM1teM9FKuQSsw
-	 FCjgKdSZTckN7/SxBNgQl/Om616vFaX4fo+lasLnfre1oDm+XZoB+UNGAg1ORLgPPP
-	 mwk15WgXJnSggDfq/MdoC5YkP3SAnx7Wmt4k+7Zs=
+	by mail.kernel.org (Postfix) with ESMTP id 4097E20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfKNUTp (ORCPT
+        id S1726953AbfKNUTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:19:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 15:19:49 -0500
+Received: from mga03.intel.com ([134.134.136.65]:45174 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbfKNUTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:19:44 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2443A20709;
-        Thu, 14 Nov 2019 20:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573762783;
-        bh=Ms+2LTB1+DESJrOdQdCv2D3DR/a6flmiLsM96V8C2E4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nACZ0IrSrZ/AlXj+jZQQZqliQSFvUsfLm7y5kYUBBF5csAwpMtCtZFbVPjaojtxqv
-         35VtNXdJxtyLA/LfY0wty1jGbnOrLtrNLb2bMoOkyvb1OeKiQWOHweYXDWknNfPm5B
-         U8gdqWhghK3nPrvW8oJflow7c0LsEAKkU7BbeGaM=
-Date:   Thu, 14 Nov 2019 14:19:41 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
+        id S1726557AbfKNUTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 15:19:47 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 12:19:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,305,1569308400"; 
+   d="scan'208";a="216879546"
+Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.7.198.56])
+  by orsmga002.jf.intel.com with ESMTP; 14 Nov 2019 12:19:47 -0800
+Date:   Thu, 14 Nov 2019 12:12:58 -0800
+From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2 0/3] PCI: Add PCI_ERROR_RESPONSE, check for errors
-Message-ID: <20191114201941.GA242410@google.com>
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH] x86/speculation: Fix incorrect MDS/TAA mitigation status
+Message-ID: <20191114201258.GA18745@guptapadev.amr>
+References: <20191113193350.24511-1-longman@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822200551.129039-1-helgaas@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191113193350.24511-1-longman@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Andrew]
+On Wed, Nov 13, 2019 at 02:33:50PM -0500, Waiman Long wrote:
+> For MDS vulnerable processors with TSX support, enabling either MDS
+> or TAA mitigations will enable the use of VERW to flush internal
+> processor buffers at the right code path. IOW, they are either both
+> mitigated or both not mitigated. However, if the command line options
+> are inconsistent, the vulnerabilites sysfs files may not report the
+> mitigation status correctly.
+> 
+> For example, with only the "mds=off" option:
+> 
+>   vulnerabilities/mds:Vulnerable; SMT vulnerable
+>   vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vulnerable
+> 
+> The mds vulnerabilities file has wrong status in this case.
+> 
+> Change taa_select_mitigation() to sync up the two mitigation status
+> and have them turned off if both "mds=off" and "tsx_async_abort=off"
+> are present.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  arch/x86/kernel/cpu/bugs.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> index 4c7b0fa15a19..418d41c1fd0d 100644
+> --- a/arch/x86/kernel/cpu/bugs.c
+> +++ b/arch/x86/kernel/cpu/bugs.c
+> @@ -304,8 +304,12 @@ static void __init taa_select_mitigation(void)
+>  		return;
+>  	}
+>  
+> -	/* TAA mitigation is turned off on the cmdline (tsx_async_abort=off) */
+> -	if (taa_mitigation == TAA_MITIGATION_OFF)
+> +	/*
+> +	 * TAA mitigation via VERW is turned off if both
+> +	 * tsx_async_abort=off and mds=off are specified.
+> +	 */
+> +	if (taa_mitigation == TAA_MITIGATION_OFF &&
+> +	    mds_mitigation == MDS_MITIGATION_OFF)
+>  		goto out;
+>  
+>  	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
+> @@ -339,6 +343,15 @@ static void __init taa_select_mitigation(void)
+>  	if (taa_nosmt || cpu_mitigations_auto_nosmt())
+>  		cpu_smt_disable(false);
+>  
+> +	/*
+> +	 * Update MDS mitigation, if necessary, as the mds_user_clear is
+> +	 * now enabled for TAA mitigation.
+> +	 */
+> +	if (mds_mitigation == MDS_MITIGATION_OFF &&
+> +	    boot_cpu_has_bug(X86_BUG_MDS)) {
+> +		mds_mitigation = MDS_MITIGATION_FULL;
+> +		mds_select_mitigation();
 
-On Thu, Aug 22, 2019 at 03:05:48PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Reads from a PCI device may fail if the device has been turned off (put
-> into D3cold), removed, or if some other error occurs.  The PCI host bridge
-> typically fabricates ~0 data to complete the CPU's read.
-> 
-> We check for that in a few places, but not in a consistent way.  This
-> series adds a PCI_ERROR_RESPONSE definition to make the checks more
-> consistent and easier to find.  Note that ~0 may indicate a PCI error, but
-> it may also be valid read data, so you need more information (such as
-> knowing that a register can never contain ~0) before concluding that it's
-> an error.
-> 
-> This series also adds a new check for PCI_ERROR_RESPONSE in the power
-> management code because that code frequently encounters devices in D3cold,
-> where we previously misinterpreted ~0 data.  It also uses pci_power_name()
-> to print D-state names more consistently.
-> 
-> Rafael, I didn't add your Reviewed-by to "PCI / PM: Return error when
-> changing power state from D3cold" because I made small changes to try to
-> make the messages more consistent, and I didn't want to presume they'd be
-> OK with you.
-> 
-> Changes since v1:
->   - Add Rafael's Reviewed-By to the first two patches
->   - Drop "PCI / PM: Check for error when reading PME status" because Rafael
->     pointed out that some devices can signal PME even when in D3cold, so
->     this would require additional rework
->   - Drop "PCI / PM: Check for error when reading Power State" because
->     Rafael thinks it's mostly redundant
-> 
-> Bjorn Helgaas (3):
->   PCI: Add PCI_ERROR_RESPONSE definition
->   PCI / PM: Decode D3cold power state correctly
->   PCI / PM: Return error when changing power state from D3cold
+This will cause a confusing print in dmesg from previous and this call
+to mds_select_mitigation().
 
-I applied patches 2 & 3 (tweaked to not depend on the
-PCI_ERROR_RESPONSE definition) with reviewed-by from Rafael, Keith,
-and Mika to pci/pm for v5.5, thanks everybody for taking a look.
+	"MDS: Vulnerable"
+	"MDS: Mitigation: Clear CPU buffers"
 
-Andrew had good ideas for improving the PCI_ERROR_RESPONSE part, so
-it's gone for now but not forgotten.
+Maybe delay MDS mitigation print till TAA is evaluated.
 
->  drivers/pci/access.c                          | 13 ++++----
->  .../pci/controller/dwc/pcie-designware-host.c |  2 +-
->  drivers/pci/controller/pci-aardvark.c         |  2 +-
->  drivers/pci/controller/pci-mvebu.c            |  4 +--
->  drivers/pci/controller/pci-thunder-ecam.c     | 20 ++++++------
->  drivers/pci/controller/pci-thunder-pem.c      |  2 +-
->  drivers/pci/controller/pcie-altera.c          |  2 +-
->  drivers/pci/controller/pcie-iproc.c           |  2 +-
->  drivers/pci/controller/pcie-mediatek.c        |  4 +--
->  drivers/pci/controller/pcie-rcar.c            |  2 +-
->  drivers/pci/controller/pcie-rockchip-host.c   |  2 +-
->  drivers/pci/controller/vmd.c                  |  2 +-
->  drivers/pci/hotplug/cpqphp_ctrl.c             | 12 +++----
->  drivers/pci/hotplug/cpqphp_pci.c              | 20 ++++++------
->  drivers/pci/hotplug/pciehp_hpc.c              |  6 ++--
->  drivers/pci/pci.c                             | 31 ++++++++++++-------
->  drivers/pci/pcie/dpc.c                        |  3 +-
->  drivers/pci/pcie/pme.c                        |  4 +--
->  drivers/pci/probe.c                           |  4 +--
->  drivers/pci/quirks.c                          |  2 +-
->  include/linux/pci.h                           |  7 +++++
->  21 files changed, 81 insertions(+), 65 deletions(-)
-> 
-> -- 
-> 2.23.0.187.g17f5b7556c-goog
-> 
+Thanks,
+Pawan
