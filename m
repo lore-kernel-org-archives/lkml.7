@@ -2,113 +2,123 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B6AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D25C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4A4206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43F720672
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKNOEn (ORCPT
+        id S1727137AbfKNOFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:04:43 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60824 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbfKNOEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:04:43 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 873AF8907A96FB076A9B;
-        Thu, 14 Nov 2019 22:04:38 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
- 22:04:29 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <valdis.kletnieks@vt.edu>, <gregkh@linuxfoundation.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] staging: exfat: remove two unused functions
-Date:   Thu, 14 Nov 2019 22:03:48 +0800
-Message-ID: <20191114140348.46088-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 14 Nov 2019 09:05:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40734 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfKNOFO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 09:05:14 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iVFjv-0003mN-UV; Thu, 14 Nov 2019 15:04:52 +0100
+Date:   Thu, 14 Nov 2019 15:04:51 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 17/23] y2038: time: avoid timespec usage in
+ settimeofday()
+In-Reply-To: <CAK8P3a2bxDZVKgcJoa99wr3tDyYckQAdk2f=RnL4vTFPjm3tXQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1911141457120.2507@nanos.tec.linutronix.de>
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-8-arnd@arndb.de> <alpine.DEB.2.21.1911132250010.2507@nanos.tec.linutronix.de> <CAK8P3a2bxDZVKgcJoa99wr3tDyYckQAdk2f=RnL4vTFPjm3tXQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+On Thu, 14 Nov 2019, Arnd Bergmann wrote:
+> On Wed, Nov 13, 2019 at 10:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Fri, 8 Nov 2019, Arnd Bergmann wrote:
+> > > -SYSCALL_DEFINE2(settimeofday, struct timeval __user *, tv,
+> > > +SYSCALL_DEFINE2(settimeofday, struct __kernel_old_timeval __user *, tv,
+> > >               struct timezone __user *, tz)
+> > >  {
+> > >       struct timespec64 new_ts;
+> > > -     struct timeval user_tv;
+> > >       struct timezone new_tz;
+> > >
+> > >       if (tv) {
+> > > -             if (copy_from_user(&user_tv, tv, sizeof(*tv)))
+> > > +             if (get_user(new_ts.tv_sec, &tv->tv_sec) ||
+> > > +                 get_user(new_ts.tv_nsec, &tv->tv_usec))
+> > >                       return -EFAULT;
+> >
+> > How is that supposed to be correct on a 32bit kernel?
+> 
+> I don't see the problem you are referring to. This should behave the
+> same way on a 32-bit kernel and on a 64-bit kernel, sign-extending
+> the tv_sec field, and copying the user tv_usec field into the
+> kernel tv_nsec, to be multiplied by 1000 a few lines later.
 
-drivers/staging/exfat/exfat_core.c:2045:4: warning: symbol 'calc_checksum_1byte' was not declared. Should it be static?
-drivers/staging/exfat/exfat_core.c:2080:5: warning: symbol 'calc_checksum_4byte' was not declared. Should it be static?
+You're right. Tired brain failed to see the implicit sign extension in
+get_user().
 
-The two functions has no caller in tree, so remove it.
+> Am I missing something?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/exfat/exfat_core.c | 35 -----------------------------------
- 1 file changed, 35 deletions(-)
+No.
 
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index 1638ed2..d2d3447 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -2042,17 +2042,6 @@ static s32 exfat_calc_num_entries(struct uni_name_t *p_uniname)
- 	return (len - 1) / 15 + 3;
- }
- 
--u8 calc_checksum_1byte(void *data, s32 len, u8 chksum)
--{
--	int i;
--	u8 *c = (u8 *)data;
--
--	for (i = 0; i < len; i++, c++)
--		chksum = (((chksum & 1) << 7) | ((chksum & 0xFE) >> 1)) + *c;
--
--	return chksum;
--}
--
- u16 calc_checksum_2byte(void *data, s32 len, u16 chksum, s32 type)
- {
- 	int i;
-@@ -2077,30 +2066,6 @@ u16 calc_checksum_2byte(void *data, s32 len, u16 chksum, s32 type)
- 	return chksum;
- }
- 
--u32 calc_checksum_4byte(void *data, s32 len, u32 chksum, s32 type)
--{
--	int i;
--	u8 *c = (u8 *)data;
--
--	switch (type) {
--	case CS_PBR_SECTOR:
--		for (i = 0; i < len; i++, c++) {
--			if ((i == 106) || (i == 107) || (i == 112))
--				continue;
--			chksum = (((chksum & 1) << 31) |
--				  ((chksum & 0xFFFFFFFE) >> 1)) + (u32)*c;
--		}
--		break;
--	default
--			:
--		for (i = 0; i < len; i++, c++)
--			chksum = (((chksum & 1) << 31) |
--				  ((chksum & 0xFFFFFFFE) >> 1)) + (u32)*c;
--	}
--
--	return chksum;
--}
--
- /*
-  *  Name Resolution Functions
-  */
--- 
-2.7.4
+> > > -             if (!timeval_valid(&user_tv))
+> > > +             if (tv->tv_usec > USEC_PER_SEC)
+> > >                       return -EINVAL;
+> >
+> > That's incomplete:
+> >
+> > static inline bool timeval_valid(const struct timeval *tv)
+> > {
+> >         /* Dates before 1970 are bogus */
+> >         if (tv->tv_sec < 0)
+> >                 return false;
+> >
+> >         /* Can't have more microseconds then a second */
+> >         if (tv->tv_usec < 0 || tv->tv_usec >= USEC_PER_SEC)
+> >                 return false;
+> >
+> >         return true;
+> > }
+> 
+> My idea was to not duplicate the range check that is done
+> in do_sys_settimeofday64() and again in do_settimeofday64:
+> 
+>         if (!timespec64_valid_settod(ts))
+>                 return -EINVAL;
+> 
+> The only check we should need in addition to this is to ensure
+> that passing an invalid tv_usec number doesn't become an
+> unexpectedly valid tv_nsec after the multiplication.
 
+Right, but please add a proper comment as you/we are going to scratch heads
+4 weeks from now when staring at that check and wondering why it is
+incomplete.
 
+Thanks,
+
+	tglx
