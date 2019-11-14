@@ -2,152 +2,152 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E699AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59479C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1612070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFBF206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ondIJO+l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QNUlRia8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKNIu7 (ORCPT
+        id S1726690AbfKNIwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:50:59 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:46422 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNIu7 (ORCPT
+        Thu, 14 Nov 2019 03:52:07 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28933 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725976AbfKNIwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:50:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1wxVpyQh0vekRMPuXPgyIq/v1OcqmGGMKosRRrc1FKM=; b=ondIJO+lfWnXDrjLEqSmurbIs
-        7SDblHUbM/2K5fI6vB3mXUS2vO3jrnCHW1xpi5HMIOcr1zi1Mr+snJ35G4ePWX1rnc+c0PqK39QP3
-        DixwCYX90/xW9szByi1vxX+/Y8r8YmYLwvVIAVbExUmfaOZ3x9CejgOQOeQuDHi0gKFNH9fEa8HG1
-        hs+3Bwdcr8yKwODDvhF+wkpubujmKzBTGt8tUpSvcEZiBw2DiNlW6T+QChrkNHtLdDO/klO70GKYh
-        emyp5vQGEUHWR6eNMYsQBotN8WTD1PxtINChrgC+x0/bE8JAZCkky4TZV/xHYjIrQCoGldsI6ya6v
-        CxVPXyGoA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVApT-0002Sk-1u; Thu, 14 Nov 2019 08:50:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CAE27301120;
-        Thu, 14 Nov 2019 09:49:03 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3540529DF1242; Thu, 14 Nov 2019 09:50:11 +0100 (CET)
-Date:   Thu, 14 Nov 2019 09:50:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v3 01/10] perf/cgroup: Reorder perf_cgroup_connect()
-Message-ID: <20191114085011.GL4131@hirez.programming.kicks-ass.net>
-References: <20191114003042.85252-1-irogers@google.com>
- <20191114003042.85252-2-irogers@google.com>
+        Thu, 14 Nov 2019 03:52:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573721526;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BFTDXu5KLCx/NgGlQEs4Px8yUQfHFzlFH/OlFo2n0ok=;
+        b=QNUlRia8af3RuBF49reGaCHPrQyGuFiTqVqoJ9xc8EfFn14OAOBySPOXbe3frQKpNSJYba
+        0q9xyqgkVAOZxWa0q28QHoZ6L6Imm3u+jhO/85/zf5dhP+pkpAja3rBHn3ecN+VUENlggy
+        Kt8DfOi1pUnj/3d6r6t0BIfZ84vkuAw=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-gu9VLXS5PGeQUGhCjnDcNg-1; Thu, 14 Nov 2019 03:52:04 -0500
+Received: by mail-oi1-f200.google.com with SMTP id q82so2701470oih.14
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 00:52:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XEwBZHA4L5rrNOG3OYpSp+PIcgka4zs8smBH6QqTobU=;
+        b=YSgRlKjhOvg3syA3fkQaN7cUICpI0Wc2x92n2D+AHsDUKYxmSsLEEa5hRTqPgfOily
+         AKM4FkMaKHIOnduBuAT37jW0qSpqcQAkiI2dqySiKqumYCwZXlHRAaw6t/3jEEGQ0Fnj
+         LSPV0yxuRXz7Qykmo4JvsUsRBaGPfSKLNCvAfO9qWMxeKQr5pPFtvOmvkgaNqFasxR0b
+         EtGxqcMvpEsFVM+z2HaKD72ECtjPuj/bhVQzIIs3FMgaJyDEBftUT+dCv/AOY74Ra7i/
+         lUlEymqegjUiM6R9hR6gcGXEKXqqN7heeRqMSEoK55WgwflnFzq6aemvWRrtXdZNaF6o
+         kXTw==
+X-Gm-Message-State: APjAAAW3FtQqReEIWV3LOyEJl3oRcgHx340D6HZq7eo/QOJ0Sed/xkea
+        D6d/mlrTJh840sq4DL+SOgoH66+LsVYuNHKEFReuUihmUUdy4yRqQEfof0x4MZyrMkOdkMX+TUS
+        NmSTmglbGjx0qgJgeC3BpZXkhHBW95zkywsSqQTf5
+X-Received: by 2002:a05:6808:2d8:: with SMTP id a24mr2573370oid.127.1573721524143;
+        Thu, 14 Nov 2019 00:52:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw1QDcDJLBPEsL/ncLIzgR6bS6OfTcJGtgLAB78T6NUoGPLrobtbWs6KSmYiwSL2HMp898O1D+tw+M5jgBSME0=
+X-Received: by 2002:a05:6808:2d8:: with SMTP id a24mr2573349oid.127.1573721523827;
+ Thu, 14 Nov 2019 00:52:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114003042.85252-2-irogers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108211323.1806194-11-arnd@arndb.de>
+ <CAFqZXNuevxW9d91Zpy6fw3LKrF=xtajAiB61soGQLxgP4xRnFg@mail.gmail.com>
+ <CAK8P3a38eZijQH=vChgm5fZBzOuV2Oi2c0LEdrMy4nKpL7QLbQ@mail.gmail.com>
+ <CAFqZXNsp3JxqW-ahCvtiZBECX5PWonpzMRK0MOn=6a28WzF4cA@mail.gmail.com> <CAK8P3a2FZ2_v6uUJJOurMAE7xYG6wq7T7ZvpLVAPA6FG2pm0dQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2FZ2_v6uUJJOurMAE7xYG6wq7T7ZvpLVAPA6FG2pm0dQ@mail.gmail.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Thu, 14 Nov 2019 09:51:52 +0100
+Message-ID: <CAFqZXNu4Tk4H3b_FS8=EA5QMi10kEgT22uD=61aDryHp-fXnig@mail.gmail.com>
+Subject: Re: [PATCH 20/23] y2038: move itimer reset into itimer.c
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        SElinux list <selinux@vger.kernel.org>
+X-MC-Unique: gu9VLXS5PGeQUGhCjnDcNg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 11, 2019 at 11:58 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sun, Nov 10, 2019 at 12:07 AM Ondrej Mosnacek <omosnace@redhat.com> wr=
+ote:
+> >
+> > On Sat, Nov 9, 2019 at 10:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > On Sat, Nov 9, 2019 at 2:43 PM Ondrej Mosnacek <omosnace@redhat.com> =
+wrote:
+> > >
+> > > > > -struct itimerval;
+> > > > > -extern int do_setitimer(int which, struct itimerval *value,
+> > > > > -                       struct itimerval *ovalue);
+> > > > > -extern int do_getitimer(int which, struct itimerval *value);
+> > > > > +#ifdef CONFIG_POSIX_TIMERS
+> > > > > +extern void clear_itimer(void);
+> > > > > +#else
+> > > > > +static inline void clear_itimer(void) {}
+> > > > > +#endif
+> > > > >
+> > >
+> > > > > @@ -249,6 +249,17 @@ int do_setitimer(int which, struct itimerval=
+ *value, struct itimerval *ovalue)
+> > > > >         return 0;
+> > > > >  }
+> > > > >
+> > > > > +#ifdef CONFIG_SECURITY_SELINUX
+> > > >
+> > > > Did you mean "#ifdef CONFIG_POSIX_TIMERS" here to match the header?
+> > >
+> > > No, this part is intentional, CONFIG_POSIX_TIMERS already controls
+> > > whether itimer.c is
+> > > compiled in the first place, but this function is only needed when ca=
+lled from
+> > > the selinux driver.
+> >
+> > All right, but you declare the function in time.h even if
+> > CONFIG_SECURITY_SELINUX is not enabled... it is kind of awkward when
+> > it can happen that the function is declared but not defined anywhere
+> > (even if it shouldn't be used by new users). Maybe you could at least
+> > put the header declaration/definition inside #ifdef
+> > CONFIG_SECURITY_SELINUX as well so it is clear that this function is
+> > intended for SELinux only?
+>
+> I don't see that as a problem, we rarely put declarations inside of an #i=
+fdef.
+> The main effect that would have is forcing any file that includes linux/t=
+ime.h
+> to be rebuilt when selinux is turned on or off in the .config.
 
-Hurm, you didn't fix my missing Changelog.. 
+OK, but with this patch if someone tries to use the function
+elsewhere, the build will succeed if SELinux is enabled in the config,
+but fail if it isn't.  Is that intended?  I would suggest at least
+clearly documenting it above the declaration that the function isn't
+supposed to be used by new users and doing so will cause build to fail
+under CONFIG_SECURITY_SELINUX=3Dn.
 
-On Wed, Nov 13, 2019 at 04:30:33PM -0800, Ian Rogers wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
+--
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
 
-Move perf_cgroup_connect() after perf_event_alloc(), such that we can
-find/use the PMU's cpu context.
-
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  kernel/events/core.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cfd89b4a02d8..0dce28b0aae0 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10597,12 +10597,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->  	if (!has_branch_stack(event))
->  		event->attr.branch_sample_type = 0;
->  
-> -	if (cgroup_fd != -1) {
-> -		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
-> -		if (err)
-> -			goto err_ns;
-> -	}
-> -
->  	pmu = perf_init_event(event);
->  	if (IS_ERR(pmu)) {
->  		err = PTR_ERR(pmu);
-> @@ -10615,6 +10609,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->  		goto err_pmu;
->  	}
->  
-> +	if (cgroup_fd != -1) {
-> +		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
-> +		if (err)
-> +			goto err_pmu;
-> +	}
-> +
->  	err = exclusive_event_init(event);
->  	if (err)
->  		goto err_pmu;
-> @@ -10675,12 +10675,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->  	exclusive_event_destroy(event);
->  
->  err_pmu:
-> +	if (is_cgroup_event(event))
-> +		perf_detach_cgroup(event);
->  	if (event->destroy)
->  		event->destroy(event);
->  	module_put(pmu->module);
->  err_ns:
-> -	if (is_cgroup_event(event))
-> -		perf_detach_cgroup(event);
->  	if (event->ns)
->  		put_pid_ns(event->ns);
->  	if (event->hw.target)
-> -- 
-> 2.24.0.432.g9d3f5f5b63-goog
-> 
