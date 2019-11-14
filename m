@@ -2,102 +2,136 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FE9C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F438C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE5320715
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5768A20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dZ1o3iwZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="t8WSXqCs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKNFeQ (ORCPT
+        id S1726910AbfKNFej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 00:34:16 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42516 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfKNFeQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 00:34:16 -0500
-Received: by mail-pl1-f193.google.com with SMTP id j12so2100691plt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 21:34:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WnPnwB7+tEaKVjCeEYFNQsf68FzMqh6+Atc4G5a3DV4=;
-        b=dZ1o3iwZaKoXYDcRarBQMQQIbKGvT1/uZMV5QvrQzNLfSdAlLK+2QdPZBIew6mpaIY
-         ruDLhVoQIQuzH9BzmKaFISKbu7tXlHil6mvxPX4h193BiRyUDIVhoOwxo9Ms1DSYFAMz
-         Qfl9hiELr7/Vdh03dNvG13EPY6DxW7wQWCYyv9z7WmLmSyPZeOqi4526TduGbdAn2yc4
-         rvMg1Q59MQrClfg07Gi843S3HAFvF0RDhFgagkoOhYQmSmWun4jIJJb24rEQjAn5+Gjs
-         vTmpmTYRiv7Cd6qupBYjpBhwIKYiuoDVbs07gtDUFF+f2LDw3LtSWjIplL1VUpkjSt4W
-         Od3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WnPnwB7+tEaKVjCeEYFNQsf68FzMqh6+Atc4G5a3DV4=;
-        b=D/3nTGP2hcQ7pikoiB+ainv3TcIv3WOeokCfqfRY8n4OtGA2NMeqPqN5IqMAlOt9x0
-         ZRuBU3AjKTP4IRIYdft2eWFp/MMNMiHcWv72mjrIQojfQc2ZNHoArbRSNeofhe/w79Cz
-         oQq+i/twL08j6Hnjm5ejtQqPHZ+/2G/KQCRbtdzJMa+sbZcpvz19PEmvb0i+zDCHrOZq
-         mJboXV+Y9NwXSgS+LS+bPFPYSMKuyzTJNM46cBd7Phn1aGw8SDim+/Gc1DmQdkSHDxIZ
-         T/bSoQsl4hs/qWtbNDfx5fXRHdNzaEvPGDuwgkjOioJwjZDykFrMV3hVOCF+tnIXMQxu
-         lyrg==
-X-Gm-Message-State: APjAAAVtrhRmS3DY1uzdGJBq82ybv0zgzBM5cP0bH7Rb2XN0cSxyR0GZ
-        PUn8G95SPTrSdebTn6f2cnRk
-X-Google-Smtp-Source: APXvYqyBGC15lugybXpYqMOdeznxM2kQyrl4gUr+Lq6xXQOeIbhXd1uM0KupL0ilL7lwC4fL9OOk9Q==
-X-Received: by 2002:a17:902:6bc3:: with SMTP id m3mr7529922plt.329.1573709654189;
-        Wed, 13 Nov 2019 21:34:14 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id a16sm4520474pfc.56.2019.11.13.21.34.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Nov 2019 21:34:12 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:04:04 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     mturquette@baylibre.com, robh+dt@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        fisher.cheng@bitmain.com, alec.lin@bitmain.com
-Subject: Re: [PATCH v6 0/7] Add Bitmain BM1880 clock driver
-Message-ID: <20191114053404.GA8459@mani>
-References: <20191026110253.18426-1-manivannan.sadhasivam@linaro.org>
- <20191113222116.E5E9B206E3@mail.kernel.org>
+        Thu, 14 Nov 2019 00:34:39 -0500
+Received: from ozlabs.org ([203.11.71.1]:33101 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbfKNFej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 00:34:39 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47D9Cc3YlQz9sP6;
+        Thu, 14 Nov 2019 16:34:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573709676;
+        bh=J7au3t/viCe8IXQ9tcxSPzFq5sAxnt6TXtlaa5JFCik=;
+        h=Date:From:To:Cc:Subject:From;
+        b=t8WSXqCsXHYgJJJHFNhd8gW8/S8oXTZ0XEXunwanJFdlUrspQOlwKnHxOBsHXjjlH
+         N6vyrkQ6CIYdsOCS8u3Rn/qJMYeueF5zCjAWDGhR9EZWrqF+HE2CjE0MzKXXugOBam
+         FI0HWN4VdruSsaslPrRiJ0Q1GT3U/C732NXUW/IE4ytl2CNixt8dsUmaBjUBbO81Al
+         btyYzt7Ir+GKwrUd7e/fsd4azJyvHxjAWbT8Vos3ttghFmfNquTwpl/UT2CryzyCEz
+         Y6PwdBWXs+4ru7bK2vaFltdHS/PtDLkBhtanE4QtgV7A7PYsI91Ym1FSayK12kdQo8
+         cIqIGIRw2e5PQ==
+Date:   Thu, 14 Nov 2019 16:34:35 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the hmm tree
+Message-ID: <20191114163435.6273b6a1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113222116.E5E9B206E3@mail.kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/akreFWQ1wi=Oo/XxHODsPFM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 02:21:15PM -0800, Stephen Boyd wrote:
-> Quoting Manivannan Sadhasivam (2019-10-26 04:02:46)
-> > Hello,
-> > 
-> > This patchset adds common clock driver for Bitmain BM1880 SoC clock
-> > controller. The clock controller consists of gate, divider, mux
-> > and pll clocks with different compositions. Hence, the driver uses
-> > composite clock structure in place where multiple clocking units are
-> > combined together.
-> > 
-> > This patchset also removes UART fixed clock and sources clocks from clock
-> > controller for Sophon Edge board where the driver has been validated.
-> > 
-> 
-> Are you waiting for review here? I see some kbuild reports so I assumed
-> you would fix and resend.
+--Sig_/akreFWQ1wi=Oo/XxHODsPFM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'll fix it but I was expecting some review from you so that I can send the
-next revision incorporating all comments.
+Hi all,
 
-Thanks,
-Mani
+After merging the hmm tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-> 
+drivers/infiniband/hw/hfi1/user_exp_rcv.c: In function 'set_rcvarray_entry':
+drivers/infiniband/hw/hfi1/user_exp_rcv.c:768:33: warning: passing argument=
+ 2 of 'mmu_interval_notifier_insert' makes pointer from integer without a c=
+ast [-Wint-conversion]
+  768 |    &node->notifier, tbuf->vaddr + (pageidx * PAGE_SIZE),
+      |                     ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+      |                                 |
+      |                                 long unsigned int
+In file included from include/rdma/ib_verbs.h:59,
+                 from include/rdma/ib_hdrs.h:53,
+                 from drivers/infiniband/hw/hfi1/hfi.h:68,
+                 from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
+                 from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
+include/linux/mmu_notifier.h:295:24: note: expected 'struct mm_struct *' bu=
+t argument is of type 'long unsigned int'
+  295 |      struct mm_struct *mm, unsigned long start,
+      |      ~~~~~~~~~~~~~~~~~~^~
+drivers/infiniband/hw/hfi1/user_exp_rcv.c:769:26: warning: passing argument=
+ 4 of 'mmu_interval_notifier_insert' makes integer from pointer without a c=
+ast [-Wint-conversion]
+  769 |    npages * PAGE_SIZE, fd->mm);
+      |                        ~~^~~~
+      |                          |
+      |                          struct mm_struct *
+In file included from include/rdma/ib_verbs.h:59,
+                 from include/rdma/ib_hdrs.h:53,
+                 from drivers/infiniband/hw/hfi1/hfi.h:68,
+                 from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
+                 from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
+include/linux/mmu_notifier.h:296:20: note: expected 'long unsigned int' but=
+ argument is of type 'struct mm_struct *'
+  296 |      unsigned long length,
+      |      ~~~~~~~~~~~~~~^~~~~~
+drivers/infiniband/hw/hfi1/user_exp_rcv.c:767:9: error: too few arguments t=
+o function 'mmu_interval_notifier_insert'
+  767 |   ret =3D mmu_interval_notifier_insert(
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from include/rdma/ib_verbs.h:59,
+                 from include/rdma/ib_hdrs.h:53,
+                 from drivers/infiniband/hw/hfi1/hfi.h:68,
+                 from drivers/infiniband/hw/hfi1/mmu_rb.h:50,
+                 from drivers/infiniband/hw/hfi1/user_exp_rcv.c:50:
+include/linux/mmu_notifier.h:294:5: note: declared here
+  294 | int mmu_interval_notifier_insert(struct mmu_interval_notifier *mni,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Caused by commit
+
+  c90dad714405 ("RDMA/hfi1: Use mmu_interval_notifier_insert for user_exp_r=
+cv")
+
+I have used the hmm tree from next-20191113 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/akreFWQ1wi=Oo/XxHODsPFM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3M52sACgkQAVBC80lX
+0GyA6Qf+Nf6nekFQi3+09GBkJemfhxv0XCe3c2Wo57BvNqOrcYdAdg6n00z7XxrC
+Oj0c8PiM9hrUp923jshRkCULgD36NfTdlCj9u2quS6RqYkmFGNs3SgJCJz/Dbj3L
+IVk6J+y82pItAEVjFjyrZkv1tVnQtYtkVMKOwZTDHEhYIhkVVywoS5/HEBYb4SbN
+12kTLNXhxiVxlXnqmMYo+eLVrn+cpfwdBe/dkCOiQEnL16DXeScWOLjRoK97vi/y
+5Ra2Xm8eFhsuGd06kaECX/T5OQ3xJZ+oI87Z/zjhHgSiv6OTjB8dfQh9zAHspc+U
+GOga9IAr2ae+sERCs3EIexeqChGDCw==
+=OxuZ
+-----END PGP SIGNATURE-----
+
+--Sig_/akreFWQ1wi=Oo/XxHODsPFM--
