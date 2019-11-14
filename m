@@ -2,77 +2,142 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A1DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2139C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863A920718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74E220724
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:31:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7cYWT2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfKNX17 (ORCPT
+        id S1727126AbfKNXbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:27:59 -0500
-Received: from mga03.intel.com ([134.134.136.65]:56626 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfKNX17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 18:27:59 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 15:27:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,306,1569308400"; 
-   d="scan'208";a="406494946"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Nov 2019 15:27:56 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iVOWq-000HuG-93; Fri, 15 Nov 2019 07:27:56 +0800
-Date:   Fri, 15 Nov 2019 07:26:55 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     kbuild-all@lists.01.org, Qiang Zhao <qiang.zhao@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Scott Wood <oss@buserror.net>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [RFC PATCH] soc: fsl: qe: qe_uart_set_mctrl() can be static
-Message-ID: <20191114232655.vhu7d4putwbbyyee@4978f4969bb8>
-References: <20191101124210.14510-37-linux@rasmusvillemoes.dk>
+        Thu, 14 Nov 2019 18:31:31 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39920 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfKNXbb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 18:31:31 -0500
+Received: by mail-qk1-f195.google.com with SMTP id 15so6631453qkh.6;
+        Thu, 14 Nov 2019 15:31:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:message-id;
+        bh=Qge9CCV+EX+KklZtFlR08GP7ynLSZVKpctR9wLJZkrk=;
+        b=o7cYWT2NAVBTODktXqN3bA5MNTX9oujvZ+1oQbd/jgb4c0pWMubNMRnizhS18w0N3F
+         RTUuhtyo182IjhuqjWUbPSJQnRXUaTyRyOChyC34m8VlymqsqQByM78aaTsm8WQmXRu/
+         3M5KHVNYv+4u2JW2r0k7LBLfK/PVkO7+B4lzyJC+ATHFVDY1W3MBOptKDktGXGf4sOaM
+         lYDtkrKg8J3hOHseidITWb6yw6RRteCZc+ucs8iLzUCLp+eStFbmD8vZFwRcq5HE7qpz
+         VTAqNSHMzz0hk1XkiPJxSKmUfpH24wxk6ZEfQRO9SzM9Ngq1h6f5f73KXWXcEe1VptSu
+         wluQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:message-id;
+        bh=Qge9CCV+EX+KklZtFlR08GP7ynLSZVKpctR9wLJZkrk=;
+        b=FCHrVm2oacByDz/oToRsvweLGI5P7wpQntFj86HbDx5yoC6Dj5YcqLDYFU44rBxKz5
+         I2laOUS28/eBSx9ssUaq5DbdQKuq66qgDHbEakJQpwraLO+4PFTC2b/NmgtFfNkMXyyt
+         mNP2VSTshigPUrOx9n4fHwHiuEJOLkKWm1JkX660FUc1uW1Fbl9J81CrN9jLOs1TLT8Q
+         K9gY3i7TSmzGyxf3oeKpuHaUwDzyvLNpXsu0lD8lSYPWvbbeHmHXjZDiLiLR33qp1sZd
+         H0r7nL+EBVbipihyDRH4bbCT37IPmPci0yFJKwnCKYTt2c48CQ9A/fK1WZuBScczDNI4
+         peuQ==
+X-Gm-Message-State: APjAAAWiTfw1EsSGypKx5RUGBIZMxiLKLgGYbaj/kCzs9VGdbhrsS+HX
+        aC3jdQgTtT40it68OIcvZtQF4/1o
+X-Google-Smtp-Source: APXvYqyvMYZ8hJ6uDmNcs55NE/gS6PLnVHtMH2DMhGL/GQeqxUNy/0vu4dHELi5ALZixu8fUbnGFxw==
+X-Received: by 2002:ae9:e114:: with SMTP id g20mr9327083qkm.13.1573774290102;
+        Thu, 14 Nov 2019 15:31:30 -0800 (PST)
+Received: from [192.168.86.249] ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id x1sm3818039qtf.81.2019.11.14.15.31.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 15:31:29 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Date:   Thu, 14 Nov 2019 20:30:30 -0300
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20191114174022.62c8259e@gandalf.local.home>
+References: <20191114133719.309-1-sudipm.mukherjee@gmail.com> <20191114174022.62c8259e@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101124210.14510-37-linux@rasmusvillemoes.dk>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] libtraceevent: fix header installation
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+CC:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
+Message-ID: <76775DFB-79CB-4B85-86CE-EB9406976E9D@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On November 14, 2019 7:40:22 PM GMT-03:00, Steven Rostedt <rostedt@goodmis=
+=2Eorg> wrote:
+>
+>Arnaldo,
+>
+>Can you take this?
 
-Fixes: 116af8542b17 ("soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- ucc_uart.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure
 
-diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-index a5330582b6103..58891be29e1cf 100644
---- a/drivers/tty/serial/ucc_uart.c
-+++ b/drivers/tty/serial/ucc_uart.c
-@@ -283,7 +283,7 @@ static unsigned int qe_uart_tx_empty(struct uart_port *port)
-  * don't need that support. This function must exist, however, otherwise
-  * the kernel will panic.
-  */
--void qe_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
-+static void qe_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
- }
- 
+>
+>Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis=2Eorg>
+>
+>-- Steve
+>
+>
+>On Thu, 14 Nov 2019 13:37:19 +0000
+>Sudip Mukherjee <sudipm=2Emukherjee@gmail=2Ecom> wrote:
+>
+>> When we passed some location in DESTDIR, install_headers called
+>> do_install with DESTDIR as part of the second argument=2E But
+>do_install
+>> is again using '$(DESTDIR_SQ)$2', so as a result the headers were
+>> installed in a location $DESTDIR/$DESTDIR=2E In my testing I passed
+>> DESTDIR=3D/home/sudip/test and the headers were installed in:
+>> /home/sudip/test/home/sudip/test/usr/include/traceevent=2E
+>> Lets remove DESTDIR from the second argument of do_install so that
+>the
+>> headers are installed in the correct location=2E
+>>=20
+>> Signed-off-by: Sudip Mukherjee <sudipm=2Emukherjee@gmail=2Ecom>
+>> ---
+>>=20
+>> Hi Steve,
+>> sent this earlier as an attachment to an email thread, not sure if
+>you
+>> saw it, so sending it now properly=2E
+>> The other problem with the pkgconfig, I guess we can live with that
+>for
+>> now as that folder is given by pc_path=2E
+>>=20
+>>  tools/lib/traceevent/Makefile | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>=20
+>> diff --git a/tools/lib/traceevent/Makefile
+>b/tools/lib/traceevent/Makefile
+>> index 5315f3787f8d=2E=2Ecbb429f55062 100644
+>> --- a/tools/lib/traceevent/Makefile
+>> +++ b/tools/lib/traceevent/Makefile
+>> @@ -232,10 +232,10 @@ install_pkgconfig:
+>> =20
+>>  install_headers:
+>>  	$(call QUIET_INSTALL, headers) \
+>> -		$(call do_install,event-parse=2Eh,$(DESTDIR)$(includedir_SQ),644); \
+>> -		$(call do_install,event-utils=2Eh,$(DESTDIR)$(includedir_SQ),644); \
+>> -		$(call do_install,trace-seq=2Eh,$(DESTDIR)$(includedir_SQ),644); \
+>> -		$(call do_install,kbuffer=2Eh,$(DESTDIR)$(includedir_SQ),644)
+>> +		$(call do_install,event-parse=2Eh,$(includedir_SQ),644); \
+>> +		$(call do_install,event-utils=2Eh,$(includedir_SQ),644); \
+>> +		$(call do_install,trace-seq=2Eh,$(includedir_SQ),644); \
+>> +		$(call do_install,kbuffer=2Eh,$(includedir_SQ),644)
+>> =20
+>>  install: install_lib
+>> =20
+
