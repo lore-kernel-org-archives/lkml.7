@@ -2,105 +2,154 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C457EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F17C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A351E2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23607206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKNOgs convert rfc822-to-8bit (ORCPT
+        id S1726949AbfKNOhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:36:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfKNOgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:36:48 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59D0C206D8;
-        Thu, 14 Nov 2019 14:36:46 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 09:36:44 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 00/10] ftrace: Add register_ftrace_direct()
-Message-ID: <20191114093644.5c183b1d@gandalf.local.home>
-In-Reply-To: <alpine.LSU.2.21.1911141004420.20723@pobox.suse.cz>
-References: <20191108212834.594904349@goodmis.org>
-        <alpine.LSU.2.21.1911131604170.18679@pobox.suse.cz>
-        <20191113113105.140fe6b6@gandalf.local.home>
-        <alpine.LSU.2.21.1911141004420.20723@pobox.suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+        Thu, 14 Nov 2019 09:37:37 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46258 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726214AbfKNOhg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 09:37:36 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEEbJmF072707
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:37:35 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w9749mtbq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:37:33 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 14 Nov 2019 14:37:24 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Nov 2019 14:37:20 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEEbJpS39125238
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 14:37:19 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 432A1AE045;
+        Thu, 14 Nov 2019 14:37:19 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 073DFAE053;
+        Thu, 14 Nov 2019 14:37:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.133.147])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Nov 2019 14:37:17 +0000 (GMT)
+Subject: Re: [PATCH v7 4/5] IMA: Add support to limit measuring keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 14 Nov 2019 09:37:17 -0500
+In-Reply-To: <20191114031202.18012-5-nramas@linux.microsoft.com>
+References: <20191114031202.18012-1-nramas@linux.microsoft.com>
+         <20191114031202.18012-5-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111414-0008-0000-0000-0000032F0196
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111414-0009-0000-0000-00004A4E10BB
+Message-Id: <1573742237.4793.30.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911140136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 10:05:42 +0100 (CET)
-Miroslav Benes <mbenes@suse.cz> wrote:
+On Wed, 2019-11-13 at 19:12 -0800, Lakshmi Ramasubramanian wrote:
+> +/**
+> + * ima_match_keyring - determine whether the keyring matches the measure rule
+> + * @rule: a pointer to a rule
+> + * @keyring: name of the keyring to match against the measure rule
+> + *
+> + * If the measure action for KEY_CHECK does not specify keyrings=
+> + * option then return true (Measure all keys).
+> + * Else, return true if the given keyring name is present in
+> + * the keyrings= option. False, otherwise.
+> + */
+> +static bool ima_match_keyring(struct ima_rule_entry *rule,
+> +			      const char *keyring)
+> +{
+> +	if ((keyring == NULL) || (rule->keyrings == NULL)
+> +		return true;
 
-> On Wed, 13 Nov 2019, Steven Rostedt wrote:
-> 
-> > On Wed, 13 Nov 2019 16:10:36 +0100 (CET)
-> > Miroslav Benes <mbenes@suse.cz> wrote:
-> >   
-> > > So I tried to run the selftests and ran into the same timeout issue we had 
-> > > with live patching :/
-> > > 
-> > > See http://lkml.kernel.org/r/20191025115041.23186-1-mbenes@suse.cz for a possible solution.  
-> > 
-> > Is this when you run the all the selftests?  
-> 
-> Yes, when I run all ftrace selftests (make run_tests in 
-> tools/testing/selftests/ftrace/).
+If the policy requires matching a specific keyring, then the "keyring"
+needs to match.  The logic, here, isn't quite right.
 
-Thanks, I added this:
+> +	else
+> +		return (strstr(rule->keyrings, keyring) != NULL);
 
-From 6105e34804bc3a9a35e8c10fcd9e10b8b5a22f8e Mon Sep 17 00:00:00 2001
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Date: Wed, 13 Nov 2019 11:48:39 -0500
-Subject: [PATCH] tracing/selftests: Turn off timeout setting
+    if (rule->keyrings) {
+            if (!keyring)
+                    return false;
+		
+            return (strstr(rule->keyrings, keyring) != NULL);
+    }
 
-As the ftrace selftests can run for a long period of time, disable the
-timeout that the general selftests have. If a selftest hangs, then it
-probably means the machine will hang too.
+    return true;
 
-Link: https://lore.kernel.org/r/alpine.LSU.2.21.1911131604170.18679@pobox.suse.cz
+Keyrings may be created by userspace with any name (e.g. foo, foobar,
+...).  A keyring name might be a subset of another keyring name.  For
+example, with the policy "keyrings=foobar", keys being loaded on "foo"
+would also be measured.  Using strstr() will not achieve what is
+needed.
 
-Suggested-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/testing/selftests/ftrace/settings | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 tools/testing/selftests/ftrace/settings
-
-diff --git a/tools/testing/selftests/ftrace/settings b/tools/testing/selftests/ftrace/settings
-new file mode 100644
-index 000000000000..e7b9417537fb
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/settings
-@@ -0,0 +1 @@
-+timeout=0
--- 
-2.20.1
+Mimi
 
 
--- Steve
+> +}
+> +
+>  /**
+>   * ima_match_rules - determine whether an inode matches the measure rule.
+>   * @rule: a pointer to a rule
+> @@ -364,18 +384,23 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
+>   * @secid: the secid of the task to be validated
+>   * @func: LIM hook identifier
+>   * @mask: requested action (MAY_READ | MAY_WRITE | MAY_APPEND | MAY_EXEC)
+> + * @keyring: keyring name to check in policy for KEY_CHECK func
+>   *
+>   * Returns true on rule match, false on failure.
+>   */
+>  static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+>  			    const struct cred *cred, u32 secid,
+> -			    enum ima_hooks func, int mask)
+> +			    enum ima_hooks func, int mask,
+> +			    const char *keyring)
+>  {
+>  	int i;
+>  
+>  	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
+> -		if ((rule->flags & IMA_FUNC) && (rule->func == func))
+> +		if ((rule->flags & IMA_FUNC) && (rule->func == func)) {
+> +			if (func == KEY_CHECK)
+> +				return ima_match_keyring(rule, keyring);
+>  			return true;
+> +		}
+>  		return false;
+>  	}
+>  	if ((rule->flags & IMA_FUNC) &&
+
