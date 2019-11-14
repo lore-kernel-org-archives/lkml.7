@@ -2,108 +2,82 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD92FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43AAC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD66206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADED120709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:42:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKNJlz (ORCPT
+        id S1726567AbfKNJmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:41:55 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2098 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726106AbfKNJlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:41:55 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 8836451502569967E717;
-        Thu, 14 Nov 2019 09:41:53 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 14 Nov 2019 09:41:53 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 14 Nov
- 2019 09:41:53 +0000
-Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
-To:     Hannes Reinecke <hare@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "hare@suse.com" <hare@suse.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>
-References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
- <1573652209-163505-4-git-send-email-john.garry@huawei.com>
- <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
- <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
- <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
- <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
- <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
-Date:   Thu, 14 Nov 2019 09:41:51 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 14 Nov 2019 04:42:37 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:34067 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfKNJmg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:42:36 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iVBdz-0002lV-0H; Thu, 14 Nov 2019 09:42:27 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] jffs2: fix indentation issue
+Date:   Thu, 14 Nov 2019 09:42:26 +0000
+Message-Id: <20191114094226.131317-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/11/2019 18:38, Hannes Reinecke wrote:
->> Hi Hannes,
->>
->>> Oh, my. Indeed, that's correct.
->>
->> The tags could be kept in sync like this:
->>
->> shared_tag = blk_mq_get_tag(shared_tagset);
->> if (shared_tag != -1)
->>      sbitmap_set(hctx->tags, shared_tag);
->>
->> But that's obviously not ideal.
->>
-> Actually, I _do_ prefer keeping both in sync.
-> We might want to check if the 'normal' tag is set (typically it would 
-> not, but then, who knows ...)
-> The beauty here is that both 'shared' and 'normal' tag are in sync, so 
-> if a driver would be wanting to use the tag as index into a command 
-> array it can do so without any surprises.
-> 
-> Why do you think it's not ideal?
+From: Colin Ian King <colin.king@canonical.com>
 
-A few points:
-- Getting a bit from one tagset and then setting it in another tagset is 
-a bit clunky.
-- There may be an atomicity of the getting the shared tag bit and 
-setting the hctx tag bit - I don't think that there is.
-- Consider that sometimes we may want to check if there is space on a hw 
-queue - checking the hctx tags is not really proper any longer, as 
-typically there would always be space on hctx, but not always the shared 
-tags. We did delete blk_mq_can_queue() yesterday, which would be an 
-example of that. Need to check if there are others.
+There are a couple of debug statements that are indented
+too deeply, remove the extraneous tabs.
 
-Having said all that, the obvious advantage is performance gain, can 
-still use request.tag and so maybe less intrusive changes.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/jffs2/nodemgmt.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I'll have a look at the implementation. The devil is mostly in the detail...
+diff --git a/fs/jffs2/nodemgmt.c b/fs/jffs2/nodemgmt.c
+index a7bbe879cfc3..4699a4ab519f 100644
+--- a/fs/jffs2/nodemgmt.c
++++ b/fs/jffs2/nodemgmt.c
+@@ -624,8 +624,8 @@ void jffs2_mark_node_obsolete(struct jffs2_sb_info *c, struct jffs2_raw_node_ref
+ 					  ref->flash_offset, jeb->used_size);
+ 			BUG();
+ 		})
+-			jffs2_dbg(1, "Obsoleting previously unchecked node at 0x%08x of len %x\n",
+-				  ref_offset(ref), freed_len);
++		jffs2_dbg(1, "Obsoleting previously unchecked node at 0x%08x of len %x\n",
++			  ref_offset(ref), freed_len);
+ 		jeb->unchecked_size -= freed_len;
+ 		c->unchecked_size -= freed_len;
+ 	} else {
+@@ -635,8 +635,8 @@ void jffs2_mark_node_obsolete(struct jffs2_sb_info *c, struct jffs2_raw_node_ref
+ 					  ref->flash_offset, jeb->used_size);
+ 			BUG();
+ 		})
+-			jffs2_dbg(1, "Obsoleting node at 0x%08x of len %#x: ",
+-				  ref_offset(ref), freed_len);
++		jffs2_dbg(1, "Obsoleting node at 0x%08x of len %#x: ",
++			  ref_offset(ref), freed_len);
+ 		jeb->used_size -= freed_len;
+ 		c->used_size -= freed_len;
+ 	}
+-- 
+2.20.1
 
-Thanks,
-John
