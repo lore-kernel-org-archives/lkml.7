@@ -2,136 +2,104 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCFEC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBBCC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B370B2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCFF2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="KW8h3Za2"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="aTy6eNni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKNPTb (ORCPT
+        id S1726977AbfKNPUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:19:31 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44193 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfKNPTb (ORCPT
+        Thu, 14 Nov 2019 10:20:08 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:62876 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfKNPUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:19:31 -0500
-Received: by mail-io1-f66.google.com with SMTP id j20so7151196ioo.11
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:19:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tDdQmYavPXfwAMVihcceAngcVZVudc5stPylZ/TzqA4=;
-        b=KW8h3Za2bC42GqVYn+81yUge003EoXRT6bhf3lE2zZrul4V+Gkvzwr017Ci3NlD1CT
-         iCxfP5AZIwtMZ2dyTQwlJhi2TMfa9d9FQMfXg+3JCOXBbQKWSX3NoKh6yQxVi+LQyqQU
-         T2N39MKmqmYxrPGzwUHe2g1dS+xzYRd6HI3TZpRz93G9TLB+dZMcdZNJ48JgOGhCDVMd
-         8sJc/8StxjsboVRGCFYQgTnqg9KrhjhZaqBUXYC5LnCkAncavzLwdq1z/1OxE0YkmFb3
-         cdFL1kIaLDqTkiDk9aShO5sZHdEGjwb9lm3oXOxpefxZw+uxHKRopTRM9TpIVNXVibuV
-         DdIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tDdQmYavPXfwAMVihcceAngcVZVudc5stPylZ/TzqA4=;
-        b=NhDiObnS9o/3sk6rzsJlODB4kdzNoDwF3ziNNCNUd6gn9dosLHQRXaA4STbNut1EPg
-         xiOemXlHWTGZFlDzY/XViRb5/hKjZCUJTK9foX9tdfB9pD1o0YQBimjMnizK3UrAUXnT
-         kiZohvCGaxiEds2MuZR1Hc+wuDspdsnnRPwcNIwkf2HD0tfWS6kMU9AlzMGAS5FEIn2i
-         oyxKD0Zm9rKVskn0RKwh8vN102/2NcqS8lzJtpJOGScv+w7s7kq/XXylQJEo0wl5Bb5m
-         jlsmlvhL9XbiZk8Dv+sr5SynIxyC2DuJ5n15UOtdQP3vM05VfwT2c5Lqulz9KyKyOknO
-         uCqw==
-X-Gm-Message-State: APjAAAVmq6KHFPv+ZS5wzz4Dn8C0H5na8cU5x8dHYkEzidO9TVZSaozd
-        wAenSRPwgas0amBaJsIkv47B8A==
-X-Google-Smtp-Source: APXvYqwOocapzh/vXy7B7ZyJ8zCjfx/xWNzIdTKhoK/SsGvYxKriRPokthX4D8cafUhLCmR42mesbQ==
-X-Received: by 2002:a6b:7f43:: with SMTP id m3mr9135039ioq.72.1573744768914;
-        Thu, 14 Nov 2019 07:19:28 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id k4sm531229iof.61.2019.11.14.07.19.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 07:19:28 -0800 (PST)
-Subject: Re: [PATCH BUGFIX V2 0/1] block, bfq: deschedule empty bfq_queues not
- referred by any process
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        tschubert@bafh.org, patdung100@gmail.com, cevich@redhat.com
-References: <20191114093311.47877-1-paolo.valente@linaro.org>
- <0cb0a853-e036-9884-5681-f4617de5c662@kernel.dk>
- <A2E68F00-EFEA-428E-A6C1-267E57450FF6@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <cc6d7197-2021-f86a-440a-c1d9c11ce191@kernel.dk>
-Date:   Thu, 14 Nov 2019 08:19:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 10:20:08 -0500
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id xAEFK48h013579;
+        Fri, 15 Nov 2019 00:20:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xAEFK48h013579
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573744805;
+        bh=3xRjq3uNRUjL7HgdFdr9feX3wpSW0Sa0zqEAmZVb+HE=;
+        h=From:Date:Subject:To:Cc:From;
+        b=aTy6eNniRWzcbIl+ZTnv6kz6TA69XYKi13+XThpw9rtQWRaqzy4Nd4QM6cIMoBuLE
+         7npBx+Y5SujRoi6UQ9VOSNM1bHf3Bgi87bu2Szix3QExBsR/Mtb2PTMjxwHZI8NvmN
+         2NHiNlothrf/R9/w36jx8/3OfmNRkBX/8fsHr7gi5+EhN+3eYid5dS/pEbCQIVGVHA
+         m9IM1o4J3HTP32BMnkQrkU6cL8k6UP9sjSKKJa0gpNJ//b49ReZDL/cpmeP8jAIIBf
+         qBnSu7H2CZM0QovcfVloQhqfbAqubTm8r6zGo+u9lWrgZa3cISTamSPb6sihzd9st/
+         OgxTP40nF8sXw==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id 190so4091905vss.8;
+        Thu, 14 Nov 2019 07:20:04 -0800 (PST)
+X-Gm-Message-State: APjAAAV6VUcVRFQXyiwcqlLgBsY5tI8/jwNp9nmCwGKKsiFc1Wyb9zFp
+        s6j5Gy50Sgdf5nuyjvg0wFGq0L+D5B+bEOrNNoA=
+X-Google-Smtp-Source: APXvYqzsCpF7BoPyCPU6uyM+cv4BXaVEnVdg0L9GEzq1RIcJ6vKtAiRpl6zS9qGgnHGMwR4dKg8Y64d12gFXaUkpQnY=
+X-Received: by 2002:a05:6102:3204:: with SMTP id r4mr2491856vsf.181.1573744803448;
+ Thu, 14 Nov 2019 07:20:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <A2E68F00-EFEA-428E-A6C1-267E57450FF6@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 15 Nov 2019 00:19:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATqoF-NVhkP9J7SyDmK-x8vQ5pDJ7U_aEngdJb_vvDixg@mail.gmail.com>
+Message-ID: <CAK7LNATqoF-NVhkP9J7SyDmK-x8vQ5pDJ7U_aEngdJb_vvDixg@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.4(-rc8)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        masahiroy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/14/19 8:14 AM, Paolo Valente wrote:
-> 
-> 
->> Il giorno 14 nov 2019, alle ore 15:02, Jens Axboe <axboe@kernel.dk> ha scritto:
->>
->> On 11/14/19 2:33 AM, Paolo Valente wrote:
->>> Hi Jens,
->>> change from V1: added check to correctly work only on bfq-queues
->>> scheduled for service, and not on in-service bfq-queues (it makes no
->>> sense, and it creates inconsistencies, to deschedule an in-service
->>> bfq-queue).
->>>
->>> Differently from V1, which was still under test when I submitted it,
->>> this version has already been tested, by those who reported V1's
->>> failures.
->>
->> I'm a bit miffed that you'd send out a patch for an issue, this late
->> in the cycle, and then it not being tested at all. That's not very
->> confidence inspiring. I have applied this one, just letting you know
->> that that is not acceptable at all.
->>
-> 
-> I'm sorry for irritating you.  Yet I don't fully get your point.  I
-> have sent this fix now, simply because this bug was found ten days
-> ago, and I've tried to fix it as soon as possible.  I did test my
-> patch before sending it.  As for public testing, how could Oleksandr
-> or any other user/dev have had a chance to test this patch if I had
-> not submitted it here?
+Hi Linus,
 
-If that's the case, then make it clear that you don't expect it to
-be merged right now. As it stands, when you sent it out, all I know is
-that it's an issue that's crashing current kernels, and we're winding
-down this release. Hence there's a sense of urgency there, as we
-could be releasing this kernel as soon as this weekend.
+Please pull Kbuild fixes.
+Thanks.
 
-If you have a potential fix, but it isn't tested yet, then make that
-clear by submitting it as an RFC. You'd say something like:
 
-"This is a potential fix for X/Y/Z, let's wait for the original reporters
-to verify this before including it."
+The following changes since commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c:
 
-And make that clear with RFC in the subject line. Your patch had none
-of that, in fact it said:
+  Linux 5.4-rc7 (2019-11-10 16:17:15 -0800)
 
-[PATCH BUGFIX]
+are available in the Git repository at:
 
-and the commit message had no references to this needing any further
-testing.
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+kbuild-fixes-v5.4-3
+
+for you to fetch changes up to 80591e61a0f7e88deaada69844e4a31280c4a38f:
+
+  kbuild: tell sparse about the $ARCH (2019-11-15 00:13:23 +0900)
+
+----------------------------------------------------------------
+Kbuild fixes for v5.4 (3rc)
+
+ - fix build error when compiling SPARC VDSO with CONFIG_COMPAT=y
+
+ - pass correct --arch option to Sparse
+
+----------------------------------------------------------------
+Luc Van Oostenryck (1):
+      kbuild: tell sparse about the $ARCH
+
+Masahiro Yamada (1):
+      sparc: vdso: fix build error of vdso32
+
+ Makefile                 | 3 +++
+ arch/sparc/vdso/Makefile | 4 ++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
 
 -- 
-Jens Axboe
-
+Best Regards
+Masahiro Yamada
