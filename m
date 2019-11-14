@@ -2,110 +2,103 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5811AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2656DC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3297420718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573758530;
-	bh=qoJvmm3HUBhrO4GtlbT8E1muqZuJdtDDlNo4ymu6dRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NyEKmgL5xZJBj72ulAEqRMVaKp4jcK5KJNhjMVPRhbaxFDWWgq3p5oKgyxfZjtJnc
-	 goOGU6a7wfQtGOhrIKPLp7kP7/NZNdmi8+mHnB8G8R9fGclsq0a1RNYzkC7DqGJj2G
-	 pMp5yShX/oSbzweJS1FffKrSlRdg+W1/3SqQpKe0=
+	by mail.kernel.org (Postfix) with ESMTP id 05D282071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nMwsgi9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKNTIt (ORCPT
+        id S1726991AbfKNTJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:08:49 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41988 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfKNTIs (ORCPT
+        Thu, 14 Nov 2019 14:09:23 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34451 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfKNTJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:08:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kexbIRGdgnOvNpDCJNRhDSzcKw+JRewZujyNvN5WeHE=; b=vkE2lkRgfNiR5JBodUL9yjrTh
-        xUawzxKzxyWEg1tP0OB4VmcSGeX4UPteei3IrJrGluGdM6cpGEjbasV7pmaunhFnO7qfYBkZSeJ6t
-        ElCcgYSeNn1ERx3dfJ+aCdlTZ3tuolw2zDiTwh09a3+o2slFVcDsgO7ZBc4LxQlUrpfrY=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iVKU0-0007PQ-Lc; Thu, 14 Nov 2019 19:08:44 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id B96AF274328B; Thu, 14 Nov 2019 19:08:43 +0000 (GMT)
-Date:   Thu, 14 Nov 2019 19:08:43 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org, phh@phh.me,
-        b.galvani@gmail.com, stefan@agner.ch
-Subject: Re: [PATCH] regulator: rn5t618: fix rc5t619 ldo10 enable
-Message-ID: <20191114190843.GB4664@sirena.co.uk>
-References: <20191113182643.23885-1-andreas@kemnade.info>
- <20191113183211.GB4402@sirena.co.uk>
- <20191113202633.66a91d96@aktux>
- <20191114115430.GA4664@sirena.co.uk>
- <20191114152451.1756b0c8@kemnade.info>
+        Thu, 14 Nov 2019 14:09:22 -0500
+Received: by mail-il1-f196.google.com with SMTP id p6so6369964ilp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:09:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aJlTqX3MqyfjXLCncAwsXq4lCz1EaZQPrfo2kGeMxys=;
+        b=nMwsgi9Ldl5oVcuBJVDG6vjkLlyAm7KANIbKWmxzWr2ow1HeKmK48ST99X0n+DiSlY
+         2OtKaB7zkDvQPL+1a6cEDXYbZhuks0scvxmpVWCOqxl9kE3cZ9SL4vfrU5DMXshAeuTi
+         Tb9Xnbuv6AgYw3Mf01HsxRdO3Swt4PnFus7q4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aJlTqX3MqyfjXLCncAwsXq4lCz1EaZQPrfo2kGeMxys=;
+        b=AHTQfEP4mngTvyL1L//q0ijPtP5A1Fk5URXUDH6WPQHuddCJl84cMGMJzkaY4LNwvo
+         Xx7KQr+2r9yGA/Xq5rDjSuhwuU0MuAcM4YA7JE1PvWsQjiKGoxfRpyIyaDEv0Zl+QWoH
+         7DcI60s06vvtfzoj8b/MDgbIlpBtqj63qn55707c5BM4xiBjRfE8nhXDa35VDs+nH+//
+         RtQCTgVkgWUTOQ0xN+QbTBTYzgYZmrx/NDm7tDTMOc/x4uz2EWqC6EeA6dVLMClxmBPe
+         GW2SoMaHCCVMPcJodqp9jpiC1QYF3D30qkDZu/nkOTNEAQ1cGCnyD9cN4bx6Noo5loPP
+         Pq8g==
+X-Gm-Message-State: APjAAAVEOS57XzTx+73oF0WAIKAiVc2vmp+PL2r7CTmLD8qoh8AgA1X6
+        BqQpP9ff5vWgzkm9JeL3DZDC8P5ssUI=
+X-Google-Smtp-Source: APXvYqwe1HDVydnGRLk9ezbGgJTiowfbINKqTqtC5f1FRIEOCuGuQwJ6B0firqVAFlDUi5Vow51/qQ==
+X-Received: by 2002:a05:6e02:c8e:: with SMTP id b14mr11794924ile.44.1573758561685;
+        Thu, 14 Nov 2019 11:09:21 -0800 (PST)
+Received: from localhost ([2620:15c:183:200:2bde:b0e1:a0d8:ffc6])
+        by smtp.gmail.com with ESMTPSA id k199sm881586ilk.20.2019.11.14.11.09.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 11:09:21 -0800 (PST)
+From:   Jacob Rasmussen <jacobraz@chromium.org>
+X-Google-Original-From: Jacob Rasmussen <jacobraz@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jacob Rasmussen <jacobraz@google.com>,
+        Bard Liao <bardliao@realtek.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        zwisler@google.com, stable@vger.kernel.org
+Subject: [PATCH] ASoC: rt5645: Fixed typo for buddy jack support.
+Date:   Thu, 14 Nov 2019 12:08:44 -0700
+Message-Id: <20191114190844.42484-1-jacobraz@google.com>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
-Content-Disposition: inline
-In-Reply-To: <20191114152451.1756b0c8@kemnade.info>
-X-Cookie: Santa Claus is watching!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Had a typo in e7cfd867fd98 that resulted in buddy jack support not being
+fixed.
 
---Pd0ReVV5GZGQvF3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: e7cfd867fd98 ("ASoC: rt5645: Fixed buddy jack support.")
+Cc: <zwisler@google.com>
+Cc: <jacobraz@google.com>
+CC: stable@vger.kernel.org
+---
+ sound/soc/codecs/rt5645.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Thu, Nov 14, 2019 at 03:24:51PM +0100, Andreas Kemnade wrote:
-> Mark Brown <broonie@kernel.org> wrote:
-> > On Wed, Nov 13, 2019 at 08:26:33PM +0100, Andreas Kemnade wrote:
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 902ac98a3fbe..19662ee330d6 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3271,7 +3271,7 @@ static void rt5645_jack_detect_work(struct work_struct *work)
+ 				    report, SND_JACK_MICROPHONE);
+ 		return;
+ 	case 4:
+-		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x002;
++		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x0020;
+ 		break;
+ 	default: /* read rt5645 jd1_1 status */
+ 		val = snd_soc_component_read32(rt5645->component, RT5645_INT_IRQ_ST) & 0x1000;
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
-> > > Well, it is not just guessing, it is there in the url I referenced. B=
-ut
-> > > I would of course prefer a better source. At first I wanted to spread
-> > > my findings. =20
-
-> > The URL you provided looked to be for a different part though?
-
-> No, they just skip the rc5t in the name. Same situation in the vendor
-> kernel for my device, but there is only a tarball online, so it is bad
-> to reference. Everything is named there ricoh619 (or 61x). And on the chi=
-p is
-> printed rc5t619.
-
-Ah, OK - that's probably good enough then.  Let's leave it a bit and see
-if we can get some more definite review though.
-
---Pd0ReVV5GZGQvF3a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3NpjoACgkQJNaLcl1U
-h9Dlxwf7BXGuuBwTLLz94MrZ1bDq60w+rMhV89xgvzQsVWZO8iGtBOE8LQkzWVfi
-xrR5ELowY3l1YXlimjIDTOqCxIzBB2Z3Gi4tffBk9TbVS0vL9FNu+WyYZcS21IEL
-Ubk8YVLbdnHGRVehtN77tktwwXccO+oN5Tt5Mb2h492aG+pAKeRR7exaJzXMvuRn
-wWb7n6d5PCkcY6Dv6Xs5HbPDt4/KJfidshrnKsMGxSHeck4RencXKM5L5dNdtD2X
-jt+u1q1BoECOqmeG0YfHL8s1T27lePZrbh0ojEO4jbW41XfSXLyL319QjGBDBclA
-1DkH82nbWe9fDS0B83y5SVYikDszvA==
-=J4fs
------END PGP SIGNATURE-----
-
---Pd0ReVV5GZGQvF3a--
