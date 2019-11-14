@@ -2,248 +2,120 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC55C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CFBC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 387C2206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83265206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 10:51:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fnNFrw9x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M8nTD+rJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfKNKti (ORCPT
+        id S1726443AbfKNKvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:49:38 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36931 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfKNKth (ORCPT
+        Thu, 14 Nov 2019 05:51:31 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33647 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfKNKvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:49:37 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z24so3537188pgu.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 02:49:36 -0800 (PST)
+        Thu, 14 Nov 2019 05:51:31 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w9so5931481wrr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 02:51:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3WLUvG+xBquRbDbfYUrQqVG4OAZBybXDHZbDNbjPzH0=;
-        b=fnNFrw9xMEm1srXbGCBxFwySimQqZh7tf3owcLyW3R6MxImMXZC/vFS5p55Vyq0X75
-         TLAVAJDK3sOZ6HTfoaenLI3DUFUyg3bORuLzdionUVOsbaHhl86jETeGZeKnlLoXclza
-         tyGIEJ67fwFvqNtoOpCDWXqBxYougkYaNQXHaJ7OT1guOQBe70w/YAQBETE8ayj6W0Hr
-         nX6sJJ6P1CuEVigP3lh1SQjGE/Q2XZ1XU2BrWnMaFNHxH1/Mde8PrMB0LdkGJblzXgZu
-         dHrO+nrezb7A4QVbvX0br5ia7/2fZ8y1WOpexm1eED9W5RZ4KhqQL4/0yxiBxIytuhPb
-         IStw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Em/ldcBTiCkH89iKxfabm8RKdGIliRRbSNYWY3rbkD4=;
+        b=M8nTD+rJCM8aJ5Gr+BGRla3e74JOsongzpE3NPb9CW5En3sYtp6dkkCANBdmu4Jz2s
+         3OovYM867yc+76ka0oIsnRZejqkVigTGWm/uX95LvJ9x/pfP7Ix456YKay2EgrcHPD7A
+         r9X7n5J9D009fVndtxJF4c+IIwCeUq2zUdrH+nIp1EvedN9F9mGioF+zdNxdEqdxrPUi
+         Qqr1SAFoGmSsxqs7etJR+8ZT+CjFyyrD0+ZkN9nH26YDuPtCvrmPheCA+N9ZpnjeddS4
+         e8mkvd7L7Re3XqcJxui7bEIxMOhn+iMBKr0rJR+nBxluy05X8FHUEGA5gZbei/8UixgF
+         1mVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3WLUvG+xBquRbDbfYUrQqVG4OAZBybXDHZbDNbjPzH0=;
-        b=AX41TlO1WaEXmDGndC2GwR91vikrqeqFpuSNZtLSSfU9TGnYydI1+VbdG4IP2nkMlQ
-         l5C8NopVBZHdKHW+cNh+vYj6Y7g0lNGbqejSnXBcWAUv5LlqOHlRV7UzWRA+/YmE8c/C
-         UAr6H8TlxJw/w11Cln5rquUKkQE9xL6hxDJAST3bYSkQAXixzL0ADEg2E6qlNff08eon
-         xoxA8evewksb6uoRMS3Fp0TL5cOuPXLEzeqtXKl8Xk8FVaSBc2Y4gyU8dw0Oj73Jhoae
-         RGKkZPPX7+SQqvjqT9C8HKirpAQQXLlIJnAnz9ZN6ef3nDq/Qb2mPb2akt37o5fmVpk0
-         QMcQ==
-X-Gm-Message-State: APjAAAU7j0z+9k1LPgvnCdTWyTvEn2htkot35biCgin5RdqpxGzkiYCn
-        NHXzwZU7bYtmR3MYLV+gAQhUHw==
-X-Google-Smtp-Source: APXvYqxKcoZRjfAJmrYepooFU1l7wf4k6AdFFhjFcD2K436DA7XWNbW8YIn4zny+IgQDtgP0DmIfNw==
-X-Received: by 2002:a63:6744:: with SMTP id b65mr9343331pgc.13.1573728575398;
-        Thu, 14 Nov 2019 02:49:35 -0800 (PST)
-Received: from localhost ([122.171.110.253])
-        by smtp.gmail.com with ESMTPSA id p7sm5733328pfn.14.2019.11.14.02.49.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 02:49:34 -0800 (PST)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel@vger.kernel.org, Parth Shah <parth@linux.ibm.com>
-Subject: [PATCH V2] sched/fair: Make sched-idle CPU selection consistent throughout
-Date:   Thu, 14 Nov 2019 16:19:27 +0530
-Message-Id: <b90cbcce608cef4e02a7bbfe178335f76d201bab.1573728344.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Em/ldcBTiCkH89iKxfabm8RKdGIliRRbSNYWY3rbkD4=;
+        b=arqR4kZ7Ty3IZPdvmNR+zZ8z61Myo0YYZXvaYKWMGXqJ+i9y/NRfs3sLekXVg+sCly
+         rpP6uwdMOHCfQ7hNg4PC8Jn1k8RIdJLXUJXlAMF1zpQ0tgyX13bdSbe1wNAKFKJhY85j
+         aPwdQbnv3/ZYw49AUOswL+p9DH9PF5h/E9ae9V8c8ctunow/E6pjMyzjCeKq18n/ovmv
+         hqouBWoqAqViISE3HbyRvXGPud/UGsywDduuUYZy2WHCDuDiRCT7FSBTx5i9v9fl26X6
+         sM0Vt0ojHFKgpE7OpMp/gx2DYvHRY8tP5AG2av46X8diarvUWpoLAUuzCwFzbefSxOI2
+         ULrQ==
+X-Gm-Message-State: APjAAAVe36qCbsx+C+FxzwuSXTcdzAKitsL8famwoMCTnbgKa2cec8VD
+        h7mBrpFy6wGjINIxjHIjQvdrFw==
+X-Google-Smtp-Source: APXvYqxaypmv9+7GkWChObVbu7wiDzQPNbv9TlnsTgRI+u9RhlgUkWuJB4t1Q8ZmN11y6dU12rOr2Q==
+X-Received: by 2002:a5d:4608:: with SMTP id t8mr7789448wrq.91.1573728688622;
+        Thu, 14 Nov 2019 02:51:28 -0800 (PST)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id k14sm7236681wrw.46.2019.11.14.02.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 02:51:27 -0800 (PST)
+Date:   Thu, 14 Nov 2019 10:51:25 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        qiaochong@loongson.cn, kgdb-bugreport@lists.sourceforge.net,
+        ralf@linux-mips.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/5] MIPS: kdb: Remove old workaround for backtracing on
+ other CPUs
+Message-ID: <20191114105125.t3jma3ghwj2wtv6w@holly.lan>
+References: <20191109191644.191766-1-dianders@chromium.org>
+ <20191109111623.1.I30a0cac4d9880040c8d41495bd9a567fe3e24989@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191109111623.1.I30a0cac4d9880040c8d41495bd9a567fe3e24989@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are instances where we keep searching for an idle CPU despite
-already having a sched-idle CPU (in find_idlest_group_cpu(),
-select_idle_smt() and select_idle_cpu() and then there are places where
-we don't necessarily do that and return a sched-idle CPU as soon as we
-find one (in select_idle_sibling()). This looks a bit inconsistent and
-it may be worth having the same policy everywhere.
+On Sat, Nov 09, 2019 at 11:16:40AM -0800, Douglas Anderson wrote:
+> As of commit 2277b492582d ("kdb: Fix stack crawling on 'running' CPUs
+> that aren't the master") we no longer need any special case for doing
+> stack dumps on CPUs that are not the kdb master.  Let's remove.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> I have no way to test this personally, so hopefully someone who uses
+> kdb/kgdb on MIPS can.
 
-On the other hand, choosing a sched-idle CPU over a idle one shall be
-beneficial from performance and power point of view as well, as we don't
-need to get the CPU online from a deep idle state which wastes quite a
-lot of time and energy and delays the scheduling of the newly woken up
-task.
+I took this as a hint to add mips support to kgdbtest ;-)
 
-This patch tries to simplify code around sched-idle CPU selection and
-make it consistent throughout.
+Support is added and working well. Unfortunately lack of familiarity
+with mips means I have not yet figured out which mips defconfig gives
+us working SMP (and what the corresponding qemu invocation should be).
 
-Testing is done with the help of rt-app on hikey board (ARM64 octa-core,
-2 clusters, 0-3 and 4-7). The cpufreq governor was set to performance to
-avoid any side affects from CPU frequency. Following are the tests
-performed:
+I think that means I still can't (quite) exercise this code fully.
+The most appropriate test is bta on an SMP system, right?
 
-Test 1: 1-cfs-task:
 
-A single SCHED_NORMAL task is pinned to CPU5 which runs for 2333 us
-out of 7777 us (so gives time for the cluster to go in deep idle
-state).
+> Ideally this patch should be Acked by MIPS folks and then land through
+> the kdb/kgdb tree since the next patch in the series, ("kdb:
+> kdb_current_regs should be private") depends on it.
 
-Test 2: 1-cfs-1-idle-task:
+An Acked-by from a MIPS maintainer would be very welcome. Perhaps
+with a bit of extra work on the above I might be able to provide
+a Tested-by:.
 
-A single SCHED_NORMAL task is pinned on CPU5 and single SCHED_IDLE
-task is pinned on CPU6 (to make sure cluster 1 doesn't go in deep idle
-state).
+I didn't see anything that particularly bothered me in the patches but
+given we're already at -rc7 I'm inclined to target this patchset for 5.6
+rather than 5.5.
 
-Test 3: 1-cfs-8-idle-task:
 
-A single SCHED_NORMAL task is pinned on CPU5 and eight SCHED_IDLE
-tasks are created which run forever (not pinned anywhere, so they run
-on all CPUs). Checked with kernelshark that as soon as NORMAL task
-sleeps, the SCHED_IDLE task starts running on CPU5.
-
-And here are the results on mean latency (in us), using the "st" tool.
-
-$ st 1-cfs-task/rt-app-cfs_thread-0.log
-N       min     max     sum     mean    stddev
-642     90      592     197180  307.134 109.906
-
-$ st 1-cfs-1-idle-task/rt-app-cfs_thread-0.log
-N       min     max     sum     mean    stddev
-642     67      311     113850  177.336 41.4251
-
-$ st 1-cfs-8-idle-task/rt-app-cfs_thread-0.log
-N       min     max     sum     mean    stddev
-643     29      173     41364   64.3297 13.2344
-
-The mean latency when we need to:
-- wakeup from deep idle state is 307 us.
-- wakeup from shallow idle state is 177 us.
-- preempt a SCHED_IDLE task is 64 us.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-V1->V2:
-- Updated commit log with the numbers received from rt-app tests.
-
- kernel/sched/fair.c | 34 ++++++++++++----------------------
- 1 file changed, 12 insertions(+), 22 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a81c36472822..bb367f48c1ef 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5545,7 +5545,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 	unsigned int min_exit_latency = UINT_MAX;
- 	u64 latest_idle_timestamp = 0;
- 	int least_loaded_cpu = this_cpu;
--	int shallowest_idle_cpu = -1, si_cpu = -1;
-+	int shallowest_idle_cpu = -1;
- 	int i;
- 
- 	/* Check if we have any choice: */
-@@ -5554,6 +5554,9 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 
- 	/* Traverse only the allowed CPUs */
- 	for_each_cpu_and(i, sched_group_span(group), p->cpus_ptr) {
-+		if (sched_idle_cpu(i))
-+			return i;
-+
- 		if (available_idle_cpu(i)) {
- 			struct rq *rq = cpu_rq(i);
- 			struct cpuidle_state *idle = idle_get_state(rq);
-@@ -5576,12 +5579,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 				latest_idle_timestamp = rq->idle_stamp;
- 				shallowest_idle_cpu = i;
- 			}
--		} else if (shallowest_idle_cpu == -1 && si_cpu == -1) {
--			if (sched_idle_cpu(i)) {
--				si_cpu = i;
--				continue;
--			}
--
-+		} else if (shallowest_idle_cpu == -1) {
- 			load = cpu_load(cpu_rq(i));
- 			if (load < min_load) {
- 				min_load = load;
-@@ -5590,11 +5588,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 		}
- 	}
- 
--	if (shallowest_idle_cpu != -1)
--		return shallowest_idle_cpu;
--	if (si_cpu != -1)
--		return si_cpu;
--	return least_loaded_cpu;
-+	return shallowest_idle_cpu != -1 ? shallowest_idle_cpu : least_loaded_cpu;
- }
- 
- static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p,
-@@ -5747,7 +5741,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
-  */
- static int select_idle_smt(struct task_struct *p, int target)
- {
--	int cpu, si_cpu = -1;
-+	int cpu;
- 
- 	if (!static_branch_likely(&sched_smt_present))
- 		return -1;
-@@ -5755,13 +5749,11 @@ static int select_idle_smt(struct task_struct *p, int target)
- 	for_each_cpu(cpu, cpu_smt_mask(target)) {
- 		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 			continue;
--		if (available_idle_cpu(cpu))
-+		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			return cpu;
--		if (si_cpu == -1 && sched_idle_cpu(cpu))
--			si_cpu = cpu;
- 	}
- 
--	return si_cpu;
-+	return -1;
- }
- 
- #else /* CONFIG_SCHED_SMT */
-@@ -5790,7 +5782,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 	u64 time, cost;
- 	s64 delta;
- 	int this = smp_processor_id();
--	int cpu, nr = INT_MAX, si_cpu = -1;
-+	int cpu, nr = INT_MAX;
- 
- 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
- 	if (!this_sd)
-@@ -5818,13 +5810,11 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 
- 	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
- 		if (!--nr)
--			return si_cpu;
-+			return -1;
- 		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 			continue;
--		if (available_idle_cpu(cpu))
-+		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			break;
--		if (si_cpu == -1 && sched_idle_cpu(cpu))
--			si_cpu = cpu;
- 	}
- 
- 	time = cpu_clock(this) - time;
--- 
-2.21.0.rc0.269.g1a574e7a288b
-
+Daniel.
