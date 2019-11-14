@@ -6,56 +6,48 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B5CC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E615C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A475B20725
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E6A20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfKNJIA (ORCPT
+        id S1727093AbfKNJIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:08:00 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40377 "EHLO ozlabs.org"
+        Thu, 14 Nov 2019 04:08:02 -0500
+Received: from ozlabs.org ([203.11.71.1]:50789 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbfKNJH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:07:57 -0500
+        id S1726655AbfKNJH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:07:59 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 47DFxk6wMPz9sRs; Thu, 14 Nov 2019 20:07:54 +1100 (AEDT)
+        id 47DFxn47blz9sS9; Thu, 14 Nov 2019 20:07:56 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 3b05a1e517e1a8cfda4866ec31d28b2bc4fee4c4
-In-Reply-To: <20191021142309.28105-1-geert+renesas@glider.be>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+X-powerpc-patch-commit: 35a5c328fcf3493c5adf333d34c1ca6953fe372d
+In-Reply-To: <20191023134423.15052-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>, <jk@ozlabs.org>,
+        <arnd@arndb.de>, <benh@kernel.crashing.org>, <paulus@samba.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc:     YueHaibing <yuehaibing@huawei.com>, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/security: Fix debugfs data leak on 32-bit
-Message-Id: <47DFxk6wMPz9sRs@ozlabs.org>
-Date:   Thu, 14 Nov 2019 20:07:54 +1100 (AEDT)
+Subject: Re: [PATCH -next] powerpc/spufs: remove set but not used variable 'ctx'
+Message-Id: <47DFxn47blz9sS9@ozlabs.org>
+Date:   Thu, 14 Nov 2019 20:07:56 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-21 at 14:23:09 UTC, Geert Uytterhoeven wrote:
-> "powerpc_security_features" is "unsigned long", i.e. 32-bit or 64-bit,
-> depending on the platform (PPC_FSL_BOOK3E or PPC_BOOK3S_64).  Hence
-> casting its address to "u64 *", and calling debugfs_create_x64() is
-> wrong, and leaks 32-bit of nearby data to userspace on 32-bit platforms.
+On Wed, 2019-10-23 at 13:44:23 UTC, YueHaibing wrote:
+> arch/powerpc/platforms/cell/spufs/inode.c:201:22:
+>  warning: variable ctx set but not used [-Wunused-but-set-variable]
 > 
-> While all currently defined SEC_FTR_* security feature flags fit in
-> 32-bit, they all have "ULL" suffixes to make them 64-bit constants.
-> Hence fix the leak by changing the type of "powerpc_security_features"
-> (and the parameter types of its accessors) to "u64".  This also allows
-> to drop the cast.
+> It is not used since commit 67cba9fd6456 ("move
+> spu_forget() into spufs_rmdir()")
 > 
-> Fixes: 398af571128fe75f ("powerpc/security: Show powerpc_security_features in debugfs")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/3b05a1e517e1a8cfda4866ec31d28b2bc4fee4c4
+https://git.kernel.org/powerpc/c/35a5c328fcf3493c5adf333d34c1ca6953fe372d
 
 cheers
