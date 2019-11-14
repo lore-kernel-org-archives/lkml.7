@@ -2,133 +2,92 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4ADC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC4FC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048D0206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573701683;
-	bh=FmT+xIiI8fjMzRISC6E96FWJYAdkxpETep6dx0aAOFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dHsdLrPRyp3UhOr8Vj6G2oe5L+qEINiCCigSdDKIN0lguKUeV5cqnxPqiJFSbMJlp
-	 mUpBIbfTyC6tImMdowUzdFgOxP64EbX3XT/KeH3y3pfPcDbL6MybMzup5NOXUNwfKu
-	 97AYg1crPaoMLkRssMArsPPJoOb7KMwn8eTy0JWk=
+	by mail.kernel.org (Postfix) with ESMTP id 01A20206F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKNDVV (ORCPT
+        id S1726599AbfKND1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:21:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
+        Wed, 13 Nov 2019 22:27:36 -0500
+Received: from mga01.intel.com ([192.55.52.88]:41987 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfKNDVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:21:21 -0500
-Received: from localhost (unknown [124.219.31.93])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FC8A206F3;
-        Thu, 14 Nov 2019 03:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573701680;
-        bh=FmT+xIiI8fjMzRISC6E96FWJYAdkxpETep6dx0aAOFQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2ZZqboLMJesjq8BgSJ7MoVJfF7TgnYS/cpHL36P4jLxMYovM+i28jf1w3HevubntO
-         CeDfpE3nKYFUIcb2Vwhkjbuo4IYsEvU7SVWvJfBdlElMiMJ5CCs+VgGXsWTotdq/qS
-         w53jwTQdO8muQEOIrztPV0CPbjIZ2Oh5POjkNcYQ=
-Date:   Thu, 14 Nov 2019 11:21:17 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, Bin Liu <b-liu@ti.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 12/13] usb: gadget: udc: gr_udc: create debugfs
- directory under usb root
-Message-ID: <20191114032117.GA130252@kroah.com>
-References: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
- <1573541519-28488-12-git-send-email-chunfeng.yun@mediatek.com>
+        id S1726489AbfKND1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 22:27:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 19:27:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
+   d="scan'208";a="235515175"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Nov 2019 19:27:34 -0800
+Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
+        by linux.intel.com (Postfix) with ESMTP id 1724F58049B;
+        Wed, 13 Nov 2019 19:27:31 -0800 (PST)
+Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
+References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+ <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
+Date:   Thu, 14 Nov 2019 11:27:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1573541519-28488-12-git-send-email-chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 02:51:58PM +0800, Chunfeng Yun wrote:
-> Now the USB gadget subsystem can use the USB debugfs root directory,
-> so move it's directory from the root of the debugfs filesystem into
-> the root of usb
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v2:
->   1. abandon new API usb_debugfs_create_dir(), and use usb_debug_root
-> ---
->  drivers/usb/gadget/udc/gr_udc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-> index 7a0e9a58c2d8..5faa09a6c770 100644
-> --- a/drivers/usb/gadget/udc/gr_udc.c
-> +++ b/drivers/usb/gadget/udc/gr_udc.c
-> @@ -208,7 +208,7 @@ static void gr_dfs_create(struct gr_udc *dev)
->  {
->  	const char *name = "gr_udc_state";
->  
-> -	dev->dfs_root = debugfs_create_dir(dev_name(dev->dev), NULL);
-> +	dev->dfs_root = debugfs_create_dir(dev_name(dev->dev), usb_debug_root);
->  	debugfs_create_file(name, 0444, dev->dfs_root, dev, &gr_dfs_fops);
->  }
->  
 
-This breaks the build:
-drivers/usb/gadget/udc/gr_udc.c: In function ‘gr_dfs_create’:
-drivers/usb/gadget/udc/gr_udc.c:211:57: error: ‘usb_debug_root’ undeclared (first use in this function)
-  211 |  dev->dfs_root = debugfs_create_dir(dev_name(dev->dev), usb_debug_root);
-      |                                                         ^~~~~~~~~~~~~~
-drivers/usb/gadget/udc/gr_udc.c:211:57: note: each undeclared identifier is reported only once for each function it appears in
-make[4]: *** [scripts/Makefile.build:265: drivers/usb/gadget/udc/gr_udc.o] Error 1
+Hi Linus,
 
-so I've dropped it from the patch series.
+On 13/11/2019 10:46 PM, Linus Walleij wrote:
+> On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
+> <rahul.tanwar@linux.intel.com> wrote:
+>
+>> Add dt bindings document for pinmux & GPIO controller driver of
+>> Intel Lightning Mountain SoC.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> (...)
+>
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-pinctrl
+> Just noted from another review where Rob noted that this name should
+> match the internal name in the datasheet for this hardware block. Is it
+> really called "lgm-pinctrl" inside Intel?
+>
+> intel,lightning-mountain-io and similar are perfectly fine if that is the
+> name it has in your documentation.
 
-Please fix up and resend.
+Our documentation does not have any specific names for these hardware
+blocks. It names it in a very generic/standard manner like GPIO, pinmux..
 
-And of course, always test-build your patches before you send them
-out...
+To make the name explicit & self explanatory, i should probably change
+the name as you suggested i.e. intel,lightning-mountain-io.
 
-greg k-h
+Regards,
+Rahul
