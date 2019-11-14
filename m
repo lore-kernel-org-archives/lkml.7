@@ -2,105 +2,112 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605D5C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCEBC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F68206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591AB206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="jtcTtrw1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3Vuqdji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfKNNhk (ORCPT
+        id S1727048AbfKNNhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:37:40 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25871 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfKNNhk (ORCPT
+        Thu, 14 Nov 2019 08:37:43 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38028 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfKNNhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:37:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1573738644; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=FdOQiHFeC6aCmfyGmWisw36xuQYXQa4bK3Z1I6RlF0HbjWtTTPQmbVyaYTw7Jij1ZsTraydwLJ9Oioul/Uk23mX2pJZ8nw9gprNvxdNodtexjh473P3FSH6VhXmXvmX6o1TSpWNpjuWrPuy7a2f66SXC541tmyzho/eqJchnQQA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1573738644; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=NfiC+cinjSWRt41jD5jXQ2ueHOhgmVAdrHkxzjmGKlo=; 
-        b=Tpo7W7Pf/wO3m8cUa+1PW0oe7gHnV9eIsgkHTdmYOABxxuZ3Cm77pZeFr8okldtBDEFa+aSBn5jT1HH130Hv3RHin/U2aZC/sBvePcLHoT7BnmHfRYIPCwPVueEZ2KIvvr5SYFD8ReU7wj3QCcTrF6OoFjRvNaZ4JOtkk9gGZWc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=er0q6KMsXWMJx/9NDexN/JHCN4w07a93L/INEGkUfisGFkd5a3rnxXM6dDDB0Ues5385ZXxO5yGX
-    h7XxGVXuZZ7AF4ZsdJ1+jVk4Df7rqZDFvA7Jo+xolZ1+/tsxY7al  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573738644;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=1056; bh=NfiC+cinjSWRt41jD5jXQ2ueHOhgmVAdrHkxzjmGKlo=;
-        b=jtcTtrw1onsboQFcintNiPlH2M8TzlpO6/Fuz7E0WVXcnxjOupxuYC4XojhVtISq
-        wvovWpBafiQQsjrm0jsgtimzF6OrElCGXNa397kUjmxc04wPLMwDMGDywWwxaxG0IMf
-        0VYkGfbE1Qr+Nldbcsg5rYJpEjnbm2JJfth17TIk=
-Received: from [192.168.10.218] (171.221.112.167 [171.221.112.167]) by mx.zohomail.com
-        with SMTPS id 15737386427141007.0962792641557; Thu, 14 Nov 2019 05:37:22 -0800 (PST)
-Subject: Re: [PATCH 1/2 v3] dt-bindings: clock: Add X1000 bindings.
-To:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
-References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
- <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com>
- <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
- <20191112005544.GB7038@bogus> <20191113235955.927B6206EE@mail.kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, paul.burton@mips.com, robh+dt@kernel.org,
-        syq@debian.org, mark.rutland@arm.com, paul@crapouillou.net
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DCD5880.9090504@zoho.com>
-Date:   Thu, 14 Nov 2019 21:37:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191113235955.927B6206EE@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+        Thu, 14 Nov 2019 08:37:42 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z19so5934195wmk.3;
+        Thu, 14 Nov 2019 05:37:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=OxTRAJXVXXdIFzpBwIyZ5uK1YGGka2CVY+xla7v0Bcg=;
+        b=T3Vuqdjiywjp0KnFG75MQwPuEkjO5rPNDR5x4F8/XMosdwKaRkMA3k98MYU0cGS22n
+         ARwOo4F4Smb/6BICAVJcoLnIscZoGroXjYpTkIJ9acv+LhiH2r5/fbaESd5AbsF1lDKT
+         iQA/V9lSPU8tTjOpTPR1dlL/t/sV4wxiyECjOL+l5zMApMh2gwisykLhEHib6rQk2utH
+         LUlNOr429N3TVFuf2+5zgJqmMritaOzngYgYANXCjawOKRSd4kQEBKDzQyvWV8/4ug8M
+         qwe7fHFPi4n6oB/JJgvWndDHv+EEmDMapB5f+JJZozBbpFPZICLE+GXY173qHUmUMLQv
+         yebw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OxTRAJXVXXdIFzpBwIyZ5uK1YGGka2CVY+xla7v0Bcg=;
+        b=hsuXNdQVlK227F3IXvrS1ldXpTkfkHWw0wxW7NnD75qbzSR2sB6SbLk+Q1qtYPEOMJ
+         c8BIzPWTCq7ByyoYuCSqi6CwDzKVnO1Y/8yanjb9vXZrL6yFeF1kKEAN7Uwoq5urmiAF
+         I7MMpGeK1U8gi6w2Y0LuGPMyixiFraMJWH6zdzmmF3sEP0PAP9C3Q0eEc0hV1vmcveji
+         PZi7fNrAGPV8fLw8SNS+mCjacgoad5DJj9q6ifugUan+LxQ0oe02FAuckukPa1sxJ6C2
+         iP5ITKc1KnjEJRNlPVkAKFocNgHecC+aWdJrF6kH34nAu9jNDSGD9lolyXewe/bGc3US
+         jINw==
+X-Gm-Message-State: APjAAAVXQV/++7g7Svhuu83ssranxQgucpMHE453Yi0IMi1uR2bNShUg
+        byopugLLOLYAUNyyxLkVFUO+xFE4
+X-Google-Smtp-Source: APXvYqwatI+kxUiWoajpho7DBVdcdQYAe4QmtGLMrCmKGz9+ia3rSKGuIZyLoXCQbWq+XHBOtiMQNg==
+X-Received: by 2002:a1c:dc09:: with SMTP id t9mr7738207wmg.65.1573738659943;
+        Thu, 14 Nov 2019 05:37:39 -0800 (PST)
+Received: from debian.office.codethink.co.uk ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id j63sm6317143wmj.46.2019.11.14.05.37.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 05:37:39 -0800 (PST)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] libtraceevent: fix header installation
+Date:   Thu, 14 Nov 2019 13:37:19 +0000
+Message-Id: <20191114133719.309-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+When we passed some location in DESTDIR, install_headers called
+do_install with DESTDIR as part of the second argument. But do_install
+is again using '$(DESTDIR_SQ)$2', so as a result the headers were
+installed in a location $DESTDIR/$DESTDIR. In my testing I passed
+DESTDIR=/home/sudip/test and the headers were installed in:
+/home/sudip/test/home/sudip/test/usr/include/traceevent.
+Lets remove DESTDIR from the second argument of do_install so that the
+headers are installed in the correct location.
 
-On 2019=E5=B9=B411=E6=9C=8814=E6=97=A5 07:59, Stephen Boyd wrote:
-> Quoting Rob Herring (2019-11-11 16:55:44)
->> On Sun, 10 Nov 2019 17:28:21 +0800, Zhou Yanjie wrote:
->>> Add the clock bindings for the X1000 Soc from Ingenic.
->>>
->>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->>> ---
->>>   .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
->>>   include/dt-bindings/clock/x1000-cgu.h              | 44 +++++++++++++=
-+++++++++
->>>   2 files changed, 45 insertions(+)
->>>   create mode 100644 include/dt-bindings/clock/x1000-cgu.h
->>>
->> Please add Acked-by/Reviewed-by tags when posting new versions. However,
->> there's no need to repost patches *only* to add the tags. The upstream
->> maintainer will do that for acks received on the version they apply.
->>
->> If a tag was not added on purpose, please state why and what changed.
-> It looks like some extra defines were added. I carried forward your
-> review tag.
->
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
 
-I'm sorry that my mistake has caused you extra work,
-I'll be careful to add tags next time.
+Hi Steve,
+sent this earlier as an attachment to an email thread, not sure if you
+saw it, so sending it now properly.
+The other problem with the pkgconfig, I guess we can live with that for
+now as that folder is given by pc_path.
 
-Best regards!
+ tools/lib/traceevent/Makefile | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 5315f3787f8d..cbb429f55062 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -232,10 +232,10 @@ install_pkgconfig:
+ 
+ install_headers:
+ 	$(call QUIET_INSTALL, headers) \
+-		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
+-		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
+-		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
+-		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
++		$(call do_install,event-parse.h,$(includedir_SQ),644); \
++		$(call do_install,event-utils.h,$(includedir_SQ),644); \
++		$(call do_install,trace-seq.h,$(includedir_SQ),644); \
++		$(call do_install,kbuffer.h,$(includedir_SQ),644)
+ 
+ install: install_lib
+ 
+-- 
+2.11.0
 
