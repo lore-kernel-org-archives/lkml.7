@@ -2,181 +2,53 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB75C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40634C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2241E206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M1cRtYqH"
+	by mail.kernel.org (Postfix) with ESMTP id 1735C206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfKNL7D (ORCPT
+        id S1726613AbfKNMBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:59:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53182 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726057AbfKNL7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:59:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573732740;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4US+hVaXhjSiBbdSE96WD7Ru4CXdoh15YX5CrSFyPiQ=;
-        b=M1cRtYqHgF3aZeDn4Tlthk0FAs2alcAyFtcrEntQCWAFXM+9km0yM3/LTonBTYjVnwvGhW
-        EI3D8BKGB6N6ued8DnfH7Sz6CGWBba0TCjiCLkkuesK3dxdWu/BiyifEsniEMY7gfZZ8Zs
-        Ks5JjS+N93xxLoEfY9nKYrr+AHgu9Yc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-XuyUh46nMr2DVtIprUzxTg-1; Thu, 14 Nov 2019 06:58:57 -0500
-Received: by mail-wr1-f70.google.com with SMTP id w4so4269709wro.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 03:58:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0g9kY8U3aDWmWJZUL7RMmE4YKOXbneFc8qmjFB/A0xY=;
-        b=Qe1yOhLaxvl2OhEbO8QqueWJfbq2VeXGWK17Bs2EIPC8bx3g3oF/4jLiK5cKTy9bei
-         xhfSGNOjGY2WtFDgk7SVMRHAzHC4RdH5Zy5E/MUxrFEr3/FDOAhk3Aw9XfY2yL6J5cmG
-         T6UKxY7JA7D1tG10h7bkysNuLdd3PEU1esddukiVCfIYr53uF18osEEOFPnKzoToqQL/
-         boAWzMH2Y2Efs1r5mRFgsbz9ARZwak1SLuwPo3n1W70VaXaq7fiQg+W3Y7uJMu4uTX8u
-         PZq3HeZzag71ECY/km6HDj+cUpd8GpGJhBkczSCKaCy/RoSmElHBwUWHTqAOqmPGjaZj
-         8gTA==
-X-Gm-Message-State: APjAAAUEt3L+7hsf96MoLLLp4oLsur62oWkaQm6sp4nOMb0InPYuTg71
-        aLGlh4dKwudl79//EiFtKfhrDxp9jDLNGI5UveiCPFdCG7U5ReTRRPxjR1HgxGJKb8gub5EE0YR
-        Ryi31375UgkMOPOS4F+Op7Kmm
-X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr7190772wmi.107.1573732736498;
-        Thu, 14 Nov 2019 03:58:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyylEnjoowHo+iG1a27HITqVo45Zcec78KDUK0v5xjWdnKee268qZqMdmqk0rsDKLg83svKyw==
-X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr7190748wmi.107.1573732736192;
-        Thu, 14 Nov 2019 03:58:56 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:a15b:f753:1ac4:56dc? ([2001:b07:6468:f312:a15b:f753:1ac4:56dc])
-        by smtp.gmail.com with ESMTPSA id z14sm6685230wrl.60.2019.11.14.03.58.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 03:58:55 -0800 (PST)
-Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6c2c7bbb-39f4-2a77-632e-7730e9887fc5@redhat.com>
-Date:   Thu, 14 Nov 2019 12:58:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 14 Nov 2019 07:01:30 -0500
+Received: from n7.nabble.com ([162.253.133.57]:52477 "EHLO n7.nabble.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfKNMB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 07:01:29 -0500
+X-Greylist: delayed 536 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Nov 2019 07:01:29 EST
+Received: from n7.nabble.com (localhost [127.0.0.1])
+        by n7.nabble.com (Postfix) with ESMTP id 29692114A61F9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 05:00:20 -0700 (MST)
+Date:   Thu, 14 Nov 2019 05:00:20 -0700 (MST)
+From:   Bruno GNUser <kernel@dantas.airpost.net>
+To:     linux-kernel@vger.kernel.org
+Message-ID: <1573732820166-0.post@n7.nabble.com>
+Subject: how to disable the button kernel module?
 MIME-Version: 1.0
-In-Reply-To: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
-Content-Language: en-US
-X-MC-Unique: XuyUh46nMr2DVtIprUzxTg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, it's not _so_ ugly after all.
+I realize that /button/ is a kernel built-in and therefore cannot be disabled
+via the /blacklist=<module_name>/ boot parameter. So I thought I'd try
+/initcall_blacklist=<function>/ but I cannot find an obvious module
+initialization function in button.c
 
-> ---
->  arch/x86/kvm/vmx/vmx.c   | 39 +++++++++++++++++++++++++++++++++++++--
->  include/linux/kvm_host.h |  1 +
->  2 files changed, 38 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 5d21a4a..5c67061 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5924,7 +5924,9 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
->  =09=09}
->  =09}
-> =20
-> -=09if (exit_reason < kvm_vmx_max_exit_handlers
-> +=09if (vcpu->fast_vmexit)
-> +=09=09return 1;
-> +=09else if (exit_reason < kvm_vmx_max_exit_handlers
-
-Instead of a separate vcpu->fast_vmexit, perhaps you can set exit_reason
-to vmx->exit_reason to -1 if the fast path succeeds.
-
-> +=09=09=09if (ret =3D=3D 0)
-> +=09=09=09=09ret =3D kvm_skip_emulated_instruction(vcpu);
-
-Please move the "kvm_skip_emulated_instruction(vcpu)" to
-vmx_handle_exit, so that this basically is
-
-#define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
-
-=09if (ret =3D=3D 0)
-=09=09vcpu->exit_reason =3D EXIT_REASON_NEED_SKIP_EMULATED_INSN;
-
-and handle_ipi_fastpath can return void.
+Please, how would one disable the /button/ module? Either using the
+/initcall_blacklist=foo/ or some other method is fine, as long as it does
+not involve recompiling the kernel. 
 
 Thanks,
+Bruno GNUser
 
-Paolo
 
-> +=09=09};
-> +=09};
-> +
-> +=09return ret;
-> +}
-> +
->  static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  {
->  =09struct vcpu_vmx *vmx =3D to_vmx(vcpu);
-> @@ -6615,6 +6645,12 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  =09=09=09=09  | (1 << VCPU_EXREG_CR3));
->  =09vcpu->arch.regs_dirty =3D 0;
-> =20
-> +=09vmx->exit_reason =3D vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON)=
-;
-> +=09vcpu->fast_vmexit =3D false;
-> +=09if (!is_guest_mode(vcpu) &&
-> +=09=09vmx->exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
-> +=09=09vcpu->fast_vmexit =3D handle_ipi_fastpath(vcpu);
 
-This should be done later, at least after kvm_put_guest_xcr0, because
-running with partially-loaded guest state is harder to audit.  The best
-place to put it actually is right after the existing vmx->exit_reason
-assignment, where we already handle EXIT_REASON_MCE_DURING_VMENTRY.
-
->  =09pt_guest_exit(vmx);
-> =20
->  =09/*
-> @@ -6634,7 +6670,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  =09vmx->nested.nested_run_pending =3D 0;
->  =09vmx->idt_vectoring_info =3D 0;
-> =20
-> -=09vmx->exit_reason =3D vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON)=
-;
->  =09if ((u16)vmx->exit_reason =3D=3D EXIT_REASON_MCE_DURING_VMENTRY)
->  =09=09kvm_machine_check();
-> =20
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 719fc3e..7a7358b 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -319,6 +319,7 @@ struct kvm_vcpu {
->  #endif
->  =09bool preempted;
->  =09bool ready;
-> +=09bool fast_vmexit;
->  =09struct kvm_vcpu_arch arch;
->  =09struct dentry *debugfs_dentry;
->  };
->=20
-
+--
+Sent from: http://linux-kernel.2935.n7.nabble.com/
