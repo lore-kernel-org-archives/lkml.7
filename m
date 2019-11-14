@@ -2,115 +2,121 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD06DC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8513C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A350F206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847E7206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:10:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uVXtAH3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfKNMKa (ORCPT
+        id S1726632AbfKNMK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:10:30 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:43553 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfKNMKa (ORCPT
+        Thu, 14 Nov 2019 07:10:56 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46887 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfKNMK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:10:30 -0500
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M7KG2-1iWLTk3ZqG-007jRg; Thu, 14 Nov 2019 13:10:29 +0100
-Received: by mail-qk1-f169.google.com with SMTP id 205so4750486qkk.1;
-        Thu, 14 Nov 2019 04:10:28 -0800 (PST)
-X-Gm-Message-State: APjAAAWzD3T/H4O6OAmEIVTVzS1KUglGojFWpePLt7wIvxHJB0gXvzF4
-        /ziJ6KBRpJVSVu54DkW2QdmsVbvoBkT4cX53Z6o=
-X-Google-Smtp-Source: APXvYqwH3ImYA6idvrUy4s0YnVGkfNSxydHJRkPK4OjgDVN/gCLA9akkaakLFb4EwY/uC0H7RI8F34p6AfRs3f0kaQA=
-X-Received: by 2002:a37:4f0a:: with SMTP id d10mr7182492qkb.286.1573733427609;
- Thu, 14 Nov 2019 04:10:27 -0800 (PST)
+        Thu, 14 Nov 2019 07:10:56 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e9so6380202ljp.13;
+        Thu, 14 Nov 2019 04:10:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=V3iPFvICh2PC2SW0ECmSzJKHcRSxlwVfa49H/g84OtY=;
+        b=uVXtAH3lunBk6jzYEqb9f5bw4ymgYlFBH2qESmvE3ahqQE2sdkjHrv27Q9cv5iWO5/
+         tAPmEDR740oZIesch020/2cMFkf5KqNXCh7f/4iUrgw10v6XLhW5mZ0op2VpteY8opBz
+         qOl8OeiFhSeJJm899MFuC4xw+58yg6Z6saRX9xJqvD576mk9RhoQFbI0rnny+dfgX5a2
+         ezxnXc7/yEFq5JQ6xkXG7GQSRZlT+K56j5C4a63OwgwF+PsyxV3+NexKkVoxnWvmM276
+         4Ye8mIqcERvDPo7yG2lB/zTwpulEdV/M8fYJiRZdt0QRuS3uQSPQUBxoiKoN15Z2SLRi
+         NXUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V3iPFvICh2PC2SW0ECmSzJKHcRSxlwVfa49H/g84OtY=;
+        b=OcBojmWh1umP8pktS7WdtAV6RpaTGOVBdRETOqiABYeiz5Eb4SUZgea5ngpdmhdrju
+         95oO49lHU5CNdHwVIB6uC/xou/s+Mg26XzskTVPNRFY3sMqM5xh7tg82Q5gpEa0MzV9D
+         adWhDvBsL8s3woT7Tx6Yf+nksvihfaWH4JIGCdFrEQAiQFbRXDM+BJFgRisiRreN3b5A
+         OVAzmo4IQ7KiYjskYlZJo8Q99pn3licGNVOnsXWK9DYJIxxYXLlmmsSuq9W5vhr14ilK
+         8cXuAaB0qs8ugY1/1e1c4vfZ6Lo2BIhxk8BW0/XK55/fSyCrGfJHVQDKl9PV/zygdwoB
+         XSNw==
+X-Gm-Message-State: APjAAAVprNJbAXNg2FbFo2PMV365O2qVh6Lz+YYL79SYobJGMveNv0nR
+        o1GcX/Wrztgzum3h11paw9JTRKAv
+X-Google-Smtp-Source: APXvYqyTvdy7St9nn1yvucJ1vFfx67G9OJX8e4xasDAfZlZ3RolkSoOA5s487+Raq3OYVxpd+EHEVQ==
+X-Received: by 2002:a2e:b5d0:: with SMTP id g16mr6541534ljn.88.1573733453562;
+        Thu, 14 Nov 2019 04:10:53 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id t13sm2067030ljo.70.2019.11.14.04.10.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 04:10:52 -0800 (PST)
+Subject: Re: [PATCH v2] clk: tegra: divider: Check UART's divider enable-bit
+ state on rate's recalculation
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191030004813.9187-1-digetx@gmail.com>
+ <20191113230303.726AE206E3@mail.kernel.org>
+ <02df00b3-5e23-441f-b2d5-b84fdb411e98@gmail.com>
+ <20191114115656.GC5690@aiwendil>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ec7062cf-a246-8b95-dca7-34e2b957d691@gmail.com>
+Date:   Thu, 14 Nov 2019 15:10:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191114153810.55d937af@canb.auug.org.au>
-In-Reply-To: <20191114153810.55d937af@canb.auug.org.au>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 14 Nov 2019 13:10:10 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a19MuYrrk_TZq5Jz-4AH0U5NYX1=WZZHcdyD+G+Rz8n2A@mail.gmail.com>
-Message-ID: <CAK8P3a19MuYrrk_TZq5Jz-4AH0U5NYX1=WZZHcdyD+G+Rz8n2A@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the y2038 tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:f6q/srZqJ+R4axATfWdpSRS5KTmcTI8IclwszzAvjY8sxX8zOfL
- mpvhiVkzqcJUL/oZs0wikoxEfKVFoQ5XXRH7z2K8+IxVc9BEgMYOtcoO3X1LbF1s1q/ioqZ
- Kv8dqNFoWgNK/Io7bv7EQPuWr6rhmdYC/raEqDvBGOPDgU/mQ83HeZCHuJrYAmF55UW8zkr
- hxxKF9Spy/L80iKxxyGXA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+UifpYRhZek=:7mMsloH2NHEb8vpwx+yugo
- FetTM4kmTHRGJtejuJO8+2G8My2eNHLlWrekJXMlQAdkr4o3hrWF6xyyS7ikvXJubNXPncmuf
- nEzYWjbe6qv73KZK9YFo295kvPumFx7X4v82IBv+yi60MaHIDWko+px7SEcWgsFa1EH1ZenQY
- o6UJxrfLusiz3jLkbeslY2KEqrT2APxKzjqjfPHw+Au37rOkBxhh0JdaaYVYnwNm+tygbz76c
- 1OZCqXlGrbSfWRhxlievgS1oCJ5Jgmv3jgx5+qXfSf8CKnPVqW+YxfU0qEec7LmcpXulKV3i4
- aOtqHz3LmMExVylJ51Oupq4BWTUywnYotvkPR6XIH0BuU3k9ZkxbBHZkAKA5cVXyaIwUKNTu1
- lq2oWgTce6F8ifig3dfXB1aYC2jPZErKc4THexOdCresBk3d+gQ+6w/rFDLgiHXcgc30j3GNf
- GHWN2PbsM+0jfxxE7wG1j2Enr9iONNOM7WPEsFAmParFwmYwyPqEyrtE7sETXqdkJfwZqxmE5
- gT7W3ov8mZ+fUM591Dr7/skkvRYsKOASgyCWeJs7excIvE5BJ/BP5Nlbkw53XRqSwYsGZ7oYo
- zgoP+GKnq7pUuV5UJ+IXmRZiNSbAN00aUt3gtcIad7gCgANVLwsxM6q+z+gTeuTL4kQti9nNX
- sDX0jcS0O6XXNweF1ryIY+NUs+m/ChFg5EzE7XaStKMqfClZoFftOHiatGSipDXHb+hBdW9ic
- Cdg1LewXkwA0/90/Gq38v/c0HwgcYAgtENoXjEOsmBQCByrki1nIcT0jyxppnuRtHxx9RT/q+
- iQGd9GaF+otKOyfDqBChrcGednPcmqk4HW1SubWW1Ixzp0wCU3Wayld+elI3T20fPsNV2rwSo
- CnponLfLY4FoSWsI0mKg==
+In-Reply-To: <20191114115656.GC5690@aiwendil>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 5:38 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the y2038 tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
->
-> arch/powerpc/kernel/time.c: In function 'update_vsyscall':
-> arch/powerpc/kernel/time.c:960:33: error: 'struct timespec64' has no member named 'sec'
->   960 |  vdso_data->stamp_xtime_sec = xt.sec;
->       |                                 ^
-> arch/powerpc/kernel/time.c:961:34: error: 'struct timespec64' has no member named 'nsec'
->   961 |  vdso_data->stamp_xtime_nsec = xt.nsec;
->       |                                  ^
->
-> Caused by commit
->
->   009a81339beb ("y2038: vdso: powerpc: avoid timespec references")
->
-> I have added the following patch for today.
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Thu, 14 Nov 2019 15:28:13 +1100
-> Subject: [PATCH] fix up for "y2038: vdso: powerpc: avoid timespec references"
->
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+14.11.2019 14:56, Thierry Reding пишет:
+> On Thu, Nov 14, 2019 at 02:29:51PM +0300, Dmitry Osipenko wrote:
+>> 14.11.2019 02:03, Stephen Boyd пишет:
+>>> Quoting Dmitry Osipenko (2019-10-29 17:48:13)
+>>>> UART clock is divided using divisor values from DLM/DLL registers when
+>>>> enable-bit is unset in clk register and clk's divider configuration isn't
+>>>> taken onto account in this case. This doesn't cause any problems, but
+>>>> let's add a check for the divider's enable-bit state, for consistency.
+>>>>
+>>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>
+>>> Is this going to be picked up or should I just apply atop the tegra PR?
+>>
+>> Looks like this patch missed the Tegra's PR by accident.
+>>
+>> Stephen, I assume it will be easier if you could apply this patch atop.
+>> The patch doesn't have any dependencies on any other patches, so it's
+>> fine to apply it separately. Thanks in advance!
+>>
+>> Thierry, please let us know if you have any objections.
+> 
+> It's not so much that I missed to pick this up. It's just that it didn't
+> make it in time. This was posted just a couple of days before v5.4-rc6
+> and I had already finalized the branches at that point. Given that this
+> doesn't fix any actual issues it didn't seem worth to force it in at
+> that point.
+> 
+> That said, I don't have any objections if Stephen wants to pick this up
+> on top of the pull requests.
 
-Folded into my patch, thanks!
-
-> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-> index ee9ba3a48c76..2d13cea13954 100644
-> --- a/arch/powerpc/kernel/time.c
-> +++ b/arch/powerpc/kernel/time.c
-> @@ -957,8 +957,8 @@ void update_vsyscall(struct timekeeper *tk)
->         vdso_data->tb_to_xs = new_tb_to_xs;
->         vdso_data->wtom_clock_sec = tk->wall_to_monotonic.tv_sec;
->         vdso_data->wtom_clock_nsec = tk->wall_to_monotonic.tv_nsec;
-> -       vdso_data->stamp_xtime_sec = xt.sec;
-> -       vdso_data->stamp_xtime_nsec = xt.nsec;
-> +       vdso_data->stamp_xtime_sec = xt.tv_sec;
-> +       vdso_data->stamp_xtime_nsec = xt.tv_nsec;
->         vdso_data->stamp_sec_fraction = frac_sec;
->         smp_wmb();
->         ++(vdso_data->tb_update_count);
-
-I was sure I had at least build-tested this, but looking at 'git reflog -p',
-I only see the same broken version that never worked, so I clearly did not.
-
-     Arnd
+Thanks!
