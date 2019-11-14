@@ -2,215 +2,106 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5D2C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED58C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F72206E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B283206E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 11:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VadeYVmW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUaH7bFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfKNLn0 (ORCPT
+        id S1727137AbfKNLnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:43:26 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:56940 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbfKNLm4 (ORCPT
+        Thu, 14 Nov 2019 06:43:31 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37794 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfKNLna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 06:42:56 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D5AFBC04CC;
-        Thu, 14 Nov 2019 11:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573731775; bh=vvxIcgTGJMMnHNBi5JJXe6vLAG4/fUQFci2iSCBSPvw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=VadeYVmWYWMrI53TlewnmWmnxb+uCy51vQntrqXcgg8w4E9mVf8iNrZTQSxVMjbpB
-         ezN5Q3jjDK/kwIzsJakUaL1GLJXj0Vakk5W6c0alqlQGjfeFZsHikTiyx3ft6bqxy5
-         A9TOGyXZDOJPaYD2cm066ZVQoRn9a65UoWPOsQzT1M4lHtLDv5GzcqN5m/SPFcPGHV
-         ikrQL/u8PY5xD5rjK3XispyFLsMb3Q8UYCNepMFdjvrVfcnsEnC+BE3y/JjfaIxsiA
-         L/Gpy+7aLbIRCkfUtQ+Pu1i/xaZdlF9wqbtjM+JSq6bSvt2hFvVvjeL2KrbsfvXS0z
-         E1/gDNwz1ilRA==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 8EA25A0096;
-        Thu, 14 Nov 2019 11:42:53 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 6/7] net: stmmac: Rework TX Coalesce logic
-Date:   Thu, 14 Nov 2019 12:42:50 +0100
-Message-Id: <38f4e95c85da24c443efeac7cd8823ab99f94d28.1573731453.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1573731453.git.Jose.Abreu@synopsys.com>
-References: <cover.1573731453.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1573731453.git.Jose.Abreu@synopsys.com>
-References: <cover.1573731453.git.Jose.Abreu@synopsys.com>
+        Thu, 14 Nov 2019 06:43:30 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t1so6099468wrv.4;
+        Thu, 14 Nov 2019 03:43:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nQNqrubOlUUYZPppnjrDT5gghOk1RD7VpCkLrJlKMDQ=;
+        b=lUaH7bFRd2dhXRSlw+qcr3GHuOtqyG8vd8F0OdlZgPharmpXM3PwpHtGslEKKUTnHM
+         27t6qBaIXKh9gGWzxI5rYY4nIBq7FD+trKsQmmL3xDJejBQR3R4DdVL8nb1tzR//uvRj
+         kGodRl0qd5Q7uRKoUBYwmpofXZllW0DYzt235GAxRyTrvti+8qVzddQ9by8x7pKAmRXe
+         oZzTv0uZpVpOU9vJGgVyUzS9zVrpykUkJv2/nPbOl5lSLoPCAhCrpVCqmDjSKuRW/Vca
+         5ZAbUDA5YTxZWn7QJi75URZ097xjC0+ScXkUI3I8/F9Gox0VW4ha0L4O0TMPn8yj+xst
+         /b6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nQNqrubOlUUYZPppnjrDT5gghOk1RD7VpCkLrJlKMDQ=;
+        b=Js1wr8OSdiJYBUxbPYTxYW/tANdSpb4Ua5UGb1H2M37cEaSyWr7vfm25cthq8O/haU
+         sFTMHcm2G9ZBYauH1zFledHMLUfypGe0Xmh+lqb+GUwKYiTd+wBs8PU1ggOY2+QkgOIH
+         dwztktaApI7HynmIoIg6ezDVfZVNVQtTvyIYQcGNsZA7G/DLacWCrj9K4WVg4hVCDM6V
+         U8OAgbj+U+rC2I7jhNntEFSVUdJ+VszTBU/7KRWAYzlipddRxrkJdXZDnvv4IxgALTaz
+         6GH9TMVyTsl63Zjj2hr/Gfbu2Mb0QqqqW02FVPmTv3RpzckawiuIcGs8bxMBV/4rPVSa
+         lJmw==
+X-Gm-Message-State: APjAAAXAcs8p0W0MvvsaGNs0QK2GTeOcmVbFSGE7Bn7tWUbPPCsBDZaV
+        g3t20awvmXmMzDpHSlqU2OI=
+X-Google-Smtp-Source: APXvYqy88aC3vqt2wu5quF6h4AmdgM/VgNut4bo25B9uywblwPxT9Fv0GJagE45hAuflHj5UsL2a4A==
+X-Received: by 2002:adf:ef91:: with SMTP id d17mr7505042wro.145.1573731807811;
+        Thu, 14 Nov 2019 03:43:27 -0800 (PST)
+Received: from localhost ([193.47.161.132])
+        by smtp.gmail.com with ESMTPSA id w18sm7021172wrp.31.2019.11.14.03.43.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Nov 2019 03:43:26 -0800 (PST)
+Date:   Thu, 14 Nov 2019 11:48:48 +0100
+From:   "oliver.graute@gmail.com" <oliver.graute@gmail.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc:     "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>,
+        "peng.fan@nxp.com" <peng.fan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Pramod Kumar <pramod.kumar_1@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
+        Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC PATCH 1/1] arm64: dts: added basic DTS for qmx8 congatec
+ board
+Message-ID: <20191114104848.GH4147@optiplex>
+References: <20191029122026.14208-1-oliver.graute@kococonnector.com>
+ <20191029122026.14208-2-oliver.graute@kococonnector.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029122026.14208-2-oliver.graute@kococonnector.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coalesce logic currently increments the number of packets and sets the
-IC bit when the coalesced packets have passed a given limit. This does
-not reflect very well what coalesce was meant for as we can have a large
-number of packets that are coalesced and then a single one, sent later
-on that has the IC bit.
+On 29/10/19, Oliver Graute wrote:
+> Add basic dts support for a Congatec iMX8QM Qseven Board
+> 
+> Product Page: https://www.congatec.com/de/produkte/qseven/conga-qmx8x.html
 
-Rework the logic so that it coalesces only upon a limit of packets and
-sets the IC bit for large number of packets.
+just noticed that above product link is wrong. The right one is this:
 
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+https://www.congatec.com/de/produkte/qseven/conga-qmx8.html
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 61 ++++++++++++++++-------
- 1 file changed, 42 insertions(+), 19 deletions(-)
+Best regards,
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 400fbb727fd5..4ba250a9008f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2916,16 +2916,17 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
- 	struct stmmac_priv *priv = netdev_priv(dev);
- 	int nfrags = skb_shinfo(skb)->nr_frags;
- 	u32 queue = skb_get_queue_mapping(skb);
-+	unsigned int first_entry, tx_packets;
-+	int tmp_pay_len = 0, first_tx;
- 	struct stmmac_tx_queue *tx_q;
--	unsigned int first_entry;
- 	u8 proto_hdr_len, hdr;
--	int tmp_pay_len = 0;
-+	bool has_vlan, set_ic;
- 	u32 pay_len, mss;
- 	dma_addr_t des;
--	bool has_vlan;
- 	int i;
- 
- 	tx_q = &priv->tx_queue[queue];
-+	first_tx = tx_q->cur_tx;
- 
- 	/* Compute header lengths */
- 	if (skb_shinfo(skb)->gso_type & SKB_GSO_UDP_L4) {
-@@ -3033,16 +3034,27 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
- 	tx_q->tx_skbuff[tx_q->cur_tx] = skb;
- 
- 	/* Manage tx mitigation */
--	tx_q->tx_count_frames += nfrags + 1;
--	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
--	    !((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
--	      priv->hwts_tx_en)) {
--		stmmac_tx_timer_arm(priv, queue);
--	} else {
-+	tx_packets = (tx_q->cur_tx + 1) - first_tx;
-+	tx_q->tx_count_frames += tx_packets;
-+
-+	if ((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) && priv->hwts_tx_en)
-+		set_ic = true;
-+	else if (!priv->tx_coal_frames)
-+		set_ic = false;
-+	else if (tx_packets > priv->tx_coal_frames)
-+		set_ic = true;
-+	else if ((tx_q->tx_count_frames % priv->tx_coal_frames) < tx_packets)
-+		set_ic = true;
-+	else
-+		set_ic = false;
-+
-+	if (set_ic) {
- 		desc = &tx_q->dma_tx[tx_q->cur_tx];
- 		tx_q->tx_count_frames = 0;
- 		stmmac_set_tx_ic(priv, desc);
- 		priv->xstats.tx_set_ic_bit++;
-+	} else {
-+		stmmac_tx_timer_arm(priv, queue);
- 	}
- 
- 	/* We've used all descriptors we need for this skb, however,
-@@ -3133,6 +3145,7 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
-  */
- static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- {
-+	unsigned int first_entry, tx_packets, enh_desc;
- 	struct stmmac_priv *priv = netdev_priv(dev);
- 	unsigned int nopaged_len = skb_headlen(skb);
- 	int i, csum_insertion = 0, is_jumbo = 0;
-@@ -3141,13 +3154,12 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 	int gso = skb_shinfo(skb)->gso_type;
- 	struct dma_desc *desc, *first;
- 	struct stmmac_tx_queue *tx_q;
--	unsigned int first_entry;
--	unsigned int enh_desc;
-+	bool has_vlan, set_ic;
-+	int entry, first_tx;
- 	dma_addr_t des;
--	bool has_vlan;
--	int entry;
- 
- 	tx_q = &priv->tx_queue[queue];
-+	first_tx = tx_q->cur_tx;
- 
- 	if (priv->tx_path_in_lpi_mode)
- 		stmmac_disable_eee_mode(priv);
-@@ -3241,12 +3253,21 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 	 * This approach takes care about the fragments: desc is the first
- 	 * element in case of no SG.
- 	 */
--	tx_q->tx_count_frames += nfrags + 1;
--	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
--	    !((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
--	      priv->hwts_tx_en)) {
--		stmmac_tx_timer_arm(priv, queue);
--	} else {
-+	tx_packets = (entry + 1) - first_tx;
-+	tx_q->tx_count_frames += tx_packets;
-+
-+	if ((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) && priv->hwts_tx_en)
-+		set_ic = true;
-+	else if (!priv->tx_coal_frames)
-+		set_ic = false;
-+	else if (tx_packets > priv->tx_coal_frames)
-+		set_ic = true;
-+	else if ((tx_q->tx_count_frames % priv->tx_coal_frames) < tx_packets)
-+		set_ic = true;
-+	else
-+		set_ic = false;
-+
-+	if (set_ic) {
- 		if (likely(priv->extend_desc))
- 			desc = &tx_q->dma_etx[entry].basic;
- 		else
-@@ -3255,6 +3276,8 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 		tx_q->tx_count_frames = 0;
- 		stmmac_set_tx_ic(priv, desc);
- 		priv->xstats.tx_set_ic_bit++;
-+	} else {
-+		stmmac_tx_timer_arm(priv, queue);
- 	}
- 
- 	/* We've used all descriptors we need for this skb, however,
--- 
-2.7.4
-
+Oliver
