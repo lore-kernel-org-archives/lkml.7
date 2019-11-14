@@ -2,154 +2,266 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F17C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AC7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23607206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA162070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:37:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vx7gNwBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfKNOhh (ORCPT
+        id S1726973AbfKNOhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:37:37 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46258 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726214AbfKNOhg (ORCPT
+        Thu, 14 Nov 2019 09:37:48 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:45940 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfKNOhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:37:36 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEEbJmF072707
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:37:35 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w9749mtbq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:37:33 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 14 Nov 2019 14:37:24 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 14:37:20 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEEbJpS39125238
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 14:37:19 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 432A1AE045;
-        Thu, 14 Nov 2019 14:37:19 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 073DFAE053;
-        Thu, 14 Nov 2019 14:37:18 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.133.147])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Nov 2019 14:37:17 +0000 (GMT)
-Subject: Re: [PATCH v7 4/5] IMA: Add support to limit measuring keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 14 Nov 2019 09:37:17 -0500
-In-Reply-To: <20191114031202.18012-5-nramas@linux.microsoft.com>
-References: <20191114031202.18012-1-nramas@linux.microsoft.com>
-         <20191114031202.18012-5-nramas@linux.microsoft.com>
+        Thu, 14 Nov 2019 09:37:47 -0500
+Received: by mail-yw1-f65.google.com with SMTP id j137so1897889ywa.12;
+        Thu, 14 Nov 2019 06:37:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=adlNbWJT++8x84LHedpmwcETz3O3BWzq6McgCf8yRb0=;
+        b=Vx7gNwBI7WuKupMBhpYwqln09RBXdzMPiAFHsF6GxBaQpcu64ynUiidGBXYwCIF8Bu
+         i+4x6jRaUAzC2CzLr5BHxqy1sKNP+vX8moutVUeHFzzDZL/n5/UETtW4ml4wz2PqNBhn
+         u7upv8UWpRsKwdHqPamKYCSZHekVim2XAe1mLwmkB1EBEcteDis8+J0TFyOlLEnIxulX
+         M5z145L3qCAXbnaNdHN5n1HU5AyQ4nZA9R285KVWxx7c2IY0gCEVPOBAWYD33UBRfOO0
+         c7b4nFkdEQDG3AF/81eejYFfoPCKV8n4ULnb6Oz1kK6e+CbUurG2Gm0KbRFeI4EvdldU
+         v9Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=adlNbWJT++8x84LHedpmwcETz3O3BWzq6McgCf8yRb0=;
+        b=KtxDFwpsjCB4rLRzLHCr5s+c6Y1lRBKQp/OGPDHV2Ybem2H2CHZgb30ypQEqvfazAT
+         aNqGPjrcrHn9Y0SW9/inzLosRhl+Z2ksbioT0qQGpQDccOF8gVpW5yX51/xE0o1df1gF
+         yaMkIeqRznY0tSewGvOadZ9u25kVz+MGdX5Q2DcJOvj7Jiujdu2uesbe3Qj0xdlYD8ho
+         5DGiJTEYoCEg5TqsYVVN25m4XaX5NHiV6k3/VY1yUY0gBOvu7n7GfBKWF8ZzgkFke92X
+         7E9UWaACkKAEChkuDCrFjBzLtDbkJ3V1c0tkopfO/G8qpR9jJh5un8lTvgbM3sj58mIr
+         PqrA==
+X-Gm-Message-State: APjAAAUepPbAePdHub+wbvau4p6oJqkwyTEJhktliJd4rYzfTc/qJ1tC
+        ofzcay7yW5anhMUwRY64+bWok0rEL4KV9Ujt1EemMnrE
+X-Google-Smtp-Source: APXvYqypGwJizPbAtIFNtfF9F16+gEKUX1tqhtofapxN8DOGmK+1PIfkktOsNhpPshlC7JgJWq7zZoio52tUJWYfh+4=
+X-Received: by 2002:a0d:f305:: with SMTP id c5mr5905050ywf.31.1573742266309;
+ Thu, 14 Nov 2019 06:37:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20191107104957.306383-1-colin.king@canonical.com>
+ <CAJfpegtr_xg_VG2npTfaxC+vD7B8bKa_0n9pu5vyfU-XQ9oV9Q@mail.gmail.com>
+ <CAOQ4uxhnpeyK6xW-c5NOQZ_h1uhAOUn_BbVVVYhUgZ74KSKDKQ@mail.gmail.com> <CAJfpegu7egxf=BVyVQKKW_icjMbjdLcLdd1FEw5hXLvDaiLNVQ@mail.gmail.com>
+In-Reply-To: <CAJfpegu7egxf=BVyVQKKW_icjMbjdLcLdd1FEw5hXLvDaiLNVQ@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 14 Nov 2019 16:37:35 +0200
+Message-ID: <CAOQ4uxh8n-QW+zTe3Y56suyaQf8Tcascj337AbMmKF7jf9=sjw@mail.gmail.com>
+Subject: Re: [PATCH][V2] ovl: fix lookup failure on multi lower squashfs
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Colin King <colin.king@canonical.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111414-0008-0000-0000-0000032F0196
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111414-0009-0000-0000-00004A4E10BB
-Message-Id: <1573742237.4793.30.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-13 at 19:12 -0800, Lakshmi Ramasubramanian wrote:
-> +/**
-> + * ima_match_keyring - determine whether the keyring matches the measure rule
-> + * @rule: a pointer to a rule
-> + * @keyring: name of the keyring to match against the measure rule
-> + *
-> + * If the measure action for KEY_CHECK does not specify keyrings=
-> + * option then return true (Measure all keys).
-> + * Else, return true if the given keyring name is present in
-> + * the keyrings= option. False, otherwise.
-> + */
-> +static bool ima_match_keyring(struct ima_rule_entry *rule,
-> +			      const char *keyring)
-> +{
-> +	if ((keyring == NULL) || (rule->keyrings == NULL)
-> +		return true;
+On Thu, Nov 14, 2019 at 4:12 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> On Wed, Nov 13, 2019 at 5:34 PM Amir Goldstein <amir73il@gmail.com> wrote:
+> >
+> > On Wed, Nov 13, 2019 at 6:02 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+> > >
+> > > On Thu, Nov 7, 2019 at 11:50 AM Colin King <colin.king@canonical.com> wrote:
+> > > >
+> > > > From: Colin Ian King <colin.king@canonical.com>
+> > > >
+> > > > In the past, overlayfs required that lower fs have non null uuid in
+> > > > order to support nfs export and decode copy up origin file handles.
+> > > >
+> > > > Commit 9df085f3c9a2 ("ovl: relax requirement for non null uuid of
+> > > > lower fs") relaxed this requirement for nfs export support, as long
+> > > > as uuid (even if null) is unique among all lower fs.
+> > > >
+> > > > However, said commit unintentionally also relaxed the non null uuid
+> > > > requirement for decoding copy up origin file handles, regardless of
+> > > > the unique uuid requirement.
+> > > >
+> > > > Amend this mistake by disabling decoding of copy up origin file handle
+> > > > from lower fs with a conflicting uuid.
+> > > >
+> > > > We still encode copy up origin file handles from those fs, because
+> > > > file handles like those already exist in the wild and because they
+> > > > might provide useful information in the future.
+> > > >
+> > > > Reported-by: Colin Ian King <colin.king@canonical.com>
+> > > > Link: https://lore.kernel.org/lkml/20191106234301.283006-1-colin.king@canonical.com/
+> > > > Fixes: 9df085f3c9a2 ("ovl: relax requirement for non null uuid ...")
+> > > > Cc: stable@vger.kernel.org # v4.20+
+> > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > > > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > > > ---
+> > > >  fs/overlayfs/namei.c     |  8 ++++++++
+> > > >  fs/overlayfs/ovl_entry.h |  2 ++
+> > > >  fs/overlayfs/super.c     | 16 ++++++++++------
+> > > >  3 files changed, 20 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
+> > > > index e9717c2f7d45..f47c591402d7 100644
+> > > > --- a/fs/overlayfs/namei.c
+> > > > +++ b/fs/overlayfs/namei.c
+> > > > @@ -325,6 +325,14 @@ int ovl_check_origin_fh(struct ovl_fs *ofs, struct ovl_fh *fh, bool connected,
+> > > >         int i;
+> > > >
+> > > >         for (i = 0; i < ofs->numlower; i++) {
+> > > > +               /*
+> > > > +                * If lower fs uuid is not unique among lower fs we cannot match
+> > > > +                * fh->uuid to layer.
+> > > > +                */
+> > > > +               if (ofs->lower_layers[i].fsid &&
+> > > > +                   ofs->lower_layers[i].fs->bad_uuid)
+> > > > +                       continue;
+> > > > +
+> > > >                 origin = ovl_decode_real_fh(fh, ofs->lower_layers[i].mnt,
+> > > >                                             connected);
+> > > >                 if (origin)
+> > > > diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
+> > > > index a8279280e88d..28348c44ea5b 100644
+> > > > --- a/fs/overlayfs/ovl_entry.h
+> > > > +++ b/fs/overlayfs/ovl_entry.h
+> > > > @@ -22,6 +22,8 @@ struct ovl_config {
+> > > >  struct ovl_sb {
+> > > >         struct super_block *sb;
+> > > >         dev_t pseudo_dev;
+> > > > +       /* Unusable (conflicting) uuid */
+> > > > +       bool bad_uuid;
+> > > >  };
+> > > >
+> > > >  struct ovl_layer {
+> > > > diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+> > > > index afbcb116a7f1..5d4faab57ba0 100644
+> > > > --- a/fs/overlayfs/super.c
+> > > > +++ b/fs/overlayfs/super.c
+> > > > @@ -1255,17 +1255,18 @@ static bool ovl_lower_uuid_ok(struct ovl_fs *ofs, const uuid_t *uuid)
+> > > >  {
+> > > >         unsigned int i;
+> > > >
+> > > > -       if (!ofs->config.nfs_export && !(ofs->config.index && ofs->upper_mnt))
+> > > > -               return true;
+> > > > -
+> >
+> > Colin, I mislead you, this should be (I think):
+> >
+> >        if (!ofs->config.nfs_export && !ofs->upper_mnt)
+> >                return true;
+> >
+> > > >         for (i = 0; i < ofs->numlowerfs; i++) {
+> > > >                 /*
+> > > >                  * We use uuid to associate an overlay lower file handle with a
+> > > >                  * lower layer, so we can accept lower fs with null uuid as long
+> > > >                  * as all lower layers with null uuid are on the same fs.
+> > > > +                * if we detect multiple lower fs with the same uuid, we
+> > > > +                * disable lower file handle decoding on all of them.
+> > > >                  */
+> > > > -               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid))
+> > > > +               if (uuid_equal(&ofs->lower_fs[i].sb->s_uuid, uuid)) {
+> > > > +                       ofs->lower_fs[i].bad_uuid = true;
+> > > >                         return false;
+> > > > +               }
+> > > >         }
+> > > >         return true;
+> > > >  }
+> > > > @@ -1277,6 +1278,7 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
+> > > >         unsigned int i;
+> > > >         dev_t dev;
+> > > >         int err;
+> > > > +       bool bad_uuid = false;
+> > > >
+> > > >         /* fsid 0 is reserved for upper fs even with non upper overlay */
+> > > >         if (ofs->upper_mnt && ofs->upper_mnt->mnt_sb == sb)
+> > > > @@ -1287,10 +1289,11 @@ static int ovl_get_fsid(struct ovl_fs *ofs, const struct path *path)
+> > > >                         return i + 1;
+> > > >         }
+> > > >
+> > > > -       if (!ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
+> > > > +       if (ofs->upper_mnt && !ovl_lower_uuid_ok(ofs, &sb->s_uuid)) {
+> > >
+> > > This seems bogus: why only check conflicting lower layers if there's
+> > > an upper layer?
+> >
+> > It is bogus - it was my (wrong) suggestion.
+> > The thinking was that we only decode origin fh if we have an upper layer
+> > and index only valid with upper layer.
+> > I forgot the case of nfs_export and lower-only setup.
+> > Suggested fix above.
+> >
+> > >
+> > > > +               bad_uuid = true;
+> > > >                 ofs->config.index = false;
+> > > >                 ofs->config.nfs_export = false;
+> > > > -               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', falling back to index=off,nfs_export=off.\n",
+> > > > +               pr_warn("overlayfs: %s uuid detected in lower fs '%pd2', enforcing index=off,nfs_export=off.\n",
+> > >
+> > > And this while this makes sense, it doesn't really fit into this patch
+> > > (no change of behavior regarding how index and nfs_export are
+> > > handled).
+> > >
+> >
+> > Again, this was my (not wrong?) suggestion.
+> > What this patch changes is that ovl_lower_uuid_ok() can now return false
+> > and we get to this print although user did not ask for index nor nfs_export.
+> > So the "falling back" language no longer makes sense.
+>
+> But does "enforcing" makes sense in this light?  That's not what the
+> detected bad_uuid condition is about, it's about failing to utilize
+> origin markings to make inode numbers persistent for filesystems that
+> have null uuid.   Is that correct?
 
-If the policy requires matching a specific keyring, then the "keyring"
-needs to match.  The logic, here, isn't quite right.
+That is not exactly how I would describe bad_uuid.
+ovl_lower_uuid_ok() had already existed for a while
+it was requires for decoding lower file handles, which is
+a requirement of both index and nfs_export.
 
-> +	else
-> +		return (strstr(rule->keyrings, keyring) != NULL);
+What Colin has now reported brings to light the fact that
+decoding lower file handles was also required for making inode
+numbers persistent.
 
-    if (rule->keyrings) {
-            if (!keyring)
-                    return false;
-		
-            return (strstr(rule->keyrings, keyring) != NULL);
-    }
+So the bad_uuid condition is required for all of the above, not
+just for decoding origin.
 
-    return true;
+> Can we do a message that makes
+> that somewhat more clearer?
+>
 
-Keyrings may be created by userspace with any name (e.g. foo, foobar,
-...).  A keyring name might be a subset of another keyring name.  For
-example, with the policy "keyrings=foobar", keys being loaded on "foo"
-would also be measured.  Using strstr() will not achieve what is
-needed.
+What about the logs:
 
-Mimi
+                pr_warn("overlayfs: upper fs does not support xattr,
+falling back to index=off and metacopy=off.\n");
+                pr_warn("overlayfs: upper fs does not support file
+handles, falling back to index=off.\n");
+                pr_warn("overlayfs: fs on '%s' does not support file
+handles, falling back to index=off,nfs_export=off.\n",
 
+Should we also change them to reflect the fact the decoding origin
+is not supported???
 
-> +}
-> +
->  /**
->   * ima_match_rules - determine whether an inode matches the measure rule.
->   * @rule: a pointer to a rule
-> @@ -364,18 +384,23 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
->   * @secid: the secid of the task to be validated
->   * @func: LIM hook identifier
->   * @mask: requested action (MAY_READ | MAY_WRITE | MAY_APPEND | MAY_EXEC)
-> + * @keyring: keyring name to check in policy for KEY_CHECK func
->   *
->   * Returns true on rule match, false on failure.
->   */
->  static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
->  			    const struct cred *cred, u32 secid,
-> -			    enum ima_hooks func, int mask)
-> +			    enum ima_hooks func, int mask,
-> +			    const char *keyring)
->  {
->  	int i;
->  
->  	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
-> -		if ((rule->flags & IMA_FUNC) && (rule->func == func))
-> +		if ((rule->flags & IMA_FUNC) && (rule->func == func)) {
-> +			if (func == KEY_CHECK)
-> +				return ima_match_keyring(rule, keyring);
->  			return true;
-> +		}
->  		return false;
->  	}
->  	if ((rule->flags & IMA_FUNC) &&
+Seems like a lot of hassle that will end up writing too much information
+that most people won't understand.
 
+IIRC, we also do not guaranty persistent inode numbers for hardlinks
+when index=off.
+
+As for the change in question (falling back => enforcing), if that bothers you,
+we can get rid of this change by testing emitting the print only if
+(ofs->config.nfs_export || ofs->config.index).
+
+Thanks,
+Amir.
