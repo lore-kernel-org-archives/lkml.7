@@ -2,208 +2,92 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E051C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC32EC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA86B20637
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49E1206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cteXF1eM"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Dd727wo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKNPvL (ORCPT
+        id S1726661AbfKNPxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:51:11 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33136 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfKNPvK (ORCPT
+        Thu, 14 Nov 2019 10:53:06 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42473 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfKNPxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:51:10 -0500
-Received: by mail-io1-f66.google.com with SMTP id j13so7354846ioe.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:51:08 -0800 (PST)
+        Thu, 14 Nov 2019 10:53:06 -0500
+Received: by mail-qt1-f196.google.com with SMTP id t20so7272032qtn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:53:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+RprlYzhSDEqjzZjpfI3XGa25r7ZTr5XLWPzcC7ZwH0=;
-        b=cteXF1eMCEYr0oXOfcP1lDv1V3S5fzBjYUjSfH0IIN9GvX9xSomMJJnxLA8dQE7b7C
-         TcgraWfimEC/gCZ8OT3NOTaAYpwTRdbo8kvdF39A/2jqo5bWAf78QHTpw7ZevshLYbxh
-         ayiBs9Zsa7IvzmfUHJVPwHgS3p+53zDbAQ68EIOBw63WnqvMbViZ/ctH8v7t+qQlSH5t
-         hnODKvP9lBhLsQKgjNosMu6fQtgZGrzQypGYLVF5hlen9z2WXVG2W94xg+bQQiFbTS5i
-         jeJMtrw3pu4ebbifrprAi53C+mmFefphATmFiYaCTYSa6XGuUE6rtIasK6NjvIMmg+8f
-         IwTw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tLI/gn4OSN8ZC/Du6JdVBQfUYGGcPQMSiqf5vI2eXOc=;
+        b=Dd727wo+TuDWwkH44X9N4CtBsI2dSYsENPDZa58bkPuAqqYfbwYj2r1Nk4lJhLwMtg
+         gAP8Zjtdv9AocJu8SGIIAQWMmAaG0WTWZF0Y1Qv9/RVMvHUs0aQFrpLlMUHJEkgMsFR4
+         pEhnfS8bWWut7Rk/dDx/YCO9wkwnFvFMvjy25+Teb+aMd3Mgvzq7GrSoEn1X//aptASa
+         zBHNyZgY8wk7d/1Pq10HA0IMPg9JSqbJprel0jFNaNMN0o8V+j90xs9jxJQyQ2+jmQr6
+         5zUGXxNmfIWt2387u/W9iGxHAS0orB8bAju6IPR7SmHo77BE24FPTiGhX0fOlhrcn5S9
+         uS4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+RprlYzhSDEqjzZjpfI3XGa25r7ZTr5XLWPzcC7ZwH0=;
-        b=pPY2aEc16b3JORZ0HvbfgeCuVuI81nSz83Colz2Qj/LWOwfSsHMwcyUMzcKY4jZVE4
-         IBjvokHY4//LnPK4jsqXYImKCqXEBiYMNrBK5bN+u+QAQp/SQ8J9Y6LnVrA/SMRf6tBc
-         SCmJo5nWyeeV/JDonDo7iTeHqxltJlE3/d5gyKECq5dizevjd7aVBEX9z7qR/OUq/zLn
-         4HBr9MBxVKnEJhoUuh0hPauIFOP4JsL7lk1Ymk492YJUNvGcJi25Gc6+ehvbACq4+o33
-         7t3gbHJh77n1MBoT9AmiSsUDrqwKxtev85xzODawDkLZ/2plDvoSp433l7yW9VpAj9A/
-         nlaA==
-X-Gm-Message-State: APjAAAV7MczI31XPpzgZ3BrP94g/d5imXY2BzbG1AizH/uBruRLZA/j9
-        shh+HJvbyZO/qqSKP5P+ScwhZQ==
-X-Google-Smtp-Source: APXvYqzUZbP6xqV2wJ1GNw3wRScPbvb6W/DH56obL15Pg1biAa4jRE2hISaLh7LK+EAxdYhN5OHs8w==
-X-Received: by 2002:a5d:8b85:: with SMTP id p5mr9482626iol.9.1573746667749;
-        Thu, 14 Nov 2019 07:51:07 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id g11sm827035ilq.39.2019.11.14.07.51.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 07:51:06 -0800 (PST)
-Subject: Re: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio)
- POLL
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jann Horn <jannh@google.com>
-Cc:     io-uring@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
- <58246851-fa45-a72d-2c42-7e56461ec04e@kernel.dk>
- <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
- <CAG48ez3dpphoQGy8G1-QgZpkMBA2oDjNcttQKJtw5pD62QYwhw@mail.gmail.com>
- <ea7a428d-a5bd-b48e-9680-82a26710ec83@rasmusvillemoes.dk>
- <e568a403-3712-4612-341a-a6f22af877ae@kernel.dk>
- <0f74341f-76fa-93ee-c03e-554d02707053@rasmusvillemoes.dk>
- <6243eb59-3340-deb5-d4b8-08501be01f34@kernel.dk>
- <85e8e954-d09c-f0b4-0944-598208098c8c@kernel.dk>
-Message-ID: <1a5b156a-fde5-507b-d5cf-f42ba3eacf1a@kernel.dk>
-Date:   Thu, 14 Nov 2019 08:51:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tLI/gn4OSN8ZC/Du6JdVBQfUYGGcPQMSiqf5vI2eXOc=;
+        b=r3Vda8/Fln2nOrgd47cqKGjeN48Vd8JUCTFoAv2uufpfOo8oBnFLMpjKpv/pqbUzLa
+         O+GXsjq9De4kDtUAD4ZA6VBfS6mA30IPgAwI+vcTnYD+ZuaI8eLxh7BvtLENCzsikFT/
+         bFAE728BjFonfhIHd6R8LJ6uMi4pO/bgksmj9HL4/ZhwuF9+6DQuGwxnrxh7vqf6/pMQ
+         nRCqA8cFwYjZrxyJYdLAmWRG/Ej0IC91NFwuWVNK+41XG6IIeeTc97u1+7HJ1zWBlSeF
+         MfqJM874bQR5OSn0AM9JmLKtieNuaorAaIljmPwL6dNadvMZQ6owxB/ACvplHxv2eYbC
+         D+lA==
+X-Gm-Message-State: APjAAAUo38wZiB91gMqVlPvngkGuBFyf8J5q7BtZ+Wn0F6L+BoimGKUy
+        4S5qlkaNTWL4Xa11DvGGB3kkqg==
+X-Google-Smtp-Source: APXvYqzeUQUldqMDzsiVRmmIdb0yNx9xu3Yzfu1xZYJyiYmmV00R48O2IXGFsO96S7ICqoOTKpLtfg==
+X-Received: by 2002:ac8:1494:: with SMTP id l20mr8747839qtj.356.1573746785170;
+        Thu, 14 Nov 2019 07:53:05 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id c27sm2592467qko.132.2019.11.14.07.53.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Nov 2019 07:53:04 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iVHQd-0007Yv-Cq; Thu, 14 Nov 2019 11:53:03 -0400
+Date:   Thu, 14 Nov 2019 11:53:03 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Pan Bian <bianpan2016@163.com>
+Cc:     Michal Kalderon <mkalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/qedr: fix potential use after free
+Message-ID: <20191114155303.GA29040@ziepe.ca>
+References: <1573021434-18768-1-git-send-email-bianpan2016@163.com>
 MIME-Version: 1.0
-In-Reply-To: <85e8e954-d09c-f0b4-0944-598208098c8c@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573021434-18768-1-git-send-email-bianpan2016@163.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/14/19 8:27 AM, Jens Axboe wrote:
-> On 11/14/19 8:20 AM, Jens Axboe wrote:
->> On 11/14/19 8:19 AM, Rasmus Villemoes wrote:
->>> On 14/11/2019 16.09, Jens Axboe wrote:
->>>> On 11/14/19 7:12 AM, Rasmus Villemoes wrote:
->>>
->>>>> So, I can't really think of anybody that might be relying on inheriting
->>>>> a signalfd instead of just setting it up in the child, but changing the
->>>>> semantics of it now seems rather dangerous. Also, I _can_ imagine
->>>>> threads in a process sharing a signalfd (initial thread sets it up and
->>>>> blocks the signals, all threads subsequently use that same fd), and for
->>>>> that case it would be wrong for one thread to dequeue signals directed
->>>>> at the initial thread. Plus the lifetime problems.
->>>>
->>>> What if we just made it specific SFD_CLOEXEC?
->>>
->>> O_CLOEXEC can be set and removed afterwards. Sure, we're far into
->>> "nobody does that" land, but having signalfd() have wildly different
->>> semantics based on whether it was initially created with O_CLOEXEC seems
->>> rather dubious.
->>>
->>>     I don't want to break
->>>> existing applications, even if the use case is nonsensical, but it is
->>>> important to allow signalfd to be properly used with use cases that are
->>>> already in the kernel (aio with IOCB_CMD_POLL, io_uring with
->>>> IORING_OP_POLL_ADD). Alternatively, if need be, we could add a specific
->>>> SFD_ flag for this.
->>>
->>> Yeah, if you want another signalfd flavour, adding it via a new SFD_
->>> flag seems the way to go. Though I can't imagine the resulting code
->>> would be very pretty.
->>
->> Well, it's currently _broken_ for the listed in-kernel use cases, so
->> I think making it work is the first priority here.
+On Wed, Nov 06, 2019 at 02:23:54PM +0800, Pan Bian wrote:
+> Move the release operation after error log to avoid possible use after
+> free.
 > 
-> How about something like this, then? Not tested.
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> ---
+>  drivers/infiniband/hw/qedr/qedr_iw_cm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested, works for me. Here's the test case I used. We setup a signalfd
-with SIGALRM, and arm a timer for 100msec. Then we queue a poll for the
-signalfd, and wait for that to complete with a timeout of 1 second. If
-we time out waiting for the completion, we failed. If we do get a
-completion but we don't have POLLIN set, we failed.
+Applied to for-next, thanks
 
-
-#include <unistd.h>
-#include <sys/signalfd.h>
-#include <sys/poll.h>
-#include <sys/time.h>
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <liburing.h>
-
-#define SFD_TASK	00000001
-
-int main(int argc, char *argv[])
-{
-	struct __kernel_timespec ts;
-	struct io_uring_sqe *sqe;
-	struct io_uring_cqe *cqe;
-	struct io_uring ring;
-	struct itimerval itv;
-	sigset_t mask;
-	int sfd, ret;
-
-	sigemptyset(&mask);
-	sigaddset(&mask, SIGALRM);
-	sigprocmask(SIG_BLOCK, &mask, NULL);
-
-	sfd = signalfd(-1, &mask, SFD_NONBLOCK | SFD_CLOEXEC | SFD_TASK);
-	if (sfd < 0) {
-		if (errno == EINVAL) {
-			printf("Not supported\n");
-			return 0;
-		}
-		perror("signalfd");
-		return 1;
-	}
-
-	memset(&itv, 0, sizeof(itv));
-	itv.it_value.tv_sec = 0;
-	itv.it_value.tv_usec = 100000;
-	setitimer(ITIMER_REAL, &itv, NULL);
-
-	io_uring_queue_init(32, &ring, 0);
-	sqe = io_uring_get_sqe(&ring);
-	io_uring_prep_poll_add(sqe, sfd, POLLIN);
-	io_uring_submit(&ring);
-
-	ts.tv_sec = 1;
-	ts.tv_nsec = 0;
-	ret = io_uring_wait_cqe_timeout(&ring, &cqe, &ts);
-	if (ret < 0) {
-		fprintf(stderr, "Timed out waiting for cqe\n");
-		ret = 1;
-	} else {
-		if (cqe->res < 0) {
-			fprintf(stderr, "cqe failed with %d\n", cqe->res);
-			ret = 1;
-		} else if (!(cqe->res & POLLIN)) {
-			fprintf(stderr, "POLLIN not set in result mask?\n");
-			ret = 1;
-		} else {
-			ret = 0;
-		}
-	}
-	io_uring_cqe_seen(&ring, cqe);
-
-	io_uring_queue_exit(&ring);
-	close(sfd);
-	return ret;
-}
-
--- 
-Jens Axboe
-
+Jason
