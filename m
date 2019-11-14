@@ -2,146 +2,145 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C9AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D304C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774DF20718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:29:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efZeLNh8"
+	by mail.kernel.org (Postfix) with ESMTP id EE2882071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKNQ3y (ORCPT
+        id S1726766AbfKNQeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:29:54 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39472 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfKNQ3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:29:54 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 15so5498664qkh.6;
-        Thu, 14 Nov 2019 08:29:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Etq+ZZLehuQdqs1e3s2Ev3L0ve5IMuF3F+oENs00DHk=;
-        b=efZeLNh8qrmA+sLeSOthCoIYWYgM+hh3MW3YpbgA+Ee0nkWXg9PznusvGodqjefIr+
-         Vq4aVJ96nuCe4wIpJZ9EkZYUoh4XQs/t3UQAzDmSFZVrQaoC+Tib1fauHQU6rXn6/EU4
-         mGc8+cEjHU5TaTGLW21fxoOSkWfwCcHepXw8oWmAp/6szm5FSHmRAjJqWavrHyCiQ+Nm
-         NhU6s+ertjFoxYdjSg+MMprtlREBfj9O9NUDMb6RJns4lsurr1/VEPpg5Pb/ldZ3dx02
-         pLe6KKqzKVkzr+1afmCdMP+qshc0K6sge7jJb6RwSl7uDXwafZyggfLbsrK0owUJhCDb
-         JVTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Etq+ZZLehuQdqs1e3s2Ev3L0ve5IMuF3F+oENs00DHk=;
-        b=XvuP7KvEnBDVRIOXJfDAPQrK6vQ75eiOtGXPiSx2u398FXXjBrjyfMXz2ZeCW0NO/d
-         73XRNyheORVto7JZMC8YvmQK1bAqJ3aHdoKYcgntZT0o32iwXaqHftUepgSiOLozlWP3
-         6gTG4SYxbCbvc/gzIZaeAQcV87gfSFpm7uNFE8IrSBJ1eoj0V4rCLTqXS8rO3n0Uvk7d
-         a8j6qMxciKMyOmTQu0BzwbdTL+5QREnbd6gMYUWx0MthpNKITtA47IgM45hjkRknn/0t
-         oiG15Rc5hupfTSqbGZJd//O3OSb/t3cGCOfxnnA1FsspiNmK2XKACoPD17fgIb/u0gaK
-         KTvA==
-X-Gm-Message-State: APjAAAUMtKaJ7e0Qv8UV2RM2+eaRAEh66Y660nE4WAK9ud2IyomFsqMk
-        UcSVHZo7f6l+ytfZapHgN+U=
-X-Google-Smtp-Source: APXvYqzViwFybatYL+Yoq+i7GWng93cFYBn8+ugVzmW2kzmWbEhzLjXQb1HoPxY4pvW8WQcThtLr0Q==
-X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr8157689qki.336.1573748992934;
-        Thu, 14 Nov 2019 08:29:52 -0800 (PST)
-Received: from localhost.localdomain ([2001:1284:f013:e3d4::1])
-        by smtp.gmail.com with ESMTPSA id k29sm3029590qtu.70.2019.11.14.08.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 08:29:52 -0800 (PST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id A35AEC4B42; Thu, 14 Nov 2019 13:29:49 -0300 (-03)
-Date:   Thu, 14 Nov 2019 13:29:49 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Aaron Conole <aconole@redhat.com>
-Cc:     netdev@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org, paulb@mellanox.com
-Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
-Message-ID: <20191114162949.GB3419@localhost.localdomain>
-References: <20191108210714.12426-1-aconole@redhat.com>
- <20191108210714.12426-2-aconole@redhat.com>
+        Thu, 14 Nov 2019 11:34:46 -0500
+Received: from mga03.intel.com ([134.134.136.65]:27987 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726214AbfKNQeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:34:46 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 08:34:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="216798796"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 14 Nov 2019 08:34:45 -0800
+Date:   Thu, 14 Nov 2019 08:34:45 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
+Message-ID: <20191114163444.GD24045@linux.intel.com>
+References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
+ <6c2c7bbb-39f4-2a77-632e-7730e9887fc5@redhat.com>
+ <20191114152235.GC24045@linux.intel.com>
+ <857e6494-4ed8-be4a-c21a-577ab99a5711@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191108210714.12426-2-aconole@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <857e6494-4ed8-be4a-c21a-577ab99a5711@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 04:07:14PM -0500, Aaron Conole wrote:
-> The act_ct TC module shares a common conntrack and NAT infrastructure
-> exposed via netfilter.  It's possible that a packet needs both SNAT and
-> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
-> this because it runs through the NAT table twice - once on ingress and
-> again after egress.  The act_ct action doesn't have such capability.
+On Thu, Nov 14, 2019 at 04:44:33PM +0100, Paolo Bonzini wrote:
+> On 14/11/19 16:22, Sean Christopherson wrote:
+> >> Instead of a separate vcpu->fast_vmexit, perhaps you can set exit_reason
+> >> to vmx->exit_reason to -1 if the fast path succeeds.
+> > 
+> > Actually, rather than make this super special case, what about moving the
+> > handling into vmx_handle_exit_irqoff()?  Practically speaking that would
+> > only add ~50 cycles (two VMREADs) relative to the code being run right
+> > after kvm_put_guest_xcr0().  It has the advantage of restoring the host's
+> > hardware breakpoints, preserving a semi-accurate last_guest_tsc, and
+> > running with vcpu->mode set back to OUTSIDE_GUEST_MODE.  Hopefully it'd
+> > also be more intuitive for people unfamiliar with the code.
 > 
-> Like netfilter hook infrastructure, we should run through NAT twice to
-> keep the symmetry.
-> 
-> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
-> 
-> Signed-off-by: Aaron Conole <aconole@redhat.com>
-> ---
->  net/sched/act_ct.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
-> index fcc46025e790..f3232a00970f 100644
-> --- a/net/sched/act_ct.c
-> +++ b/net/sched/act_ct.c
-> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
->  			  bool commit)
->  {
->  #if IS_ENABLED(CONFIG_NF_NAT)
-> +	int err;
->  	enum nf_nat_manip_type maniptype;
->  
->  	if (!(ct_action & TCA_CT_ACT_NAT))
-> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
->  		return NF_ACCEPT;
->  	}
->  
-> -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> +	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> +	if (err == NF_ACCEPT &&
-> +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
-> +		if (maniptype == NF_NAT_MANIP_SRC)
-> +			maniptype = NF_NAT_MANIP_DST;
-> +		else
-> +			maniptype = NF_NAT_MANIP_SRC;
-> +
-> +		err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
-> +	}
+> Yes, that's a good idea.  The expensive bit between handle_exit_irqoff
+> and handle_exit is srcu_read_lock, which has two memory barriers in it.
 
-I keep thinking about this and I'm not entirely convinced that this
-shouldn't be simpler. More like:
+Preaching to the choir at this point, but it'd also eliminate latency
+spikes due to interrupts.
 
-if (DNAT)
-	DNAT
-if (SNAT)
-	SNAT
-
-So it always does DNAT before SNAT, similarly to what iptables would
-do on PRE/POSTROUTING chains.
-
-> +	return err;
->  #else
->  	return NF_ACCEPT;
->  #endif
-> -- 
-> 2.21.0
+> >>> +			if (ret == 0)
+> >>> +				ret = kvm_skip_emulated_instruction(vcpu);
+> >> Please move the "kvm_skip_emulated_instruction(vcpu)" to
+> >> vmx_handle_exit, so that this basically is
+> >>
+> >> #define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
+> >>
+> >> 	if (ret == 0)
+> >> 		vcpu->exit_reason = EXIT_REASON_NEED_SKIP_EMULATED_INSN;
+> >>
+> >> and handle_ipi_fastpath can return void.
+> >
+> > I'd rather we add a dedicated variable to say the exit has already been
+> > handled.  Overloading exit_reason is bound to cause confusion, and that's
+> > probably a best case scenario.
 > 
+> I proposed the fake exit reason to avoid a ternary return code from
+> handle_ipi_fastpath (return to guest, return to userspace, call
+> kvm_x86_ops->handle_exit), which Wanpeng's patch was mishandling.
+
+For this case, I think we can get away with a WARN if kvm_lapic_reg_write()
+fails since it (currently) can't fail for ICR.  That would allow us to keep
+a void return for ->handle_exit_irqoff() and avoid an overloaded return
+value.
+
+And, if the fastpath is used for all ICR writes, not just FIXED+PHYSICAL,
+and is implemented for SVM, then we don't even need a a flag, e.g.
+kvm_x2apic_msr_write() can simply ignore ICR writes, similar to how
+handle_exception() ignores #MC and NMIs.
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 87b0fcc23ef8..d7b79f7faac1 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2615,12 +2615,11 @@ int kvm_x2apic_msr_write(struct kvm_vcpu *vcpu, u32 msr, u64 data)
+        if (!lapic_in_kernel(vcpu) || !apic_x2apic_mode(apic))
+                return 1;
+
+-       if (reg == APIC_ICR2)
++
++       /* ICR2 writes are ignored and ICR writes are handled early. */
++       if (reg == APIC_ICR2 || reg == APIC_ICR)
+                return 1;
+
+-       /* if this is ICR write vector before command */
+-       if (reg == APIC_ICR)
+-               kvm_lapic_reg_write(apic, APIC_ICR2, (u32)(data >> 32));
+        return kvm_lapic_reg_write(apic, reg, (u32)data);
+ }
+
+Another bonus to this approach is that the refactoring for the
+exit_reason can be done in a separate series.
+
+> To ensure confusion does not become the best case scenario, perhaps it
+> is worth trying to push exit_reason into vcpu_enter_guest's stack.
+> vcpu_enter_guest can pass a pointer to it, and then it can be passed
+> back into kvm_x86_ops->handle_exit{,_irqoff}.  It could be a struct too,
+> instead of just a bare u32.
+
+On the other hand, if it's a bare u32 then kvm_x86_ops->run can simply
+return the value instead of doing out parameter shenanigans.
+
+> This would ensure at compile-time that exit_reason is not accessed
+> outside the short path from vmexit to kvm_x86_ops->handle_exit.
+
+That would be nice.  Surprisingly, the code actually appears to be fairly
+clean, I thought for sure the nested stuff would be using exit_reason all
+over the place.  The only one that needs to be fixed is handle_vmfunc(),
+which passes vmx->exit_reason when forwarding the VM-Exit instead of simply
+hardcoding EXIT_REASON_VMFUNC.
