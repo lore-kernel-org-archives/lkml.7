@@ -2,130 +2,112 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD4CC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7EDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4013E206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:12:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IR4FDGHJ"
+	by mail.kernel.org (Postfix) with ESMTP id E0443206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 03:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573701623;
+	bh=OtP6MQL/9zqWPLBJmcEhDTenHXMX6HLpeiVYH4UmMDE=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=xPQmMgve+5tBO9x3eTz8j7x2HtpmN59/fHv/5PO6jOx640EVfbHJHk56d8VrdD2OW
+	 FYaawYy944In/TABivCUaNlu+1VPUDRGLwPNtogv3RbDDcvGOagxxOmj85FvWovUtX
+	 ZEMjwqdi84eOwQph7BzryGrsMbDRvHsrwycvsAiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfKNDMg (ORCPT
+        id S1726969AbfKNDUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:12:36 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48462 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKNDMK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:12:10 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.159.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 863B720B4905;
-        Wed, 13 Nov 2019 19:12:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 863B720B4905
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573701129;
-        bh=ry+B6JyXbEyIMFjlJbZQDnq31UX3LFYZGc2QxVmtSW4=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=IR4FDGHJjt+AdTzq/RxAjG534S3Q6piFgas7ZyLdJ8PDTHNH/daPqzg7LuciJnoGU
-         3q12d9vZJocy0U91MmeEcHEerlS9H2GfW7aKGIFyVaD6QLJrg50x25Ui3AVGNYf4AJ
-         hmID6amV/gotFJWh84DZXPZrmvuASd6f6sh1VB5A=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 3/5] KEYS: Call the IMA hook to measure keys
-Date:   Wed, 13 Nov 2019 19:12:00 -0800
-Message-Id: <20191114031202.18012-4-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191114031202.18012-1-nramas@linux.microsoft.com>
-References: <20191114031202.18012-1-nramas@linux.microsoft.com>
+        Wed, 13 Nov 2019 22:20:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfKNDUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 22:20:22 -0500
+Received: from localhost (unknown [124.219.31.93])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBE25206F3;
+        Thu, 14 Nov 2019 03:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573701621;
+        bh=OtP6MQL/9zqWPLBJmcEhDTenHXMX6HLpeiVYH4UmMDE=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=gQLXWXktL91SJAhfZP1kDUlvFwg3yUAhxTlw3gEyBZm+csv1Fe3nn+RAgRYOGy8zH
+         MrSA9ov5qkWicZMsu5PnaUDmANrLHTjaP2NrEUP2gsBQBdTLLG9FbXwLZ1HPjT/uxn
+         CEEBcRjEjnPcIOLb6WihxH/e2FQ07IVp9PbR/Az4=
+Date:   Thu, 14 Nov 2019 11:20:18 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bin Liu <b-liu@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 05/13] usb: musb: create debugfs directory under usb
+ root
+Message-ID: <20191114032018.GA122287@kroah.com>
+References: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1573541519-28488-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20191112152857.GA5853@uda0271908>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112152857.GA5853@uda0271908>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call the IMA hook from key_create_or_update function to measure
-the key when a new key is created or an existing key is updated.
+On Tue, Nov 12, 2019 at 09:28:57AM -0600, Bin Liu wrote:
+> Hi,
+> 
+> On Tue, Nov 12, 2019 at 02:51:51PM +0800, Chunfeng Yun wrote:
+> > Now the USB gadget subsystem can use the USB debugfs root directory,
+> > so move musb's directory from the root of the debugfs filesystem into
+> > the root of usb
+> 
+> My opinion is this move is unnecessary. I breaks existing debug tools or
+> documentation which is already published on Internet. 
 
-This patch adds the call to the IMA hook from key_create_or_update
-function to measure the key on key create or update.
+Having a "root" directory for a single random driver seems like you are
+making your driver a "very important" thing in the overall scheme of the
+kernel, right?  What's wrong with using the usb subdirectory like all
+other USB drivers use (after this patch series is merged)?  That feels
+like a much more "sane" way to handle the wide-open debugfs namespace.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- include/linux/ima.h | 13 +++++++++++++
- security/keys/key.c |  7 +++++++
- 2 files changed, 20 insertions(+)
+Yes, there are no rules when it comes to debugfs file names and
+locations, but let's try to be sane please.
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 6d904754d858..0af88b781ab6 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -25,6 +25,12 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern void ima_kexec_cmdline(const void *buf, int size);
- 
-+#ifdef CONFIG_KEYS
-+extern void ima_post_key_create_or_update(struct key *keyring,
-+					  struct key *key,
-+					  unsigned long flags, bool create);
-+#endif
-+
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
- #endif
-@@ -101,6 +107,13 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
- {}
- #endif
- 
-+#ifndef CONFIG_KEYS
-+static inline void ima_post_key_create_or_update(struct key *keyring,
-+						 struct key *key,
-+						 unsigned long flags,
-+						 bool create) {}
-+#endif
-+
- #ifdef CONFIG_IMA_APPRAISE
- extern bool is_ima_appraise_enabled(void);
- extern void ima_inode_post_setattr(struct dentry *dentry);
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 764f4c57913e..a0f1e7b3b8b9 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -13,6 +13,7 @@
- #include <linux/security.h>
- #include <linux/workqueue.h>
- #include <linux/random.h>
-+#include <linux/ima.h>
- #include <linux/err.h>
- #include "internal.h"
- 
-@@ -936,6 +937,8 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 		goto error_link_end;
- 	}
- 
-+	ima_post_key_create_or_update(keyring, key, flags, true);
-+
- 	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
- 
- error_link_end:
-@@ -965,6 +968,10 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 	}
- 
- 	key_ref = __key_update(key_ref, &prep);
-+
-+	if (!IS_ERR(key_ref))
-+		ima_post_key_create_or_update(keyring, key, flags, false);
-+
- 	goto error_free_prep;
- }
- EXPORT_SYMBOL(key_create_or_update);
--- 
-2.17.1
+thanks,
 
+greg k-h
