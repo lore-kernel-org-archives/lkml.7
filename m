@@ -2,106 +2,94 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E77C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B8FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FF3206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:45:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iotEtJ/X"
+	by mail.kernel.org (Postfix) with ESMTP id 711C82071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 18:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKNSpH (ORCPT
+        id S1726901AbfKNSsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:45:07 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:40118 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfKNSpH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 13:45:07 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6BE9820110C5;
-        Thu, 14 Nov 2019 10:45:06 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6BE9820110C5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573757106;
-        bh=nT4IO+CWu2bRiTtDpcO+b4y7oYNV0E1iPqumup/LrHc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iotEtJ/XIqAF3q7j3QPuh7LCcFit74EAEzsq08vINI1+90+Mjghnff2hxY+MSQ+O3
-         VttqkrTk6ez8B+0isSwd+yavPOWWYM/yTF7cWY7aH9h3gexKIV7t2RPHh0qMI2Wtgb
-         8f+nAKiP19QeLlqvJS9fhCwtFAQq8broiSkOwIOg=
-Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
-To:     Patrick Callaghan <patrickc@linux.vnet.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Patrick Callaghan <patrickc@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-References: <20191111192348.30535-1-patrickc@linux.ibm.com>
- <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
- <1573578841.17949.48.camel@linux.ibm.com>
- <c6a57c24-2f30-f252-0f42-8d748ede65af@linux.microsoft.com>
- <1573582344.17949.67.camel@linux.ibm.com>
- <abdf66fb39d4c8ee08e0b52c34fb81b93bd33006.camel@linux.vnet.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <4e1c0c6b-a5e1-a95a-8a0b-c5a7f0a253cf@linux.microsoft.com>
-Date:   Thu, 14 Nov 2019 10:45:06 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 13:48:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726549AbfKNSsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 13:48:31 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B89206CC;
+        Thu, 14 Nov 2019 18:48:29 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 13:48:27 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH 03/10] ftrace: Add register_ftrace_direct()
+Message-ID: <20191114134827.555e9b31@gandalf.local.home>
+In-Reply-To: <CAADnVQJcwyDBm7no2_wauezjkEFvgJk10FppiqRBU8p_7n0tbw@mail.gmail.com>
+References: <20191108212834.594904349@goodmis.org>
+        <20191108213450.032003836@goodmis.org>
+        <20191109022907.6zzo6orhxpt5n2sv@ast-mbp.dhcp.thefacebook.com>
+        <20191109073310.6a7a16f2@gandalf.local.home>
+        <20191114132942.2adc7aa2@gandalf.local.home>
+        <CAADnVQJcwyDBm7no2_wauezjkEFvgJk10FppiqRBU8p_7n0tbw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <abdf66fb39d4c8ee08e0b52c34fb81b93bd33006.camel@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/14/19 5:55 AM, Patrick Callaghan wrote:
+On Thu, 14 Nov 2019 10:34:09 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-Hi Patrick,
-
-> Hello Laks,
-> You suggested that the if statement of the patch change to the
-> following:
+> > Alexei,
+> >
+> > Do you still need such a feature?
+> >
+> > Note, I just pushed my tree to my for-next tree, and also have a
+> > ftrace/direct branch that ends with this patch set that is the basis of
+> > the rest of the work of my code. Feel free to build against that
+> > branch if you need to have something built on the net tree.  
 > 
-> if ((rbuf_len == 0) || (offset + rbuf_len >= i_size)) {
-> 
-> Unless the file size changed between the time that i_size was set in
-> ima_calc_file_hash_tfm() and an i_size_read() call was subsequently
-> issued in a function downstream of the integrity_kernel_read() call,
-> the rbuf_len returned on the integrity_kernel_read() call will not be
-> more than i_size - offset. I do not think that it is possible for the
-> file size to change during this window but nonetheless, if it can, this
-> would be a different problem and I would not want to include this in my
-> patch. That said, I do appreciate you taking time to review this patch.
+> I'm still trying to figure out what you meant
+> by your suggestion to implement a modify_ftrace_direct().
+> I was thinking something much simpler like
+> modify_ftrace_direct(ip, old_call, new_ca);
+> will just text poke that call addr from old to new if old matches
 
-You are right - unless the file size changes between the calls this 
-problem would not occur. I agree - that issue, even if it can occur, 
-should be addressed separately.
+The main reason, is that then we need to add another arch specific
+change, where as, the solution I suggested doesn't need anything new.
+The less arch specific code we need the better.
 
-Another one (again - am not saying this needs to be addressed in this 
-patch, but just wanted to point out)
+> and will adjust ftrace inner bookkeeping.
+> I don't understand why you want to malloc/free ftrace_ops for that.
 
-	rbuf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-	...
-	rbuf_len = integrity_kernel_read(file, offset, rbuf, PAGE_SIZE);
-	...
-	rc = crypto_shash_update(shash, rbuf, rbuf_len);
+We wouldn't need to allocate it, the stub could be something as simple
+as:
 
-rbuf is of size PAGE_SIZE, but rbuf_len, returned by 
-integrity_kernel_read() is passed as buffer size to 
-crypto_shash_update() without any validation (rbuf_len <= PAGE_SIZE)
+struct ftrace_ops dummy_ops = {
+	.func = ftrace_stub;
+}
 
-It is assumed here that integrity_kernel_read() would not return a 
-length greater than rbuf size and hence crypto_shash_update() would 
-never access beyond the given buffer.
+And just register that, where we set the hash to it, which would
+require an malloc and free, but is that really a problem? A modify
+shouldn't be a hot path, as text poke itself is going to be slow.
 
-thanks,
-  -lakshmi
-
-
+-- Steve
