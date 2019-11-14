@@ -2,137 +2,122 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A9BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BE1C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C60206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE52206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="RDXc0Q5F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B7dmBbpa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfKNMSv (ORCPT
+        id S1726474AbfKNMVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:18:51 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37337 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfKNMSv (ORCPT
+        Thu, 14 Nov 2019 07:21:34 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22491 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726106AbfKNMVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:18:51 -0500
-Received: by mail-lj1-f194.google.com with SMTP id d5so6437836ljl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 04:18:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unikie-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=CxVi3GPGI1Yul7gR4P6aaY8XhBPQyYx/5eSJ5XWodjM=;
-        b=RDXc0Q5FmmfY6VL6IwoPjQAuPtBUSiEtl6EszI5DUyp0O6f1LPQ/DqCmNnF1tHd4EN
-         T3s2bfVsRv5v1CVoQUT3uswpKpZCT0g6aW5UTJIKnybmWBxvCo/8ToO8Ej0i517psL8I
-         6wQqnAInhQYwxnltPTT1cduXQZ5itdKiHoyix3dNENXlW/3FM8bnIxJ5F30SfqQiY8DB
-         uPJuArfHDr4udxndKHsXkTLsklV5tiOAnT/fvk0/LoqSWwB5ESOC/7xypOmzEVgH+ujI
-         4W0ohNpt0Iow7wZS8qwEf1+fD9iQcVTI4hA/5Dz9pgYYYuivu0tQfG+y3x6DvLo+mhE6
-         49XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CxVi3GPGI1Yul7gR4P6aaY8XhBPQyYx/5eSJ5XWodjM=;
-        b=lHbKBLpWauwK8+L7zfgrQyy7YyLlckhgkDGybefJQ5z6/KG7d6uWekdBVNcvPeFsUF
-         J8ZN7cMZ+flmKQq6NuN5XFbC+h3EJDllqx7sqt3359uoln84Dl5+wT9Qf3XfCekTvhVp
-         ospsLTRfZX/Nlz+13o/RBRedY8Bd/dzd5hIICdnmg0loE6RrJM0FxSEyI1Oxxg+jnHvW
-         wdixx7R7XNd434RxJsU2JJ6IW7cQAchmffdx6BviZFWYchuKA/KMi0kME7COCRDnDpky
-         EEW5yaHfRgppt2r4rVudHFYBECjXBaPj7SVHo2rdTBEf26N3zgIhC/Th8InU1d4kdYbh
-         WdVg==
-X-Gm-Message-State: APjAAAUtBDhs1sED484XDKXy8PDeP1q6pwKs/Ke1OLUxvZt8Clh0ajcy
-        MzXU+XETJjFeetaFSF7QqElAWgMHlTo1Ww==
-X-Google-Smtp-Source: APXvYqzgVdhgd5RZgTpQE4UH0meInG+j8TPTvoCZWfGfQYfb03mjbNk/ORv22U+5QNQNDb2FKuuNXA==
-X-Received: by 2002:a2e:9712:: with SMTP id r18mr6657897lji.12.1573733928670;
-        Thu, 14 Nov 2019 04:18:48 -0800 (PST)
-Received: from localhost.localdomain ([109.204.235.119])
-        by smtp.gmail.com with ESMTPSA id a15sm2480300lfj.78.2019.11.14.04.18.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 04:18:48 -0800 (PST)
-From:   jouni.hogander@unikie.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
+        Thu, 14 Nov 2019 07:21:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573734092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PZX7pGUHhWmTDW+4G9DVRk0+x/DIsEoLM1+7MqBPpmg=;
+        b=B7dmBbpau4dVYxMwSicg9fysX+OqldBVSz3zzZFa+fmVbvLnDBGVLoEDIYcPwIkBp/y5Qe
+        dlkowGO82urZzHglN4KD/AjlJqbnEGNRRNdG5qDzr762QaP3tG7Xj4DO7tXM6mRVvguOAA
+        Q2zIbZPF0oSVmmEv4N3grv2O0G/Uy8I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-fGPYAQngOrqdrOVl2fN1jg-1; Thu, 14 Nov 2019 07:21:29 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48110800C77;
+        Thu, 14 Nov 2019 12:21:27 +0000 (UTC)
+Received: from [10.36.117.13] (ovpn-117-13.ams2.redhat.com [10.36.117.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE5E55ED4B;
+        Thu, 14 Nov 2019 12:21:23 +0000 (UTC)
+Subject: Re: [PATCH v1 01/12] powerpc/pseries: CMM: Implement release()
+ function for sysfs device
+To:     Michael Ellerman <patch-notifications@ellerman.id.au>,
+        linux-kernel@vger.kernel.org
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] drivers/base: Fix memory leak in error paths
-Date:   Thu, 14 Nov 2019 14:18:40 +0200
-Message-Id: <20191114121840.5585-1-jouni.hogander@unikie.com>
-X-Mailer: git-send-email 2.17.1
+        linux-mm@kvack.org, Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Arun KS <arunks@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>
+References: <47DFy90198z9sSZ@ozlabs.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <8e2dc539-e4fc-6eae-568c-21a8e809c0fc@redhat.com>
+Date:   Thu, 14 Nov 2019 13:21:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <47DFy90198z9sSZ@ozlabs.org>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: fGPYAQngOrqdrOVl2fN1jg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+On 14.11.19 10:08, Michael Ellerman wrote:
+> On Thu, 2019-10-31 at 14:29:22 UTC, David Hildenbrand wrote:
+>> When unloading the module, one gets
+>> [  548.188594] ------------[ cut here ]------------
+>> [  548.188596] Device 'cmm0' does not have a release() function, it is b=
+rok=3D
+>> en and must be fixed. See Documentation/kobject.txt.
+>> [  548.188622] WARNING: CPU: 0 PID: 19308 at drivers/base/core.c:1244 .d=
+evi=3D
+>> ce_release+0xcc/0xf0
+>> ...
+>>
+>> We only have on static fake device. There is nothing to do when
+>> releasing the device (via cmm_exit).
+>>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> Cc: Allison Randal <allison@lohutok.net>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Arun KS <arunks@codeaurora.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>=20
+> Patches 1-10 applied to powerpc next, thanks.
+>=20
+> https://git.kernel.org/powerpc/c/7d8212747435c534c8d564fbef4541a463c976ff
+>=20
+> cheers
+>=20
 
-Currently error paths are using device_del to clean-up preparations
-done by device_add. This is causing memory leak as free of dev->p
-allocated in device_add is freed in device_release. This is fixed by
-moving freeing dev->p to counterpart of device_add i.e. device_del.
+Thanks! I'll probably resend patch 11/12 to give it more attention and=20
+to fixup one comment leftover in patch 11. I guess if we get ACKs these=20
+two patch should also go via your tree to avoid collisions.
 
-This memory leak was reported by Syzkaller:
+--=20
 
-BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
-  comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
-    [<000000002340019b>] device_add+0x882/0x1750
-    [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
-    [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
-    [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
-    [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
-    [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
-    [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
-    [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
-    [<00000000984cabb9>] do_syscall_64+0x16f/0x580
-    [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<00000000e6ca2d9f>] 0xffffffffffffffff
+Thanks,
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
----
- drivers/base/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 7bd9cd366d41..cb4b27e82a9f 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1080,7 +1080,6 @@ EXPORT_SYMBOL_GPL(device_show_bool);
- static void device_release(struct kobject *kobj)
- {
- 	struct device *dev = kobj_to_dev(kobj);
--	struct device_private *p = dev->p;
- 
- 	/*
- 	 * Some platform devices are driven without driver attached
-@@ -1102,7 +1101,6 @@ static void device_release(struct kobject *kobj)
- 	else
- 		WARN(1, KERN_ERR "Device '%s' does not have a release() function, it is broken and must be fixed. See Documentation/kobject.txt.\n",
- 			dev_name(dev));
--	kfree(p);
- }
- 
- static const void *device_namespace(struct kobject *kobj)
-@@ -2388,6 +2386,7 @@ void device_del(struct device *dev)
- 	kobject_del(&dev->kobj);
- 	cleanup_glue_dir(dev, glue_dir);
- 	put_device(parent);
-+	kfree(dev->p);
- }
- EXPORT_SYMBOL_GPL(device_del);
- 
--- 
-2.17.1
+David / dhildenb
 
