@@ -2,123 +2,83 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A414C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2911FC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D96E20718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:16:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CWMhGPaU"
+	by mail.kernel.org (Postfix) with ESMTP id 0E1FF20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 12:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfKNMQf (ORCPT
+        id S1726977AbfKNMRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:16:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56828 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726469AbfKNMQf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:16:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573733793;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6g3FuiSmJL+Kk/iwiMI9WeS/k56NyXnRD61zjnDeFo8=;
-        b=CWMhGPaUV0aKGd4SQk5OlLb7qD4pwJ81W2piEt/dB2oRo6m+w6YeoO2CMqXwDx0U3J6zBB
-        r3ob9WqqJCTyY1ZlIxYwYBsQbwuBSYON2zXLRrGo7Ee6jTAHzg1X1+OquUFGCOY2BCXcmV
-        O2Wg3FiM8eCEX05YMGNmyPBPDAxvABY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-F_irfEmtNmiIm8ZA6zRiGQ-1; Thu, 14 Nov 2019 07:16:32 -0500
-Received: by mail-wm1-f70.google.com with SMTP id i23so3254729wmb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 04:16:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wbG6hQQW5/T3L1JRr4XcKwwPNPz10SDjCnOLcci1gTs=;
-        b=YAFEaxsrwu+2kDoj6/5+8hccqCOGr/LayUXVBBRXSuksmPeIaPmVkgqNfu14im4sAq
-         GYftR/Zm9STI+dCJ5TyyJA/n+7fBRSCd4ub0QG/oMGhzv6o4abQY9lmxZGcUq1hfDs35
-         2OuSWQuoZ3KmyRlEhSlKwWGvuiSL08sVRG2HAtvrWuHABbZ+XgzaBSvLHvkprWKt82eo
-         ZNYVJjG/ZYknDwubwkNjR1G/Ok676ZG2J7xfzfjvu1uv8a1Yecql5hW6bNcvfpUeuVvF
-         eHjJqVkrerJ1ACmn/7okvGLNA5ZSOGP9y7JD6dCWw3veyf7OpGjAFwD4Gb4rdXpZJMBT
-         Mk3w==
-X-Gm-Message-State: APjAAAW4ykmaXqnAeTrF7ZzZaQi9Un4GfFVeHhmCLUGxPNA3If4y9cnf
-        tTYEBhWs9NU/ehRiboOJA8Sz1aXkPEUH/UnFf9p9HOpKDGv8k1r0FRocnwhO+9CyGv2YgkaAtUg
-        Cwe03s6Kgb1PHi2NjwAxEVEHO
-X-Received: by 2002:a1c:7f94:: with SMTP id a142mr7299108wmd.33.1573733791357;
-        Thu, 14 Nov 2019 04:16:31 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwm8L07aob9pGVI1BqTnXUFu0oi7C7NBJZTfOSxIoMVifSd1LDxfNMr/utRbXLIyyw76nANLw==
-X-Received: by 2002:a1c:7f94:: with SMTP id a142mr7299081wmd.33.1573733791064;
-        Thu, 14 Nov 2019 04:16:31 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:a15b:f753:1ac4:56dc? ([2001:b07:6468:f312:a15b:f753:1ac4:56dc])
-        by smtp.gmail.com with ESMTPSA id w13sm6588216wrm.8.2019.11.14.04.16.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 04:16:30 -0800 (PST)
-Subject: Re: [PATCH] selftests: kvm: Simplify loop in kvm_create_max_vcpus
- test
-To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
-        rkrcmar@redhat.com
-Cc:     shuah@kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191112142111.13528-1-wainersm@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <70986b1a-5a04-cbd6-fe1a-fda4d97d5a72@redhat.com>
-Date:   Thu, 14 Nov 2019 13:16:31 +0100
+        Thu, 14 Nov 2019 07:17:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:42164 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726142AbfKNMRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 07:17:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D33131B;
+        Thu, 14 Nov 2019 04:17:52 -0800 (PST)
+Received: from [10.1.198.56] (e108754-lin.cambridge.arm.com [10.1.198.56])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CB75F3F6C4;
+        Thu, 14 Nov 2019 04:17:50 -0800 (PST)
+Subject: Re: [PATCH 5/6] blk-cgroup: reimplement basic IO stats using cgroup
+ rstat
+To:     Tejun Heo <tj@kernel.org>, Faiz Abbas <faiz_abbas@ti.com>
+Cc:     axboe@kernel.dk, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lizefan@huawei.com, hannes@cmpxchg.org, kernel-team@fb.com,
+        Dan Schatzberg <dschatzberg@fb.com>, Daniel Xu <dlxu@fb.com>
+References: <20191107191804.3735303-1-tj@kernel.org>
+ <20191107191804.3735303-6-tj@kernel.org>
+ <cd3ebcee-6819-a09b-aeba-de6817f32cde@ti.com>
+ <20191113163501.GI4163745@devbig004.ftw2.facebook.com>
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+Message-ID: <3c76ab1f-6836-fb60-11ed-25d6db9a2a57@arm.com>
+Date:   Thu, 14 Nov 2019 12:17:43 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191112142111.13528-1-wainersm@redhat.com>
+In-Reply-To: <20191113163501.GI4163745@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MC-Unique: F_irfEmtNmiIm8ZA6zRiGQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 15:21, Wainer dos Santos Moschetta wrote:
-> On kvm_create_max_vcpus test remove unneeded local
-> variable in the loop that add vcpus to the VM.
->=20
-> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
-> ---
->  tools/testing/selftests/kvm/kvm_create_max_vcpus.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->=20
-> diff --git a/tools/testing/selftests/kvm/kvm_create_max_vcpus.c b/tools/t=
-esting/selftests/kvm/kvm_create_max_vcpus.c
-> index 231d79e57774..6f38c3dc0d56 100644
-> --- a/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
-> +++ b/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
-> @@ -29,12 +29,9 @@ void test_vcpu_creation(int first_vcpu_id, int num_vcp=
-us)
-> =20
->  =09vm =3D vm_create(VM_MODE_DEFAULT, DEFAULT_GUEST_PHY_PAGES, O_RDWR);
-> =20
-> -=09for (i =3D 0; i < num_vcpus; i++) {
-> -=09=09int vcpu_id =3D first_vcpu_id + i;
-> -
-> +=09for (i =3D first_vcpu_id; i < first_vcpu_id + num_vcpus; i++)
->  =09=09/* This asserts that the vCPU was created. */
-> -=09=09vm_vcpu_add(vm, vcpu_id);
-> -=09}
-> +=09=09vm_vcpu_add(vm, i);
-> =20
->  =09kvm_vm_free(vm);
->  }
->=20
+Hi Tejun,
 
-Queued, thanks.
+On 13/11/2019 16:35, Tejun Heo wrote:
+> Hello,
+> 
+> Can you please see whether the following patch fixes the issue?
+> 
 
-Paolo
+This patch does fix the issue for me.
 
+
+Thanks,
+Ionela.
+
+> Thanks.
+> 
+> diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
+> index 48a66738143d..19394c77ed99 100644
+> --- a/include/linux/blk-cgroup.h
+> +++ b/include/linux/blk-cgroup.h
+> @@ -626,7 +626,8 @@ static inline bool blkcg_bio_issue_check(struct request_queue *q,
+>  		bis->cur.ios[rwd]++;
+>  
+>  		u64_stats_update_end(&bis->sync);
+> -		cgroup_rstat_updated(blkg->blkcg->css.cgroup, cpu);
+> +		if (cgroup_subsys_on_dfl(io_cgrp_subsys))
+> +			cgroup_rstat_updated(blkg->blkcg->css.cgroup, cpu);
+>  		put_cpu();
+>  	}
+>  
+> 
