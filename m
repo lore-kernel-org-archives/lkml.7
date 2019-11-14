@@ -2,233 +2,250 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCF8C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BF4C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDDB206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F12F206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:06:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="p6WWfMgh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfKNPFI (ORCPT
+        id S1726755AbfKNPGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:05:08 -0500
-Received: from mga07.intel.com ([134.134.136.100]:24781 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfKNPFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:05:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 07:05:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="379599049"
-Received: from longcui-mobl.ccr.corp.intel.com ([10.255.29.57])
-  by orsmga005.jf.intel.com with ESMTP; 14 Nov 2019 07:05:04 -0800
-Message-ID: <05e926734126474216885a243cb94887b3a1ddc6.camel@intel.com>
-Subject: Re: [PATCH 5.3 113/148] thermal: Fix use-after-free when
- unregistering thermal zone device
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, wvw@google.com
-Date:   Thu, 14 Nov 2019 23:05:03 +0800
-In-Reply-To: <905e26d4-76c7-555f-3b33-51fa3cf7a470@arm.com>
-References: <20191010083609.660878383@linuxfoundation.org>
-         <20191010083617.967244655@linuxfoundation.org>
-         <905e26d4-76c7-555f-3b33-51fa3cf7a470@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Thu, 14 Nov 2019 10:06:21 -0500
+Received: from mail.efficios.com ([167.114.142.138]:43772 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfKNPGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 10:06:20 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id BFA2E41E99F;
+        Thu, 14 Nov 2019 10:06:18 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id y5v4rZBxmuph; Thu, 14 Nov 2019 10:06:18 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 3C86441E99B;
+        Thu, 14 Nov 2019 10:06:18 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3C86441E99B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1573743978;
+        bh=RuHkOvmK9qPDSxk0veOJwx6BmoK8VXMvjoAV6kKuzNA=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=p6WWfMghZQc+kpvpCBgL5oXSi7D1qZVAT7yOQrmffSy+QR0/q+RpK/Fbp6rR4JGmd
+         RsEm4EKRLHlWDjPu4thI52KRM4aQeEi3dHM2VOFUacpP5ToY+x5qgbMsQCP2z4Q4nt
+         XPVK5b8aiU8LxFGwQTAVZr/YB1/G+YDh4dnZLN4QKs6/Ernl/0nMt5NEf1hPLYRIXt
+         36V7bO0vbDw8+FrOKGdzc077wjK9OT38pZXD8GGw7wSSc/mN65OsWZC03sXPCQZvaB
+         mwj31EIVfnR8iheUodhBSbbunNiSlRDv2Bg3nJNEZxipvDF4Fnf/Jsd2o2JBaPySvo
+         qQbweWFuziasQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 58PU-DPc0tvL; Thu, 14 Nov 2019 10:06:18 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 1347B41E98B;
+        Thu, 14 Nov 2019 10:06:18 -0500 (EST)
+Date:   Thu, 14 Nov 2019 10:06:17 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86 <x86@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        bristot <bristot@redhat.com>, jbaron <jbaron@akamai.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        paulmck <paulmck@kernel.org>
+Message-ID: <1135959694.112.1573743977897.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20191114135311.GW4131@hirez.programming.kicks-ass.net>
+References: <20191111131252.921588318@infradead.org> <20191111132458.162172862@infradead.org> <394483573.90.1573659752560.JavaMail.zimbra@efficios.com> <20191114135311.GW4131@hirez.programming.kicks-ass.net>
+Subject: Re: [PATCH -v5 12/17] x86/kprobes: Fix ordering
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - FF70 (Linux)/8.8.15_GA_3869)
+Thread-Topic: x86/kprobes: Fix ordering
+Thread-Index: UFOFrabDNwwFpDwtGKVJiKNujCuP8w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-11-14 at 13:17 +0000, Lukasz Luba wrote:
-> Hi Greg,
-> 
-> This patch causes a deadlock, the thermal framework stops. Please
-> check
-> this fix (I found it before posting exactly the same solution):
-> https://lkml.org/lkml/2019/11/12/1075
-> 
-> I have verified it on OdroidXU4 and it works. It needs some cleaning
-> in
-> the commit message, though.
-> I have added to CC the author: Wei Wang
-> 
-> I don't know in how many stable trees it was applied, but should be
-> fix
-> there also.
-> 
-Right.
-I've just applied this in thermal tree, will check if it can get 5.4 or
-not later.
+----- On Nov 14, 2019, at 8:53 AM, Peter Zijlstra peterz@infradead.org wrote:
 
-thanks,
-rui
-
-> Regards,
-> Lukasz Luba
+> On Wed, Nov 13, 2019 at 10:42:32AM -0500, Mathieu Desnoyers wrote:
+>> ----- On Nov 11, 2019, at 8:13 AM, Peter Zijlstra peterz@infradead.org wrote:
+>> 
+>> > Kprobes does something like:
+>> > 
+>> > register:
+>> >	arch_arm_kprobe()
+>> >	  text_poke(INT3)
+>> >          /* guarantees nothing, INT3 will become visible at some point, maybe */
+>> > 
+>> >        kprobe_optimizer()
+>> >	  /* guarantees the bytes after INT3 are unused */
+>> >	  syncrhonize_rcu_tasks();
+>> 
+>> syncrhonize -> synchronize
 > 
-> On 10/10/19 9:36 AM, Greg Kroah-Hartman wrote:
-> > From: Ido Schimmel <idosch@mellanox.com>
-> > 
-> > [ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
-> > 
-> > thermal_zone_device_unregister() cancels the delayed work that
-> > polls the
-> > thermal zone, but it does not wait for it to finish. This is racy
-> > with
-> > respect to the freeing of the thermal zone device, which can result
-> > in a
-> > use-after-free [1].
-> > 
-> > Fix this by waiting for the delayed work to finish before freeing
-> > the
-> > thermal zone device. Note that thermal_zone_device_set_polling() is
-> > never invoked from an atomic context, so it is safe to call
-> > cancel_delayed_work_sync() that can block.
-> > 
-> > [1]
-> > [  +0.002221]
-> > ==================================================================
-> > [  +0.000064] BUG: KASAN: use-after-free in
-> > __mutex_lock+0x1076/0x11c0
-> > [  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task
-> > kworker/1:0/17
-> > 
-> > [  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-
-> > rc6-custom-02495-g8e73ca3be4af #1701
-> > [  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-
-> > CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-> > [  +0.000016] Workqueue: events_freezable_power_
-> > thermal_zone_device_check
-> > [  +0.000012] Call Trace:
-> > [  +0.000021]  dump_stack+0xa9/0x10e
-> > [  +0.000020]  print_address_description.cold.2+0x9/0x25e
-> > [  +0.000018]  __kasan_report.cold.3+0x78/0x9d
-> > [  +0.000016]  kasan_report+0xe/0x20
-> > [  +0.000016]  __mutex_lock+0x1076/0x11c0
-> > [  +0.000014]  step_wise_throttle+0x72/0x150
-> > [  +0.000018]  handle_thermal_trip+0x167/0x760
-> > [  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
-> > [  +0.000019]  process_one_work+0x969/0x16f0
-> > [  +0.000017]  worker_thread+0x91/0xc40
-> > [  +0.000014]  kthread+0x33d/0x400
-> > [  +0.000015]  ret_from_fork+0x3a/0x50
-> > 
-> > [  +0.000020] Allocated by task 1:
-> > [  +0.000015]  save_stack+0x19/0x80
-> > [  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
-> > [  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
-> > [  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
-> > [  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
-> > [  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
-> > [  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
-> > [  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
-> > [  +0.000014]  local_pci_probe+0xc3/0x150
-> > [  +0.000013]  pci_device_probe+0x280/0x410
-> > [  +0.000013]  really_probe+0x26a/0xbb0
-> > [  +0.000013]  driver_probe_device+0x208/0x2e0
-> > [  +0.000013]  device_driver_attach+0xfe/0x140
-> > [  +0.000013]  __driver_attach+0x110/0x310
-> > [  +0.000013]  bus_for_each_dev+0x14b/0x1d0
-> > [  +0.000013]  driver_register+0x1c0/0x400
-> > [  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
-> > [  +0.000014]  do_one_initcall+0x239/0x4dd
-> > [  +0.000013]  kernel_init_freeable+0x42b/0x4e8
-> > [  +0.000012]  kernel_init+0x11/0x18b
-> > [  +0.000013]  ret_from_fork+0x3a/0x50
-> > 
-> > [  +0.000015] Freed by task 581:
-> > [  +0.000013]  save_stack+0x19/0x80
-> > [  +0.000014]  __kasan_slab_free+0x125/0x170
-> > [  +0.000013]  kfree+0xf3/0x310
-> > [  +0.000013]  thermal_release+0xc7/0xf0
-> > [  +0.000014]  device_release+0x77/0x200
-> > [  +0.000014]  kobject_put+0x1a8/0x4c0
-> > [  +0.000014]  device_unregister+0x38/0xc0
-> > [  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
-> > [  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
-> > [  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
-> > [  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
-> > [  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
-> > [  +0.000014]  genl_family_rcv_msg+0x700/0xee0
-> > [  +0.000013]  genl_rcv_msg+0xca/0x170
-> > [  +0.000013]  netlink_rcv_skb+0x137/0x3a0
-> > [  +0.000012]  genl_rcv+0x29/0x40
-> > [  +0.000013]  netlink_unicast+0x49b/0x660
-> > [  +0.000013]  netlink_sendmsg+0x755/0xc90
-> > [  +0.000013]  __sys_sendto+0x3de/0x430
-> > [  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
-> > [  +0.000013]  do_syscall_64+0xa4/0x4d0
-> > [  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > 
-> > [  +0.000017] The buggy address belongs to the object at
-> > ffff8881e48e0008
-> >                 which belongs to the cache kmalloc-2k of size 2048
-> > [  +0.000012] The buggy address is located 1096 bytes inside of
-> >                 2048-byte region [ffff8881e48e0008,
-> > ffff8881e48e0808)
-> > [  +0.000007] The buggy address belongs to the page:
-> > [  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0
-> > mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
-> > [  +0.000020] flags: 0x200000000010200(slab|head)
-> > [  +0.000019] raw: 0200000000010200 ffffea0007682008
-> > ffffea00076ab808 ffff88823680d0c0
-> > [  +0.000016] raw: 0000000000000000 00000000000d000d
-> > 00000001ffffffff 0000000000000000
-> > [  +0.000007] page dumped because: kasan: bad access detected
-> > 
-> > [  +0.000012] Memory state around the buggy address:
-> > [  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb
-> > fb fb fb fb fb
-> > [  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb
-> > fb fb fb fb fb
-> > [  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb
-> > fb fb fb fb fb
-> > [  +0.000008]                                                  ^
-> > [  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb
-> > fb fb fb fb fb
-> > [  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb
-> > fb fb fb fb fb
-> > [  +0.000007]
-> > ==================================================================
-> > 
-> > Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic
-> > thermal layer")
-> > Reported-by: Jiri Pirko <jiri@mellanox.com>
-> > Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-> > Acked-by: Jiri Pirko <jiri@mellanox.com>
-> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >   drivers/thermal/thermal_core.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/thermal/thermal_core.c
-> > b/drivers/thermal/thermal_core.c
-> > index 6bab66e84eb58..ebe15f2cf7fc3 100644
-> > --- a/drivers/thermal/thermal_core.c
-> > +++ b/drivers/thermal/thermal_core.c
-> > @@ -304,7 +304,7 @@ static void
-> > thermal_zone_device_set_polling(struct thermal_zone_device *tz,
-> >   				 &tz->poll_queue,
-> >   				 msecs_to_jiffies(delay));
-> >   	else
-> > -		cancel_delayed_work(&tz->poll_queue);
-> > +		cancel_delayed_work_sync(&tz->poll_queue);
-> >   }
-> >   
-> >   static void monitor_thermal_zone(struct thermal_zone_device *tz)
-> > 
+> Fixed.
+> 
+>> >	  text_poke_bp(JMP32);
+>> >	  /* implies IPI-sync, kprobe really is enabled */
+>> > 
+>> > 
+>> > unregister:
+>> >	__disarm_kprobe()
+>> >	  unoptimize_kprobe()
+>> >	    text_poke_bp(INT3 + tail);
+>> >	    /* implies IPI-sync, so tail is guaranteed visible */
+>> >          arch_disarm_kprobe()
+>> >            text_poke(old);
+>> >	    /* guarantees nothing, old will maybe become visible */
+>> > 
+>> >	synchronize_rcu()
+>> > 
+>> >        free-stuff
+>> > 
+>> > Now the problem is that on register, the synchronize_rcu_tasks() does
+>> > not imply sufficient to guarantee all CPUs have already observed INT3
+>> > (although in practise this is exceedingly unlikely not to have
+>> 
+>> practise -> practice
+> 
+> And fixed.
+> 
+>> > happened) (similar to how MEMBARRIER_CMD_PRIVATE_EXPEDITED does not
+>> > imply MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE).
+>> > 
+>> > Worse, even if it did, we'd have to do 2 synchronize calls to provide
+>> > the guarantee we're looking for, the first to ensure INT3 is visible,
+>> > the second to guarantee nobody is then still using the instruction
+>> > bytes after INT3.
+>> 
+>> I'm not entirely convinced about this last statement though. AFAIU:
+>> 
+>> - Swapping between some instruction and INT3 is OK,
+>> - Swapping back between that INT3 and _original_ instruction is OK,
+>> - Anything else needs to have explicit core serialization.
+> 
+> So far, agreed.
+> 
+>> So I understand the part about requiring the synchronize call to guarantee
+>> that nobody is then still using the instruction bytes following INT3, but not
+>> the rationale for the first synchronization. What operation would theoretically
+>> follow this first synchronize call ?
+> 
+> I'm not completely sure what you're asking, so I'm going to explain too
+> much and hope I answered your question along the way. If not, please be
+> a little more specific.
+> 
+> First:
+> 
+> So what can happen with optimized kprobes is that the original
+> instruction is <5 bytes and we want to write a JMP.d32 (5 bytes).
+> Something like:
+> 
+>	83e:   48 89 e5                mov    %rsp,%rbp
+>	841:   48 85 c0                test   %rax,%rax
+> 
+> And we put a kprobe on the MOV. Then we poke INT3 at 0x83e and IPI-sync.
+> At that point the kprobe is active:
+> 
+>	83e:   cc 89 e5                int3 ; 2 byte garbage
+>	841:   48 85 c0                test   %rax,%rax
+> 
+> Now we want to optimize that thing. But imagine a task being preempted
+> at 0x841. If we poke in the JMP.d32 the above turns into gibberish
+> 
+>	83e:   e9 12 34 56 78		jmp +0x12345678
+> 
+> Then our task resumes, loads the instruction at 0x841, which then reads:
+> 
+>	841:   56 78 c0
+> 
+> And goes *bang*.
 
+Thanks for the reminder. I somehow forgot that optimized kprobes covered
+instructions smaller than 5 bytes.
+
+> 
+> So what we do, after enabling the regular kprobe, is call
+> synchronize_rcu_tasks() to wait for each task to have passed through
+> schedule(). That guarantees no task is preempted inside the kprobe
+> shadow (when it triggers it ensures it resumes execution at an
+> instruction boundary further than 5 bytes away).
+
+Indeed, given that synchronize_rcu_tasks() awaits for voluntary context
+switches (or user-space execution), it guarantees that no task was preempted
+within the kprobe shadow.
+
+Considering that synchronize_rcu_tasks() is meant only for code rewriting,
+I wonder if it would make sense to include the core serializing guarantees
+within this RCU API ?
+
+> 
+> 
+> Second:
+> 
+> The argument I was making was that if we didn't IPI-sync, and if
+> synchronize_rcu_tasks() would imply the IPI-sync, we would still need
+> two invocations of it to achieve the desired result. Because only after
+> the implied IPI-sync must we guarantee no tasks is still inside the
+> kprobe 'shadow'.
+> 
+> 
+> Did that answer your question?
+
+Yes.
+
+Which makes me wonder if we should include the IPI-sync guarantees within
+synchronize_rcu_tasks(), _and_ issue the additional IPI-sync when a full
+synchronize_rcu_tasks() is not required. But this is a minor nit, I'm fine
+with the approach you propose.
+
+> 
+>> I understand that this patch modifies arch_{arm,disarm}_kprobe to add
+>> core serialization after inserting/removing the INT3 even in the case
+>> where no optimized kprobes are used, which is heavier than what is
+>> strictly required without optimized kprobes.
+> 
+> I disagree, it is required even for normal kprobes, namely:
+> 
+> Without this additional sync it is uncertain when the kprobe would've
+> taken effect (if ever).
+> 
+> Suppose a CPU is stuck in a tight loop around the probed instruction,
+> then it would never have to re-fetch the changed text and thus never
+> trigger.
+
+If the instruction cache state is not presumed to be "eventually
+consistent", then this explicit core serialization is indeed required.
+
+Please consider my comments about as food for thoughts, I'm fine with
+your proposed patch:
+
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+
+Thanks!
+
+Mathieu
+
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
