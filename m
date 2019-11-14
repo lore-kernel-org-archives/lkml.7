@@ -2,165 +2,152 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3036FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D3BC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01227206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56C9206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ocSs8KGS";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="LhptA+iA"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="metflymB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKNEmq (ORCPT
+        id S1726957AbfKNEtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 23:42:46 -0500
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:19530 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726521AbfKNEmq (ORCPT
+        Wed, 13 Nov 2019 23:49:43 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37990 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfKNEtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 23:42:46 -0500
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAE4em35021160;
-        Wed, 13 Nov 2019 20:42:35 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=Ge7k4OSblBjU2JhwE4iFeI1STTIDyks3Tjf9AV2lZAU=;
- b=ocSs8KGSpWCFtqfu6DcR45ppV5ppZSsPUkTu9GZOVtcri14JRVindnfyBP3jXq3syE6Z
- kCjYvLAaUj97/5A4f+532wtb+rSQVA3t2Fk424LXt/3iTEsGUCdJ/BqkJA4cCtJgx51U
- xgIZrr3kaYToot6K/2tt55zuodf3rquqC+NBypf1WIG9vV7wUObbM3NkW93/JkwCRghX
- wgLU5gwqdYHofG6lLzsiNw04kQ7vccP5yMR3SUVqVkPwvkS4RXhjRCqjlyeMwfpBlgPp
- c/Imo9K1pVDVSQENx3IY1g8zrbKwzbzMWk30LgZ/KycbSnonzrf5dzGMG8ktSHg1NDQZ NA== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2w8wwg0gdt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 13 Nov 2019 20:42:35 -0800
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 13 Nov
- 2019 20:42:34 -0800
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (104.47.48.53) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 13 Nov 2019 20:42:34 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kg1HIzvMIP8LAitJfGIB5EIP19tHmB+qMi7Roh/vUeoN+pIlK7JWzq5bmnc2xj0iA9jaKyJEPrDwV1us9aUMKmFCfYm/Z3ECLRTMxsGYpBCvbemmDHvLigOhySzdjvHdkymHDmStdlAzx7BooiRqM3MshhaBmFy4ea99r7ezBT1H/yibJSob+FfvboXMNSE8gCgB3WteIsm74t4lOE9RN3RQNbzl/EYtnToCO1hV+ky92CSUdDHTMNfr+wnU6f/droHIRrFcNeq+MgSAbki06+lzCvoocKm6sNyu8OVCb/d5H2x2XZKh7W43f/+jrHDLLYRXgir99uJyPZcHOR1pdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ge7k4OSblBjU2JhwE4iFeI1STTIDyks3Tjf9AV2lZAU=;
- b=a1Ru35/2RaTkvnYxG/zMjulAJ4z2QR6aEoNMID27vrEW1viYOObWZa/h1y2fp6UcYa+8BMPrN9Z84CtDIPlIypGutlExTSAs76S4j0OautQmJqFWT8TRj3Sequ3CKBlY7a8A6liLXSi9OzBljrwsfTQc1s2YlntnQtFhp9h9IqdL3FB7z05P4Mef6BI8sJ2WLzYoUqUObUiOagKtRjAmgU9X7GX2aJQBRApjcA2bgGqPH8PyJGaxjwXXHeVKPd8ySpBsypGiVQYvZ2EmIFHDgmgdwoFzWTr1X7Rk/JFZRGGVcMl0vh72+yrBTBIbmJNg0vVGBXd4taOx9Ccvw676wQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Wed, 13 Nov 2019 23:49:43 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 15so2889117pgh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Nov 2019 20:49:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ge7k4OSblBjU2JhwE4iFeI1STTIDyks3Tjf9AV2lZAU=;
- b=LhptA+iAA+hxIdNx6fSjClu33IXZLsQqe2vOzYPM1Mo7pbiikj25rmGd3qtpFAv7O1lYB/7NBimQS6NFibPXvj5qrmt1vLcVJSEtERnUnUJuWjQDxUEBo2M+0R22FXhB/BBFwMHAVAWinzCmLaMA5dg2kTV7cut3k3qcHdMAvEE=
-Received: from MN2PR18MB3022.namprd18.prod.outlook.com (20.179.81.79) by
- MN2PR18MB2384.namprd18.prod.outlook.com (20.179.80.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Thu, 14 Nov 2019 04:42:33 +0000
-Received: from MN2PR18MB3022.namprd18.prod.outlook.com
- ([fe80::50f5:6e56:bb7a:c6a5]) by MN2PR18MB3022.namprd18.prod.outlook.com
- ([fe80::50f5:6e56:bb7a:c6a5%6]) with mapi id 15.20.2430.027; Thu, 14 Nov 2019
- 04:42:33 +0000
-From:   Manish Rangankar <mrangankar@marvell.com>
-To:     Pan Bian <bianpan2016@163.com>,
-        "QLogic-Storage-Upstream@qlogic.com" 
-        <QLogic-Storage-Upstream@qlogic.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sfkuMUsk/SV9FHy+miwKwO0qh9BP5ORMbQaGtLeZyoc=;
+        b=metflymBEPmiF5pgfQ0LZSX1Dz4TrQiQ6/kwX6D+oqJ0xSd4vW61ubqLpojLIy7p4A
+         g/J+3d2S/+P9UE3Zx9Ubtq4AV0Xe15d4MBxAnFtwIIlp6J2tPAhn2CxMl9Vb+RsneYV2
+         HcuSm+PNV4nN8PkG61QCRPDH9ZCTsI27mgl8qezxImz0PiHkruotmzh+0CykSK14EA/b
+         voFBSGomDxNqgJvb5RJB9ZS4T+IQu2PCFxOFwy1TzkaxjkLOIwJ/9mpdeHqv3UJ6VkzB
+         uyr5MRS7Xj095vdxuqE0sPf70xlHEmX0lz4Px0/ZLiJF3eDVWueETtAPGPetZUtd6216
+         za9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sfkuMUsk/SV9FHy+miwKwO0qh9BP5ORMbQaGtLeZyoc=;
+        b=SSmSINuJqqXwuqApBUcO8d1GTAiah8J+bkKT/5rASRKsPbfRGAJnADdzqGM+pqYFCi
+         uDzBg3hmL3zBc4SV0tPXpPpE9eh3n3RIwFEpqk0KQ0bkkq3XaGtLcgUmsOr4fUh9B0lH
+         MQNP5Zmy9n4u8kmMvIS/lztmhJ1j6hCFpD17qmpA2Ff8HTXuok1um+AM7AdtLVQnHE+Q
+         WrJkva6S1TwviQP5K16D6YUJ/sfaCarh2TGMobimRgRvjT+FzODcYsoJDmvcRjaGcx7b
+         zd/alAETw5LPM0JY/tazR1dJIAjIDUBB8Adrrd6dg1QQzIKQDpxVTVJRlGCYQDOAxpKh
+         qVaw==
+X-Gm-Message-State: APjAAAXc2vwyqW7oR/xGxvEkDabfqNNJL1Mt3pEZqAdszgb8CBW1WDcL
+        Q/MmoLuwPD2F4UCV6YOiesl6tg==
+X-Google-Smtp-Source: APXvYqz3czEKj7TamiP4er9SMcbQHENT3JWGo1hXUXF6T1DpiFs41gDFFA8oePRaUtC/r23jp2WEIg==
+X-Received: by 2002:a17:90a:c56:: with SMTP id u22mr9683616pje.24.1573706980964;
+        Wed, 13 Nov 2019 20:49:40 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id d25sm4828349pfq.70.2019.11.13.20.49.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Nov 2019 20:49:40 -0800 (PST)
+Subject: Re: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio)
+ POLL
+From:   Jens Axboe <axboe@kernel.dk>
+To:     io-uring@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] SCSI: qla4xxx: fix double free bug
-Thread-Topic: [PATCH] SCSI: qla4xxx: fix double free bug
-Thread-Index: AQHVk704LzvZr/hpFk+MexrJVSr6K6eKJC9Q
-Date:   Thu, 14 Nov 2019 04:42:33 +0000
-Message-ID: <MN2PR18MB302207CEA407EB6C5E8C2A05D8710@MN2PR18MB3022.namprd18.prod.outlook.com>
-References: <1572945927-27796-1-git-send-email-bianpan2016@163.com>
-In-Reply-To: <1572945927-27796-1-git-send-email-bianpan2016@163.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [114.143.185.87]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e1001c0-d25f-491b-3318-08d768bd10b5
-x-ms-traffictypediagnostic: MN2PR18MB2384:
-x-microsoft-antispam-prvs: <MN2PR18MB2384842E806B970F09788E10D8710@MN2PR18MB2384.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 02213C82F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(396003)(376002)(136003)(13464003)(199004)(189003)(81166006)(102836004)(76176011)(11346002)(6506007)(71190400001)(3846002)(476003)(33656002)(486006)(53546011)(99286004)(446003)(2906002)(7736002)(26005)(2501003)(66066001)(25786009)(74316002)(305945005)(86362001)(6436002)(6116002)(4326008)(66476007)(66556008)(64756008)(14454004)(316002)(478600001)(14444005)(8936002)(8676002)(186003)(71200400001)(66446008)(9686003)(54906003)(66946007)(229853002)(5660300002)(76116006)(52536014)(110136005)(256004)(81156014)(7696005)(55016002)(6246003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2384;H:MN2PR18MB3022.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CJLTqcOtB1gUx9/GGpwUHbzOkjW215sy3WLbwhQHKccPdAAxz2XunmorrdZu/qdEEvWhhZM/0I9HyVplKpFpDZbjC9HnbMNP0lYCcdsjiXqK75p5StQfvtMqegTn6wnHUOQygHrIpVnl8+4r287pjK59LkpIHZPcckMHFdn6PpvY0CO23XG++sJytz0imboCmOK9JP1QD7z0EQBEDk7OdZxpISgj9xnlhI/4fjBIRItr5YNrtPA417IemeZ1vEZKEBwoOsZVK6pB4aVlER31fH8fzziTVaTVtl9JRDMIcFUpSn9kJzjQq9R3OP5GoiwbS1EezV1NukCKu0+ZPfWQlDeqYSA9VLwqazN7KDyltjQVVyH0g0wkHaMPBmH2KdskUjD/Y5HpnUghF+MGLZvT6sfIiradNmiIZYtRWdbz8QOMi6cs+17WnlEz5p1XSSNi
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
+Message-ID: <58246851-fa45-a72d-2c42-7e56461ec04e@kernel.dk>
+Date:   Wed, 13 Nov 2019 21:49:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e1001c0-d25f-491b-3318-08d768bd10b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 04:42:33.3683
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: L6MmX6uk3dbwCZYt2K2evuaZON3iXxQcz9onjhiR8vHEIsPpzZV7bDZJtRTsqBSn/BYRKzQFUYgwdMflYPRuSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2384
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-13_06:2019-11-13,2019-11-13 signatures=0
+In-Reply-To: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/13/19 9:31 PM, Jens Axboe wrote:
+> This is a case of "I don't really know what I'm doing, but this works
+> for me". Caveat emptor, but I'd love some input on this.
+> 
+> I got a bug report that using the poll command with signalfd doesn't
+> work for io_uring. The reporter also noted that it doesn't work with the
+> aio poll implementation either. So I took a look at it.
+> 
+> What happens is that the original task issues the poll request, we call
+> ->poll() (which ends up with signalfd for this fd), and find that
+> nothing is pending. Then we wait, and the poll is passed to async
+> context. When the requested signal comes in, that worker is woken up,
+> and proceeds to call ->poll() again, and signalfd unsurprisingly finds
+> no signals pending, since it's the async worker calling it.
+> 
+> That's obviously no good. The below allows you to pass in the task in
+> the poll_table, and it does the right thing for me, signal is delivered
+> and the correct mask is checked in signalfd_poll().
+> 
+> Similar patch for aio would be trivial, of course.
 
-> -----Original Message-----
-> From: linux-scsi-owner@vger.kernel.org <linux-scsi-
-> owner@vger.kernel.org> On Behalf Of Pan Bian
-> Sent: Tuesday, November 5, 2019 2:55 PM
-> To: QLogic-Storage-Upstream@qlogic.com; James E.J. Bottomley
-> <jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org; Pan Bian
-> <bianpan2016@163.com>
-> Subject: [PATCH] SCSI: qla4xxx: fix double free bug
->=20
-> The variable init_fw_cb is released twice, resulting in a double free bug=
-. The
-> call to the function dma_free_coherent() before goto is removed to get ri=
-d
-> of potential double free.
->=20
-> Fixes: 2a49a78ed3c ("[SCSI] qla4xxx: added IPv6 support.")
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
-> ---
->  drivers/scsi/qla4xxx/ql4_mbx.c | 3 ---
->  1 file changed, 3 deletions(-)
->=20
-> diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mb=
-x.c
-> index dac9a7013208..02636b4785c5 100644
-> --- a/drivers/scsi/qla4xxx/ql4_mbx.c
-> +++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-> @@ -640,9 +640,6 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host *
-> ha)
->=20
->  	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0],
-> init_fw_cb_dma) !=3D
->  	    QLA_SUCCESS) {
-> -		dma_free_coherent(&ha->pdev->dev,
-> -				  sizeof(struct addr_ctrl_blk),
-> -				  init_fw_cb, init_fw_cb_dma);
->  		goto exit_init_fw_cb;
->  	}
+From the probably-less-nasty category, Jann Horn helpfully pointed out
+that it'd be easier if signalfd just looked at the task that originally
+created the fd instead. That looks like the below, and works equally
+well for the test case at hand.
 
-Thanks
+diff --git a/fs/signalfd.c b/fs/signalfd.c
+index 44b6845b071c..cc72b5b08946 100644
+--- a/fs/signalfd.c
++++ b/fs/signalfd.c
+@@ -50,6 +50,7 @@ void signalfd_cleanup(struct sighand_struct *sighand)
+ 
+ struct signalfd_ctx {
+ 	sigset_t sigmask;
++	struct task_struct *task;
+ };
+ 
+ static int signalfd_release(struct inode *inode, struct file *file)
+@@ -63,14 +64,14 @@ static __poll_t signalfd_poll(struct file *file, poll_table *wait)
+ 	struct signalfd_ctx *ctx = file->private_data;
+ 	__poll_t events = 0;
+ 
+-	poll_wait(file, &current->sighand->signalfd_wqh, wait);
++	poll_wait(file, &ctx->task->sighand->signalfd_wqh, wait);
+ 
+-	spin_lock_irq(&current->sighand->siglock);
+-	if (next_signal(&current->pending, &ctx->sigmask) ||
+-	    next_signal(&current->signal->shared_pending,
++	spin_lock_irq(&ctx->task->sighand->siglock);
++	if (next_signal(&ctx->task->pending, &ctx->sigmask) ||
++	    next_signal(&ctx->task->signal->shared_pending,
+ 			&ctx->sigmask))
+ 		events |= EPOLLIN;
+-	spin_unlock_irq(&current->sighand->siglock);
++	spin_unlock_irq(&ctx->task->sighand->siglock);
+ 
+ 	return events;
+ }
+@@ -280,6 +281,7 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
+ 			return -ENOMEM;
+ 
+ 		ctx->sigmask = *mask;
++		ctx->task = current;
+ 
+ 		/*
+ 		 * When we call this, the initialization must be complete, since
 
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
+-- 
+Jens Axboe
+
