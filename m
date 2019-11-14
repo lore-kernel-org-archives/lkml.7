@@ -2,118 +2,123 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E8EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1950AC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A58206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C3E20706
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UahwqbSq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfKNNq5 (ORCPT
+        id S1726980AbfKNNq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 14 Nov 2019 08:46:57 -0500
-Received: from mga09.intel.com ([134.134.136.24]:40485 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbfKNNq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:46:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 05:46:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="207792492"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 14 Nov 2019 05:46:55 -0800
-Received: from [10.251.18.41] (kliang2-mobl.ccr.corp.intel.com [10.251.18.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id A52175801E3;
-        Thu, 14 Nov 2019 05:46:52 -0800 (PST)
-Subject: Re: [PATCH v3 10/10] perf/cgroup: Do not switch system-wide events in
- cgroup switch
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-References: <20191114003042.85252-1-irogers@google.com>
- <20191114003042.85252-11-irogers@google.com>
- <20191114104340.GT4131@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <710edaf6-2562-0f53-15d6-dc50885b8e08@linux.intel.com>
-Date:   Thu, 14 Nov 2019 08:46:51 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44621 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfKNNq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:46:57 -0500
+Received: by mail-ot1-f67.google.com with SMTP id c19so4851310otr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 05:46:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uI8XwCq8heWQgz9mOCei/A4zlcNK1RwWtVyxWKPoyCY=;
+        b=UahwqbSqvtof4ApznsHyp0AlKHLFzHrxsamAv0VQY+oZJtqKA78BYD2h5x/M/+1WNB
+         MO+4SiP6gjREXogK6tfVKyF/jAFocNey9Op4uCU+L2U2AmZDLu9J8JbOrwV6nBqwTo6z
+         xL039E7/kDRBfwveQp/13PSOuzm6DCMWu0J2Y0FxiXNGrvatHAppgJNfrbPWjw/mHj+l
+         SDnr1+6056C4QCRQid8YH9FasMJzNfCDPQj5oclNE2IqPhngj4fHqu4jKRWY6YTvxxn3
+         xvv671DVE21gaGobdem64IJEZNue8NNMRiWDl7H8OOrPVf4eRwu5iApOcrrLwVTGG+pa
+         GiUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uI8XwCq8heWQgz9mOCei/A4zlcNK1RwWtVyxWKPoyCY=;
+        b=dT5ItCJkzK5hiF1sMQTudgQx0IYeG+WxC5Ilth6nD1CvKgM+QNoQYm3BHtsdx9/xTU
+         dxaOxd0VN3AaF2bR6wN4TjCyQnGFZWZ78I2ko/vBWZTuYTQsIIDHmrSsO00ETjFxGP/1
+         ZObZlizXupdE2CWfe6V3UBQLZeiKpesU21LzsTUVW6EuFgiHqDQW4SOVRvdh/p1Iwk/Y
+         VVZI52Su/D8b6qnJdXzCaKmm5n/pMRuF0y2Gm4B2ZaG50lH7cL5aMrpYs54mXJly+4PR
+         WNb4H8tUV5UP4RpW2udcSE8NcWCZG2GZAFajeKgXlCiYoB8Bco8ueXPtGdU5J+qfg/6F
+         aM4Q==
+X-Gm-Message-State: APjAAAWNzJv/RsJFvDS5xOGL05lw6pmoOdIzxAvr081MD9ik5WVaq6wq
+        FJFBoDlJuAmj40BG1Lu8f4D4acvPwFSYqWShp8ck9A==
+X-Google-Smtp-Source: APXvYqwDZBkC3ZCnLaE6JyJHavd4O4J7fjyTaIFp+mvp+beXg9Dgi+Sa3lj0dJf2RuzfQII2ljxRH9p+6FWYUlXZ01Y=
+X-Received: by 2002:a9d:328:: with SMTP id 37mr6858344otv.228.1573739215541;
+ Thu, 14 Nov 2019 05:46:55 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191114104340.GT4131@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
+ <58246851-fa45-a72d-2c42-7e56461ec04e@kernel.dk> <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
+In-Reply-To: <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 14 Nov 2019 14:46:29 +0100
+Message-ID: <CAG48ez3dpphoQGy8G1-QgZpkMBA2oDjNcttQKJtw5pD62QYwhw@mail.gmail.com>
+Subject: Re: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio) POLL
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 14, 2019 at 10:20 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+> On 14/11/2019 05.49, Jens Axboe wrote:
+> > On 11/13/19 9:31 PM, Jens Axboe wrote:
+> >> This is a case of "I don't really know what I'm doing, but this works
+> >> for me". Caveat emptor, but I'd love some input on this.
+> >>
+> >> I got a bug report that using the poll command with signalfd doesn't
+> >> work for io_uring. The reporter also noted that it doesn't work with the
+> >> aio poll implementation either. So I took a look at it.
+> >>
+> >> What happens is that the original task issues the poll request, we call
+> >> ->poll() (which ends up with signalfd for this fd), and find that
+> >> nothing is pending. Then we wait, and the poll is passed to async
+> >> context. When the requested signal comes in, that worker is woken up,
+> >> and proceeds to call ->poll() again, and signalfd unsurprisingly finds
+> >> no signals pending, since it's the async worker calling it.
+> >>
+> >> That's obviously no good. The below allows you to pass in the task in
+> >> the poll_table, and it does the right thing for me, signal is delivered
+> >> and the correct mask is checked in signalfd_poll().
+> >>
+> >> Similar patch for aio would be trivial, of course.
+> >
+> > From the probably-less-nasty category, Jann Horn helpfully pointed out
+> > that it'd be easier if signalfd just looked at the task that originally
+> > created the fd instead. That looks like the below, and works equally
+> > well for the test case at hand.
+>
+> Eh, how should that work? If I create a signalfd() and fork(), the
+> child's signalfd should only be concerned with signals sent to the
+> child. Not to mention what happens after the parent dies and the child
+> polls its fd.
+>
+> Or am I completely confused?
 
+I think the child should not be getting signals for the child when
+it's reading from the parent's signalfd. read() and write() aren't
+supposed to look at properties of `current`. If I send an fd to some
+daemon via SCM_RIGHTS, and the daemon does a read() on it, that should
+never cause signals to disappear from the daemon's signal queue.
 
-On 11/14/2019 5:43 AM, Peter Zijlstra wrote:
-> On Wed, Nov 13, 2019 at 04:30:42PM -0800, Ian Rogers wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> When counting system-wide events and cgroup events simultaneously, the
->> system-wide events are always scheduled out then back in during cgroup
->> switches, bringing extra overhead and possibly missing events. Switching
->> out system wide flexible events may be necessary if the scheduled in
->> task's cgroups have pinned events that need to be scheduled in at a higher
->> priority than the system wide flexible events.
-> 
-> I'm thinking this patch is actively broken. groups->index 'group' wide
-> and therefore across cpu/cgroup boundaries.
-> 
-> There is no !cgroup to cgroup hierarchy as this patch seems to assume,
-> specifically look at how the merge sort in visit_groups_merge() allows
-> cgroup events to be picked before !cgroup events.
+Of course, if someone does rely on the current (silly) semantics, this
+might break stuff.
 
-
-No, the patch intends to avoid switch !cgroup during cgroup context 
-switch.
-
-In perf_cgroup_switch(), when the cgroup is scheduled out, current 
-implementation schedule out everything including !cgroup. I think it 
-definitely breaks the semantics of !cgroup aka system-wide event.
-
-The patch itself doesn't touch the merge sort in visit_groups_merge().
-The perf_cgroup_skip_switch() just skips the !cgroup in schedule_in().
-Because !cgroup wasn't scheduled out. We don't want to schedule !cgroup 
-in again.
-The cgroup events must be after !cgroup events, since !cgroup never be 
-switched.
-
-Thanks,
-Kan
+And we probably also don't want to just let the signalfd keep a
+reference to a task, because then if the task later goes through a
+setuid transition, you'd still be able to dequeue its signals. So it'd
+have to also check against ->self_exec_id or something like that.
