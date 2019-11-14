@@ -2,184 +2,70 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A30C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857DDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8A420718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:16:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573766171;
-	bh=cM1x8DCsw1fWloYG+Ij/9ZmtPjfOiAsowy4wB1NlS8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jCVDt+1EMZANSTyo4sVqATcuX7RdxPDwUMXOtR+PZ+q9SslPe8sX3ny+f9VXk/igX
-	 OG9gUNGSTvlO+DNfYyt30PT6JO1fp8a357HJf53tFcSufWYgB0dQO2lEAA3h8ZPf1/
-	 0WvagUAzmCaQsG5D5Vc6gUtsloBIVBkGOmILr8oY=
+	by mail.kernel.org (Postfix) with ESMTP id 5FC35206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfKNVQK (ORCPT
+        id S1726991AbfKNVR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:16:10 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41591 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfKNVQJ (ORCPT
+        Thu, 14 Nov 2019 16:17:26 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54091 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfKNVR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 16:16:09 -0500
-Received: by mail-oi1-f196.google.com with SMTP id e9so6651131oif.8;
-        Thu, 14 Nov 2019 13:16:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fuBWITyC2SUHGRslSMvj5Vn8Ahl50d58H5d7xUTeDJI=;
-        b=tc7YV5ON3zl81ROXYDKc6mFSGhuezco79nmwVqvjQrOVnXv5z4t7CulJoM4af8tXA+
-         /1ajDCrKZrqlTXA3zhfOBsdwHP1zGHFNWKWQi68ZycawAQ4lTB60jBd2M/IIbSVOtbNj
-         a48ymqEtnrvVD4lUWz4zo4LpzrPGfEhsH5b6tjkneLX2C9OlQfF2Htc2tjAeDcppEw1C
-         /EahNQHUseAoKJfBUOCZ8UE029fItz/XHhnZooVH04UN0zZKl8wmBUuSX8MJAZLCbox4
-         cMcPNTnB4WmQsg2qXrSNggk71JX6LuGTSrL23Ueets1zchQkSIyGMu1MuzwQyWK1XNws
-         4R/Q==
-X-Gm-Message-State: APjAAAXxTTzI1etyH3tx7iBQUFOp007ApJVwLHz67ozgg+7U9sihJAu8
-        iP2obnMHR5me/QfafQzIbUWCWt4=
-X-Google-Smtp-Source: APXvYqwevaCYrY0AyZMovwZy/WJFexiM3d8xYM1wLFqCGNAgEmUo1sPa+HW+eNGxzjEN3JlrU08W9A==
-X-Received: by 2002:aca:b909:: with SMTP id j9mr5324529oif.121.1573766168634;
-        Thu, 14 Nov 2019 13:16:08 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h9sm2209821otn.14.2019.11.14.13.16.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 13:16:07 -0800 (PST)
-Date:   Thu, 14 Nov 2019 15:16:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     mark.rutland@arm.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: media: renesas,ceu: Convert to yaml
-Message-ID: <20191114211607.GA4896@bogus>
-References: <20191111120017.83161-1-jacopo+renesas@jmondi.org>
+        Thu, 14 Nov 2019 16:17:26 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iVMUK-0001tF-FY; Thu, 14 Nov 2019 22:17:12 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iVMUG-00072W-EA; Thu, 14 Nov 2019 22:17:08 +0100
+Date:   Thu, 14 Nov 2019 22:17:08 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: imx25: fix usbhost1 node
+Message-ID: <20191114211708.77d6bttkyj426yqy@pengutronix.de>
+References: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191111120017.83161-1-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 01:00:17PM +0100, Jacopo Mondi wrote:
-> Convert the Renesas CEU bindings description to json-schema and remove
-> the existing textual bindings document.
+On Mon, Nov 11, 2019 at 12:46:56PM +0100, Michael Grzeschik wrote:
+> The usb port represented by &usbhost1 uses an USB phy internal to the
+> SoC. We add the phy_type to the base dtsi so the board dts only have to
+> overwrite it if they use a different configuration. While at it we also
+> pin the usbhost port to host mode.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  .../devicetree/bindings/media/renesas,ceu.txt | 86 -------------------
->  .../bindings/media/renesas,ceu.yaml           | 72 ++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 73 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
+> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
+Thanks
+Uwe
 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.yaml b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
-> new file mode 100644
-> index 000000000000..3c4a4ff975ae
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-
-If only Renesas authors, can you dual license.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/renesas,ceu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas Capture Engine Unit (CEU) Bindings
-> +
-> +maintainers:
-> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
-> +  - linux-renesas-soc@vger.kernel.org
-> +
-> +description: |+
-> +  The Capture Engine Unit is the image capture interface found in the Renesas SH
-> +  Mobile, R-Mobile and RZ SoCs. The interface supports a single parallel input
-> +  with data bus width of 8 or 16 bits.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - renesas,r7a72100-ceu
-> +      - renesas,r8a7740-ceu
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +       endpoint:
-> +         type: object
-> +
-> +         # Properties described in
-> +         # Documentation/devicetree/bindings/media/video-interfaces.txt
-> +         properties:
-> +           hsync-active: true
-> +           vsync-active: true
-> +           field-even-active: false
-> +           bus-width:
-> +             enum: [8, 16]
-
-These should all have 'default'.
-
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - port
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    ceu: ceu@e8210000 {
-> +        reg = <0xe8210000 0x209c>;
-> +        compatible = "renesas,r7s72100-ceu";
-> +        interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +        port {
-> +            ceu_in: endpoint {
-> +                remote-endpoint = <&ov7670_out>;
-> +                hsync-active = <1>;
-> +                vsync-active = <0>;
-> +            };
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 37a977cbac6f..feab894f7584 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10133,7 +10133,7 @@ L:	linux-media@vger.kernel.org
->  L:	linux-renesas-soc@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Supported
-> -F:	Documentation/devicetree/bindings/media/renesas,ceu.txt
-> +F:	Documentation/devicetree/bindings/media/renesas,ceu.yaml
->  F:	drivers/media/platform/renesas-ceu.c
->  F:	include/media/drv-intf/renesas-ceu.h
-> 
-> --
-> 2.23.0
-> 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
