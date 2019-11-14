@@ -2,134 +2,98 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FFDC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320C3C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA8C206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D01206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:57:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oiT2RC/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfKNIzn convert rfc822-to-8bit (ORCPT
+        id S1726548AbfKNI47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:55:43 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:52882 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNIzn (ORCPT
+        Thu, 14 Nov 2019 03:56:59 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40043 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfKNI46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:55:43 -0500
-Received: from marcel-macpro.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 42657CED07;
-        Thu, 14 Nov 2019 10:04:47 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable clocks required for BT SOC
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191114081430.25427-1-bgodavar@codeaurora.org>
-Date:   Thu, 14 Nov 2019 09:55:41 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, tientzu@chromium.org,
-        seanpaul@chromium.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <39626995-672E-4D6A-8BD5-9E5D9272553B@holtmann.org>
-References: <20191114081430.25427-1-bgodavar@codeaurora.org>
-To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Thu, 14 Nov 2019 03:56:58 -0500
+Received: by mail-io1-f66.google.com with SMTP id p6so5927163iod.7;
+        Thu, 14 Nov 2019 00:56:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NbXXK6bu0dg2zI7R5KEkk9IUJJ7xkv0jNGRocMeqp54=;
+        b=oiT2RC/bejWLycuxKkNmrXLshuKJkpQ8QbbCzp5sZf7uCmkjcLVlsqufYaB76kVLEp
+         td9Wkb5yZErKpFF7Q3iWppBkvWx91gbXE5ErUKPMMEKvDqkOOuMLfcWATWNjxc0t23Sb
+         4oZXa5Bpvo0cLB8oKsz+NNEEvftslGUdU/L+4vMvvDxNyQ71XNXefomOoHPgbzVmjVa6
+         3GaKNTRCALTkfi1LWgbSLHqR+z6u3NMduZDEAj6utVvKx2rWvdFPI+4v57+4k4e3FuSC
+         /3HfVUjcY1QV4wW2t7T3XhaxkcBmzFiS2JGp83MiyMOzOiBEFqFn5RPTyuHMZSFvlWF+
+         9ZiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NbXXK6bu0dg2zI7R5KEkk9IUJJ7xkv0jNGRocMeqp54=;
+        b=k5UNgxnoI85bEuTUZhLxGRh6eREez/Xtk44zo3ip878Tpo18+wUMjbVXmB355GpEHz
+         rxAG1PdyYqMuVGiXKnCXSVbpGGMmkQOr2jUDnJUqyR5XaqLexAHRgLmWpkni4UX2sgpM
+         uAx31b8jHP7JzD0M258ge+MdeLsP0lCbIzIHoHTLSgxDl3PEOFKdT2mgEIEdk5YuTn4l
+         vhpuH5qg66+B7mQk04yDg0GwBmO7hwC4J1gJcqE8v7mgeQfyaeUQuUrg5Q/nwKSRTyqt
+         JAneLqr9UdWE9AgmanDI9nLCCH3HqYj5FbWDzlN3mx260M2OJsPSAq+7CH6QysAMk40d
+         y/VA==
+X-Gm-Message-State: APjAAAWO5mubqH8cMNgA0afJIvnRa1K5Sy/PuoEKKJCVuzv5BajTcgIG
+        T6/a9EOgOdq4ilqhZZbYqKK4a5lrxhs2JdCspBg=
+X-Google-Smtp-Source: APXvYqwHjWoyL1J5Jrs+HHYpGKOUUX6fk2rrVcjRpaxLwOQPHCz3m1260WX/UfjMbtX9LCjy6k3m6aYtWim4Smtjre0=
+X-Received: by 2002:a02:ac0a:: with SMTP id a10mr7105329jao.53.1573721816302;
+ Thu, 14 Nov 2019 00:56:56 -0800 (PST)
+MIME-Version: 1.0
+References: <1559161113902-328168114-2-diffsplit-thomas@m3y3r.de> <07841ae4-03d2-1fdd-1c32-85c55688bb2a@web.de>
+In-Reply-To: <07841ae4-03d2-1fdd-1c32-85c55688bb2a@web.de>
+From:   "Gomonovych, Vasyl" <gomonovych@gmail.com>
+Date:   Thu, 14 Nov 2019 09:56:45 +0100
+Message-ID: <CAHYXAn+hzzysj6uW6ghLDtjZ7UxEDXXzvLDW46VkJyVwBD78Lw@mail.gmail.com>
+Subject: Re: scsi: pmcraid: Use *_pool_zalloc rather than *_pool_alloc
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Thomas Meyer <thomas@m3y3r.de>,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Balakrishna,
+Hi,
 
-> Instead of relying on other subsytem to turn ON clocks
-> required for BT SoC to operate, voting them from the driver.
-> 
-> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> ---
-> drivers/bluetooth/hci_qca.c | 31 +++++++++++++++++++++++++++++--
-> 1 file changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index f10bdf8e1fc5..dc95e378574b 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -164,6 +164,7 @@ struct qca_serdev {
-> };
-> 
-> static int qca_regulator_enable(struct qca_serdev *qcadev);
-> +static int qca_power_on(struct qca_serdev *qcadev);
+Yes, maybe you are right better to use the full name, sorry.
 
-I really dislike forward declaration. Only use them if they are really really needed. That said, this driver might actually need cleanups since I just realized it has tons of forward declarations.
+Regards Vasyl
 
-> static void qca_regulator_disable(struct qca_serdev *qcadev);
-> static void qca_power_shutdown(struct hci_uart *hu);
-> static int qca_power_off(struct hci_dev *hdev);
-> @@ -528,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
-> 		} else {
-> 			hu->init_speed = qcadev->init_speed;
-> 			hu->oper_speed = qcadev->oper_speed;
-> -			ret = qca_regulator_enable(qcadev);
-> +			ret = qca_power_on(qcadev);
-> 			if (ret) {
-> 				destroy_workqueue(qca->workqueue);
-> 				kfree_skb(qca->rx_skb);
-> @@ -1214,7 +1215,7 @@ static int qca_wcn3990_init(struct hci_uart *hu)
-> 	qcadev = serdev_device_get_drvdata(hu->serdev);
-> 	if (!qcadev->bt_power->vregs_on) {
-> 		serdev_device_close(hu->serdev);
-> -		ret = qca_regulator_enable(qcadev);
-> +		ret = qca_power_on(qcadev);
-> 		if (ret)
-> 			return ret;
-> 
-> @@ -1408,6 +1409,9 @@ static void qca_power_shutdown(struct hci_uart *hu)
-> 	host_set_baudrate(hu, 2400);
-> 	qca_send_power_pulse(hu, false);
-> 	qca_regulator_disable(qcadev);
-> +
-> +	if (qcadev->susclk)
-> +		clk_disable_unprepare(qcadev->susclk);
-> }
-> 
-> static int qca_power_off(struct hci_dev *hdev)
-> @@ -1423,6 +1427,20 @@ static int qca_power_off(struct hci_dev *hdev)
-> 	return 0;
-> }
-> 
-> +static int qca_power_on(struct qca_serdev *qcadev)
-> +{
-> +	int err;
-> +
-> +	if (qcadev->susclk) {
-> +		err = clk_prepare_enable(qcadev->susclk);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	qca_regulator_enable(qcadev);
-> +	return 0;
-> +}
-> +
-> static int qca_regulator_enable(struct qca_serdev *qcadev)
-> {
-> 	struct qca_power *power = qcadev->bt_power;
-> @@ -1523,6 +1541,15 @@ static int qca_serdev_probe(struct serdev_device *serdev)
-> 
-> 		qcadev->bt_power->vregs_on = false;
-> 
-> +		if (qcadev->btsoc_type == QCA_WCN3990 ||
-> +		    qcadev->btsoc_type == QCA_WCN3991) {
+On Sun, Nov 3, 2019 at 5:05 PM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
+>
+> > Use *_pool_zalloc rather than *_pool_alloc followed by memset with 0.
+>
+> Do you find a commit message nicer from a similar change suggestion?
+> scsi: pmcraid: Use dma_pool_zalloc rather than dma_pool_alloc
+> https://lore.kernel.org/linux-scsi/20190718181051.22882-1-gomonovych@gmai=
+l.com/
+> https://lore.kernel.org/patchwork/patch/1102040/
+>
+> Regards,
+> Markus
 
-There comes a point when using a switch statement is a lot easier to read. See if that has been reached and if there are other places that would benefit from a cleanup patch.
 
-Regards
 
-Marcel
-
+--=20
+=D0=94=D0=BE=D0=B1=D1=80=D0=BE=D1=97 =D0=B2=D0=B0=D0=BC =D0=BF=D0=BE=D1=80=
+=D0=B8 =D0=B4=D0=BD=D1=8F.
