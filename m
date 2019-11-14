@@ -2,103 +2,179 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9617AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F868C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69888206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:19:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ru/B8kdy"
+	by mail.kernel.org (Postfix) with ESMTP id 2813120715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfKNITc (ORCPT
+        id S1726335AbfKNIVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:19:32 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39668 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfKNITc (ORCPT
+        Thu, 14 Nov 2019 03:21:51 -0500
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:48143 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725965AbfKNIVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:19:32 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v138so4501806oif.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 00:19:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JaJ/24ug8EOdA634pqQxtCQHNaGQDoT5QO/cUZAPyN8=;
-        b=ru/B8kdyEF+8X/F+RYI6XxfAscZ4dA2WpcMuSnAZQ7WAJSxwzRdMQvN0jzwHqC9gN9
-         MNdMczMdLpc/WgDZiKA0LV/xvQbjtogEuJPVtriyZpBxNVtMzJlI+oRt+niwdo/rLmJq
-         SQkLAyb+/Oxth0R0eRylxl43ZOHalSyElhvjecGxdIgxSnmH1HD73n0n3ItBzlLN4kzP
-         8xwpxzUDXL1C1A9HfYAWkdt+JGwVSfciyg18trUIu7EJzLAzcpqQDEvqrLrwU2hKN7Zm
-         0i71MX8xdta7xrSfgL1OLgWdJxIfsJyLI53J1jF2ZetcJHtkcJFN8uC5GF5LIY8Ixv2D
-         NC1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JaJ/24ug8EOdA634pqQxtCQHNaGQDoT5QO/cUZAPyN8=;
-        b=CGSmwYpt7o8iK3bCSPeU/EIA8vmG6TWfio1aUKklZrv0d9J8olNU1EkQXdL7bsxOJL
-         JwVbgdAWW7pTJ9+WFjqX2ZjFydRKZ3booythMioJhygTJQ8Izx7qkRgxOQuruf3SKFjk
-         Lgc8BPOo/QpNK+niwVqMr00hNCZqekpbT33Zjsbnn5DpC8NUER81BBicRH9Ms6Si7u64
-         mKmxQKuN+Ik3wFosJDuVO453M5Z1tcgCkYfsrqLFix0RnUTiLgt54YKaQsa264kJWxn8
-         G6/h6vlnKqi2IyoPebrqXG+1k95PBZ2VLI+yfpcMqlWN8mc8HYwEloixyDmFZhMcndK1
-         JSmA==
-X-Gm-Message-State: APjAAAU50idJ+goT97DyNIA9IR64NFIFM9P6dlzVz4cb9mWfZp7dnLrv
-        Jx24HDtDmt2njZdP4a6/q1trzqBj79+F4cpFILs=
-X-Google-Smtp-Source: APXvYqx8D9GlJ385oYygjCaMSvLMvmBz7OT2vUysUTVFxuEaxfasZyDjLfPaArprQ3D6hB+O99WzCUmlXvxlMWh3J2U=
-X-Received: by 2002:aca:3f87:: with SMTP id m129mr2587853oia.30.1573719569553;
- Thu, 14 Nov 2019 00:19:29 -0800 (PST)
+        Thu, 14 Nov 2019 03:21:50 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id VANri8XnO5b4MVANvin0UB; Thu, 14 Nov 2019 09:21:48 +0100
+Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for rkisp1
+ meta buffer format
+To:     Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        kernel@collabora.com, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        zhengsq@rock-chips.com, Jacob Chen <jacob2.chen@rock-chips.com>,
+        Jacob Chen <jacob-chen@rock-chips.com>
+References: <20191114051242.14651-1-helen.koike@collabora.com>
+ <20191114051242.14651-3-helen.koike@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
+Date:   Thu, 14 Nov 2019 09:21:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191110052104.5502-1-gch981213@gmail.com> <201911121507.ANXNexIL%lkp@intel.com>
-In-Reply-To: <201911121507.ANXNexIL%lkp@intel.com>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Thu, 14 Nov 2019 16:19:18 +0800
-Message-ID: <CAJsYDV+nGHtvmnfY8jN+fR8E8m2vh7OTe7Y0zQvSX8HKBidszA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mtd: mtk-quadspi: add support for DMA reading
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-mtd@lists.infradead.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191114051242.14651-3-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFzl5hYLISanSAOy5YJH10k6V2JleNvifodOgbTuK7g2UOD60o4XUFaAYIOZAvR1InLiLVdHYCzJ9Z6L6C4CnUomR6mLGajHDaCkCg396LZ1f9r9aQ+G
+ gN2iuawntRhSMYngC9fhq8AECGbNTg3V3xInnxIzl684TY5H1o0tGVd26/PLCaKf37Av7VC7bjkT9tsdSXH49eqV9zMWLaumD9vOrLehmSYa6q2rELD35Ohr
+ bKxEUaVDQtO9hDAAbwXrR7DiVBDDo+Svsjs1aHgObyJgvDxo8Vx5hqnvP7JSFye3t96/G9ZNbsiQ9lskGUJ2gZiWdAGyFA3v7XXSYTyvODNRvD5yq0Uu4WCL
+ 00cqCxXWvysVU7BTzFcUcxwKgqZrOEUVnqql4YG0Un+IX9IkdtP/z/ojRRRqQ3ihHxExeNC8OLk9AyvkYAcXefryb2YA2fbIqtHsi0OHkqn4nOYiymNuHYq9
+ nC4eSS+K/38be8Su3mgOtYdQuFFnCKgYQOlAc8epdCCRDNaqrKKIHafQc2jEedzhXAw5OULgDoI2+MKnXSu52RCRO+h0aaMkf0SVP0NH8qUPNAM+DTYCqyvZ
+ ejppe1um+UzFoGDaIJ2s+t6IGO7JI0EbP9YDvhg/H0xYE1rMBur8sN0W26zN6pVgkd3iC2glZk92UCJD8gYbV2muAxNldIvcoqlxht07xn1q72CJhXSPP+/1
+ Bd3SO97hTE65lZzn8Clp7AClF1ITCc8HwVnVmmUp9cHEje9RGLKDwCwqW5bX1lbhbIRAuhYI9SGnDX7nTuVTC3fn2kHIiGr4PTyQg00JqoKj4IPtdvlhfX15
+ Gu8UzEiCgEfC2/ey6PHQ+Sx1aYo+uX8fiwpBk2Lj1x4dHanYS3zayIeRUdlcBRYvXqKLnCR3cPXAgbh3TmcXcgee4AEozxdMc9T1ZtVbfForxx6qAfvLrxLP
+ lRF/uWKSvM8qLQYIS6Yf5/ATxospbYafk/bdIu5LzLvBuN8qXdd8oimrMY6GmiFjG6VauawshMbMMhZEKvWF7fh0n/Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all!
+On 11/14/19 6:12 AM, Helen Koike wrote:
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
+> 
+> This commit add document for rkisp1 meta buffer format
+> 
+> Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
+> [refactored for upstream]
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
-On Tue, Nov 12, 2019 at 3:29 PM kbuild test robot <lkp@intel.com> wrote:
-> [...]
-> All warnings (new ones prefixed by >>):
->
->    drivers/mtd/spi-nor/mtk-quadspi.c: In function 'mtk_nor_read_dma_bounce':
-> >> drivers/mtd/spi-nor/mtk-quadspi.c:349:22: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->      mem_unaligned_len = (u32)buf % MTK_NOR_DMA_ALIGN;
->                          ^
->    drivers/mtd/spi-nor/mtk-quadspi.c: In function 'mtk_nor_read':
->    drivers/mtd/spi-nor/mtk-quadspi.c:369:6: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->          (u32)buffer % MTK_NOR_DMA_ALIGN || from % MTK_NOR_DMA_ALIGN)
->          ^
->
+checkpatch gives me:
 
-DMA mode on this controller requires that source address, destination
-address and reading
-length should all be 16-byte aligned. And because of this, I didn't
-use the bounce buffer
-provided by spi-nor framework and allocate its own one.
-Should I just cast all these pointers to ulong or are there better
-ways to check for address
-alignments and/or obtain an aligned buffer?
+WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob Chen <jacob2.chen@rock-chips.com>'
+
+Looking at this series I see duplicate Signed-off-by entries for Jacob Chen and a total
+of three different email addresses:
+
+jacob2.chen@rock-chips.com
+jacob-chen@rock-chips.com
+cc@rock-chips.com
+
+It's confusing.
 
 Regards,
-Chuanhong Guo
+
+	Hans
+
+> 
+> ---
+> 
+> Changes in v11: None
+> Changes in v10:
+> - unsquash
+> 
+> Changes in v9:
+> - squash
+> - migrate to staging
+> - remove meta-formats.rst update
+> 
+> Changes in v8:
+> - Add SPDX in the header
+> - Remove emacs configs
+> - Fix doc style
+> 
+> Changes in v7:
+> - s/correspond/corresponding
+> - s/use/uses
+> - s/docuemnt/document
+> 
+>  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
+>  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+>  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> 
+> diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> new file mode 100644
+> index 000000000000..103b5cb79b7c
+> --- /dev/null
+> +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> @@ -0,0 +1,23 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +.. _v4l2-meta-fmt-rkisp1-params:
+> +
+> +============================
+> +V4L2_META_FMT_RK_ISP1_PARAMS
+> +============================
+> +
+> +Rockchip ISP1 Parameters Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes input parameters for the Rockchip ISP1.
+> +
+> +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file.
+> +
+> +The parameters consist of multiple modules.
+> +The module won't be updated if the corresponding bit was not set in module_*_update.
+> +
+> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> +   :functions: rkisp1_isp_params_cfg
+> diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> new file mode 100644
+> index 000000000000..4ad303f96421
+> --- /dev/null
+> +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> @@ -0,0 +1,22 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +.. _v4l2-meta-fmt-rkisp1-stat:
+> +
+> +=============================
+> +V4L2_META_FMT_RK_ISP1_STAT_3A
+> +=============================
+> +
+> +
+> +Rockchip ISP1 Statistics Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes image color statistics information generated by the Rockchip
+> +ISP1.
+> +
+> +It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file.
+> +
+> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> +   :functions: rkisp1_stat_buffer
+> 
+
