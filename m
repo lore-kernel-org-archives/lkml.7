@@ -2,174 +2,105 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A65C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA6C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC0F206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF2820715
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 14:56:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="PwZpjfZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfKNOyh (ORCPT
+        id S1726690AbfKNO4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:54:37 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52400 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726444AbfKNOyh (ORCPT
+        Thu, 14 Nov 2019 09:56:17 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36680 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfKNO4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 09:54:37 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEEdAkj098125
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:54:35 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w962eybwy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:54:35 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 14 Nov 2019 14:54:33 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 14:54:30 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEEsTiB35192900
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 14:54:29 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08DB342041;
-        Thu, 14 Nov 2019 14:54:29 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD0714203F;
-        Thu, 14 Nov 2019 14:54:27 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.133.147])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Nov 2019 14:54:27 +0000 (GMT)
-Subject: Re: [PATCH v7 3/5] KEYS: Call the IMA hook to measure keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        Thu, 14 Nov 2019 09:56:16 -0500
+Received: by mail-il1-f195.google.com with SMTP id s75so5595215ilc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 06:56:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OtNC3DCT1+p+B/9UUHW4/yZiHAI0wPUVZr+uFA8Etkg=;
+        b=PwZpjfZXbQCzjCPSLznOzq/afrnTnJF7lnnV0Nsi8jKcZcEMyLaRNPdqKann2L5t/R
+         7F+5Eue/xaV2aERKiMQxYmS2vsqFwBGhUl3cxuCE+8NlewV+46HvnynfU0qbwE0htPAM
+         rrysoHv2rRf7mTEwjgoYgftxQ+UMYadNJneK8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OtNC3DCT1+p+B/9UUHW4/yZiHAI0wPUVZr+uFA8Etkg=;
+        b=YUiQUCZVzMyDWZsvIzRg9rF6oJcIn2ylT+TXKC36DbqUJZMenfckPCAJd0TekH0LGj
+         o9g+dRbcDOawv8TmrNKIJyE+ARv2a9PT8R4fMrun4JN1kpleVUWVa5TtuZALzA9EA4Nk
+         b8M4vRNGJmGv7b+ZbbEX0eb4dhwd+Y1kZ0/JA2KA7j+3adnv3WnUCoTR/22t4W6C2sK1
+         pMUl+lzdp+OFZ8agKqHEyAxCQyPUbgtubAsYSM35eMGThhwy4pe8k4GhGTJYEjzBwnG9
+         awlnpX4nsWeD5IGLoT+GE6rGWSJ2ekiLxzYazBNuw9dh1II9ycJX08HuK00bRaO8F6NS
+         Movw==
+X-Gm-Message-State: APjAAAURtWu0NMy5P09xKu+QLHGsEAPyHxDfO77qcLr/zOoYn4lQl7b+
+        +XmWBYl1zFx5Eg63i5YgYQ5D/Mq/Bnu1hc3ydWj6Pw==
+X-Google-Smtp-Source: APXvYqxEFGlkuYg0qko+FzksrbzDuAF0iP16PMh2OjeSsEUnRxtKxBmoSu6MVj8gNYORjLjR5GP7YhCYIFKb19KL514=
+X-Received: by 2002:a92:6407:: with SMTP id y7mr9935528ilb.285.1573743374206;
+ Thu, 14 Nov 2019 06:56:14 -0800 (PST)
+MIME-Version: 1.0
+References: <1b192a85-e1da-0925-ef26-178b93d0aa45@plexistor.com>
+ <20191024023606.GA1884@infradead.org> <20191029160733.298c6539@canb.auug.org.au>
+ <514e220d-3f93-7ce3-27cd-49240b498114@plexistor.com>
+In-Reply-To: <514e220d-3f93-7ce3-27cd-49240b498114@plexistor.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 14 Nov 2019 15:56:03 +0100
+Message-ID: <CAJfpegtT-nX7H_-5xpkP+fp8LfdVGbSTfnNf-c=a_EfOd3R5tA@mail.gmail.com>
+Subject: Re: Please add the zuf tree to linux-next
+To:     Boaz Harrosh <boaz@plexistor.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-kernel@vger.kernel.org
-Date:   Thu, 14 Nov 2019 09:54:27 -0500
-In-Reply-To: <20191114031202.18012-4-nramas@linux.microsoft.com>
-References: <20191114031202.18012-1-nramas@linux.microsoft.com>
-         <20191114031202.18012-4-nramas@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111414-0028-0000-0000-000003B6DFC2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111414-0029-0000-0000-00002479EDB6
-Message-Id: <1573743267.4793.43.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-13 at 19:12 -0800, Lakshmi Ramasubramanian wrote:
-> Call the IMA hook from key_create_or_update function to measure
-> the key when a new key is created or an existing key is updated.
-> 
-> This patch adds the call to the IMA hook from key_create_or_update
-> function to measure the key on key create or update.
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+On Thu, Nov 14, 2019 at 3:02 PM Boaz Harrosh <boaz@plexistor.com> wrote:
 
-No need to Cc David Howells on the entire patch set.  Just Cc him,
-here, after your tag.
+> At the last LSF. Steven from Red-Hat asked me to talk with Miklos about the fuse vs zufs.
+> We had a long talk where I have explained to him in detail How we do the mounting, how
+> Kernel owns the multy-devices. How we do the PMEM API and our IO API in general. How
+> we do pigi-back operations to minimize latencies. How we do DAX and mmap. At the end of the
+> talk he said to me that he understands how this is very different from FUSE and he wished
+> me "good luck".
+>
+> Miklos - you have seen both projects; do you think that All these new subsystems from ZUFS
+> can have a comfortable place under FUSE, including the new IO API?
 
-With this patch, keys are now being measured.  With the boot command
-line, we can verify the measurement entry against /proc/cmdline.  How
-can the key measurement entry be verified?  Please include that
-information, here, in this patch description.
+It is quite true that ZUFS includes a lot of innovative ideas to
+improve the performance of a certain class of userspace filesystems.
+I think most, if not all of those ideas could be applied to the fuse
+implementation as well, but I can understand why this hasn't been
+done.  Fuse is in serious need of a cleanup, which I've started to do,
+but it's not there yet...
 
-Also, can the key data, now included in the measurement list, be used
-to verify signatures in the ima-sig or ima-modsig templates?  Is there
-a way of correlating a signature with a key?  Perhaps include a
-kselftest as an example.
+One of the major issues that I brought up when originally reviewing
+ZUFS (but forgot to discuss at LSF) is about the userspace API.  I
+think it would make sense to reuse FUSE protocol definition and extend
+it where needed.   That does not mean ZUFS would need to be 100%
+backward compatible with FUSE, it would just mean that we'd have a
+common userspace API and each implementation could implement a subset
+of features.    I think this would be an immediate and significant
+boon for ZUFS, since it would give it an already existing user/tester
+base that it otherwise needs to build up.  It would also allow
+filesystem implementation to be more easily switchable between the
+kernel frameworks in case that's necessary.
 
-Mimi
-
-> ---
->  include/linux/ima.h | 13 +++++++++++++
->  security/keys/key.c |  7 +++++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 6d904754d858..0af88b781ab6 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -25,6 +25,12 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  extern void ima_post_path_mknod(struct dentry *dentry);
->  extern void ima_kexec_cmdline(const void *buf, int size);
->  
-> +#ifdef CONFIG_KEYS
-> +extern void ima_post_key_create_or_update(struct key *keyring,
-> +					  struct key *key,
-> +					  unsigned long flags, bool create);
-> +#endif
-> +
->  #ifdef CONFIG_IMA_KEXEC
->  extern void ima_add_kexec_buffer(struct kimage *image);
->  #endif
-> @@ -101,6 +107,13 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
->  {}
->  #endif
->  
-> +#ifndef CONFIG_KEYS
-> +static inline void ima_post_key_create_or_update(struct key *keyring,
-> +						 struct key *key,
-> +						 unsigned long flags,
-> +						 bool create) {}
-> +#endif
-> +
->  #ifdef CONFIG_IMA_APPRAISE
->  extern bool is_ima_appraise_enabled(void);
->  extern void ima_inode_post_setattr(struct dentry *dentry);
-> diff --git a/security/keys/key.c b/security/keys/key.c
-> index 764f4c57913e..a0f1e7b3b8b9 100644
-> --- a/security/keys/key.c
-> +++ b/security/keys/key.c
-> @@ -13,6 +13,7 @@
->  #include <linux/security.h>
->  #include <linux/workqueue.h>
->  #include <linux/random.h>
-> +#include <linux/ima.h>
->  #include <linux/err.h>
->  #include "internal.h"
->  
-> @@ -936,6 +937,8 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
->  		goto error_link_end;
->  	}
->  
-> +	ima_post_key_create_or_update(keyring, key, flags, true);
-> +
->  	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
->  
->  error_link_end:
-> @@ -965,6 +968,10 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
->  	}
->  
->  	key_ref = __key_update(key_ref, &prep);
-> +
-> +	if (!IS_ERR(key_ref))
-> +		ima_post_key_create_or_update(keyring, key, flags, false);
-> +
->  	goto error_free_prep;
->  }
->  EXPORT_SYMBOL(key_create_or_update);
-
+Thanks,
+Miklos
