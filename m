@@ -2,174 +2,191 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBF0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969DFC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D38720672
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6985D20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:11:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ooW5Ua4E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFqOShpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfKNQIV (ORCPT
+        id S1726766AbfKNQLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:08:21 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45229 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfKNQIU (ORCPT
+        Thu, 14 Nov 2019 11:11:20 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40833 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfKNQLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:08:20 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k1so2742181pgg.12;
-        Thu, 14 Nov 2019 08:08:19 -0800 (PST)
+        Thu, 14 Nov 2019 11:11:20 -0500
+Received: by mail-qt1-f193.google.com with SMTP id o49so7340737qta.7;
+        Thu, 14 Nov 2019 08:11:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ayAVj6XklJJBJPKHbdoumjHnfHk65xz206ddr7YvVB0=;
-        b=ooW5Ua4E4EOqBaLeWVLobQoOF6HaU61zJ2P4lJPsXX735kybv1kRnmqogrM2jVOw2i
-         C1sg3K0QAMdnkowcVTNVO+LpoRz4pOFXkoxgSYF0N6jLHQLUJI+zp6hUFurlQKcGj+gv
-         lZekcsWWMHmcw3qoZ767UtSXJigukhyENaOIVszLHWP9R1ef0zPTdu+DazLnijRbhYTC
-         m4zeYIGISgrq+i3Z34IKCIRdb8ChjpPb/vM+68cSF2kvzJw+p7DXbxltbWE88JfcydQQ
-         TQ3+0S6ovbe8BE/3Slky0QEfgAUOuPczS4BQT342YJvB6Yp9i64rNTnK5BHwfLB1zjb2
-         Og+Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=BOPJip910ImC+qHUP+LwyRp/oWfN3GE0KkiS0ZFAdXY=;
+        b=JFqOShpAQwGsjh6wLpsyuqLJxoGdJccNiUfQnqYuCbgTheAXRifadAOEVww1bQ4WFB
+         Erdq8+2oNXLndOTe/OeBTEbh0ShhY1kPzAHMlFOnzNiadJXLpT8wWzETdpSNgQ0qRnnY
+         Gw7aCbLweyFmgA4TTogBVYIsBM0pO+yBwxfnkYhOb2cUZ9+uq/4+pYbicdzIDxNN+3ie
+         vA9w0m+NJT6iIekM9JH5EXsMckNwFqO9Hl0q3WwKx7bu/ri6fKVyKYdSPgkS+DKdsmy1
+         lKf1sCbGVJcgEILeZh/1OWGhomskzvhLjWhwgiP8DRIqta15Go/2/HKuHULlWcKYjCGm
+         MHqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=ayAVj6XklJJBJPKHbdoumjHnfHk65xz206ddr7YvVB0=;
-        b=BX83U1SkbaFg4tdXPhE/LS1Zq3ACOoG7uKyNSCoS3xrSCWxwEpJJYngFizmrEtxNpB
-         Bv7vSeQRLpYlkg4B3xX06Jl5oVy9A0d5aw25EOJPnQGHUJff85RPJfQcLK56eZ3qbwS0
-         B0imjSLqHVZZKOVboa72EEYpzQWnIz+FU8WmS2OFPdwDMwqVc3PebEcC+HKSHEZ1FWK7
-         Wo0aA9vHHuHr2pkOcGhz0JZBCt04WxbXNT5bNQNX9RHpnexUUKloFemXb8oxZTAKsLsb
-         BiQWBq44XNeukHxaQBwUWa8pqL3j2CZ2GJ7ENhIprdV/uuoCGBsyy6csU735d98JEVC8
-         YOfQ==
-X-Gm-Message-State: APjAAAXKRij7kss/0dM+sb4yYl1zIz0+g0o6VYQkWxIgS0yoG6bpHKFj
-        uVgwXxpKpc9y4x1yJr4H1JB/Qjfw
-X-Google-Smtp-Source: APXvYqyCmyzBlJHqpHHUz/lJupT5sWCvCMDatQwNrXhNrIxK/LqC8IZj9I4WdrOqcffBRVooMYtCbQ==
-X-Received: by 2002:a62:2ccf:: with SMTP id s198mr1915441pfs.42.1573747699509;
-        Thu, 14 Nov 2019 08:08:19 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q1sm5889789pgr.92.2019.11.14.08.08.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 08:08:18 -0800 (PST)
-Date:   Thu, 14 Nov 2019 08:08:16 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eugen.Hristev@microchip.com
-Cc:     robh+dt@kernel.org, wim@linux-watchdog.org,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
-Message-ID: <20191114160816.GA25430@roeck-us.net>
-References: <1573474383-21915-1-git-send-email-eugen.hristev@microchip.com>
- <e34df163-60f5-35c6-05c6-845d70143fd9@roeck-us.net>
- <70ba833e-2acc-7b5a-ca29-1ae9476eb0f5@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <70ba833e-2acc-7b5a-ca29-1ae9476eb0f5@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BOPJip910ImC+qHUP+LwyRp/oWfN3GE0KkiS0ZFAdXY=;
+        b=gtdcEENL83HFTrK5MkcQYQZHWFNP87+X0QoLCeTE4yWBVtIbkXODfApJ+t4RT+NAHd
+         1eA/hWsy0sEM6VOdCjWnvSRTDHFAm1TylpvB164A9goWPY1d/cxSVW/QNym7Qs7ci0oB
+         yr+ZjQ8xvJ+gmIPMgmPRx0FWHCvhQUrCgKimSlSBwM5XbWNxeAiXFWauVB/aq+CxerPm
+         /ugQdNqrXO0F5vswLJRaAHIn/RGhRuveTpWnpdg9D9zdyE3x7+4udr6BfMw9yxWXFc3u
+         if06QZgll9hxvZzzvSR0pHFUaPhfdeJFGUxFUpFIDaKgfDvPtRuMEqQ5blOdUi841EKb
+         A3Cw==
+X-Gm-Message-State: APjAAAXwFTH8M90X+iQsTXxSOEGnWofS7YgOB8KbtNEclppodDF5xHMU
+        E0npjCksdG1kp4hScFYKXA==
+X-Google-Smtp-Source: APXvYqw6Dq8NsnAZHxKC+SggPkyY6aakIFXBizI56tHuEt8ZVZViIZUPvxZNCEcDeeTEetmpkm5O+Q==
+X-Received: by 2002:ac8:60cc:: with SMTP id i12mr5729392qtm.103.1573747878621;
+        Thu, 14 Nov 2019 08:11:18 -0800 (PST)
+Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id n20sm2767705qkn.118.2019.11.14.08.11.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 08:11:17 -0800 (PST)
+From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        d.hatayama@fujitsu.com
+Subject: [RFC PATCH v2] efi: arm64: Introduce /sys/firmware/efi/memreserve to tell the persistent pages
+Date:   Thu, 14 Nov 2019 11:10:19 -0500
+Message-Id: <20191114161019.8735-1-msys.mizuma@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:34:31AM +0000, Eugen.Hristev@microchip.com wrote:
-> 
-> 
-> On 12.11.2019 15:47, Guenter Roeck wrote:
-> 
-> > 
-> > On 11/11/19 4:13 AM, Eugen.Hristev@microchip.com wrote:
-> >> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>
-> >> Cleanup the macro definitions to use BIT and align with two spaces.
-> >>
-> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> >> ---
-> >> Changes in v3:
-> >> - new patch as requested from review on ML
-> >>
-> >>   drivers/watchdog/at91sam9_wdt.h | 30 +++++++++++++++---------------
-> >>   1 file changed, 15 insertions(+), 15 deletions(-)
-> >>
-> >> diff --git a/drivers/watchdog/at91sam9_wdt.h 
-> >> b/drivers/watchdog/at91sam9_wdt.h
-> >> index 390941c..2ca5fc5 100644
-> >> --- a/drivers/watchdog/at91sam9_wdt.h
-> >> +++ b/drivers/watchdog/at91sam9_wdt.h
-> >> @@ -14,23 +14,23 @@
-> >>   #define AT91_WDT_H
-> >>   #define AT91_WDT_CR        0x00            /* Watchdog Control 
-> >> Register */
-> >> -#define        AT91_WDT_WDRSTT        (1    << 0)        /* Restart */
-> >> -#define        AT91_WDT_KEY        (0xa5 << 24)        /* KEY 
-> >> Password */
-> >> +#define  AT91_WDT_WDRSTT    BIT(0)            /* Restart */
-> > 
-> > Using BIT() requires including linux/bits.h.
-> 
-> 
-> Hi Guenter,
-> 
-> The C files include/will include the bits.h as the drivers use this 
-> definition header, or, you have something else in mind ?
-> 
-You are supposed to include the file where it is used. If the C file
-uses it again, it will need to include it again.
+From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Guenter
+kexec reboot stops in early boot sequence because efi_config_parse_tables()
+refers garbage data. We can see the log with memblock=debug kernel option:
 
-> Thanks,
-> Eugen
-> 
-> > 
-> >> +#define  AT91_WDT_KEY        (0xa5 << 24)        /* KEY Password */
-> >>   #define AT91_WDT_MR        0x04            /* Watchdog Mode Register */
-> >> -#define        AT91_WDT_WDV        (0xfff << 0)        /* Counter 
-> >> Value */
-> >> -#define            AT91_WDT_SET_WDV(x)    ((x) & AT91_WDT_WDV)
-> >> -#define        AT91_WDT_WDFIEN        (1     << 12)        /* Fault 
-> >> Interrupt Enable */
-> >> -#define        AT91_WDT_WDRSTEN    (1     << 13)        /* Reset 
-> >> Processor */
-> >> -#define        AT91_WDT_WDRPROC    (1     << 14)        /* Timer 
-> >> Restart */
-> >> -#define        AT91_WDT_WDDIS        (1     << 15)        /* Watchdog 
-> >> Disable */
-> >> -#define        AT91_WDT_WDD        (0xfff << 16)        /* Delta 
-> >> Value */
-> >> -#define            AT91_WDT_SET_WDD(x)    (((x) << 16) & AT91_WDT_WDD)
-> >> -#define        AT91_WDT_WDDBGHLT    (1     << 28)        /* Debug 
-> >> Halt */
-> >> -#define        AT91_WDT_WDIDLEHLT    (1     << 29)        /* Idle 
-> >> Halt */
-> >> +#define  AT91_WDT_WDV        (0xfff << 0)        /* Counter Value */
-> >> +#define  AT91_WDT_SET_WDV(x)    ((x) & AT91_WDT_WDV)
-> >> +#define  AT91_WDT_WDFIEN    BIT(12)        /* Fault Interrupt Enable */
-> >> +#define  AT91_WDT_WDRSTEN    BIT(13)        /* Reset Processor */
-> >> +#define  AT91_WDT_WDRPROC    BIT(14)        /* Timer Restart */
-> >> +#define  AT91_WDT_WDDIS        BIT(15)        /* Watchdog Disable */
-> >> +#define  AT91_WDT_WDD        (0xfff << 16)        /* Delta Value */
-> >> +#define  AT91_WDT_SET_WDD(x)    (((x) << 16) & AT91_WDT_WDD)
-> >> +#define  AT91_WDT_WDDBGHLT    BIT(28)        /* Debug Halt */
-> >> +#define  AT91_WDT_WDIDLEHLT    BIT(29)        /* Idle Halt */
-> >> -#define AT91_WDT_SR        0x08            /* Watchdog Status 
-> >> Register */
-> >> -#define        AT91_WDT_WDUNF        (1 << 0)        /* Watchdog 
-> >> Underflow */
-> >> -#define        AT91_WDT_WDERR        (1 << 1)        /* Watchdog 
-> >> Error */
-> >> +#define AT91_WDT_SR        0x08        /* Watchdog Status Register */
-> >> +#define  AT91_WDT_WDUNF        BIT(0)        /* Watchdog Underflow */
-> >> +#define  AT91_WDT_WDERR        BIT(1)        /* Watchdog Error */
-> >>   #endif
-> >>
-> > 
+  efi:  ACPI 2.0=0x9821790014  PROP=0x8757f5c0  SMBIOS 3.0=0x9820740000  MEMRESERVE=0x9820bfdc58
+  memblock_reserve: [0x0000009820bfdc58-0x0000009820bfdc67] efi_config_parse_tables+0x228/0x278
+  memblock_reserve: [0x0000000082760000-0x00000000324d07ff] efi_config_parse_tables+0x228/0x278
+  memblock_reserve: [0xcc4f84ecc0511670-0x5f6e5214a7fd91f9] efi_config_parse_tables+0x244/0x278
+  memblock_reserve: [0xd2fd4144b9af693d-0xad0c1db1086f40a2] efi_config_parse_tables+0x244/0x278
+  memblock_reserve: [0x0c719bb159b1fadc-0x5aa6e62a1417ce12] efi_config_parse_tables+0x244/0x278
+  ...
+
+That happens because 0x82760000, struct linux_efi_memreserve, is destroyed.
+0x82760000 is pointed from efi.mem_reseve, and efi.mem_reserve points the
+head page of LPI pending table and LPI property table which are allocated by
+gic_reserve_range().
+
+The destroyer is kexec. kexec locates the initrd to the area:
+
+  ]# kexec -d -l /boot/vmlinuz-5.4.0-rc7 /boot/initramfs-5.4.0-rc7.img --reuse-cmdline
+  ...
+  initrd: base 82290000, size 388dd8ah (59301258)
+  ...
+
+From dynamic debug log. initrd is located in segment[1]:
+  machine_kexec_prepare:70:
+    kexec kimage info:
+      type:        0
+      start:       85b30680
+      head:        0
+      nr_segments: 4
+        segment[0]: 0000000080480000 - 0000000082290000, 0x1e10000 bytes, 481 pages
+        segment[1]: 0000000082290000 - 0000000085b20000, 0x3890000 bytes, 905 pages
+        segment[2]: 0000000085b20000 - 0000000085b30000, 0x10000 bytes, 1 pages
+        segment[3]: 0000000085b30000 - 0000000085b40000, 0x10000 bytes, 1 pages
+
+kexec searches the memory region to locate initrd through
+"System RAM" in /proc/iomem. The pending tables are included in
+"System RAM" because they are allocated by alloc_pages(), so kexec
+destroys the LPI pending tables.
+
+Introduce /sys/firmware/efi/memreserve to tell the pages pointed by
+efi.mem_reserve so that kexec can avoid the area to locate initrd.
+
+Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+---
+ drivers/firmware/efi/efi.c | 41 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 0b6b0c19a..07812d697 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -149,6 +149,45 @@ static ssize_t systab_show(struct kobject *kobj,
+ 
+ static struct kobj_attribute efi_attr_systab = __ATTR_RO_MODE(systab, 0400);
+ 
++static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
++static ssize_t memreserve_show(struct kobject *kobj,
++			   struct kobj_attribute *attr, char *buf)
++{
++	struct linux_efi_memreserve *rsv;
++	phys_addr_t start, end;
++	unsigned long prsv;
++	char *str = buf;
++	int count, i;
++
++	if (!kobj || !buf)
++		return -EINVAL;
++
++	if ((efi_memreserve_root == (void *)ULONG_MAX) ||
++			(!efi_memreserve_root))
++		return -ENODEV;
++
++	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
++		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
++		if (!rsv) {
++			pr_err("Could not map efi_memreserve\n");
++			return -ENOMEM;
++		}
++		count = atomic_read(&rsv->count);
++		for (i = 0; i < count; i++) {
++			start = rsv->entry[i].base;
++			end = start + rsv->entry[i].size - 1;
++
++			str += sprintf(str, "%pa-%pa\n", &start, &end);
++		}
++		memunmap(rsv);
++	}
++
++	return str - buf;
++}
++
++static struct kobj_attribute efi_attr_memreserve =
++			__ATTR_RO_MODE(memreserve, 0444);
++
+ #define EFI_FIELD(var) efi.var
+ 
+ #define EFI_ATTR_SHOW(name) \
+@@ -180,6 +219,7 @@ static struct attribute *efi_subsys_attrs[] = {
+ 	&efi_attr_runtime.attr,
+ 	&efi_attr_config_table.attr,
+ 	&efi_attr_fw_platform_size.attr,
++	&efi_attr_memreserve.attr,
+ 	NULL,
+ };
+ 
+@@ -964,7 +1004,6 @@ int efi_status_to_err(efi_status_t status)
+ }
+ 
+ static DEFINE_SPINLOCK(efi_mem_reserve_persistent_lock);
+-static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
+ 
+ static int __init efi_memreserve_map_root(void)
+ {
+-- 
+2.21.0
+
