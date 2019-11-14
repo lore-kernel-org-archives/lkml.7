@@ -2,126 +2,98 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A575C33C9A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DA6C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C71C20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:38:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R5r44sic"
+	by mail.kernel.org (Postfix) with ESMTP id 4DA07206E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKNWiO (ORCPT
+        id S1727064AbfKNWkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:38:14 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41241 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNWiN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 17:38:13 -0500
-Received: by mail-pg1-f194.google.com with SMTP id h4so4690850pgv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:38:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:subject:from:user-agent:date;
-        bh=p4y/u0pJZ4ht/TVnTh39A/nft5VvdZ/DB4gpmQC3eKE=;
-        b=R5r44sicHCxyOg50fkAynKsN7Vct8b4lVY3vLt/krsrcaSxBxuEOssTswUgaCguWrX
-         Tr/1JgiVI6HEfXHF1XdM4QNG5NwEWwhNGArtpxFPCgeQg9T/JUcLWWU+Z0fKERu1fyWF
-         YHeuDO1ycha3/W1d+56fpvv1NhnbCHZfnNoKE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
-         :user-agent:date;
-        bh=p4y/u0pJZ4ht/TVnTh39A/nft5VvdZ/DB4gpmQC3eKE=;
-        b=Z1CSXXyGOZiqeCCeVPJI6ecbJKh0P95qmFsdSkdQnt28SOPhqU045nzM9l+MxlA774
-         2e4yXTC2/n5wI1FFCYwv9xSNQ2mheRsa2musOoYToOdH88GFE1iwSVdxQJ/lHbOtuJVt
-         PUI//4C5jr/d8I4+7bF+DDJdxKBtLr9jj3zUH1UBRhc+4vpRKhWmXSeCUgFON1DvzNpt
-         bsmpJ6gFm1m6zix+bBRjz0TDb9ZKtMbaBsYdDP0JjKqlDCeGFlydIf6iP7EI1t73BUOI
-         50ftY53+mbOpHr19URIQGTBYyIGeqy0QyXhDixhLaY3XRY8ImAwlG45zxyQuNEO4LIxo
-         +w+A==
-X-Gm-Message-State: APjAAAUkVjMnV4+z9U5XSIqPGpPKzdBwXBTyN7Y92XOnhT5+b6Med0vy
-        cuzrUIFpMPlp/tT0UIzAJvK29g==
-X-Google-Smtp-Source: APXvYqyfHmCJR7t2KTVkw2EmAY2DsVM1nVcn+H7AqIvcJSrHnpqB5L2ob+YwQadE1CBnl57hyUOmaQ==
-X-Received: by 2002:a17:90a:bcf:: with SMTP id x15mr16023012pjd.0.1573771092936;
-        Thu, 14 Nov 2019 14:38:12 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b82sm7853038pfb.33.2019.11.14.14.38.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 14:38:12 -0800 (PST)
-Message-ID: <5dcdd754.1c69fb81.27caf.7022@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 14 Nov 2019 17:40:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbfKNWkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 17:40:25 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E050F206E5;
+        Thu, 14 Nov 2019 22:40:23 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 17:40:22 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] libtraceevent: fix header installation
+Message-ID: <20191114174022.62c8259e@gandalf.local.home>
+In-Reply-To: <20191114133719.309-1-sudipm.mukherjee@gmail.com>
+References: <20191114133719.309-1-sudipm.mukherjee@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <c08cf285b8696c4fd00706b85cd3c88d12f97df3.1573499020.git.amit.kucheria@linaro.org>
-References: <cover.1573499020.git.amit.kucheria@linaro.org> <c08cf285b8696c4fd00706b85cd3c88d12f97df3.1573499020.git.amit.kucheria@linaro.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
-        edubezval@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaa@codeaurora.org
-Subject: Re: [PATCH 2/3] drivers: thermal: tsens: Add watchdog support
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 14 Nov 2019 14:38:11 -0800
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2019-11-11 11:21:28)
-> TSENS IP v2.3 onwards adds support for a watchdog to detect if the TSENS
-> HW FSM is frozen. Add support to detect and restart the FSM in the
 
-Maybe 'frozen' is an ambiguous term? Maybe 'stuck' or 'has stopped
-making progress'?
+Arnaldo,
 
-> driver. The watchdog is configured by the bootloader, we just enable the
-> feature in the kernel.
+Can you take this?
 
-Does it work to enable it if we don't configure it in the bootloader?
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
->=20
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+-- Steve
+
+
+On Thu, 14 Nov 2019 13:37:19 +0000
+Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
+
+> When we passed some location in DESTDIR, install_headers called
+> do_install with DESTDIR as part of the second argument. But do_install
+> is again using '$(DESTDIR_SQ)$2', so as a result the headers were
+> installed in a location $DESTDIR/$DESTDIR. In my testing I passed
+> DESTDIR=/home/sudip/test and the headers were installed in:
+> /home/sudip/test/home/sudip/test/usr/include/traceevent.
+> Lets remove DESTDIR from the second argument of do_install so that the
+> headers are installed in the correct location.
+> 
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 > ---
->  drivers/thermal/qcom/tsens-common.c | 41 +++++++++++++++++++++++++++++
->  drivers/thermal/qcom/tsens-v2.c     | 10 +++++++
->  drivers/thermal/qcom/tsens.h        | 12 +++++++++
->  3 files changed, 63 insertions(+)
->=20
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
-sens-common.c
-> index 2989cb952cdb..9432518502a7 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -794,6 +820,21 @@ int __init init_common(struct tsens_priv *priv)
->                 }
->         }
-> =20
-> +       if (tsens_version(priv) > VER_1_X &&  ver_minor > 2) {
-> +               /* Watchdog is present only on v2.3+ */
-> +               for (i =3D 0, j =3D WDOG_BARK_STATUS; j <=3D CC_MON_MASK;=
- i++, j++) {
+> 
+> Hi Steve,
+> sent this earlier as an attachment to an email thread, not sure if you
+> saw it, so sending it now properly.
+> The other problem with the pkgconfig, I guess we can live with that for
+> now as that folder is given by pc_path.
+> 
+>  tools/lib/traceevent/Makefile | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+> index 5315f3787f8d..cbb429f55062 100644
+> --- a/tools/lib/traceevent/Makefile
+> +++ b/tools/lib/traceevent/Makefile
+> @@ -232,10 +232,10 @@ install_pkgconfig:
+>  
+>  install_headers:
+>  	$(call QUIET_INSTALL, headers) \
+> -		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
+> -		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
+> -		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
+> -		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
+> +		$(call do_install,event-parse.h,$(includedir_SQ),644); \
+> +		$(call do_install,event-utils.h,$(includedir_SQ),644); \
+> +		$(call do_install,trace-seq.h,$(includedir_SQ),644); \
+> +		$(call do_install,kbuffer.h,$(includedir_SQ),644)
+>  
+>  install: install_lib
+>  
 
-The variable 'i' is not actually used in this loop. What's going on?
-
-> +                       priv->rf[j] =3D devm_regmap_field_alloc(dev, priv=
-->tm_map,
-> +                                                             priv->field=
-s[j]);
-> +                       if (IS_ERR(priv->rf[j])) {
-> +                               ret =3D PTR_ERR(priv->rf[j]);
-> +                               goto err_put_device;
-> +                       }
-> +               }
-> +               /* Enable WDOG and disable cycle completion monitoring */
-> +               regmap_field_write(priv->rf[WDOG_BARK_MASK], 0);
-> +               regmap_field_write(priv->rf[CC_MON_MASK], 1);
-> +       }
