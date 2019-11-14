@@ -2,94 +2,88 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6460DC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A73CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFD1206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 16:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4187B206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:00:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="sk59Sxa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKNQ7d (ORCPT
+        id S1726960AbfKNRA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:59:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:8587 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbfKNQ7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:59:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 08:59:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
-   d="scan'208";a="235745047"
-Received: from pkamlakx-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.10.73])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Nov 2019 08:59:28 -0800
-Date:   Thu, 14 Nov 2019 18:59:27 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>
-Subject: Re: [PATCH v3] tpm_tis: turn on TPM before calling tpm_get_timeouts
-Message-ID: <20191114165927.GB11107@linux.intel.com>
-References: <20191111233418.17676-1-jsnitsel@redhat.com>
- <20191113000243.16611-1-jsnitsel@redhat.com>
+        Thu, 14 Nov 2019 12:00:56 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45751 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfKNRAz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:00:55 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k1so2830687pgg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:00:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=6bO7e6hWYl53t03anT/Z1zUE/FznVpwaBWq+FDBPOFw=;
+        b=sk59Sxa2ql+seW2RmX9NyqQTrkbW9s/bSh8AA1Z5jYFL/X7vqVEwE93ZDDJ/q8Ymbj
+         Fmu1zUaUHdrvARX7jQ53KEP23AgKmakA97LTT01nZdvxL9+qWFff/I0gdTt3ITzqu4Ny
+         4r/sWDtJg054Fhg90F1n3K+hTuI6KqA9ax4gUQTWvaSGsJlPK5qgZr1nouxPjuE14qof
+         9f8jmkityB8eL0Kw7oTGeVuecjfmoLzbj7V1zb5TC0Rc5PPOz3HDoPWEc6SY2LmsqRmQ
+         30WOdXNzT63MinUon6Zf/uGxvAfk0FNL+Eiegcbf1KVwmvgpBlpCueVTOja6xctBQ7sa
+         +log==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=6bO7e6hWYl53t03anT/Z1zUE/FznVpwaBWq+FDBPOFw=;
+        b=mG4aMwgRLqAwkIcExYV6SSQFRhm84bgJPhax1cIz3Yb0Z66ATSvq+6C4zTQMtJEriz
+         gdj2kxMAJ6jSeJC+gbdVa3tJi7Km7fEflnVOmI+SZqi4Lk/OeHWLt+3k0LrNKYFcpRRF
+         G4YvGoYQ+zU6EIQJcBkMfS+GteDZB9d223byf50DWOGBRBAydIhnCnz/BWI/apVwsonY
+         sYGBy2RWHq1sztKdmVPU2aEns56yZphpj7/mlgDRtSqtr5MS8LjZ/eY1aIIlrLAHRYqR
+         4/J5jS6XxONthzs2SJGTmUjyi2lq2zdw/V3Cb/YA8W3mZN53MKUXpDoftUwP4cW68BUi
+         +F9g==
+X-Gm-Message-State: APjAAAVJx3Ld4YeK068bOamfvm82LOtollq26+U2ZGzP14E2s8CwlgYC
+        ToA36iN0QPvT5HUJlfePTlxfrQ==
+X-Google-Smtp-Source: APXvYqx8uPXf4czd3iKUV0VVk5MDGgysrPrpM6yFUYmtbUIKVtFNriO8qzyTyMZgTmgiZz3P1aI5bQ==
+X-Received: by 2002:a63:cc56:: with SMTP id q22mr11217252pgi.439.1573750854560;
+        Thu, 14 Nov 2019 09:00:54 -0800 (PST)
+Received: from cakuba.netronome.com ([2601:646:8e00:e18::3])
+        by smtp.gmail.com with ESMTPSA id d25sm8101407pfq.70.2019.11.14.09.00.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 09:00:54 -0800 (PST)
+Date:   Thu, 14 Nov 2019 09:00:49 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <borisp@mellanox.com>, <aviadye@mellanox.com>,
+        <john.fastabend@gmail.com>, <daniel@iogearbox.net>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] net/tls: Fix unused function warning
+Message-ID: <20191114090049.47cfee19@cakuba.netronome.com>
+In-Reply-To: <20191114073946.46340-1-yuehaibing@huawei.com>
+References: <20191114073946.46340-1-yuehaibing@huawei.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113000243.16611-1-jsnitsel@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 05:02:43PM -0700, Jerry Snitselaar wrote:
-> With power gating moved out of the tpm_transmit code we need
-> to power on the TPM prior to calling tpm_get_timeouts.
+On Thu, 14 Nov 2019 15:39:46 +0800, YueHaibing wrote:
+> If PROC_FS is not set, gcc warning this:
 > 
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Cc: Peter Huewe <peterhuewe@gmx.de>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> Reported-by: Christian Bundy <christianbundy@fraction.io>
-> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> ---
-> v3: call tpm_chip_stop in error path
-> v2: fix stable cc to correct address
+> net/tls/tls_proc.c:23:12: warning:
+>  'tls_statistics_seq_show' defined but not used [-Wunused-function]
 > 
->  drivers/char/tpm/tpm_tis_core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Use #ifdef to guard this.
 > 
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-> index 270f43acbb77..806acc666696 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -974,13 +974,14 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
->  		 * to make sure it works. May as well use that command to set the
->  		 * proper timeouts for the driver.
->  		 */
-> +		tpm_chip_start(chip);
->  		if (tpm_get_timeouts(chip)) {
->  			dev_err(dev, "Could not get TPM timeouts and durations\n");
->  			rc = -ENODEV;
-> +			tpm_chip_stop(chip);
->  			goto out_err;
->  		}
->  
-> -		tpm_chip_start(chip);
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-As the commit describes the call is not there for any other reason than
-pinging the TPM.
-
-/Jarkko
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
