@@ -2,104 +2,125 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBBCC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDA7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCFF2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3270D2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="aTy6eNni"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="uGb1zBYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKNPUI (ORCPT
+        id S1727048AbfKNPUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:20:08 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:62876 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfKNPUI (ORCPT
+        Thu, 14 Nov 2019 10:20:22 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35622 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfKNPUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:20:08 -0500
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id xAEFK48h013579;
-        Fri, 15 Nov 2019 00:20:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xAEFK48h013579
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573744805;
-        bh=3xRjq3uNRUjL7HgdFdr9feX3wpSW0Sa0zqEAmZVb+HE=;
-        h=From:Date:Subject:To:Cc:From;
-        b=aTy6eNniRWzcbIl+ZTnv6kz6TA69XYKi13+XThpw9rtQWRaqzy4Nd4QM6cIMoBuLE
-         7npBx+Y5SujRoi6UQ9VOSNM1bHf3Bgi87bu2Szix3QExBsR/Mtb2PTMjxwHZI8NvmN
-         2NHiNlothrf/R9/w36jx8/3OfmNRkBX/8fsHr7gi5+EhN+3eYid5dS/pEbCQIVGVHA
-         m9IM1o4J3HTP32BMnkQrkU6cL8k6UP9sjSKKJa0gpNJ//b49ReZDL/cpmeP8jAIIBf
-         qBnSu7H2CZM0QovcfVloQhqfbAqubTm8r6zGo+u9lWrgZa3cISTamSPb6sihzd9st/
-         OgxTP40nF8sXw==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id 190so4091905vss.8;
-        Thu, 14 Nov 2019 07:20:04 -0800 (PST)
-X-Gm-Message-State: APjAAAV6VUcVRFQXyiwcqlLgBsY5tI8/jwNp9nmCwGKKsiFc1Wyb9zFp
-        s6j5Gy50Sgdf5nuyjvg0wFGq0L+D5B+bEOrNNoA=
-X-Google-Smtp-Source: APXvYqzsCpF7BoPyCPU6uyM+cv4BXaVEnVdg0L9GEzq1RIcJ6vKtAiRpl6zS9qGgnHGMwR4dKg8Y64d12gFXaUkpQnY=
-X-Received: by 2002:a05:6102:3204:: with SMTP id r4mr2491856vsf.181.1573744803448;
- Thu, 14 Nov 2019 07:20:03 -0800 (PST)
+        Thu, 14 Nov 2019 10:20:21 -0500
+Received: by mail-io1-f67.google.com with SMTP id x21so7225873ior.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:20:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Vpd16eavpmhvftjyKz985AmPeNIs+JfDlbBiiR7zkfc=;
+        b=uGb1zBYJJpThFDYCcIxgKaHpCNVMaZuYtiKEcWiz/VxIPkRceu3ODp9cuiBPjIgwtM
+         +RF7+sl2A5D2Y7yY80BSsBNmSzLakYQdXzuYhEq7szm1lWGcDB/QELSsZhHkMZUxGeHg
+         oiIwmv61f86XHQseUbizRrJnJBp3LlSlE77CahpuSmBsl7un4nwN9pkDKU/xcb2OdCZp
+         LM+FGwaPD1818bRln/cKHCSlWOti795zAtaijCkF5MMtBYKokt8cTmkNI+eDloUh33IE
+         K1gRrFI+tZdmsmsugG/WlDn81+axhx8uEZk35SjDM7fgesNXwGmRbosHh0ZAh43+US9L
+         Tdpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Vpd16eavpmhvftjyKz985AmPeNIs+JfDlbBiiR7zkfc=;
+        b=sUogxC8OHLCLYyRGhlYa+r1OTYRWD/Za7DCF3kD1Zm8JEE1KstKqJlZV+V8DE9+/PN
+         I/q4so57ECjXDK6VBxvLRvwwrl+o8E7KgwxECEpCjDWzp7cFb8JsFYUCUlDqGmf6Qlhl
+         lAme5BnHcg4NLw+iwnVdG9qZLQR2MJfBn1qDYbTYZKF1Bz4XGpo1gHIrnux55lSB2NIR
+         kHtgR4TPoGRBv31HKN+4aCIQneiIl5O3/U+7Vuq7kNAHiphw7TPeNGzUL2nQCqR2jVk2
+         BEdUDghpQU3Sp+dqfzVjZbRcTqbXuoZJTOq4L0O8T3IfrB37RVtyztQO8q0TWXx/27gA
+         5OjQ==
+X-Gm-Message-State: APjAAAXJbm2bIxLwxyzc85M8qrmPmrE6TnTeJPsxgypr/WwC9DJDKLJa
+        ulR1UbMSamq3xyp/Wh/v1bFszg==
+X-Google-Smtp-Source: APXvYqy5EI/qSRAtCkOOx7aGDPcLuTi/cX9oQolxwD7v62CvKOF5bCsQVZPHj//oBiARdvv0st34yw==
+X-Received: by 2002:a6b:7c42:: with SMTP id b2mr8780551ioq.184.1573744821048;
+        Thu, 14 Nov 2019 07:20:21 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t68sm768152ilb.66.2019.11.14.07.20.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 07:20:20 -0800 (PST)
+Subject: Re: [PATCH RFC] io_uring: make signalfd work with io_uring (and aio)
+ POLL
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jann Horn <jannh@google.com>
+Cc:     io-uring@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <58059c9c-adf9-1683-99f5-7e45280aea87@kernel.dk>
+ <58246851-fa45-a72d-2c42-7e56461ec04e@kernel.dk>
+ <ec3526fb-948a-70c0-4a7b-866d6cd6a788@rasmusvillemoes.dk>
+ <CAG48ez3dpphoQGy8G1-QgZpkMBA2oDjNcttQKJtw5pD62QYwhw@mail.gmail.com>
+ <ea7a428d-a5bd-b48e-9680-82a26710ec83@rasmusvillemoes.dk>
+ <e568a403-3712-4612-341a-a6f22af877ae@kernel.dk>
+ <0f74341f-76fa-93ee-c03e-554d02707053@rasmusvillemoes.dk>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6243eb59-3340-deb5-d4b8-08501be01f34@kernel.dk>
+Date:   Thu, 14 Nov 2019 08:20:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 15 Nov 2019 00:19:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATqoF-NVhkP9J7SyDmK-x8vQ5pDJ7U_aEngdJb_vvDixg@mail.gmail.com>
-Message-ID: <CAK7LNATqoF-NVhkP9J7SyDmK-x8vQ5pDJ7U_aEngdJb_vvDixg@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v5.4(-rc8)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        masahiroy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0f74341f-76fa-93ee-c03e-554d02707053@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 11/14/19 8:19 AM, Rasmus Villemoes wrote:
+> On 14/11/2019 16.09, Jens Axboe wrote:
+>> On 11/14/19 7:12 AM, Rasmus Villemoes wrote:
+> 
+>>> So, I can't really think of anybody that might be relying on inheriting
+>>> a signalfd instead of just setting it up in the child, but changing the
+>>> semantics of it now seems rather dangerous. Also, I _can_ imagine
+>>> threads in a process sharing a signalfd (initial thread sets it up and
+>>> blocks the signals, all threads subsequently use that same fd), and for
+>>> that case it would be wrong for one thread to dequeue signals directed
+>>> at the initial thread. Plus the lifetime problems.
+>>
+>> What if we just made it specific SFD_CLOEXEC?
+> 
+> O_CLOEXEC can be set and removed afterwards. Sure, we're far into
+> "nobody does that" land, but having signalfd() have wildly different
+> semantics based on whether it was initially created with O_CLOEXEC seems
+> rather dubious.
+> 
+>   I don't want to break
+>> existing applications, even if the use case is nonsensical, but it is
+>> important to allow signalfd to be properly used with use cases that are
+>> already in the kernel (aio with IOCB_CMD_POLL, io_uring with
+>> IORING_OP_POLL_ADD). Alternatively, if need be, we could add a specific
+>> SFD_ flag for this.
+> 
+> Yeah, if you want another signalfd flavour, adding it via a new SFD_
+> flag seems the way to go. Though I can't imagine the resulting code
+> would be very pretty.
 
-Please pull Kbuild fixes.
-Thanks.
-
-
-The following changes since commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c:
-
-  Linux 5.4-rc7 (2019-11-10 16:17:15 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-kbuild-fixes-v5.4-3
-
-for you to fetch changes up to 80591e61a0f7e88deaada69844e4a31280c4a38f:
-
-  kbuild: tell sparse about the $ARCH (2019-11-15 00:13:23 +0900)
-
-----------------------------------------------------------------
-Kbuild fixes for v5.4 (3rc)
-
- - fix build error when compiling SPARC VDSO with CONFIG_COMPAT=y
-
- - pass correct --arch option to Sparse
-
-----------------------------------------------------------------
-Luc Van Oostenryck (1):
-      kbuild: tell sparse about the $ARCH
-
-Masahiro Yamada (1):
-      sparc: vdso: fix build error of vdso32
-
- Makefile                 | 3 +++
- arch/sparc/vdso/Makefile | 4 ++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
+Well, it's currently _broken_ for the listed in-kernel use cases, so
+I think making it work is the first priority here.
 
 -- 
-Best Regards
-Masahiro Yamada
+Jens Axboe
+
