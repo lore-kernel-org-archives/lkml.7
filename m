@@ -2,86 +2,89 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB12C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFE8C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A862070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7054B20723
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:28:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzjKrL6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfKNUYJ (ORCPT
+        id S1726869AbfKNU2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:24:09 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:54791 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726474AbfKNUYJ (ORCPT
+        Thu, 14 Nov 2019 15:28:00 -0500
+Received: from mail-yw1-f52.google.com ([209.85.161.52]:43399 "EHLO
+        mail-yw1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfKNU2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:24:09 -0500
-Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3D5E743E7D2;
-        Fri, 15 Nov 2019 07:24:04 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iVLer-0002xv-KL; Fri, 15 Nov 2019 07:24:01 +1100
-Date:   Fri, 15 Nov 2019 07:24:01 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Goldwyn Rodrigues <rgoldwyn@suse.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        gujx@cn.fujitsu.com, qi.fuli@fujitsu.com
-Subject: Re: [RFC PATCH v2 0/7] xfs: reflink & dedupe for fsdax (read/write
- path).
-Message-ID: <20191114202401.GB4614@dread.disaster.area>
-References: <20191030041358.14450-1-ruansy.fnst@cn.fujitsu.com>
- <e33532a2-a9e5-1578-bdd8-a83d4710a151@cn.fujitsu.com>
- <CAPcyv4ivOgMNdvWTtpXw2aaR0o7MEQZ=cDiy=_P9qhVb3QVWdQ@mail.gmail.com>
+        Thu, 14 Nov 2019 15:28:00 -0500
+Received: by mail-yw1-f52.google.com with SMTP id g77so2321095ywb.10;
+        Thu, 14 Nov 2019 12:27:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gosnal9kN2eql1s5D44AG42b0F2sEZJ5o9XY9+CqiYA=;
+        b=PzjKrL6+NtYpShE0wz+zoY5KXIXzF5xtBIF/4/oy2hzZP5HFYbzYdR+Go9vFiv06xZ
+         zJSenwFilMhq2UAQZ3DZHfkEjTjb9LdiEebVK8E2JFJbvIw3+PtujoMQjXjfbGaNjGTD
+         WUQdzjo57bxh8uQsEp0br8Yjr2Xluw+chU/9z739Kxk8lej0GtvT8Ysfu5+JOuGkT1Zh
+         nVANma13htudxUG6rosrLVjUD1L2sgHbQqrt6HkfuGRGO8kGgW/iiVMobYj+m4JZN+Eo
+         53zEtbEe+fdgJOiaxRTEcEBIGjken/T/+HAbGaJKiBZKZ9OIUtvdgCTBwbtZlsdy8Op5
+         eZUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gosnal9kN2eql1s5D44AG42b0F2sEZJ5o9XY9+CqiYA=;
+        b=awkDfBDVi+S2vctnCgclol79rXZKjm0zfDI3h7CGBnwG1APaB8y6t/rxwgrVLCcuv5
+         eQydKMhdfmtFDM2iW3rqM28zEBRbaYzw7YYT43YO4SpBWTB0IPWP+xuaHPrDjCrLMoHW
+         YtfuAsZdRQZH2uJEImlK5T6LnLTf1KscaBCX1ammJKxRopiO2wxLAhe/OyL+zsT+jiyI
+         Lw/7GPru8atACJtOLw73BX7EhKPFwor6emT/U5+U8nKHwGAkt/kW8g1Au7vZms/xknUa
+         rJXID4dGOZK/wfgGxjnH3AfobqAJgpvxsBij8QSulK3VmMFN71wR20ZIcklsZ6g6YAuT
+         vYxw==
+X-Gm-Message-State: APjAAAW5UC5iSvgmoPe5rdKZGrHoQns2HBmLDmltGwjni0tJinRGQzm1
+        wLGAVErZUtf/LEW/rgNZ7aZ6rkcB69qlf3zk9qZYMaHPVqw=
+X-Google-Smtp-Source: APXvYqxTIj/kWS6wMWLhbvm//WPEF9tRDyOypt44M536RxAxRtlC7o7bsI86qeHS+DWhxdpAI9RSLA0dNIm9ZeclWkg=
+X-Received: by 2002:a81:5794:: with SMTP id l142mr6854892ywb.107.1573763277722;
+ Thu, 14 Nov 2019 12:27:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4ivOgMNdvWTtpXw2aaR0o7MEQZ=cDiy=_P9qhVb3QVWdQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
-        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=omOdbC7AAAAA:8 a=7-415B0cAAAA:8 a=LDxVRJNMUMF_87RH2osA:9
-        a=CjuIK1q_8ugA:10 a=baC4JDFNLZpnPwus_NF9:22 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20191115070908.01d8e46d@canb.auug.org.au>
+In-Reply-To: <20191115070908.01d8e46d@canb.auug.org.au>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Thu, 14 Nov 2019 12:27:45 -0800
+Message-ID: <CAMo8Bf+9=0t+z6r=Mct358h8zDOjiVCYQiS7DxYgz6JcGTrYVg@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the xtensa tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 07:30:32PM -0800, Dan Williams wrote:
-> On Thu, Nov 7, 2019 at 7:11 PM Shiyang Ruan <ruansy.fnst@cn.fujitsu.com> wrote:
-> >
-> > Hi Darrick, Dave,
-> >
-> > Do you have any comment on this?
-> 
-> Christoph pointed out at ALPSS that this problem has significant
-> overlap with the shared page-cache for reflink problem. So I think we
-> need to solve that first and then circle back to dax reflink support.
-> I'm starting to take a look at that.
+Hi Stephen,
 
-I think the DAX side is somewhat simpler because it doesn't really
-need to involve the page cache and we don't have to worry about
-subtly breaking random filesystems. Hence I'd suggest we sort out a
-solution for DAX first, then worry about page cache stuff. The
-shared page cache for reflink feature is not a show stopper -
-multiple references for DAX is a show stopper. Let's deal with the
-DAX problem first.
+On Thu, Nov 14, 2019 at 12:09 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> In commit
+>   29ba235590d1 ("xtensa: use MEMBLOCK_ALLOC_ANYWHERE for KASAN shadow map")
+>
+> Fixes tag
+>   Fixes: f240ec09bb8a ("memblock: replace memblock_alloc_base(ANYWHERE)
+> has these problem(s):
+>   - Subject has leading but no trailing quotes
+>
+> Please do not split Fixes tags over more than one line.
 
-Cheers,
+Thanks for the tip, I've fixed up the 'Fixes' tag. Fixed version of this fix
+is available as
+00c04249bcbe ("xtensa: use MEMBLOCK_ALLOC_ANYWHERE for KASAN shadow map")
 
--Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Thanks.
+-- Max
