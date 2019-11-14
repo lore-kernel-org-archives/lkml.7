@@ -2,69 +2,92 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2CEC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF091C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B997206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BC120723
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 23:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKNXNo (ORCPT
+        id S1727083AbfKNXT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:13:44 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:55590 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKNXNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 18:13:42 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6FC1014AC47DD;
-        Thu, 14 Nov 2019 15:13:41 -0800 (PST)
-Date:   Thu, 14 Nov 2019 15:13:40 -0800 (PST)
-Message-Id: <20191114.151340.735858877920708489.davem@davemloft.net>
-To:     Mark-MC.Lee@mediatek.com
-Cc:     sean.wang@mediatek.com, john@phrozen.org, matthias.bgg@gmail.com,
-        andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com,
-        opensource@vdorst.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jakub.kicinski@netronome.com
-Subject: Re: [PATCH net,v3 0/3] Rework mt762x GDM setup flow
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191113023844.17800-1-Mark-MC.Lee@mediatek.com>
-References: <20191113023844.17800-1-Mark-MC.Lee@mediatek.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 14 Nov 2019 15:13:41 -0800 (PST)
+        Thu, 14 Nov 2019 18:19:27 -0500
+Received: from mga18.intel.com ([134.134.136.126]:23450 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbfKNXT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 18:19:26 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 15:19:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,306,1569308400"; 
+   d="scan'208";a="207950534"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga003.jf.intel.com with ESMTP; 14 Nov 2019 15:19:24 -0800
+Date:   Thu, 14 Nov 2019 15:19:24 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH V2 0/2] Move swap functions out of address space
+ operations
+Message-ID: <20191114231924.GA4370@iweiny-DESK2.sc.intel.com>
+References: <20191113004244.9981-1-ira.weiny@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113004244.9981-1-ira.weiny@intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: MarkLee <Mark-MC.Lee@mediatek.com>
-Date: Wed, 13 Nov 2019 10:38:41 +0800
+On Tue, Nov 12, 2019 at 04:42:42PM -0800, 'Ira Weiny' wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> As suggested by Jan Kara, move swap_[de]activate to file_operations to simplify
+> address space operations for coming changes.
+> 
+> I'm not sure if this should go through Al Viro or Andrew Morton so I'm sending
+> it to both of you.  Sorry if this is a problem.  Let me know if there is
+> something else I should do.
+> 
+> Ira Weiny (2):
+>   fs: Clean up mapping variable
+>   fs: Move swap_[de]activate to file_operations
 
-> The mt762x GDM block is mainly used to setup the HW internal
-> rx path from GMAC to RX DMA engine(PDMA) and the packet
-> switching engine(PSE) is responsed to do the data forward
-> following the GDM configuration.
-> 
-> This patch set have three goals :
-> 
-> 1. Integrate GDM/PSE setup operations into single function "mtk_gdm_config"
-> 
-> 2. Refine the timing of GDM/PSE setup, move it from mtk_hw_init 
->    to mtk_open
-> 
-> 3. Enable GDM GDMA_DROP_ALL mode to drop all packet during the 
->    stop operation
+There should have been an update to the documentation with this.
 
-Series applied, thanks.
+I have a 3rd patch which I'm sending separately.
+
+Ira
+
+> 
+>  fs/btrfs/file.c     | 341 ++++++++++++++++++++++++++++++++++++++++++++
+>  fs/btrfs/inode.c    | 340 -------------------------------------------
+>  fs/f2fs/data.c      | 123 ----------------
+>  fs/f2fs/file.c      | 122 ++++++++++++++++
+>  fs/iomap/swapfile.c |   3 +-
+>  fs/nfs/file.c       |   4 +-
+>  fs/xfs/xfs_aops.c   |  13 --
+>  fs/xfs/xfs_file.c   |  12 ++
+>  include/linux/fs.h  |  10 +-
+>  mm/swapfile.c       |  12 +-
+>  10 files changed, 488 insertions(+), 492 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
