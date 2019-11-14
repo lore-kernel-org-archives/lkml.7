@@ -2,99 +2,141 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8334C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0601FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6256206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A2B206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKNPYx (ORCPT
+        id S1727050AbfKNPY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:24:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49326 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726339AbfKNPYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:24:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3ABE7AD19;
-        Thu, 14 Nov 2019 15:24:51 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 15:24:50 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Sage Weil <sweil@redhat.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus
- OSDs
-Message-ID: <20191114152450.GA6902@hermes.olymp>
-References: <20191114105736.8636-1-lhenriques@suse.com>
- <cbda3a69d25b04e10332e7b3898064a93b2d04ae.camel@kernel.org>
- <alpine.DEB.2.21.1911141326260.17979@piezo.novalocal>
- <CAOi1vP9XaeJdqV-jMP3BM=mjHKqJW8-ynAjCi0xcDD3DtL94KQ@mail.gmail.com>
- <alpine.DEB.2.21.1911141416040.17979@piezo.novalocal>
+        Thu, 14 Nov 2019 10:24:59 -0500
+Received: from mga17.intel.com ([192.55.52.151]:9885 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbfKNPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 10:24:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 07:24:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,304,1569308400"; 
+   d="scan'208";a="198852045"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 14 Nov 2019 07:24:58 -0800
+Received: from [10.251.18.41] (kliang2-mobl.ccr.corp.intel.com [10.251.18.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id DF81E5801E3;
+        Thu, 14 Nov 2019 07:24:55 -0800 (PST)
+Subject: Re: [PATCH v3 10/10] perf/cgroup: Do not switch system-wide events in
+ cgroup switch
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+References: <20191114003042.85252-1-irogers@google.com>
+ <20191114003042.85252-11-irogers@google.com>
+ <20191114104340.GT4131@hirez.programming.kicks-ass.net>
+ <710edaf6-2562-0f53-15d6-dc50885b8e08@linux.intel.com>
+ <20191114135718.GX4131@hirez.programming.kicks-ass.net>
+ <97cb578c-d302-9be3-5fe6-b2030b318bcc@linux.intel.com>
+Message-ID: <4bc51bf9-1d47-063a-e811-d05fb42c8838@linux.intel.com>
+Date:   Thu, 14 Nov 2019 10:24:54 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.21.1911141416040.17979@piezo.novalocal>
+In-Reply-To: <97cb578c-d302-9be3-5fe6-b2030b318bcc@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 02:17:44PM +0000, Sage Weil wrote:
-> On Thu, 14 Nov 2019, Ilya Dryomov wrote:
-> > > > I'm just getting caught up on the discussion here, but why was it
-> > > > decided to do it this way instead of just adding a new OSD
-> > > > "copy-from-no-truncseq" operation? Once you tried it once and an OSD
-> > > > didn't support it, you could just give up on using it any longer? That
-> > > > seems a lot simpler than trying to monkey with feature bits.
-> > >
-> > > I don't remember the original discussion either, but in retrospect that
-> > > does seem much simpler--especially since hte client is conditioning
-> > > sending this based on the the require_osd_release.  It seems like passing
-> > > a flag to the copy-from op would be more reasonable instead of conditional
-> > > feature-based behavior.
-> > 
-> > Yeah, I suggested adding require_osd_release to the client portion just
-> > because we are running into it more and more: Objecter relies on it for
-> > RESEND_ON_SPLIT for example.  It needs to be accessible so that patches
-> > like that can be carried over to the kernel client without workarounds.
-> > 
-> > copy-from in its existing form is another example.  AFAIU the problem
-> > is that copy-from op doesn't reject unknown flags.  Luis added a flag
-> > in https://github.com/ceph/ceph/pull/25374, but it is simply ignored on
-> > nautilus and older releases, potentially leading to data corruption.
-> > 
-> > Adding a new op that would be an alias for CEPH_OSD_OP_COPY_FROM with
-> > CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ like Jeff is suggesting, or a new
-> > copy-from2 op that would behave just like copy-from, but reject unknown
-> > flags to avoid similar compatibility issues in the future is probably
-> > the best thing we can do from the client perspective.
+
+
+On 11/14/2019 10:16 AM, Liang, Kan wrote:
 > 
-> Yeah, I think copy-from2 is the best path.  I think that means we should 
-> revert what we merged to ceph.git a few weeks back, Luis!  Sorry we didn't 
-> put all the pieces together before...
+> 
+> On 11/14/2019 8:57 AM, Peter Zijlstra wrote:
+>> On Thu, Nov 14, 2019 at 08:46:51AM -0500, Liang, Kan wrote:
+>>>
+>>>
+>>> On 11/14/2019 5:43 AM, Peter Zijlstra wrote:
+>>>> On Wed, Nov 13, 2019 at 04:30:42PM -0800, Ian Rogers wrote:
+>>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>>
+>>>>> When counting system-wide events and cgroup events simultaneously, the
+>>>>> system-wide events are always scheduled out then back in during cgroup
+>>>>> switches, bringing extra overhead and possibly missing events. 
+>>>>> Switching
+>>>>> out system wide flexible events may be necessary if the scheduled in
+>>>>> task's cgroups have pinned events that need to be scheduled in at a 
+>>>>> higher
+>>>>> priority than the system wide flexible events.
+>>>>
+>>>> I'm thinking this patch is actively broken. groups->index 'group' wide
+>>>> and therefore across cpu/cgroup boundaries.
+>>>>
+>>>> There is no !cgroup to cgroup hierarchy as this patch seems to assume,
+>>>> specifically look at how the merge sort in visit_groups_merge() allows
+>>>> cgroup events to be picked before !cgroup events.
+>>>
+>>>
+>>> No, the patch intends to avoid switch !cgroup during cgroup context 
+>>> switch.
+>>
+>> Which is wrong.
+>>
+> Why we want to switch !cgroup system-wide event in context switch?
+> 
+> How should current perf handle this case?
 
-Well, that's an unexpected turn.  I'm not disagreeing with that decision
-but since my initial pull request was done one year ago (almost to the
-day!), it's a bit disappointing to see that in the end I'm back to
-square one :-)
+This is not a right case. I will think about more.
+Sorry for the noise.
 
-I guess that the PR I mentioned in the cover letter can also be dropped,
-as it's not really usable by the kernel client (at least not until it
-fully supports all the features up to SERVER_OCTOPUS).
+Thanks,
+Kan
 
-Anyway, thanks everyone for the review.
+> For example,
+> User A: perf stat -e cycles -G cgroup1
+> User B: perf stat -e instructions -a
+> 
+> There is only one cpuctx for each CPU. So both cycles and instructions 
+> are tracked in flexible_active list.
+> When user A left, the cgroup context-switch schedule out everything 
+> including both cycles and instructions.
+> It seems that we will never switch the instructions event back for user B.
 
-Cheers,
---
-Luís
+
+
+
