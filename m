@@ -2,120 +2,115 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9B9C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8215C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2CC2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:56:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOPAr9Qp"
+	by mail.kernel.org (Postfix) with ESMTP id 9F4502070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfKNH45 (ORCPT
+        id S1726378AbfKNH6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 02:56:57 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55705 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfKNH44 (ORCPT
+        Thu, 14 Nov 2019 02:58:13 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:59497 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfKNH6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 02:56:56 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so4588711wmb.5;
-        Wed, 13 Nov 2019 23:56:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3K2jlKns5uBLkzDh9Yqp5vanNtQbiJVshVMnoLizCHU=;
-        b=LOPAr9QpwxQZ6yy5Z+4+Tbtd9Lt+/s7RGkLsFMpjZVMGHUYG8IJilruwObPEw2erMn
-         HowM/VT/xT+bB4TCfwnJuXqPklx724lgWIfRhkz6v2eDkEJ4zhMLNUlUcElK2Nl+8KVK
-         SAYvK7OQwbU9kdiWKA2m7Jkcmq+fr96f0xKpmNBdL571lsWm8LEQMlYDDgKLXcCTXqjT
-         x5PrtMbuN7QaH1J/v1NUi+3gAxB3Ph0oYxSU5rzsWCmvgbS0I5xkJ4wJpjR41/uDZHD3
-         gBRIY9zxM7eA9SSj/nIdWlVEhEfLOZ7mgUf9O+jTKVwToMCZTBL8qvEHPT3pRay9bZyX
-         sMrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3K2jlKns5uBLkzDh9Yqp5vanNtQbiJVshVMnoLizCHU=;
-        b=oEyUnLve2qHrWki21bQH5Lw00i3CMcF1lHKpaYcSefkIksOjC8uREVWv0YCELLk2CT
-         y+LfjaKyqjNxPzFv4Huxau+pq0T6gg7A+Cq1EzovmWacMwbDJ+aOmIgri7mHfP5lgpaS
-         qaPlfkuJa7WCuIlCKaaayCnLlT66g0g/cjReisMRS5JoSDo64zsMq5bf89tO3FdVPqPs
-         vf+M1fU1xe2dcSb7vFvw/0KAbPH/LFEZVuFOeoGTK8lZBCB8WGczSyDt2qWH1IV5iWlP
-         kRn88MPUB6G529io5VXtWx73cv9yM1BRMQv7TuKcQyNf0nG+POZmMrd+Vys3dsciApEh
-         eZcQ==
-X-Gm-Message-State: APjAAAVHUAWRgvV2Dsf1eZnc70gkFouUj20PObKrDx0pTGsenwQ1dhUC
-        hRpS5hJAW0qgkVrsT2b2RrRKJ8rHxW1MXqpNYM4=
-X-Google-Smtp-Source: APXvYqxBerVbJgV3OSodNbBETUOG4GiQVDJ4dW1YDf5/mNBYS1hXAjI97JZxFxwK80d6fUKmOiAK9WUORUEZ/dL0iyA=
-X-Received: by 2002:a1c:4456:: with SMTP id r83mr6205339wma.2.1573718214611;
- Wed, 13 Nov 2019 23:56:54 -0800 (PST)
+        Thu, 14 Nov 2019 02:58:12 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iVA0v-0006DG-3f; Thu, 14 Nov 2019 07:58:01 +0000
+Date:   Thu, 14 Nov 2019 08:58:00 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v9 1/2] fork: extend clone3() to support setting a PID
+Message-ID: <20191114075759.3cdil2rh3dz4ozvs@wittgenstein>
+References: <20191114070709.1504202-1-areber@redhat.com>
 MIME-Version: 1.0
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
- <20191111090230.3402-5-chunyan.zhang@unisoc.com> <20191112005600.GA9055@bogus>
- <CAAfSe-uohXXHyQ7txhPmLCpyQODDHAuxjuUVbGcwYySN6G9tNQ@mail.gmail.com> <CAL_JsqLUkaL=dq0Nrdcax3KG7TXW3LErHTSONa9mH2gXu4du9w@mail.gmail.com>
-In-Reply-To: <CAL_JsqLUkaL=dq0Nrdcax3KG7TXW3LErHTSONa9mH2gXu4du9w@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Thu, 14 Nov 2019 15:56:18 +0800
-Message-ID: <CAAfSe-vVxYsHBVorqpw1sTyi-B+VtU8pgAe79-T8WXhW8ZZHwQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] dt-bindings: serial: Add a new compatible string
- for SC9863A
-To:     Rob Herring <robh@kernel.org>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191114070709.1504202-1-areber@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 at 08:06, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Nov 11, 2019 at 7:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> >
-> > On Tue, 12 Nov 2019 at 08:56, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Mon, 11 Nov 2019 17:02:29 +0800, Chunyan Zhang wrote:
-> > > >
-> > > > SC9863A use the same serial device which SC9836 uses.
-> > > >
-> > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/serial/sprd-uart.yaml | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > >
-> > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> >
-> > Yes, I know.
-> >
-> > > there's no need to repost patches *only* to add the tags. The upstream
-> > > maintainer will do that for acks received on the version they apply.
-> > >
-> > > If a tag was not added on purpose, please state why and what changed.
-> >
-> > The reason was that I switched to yaml rather than txt in last version
-> > which recieved your Acked-by.
-> > Not sure for this kind of case I can still add your Acked-by.
->
-> This was a semi-automated reply. I do review it first, but if the
+On Thu, Nov 14, 2019 at 08:07:08AM +0100, Adrian Reber wrote:
+> The main motivation to add set_tid to clone3() is CRIU.
+> 
+> To restore a process with the same PID/TID CRIU currently uses
+> /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
+> ns_last_pid and then (quickly) does a clone(). This works most of the
+> time, but it is racy. It is also slow as it requires multiple syscalls.
+> 
+> Extending clone3() to support *set_tid makes it possible restore a
+> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
+> race free (as long as the desired PID/TID is available).
+> 
+> This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
+> on clone3() with *set_tid as they are currently in place for ns_last_pid.
+> 
+> The original version of this change was using a single value for
+> set_tid. At the 2019 LPC, after presenting set_tid, it was, however,
+> decided to change set_tid to an array to enable setting the PID of a
+> process in multiple PID namespaces at the same time. If a process is
+> created in a PID namespace it is possible to influence the PID inside
+> and outside of the PID namespace. Details also in the corresponding
+> selftest.
+> 
+> To create a process with the following PIDs:
+> 
+>       PID NS level         Requested PID
+>         0 (host)              31496
+>         1                        42
+>         2                         1
+> 
+> For that example the two newly introduced parameters to struct
+> clone_args (set_tid and set_tid_size) would need to be:
+> 
+>   set_tid[0] = 1;
+>   set_tid[1] = 42;
+>   set_tid[2] = 31496;
+>   set_tid_size = 3;
+> 
+> If only the PIDs of the two innermost nested PID namespaces should be
+> defined it would look like this:
+> 
+>   set_tid[0] = 1;
+>   set_tid[1] = 42;
+>   set_tid_size = 2;
+> 
+> The PID of the newly created process would then be the next available
+> free PID in the PID namespace level 0 (host) and 42 in the PID namespace
+> at level 1 and the PID of the process in the innermost PID namespace
+> would be 1.
+> 
+> The set_tid array is used to specify the PID of a process starting
+> from the innermost nested PID namespaces up to set_tid_size PID namespaces.
+> 
+> set_tid_size cannot be larger then the current PID namespace level.
+> 
+> Signed-off-by: Adrian Reber <areber@redhat.com>
 
-Thanks for the review!
+I have no quarrels with the core patch anymore.
+Note, once Oleg has said he's fine with this patch too I will likely
+reword the kernel-doc and the comment in alloc_pid() and the commit
+message a little before applying; but really just minor things that are
+not worth resending for.
 
-Can you please also have a look at other binding patches in this
-series when convenient?
-
-Thanks,
-Chunyan
-
-> changelog is not in the patch I may miss the reason.
->
-> Anyways,
->
-> Acked-by: Rob Herring <robh@kernel.org>
+Thanks!
+Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
