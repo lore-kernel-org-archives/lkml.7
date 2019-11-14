@@ -2,189 +2,85 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311E8C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A094CC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132B520409
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F5620409
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 09:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573724882;
+	bh=aENC5+uqOt8x8k+ADiNUuSTlGYJaOZ2quvrGJvqWymA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eXrWtw9CwfBzMuazEBwresJ+evSsPGAYKLMlcPl/AED5T4QVow+3AQcP0lvPTMJw8
+	 d27pBkMDFKejfaTxYxrvRMv/sdZpwX2CnI38IKN+Z+UnbnZX9anlJnNqKwA8io4yad
+	 2MMEZybkYBnqTqZzD4OnNfiU74FxC7M9bEVc0cSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfKNJrJ (ORCPT
+        id S1726983AbfKNJsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 04:47:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36710 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfKNJrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:47:08 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B254CB14D;
-        Thu, 14 Nov 2019 09:47:04 +0000 (UTC)
-Message-ID: <33ba915ee84839286c69d048b15758a911c02844.camel@suse.de>
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 14 Nov 2019 10:47:00 +0100
-In-Reply-To: <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-         <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-wOQXYnHdB19ozhE01VMB"
-User-Agent: Evolution 3.34.1 
+        Thu, 14 Nov 2019 04:48:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfKNJsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:48:01 -0500
+Received: from localhost (unknown [61.58.47.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A7A620715;
+        Thu, 14 Nov 2019 09:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573724880;
+        bh=aENC5+uqOt8x8k+ADiNUuSTlGYJaOZ2quvrGJvqWymA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U77pto+xf9jrnoKspvyzQb985Tr5D5ytMcnOHuYeHgUkP0MblJgFv2wef5vEDJRHQ
+         GGVrwmuvD2E1SnpHs+N/qxs0wHt9+Oq7SxovW3t/k/ZOFJmWpjTN+miORfCWjndAJX
+         S35KA6XKHK7RYSWfL330CTKrkX7Uj5/wPOlkcI9E=
+Date:   Thu, 14 Nov 2019 17:47:58 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        George Wilson <gcwilson@linux.ibm.com>
+Subject: Re: [PATCH] sysfs: Fixes __BIN_ATTR_WO() macro
+Message-ID: <20191114094758.GB631558@kroah.com>
+References: <1569973038-2710-1-git-send-email-nayna@linux.ibm.com>
+ <47DFxf2Pscz9s7T@ozlabs.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47DFxf2Pscz9s7T@ozlabs.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 14, 2019 at 08:07:49PM +1100, Michael Ellerman wrote:
+> On Tue, 2019-10-01 at 23:37:18 UTC, Nayna Jain wrote:
+> > This patch fixes the size and write parameter for the macro
+> > __BIN_ATTR_WO().
+> > 
+> > Fixes: 7f905761e15a8 ("sysfs: add BIN_ATTR_WO() macro")
+> > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> 
+> Applied to powerpc next, thanks.
+> 
+> https://git.kernel.org/powerpc/c/39a963b457b5c6cbbdc70441c9d496e39d151582
 
---=-wOQXYnHdB19ozhE01VMB
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Why?  This is already in 5.4-rc5, why do you need/want it again?
 
-On Wed, 2019-11-13 at 20:34 +0000, Robin Murphy wrote:
-> On 13/11/2019 4:13 pm, Nicolas Saenz Julienne wrote:
-> > Using a mask to represent bus DMA constraints has a set of limitations.
-> > The biggest one being it can only hold a power of two (minus one). The
-> > DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> > as a limit. This quirk is already used by some architectures although
-> > still rare.
-> >=20
-> > With the introduction of the Raspberry Pi 4 we've found a new contender
-> > for the use of bus DMA limits, as its PCIe bus can only address the
-> > lower 3GB of memory (of a total of 4GB). This is impossible to represen=
-t
-> > with a mask. To make things worse the device-tree code rounds non power
-> > of two bus DMA limits to the next power of two, which is unacceptable i=
-n
-> > this case.
-> >=20
-> > In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit al=
-l
-> > over the tree and treat it as such. Note that dev->bus_dma_limit is
-> > meant to contain the higher accesible DMA address.
->=20
-> Neat, you win a "why didn't I do it that way in the first place?" :)
+thanks,
 
-:)
-
-> Looking at it without all the history of previous attempts, this looks=
-=20
-> entirely reasonable, and definitely a step in the right direction.
->=20
-> [...]
-> > diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> > index 5a7551d060f2..f18827cf96df 100644
-> > --- a/drivers/acpi/arm64/iort.c
-> > +++ b/drivers/acpi/arm64/iort.c
-> > @@ -1097,7 +1097,7 @@ void iort_dma_setup(struct device *dev, u64 *dma_=
-addr,
-> > u64 *dma_size)
-> >   		 * Limit coherent and dma mask based on size
-> >   		 * retrieved from firmware.
-> >   		 */
-> > -		dev->bus_dma_mask =3D mask;
-> > +		dev->bus_dma_limit =3D mask;
->=20
-> Although this preserves the existing behaviour, as in of_dma_configure()=
-=20
-> we can do better here since we have the original address range to hand.=
-=20
-> I think it's worth keeping the ACPI and OF paths in sync for minor=20
-> tweaks like this, rather than letting them diverge unnecessarily.
-
-I figure you mean something like this:
-
-@@ -1085,19 +1085,15 @@ void iort_dma_setup(struct device *dev, u64 *dma_ad=
-dr,
-u64 *dma_size)
-        }
-
-        if (!ret) {
--               msb =3D fls64(dmaaddr + size - 1);
--               /*
--                * Round-up to the power-of-two mask or set
--                * the mask to the whole 64-bit address space
--                * in case the DMA region covers the full
--                * memory window.
--                */
--               mask =3D msb =3D=3D 64 ? U64_MAX : (1ULL << msb) - 1;
-+               /* Round-up to the power-of-two */
-+               end =3D dmaddr + size - 1;
-+               mask =3D DMA_BIT_MASK(ilog2(end) + 1);
-+
-                /*
-                 * Limit coherent and dma mask based on size
-                 * retrieved from firmware.
-                 */
--               dev->bus_dma_limit =3D mask;
-+               dev->bus_dma_limit =3D end;
-                dev->coherent_dma_mask =3D mask;
-                *dev->dma_mask =3D mask;
-        }
-
-> Otherwise, the rest looks OK to me - in principle we could store it as=
-=20
-> an exclusive limit such that we could then streamline the min_not_zero()=
-=20
-> tests to just min(mask, limit - 1), but that's probably too clever for=
-=20
-> its own good.
-
-Yes, that was my first intuition and in a perfect world I'd prefer it like
-that. But as you say, it's probably going to cause more trouble than anythi=
-ng.
-
-Regards,
-Nicolas
-
-
---=-wOQXYnHdB19ozhE01VMB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3NIpQACgkQlfZmHno8
-x/4XNggAtctjofJ4XldVo+K1/P/rLILA/Y+cKWu8qACkyx4o0VedANdaK2iANvY3
-NSFryeYrZSSQS9AGVUcXKwxvBIuLvE2BX6jm7CLSMgir0EIWBOQLWq/RidFZYqm7
-OGFkiOaN1/+XW8Gh8tLu63CtAYXisZ7O7jsxv+qqlXqAmBpChHR3+NimdDsxevgf
-zm6Uk7GEgwPcenlzAFYGaVyhIelfXxB64OJoGJZ3xybsLmBBoa8nlL/vC1QfzNsj
-kGlc4Mc3c6ySI9vpf2Mgn/9pSkOoFvoOsXGEsrbz/qtrpQrC+gpBvYbeLZicVl6G
-Z5EX/OFky1O9iMZTL99Sb2tEonSNlw==
-=17Ah
------END PGP SIGNATURE-----
-
---=-wOQXYnHdB19ozhE01VMB--
-
+greg k-h
