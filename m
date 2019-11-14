@@ -2,168 +2,144 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59629C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A56CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3269A2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A882071F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="LdCERzXg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EZv+Wg45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfKNR4y (ORCPT
+        id S1727041AbfKNR6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:56:54 -0500
-Received: from mail.z3ntu.xyz ([128.199.32.197]:53100 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfKNR4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:56:53 -0500
-Received: from localhost.localdomain (unknown [10.0.11.2])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 327F2C9911;
-        Thu, 14 Nov 2019 17:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1573754210; bh=xKF5IEKM8Xl2wXlayf1TOim4t3nqonKziZ/IAPjsGm0=;
-        h=From:To:Cc:Subject:Date;
-        b=LdCERzXgaDHPeTxRkGC4jw4zaAzmgdzHbziWvmoPyTY9Ya1JKDpdhrqxnuo3ww68K
-         bqNviie877BsUOwILNjwHBkmgAMYEFvPCd8sitnkgWm9w91XgwwJeKQKOzqrkE9e4H
-         NwlU9heD2/bhoDEKaPxIFc6AO04sOVxmo/C6rEsQ=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>, Andy Gross <agross@kernel.org>,
+        Thu, 14 Nov 2019 12:58:42 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43011 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfKNR6k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:58:40 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a18so2946803plm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 09:58:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xtjRZ4N/dj5TnunKPr1ub8m5J6PxcC016TNe/Bh9Z1k=;
+        b=EZv+Wg45gytZ+SSGZ2MxGiIv9faCbFgA5DBq38RREWXPPOYxT+1YkOhGIBThM1zv2s
+         TR/ceK4mmS3CtlaSEFdD51xZIXTwPfo9bq+cgqr+TzMCuaniV2rwiM15zbih8G8djOBO
+         1qkqwFzqGT11ywk/B3nSxFkc47m8FodSOHUBw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xtjRZ4N/dj5TnunKPr1ub8m5J6PxcC016TNe/Bh9Z1k=;
+        b=nwp98FyjFWczNiRDOK0c1FBjf+Jmlw50s6AUuIz6CjxX2SAcyIMYb9+jGh/uTWX/B1
+         bTao5uFCLcBkkazpgZbm6HMqa64yxRYJQSqHQr4qen2/PHAe1me7toHwHMwOwaTNg6V0
+         2XfdDYmRnYz0B6GBGp671SveJzwtnd2yPuxADvQnbKAeE3PMgSujwFiGoVM6+iZr18rD
+         kjvFabNOVQfqvjUmscaa0AlZsd/TE/3wGLs2eoTDvSl2YRskia+LTxT2y03Cde7yVADJ
+         HTIq9oCyoSrFesgnAiC2x3V6STeLHjGthRiGKJNAQi1c2IcGi9KmJVxOYXA73HpxDGXe
+         u2gA==
+X-Gm-Message-State: APjAAAU+QI0ie0G5Q41l3UPZ82kufkbHp6CULfN2HMOFn8y1cdaetAoc
+        Bcw5KV6QYZEIEg5asI93DjXWUQ==
+X-Google-Smtp-Source: APXvYqzLuxA1NXzpc+PtqUC7hvdD8QB6bq/rvafa9MU7QspCSAYdGw0pn8iQHHA0/Bk6SqzTzc8SsQ==
+X-Received: by 2002:a17:902:d917:: with SMTP id c23mr10706341plz.199.1573754318761;
+        Thu, 14 Nov 2019 09:58:38 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 13sm6901904pgu.53.2019.11.14.09.58.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 09:58:37 -0800 (PST)
+Date:   Thu, 14 Nov 2019 09:58:36 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
+        devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ARM: dts: msm8974: Add modem remoteproc node
-Date:   Thu, 14 Nov 2019 18:53:48 +0100
-Message-Id: <20191114175348.288976-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.24.0
+        Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm
+ config
+Message-ID: <20191114175836.GI27773@google.com>
+References: <20191112230944.48716-1-abhishekpandit@chromium.org>
+ <20191112230944.48716-5-abhishekpandit@chromium.org>
+ <0642BE4E-D3C7-48B3-9893-11828EAFA7EF@holtmann.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0642BE4E-D3C7-48B3-9893-11828EAFA7EF@holtmann.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Wed, Nov 13, 2019 at 01:21:06AM +0100, Marcel Holtmann wrote:
+> Hi Abhishek,
+> 
+> > Add documentation for pcm parameters.
+> > 
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > 
+> > ---
+> > 
+> > Changes in v4:
+> > - Fix incorrect function name in hci_bcm
+> > 
+> > Changes in v3:
+> > - Change disallow baudrate setting to return -EBUSY if called before
+> >  ready. bcm_proto is no longer modified and is back to being const.
+> > - Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
+> > - Changed brcm,sco-routing to brcm,bt-sco-routing
+> > 
+> > Changes in v2:
+> > - Use match data to disallow baudrate setting
+> > - Parse pcm parameters by name instead of as a byte string
+> > - Fix prefix for dt-bindings commit
+> > 
+> > .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
+> > 1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > index c749dc297624..42fb2fa8143d 100644
+> > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > @@ -29,6 +29,11 @@ Optional properties:
+> >    - "lpo": external low power 32.768 kHz clock
+> >  - vbat-supply: phandle to regulator supply for VBAT
+> >  - vddio-supply: phandle to regulator supply for VDDIO
+> > + - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
+> > + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
+> > + - brcm,pcm-frame-type: 0-1 (short, long)
+> > + - brcm,pcm-sync-mode: 0-1 (slave, master)
+> > + - brcm,pcm-clock-mode: 0-1 (slave, master)
+> 
+> I think that all of them need to start with brcm,bt- prefix since it is rather Bluetooth specific.
+> 
+> > 
+> > 
+> > Example:
+> > @@ -40,5 +45,11 @@ Example:
+> >        bluetooth {
+> >                compatible = "brcm,bcm43438-bt";
+> >                max-speed = <921600>;
+> > +
+> > +               brcm,bt-sco-routing = [01];
+> > +               brcm,pcm-interface-rate = [02];
+> > +               brcm,pcm-frame-type = [00];
+> > +               brcm,pcm-sync-mode = [01];
+> > +               brcm,pcm-clock-mode = [01];
+> >        };
+> 
+> My personal taste would be to add a comment after each entry that gives the human readable setting.
 
-Add the remoteproc node for the modem on msm8974.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[luca@z3ntu.xyz: cleanups, add label to smd-edge node]
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
-Note: This patch needs "remoteproc: qcom_q6v5_mss: Validate each segment
-during loading" from the mailing list to be functional.
-
- arch/arm/boot/dts/qcom-msm8974.dtsi | 63 ++++++++++++++++++++++++-----
- 1 file changed, 54 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 6f24dc9a7924..b357cb51c0fb 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -21,12 +21,12 @@ reserved-memory {
- 		#size-cells = <1>;
- 		ranges;
- 
--		mpss@8000000 {
-+		mpss_region: mpss@8000000 {
- 			reg = <0x08000000 0x5100000>;
- 			no-map;
- 		};
- 
--		mba@d100000 {
-+		mba_region: mba@d100000 {
- 			reg = <0x0d100000 0x100000>;
- 			no-map;
- 		};
-@@ -62,8 +62,11 @@ rfsa@fd60000 {
- 		};
- 
- 		rmtfs@fd80000 {
-+			compatible = "qcom,rmtfs-mem";
- 			reg = <0x0fd80000 0x180000>;
- 			no-map;
-+
-+			qcom,client-id = <1>;
- 		};
- 	};
- 
-@@ -807,6 +810,55 @@ rng@f9bff000 {
- 			clock-names = "core";
- 		};
- 
-+		remoteproc@fc880000 {
-+			compatible = "qcom,msm8974-mss-pil";
-+			reg = <0xfc880000 0x100>, <0xfc820000 0x020>;
-+			reg-names = "qdsp6", "rmb";
-+
-+			interrupts-extended = <&intc GIC_SPI 24 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready", "handover", "stop-ack";
-+
-+			clocks = <&gcc GCC_MSS_Q6_BIMC_AXI_CLK>,
-+				 <&gcc GCC_MSS_CFG_AHB_CLK>,
-+				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
-+				 <&xo_board>;
-+			clock-names = "iface", "bus", "mem", "xo";
-+
-+			resets = <&gcc GCC_MSS_RESTART>;
-+			reset-names = "mss_restart";
-+
-+			cx-supply = <&pm8841_s2>;
-+			mss-supply = <&pm8841_s3>;
-+			mx-supply = <&pm8841_s1>;
-+			pll-supply = <&pm8941_l12>;
-+
-+			qcom,halt-regs = <&tcsr_mutex_block 0x1180 0x1200 0x1280>;
-+
-+			qcom,smem-states = <&modem_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			mba {
-+				memory-region = <&mba_region>;
-+			};
-+
-+			mpss {
-+				memory-region = <&mpss_region>;
-+			};
-+
-+			smd-edge {
-+				interrupts = <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>;
-+
-+				qcom,ipc = <&apcs 8 12>;
-+				qcom,smd-edge = <0>;
-+
-+				label = "modem";
-+			};
-+		};
-+
- 		pronto: remoteproc@fb21b000 {
- 			compatible = "qcom,pronto-v2-pil", "qcom,pronto";
- 			reg = <0xfb204000 0x2000>, <0xfb202000 0x1000>, <0xfb21b000 0x3000>;
-@@ -1524,13 +1576,6 @@ adsp {
- 			qcom,smd-edge = <1>;
- 		};
- 
--		modem {
--			interrupts = <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>;
--
--			qcom,ipc = <&apcs 8 12>;
--			qcom,smd-edge = <0>;
--		};
--
- 		rpm {
- 			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
- 			qcom,ipc = <&apcs 8 0>;
--- 
-2.24.0
-
+I'd suggest to define constants in include/dt-bindings/bluetooth/brcm.h
+and use them instead of literals, with this we wouldn't rely on (optional)
+comments to make the configuration human readable.
