@@ -2,120 +2,141 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEFEC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DC8C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F22206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573707363;
-	bh=LE6qCswHlWOHnxEJs8IN+lZrqjVOccPKEwov1WrEzbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j7ueoCHbAdyvYt4SPLos2/XZ2FD1HJhTvmUyp9Hhrz7zemDgY6Z76n3pqRsY8JrJu
-	 AVY/d4XUSBMp3ZSUYQsp/QSt0jxzjSXHgf82hzzyjKLaFq+uv8Nc7zB2B8G/C5It9H
-	 A6qJw0rbpwN7ipsYJCUcsWSKko0bNbfGa3jA1/rE=
+	by mail.kernel.org (Postfix) with ESMTP id 68FB1206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 04:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKNE4C (ORCPT
+        id S1727104AbfKNE6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 23:56:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726505AbfKNE4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 23:56:02 -0500
-Received: from localhost (unknown [223.226.110.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 Nov 2019 23:58:19 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:21844 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfKNE6S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Nov 2019 23:58:18 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8851C206EF;
-        Thu, 14 Nov 2019 04:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573707361;
-        bh=LE6qCswHlWOHnxEJs8IN+lZrqjVOccPKEwov1WrEzbA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bWfimNONXDwf2ajvcX+OY6WZbWg6+7vV1V+GrVwZ5R+0r0DvWhuZDbyWnKXFBqOeH
-         c/8chMm4fpmkZk1F8I3J+5I7wbLM0QI/RJqLHXhzjcWB8Sr/X4G1RBUGo6xBPkKXgG
-         4iSO+pWDaYV1gxK2FP3y6yoLTMZnffn/1XVyYtRM=
-Date:   Thu, 14 Nov 2019 10:25:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
-Message-ID: <20191114045555.GJ952516@vkoul-mobl>
-References: <20191022214616.7943-1-logang@deltatee.com>
- <20191022214616.7943-2-logang@deltatee.com>
- <20191109171853.GF952516@vkoul-mobl>
- <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
- <20191112055540.GY952516@vkoul-mobl>
- <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47D8Pf2Sf9zKmdL;
+        Thu, 14 Nov 2019 05:58:14 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id QpQxpch70Axr; Thu, 14 Nov 2019 05:58:06 +0100 (CET)
+Date:   Thu, 14 Nov 2019 15:57:44 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Shuah Khan <shuah@kernel.org>, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-m68k@lists.linux-m68k.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        David Drysdale <drysdale@google.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        libc-alpha@sourceware.org, linux-parisc@vger.kernel.org,
+        linux-api@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-alpha@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org
+Subject: Re: [PATCH v15 4/9] namei: LOOKUP_BENEATH: O_BENEATH-like scoped
+ resolution
+Message-ID: <20191114045744.d3e7mp3zrupfe2wr@yavin.dot.cyphar.com>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-5-cyphar@cyphar.com>
+ <20191113015534.GA26530@ZenIV.linux.org.uk>
+ <20191113074757.5b4u5vlyx2u6pbn6@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6gz2i7fpwlz4mefu"
 Content-Disposition: inline
-In-Reply-To: <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191113074757.5b4u5vlyx2u6pbn6@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-11-19, 09:45, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-11-11 10:56 p.m., Vinod Koul wrote:
-> > On 11-11-19, 09:50, Logan Gunthorpe wrote:
-> >>
-> >>
-> >> On 2019-11-09 10:18 a.m., Vinod Koul wrote:
-> >>> Hi Logan,
-> >>>
-> >>> Sorry for delay in reply!
-> >>>
-> >>> On 22-10-19, 15:46, Logan Gunthorpe wrote:
-> >>>> dma_chan_to_owner() dereferences the driver from the struct device to
-> >>>> obtain the owner and call module_[get|put](). However, if the backing
-> >>>> device is unbound before the dma_device is unregistered, the driver
-> >>>> will be cleared and this will cause a NULL pointer dereference.
-> >>>
-> >>> Have you been able to repro this? If so how..?
-> >>>
-> >>> The expectation is that the driver shall unregister before removed.
-> >>
-> >> Yes, with my new driver, if I do a PCI unbind (which unregisters) while
-> >> the DMA engine is in use, it panics. The point is the underlying driver
-> >> can go away before the channel is removed.
-> > 
-> > and in your driver remove you do not unregister? When unbind is invoked
-> > the driver remove is invoked by core and you should unregister whatever
-> > you have registered in your probe!
-> >
-> > Said that, if someone is using the dmaengine at that point of time, it
-> > is not a nice thing to do and can cause issues, but on idle it should
-> > just work!
-> 
-> But that's the problem. We can't expect our users to be "nice" and not
-> unbind when the driver is in use. Killing the kernel if the user
-> unexpectedly unbinds is not acceptable.
 
-And that is why we review the code and ensure this does not happen and
-behaviour is as expected
+--6gz2i7fpwlz4mefu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >> I suspect this is less of an issue for most devices as they wouldn't
-> >> normally be unbound while in use (for example there's really no reason
-> >> to ever unbind IOAT seeing it's built into the system). Though, the fact
-> >> is, the user could unbind these devices at anytime and we don't want to
-> >> panic if they do.
-> > 
-> > There are many drivers which do modules so yes I am expecting unbind and
-> > even a bind following that to work
-> 
-> Except they will panic if they unbind while in use, so that's a
-> questionable definition of "work".
+On 2019-11-13, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > Minor nit here - I'd split "move the conditional call of set_root()
+> > into nd_jump_root()" into a separate patch before that one.  Makes
+> > for fewer distractions in this one.  I'd probably fold "and be
+> > ready for errors other than -ECHILD" into the same preliminary
+> > patch.
+>=20
+> Will do.
+>=20
+> > > +			/* Not currently safe for scoped-lookups. */
+> > > +			if (unlikely(nd->flags & LOOKUP_IS_SCOPED))
+> > > +				return ERR_PTR(-EXDEV);
+> >=20
+> > Also a candidate for doing in nd_jump_link()...
+> >=20
+> > > @@ -1373,8 +1403,11 @@ static int follow_dotdot_rcu(struct nameidata =
+*nd)
+> > >  	struct inode *inode =3D nd->inode;
+> > > =20
+> > >  	while (1) {
+> > > -		if (path_equal(&nd->path, &nd->root))
+> > > +		if (path_equal(&nd->path, &nd->root)) {
+> > > +			if (unlikely(nd->flags & LOOKUP_BENEATH))
+> > > +				return -EXDEV;
+> >=20
+> > Umm...  Are you sure it's not -ECHILD?
+>=20
+> It wouldn't hurt to be -ECHILD -- though it's not clear to me how likely
+> a success would be in REF-walk if the parent components didn't already
+> trigger an unlazy_walk() in RCU-walk.
+>=20
+> I guess that also means LOOKUP_NO_XDEV should trigger -ECHILD in
+> follow_dotdot_rcu()?
 
-dmaengine core has module reference so while they are being used they
-won't be removed (unless I complete misread the driver core behaviour)
+Scratch the last question -- AFAICS we don't need to do that for
+LOOKUP_NO_XDEV because we check against mount_lock so it's very unlikely
+that -ECHILD will have any benefit.
 
--- 
-~Vinod
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--6gz2i7fpwlz4mefu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXczexQAKCRCdlLljIbnQ
+Em3mAQDOIg6+v9zFmJZ9+uYnLQ8tGd3ay8OeAsu6/xVlfCimMwD/cMP8o+o1KTbo
++rDSfA6D7b6Zhy7K3Vlf0k0OTebeSwI=
+=kHIA
+-----END PGP SIGNATURE-----
+
+--6gz2i7fpwlz4mefu--
