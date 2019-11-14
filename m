@@ -2,139 +2,113 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD397C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68901C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 823A2206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F7E206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 22:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573771538;
-	bh=xN7BqHG8v5qTljz1rtNacBFEUWeXv4gNUxLNQix72fc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=urgbZ5UtegSw3rhONN6+OKJW1wMo2cM5MTT0ccSiFhTf6UtGIw0Oqyf7uQ3FXhHOG
-	 /vq4kjMxhTmmqmS78uv2ymu0stVF/whRqohUKUJqhILAO9tczntkYmqEY9e1XoCbPX
-	 Fg9yKDAaG9lg7L/hA75WxZjit3lsfXe1S6Y6VBvg=
+	s=default; t=1573771539;
+	bh=xWFHui9sK8qDks61dZHYJDLOYXUZjqDf3zzjpdqApAw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M98t3SRcE6NK6lZdPgQoQHCH2Bia92IG0aCNuI3vlzYFRWXgR6x5plUyKEcFSPZlQ
+	 JEIdNOPngrHfAxm+ZTi8ayufTorVDguBvBaLuboWzSPQQZtli+3J9kZ2RZsl3/ThNj
+	 TKV5v4r7t+WVvOe4kgVngBuoHwT51u5MGjrUcyzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfKNWph (ORCPT
+        id S1727146AbfKNWph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 14 Nov 2019 17:45:37 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43012 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfKNWph (ORCPT
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39064 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKNWph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Nov 2019 17:45:37 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l20so6850535oie.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 14:45:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DhMAaOuLWO6MHWm0rzegVnx1g/8bytY9Jgc505hZftA=;
-        b=c6MNRRz3abkWdy4hRt7V7q18dBgCZekG8uF79K45svJMTmE7w1C/gaW0Uqv+h7IJXk
-         TkH7eDzX76ol1PLqLkmjnsk+gW7r+Ih/5Hj9DeYVvrSck0MzhA1upaBXqlhCAK/wYisf
-         C8SMNGJLp7BQjSZqXvSUibhu/9HBuhWHvqc0jmmILXIG1R7O5UfSStruefcSslRRg6P4
-         XIjIZkfnmaU53eZMGeyeslivE8U1BOw5Kh4timGwS9Cr+GbGoK+ZGbjI7bCau8FvLyhk
-         6uEe2qZdGBFD1kcA9pJljUc5VAZnLdRBTSUTJ02z/bTg/YoNNpQPNCGdunAPtZ5sQEU7
-         9ZhA==
-X-Gm-Message-State: APjAAAVaTVYZnilI1HWpeC7kebZMW33BXfNp0ErG52+NEpDO/JSOyRuf
-        yY+gZLAWesA2cxrUK28QncL5Mz6Ml1d9d8OvtWI=
-X-Google-Smtp-Source: APXvYqxge4NVhPaIpqZwlGWo/G7Jr3nHf6l+Z+kaIKF14Hia8GsmFTC18onwYR8YvPvVCbEOgYIuy6Q3j+0MwI5e2uo=
-X-Received: by 2002:aca:1101:: with SMTP id 1mr5685729oir.103.1573771535925;
- Thu, 14 Nov 2019 14:45:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VBWSxyqFNu57a211AegG4LgleE/has5MXudCMHIozs4=; b=up5DdfD/1x/hAHbiXVOVPlRfP
+        NPuQjpXURVaBXynlhBNx3/LW7UvG/N9gVE5hcrGPKpV1CNS7+Latc0RbONtqvZmyy8m9Cm2o9BSHg
+        SE6ywZHp4ILU7svhX+iDbhSLFdcjJ74xMvLJ+GrLSPS5f8iPzqC5wyxrJSgoL+DO3TNJI=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iVNrD-0007jQ-8S; Thu, 14 Nov 2019 22:44:55 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 566CF274328B; Thu, 14 Nov 2019 22:44:54 +0000 (GMT)
+Date:   Thu, 14 Nov 2019 22:44:54 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jacob Rasmussen <jacobraz@google.com>
+Cc:     Ross Zwisler <zwisler@google.com>,
+        Jacob Rasmussen <jacobraz@chromium.org>,
+        linux-kernel@vger.kernel.org, Bard Liao <bardliao@realtek.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ASoC: rt5645: Fixed typo for buddy jack support.
+Message-ID: <20191114224454.GD4664@sirena.co.uk>
+References: <20191114190844.42484-1-jacobraz@google.com>
+ <20191114214301.GA159315@google.com>
+ <CAPZ+yN+EP=ffzWDz4hWZ3W=usDoYt7VFKaoMAgzvjo7WL_jW=g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191114222348.226355-1-saravanak@google.com>
-In-Reply-To: <20191114222348.226355-1-saravanak@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Nov 2019 23:45:24 +0100
-Message-ID: <CAJZ5v0gFUmNd1JNNV+KdQLZ6Zw0VTjtEumbBpy20=0Py0q=OKQ@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Allow device link operations inside sync_state()
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="n/aVsWSeQ4JHkrmm"
+Content-Disposition: inline
+In-Reply-To: <CAPZ+yN+EP=ffzWDz4hWZ3W=usDoYt7VFKaoMAgzvjo7WL_jW=g@mail.gmail.com>
+X-Cookie: Santa Claus is watching!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:23 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Some sync_state() implementations might need to call APIs that in turn
-> make calls to device link APIs. So, do the sync_state() callbacks
-> without holding the device link lock.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/base/core.c | 80 ++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 72 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index e6d3e6d485da..9a88bcfd5d33 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -695,7 +695,26 @@ int device_links_check_suppliers(struct device *dev)
->         return ret;
->  }
->
-> -static void __device_links_supplier_sync_state(struct device *dev)
-> +/**
-> + * __device_links_queue_sync_state - Queue a device for sync_state() callback
-> + * @dev: Device to call sync_state() on
-> + * @list: List head to queue the @dev on
-> + *
-> + * Queues a device for a sync_state() callback when the device links write lock
-> + * isn't held. This allows the sync_state() execution flow to use device links
-> + * APIs.  The caller must ensure this function is called with
-> + * device_links_write_lock() held.
-> + *
-> + * This function does a get_device() to make sure the device is not freed while
-> + * on this list.
-> + *
-> + * So the caller must also ensure that device_links_flush_sync_list() is called
-> + * as soon as the caller releases device_links_write_lock().  This is necessary
-> + * to make sure the sync_state() is called in a timely fashion and the
-> + * put_device() is called on this device.
-> + */
-> +static void __device_links_queue_sync_state(struct device *dev,
-> +                                           struct list_head *list)
->  {
->         struct device_link *link;
->
-> @@ -709,12 +728,46 @@ static void __device_links_supplier_sync_state(struct device *dev)
->                         return;
->         }
->
-> -       if (dev->bus->sync_state)
-> -               dev->bus->sync_state(dev);
-> -       else if (dev->driver && dev->driver->sync_state)
-> -               dev->driver->sync_state(dev);
-> -
-> +       /*
-> +        * Set the flag here to avoid adding the same device to a list more
-> +        * than once. This can happen if new consumers get added to the device
-> +        * and probed before the list is flushed.
-> +        */
->         dev->state_synced = true;
-> +
-> +       if (list_empty(&dev->links.defer_sync)) {
-> +               get_device(dev);
-> +               list_add_tail(&dev->links.defer_sync, list);
-> +       } else {
-> +               WARN_ON(1);
-> +       }
 
-Now you can do:
+--n/aVsWSeQ4JHkrmm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-        if (WARN_ON(!list_empty(&dev->links.defer_sync)))
-                return;
+On Thu, Nov 14, 2019 at 03:43:32PM -0700, Jacob Rasmussen wrote:
+> On Thu, Nov 14, 2019 at 2:43 PM Ross Zwisler <zwisler@google.com> wrote:
 
-        get_device(dev);
-        list_add_tail(&dev->links.defer_sync, list);
+> > On Thu, Nov 14, 2019 at 12:08:44PM -0700, Jacob Rasmussen wrote:
+> > > Had a typo in e7cfd867fd98 that resulted in buddy jack support not being
+> > > fixed.
 
-The rest of the patch LGTM.
+> > > Fixes: e7cfd867fd98 ("ASoC: rt5645: Fixed buddy jack support.")
+> > > Cc: <zwisler@google.com>
+> > > Cc: <jacobraz@google.com>
+> > > CC: stable@vger.kernel.org
+
+> > Need to add your signed-off-by.  With that added you can add:
+
+> > Reviewed-by: Ross Zwisler <zwisler@google.com>
+> Signed-off-by: Jacob Rasmussen <jacobraz@google.com>
+
+I'd be more comfortable with this if you could repost with the signoff
+and the patch in one mail.
+
+--n/aVsWSeQ4JHkrmm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3N2OUACgkQJNaLcl1U
+h9AMRgf7BSP5AIvGA9TnvKf2VoXlRlNS8DrafSXItt9h4X1RVJgmcCFoF+W9AZrL
+2UM5V9NfuB0A+PsVYWTdUWbIvDYrBRb4NecaaYJvEa7XVL+dtvOLrqGZcANn/Trr
+lnqwHZhMrHyIRPWXjCdWuM6XymaC8n31ptGJH+OJ6/QJBvwiM/HvMBVPNjFczuU3
+1NOVR4shUdS83vqRTWzqNOwQaOfRbSxlG8OH1de0inLiqDXM+4BN6T2BabBfTelI
+f/JnxMOvQBaIAnjN2hsY/f4Q3acDof1btff0hSLSH25wOKeUtrWq3MRt6H94CkbJ
+1T0d6DDwjKphYDn6J9ijVUWO5pOi+A==
+=SPvm
+-----END PGP SIGNATURE-----
+
+--n/aVsWSeQ4JHkrmm--
