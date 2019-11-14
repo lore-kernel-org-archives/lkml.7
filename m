@@ -2,117 +2,144 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C09C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DEAC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527AE206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573759283;
-	bh=gNbeR9BM7MxYZGNN3sBCjdTm3nruEH2o+fD3s6cTwsM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vzp9Lvg5PlTDYeQZDqL4MAacXLnTmhUBW+Wjw0efpxhPRdw3ElELAl4Ra6MXskFNZ
-	 cSMQtJFiIxfLrI87Y6fCr5iI5yKTS/U8WXDbhc31tp7l/LRGFtz76DlKdr/t6laQd3
-	 rVITTjhgBrbpPBdYeChH0vI2HrU657fBdybLdgyc=
+	by mail.kernel.org (Postfix) with ESMTP id 34A9220724
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JX54imOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKNTVW (ORCPT
+        id S1727083AbfKNTVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:21:22 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41314 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfKNTVV (ORCPT
+        Thu, 14 Nov 2019 14:21:55 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43039 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfKNTVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:21:21 -0500
-Received: by mail-qt1-f195.google.com with SMTP id o3so8030927qtj.8;
-        Thu, 14 Nov 2019 11:21:20 -0800 (PST)
+        Thu, 14 Nov 2019 14:21:54 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z23so5985627qkj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:21:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V8JOYrhFKJZsjLpy3zbICgm56f832zoaBb4LCM6R/wE=;
-        b=SSPWq/TOhRhkWt64BoCNntBWMb/TucJ3AIdHYBXY2nyWahkTra09hFT8GSEsnolfnM
-         xD4C/j9iKWF72fTVou2+nt+/RsWRC+pDpOOaOTEmLX/TiN06RAsPWbN1SGpX2IGMDH+A
-         5WlVvsj2+2L0ufhWln/MYkO13Ie8z2hOaGr6N6H1Sw3QVcIaSwEbn/pxeaKEc8NZMTIq
-         5xmtxuj3Rk2WBNAhicO9mPb+pg7s8lub70oiaCN0Kwe6rdb92t+SjQvGsMiyB2THTDrc
-         uSN/dNw4lQuOeskHze8uTQtjD5stAKCzHc0EPVaiszH2k3oZ1IH0C37Lguc88/qZe+wV
-         R6vw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2+dA9T6MH4sNbOzz4jWY/HUz9UYvTwVEPvgzw5IY25o=;
+        b=JX54imOvMkg6TCZIIl7TjVODjvdE3eJWOBIn/TFXI/K3XBbyoUgnyMHp3+jWXwZcpA
+         qC9dQDhc9YTs0ZD5QD1D5sVEP0wVu3UriNJS/O8GlMjey/Yo50i1c5JxHNugoR7fOFse
+         v1ZuqMc/cGqti3BKA5y6oQGs2EJ00KMkWFCU0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V8JOYrhFKJZsjLpy3zbICgm56f832zoaBb4LCM6R/wE=;
-        b=Rf+4J2z7DIg7bnJI7n2umYXkPS/m3ckbAAqnfXPqEfGGgZtf/c+dGOFEDPBYU2Z1nh
-         mYNpMFZM79J8qq2sh6YrwIlKI7UgnotTGCT9pyUMBfXB2Fs3aFAPlXYIRnMUFQWdmIg7
-         ijC1gh7hu6wSRELHUMU0VsiYsPOdMxCl7ebJfE8XblqDrjf+QWppYrx5/tHxxKyhogvI
-         xQVOXQyFwHJ0FtZIAAobBIkMjglzCleDh2yT6g9fhPqdJKg0McVWtJ0IUwjO0CyjlHga
-         gmkeSm+UioIAiwtwMWv/yW59v2lnJua175GddHLBNqqDUT57fCq6IN+H5fQou7jaKh89
-         tfug==
-X-Gm-Message-State: APjAAAVJMJhUOhErReQLjuYdGHkVc1YkbMEHlKT2xzxWEZxlJhXaN84q
-        B0siGNxRUNemq3rF0t+j85ZxxumK
-X-Google-Smtp-Source: APXvYqxVA9c1jZyC24DjlRcVync5U+FaGqLYy/aPEeYMXGzICKoGfSyzC9htmCREvDbO5rhSKYBOgQ==
-X-Received: by 2002:ac8:698d:: with SMTP id o13mr9863131qtq.68.1573759280316;
-        Thu, 14 Nov 2019 11:21:20 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:69f2])
-        by smtp.gmail.com with ESMTPSA id 130sm3062273qkd.33.2019.11.14.11.21.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 11:21:19 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:21:18 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        axboe@kernel.dk, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] writeback: fix -Wformat compilation warnings
-Message-ID: <20191114192118.GK4163745@devbig004.ftw2.facebook.com>
-References: <1573751861-10303-1-git-send-email-cai@lca.pw>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2+dA9T6MH4sNbOzz4jWY/HUz9UYvTwVEPvgzw5IY25o=;
+        b=iE2IHJm606ve+rWZWvVeAu3YsB+h5NXXjXjYR+Z3O5Ti10cRG3XAAgvOVzUg1hDCEU
+         XzCRA2QY1lmSfSqUI8VZ9NygNfShsLUlGhse7lAwpbRfiet4c73BSEC3mWMK2++5pJBX
+         i79ckBiOdolWmZS7Pz7KMJimgmE1rc1nsQ/1pt57Fs6fZR8rc7j3HOzMTOInsIFAs3XS
+         mjN3RRd8/IferYHVgNPIczWChPs8DyakjLDBi36vm4NqL5OKkT5Ie8wBHsVZUPIXleYq
+         pghOHrJL44s/FVdHZZJ/VG4hZ8xoZ7NW10VPSL0K9YknnpLk5RABx0fhTq/fd9UbaExq
+         Pbzg==
+X-Gm-Message-State: APjAAAUZgEJUC1TP8NwvyjhyV6MfKXJqsZ8gYzsi2IiRB1FQqlyo4AJs
+        tcr0J05dQpT0h/j7RHsq64LwmKe6d1/3BSa6DuuSgg==
+X-Google-Smtp-Source: APXvYqzt7LFP6F0xw3d3PYvSjUoOlxGbFwywBADu+rd0E/KeDMf/vRwQbeoderg31GWDs+7zrfVUalr6EybZ5j7ItHM=
+X-Received: by 2002:a05:620a:1032:: with SMTP id a18mr7536658qkk.305.1573759313671;
+ Thu, 14 Nov 2019 11:21:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573751861-10303-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20191112230944.48716-1-abhishekpandit@chromium.org>
+ <20191112230944.48716-5-abhishekpandit@chromium.org> <0642BE4E-D3C7-48B3-9893-11828EAFA7EF@holtmann.org>
+ <20191114175836.GI27773@google.com>
+In-Reply-To: <20191114175836.GI27773@google.com>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Thu, 14 Nov 2019 11:21:42 -0800
+Message-ID: <CANFp7mXfhs3mw_QuVQHcQwkz8+4DpJ8SMbTiwS=7fo5kXGrBQQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 12:17:41PM -0500, Qian Cai wrote:
-> The commit f05499a06fb4 ("writeback: use ino_t for inodes in
-> tracepoints") introduced a lot of GCC compilation warnings on s390,
-> 
-> In file included from ./include/trace/define_trace.h:102,
->                  from ./include/trace/events/writeback.h:904,
->                  from fs/fs-writeback.c:82:
-> ./include/trace/events/writeback.h: In function
-> 'trace_raw_output_writeback_page_template':
-> ./include/trace/events/writeback.h:76:12: warning: format '%lu' expects
-> argument of type 'long unsigned int', but argument 4 has type 'ino_t'
-> {aka 'unsigned int'} [-Wformat=]
->   TP_printk("bdi %s: ino=%lu index=%lu",
->             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ./include/trace/trace_events.h:360:22: note: in definition of macro
-> 'DECLARE_EVENT_CLASS'
->   trace_seq_printf(s, print);     \
->                       ^~~~~
-> ./include/trace/events/writeback.h:76:2: note: in expansion of macro
-> 'TP_printk'
->   TP_printk("bdi %s: ino=%lu index=%lu",
->   ^~~~~~~~~
-> 
-> Fix them by adding necessary casts where ino_t could be either "unsigned
-> int" or "unsigned long".
-> 
-> Fixes: f05499a06fb4 ("writeback: use ino_t for inodes in tracepoints")
-> Signed-off-by: Qian Cai <cai@lca.pw>
+On Thu, Nov 14, 2019 at 9:58 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> On Wed, Nov 13, 2019 at 01:21:06AM +0100, Marcel Holtmann wrote:
+> > Hi Abhishek,
+> >
+> > > Add documentation for pcm parameters.
+> > >
+> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > >
+> > > ---
+> > >
+> > > Changes in v4:
+> > > - Fix incorrect function name in hci_bcm
+> > >
+> > > Changes in v3:
+> > > - Change disallow baudrate setting to return -EBUSY if called before
+> > >  ready. bcm_proto is no longer modified and is back to being const.
+> > > - Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
+> > > - Changed brcm,sco-routing to brcm,bt-sco-routing
+> > >
+> > > Changes in v2:
+> > > - Use match data to disallow baudrate setting
+> > > - Parse pcm parameters by name instead of as a byte string
+> > > - Fix prefix for dt-bindings commit
+> > >
+> > > .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
+> > > 1 file changed, 11 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > > index c749dc297624..42fb2fa8143d 100644
+> > > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > > @@ -29,6 +29,11 @@ Optional properties:
+> > >    - "lpo": external low power 32.768 kHz clock
+> > >  - vbat-supply: phandle to regulator supply for VBAT
+> > >  - vddio-supply: phandle to regulator supply for VDDIO
+> > > + - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
+> > > + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
+> > > + - brcm,pcm-frame-type: 0-1 (short, long)
+> > > + - brcm,pcm-sync-mode: 0-1 (slave, master)
+> > > + - brcm,pcm-clock-mode: 0-1 (slave, master)
+> >
+> > I think that all of them need to start with brcm,bt- prefix since it is rather Bluetooth specific.
+> >
+> > >
+> > >
+> > > Example:
+> > > @@ -40,5 +45,11 @@ Example:
+> > >        bluetooth {
+> > >                compatible = "brcm,bcm43438-bt";
+> > >                max-speed = <921600>;
+> > > +
+> > > +               brcm,bt-sco-routing = [01];
+> > > +               brcm,pcm-interface-rate = [02];
+> > > +               brcm,pcm-frame-type = [00];
+> > > +               brcm,pcm-sync-mode = [01];
+> > > +               brcm,pcm-clock-mode = [01];
+> > >        };
+> >
+> > My personal taste would be to add a comment after each entry that gives the human readable setting.
+>
+> I'd suggest to define constants in include/dt-bindings/bluetooth/brcm.h
+> and use them instead of literals, with this we wouldn't rely on (optional)
+> comments to make the configuration human readable.
 
-Acked-by: Tejun Heo <tj@kernel.org>
-
-Thanks.
-
--- 
-tejun
+:+1: Sounds like a good idea; expect it in next patch revision
