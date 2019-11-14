@@ -2,144 +2,131 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DEAC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6ADC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A9220724
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C130206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JX54imOv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i06/EpMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKNTVz (ORCPT
+        id S1726828AbfKNTXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:21:55 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43039 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfKNTVy (ORCPT
+        Thu, 14 Nov 2019 14:23:37 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35192 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNTXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:21:54 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z23so5985627qkj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:21:54 -0800 (PST)
+        Thu, 14 Nov 2019 14:23:37 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q13so4959379pff.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:23:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2+dA9T6MH4sNbOzz4jWY/HUz9UYvTwVEPvgzw5IY25o=;
-        b=JX54imOvMkg6TCZIIl7TjVODjvdE3eJWOBIn/TFXI/K3XBbyoUgnyMHp3+jWXwZcpA
-         qC9dQDhc9YTs0ZD5QD1D5sVEP0wVu3UriNJS/O8GlMjey/Yo50i1c5JxHNugoR7fOFse
-         v1ZuqMc/cGqti3BKA5y6oQGs2EJ00KMkWFCU0=
+        h=message-id:from:to:cc:subject:date:mime-version
+         :content-transfer-encoding;
+        bh=wzCOnp2g5c74yPWIyp7wZK4sxxMOjO7vz0Rib0NxX9M=;
+        b=i06/EpMQzrDQkqBXZ46Y8NHt7bKhuduDvVXqDhVm3qe16yR54Bu0p2gw+kD7PkjZhv
+         1zxfHNP+6Jshhd2y50gYo6CVJsSbKrSW6nvV++h0ws+ynxg/ClYFlnNYHtsdbvp9/+Dg
+         mRtWLqRBLHcOKDWACPkEa2XvriQkNROGlk1ZY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2+dA9T6MH4sNbOzz4jWY/HUz9UYvTwVEPvgzw5IY25o=;
-        b=iE2IHJm606ve+rWZWvVeAu3YsB+h5NXXjXjYR+Z3O5Ti10cRG3XAAgvOVzUg1hDCEU
-         XzCRA2QY1lmSfSqUI8VZ9NygNfShsLUlGhse7lAwpbRfiet4c73BSEC3mWMK2++5pJBX
-         i79ckBiOdolWmZS7Pz7KMJimgmE1rc1nsQ/1pt57Fs6fZR8rc7j3HOzMTOInsIFAs3XS
-         mjN3RRd8/IferYHVgNPIczWChPs8DyakjLDBi36vm4NqL5OKkT5Ie8wBHsVZUPIXleYq
-         pghOHrJL44s/FVdHZZJ/VG4hZ8xoZ7NW10VPSL0K9YknnpLk5RABx0fhTq/fd9UbaExq
-         Pbzg==
-X-Gm-Message-State: APjAAAUZgEJUC1TP8NwvyjhyV6MfKXJqsZ8gYzsi2IiRB1FQqlyo4AJs
-        tcr0J05dQpT0h/j7RHsq64LwmKe6d1/3BSa6DuuSgg==
-X-Google-Smtp-Source: APXvYqzt7LFP6F0xw3d3PYvSjUoOlxGbFwywBADu+rd0E/KeDMf/vRwQbeoderg31GWDs+7zrfVUalr6EybZ5j7ItHM=
-X-Received: by 2002:a05:620a:1032:: with SMTP id a18mr7536658qkk.305.1573759313671;
- Thu, 14 Nov 2019 11:21:53 -0800 (PST)
+        h=x-gm-message-state:message-id:from:to:cc:subject:date:mime-version
+         :content-transfer-encoding;
+        bh=wzCOnp2g5c74yPWIyp7wZK4sxxMOjO7vz0Rib0NxX9M=;
+        b=HDwrMZOb7wWpyUH4fQtGPkHQz8A7mmUeH2t6i28+8Cbg2J0v1rHSB8LvTmTuULngbw
+         Ygda6DNbdHFmatjLbznLJtWwfKLx8XkZ+Wfw0IStVYhSCFndgxnOKZePNTb3302lcwpA
+         gkCynxD61fSgOrM6h8Fkap8ZO+1Rpm6TZ9QuKuAEyay3MjJJklcKwfqmz/m7tviS2BFy
+         K9lW21X3BtN6qd1anJNXbV7cRXSd+JlBSZpmT24CinjakQ0J0MJGWwx5561QV2Ah5dre
+         GEwI7EK1Z3nUzrPSZ9lxCOjEBcinnVKdnd5eW5pPQ3W7AOyAMzHBRQKiUT4qVTtD6t5/
+         1ymQ==
+X-Gm-Message-State: APjAAAWl/hYs9G61qHt9NjwugTp8saH/Go0J6xmNGA/Z0U2EYNL8tZNA
+        SpBbG7BrXD8kTTyt6K2mBuAxFw==
+X-Google-Smtp-Source: APXvYqy+oUpPXoZIRWArlRx4ZdYnYUcCIxtIMddvBBNC4wEAI61WbcQkAtAGD8T9YHqutiyJpKXFJQ==
+X-Received: by 2002:a62:2cd7:: with SMTP id s206mr12742593pfs.106.1573759416886;
+        Thu, 14 Nov 2019 11:23:36 -0800 (PST)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id z16sm7463478pge.55.2019.11.14.11.23.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 14 Nov 2019 11:23:36 -0800 (PST)
+Message-ID: <5dcda9b8.1c69fb81.74ed1.4e10@mx.google.com>
+X-Google-Original-Message-ID: <20191114112213.STABLE 4.14.1.I595ffb495f7a7c9217814c117ce671db8c73ab39@changeid>
+From:   Evan Green <evgreen@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Duggan <aduggan@synaptics.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Pan Bian <bianpan2016@163.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH STABLE 4.14] Revert "Input: synaptics-rmi4 - avoid processing unknown IRQs"
+Date:   Thu, 14 Nov 2019 11:22:59 -0800
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20191112230944.48716-1-abhishekpandit@chromium.org>
- <20191112230944.48716-5-abhishekpandit@chromium.org> <0642BE4E-D3C7-48B3-9893-11828EAFA7EF@holtmann.org>
- <20191114175836.GI27773@google.com>
-In-Reply-To: <20191114175836.GI27773@google.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Thu, 14 Nov 2019 11:21:42 -0800
-Message-ID: <CANFp7mXfhs3mw_QuVQHcQwkz8+4DpJ8SMbTiwS=7fo5kXGrBQQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 9:58 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Wed, Nov 13, 2019 at 01:21:06AM +0100, Marcel Holtmann wrote:
-> > Hi Abhishek,
-> >
-> > > Add documentation for pcm parameters.
-> > >
-> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > >
-> > > ---
-> > >
-> > > Changes in v4:
-> > > - Fix incorrect function name in hci_bcm
-> > >
-> > > Changes in v3:
-> > > - Change disallow baudrate setting to return -EBUSY if called before
-> > >  ready. bcm_proto is no longer modified and is back to being const.
-> > > - Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
-> > > - Changed brcm,sco-routing to brcm,bt-sco-routing
-> > >
-> > > Changes in v2:
-> > > - Use match data to disallow baudrate setting
-> > > - Parse pcm parameters by name instead of as a byte string
-> > > - Fix prefix for dt-bindings commit
-> > >
-> > > .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
-> > > 1 file changed, 11 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > > index c749dc297624..42fb2fa8143d 100644
-> > > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > > @@ -29,6 +29,11 @@ Optional properties:
-> > >    - "lpo": external low power 32.768 kHz clock
-> > >  - vbat-supply: phandle to regulator supply for VBAT
-> > >  - vddio-supply: phandle to regulator supply for VDDIO
-> > > + - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
-> > > + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
-> > > + - brcm,pcm-frame-type: 0-1 (short, long)
-> > > + - brcm,pcm-sync-mode: 0-1 (slave, master)
-> > > + - brcm,pcm-clock-mode: 0-1 (slave, master)
-> >
-> > I think that all of them need to start with brcm,bt- prefix since it is rather Bluetooth specific.
-> >
-> > >
-> > >
-> > > Example:
-> > > @@ -40,5 +45,11 @@ Example:
-> > >        bluetooth {
-> > >                compatible = "brcm,bcm43438-bt";
-> > >                max-speed = <921600>;
-> > > +
-> > > +               brcm,bt-sco-routing = [01];
-> > > +               brcm,pcm-interface-rate = [02];
-> > > +               brcm,pcm-frame-type = [00];
-> > > +               brcm,pcm-sync-mode = [01];
-> > > +               brcm,pcm-clock-mode = [01];
-> > >        };
-> >
-> > My personal taste would be to add a comment after each entry that gives the human readable setting.
->
-> I'd suggest to define constants in include/dt-bindings/bluetooth/brcm.h
-> and use them instead of literals, with this we wouldn't rely on (optional)
-> comments to make the configuration human readable.
+This reverts commit 7b9f7a928255a232012be55cb95db30e963b83a7.
 
-:+1: Sounds like a good idea; expect it in next patch revision
+That change should have had a fixes tag for
+commit 24d28e4f1271 ("Input: synaptics-rmi4 - convert irq distribution to
+irq_domain"). The conversion to irq_domain introduced the issue being
+fixed by this commit.
+
+In older kernels the bitmap IRQ accounting is done differently, and
+it doesn't suffer from the same issue of calling handle_nested_irq(0).
+Keeping this commit on kernels 4.14 and older causes problems with
+touchpads due to the different semantics of the IRQ bitmasks.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+---
+
+This revert is only needed on 4.14 where the driver is not yet
+converted to irq_domain and the existing bitmasks work fine.
+Upstream, the patch works fine and should not be reverted.
+
+---
+ drivers/input/rmi4/rmi_driver.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index bae46816a3b3..997ccae7ee05 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -165,7 +165,7 @@ static int rmi_process_interrupt_requests(struct rmi_device *rmi_dev)
+ 	}
+ 
+ 	mutex_lock(&data->irq_mutex);
+-	bitmap_and(data->irq_status, data->irq_status, data->fn_irq_bits,
++	bitmap_and(data->irq_status, data->irq_status, data->current_irq_mask,
+ 	       data->irq_count);
+ 	/*
+ 	 * At this point, irq_status has all bits that are set in the
+@@ -412,8 +412,6 @@ static int rmi_driver_set_irq_bits(struct rmi_device *rmi_dev,
+ 	bitmap_copy(data->current_irq_mask, data->new_irq_mask,
+ 		    data->num_of_irq_regs);
+ 
+-	bitmap_or(data->fn_irq_bits, data->fn_irq_bits, mask, data->irq_count);
+-
+ error_unlock:
+ 	mutex_unlock(&data->irq_mutex);
+ 	return error;
+@@ -427,8 +425,6 @@ static int rmi_driver_clear_irq_bits(struct rmi_device *rmi_dev,
+ 	struct device *dev = &rmi_dev->dev;
+ 
+ 	mutex_lock(&data->irq_mutex);
+-	bitmap_andnot(data->fn_irq_bits,
+-		      data->fn_irq_bits, mask, data->irq_count);
+ 	bitmap_andnot(data->new_irq_mask,
+ 		  data->current_irq_mask, mask, data->irq_count);
+ 
+-- 
+2.21.0
+
