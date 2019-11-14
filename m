@@ -2,87 +2,116 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42016C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264B3C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147A32071F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573758734;
-	bh=h6i+jO4ClmW2IeSbOGO8TMT3lJHc7Vol4IZ0eOI4cEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XuO0D9DTI/BE/9AFnLPVlw20LsVSKLKSpqyfOFwnVcFWIO6u8PLAOMqG+H4bxewAg
-	 c6X2ZxoQpdLOUqg8MCu9JfuENH/+FKgHEP9kZKPeHUJh3wpHnSfxmLls8HvDpzs5t/
-	 vwS+GD1K9KM6gy0b0DJ8fujB/RJ7CCtL5A9nlnSI=
+	by mail.kernel.org (Postfix) with ESMTP id F188A20718
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 19:13:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drTQw6Ua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKNTMM (ORCPT
+        id S1726996AbfKNTNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:12:12 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39423 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfKNTMM (ORCPT
+        Thu, 14 Nov 2019 14:13:47 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46849 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNTNq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 14:12:12 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w24so5364886otk.6;
-        Thu, 14 Nov 2019 11:12:11 -0800 (PST)
+        Thu, 14 Nov 2019 14:13:46 -0500
+Received: by mail-qt1-f195.google.com with SMTP id r20so7961416qtp.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 11:13:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=s7K7QRUqbf9Temd7llxS32t393V34zAyTAVFia8Ciqc=;
+        b=drTQw6Ua+mo61cZncZs42n6HGq/ohCgLCnzjKOx9MVS8CzNVABU+Md5TsNodLdK7Eg
+         o6pLh/fr3ciysaqtJyYsnteVFKW0XTnwiz4QVdB6sbhIXW/sQ/Hb24z/yt29p4sgmZzx
+         a+E81Xune6EjZ7+P/fGozRwN9XTP95h8r2cncICSBH7Bw01/l8CBttIGGbLBgkNO8h6T
+         ZCGihzXlwH5wOiTS+7TwkBc8COa6wkIYVQIxa1fET5iB3RgfvD0IjPVDoMq8IXWM+fiE
+         IrAAWGMPTY9GL+VKzy189BYVJfYtu32OAncox8Fuv+Ycck+HWQX6m4VCMbPdIJwoLIt3
+         TvxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+C86HU47Ruq8ie43k/9gRtCKU5MxuhIIqhntEz1NPZQ=;
-        b=IchMeODD2cvjbbsGoWVhSEaRY8BoqJyxHXaZEGjSCWxIpyRKk7o+wt3T80/l8jAc78
-         N9h3WLfhu564opz7wWrotg+ng/a19fofq45i67StXvKXlN0DPEV9XhnGldfyoez5/xnG
-         fu7hIZlScvCV0uXAT5WHJBRon4BJo2q6LfPdHd61OJrVsXzHRTSZl9ceGi7sKXMeEP/f
-         blztBo3ZDd/wsHyWuWlbjdq+bv+jmqlyUkeueQt1yoi6SqgRuC6+snQIpRt233I1nGKw
-         FoUDwryUTgyVSGXcIe9mGReq7Imkdxtks5R+MGFe5tevMcwdJ2AQFp4awqoSJUQQx/2d
-         svEg==
-X-Gm-Message-State: APjAAAXX/z03tSpiG8CHEbqXqDalgjw7UfT+VV2JtHEMPKIx7eiO9w3w
-        bWrd1SCGl91EGfkdENyBdwNBqU8=
-X-Google-Smtp-Source: APXvYqyK9IS1/37lWqaHxvuWrpHCJsZDLpbEJyl9jVccb1gWuKI2tXRvRTaUMaR3uOkMFMa/eX1sYQ==
-X-Received: by 2002:a9d:5e1a:: with SMTP id d26mr7845139oti.96.1573758731278;
-        Thu, 14 Nov 2019 11:12:11 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s66sm2140530otb.65.2019.11.14.11.12.10
+        bh=s7K7QRUqbf9Temd7llxS32t393V34zAyTAVFia8Ciqc=;
+        b=Es+EQQdBD1rWyCOsq9Zui57pO2LLAn0m84LyDR8aEQ3ZxMHzKAgqu/LoZ7aMwIzrlf
+         saNDvJHwrmu+zj8MgbGBz2E9RN88WzFrqgvYDiDHR/2KtgprSHLO2aSg+bvXepLECtBk
+         l6q7f3ezU9YMUfGybfqa9Y6nU4AxGG13FEQ8XKek8vt0k/RNqNGNTP41K5JdZXk0pYAY
+         ijiX8zQtGOCbJ3DTgcX29y38a9i00W68jT2YPwA/SHP0lmvBsPGYDkDSJQSte1NfpvR6
+         8Jign7yvDTEdWv8be+Tn/lo98Zdr5GwqmNW8J3WIpyQgjAIPR6przHwVJskXP73TsByD
+         6e3g==
+X-Gm-Message-State: APjAAAUQrOBJvOEkYHxkGLJUOzN2d44uvUG13ALAsxMf1vaXru5cVPiy
+        CDuHZNDG5jdT1daoUyxuBNI=
+X-Google-Smtp-Source: APXvYqwMEoFf7Uo4uEQC7K9dQ3SqZxtAo+Dd3ACkx2WOvqrq8yhGcM73XkjIToDP03cTdttbhWsUnA==
+X-Received: by 2002:ac8:434a:: with SMTP id a10mr10172411qtn.263.1573758825583;
+        Thu, 14 Nov 2019 11:13:45 -0800 (PST)
+Received: from quaco.ghostprotocols.net (187-26-107-110.3g.claro.net.br. [187.26.107.110])
+        by smtp.gmail.com with ESMTPSA id 7sm3154706qkf.67.2019.11.14.11.13.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 11:12:10 -0800 (PST)
-Date:   Thu, 14 Nov 2019 13:12:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 4/4] dt-bindings: arm: imx: Add the i.MX6SLL-EVK Rev-A
- board
-Message-ID: <20191114191210.GA4324@bogus>
-References: <1573435732-30361-1-git-send-email-Anson.Huang@nxp.com>
- <1573435732-30361-4-git-send-email-Anson.Huang@nxp.com>
+        Thu, 14 Nov 2019 11:13:44 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D216B40D3E; Thu, 14 Nov 2019 16:13:35 -0300 (-03)
+Date:   Thu, 14 Nov 2019 16:13:35 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf callchain: Fix segfault in
+ thread__resolve_callchain_sample()
+Message-ID: <20191114191335.GA24290@kernel.org>
+References: <20191114142538.4097-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573435732-30361-4-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191114142538.4097-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Nov 2019 09:28:52 +0800, Anson Huang wrote:
-> Add board binding for i.MX6SLL-EVK Rev-A board.
+Em Thu, Nov 14, 2019 at 04:25:38PM +0200, Adrian Hunter escreveu:
+> Do not dereference 'chain' when it is NULL.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes.
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+>   $ perf record -e intel_pt//u -e branch-misses:u uname
+>   $ perf report --itrace=l --branch-history
+>   perf: Segmentation fault
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks, tested and applied.
+
+- Arnaldo
+ 
+> Fixes: e9024d519d89 ("perf callchain: Honour the ordering of PERF_CONTEXT_{USER,KERNEL,etc}")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/util/machine.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 6a0f5c25ce3e..0a21ab69a247 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2414,7 +2414,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+>  	}
+>  
+>  check_calls:
+> -	if (callchain_param.order != ORDER_CALLEE) {
+> +	if (chain && callchain_param.order != ORDER_CALLEE) {
+>  		err = find_prev_cpumode(chain, thread, cursor, parent, root_al,
+>  					&cpumode, chain->nr - first_call);
+>  		if (err)
+> -- 
+> 2.17.1
+
+-- 
+
+- Arnaldo
