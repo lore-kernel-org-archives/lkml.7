@@ -2,103 +2,203 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0695DC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C55C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD482206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F2D206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 21:54:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tFR9JxRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfKNVxy (ORCPT
+        id S1727083AbfKNVyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:53:54 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:46844 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726812AbfKNVxx (ORCPT
+        Thu, 14 Nov 2019 16:54:31 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35131 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKNVyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 16:53:53 -0500
-Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id CCFE13A235F;
-        Fri, 15 Nov 2019 08:53:50 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iVN3m-0003gD-4F; Fri, 15 Nov 2019 08:53:50 +1100
-Date:   Fri, 15 Nov 2019 08:53:50 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 26/28] xfs: use xfs_ail_push_all in xfs_reclaim_inodes
-Message-ID: <20191114215350.GI4614@dread.disaster.area>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-27-david@fromorbit.com>
- <20191106172215.GD37080@bfoster>
+        Thu, 14 Nov 2019 16:54:31 -0500
+Received: by mail-qv1-f67.google.com with SMTP id y18so3024048qve.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 13:54:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9TQxPEhJ1QpedI2fdAYdmTWIf385KUzKuDuP9UXKDbw=;
+        b=tFR9JxRuB2005f/p1gQKTsGFJfT0C6h+RJFiPWI6h6v2v7oa4P48Xv+rkwZ+WJqqLi
+         f8Apio/Gt2QaaEysuTW7Vi5TNOjSw2s1uhNfV3JU+RzGHsOwY2FlBnMx1Mjk+c7MNz0V
+         43lxWmZOLxaiQr0OQCMKceh8Nv3cdITAtI7XeO/cgAn5nFJfizHr5Sw6RgXH0jkkxmtB
+         cEsB7DOX86xt0J9FKG8jfqZTNaIv0ZxY8JlSpHnqM3srfFmWGxyfaZSZKtGsVwJHqOyZ
+         eBgXalrQpj8puWtFFe2zPVUOAe7UWq0CaHOdo/uKI2txZwoVIVcrRudw4LfIgfnxi/jV
+         mcGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9TQxPEhJ1QpedI2fdAYdmTWIf385KUzKuDuP9UXKDbw=;
+        b=ZFHeHLaoEbYX1HRGKJmyrEgeIW/udkJmoA/cxj9S3zu0403b2wfL0KWBaJqSUTqdu5
+         OJyXr5JyeYc/JMRrGITNuppm3VAlAa6XdHZ3eFT9XnEm70D3IxqrhB/17hiNpbb1DnkN
+         ebanOOcY5FwreILkcKKX3e6v8Tw76olVOCIli3wAj6qpHSX/GXNh1B9IwsuEJMxhBAY+
+         POjlkPUdwSxlREQyjeN+qrf761P0jgeBcFD85Jm179VBD3BCdF0pYfO8ZwXGqgIq/0zF
+         qqnnz/LcugpOeejF9tOoimqCUF2jLFhkdO/2MTcqlUgNjiTcDvZdjgkchMbTP3tbMhY0
+         +muw==
+X-Gm-Message-State: APjAAAXLf2qBTzqdlL8YgCFPeskUQ3xHoJ03+rO4ZlDgeQxX+tu+sWNC
+        Tj4SyzSBnSnB0US9WDQcDXilODsy3ejnMiMo6rggyw==
+X-Google-Smtp-Source: APXvYqyO2TFn5IwRoUN2d3CEJBj6soP1oIB4RoiGkLUpEc00Fr2+Lp81ksGESQEb6KIXZo5/bSr/bucJKEmkHq7X1ns=
+X-Received: by 2002:ad4:4e6b:: with SMTP id ec11mr10497224qvb.121.1573768469560;
+ Thu, 14 Nov 2019 13:54:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106172215.GD37080@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
-        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=6BWFxZc-ePnZL1BRICgA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20191113031044.136232-1-jflat@chromium.org> <20191113031044.136232-3-jflat@chromium.org>
+In-Reply-To: <20191113031044.136232-3-jflat@chromium.org>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 14 Nov 2019 22:53:51 +0100
+Message-ID: <CAFqH_50LoD_gu3XhvRNk4EjyCNpgJaCW_CqF2GNAWguk-AB0dA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] power: supply: cros-ec-usbpd-charger: Fix host events
+To:     Jon Flatley <jflat@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 12:22:15PM -0500, Brian Foster wrote:
-> On Fri, Nov 01, 2019 at 10:46:16AM +1100, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > If we are reclaiming all inodes, it is likely we need to flush the
-> > entire AIL to do that. We have mechanisms to do that without needing
-> > to push to a specific LSN.
-> > 
-> > Convert xfs_relaim_all_inodes() to use xfs_ail_push_all variant so
-> > we can get rid of the hacky xfs_ail_push_sync() scaffolding we used
-> > to support the intermediate stages of the non-blocking reclaim
-> > changeset.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > ---
-> >  fs/xfs/xfs_icache.c     | 17 +++++++++++------
-> >  fs/xfs/xfs_trans_ail.c  | 32 --------------------------------
-> >  fs/xfs/xfs_trans_priv.h |  2 --
-> >  3 files changed, 11 insertions(+), 40 deletions(-)
-> > 
-> > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> > index 71a729e29260..11bf4768d491 100644
-> > --- a/fs/xfs/xfs_icache.c
-> > +++ b/fs/xfs/xfs_icache.c
-> ...
-> > @@ -1066,13 +1074,10 @@ xfs_reclaim_all_inodes(
-> >  				      xfs_inode_reclaim_isolate, &ra, to_free);
-> >  		xfs_dispose_inodes(&ra.freeable);
-> >  
-> > -		if (freed == 0) {
-> > +		if (freed == 0)
-> >  			xfs_log_force(mp, XFS_LOG_SYNC);
-> > -			xfs_ail_push_all(mp->m_ail);
-> > -		} else if (ra.lowest_lsn != NULLCOMMITLSN) {
-> > -			xfs_ail_push_sync(mp->m_ail, ra.lowest_lsn);
-> > -		}
-> > -		cond_resched();
-> > +		else if (ra.dirty_skipped)
-> > +			congestion_wait(BLK_RW_ASYNC, HZ/10);
-> 
-> Why not use xfs_ail_push_all_sync() in this function and skip the direct
-> stall? This is only used in the unmount and quiesce paths so the big
-> hammer approach seems reasonable.
+Hi Jon,
 
-Ok, that's a good simplification :)
+Some comments below.
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Missatge de Jon Flatley <jflat@chromium.org> del dia dc., 13 de nov.
+2019 a les 4:19:
+>
+> There's a bug on ACPI platforms where host events from the ECPD ACPI
+> device never make their way to the cros-ec-usbpd-charger driver. This
+> makes it so the only time the charger driver updates its state is when
+> user space accesses its sysfs attributes.
+>
+> Now that these events have been unified into a single notifier chain on
+> both ACPI and non-ACPI platforms the charger driver can just be updated
+> to use this new notifer.
+>
+> Signed-off-by: Jon Flatley <jflat@chromium.org>
+> ---
+>  drivers/power/supply/Kconfig              |  2 +-
+>  drivers/power/supply/cros_usbpd-charger.c | 45 ++++++++---------------
+>  2 files changed, 17 insertions(+), 30 deletions(-)
+>
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index c84a7b1caeb6..7664849d7680 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -659,7 +659,7 @@ config CHARGER_RT9455
+>
+>  config CHARGER_CROS_USBPD
+>         tristate "ChromeOS EC based USBPD charger"
+> -       depends on CROS_EC
+> +       depends on CROS_EC_USBPD_NOTIFY
+>         default n
+>         help
+>           Say Y here to enable ChromeOS EC based USBPD charger
+> diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
+> index 6cc7c3910e09..58cf51b51179 100644
+> --- a/drivers/power/supply/cros_usbpd-charger.c
+> +++ b/drivers/power/supply/cros_usbpd-charger.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+> +#include <linux/platform_data/cros_ec_usbpd_notify.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/power_supply.h>
+> @@ -524,32 +525,22 @@ static int cros_usbpd_charger_property_is_writeable(struct power_supply *psy,
+>  }
+>
+>  static int cros_usbpd_charger_ec_event(struct notifier_block *nb,
+> -                                      unsigned long queued_during_suspend,
+> +                                      unsigned long host_event,
+>                                        void *_notify)
+>  {
+> -       struct cros_ec_device *ec_device;
+>         struct charger_data *charger;
+> -       u32 host_event;
+>
+>         charger = container_of(nb, struct charger_data, notifier);
+> -       ec_device = charger->ec_device;
+>
+> -       host_event = cros_ec_get_host_event(ec_device);
+> -       if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
+> -               cros_usbpd_charger_power_changed(charger->ports[0]->psy);
+> -               return NOTIFY_OK;
+> -       } else {
+> -               return NOTIFY_DONE;
+> -       }
+> +       cros_usbpd_charger_power_changed(charger->ports[0]->psy);
+> +       return NOTIFY_OK;
+>  }
+>
+>  static void cros_usbpd_charger_unregister_notifier(void *data)
+>  {
+>         struct charger_data *charger = data;
+> -       struct cros_ec_device *ec_device = charger->ec_device;
+>
+> -       blocking_notifier_chain_unregister(&ec_device->event_notifier,
+> -                                          &charger->notifier);
+> +       cros_ec_usbpd_unregister_notify(&charger->notifier);
+>  }
+>
+
+Can we get rid of this function and call directly
+cros_ec_usbpd_unregister_notify where the function is used?
+
+>  static int cros_usbpd_charger_probe(struct platform_device *pd)
+> @@ -683,21 +674,17 @@ static int cros_usbpd_charger_probe(struct platform_device *pd)
+>                 goto fail;
+>         }
+>
+> -       if (ec_device->mkbp_event_supported) {
+> -               /* Get PD events from the EC */
+> -               charger->notifier.notifier_call = cros_usbpd_charger_ec_event;
+> -               ret = blocking_notifier_chain_register(
+> -                                               &ec_device->event_notifier,
+> -                                               &charger->notifier);
+> -               if (ret < 0) {
+> -                       dev_warn(dev, "failed to register notifier\n");
+> -               } else {
+> -                       ret = devm_add_action_or_reset(dev,
+> -                                       cros_usbpd_charger_unregister_notifier,
+> -                                       charger);
+> -                       if (ret < 0)
+> -                               goto fail;
+> -               }
+> +       /* Get PD events from the EC */
+> +       charger->notifier.notifier_call = cros_usbpd_charger_ec_event;
+> +       ret = cros_ec_usbpd_register_notify(&charger->notifier);
+> +       if (ret < 0) {
+> +               dev_warn(dev, "failed to register notifier\n");
+
+Hmm, now I am wondering if should we only warn and continue or fail.
+Makes sense have this without the notifier?
+
+> +       } else {
+> +               ret = devm_add_action_or_reset(dev,
+> +                               cros_usbpd_charger_unregister_notifier,
+> +                               charger);
+> +               if (ret < 0)
+> +                       goto fail;
+>         }
+>
+>         return 0;
+> --
+> 2.24.0.432.g9d3f5f5b63-goog
+>
+
+Thanks,
+ Enric
