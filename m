@@ -2,202 +2,370 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D237C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E15C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551EE2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40B42070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:37:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="rS0OBR4p";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="rS0OBR4p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfKNIhQ (ORCPT
+        id S1726549AbfKNIhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:37:16 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49887 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfKNIhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:37:15 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1iVAco-0004fG-6w; Thu, 14 Nov 2019 09:37:10 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:fcf3:94db:a77f:e6a3] (unknown [IPv6:2a03:f580:87bc:d400:fcf3:94db:a77f:e6a3])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id C85E347C670;
-        Thu, 14 Nov 2019 08:25:35 +0000 (UTC)
-Subject: Re: linux-next: Signed-off-by missing for commit in the net tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191114072120.505dcb59@canb.auug.org.au>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <6cec0901-bee1-afad-f901-11146ab12afa@pengutronix.de>
-Date:   Thu, 14 Nov 2019 09:25:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 03:37:42 -0500
+Received: from mail-eopbgr60059.outbound.protection.outlook.com ([40.107.6.59]:34839
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726339AbfKNIhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 03:37:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XsOUzp77nJl9O3WojFtY2JRXsyfXhsor1OJ5olyuFR0=;
+ b=rS0OBR4p14/DJju/VzEVcfPJYYl0h6oAFyTlcYVGc0XjKwIx/+d+OWRZXtOjUb8pp7YP17XXbYaqVgasyhxfG5QTX1vhZoJv8aFGAkQavkB17NawyP2rxRl1l1leW4mhsqYy3X8aBEnyN4ywX8GG2sXZ72PS20r9x/GxX0e/e5I=
+Received: from AM6PR08CA0009.eurprd08.prod.outlook.com (2603:10a6:20b:b2::21)
+ by AM5PR0802MB2564.eurprd08.prod.outlook.com (2603:10a6:203:a0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Thu, 14 Nov
+ 2019 08:37:34 +0000
+Received: from AM5EUR03FT017.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::204) by AM6PR08CA0009.outlook.office365.com
+ (2603:10a6:20b:b2::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22 via Frontend
+ Transport; Thu, 14 Nov 2019 08:37:35 +0000
+Authentication-Results: spf=fail (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT017.mail.protection.outlook.com (10.152.16.89) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23 via Frontend Transport; Thu, 14 Nov 2019 08:37:34 +0000
+Received: ("Tessian outbound 3fba803f6da3:v33"); Thu, 14 Nov 2019 08:37:33 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: ef44006d2a0e0b86
+X-CR-MTA-TID: 64aa7808
+Received: from 3ea362dbe0f1.2 (cr-mta-lb-1.cr-mta-net [104.47.6.57])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id AB8C96AF-C819-4356-BFFE-22504439D382.1;
+        Thu, 14 Nov 2019 08:37:28 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-ve1eur02lp2057.outbound.protection.outlook.com [104.47.6.57])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 3ea362dbe0f1.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 14 Nov 2019 08:37:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BGY1Tr+IoapMO6nFGGZk1Di1nQeg/noQYNX8hDS71trYaUOmtWTLBykewlvxtJgCI5ip4DfbHc+EUBXgPhRJGLCfkH545pH2XaZPIkinqSNFr6J9OxBVjMs0KT9IxSASt7++A0m5XpG243etVprtkzSYlMvuM6tRh6t8MlM42vMuCwvzoDGrjaeJAOlj9KtpS3xtMaPCb67zI2ZpqDRQ/ylFjTwwXeOGKT1SQ0G8x2WWvRLCnkJmxatbh/uVsHN0aY3/uaQ57vNay0fAfA3KE8Zfp2g/G6XyDNuKsLDWbcaw75wnEzO0GeI1gvKvUXFh6OjjX4aPqc9vQaQ4KUNFmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XsOUzp77nJl9O3WojFtY2JRXsyfXhsor1OJ5olyuFR0=;
+ b=VfRrN9zG0R9vsCdDN0qllC9m5lLXfe/glA5/Tke77uQBeetIjucJDlaWQiEejLsje2lQshXSKGhQr9pj3c87xlLYaNCk04BGH9t4q4YkpOj9kDXuenkK6aOhkXLpX2KoBxOQt+MqOQGNj9X9xUpIUZhVLvYwWQLwIwWtJYRPT9NsXA4wL8RKNO+sXdvMcFOVnMBTV03GaUAbZVWAY9+H/Od3oRFycMSZym75zhyY09O7NJcfRtWRZ6cLOAtV9GTWbcpIhk+EnMB5PvQe41zRKdUk11aHwSLOOLq0vWHM+77OV6C85kvpSRkDDj4xDfGKMJm+Ss2Yo41HPOLFM2psLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XsOUzp77nJl9O3WojFtY2JRXsyfXhsor1OJ5olyuFR0=;
+ b=rS0OBR4p14/DJju/VzEVcfPJYYl0h6oAFyTlcYVGc0XjKwIx/+d+OWRZXtOjUb8pp7YP17XXbYaqVgasyhxfG5QTX1vhZoJv8aFGAkQavkB17NawyP2rxRl1l1leW4mhsqYy3X8aBEnyN4ywX8GG2sXZ72PS20r9x/GxX0e/e5I=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4782.eurprd08.prod.outlook.com (10.255.115.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Thu, 14 Nov 2019 08:37:25 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a809:417a:faf3:61a7]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a809:417a:faf3:61a7%6]) with mapi id 15.20.2451.023; Thu, 14 Nov 2019
+ 08:37:25 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH v3 1/6] drm/komeda: Add side by side assembling
+Thread-Topic: [PATCH v3 1/6] drm/komeda: Add side by side assembling
+Thread-Index: AQHVmsa9UkYGk9o7O0O+920wharNZA==
+Date:   Thu, 14 Nov 2019 08:37:24 +0000
+Message-ID: <20191114083658.27237-2-james.qian.wang@arm.com>
+References: <20191114083658.27237-1-james.qian.wang@arm.com>
+In-Reply-To: <20191114083658.27237-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR01CA0038.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:3e::26) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 628033a1-f98c-4605-7cd1-08d768dde5d5
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4782:|VE1PR08MB4782:|AM5PR0802MB2564:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM5PR0802MB2564F11E39C98D2DFC7B5595B3710@AM5PR0802MB2564.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:3044;OLM:3044;
+x-forefront-prvs: 02213C82F8
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(39850400004)(366004)(396003)(189003)(199004)(25786009)(486006)(66476007)(66446008)(66946007)(66556008)(64756008)(66066001)(11346002)(4326008)(386003)(6636002)(8936002)(446003)(2616005)(476003)(305945005)(14454004)(2501003)(478600001)(36756003)(7736002)(1076003)(5660300002)(54906003)(256004)(14444005)(316002)(6436002)(6512007)(71190400001)(52116002)(71200400001)(110136005)(76176011)(8676002)(102836004)(6506007)(6486002)(2201001)(55236004)(50226002)(103116003)(26005)(86362001)(186003)(3846002)(2906002)(81166006)(81156014)(6116002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4782;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: KVe4BfeS7WEdRZ90f2As8N+RcKkFWSeROha2cSQNjLMU4uWrplslVjct+5o2KYyZ8gc/dPbbrdlj06FqN8edISH6z4Lk0tWW1SsnxgmDM6qpov/oxBI+se70xmLTTF9aE4iVRoVF7TgXMRLbSBMSjblfw5qNrq2H/1PWLefZCIg2NEUH6rNMQ6gaaLodKiPZjQGWu+/c+OeO70dcJKnmmVFCt0OtZdEcGdS4ueD2Qp1FjQ+8N6qIKastw6CnqNCaa6rQuJCu7RAg4XyEfh+E4B5JCharKsMiRA9RgNpJPhkR5yjgGHgI8LHxEZD6tG2cgHqYx3cHpueQOjO+WTxB2iOf4hSkDItiU9NQjzDH135nR/qfH/fgfkoUE+FGB2SyJTdtiiapLGlIZQoSbb8Jo6xN5nFVXheFbqdpKJ5CIBNP+uIJV3za30dnN7jELX7a
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20191114072120.505dcb59@canb.auug.org.au>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="GdcJuy3U20WFeXhrMKcyTJPcl4fnulRb4"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4782
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT017.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(396003)(136003)(1110001)(339900001)(189003)(199004)(8676002)(50226002)(23756003)(446003)(11346002)(102836004)(2501003)(26005)(305945005)(7736002)(66066001)(5660300002)(70586007)(2906002)(6116002)(8936002)(81166006)(3846002)(8746002)(22756006)(76130400001)(81156014)(14444005)(70206006)(47776003)(54906003)(1076003)(356004)(103116003)(76176011)(486006)(105606002)(386003)(36756003)(476003)(2616005)(126002)(6506007)(99286004)(36906005)(478600001)(186003)(336012)(2201001)(6636002)(50466002)(4326008)(316002)(14454004)(6512007)(26826003)(86362001)(110136005)(6486002)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0802MB2564;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: db6ed058-2e0e-4029-4a3a-08d768dddfbc
+NoDisclaimer: True
+X-Forefront-PRVS: 02213C82F8
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: V3ybpb8iIWiTbbSCaNF1yQYko1HzPPrbyVoeOpph4Wj9OY7Jcfn4HUG9AsWRpvba93V5ZsPpiSmkYXMTuRZbyoA9nBvQzW0r7tFz2ryUpz8yDoQig6fI0eFwk5VlFixmtMaXGZEKIaabBlKGF2g4XC4H//KPy+12bZxBlGmFKOxixI3zKNkukkKDi9edjI97Vh2S871Cyymq3VDBy+37aUqJXyFXan5aPPB5sUpvCmVPTS16CiXs2fycpd6S3usxyRauuzM5JIwBPT99rs0SgCZ9DthjEnZn3vX6Ob0t4tG6dp0WrjpcMKMy4g3e18dQeTNUBfE6Hc8gKCCfN7tYgCOOwycomKGfE3Xvkk3r6cL+fYzY5ks0f0jg8zNKgW82TL9B8+aKo+fbCUiA6uywzXGFoWD/uLODw+1t0Clp1vGuNkKjDiUme5l/MIzq+sx5
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2019 08:37:34.8628
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 628033a1-f98c-4605-7cd1-08d768dde5d5
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0802MB2564
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---GdcJuy3U20WFeXhrMKcyTJPcl4fnulRb4
-Content-Type: multipart/mixed; boundary="4lNdb1Beve92UGTCayIpIYFAIz7irItRW";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- David Miller <davem@davemloft.net>, Networking <netdev@vger.kernel.org>
-Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <6cec0901-bee1-afad-f901-11146ab12afa@pengutronix.de>
-Subject: Re: linux-next: Signed-off-by missing for commit in the net tree
-References: <20191114072120.505dcb59@canb.auug.org.au>
-In-Reply-To: <20191114072120.505dcb59@canb.auug.org.au>
+Komeda HW can support side by side, which splits the internal display
+processing to two single halves (LEFT/RIGHT) and handle them by two
+pipelines separately.
+komeda "side by side" is enabled by DT property: "side_by_side_master",
+once DT configured side by side, komeda need to verify it with HW's
+configuration, and assemble it for the further usage.
 
---4lNdb1Beve92UGTCayIpIYFAIz7irItRW
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+v3: Correct a typo.
 
-On 11/13/19 9:21 PM, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Commits
->=20
->   4a15d574e68a ("can: j1939: warn if resources are still linked on dest=
-roy")
->   ddeeb7d4822e ("can: j1939: j1939_can_recv(): add priv refcounting")
->   8d7a5f000e23 ("can: j1939: transport: j1939_cancel_active_session(): =
-use hrtimer_try_to_cancel() instead of hrtimer_cancel()")
->   62ebce1dc1fa ("can: j1939: make sure socket is held as long as sessio=
-n exists")
->   d966635b384b ("can: j1939: transport: make sure the aborted session w=
-ill be deactivated only once")
->   fd81ebfe7975 ("can: j1939: socket: rework socket locking for j1939_sk=
-_release() and j1939_sk_sendmsg()")
->   c48c8c1e2e81 ("can: j1939: main: j1939_ndev_to_priv(): avoid crash if=
- can_ml_priv is NULL")
->   25fe97cb7620 ("can: j1939: move j1939_priv_put() into sk_destruct cal=
-lback")
->   975987e7015b ("can: af_can: export can_sock_destruct()")
->=20
-> are missing a Signed-off-by from their committer.
+Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.=
+com>
+---
+ .../gpu/drm/arm/display/komeda/komeda_crtc.c  | 13 ++++-
+ .../gpu/drm/arm/display/komeda/komeda_dev.c   |  3 ++
+ .../gpu/drm/arm/display/komeda/komeda_dev.h   |  9 ++++
+ .../gpu/drm/arm/display/komeda/komeda_kms.h   |  3 ++
+ .../drm/arm/display/komeda/komeda_pipeline.c  | 50 +++++++++++++++++--
+ .../drm/arm/display/komeda/komeda_pipeline.h  |  1 +
+ 6 files changed, 73 insertions(+), 6 deletions(-)
 
-Ouch! Sorry my fault.
-
-> Dave, since your trees are immutable, you are really going to have to
-> do some premerge checking for these ... I have attached the scripts I
-> use.  Others have some git hooks which do something similar.
-
-I'll integrate this script into mine.
-
-regard.
-Marc
-
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu=
+/drm/arm/display/komeda/komeda_crtc.c
+index 1c452ea75999..cee9a1692e71 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+@@ -561,21 +561,30 @@ int komeda_kms_setup_crtcs(struct komeda_kms_dev *kms=
+,
+ 	kms->n_crtcs =3D 0;
+=20
+ 	for (i =3D 0; i < mdev->n_pipelines; i++) {
++		/* if sbs, one komeda_dev only can represent one CRTC */
++		if (mdev->side_by_side && i !=3D mdev->side_by_side_master)
++			continue;
++
+ 		crtc =3D &kms->crtcs[kms->n_crtcs];
+ 		master =3D mdev->pipelines[i];
+=20
+ 		crtc->master =3D master;
+ 		crtc->slave  =3D komeda_pipeline_get_slave(master);
++		crtc->side_by_side =3D mdev->side_by_side;
+=20
+ 		if (crtc->slave)
+ 			sprintf(str, "pipe-%d", crtc->slave->id);
+ 		else
+ 			sprintf(str, "None");
+=20
+-		DRM_INFO("CRTC-%d: master(pipe-%d) slave(%s).\n",
+-			 kms->n_crtcs, master->id, str);
++		DRM_INFO("CRTC-%d: master(pipe-%d) slave(%s) sbs(%s).\n",
++			 kms->n_crtcs, master->id, str,
++			 crtc->side_by_side ? "On" : "Off");
+=20
+ 		kms->n_crtcs++;
++
++		if (mdev->side_by_side)
++			break;
+ 	}
+=20
+ 	return 0;
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/=
+drm/arm/display/komeda/komeda_dev.c
+index 4e46f650fddf..c3fa4835cb8d 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+@@ -178,6 +178,9 @@ static int komeda_parse_dt(struct device *dev, struct k=
+omeda_dev *mdev)
+ 		}
+ 	}
+=20
++	mdev->side_by_side =3D !of_property_read_u32(np, "side_by_side_master",
++						   &mdev->side_by_side_master);
++
+ 	return ret;
+ }
+=20
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/=
+drm/arm/display/komeda/komeda_dev.h
+index d406a4d83352..471604b42431 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+@@ -183,6 +183,15 @@ struct komeda_dev {
+=20
+ 	/** @irq: irq number */
+ 	int irq;
++	/**
++	 * @side_by_side:
++	 *
++	 * on sbs the whole display frame will be split to two halves (1:2),
++	 * master pipeline handles the left part, slave for the right part
++	 */
++	bool side_by_side;
++	/** @side_by_side_master: master pipe id for side by side */
++	int side_by_side_master;
+=20
+ 	/** @lock: used to protect dpmode */
+ 	struct mutex lock;
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/gpu/=
+drm/arm/display/komeda/komeda_kms.h
+index 456f3c435719..ae6654fe95e2 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+@@ -76,6 +76,9 @@ struct komeda_crtc {
+ 	 */
+ 	struct komeda_pipeline *slave;
+=20
++	/** @side_by_side: if the master and slave works on side by side mode */
++	bool side_by_side;
++
+ 	/** @slave_planes: komeda slave planes mask */
+ 	u32 slave_planes;
+=20
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c b/drivers=
+/gpu/drm/arm/display/komeda/komeda_pipeline.c
+index 452e505a1fd3..104e27cc1dc3 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c
+@@ -326,14 +326,56 @@ static void komeda_pipeline_assemble(struct komeda_pi=
+peline *pipe)
+ struct komeda_pipeline *
+ komeda_pipeline_get_slave(struct komeda_pipeline *master)
+ {
+-	struct komeda_component *slave;
++	struct komeda_dev *mdev =3D master->mdev;
++	struct komeda_component *comp, *slave;
++	u32 avail_inputs;
++
++	/* on SBS, slave pipeline merge to master via image processor */
++	if (mdev->side_by_side) {
++		comp =3D &master->improc->base;
++		avail_inputs =3D KOMEDA_PIPELINE_IMPROCS;
++	} else {
++		comp =3D &master->compiz->base;
++		avail_inputs =3D KOMEDA_PIPELINE_COMPIZS;
++	}
+=20
+-	slave =3D komeda_component_pickup_input(&master->compiz->base,
+-					      KOMEDA_PIPELINE_COMPIZS);
++	slave =3D komeda_component_pickup_input(comp, avail_inputs);
+=20
+ 	return slave ? slave->pipeline : NULL;
+ }
+=20
++static int komeda_assemble_side_by_side(struct komeda_dev *mdev)
++{
++	struct komeda_pipeline *master, *slave;
++	int i;
++
++	if (!mdev->side_by_side)
++		return 0;
++
++	if (mdev->side_by_side_master >=3D mdev->n_pipelines) {
++		DRM_ERROR("DT configured side by side master-%d is invalid.\n",
++			  mdev->side_by_side_master);
++		return -EINVAL;
++	}
++
++	master =3D mdev->pipelines[mdev->side_by_side_master];
++	slave =3D komeda_pipeline_get_slave(master);
++	if (!slave || slave->n_layers !=3D master->n_layers) {
++		DRM_ERROR("Current HW doesn't support side by side.\n");
++		return -EINVAL;
++	}
++
++	if (!master->dual_link) {
++		DRM_DEBUG_ATOMIC("SBS can not work without dual link.\n");
++		return -EINVAL;
++	}
++
++	for (i =3D 0; i < master->n_layers; i++)
++		master->layers[i]->sbs_slave =3D slave->layers[i];
++
++	return 0;
++}
++
+ int komeda_assemble_pipelines(struct komeda_dev *mdev)
+ {
+ 	struct komeda_pipeline *pipe;
+@@ -346,7 +388,7 @@ int komeda_assemble_pipelines(struct komeda_dev *mdev)
+ 		komeda_pipeline_dump(pipe);
+ 	}
+=20
+-	return 0;
++	return komeda_assemble_side_by_side(mdev);
+ }
+=20
+ void komeda_pipeline_dump_register(struct komeda_pipeline *pipe,
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers=
+/gpu/drm/arm/display/komeda/komeda_pipeline.h
+index ac8725e24853..20a076cce635 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+@@ -237,6 +237,7 @@ struct komeda_layer {
+ 	 * not the source buffer.
+ 	 */
+ 	struct komeda_layer *right;
++	struct komeda_layer *sbs_slave;
+ };
+=20
+ struct komeda_layer_state {
 --=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+2.20.1
 
-
---4lNdb1Beve92UGTCayIpIYFAIz7irItRW--
-
---GdcJuy3U20WFeXhrMKcyTJPcl4fnulRb4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3ND3QACgkQWsYho5Hk
-nSCXDwf+Pa9k342O6ELV84HjktuYDTQe8B+ADRUFs6HD/ArDrvjXBiu+wmV+aJGq
-NUoD7g5jKMtaZaK3PW21Bb1oChtNRFJXrGMzHRowLVs8qMYiyC6yypY3BusZRnb3
-P6jU1xhmNU0AGUsYWE5JXolqnP7PN05j5lqkwBYUeAEB2NQHzsGs1gxQGe+vkZMU
-IkgfF8EbT0pqkcQPKivBQCQHZ41Huvlk/pYBsANUGCmpyM5J+9turXDYKruwGLik
-5Y7uoImAqjkAVT8M/mIXr5yAl4ebMjpYNBAIdUq7Sr3fCrm78tAjAxM7qwYE3Ulr
-oa9ET2C3biSKz0ohF0XIyUyTIIprBw==
-=KsrK
------END PGP SIGNATURE-----
-
---GdcJuy3U20WFeXhrMKcyTJPcl4fnulRb4--
