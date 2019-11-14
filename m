@@ -2,88 +2,115 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E8AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9A9C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB3520718
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A6220675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 08:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfKNIJ2 (ORCPT
+        id S1726473AbfKNILk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 03:09:28 -0500
-Received: from thoth.sbs.de ([192.35.17.2]:37567 "EHLO thoth.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfKNIJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 03:09:27 -0500
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id xAE89CZT030781
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 09:09:13 +0100
-Received: from [167.87.46.11] ([167.87.46.11])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id xAE89CH4016661;
-        Thu, 14 Nov 2019 09:09:12 +0100
-Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        "Gupta, Pawan Kumar" <pawan.kumar.gupta@intel.com>
-References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
- <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
- <ea5a084b-e047-6677-b8fe-d7bb6f8c0ef8@redhat.com>
- <dffb19ab-daa2-a513-531e-c43279d8a4bf@intel.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <e86c01a8-8265-5e42-2fae-2c42c7e3d961@siemens.com>
-Date:   Thu, 14 Nov 2019 09:09:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 14 Nov 2019 03:11:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63842 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725920AbfKNILk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 03:11:40 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAE88FFK027488
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 03:11:38 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w91npjxtj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 03:11:38 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 14 Nov 2019 08:11:36 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 14 Nov 2019 08:11:34 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAE8AuTk36569358
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Nov 2019 08:10:56 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA95252051;
+        Thu, 14 Nov 2019 08:11:32 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.207.103])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 5609A5204F;
+        Thu, 14 Nov 2019 08:11:31 +0000 (GMT)
+Date:   Thu, 14 Nov 2019 09:11:28 +0100
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Max Filippov <jcmvbkbc@gmail.com>
+Cc:     linux-xtensa@linux-xtensa.org, Chris Zankel <chris@zankel.net>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] xtensa: use MEMBLOCK_ALLOC_ANYWHERE for KASAN shadow map
+References: <20191114010824.29540-1-jcmvbkbc@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <dffb19ab-daa2-a513-531e-c43279d8a4bf@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114010824.29540-1-jcmvbkbc@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19111408-0012-0000-0000-0000036383F2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111408-0013-0000-0000-0000219EFBE0
+Message-Id: <20191114081127.GB13537@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=831 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911140077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.11.19 22:24, Dave Hansen wrote:
-> On 11/13/19 12:23 AM, Paolo Bonzini wrote:
->> On 13/11/19 07:38, Jan Kiszka wrote:
->>> When reading MCE, error code 0150h, ie. SRAR, I was wondering if that
->>> couldn't simply be handled by the host. But I suppose the symptom of
->>> that erratum is not "just" regular recoverable MCE, rather
->>> sometimes/always an unrecoverable CPU state, despite the error code, right?
->> The erratum documentation talks explicitly about hanging the system, but
->> it's not clear if it's just a result of the OS mishandling the MCE, or
->> something worse.  So I don't know. :(  Pawan, do you?
+On Wed, Nov 13, 2019 at 05:08:24PM -0800, Max Filippov wrote:
+> KASAN shadow map doesn't need to be accessible through the linear kernel
+> mapping, allocate its pages with MEMBLOCK_ALLOC_ANYWHERE so that high
+> memory can be used. This frees up to ~100MB of low memory on xtensa
+> configurations with KASAN and high memory.
 > 
-> It's "something worse".
+> Cc: stable@vger.kernel.org # v5.1+
+> Fixes: f240ec09bb8a ("memblock: replace memblock_alloc_base(ANYWHERE)
+> 		     with memblock_phys_alloc")
+> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+
+> ---
+>  arch/xtensa/mm/kasan_init.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> I built a kernel module reproducer for this a long time ago.  The
-> symptom I observed was the whole system hanging hard, requiring me to go
-> hit the power button.  The MCE software machinery was not involved at
-> all from what I could tell.
-
-Thanks for clarifying this - too bad.
-
+> diff --git a/arch/xtensa/mm/kasan_init.c b/arch/xtensa/mm/kasan_init.c
+> index 9c957791bb33..e3baa21ff24c 100644
+> --- a/arch/xtensa/mm/kasan_init.c
+> +++ b/arch/xtensa/mm/kasan_init.c
+> @@ -60,7 +60,9 @@ static void __init populate(void *start, void *end)
+>  
+>  		for (k = 0; k < PTRS_PER_PTE; ++k, ++j) {
+>  			phys_addr_t phys =
+> -				memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> +				memblock_phys_alloc_range(PAGE_SIZE, PAGE_SIZE,
+> +							  0,
+> +							  MEMBLOCK_ALLOC_ANYWHERE);
+>  
+>  			if (!phys)
+>  				panic("Failed to allocate page table page\n");
+> -- 
+> 2.20.1
 > 
-> About creating a unit test, I'd be personally happy to share my
-> reproducer, but I built it before this issue was root-caused.  There are
-> actually quite a few underlying variants and a good unit test would make
-> sure to exercise all of them.  My reproducer probably only exercised a
-> single case.
-> 
-
-Would be interesting to see this. Ralf and tried something quickly, but 
-there seems to be a detail missing or wrong.
-
-Jan
 
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Sincerely yours,
+Mike.
+
