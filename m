@@ -2,245 +2,148 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5059C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C429DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809EB20723
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D95020725
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2hSixm3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ig7fLC+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfKNUbY (ORCPT
+        id S1726865AbfKNUfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:31:24 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37822 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfKNUbX (ORCPT
+        Thu, 14 Nov 2019 15:35:31 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23571 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726533AbfKNUfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:31:23 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t1so8226448wrv.4;
-        Thu, 14 Nov 2019 12:31:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xrGK4XSxLK8daRWkwFS6OsjqxfoBJHTZ4472D/sbTNI=;
-        b=k2hSixm3GFrfEkBPy7Fi63J6e64zOPKcDGWnaW9FM+LXURuA49nELVLiWivw4LjloC
-         G0j70jj4i+c3pujvbNJb+ZBKjWgsrB/C/J4Rj1FUtLHZMoLQKLSs0lkZ5HHzArDcFBcE
-         q09e18h4Z+HnrFdUsTVlqGnHtEkLCz5fAw+ue5SHxo8PqY3O984SIq/o0Ek8CTZLnFFM
-         flQvLPxsGCpqVnxwjCwBs9KKulLefQvLV4ExkJ2mod68pgw9tTcWOZwJHeEe0K0oLtpx
-         k500uxyX/Js0UC200IishMmP69j9vlWGw0VnzZVSotk0wlZno+0hfs4D5gitGvYSIt5j
-         JAJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xrGK4XSxLK8daRWkwFS6OsjqxfoBJHTZ4472D/sbTNI=;
-        b=GPmSMdfL9uETSvvAdS2zpKZE+NyM46w3TZTVtRFF7wVI4Y5lIDRnnZLFBWRYGD0z/c
-         8oyqoCW173pD7NHnt1x7RAdOK74eNNhQaXxwoa3e46k4Ya8oVKYhLd2i+iDYbgjGezFW
-         2wmQ1Rm1rJXK9gjbYTt+1FtILGBfwHxrKRl0dPWg6HSYeGx8ci6FJCsfaQ6ZTPBTkSso
-         k9rD+icNxyWwuLta3J2WbwH29LbxrMdeR6xNTK5H+t15HjpRisr6uu2lZZ0uz8IwRdmN
-         9SUwhM5wPEupvcNW1yBKW5gr51t+cyvsL1iUxpiSmN4iJB9AYr8sRPT5Id96rXU5W7aa
-         DaUg==
-X-Gm-Message-State: APjAAAXqYh5EmrpVftbBGi3XDi7qLuutnyiNoqSodWOUezcpmV3EeO11
-        Tg+R7sgqq8twf03dtV/Ex9DwwsK38RA=
-X-Google-Smtp-Source: APXvYqxps0X0FFQBJnBrVXDHms4NvvcvClz9T98MD1+q8IBuInpCF0ZioNZpideNYi5uV0FENgubDQ==
-X-Received: by 2002:a5d:6a83:: with SMTP id s3mr10186575wru.159.1573763480083;
-        Thu, 14 Nov 2019 12:31:20 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id n1sm8755284wrr.24.2019.11.14.12.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 12:31:18 -0800 (PST)
-Date:   Thu, 14 Nov 2019 21:31:17 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/tegra: Turn off and reset hardware across
- suspend-resume
-Message-ID: <20191114203117.GA761559@ulmo>
-References: <20190811183932.15850-1-digetx@gmail.com>
+        Thu, 14 Nov 2019 15:35:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573763729;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wz78dwaxpm4rR8noHiumwhs8zmjexVrjlYPQCaWOjVU=;
+        b=Ig7fLC+aaD9hzvPqnq14vgAR7KQzjL9NTnDPpHXuomtizCiktEmT1ZnEHX934/ZBIu8B3e
+        wNuR8HHz0OBxQ0/9yQhmKJynbJ58ydkSDDxYdD7si7t8HrPVLigDqNBwtO28NmsIjv3J0F
+        jj1GSfFY/UhuBp15+z3SvdR/ETgZtC8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-326-jUVu9U6sOhSbba59QKGGZw-1; Thu, 14 Nov 2019 15:35:26 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9D80100550E;
+        Thu, 14 Nov 2019 20:35:24 +0000 (UTC)
+Received: from treble (ovpn-121-52.rdu2.redhat.com [10.10.121.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A025F8164;
+        Thu, 14 Nov 2019 20:35:19 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 14:35:17 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH] x86/speculation: Fix incorrect MDS/TAA mitigation status
+Message-ID: <20191114203517.su2roiygk4htkpc3@treble>
+References: <20191113193350.24511-1-longman@redhat.com>
+ <20191114201258.GA18745@guptapadev.amr>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
+In-Reply-To: <20191114201258.GA18745@guptapadev.amr>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: jUVu9U6sOhSbba59QKGGZw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20190811183932.15850-1-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Aug 11, 2019 at 09:39:32PM +0300, Dmitry Osipenko wrote:
-> The drivers core bumps runtime PM refcount during of entering into
-> suspend to workaround some problem where parent device may become turned
-> off before its children. In order to disable and reset CRTCs/HDMI/etc
-> hardware, the runtime PM needs to be "forced" into suspend mode.
+On Thu, Nov 14, 2019 at 12:12:58PM -0800, Pawan Gupta wrote:
+> On Wed, Nov 13, 2019 at 02:33:50PM -0500, Waiman Long wrote:
+> > For MDS vulnerable processors with TSX support, enabling either MDS
+> > or TAA mitigations will enable the use of VERW to flush internal
+> > processor buffers at the right code path. IOW, they are either both
+> > mitigated or both not mitigated. However, if the command line options
+> > are inconsistent, the vulnerabilites sysfs files may not report the
+> > mitigation status correctly.
+> >=20
+> > For example, with only the "mds=3Doff" option:
+> >=20
+> >   vulnerabilities/mds:Vulnerable; SMT vulnerable
+> >   vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vu=
+lnerable
+> >=20
+> > The mds vulnerabilities file has wrong status in this case.
+> >=20
+> > Change taa_select_mitigation() to sync up the two mitigation status
+> > and have them turned off if both "mds=3Doff" and "tsx_async_abort=3Doff=
+"
+> > are present.
+> >=20
+> > Signed-off-by: Waiman Long <longman@redhat.com>
+> > ---
+> >  arch/x86/kernel/cpu/bugs.c | 17 +++++++++++++++--
+> >  1 file changed, 15 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> > index 4c7b0fa15a19..418d41c1fd0d 100644
+> > --- a/arch/x86/kernel/cpu/bugs.c
+> > +++ b/arch/x86/kernel/cpu/bugs.c
+> > @@ -304,8 +304,12 @@ static void __init taa_select_mitigation(void)
+> >  =09=09return;
+> >  =09}
+> > =20
+> > -=09/* TAA mitigation is turned off on the cmdline (tsx_async_abort=3Do=
+ff) */
+> > -=09if (taa_mitigation =3D=3D TAA_MITIGATION_OFF)
+> > +=09/*
+> > +=09 * TAA mitigation via VERW is turned off if both
+> > +=09 * tsx_async_abort=3Doff and mds=3Doff are specified.
+> > +=09 */
+> > +=09if (taa_mitigation =3D=3D TAA_MITIGATION_OFF &&
+> > +=09    mds_mitigation =3D=3D MDS_MITIGATION_OFF)
+> >  =09=09goto out;
+> > =20
+> >  =09if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
+> > @@ -339,6 +343,15 @@ static void __init taa_select_mitigation(void)
+> >  =09if (taa_nosmt || cpu_mitigations_auto_nosmt())
+> >  =09=09cpu_smt_disable(false);
+> > =20
+> > +=09/*
+> > +=09 * Update MDS mitigation, if necessary, as the mds_user_clear is
+> > +=09 * now enabled for TAA mitigation.
+> > +=09 */
+> > +=09if (mds_mitigation =3D=3D MDS_MITIGATION_OFF &&
+> > +=09    boot_cpu_has_bug(X86_BUG_MDS)) {
+> > +=09=09mds_mitigation =3D MDS_MITIGATION_FULL;
+> > +=09=09mds_select_mitigation();
 >=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
+> This will cause a confusing print in dmesg from previous and this call
+> to mds_select_mitigation().
 >=20
-> Changelog:
+> =09"MDS: Vulnerable"
+> =09"MDS: Mitigation: Clear CPU buffers"
 >=20
-> v2: The SYSTEM_SLEEP_PM_OPS are now set for all of the relevant drivers a=
-nd
->     not only for the DC because turned out that they all should enforce t=
-he
->     suspending.
->=20
->  drivers/gpu/drm/tegra/dc.c    | 2 ++
->  drivers/gpu/drm/tegra/dpaux.c | 2 ++
->  drivers/gpu/drm/tegra/dsi.c   | 2 ++
->  drivers/gpu/drm/tegra/hdmi.c  | 2 ++
->  drivers/gpu/drm/tegra/hub.c   | 2 ++
->  drivers/gpu/drm/tegra/sor.c   | 2 ++
->  drivers/gpu/drm/tegra/vic.c   | 2 ++
->  7 files changed, 14 insertions(+)
+> Maybe delay MDS mitigation print till TAA is evaluated.
 
-I'm not exactly sure I understand why this is necessary. Runtime PM is
-controlled by the drivers themselves so that when an output (say SOR) is
-disabled, it drops the runtime PM reference. The idea is that since the
-disabled output is no longer needed it can just go into a low power mode
-which on Tegra usually means clocks off and reset asserted (and in some
-cases also power domain off).
+Since they're so intertwined it might make sense to just combine the two
+mitigations into a single function.
 
-DRM/KMS has system-level suspend support, which we use to disable all
-outputs when entering suspend. I see that, unfortunately, this doesn't
-seem to actually cause the devices to runtime suspend. I'm pretty sure
-that this used to work at some point, so I don't know what changed. I'd
-have to look into this a little more. The core doing something like this
-behind the driver's back seems wrong and having to force the device into
-suspend mode seems like it's just piling up on the workarounds.
+--=20
+Josh
 
-Thierry
-
->=20
-> diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-> index 4a75d149e368..6c8f5222d558 100644
-> --- a/drivers/gpu/drm/tegra/dc.c
-> +++ b/drivers/gpu/drm/tegra/dc.c
-> @@ -2572,6 +2572,8 @@ static int tegra_dc_resume(struct device *dev)
-> =20
->  static const struct dev_pm_ops tegra_dc_pm_ops =3D {
->  	SET_RUNTIME_PM_OPS(tegra_dc_suspend, tegra_dc_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
-> =20
->  struct platform_driver tegra_dc_driver =3D {
-> diff --git a/drivers/gpu/drm/tegra/dpaux.c b/drivers/gpu/drm/tegra/dpaux.c
-> index 2d94da225e51..22f80f69ffb8 100644
-> --- a/drivers/gpu/drm/tegra/dpaux.c
-> +++ b/drivers/gpu/drm/tegra/dpaux.c
-> @@ -638,6 +638,8 @@ static int tegra_dpaux_resume(struct device *dev)
-> =20
->  static const struct dev_pm_ops tegra_dpaux_pm_ops =3D {
->  	SET_RUNTIME_PM_OPS(tegra_dpaux_suspend, tegra_dpaux_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
-> =20
->  static const struct of_device_id tegra_dpaux_of_match[] =3D {
-> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-> index 2fbfefe9cb42..fd0f8cec8c7e 100644
-> --- a/drivers/gpu/drm/tegra/dsi.c
-> +++ b/drivers/gpu/drm/tegra/dsi.c
-> @@ -1665,6 +1665,8 @@ static int tegra_dsi_resume(struct device *dev)
-> =20
->  static const struct dev_pm_ops tegra_dsi_pm_ops =3D {
->  	SET_RUNTIME_PM_OPS(tegra_dsi_suspend, tegra_dsi_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
-> =20
->  static const struct of_device_id tegra_dsi_of_match[] =3D {
-> diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
-> index 334c4d7d238b..ef66defac767 100644
-> --- a/drivers/gpu/drm/tegra/hdmi.c
-> +++ b/drivers/gpu/drm/tegra/hdmi.c
-> @@ -1739,6 +1739,8 @@ static int tegra_hdmi_resume(struct device *dev)
-> =20
->  static const struct dev_pm_ops tegra_hdmi_pm_ops =3D {
->  	SET_RUNTIME_PM_OPS(tegra_hdmi_suspend, tegra_hdmi_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
-> =20
->  struct platform_driver tegra_hdmi_driver =3D {
-> diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
-> index 92f202ec0577..3d33d0360169 100644
-> --- a/drivers/gpu/drm/tegra/hub.c
-> +++ b/drivers/gpu/drm/tegra/hub.c
-> @@ -931,6 +931,8 @@ static int __maybe_unused tegra_display_hub_resume(st=
-ruct device *dev)
->  static const struct dev_pm_ops tegra_display_hub_pm_ops =3D {
->  	SET_RUNTIME_PM_OPS(tegra_display_hub_suspend,
->  			   tegra_display_hub_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
-> =20
->  static const struct tegra_display_hub_soc tegra186_display_hub =3D {
-> diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
-> index 4ffe3794e6d3..b743193bf0b1 100644
-> --- a/drivers/gpu/drm/tegra/sor.c
-> +++ b/drivers/gpu/drm/tegra/sor.c
-> @@ -3572,6 +3572,8 @@ static int tegra_sor_resume(struct device *dev)
-> =20
->  static const struct dev_pm_ops tegra_sor_pm_ops =3D {
->  	SET_RUNTIME_PM_OPS(tegra_sor_suspend, tegra_sor_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
-> =20
->  struct platform_driver tegra_sor_driver =3D {
-> diff --git a/drivers/gpu/drm/tegra/vic.c b/drivers/gpu/drm/tegra/vic.c
-> index 958548ef69e7..880304a65c5c 100644
-> --- a/drivers/gpu/drm/tegra/vic.c
-> +++ b/drivers/gpu/drm/tegra/vic.c
-> @@ -476,6 +476,8 @@ static int vic_remove(struct platform_device *pdev)
-> =20
->  static const struct dev_pm_ops vic_pm_ops =3D {
->  	SET_RUNTIME_PM_OPS(vic_runtime_suspend, vic_runtime_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
-> =20
->  struct platform_driver tegra_vic_driver =3D {
-> --=20
-> 2.22.0
->=20
-
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3NuYwACgkQ3SOs138+
-s6G+7Q/+P+mkojE+rHRI4ZMc+b9mOvTUZBtwAj53oa4TdGYuTCZdSb3SxsOHtkCV
-ILcEuY1Wjbw1JEAWclTVaFXJy3eWlJHcG+tDZf3NKZefuAQ+HJbPUJ2Z1YBwfy7n
-DqcXdpTY5lfFWbuZCaU35bPlL7Bfd2MEZD7SxLdC+Tfcv8I7jfFZjBPZJN3GdGfk
-KEPwXFBfQ2XeQmUHcidkEjJFADGwKGApU6MORS1UnV6epF3d5mLLF5CUqajIPZh7
-Nd4mseykcmfoARHRLAmlK3dV9zHE5JGgFLpbWCF/NKvS7eP7Ke4qMetp3qhPOUto
-ZNSMloJiSbEimHsZbG9YlyCvYulkDz4u2ECK13iE13rnROjSt06qhqR91G20ibFJ
-axYyZHlV1UGg0DvGliyHlkgBKWnjiXuc4mPYlzJxutmo7B+uRkiQ0wqLo8vlf72o
-4NBizcSzfmy+TYPL2jkMqePvJJyrGz+0xhFyxb6Ft7zR+x1vQFYpSw5TPksZ/O0k
-doGZrJRDZPvGCiCr8iJnI1qjTo2Y/WZS5kRmheFDO2Q6qdNfxLKEtlOtJDA2l3lU
-vwphL1XBC8oa/OKCHBqTW5G5iCR28/9+YIb4mq5OorBUdY+bVl1hgyiNFYvjsVHW
-GN4sSS9gy0l50Znta4ecJ9k1eYTuPBvBWTenJ3+T4ealVDNm2R4=
-=XCS8
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
