@@ -2,120 +2,131 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773AFC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6307C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3B720723
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EF9206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 05:29:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfKNF00 (ORCPT
+        id S1726949AbfKNF3w convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 00:26:26 -0500
-Received: from mga04.intel.com ([192.55.52.120]:58904 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbfKNF00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 00:26:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 21:26:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
-   d="scan'208";a="208018135"
-Received: from rlin99-mobl.gar.corp.intel.com (HELO [10.251.23.44]) ([10.251.23.44])
-  by orsmga006.jf.intel.com with ESMTP; 13 Nov 2019 21:26:24 -0800
-Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
-To:     Nadav Amit <nadav.amit@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        "Gupta, Pawan Kumar" <pawan.kumar.gupta@intel.com>
-References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
- <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
- <ea5a084b-e047-6677-b8fe-d7bb6f8c0ef8@redhat.com>
- <dffb19ab-daa2-a513-531e-c43279d8a4bf@intel.com>
- <6C0513A5-6C73-4F17-B73B-6F19E7D9EAF0@gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <6a317558-44c0-5a21-0310-4ae49048134f@intel.com>
-Date:   Wed, 13 Nov 2019 21:26:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <6C0513A5-6C73-4F17-B73B-6F19E7D9EAF0@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 14 Nov 2019 00:29:52 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:34705 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfKNF3w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 00:29:52 -0500
+Received: from marcel-macpro.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 1E414CED05;
+        Thu, 14 Nov 2019 06:38:56 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v4 3/4] Bluetooth: hci_bcm: Support pcm params in dts
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CANFp7mX0tXmBdJOkBUbar6Niwv9D60Fo9CvAcUkEKZKLnt--hQ@mail.gmail.com>
+Date:   Thu, 14 Nov 2019 06:29:50 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <102CFB68-22A0-4DF7-B5CE-F3146AA36746@holtmann.org>
+References: <20191112230944.48716-1-abhishekpandit@chromium.org>
+ <20191112230944.48716-4-abhishekpandit@chromium.org>
+ <DCCD0A71-D696-4701-9BBB-ED6D8FECC7FB@holtmann.org>
+ <CANFp7mX0tXmBdJOkBUbar6Niwv9D60Fo9CvAcUkEKZKLnt--hQ@mail.gmail.com>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 5:17 PM, Nadav Amit wrote:
-> But is it always the case? Looking at __split_large_page(), it seems that the
-> TLB invalidation is only done after the PMD is changed. Can't this leave a
-> small time window in which a malicious actor triggers a machine-check on 
-> another core than the one that runs __split_large_page()?
+Hi Abhishek,
 
-It's not just a split.  It has to be a change that results in
-inconsistencies between two entries in the TLB.  A normal split doesn't
-change the resulting final translations and is never inconsistent
-between the two translations.
+>>> BCM chips may require configuration of PCM to operate correctly and
+>>> there is a vendor specific HCI command to do this. Add support in the
+>>> hci_bcm driver to parse this from devicetree and configure the chip.
+>>> 
+>>> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>>> ---
+>>> 
+>>> Changes in v4: None
+>>> Changes in v3: None
+>>> Changes in v2: None
+>>> 
+>>> drivers/bluetooth/hci_bcm.c | 32 ++++++++++++++++++++++++++++++++
+>>> 1 file changed, 32 insertions(+)
+>>> 
+>>> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+>>> index 6134bff58748..4ee0b45be7e2 100644
+>>> --- a/drivers/bluetooth/hci_bcm.c
+>>> +++ b/drivers/bluetooth/hci_bcm.c
+>>> @@ -88,6 +88,8 @@ struct bcm_device_data {
+>>> *    used to disable flow control during runtime suspend and system sleep
+>>> * @is_suspended: whether flow control is currently disabled
+>>> * @disallow_set_baudrate: don't allow set_baudrate
+>>> + * @has_pcm_params: whether PCM parameters need to be configured
+>>> + * @pcm_params: PCM and routing parameters
+>>> */
+>>> struct bcm_device {
+>>>      /* Must be the first member, hci_serdev.c expects this. */
+>>> @@ -122,6 +124,9 @@ struct bcm_device {
+>>>      bool                    is_suspended;
+>>> #endif
+>>>      bool                    disallow_set_baudrate;
+>>> +
+>>> +     bool                            has_pcm_params;
+>>> +     struct bcm_set_pcm_int_params   pcm_params;
+>>> };
+>>> 
+>>> /* generic bcm uart resources */
+>>> @@ -596,6 +601,16 @@ static int bcm_setup(struct hci_uart *hu)
+>>>                      host_set_baudrate(hu, speed);
+>>>      }
+>>> 
+>>> +     /* PCM parameters if any*/
+>>> +     if (bcm->dev && bcm->dev->has_pcm_params) {
+>>> +             err = btbcm_set_pcm_int_params(hu->hdev, &bcm->dev->pcm_params);
+>>> +
+>>> +             if (err) {
+>>> +                     bt_dev_info(hu->hdev, "BCM: Set pcm params failed (%d)",
+>>> +                                 err);
+>>> +             }
+>>> +     }
+>>> +
+>>> finalize:
+>>>      release_firmware(fw);
+>>> 
+>>> @@ -1132,7 +1147,24 @@ static int bcm_acpi_probe(struct bcm_device *dev)
+>>> 
+>>> static int bcm_of_probe(struct bcm_device *bdev)
+>>> {
+>>> +     int err;
+>>> +
+>>>      device_property_read_u32(bdev->dev, "max-speed", &bdev->oper_speed);
+>>> +
+>>> +     err = device_property_read_u8(bdev->dev, "brcm,bt-sco-routing",
+>>> +                                   &bdev->pcm_params.routing);
+>>> +     if (!err)
+>>> +             bdev->has_pcm_params = true;
+>> 
+>> I think in case of HCI as routing path, these should be using the default or zero values as defined by Broadcom.
+> 
+> I'm not sure what these default values should be. Wouldn't it be
+> reasonable to expect the user/developer to set the various brcm
+> parameters in device tree?
+> If unset, it's just 0.
 
-To have an inconsistency, you need to change the backing physical
-address (or cache attributes?).  I'd need to go double-check the erratum
-to be sure about the cache attributes.
+if that works with the hardware I am fine with that. The other option is to actually first read the current values. And then only change the ones that are supplied by the DT.
 
-In any case, that's why we decided that normal kernel mapping
-split/merges don't need to be mitigated.  But, we should probably
-document this somewhere if it's not clear.
+Regards
 
-Pawan, did we document the results of the audit you did anywhere?
+Marcel
+
