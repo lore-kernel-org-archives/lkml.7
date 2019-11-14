@@ -2,148 +2,170 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C429DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7678C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D95020725
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48FB20723
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 20:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ig7fLC+a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khIcyMl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfKNUfb (ORCPT
+        id S1726953AbfKNUfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:35:31 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23571 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726533AbfKNUfb (ORCPT
+        Thu, 14 Nov 2019 15:35:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53933 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfKNUfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:35:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573763729;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wz78dwaxpm4rR8noHiumwhs8zmjexVrjlYPQCaWOjVU=;
-        b=Ig7fLC+aaD9hzvPqnq14vgAR7KQzjL9NTnDPpHXuomtizCiktEmT1ZnEHX934/ZBIu8B3e
-        wNuR8HHz0OBxQ0/9yQhmKJynbJ58ydkSDDxYdD7si7t8HrPVLigDqNBwtO28NmsIjv3J0F
-        jj1GSfFY/UhuBp15+z3SvdR/ETgZtC8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-jUVu9U6sOhSbba59QKGGZw-1; Thu, 14 Nov 2019 15:35:26 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9D80100550E;
-        Thu, 14 Nov 2019 20:35:24 +0000 (UTC)
-Received: from treble (ovpn-121-52.rdu2.redhat.com [10.10.121.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A025F8164;
-        Thu, 14 Nov 2019 20:35:19 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 14:35:17 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH] x86/speculation: Fix incorrect MDS/TAA mitigation status
-Message-ID: <20191114203517.su2roiygk4htkpc3@treble>
-References: <20191113193350.24511-1-longman@redhat.com>
- <20191114201258.GA18745@guptapadev.amr>
+        Thu, 14 Nov 2019 15:35:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u18so7243159wmc.3;
+        Thu, 14 Nov 2019 12:35:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PYBZiXscqcc5JmmP+m3C7UIXJ3xgM+2CTSb6uB6naGA=;
+        b=khIcyMl+rGT5mwjxWkcHz43uzGegmpoQoNiAADVb/5Cc4nOBUupEIz7xF3e5kEA3RJ
+         3WhFkBBY2OgXVS7ZjoRnKn5MLNAStBxN1psGrejHOlooPJtFTvpvjzhsoxUTcD5ZCan/
+         xZkM+iVchf/PfUnLOH42C+w/jYECSlBjS1v9ANfFvernJ+3stBWdAm13Qtue+Rsturnn
+         aApiNPUaqEi6mGoEUhLztqychUMdjrErWi4d5myCnmNvCw5GBaCfJxXujaGWoIAx+284
+         SwIeO1MHyB+DvWgLiU9BD/kOYHPxLj6HVVFSanH5Nz6VwlNJ8Kal79r/vhc2cA9dx/0Z
+         Vy9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=PYBZiXscqcc5JmmP+m3C7UIXJ3xgM+2CTSb6uB6naGA=;
+        b=HzFLKyo6V7Bm6K0lu/nMIVuOltd0lBa4yiEqxDI2CsPOQtR/KyuRXVYPj6DtRBAud4
+         bgiuajhWecTBbFcyC+PpF9N4pQhkBtiWcHg0LwZHVtJ5Ss8j/xvUnUl9GWLRU15xrHjU
+         lP3pUfi5hoyEOlqBWLOPI84G+2ub1ZmqCKV7aEvNe0lkxB7LjbUCbOC/95WpHu4JiZgZ
+         6hkeSY9ztd5IJWUUBKqb7hCoDJLUwRKeDYWmztiOXm1mF2MzzcsPrABRZGXv+MeapmM6
+         6ODqe/KYncILK9vTYVCoFVqA9hS9nAX/FJLQ2tGwq2ZgHafNobeUWoJX4oUgo8lvuT/G
+         C7uA==
+X-Gm-Message-State: APjAAAVJUeX/4V4YYCxGUEtbvEndxGwfMHgKFAMeLjkeH/ogUe4+5k3Y
+        gkB10NemiIu5T6OmcapvZms=
+X-Google-Smtp-Source: APXvYqx99nkbeN1wTXu6cYa79Rj3kijaL40vghksl+vhL+HIzNvJwSaTbQIEwfHEnNBOBI8K6Q9MZw==
+X-Received: by 2002:a1c:5603:: with SMTP id k3mr10979084wmb.150.1573763741391;
+        Thu, 14 Nov 2019 12:35:41 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id z69sm428387ede.88.2019.11.14.12.35.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 12:35:40 -0800 (PST)
+Subject: Re: [PATCH v3 1/2] ARM: dts: bcm2711: force CMA into first GB of
+ memory
+To:     Stefan Wahren <wahrenst@gmx.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191107095611.18429-1-nsaenzjulienne@suse.de>
+ <20191107095611.18429-2-nsaenzjulienne@suse.de>
+ <20191107112020.GA16965@arrakis.emea.arm.com>
+ <4f82d3b5-fe5e-03a5-220e-f1431cb3a50c@gmail.com>
+ <8c84654e-f91e-7865-0cf7-99b30820b7d0@gmx.net>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <0bc15362-1579-b0c5-bd68-7fb5cc6b09a9@gmail.com>
+Date:   Thu, 14 Nov 2019 12:35:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191114201258.GA18745@guptapadev.amr>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: jUVu9U6sOhSbba59QKGGZw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <8c84654e-f91e-7865-0cf7-99b30820b7d0@gmx.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 12:12:58PM -0800, Pawan Gupta wrote:
-> On Wed, Nov 13, 2019 at 02:33:50PM -0500, Waiman Long wrote:
-> > For MDS vulnerable processors with TSX support, enabling either MDS
-> > or TAA mitigations will enable the use of VERW to flush internal
-> > processor buffers at the right code path. IOW, they are either both
-> > mitigated or both not mitigated. However, if the command line options
-> > are inconsistent, the vulnerabilites sysfs files may not report the
-> > mitigation status correctly.
-> >=20
-> > For example, with only the "mds=3Doff" option:
-> >=20
-> >   vulnerabilities/mds:Vulnerable; SMT vulnerable
-> >   vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vu=
-lnerable
-> >=20
-> > The mds vulnerabilities file has wrong status in this case.
-> >=20
-> > Change taa_select_mitigation() to sync up the two mitigation status
-> > and have them turned off if both "mds=3Doff" and "tsx_async_abort=3Doff=
-"
-> > are present.
-> >=20
-> > Signed-off-by: Waiman Long <longman@redhat.com>
-> > ---
-> >  arch/x86/kernel/cpu/bugs.c | 17 +++++++++++++++--
-> >  1 file changed, 15 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> > index 4c7b0fa15a19..418d41c1fd0d 100644
-> > --- a/arch/x86/kernel/cpu/bugs.c
-> > +++ b/arch/x86/kernel/cpu/bugs.c
-> > @@ -304,8 +304,12 @@ static void __init taa_select_mitigation(void)
-> >  =09=09return;
-> >  =09}
-> > =20
-> > -=09/* TAA mitigation is turned off on the cmdline (tsx_async_abort=3Do=
-ff) */
-> > -=09if (taa_mitigation =3D=3D TAA_MITIGATION_OFF)
-> > +=09/*
-> > +=09 * TAA mitigation via VERW is turned off if both
-> > +=09 * tsx_async_abort=3Doff and mds=3Doff are specified.
-> > +=09 */
-> > +=09if (taa_mitigation =3D=3D TAA_MITIGATION_OFF &&
-> > +=09    mds_mitigation =3D=3D MDS_MITIGATION_OFF)
-> >  =09=09goto out;
-> > =20
-> >  =09if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
-> > @@ -339,6 +343,15 @@ static void __init taa_select_mitigation(void)
-> >  =09if (taa_nosmt || cpu_mitigations_auto_nosmt())
-> >  =09=09cpu_smt_disable(false);
-> > =20
-> > +=09/*
-> > +=09 * Update MDS mitigation, if necessary, as the mds_user_clear is
-> > +=09 * now enabled for TAA mitigation.
-> > +=09 */
-> > +=09if (mds_mitigation =3D=3D MDS_MITIGATION_OFF &&
-> > +=09    boot_cpu_has_bug(X86_BUG_MDS)) {
-> > +=09=09mds_mitigation =3D MDS_MITIGATION_FULL;
-> > +=09=09mds_select_mitigation();
->=20
-> This will cause a confusing print in dmesg from previous and this call
-> to mds_select_mitigation().
->=20
-> =09"MDS: Vulnerable"
-> =09"MDS: Mitigation: Clear CPU buffers"
->=20
-> Maybe delay MDS mitigation print till TAA is evaluated.
+On 11/7/19 11:09 AM, Stefan Wahren wrote:
+> 
+> Am 07.11.19 um 18:59 schrieb Florian Fainelli:
+>> On 11/7/19 3:20 AM, Catalin Marinas wrote:
+>>> Hi Nicolas,
+> ...
+>>> Sorry, I just realised I can't merge this as it depends on a patch
+>>> that's only in -next: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi
+>>> 4 support").
+>>>
+>>> I'll queue the second patch in the series to fix the regression
+>>> introduces by the ZONE_DMA patches and, AFAICT, the dts update can be
+>>> queued independently.
+>> I will take it directly, unless you have more stuff coming Stefan?
+> Please take. Thanks
 
-Since they're so intertwined it might make sense to just combine the two
-mitigations into a single function.
+I picked up v2 because it had your explicit Acked-by tag, but amended in
+a similar way to what Nicolas did, except s/Raspberry Pi 4/BCM2711/:
 
---=20
-Josh
+https://github.com/Broadcom/stblinux/commit/d98a8dbdaec628f5c993cc711ba9ab98fe909f0f
 
+neither of you will probably mind me having done that.
+-- 
+Florian
