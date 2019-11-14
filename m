@@ -2,169 +2,126 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC46C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CA0C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C2C206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 06:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39ECA2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Wp40cQwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbfKNG7Q (ORCPT
+        id S1726678AbfKNHAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:59:16 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60938 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbfKNG7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:59:15 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1F858AD4A2CE2703F348;
-        Thu, 14 Nov 2019 14:59:13 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.96) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
- 14:59:05 +0800
-Subject: Re: [PATCH] debugfs: fix potential infinite loop in
- debugfs_remove_recursive
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
-        <oleg@redhat.com>, <jack@suse.cz>, <linux-kernel@vger.kernel.org>,
-        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>,
-        <chenxiang66@hisilicon.com>, <xiexiuqi@huawei.com>
-References: <1572528884-67565-1-git-send-email-yukuai3@huawei.com>
- <20191113151755.7125e914@gandalf.local.home>
- <a399ae58-a467-3ff9-5a01-a4a2cdcf4fd6@huawei.com>
- <20191113214307.29a8d001@oasis.local.home>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <0ceb4529-5238-e7fc-2b5b-d2f0bdeb706e@huawei.com>
-Date:   Thu, 14 Nov 2019 14:59:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 14 Nov 2019 02:00:39 -0500
+Received: from ozlabs.org ([203.11.71.1]:42553 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbfKNHAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 02:00:38 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47DC6q4xrdz9s7T;
+        Thu, 14 Nov 2019 18:00:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573714836;
+        bh=euj/0s9yXpcFqoYhD71j8Eq1U9uEbXtJxC0RlGaVYMc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Wp40cQwCzSQ/omfkQmgP4QnhTq3IlIENNc3QZJ9Z+6ELKQC+MsLMyDsuujd8GmIfK
+         35nq9zWBFCeCwL+g3XFB3ZvPSVd8PCN9+dPuxT2/PJyjzPNLLfsZaX9n2EMXYC+3C5
+         hFSqJXfb8jVOqhcvqJJouCUYaqrCgZeC2+unp9clzn4AnLK5LKIvU5rlD74lay+Rru
+         rbKK4e/3TA8VMmY0wd9EVfsj/aoDJg5A61gn3+AiDfT2XDlFzEEpPeXwtvzhbbdNbt
+         IkiCJVMiY6Amiil61V92+11+bX0x3ROrbpBrsj7UJWMnzR6Jf5e1/3eD6TEjY5C9YW
+         d/9Nce/AkapXw==
+Date:   Thu, 14 Nov 2019 18:00:21 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mohammad Nasirifar <far.nasiri.m@gmail.com>
+Subject: linux-next: manual merge of the akpm-current tree with the y2038
+ tree
+Message-ID: <20191114180021.1a41c73b@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191113214307.29a8d001@oasis.local.home>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.96]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/odvzAu7STO0W1ww9f_42E9f";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/odvzAu7STO0W1ww9f_42E9f
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2019/11/14 10:43, Steven Rostedt wrote:
-> On Thu, 14 Nov 2019 10:01:23 +0800
-> "yukuai (C)" <yukuai3@huawei.com> wrote:
-> 
-> 
->> Do you agree with that list_empty(&chile->d_subdirs) here is not
->> appropriate? Since it can't skip the subdirs that is not
->> simple_positive(simple_positive() will return false), which is the
->> reason of infinite loop.
-> 
-> I do agree that simple_empty() is wrong, for the reasons you pointed out.
-> 
->>>> +		if (!simple_empty(child)) {
->>>
->>> Have you tried this with lockdep enabled? I'm thinking that you might
->>> get a splat with holding parent->d_lock and simple_empty(child) taking
->>> the child->d_lock.
->> The locks are taken and released in the right order:
->> take parent->d_lock
->> 	take child->d_lock
->> 		list_for_each_entry(c, &child->d_sundirs, d_child)
->> 			take c->d_lock
->> 			release c->d_lock
->> 	release child->d_lock
->> release parent->d_lock
->> I don't see anything wrong, am I missing something?
-> 
-> It should be fine, my worry is that we may be missing a lockdep
-> annotation, that might confuse lockdep, as lockdep may see this as the
-> same type of lock being taken, and wont know the order.
-> 
-> Have you tried this patch with lockdep enabled and tried to hit this
-> code path?
-> 
-> -- Steve
-> 
-> .
-> 
-You are right, I get the results with lockdep enabled:
-[   64.314748] ============================================
-[   64.315568] WARNING: possible recursive locking detected
-[   64.316549] 5.4.0-rc7-dirty #5 Tainted: G           O
-[   64.317398] --------------------------------------------
-[   64.318230] rmmod/2607 is trying to acquire lock:
-[   64.318982] ffff88812c8d01e8 
-(&(&dentry->d_lockref.lock)->rlock){+.+.}, at: simple_empty+0x2c/0xf0
-[   64.320539]
-[   64.320539] but task is already holding lock:
-[   64.321466] ffff88812c8d00a8 
-(&(&dentry->d_lockref.lock)->rlock){+.+.}, at: 
-debugfs_remove_recursive+0x7a/0x260
-[   64.323066]
-[   64.323066] other info that might help us debug this:
-[   64.324200]  Possible unsafe locking scenario:
-[   64.324200]
-[   64.325166]        CPU0
-[   64.325569]        ----
-[   64.325966]   lock(&(&dentry->d_lockref.lock)->rlock);
-[   64.326790]   lock(&(&dentry->d_lockref.lock)->rlock);
-[   64.327604]
-[   64.327604]  *** DEADLOCK ***
-[   64.327604]
-[   64.328675]  May be due to missing lock nesting notation
-[   64.328675]
-[   64.329758] 2 locks held by rmmod/2607:
-[   64.330373]  #0: ffff88812c8ba630 (&sb->s_type->i_mutex_key#3){++++}, 
-at: debugfs_remove_recursive+0x6a/0x260
-[   64.331997]  #1: ffff88812c8d00a8 
-(&(&dentry->d_lockref.lock)->rlock){+.+.}, at: 
-debugfs_remove_recursive+0x7a/0x260
-[   64.333713]
-[   64.333713] stack backtrace:
-[   64.334412] CPU: 2 PID: 2607 Comm: rmmod Tainted: G           O 
-5.4.0-rc7-dirty #5
-[   64.335688] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
-BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-[   64.337582] Call Trace:
-[   64.337999]  dump_stack+0xd6/0x13a
-[   64.338554]  __lock_acquire+0x19b1/0x1a70
-[   64.339205]  lock_acquire+0x10a/0x2a0
-[   64.339821]  ? simple_empty+0x2c/0xf0
-[   64.340503]  _raw_spin_lock+0x50/0xd0
-[   64.341097]  ? simple_empty+0x2c/0xf0
-[   64.341693]  simple_empty+0x2c/0xf0
-[   64.342258]  debugfs_remove_recursive+0xef/0x260
-[   64.343755]  hisi_sas_test_exit+0x26/0x30 [hisi_sas_test]
-[   64.344732]  __x64_sys_delete_module+0x258/0x330
-[   64.345474]  ? do_syscall_64+0x74/0x530
-[   64.346094]  ? trace_hardirqs_on+0x6a/0x1e0
-[   64.346766]  do_syscall_64+0xcc/0x530
-[   64.347349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   64.348265] RIP: 0033:0x7f2418459fc7
-[   64.348841] Code: 73 01 c3 48 8b 0d c1 de 2b 00 f7 d8 64 89 01 48 83 
-c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 008
-[   64.351789] RSP: 002b:00007fffbc2b0ab8 EFLAGS: 00000206 ORIG_RAX: 
-00000000000000b0
-[   64.353106] RAX: ffffffffffffffda RBX: 00007fffbc2b0b18 RCX: 
-00007f2418459fc7
-[   64.354238] RDX: 000000000000000a RSI: 0000000000000800 RDI: 
-000055b1e1d84258
-[   64.355377] RBP: 000055b1e1d841f0 R08: 00007fffbc2afa31 R09: 
-0000000000000000
-[   64.356628] R10: 00007f24184cc260 R11: 0000000000000206 R12: 
-00007fffbc2b0ce0
-[   64.357760] R13: 00007fffbc2b13d6 R14: 000055b1e1d83010 R15: 
-000055b1e1d841f0
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-The warning will disappeare by adding 
-lockdep_set_novalidate_class(&child->d_lock) before calling 
-simple_empty(child). But I'm not sure It's the right modfication.
+  include/linux/syscalls.h
 
-Thanks
-Yu Kuai
+between commit:
 
+  4ced3933226d ("y2038: syscalls: change remaining timeval to __kernel_old_=
+timeval")
+
+from the y2038 tree and commit:
+
+  01606a699584 ("syscalls: fix references to filenames containing syscall d=
+efs")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/syscalls.h
+index f90f1c8705fc,1dbefa5e00e5..000000000000
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@@ -731,10 -731,10 +731,10 @@@ asmlinkage long sys_prctl(int option, u
+  			unsigned long arg4, unsigned long arg5);
+  asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, s=
+truct getcpu_cache __user *cache);
+ =20
+- /* kernel/time.c */
++ /* kernel/time/time.c */
+ -asmlinkage long sys_gettimeofday(struct timeval __user *tv,
+ +asmlinkage long sys_gettimeofday(struct __kernel_old_timeval __user *tv,
+  				struct timezone __user *tz);
+ -asmlinkage long sys_settimeofday(struct timeval __user *tv,
+ +asmlinkage long sys_settimeofday(struct __kernel_old_timeval __user *tv,
+  				struct timezone __user *tz);
+  asmlinkage long sys_adjtimex(struct __kernel_timex __user *txc_p);
+  asmlinkage long sys_adjtimex_time32(struct old_timex32 __user *txc_p);
+
+--Sig_/odvzAu7STO0W1ww9f_42E9f
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3M+4UACgkQAVBC80lX
+0Gz/2ggApPIv/8CUtjx2tFvfYNiKFGiaQa0IGThYq1JElMYSrtiAyOEVR6Yi8HHj
++CfRsavd4jRtWBCjkKNmVSCU7wy0ChCe4hk8I/4p48oq9luv+x0hbD0/rWbXxir9
+iDsQVnKlx5oSDm/WXq01DBQnLoKoArdMuqW6Vv7xFOIU4GrYxMutICoZq7oiXET1
+MQnDUe7/AU/SuYQy+sRO3Sq48l52e/4tOuda2yGwf3QyWXQZlQGyBhyuUaZ6MACf
+DApU8sfJJCbXaroNF2Ovl80Z/R4tLTjwM+jojGnA8OyoyHJ4OXTPeM2PwHtbwNjY
+et2bPwBNBNJFxqj79jy6aBMlZT1U6w==
+=jp/n
+-----END PGP SIGNATURE-----
+
+--Sig_/odvzAu7STO0W1ww9f_42E9f--
