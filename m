@@ -2,236 +2,108 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE9FC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6031AC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565ED206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:39:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="m1zvT6wX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fjT6lIeS"
+	by mail.kernel.org (Postfix) with ESMTP id 340D9206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 17:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573753194;
+	bh=VzKteWn1F/CosCCsd6C4IKUCGWE4H5oQV8jGARZ48tc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pwDx16oxNLMECknXV4cBSM8aFcd0F1mZIbBj5XmdhpmJd8ZI4PjwBKszMYmsfuizU
+	 C2FjuDTMh2WlVaePlDEOEy2Xh080jfd9MOg32fVGYFoXmnqaDHfCySpqC5iAh2bb5w
+	 hm97IGKVFol6urLuQes3XMKVS40/aC4b40Gui2Y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfKNRjP (ORCPT
+        id S1726767AbfKNRjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:39:15 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:52076 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNRjP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:39:15 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B2A7F60FF9; Thu, 14 Nov 2019 17:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573753153;
-        bh=RPC+2jas2s+k3RFoeRjA2/hYuU9Gn+d5GL6qKdZf9dY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m1zvT6wXxuMOnsA/omGOq7bxZP5u4CDlSPxH/ijFT939KisenUH95k+mV6Qj59E6b
-         t3809XLmb+9tteZNHaVzPc6ygS9kRAj9VZksanja0VmjKlBb5ZUy/PouGC1ukSfQ+3
-         zwyHw/0gaCtSs+SkjOpgIkEk+Keuy1D7LJFIvz7M=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        Thu, 14 Nov 2019 12:39:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbfKNRjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:39:53 -0500
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7B97860DCD;
-        Thu, 14 Nov 2019 17:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573753152;
-        bh=RPC+2jas2s+k3RFoeRjA2/hYuU9Gn+d5GL6qKdZf9dY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fjT6lIeSx3d+sYc3se784USyc4fzu6Cv+F+9SK3Qwmn99luQw1Q55Mv7gL6reoreR
-         0a7yPbyXzwaCbTs4l4ujGSQNji2e9uN0Q2NelAHobdOPnIN3+kYh/XFCRcck2o29mI
-         p/sekKnnydc0Knr5/4BI0wEO6gcH3Cenab6C1Vj4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7B97860DCD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 14 Nov 2019 10:39:09 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Shubhashree Dhar <dhar@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, abhinavk@codeaurora.org,
-        robdclark@gmail.com, nganji@codeaurora.org, seanpaul@chromium.org,
-        hoegsberg@chromium.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org
-Subject: Re: [Freedreno] [v1] msm: disp: dpu1: add support to access hw irqs
- regs depending on revision
-Message-ID: <20191114173909.GA19503@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Shubhashree Dhar <dhar@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, abhinavk@codeaurora.org,
-        robdclark@gmail.com, nganji@codeaurora.org, seanpaul@chromium.org,
-        hoegsberg@chromium.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org
-References: <1573710536-26889-1-git-send-email-dhar@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B0120718;
+        Thu, 14 Nov 2019 17:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573753192;
+        bh=VzKteWn1F/CosCCsd6C4IKUCGWE4H5oQV8jGARZ48tc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qN2v5wV095fAUbYtR5P6fE7B5vGnb+vx313xCT936CPIndi5UGPzUwBJ4RrLRuJ3x
+         doWz3mevftGogNgXftWdpHE1RIm0Y5J6GvK5tLIDIKNpwQIF4FFify2At4paexUm3K
+         4SIxI+snb5+OFz1v88ytyKBaUGmq/kZP83rqrNBI=
+Received: by mail-qv1-f48.google.com with SMTP id s18so2698307qvr.4;
+        Thu, 14 Nov 2019 09:39:52 -0800 (PST)
+X-Gm-Message-State: APjAAAWU3N45mXI3Ud44Pp4vYPoEZm/VZN9MOpL5LaaVCp0AL7a7LjP+
+        ZR2aMon3mU4pSQ46aeWgIpGYozdnZqVv/a9nCw==
+X-Google-Smtp-Source: APXvYqxjXzdKzRE0EK2pcCqMsxPiZ4eYz6WenDnilDBfvtuJZs9Eo9skkMhiHprH/vEA4CI6gl4l72fI4G+D1tx4Ce4=
+X-Received: by 2002:a0c:d2b4:: with SMTP id q49mr8873666qvh.135.1573753191385;
+ Thu, 14 Nov 2019 09:39:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573710536-26889-1-git-send-email-dhar@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+ <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com> <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
+In-Reply-To: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 14 Nov 2019 11:39:40 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
+Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin zhu <yixin.zhu@linux.intel.com>,
+        cheol.yong.kim@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:18:56AM +0530, Shubhashree Dhar wrote:
-> Current code assumes that all the irqs registers offsets can be
-> accessed in all the hw revisions; this is not the case for some
-> targets that should not access some of the irq registers.
-> This change adds the support to selectively remove the irqs that
-> are not supported in some of the hw revisions.
-> 
-> Change-Id: I6052b8237b703a1a9edd53893e04f7bd72223da1
-> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    |   1 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |   3 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c |  22 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h |   1 +
->  drivers/gpu/drm/panel/panel-visionox-rm69299.c    | 478 ++++++++++++++++++++++
->  5 files changed, 500 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> index 04c8c44..357e15b 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> @@ -421,6 +421,7 @@ static void sdm845_cfg_init(struct dpu_mdss_cfg *dpu_cfg)
->  		.reg_dma_count = 1,
->  		.dma_cfg = sdm845_regdma,
->  		.perf = sdm845_perf_data,
-> +		.mdss_irqs[0] = 0x3ff,
->  	};
->  }
->  
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> index ec76b868..def8a3f 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> @@ -646,6 +646,7 @@ struct dpu_perf_cfg {
->   * @dma_formats        Supported formats for dma pipe
->   * @cursor_formats     Supported formats for cursor pipe
->   * @vig_formats        Supported formats for vig pipe
-> + * @mdss_irqs          Bitmap with the irqs supported by the target
->   */
->  struct dpu_mdss_cfg {
->  	u32 hwversion;
-> @@ -684,6 +685,8 @@ struct dpu_mdss_cfg {
->  	struct dpu_format_extended *dma_formats;
->  	struct dpu_format_extended *cursor_formats;
->  	struct dpu_format_extended *vig_formats;
-> +
-> +	DECLARE_BITMAP(mdss_irqs, BITS_PER_BYTE * sizeof(long));
+On Wed, Nov 13, 2019 at 9:27 PM Tanwar, Rahul
+<rahul.tanwar@linux.intel.com> wrote:
+>
+>
+> Hi Linus,
+>
+> On 13/11/2019 10:46 PM, Linus Walleij wrote:
+> > On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
+> > <rahul.tanwar@linux.intel.com> wrote:
+> >
+> >> Add dt bindings document for pinmux & GPIO controller driver of
+> >> Intel Lightning Mountain SoC.
+> >>
+> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> > (...)
+> >
+> >> +properties:
+> >> +  compatible:
+> >> +    const: intel,lgm-pinctrl
+> > Just noted from another review where Rob noted that this name should
+> > match the internal name in the datasheet for this hardware block. Is it
+> > really called "lgm-pinctrl" inside Intel?
+> >
+> > intel,lightning-mountain-io and similar are perfectly fine if that is the
+> > name it has in your documentation.
+>
+> Our documentation does not have any specific names for these hardware
+> blocks. It names it in a very generic/standard manner like GPIO, pinmux..
+>
+> To make the name explicit & self explanatory, i should probably change
+> the name as you suggested i.e. intel,lightning-mountain-io.
 
-This is a very round about way of declaring an unsigned long. Do you ever
-expect to have more than a long's worth of interrupt bits? If not, then just an
-unsigned long mdss_irqs would be the preferred less macro-y way of doing this.
+You should also be consistent with 'lgm' vs. 'lightning-mountain' use
+across bindings some of which I think have already been accepted.
 
->  };
->  
->  struct dpu_mdss_hw_cfg_handler {
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-> index 8bfa7d0..2a3634c 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-> @@ -800,7 +800,8 @@ static void dpu_hw_intr_dispatch_irq(struct dpu_hw_intr *intr,
->  		start_idx = reg_idx * 32;
->  		end_idx = start_idx + 32;
->  
-> -		if (start_idx >= ARRAY_SIZE(dpu_irq_map) ||
-> +		if (!test_bit(reg_idx, &intr->irq_mask) ||
-> +			start_idx >= ARRAY_SIZE(dpu_irq_map) ||
->  				end_idx > ARRAY_SIZE(dpu_irq_map)) 
-
-This last one will always be true since end_idx is always 32 bigger than
-start_idx. If you add the start_idx check you no longer need the end_idx check.
-
->  			continue;
->  
-> @@ -955,8 +956,11 @@ static int dpu_hw_intr_clear_irqs(struct dpu_hw_intr *intr)
->  	if (!intr)
->  		return -EINVAL;
->  
-> -	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++)
-> -		DPU_REG_WRITE(&intr->hw, dpu_intr_set[i].clr_off, 0xffffffff);
-> +	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
-> +		if(test_bit(i, &intr->irq_mask))
-> +			DPU_REG_WRITE(&intr->hw,
-> +					dpu_intr_set[i].clr_off, 0xffffffff);
-> +	}
->  
->  	/* ensure register writes go through */
->  	wmb();
-> @@ -971,8 +975,11 @@ static int dpu_hw_intr_disable_irqs(struct dpu_hw_intr *intr)
->  	if (!intr)
->  		return -EINVAL;
->  
-> -	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++)
-> -		DPU_REG_WRITE(&intr->hw, dpu_intr_set[i].en_off, 0x00000000);
-> +	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
-> +		if(test_bit(i, &intr->irq_mask))
-> +			DPU_REG_WRITE(&intr->hw,
-> +					dpu_intr_set[i].en_off, 0x00000000);
-> +	}
->  
->  	/* ensure register writes go through */
->  	wmb();
-> @@ -991,6 +998,10 @@ static void dpu_hw_intr_get_interrupt_statuses(struct dpu_hw_intr *intr)
->  
->  	spin_lock_irqsave(&intr->irq_lock, irq_flags);
->  	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
-> +
-
-This extra blank line isn't strictly needed if you don't want it.
-
-> +		if(!test_bit(i, &intr->irq_mask))
-> +			continue;
-> +
->  		/* Read interrupt status */
->  		intr->save_irq_status[i] = DPU_REG_READ(&intr->hw,
->  				dpu_intr_set[i].status_off);
-> @@ -1115,6 +1126,7 @@ struct dpu_hw_intr *dpu_hw_intr_init(void __iomem *addr,
->  		return ERR_PTR(-ENOMEM);
->  	}
->  
-> +	intr->irq_mask = m->mdss_irqs[0];
->  
->  	return intr;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-> index 4edcf40..fc9c986 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-> @@ -187,6 +187,7 @@ struct dpu_hw_intr {
->  	u32 *save_irq_status;
->  	u32 irq_idx_tbl_size;
->  	spinlock_t irq_lock;
-> +	unsigned long irq_mask;
-
-This plus the chunk above would imply that, no, you never expect more than a
-long's worth of interrupt bits.
-
->  	spin_lock_init(&intr->irq_lock);
->  };
->  
->  /**
-> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> new file mode 100644
-> index 00000000..1bbd40d
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-
-Do you mean this file to be in this patch? The commit log doesn't make mention
-of it and it doesn't seem to be related.
-
-<snip>
-
-Jordan
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
