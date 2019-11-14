@@ -2,154 +2,149 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D12FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95672C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EF620643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2BC20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 00:42:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L45FU6S5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mfj+mls9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKNAlt (ORCPT
+        id S1727022AbfKNAmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:41:49 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:10550 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfKNAls (ORCPT
+        Wed, 13 Nov 2019 19:42:04 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18192 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfKNAmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Nov 2019 19:41:48 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191114004146epoutp04fe3a04ec78306fc5c24825f29bd2ac0f~W4KIZjWnL1752417524epoutp04p
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 00:41:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191114004146epoutp04fe3a04ec78306fc5c24825f29bd2ac0f~W4KIZjWnL1752417524epoutp04p
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573692106;
-        bh=3nKxhfn3QKWb/HaThz1/AtERm4reG8NxbkcosujDoE0=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=L45FU6S5fK4W9hBf3e6iCDixjgh8IXVyYUUQxt03gySwcgmA0fRJuw/+XRpsaApn5
-         YIpczQOlVQFmYpbFvHetm7lcpnzRHjx/kCHScs9+SmbJyLfXYvRKtYgYIXoSBbHScv
-         wc3wD4qCLuhohJEuNqX5A7VOCzXWfshhy2PxcMQU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191114004145epcas1p1d1a2bf89012aab2ea6b0b31447c62002~W4KHZtlC82838528385epcas1p1a;
-        Thu, 14 Nov 2019 00:41:45 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47D2jh3Q64zMqYm5; Thu, 14 Nov
-        2019 00:41:44 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        27.56.04135.8C2ACCD5; Thu, 14 Nov 2019 09:41:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191114004144epcas1p439302839cefe1e9c89de63ea3ace0a20~W4KF_SCVX1491714917epcas1p4A;
-        Thu, 14 Nov 2019 00:41:44 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191114004144epsmtrp215af9d75922b44789d3a869181e25076~W4KF9oqlh2646826468epsmtrp24;
-        Thu, 14 Nov 2019 00:41:44 +0000 (GMT)
-X-AuditID: b6c32a36-7e3ff70000001027-5e-5dcca2c8318e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        19.A8.25663.7C2ACCD5; Thu, 14 Nov 2019 09:41:43 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191114004143epsmtip1b76194f9a2adf7abdc3a23dbff30902d~W4KFvBWC40748507485epsmtip1I;
-        Thu, 14 Nov 2019 00:41:43 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Eric Sandeen'" <sandeen@sandeen.net>,
-        =?UTF-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@vt.edu>
-Cc:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <hch@lst.de>, <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>
-In-Reply-To: <5965ff2d-6cf5-f0b2-54c6-cba6e0cfc364@sandeen.net>
-Subject: RE: [PATCH 00/13] add the latest exfat driver
-Date:   Thu, 14 Nov 2019 09:41:43 +0900
-Message-ID: <003a01d59a84$498b1570$dca14050$@samsung.com>
+        Wed, 13 Nov 2019 19:42:03 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcca2da0000>; Wed, 13 Nov 2019 16:42:02 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 13 Nov 2019 16:42:03 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 13 Nov 2019 16:42:03 -0800
+Received: from [10.2.160.107] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 Nov
+ 2019 00:42:02 +0000
+Subject: Re: [PATCH] mm: Cleanup __put_devmap_managed_page() vs ->page_free()
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        <linux-nvdimm@lists.01.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <157368992671.2974225.13512647385398246617.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <913133b7-58d8-9645-fc89-c2819825e1ee@nvidia.com>
+Date:   Wed, 13 Nov 2019 16:39:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <157368992671.2974225.13512647385398246617.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 14.0
-Content-Language: ko
-Thread-Index: AQHHxga7Pe0xkp6Lg43M9LEQ0kGZ9QIMNz33AdkqbhQCC3wlLQJLNfGap2OXC/A=
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm29nOOatWX9ust0WxDhRprG3OrVO4riKLoqQiKLJ1cAeVtrO1
-        M8UulHRVsbAoqpldscgiQ1apEda6mKBRWUSGXciYrdTULj+MaNsx8t/zPe/zfO/7fN9LE+pr
-        pI7OFwK8X+DcDDlKfvN+ssHw+HxrtulY2yR2z4Vakr185aGMfdXZQbDtjadIdt+LFDb054GC
-        fd73Tb6QcjQEOylHU9VVynH7dTHpOBSqQY7QhQ8yx2DdVEf41lcyi1rvTs/jORfv1/NCjteV
-        L+TamWWrnUucVpvJbDDPZecweoHz8HYmY3mWITPfHZuH0Rdy7oIYlcWJImOcn+73FgR4fZ5X
-        DNgZ3udy+8wm32yR84gFQu7sHK9nntlkSrXGlJvcedHql5RvQFPUe/2arBjVaMqQkgacBp9/
-        V8jL0ChajesR/IiUy+IFNR5AEAkbpcJPBF11PeQ/R/TMW4VUuIOg8l43kg5RBPee3kjYSWyA
-        P7+bEg4t3gw3HjRTcRGBdyM48+mEIl5Q4gVwPNKSMGiwDb7vPZowyPF0GGivQXGswnPhzeE3
-        w3g8tJzskscxgWfBxXNfCGkkPdS3fUESr4XK0v2E1HgFNLw7kggH+BcJkccdw4YMCFZ9QBLW
-        QLQ5RElYB4O9d2JD0DG8HfqbhuUlCLp/2SVsgde11xVxCYGTobbRKNHToGGoaniEsdD7o1wh
-        3aKCkv1qSTIdDj2/L5PwZCg78I2qQExwRLDgiGDBEWGC/5udRfIaNIH3iZ5cXjT7Ukd+dh1K
-        7GqKrR6df7I8jDCNmDGqu0mt2WoFVyhu9YQR0ASjVc0UYpTKxW3dxvu9Tn+BmxfDyBp798OE
-        LinHG9t8IeA0W1MtFgubZptjs1qYiapFl6qz1TiXC/Cbed7H+//5ZLRSV4xsV3Weu3TPknE7
-        X6LTDW3vjmtStYpI34YrSV1b0r9rncoZC7SNb4vG7/6Idpzo7pzZ/8i4HrcrdSVjn2X3C2OK
-        OmhLWsWqbXvtyStNPZS+1VkYisLBnY+ChZ/XVeNFjZPXoJbmtaNLdz1cl+I1Dh0Q3y+esdRV
-        3Jd5e2hj2uAUYORiHmdOIfwi9xcGG05awQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnO7xRWdiDZ59MLNoXryezWLl6qNM
-        Ftfv3mK2uLxrDptF6xUtiy3/jrBaXHr/gcWB3WPnrLvsHvvnrmH32H2zgc2jb8sqRo8tix8y
-        eXzeJOdxaPsbtgD2KC6blNSczLLUIn27BK6MvRd3MBa85K3YvK+TrYHxNVcXIyeHhICJxKv5
-        91i7GLk4hAR2M0r8Ov+eCSIhLXHsxBnmLkYOIFtY4vDhYoiaF4wSd/o2MYLUsAnoSvz7s58N
-        xBYRyJbYeuQ4O4jNLNDBKLGpyxaiYSqTRNv+mWANnAL2EtOfnwRbICxgJvGlZQpYM4uAqsSn
-        y6vAangFLCVuT7wNZQtKnJz5hAViqLZE78NWRhh72cLXzBCHKkjsOPsaKi4iMbuzjRniID+J
-        nfcnsUxgFJ6FZNQsJKNmIRk1C0n7AkaWVYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsY
-        wRGmpbWD8cSJ+EOMAhyMSjy8EhJnYoVYE8uKK3MPMUpwMCuJ8GrkAYV4UxIrq1KL8uOLSnNS
-        iw8xSnOwKInzyucfixQSSE8sSc1OTS1ILYLJMnFwSjUwOji73ri1dvfuZx1Wzy+aL39r/Svl
-        T/5D/65fc0OVHWdsFopZYq5qM9P9AJPwFRHvI08PqM1br/x2ctdqucCTrru3Mk8pedPckGBX
-        obLz0fVTz2+dvbGqLWiTw6UZr6pz9n2YG+or4f56beH/mcG/j5ucWTXl1mEW1Vfm1s1lMiJc
-        82ZwtL9/YqXEUpyRaKjFXFScCADErj4xrAIAAA==
-X-CMS-MailID: 20191114004144epcas1p439302839cefe1e9c89de63ea3ace0a20
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191113082216epcas1p2e712c23c9524e04be624ccc822b59bf0
-References: <CGME20191113082216epcas1p2e712c23c9524e04be624ccc822b59bf0@epcas1p2.samsung.com>
-        <20191113081800.7672-1-namjae.jeon@samsung.com>
-        <69d00c12-7b8a-1d47-0c18-58323f7ca60b@sandeen.net>
-        <367298.1573682134@turing-police>
-        <5965ff2d-6cf5-f0b2-54c6-cba6e0cfc364@sandeen.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573692122; bh=nHBqKFuyS3Jqi47A+b+7bCsdLPkBjyfHLHVyQVlH5s4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mfj+mls9Md6loxbYBg0RKUGTHWE83J7r/HTza4FSYS/5NJpTEpg2CWpo40dqRX44+
+         ajl43OHTFYsQowjpTzBH7ZG1pTO8SEok2b2z6W9HC0AEQFF5y+7ki4ZiCjuAmJhSUr
+         9145t48pXQ16RpzNBRlEsbqImCl8QHDCSXJVmguYGxAxx7q3iSEy9ByUVyfDVBNq71
+         aqkHuqQyRRpBigl9VkMvUrwWr/3fmaRqMIns6aKSWPne9X5LHUJKn05kH8ejTwpgaC
+         UQKKSqa3O0YFIGHAms67s2H1FHY6cwFQ/zBsA72LKnaD5bDaMSzkNvOJRvU456t2A+
+         JWCL34W+vVxBA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 11/13/19 3:55 PM, Valdis Kl=C4=93tnieks=20wrote:=0D=0A>=20>=20On=20Wed=
-,=2013=20Nov=202019=2015:00:23=20-0600,=20Eric=20Sandeen=20said:=0D=0A>=20>=
->=20On=2011/13/19=202:17=20AM,=20Namjae=20Jeon=20wrote:=0D=0A>=20>>>=20This=
-=20adds=20the=20latest=20Samsung=20exfat=20driver=20to=20fs/exfat.=20This=
-=20is=20an=0D=0A>=20>>>=20implementation=20of=20the=20Microsoft=20exFAT=20s=
-pecification.=20Previous=20versions=0D=0A>=20>>>=20of=20this=20shipped=20wi=
-th=20millions=20of=20Android=20phones,=20an=20a=20random=20previous=0D=0A>=
-=20>>>=20snaphot=20has=20been=20merged=20in=20drivers/staging/.=0D=0A>=20>>=
->=0D=0A>=20>>>=20Compared=20to=20the=20sdfat=20driver=20shipped=20on=20the=
-=20phones=20the=20following=20changes=0D=0A>=20>>>=20have=20been=20made:=0D=
-=0A>=20>>>=0D=0A>=20>>>=20=20-=20the=20support=20for=20vfat=20has=20been=20=
-removed=20as=20that=20is=20already=20supported=0D=0A>=20>>>=20=20=20=20by=
-=20fs/fat=0D=0A>=20>>>=20=20-=20driver=20has=20been=20renamed=20to=20exfat=
-=0D=0A>=20>>>=20=20-=20the=20code=20has=20been=20refactored=20and=20clean=
-=20up=20to=20fully=20integrate=20into=0D=0A>=20>>>=20=20=20=20the=20upstrea=
-m=20Linux=20version=20and=20follow=20the=20Linux=20coding=20style=0D=0A>=20=
->>>=20=20-=20metadata=20operations=20like=20create,=20lookup=20and=20readdi=
-r=20have=20been=20further=0D=0A>=20>>>=20=20=20=20optimized=0D=0A>=20>>>=20=
-=20-=20various=20major=20and=20minor=20bugs=20have=20been=20fixed=0D=0A>=20=
->>>=0D=0A>=20>>>=20We=20plan=20to=20treat=20this=20version=20as=20the=20fut=
-ure=20upstream=20for=20the=20code=20base=0D=0A>=20>>>=20once=20merged,=20an=
-d=20all=20new=20features=20and=20bug=20fixes=20will=20go=20upstream=20first=
-.=0D=0A>=20>>=0D=0A>=20>>=20Apologies=20if=20I=20should=20know=20this=20alr=
-eady,=20but=20where=20are=20the=20userspace=0D=0A>=20tools=0D=0A>=20>>=20fo=
-r=20exfat=20located?=0D=0A>=20>=0D=0A>=20>=20The=20upstream=20for=20that=20=
-is=20https://protect2.fireeye.com/url?k=3Dc58c1a81-=0D=0A>=2098101be1-c58d9=
-1ce-0cc47a31307c-=0D=0A>=20f7e416d4f44c26c5&u=3Dhttps://github.com/relan/ex=
-fat=0D=0A>=20>=0D=0A>=20>=20On=20Fedora,=20they're=20available=20in=20the=
-=20rpmfusion=20RPM=20'exfat-utils',=20not=20sure=0D=0A>=20where=0D=0A>=20>=
-=20Ubuntu=20or=20other=20distros=20put=20it.=0D=0A>=20=0D=0A>=20Thanks,=20I=
-=20wasn't=20sure=20if=20that=20was=20the=20=22official=22=20repo=20at=20thi=
-s=20point.=0D=0AI=20am=20preparing=20exfat-tools=20project=20and=20will=20s=
-hare=20it=20here.=0D=0A>=20=0D=0A>=20-Eric=0D=0A=0D=0A=0D=0A
+On 11/13/19 4:07 PM, Dan Williams wrote:
+> After the removal of the device-public infrastructure there are only 2
+> ->page_free() call backs in the kernel. One of those is a device-private
+> callback in the nouveau driver, the other is a generic wakeup needed in
+> the DAX case. In the hopes that all ->page_free() callbacks can be
+> migrated to common core kernel functionality, move the device-private
+> specific actions in __put_devmap_managed_page() under the
+> is_device_private_page() conditional, including the ->page_free()
+> callback. For the other page types just open-code the generic wakeup.
+>=20
+> Yes, the wakeup is only needed in the MEMORY_DEVICE_FSDAX case, but it
+> does no harm in the MEMORY_DEVICE_DEVDAX and MEMORY_DEVICE_PCI_P2PDMA
+> case.
+>=20
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> Hi John,
+>=20
+> This applies on top of today's linux-next and passes my nvdimm unit
+> tests. That testing noticed that devmap_managed_enable_get() needed a
+> small fixup as well.
+
+Got it. This will appear in the next posted version of my "mm/gup: track
+dma-pinned pages: FOLL_PIN, FOLL_LONGTERM" patchset.
+
+
+>=20
+>   drivers/nvdimm/pmem.c |    6 ------
+>   mm/memremap.c         |   22 ++++++++++++----------
+>   2 files changed, 12 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index f9f76f6ba07b..21db1ce8c0ae 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -338,13 +338,7 @@ static void pmem_release_disk(void *__pmem)
+>   	put_disk(pmem->disk);
+>   }
+>  =20
+> -static void pmem_pagemap_page_free(struct page *page)
+> -{
+> -	wake_up_var(&page->_refcount);
+> -}
+> -
+>   static const struct dev_pagemap_ops fsdax_pagemap_ops =3D {
+> -	.page_free		=3D pmem_pagemap_page_free,
+>   	.kill			=3D pmem_pagemap_kill,
+>   	.cleanup		=3D pmem_pagemap_cleanup,
+>   };
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 022e78e68ea0..6e6f3d6fdb73 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -27,7 +27,8 @@ static void devmap_managed_enable_put(void)
+>  =20
+>   static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
+>   {
+> -	if (!pgmap->ops || !pgmap->ops->page_free) {
+> +	if (!pgmap->ops || (pgmap->type =3D=3D MEMORY_DEVICE_PRIVATE
+> +				&& !pgmap->ops->page_free)) {
+
+
+OK, so only MEMORY_DEVICE_PRIVATE has .page_free ops. That looks
+correct to me, based on looking at the .page_free setters--I
+only see Nouveau setting it.
+
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
