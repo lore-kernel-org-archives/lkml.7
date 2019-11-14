@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC9DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C42C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D6F205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F46A206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 13:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ood9URs0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XAsKkLwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfKNNcz (ORCPT
+        id S1727485AbfKNNdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:32:55 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40660 "EHLO
+        Thu, 14 Nov 2019 08:33:05 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40686 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfKNNcx (ORCPT
+        with ESMTP id S1726597AbfKNNdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:32:53 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAEDWomW103943;
-        Thu, 14 Nov 2019 07:32:50 -0600
+        Thu, 14 Nov 2019 08:33:04 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAEDX1D2103984;
+        Thu, 14 Nov 2019 07:33:01 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573738370;
-        bh=NQIDcyaqyTtBOLVrg500yyWcRWTyZF2LrgrP3Wcd470=;
+        s=ti-com-17Q1; t=1573738381;
+        bh=CiO3hXAyFsuZm3cE8SXZzPxL1D+KaY4p9kZlHGgSu6M=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ood9URs003ONQbpL3uGluUpWlZ1s7lJtaVT0jDY7I8+kf1hKR7iFqz7raPWUKmtv2
-         BCgTVRW29rr8Vl5eaXUAveNOxyC8slWIyE7dDn8u9z0ZTcKCBGJPk9hA3WlY71mmnq
-         GQ95I144liru4TB44N+ogCmjlYiMmRh1kVhdeV+I=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAEDWo3U020956
+        b=XAsKkLwmCbmrSZz0qqZ0uybtWehg+lTyb1r46JXCpf9lgI5tVmRgRRzRHFz1slhoM
+         yvRufn4r7cDpQv1CXaWfSVWmEUF03HAlXf3JFJyAa+uZb1pxvaYJjtV0UnjxVudAZX
+         TtonYgoPxdE0w4rwls5NrHYq5it/vqrmgDqm0DYk=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAEDX1Un064593
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 Nov 2019 07:32:50 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 14 Nov 2019 07:33:01 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 14
- Nov 2019 07:32:50 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 07:33:01 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 14 Nov 2019 07:32:50 -0600
+ Frontend Transport; Thu, 14 Nov 2019 07:33:01 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEDWoj4092464;
-        Thu, 14 Nov 2019 07:32:50 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEDX1uP081637;
+        Thu, 14 Nov 2019 07:33:01 -0600
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v17 17/19] leds: lp5523: Fix checkpatch issues in the code
-Date:   Thu, 14 Nov 2019 07:30:21 -0600
-Message-ID: <20191114133023.32185-18-dmurphy@ti.com>
+Subject: [PATCH v17 19/19] leds: lp55xx-common: Remove extern from lp55xx-common header
+Date:   Thu, 14 Nov 2019 07:30:23 -0600
+Message-ID: <20191114133023.32185-20-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191114133023.32185-1-dmurphy@ti.com>
 References: <20191114133023.32185-1-dmurphy@ti.com>
@@ -67,65 +67,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch errors and warnings for the LP5523.c device
-driver.
+extern is implied and is not needed in the common header file.
+Remove the extern keyword and re-align the code.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/leds-lp5523.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/leds/leds-lp55xx-common.h | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index 609288077917..cb402b5b4495 100644
---- a/drivers/leds/leds-lp5523.c
-+++ b/drivers/leds/leds-lp5523.c
-@@ -23,13 +23,13 @@
+diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
+index 18476051d3d2..051f8b33c601 100644
+--- a/drivers/leds/leds-lp55xx-common.h
++++ b/drivers/leds/leds-lp55xx-common.h
+@@ -183,29 +183,27 @@ struct lp55xx_led {
+ };
  
- #define LP5523_PROGRAM_LENGTH		32	/* bytes */
- /* Memory is used like this:
--   0x00 engine 1 program
--   0x10 engine 2 program
--   0x20 engine 3 program
--   0x30 engine 1 muxing info
--   0x40 engine 2 muxing info
--   0x50 engine 3 muxing info
--*/
-+ * 0x00 engine 1 program
-+ * 0x10 engine 2 program
-+ * 0x20 engine 3 program
-+ * 0x30 engine 1 muxing info
-+ * 0x40 engine 2 muxing info
-+ * 0x50 engine 3 muxing info
-+ */
- #define LP5523_MAX_LEDS			9
+ /* register access */
+-extern int lp55xx_write(struct lp55xx_chip *chip, u8 reg, u8 val);
+-extern int lp55xx_read(struct lp55xx_chip *chip, u8 reg, u8 *val);
+-extern int lp55xx_update_bits(struct lp55xx_chip *chip, u8 reg,
+-			u8 mask, u8 val);
++int lp55xx_write(struct lp55xx_chip *chip, u8 reg, u8 val);
++int lp55xx_read(struct lp55xx_chip *chip, u8 reg, u8 *val);
++int lp55xx_update_bits(struct lp55xx_chip *chip, u8 reg, u8 mask, u8 val);
  
- /* Registers */
-@@ -326,7 +326,7 @@ static int lp5523_update_program_memory(struct lp55xx_chip *chip,
- 					const u8 *data, size_t size)
- {
- 	u8 pattern[LP5523_PROGRAM_LENGTH] = {0};
--	unsigned cmd;
-+	unsigned int cmd;
- 	char c[3];
- 	int nrchars;
- 	int ret;
-@@ -468,6 +468,7 @@ static int lp5523_mux_parse(const char *buf, u16 *mux, size_t len)
- static void lp5523_mux_to_array(u16 led_mux, char *array)
- {
- 	int i, pos = 0;
-+
- 	for (i = 0; i < LP5523_MAX_LEDS; i++)
- 		pos += sprintf(array + pos, "%x", LED_ACTIVE(led_mux, i));
+ /* external clock detection */
+-extern bool lp55xx_is_extclk_used(struct lp55xx_chip *chip);
++bool lp55xx_is_extclk_used(struct lp55xx_chip *chip);
  
-@@ -506,7 +507,7 @@ static int lp5523_load_mux(struct lp55xx_chip *chip, u16 mux, int nr)
- 	if (ret)
- 		return ret;
+ /* common device init/deinit functions */
+-extern int lp55xx_init_device(struct lp55xx_chip *chip);
+-extern void lp55xx_deinit_device(struct lp55xx_chip *chip);
++int lp55xx_init_device(struct lp55xx_chip *chip);
++void lp55xx_deinit_device(struct lp55xx_chip *chip);
  
--	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM , (u8)(mux >> 8));
-+	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM, (u8)(mux >> 8));
- 	if (ret)
- 		return ret;
+ /* common LED class device functions */
+-extern int lp55xx_register_leds(struct lp55xx_led *led,
+-				struct lp55xx_chip *chip);
++int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip);
  
+ /* common device attributes functions */
+-extern int lp55xx_register_sysfs(struct lp55xx_chip *chip);
+-extern void lp55xx_unregister_sysfs(struct lp55xx_chip *chip);
++int lp55xx_register_sysfs(struct lp55xx_chip *chip);
++void lp55xx_unregister_sysfs(struct lp55xx_chip *chip);
+ 
+ /* common device tree population function */
+-extern struct lp55xx_platform_data
+-*lp55xx_of_populate_pdata(struct device *dev, struct device_node *np,
+-			  struct lp55xx_chip *chip);
++struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
++						      struct device_node *np,
++						      struct lp55xx_chip *chip);
+ 
+ #endif /* _LEDS_LP55XX_COMMON_H */
 -- 
 2.22.0.214.g8dca754b1e
 
