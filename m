@@ -2,139 +2,132 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F4FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CD620706
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB0620637
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 15:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eCjXXwZw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mugySPOo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKNPol (ORCPT
+        id S1726869AbfKNPqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:44:41 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55753 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726567AbfKNPol (ORCPT
+        Thu, 14 Nov 2019 10:46:36 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37271 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfKNPqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:44:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573746281;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=srX8+tu6jTJ3Sc27i2QajGzqsOPbIfI99SC2CHnPWac=;
-        b=eCjXXwZw81czXlHH6DHH6/zkg9HlAgNhFF/XQRNhk4sMAe9VwrUB9FzkDQS6iUFzUYicl2
-        zG4Zr+LKMebzgTz1nPgvMn6KnxyeAiAEcqskTFJhZumB5vQ2XU9zMrETzaaaNFlsP1o1ga
-        INhAqAw0hyw0PB1qc1LcAETEcP1sHiA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-29-vMS-c5_JNwaoCMaoh2H-dw-1; Thu, 14 Nov 2019 10:44:37 -0500
-Received: by mail-wm1-f70.google.com with SMTP id f191so4151590wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 07:44:37 -0800 (PST)
+        Thu, 14 Nov 2019 10:46:35 -0500
+Received: by mail-io1-f68.google.com with SMTP id 1so7321684iou.4;
+        Thu, 14 Nov 2019 07:46:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xOIHTfBLTMB4ZoLauAEk7jGm1OPQ6xnkIWbsYKNK/Go=;
+        b=mugySPOoxB8TWmIsctCqLuW1W60V4RQLkLr9y2CrKpWldwcbogZtAwdw4r1H7aI4GI
+         X69YpnWUU6MMvvTGzRkRxWZUJwJ63M0E5SDaTG/sNTcXVKpYsr/T74VYoY4Si3xVUU8A
+         Zv2opc76RjdF/GPIrwuQtClY24bL8EVy3Xz+eXQxS3VPmGK/Svb7aC95V4eN9tmRjEfN
+         MuUJZfE8DRfdKKiXPvBSzNo1CJBrZjvOEXtHZGk1oOxx3R/mAr9AB+yNQMMP7wv7xCO6
+         blrdskMnH+wI9nFFH9GpfhQBXh0lvMOPR0WojAnShU5SIkEjRro1DTFR5QoRlKjBkkMs
+         MCSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EPJfk7cvgsr/qwib5eUrDTdAdQF5Fzm3xB/co9XZ6Ds=;
-        b=d+ek8/BO85n3ZwM7AFdCDj39P+nyHwKuHs+ADbPPEDfFDAEVUSicMij8YHJskSi6F2
-         goUUUiUhKZK3q1LkmYKDXtLQicJZYmuy2CU85jd+8bL8PwM6mBHmAphTFOzHiGwKWXcr
-         dPz3rvFKtrXGfbsTeyJZURDUeiSACacvL/0H0MnNHq6AaxhbvUIQPN8/JgQyBt+jPu8P
-         M31f8+zUEs0bk1dvrMLNTiQ3UlDLwFAr5tgT+qhB+SbNVhLGAenSO7kMCKURMAImUzoy
-         1w9+YaMkBrpi00b83K+0rC74dto5U9MJkN5Yrl55BffVXYDyL999v37bblokUBzTDF19
-         8rdw==
-X-Gm-Message-State: APjAAAXeky5pNegp7x1qJ/jv+cWmt3y82d0bXNj4TDcHUcHdD+YUP/lP
-        f6sZ/46LZ/7yvB5shi7YWwF5rMVvjOu3vgwiXzZ3w2r/rLYVMyzg9VQkcN/NVNahgVX1ucFD5P1
-        6Mk4oQXlYOty43eT8iW15iPL1
-X-Received: by 2002:a5d:6ac9:: with SMTP id u9mr8438286wrw.383.1573746276770;
-        Thu, 14 Nov 2019 07:44:36 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzqMn3KSNJtDpV0zpZnG0zQCePVxFOYVe2ZQbsb9HJAFswSYMqJVTNWAMHK7HVpYXG9Bm0l8g==
-X-Received: by 2002:a5d:6ac9:: with SMTP id u9mr8438260wrw.383.1573746276484;
-        Thu, 14 Nov 2019 07:44:36 -0800 (PST)
-Received: from [192.168.43.81] (mob-109-112-119-76.net.vodafone.it. [109.112.119.76])
-        by smtp.gmail.com with ESMTPSA id u16sm7942375wrr.65.2019.11.14.07.44.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 07:44:35 -0800 (PST)
-Subject: Re: [PATCH 1/2] KVM: X86: Single target IPI fastpath
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1573283135-5502-1-git-send-email-wanpengli@tencent.com>
- <6c2c7bbb-39f4-2a77-632e-7730e9887fc5@redhat.com>
- <20191114152235.GC24045@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <857e6494-4ed8-be4a-c21a-577ab99a5711@redhat.com>
-Date:   Thu, 14 Nov 2019 16:44:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xOIHTfBLTMB4ZoLauAEk7jGm1OPQ6xnkIWbsYKNK/Go=;
+        b=fj8GNgLBCZb8BAKGPudqsBcAc+wWFuk1SbaikFIrbHLOCXZMgBAEkOnjLl/YNtgymG
+         ns6oCCQDh/ELC1NI0AiA8LuqhPaFLmoh92Ozd4L+FSw/bl3nRvx9hMhKbc1X1fk719ME
+         B9fVOdtrkiSZHaNyn8yov7gVCETAH+n6st2F8prqoTZCfjBvdBktR4kOVB0GtuuhyMQT
+         5BUe4Q75KvdqBaULk999sZ1Xga7l7IQNGaXACSfTfpX+zejEh95XuRSTdm6pWg7gBv4f
+         w9cLJaoUvyNSqoDhA7w4d3nEoyYsqN/2eJgWtF+qUDeaCTkhIgBJwStNYtU8HmA1ZwMn
+         CUQg==
+X-Gm-Message-State: APjAAAUq4VVzTQVF3bmktJKfsYJMeVcjYW1uvoBNsK8ey8Q0ZlKqW1/q
+        /SU/21hz/MQcIsdIad+6zYqqMJ3EpdHKHDt8NHk=
+X-Google-Smtp-Source: APXvYqxED6h0fNFN4w1dvWOm28RohkY/9NELaLWTvjMYQmMZUqmeyBP3fL1JGc3TMdpEZ+QD6YTh4YbRNPN0P5nDU2E=
+X-Received: by 2002:a5e:9741:: with SMTP id h1mr8806846ioq.143.1573746394533;
+ Thu, 14 Nov 2019 07:46:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191114152235.GC24045@linux.intel.com>
-Content-Language: en-US
-X-MC-Unique: vMS-c5_JNwaoCMaoh2H-dw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <20191114105736.8636-1-lhenriques@suse.com> <cbda3a69d25b04e10332e7b3898064a93b2d04ae.camel@kernel.org>
+ <alpine.DEB.2.21.1911141326260.17979@piezo.novalocal> <CAOi1vP9XaeJdqV-jMP3BM=mjHKqJW8-ynAjCi0xcDD3DtL94KQ@mail.gmail.com>
+ <alpine.DEB.2.21.1911141416040.17979@piezo.novalocal> <20191114152450.GA6902@hermes.olymp>
+In-Reply-To: <20191114152450.GA6902@hermes.olymp>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Thu, 14 Nov 2019 16:47:02 +0100
+Message-ID: <CAOi1vP8YWdN=bOVcHq5j4x9iv+JuO8vd3zEkmVE_Pc-BC8dSAQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/4] ceph: safely use 'copy-from' Op on Octopus OSDs
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Sage Weil <sweil@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/11/19 16:22, Sean Christopherson wrote:
->> Instead of a separate vcpu->fast_vmexit, perhaps you can set exit_reason
->> to vmx->exit_reason to -1 if the fast path succeeds.
->=20
-> Actually, rather than make this super special case, what about moving the
-> handling into vmx_handle_exit_irqoff()?  Practically speaking that would
-> only add ~50 cycles (two VMREADs) relative to the code being run right
-> after kvm_put_guest_xcr0().  It has the advantage of restoring the host's
-> hardware breakpoints, preserving a semi-accurate last_guest_tsc, and
-> running with vcpu->mode set back to OUTSIDE_GUEST_MODE.  Hopefully it'd
-> also be more intuitive for people unfamiliar with the code.
-
-Yes, that's a good idea.  The expensive bit between handle_exit_irqoff
-and handle_exit is srcu_read_lock, which has two memory barriers in it.
-
-
->>> +=09=09=09if (ret =3D=3D 0)
->>> +=09=09=09=09ret =3D kvm_skip_emulated_instruction(vcpu);
->> Please move the "kvm_skip_emulated_instruction(vcpu)" to
->> vmx_handle_exit, so that this basically is
->>
->> #define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
->>
->> =09if (ret =3D=3D 0)
->> =09=09vcpu->exit_reason =3D EXIT_REASON_NEED_SKIP_EMULATED_INSN;
->>
->> and handle_ipi_fastpath can return void.
+On Thu, Nov 14, 2019 at 4:24 PM Luis Henriques <lhenriques@suse.com> wrote:
 >
-> I'd rather we add a dedicated variable to say the exit has already been
-> handled.  Overloading exit_reason is bound to cause confusion, and that's
-> probably a best case scenario.
+> On Thu, Nov 14, 2019 at 02:17:44PM +0000, Sage Weil wrote:
+> > On Thu, 14 Nov 2019, Ilya Dryomov wrote:
+> > > > > I'm just getting caught up on the discussion here, but why was it
+> > > > > decided to do it this way instead of just adding a new OSD
+> > > > > "copy-from-no-truncseq" operation? Once you tried it once and an OSD
+> > > > > didn't support it, you could just give up on using it any longer? That
+> > > > > seems a lot simpler than trying to monkey with feature bits.
+> > > >
+> > > > I don't remember the original discussion either, but in retrospect that
+> > > > does seem much simpler--especially since hte client is conditioning
+> > > > sending this based on the the require_osd_release.  It seems like passing
+> > > > a flag to the copy-from op would be more reasonable instead of conditional
+> > > > feature-based behavior.
+> > >
+> > > Yeah, I suggested adding require_osd_release to the client portion just
+> > > because we are running into it more and more: Objecter relies on it for
+> > > RESEND_ON_SPLIT for example.  It needs to be accessible so that patches
+> > > like that can be carried over to the kernel client without workarounds.
+> > >
+> > > copy-from in its existing form is another example.  AFAIU the problem
+> > > is that copy-from op doesn't reject unknown flags.  Luis added a flag
+> > > in https://github.com/ceph/ceph/pull/25374, but it is simply ignored on
+> > > nautilus and older releases, potentially leading to data corruption.
+> > >
+> > > Adding a new op that would be an alias for CEPH_OSD_OP_COPY_FROM with
+> > > CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ like Jeff is suggesting, or a new
+> > > copy-from2 op that would behave just like copy-from, but reject unknown
+> > > flags to avoid similar compatibility issues in the future is probably
+> > > the best thing we can do from the client perspective.
+> >
+> > Yeah, I think copy-from2 is the best path.  I think that means we should
+> > revert what we merged to ceph.git a few weeks back, Luis!  Sorry we didn't
+> > put all the pieces together before...
+>
+> Well, that's an unexpected turn.  I'm not disagreeing with that decision
+> but since my initial pull request was done one year ago (almost to the
+> day!), it's a bit disappointing to see that in the end I'm back to
+> square one :-)
 
-I proposed the fake exit reason to avoid a ternary return code from
-handle_ipi_fastpath (return to guest, return to userspace, call
-kvm_x86_ops->handle_exit), which Wanpeng's patch was mishandling.
+Well, I think literally every line from that PR will still go in, just
+wrapped in a new OSD op.  Backwards compatibility is hard...
 
-To ensure confusion does not become the best case scenario, perhaps it
-is worth trying to push exit_reason into vcpu_enter_guest's stack.
-vcpu_enter_guest can pass a pointer to it, and then it can be passed
-back into kvm_x86_ops->handle_exit{,_irqoff}.  It could be a struct too,
-instead of just a bare u32.
+>
+> I guess that the PR I mentioned in the cover letter can also be dropped,
+> as it's not really usable by the kernel client (at least not until it
+> fully supports all the features up to SERVER_OCTOPUS).
 
-This would ensure at compile-time that exit_reason is not accessed
-outside the short path from vmexit to kvm_x86_ops->handle_exit.
+No, some form of https://github.com/ceph/ceph/pull/31611 should go in.
+I'm pretty certain it will come up at some point in the future, even if
+the new field isn't immediately usable today.  Someone porting a change
+to the kernel client a couple years from now will thank you for it ;)
 
-Paolo
+Thanks,
 
+                Ilya
