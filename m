@@ -2,96 +2,111 @@ Return-Path: <SRS0=RWM+=ZG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50901C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE16C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C25206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573715758;
-	bh=CdaQJfZeE12NS1/9Gejd29MDaXIfXJWzS072VrL8Xes=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vL4kQTw/XGb1AU5sc8gCM6kaiB6L5Ml+iBsLzE16fG+Md88iOmBeSkKcxzE/4NmSr
-	 FdkRfH2mAGiEii2iU4Vla2QBhc50MVQvSjf/X+K4DIt2IizPGH8y42Ua3OJb7g50sN
-	 prL3CuA8f68/LcG2Z11ddMNqUgW6OBlDAZIIxW9E=
+	by mail.kernel.org (Postfix) with ESMTP id C57CD20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 Nov 2019 07:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfKNHP5 (ORCPT
+        id S1726953AbfKNHQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 02:15:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfKNHP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 02:15:57 -0500
-Received: from localhost (unknown [223.226.110.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539B9206C0;
-        Thu, 14 Nov 2019 07:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573715756;
-        bh=CdaQJfZeE12NS1/9Gejd29MDaXIfXJWzS072VrL8Xes=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PhsOCoDGSgOK8ezKmJxaKvTdSHilYh12J6nNN8tFokL7n2P2BHdFFLr3jKRR4wcSB
-         kHkUc5uIaH/d1CCakQKBk9IVDJHVa0Hzz7WHtWGluW3kwSI9Kb0arWaeqG8M6/M0vt
-         /5dpCcS3I4+Zhf/lF6Xke7riMzVuVnG37CmLzPhs=
-Date:   Thu, 14 Nov 2019 12:45:51 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Green Wan <green.wan@sifive.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] dmaengine: sf-pdma: Add platform dma driver
-Message-ID: <20191114071551.GQ952516@vkoul-mobl>
-References: <20191107084955.7580-1-green.wan@sifive.com>
+        Thu, 14 Nov 2019 02:16:43 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6227 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbfKNHQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 02:16:42 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3930F728594AE501539C;
+        Thu, 14 Nov 2019 15:16:40 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 15:16:33 +0800
+To:     <rjw@rjwysocki.net>, <lenb@kernel.org>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH v2] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
+Message-ID: <cc03ba18-4949-9244-639c-94f461f03361@huawei.com>
+Date:   Thu, 14 Nov 2019 15:16:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107084955.7580-1-green.wan@sifive.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07-11-19, 16:49, Green Wan wrote:
-> Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
-> DMAengine controller doc[1] to implement and take other DMA drivers as reference.
-> Such as
-> 
->   - drivers/dma/fsl-edma.c
->   - drivers/dma/dw-edma/
->   - drivers/dma/pxa-dma.c
-> 
-> Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
-> 
->  - 4 physical DMA channels, share same DONE and error interrupt handler. 
->  - Support MEM_TO_MEM
->  - Tested by DMA test client
->  - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
->    patch for easier review and apply to different branch or SoC platform.
->  - retry 1 time if DMA error occurs.
+The commit 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel
+parameter cover all GPEs") says:
+  "Use a bitmap of size 0xFF instead of a u64 for the GPE mask so 256
+   GPEs can be masked"
 
-I have applied this expect dt change. I see some warns due to missing
-kernel-doc style comments with W=1, please fix that and send update on
-top of these
+But the masking of GPE 0xFF it not supported and the check condition
+"gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of gpe is
+u8.
 
-Thanks
+So modify the macro ACPI_MASKABLE_GPE_MAX to 0x100, and drop the "gpe >
+ACPI_MASKABLE_GPE_MAX" check. In addition, update the docs "Format" for
+acpi_mask_gpe parameter.
+
+Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+v1 -> v2:
+ - drop the "gpe > ACPI_MASKABLE_GPE_MAX" check
+ - update the docs "Format" from <int> to <byte> for acpi_mask_gpe parameter
+ - update the commit comment
+
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ drivers/acpi/sysfs.c                            | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index a84a83f8881e..87e27186dc69 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -113,7 +113,7 @@
+ 			the GPE dispatcher.
+ 			This facility can be used to prevent such uncontrolled
+ 			GPE floodings.
+-			Format: <int>
++			Format: <byte>
+
+ 	acpi_no_auto_serialize	[HW,ACPI]
+ 			Disable auto-serialization of AML methods
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index 75948a3f1a20..0a83ce186bc4 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -819,14 +819,14 @@ static ssize_t counter_set(struct kobject *kobj,
+  * interface:
+  *   echo unmask > /sys/firmware/acpi/interrupts/gpe00
+  */
+-#define ACPI_MASKABLE_GPE_MAX	0xFF
++#define ACPI_MASKABLE_GPE_MAX	0x100
+ static DECLARE_BITMAP(acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) __initdata;
+
+ static int __init acpi_gpe_set_masked_gpes(char *val)
+ {
+ 	u8 gpe;
+
+-	if (kstrtou8(val, 0, &gpe) || gpe > ACPI_MASKABLE_GPE_MAX)
++	if (kstrtou8(val, 0, &gpe))
+ 		return -EINVAL;
+ 	set_bit(gpe, acpi_masked_gpes_map);
+
 -- 
-~Vinod
+2.7.4
+
