@@ -2,91 +2,184 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A736EC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF849C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBAB20725
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573781605;
-	bh=TjfPdNVPIeEvReyGDHdp+l0oWyIBAlhdiKCkIA2SxF4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qtzZ30ro95BNtu/RbKlupvbOPlgIP/bmQXwkjekS40rNl3veuNfVnZ5fYs5J8Gr4O
-	 agrQMAUbU7o6NpAD1j+35htt7kvGQao6Mq4ZwyIiZ9queei+l1IBTxFtIHpe2Tlhjr
-	 QeDm6jbwfalPs2th4xLMH6gkbI5bNaURSRReE2rA=
+	by mail.kernel.org (Postfix) with ESMTP id BDB2C20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:33:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MOPBtNtj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TSccu8B1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfKOBdY (ORCPT
+        id S1727403AbfKOBdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 14 Nov 2019 20:33:25 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:39220 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfKOBdY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 Nov 2019 20:33:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbfKOBdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 20:33:24 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DB2820725;
-        Fri, 15 Nov 2019 01:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3900961067; Fri, 15 Nov 2019 01:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573781604;
+        bh=VTBzwwJodLYvkUFlF5wil68XysauCwqW0WsHUJpxbKM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MOPBtNtjoP1TlyKvikj8jIMxAwLTij7v4JnLqyR0vG1hUlAGhirMKmHErtU+ad8aC
+         Msi4yb6ULOHwJfGSzc4ewOn10tKTPDmma1Zr+f9qe7R2VfNMl7sqXEJcRrpsfv0Snb
+         qCYyIX3i+UFxGiiIkp8SB+CCvDC/0ulSikjIdmvk=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id ED7F660A37;
+        Fri, 15 Nov 2019 01:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
         s=default; t=1573781603;
-        bh=TjfPdNVPIeEvReyGDHdp+l0oWyIBAlhdiKCkIA2SxF4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wXwmH1o9Ntc1eiYydifMeSePrvyPdp843OoG1MKhziCfF0WKkKntoLojZuqNXZSWQ
-         XRPqSbpgzjleJDHBFSQd90rNYLV0/lkKPUaCvcZZ2Z0Ui6dKVLAOLqry7gLks5DZG/
-         hGCABoAeV60FY/M7dMTGMagtjKD8VKuUcn7yU7PA=
-Received: by mail-qk1-f173.google.com with SMTP id z23so6812489qkj.10;
-        Thu, 14 Nov 2019 17:33:23 -0800 (PST)
-X-Gm-Message-State: APjAAAVwUWy/o344JbZIiInJo+26DxxbwJYFjWlu1+hTAkWstT44Yg/b
-        L5Jv2Vzf889RDvtHaP2TcVaZdAd5eCcx7aJWAQ==
-X-Google-Smtp-Source: APXvYqyrKS5cVeQ3i3w1IPqL0wZve42ikZtItrJjuSQMwNf9oO+9PoexTpjhpJX3Vg+HensaTGHh5ytaFFs4FY1vmfw=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr10453959qka.152.1573781602693;
- Thu, 14 Nov 2019 17:33:22 -0800 (PST)
+        bh=VTBzwwJodLYvkUFlF5wil68XysauCwqW0WsHUJpxbKM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TSccu8B15kPEbE0ljTxC+PMD9UjwyawQdv7yUHUePL6kbh5aZdh/QE8rSWcqB22zt
+         rhFWQszFVdqhiP8V4rBC6pDI5V/6K8lLR39JcqICLP0UVhErBcmkPotfV33eBxFkEK
+         oHVN6ge7/wNg7zl4GPsvhOhRfntC9EW42ffx2h/w=
 MIME-Version: 1.0
-References: <20191031165308.14102-1-afaerber@suse.de> <20191031165308.14102-4-afaerber@suse.de>
-In-Reply-To: <20191031165308.14102-4-afaerber@suse.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 14 Nov 2019 19:33:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKON3rp61e=_7D7zD6k7XFJxbwEziZxWeKB7+i+bnTGPA@mail.gmail.com>
-Message-ID: <CAL_JsqKON3rp61e=_7D7zD6k7XFJxbwEziZxWeKB7+i+bnTGPA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 15 Nov 2019 09:33:22 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 7/7] scsi: ufs: Fix error handing during hibern8 enter
+In-Reply-To: <MN2PR04MB699130F410CDE9BFB5815CC0FC710@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1573627552-12615-1-git-send-email-cang@codeaurora.org>
+ <1573627552-12615-8-git-send-email-cang@codeaurora.org>
+ <MN2PR04MB699130F410CDE9BFB5815CC0FC710@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <258c6c088cafb4c0b89e8e9439cfa06e@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 11:53 AM Andreas F=C3=A4rber <afaerber@suse.de> wro=
-te:
->
-> Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
->
-> Reuse the existing RTD1295 watchdog compatible for now.
->
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
->  v1 -> v2:
->  * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR=
- (Rob)
->  * Carved them out from memory reg instead (Rob)
->  * Converted some /memreserve/s to reserved-memory nodes
->
->  arch/arm/boot/dts/Makefile               |   2 +
->  arch/arm/boot/dts/rtd1195-mele-x1000.dts |  31 ++++++++
->  arch/arm/boot/dts/rtd1195.dtsi           | 127 +++++++++++++++++++++++++=
-++++++
->  3 files changed, 160 insertions(+)
->  create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
->  create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+On 2019-11-14 19:06, Avri Altman wrote:
+>> 
+>> 
+>> From: Subhash Jadavani <subhashj@codeaurora.org>
+>> 
+>> During clock gating (ufshcd_gate_work()), we first put the link 
+>> hibern8 by
+>> calling ufshcd_uic_hibern8_enter() and if ufshcd_uic_hibern8_enter() 
+>> returns
+>> success (0) then we gate all the clocks.
+>> Now let’s zoom in to what ufshcd_uic_hibern8_enter() does internally:
+>> It calls __ufshcd_uic_hibern8_enter() which on detecting the 
+>> LINERESET,
+>> initiates the full recovery and puts the link back to highest HS gear 
+>> and returns
+>> success (0) to ufshcd_uic_hibern8_enter() which is the issue as link 
+>> is still in
+>> active state due to recovery!
+>> Now ufshcd_uic_hibern8_enter() returns success to ufshcd_gate_work() 
+>> and
+>> hence it goes ahead with gating the UFS clock while link is still in 
+>> active state
+>> hence I believe controller would raise UIC error interrupts. But when 
+>> we service
+>> the interrupt, clocks might have already been disabled!
+>> 
+>> This change fixes for this by returning failure from
+>> __ufshcd_uic_hibern8_enter() if recovery succeeds as link is still not 
+>> in hibern8,
+>> upon receiving the error ufshcd_hibern8_enter() would initiate retry 
+>> to put the
+>> link state back into hibern8.
+>> 
+>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>  drivers/scsi/ufs/ufshcd.c | 19 ++++++++++++++-----
+>>  1 file changed, 14 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c 
+>> index
+>> 7a5a904..934c27a 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -3891,15 +3891,24 @@ static int __ufshcd_uic_hibern8_enter(struct
+>> ufs_hba *hba)
+>>                              ktime_to_us(ktime_sub(ktime_get(), 
+>> start)), ret);
+>> 
+>>         if (ret) {
+>> +               int err;
+>> +
+>>                 dev_err(hba->dev, "%s: hibern8 enter failed. ret = 
+>> %d\n",
+>>                         __func__, ret);
+>> 
+>>                 /*
+>> -                * If link recovery fails then return error so that 
+>> caller
+>> -                * don't retry the hibern8 enter again.
+>> +                * If link recovery fails then return error code 
+>> (-ENOLINK)
+>> +                * returned ufshcd_link_recovery().
+>> +                * If link recovery succeeds then return -EAGAIN to 
+>> attempt
+>> +                * hibern8 enter retry again.
+> You no longer returning -ENOLINK, and either way retrying, regardless
+> of the error code.
+> Better check that the commit log is still telling the correct story,
+> taking into consideration all those recent fixes and all.
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for pointing this.
+
+Best Regards,
+Can Guo.
+
+>>                  */
+>> -               if (ufshcd_link_recovery(hba))
+>> -                       ret = -ENOLINK;
+>> +               err = ufshcd_link_recovery(hba);
+>> +               if (err) {
+>> +                       dev_err(hba->dev, "%s: link recovery failed", 
+>> __func__);
+>> +                       ret = err;
+>> +               } else {
+>> +                       ret = -EAGAIN;
+>> +               }
+>>         } else
+>>                 ufshcd_vops_hibern8_notify(hba, 
+>> UIC_CMD_DME_HIBER_ENTER,
+>>                                                                 
+>> POST_CHANGE); @@ -3913,7 +3922,7 @@
+>> static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
+>> 
+>>         for (retries = UIC_HIBERN8_ENTER_RETRIES; retries > 0; 
+>> retries--) {
+>>                 ret = __ufshcd_uic_hibern8_enter(hba);
+>> -               if (!ret || ret == -ENOLINK)
+>> +               if (!ret)
+>>                         goto out;
+>>         }
+>>  out:
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
