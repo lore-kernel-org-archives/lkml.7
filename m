@@ -2,153 +2,147 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D315C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DEBC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052092075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:38:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="VgtgZU6m"
+	by mail.kernel.org (Postfix) with ESMTP id 12D5820859
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKOHiF (ORCPT
+        id S1727041AbfKOHkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:38:05 -0500
-Received: from mail-eopbgr30091.outbound.protection.outlook.com ([40.107.3.91]:18830
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725829AbfKOHiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:38:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aqV9Ch7vY78lQSTNZAJ7y4R/1nzpR7HQFgFmJ8HuywrFWQ3ppLmAUutGONm+ixbld7/5TQ6Ch8d5/JeMTAD86MH4mLt4vrKTMDw/XwFMapb0V6iQZtWjeNsa7ZHzZ4+LfBXCIEhSDhXkrmJdYY7GQ/s32x7yuI8/CFld2uTJ0FVwWGNJzXUW/Ne3lOU2Eu2Cr2zrWRxTrE18e6gvoxRSOCHMqRGXNSHFizHZ2R3Y4Oryo0btEM3MA7TCxmM8sy7ZiE+0ExYeZn9Rq/E93TM7DwTZZaLAJNOMEL5ZFwSetwPEVpvfJ1Xn+rsmrj/JoeWdWQ9I50T+HkaI6Vvh0IVq0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SrHtls4t9yOCl9GsSHCAhaIjmNxqov2YqOfTurXj4Vo=;
- b=G0I6zZl6YptLyPmEyPW8UAlb1C/oa3kHn1UQHou+nAIgytUEa6upOvvKy3nqnw7v0rI7AJrsunaU4FzYmMXQDN28J49BTMWH/CGlM4WdYw9JL8mWS2oHRXgqs2tFcDx/bq0uVHdLIFemZkSEiYVSItoTuhyZ9ncYk9N6sb03asSH41sevQDWDxE3PTzr4ZzMf+fE+nuxZZUU8d0NLO0R7puZ6hrSSVEqxrVq+l7d4b/4bHeOboiVjif6tjD5zatXrFly1l6j1VVr0F83hRctEeFkJl7zc3/I93KuOjnYI0fqfLvNd1L7WyYT8EJl7qFTp40pHoGnPuZaWUqPO9KdYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SrHtls4t9yOCl9GsSHCAhaIjmNxqov2YqOfTurXj4Vo=;
- b=VgtgZU6mxC19TPRSYbrvE1DZk38JSD1BWy8UaB0k/6m+z0HcZ6W4hkUwpd0r7DMM6KCn+QXX3DXgBNt0A+/g9odCeA6Uaf8yss4EU5Y4oHXsDKBiet4e0HtsfIKAIZHRchp5AQcX62ybasPKrWmokd8gllJbOmX8szRLeBgVZpY=
-Received: from AM0PR08MB5332.eurprd08.prod.outlook.com (52.132.212.72) by
- AM0PR08MB3012.eurprd08.prod.outlook.com (52.134.92.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Fri, 15 Nov 2019 07:37:58 +0000
-Received: from AM0PR08MB5332.eurprd08.prod.outlook.com
- ([fe80::a55d:53b6:474e:68d5]) by AM0PR08MB5332.eurprd08.prod.outlook.com
- ([fe80::a55d:53b6:474e:68d5%3]) with mapi id 15.20.2430.028; Fri, 15 Nov 2019
- 07:37:58 +0000
-From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-CC:     Jeff Layton <jlayton@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Paul Moore <paul@paul-moore.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "Andrei Vagin (C)" <avagin@gmail.com>
-Subject: Re: [PATCH v2] fs: add new O_MNT flag for opening mount root from
- mountpoint fd
-Thread-Topic: [PATCH v2] fs: add new O_MNT flag for opening mount root from
- mountpoint fd
-Thread-Index: AQHVmsqsFW/dz5a/YUCIFt85IYaocKeKtcAAgAEj3YA=
-Date:   Fri, 15 Nov 2019 07:37:58 +0000
-Message-ID: <1af96c9c-0e4c-5f18-a710-1db4b6a3cf87@virtuozzo.com>
-References: <20191114090454.27903-1-ptikhomirov@virtuozzo.com>
- <20191114141320.GI26530@ZenIV.linux.org.uk>
-In-Reply-To: <20191114141320.GI26530@ZenIV.linux.org.uk>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR04CA0008.eurprd04.prod.outlook.com
- (2603:10a6:208:122::21) To AM0PR08MB5332.eurprd08.prod.outlook.com
- (2603:10a6:208:17e::8)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ptikhomirov@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [46.39.231.243]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d67ee7bf-6892-425e-2679-08d7699ebc82
-x-ms-traffictypediagnostic: AM0PR08MB3012:
-x-ld-processed: 0bc7f26d-0264-416e-a6fc-8352af79c58f,ExtAddr
-x-microsoft-antispam-prvs: <AM0PR08MB30124FA9B9BA31F8935CD1E0B7700@AM0PR08MB3012.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 02229A4115
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(39850400004)(346002)(366004)(189003)(199004)(14444005)(229853002)(5660300002)(256004)(305945005)(7736002)(2616005)(6486002)(11346002)(446003)(52116002)(8936002)(14454004)(316002)(76176011)(102836004)(6436002)(25786009)(7416002)(478600001)(486006)(54906003)(386003)(6506007)(86362001)(26005)(6916009)(66066001)(8676002)(81166006)(31686004)(81156014)(71200400001)(3846002)(6512007)(6116002)(36756003)(71190400001)(53546011)(186003)(476003)(31696002)(2906002)(66946007)(66446008)(4326008)(99286004)(6246003)(64756008)(66556008)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR08MB3012;H:AM0PR08MB5332.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wtRSmfYYL1zkcNEzoqVMc5z23EUPVgOCFZyXudqysQM1zuxLbPusgqcMAxEMdpEXVVYcDELvXSjLeWgwS2cX+LXJ9JuOLCo8ozCAf1f5vGiPol7EwPkO3xOkHTGiMNg/JYSQic8OSKt4tDoEYGbCUC4ixal2lstw8Jf01J/8hXgQO+JqstiPbi7ZRqksUa2l5AKGqkSc2mIF0iWLzlfmYi18JRiX40/VoYt8x6nd7bIQWXhPzLWtHxrckLIekrHq+53XfnL1Jf/cczTLBGZ9DIjm0fVBVMPIHtCrHsBHxHLCImffgY2W4LxPmlhcPU9yBdyTQBKLxru5qW232o12XJDcsisyHGxSLWMm8wVEzkFbsBmP96XJRYg2N28aG48DXIhDXZuDwNT5Z2V/V7yVdpqyO/Ht3feoJsl0WlcN2Gkb/dzvPXERIzrqA2fYxYVQ
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C32DEDA78AC6494A9DD557DA3785FC4F@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 15 Nov 2019 02:40:23 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42579 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfKOHkW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 02:40:22 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iVWDI-0002WY-0m; Fri, 15 Nov 2019 08:40:16 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9322F1C18B4;
+        Fri, 15 Nov 2019 08:40:15 +0100 (CET)
+Date:   Fri, 15 Nov 2019 07:40:15 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf symbols: Use kmaps(map)->machine when we know
+ its a kernel map
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <tip-lgrrzdxo2p9liq2keivcg887@git.kernel.org>
+References: <tip-lgrrzdxo2p9liq2keivcg887@git.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d67ee7bf-6892-425e-2679-08d7699ebc82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 07:37:58.6143
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ja6zg01rPBa/m6zwzHWnjWK2RzbPJ9hmKiVxG6mE0FkwOhb2vlJP6DuawIsZW5oy7HaUaXMyWR/3Gxa51pnj4tmTk8hi/8B/IVBgrIxbiMM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3012
+Message-ID: <157380361519.29467.5470618161759183163.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDExLzE0LzE5IDU6MTMgUE0sIEFsIFZpcm8gd3JvdGU6DQo+IE9uIFRodSwgTm92IDE0
-LCAyMDE5IGF0IDEyOjA0OjU0UE0gKzAzMDAsIFBhdmVsIFRpa2hvbWlyb3Ygd3JvdGU6DQo+IA0K
-Pj4gTW9yZSBwcmVjaXNlbHkgdGhlIGFsZ29yaXRobSBpczoNCj4+IGEpIG9wZW5hdCBtcGZkIHRv
-IGEgbmV3IG1vdW50cG9pbnQgdGhyb3VnaCBwYXJlbnQgbW91bnQncyByb290IC0NCj4+IHBfcm9v
-dGZkICh3aGljaCB3ZSBhbHJlYWR5IGhhdmUpIG9yIG1vdW50cG9pbnQgZmQgdW5kZXIgYSBzaWJs
-aW5nIG1vdW50DQo+PiAtIHNfbXBmZCBpZiBvdXIgbW91bnRwb2ludCBpcyBhbHJlYWR5IG92ZXJt
-b3VudGVkLg0KPj4gYikgY3JlYXRlIGEgbmV3IG1vdW50IG9uIG1wZmQgdmlhIC9wcm9jLzxwaWQ+
-L2ZkLzxOPiBpbnRlcmZhY2UNCj4+IGMpIG9wZW5hdCBpdCdzIHJvb3RmZCB2aWEgT19NTlQgZnJv
-bSBtcGZkDQo+Pg0KPj4gSWYgd2UgaGF2ZSBtcGZkIGFuZCByb290ZmQgZm9yIGVhY2ggbW91bnQg
-dGhyb3VnaCAvcHJvYy88cGlkPi9mZC88Tj4NCj4+IGludGVyZmFjZSB3ZSB3aWxsIGJlIGFibGUg
-dG8gYmluZG1vdW50IGFueSBwYXJ0IG9mIGVhY2ggb2YgYWxyZWFkeQ0KPj4gY3JlYXRlZCBtb3Vu
-dHMgdG8gcmVzdG9yZSBvdGhlciBtb3VudHMgIGFuZCB3ZSB3aWxsIGJlIGFibGUgdG8gY29uZmln
-dXJlDQo+PiBtb3VudHMsIGUuZy4gY2hhbmdlIHNoYXJpbmcgb3Igb3RoZXIgb3B0aW9ucyBldmVu
-IGlmIG1vdW50cyBhcmUNCj4+IGludmlzaWJsZSBmcm9tIGZzLXJvb3QuDQo+IA0KPiBFdmVyeXRo
-aW5nIGVsc2UgYXNpZGUgKGFuZCBJJ20gbm90IHRocmlsbGVkIGFib3V0IHRoZSBpZGVhIGluIGdl
-bmVyYWwpLA0KPiB5b3UgYXJlIG5vdCBoYW5kbGluZyB0aGUgc2l0dWF0aW9uIHdoZW4gdGhhdCBv
-dmVybW91bnQgaXMsIGluIHR1cm4sDQo+IG92ZXJtb3VudGVkLg0KDQpTb3JyeSBidXQgSSBkb24n
-dCB1bmRlcnN0YW5kIHdoeSBvdmVybW91bnRlZCBvdmVybW91bnQgaXMgYSBzcGVjaWFsIA0KY2Fz
-ZS4uLiBMZXQgbWUgZXhwbGFpbiBpbiBvdGhlciB3b3Jkcy4gSSB1c2UgbWF0aGVtYXRpY2FsIGlu
-ZHVjdGlvbiBhcyBhIA0KcHJvb2YgdGVjaG5pcXVlLiBCYXNlIG9mIGluZHVjdGlvbiBpcyB3aGVu
-IHdlIGhhdmUgbm8gbW91bnRzIChleGVwdCANCnJvb3QpLCBpdCBpcyBvYnZpb3VzIHRoYXQgd2Ug
-Y2FuIGFjY2VzcyBhbGwgZGlyZWN0b3JpZXMgaW4gdGhlIHN5c3RlbS4gDQpTdGVwIG9mIGluZHVj
-dGlvbiBpcyB3aGVuIHdlIGFkZCBvbmUgbW9yZSBtb3VudCBhbmQgYmVmb3JlIHRoYXQgc3RlcCAN
-CndlJ3ZlIGhhZCBhbiBhY2Nlc3MgdG8gYWxsIGRpcmVjdG9yaWVzIGluIHRoZSBzeXN0ZW0gKGhh
-dmUgbXBmZHMgYW5kIA0Kcm9vdGZkcyBmb3IgYWxsIG1vdW50cykuDQoNCklmIHN0ZXAgYWRkcyBh
-IG1vdW50IG1udCB3ZSBuZWVkIHRvIG9ubHkgY29uc2lkZXIgaXQncyBwYXJlbnQsIHNpYmxpbmdz
-IA0KYW5kIGNoaWxkcmVuIHdoaWNoIHdpbGwgYmUgdGhlcmUgYWZ0ZXIgdGhlIHN0ZXAsIGFsbCBv
-dGhlciBtb3VudHMgZG9lcyANCm5vdCBjaGFuZ2UgYW55dGhpbmcuDQoNClByb3BhZ2F0aW9ucyBv
-ZiBtbnQgY2FuJ3QgYmVjb21lIG1udCdzIGNoaWxkcmVuIG9yIHNpYmxpbmdzIG9yIHBhcmVudCwg
-DQpsdWNraWx5IGZvciB1cy4gU28gd2UgY2FuIGFjdHVhbGx5IGNvbnNpZGVyIG9uZSBtb3VudCBm
-cm9tIHByb3BhZ2F0aW9uIA0KZ3JvdXAgYXQgYSB0aW1lLg0KDQpOb3cgaWYgbXAgaXMganVzdCB2
-aXNpYmxlIGZyb20gcGFyZW50J3MgcF9yb290ZmQgd2Ugb3BlbiBtcGZkLiBFbHNlIHdlIA0KaGF2
-ZSBzb21lIHNpYmxpbmcgZnJvbSB3aGljaCBzX21wZmQgdGhlIG1wIGlzIHZpc2libGUgYW5kIHdl
-IG9wZW4gbXBmZCANCmZyb20gaXQuIEFuZCB0aGUgbGFzdCBjYXNlIGlmIHdlJ3JlIGNyYXdsaW5n
-IHVuZGVyIHNvbWUgbW91bnQgKGNoaWxkKSB3ZSANCmNhbiBvcGVuIG1wZmQgdGhyb3VnaCBjX21w
-ZmQuDQoNCk5vdyBvdXIgbXBmZCBpcyBvcGVuIHNvIHdlIHVzZSBPX01OVCB0byBvcGVuIG91ciBy
-b290ZmQuIChBbmQgaGVyZSB3ZSANCmNoYW5nZSBjX21wZmQgdG8gb3VyIHJvb3RmZCBhcyBvdXIg
-bmV3IGNoaWxkIHN3aXRjaGVkIHBhcmVudCkNCg0KPiAgT3Igd2hlbiB0aGVyZSdzIGFuIGF1dG9t
-b3VudCBzZXQgb24gdG9wIG9mIGl0LCBldGMuDQoNCkknbSBub3QgY29tbW9uIHdpdGggYXV0b21v
-dW50cyBhY3R1YWxseSwgc28gSSBtaWdodCBtaXNzIHNvbWV0aGluZyBoZXJlLiANCkNhbiB5b3Ug
-cGxlYXNlIHNob3cgYWN0dWFsIG1vdW50IHRyZWUgd2hlcmUgdGhpcyBwcm9ibGVtIGNhbiBoYXBw
-ZW4/DQoNCj4gDQoNCi0tIA0KQmVzdCByZWdhcmRzLCBUaWtob21pcm92IFBhdmVsDQpTb2Z0d2Fy
-ZSBEZXZlbG9wZXIsIFZpcnR1b3p6by4NCg==
+The following commit has been merged into the perf/core branch of tip:
+
+Commit-ID:     93fcce96c71931f65c9bb1a0f2303008e6862c97
+Gitweb:        https://git.kernel.org/tip/93fcce96c71931f65c9bb1a0f2303008e6862c97
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Mon, 04 Nov 2019 16:25:11 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Tue, 12 Nov 2019 08:20:53 -03:00
+
+perf symbols: Use kmaps(map)->machine when we know its a kernel map
+
+And then stop using map->groups to achieve that.
+
+To test that that branch is being taken, probe the function that is only
+called from there and then run something like 'perf top' in another
+xterm:
+
+  # perf probe -x ~/bin/perf machine__map_x86_64_entry_trampolines
+  Added new event:
+    probe_perf:machine__map_x86_64_entry_trampolines (on machine__map_x86_64_entry_trampolines in /home/acme/bin/perf)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe_perf:machine__map_x86_64_entry_trampolines -aR sleep 1
+
+  # perf trace -e probe_perf:*
+       0.000 bash/10614 probe_perf:machine__map_x86_64_entry_trampolines(__probe_ip: 5224944)
+  ^C#
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-lgrrzdxo2p9liq2keivcg887@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/symbol.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 2764863..88f4cfb 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1588,7 +1588,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 	char *name;
+ 	int ret = -1;
+ 	u_int i;
+-	struct machine *machine;
++	struct machine *machine = NULL;
+ 	char *root_dir = (char *) "";
+ 	int ss_pos = 0;
+ 	struct symsrc ss_[2];
+@@ -1617,17 +1617,13 @@ int dso__load(struct dso *dso, struct map *map)
+ 		goto out;
+ 	}
+ 
+-	if (map->groups)
+-		machine = map->groups->machine;
+-	else
+-		machine = NULL;
+-
+ 	if (dso->kernel) {
+ 		if (dso->kernel == DSO_TYPE_KERNEL)
+ 			ret = dso__load_kernel_sym(dso, map);
+ 		else if (dso->kernel == DSO_TYPE_GUEST_KERNEL)
+ 			ret = dso__load_guest_kernel_sym(dso, map);
+ 
++		machine = map__kmaps(map)->machine;
+ 		if (machine__is(machine, "x86_64"))
+ 			machine__map_x86_64_entry_trampolines(machine, dso);
+ 		goto out;
+@@ -2027,15 +2023,9 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map)
+ {
+ 	int err;
+ 	const char *kallsyms_filename = NULL;
+-	struct machine *machine;
++	struct machine *machine = map__kmaps(map)->machine;
+ 	char path[PATH_MAX];
+ 
+-	if (!map->groups) {
+-		pr_debug("Guest kernel map hasn't the point to groups\n");
+-		return -1;
+-	}
+-	machine = map->groups->machine;
+-
+ 	if (machine__is_default_guest(machine)) {
+ 		/*
+ 		 * if the user specified a vmlinux filename, use it and only
