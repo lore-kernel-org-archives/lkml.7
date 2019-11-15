@@ -2,159 +2,91 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B7FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C0DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C505D20692
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683D420692
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="TK0eriJD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JGsWQv/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKOVGi (ORCPT
+        id S1726984AbfKOVHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 16:06:38 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46384 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfKOVGh (ORCPT
+        Fri, 15 Nov 2019 16:07:50 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26073 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726599AbfKOVHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 16:06:37 -0500
-Received: by mail-qt1-f195.google.com with SMTP id r20so12203297qtp.13
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 13:06:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PVeUd0Z9qID74jwTLN71/X5ho1REfkJ1WwqU2FF2PSI=;
-        b=TK0eriJDcFnWuO9O157SGzkRAyr6VHRcA7oMDgqrEmpehZYvWbIXiYVuMtdHtdn1y6
-         6y8xxDuJ/xzb/5fbtQAjwpXd7iMrXIZz15GFEQ91jHgA0G/cOlbPnNZz5er57yCILzyf
-         O6GsrUgx8v9gK+PFWALE9lj+lKn6q4lXdJ8hpTeU+EgLwr7TnG0p9Nm1k0uOKUSFQc2f
-         wQKhKin3tmKzlNqngYtpxcgxw1fHrZfNdHzFj4Xgm9bYFUUrxYV2FDSxTT4NlXTJ25WG
-         r+PzjOkX0Az2Pgtllj8bPpOC4gxl6f6lFtyPc/a3wuqoTQZnpVCJ6Ck//OxjJBe+TXry
-         O9+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PVeUd0Z9qID74jwTLN71/X5ho1REfkJ1WwqU2FF2PSI=;
-        b=ZWMOVa263+ByJ91QQc5PsQB6XY9cAExX/kR669cjLbNhh2AJWtqjYNEj5Fqpzu5Lbz
-         ZXE0FflkacvImkXDDzsJwZYQLufgGraoQnDZ4C1mTPmOqYMm5/yRiydksfGHtpLqJMie
-         FGyA52ZJant6rPragfWWgc+JIZQcKNqfhrD7u8Gby4LlI13hxl9Y/anCQOzYW4AkBS0V
-         s3kBo1OCMIjRHhkfSaHudUMF4VXl0fgtrU4SlsBPwDCGocugnWILIOJna8CqdZ0Dx16l
-         AGvuMW4qpOUFnZFo3oWwc3CMAzEN4k9KWV0puTPCTsixxuljq8sMnBzOJn/Fh83aZSrE
-         hapw==
-X-Gm-Message-State: APjAAAXtvqwH3GcFiohTr0aFC9vHHFqRBp1XxpkvuaCe5J4BMUl978wa
-        XImkmuCH7egwYJnb3XbR1qhkKQ==
-X-Google-Smtp-Source: APXvYqw4SOGDOoWQJs12lnlimfm/ZUDq9OCmmNY6RKMEEYMcSf2xS9P8MXAO3XVBW7XJs3aVHB+K1Q==
-X-Received: by 2002:ac8:3142:: with SMTP id h2mr16647308qtb.182.1573851996738;
-        Fri, 15 Nov 2019 13:06:36 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id m65sm5397635qte.54.2019.11.15.13.06.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 13:06:35 -0800 (PST)
-Message-ID: <1573851994.5937.138.camel@lca.pw>
-Subject: Re: powerpc ftrace broken due to "manual merge of the ftrace tree
- with the arm64 tree"
-From:   Qian Cai <cai@lca.pw>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 15 Nov 2019 16:06:34 -0500
-In-Reply-To: <20191115160230.78871d8f@gandalf.local.home>
-References: <1573849732.5937.136.camel@lca.pw>
-         <20191115160230.78871d8f@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 15 Nov 2019 16:07:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573852068;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=fZHCbRTyudvOPs1jp78LmqzUhByFAzYjWlaniYrl0dY=;
+        b=JGsWQv/Mm+DHjKjtTB1x2R51wFiDSA8U6Nq0t2Yv/VIoMjVwpPWIFJ6Of604ofi/fi82JX
+        JodG5rz86sBD6fpKS0a+Nx9pX9vbWmSkISoEu8irFdt3L1sd/eX/YaN+4EhhAzg3rVprhO
+        hpWWRkSxwFUzEU+M9ueTOBuXKTW+22I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-117-gYFElgWXMImczVozR5YyPQ-1; Fri, 15 Nov 2019 16:07:47 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3BB62F2A;
+        Fri, 15 Nov 2019 21:07:41 +0000 (UTC)
+Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F5CC69193;
+        Fri, 15 Nov 2019 21:07:36 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org
+Cc:     "Daniel Vetter" <daniel@ffwll.ch>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        "David Airlie" <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, "Ben Skeggs" <bskeggs@redhat.com>,
+        "Sam Ravnborg" <sam@ravnborg.org>, "Lyude Paul" <lyude@redhat.com>,
+        "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        "Ilia Mirkin" <imirkin@alum.mit.edu>,
+        "Peteris Rudzusiks" <peteris.rudzusiks@gmail.com>
+Subject: [PATCH 0/3] MST BPC fixes for nouveau
+Date:   Fri, 15 Nov 2019 16:07:17 -0500
+Message-Id: <20191115210728.3467-1-lyude@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: gYFElgWXMImczVozR5YyPQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-15 at 16:02 -0500, Steven Rostedt wrote:
-> On Fri, 15 Nov 2019 15:28:52 -0500
-> Qian Cai <cai@lca.pw> wrote:
-> 
-> > # echo function >/sys/kernel/debug/tracing/current_tracer
-> > 
-> > It hangs forever with today's linux-next on powerpc. Reverted the conflict fix
-> > [1] as below fixes the issue.
-> > 
-> > [1] https://lore.kernel.org/linux-next/20191115135357.10386fac@canb.auug.org.au/
-> 
-> What's your config file.
+Realized when I moved nouveau over to using the atomic DP MST VCPI
+helpers that I forgot to ensure that we clamp the BPC to 8 to make us
+less likely to run out of bandwidth on a topology when enabling multiple
+displays that support >8 BPC - something we want to do until we have
+support for dynamically selecting the bpc based on the topology's
+available bandwidth, since userspace isn't really using HDR yet anyway.
+This matches the behavior that i915 has, along with the behavior of
+amdgpu and should fix some people's displays not turning on.
 
-https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
+Lyude Paul (3):
+  drm/nouveau/kms/nv50-: Call outp_atomic_check_view() before handling
+    PBN
+  drm/nouveau/kms/nv50-: Store the bpc we're using in nv50_head_atom
+  drm/nouveau/kms/nv50-: Limit MST BPC to 8
 
-> 
-> And can you test the two conflicting commits to see which one caused
-> your error?
-> 
-> Test this commit please: b83b43ffc6e4b514ca034a0fbdee01322e2f7022
+ drivers/gpu/drm/nouveau/dispnv50/atom.h |   1 +
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 102 ++++++++++++++----------
+ drivers/gpu/drm/nouveau/dispnv50/head.c |   5 +-
+ 3 files changed, 64 insertions(+), 44 deletions(-)
 
-# git reset --hard b83b43ffc6e4b514ca034a0fbdee01322e2f7022
+--=20
+2.21.0
 
-Yes, that one is bad.
-
-> 
-> And see if the issue is with that one, and not with the one without it.
-> 
-> -- Steve
-> 
-> 
-> > 
-> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-
-> > generic/vmlinux.lds.h
-> > index 7d0d03a03d4d..a92222f79b53 100644
-> > --- a/include/asm-generic/vmlinux.lds.h
-> > +++ b/include/asm-generic/vmlinux.lds.h
-> > @@ -136,29 +136,20 @@
-> >  #endif
-> >  
-> >  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
-> > -/*
-> > - * The ftrace call sites are logged to a section whose name depends on the
-> > - * compiler option used. A given kernel image will only use one, AKA
-> > - * FTRACE_CALLSITE_SECTION. We capture all of them here to avoid header
-> > - * dependencies for FTRACE_CALLSITE_SECTION's definition.
-> > - */
-> > -/*
-> > - * Need to also make ftrace_graph_stub point to ftrace_stub
-> > - * so that the same stub location may have different protocols
-> > - * and not mess up with C verifiers.
-> > - */
-> > -#define MCOUNT_REC()	. = ALIGN(8);				\
-> > +#ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
-> > +#define MCOUNT_REC()	. = ALIGN(8)				\
-> >  			__start_mcount_loc = .;			\
-> > -			KEEP(*(__mcount_loc))			\
-> >  			KEEP(*(__patchable_function_entries))	\
-> >  			__stop_mcount_loc = .;			\
-> >  			ftrace_graph_stub = ftrace_stub;
-> >  #else
-> > -# ifdef CONFIG_FUNCTION_TRACER
-> > -#  define MCOUNT_REC()	ftrace_graph_stub = ftrace_stub;
-> > -# else
-> > -#  define MCOUNT_REC()
-> > -# endif
-> > +#define MCOUNT_REC()	. = ALIGN(8);				\
-> > +			__start_mcount_loc = .;			\
-> > +			KEEP(*(__mcount_loc))			\
-> > +			__stop_mcount_loc = .;
-> > +#endif
-> > +#else
-> > +#define MCOUNT_REC()
-> >  #endif
-> >  
-> >  #ifdef CONFIG_TRACE_BRANCH_PROFILING
-> 
-> 
