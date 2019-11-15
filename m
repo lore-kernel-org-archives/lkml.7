@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7C8C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA8DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E1E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8584320732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZPkZWj3s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RFG9uuNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfKOPgE (ORCPT
+        id S1727845AbfKOPgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:36:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26357 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727803AbfKOPgC (ORCPT
+        Fri, 15 Nov 2019 10:36:07 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39925 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727827AbfKOPgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:36:02 -0500
+        Fri, 15 Nov 2019 10:36:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573832162;
+        s=mimecast20190719; t=1573832164;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xEBrDdwqBspifEyrKVUN4LwxDIQDuRZSkP0oQyfCJjI=;
-        b=ZPkZWj3sQfqRrNN3YzFsAuQQvWMkr53f5+y8qWT2y0k4waTPsgbFjycsIkUG/gRKhKgqoo
-        vsNQS6vljYn5SR8Km4k3Dk986Z838mEHI3Dtl3lAzrlHYkPT/VdNB9h+rwDnVFdVm2IJ0i
-        VheeRjaBbk02SXlZ0WQAtxJe37Y/wpI=
+        bh=l3ClPDQhnQdEhbyOWefyMTALJbpKz/GsjGzDJ6+49Gg=;
+        b=RFG9uuNOKXF50ybrPBZ/c7NoZ+mCLW8JFChk5PIg6KNGrFUosaYk9yz67ZYe7FcLKxOIBL
+        mHWOSRE3Sj5+J/OvqvTA0Qj77tW28DEFXvF2TB9GcfXkCmT6KXnlpRMBwCe3EbG4r/Fr68
+        WBF0IQQncJaeKemJ1BP1ab1XjyH7/98=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-tcC1Bu11M6aF265k8bJJRw-1; Fri, 15 Nov 2019 10:35:58 -0500
+ us-mta-308-QRXe6FPLNl21VTXrpS5kgw-1; Fri, 15 Nov 2019 10:36:01 -0500
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07F69DB8A;
-        Fri, 15 Nov 2019 15:35:55 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E82DADB8D;
+        Fri, 15 Nov 2019 15:35:58 +0000 (UTC)
 Received: from shalem.localdomain.com (ovpn-116-154.ams2.redhat.com [10.36.116.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6016E6117E;
-        Fri, 15 Nov 2019 15:35:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E77E6106C;
+        Fri, 15 Nov 2019 15:35:55 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Darren Hart <dvhart@infradead.org>,
@@ -62,14 +62,14 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-input@vger.kernel.org
-Subject: [PATCH v8 5/8] Input: silead - Switch to firmware_request_platform for retreiving the fw
-Date:   Fri, 15 Nov 2019 16:35:26 +0100
-Message-Id: <20191115153529.215244-6-hdegoede@redhat.com>
+Subject: [PATCH v8 6/8] Input: icn8505 - Switch to firmware_request_platform for retreiving the fw
+Date:   Fri, 15 Nov 2019 16:35:27 +0100
+Message-Id: <20191115153529.215244-7-hdegoede@redhat.com>
 In-Reply-To: <20191115153529.215244-1-hdegoede@redhat.com>
 References: <20191115153529.215244-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: tcC1Bu11M6aF265k8bJJRw-1
+X-MC-Unique: QRXe6FPLNl21VTXrpS5kgw-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -79,14 +79,14 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Unfortunately sofar we have been unable to get permission to redistribute
-Silead touchscreen firmwares in linux-firmware. This means that people
+icn8505 touchscreen firmwares in linux-firmware. This means that people
 need to find and install the firmware themselves before the touchscreen
 will work
 
-Some UEFI/x86 tablets with a Silead touchscreen have a copy of the fw
+Some UEFI/x86 tablets with an icn8505 touchscreen have a copy of the fw
 embedded in their UEFI boot-services code.
 
-This commit makes the silead driver use the new firmware_request_platform
+This commit makes the icn8505 driver use the new firmware_request_platform
 function, which will fallback to looking for such an embedded copy when
 direct filesystem lookup fails. This will make the touchscreen work OOTB
 on devices where there is a fw copy embedded in the UEFI code.
@@ -94,20 +94,21 @@ on devices where there is a fw copy embedded in the UEFI code.
 Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/input/touchscreen/silead.c | 2 +-
+ drivers/input/touchscreen/chipone_icn8505.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen=
-/silead.c
-index ad8b6a2bfd36..8fa2f3b7cfd8 100644
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -288,7 +288,7 @@ static int silead_ts_load_fw(struct i2c_client *client)
-=20
- =09dev_dbg(dev, "Firmware file name: %s", data->fw_name);
-=20
--=09error =3D request_firmware(&fw, data->fw_name, dev);
-+=09error =3D firmware_request_platform(&fw, data->fw_name, dev);
+diff --git a/drivers/input/touchscreen/chipone_icn8505.c b/drivers/input/to=
+uchscreen/chipone_icn8505.c
+index c768186ce856..f9ca5502ac8c 100644
+--- a/drivers/input/touchscreen/chipone_icn8505.c
++++ b/drivers/input/touchscreen/chipone_icn8505.c
+@@ -288,7 +288,7 @@ static int icn8505_upload_fw(struct icn8505_data *icn85=
+05)
+ =09 * we may need it at resume. Having loaded it once will make the
+ =09 * firmware class code cache it at suspend/resume.
+ =09 */
+-=09error =3D request_firmware(&fw, icn8505->firmware_name, dev);
++=09error =3D firmware_request_platform(&fw, icn8505->firmware_name, dev);
  =09if (error) {
  =09=09dev_err(dev, "Firmware request error %d\n", error);
  =09=09return error;
