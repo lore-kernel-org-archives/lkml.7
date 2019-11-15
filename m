@@ -2,184 +2,108 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C51C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B4AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E1320637
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A30FE20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573799044;
-	bh=4+nCz3LEl6kdoeHSXQYEjgSPf3SPhDIfUUjquwpozLY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rNSOL4QE3q9z6+7qr9s6ssVPT+drWtnWuhTWxiRP9ZwJeejYu2q9vg8MotAbXsukI
-	 bo0VEhLRYEJnlOGXXZbUk+FYgpx7HreLHOtM9kmJjg2TJzqAS8SGQSD5TsBV50YuHg
-	 gbQ8+GX4dvlQINiueMa8HoCT8MT7P+4+96UHnGok=
+	s=default; t=1573799052;
+	bh=TIK9pVtbBBILAUJCSvHvEmIwJ+1++E+kftAnB/VxuJ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K7jZgjhZMyfAJz5gk/oCexAzkCZMObHTcLYI2KjTgzFrB7V8Tn59aD/461XyvYoNc
+	 5VA02PxpwbgUsUm4WO4aVZcmu4MwOWSy1eogpF5/kztANSmSp9EKuMVcWf1xNUFyNf
+	 FjezEcAt8kyQqJD2xmA1VguP10yV8iLzlqfIqqBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfKOGV4 (ORCPT
+        id S1727744AbfKOGYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:21:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50896 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:24:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727494AbfKOGVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:21:53 -0500
+        id S1727442AbfKOGVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:21:48 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F35C220728;
-        Fri, 15 Nov 2019 06:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1882073A;
+        Fri, 15 Nov 2019 06:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798912;
-        bh=4+nCz3LEl6kdoeHSXQYEjgSPf3SPhDIfUUjquwpozLY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AgwsMk63LYEgC47H2n50bnkdPqhS4A3JciDrg0tCdqYHLxJycAjFm4J2UHQ7Ddml7
-         EwA5JPRz6Cf1hueqmlFljWZluGdVaVw901gav9qEG+Dceim3Ll9de0S+Uw+t975Zl7
-         qjbAUU/gT4lzajVegNY7EJZhsLxWc1nofitauQVU=
+        s=default; t=1573798908;
+        bh=TIK9pVtbBBILAUJCSvHvEmIwJ+1++E+kftAnB/VxuJ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HnxlwjdYhB1mj7j1I24RUSKnKHBuDREdpCFmCbXR1/bKzYXWZ2V4op9S0FvEoLeh4
+         lXOhcMbCbAJdJLbgEezHuZPI0CwpigKdNHbvRaRaHFYS2SkS1unKdRMBY98IiLPotf
+         CZ0QIavmO1uPjVRRooq6x/eXs+SykdOPk54NZBoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.4 00/20] 4.4.202-stable review
-Date:   Fri, 15 Nov 2019 14:20:29 +0800
-Message-Id: <20191115062006.854443935@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 08/20] kvm: x86: IA32_ARCH_CAPABILITIES is always supported
+Date:   Fri, 15 Nov 2019 14:20:37 +0800
+Message-Id: <20191115062010.880089365@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
+In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
+References: <20191115062006.854443935@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.202-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.202-rc1
-X-KernelTest-Deadline: 2019-11-17T06:20+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.4.202 release.
-There are 20 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Jim Mattson <jmattson@google.com>
 
-Responses should be made by Sun, 17 Nov 2019 06:18:31 +0000.
-Anything received after that time might be too late.
+commit 1eaafe91a0df4157521b6417b3dd8430bf5f52f0 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.202-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-and the diffstat can be found below.
+If there is a possibility that a VM may migrate to a Skylake host,
+then the hypervisor should report IA32_ARCH_CAPABILITIES.RSBA[bit 2]
+as being set (future work, of course). This implies that
+CPUID.(EAX=7,ECX=0):EDX.ARCH_CAPABILITIES[bit 29] should be
+set. Therefore, kvm should report this CPUID bit as being supported
+whether or not the host supports it.  Userspace is still free to clear
+the bit if it chooses.
 
-thanks,
+For more information on RSBA, see Intel's white paper, "Retpoline: A
+Branch Target Injection Mitigation" (Document Number 337131-001),
+currently available at https://bugzilla.kernel.org/show_bug.cgi?id=199511.
 
-greg k-h
+Since the IA32_ARCH_CAPABILITIES MSR is emulated in kvm, there is no
+dependency on hardware support for this feature.
 
--------------
-Pseudo-Shortlog of commits:
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Fixes: 28c1c9fabf48 ("KVM/VMX: Emulate MSR_IA32_ARCH_CAPABILITIES")
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/kvm/cpuid.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.4.202-rc1
-
-Vineela Tummalapalli <vineela.tummalapalli@intel.com>
-    x86/bugs: Add ITLB_MULTIHIT bug infrastructure
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/speculation/taa: Fix printing of TAA_MSG_SMT on IBRS_ALL CPUs
-
-Michal Hocko <mhocko@suse.com>
-    x86/tsx: Add config options to set tsx=on|off|auto
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/speculation/taa: Add documentation for TSX Async Abort
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/tsx: Add "auto" option to the tsx= cmdline parameter
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    kvm/x86: Export MDS_NO=0 to guests when TSX is enabled
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/speculation/taa: Add sysfs reporting for TSX Async Abort
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/speculation/taa: Add mitigation for TSX Async Abort
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/cpu: Add a helper function x86_read_arch_cap_msr()
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/msr: Add the IA32_TSX_CTRL MSR
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: use Intel speculation bugs and features as derived in generic x86 code
-
-Jim Mattson <jmattson@google.com>
-    kvm: x86: IA32_ARCH_CAPABILITIES is always supported
-
-Sean Christopherson <sean.j.christopherson@intel.com>
-    KVM: x86: Emulate MSR_IA32_ARCH_CAPABILITIES on AMD hosts
-
-Ben Hutchings <ben@decadent.org.uk>
-    KVM: Introduce kvm_get_arch_capabilities()
-
-Nicholas Piggin <npiggin@gmail.com>
-    powerpc/boot: Request no dynamic linker for boot wrapper
-
-Nicholas Piggin <npiggin@gmail.com>
-    powerpc: Fix compiling a BE kernel with a powerpc64le toolchain
-
-Michael Ellerman <mpe@ellerman.id.au>
-    powerpc/Makefile: Use cflags-y/aflags-y for setting endian options
-
-Jonas Gorski <jonas.gorski@gmail.com>
-    MIPS: BCM63XX: fix switch core reset on BCM6368
-
-Junaid Shahid <junaids@google.com>
-    kvm: mmu: Don't read PDPTEs when paging is not enabled
-
-
--------------
-
-Diffstat:
-
- Documentation/ABI/testing/sysfs-devices-system-cpu |   2 +
- Documentation/hw-vuln/tsx_async_abort.rst          | 268 +++++++++++++++++++++
- Documentation/kernel-parameters.txt                |  62 +++++
- Documentation/x86/tsx_async_abort.rst              | 117 +++++++++
- Makefile                                           |   4 +-
- arch/mips/bcm63xx/reset.c                          |   2 +-
- arch/powerpc/Makefile                              |  31 ++-
- arch/powerpc/boot/wrapper                          |  24 +-
- arch/x86/Kconfig                                   |  45 ++++
- arch/x86/include/asm/cpufeatures.h                 |   2 +
- arch/x86/include/asm/kvm_host.h                    |   2 +
- arch/x86/include/asm/msr-index.h                   |  16 ++
- arch/x86/include/asm/nospec-branch.h               |   4 +-
- arch/x86/include/asm/processor.h                   |   7 +
- arch/x86/kernel/cpu/Makefile                       |   2 +-
- arch/x86/kernel/cpu/bugs.c                         | 143 ++++++++++-
- arch/x86/kernel/cpu/common.c                       |  93 ++++---
- arch/x86/kernel/cpu/cpu.h                          |  18 ++
- arch/x86/kernel/cpu/intel.c                        |   5 +
- arch/x86/kernel/cpu/tsx.c                          | 140 +++++++++++
- arch/x86/kvm/cpuid.c                               |  12 +
- arch/x86/kvm/vmx.c                                 |  15 --
- arch/x86/kvm/x86.c                                 |  53 +++-
- drivers/base/cpu.c                                 |  17 ++
- include/linux/cpu.h                                |   5 +
- 25 files changed, 1019 insertions(+), 70 deletions(-)
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -447,6 +447,11 @@ static inline int __do_cpuid_ent(struct
+ 			entry->ebx |= F(TSC_ADJUST);
+ 			entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+ 			cpuid_mask(&entry->edx, CPUID_7_EDX);
++			/*
++			 * We emulate ARCH_CAPABILITIES in software even
++			 * if the host doesn't support it.
++			 */
++			entry->edx |= F(ARCH_CAPABILITIES);
+ 		} else {
+ 			entry->ebx = 0;
+ 			entry->edx = 0;
 
 
