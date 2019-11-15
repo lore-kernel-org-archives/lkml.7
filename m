@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445CBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAD2C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298E82073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0754C2073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfKOST0 (ORCPT
+        id S1727140AbfKOSTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:19:26 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44306 "EHLO
+        Fri, 15 Nov 2019 13:19:30 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44326 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfKOSTY (ORCPT
+        with ESMTP id S1727080AbfKOST3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:19:24 -0500
+        Fri, 15 Nov 2019 13:19:29 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVgBk-00059S-1d; Fri, 15 Nov 2019 19:19:20 +0100
+        id 1iVgBo-0005B9-00; Fri, 15 Nov 2019 19:19:24 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B43111C18CF;
-        Fri, 15 Nov 2019 19:19:19 +0100 (CET)
-Date:   Fri, 15 Nov 2019 18:19:19 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7FDFF1C18D1;
+        Fri, 15 Nov 2019 19:19:20 +0100 (CET)
+Date:   Fri, 15 Nov 2019 18:19:20 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] futex: Provide state handling for exec() as well
+Subject: [tip: locking/core] exit/exec: Seperate mm_release()
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191106224556.753355618@linutronix.de>
-References: <20191106224556.753355618@linutronix.de>
+In-Reply-To: <20191106224556.240518241@linutronix.de>
+References: <20191106224556.240518241@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <157384195969.12247.9678359807421410494.tip-bot2@tip-bot2>
+Message-ID: <157384196048.12247.4439360535334017410.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,102 +57,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     1cc7f1d098bbada1f999b143893b31e0bc0cafc4
-Gitweb:        https://git.kernel.org/tip/1cc7f1d098bbada1f999b143893b31e0bc0cafc4
+Commit-ID:     c0f785dcba91e250db7191aba57955f36e9ab606
+Gitweb:        https://git.kernel.org/tip/c0f785dcba91e250db7191aba57955f36e9ab606
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 06 Nov 2019 22:55:43 +01:00
+AuthorDate:    Wed, 06 Nov 2019 22:55:38 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 15 Nov 2019 19:10:53 +01:00
+CommitterDate: Fri, 15 Nov 2019 19:10:50 +01:00
 
-futex: Provide state handling for exec() as well
+exit/exec: Seperate mm_release()
 
-exec() attempts to handle potentially held futexes gracefully by running
-the futex exit handling code like exit() does.
+mm_release() contains the futex exit handling. mm_release() is called from
+do_exit()->exit_mm() and from exec()->exec_mm().
 
-The current implementation has no protection against concurrent incoming
-waiters. The reason is that the futex state cannot be set to
-FUTEX_STATE_DEAD after the cleanup because the task struct is still active
-and just about to execute the new binary.
+In the exit_mm() case PF_EXITING and the futex state is updated. In the
+exec_mm() case these states are not touched.
 
-While its arguably buggy when a task holds a futex over exec(), for
-consistency sake the state handling can at least cover the actual futex
-exit cleanup section. This provides state consistency protection accross
-the cleanup. As the futex state of the task becomes FUTEX_STATE_OK after the
-cleanup has been finished, this cannot prevent subsequent attempts to
-attach to the task in case that the cleanup was not successfull in mopping
-up all leftovers.
+As the futex exit code needs further protections against exit races, this
+needs to be split into two functions.
+
+Preparatory only, no functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191106224556.753355618@linutronix.de
+Link: https://lkml.kernel.org/r/20191106224556.240518241@linutronix.de
 
 ---
- kernel/futex.c | 38 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 34 insertions(+), 4 deletions(-)
+ fs/exec.c                |  2 +-
+ include/linux/sched/mm.h |  6 ++++--
+ kernel/exit.c            |  2 +-
+ kernel/fork.c            | 12 +++++++++++-
+ 4 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index f618562..0c9850a 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -3661,7 +3661,7 @@ static void exit_robust_list(struct task_struct *curr)
- 	}
+diff --git a/fs/exec.c b/fs/exec.c
+index 555e93c..c272312 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1015,7 +1015,7 @@ static int exec_mmap(struct mm_struct *mm)
+ 	/* Notify parent that we're no longer interested in the old VM */
+ 	tsk = current;
+ 	old_mm = current->mm;
+-	mm_release(tsk, old_mm);
++	exec_mm_release(tsk, old_mm);
+ 
+ 	if (old_mm) {
+ 		sync_mm_rss(old_mm);
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index e677001..c49257a 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -117,8 +117,10 @@ extern struct mm_struct *get_task_mm(struct task_struct *task);
+  * succeeds.
+  */
+ extern struct mm_struct *mm_access(struct task_struct *task, unsigned int mode);
+-/* Remove the current tasks stale references to the old mm_struct */
+-extern void mm_release(struct task_struct *, struct mm_struct *);
++/* Remove the current tasks stale references to the old mm_struct on exit() */
++extern void exit_mm_release(struct task_struct *, struct mm_struct *);
++/* Remove the current tasks stale references to the old mm_struct on exec() */
++extern void exec_mm_release(struct task_struct *, struct mm_struct *);
+ 
+ #ifdef CONFIG_MEMCG
+ extern void mm_update_next_owner(struct mm_struct *mm);
+diff --git a/kernel/exit.c b/kernel/exit.c
+index d11bdca..cd893b5 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -437,7 +437,7 @@ static void exit_mm(void)
+ 	struct mm_struct *mm = current->mm;
+ 	struct core_state *core_state;
+ 
+-	mm_release(current, mm);
++	exit_mm_release(current, mm);
+ 	if (!mm)
+ 		return;
+ 	sync_mm_rss(mm);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index bd7c218..096f9d8 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1283,7 +1283,7 @@ static int wait_for_vfork_done(struct task_struct *child,
+  * restoring the old one. . .
+  * Eric Biederman 10 January 1998
+  */
+-void mm_release(struct task_struct *tsk, struct mm_struct *mm)
++static void mm_release(struct task_struct *tsk, struct mm_struct *mm)
+ {
+ 	/* Get rid of any futexes when releasing the mm */
+ 	futex_mm_release(tsk);
+@@ -1320,6 +1320,16 @@ void mm_release(struct task_struct *tsk, struct mm_struct *mm)
+ 		complete_vfork_done(tsk);
  }
  
--void futex_exec_release(struct task_struct *tsk)
-+static void futex_cleanup(struct task_struct *tsk)
- {
- 	if (unlikely(tsk->robust_list)) {
- 		exit_robust_list(tsk);
-@@ -3701,7 +3701,7 @@ void futex_exit_recursive(struct task_struct *tsk)
- 	tsk->futex_state = FUTEX_STATE_DEAD;
- }
- 
--void futex_exit_release(struct task_struct *tsk)
-+static void futex_cleanup_begin(struct task_struct *tsk)
- {
- 	/*
- 	 * Switch the state to FUTEX_STATE_EXITING under tsk->pi_lock.
-@@ -3717,10 +3717,40 @@ void futex_exit_release(struct task_struct *tsk)
- 	raw_spin_lock_irq(&tsk->pi_lock);
- 	tsk->futex_state = FUTEX_STATE_EXITING;
- 	raw_spin_unlock_irq(&tsk->pi_lock);
-+}
- 
--	futex_exec_release(tsk);
-+static void futex_cleanup_end(struct task_struct *tsk, int state)
++void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
 +{
-+	/*
-+	 * Lockless store. The only side effect is that an observer might
-+	 * take another loop until it becomes visible.
-+	 */
-+	tsk->futex_state = state;
-+}
- 
--	tsk->futex_state = FUTEX_STATE_DEAD;
-+void futex_exec_release(struct task_struct *tsk)
-+{
-+	/*
-+	 * The state handling is done for consistency, but in the case of
-+	 * exec() there is no way to prevent futher damage as the PID stays
-+	 * the same. But for the unlikely and arguably buggy case that a
-+	 * futex is held on exec(), this provides at least as much state
-+	 * consistency protection which is possible.
-+	 */
-+	futex_cleanup_begin(tsk);
-+	futex_cleanup(tsk);
-+	/*
-+	 * Reset the state to FUTEX_STATE_OK. The task is alive and about
-+	 * exec a new binary.
-+	 */
-+	futex_cleanup_end(tsk, FUTEX_STATE_OK);
++	mm_release(tsk, mm);
 +}
 +
-+void futex_exit_release(struct task_struct *tsk)
++void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
 +{
-+	futex_cleanup_begin(tsk);
-+	futex_cleanup(tsk);
-+	futex_cleanup_end(tsk, FUTEX_STATE_DEAD);
- }
- 
- long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
++	mm_release(tsk, mm);
++}
++
+ /**
+  * dup_mm() - duplicates an existing mm structure
+  * @tsk: the task_struct with which the new mm will be associated.
