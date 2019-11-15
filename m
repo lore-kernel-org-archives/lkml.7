@@ -4,47 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DEBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D03C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D5820859
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4493D20859
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfKOHkX (ORCPT
+        id S1727186AbfKOHkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:40:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42579 "EHLO
+        Fri, 15 Nov 2019 02:40:25 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42570 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfKOHkW (ORCPT
+        with ESMTP id S1725829AbfKOHkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:40:22 -0500
+        Fri, 15 Nov 2019 02:40:23 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVWDI-0002WY-0m; Fri, 15 Nov 2019 08:40:16 +0100
+        id 1iVWDF-0002VY-ID; Fri, 15 Nov 2019 08:40:13 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9322F1C18B4;
-        Fri, 15 Nov 2019 08:40:15 +0100 (CET)
-Date:   Fri, 15 Nov 2019 07:40:15 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D7881C18B4;
+        Fri, 15 Nov 2019 08:40:13 +0100 (CET)
+Date:   Fri, 15 Nov 2019 07:40:12 -0000
+From:   "tip-bot2 for Ravi Bangoria" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf symbols: Use kmaps(map)->machine when we know
- its a kernel map
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Subject: [tip: perf/core] perf tool: Provide an option to print
+ perf_event_open args and return value
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <tip-lgrrzdxo2p9liq2keivcg887@git.kernel.org>
-References: <tip-lgrrzdxo2p9liq2keivcg887@git.kernel.org>
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191108094128.28769-1-ravi.bangoria@linux.ibm.com>
+References: <20191108094128.28769-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-Message-ID: <157380361519.29467.5470618161759183163.tip-bot2@tip-bot2>
+Message-ID: <157380361279.29467.6054303321507255621.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,89 +58,298 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     93fcce96c71931f65c9bb1a0f2303008e6862c97
-Gitweb:        https://git.kernel.org/tip/93fcce96c71931f65c9bb1a0f2303008e6862c97
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 04 Nov 2019 16:25:11 -03:00
+Commit-ID:     ccd26741f5e6bdf2c18ea38b32e6a347c5648a97
+Gitweb:        https://git.kernel.org/tip/ccd26741f5e6bdf2c18ea38b32e6a347c5648a97
+Author:        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+AuthorDate:    Fri, 08 Nov 2019 15:11:28 +05:30
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 12 Nov 2019 08:20:53 -03:00
+CommitterDate: Tue, 12 Nov 2019 08:32:27 -03:00
 
-perf symbols: Use kmaps(map)->machine when we know its a kernel map
+perf tool: Provide an option to print perf_event_open args and return value
 
-And then stop using map->groups to achieve that.
+Perf record with verbose=2 already prints this information along with
+whole lot of other traces which requires lot of scrolling. Introduce
+an option to print only perf_event_open() arguments and return value.
 
-To test that that branch is being taken, probe the function that is only
-called from there and then run something like 'perf top' in another
-xterm:
+Sample o/p:
 
-  # perf probe -x ~/bin/perf machine__map_x86_64_entry_trampolines
-  Added new event:
-    probe_perf:machine__map_x86_64_entry_trampolines (on machine__map_x86_64_entry_trampolines in /home/acme/bin/perf)
+  $ perf --debug perf-event-open=1 record -- ls > /dev/null
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             112
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|PERIOD
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    exclude_kernel                   1
+    mmap                             1
+    comm                             1
+    freq                             1
+    enable_on_exec                   1
+    task                             1
+    precise_ip                       3
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 4308  cpu 0  group_fd -1  flags 0x8 = 4
+  sys_perf_event_open: pid 4308  cpu 1  group_fd -1  flags 0x8 = 5
+  sys_perf_event_open: pid 4308  cpu 2  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid 4308  cpu 3  group_fd -1  flags 0x8 = 8
+  sys_perf_event_open: pid 4308  cpu 4  group_fd -1  flags 0x8 = 9
+  sys_perf_event_open: pid 4308  cpu 5  group_fd -1  flags 0x8 = 10
+  sys_perf_event_open: pid 4308  cpu 6  group_fd -1  flags 0x8 = 11
+  sys_perf_event_open: pid 4308  cpu 7  group_fd -1  flags 0x8 = 12
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1
+    size                             112
+    config                           0x9
+    watermark                        1
+    sample_id_all                    1
+    bpf_event                        1
+    { wakeup_events, wakeup_watermark } 1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
+  sys_perf_event_open failed, error -13
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.002 MB perf.data (9 samples) ]
 
-  You can now use it in all perf tools, such as:
+Committer notes:
 
-  	perf record -e probe_perf:machine__map_x86_64_entry_trampolines -aR sleep 1
+Just like the 'verbose' variable this new 'debug_peo_args' needs to be
+added to util/python.c, since we don't link the debug.o file in the
+python binding, which ended up making 'perf test python' fail with:
 
-  # perf trace -e probe_perf:*
-       0.000 bash/10614 probe_perf:machine__map_x86_64_entry_trampolines(__probe_ip: 5224944)
-  ^C#
+  # perf test -v python
+  18: 'import perf' in python                               :
+  --- start ---
+  test child forked, pid 19237
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  ImportError: /tmp/build/perf/python/perf.so: undefined symbol: debug_peo_args
+  test child finished with -1
+  ---- end ----
+  'import perf' in python: FAILED!
+  #
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-lgrrzdxo2p9liq2keivcg887@git.kernel.org
+After adding that new variable to util/python.c:
+
+  # perf test -v python
+  18: 'import perf' in python                               :
+  --- start ---
+  test child forked, pid 22364
+  test child finished with 0
+  ---- end ----
+  'import perf' in python: Ok
+  #
+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20191108094128.28769-1-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ tools/perf/Documentation/perf.txt |  2 ++-
+ tools/perf/util/debug.c           |  2 ++-
+ tools/perf/util/debug.h           |  9 ++++++++-
+ tools/perf/util/evsel.c           | 36 +++++++++++++++---------------
+ tools/perf/util/python.c          |  1 +-
+ 5 files changed, 32 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 2764863..88f4cfb 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1588,7 +1588,7 @@ int dso__load(struct dso *dso, struct map *map)
- 	char *name;
- 	int ret = -1;
- 	u_int i;
--	struct machine *machine;
-+	struct machine *machine = NULL;
- 	char *root_dir = (char *) "";
- 	int ss_pos = 0;
- 	struct symsrc ss_[2];
-@@ -1617,17 +1617,13 @@ int dso__load(struct dso *dso, struct map *map)
- 		goto out;
+diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+index 401f0ed..3f37ded 100644
+--- a/tools/perf/Documentation/perf.txt
++++ b/tools/perf/Documentation/perf.txt
+@@ -24,6 +24,8 @@ OPTIONS
+ 	  data-convert     - data convert command debug messages
+ 	  stderr           - write debug output (option -v) to stderr
+ 	                     in browser mode
++	  perf-event-open  - Print perf_event_open() arguments and
++			     return value
+ 
+ --buildid-dir::
+ 	Setup buildid cache directory. It has higher priority than
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index e55114f..adb6567 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -24,6 +24,7 @@
+ #include <linux/ctype.h>
+ 
+ int verbose;
++int debug_peo_args;
+ bool dump_trace = false, quiet = false;
+ int debug_ordered_events;
+ static int redirect_to_stderr;
+@@ -180,6 +181,7 @@ static struct debug_variable {
+ 	{ .name = "ordered-events",	.ptr = &debug_ordered_events},
+ 	{ .name = "stderr",		.ptr = &redirect_to_stderr},
+ 	{ .name = "data-convert",	.ptr = &debug_data_convert },
++	{ .name = "perf-event-open",	.ptr = &debug_peo_args },
+ 	{ .name = NULL, }
+ };
+ 
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index d25ae1c..f1734ab 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -8,6 +8,7 @@
+ #include <linux/compiler.h>
+ 
+ extern int verbose;
++extern int debug_peo_args;
+ extern bool quiet, dump_trace;
+ extern int debug_ordered_events;
+ extern int debug_data_convert;
+@@ -30,6 +31,14 @@ extern int debug_data_convert;
+ #define pr_debug3(fmt, ...) pr_debugN(3, pr_fmt(fmt), ##__VA_ARGS__)
+ #define pr_debug4(fmt, ...) pr_debugN(4, pr_fmt(fmt), ##__VA_ARGS__)
+ 
++/* Special macro to print perf_event_open arguments/return value. */
++#define pr_debug2_peo(fmt, ...) {				\
++	if (debug_peo_args)						\
++		pr_debugN(0, pr_fmt(fmt), ##__VA_ARGS__);	\
++	else							\
++		pr_debugN(2, pr_fmt(fmt), ##__VA_ARGS__);	\
++}
++
+ #define pr_time_N(n, var, t, fmt, ...) \
+ 	eprintf_time(n, var, t, fmt, ##__VA_ARGS__)
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d445184..1bf60f3 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1524,7 +1524,7 @@ static int __open_attr__fprintf(FILE *fp, const char *name, const char *val,
+ 
+ static void display_attr(struct perf_event_attr *attr)
+ {
+-	if (verbose >= 2) {
++	if (verbose >= 2 || debug_peo_args) {
+ 		fprintf(stderr, "%.60s\n", graph_dotted_line);
+ 		fprintf(stderr, "perf_event_attr:\n");
+ 		perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
+@@ -1540,7 +1540,7 @@ static int perf_event_open(struct evsel *evsel,
+ 	int fd;
+ 
+ 	while (1) {
+-		pr_debug2("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
++		pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
+ 			  pid, cpu, group_fd, flags);
+ 
+ 		fd = sys_perf_event_open(&evsel->core.attr, pid, cpu, group_fd, flags);
+@@ -1560,9 +1560,9 @@ static int perf_event_open(struct evsel *evsel,
+ 			break;
+ 		}
+ 
+-		pr_debug2("\nsys_perf_event_open failed, error %d\n", -ENOTSUP);
++		pr_debug2_peo("\nsys_perf_event_open failed, error %d\n", -ENOTSUP);
+ 		evsel->core.attr.precise_ip--;
+-		pr_debug2("decreasing precise_ip by one (%d)\n", evsel->core.attr.precise_ip);
++		pr_debug2_peo("decreasing precise_ip by one (%d)\n", evsel->core.attr.precise_ip);
+ 		display_attr(&evsel->core.attr);
  	}
  
--	if (map->groups)
--		machine = map->groups->machine;
--	else
--		machine = NULL;
--
- 	if (dso->kernel) {
- 		if (dso->kernel == DSO_TYPE_KERNEL)
- 			ret = dso__load_kernel_sym(dso, map);
- 		else if (dso->kernel == DSO_TYPE_GUEST_KERNEL)
- 			ret = dso__load_guest_kernel_sym(dso, map);
+@@ -1681,12 +1681,12 @@ retry_open:
+ 					continue;
+ 				}
  
-+		machine = map__kmaps(map)->machine;
- 		if (machine__is(machine, "x86_64"))
- 			machine__map_x86_64_entry_trampolines(machine, dso);
- 		goto out;
-@@ -2027,15 +2023,9 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map)
- {
- 	int err;
- 	const char *kallsyms_filename = NULL;
--	struct machine *machine;
-+	struct machine *machine = map__kmaps(map)->machine;
- 	char path[PATH_MAX];
+-				pr_debug2("\nsys_perf_event_open failed, error %d\n",
++				pr_debug2_peo("\nsys_perf_event_open failed, error %d\n",
+ 					  err);
+ 				goto try_fallback;
+ 			}
  
--	if (!map->groups) {
--		pr_debug("Guest kernel map hasn't the point to groups\n");
--		return -1;
--	}
--	machine = map->groups->machine;
--
- 	if (machine__is_default_guest(machine)) {
- 		/*
- 		 * if the user specified a vmlinux filename, use it and only
+-			pr_debug2(" = %d\n", fd);
++			pr_debug2_peo(" = %d\n", fd);
+ 
+ 			if (evsel->bpf_fd >= 0) {
+ 				int evt_fd = fd;
+@@ -1754,58 +1754,58 @@ try_fallback:
+ 	 */
+ 	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
+ 		perf_missing_features.aux_output = true;
+-		pr_debug2("Kernel has no attr.aux_output support, bailing out\n");
++		pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
+ 		goto out_close;
+ 	} else if (!perf_missing_features.bpf && evsel->core.attr.bpf_event) {
+ 		perf_missing_features.bpf = true;
+-		pr_debug2("switching off bpf_event\n");
++		pr_debug2_peo("switching off bpf_event\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.ksymbol && evsel->core.attr.ksymbol) {
+ 		perf_missing_features.ksymbol = true;
+-		pr_debug2("switching off ksymbol\n");
++		pr_debug2_peo("switching off ksymbol\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.write_backward && evsel->core.attr.write_backward) {
+ 		perf_missing_features.write_backward = true;
+-		pr_debug2("switching off write_backward\n");
++		pr_debug2_peo("switching off write_backward\n");
+ 		goto out_close;
+ 	} else if (!perf_missing_features.clockid_wrong && evsel->core.attr.use_clockid) {
+ 		perf_missing_features.clockid_wrong = true;
+-		pr_debug2("switching off clockid\n");
++		pr_debug2_peo("switching off clockid\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.clockid && evsel->core.attr.use_clockid) {
+ 		perf_missing_features.clockid = true;
+-		pr_debug2("switching off use_clockid\n");
++		pr_debug2_peo("switching off use_clockid\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.cloexec && (flags & PERF_FLAG_FD_CLOEXEC)) {
+ 		perf_missing_features.cloexec = true;
+-		pr_debug2("switching off cloexec flag\n");
++		pr_debug2_peo("switching off cloexec flag\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.mmap2 && evsel->core.attr.mmap2) {
+ 		perf_missing_features.mmap2 = true;
+-		pr_debug2("switching off mmap2\n");
++		pr_debug2_peo("switching off mmap2\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.exclude_guest &&
+ 		   (evsel->core.attr.exclude_guest || evsel->core.attr.exclude_host)) {
+ 		perf_missing_features.exclude_guest = true;
+-		pr_debug2("switching off exclude_guest, exclude_host\n");
++		pr_debug2_peo("switching off exclude_guest, exclude_host\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.sample_id_all) {
+ 		perf_missing_features.sample_id_all = true;
+-		pr_debug2("switching off sample_id_all\n");
++		pr_debug2_peo("switching off sample_id_all\n");
+ 		goto retry_sample_id;
+ 	} else if (!perf_missing_features.lbr_flags &&
+ 			(evsel->core.attr.branch_sample_type &
+ 			 (PERF_SAMPLE_BRANCH_NO_CYCLES |
+ 			  PERF_SAMPLE_BRANCH_NO_FLAGS))) {
+ 		perf_missing_features.lbr_flags = true;
+-		pr_debug2("switching off branch sample type no (cycles/flags)\n");
++		pr_debug2_peo("switching off branch sample type no (cycles/flags)\n");
+ 		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.group_read &&
+ 		    evsel->core.attr.inherit &&
+ 		   (evsel->core.attr.read_format & PERF_FORMAT_GROUP) &&
+ 		   perf_evsel__is_group_leader(evsel)) {
+ 		perf_missing_features.group_read = true;
+-		pr_debug2("switching off group read\n");
++		pr_debug2_peo("switching off group read\n");
+ 		goto fallback_missing_features;
+ 	}
+ out_close:
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 2511860..83212c6 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -65,6 +65,7 @@ struct perf_env perf_env;
+  * implementing 'verbose' and 'eprintf'.
+  */
+ int verbose;
++int debug_peo_args;
+ 
+ int eprintf(int level, int var, const char *fmt, ...);
+ 
