@@ -2,115 +2,177 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AA7C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A09AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25AF2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C0620733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cl288YrG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qCPoUdJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfKOTOz (ORCPT
+        id S1726930AbfKOTRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 14:14:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32177 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726075AbfKOTOz (ORCPT
+        Fri, 15 Nov 2019 14:17:45 -0500
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:56071 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfKOTRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 14:14:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573845293;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6aeKPDmbhVFkPfpFZ83fbmccBa2OFHpCHF58FRCqPwY=;
-        b=Cl288YrGYXPs+jIjxIrKUPuHDzpigmJplF0WaCjMyj5bacJXTeG3DkE2hJ1zHB4QBUGGpq
-        69/GzXsWJVESOe52Ix8feYgC3AA904QHkb8tPh5tW+zZsc0sbFALT0W+kgfIQxqfAUWnht
-        bKOoBNfqpf1/5uQR08VHF1L/UY82cXQ=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-GQGJvN8hPmeaSBndARBd6w-1; Fri, 15 Nov 2019 14:14:52 -0500
-Received: by mail-pg1-f198.google.com with SMTP id l5so7967710pgu.13
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 11:14:52 -0800 (PST)
+        Fri, 15 Nov 2019 14:17:44 -0500
+Received: by mail-vk1-f201.google.com with SMTP id n6so4556002vke.22
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 11:17:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=Z4eVXgHWWbGRrH9BipYQn3sMDOkKflzbIVEAmfiSHc4=;
+        b=qCPoUdJ0wzt053R9VhJrlNxU9aqLDf1JU8N77nqnqs1UNRFbPCPE+Fkpv+Gqrpa5B1
+         7YuLk1nFQJ2IseEsVFRDdBoiSYMjEqCcaJzu20t0EITie6omSxbzd98Yvp5yf1vagYEB
+         jWh+LYL6GzFRM6TbQ2hmff2Oh15gBP8EdiN8c1x7FShABhxNvnFRtl7hlZvQAInMWq2B
+         ha60eUT3ZgCZ7xO3JjJyJHTCHQTz3qP+wbmkn4w1bxnWE4FmDfcom1FhX/0RNA6fNpei
+         AHubL4bsK+sVFtfmX/wTWyPTHOdRrH2YxKBeOm06Gxpb6cF5AZfTnBpCrDpDmKkuRE3h
+         422Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=FxBh+q2M0KKHt6TdqEdE1VpfsrS5eZh2oXrvCdz9BQo=;
-        b=BssK//mIEFd6y+Ng6Cdp4kaYRqqDPHrd9HMq4QcnIWP3Xw0R2RrIHViEG2G6Tks9el
-         asajqUOnbj9y0Kyx9D/BtXRWbeY2SBg2diyzM4XSmdDxEFvP6FpTIevh2fVV3EICqzEm
-         4vrJR4QcxlK0FmJL147EtxJq5rPLy2ldezpufdQHnvYuRwDjcVdb0EdYgrZBsPKOLQU/
-         S1KCM8aB2CySWRylwFg4ImQCtHgUqtJaNAqn3jI24ROXVp6R9G69oGL4IzIBIuO2YXxF
-         /r3w5m+EkmxeBjv6kQihQIucXY1ZLr+OJtleXxJ/rLevwupJmEWbbOQtnNfUTKYv2Naa
-         ZzuA==
-X-Gm-Message-State: APjAAAWrUX/sXebX0Yr4kU1uGGUrVXUhPmtCns1UQJBg98z8hFnyd3At
-        5WBVbnATv5HTXmGP0EI9sa5qKEVgEExFgSjHFCIq1V3/3WYFIPDRXpGXNlR0pzcZhlimEecxtkB
-        cmh7VqCpp6I2Ygz6ym3+eIONW
-X-Received: by 2002:a62:31c1:: with SMTP id x184mr19500523pfx.255.1573845291379;
-        Fri, 15 Nov 2019 11:14:51 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxv+9Zt2zsiWTpVh31clu5gBOi8WXECDEI8w7e37+mZ8dEznH2KmYFs+APiWtJMjzZwXiqG3w==
-X-Received: by 2002:a62:31c1:: with SMTP id x184mr19500497pfx.255.1573845291027;
-        Fri, 15 Nov 2019 11:14:51 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id q34sm10731806pjb.15.2019.11.15.11.14.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 11:14:50 -0800 (PST)
-Date:   Fri, 15 Nov 2019 12:14:49 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Stefan Berger <stefanb@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: question about setting TPM_CHIP_FLAG_IRQ in tpm_tis_core_init
-Message-ID: <20191115191449.qnqgos4nli3tjsdw@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191112033637.kxotlhm6mtr5irvd@cantor>
- <6d6f0899-8ba0-d6cf-ef3b-317ca698b687@linux.ibm.com>
- <20191112201716.GA12340@linux.intel.com>
-MIME-Version: 1.0
-In-Reply-To: <20191112201716.GA12340@linux.intel.com>
-X-MC-Unique: GQGJvN8hPmeaSBndARBd6w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Z4eVXgHWWbGRrH9BipYQn3sMDOkKflzbIVEAmfiSHc4=;
+        b=I3cHo80MypREBRt53nhOh/CxTR8g5L1vxgNLigt2YhRRHBFKhAqlUXkBqlCjCTWob0
+         aWLC19QiQr7zzGMJ2mK6a8ZHkuWRDgcziKCzwX1zyh5Zgc0wwBmqJtKVuJA/sJg1tIPu
+         XhUYQmKVVF5YGq1c3uWg3Qv3K/OHz7SHizp1moXcnBTDBlL4LKq8338CsrNa6vk3fMGn
+         uURWPGLCFH6r1eBEM0XSz/7NEYU5k4iwieDq4dp9iuv2aBJBo7mqfkCLpsf1kBWuDXxW
+         sWfqw55GpY3EU0mbQQeOWgizmp50YrDbYAnp7AODDC0qh0rxSGcwhvzG/fHrnPmANEHJ
+         c0cw==
+X-Gm-Message-State: APjAAAV/B6xwJ4fcFwfSW0LalXDko+QacmtRhv02NFaDKCP9YdI5joOD
+        CxeME/JWEq0Rl3WTNz8xfJ8DPGxdAA==
+X-Google-Smtp-Source: APXvYqyH7QRBMTX5ezESOd44VIolFqyVQWfQv0619idWwqWSlEjdQc5LJ5AzgMKVcRzlnFmljteSrUd9+g==
+X-Received: by 2002:a1f:9705:: with SMTP id z5mr9652185vkd.46.1573845463473;
+ Fri, 15 Nov 2019 11:17:43 -0800 (PST)
+Date:   Fri, 15 Nov 2019 20:17:27 +0100
+In-Reply-To: <20191115191728.87338-1-jannh@google.com>
+Message-Id: <20191115191728.87338-2-jannh@google.com>
+Mime-Version: 1.0
+References: <20191115191728.87338-1-jannh@google.com>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
+From:   Jann Horn <jannh@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        jannh@google.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Nov 12 19, Jarkko Sakkinen wrote:
->On Tue, Nov 12, 2019 at 08:28:57AM -0500, Stefan Berger wrote:
->> I set this flag for the TIS because it wasn't set anywhere else.
->> tpm_tis_send() wouldn't set the flag but go via the path:
->>
->> if (!(chip->flags & TPM_CHIP_FLAG_IRQ) || priv->irq_tested)
->>
->> =A0=A0=A0=A0=A0=A0=A0 return tpm_tis_send_main(chip, buf, len);
->
->Wondering why this isn't just "if (priv->irq_tested)"? Isn't that the
->whole point. The tail is the test part e.g. should be executed when
->IRQ testing is done.
->
->/Jarkko
->
+A frequent cause of #GP exceptions are memory accesses to non-canonical
+addresses. Unlike #PF, #GP doesn't come with a fault address in CR2, so
+the kernel doesn't currently print the fault address for #GP.
+Luckily, we already have the necessary infrastructure for decoding X86
+instructions and computing the memory address that is being accessed;
+hook it up to the #GP handler so that we can figure out whether the #GP
+looks like it was caused by a non-canonical address, and if so, print
+that address.
 
-I wonder if it would make sense to rename tpm_tis_send_main to tpm_tis_send=
-,
-move the irq testing bits from the current tpm_tis_send to tpm_tis_gen_inte=
-rrupt,
-and have tpm_tis_gen_interrupt build its own tpmbufs to send via tpm_tis_se=
-nd
-for the testing. Have all the irq testing bits are off on their own and sep=
-arated out
-from sending commands.
+While it is already possible to compute the faulting address manually by
+disassembling the opcode dump and evaluating the instruction against the
+register dump, this should make it slightly easier to identify crashes
+at a glance.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+
+Notes:
+    v2:
+     - print different message for segment-related GP (Borislav)
+     - rewrite check for non-canonical address (Sean)
+     - make it clear we don't know for sure why the GP happened (Andy)
+
+ arch/x86/kernel/traps.c | 45 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index c90312146da0..12d42697a18e 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -56,6 +56,8 @@
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ #include <asm/umip.h>
++#include <asm/insn.h>
++#include <asm/insn-eval.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <asm/x86_init.h>
+@@ -509,6 +511,38 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+ 	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
+ }
+ 
++/*
++ * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
++ * address, print that address.
++ */
++static void print_kernel_gp_address(struct pt_regs *regs)
++{
++#ifdef CONFIG_X86_64
++	u8 insn_bytes[MAX_INSN_SIZE];
++	struct insn insn;
++	unsigned long addr_ref;
++
++	if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
++		return;
++
++	kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
++	insn_get_modrm(&insn);
++	insn_get_sib(&insn);
++	addr_ref = (unsigned long)insn_get_addr_ref(&insn, regs);
++
++	/* Bail out if insn_get_addr_ref() failed or we got a kernel address. */
++	if (addr_ref >= ~__VIRTUAL_MASK)
++		return;
++
++	/* Bail out if the entire operand is in the canonical user half. */
++	if (addr_ref + insn.opnd_bytes - 1 <= __VIRTUAL_MASK)
++		return;
++
++	pr_alert("probably dereferencing non-canonical address 0x%016lx\n",
++		 addr_ref);
++#endif
++}
++
+ dotraplinkage void
+ do_general_protection(struct pt_regs *regs, long error_code)
+ {
+@@ -547,8 +581,15 @@ do_general_protection(struct pt_regs *regs, long error_code)
+ 			return;
+ 
+ 		if (notify_die(DIE_GPF, desc, regs, error_code,
+-			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
+-			die(desc, regs, error_code);
++			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
++			return;
++
++		if (error_code)
++			pr_alert("GPF is segment-related (see error code)\n");
++		else
++			print_kernel_gp_address(regs);
++
++		die(desc, regs, error_code);
+ 		return;
+ 	}
+ 
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
