@@ -2,97 +2,114 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C39C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5F9C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC542072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F2E2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="rjHnXjwB";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="qhegkJsU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JcPIWFFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKORpk (ORCPT
+        id S1726974AbfKORq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:45:40 -0500
-Received: from smtp.uniroma2.it ([160.80.6.23]:52404 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfKORpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:45:40 -0500
-Received: from smtpauth-2019-1.uniroma2.it (smtpauth.uniroma2.it [160.80.5.46])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id xAFHiuoF021741;
-        Fri, 15 Nov 2019 18:45:01 +0100
-Received: from lubuntu-18.04 (unknown [160.80.103.17])
-        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id 6E582120288;
-        Fri, 15 Nov 2019 18:44:52 +0100 (CET)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
-        s=ed201904; t=1573839892; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
+        Fri, 15 Nov 2019 12:46:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48555 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726466AbfKORq7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 12:46:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573840018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=G+gMUpNvXVmANKnt9biF9wy+hihvyOaCvIM2XBgwx5k=;
-        b=rjHnXjwBoLKZ7zt0plnJZANkLWcH014rXejP75TbOEZ4lQQRRvgHpzUx8oy5Sv+gWBCvyL
-        +zo6ApJbV6PQ+hAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
-        t=1573839892; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G+gMUpNvXVmANKnt9biF9wy+hihvyOaCvIM2XBgwx5k=;
-        b=qhegkJsU5LSEbbqG9RCyf7ATS3q1ZekBwgitPl2tilRWDIdg10dMctXpQ0AADtMOR3NLI7
-        EhuPGSRkGEBtzB+nG/cnNXYNhmEdRpPORRZzqemjKyVLunWNqcE7PK4gwpMmaP2USux/q9
-        n/IrlJh0R+nsBDrJm2izgiNAsuVZP3v8IGGrbsfnqlHAiu5BKMx2BtbujZWC/aGIrnDvOj
-        ZMJawXxrZ7rAAHcSLpPJ2xczegYfSCLTu2Pnv8gHdN3JWPtaeI4jKRih1tV6aBKq1M9iqK
-        1QMTwaFSDPIyulnSDwYg/ZMl2oKsw2eTmtfooYGSpz/IzfuzlD9YtRMpS/3rpg==
-Date:   Fri, 15 Nov 2019 18:44:52 +0100
-From:   Andrea Mayer <andrea.mayer@uniroma2.it>
-To:     David Miller <davem@davemloft.net>
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        dav.lebrun@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrea.mayer@uniroma2.it
-Subject: Re: [net-next, 1/3] seg6: verify srh pointer in get_srh()
-Message-Id: <20191115184452.828eb26ff29c90ff432bc2f5@uniroma2.it>
-In-Reply-To: <20191114.174512.2282984013110706126.davem@davemloft.net>
-References: <20191113192912.17546-1-andrea.mayer@uniroma2.it>
-        <20191113192912.17546-2-andrea.mayer@uniroma2.it>
-        <20191114.174512.2282984013110706126.davem@davemloft.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+        bh=HGq8jc1LJlY1741ot7fezu8w/ETUBmd5wl0nIESlykU=;
+        b=JcPIWFFadQsubpdW7FThfa6cG0L3FOhJKpFfZU8qIEcKCevBfFv/TMOv3w1JkK9C0rSgYP
+        qUKE//Vjlx7ETvw0mecehCHJwlqIkUzQvYzA8c/zDGvrZKfUKNo9nq/ByHziqeJFCXI0QK
+        wN9P+5g8r3YmpLHYO7omZsZNwnysDY4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-5obBkpWmNaOQOhyMmkCmhg-1; Fri, 15 Nov 2019 12:46:54 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E13DA1005510;
+        Fri, 15 Nov 2019 17:46:52 +0000 (UTC)
+Received: from treble (ovpn-120-26.rdu2.redhat.com [10.10.120.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 42BCD5C548;
+        Fri, 15 Nov 2019 17:46:51 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 11:46:49 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Shile Zhang' <shile.zhang@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
+Subject: Re: [RFC PATCH v3 7/7] x86/unwind/orc: remove run-time ORC unwind
+ tables sort
+Message-ID: <20191115174649.ldif5o7xqo5ntxeo@treble>
+References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
+ <20191115064750.47888-8-shile.zhang@linux.alibaba.com>
+ <893d3caf85cd4ed0921fab84cfe28cad@AcuMS.aculab.com>
+MIME-Version: 1.0
+In-Reply-To: <893d3caf85cd4ed0921fab84cfe28cad@AcuMS.aculab.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 5obBkpWmNaOQOhyMmkCmhg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 17:45:12 -0800 (PST)
-David Miller <davem@davemloft.net> wrote:
+On Fri, Nov 15, 2019 at 04:51:24PM +0000, David Laight wrote:
+> From: Shile Zhang
+> > Sent: 15 November 2019 06:48
+> ...
+> >  arch/x86/kernel/unwind_orc.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.=
+c
+> > index 332ae6530fa8..280da6fa9922 100644
+> > --- a/arch/x86/kernel/unwind_orc.c
+> > +++ b/arch/x86/kernel/unwind_orc.c
+> > @@ -273,9 +273,11 @@ void __init unwind_init(void)
+> >  =09=09return;
+> >  =09}
+> >=20
+> > -=09/* Sort the .orc_unwind and .orc_unwind_ip tables: */
+> > -=09sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
+> > -=09     orc_sort_swap);
+> > +=09/*
+> > +=09 * Note, orc_unwind and orc_unwind_ip tables has been sorted in
+> > +=09 * vmlinux link phase by sorttable tool at build time.
+> > +=09 * Its ready for binary search now.
+> > +=09 */
+>=20
+> How fast is sort() if the table is sorted?
+> Relying on the kernel sources and build scripts always being in sync seem=
+s dangerous.
+> Probably better to leave the sort in for a release of two.
 
-> From: Andrea Mayer <andrea.mayer@uniroma2.it>
-> Date: Wed, 13 Nov 2019 20:29:10 +0100
-> 
-> > pskb_may_pull may change pointers in header. For this reason, it is
-> > mandatory to reload any pointer that points into skb header.
-> > 
-> > Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
-> 
-> This is a bug fix and must be separated out and submitted to 'net'.
-> 
-> Then you must wait until 'net' is merged into 'net-next' so that you
-> can cleanly resubmit the other changes in this series which add the
-> new features.
-> 
-> Actually, patch #2 looks like a bug fix as well.
+This patch comes after the build script changes, so they'd be in sync.
+What would the concern be?
 
-Hi,
-thanks for your review. I will submit the first two patches to 'net'.
+--=20
+Josh
 
-Regards,
-Andrea Mayer
