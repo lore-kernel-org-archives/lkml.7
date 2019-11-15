@@ -2,117 +2,114 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A18C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41E3C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABF62073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1C12073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:36:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="SfuWrd47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfKOHf5 (ORCPT
+        id S1727116AbfKOHgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:35:57 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45213 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOHf5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:35:57 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iVW8y-0006Dh-PE; Fri, 15 Nov 2019 08:35:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iVW8x-0000cb-Kd; Fri, 15 Nov 2019 08:35:47 +0100
-Date:   Fri, 15 Nov 2019 08:35:47 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>, kernel@pengutronix.de
-Subject: Re: [PATCH v4 4/7] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20191115073547.iflhs6vqdsmyjla3@pengutronix.de>
-References: <20191108084517.21617-1-peron.clem@gmail.com>
- <20191108084517.21617-5-peron.clem@gmail.com>
- <20191113085858.76rad3vpszknu4cp@pengutronix.de>
- <CAJiuCceYg7WC=peHYeC=eE-HOsKH_SdsKyWwkWY5VpeY+uzaKA@mail.gmail.com>
+        Fri, 15 Nov 2019 02:36:25 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:45614 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfKOHgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 02:36:25 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 5F79F1B21219; Fri, 15 Nov 2019 10:36:19 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 5F79F1B21219
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1573803379; bh=auYJSdX39uan+gvUCsaNo2NaaQLgfRyrUszL7DhJUb4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=SfuWrd47XdQioLUmZkIhQ3OMs+HeaDWSatiVwQEdzY6ZWJg2pT1l1h5EpRzPJOv1V
+         iwF6IOh6Wr3/0/ynRcejg8zch7KZVc5GEmUbQMUJVgrUDcjeky25QHC4/jtsEcdxeX
+         QQyOIe6XZqOm2o6R0+fxyLS063xmDUIB+DB8uGYo=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id D61961B203C6;
+        Fri, 15 Nov 2019 10:36:08 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D61961B203C6
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 9C6611B21209;
+        Fri, 15 Nov 2019 10:36:08 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Fri, 15 Nov 2019 10:36:08 +0300 (MSK)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCceYg7WC=peHYeC=eE-HOsKH_SdsKyWwkWY5VpeY+uzaKA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Date:   Fri, 15 Nov 2019 10:36:08 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     David Miller <davem@davemloft.net>
+Cc:     ecree@solarflare.com, jiri@mellanox.com, edumazet@google.com,
+        idosch@mellanox.com, pabeni@redhat.com, petrm@mellanox.com,
+        sd@queasysnail.net, f.fainelli@gmail.com,
+        jaswinder.singh@linaro.org, manishc@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, johannes.berg@intel.com,
+        emmanuel.grumbach@intel.com, luciano.coelho@intel.com,
+        linuxwifi@intel.com, kvalo@codeaurora.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: core: allow fast GRO for skbs with Ethernet
+ header in head
+In-Reply-To: <20191114.172508.1027995193093100862.davem@davemloft.net>
+References: <20191112122843.30636-1-alobakin@dlink.ru>
+ <20191114.172508.1027995193093100862.davem@davemloft.net>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <097eb720466a7c429c8fd91c792e7cd5@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Clément,
+Hi Dave,
 
-On Thu, Nov 14, 2019 at 11:47:00PM +0100, Clément Péron wrote:
-> On Wed, 13 Nov 2019 at 09:58, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Fri, Nov 08, 2019 at 09:45:14AM +0100, Clément Péron wrote:
-> > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > +     /*
-> > > +      * Although it would make much more sense to check for bypass in
-> > > +      * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
-> >
-> > I don't understand this reasoning. sun4i_pwm_calculate knows about
-> > .enabled and also sun4i_pwm->data->has_direct_mod_clk_output. Maybe just
-> > add a bool *bypass as parameter and move the logic there?
+David Miller wrote 15.11.2019 04:25:
+
+> From: Alexander Lobakin <alobakin@dlink.ru>
+> Date: Tue, 12 Nov 2019 15:28:43 +0300
 > 
-> I asked myself the same question, however the sun4i_pwm_calculate is
-> only called when period or duty_cycle is updated not when state is
-> toggled between disabled / enabled.
+>> Commit 78d3fd0b7de8 ("gro: Only use skb_gro_header for completely
+>> non-linear packets") back in May'09 (2.6.31-rc1) has changed the
+>> original condition '!skb_headlen(skb)' to the current
+>> 'skb_mac_header(skb) == skb_tail_pointer(skb)' in gro_reset_offset()
+>> saying: "Since the drivers that need this optimisation all provide
+>> completely non-linear packets".
 > 
-> Should we also call it when the state is switched to enabled ?
+> Please reference the appropriate SHA1-ID both here in this paragraph 
+> and
+> also in an appropriate Fixes: tag.
 
-Given that the check
+Sorry for confusing. The SHA1-ID from commit message is correct
+actually. At the moment of 2.6.31 we used skb->mac_header and skb->tail
+pointers directly, so the original condition was
+'skb->mac_header == skb->tail'.
+Commit ced14f6804a9 ("net: Correct comparisons and calculations using
+skb->tail and skb-transport_header") has changed this condition to
+the referred 'skb_mac_header(skb) == skb_tail_pointer(skb)' without
+any functional changes.
+I didn't add the "Fixes:" tag because at the moment of 2.6.31 it was
+a needed change, but it became obsolete later, so now we can revert
+it back to speed up skbs with only Ethernet header in head.
+Please let me know if I must send v2 of this patch with corrected
+description before getting any further reviews.
 
-	if ((cstate.period != state->period) ||
-	    (cstate.duty_cycle != state->duty_cycle)) {
+Thanks.
 
-is not perfect anyhow (because if I toggle between
+> If this goes so far back that it is before GIT, then you need to 
+> provide
+> a reference to the patch posting via lore.kernel.org or similar because
+> it is absolutely essentialy for people reviewing this patch to be able
+> to do some digging into why the condition is code the way that it is
+> currently.
+> 
+> Thank you.
 
-	pwm_apply_state(pwm, { .period = 50000001, .duty_cycle = 25000000, .enabled = true });
-
-and
-
-	pwm_apply_state(pwm, { .period = 50000000, .duty_cycle = 25000000, .enabled = true });
-
-the code recalculates every parameter while it (probably) doesn't make a
-difference.) And also given that cstate is filled by pwm_get_state which
-might change its semantic slightly in the future I would say calculating
-the needed parameter always is also cleaner. (But I'm aware this isn't
-objective enough to overrule different opinions.) While I'm a fan of
-avoid unneeded calculations, I think having a simple driver is more
-important.
-
-(And apart from that I don't like lowlevel drivers calling the pwm API
-that is designed for consumers.)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Regards,
+áš· á›– áš¢ áš¦ áš  áš±
