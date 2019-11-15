@@ -2,99 +2,108 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EFAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B6AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5657D206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247EF206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UMHsl8nl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAaeCX6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfKOKfs (ORCPT
+        id S1727364AbfKOKgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:35:48 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36339 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfKOKfs (ORCPT
+        Fri, 15 Nov 2019 05:36:21 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38427 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbfKOKgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:35:48 -0500
-Received: by mail-lf1-f66.google.com with SMTP id r14so1014048lff.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:35:45 -0800 (PST)
+        Fri, 15 Nov 2019 05:36:20 -0500
+Received: by mail-wm1-f66.google.com with SMTP id z19so9831110wmk.3;
+        Fri, 15 Nov 2019 02:36:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f+PSnzKtja1Ax7hxE68546cbLixgKvyFJbg+bbzyNhg=;
-        b=UMHsl8nlmA66VaV3D9wHoJhMCfUadP4SBWVwxFDj5aPll1Sff7hPsLyOB9PDLxedV+
-         +bFLeR70XvA14r8cpiwPF3RKDnk1bzILLFVHyx2qEfrn+3LB0DR2Rou4kZVDe0de0xGi
-         vlSgH+f7xchJknSannwxUqmxFjPSN8X4qmltznf5JjY52rbHwM2OOWmMzDnNR5i/5ieV
-         JdgnUBZYRz1ikHJOM5h1JShNdGUIDGDMkBAR1HyVaemzNbZON5m+q9bh8YhY4ziYI3J6
-         QqhB7zw0nxrioPQ94srgpnk69V0cVivjw+8z2p+SsK9KFXjUbws0ff3/VfjOLQ8ideZD
-         pPXg==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=frWZkSD6sy+8xeYJ3Z3Dvc1ltroH4PVNYqHO9zC/gkU=;
+        b=oAaeCX6Lw4vTyv0tC3MmzjWCZ0wJwGhNiup8LtPqlbMwl4Tz0ld9uF9kAdkXbv0j1m
+         F/3MQx4qpNlS1NE/4ZuukATOeEbUzu+9ESR0W86lDELqojpGB7Ocsodi97F+PbTN4Ls7
+         5io2PJ2RgWlEThI3Yoh/Pcxe6cEN9tSmgOSaun0R3G0Mo5jBNK+NPU4XkWu6X4LztwJO
+         I4qtJYHR1ggCeMx9tUvzUXOAknQk7ogN7QcRf0yp553OqA8i8MmhHDIdK4kTokmxN0Ym
+         qliw4KqyhB0i8W9dsat0p9Wlin6ravgfbVCu7ekv/uXV71d+ffavN1IBZCSpKpI3SSpp
+         5BiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f+PSnzKtja1Ax7hxE68546cbLixgKvyFJbg+bbzyNhg=;
-        b=iOcnjTeLqbNHcRiRGTPqnxZ6xuBZhWfGWMtV1I94NWBYNmT7bqHfXsDI4+R0aVeJzi
-         +3JMkZnsVP1CPM3DsZI7fTg5al8oJZWmM+55p+SChVhtK2IO5lNanEX9FS14qu+MqIoy
-         vTdFEwmnDHN6KYmvlZ7hDXHLPj8BXIV5bT2xANPVMkyPy3UClFvJvtTB+512sozprBLJ
-         qR46ksyIIA/8qRIpttqhpAO59WueLTWMxn+UaZ4Sl6gyI9YmuoOyF8xmwdVCwPhD0bWe
-         h5mVybqc0VlVckbWRgmto+Ew1oArC47PoChvv3JvDSV3aTjejHLx8XQiQ7bE5dkPNXcc
-         ECsw==
-X-Gm-Message-State: APjAAAWI2SF1d26t97Oe9lWgf7gNYJUU6ekvt1mSkeRl5gqjljMmrzhV
-        0nx+8r/TS6cmlHIDMB2/kPFiTw==
-X-Google-Smtp-Source: APXvYqwEI5CQj5B/Fs+4NNeTLFzILE3sMvUJYAv0KLf6gpWqi8RWkC489XyClBBvR4ZjICQXo5NGRw==
-X-Received: by 2002:ac2:5a11:: with SMTP id q17mr10922147lfn.41.1573814144566;
-        Fri, 15 Nov 2019 02:35:44 -0800 (PST)
-Received: from jax (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
-        by smtp.gmail.com with ESMTPSA id 70sm4317905lfh.86.2019.11.15.02.35.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Nov 2019 02:35:44 -0800 (PST)
-Date:   Fri, 15 Nov 2019 11:35:42 +0100
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Volodymyr_Babchuk@epam.com, tee-dev@lists.linaro.org,
-        linux-kernel@vger.kernel.org, etienne.carriere@linaro.org
-Subject: Re: [Patch v2] tee: optee: Fix dynamic shm pool allocations
-Message-ID: <20191115103541.GA21189@jax>
-References: <1573212434-25526-1-git-send-email-sumit.garg@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1573212434-25526-1-git-send-email-sumit.garg@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=frWZkSD6sy+8xeYJ3Z3Dvc1ltroH4PVNYqHO9zC/gkU=;
+        b=RfCsLMhR7qjgGCZDyr5ML9ZD1byy49AYIJyG241QniH4wAMH/gHHeyjZTppAwsDm/W
+         2i5zMsau9wxc5k08h/0gIlMD7PBcFzEfrJcky5kvcECk9AYaFroWXrjJ+VecHAP4hvV0
+         LY1pDiwmzm/dmUwttxp3LVR/IxRiZJyhRSzCBAods9McmGOel+QPc5G8/1e/dN1vQzOM
+         y4FJ/sertNVQedEgyACMVWoLHr/7cbZuRGXQu4XjKZuuEm9wwF2yVIAKg2IZQ0TjBlhP
+         sxailiprI+j/Kbg8DjznClGyJgpTrfqaGh5NfnsC7JlwHUGZPhRZyMRqlKQRxKAZ65g9
+         Pv/Q==
+X-Gm-Message-State: APjAAAURzzYOwLGKBahtFwX4l6cOk2KnlT/G7pIgImF8kdW/kQcuP03e
+        y5OwjakZ2BDgPqQEA2zyIENbd6rf
+X-Google-Smtp-Source: APXvYqwR8q3zsqox2ep5AOsJj1majxWGrUKLw6Izp+EvrWGnzP7gzmSEyY6YmaYXu6FJDq4UwXpgnQ==
+X-Received: by 2002:a1c:4e1a:: with SMTP id g26mr14110733wmh.138.1573814178104;
+        Fri, 15 Nov 2019 02:36:18 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id b186sm8801138wmb.21.2019.11.15.02.36.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 02:36:17 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: nVMX: mark functions in the header as "static inline"
+Date:   Fri, 15 Nov 2019 11:36:16 +0100
+Message-Id: <1573814176-28536-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sumit,
+Correct a small inaccuracy in the shattering of vmx.c, which becomes
+visible now that pmu_intel.c includes nested.h.
 
-On Fri, Nov 08, 2019 at 04:57:14PM +0530, Sumit Garg wrote:
-> In case of dynamic shared memory pool, kernel memory allocated using
-> dmabuf_mgr pool needs to be registered with OP-TEE prior to its usage
-> during optee_open_session() or optee_invoke_func().
-> 
-> So fix dmabuf_mgr pool allocations via an additional call to
-> optee_shm_register().
-> 
-> Also, allow kernel pages to be registered as shared memory with OP-TEE.
-> 
-> Fixes: 9733b072a12a ("optee: allow to work without static shared memory")
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
-> 
-> Changes in v2:
-> Merge the dependency patch: https://lkml.org/lkml/2019/10/31/431
-> 
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/nested.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Looks good, I'm picking this up.
+diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+index 19e6015722a9..b9e519840f28 100644
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -246,7 +246,7 @@ static inline bool fixed_bits_valid(u64 val, u64 fixed0, u64 fixed1)
+ 	return ((val & fixed1) | fixed0) == val;
+ }
+ 
+-static bool nested_guest_cr0_valid(struct kvm_vcpu *vcpu, unsigned long val)
++static inline bool nested_guest_cr0_valid(struct kvm_vcpu *vcpu, unsigned long val)
+ {
+ 	u64 fixed0 = to_vmx(vcpu)->nested.msrs.cr0_fixed0;
+ 	u64 fixed1 = to_vmx(vcpu)->nested.msrs.cr0_fixed1;
+@@ -260,7 +260,7 @@ static bool nested_guest_cr0_valid(struct kvm_vcpu *vcpu, unsigned long val)
+ 	return fixed_bits_valid(val, fixed0, fixed1);
+ }
+ 
+-static bool nested_host_cr0_valid(struct kvm_vcpu *vcpu, unsigned long val)
++static inline bool nested_host_cr0_valid(struct kvm_vcpu *vcpu, unsigned long val)
+ {
+ 	u64 fixed0 = to_vmx(vcpu)->nested.msrs.cr0_fixed0;
+ 	u64 fixed1 = to_vmx(vcpu)->nested.msrs.cr0_fixed1;
+@@ -268,7 +268,7 @@ static bool nested_host_cr0_valid(struct kvm_vcpu *vcpu, unsigned long val)
+ 	return fixed_bits_valid(val, fixed0, fixed1);
+ }
+ 
+-static bool nested_cr4_valid(struct kvm_vcpu *vcpu, unsigned long val)
++static inline bool nested_cr4_valid(struct kvm_vcpu *vcpu, unsigned long val)
+ {
+ 	u64 fixed0 = to_vmx(vcpu)->nested.msrs.cr4_fixed0;
+ 	u64 fixed1 = to_vmx(vcpu)->nested.msrs.cr4_fixed1;
+-- 
+1.8.3.1
 
-Thanks,
-Jens
