@@ -2,203 +2,155 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0AAC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C53C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F0120733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A401220733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYNdD7nk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VKr2vO4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfKOPLO (ORCPT
+        id S1727643AbfKOPLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:11:14 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41225 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfKOPLO (ORCPT
+        Fri, 15 Nov 2019 10:11:32 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30451 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727380AbfKOPLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:11:14 -0500
-Received: by mail-io1-f67.google.com with SMTP id r144so10741520iod.8;
-        Fri, 15 Nov 2019 07:11:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TFzvSShG866Tx0Q9T+Le+8pqUDl0GErr112sEYfvLrA=;
-        b=vYNdD7nkYFmWZZmrsXGQn5WUw2fdx612njgNnf7ZYt6tIh/0DcDFcZHkS62g5ba5wj
-         K+oepbMjd8eh/87t2eQHoB2UWLqdWbLKjDHbJG3Y7zBZB4v4XlqTS6hyp9DL5nDgAQEs
-         MLXPhBYYGqsvtf5M4EsTT4kvQ4nNEMPcXo9MLKfEKN6tlC+Syg+0+lq2cIvZfhSJ+4sj
-         OPMUq44RDCup2w8ay/2lbC/dNYopVcCLX6xm48+ngkO2PRtwO4Wy4Aw46174AdC1gzO8
-         ueoFcrkMln3Jpy+dTSDlKu0vxc893jze4ZxBKhjWO1CG+kCxIFluSKE94mTLtm0Tb5FK
-         urRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TFzvSShG866Tx0Q9T+Le+8pqUDl0GErr112sEYfvLrA=;
-        b=aqe/yVo0P00/O+Nig8H8AGYoWpveJ1FNBb6OMovGuw/WM3sztPhQ3MbKzkjZplN1fn
-         9l0HzIuOgL7oHHoG+VRWf2EnsXHDzWgtc3JsMcZznLEfsS7OuW/tSLAFTy4bRFSvT6Kd
-         noELcAKBZ9J3ER5T1ZLOldN8zNer7C9T/aRxe/WS7ZkWLfRicZ7rbXymzMsdQMC/xqfR
-         bmA2Lr4NOWnXDdMY8G08CeCK/iId+sGRCrcJCgokIgPbz2vPboLPv/+0NTDzVxT9Hdc+
-         aXlipTlxQXqkQ83HTxxhNqzWQlPuAxxyb2MkaRkQUyT4C3GvcWJk9QezOqzqNKB+om+k
-         4GvA==
-X-Gm-Message-State: APjAAAVXQ0SI4+nzg8VjUUb+/TyQDA3YYL6lsrknK9QJDcIiddAMqlPx
-        SFdQPvqqcvZoSiWTohzlwy7YbmfOPPSvSwUOlqZf2g==
-X-Google-Smtp-Source: APXvYqy8Ml8XdNNu1e1S+drq8SJ03lssUDFd9PATFauKT1En+/MUxAIZp27r7XLHypV0IGX3osYGBdIMvlMNj2od2DI=
-X-Received: by 2002:a02:6a24:: with SMTP id l36mr1120582jac.46.1573830672557;
- Fri, 15 Nov 2019 07:11:12 -0800 (PST)
+        Fri, 15 Nov 2019 10:11:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573830691;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VPXP6F+mV8JIBN1eHnEpmeTZOZyHrGdWMdr7mXYpyO8=;
+        b=VKr2vO4mQVXU7bOFHrzwTguxnmw7XH9r4pMva8bm8PWDmEuaA4jYnLyHdA0oeYkETtBBpo
+        sb0l1XQNt2NdLTsAwK/sQMSQfqqEwPZDswHMlbJL7IKMpAVenY3UV47pl2Ch9+/TWd4Ay5
+        YwnU9tOH9pxL0hmloqqE3hgkMFHehCk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-9wMylUw0MIi5PyyvYa4yQQ-1; Fri, 15 Nov 2019 10:11:28 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EED31005500;
+        Fri, 15 Nov 2019 15:11:27 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3B9455C1B0;
+        Fri, 15 Nov 2019 15:11:25 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 16:11:24 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] perf session: fix decompression of
+ PERF_RECORD_COMPRESSED records
+Message-ID: <20191115151124.GA25246@krava>
+References: <237222f1-9765-dce1-601c-60530a7fc844@linux.intel.com>
 MIME-Version: 1.0
-References: <1573812304-24074-1-git-send-email-tdas@codeaurora.org> <1573812304-24074-4-git-send-email-tdas@codeaurora.org>
-In-Reply-To: <1573812304-24074-4-git-send-email-tdas@codeaurora.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Fri, 15 Nov 2019 08:11:01 -0700
-Message-ID: <CAOCk7NqfHe6jRPmw6o650fyd6EyVfFObHhJ9=21ipuAqJo6oGA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] dt-bindings: clock: Add YAML schemas for the QCOM
- GPUCC clock bindings
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <237222f1-9765-dce1-601c-60530a7fc844@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 9wMylUw0MIi5PyyvYa4yQQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 3:07 AM Taniya Das <tdas@codeaurora.org> wrote:
->
-> The GPUCC clock provider have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
->
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+On Fri, Nov 15, 2019 at 12:05:14PM +0300, Alexey Budankov wrote:
+>=20
+> Avoid termination of trace loading in case the last record in=20
+> the decompressed buffer partly resides in the following=20
+> mmaped PERF_RECORD_COMPRESSED record. In this case NULL value
+> returned by fetch_mmaped_event() means to proceed to the next=20
+> mmaped record then decompress it and load compressed events.=20
+>=20
+> The issue can be reproduced like this:
+>=20
+>   $ perf record -z -- some_long_running_workload
+>   $ perf report --stdio -vv
+>   decomp (B): 44519 to 163000
+>   decomp (B): 48119 to 174800
+>   decomp (B): 65527 to 131072
+>   fetch_mmaped_event: head=3D0x1ffe0 event->header_size=3D0x28, mmap_size=
+=3D0x20000: fuzzed perf.data?
+>   Error:
+>   failed to process sample
+>   ...
+>=20
+> Testing:
+> 71: Zstd perf.data compression/decompression              : Ok
+>=20
+> Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing inval=
+id header.size")
+> Link: https://marc.info/?l=3Dlinux-kernel&m=3D156580812427554&w=3D2
+> Co-developed-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 > ---
->  .../devicetree/bindings/clock/qcom,gpucc.txt       | 24 --------
->  .../devicetree/bindings/clock/qcom,gpucc.yaml      | 69 ++++++++++++++++++++++
->  2 files changed, 69 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.txt b/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
-> deleted file mode 100644
-> index 269afe8a..0000000
-> --- a/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -Qualcomm Graphics Clock & Reset Controller Binding
-> ---------------------------------------------------
-> -
-> -Required properties :
-> -- compatible : shall contain "qcom,sdm845-gpucc" or "qcom,msm8998-gpucc"
-> -- reg : shall contain base register location and length
-> -- #clock-cells : from common clock binding, shall contain 1
-> -- #reset-cells : from common reset binding, shall contain 1
-> -- #power-domain-cells : from generic power domain binding, shall contain 1
-> -- clocks : shall contain the XO clock
-> -          shall contain the gpll0 out main clock (msm8998)
-> -- clock-names : shall be "xo"
-> -               shall be "gpll0" (msm8998)
-> -
-> -Example:
-> -       gpucc: clock-controller@5090000 {
-> -               compatible = "qcom,sdm845-gpucc";
-> -               reg = <0x5090000 0x9000>;
-> -               #clock-cells = <1>;
-> -               #reset-cells = <1>;
-> -               #power-domain-cells = <1>;
-> -               clocks = <&rpmhcc RPMH_CXO_CLK>;
-> -               clock-names = "xo";
-> -       };
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> new file mode 100644
-> index 0000000..c2d6243
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Graphics Clock & Reset Controller Binding
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm grpahics clock control module which supports the clocks, resets and
-> +  power domains.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,msm8998-gpucc
-> +      - qcom,sdm845-gpucc
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: Board XO source
-> +      - description: GPLL0 source from GCC
+>  tools/perf/util/session.c | 47 +++++++++++++++++++++++++++++++++--------=
+------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index f07b8ecb91bc..3f6f812ec4ed 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1957,9 +1957,31 @@ static int __perf_session__process_pipe_events(str=
+uct perf_session *session)
+>  =09return err;
+>  }
+> =20
+> +static union perf_event *
+> +prefetch_event(char *buf, u64 head, size_t mmap_size,
+> +=09       bool needs_swap, union perf_event *ret);
 
-This is not an accurate conversion.  GPLL0 was not valid for 845, and
-is required for 8998.
+why not move prefetch_event definition in here?
+I don't see any need for the static declaration..
 
 > +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: xo
-> +      - const: gpll0
+>  static union perf_event *
+>  fetch_mmaped_event(struct perf_session *session,
+>  =09=09   u64 head, size_t mmap_size, char *buf)
+> +{
+> +=09return prefetch_event(buf, head, mmap_size,
+> +=09=09=09      session->header.needs_swap,
+> +=09=09=09      ERR_PTR(-EINVAL));
+> +}
 > +
-> +  '#clock-cells':
-> +    const: 1
+> +static union perf_event *
+> +fetch_decomp_event(struct perf_session *session,
+> +=09=09   u64 head, size_t mmap_size, char *buf)
+> +{
+
+if this is decomp specific, it could take 'struct decomp*' as argument
+
+> +=09return prefetch_event(buf, head, mmap_size,
+> +=09=09=09      session->header.needs_swap,
+> +=09=09=09      NULL);
+> +}
 > +
-> +  '#reset-cells':
-> +    const: 1
-> +
-> +  '#power-domain-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +  - '#reset-cells'
-> +  - '#power-domain-cells'
-> +
-> +examples:
-> +  # Example of GPUCC with clock node properties for SDM845:
-> +  - |
-> +    clock-controller@5090000 {
-> +      compatible = "qcom,sdm845-gpucc";
-> +      reg = <0x5090000 0x9000>;
-> +      clocks = <&rpmhcc 0>, <&gcc 32>;
-> +      clock-names = "xo", "gpll0";
-> +      #clock-cells = <1>;
-> +      #reset-cells = <1>;
-> +      #power-domain-cells = <1>;
-> +     };
-> +...
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
->
+> +static union perf_event *
+> +prefetch_event(char *buf, u64 head, size_t mmap_size,
+> +=09       bool needs_swap, union perf_event *ret)
+>  {
+
+'error' might be more suitable then ret in here
+
+thanks,
+jirka
+
