@@ -2,39 +2,38 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7BFC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98852C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86DD2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A45D2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfKOMnu (ORCPT
+        id S1727779AbfKOMnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:43:50 -0500
+        Fri, 15 Nov 2019 07:43:47 -0500
 Received: from mga14.intel.com ([192.55.52.115]:58938 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfKOMno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:43:44 -0500
+        id S1727721AbfKOMnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:43:39 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 04:43:43 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 04:43:39 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
-   d="scan'208";a="257749712"
+   d="scan'208";a="257749696"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.197])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Nov 2019 04:43:42 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Nov 2019 04:43:37 -0800
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 14/15] perf intel-pt: Add support for decoding AUX area samples
-Date:   Fri, 15 Nov 2019 14:42:24 +0200
-Message-Id: <20191115124225.5247-15-adrian.hunter@intel.com>
+Subject: [PATCH 11/15] perf auxtrace: Add support for queuing AUX area samples
+Date:   Fri, 15 Nov 2019 14:42:21 +0200
+Message-Id: <20191115124225.5247-12-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115124225.5247-1-adrian.hunter@intel.com>
 References: <20191115124225.5247-1-adrian.hunter@intel.com>
@@ -44,185 +43,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for dumping, queuing and decoding AUX area samples. Decoding
-samples is the same as regular decoding, except in the case where there are
-no timestamps, in which case buffers are decoded immediately before the
-sample event.
+Add functions to queue AUX area samples in advance (auxtrace_queue_data())
+or individually (auxtrace_queues__add_sample()) or find out what queue a
+sample belongs on (auxtrace_queues__sample_queue()).
+
+auxtrace_queue_data() can also queue snapshot data which keeps snapshots
+and samples ordered with respect to each other in case support for that is
+desired.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/intel-pt.c | 109 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 106 insertions(+), 3 deletions(-)
+ tools/perf/util/auxtrace.c | 107 +++++++++++++++++++++++++++++++++++++
+ tools/perf/util/auxtrace.h |  15 ++++++
+ 2 files changed, 122 insertions(+)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index a1c9eb6d4f40..409afc611be9 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -233,6 +233,16 @@ static void intel_pt_log_event(union perf_event *event)
- 	perf_event__fprintf(event, f);
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 4f5c5fe3516b..eb087e7df6f4 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1004,6 +1004,113 @@ struct auxtrace_buffer *auxtrace_buffer__next(struct auxtrace_queue *queue,
+ 	}
  }
  
-+static void intel_pt_dump_sample(struct perf_session *session,
-+				 struct perf_sample *sample)
++struct auxtrace_queue *auxtrace_queues__sample_queue(struct auxtrace_queues *queues,
++						     struct perf_sample *sample,
++						     struct perf_session *session)
 +{
-+	struct intel_pt *pt = container_of(session->auxtrace, struct intel_pt,
-+					   auxtrace);
++	struct perf_sample_id *sid;
++	unsigned int idx;
++	u64 id;
 +
-+	printf("\n");
-+	intel_pt_dump(pt, sample->aux_sample.data, sample->aux_sample.size);
++	id = sample->id;
++	if (!id)
++		return NULL;
++
++	sid = perf_evlist__id2sid(session->evlist, id);
++	if (!sid)
++		return NULL;
++
++	idx = sid->idx;
++
++	if (idx >= queues->nr_queues)
++		return NULL;
++
++	return &queues->queue_array[idx];
 +}
 +
- static int intel_pt_do_fix_overlap(struct intel_pt *pt, struct auxtrace_buffer *a,
- 				   struct auxtrace_buffer *b)
- {
-@@ -836,6 +846,18 @@ static bool intel_pt_have_tsc(struct intel_pt *pt)
- 	return have_tsc;
- }
- 
-+static bool intel_pt_sampling_mode(struct intel_pt *pt)
++int auxtrace_queues__add_sample(struct auxtrace_queues *queues,
++				struct perf_session *session,
++				struct perf_sample *sample, u64 data_offset,
++				u64 reference)
 +{
-+	struct evsel *evsel;
++	struct auxtrace_buffer buffer = {
++		.pid = -1,
++		.data_offset = data_offset,
++		.reference = reference,
++		.size = sample->aux_sample.size,
++	};
++	struct perf_sample_id *sid;
++	u64 id = sample->id;
++	unsigned int idx;
 +
-+	evlist__for_each_entry(pt->session->evlist, evsel) {
-+		if ((evsel->core.attr.sample_type & PERF_SAMPLE_AUX) &&
-+		    evsel->core.attr.aux_sample_size)
-+			return true;
-+	}
-+	return false;
-+}
-+
- static u64 intel_pt_ns_to_ticks(const struct intel_pt *pt, u64 ns)
- {
- 	u64 quot, rem;
-@@ -2320,6 +2342,56 @@ static int intel_pt_process_timeless_queues(struct intel_pt *pt, pid_t tid,
- 	return 0;
- }
- 
-+static void intel_pt_sample_set_pid_tid_cpu(struct intel_pt_queue *ptq,
-+					    struct auxtrace_queue *queue,
-+					    struct perf_sample *sample)
-+{
-+	struct machine *m = ptq->pt->machine;
-+
-+	ptq->pid = sample->pid;
-+	ptq->tid = sample->tid;
-+	ptq->cpu = queue->cpu;
-+
-+	intel_pt_log("queue %u cpu %d pid %d tid %d\n",
-+		     ptq->queue_nr, ptq->cpu, ptq->pid, ptq->tid);
-+
-+	thread__zput(ptq->thread);
-+
-+	if (ptq->tid == -1)
-+		return;
-+
-+	if (ptq->pid == -1) {
-+		ptq->thread = machine__find_thread(m, -1, ptq->tid);
-+		if (ptq->thread)
-+			ptq->pid = ptq->thread->pid_;
-+		return;
-+	}
-+
-+	ptq->thread = machine__findnew_thread(m, ptq->pid, ptq->tid);
-+}
-+
-+static int intel_pt_process_timeless_sample(struct intel_pt *pt,
-+					    struct perf_sample *sample)
-+{
-+	struct auxtrace_queue *queue;
-+	struct intel_pt_queue *ptq;
-+	u64 ts = 0;
-+
-+	queue = auxtrace_queues__sample_queue(&pt->queues, sample, pt->session);
-+	if (!queue)
++	if (!id)
 +		return -EINVAL;
 +
-+	ptq = queue->priv;
-+	if (!ptq)
-+		return 0;
++	sid = perf_evlist__id2sid(session->evlist, id);
++	if (!sid)
++		return -ENOENT;
 +
-+	ptq->stop = false;
-+	ptq->time = sample->time;
-+	intel_pt_sample_set_pid_tid_cpu(ptq, queue, sample);
-+	intel_pt_run_decoder(ptq, &ts);
-+	return 0;
++	idx = sid->idx;
++	buffer.tid = sid->tid;
++	buffer.cpu = sid->cpu;
++
++	return auxtrace_queues__add_buffer(queues, session, idx, &buffer, NULL);
 +}
 +
- static int intel_pt_lost(struct intel_pt *pt, struct perf_sample *sample)
- {
- 	return intel_pt_synth_error(pt, INTEL_PT_ERR_LOST, sample->cpu,
-@@ -2550,7 +2622,11 @@ static int intel_pt_process_event(struct perf_session *session,
- 	}
- 
- 	if (pt->timeless_decoding) {
--		if (event->header.type == PERF_RECORD_EXIT) {
-+		if (pt->sampling_mode) {
-+			if (sample->aux_sample.size)
-+				err = intel_pt_process_timeless_sample(pt,
-+								       sample);
-+		} else if (event->header.type == PERF_RECORD_EXIT) {
- 			err = intel_pt_process_timeless_queues(pt,
- 							       event->fork.tid,
- 							       sample->time);
-@@ -2676,6 +2752,28 @@ static int intel_pt_process_auxtrace_event(struct perf_session *session,
- 	return 0;
- }
- 
-+static int intel_pt_queue_data(struct perf_session *session,
-+			       struct perf_sample *sample,
-+			       union perf_event *event, u64 data_offset)
-+{
-+	struct intel_pt *pt = container_of(session->auxtrace, struct intel_pt,
-+					   auxtrace);
-+	u64 timestamp;
++struct queue_data {
++	bool samples;
++	bool events;
++};
 +
-+	if (event) {
-+		return auxtrace_queues__add_event(&pt->queues, session, event,
-+						  data_offset, NULL);
++static int auxtrace_queue_data_cb(struct perf_session *session,
++				  union perf_event *event, u64 offset,
++				  void *data)
++{
++	struct queue_data *qd = data;
++	struct perf_sample sample;
++	int err;
++
++	if (qd->events && event->header.type == PERF_RECORD_AUXTRACE) {
++		if (event->header.size < sizeof(struct perf_record_auxtrace))
++			return -EINVAL;
++		offset += event->header.size;
++		return session->auxtrace->queue_data(session, NULL, event,
++						     offset);
 +	}
 +
-+	if (sample->time && sample->time != (u64)-1)
-+		timestamp = perf_time_to_tsc(sample->time, &pt->tc);
-+	else
-+		timestamp = 0;
++	if (!qd->samples || event->header.type != PERF_RECORD_SAMPLE)
++		return 0;
 +
-+	return auxtrace_queues__add_sample(&pt->queues, session, sample,
-+					   data_offset, timestamp);
++	err = perf_evlist__parse_sample(session->evlist, event, &sample);
++	if (err)
++		return err;
++
++	if (!sample.aux_sample.size)
++		return 0;
++
++	offset += sample.aux_sample.data - (void *)event;
++
++	return session->auxtrace->queue_data(session, &sample, NULL, offset);
 +}
 +
- struct intel_pt_synth {
- 	struct perf_tool dummy_tool;
- 	struct perf_session *session;
-@@ -3178,7 +3276,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 	if (pt->timeless_decoding && !pt->tc.time_mult)
- 		pt->tc.time_mult = 1;
- 	pt->have_tsc = intel_pt_have_tsc(pt);
--	pt->sampling_mode = false;
-+	pt->sampling_mode = intel_pt_sampling_mode(pt);
- 	pt->est_tsc = !pt->timeless_decoding;
- 
- 	pt->unknown_thread = thread__new(999999999, 999999999);
-@@ -3205,6 +3303,8 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 
- 	pt->auxtrace.process_event = intel_pt_process_event;
- 	pt->auxtrace.process_auxtrace_event = intel_pt_process_auxtrace_event;
-+	pt->auxtrace.queue_data = intel_pt_queue_data;
-+	pt->auxtrace.dump_auxtrace_sample = intel_pt_dump_sample;
- 	pt->auxtrace.flush_events = intel_pt_flush;
- 	pt->auxtrace.free_events = intel_pt_free_events;
- 	pt->auxtrace.free = intel_pt_free;
-@@ -3282,7 +3382,10 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 
- 	intel_pt_setup_pebs_events(pt);
- 
--	err = auxtrace_queues__process_index(&pt->queues, session);
-+	if (pt->sampling_mode || list_empty(&session->auxtrace_index))
-+		err = auxtrace_queue_data(session, true, true);
-+	else
-+		err = auxtrace_queues__process_index(&pt->queues, session);
- 	if (err)
- 		goto err_delete_thread;
- 
++int auxtrace_queue_data(struct perf_session *session, bool samples, bool events)
++{
++	struct queue_data qd = {
++		.samples = samples,
++		.events = events,
++	};
++
++	if (auxtrace__dont_decode(session))
++		return 0;
++
++	if (!session->auxtrace || !session->auxtrace->queue_data)
++		return -EINVAL;
++
++	return perf_session__peek_events(session, session->header.data_offset,
++					 session->header.data_size,
++					 auxtrace_queue_data_cb, &qd);
++}
++
+ void *auxtrace_buffer__get_data(struct auxtrace_buffer *buffer, int fd)
+ {
+ 	size_t adj = buffer->data_offset & (page_size - 1);
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 7ca3e6dcf8b8..804847636b38 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -141,6 +141,8 @@ struct auxtrace_index {
+  * struct auxtrace - session callbacks to allow AUX area data decoding.
+  * @process_event: lets the decoder see all session events
+  * @process_auxtrace_event: process a PERF_RECORD_AUXTRACE event
++ * @queue_data: queue an AUX sample or PERF_RECORD_AUXTRACE event for later
++ *              processing
+  * @dump_auxtrace_sample: dump AUX area sample data
+  * @flush_events: process any remaining data
+  * @free_events: free resources associated with event processing
+@@ -154,6 +156,9 @@ struct auxtrace {
+ 	int (*process_auxtrace_event)(struct perf_session *session,
+ 				      union perf_event *event,
+ 				      struct perf_tool *tool);
++	int (*queue_data)(struct perf_session *session,
++			  struct perf_sample *sample, union perf_event *event,
++			  u64 data_offset);
+ 	void (*dump_auxtrace_sample)(struct perf_session *session,
+ 				     struct perf_sample *sample);
+ 	int (*flush_events)(struct perf_session *session,
+@@ -467,9 +472,19 @@ int auxtrace_queues__add_event(struct auxtrace_queues *queues,
+ 			       struct perf_session *session,
+ 			       union perf_event *event, off_t data_offset,
+ 			       struct auxtrace_buffer **buffer_ptr);
++struct auxtrace_queue *
++auxtrace_queues__sample_queue(struct auxtrace_queues *queues,
++			      struct perf_sample *sample,
++			      struct perf_session *session);
++int auxtrace_queues__add_sample(struct auxtrace_queues *queues,
++				struct perf_session *session,
++				struct perf_sample *sample, u64 data_offset,
++				u64 reference);
+ void auxtrace_queues__free(struct auxtrace_queues *queues);
+ int auxtrace_queues__process_index(struct auxtrace_queues *queues,
+ 				   struct perf_session *session);
++int auxtrace_queue_data(struct perf_session *session, bool samples,
++			bool events);
+ struct auxtrace_buffer *auxtrace_buffer__next(struct auxtrace_queue *queue,
+ 					      struct auxtrace_buffer *buffer);
+ void *auxtrace_buffer__get_data(struct auxtrace_buffer *buffer, int fd);
 -- 
 2.17.1
 
