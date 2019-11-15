@@ -2,109 +2,118 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96D7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3338EC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB2B2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WvPEQM25"
+	by mail.kernel.org (Postfix) with ESMTP id 16DCF2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfKOIBM (ORCPT
+        id S1727401AbfKOIB5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:01:12 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41088 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOIBM (ORCPT
+        Fri, 15 Nov 2019 03:01:57 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:37540 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfKOIB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 03:01:12 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m4so4729640ljj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 00:01:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K7AVtvzUjcO1cH7HI4QDDaRMFMqYOvK9VjNlChoFy28=;
-        b=WvPEQM25nYZqJtCFviyiD5ljzM/UmkIClduWS5T64tJiWhNJmgokv03NvNrxgyQS+y
-         +5ABXTxPcvc7NSKvwma9diqktx6g7QSNjbcBVdIQbuLjNfOH8c/sfbAmpgxGbu3j8NvN
-         SWQP/Ey72K1GHGzEJeMzAkIbyO7FCT+amG3Kw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K7AVtvzUjcO1cH7HI4QDDaRMFMqYOvK9VjNlChoFy28=;
-        b=ZVTQ7mPw6fPuDYF2I084NR+gqjjcDGaMYPXKVYu9dnVhE0jQwNcT34fpP1Yj+N2Tyv
-         XuVLfLgOC2APbtklsEHqwduiE89+M+JUefHx7eKHGXT5x+xANl+eOiPovRRm+8dbzWuj
-         6mQwlsAmzR2Auy9eIwtK1rQbTAI9Z2jie6+zTLrtFFjMBR4DBMEGpCydYqFVHR9Q/QRK
-         up7OSBETwtepSkhjVj3FIUTt9oZTU+/x9ju38i+fvbfxaXawnkP+Oi3dgAXRGBSXNfM+
-         CY+FnAnfTKa4gMsTn95LJl1cM1vIMidzifeAIC6uyVH4SZ5to3j/gomf3uT9KDFAHbeS
-         cm9Q==
-X-Gm-Message-State: APjAAAUBOAp+5mkIRNw2OsRS6booPjlYQHBqoKnpBssZBp8Tr/MFnVdT
-        X+HOM+nTyfUEhOdQTy0poO1PcA==
-X-Google-Smtp-Source: APXvYqzc04JNvBuLcN/d5H0lWI5kqLrC+8YRwhm+xzIsLHtvpNLGSz16bdRnRpDrrXnxVQ4J/enZ6Q==
-X-Received: by 2002:a2e:9ecf:: with SMTP id h15mr10034052ljk.173.1573804870160;
-        Fri, 15 Nov 2019 00:01:10 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id a11sm3426309ljm.60.2019.11.15.00.01.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 00:01:09 -0800 (PST)
-Subject: Re: [PATCH v4 32/47] serial: ucc_uart: use of_property_read_u32() in
- ucc_uart_probe()
-To:     Timur Tabi <timur@kernel.org>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Fri, 15 Nov 2019 03:01:56 -0500
+Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id A8C1ECED16;
+        Fri, 15 Nov 2019 09:11:00 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v5 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm
+ config
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191114180959.v5.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+Date:   Fri, 15 Nov 2019 09:01:54 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        dianders@chromium.org, devicetree <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
         lkml <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>, linux-serial@vger.kernel.org
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
- <20191108130123.6839-33-linux@rasmusvillemoes.dk>
- <CAOZdJXU1ELqQh7TitAJW7bsmnj89wq3opJGVizC2B19nL_3_rQ@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <9f1a846b-c303-92fa-9620-f492ef940de7@rasmusvillemoes.dk>
-Date:   Fri, 15 Nov 2019 09:01:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAOZdJXU1ELqQh7TitAJW7bsmnj89wq3opJGVizC2B19nL_3_rQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <CAF11E66-CD51-47CA-82AD-3DF3302FC456@holtmann.org>
+References: <20191115021008.32926-1-abhishekpandit@chromium.org>
+ <20191114180959.v5.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/11/2019 14.57, Timur Tabi wrote:
-> On Fri, Nov 8, 2019 at 7:03 AM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->>
->> -       if (*iprop)
->> -               qe_port->port.uartclk = *iprop;
->> +       if (val)
->> +               qe_port->port.uartclk = val;
->>         else {
->>                 /*
->>                  * Older versions of U-Boot do not initialize the brg-frequency
->>                  * property, so in this case we assume the BRG frequency is
->>                  * half the QE bus frequency.
->>                  */
-> 
-> This bug in older U-Boots is definitely PowerPC-specific, so could you
-> change this so that it reports an error on ARM if brg-frequency is
-> zero, and displays a warning on PowerPC?
-> 
+Hi Abhishek,
 
-That would be a separate patch, this patch is only concerned with
-eliminating the implicit assumption of the host being big-endian. And
-there's already been some pushback to adding arch-specific ifdefs (which
-I agree with, but as I responded there see as the lesser evil), so
-unless there's a very good reason to add that complexity, I'd rather not.
+> Add documentation for pcm parameters.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> 
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+> .../bindings/net/broadcom-bluetooth.txt       | 20 +++++++++++-
+> include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
+> 2 files changed, 51 insertions(+), 1 deletion(-)
+> create mode 100644 include/dt-bindings/bluetooth/brcm.h
+> 
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> index c749dc297624..a92da31daa79 100644
+> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> @@ -29,10 +29,22 @@ Optional properties:
+>    - "lpo": external low power 32.768 kHz clock
+>  - vbat-supply: phandle to regulator supply for VBAT
+>  - vddio-supply: phandle to regulator supply for VDDIO
+> -
+> + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
+> +                        This value must be set in order for the latter
+> +                        properties to take effect.
+> + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
+> + - brcm,bt-pcm-frame-type: short, long
+> + - brcm,bt-pcm-sync-mode: slave, master
+> + - brcm,bt-pcm-clock-mode: slave, master
+> +
+> +See include/dt-bindings/bluetooth/brcm.h for SCO/PCM parameters. The default
+> +value for all these values are 0 (except for brcm,bt-sco-routing which requires
+> +a value) if you choose to leave it out.
+> 
+> Example:
+> 
+> +#include <dt-bindings/bluetooth/brcm.h>
+> +
+> &uart2 {
+>        pinctrl-names = "default";
+>        pinctrl-0 = <&uart2_pins>;
+> @@ -40,5 +52,11 @@ Example:
+>        bluetooth {
+>                compatible = "brcm,bcm43438-bt";
+>                max-speed = <921600>;
+> +
+> +               brcm,bt-sco-routing        = <BRCM_SCO_ROUTING_TRANSPORT>;
+> +               brcm,bt-pcm-interface-rate = <BRCM_PCM_IF_RATE_512KBPS>;
+> +               brcm,bt-pcm-frame-type     = <BRCM_PCM_FRAME_TYPE_SHORT>;
+> +               brcm,bt-pcm-sync-mode      = <BRCM_PCM_SYNC_MODE_MASTER>;
+> +               brcm,bt-pcm-clock-mode     = <BRCM_PCM_CLOCK_MODE_MASTER>;
+>        };
 
-Rasmus
+I am not sure this makes this all that much more readable. I would have been fine with using actual integer values with a comment behind it. Especially since in the driver itself we will never compare against the constants, we set whatever the DT gives us.
+
+Anyway, for the names, I like Rob to ack them before applying them.
+
+Regards
+
+Marcel
+
