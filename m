@@ -2,161 +2,185 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 637F1C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA7AC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449ED20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C609D20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ha4DEbaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfKOKq7 (ORCPT
+        id S1727279AbfKOKtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:46:59 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2102 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726996AbfKOKq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:46:56 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 62D3A1695C76DAA7E817;
-        Fri, 15 Nov 2019 10:46:55 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 15 Nov 2019 10:46:55 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 15 Nov
- 2019 10:46:54 +0000
-Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
-To:     Hannes Reinecke <hare@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "hare@suse.com" <hare@suse.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>
-References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
- <1573652209-163505-4-git-send-email-john.garry@huawei.com>
- <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
- <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
- <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
- <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
- <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
- <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
- <e676df15-7331-abe3-d3da-3ff46cb6684f@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ff77beff-5fd9-9f05-12b6-826922bace1f@huawei.com>
-Date:   Fri, 15 Nov 2019 10:46:53 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 15 Nov 2019 05:49:20 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46575 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726983AbfKOKtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:49:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573814958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2WZELhR2mEJomYhrXFHphMnsP0bhd8Y9CxfJQCgTBVA=;
+        b=ha4DEbaO4HgsIX7pCvGLBJTsAkBZh3Lqv7hNp4CyEUPN6PIaxGfipszTCi3evOiFVJzOLh
+        VpwTO99086ffIW+xqbtRWA1ZeMKyjPD/FfCvDfG8cxCwwYkTq6+I7vwZLYSYp7LC0CEJxX
+        PBwjlvUntAwYVbVYBKlY6Ja7ziYfc4o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-pf5Z2PPWPXeyXz7k8RXRdQ-1; Fri, 15 Nov 2019 05:49:15 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C66E1802CE0;
+        Fri, 15 Nov 2019 10:49:14 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C83C369185;
+        Fri, 15 Nov 2019 10:49:11 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 15 Nov 2019 11:49:13 +0100 (CET)
+Date:   Fri, 15 Nov 2019 11:49:10 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Andrei Vagin <avagin@gmail.com>, Adrian Reber <areber@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v10 1/2] fork: extend clone3() to support setting a PID
+Message-ID: <20191115104909.GB25528@redhat.com>
+References: <20191114142707.1608679-1-areber@redhat.com>
+ <20191114191538.GC171963@gmail.com>
+ <20191115093419.GA25528@redhat.com>
+ <20191115095854.4vr6bgfz6ny5zbpd@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <e676df15-7331-abe3-d3da-3ff46cb6684f@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191115095854.4vr6bgfz6ny5zbpd@wittgenstein>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: pf5Z2PPWPXeyXz7k8RXRdQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/11/2019 07:26, Hannes Reinecke wrote:
-> On 11/14/19 10:41 AM, John Garry wrote:
->> On 13/11/2019 18:38, Hannes Reinecke wrote:
->>>> Hi Hannes,
->>>>
->>>>> Oh, my. Indeed, that's correct.
->>>>
->>>> The tags could be kept in sync like this:
->>>>
->>>> shared_tag = blk_mq_get_tag(shared_tagset);
->>>> if (shared_tag != -1)
->>>>       sbitmap_set(hctx->tags, shared_tag);
->>>>
->>>> But that's obviously not ideal.
->>>>
->>> Actually, I _do_ prefer keeping both in sync.
->>> We might want to check if the 'normal' tag is set (typically it would
->>> not, but then, who knows ...)
->>> The beauty here is that both 'shared' and 'normal' tag are in sync, so
->>> if a driver would be wanting to use the tag as index into a command
->>> array it can do so without any surprises.
->>>
->>> Why do you think it's not ideal?
->>
->> A few points:
->> - Getting a bit from one tagset and then setting it in another tagset is
->> a bit clunky.
-> Yes, that's true.
-> But painstakingly trying to find a free bit in a bitmask when we already
-> know which to pick is also a bit daft.
+On 11/15, Christian Brauner wrote:
+>
+> +static int set_tid_next(pid_t *set_tid, size_t *size, int idx)
+> +{
+> +=09int tid =3D 0;
+> +
+> +=09if (*size) {
+> +=09=09tid =3D set_tid[idx];
+> +=09=09if (tid < 1 || tid >=3D pid_max)
+> +=09=09=09return -EINVAL;
+> +
+> +=09=09/*
+> +=09=09 * Also fail if a PID !=3D 1 is requested and
+> +=09=09 * no PID 1 exists.
+> +=09=09 */
+> +=09=09if (tid !=3D 1 && !tmp->child_reaper)
+> +=09=09=09return -EINVAL;
+> +
+> +=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
+> +=09=09=09return -EPERM;
+> +
+> +=09=09(*size)--;
+> +=09}
 
-Yeah, but it's not all good - there would still be a certain overhead in 
-the atomic set and unset bit on the hctx sbitmap. However it still 
-should be faster as it excludes the search.
+this needs more args, struct pid_namespace *tmp + pid_t pid_max
 
-> 
->> - There may be an atomicity of the getting the shared tag bit and
->> setting the hctx tag bit - I don't think that there is.
-> 
-> That was precisely what I've alluded to in 'We might want to check if
-> the normal tag is set'.
-> Typically the 'normal' tag would be free (as the shared tag set out of
-> necessity needs to be the combination of all hctx tag sets).
+> +
+> +=09return tid;
+> +}
+> +
+>  struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  =09=09      size_t set_tid_size)
+>  {
+> @@ -188,20 +213,10 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid=
+_t *set_tid,
+>  =09for (i =3D ns->level; i >=3D 0; i--) {
+>  =09=09int tid =3D 0;
+> =20
+> -=09=09if (set_tid_size) {
+> -=09=09=09tid =3D set_tid[ns->level - i];
+> -=09=09=09if (tid < 1 || tid >=3D pid_max)
+> -=09=09=09=09return ERR_PTR(-EINVAL);
+> -=09=09=09/*
+> -=09=09=09 * Also fail if a PID !=3D 1 is requested and
+> -=09=09=09 * no PID 1 exists.
+> -=09=09=09 */
+> -=09=09=09if (tid !=3D 1 && !tmp->child_reaper)
+> -=09=09=09=09return ERR_PTR(-EINVAL);
+> -=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
+> -=09=09=09=09return ERR_PTR(-EPERM);
+> -=09=09=09set_tid_size--;
+> -=09=09}
+> +=09=09retval =3D set_tid_next(set_tid, &set_tid_size, ns->level - i);
+> +=09=09if (retval < 0)
+> +=09=09=09goto out_free;
+> +=09=09tid =3D retval;
 
-Right
+Well, if we add a helper then
 
-> Any difference here _is_ a programming error, and should be flagged as
-> such (sbitmap_test_and_set() anyone?)
+=09static inline int check_tid(tid, max, ns)
+=09{
+=09=09if (tid < 1 || tid >=3D max)
+=09=09=09return ERR_PTR(-EINVAL);
+=09=09/*
+=09=09 * Also fail if a PID !=3D 1 is requested and
+=09=09 * no PID 1 exists.
+=09=09 */
+=09=09if (tid !=3D 1 && !ns->child_reaper)
+=09=09=09return ERR_PTR(-EINVAL);
+=09=09if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN))
+=09=09=09return ERR_PTR(-EPERM);
+=09=09return 0;
+=09}
 
-Eh, I hope that we wouldn't need this.
+=09... alloc_pid() ...
 
-> We might have ordering issues on release, as we really should drop the
-> hctx tag before the shared tag; but when we observe that we should be fine.
-> 
->> - Consider that sometimes we may want to check if there is space on a hw
->> queue - checking the hctx tags is not really proper any longer, as
->> typically there would always be space on hctx, but not always the shared
->> tags. We did delete blk_mq_can_queue() yesterday, which would be an
->> example of that. Need to check if there are others.
->>
-> Clearly, this needs an audit of all functions accessing the hctx tag
-> space; maybe it's worth having a pre-requisite patchset differentiating
-> between hctx tags and global, shared tags. Hmm.
-> 
->> Having said all that, the obvious advantage is performance gain, can
->> still use request.tag and so maybe less intrusive changes.
->>
->> I'll have a look at the implementation. The devil is mostly in the
->> detail...
->>
-> True.
-> And, incidentally, if we run with shared tage we can skip the scheduling
-> section in blk_mq_get_tag(); if we're out of tags, we're out of tags,
+=09=09if (set_tid_size) {
+=09=09=09tid =3D set_tid[ns->level - i];
+=09=09=09retval =3D check_tid(tid, pid_max, tmp);
+=09=09=09if (retval)
+=09=09=09=09goto out_free;
+=09=09=09set_tid_size--;
+=09=09}
 
-Right, but don't we need to then "kick all hw queues", instead of just 
-that for the current hctx in blk_mq_get_tag() when free tags are exhausted?
+looks more clean to me. But still ugly. IMO,
 
-> and no rescheduling will help as we don't _have_ other tagsets to look at.
-> 
-> But overall I like this approach.
-> 
+=09=09if (set_tid_size) {
+=09=09=09tid =3D set_tid[ns->level - i];
 
-Yeah, to me it seems sensible. Again, a neat implementation is the 
-challenge.
+=09=09=09retval =3D -EINVAL;
+=09=09=09if (tid < 1 || tid >=3D pid_max)
+=09=09=09=09goto out_free;
+=09=09=09/*
+=09=09=09 * Also fail if a PID !=3D 1 is requested and
+=09=09=09 * no PID 1 exists.
+=09=09=09 */
+=09=09=09if (tid !=3D 1 && !tmp->child_reaper)
+=09=09=09=09goto out_free;
+=09=09=09retval =3D -EPERM;
+=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
+=09=09=09=09goto out_free;
+=09=09=09set_tid_size--;
+=09=09}
 
-I'll post an RFC v2 for this one.
+makes more sense.
 
-I am also requesting some performance figures also internally.
+Oleg.
 
-Thanks,
-John
