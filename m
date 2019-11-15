@@ -2,77 +2,196 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E7DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B7AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B751020730
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570B62073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:07:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="HzFBCREP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfKOQHF (ORCPT
+        id S1727643AbfKOQH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:07:05 -0500
-Received: from mga09.intel.com ([134.134.136.24]:10613 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727423AbfKOQHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:07:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 08:07:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
-   d="scan'208";a="214800600"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Nov 2019 08:06:59 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     tip-bot2 for Thomas Richter <tip-bot2@linutronix.de>,
-        linux-tip-commits@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
-        gor@linux.ibm.com, hechaol@fb.com, heiko.carstens@de.ibm.com,
-        linux-perf-users@vger.kernel.org, songliubraving@fb.com,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com
-Subject: Re: [tip: perf/urgent] perf/aux: Fix tracking of auxiliary trace buffer allocation
-In-Reply-To: <157165050422.29376.10692255781840811810.tip-bot2@tip-bot2>
-References: <20191021083354.67868-1-tmricht@linux.ibm.com> <157165050422.29376.10692255781840811810.tip-bot2@tip-bot2>
-Date:   Fri, 15 Nov 2019 18:06:59 +0200
-Message-ID: <87bltddsyk.fsf@ashishki-desk.ger.corp.intel.com>
+        Fri, 15 Nov 2019 11:07:27 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42028 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbfKOQH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 11:07:26 -0500
+Received: by mail-pl1-f196.google.com with SMTP id j12so4949825plt.9
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 08:07:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1MDIj/Ne5pWo+qodnUOYNjkosiDdOXlcWKy8+ElVdyg=;
+        b=HzFBCREP8wXPZZXgWF27J4qUzWH5xoBUAuAtElEVPcSC+Ki7U/c5SUXGvYZa01flfV
+         YDHshfhjrztIe8xP8xPhd0nx9YE4eVyuCblRCwS1pg7oij+8FE1TrEk6Jj+fNx6W+AHI
+         IYJZHmpNmtsc6G8iFGqUHRz8muPDmz4HrNqZ0zvq6vfgirhS0QoZnsj8w6jFmfHkfh7U
+         4+cd6pqvCvowO/FlGZ1B/OCnQxWPbEIlFGrWe1Ss8FEf4VixRWYaqnJ/T8tNNgV4NOiC
+         GIYUSUi39Pu5pVdEbudq/SadJ+Hy2Pg2kisrZ/lT3gydRjxhPK7Lg+wUJrhxZoUP8mHx
+         qhhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1MDIj/Ne5pWo+qodnUOYNjkosiDdOXlcWKy8+ElVdyg=;
+        b=dDuzS2HmZXy7EyiUElrMXWHPBDVaAr1M8ixMuLzAGDe1xh1CQgxtSHsCKOf4tMk35M
+         x1xTDq8b8syAiJ7dM6iTlcT3bImliF3r3PK5YXqfLgxLaaulfa2+Tx7LxT9le4KYUb/R
+         cIqKUi02fqN/5lbt+wIFUdLFSe0ERlytZo7Ujbaujh+p9gyERS/uOejEvXtuXZ0dLbCO
+         CENyCxoCEhWLb1oXfElRyue7HuAlkVfkfCbJMlihlAVETgc1kcShKxrJz+puluR1aXdh
+         2seKzMRvQ5AwWZ6CcKbZtym/MCB6NS5MZDsQ1AkA3UNxqhwLgSDJbAdYAFdYZddXBtGp
+         a5iQ==
+X-Gm-Message-State: APjAAAVKreh3yPCx1YMvYikBUU1OFPsp7mc1ofDdOmIibpBIqj3D0ZZl
+        C7ddPEar/W3TzuFGSTzy9Vnmxg==
+X-Google-Smtp-Source: APXvYqwrOAVOnU7OMk5MtyPLxWlFt3r9kNrFgnMuuxt45gS8mFGw7nKAnqWdVJyx+preTg6WeyxjEA==
+X-Received: by 2002:a17:902:322:: with SMTP id 31mr4544289pld.244.1573834045491;
+        Fri, 15 Nov 2019 08:07:25 -0800 (PST)
+Received: from localhost ([2620:10d:c090:180::a9db])
+        by smtp.gmail.com with ESMTPSA id v10sm10527644pfg.11.2019.11.15.08.07.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 08:07:24 -0800 (PST)
+Date:   Fri, 15 Nov 2019 11:07:22 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
+Message-ID: <20191115160722.GA309754@cmpxchg.org>
+References: <20191107205334.158354-1-hannes@cmpxchg.org>
+ <20191107205334.158354-3-hannes@cmpxchg.org>
+ <CALvZod5y2NPPg=24q33=ktQqwyUsH1gpwHgROe5z_P+tW74SDw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod5y2NPPg=24q33=ktQqwyUsH1gpwHgROe5z_P+tW74SDw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"tip-bot2 for Thomas Richter" <tip-bot2@linutronix.de> writes:
+On Thu, Nov 14, 2019 at 03:47:59PM -0800, Shakeel Butt wrote:
+> On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > We use refault information to determine whether the cache workingset
+> > is stable or transitioning, and dynamically adjust the inactive:active
+> > file LRU ratio so as to maximize protection from one-off cache during
+> > stable periods, and minimize IO during transitions.
+> >
+> > With cgroups and their nested LRU lists, we currently don't do this
+> > correctly. While recursive cgroup reclaim establishes a relative LRU
+> > order among the pages of all involved cgroups, refaults only affect
+> > the local LRU order in the cgroup in which they are occuring. As a
+> > result, cache transitions can take longer in a cgrouped system as the
+> > active pages of sibling cgroups aren't challenged when they should be.
+> >
+> > [ Right now, this is somewhat theoretical, because the siblings, under
+> >   continued regular reclaim pressure, should eventually run out of
+> >   inactive pages - and since inactive:active *size* balancing is also
+> >   done on a cgroup-local level, we will challenge the active pages
+> >   eventually in most cases. But the next patch will move that relative
+> >   size enforcement to the reclaim root as well, and then this patch
+> >   here will be necessary to propagate refault pressure to siblings. ]
+> >
+> > This patch moves refault detection to the root of reclaim. Instead of
+> > remembering the cgroup owner of an evicted page, remember the cgroup
+> > that caused the reclaim to happen. When refaults later occur, they'll
+> > correctly influence the cross-cgroup LRU order that reclaim follows.
+> 
+> Can you please explain how "they'll correctly influence"? I see that
+> if the refaulted page was evicted due to pressure in some ancestor,
+> then that's ancestor's refault distance and active file size will be
+> used to decide to activate the refaulted page but how that is
+> influencing cross-cgroup LRUs?
 
->  		/* now it's safe to free the pages */
-> -		atomic_long_sub(rb->aux_nr_pages, &mmap_user->locked_vm);
-> -		atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
-> +		if (!rb->aux_mmap_locked)
-> +			atomic_long_sub(rb->aux_nr_pages, &mmap_user->locked_vm);
-> +		else
-> +			atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
+I take it the next patch answered your question: Activating a page
+inside a cgroup has an effect on how it's reclaimed relative to pages
+in sibling cgroups. So the influence part isn't new with this change -
+it's about recognizing that an activation has an effect on a wider
+scope than just the local cgroup, and considering that scope when
+making the decision whether to activate or not.
 
-This only works correctly when rb->aux_mmap_locked is either equal to
-rb->aux_nr_pages or zero. Otherwise, it leaks
+> > @@ -302,6 +330,17 @@ void workingset_refault(struct page *page, void *shadow)
+> >          */
+> >         refault_distance = (refault - eviction) & EVICTION_MASK;
+> >
+> > +       /*
+> > +        * The activation decision for this page is made at the level
+> > +        * where the eviction occurred, as that is where the LRU order
+> > +        * during page reclaim is being determined.
+> > +        *
+> > +        * However, the cgroup that will own the page is the one that
+> > +        * is actually experiencing the refault event.
+> > +        */
+> > +       memcg = get_mem_cgroup_from_mm(current->mm);
+> 
+> Why not page_memcg(page)? page is locked.
 
-  rb->aux_nr_pages - rb->aux_mmap_locked
+Nice catch! Indeed, the page is charged and locked at this point, so
+we don't have to do another lookup and refcounting dance here.
 
-in the locked_vm permanently.
+Delta patch:
 
-Regards,
---
-Alex
+---
+
+From 8984f37f3e88b1b39c7d6470b313730093b24474 Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Fri, 15 Nov 2019 09:14:04 -0500
+Subject: [PATCH] mm: vmscan: detect file thrashing at the reclaim root fix
+
+Shakeel points out that the page is locked and already charged by the
+time we call workingset_refault(). Instead of doing another cgroup
+lookup and reference from current->mm we can simply use page_memcg().
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/workingset.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/mm/workingset.c b/mm/workingset.c
+index f0885d9f41cd..474186b76ced 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -338,7 +338,7 @@ void workingset_refault(struct page *page, void *shadow)
+ 	 * However, the cgroup that will own the page is the one that
+ 	 * is actually experiencing the refault event.
+ 	 */
+-	memcg = get_mem_cgroup_from_mm(current->mm);
++	memcg = page_memcg(page);
+ 	lruvec = mem_cgroup_lruvec(memcg, pgdat);
+ 
+ 	inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
+@@ -349,7 +349,7 @@ void workingset_refault(struct page *page, void *shadow)
+ 	 * the memory was available to the page cache.
+ 	 */
+ 	if (refault_distance > active_file)
+-		goto out_memcg;
++		goto out;
+ 
+ 	SetPageActive(page);
+ 	advance_inactive_age(memcg, pgdat);
+@@ -360,9 +360,6 @@ void workingset_refault(struct page *page, void *shadow)
+ 		SetPageWorkingset(page);
+ 		inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
+ 	}
+-
+-out_memcg:
+-	mem_cgroup_put(memcg);
+ out:
+ 	rcu_read_unlock();
+ }
+-- 
+2.24.0
+
