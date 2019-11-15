@@ -2,136 +2,98 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91DAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FA6C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C61120740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D1320748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ynvb5DGR"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b3/P3/YJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfKOKiO (ORCPT
+        id S1727434AbfKOKij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:38:14 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:59142 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727365AbfKOKiN (ORCPT
+        Fri, 15 Nov 2019 05:38:39 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52679 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727202AbfKOKii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:38:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kF17KYqpXXxrOXvE5ZmPkjCvqdlqrYPD5aCNtqKBz40=; b=Ynvb5DGRQwGex8Q0NTJer5TLU
-        KlzMAbWWklLqeWAgE0WFxer4N5SAkywU6V6El8MJ1ylwwM4rQKYH6wU2YzqYQ7EB941XJ7jseH62B
-        uGh3Hl1VvE3HjmC8EWWC0y/rlsSLNjalUONSoHmPisftHOxBV0C3oScR+EhQdVX75aOwu0YN/Wuzj
-        uOOBcWME6abYJoXrPT02rwEnOTuRzPy7DDNSSj8pU+dLCIrMkGinOVgv1JA4DSBrNMUtFBMdZB5re
-        rT+3mIB0u/9//YqC2mNMaEgxxrMve9qZiycW0oskf54iG8Z3kcGFDFfdpHu0zrnwgp5I9yeVMxnlF
-        49GqRWJsg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVYyw-0006Pz-8Q; Fri, 15 Nov 2019 10:37:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8DCD2303D9F;
-        Fri, 15 Nov 2019 11:36:27 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 79AC42B0BC1FB; Fri, 15 Nov 2019 11:37:35 +0100 (CET)
-Date:   Fri, 15 Nov 2019 11:37:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-Message-ID: <20191115103735.GE4131@hirez.programming.kicks-ass.net>
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115095447.GU4114@hirez.programming.kicks-ass.net>
- <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
+        Fri, 15 Nov 2019 05:38:38 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFAVxM7004303;
+        Fri, 15 Nov 2019 11:38:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=uNLK9FoUA5Uss+jpUkWda+7Twp6fHYrxsRWlK1dQc7k=;
+ b=b3/P3/YJdE5ABYvTu4M/8G5LWbSOHe7NVUIOh0G6nfztZC2PUedEHt9lGZYO/z64cCcA
+ jrm3/jIuGq4rDQe+ktiqgc9KTUcQnvvkQ1/3gwVy8hka0bhUsn+LOUBN83tClhNhnljR
+ F8x2F+LRJhDcAD8usv0nP8Wef3IylQHfO9sNQ6tWRQVJ7yIOp2qe3LzUOn2N14raSrdv
+ UcKQ5jyfn1d5xRbd+9ufED+1xMcpV1fhTm+akC8aFkpxOk3pr8i1JWFFRWoLJwZjEK0B
+ btlEIBCmV6qufGQFex6GFCRmiREZQWS/twMyWO5Pvff6FQyFn9aKRp+1dZxo7+wJz74g 5A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w7psbkg4j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 11:38:26 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CB3C110002A;
+        Fri, 15 Nov 2019 11:38:25 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BC5902B3F87;
+        Fri, 15 Nov 2019 11:38:25 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov
+ 2019 11:38:25 +0100
+Subject: Re: [PATCH] ARM: dts: stm32: add timers counter support on
+ stm32mp157c
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1573031484-18701-1-git-send-email-fabrice.gasnier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <64bc558b-d0d2-5477-7b6e-3399fbcd5bed@st.com>
+Date:   Fri, 15 Nov 2019 11:38:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1573031484-18701-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_02:2019-11-15,2019-11-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 11:18:00AM +0100, Vincent Guittot wrote:
-> On Fri, 15 Nov 2019 at 10:55, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
-> > > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> > > which might be inefficient when cpufreq driver has rate limitation.
-> > >
-> > > When a task is attached on a CPU, we have call path:
-> > >
-> > > update_load_avg()
-> > >   update_cfs_rq_load_avg()
-> > >     cfs_rq_util_change -- > trig frequency update
-> > >   attach_entity_load_avg()
-> > >     cfs_rq_util_change -- > trig frequency update
-> > >
-> > > The 1st frequency update will not take into account the utilization of the
-> > > newly attached task and the 2nd one might be discard because of rate
-> > > limitation of the cpufreq driver.
-> >
-> > Doesn't this just show that a dumb rate limit in the driver is broken?
+Hi Fabrice
+
+On 11/6/19 10:11 AM, Fabrice Gasnier wrote:
+> Add counter support on stm32mp157c that provides quadrature encoder on
+> timers 1, 2, 3, 4, 5 and 8.
 > 
-> But the rate limit may come from HW constraints that forces to wait
-> let say 4ms or even 10ms between each frequency update.
-
-Sure, but then it can still remember the value passed in last and use
-that state later.
-
-It doesn't _have_ to completely discard values.
-
-> > > update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> > > and update_load_avg() so we can move the call to
-> > > cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
-> > > interesting to notice that update_load_avg() already calls directly
-> > > cfs_rq_util_change() for !SMP case.
-> > >
-> > > This changes will also ensure that cpufreq_update_util() is called even
-> > > when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-> > > irq, rt or dl pelt signals.
-> >
-> > I don't think it does that; that is, iirc the return value of
-> > ___update_load_sum() is 1 every time a period lapses. So even if the avg
-> > is 0 and doesn't change, it'll still return 1 on every period.
-> >
-> > Which is what that dumb rate-limit thing wants of course. But I'm still
-> > thinking that it's stupid to do. If nothing changes, don't generate
-> > events.
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 30 ++++++++++++++++++++++++++++++
+>   1 file changed, 30 insertions(+)
 > 
-> When everything (irq, dl, rt, cfs) is 0, we don't generate events
-> because update_blocked_averages is no more called because
-> rq->has_blocked_load is clear
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index e0f3d4c6..a4ca23c 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -148,6 +148,11 @@
 
-Aah.. Ok, let me look at this thing again.
+Applied on stm32-next.
 
-> > If anything, update_blocked_avgerages() should look at
-> > @done/others_have_blocked() to emit events for rt,dl,irq.
-> 
-> other_have_blocked can be set but no decay happened during the update
-> and we don't need to call cpufreq_update_util
-
-True.
+Thanks.
+Alex
