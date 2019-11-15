@@ -3,70 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4145FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198E4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D85820709
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62172071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfKOBGu (ORCPT
+        id S1727359AbfKOBIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 20:06:50 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:55212 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727020AbfKOBGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 20:06:49 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Ti6Dufq_1573780006;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Ti6Dufq_1573780006)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 15 Nov 2019 09:06:47 +0800
-Subject: Re: [PATCH] mm/vmalloc: Fix regression caused by needless
- vmalloc_sync_all()
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20191113095530.228959-1-shile.zhang@linux.alibaba.com>
- <20191114171231.GA21753@suse.de>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <88a7e8d5-84bc-46b1-573e-9da18218ef57@linux.alibaba.com>
-Date:   Fri, 15 Nov 2019 09:06:46 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Thu, 14 Nov 2019 20:08:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43692 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726996AbfKOBIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 20:08:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DDE13AEAB;
+        Fri, 15 Nov 2019 01:08:33 +0000 (UTC)
+Subject: Re: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+To:     James Tai <james.tai@realtek.com>
+Cc:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
+ <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
+ <43B123F21A8CFE44A9641C099E4196FFCF920024@RTITMBSVM04.realtek.com.tw>
+ <7a05ac2c-00bc-b2ac-0a33-be0242d33188@suse.de>
+ <309cd67da48e4702ae3dcc4ca8ab4309@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <279fd3a3-17dc-5796-f0b0-e39eb919081f@suse.de>
+Date:   Fri, 15 Nov 2019 02:08:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191114171231.GA21753@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <309cd67da48e4702ae3dcc4ca8ab4309@realtek.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi James,
 
+Am 11.11.19 um 03:58 schrieb James Tai:
+>> How much? More than 0x98000000? The RTD1395 datasheet says up to 4 GB -
+>> does that mean it continues in a second region beyond 0xffffffff? Those
+>> locations should be excluded in the soc node ranges (which you sadly appear to
+>> have dropped in v2).
+> 
+> Sorry for my misunderstanding. The RAM region don't require 
+> two cells for memory nodes, so I'll fix it in v3 patch.
 
-On 2019/11/15 01:12, Joerg Roedel wrote:
-> On Wed, Nov 13, 2019 at 05:55:30PM +0800, Shile Zhang wrote:
->> +#if defined(CONFIG_X86_32) && defined(CONFIG_X86_PAE)
->>   	/*
->>   	 * First make sure the mappings are removed from all page-tables
->>   	 * before they are freed.
->> +	 *
->> +	 * This is only needed on x86-32 with !SHARED_KERNEL_PMD, which is
->> +	 * the case on a PAE kernel with PTI enabled.
->>   	 */
->> -	vmalloc_sync_all();
->> +	if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
->> +		vmalloc_sync_all();
->> +#endif
-> I already submitted another fix for this quite some time ago:
->
-> 	https://lore.kernel.org/lkml/20191009124418.8286-1-joro@8bytes.org/
->
-> Regards,
->
-> 	Joerg
-Oh, sorry for I missed that, good job and thanks for your work!
+Should I then also change RTD1395 to use only one cell, or does it
+support more RAM than RTD1619?
+
+By my calculation 0x98000000 is less than 2.4 GiB! So, does RAM continue
+between r-bus and GIC, similar to how it does on RTD1195? Then we need
+to exclude those RAM ranges from the SoC node (adjusting 0x68000000).
+
+Regards,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
