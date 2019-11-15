@@ -2,129 +2,96 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A05EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251B4C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB5E2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F282120740
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XPmJB/Tr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fEl2ZznS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfKOQWK (ORCPT
+        id S1727730AbfKOQWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:22:10 -0500
-Received: from mail-qv1-f46.google.com ([209.85.219.46]:36204 "EHLO
-        mail-qv1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfKOQWJ (ORCPT
+        Fri, 15 Nov 2019 11:22:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41397 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727716AbfKOQWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:22:09 -0500
-Received: by mail-qv1-f46.google.com with SMTP id cv8so3834065qvb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 08:22:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=w7jUeJOoUXH4Qqizv6WofWArxITzVZUe1/AouJiaEWs=;
-        b=XPmJB/TrxXdwntPZQn/pG6IoPfqIvTjFs+9AtqLINMFVbip/eogNS3LiL73jcgCDqt
-         qzmOneG1K5ysjBPQWNRkd/re3r84pvUlKqyLRvf/6UxeGHDKbYY0u2IyrGO1BPXCUiQA
-         qwxOnRh6mUS8vkcCXw2gsbSavUaw+O0d6FsOOWrEOpEo02JStDLR5KCW2RJ0k10pYpta
-         siowDyjSw9vKOeMs3VmH7Qu3v3zTjz9b/JKw4CVYUcFMkqQeXKTObbCv1cmZm+hKdkkv
-         NCeUdwxFTXohiIMUyWoLBhStmLB0UF7DP3HPMpGqAwjXfd1xRAq2UCd13nKp//Vlslfy
-         VFxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=w7jUeJOoUXH4Qqizv6WofWArxITzVZUe1/AouJiaEWs=;
-        b=EuvDHdeNpqn83x3QRu96LcEHmuD2imx+3TtppKQSjWJjT4U4TchAocn6hmXP2rI8Gz
-         zWBKITJu7PXEHHLLYrCf14S41rIwzwPv5F1Fi+VV95arcCPFcZ47V29zuF5f+YW9V6ZU
-         wu7B8FNdPs5rh7dqSS/bjymmpBl0qbXnthDLHtDyplAT5dcUnF8R+8EzPWgIjNMV2YtT
-         YciQQ/CmgJcREd9Qa+aMkv056Bd6DMS1a4RYPngA5+8k/djR3kNtJdjyndXlRHSD2W5C
-         uKWRLo+NiAUu4WZmscgWmP9YZsyYsUWyzjZLSBCNwjSru9js0sbx2newjws17Q0QfUxa
-         bmLw==
-X-Gm-Message-State: APjAAAV07niNVO4gOLDxmLtVBDldxuQBj4ImMuI+w0tRmgQDelXuWdQV
-        9FzAYWdYGPF4nWIewdrouIQieg==
-X-Google-Smtp-Source: APXvYqyjlk1Foro5VxpnbnLOuSGsg14UtbsKQ/fmNm8FzqdVwfvXbEY4e5nIUOhxpANgsHD4qBiyEQ==
-X-Received: by 2002:a0c:a998:: with SMTP id a24mr9881957qvb.117.1573834927156;
-        Fri, 15 Nov 2019 08:22:07 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id q17sm5356533qtq.58.2019.11.15.08.22.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 08:22:06 -0800 (PST)
-Message-ID: <1573834925.5937.127.camel@lca.pw>
-Subject: Re: [PATCH -next] mm/vmscan: fix some -Wenum-conversion warnings
-From:   Qian Cai <cai@lca.pw>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     akpm@linux-foundation.org, surenb@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 15 Nov 2019 11:22:05 -0500
-In-Reply-To: <20191115161723.GB309754@cmpxchg.org>
-References: <1573826697-869-1-git-send-email-cai@lca.pw>
-         <20191115161723.GB309754@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 15 Nov 2019 11:22:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573834956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CwUyebu0scckytmwM4Mxi9fLVUlAZpXNEMuEmf6DWjI=;
+        b=fEl2ZznSGZxRiETQOpkIOmxSSV5OTbc/GsSUpbQ4QWZTUNuiYjNjOcgWiGhhV7AwHK7bIK
+        UVJ6MAlNBQsTjfQiosWu3k3KNpS/kH/yBSiFhR+wQ1atP3331vIFXP3wVszW+m9SEo48IU
+        odb8JARv2yr4mE8tJrvOqxSZkIlUlV8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-hGixx7PgMDyNOgdOe7YA3g-1; Fri, 15 Nov 2019 11:22:33 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 860AB8048E3;
+        Fri, 15 Nov 2019 16:22:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5459210375C0;
+        Fri, 15 Nov 2019 16:22:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <9279.1573824532@warthog.procyon.org.uk>
+References: <9279.1573824532@warthog.procyon.org.uk> <20191110031348.GE29418@shao2-debian>
+To:     kernel test robot <lkp@intel.com>
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org
+Subject: Re: [pipe] d60337eff1: BUG:kernel_NULL_pointer_dereference,address
+MIME-Version: 1.0
+Content-ID: <6852.1573834946.1@warthog.procyon.org.uk>
+Date:   Fri, 15 Nov 2019 16:22:26 +0000
+Message-ID: <6853.1573834946@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: hGixx7PgMDyNOgdOe7YA3g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-15 at 11:17 -0500, Johannes Weiner wrote:
-> On Fri, Nov 15, 2019 at 09:04:57AM -0500, Qian Cai wrote:
-> > The -next commit "mm: vmscan: enforce inactive:active ratio at the
-> > reclaim root" [1] introduced some GCC -Wenum-conversion warnings,
-> > 
-> > mm/vmscan.c:2216:39: warning: implicit conversion from enumeration type
-> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
-> > [-Wenum-conversion]
-> >         inactive = lruvec_page_state(lruvec, inactive_lru);
-> >                    ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~~~
-> > mm/vmscan.c:2217:37: warning: implicit conversion from enumeration type
-> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
-> > [-Wenum-conversion]
-> >         active = lruvec_page_state(lruvec, active_lru);
-> >                  ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~
-> > mm/vmscan.c:2746:42: warning: implicit conversion from enumeration type
-> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
-> > [-Wenum-conversion]
-> >         file = lruvec_page_state(target_lruvec, LRU_INACTIVE_FILE);
-> 
-> Interesting, it doesn't show these for me with gcc-9.2.0.
+Actually, no, this is the fix:
 
-Sorry, I meant to say it is clang.
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 7006b5b2106d..be2fc5793ddd 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -537,7 +537,7 @@ static size_t push_pipe(struct iov_iter *i, size_t size=
+,
+ =09=09buf->ops =3D &default_pipe_buf_ops;
+ =09=09buf->page =3D page;
+ =09=09buf->offset =3D 0;
+-=09=09buf->len =3D max_t(ssize_t, left, PAGE_SIZE);
++=09=09buf->len =3D min_t(ssize_t, left, PAGE_SIZE);
+ =09=09left -=3D buf->len;
+ =09=09iter_head++;
+ =09=09pipe->head =3D iter_head;
 
-> 
-> We should definitely fix these!
-> 
-> > @@ -2213,8 +2213,9 @@ static bool inactive_is_low(struct lruvec *lruvec, enum lru_list inactive_lru)
-> >  	unsigned long inactive_ratio;
-> >  	unsigned long gb;
-> >  
-> > -	inactive = lruvec_page_state(lruvec, inactive_lru);
-> > -	active = lruvec_page_state(lruvec, active_lru);
-> > +	inactive = lruvec_page_state(lruvec,
-> > +				     (enum node_stat_item)inactive_lru);
-> > +	active = lruvec_page_state(lruvec, (enum node_stat_item)active_lru);
-> 
-> This is fragile, as it relies on the absolute values being identical,
-> which we don't guarantee. However, we do guarantee the relative order
-> between the LRU items, and we use NR_LRU_BASE for the translation.
-> 
-> Please use NR_LRU_BASE + (in)active_lru here.
-> 
-> > @@ -2743,7 +2744,8 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-> >  	 * thrashing, try to reclaim those first before touching
-> >  	 * anonymous pages.
-> >  	 */
-> > -	file = lruvec_page_state(target_lruvec, LRU_INACTIVE_FILE);
-> > +	file = lruvec_page_state(target_lruvec,
-> > +				 (enum node_stat_item)LRU_INACTIVE_FILE);
-> 
-> This should just directly use NR_INACTIVE_FILE instead.
-> 
-> Thanks
+David
+
