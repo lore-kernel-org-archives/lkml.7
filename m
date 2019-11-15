@@ -2,111 +2,95 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D339C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBDEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A3420733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F36620723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfKOJJp (ORCPT
+        id S1727199AbfKOJKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:09:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:55392 "EHLO foss.arm.com"
+        Fri, 15 Nov 2019 04:10:39 -0500
+Received: from sauhun.de ([88.99.104.3]:56592 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfKOJJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:09:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D5F4328;
-        Fri, 15 Nov 2019 01:09:44 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBF883F6C4;
-        Fri, 15 Nov 2019 01:09:42 -0800 (PST)
-Date:   Fri, 15 Nov 2019 09:09:40 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
-        Tejun Heo <tj@kernel.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Quentin Perret <qperret@google.com>
-Subject: Re: [PATCH] sched/uclamp: Fix overzealous type replacement
-Message-ID: <20191115090939.6ku6cc44iaoanjph@e107158-lin.cambridge.arm.com>
-References: <20191113165334.14291-1-valentin.schneider@arm.com>
- <CAKfTPtCeGPS57wdyVjA7mnQTW4EeTrd0LX-_1f_+MWp--1FRNQ@mail.gmail.com>
+        id S1725829AbfKOJKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:10:39 -0500
+Received: from localhost (p54B33606.dip0.t-ipconnect.de [84.179.54.6])
+        by pokefinder.org (Postfix) with ESMTPSA id 6C5462C03E3;
+        Fri, 15 Nov 2019 10:10:36 +0100 (CET)
+Date:   Fri, 15 Nov 2019 10:10:36 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] i2c: of: Populate fwnode in of_i2c_get_board_info()
+Message-ID: <20191115091035.GA2227@kunai>
+References: <20191115045049.261104-1-saravanak@google.com>
+ <20191115053201.GA800105@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtCeGPS57wdyVjA7mnQTW4EeTrd0LX-_1f_+MWp--1FRNQ@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20191115053201.GA800105@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/15/19 09:12, Vincent Guittot wrote:
-> On Wed, 13 Nov 2019 at 17:55, Valentin Schneider
-> <valentin.schneider@arm.com> wrote:
-> >
-> > Some uclamp helpers had their return type changed from 'unsigned int' to
-> > 'enum uclamp_id' by commit
-> >
-> >   0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-> >
-> > but it happens that some *actually* do return an unsigned int value. Those
-> > are the helpers that return a utilization value: uclamp_rq_max_value() and
-> > uclamp_eff_value(). Fix those up.
-> >
-> > Note that this doesn't lead to any obj diff using a relatively recent
-> > aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
-> > already figures out that the return value is 11 bits (bits_per(1024)) and
-> > doesn't seem to do anything funny. I'm still marking this as fixing the
-> > above commit to be on the safe side.
-> >
-> > Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-> > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Nov 15, 2019 at 01:32:01PM +0800, Greg Kroah-Hartman wrote:
+> On Thu, Nov 14, 2019 at 08:50:48PM -0800, Saravana Kannan wrote:
+> > This allows the of_devlink feature to work across i2c devices too. This
+> > avoid unnecessary probe deferrals of i2c devices, defers consumers of
+> > i2c devices till the i2c devices probe, and allows i2c drivers to
+> > implement sync_state() callbacks.
+> >=20
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
 > > ---
-> >  kernel/sched/core.c  | 4 ++--
-> >  kernel/sched/sched.h | 2 +-
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 513a4794ff36..71a45025cd2e 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
-> >  }
-> >
-> >  static inline
-> > -enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
-> > +unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
-> >                                    unsigned int clamp_value)
-> >  {
-> >         struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-> > @@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
-> >         return uc_req;
-> >  }
-> >
-> > -enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-> > +unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-> >  {
-> >         struct uclamp_se uc_eff;
-> >
-> 
-> And static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id) ?
-> 
-> Should it be fixed as well as it can return SCHED_CAPACITY_SCALE ?
+> > The of_devlink feature is present in driver-core-next branch. It started
+> > off with [1] but it has been improving since then.
+> >=20
+> > [1] -- https://lore.kernel.org/linux-acpi/20190904211126.47518-1-sarava=
+nak@google.com/
+> >=20
+> >  drivers/i2c/i2c-core-of.c | 1 +
+> >  1 file changed, 1 insertion(+)
+>=20
+> Wolfram, I can take this through my tree now if you have no objections
+> to this.
 
-Indeed. That should return unsigned int too as it's returning the uclamp value.
+What would be the advantage? I can also apply it today if you ack it.
 
-Thanks
 
---
-Qais Yousef
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3Oa4cACgkQFA3kzBSg
+KbaZMhAAh1UZSZZXjji5ZsU0sxQOpgTLqO0m8PDgaHqtoQ8ASGngmutKDq6R9v8M
+6ChpmmIfUHgIFdqta87XH/xhnjpP94TAr0XdIl8Aryjj2xg8+pdUOwNpxofuQmQ+
+TG7gzSlRI2MAN2+nyiaObD42FlZrOoNjiwL2nZySsPlWRoIGdfT7CO0zX41qp16l
+f4E01AhfO6Irb94O1GJXtg3/EKoN91K7B25+BhXiCiv8PE0+MFZzWZ6BprKZCpae
+oy1pHgQpJbZJM1GvPEdXTfBQu5HHDxlnL50d1auAsJaTMcch0p4nTFKmTqg+tW0N
+7szlGfwVyVBnGatSCqwZrX8GALU+7pPPDMx5KT+sh6M/a28+G2qFX/3HrATRQvat
+omMHQkVtvNll2OZzo9EWIaWvElLqay1hpTzdO5Anbwj4/6fKUWgGwj+/TF0xkj06
+xA+nLKOn3kEcO8xoBCduWvShvmQDUADnVNXj6dbM6XyF/WmRH4dEcrgItcoUjqfn
+tsF1lmSlJIHlzrUwQ77BsJj1ZTziwnwrj+aBQkqmRUYw3K+qJrmJAAyfqvoPYcT4
+uh4U2sSxAw5s1TuzZFRqDY4drnQ6Spooquq6BE6CL21yqURKfENUiF63BUrMVobp
+vAwaflgkzGCP7XtJMRP86uFd2a9gtdSTjiLA3A54Qd/gmx5FJoM=
+=PpDn
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
