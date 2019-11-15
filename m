@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF1DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836B5C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257302075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C180207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798925;
-	bh=xQGPlnZNgMac2zqZMDOFZsefS7uj2U/f0RNaF7SFnHk=;
+	s=default; t=1573798930;
+	bh=k/QTvKQ7CL52EtvqmQq+zWJX9EG7E24ynNVmGRIe72w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ShZIugSHy/MDyJ45mYad8tA5VSUcoRmopjwd6UqH+8DYd7ZkxP2hoReeUzLuAja3b
-	 BgTgNmittOlNXHfFUXLJzKcXjunglXX4JKCCS7ohU8i/sD8MzgIdq8SrdfI75tFpfF
-	 RipQYhaxaa6VTJXHXF8lkRf+wjzPN3flXVZWgkKU=
+	b=UUuPHmN7dW4YyIdjuqhTOJ+JtjU76OopWnChF0YIHy7rbrtdBZaluik75onXi7QqN
+	 C5mcbj+WS2Y7lh2wEIBo9euhHRJTNiHJ/ASgcHK8EvrQURZkFPiVfZl2ZDiKDYG0bU
+	 v8q0S/xSuIU1fdkn2H7JOIeFt2PwvPseKHxjdGJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfKOGWD (ORCPT
+        id S1727603AbfKOGWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbfKOGV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:21:59 -0500
+        id S1727550AbfKOGWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:01 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AB1E2053B;
-        Fri, 15 Nov 2019 06:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61B42073C;
+        Fri, 15 Nov 2019 06:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798919;
-        bh=xQGPlnZNgMac2zqZMDOFZsefS7uj2U/f0RNaF7SFnHk=;
+        s=default; t=1573798921;
+        bh=k/QTvKQ7CL52EtvqmQq+zWJX9EG7E24ynNVmGRIe72w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJMIHU1W29neuY5VtuD8/WDcRzxNpG89w476/SvbvXJARYgi63HtcFUDcBpNfY49D
-         ISqy+11QoRgmEUVqVPetDhLABd9t5JAPV4ctLoTj5KEEDuIRgk0ny0sxb5zJ5ZkplC
-         Moz+qUv2GZIj2d2+EpB/q4shjr7G9Bb36+z7dQqE=
+        b=18afwdj6kFztacoBFVH1y2nmRLO0hNRKuV3QCoDHV2X73wfs2GZqILybfR74Pso/S
+         ec94AV5WCHpWYEjxZPu2F2YWqaMR8Z1kmkrUGXfpr6P2cJqawE9ZgYjSopt59we1F+
+         itISkSwKR4tQFtOa5HqpBIcmUqWJKc4YCqcSNtoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,13 +46,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Borislav Petkov <bp@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
         Tony Luck <tony.luck@intel.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 11/31] kvm/x86: Export MDS_NO=0 to guests when TSX is enabled
-Date:   Fri, 15 Nov 2019 14:20:40 +0800
-Message-Id: <20191115062013.701053129@linuxfoundation.org>
+Subject: [PATCH 4.9 12/31] x86/tsx: Add "auto" option to the tsx= cmdline parameter
+Date:   Fri, 15 Nov 2019 14:20:41 +0800
+Message-Id: <20191115062014.685532405@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
@@ -67,63 +66,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-commit e1d38b63acd843cfdd4222bf19a26700fd5c699e upstream.
+commit 7531a3596e3272d1f6841e0d601a614555dc6b65 upstream.
 
-Export the IA32_ARCH_CAPABILITIES MSR bit MDS_NO=0 to guests on TSX
-Async Abort(TAA) affected hosts that have TSX enabled and updated
-microcode. This is required so that the guests don't complain,
+Platforms which are not affected by X86_BUG_TAA may want the TSX feature
+enabled. Add "auto" option to the TSX cmdline parameter. When tsx=auto
+disable TSX when X86_BUG_TAA is present, otherwise enable TSX.
 
-  "Vulnerable: Clear CPU buffers attempted, no microcode"
+More details on X86_BUG_TAA can be found here:
+https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/tsx_async_abort.html
 
-when the host has the updated microcode to clear CPU buffers.
-
-Microcode update also adds support for MSR_IA32_TSX_CTRL which is
-enumerated by the ARCH_CAP_TSX_CTRL bit in IA32_ARCH_CAPABILITIES MSR.
-Guests can't do this check themselves when the ARCH_CAP_TSX_CTRL bit is
-not exported to the guests.
-
-In this case export MDS_NO=0 to the guests. When guests have
-CPUID.MD_CLEAR=1, they deploy MDS mitigation which also mitigates TAA.
+ [ bp: Extend the arg buffer to accommodate "auto\0". ]
 
 Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+[bwh: Backported to 4.9: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kvm/x86.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/kernel-parameters.txt |    3 +++
+ arch/x86/kernel/cpu/tsx.c           |    7 ++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1050,6 +1050,25 @@ u64 kvm_get_arch_capabilities(void)
- 	if (!boot_cpu_has_bug(X86_BUG_MDS))
- 		data |= ARCH_CAP_MDS_NO;
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -4537,6 +4537,9 @@ bytes respectively. Such letter suffixes
+ 				update. This new MSR allows for the reliable
+ 				deactivation of the TSX functionality.)
  
-+	/*
-+	 * On TAA affected systems, export MDS_NO=0 when:
-+	 *	- TSX is enabled on the host, i.e. X86_FEATURE_RTM=1.
-+	 *	- Updated microcode is present. This is detected by
-+	 *	  the presence of ARCH_CAP_TSX_CTRL_MSR and ensures
-+	 *	  that VERW clears CPU buffers.
-+	 *
-+	 * When MDS_NO=0 is exported, guests deploy clear CPU buffer
-+	 * mitigation and don't complain:
-+	 *
-+	 *	"Vulnerable: Clear CPU buffers attempted, no microcode"
-+	 *
-+	 * If TSX is disabled on the system, guests are also mitigated against
-+	 * TAA and clear CPU buffer mitigation is not required for guests.
-+	 */
-+	if (boot_cpu_has_bug(X86_BUG_TAA) && boot_cpu_has(X86_FEATURE_RTM) &&
-+	    (data & ARCH_CAP_TSX_CTRL_MSR))
-+		data &= ~ARCH_CAP_MDS_NO;
++			auto	- Disable TSX if X86_BUG_TAA is present,
++				  otherwise enable TSX on the system.
 +
- 	return data;
- }
+ 			Not specifying this option is equivalent to tsx=off.
  
+ 			See Documentation/hw-vuln/tsx_async_abort.rst
+--- a/arch/x86/kernel/cpu/tsx.c
++++ b/arch/x86/kernel/cpu/tsx.c
+@@ -75,7 +75,7 @@ static bool __init tsx_ctrl_is_supported
+ 
+ void __init tsx_init(void)
+ {
+-	char arg[4] = {};
++	char arg[5] = {};
+ 	int ret;
+ 
+ 	if (!tsx_ctrl_is_supported())
+@@ -87,6 +87,11 @@ void __init tsx_init(void)
+ 			tsx_ctrl_state = TSX_CTRL_ENABLE;
+ 		} else if (!strcmp(arg, "off")) {
+ 			tsx_ctrl_state = TSX_CTRL_DISABLE;
++		} else if (!strcmp(arg, "auto")) {
++			if (boot_cpu_has_bug(X86_BUG_TAA))
++				tsx_ctrl_state = TSX_CTRL_DISABLE;
++			else
++				tsx_ctrl_state = TSX_CTRL_ENABLE;
+ 		} else {
+ 			tsx_ctrl_state = TSX_CTRL_DISABLE;
+ 			pr_err("tsx: invalid option, defaulting to off\n");
 
 
