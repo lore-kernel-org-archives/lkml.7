@@ -2,151 +2,111 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9E2C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D13C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D138D20733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:12:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="V8uZqTp7"
+	by mail.kernel.org (Postfix) with ESMTP id 25EA120723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfKOJMQ (ORCPT
+        id S1727192AbfKOJNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:12:16 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:33776 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbfKOJMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:12:16 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 69EB41B21157; Fri, 15 Nov 2019 12:12:12 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 69EB41B21157
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1573809132; bh=CtxYuY+GbtGqv5wTXxa7arIIy/o1DNl/HAFZOiotkTU=;
-        h=From:To:Cc:Subject:Date;
-        b=V8uZqTp7MX2P/2kNdeX0wta4JIxkank0K0AVppscD0C9XbbHY17EAnzP3ZanbOIAP
-         fMFiB5bR6qvBMctPGnVBTmvUmMkBzoqjd/+1RDNgaxwd6OSG8byt3kgQJdNsBUCF0A
-         fTZbK4JUm+IIavyNjXYWRDZkfvKBOCSsBqYIQ+fo=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id B5FE21B20B5F;
-        Fri, 15 Nov 2019 12:12:02 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru B5FE21B20B5F
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 6EF761B21209;
-        Fri, 15 Nov 2019 12:12:01 +0300 (MSK)
-Received: from localhost.localdomain (unknown [196.196.203.126])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Fri, 15 Nov 2019 12:12:01 +0300 (MSK)
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Edward Cree <ecree@solarflare.com>, Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Alexander Lobakin <alobakin@dlink.ru>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next] net: core: allow fast GRO for skbs with Ethernet header in head
-Date:   Fri, 15 Nov 2019 12:11:35 +0300
-Message-Id: <20191115091135.13487-1-alobakin@dlink.ru>
-X-Mailer: git-send-email 2.24.0
+        Fri, 15 Nov 2019 04:13:16 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:38583 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbfKOJNP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:13:15 -0500
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M2gt5-1iRxQb0tsV-004DzZ for <linux-kernel@vger.kernel.org>; Fri, 15 Nov
+ 2019 10:13:14 +0100
+Received: by mail-qk1-f174.google.com with SMTP id 205so7562981qkk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:13:14 -0800 (PST)
+X-Gm-Message-State: APjAAAUWRlajfIXjUroZZXQ9DT+cKsWCYGVGnXXAK3r+qd96B2bvoKFh
+        NbmhZOUNeai3CXkmshs4b0J7CtHabeOjhy01Ono=
+X-Google-Smtp-Source: APXvYqzK+NKPtBnVDtMTSq9zbDtIp+PZVJO4gYi0S3FpsNJw5m1Rcv8OlP3fb54XVLc70eCZF0Y/3pqQhF8s4wE4tr8=
+X-Received: by 2002:a37:58d:: with SMTP id 135mr11602050qkf.394.1573809193077;
+ Fri, 15 Nov 2019 01:13:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191115084931.77161-1-andriy.shevchenko@linux.intel.com> <20191115084931.77161-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20191115084931.77161-2-andriy.shevchenko@linux.intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 15 Nov 2019 10:12:57 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2D1eks7dirbX=LrdQy6w0HeA7-x8jb1=qkxfatPuc51w@mail.gmail.com>
+Message-ID: <CAK8P3a2D1eks7dirbX=LrdQy6w0HeA7-x8jb1=qkxfatPuc51w@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] mfd: syscon: Switch to use devm_ioremap_resource()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:nnxmebc/kXufC0ty12KF24qspF0zJpIqxv+SECWV65tXJ97sUSx
+ cqRCyC0zPrPnGoWS0x/aQ9LHfKK7X918Q7WJcFsNKuakF9oYA6cDLxNGslWNsjlPer29H+4
+ yFPeNEWvWvI6q6AZLAfk1MEJtudQvfTzgcc6ZU+JpRTT4MhrQ5iX8fes91VZ8v8kBgVBqUF
+ 6EBTji5uLgoedgp7wKEig==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cTtqdKeQ+Zo=:cFBn8/MVmuV+ki0GZdCuv+
+ WplatiUbK3PtGuYi01UiLkfVmz5s5Vt7zE2ejxc+ZelQo94Q7nPg5elNuyIxPO5iK76qlpBsj
+ I8UIca7vztGPTuRgOE68AVeCbPvjR0/QqPcofolhQi15Auw/voLMNY+dxuQWzjXq4YydGxp+v
+ VWmn42h5mnoZHlKzVGBRV/qBpFiM0bvRqYd0EMuZkWXsVqwtxZWq8F/p09hTvh8YVQCxN4DFP
+ SGCzTwkEz2GTp/zyQBHvHnjXnLUIY93ZCNB507DwrstBz9CFsIYAbLlPbrcgyZs6MUmBmrOkR
+ R6OIZkVx3R6Dr+qKnUwxeHbGFJqKrjQ4l8ScWCmobp1etXjarItpw5rB6teler1qe0Yviddw/
+ 3S6HHvhTsrvOTIbE4xjDUPbsXESzq3pXHLeeFaCCcD5pNwe0g5eMnQ0RC+x9fqoHnHd8IzGHQ
+ BDEBB77i2Jql+BseO9CXsrXKGsmI6t9InCK8GRb7lCRjpWxIDR558/d1HEHtFTIrBkTM7lvFA
+ v++2jZLxYaxWBijkTMwJe45gYpBj1H+w+OmfojoTQ+HBXbo3AJsZlVHEteJZdjJSUAHKs6lLo
+ blHRVoG1Br/WNdAhU8S+B4C0rUj2fTmhabLcMWLpOJn58LEySb/Gba3unO813tBOKkajzn/Qy
+ riUJZAbXQQ/E/zNUPF/KcoEaE7XXEMgUZo/5vcSoLuMtsThkDDRaxkiaRFeGk2B9o+OMyUUQK
+ xUOhL5kpA+Qc320rxZ7bXteFDR+p7PuipG3Awu/ILfw5bYOfAg0Rio9T5u+w8PAjpUKWqIRjf
+ 76158AUU5QX12zMNHyehEop5Lk+k5Pjg4LDskrHbUcgXXUknNNLsAm6AZ6a/Ayey4v8Y/xVgT
+ vtxQ7OU2FzP2jsfPxu+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 78d3fd0b7de8 ("gro: Only use skb_gro_header for completely
-non-linear packets") back in May'09 (v2.6.31-rc1) has changed the
-original condition '!skb_headlen(skb)' to
-'skb->mac_header == skb->tail' in gro_reset_offset() saying: "Since
-the drivers that need this optimisation all provide completely
-non-linear packets" (note that this condition has become the current
-'skb_mac_header(skb) == skb_tail_pointer(skb)' later with commmit
-ced14f6804a9 ("net: Correct comparisons and calculations using
-skb->tail and skb-transport_header") without any functional changes).
+On Fri, Nov 15, 2019 at 9:49 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Instead of checking resource pointer for being NULL and
+> report some not very standard error codes in this case,
+> switch to devm_ioremap_resource() API.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-For now, we have the following rough statistics for v5.4-rc7:
-1) napi_gro_frags: 14
-2) napi_gro_receive with skb->head containing (most of) payload: 83
-3) napi_gro_receive with skb->head containing all the headers: 20
-4) napi_gro_receive with skb->head containing only Ethernet header: 2
+IIRC there are some slightly odd uses of syscon that rely on on us not calling
+devm_request_mem_region here, which is implied by devm_ioremap_resource()
+but not devm_ioremap().
 
-With the current condition, fast GRO with the usage of
-NAPI_GRO_CB(skb)->frag0 is available only in the [1] case.
-Packets pushed by [2] and [3] go through the 'slow' path, but
-it's not a problem for them as they already contain all the needed
-headers in skb->head, so pskb_may_pull() only moves skb->data.
+A patch to add a comment about this might be helpful though.
 
-The layout of skbs in the fourth [4] case at the moment of
-dev_gro_receive() is identical to skbs that have come through [1],
-as napi_frags_skb() pulls Ethernet header to skb->head. The only
-difference is that the mentioned condition is always false for them,
-because skb_put() and friends irreversibly alter the tail pointer.
-They also go through the 'slow' path, but now every single
-pskb_may_pull() in every single .gro_receive() will call the *really*
-slow __pskb_pull_tail() to pull headers to head. This significantly
-decreases the overall performance for no visible reasons.
+    Arnd
 
-The only two users of method [4] is:
-* drivers/staging/qlge
-* drivers/net/wireless/iwlwifi (all three variants: dvm, mvm, mvm-mq)
-
-Note that in case with wireless drivers we can't use [1]
-(napi_gro_frags()) at least for now and mac80211 stack always
-performs pushes and pulls anyways, so performance hit is inavoidable.
-
-At the moment of v2.6.31 the mentioned change was necessary (that's
-why I don't add the "Fixes:" tag), but it became obsolete since
-skb_gro_mac_header() has gone in commit a50e233c50db ("net-gro:
-restore frag0 optimization"), so we can simply revert the condition
-in gro_reset_offset() to allow skbs from [4] go through the 'fast'
-path just like in case [1].
-
-This was tested on a 600 MHz MIPS CPU and a custom driver and this
-patch gave boosts up to 40 Mbps to method [4] in both directions
-comparing to net-next, which made overall performance relatively
-close to [1] (without it, [4] is the slowest).
-
-v2:
-- Add more references and explanations to commit message
-- Fix some typos ibid
-- No functional changes
-
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
----
- net/core/dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 1c799d486623..da78a433c10c 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -5611,8 +5611,7 @@ static void skb_gro_reset_offset(struct sk_buff *skb)
- 	NAPI_GRO_CB(skb)->frag0 = NULL;
- 	NAPI_GRO_CB(skb)->frag0_len = 0;
- 
--	if (skb_mac_header(skb) == skb_tail_pointer(skb) &&
--	    pinfo->nr_frags &&
-+	if (!skb_headlen(skb) && pinfo->nr_frags &&
- 	    !PageHighMem(skb_frag_page(frag0))) {
- 		NAPI_GRO_CB(skb)->frag0 = skb_frag_address(frag0);
- 		NAPI_GRO_CB(skb)->frag0_len = min_t(unsigned int,
--- 
-2.24.0
-
+> ---
+>  drivers/mfd/syscon.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index 13626bb2d432..fad961b2e4a5 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -238,12 +238,9 @@ static int syscon_probe(struct platform_device *pdev)
+>                 return -ENOMEM;
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       if (!res)
+> -               return -ENOENT;
+> -
+> -       base = devm_ioremap(dev, res->start, resource_size(res));
+> -       if (!base)
+> -               return -ENOMEM;
+> +       base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+>
+>         syscon_config.max_register = resource_size(res) - 4;
+>         if (pdata)
+> --
+> 2.24.0
+>
