@@ -2,77 +2,114 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3C8C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2119C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0552072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9324520728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QUbG1FRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfKORKI (ORCPT
+        id S1727620AbfKORO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:10:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:33936 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727528AbfKORKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:10:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35F6D31B;
-        Fri, 15 Nov 2019 09:10:08 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CE003F6C4;
-        Fri, 15 Nov 2019 09:10:06 -0800 (PST)
-Subject: Re: [PATCH v2] sched/uclamp: Fix overzealous type replacement
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
-        Tejun Heo <tj@kernel.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Qais Yousef <qais.yousef@arm.com>
-References: <20191115103908.27610-1-valentin.schneider@arm.com>
- <CAKfTPtBoi_5sUiGrTpYuV_u2vPkBK+caUzgaKxY3Ck3PKJXZiw@mail.gmail.com>
- <f4fcc45e-7609-3836-162a-0a1839134bcf@arm.com>
-Message-ID: <2dce8a83-b358-d975-bf43-8088b3bc5557@arm.com>
-Date:   Fri, 15 Nov 2019 17:10:05 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 15 Nov 2019 12:14:59 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48378 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727548AbfKORO7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 12:14:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573838098;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=i//VdLznyJQ1f9EYHUzbZrmnX/uwUJtCHfRMoEiRRFM=;
+        b=QUbG1FRkgiruETIr+rJqo4Q7IA89FwWUFX0oGpDRZiyB0khjdgglhnEOBOTF/xUDiikFTS
+        fkFl4TfdPeOPXPUqP3E8XNN+eO1qE/x3zz+s92U6BpKfeOzCUcsg+Gw+W1HQYPeeB7Kv4S
+        uIDRGj3uuq5B9ogg5xILALUQ2O8jcas=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-bn7BejAKOU--lJSVYPquaA-1; Fri, 15 Nov 2019 12:14:55 -0500
+Received: by mail-wm1-f69.google.com with SMTP id h191so7301474wme.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 09:14:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fkKZc7EVVIK/btwaEMMtK6umsKN2KQyJVj0fen7NWM4=;
+        b=KnuLg+GIbDkXHQByTygxYXvHguSZaLsYVEXJ42dZn2pwclIuKV23/9yBZYrux25fWQ
+         h1oTWtFgspEdUwYa3UI20EExT5289gSLh14xY1npmv6CYYnbsUDRA105EqTBAR50d4N5
+         gzX5a2/GD/7HoW3c2h/ALKfuHUFQftfnXRz0BUhia8OyrsCMjcJqzeD2jyMF8me2/t4V
+         mtQ/YqCkSV6xHAKmDV1DanBdQCIbTXvQShLg5caiUXtecI8i5CAVN2m7EVQySMz5SSQS
+         QB4c13YBPD7f0fX/wmEFiDDMlH3/sIlwoGej8qiW4SYsxTY5W4nrKSKo4DvE81NcAASx
+         A1Aw==
+X-Gm-Message-State: APjAAAUtb3FSZgpko1o+lEbjyhbfjfAdYdInUNtD3QY9ViohZPzT/5ju
+        /EX/OW/NQKKuwRC0E0tvhj/NB0AdjzPsrv6zMYvZ9yd4O37Wyah1SdTbcm4yEq4aW6H6Lee6XK5
+        44QGBSvCiMcg766cCBYWRGBLq
+X-Received: by 2002:a1c:7709:: with SMTP id t9mr15737398wmi.80.1573838093812;
+        Fri, 15 Nov 2019 09:14:53 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzFYsvAwIE6O5TRg5h8L4op6aHWHNgR4Qnu7Nap2afcKOa3ebQhqU+/jSY5LlHI0javOU1nhQ==
+X-Received: by 2002:a1c:7709:: with SMTP id t9mr15737362wmi.80.1573838093545;
+        Fri, 15 Nov 2019 09:14:53 -0800 (PST)
+Received: from localhost.localdomain ([151.29.177.194])
+        by smtp.gmail.com with ESMTPSA id a6sm13758352wrh.69.2019.11.15.09.14.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Nov 2019 09:14:52 -0800 (PST)
+Date:   Fri, 15 Nov 2019 18:14:50 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, will@kernel.org, oleg@redhat.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de, williams@redhat.com, bristot@redhat.com,
+        longman@redhat.com, dave@stgolabs.net, jack@suse.com
+Subject: Re: [PATCH 0/5] locking: Percpu-rwsem rewrite
+Message-ID: <20191115171450.GJ19129@localhost.localdomain>
+References: <20191113102115.116470462@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <f4fcc45e-7609-3836-162a-0a1839134bcf@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191113102115.116470462@infradead.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-MC-Unique: bn7BejAKOU--lJSVYPquaA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/11/2019 14:29, Valentin Schneider wrote:
-> On 15/11/2019 14:07, Vincent Guittot wrote:
->>> -static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
->>> +static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
->>
->> Out of curiosity why uclamp decided to use unsigned int to manipulate
->> utilization instead of unsigned long which is the type of util_avg ?
->>
-> 
-> I didn't stare at the discussion much, but I think it stems from the
-> design choices behind struct uclamp_se: everything is crammed in an unsigned
-> int bitfield. Let me see if I can find some relevant mails.
-> 
+Hi,
 
-So I think a relevant mail is:
+On 13/11/19 11:21, Peter Zijlstra wrote:
+> Yet another version of the percpu-rwsem rewrite..
+>=20
+> This one (ab)uses the waitqueue in an entirely different and unique way, =
+but no
+> longer shares it like it did. It retains the use of rcuwait for the
+> writer-waiting-for-readers-to-complete condition.
+>=20
+> This one should be FIFO fair with writer-stealing.
+>=20
+> It seems to pass locktorture torture_type=3Dpercpu_rwsem_lock. But as alw=
+ays,
+> this stuff is tricky, please look carefully.
 
-https://lore.kernel.org/lkml/20180912174236.GB24106@hirez.programming.kicks-ass.net/
+Backported this series to v5.2.21-rt13.
 
-Other than that, the uclamp_se.value field was 'int' in v1 and has been
-'unsigned int' for all following versions. uclamp_bucket.value is a bitfield
-of an 'unsigned long' just because we want more headroom for the tasks count,
-AFAICT.
+locktorture looks good (running for several hours) and DEBUG_LOCKS splat
+[1] not reproducible anymore.
+
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
+
+Thanks!
+
+Juri
+
+1 - https://lore.kernel.org/lkml/20190326093421.GA29508@localhost.localdoma=
+in/
+
