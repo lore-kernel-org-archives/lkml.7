@@ -2,150 +2,372 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78DDC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B48FC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C213E2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2862067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SgyG+3pL";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jaMs4OJk"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JK0LfWi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfKOM12 (ORCPT
+        id S1727563AbfKOM1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:27:28 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:57670 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfKOM12 (ORCPT
+        Fri, 15 Nov 2019 07:27:39 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42133 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727323AbfKOM1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:27:28 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C99B46149A; Fri, 15 Nov 2019 12:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573820846;
-        bh=nn641KuPlVJ7M03lH48vK72IKsPONDRXYZbuLdODP+E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SgyG+3pLBf/epYtaBAk0ZRB50L2a8+58nD2VcCuqJ4KjPImZYadXXmTNp350yi0jj
-         QLsECcs55VPRM+eZbluH6JjBKPn/XtgCfFptwNXkffw1oqnjdi+BPX817W9GbuG2rI
-         KllDQKb3u7th/v9QKlr/JKUuSn4dxVCdN1XNO+8I=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id E5CFC61494;
-        Fri, 15 Nov 2019 12:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573820839;
-        bh=nn641KuPlVJ7M03lH48vK72IKsPONDRXYZbuLdODP+E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jaMs4OJkRDvrjtvA6b7JIjzUo1PVR1a9YeKe4NoVjt578d3wMaxMuiOj+l6brL5Nb
-         Teae1FX11ODMVsu13jt+iZP7Mp/KjuWL2Q1Ye+4MtB6gddDjRJpKjvVnSAXVcjL5u7
-         YP3akQeyW7AwCQRayChFmcUNP2zZMSoAwLg7w+hg=
+        Fri, 15 Nov 2019 07:27:38 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFCC3DP030963;
+        Fri, 15 Nov 2019 13:27:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=+ySUyuIgppZscAXuN5IFd1l92uGKjRfWMz0ArEYbKMg=;
+ b=JK0LfWi89WCk8ooVq9J6K8MmK5G8ByfR1TP+Am1vgJJ4EpvI1uLXGfcT1wQqVg2a8JUO
+ z7bs+PJ0e8gIpuyda2PwAjci1609IKKHPdzZvbxFd2gTwK2JzzFm/l3T/JHmjM/wXVIJ
+ hn3r1fi8zvIVk0XoguiGvByik5m6hBPsKUACGg/P6bWBvcjlZwUb2NT7hc8LTrCG97MN
+ E1LZdrl2br0TPxwkoGqfqd0FlNbppbS7WFsfJhZVNyqFA7uT0RM4SL3d8RpnW+DeNVyd
+ TAxiDckTIWPdwWw3utVF7gMp0zGQQHLLuF8t0Sqb4Ayqz9FBcmYp/Q4l8Q2yqSJ6Met3 Dw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w7psbm1k0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 13:27:04 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 63C46100034;
+        Fri, 15 Nov 2019 13:27:03 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 34D852A96EE;
+        Fri, 15 Nov 2019 13:27:03 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov 2019 13:27:02
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <fabrice.gasnier@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
+        <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <lee.jones@linaro.org>,
+        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: mfd: Convert stm32 low power timers bindings to json-schema
+Date:   Fri, 15 Nov 2019 13:27:00 +0100
+Message-ID: <20191115122700.12688-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 Nov 2019 20:27:18 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 3/7] scsi: ufs: Fix up auto hibern8 enablement
-In-Reply-To: <1573802311.4956.8.camel@mtkswgap22>
-References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
- <1573798172-20534-4-git-send-email-cang@codeaurora.org>
- <1573799728.4956.5.camel@mtkswgap22>
- <2a925548b8ead7c3b5ddf2d7bf3de05d@codeaurora.org>
- <1573802311.4956.8.camel@mtkswgap22>
-Message-ID: <433afef33c8ca61aa299fa453c0d25d3@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-15 15:18, Stanley Chu wrote:
-> Hi Can,
-> 
-> On Fri, 2019-11-15 at 15:03 +0800, Can Guo wrote:
->> On 2019-11-15 14:35, Stanley Chu wrote:
->> > Hi Can,
->> >
->> > On Thu, 2019-11-14 at 22:09 -0800, Can Guo wrote:
->> >> +	if (hba->ahit != ahit)
->> >> +		hba->ahit = ahit;
->> >>  	spin_unlock_irqrestore(hba->host->host_lock, flags);
->> >> +	if (!pm_runtime_suspended(hba->dev)) {
->> >
->> > Always do pm_runtime_get_sync() here could avoid possible racing?
->> >
->> > And thus AH8 could be enabled regardless of runtime status.
->> >
->> >> +		pm_runtime_get_sync(hba->dev);
->> >> +		ufshcd_hold(hba, false);
->> >> +		ufshcd_auto_hibern8_enable(hba);
->> >> +		ufshcd_release(hba);
->> >> +		pm_runtime_put(hba->dev);
->> >> +	}
->> >>  }
->> >
->> > Thanks,
->> > Stanley
->> 
->> Hi Stanley,
->> 
->> if !pm_runtime_suspended() is true, hba->dev's runtime status, other
->> than RPM_ACTIVE,
->> may be RPM_SUSPENDING or RPM_RESUMING. So, here for safty, do
->> pm_runtime_get_sync() once
->> before access registers, in case we hit corner cases in which powers
->> and/or clocks are OFF.
->> 
-> 
-> Thanks for explanation.
-> 
-> I fully understand the intention of this patch.
-> 
-> Just wonder if "if (!pm_runtime_suspended(hba->dev))" could be removed
-> and then always do pm_runtime_get_sync() here.
-> 
-> This could avoid possible racing and enable AH8 regardless of current
-> runtime status.
-> 
->> Thanks,
->> Can Guo.
-> 
-> Thanks,
-> Stanley
+Convert the STM32 low power timers binding to DT schema format using json-schema
 
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ .../bindings/counter/stm32-lptimer-cnt.txt         |  29 -----
+ .../bindings/iio/timer/stm32-lptimer-trigger.txt   |  23 ----
+ .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 117 +++++++++++++++++++++
+ .../devicetree/bindings/mfd/stm32-lptimer.txt      |  48 ---------
+ .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  30 ------
+ 5 files changed, 117 insertions(+), 130 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
+ delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
 
-Hi Stanley,
-
-Actually, I thought about the way you reommand.
-
-But I guess the author's intention here is to update the AH8 timer
-only when current runtime status is RPM_ACTIVE. If it is not RPM_ACTIVE,
-we just update the hba->ahit and bail out, because the AH8 timer will be
-updated in ufshcd_reusme() eventually when hba is resumed. This can 
-avoid
-frequently waking up hba just for accessing a single register.
-How do you think?
-
-Thanks,
-Can Guo.
-
+diff --git a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
+deleted file mode 100644
+index e90bc47f752a..000000000000
+--- a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer quadrature encoder and counter
+-
+-STM32 Low-Power Timer provides several counter modes. It can be used as:
+-- quadrature encoder to detect angular position and direction of rotary
+-  elements, from IN1 and IN2 input signals.
+-- simple counter from IN1 input signal.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer-counter".
+-- pinctrl-names: 	Set to "default". An additional "sleep" state can be
+-			defined to set pins in sleep state.
+-- pinctrl-n: 		List of phandles pointing to pin configuration nodes,
+-			to set IN1/IN2 pins in mode of operation for Low-Power
+-			Timer input on external pin.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		counter {
+-			compatible = "st,stm32-lptimer-counter";
+-			pinctrl-names = "default", "sleep";
+-			pinctrl-0 = <&lptim1_in_pins>;
+-			pinctrl-1 = <&lptim1_sleep_in_pins>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
+deleted file mode 100644
+index 85e6806b17d7..000000000000
+--- a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer Trigger
+-
+-STM32 Low-Power Timer provides trigger source (LPTIM output) that can be used
+-by STM32 internal ADC and/or DAC.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer-trigger".
+-- reg:			Identify trigger hardware block. Must be 0, 1 or 2
+-			respectively for lptimer1, lptimer2 or lptimer3
+-			trigger output.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		trigger@0 {
+-			compatible = "st,stm32-lptimer-trigger";
+-			reg = <0>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+new file mode 100644
+index 000000000000..8f42c9a4c6cb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+@@ -0,0 +1,117 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/st,stm32-lptimer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Low-Power Timers bindings
++
++description: |
++  The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
++  functions
++   - PWM output (with programmable prescaler, configurable polarity)
++   - Quadrature encoder, counter
++   - Trigger source for STM32 ADC/DAC (LPTIM_OUT)
++
++maintainers:
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++
++properties:
++  compatible:
++    const: st,stm32-lptimer
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: mux
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  pwm:
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-pwm-lp
++
++      "#pwm-cells":
++        const: 3
++
++    required:
++      - "#pwm-cells"
++      - compatible
++
++patternProperties:
++  "^trigger@[0-9]+$":
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-lptimer-trigger
++
++      reg:
++        description: Identify trigger hardware block.
++        items:
++         minimum: 0
++         maximum: 3
++
++    required:
++      - compatible
++      - reg
++
++  counter:
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-lptimer-counter
++
++    required:
++      - compatible
++
++required:
++  - "#address-cells"
++  - "#size-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    timer@40002400 {
++      compatible = "st,stm32-lptimer";
++      reg = <0x40002400 0x400>;
++      clocks = <&timer_clk>;
++      clock-names = "mux";
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      pwm {
++        compatible = "st,stm32-pwm-lp";
++        #pwm-cells = <3>;
++      };
++
++      trigger@0 {
++        compatible = "st,stm32-lptimer-trigger";
++        reg = <0>;
++      };
++
++      counter {
++        compatible = "st,stm32-lptimer-counter";
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+deleted file mode 100644
+index fb54e4dad5b3..000000000000
+--- a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer
+-
+-The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
+-functions:
+-- PWM output (with programmable prescaler, configurable polarity)
+-- Quadrature encoder, counter
+-- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer".
+-- reg:			Offset and length of the device's register set.
+-- clocks:		Phandle to the clock used by the LP Timer module.
+-- clock-names:		Must be "mux".
+-- #address-cells:	Should be '<1>'.
+-- #size-cells:		Should be '<0>'.
+-
+-Optional subnodes:
+-- pwm:			See ../pwm/pwm-stm32-lp.txt
+-- counter:		See ../counter/stm32-lptimer-cnt.txt
+-- trigger:		See ../iio/timer/stm32-lptimer-trigger.txt
+-
+-Example:
+-
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		reg = <0x40002400 0x400>;
+-		clocks = <&timer_clk>;
+-		clock-names = "mux";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		pwm {
+-			compatible = "st,stm32-pwm-lp";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&lppwm1_pins>;
+-		};
+-
+-		trigger@0 {
+-			compatible = "st,stm32-lptimer-trigger";
+-			reg = <0>;
+-		};
+-
+-		counter {
+-			compatible = "st,stm32-lptimer-counter";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&lptim1_in_pins>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+deleted file mode 100644
+index 6521bc44a74e..000000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer PWM
+-
+-STM32 Low-Power Timer provides single channel PWM.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required parameters:
+-- compatible:		Must be "st,stm32-pwm-lp".
+-- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
+-			bindings defined in pwm.txt.
+-
+-Optional properties:
+-- pinctrl-names: 	Set to "default". An additional "sleep" state can be
+-			defined to set pins in sleep state when in low power.
+-- pinctrl-n: 		Phandle(s) pointing to pin configuration node for PWM,
+-			respectively for "default" and "sleep" states.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		pwm {
+-			compatible = "st,stm32-pwm-lp";
+-			#pwm-cells = <3>;
+-			pinctrl-names = "default", "sleep";
+-			pinctrl-0 = <&lppwm1_pins>;
+-			pinctrl-1 = <&lppwm1_sleep_pins>;
+-		};
+-	};
+-- 
+2.15.0
 
