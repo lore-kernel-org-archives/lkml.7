@@ -2,97 +2,119 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F73C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D21C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC44206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E4B2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:00:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gJNGXYfI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lea72v0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKOQ7v (ORCPT
+        id S1727656AbfKORAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:59:51 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39923 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfKOQ7v (ORCPT
+        Fri, 15 Nov 2019 12:00:30 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46786 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfKORAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:59:51 -0500
-Received: by mail-io1-f68.google.com with SMTP id k1so11172450ioj.6;
-        Fri, 15 Nov 2019 08:59:50 -0800 (PST)
+        Fri, 15 Nov 2019 12:00:30 -0500
+Received: by mail-pl1-f195.google.com with SMTP id l4so5040956plt.13
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 09:00:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JdX/13FI573A99ZfQ+b/X2YPtRW6JH4G+iSGl0lCkmw=;
-        b=gJNGXYfILtD8BKM9DBlgL123F5+fDoVyi4wdgy72g4sQqk8ekWkm0ZHz53piiVdQU/
-         nJ2710aaf6zMZczFGEyd/0A6b0AOqoDzwrA51ewihBh4I1f5O0cWiL2Gj6vOEdzqI9iw
-         IXZJCg+F53QrkNfe5VWmG6omKn+U0a0Q0jEE9lVshElhTegI6vym8VWCtfm8cww9TYbG
-         io5LPOzlWV6MPyGNrvOi9Z6oehWV+vgW85IjtB7ibkb3In0kqNhheGgt5rkiXyKi//Fz
-         kQ6I8Av12VT8xxtyYwR2gHuo/Ut5smUK4DwENGTYaWIXVrWx6+vxsN1ILf8ismv2lVKf
-         sYKQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6KJTXmV3nRW8gUbGqQ4GcrDPQULApXAqF7C+3pqi6RM=;
+        b=lea72v0aKBO/HzkW9xRW0+gmfuKWuweJm8ZuZhTIE6ZspE9e3DdbgdeOqryeh2WpHs
+         69VCzsotxdw11qrFs2/xzVdgNpKaC8lZYDeHIj6pnZlDX4VWEl4FWcoKYqGnAas8lUU4
+         1dbEIwD9NKRURLHoHwSslyp2NZXgzpz91sk68=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JdX/13FI573A99ZfQ+b/X2YPtRW6JH4G+iSGl0lCkmw=;
-        b=M7KA+cCKtso6DnB+xddMgU6tZ5+HZZRsVYon9TfW1Ny4iTiMbWlvLkvoc5Y+5u0iZb
-         GduxqU1QDldLtA0Edaiw+rU2udRKvL/ALfGZJbmQxOAM7WghYCntIkZEAzdGwpUrYIEf
-         UG+d1+2QEXNA97z+afR4oZFlguz04DrrJIIPVUFlCe6qCoXVRHhAIcmJ7fBHZDN28Vx1
-         c8VeZJrT1t4owNljUSKqpnV6xX+8EJ2IcFKjLe+Iaih1L5FYgeY0RbmFYyINUWkeeXuT
-         oajXkEnbpKyFdMgq324p0wO2/+nmj7exNS8nGMknLq+EbVUcfK+hT0/U6qZ4m/GTO7cK
-         p01w==
-X-Gm-Message-State: APjAAAVrVZElakjxPMgkHZmHZenM5dIGcTESN4IRknbG9nTlg5xJ4+rT
-        PWtfxdsBAjsCDwN5wGEDymo=
-X-Google-Smtp-Source: APXvYqwHU3e4nMOXVPh1aJVXVZ9Uny2wti9DxI7DEl0LbMc4xLYNUbh8o4Q5HqqdeYXyyKE+tO4Uzg==
-X-Received: by 2002:a5d:85c7:: with SMTP id e7mr1541591ios.59.1573837190358;
-        Fri, 15 Nov 2019 08:59:50 -0800 (PST)
-Received: from dahern-DO-MB.local ([2601:282:800:fd80:c9ae:cf0c:82df:2536])
-        by smtp.googlemail.com with ESMTPSA id i20sm1725555ile.79.2019.11.15.08.59.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2019 08:59:49 -0800 (PST)
-Subject: Re: [PATCH] vrf: Fix possible NULL pointer oops when delete nic
-To:     "wangxiaogang (F)" <wangxiaogang3@huawei.com>, dsahern@kernel.org,
-        shrijeet@gmail.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hujunwei4@huawei.com, xuhanbing@huawei.com
-References: <60e827cb-2bba-2b7e-55dc-651103e9905f@huawei.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <7fe948a8-debd-e336-9584-e66153e90701@gmail.com>
-Date:   Fri, 15 Nov 2019 09:59:47 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6KJTXmV3nRW8gUbGqQ4GcrDPQULApXAqF7C+3pqi6RM=;
+        b=XBsCA57rzWp17p7ZHyXMQF1Jhw/PJZOpN8zSgJaWDO0ZkpTVACYH/mCcKnlhXXaqBi
+         kc9JnPabgwm4s67rB73vezKCl25guvApPoLa6A8qHkpleyP5XltxJ0Pb13adM4ahLOvf
+         lkrXkbArJ8krwwwzRrkl/y9NtPvhawp26RzAeI/TLz+hvqyKBAY28KghlqQNzyBG/eQ0
+         K0PDQYpS7mNUpYra5q9lmhA08IxLTjKQmTXzemZthTx4sW1Ds8vx60/XYVV5XMN3wtyr
+         aMGqUmpdYZg2QDvDeiQrotIokW2j7+CqVQ24seK4WanpkH1OO0evyqO6aNsyQVXYbUDN
+         Pkdw==
+X-Gm-Message-State: APjAAAV5BUIIeRncoImwUbs22s82ApKtffj1GO/kzJYyfryksFRhyZ+u
+        Gr4nSoOipE1fzXBhOffny6an3g==
+X-Google-Smtp-Source: APXvYqy13tvuu58lwI0ZashXZBglnAc01GHqKKGLWlQ1kA0mCtTgoAkAcwI/Gc3rB016Is7SqriZWA==
+X-Received: by 2002:a17:90a:b393:: with SMTP id e19mr21641421pjr.115.1573837228497;
+        Fri, 15 Nov 2019 09:00:28 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i22sm8907804pjx.1.2019.11.15.09.00.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 09:00:27 -0800 (PST)
+Date:   Fri, 15 Nov 2019 09:00:26 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
+Subject: Re: [PATCH] clk: clkdev: Replace strlcpy with strscpy
+Message-ID: <201911150900.817CDE33@keescook>
+References: <1573812819-5030-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <60e827cb-2bba-2b7e-55dc-651103e9905f@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573812819-5030-1-git-send-email-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/14/19 11:22 PM, wangxiaogang (F) wrote:
-> diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-> index b8228f5..86c4b8c 100644
-> --- a/drivers/net/vrf.c
-> +++ b/drivers/net/vrf.c
-> @@ -1427,6 +1427,9 @@ static int vrf_device_event(struct notifier_block *unused,
->  			goto out;
+On Fri, Nov 15, 2019 at 10:17:53AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
->  		vrf_dev = netdev_master_upper_dev_get(dev);
-> +		if (!vrf_dev)
-> +			goto out;
-> +
->  		vrf_del_slave(vrf_dev, dev);
->  	}
->  out:
+> The implementation of strscpy() is more robust and safer.
+> 
+> The strscpy was introduced to fix some API problems around strlcpy.
+> strscpy is preferred to strlcpy() since the API doesn't require
+> reading memory from the src string beyond the specified "count" bytes,
+> and since the return value is easier to error-check than strlcpy()'s.
+> In addition, the implementation is robust to the string changing out
+> from underneath it, unlike the current strlcpy() implementation.
+> 
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-BTW, I believe this is the wrong fix. A device can not be a VRF slave
-AND not have an upper device. Something is fundamentally wrong.
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  drivers/clk/clkdev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+> index 0f2e3fcf0f19..ee56109bc0b4 100644
+> --- a/drivers/clk/clkdev.c
+> +++ b/drivers/clk/clkdev.c
+> @@ -165,7 +165,7 @@ vclkdev_alloc(struct clk_hw *hw, const char *con_id, const char *dev_fmt,
+>  
+>  	cla->cl.clk_hw = hw;
+>  	if (con_id) {
+> -		strlcpy(cla->con_id, con_id, sizeof(cla->con_id));
+> +		strscpy(cla->con_id, con_id, sizeof(cla->con_id));
+>  		cla->cl.con_id = cla->con_id;
+>  	}
+>  
+> -- 
+> 2.16.4
+> 
+
+-- 
+Kees Cook
