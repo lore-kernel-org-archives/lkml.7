@@ -2,105 +2,148 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78896C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9710C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508AC2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBA92073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfKOPZD (ORCPT
+        id S1727654AbfKOP0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:25:03 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:40727 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbfKOPZD (ORCPT
+        Fri, 15 Nov 2019 10:26:06 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39678 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727504AbfKOP0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:25:03 -0500
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MnaY1-1i4JTM2kjN-00jbq0 for <linux-kernel@vger.kernel.org>; Fri, 15 Nov
- 2019 16:25:01 +0100
-Received: by mail-qk1-f182.google.com with SMTP id z23so8350973qkj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 07:25:01 -0800 (PST)
-X-Gm-Message-State: APjAAAWkokZkfy9OE/V7hu3FOi/PmCKzRhlhRHCakz8Ajr2KjH8mLO7H
-        xHizmxPQyX/jYtRp5mJmJ8EwYr09c3XxEX9QQeQ=
-X-Google-Smtp-Source: APXvYqy8dMVukKj8OZlWxjuWzWZMk1KwdHT2dkvcKDjQCzPCanUtmwdZnLb2X9QPsxj5Z4xTa9r/kW0G6wcFxWdz6Mk=
-X-Received: by 2002:a37:58d:: with SMTP id 135mr13036950qkf.394.1573831500565;
- Fri, 15 Nov 2019 07:25:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20191112151642.680072-1-arnd@arndb.de> <20191112151642.680072-9-arnd@arndb.de>
-In-Reply-To: <20191112151642.680072-9-arnd@arndb.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 Nov 2019 16:24:43 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1FERLEZq3BFUJ9Hi6GP3rGKazJX9cbEQAw0O5tSB8H_Q@mail.gmail.com>
-Message-ID: <CAK8P3a1FERLEZq3BFUJ9Hi6GP3rGKazJX9cbEQAw0O5tSB8H_Q@mail.gmail.com>
-Subject: Re: [PATCH v6 8/8] ALSA: add new 32-bit layout for snd_pcm_mmap_status/control
-To:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     Baolin Wang <baolin.wang7@gmail.com>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>
+        Fri, 15 Nov 2019 10:26:06 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFFMsZ2048126;
+        Fri, 15 Nov 2019 10:25:59 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w9nsdmd3p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 10:25:59 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAFFNGQt025551;
+        Fri, 15 Nov 2019 15:25:58 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02wdc.us.ibm.com with ESMTP id 2w9gy3wpqf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 15:25:58 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAFFPvDQ17957122
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Nov 2019 15:25:57 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B771B112062;
+        Fri, 15 Nov 2019 15:25:57 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DC13112061;
+        Fri, 15 Nov 2019 15:25:57 +0000 (GMT)
+Received: from oc3746452103.endicott.ibm.com (unknown [9.60.73.196])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 15 Nov 2019 15:25:57 +0000 (GMT)
+Message-ID: <ffb1ec9d8cf12f6366fb4eb022a5442a8edae53c.camel@linux.vnet.ibm.com>
+Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
+From:   Patrick Callaghan <patrickc@linux.vnet.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Patrick Callaghan <patrickc@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+Date:   Fri, 15 Nov 2019 10:25:57 -0500
+In-Reply-To: <4e1c0c6b-a5e1-a95a-8a0b-c5a7f0a253cf@linux.microsoft.com>
+References: <20191111192348.30535-1-patrickc@linux.ibm.com>
+         <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
+         <1573578841.17949.48.camel@linux.ibm.com>
+         <c6a57c24-2f30-f252-0f42-8d748ede65af@linux.microsoft.com>
+         <1573582344.17949.67.camel@linux.ibm.com>
+         <abdf66fb39d4c8ee08e0b52c34fb81b93bd33006.camel@linux.vnet.ibm.com>
+         <4e1c0c6b-a5e1-a95a-8a0b-c5a7f0a253cf@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NWnnIHjJxOEFtqbVUz601t7aVdy9BAfazy2cDuiJEhRMnnw4Xm4
- sOfqLo8z5+3GNmzGtKSvkyGRymL3SwPqSWKQJKBKvwCcXip1ZzDaGgqZrw0RV4T8hlvUi9n
- 7BZA08RqwsG5usEn3a2QFiwabTx5gfyOzr2xdxHyyW8Hoiw3mI/7CE1zlwqBhcEQ9MPnfXT
- 4ye6Drmo7L7JB0PTZNREA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:duvyq59C5E0=:UiwzFiwb2Os5azctIp4dk/
- 7GT+nIWTgfNLScWQQnj2k54C9J6zWkCdGf3Lsyy1aWGEP9Y1aXlBE9oNEeTj2TZih7vp0MgLT
- Bod4ll27qWNgeNtPu35UnJESOSMKwaeJ+8Jh3jx3ysHxkf7lfcQ1vNQqmkbMnT++X0cpbHXLf
- EQGzFpF1wueJE9OarMUeVz/7cd/ZobCjJlnjCN7wb3PTDikiW5m5sZ00ajNhU6iiknFPZEWyh
- sdqkGHW7S88K2O00hQUXKRe1Bbeq2WHY6OLE/e6TyJtZZ5O91jBpSkzu8q7whwiWwIqoYcAqZ
- z1vMpxT8b/i4X8K+sKaxFO2TBJpgnRrrVPeR3oQNpskHRPitVIURamjNKb3u9YA6Ih0skxwAg
- UZBc01PGCVbNDjhzv48Mh2bdVo94oMLU8YZ6hln0E6Gp/v8j/NVKb4LKME9NCBlA4jQ99fRLx
- U1xFmoPrvgOZNIxUlNIHgnxKk95NM7gvYvWVfXWpKJweRAqzLXjTNDtYAXSpOsj0DHqbCVIU0
- FgScQdU/xKcHZ74O+C/bMfNChJ5joxdPHeu9x9eOpRfX6NxKiPH6SgljbOlmxL2+tNIgO3Oao
- 4xOEMshBIAqW1VykPhnNtxrlJFnmhHOGxqRzEs9sniG/+BUAOgd33ixqBpZpJwXZVAzTVAdPp
- AJLwifFf4TdszxPOpHyIA5/CUL8H2t9bOFPr1V799BIBbmmrxARXptMQVPp5tatq0Mu5LVrFm
- 9FSCt04bHAP1GfnXzbR3gY8yB1HPvxJ5ykqXuFNB98lQedc8zipSn3uhjtZakjob9I9B5WWNf
- RwJ1TeZti2LEwD7Zw48mSflHk0XCiP7ev936GpRuKDsgHk9VrsXjtP9WVV2nVpkA38yT+s9XY
- CE3rFwXc2JHpGtmsj5Cg==
+X-Mailer: Evolution 3.28.5 (3.28.5-5.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_04:2019-11-15,2019-11-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 priorityscore=1501 clxscore=1015 spamscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911150139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 4:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Co-developed-with: Baolin Wang <baolin.wang@linaro.org>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  include/uapi/sound/asound.h | 106 ++++++++++++++++++++++++++++++++----
->  sound/core/pcm_compat.c     |  30 +++++-----
->  sound/core/pcm_lib.c        |  10 ++--
->  sound/core/pcm_native.c     |  39 ++++++++-----
->  4 files changed, 143 insertions(+), 42 deletions(-)
+On Thu, 2019-11-14 at 10:45 -0800, Lakshmi Ramasubramanian wrote:
+> On 11/14/19 5:55 AM, Patrick Callaghan wrote:
+> 
+> Hi Patrick,
+> 
+> > Hello Laks,
+> > You suggested that the if statement of the patch change to the
+> > following:
+> > 
+> > if ((rbuf_len == 0) || (offset + rbuf_len >= i_size)) {
+> > 
+> > Unless the file size changed between the time that i_size was set
+> > in
+> > ima_calc_file_hash_tfm() and an i_size_read() call was subsequently
+> > issued in a function downstream of the integrity_kernel_read()
+> > call,
+> > the rbuf_len returned on the integrity_kernel_read() call will not
+> > be
+> > more than i_size - offset. I do not think that it is possible for
+> > the
+> > file size to change during this window but nonetheless, if it can,
+> > this
+> > would be a different problem and I would not want to include this
+> > in my
+> > patch. That said, I do appreciate you taking time to review this
+> > patch.
+> 
+> You are right - unless the file size changes between the calls this 
+> problem would not occur. I agree - that issue, even if it can occur, 
+> should be addressed separately.
+> 
+> Another one (again - am not saying this needs to be addressed in
+> this 
+> patch, but just wanted to point out)
+> 
+> 	rbuf = kzalloc(PAGE_SIZE, GFP_KERNEL);
+> 	...
+> 	rbuf_len = integrity_kernel_read(file, offset, rbuf,
+> PAGE_SIZE);
+> 	...
+> 	rc = crypto_shash_update(shash, rbuf, rbuf_len);
+> 
+> rbuf is of size PAGE_SIZE, but rbuf_len, returned by 
+> integrity_kernel_read() is passed as buffer size to 
+> crypto_shash_update() without any validation (rbuf_len <= PAGE_SIZE)
+> 
+> It is assumed here that integrity_kernel_read() would not return a 
+> length greater than rbuf size and hence crypto_shash_update() would 
+> never access beyond the given buffer.
+> 
+> thanks,
+>   -lakshmi
+> 
+> 
+Hello Laks,
+Agreed. The assumption is that integrity_kernel_read() function does
+not return a value greater than the fourth parameter passed to it (i.e.
+does not read more bytes from the file than the size of the buffer
+passed to it). I tried to validate that this assumption was true by
+following the code but felt I could not prove it with my current
+knowledge of the code. If this assumption is not true then I believe
+that any code change for this problem should go into a different
+patch. 
 
-I found one more use of 'struct timespec' remaining in there, and have amended
-this patch with a small change now to hide that as well.
+Thank you.
 
-       Arnd
-
-diff --git a/include/uapi/sound/asound.h b/include/uapi/sound/asound.h
-index c5d8e7f134d0..e6a958b8aff1 100644
---- a/include/uapi/sound/asound.h
-+++ b/include/uapi/sound/asound.h
-@@ -502,7 +502,11 @@ struct snd_pcm_status {
- #define __snd_pcm_mmap_status64                snd_pcm_mmap_status
- #define __snd_pcm_mmap_control64       snd_pcm_mmap_control
- #define __snd_pcm_sync_ptr64           snd_pcm_sync_ptr
-+#ifdef __KERNEL__
-+#define __snd_timespec64               __kernel_timespec
-+#else
- #define __snd_timespec64               timespec
-+#endif
- struct __snd_timespec {
-        __s32 tv_sec;
-        __s32 tv_nsec;
