@@ -2,186 +2,88 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC85DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F599C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7628E20672
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C892077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:16:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="PmFLvl34"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iu5CCvEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfKOQQZ (ORCPT
+        id S1727699AbfKOQQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 15 Nov 2019 11:16:25 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50507 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfKOQQZ (ORCPT
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40709 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727614AbfKOQQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Nov 2019 11:16:25 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l17so10203776wmh.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 08:16:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MVxHSx/minQx5d0tJI7s0eZgBU80i8rjqDZ6K3QTLuc=;
-        b=PmFLvl34Ywer4Wi+BfDYl4JasRk9hvc+CVeCSzTbzSUY8ons28GoXPXrCaQ5fkiCo1
-         jcx9b+Flgnv1ERWX9hMnls1XE4KhqCoZTeuFtMlM1VVP6uIef5yX4g03j6jUBhB+LSOg
-         8tHjIiItg312SB8bZ7lTk2vJQAgIuFr1W4AAHP1+pR52GMXM57x8LiXVTuW/nyPytOKO
-         gV7kZfj5gSrf8gqlcYCzA5jLbPYYX8HrzvRJIUmEzzNk0RhOqC+8RqcsDUzAKpObxxSo
-         vXGmUx3qIazJp6jvkRPsq8A0keQ0r7zX/5243sZ+xBOQDC/5HJl2e7dnONWr26Kwc1Jm
-         ZrKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MVxHSx/minQx5d0tJI7s0eZgBU80i8rjqDZ6K3QTLuc=;
-        b=IsJhNT1RPKCORpJYJiYKBdeyk389ROKqFZtQfTxNBuwzsUnM75dYBVORop6rVJ0HUF
-         aOVyFPK4eEtxcYpZgZKSv7zRO0RVhWleV2t2QMCeZnR9CFJrMIvzig7yE63ae81ICRjB
-         xg5B6Tbu4qs9Si89cZk4Egng7be3ZjCknWz/MdxWAgY/DiM1K0RQ9AQSs9VaTUdrerKh
-         CejlQ6eOOCWrtb/V9ANZlrhURa/lFLrdyPc94OBfV6fIrkmy7V3bf0IB/Puo6+9BjS+E
-         HzC99Ou2/blb3p+kzWpl/2ax4zn+KO1by+TNk9HxHlcdLdV062aVo9ToK2GR5hXtxCO4
-         S9qg==
-X-Gm-Message-State: APjAAAXxAyiUUkiq4Fm5n5UCIVLZo4GlUKKy7EVJ8p+5XyisOd4nIbEa
-        f1OSswbvGVc4lNmAKRK6gz0Pn9Fm8H7eQ8Eg
-X-Google-Smtp-Source: APXvYqxOJPwnQnfs2DiWf+oCvT22TYgRLoTMNkeru2+85IdMaQItnEz5r7r5Ry3s+GEjZiKKGiFipg==
-X-Received: by 2002:a1c:6405:: with SMTP id y5mr16534329wmb.175.1573834582334;
-        Fri, 15 Nov 2019 08:16:22 -0800 (PST)
-Received: from rudolphp.sr1.9esec.dev (ip-94-114-101-228.unity-media.net. [94.114.101.228])
-        by smtp.gmail.com with ESMTPSA id o5sm11637467wrx.15.2019.11.15.08.16.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 08:16:21 -0800 (PST)
-From:   patrick.rudolph@9elements.com
-To:     linux-kernel@vger.kernel.org
-Cc:     coreboot@coreboot.org,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573834584;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZccMmQV2I9Usjc9z4oHVV3rqIYYfGXlFFrANJErSVXI=;
+        b=iu5CCvEeodH6OgcJxCQpMAZXfxsowQhGGvxmj1jZKtL5YaCns8JEgvQ1P6W8WISJ22j5+v
+        mqoiDY+rm4VvyNF0WGgjkYd47B6tfgv0bk76a8Rngwb62qrnpUPSdnfOb0mlK+Uwi1t56T
+        0COQfuX7qvK0/WFkaRgxNJ7Be5I9q1I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-298-wGZQGWnkO3aWB0jmJXbWdA-1; Fri, 15 Nov 2019 11:16:21 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 929C980268B;
+        Fri, 15 Nov 2019 16:16:19 +0000 (UTC)
+Received: from llong.com (ovpn-124-92.rdu2.redhat.com [10.10.124.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2913E9D54;
+        Fri, 15 Nov 2019 16:16:15 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Samuel Holland <samuel@sholland.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 2/2] firmware: google: Expose coreboot tables over sysfs
-Date:   Fri, 15 Nov 2019 17:15:16 +0100
-Message-Id: <20191115161524.23738-3-patrick.rudolph@9elements.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191115161524.23738-1-patrick.rudolph@9elements.com>
-References: <20191115161524.23738-1-patrick.rudolph@9elements.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2 0/2] x86/speculation: Fix incorrect MDS/TAA mitigation status
+Date:   Fri, 15 Nov 2019 11:14:43 -0500
+Message-Id: <20191115161445.30809-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: wGZQGWnkO3aWB0jmJXbWdA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+ v2:
+  - Update the documentation files accordingly
+  - Add an optional second patch to defer printing of MDS mitigation.
 
-Make all coreboot table entries available to userland. This is useful for
-tools that are currently using /dev/mem.
+As MDS and TAA mitigations can be inter-related, setting command
+line option for one without a matching other may cause one of their
+vulnerabilities files to report their status incorrectly. This patch
+makes sure that both vulnerabilities files will report consistent
+status correctly.
 
-Besides the tag and size also expose the raw table data itself.
+Waiman Long (2):
+  x86/speculation: Fix incorrect MDS/TAA mitigation status
+  x86/speculation: Fix redundant MDS mitigation message
 
-Tools can easily scan for the right coreboot table by reading
-/sys/bus/coreboot/devices/coreboot*/attributes/id
-The binary table data can then be read from
-/sys/bus/coreboot/devices/coreboot*/attributes/data
+ Documentation/admin-guide/hw-vuln/mds.rst     |  6 ++++-
+ .../admin-guide/hw-vuln/tsx_async_abort.rst   |  5 +++-
+ arch/x86/kernel/cpu/bugs.c                    | 27 +++++++++++++++++--
+ 3 files changed, 34 insertions(+), 4 deletions(-)
 
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
----
- drivers/firmware/google/coreboot_table.c | 60 ++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
-
-diff --git a/drivers/firmware/google/coreboot_table.c b/drivers/firmware/google/coreboot_table.c
-index 8d132e4f008a..baddf28a2103 100644
---- a/drivers/firmware/google/coreboot_table.c
-+++ b/drivers/firmware/google/coreboot_table.c
-@@ -6,6 +6,7 @@
-  *
-  * Copyright 2017 Google Inc.
-  * Copyright 2017 Samuel Holland <samuel@sholland.org>
-+ * Copyright 2019 9elements Agency GmbH
-  */
- 
- #include <linux/acpi.h>
-@@ -84,6 +85,63 @@ void coreboot_driver_unregister(struct coreboot_driver *driver)
- }
- EXPORT_SYMBOL(coreboot_driver_unregister);
- 
-+static ssize_t id_show(struct device *dev,
-+		       struct device_attribute *attr, char *buffer)
-+{
-+	struct coreboot_device *device = CB_DEV(dev);
-+
-+	return sprintf(buffer, "%08x\n", device->entry.tag);
-+}
-+
-+static ssize_t size_show(struct device *dev,
-+			 struct device_attribute *attr, char *buffer)
-+{
-+	struct coreboot_device *device = CB_DEV(dev);
-+
-+	return sprintf(buffer, "%u\n", device->entry.size);
-+}
-+
-+static DEVICE_ATTR_RO(id);
-+static DEVICE_ATTR_RO(size);
-+
-+static struct attribute *cb_dev_attrs[] = {
-+	&dev_attr_id.attr,
-+	&dev_attr_size.attr,
-+	NULL
-+};
-+
-+static ssize_t table_data_read(struct file *filp, struct kobject *kobj,
-+			       struct bin_attribute *bin_attr,
-+			       char *buffer, loff_t offset, size_t count)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct coreboot_device *device = CB_DEV(dev);
-+
-+	return memory_read_from_buffer(buffer, count, &offset,
-+				       &device->entry, device->entry.size);
-+}
-+
-+static struct bin_attribute coreboot_attr_data = {
-+	.attr = { .name = "data", .mode = 0444 },
-+	.read = table_data_read,
-+};
-+
-+static struct bin_attribute *cb_dev_bin_attrs[] = {
-+	&coreboot_attr_data,
-+	NULL
-+};
-+
-+static const struct attribute_group cb_dev_attr_group = {
-+	.name = "attributes",
-+	.attrs = cb_dev_attrs,
-+	.bin_attrs = cb_dev_bin_attrs,
-+};
-+
-+static const struct attribute_group *cb_dev_attr_groups[] = {
-+	&cb_dev_attr_group,
-+	NULL
-+};
-+
- static int coreboot_table_populate(struct device *dev, void *ptr)
- {
- 	int i, ret;
-@@ -104,6 +162,8 @@ static int coreboot_table_populate(struct device *dev, void *ptr)
- 		device->dev.parent = dev;
- 		device->dev.bus = &coreboot_bus_type;
- 		device->dev.release = coreboot_device_release;
-+		device->dev.groups = cb_dev_attr_groups;
-+
- 		memcpy(&device->entry, ptr_entry, entry->size);
- 
- 		ret = device_register(&device->dev);
--- 
-2.21.0
+--=20
+2.18.1
 
