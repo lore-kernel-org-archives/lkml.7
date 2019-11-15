@@ -2,188 +2,159 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C350C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2E4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5736B206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22DC206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKOC7d (ORCPT
+        id S1727075AbfKOC7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 21:59:33 -0500
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:60779 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfKOC7d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 21:59:33 -0500
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id xAF2wscV002069
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 15 Nov 2019 11:58:54 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id xAF2wsJ7017676;
-        Fri, 15 Nov 2019 11:58:54 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id xAF2vp8X014887;
-        Fri, 15 Nov 2019 11:58:54 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-10387758; Fri, 15 Nov 2019 11:57:46 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0439.000; Fri,
- 15 Nov 2019 11:57:45 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
-Thread-Topic: [PATCH 2/3] mm: Introduce subsection_dev_map
-Thread-Index: AQHVlciaV4LdiB2s4UGTCvjTchQqtqeBDuKAgAfVYoCAAAQ6gIAADP8AgAAE4gCAAAOxgIAABLSAgAAItACAAAMVAIAAARcAgAG27YCAABMpgIAAJQOA
-Date:   Fri, 15 Nov 2019 02:57:44 +0000
-Message-ID: <97b0e568-828b-c298-e7e4-1af7ff9c3963@vx.jp.nec.com>
-References: <49786b4d-ba95-21b5-c079-46d93c2fe53f@vx.jp.nec.com>
- <759F6C7C-C34F-433E-8909-DB76A626CF3F@redhat.com>
-In-Reply-To: <759F6C7C-C34F-433E-8909-DB76A626CF3F@redhat.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.135]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B32E1C368B20E1498D789BEED70BC78C@gisp.nec.co.jp>
-Content-Transfer-Encoding: base64
+        Thu, 14 Nov 2019 21:59:53 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6231 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726674AbfKOC7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 21:59:52 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B3BF4703125ED2C8AE1E;
+        Fri, 15 Nov 2019 10:59:50 +0800 (CST)
+Received: from [127.0.0.1] (10.133.215.182) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 15 Nov 2019
+ 10:59:45 +0800
+Subject: Re: [RFC v2 4/4] perf tools: Support "branch-misses:pp" on arm64
+To:     James Clark <James.Clark@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        nd <nd@arm.com>
+References: <20191024144830.16534-1-tanxiaojun@huawei.com>
+ <20191024144830.16534-5-tanxiaojun@huawei.com>
+ <AM4PR0802MB224263700592195B3BAE9D5AE26A0@AM4PR0802MB2242.eurprd08.prod.outlook.com>
+ <38c18a3e-1b9a-05fe-63f6-920af2f53fc7@huawei.com>
+ <609eb078-7998-9e4a-ca04-6c40a8a47f84@arm.com>
+From:   Tan Xiaojun <tanxiaojun@huawei.com>
+Message-ID: <7137fecb-a0bd-6dee-14c9-5753e56d39a1@huawei.com>
+Date:   Fri, 15 Nov 2019 10:59:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+In-Reply-To: <609eb078-7998-9e4a-ca04-6c40a8a47f84@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.215.182]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS8xMS8xNSA5OjQ2LCBEYXZpZCBIaWxkZW5icmFuZCB3cm90ZToNCj4gDQo+IA0KPj4g
-QW0gMTUuMTEuMjAxOSB1bSAwMDo0MiBzY2hyaWViIFRvc2hpa2kgRnVrYXNhd2EgPHQtZnVrYXNh
-d2FAdnguanAubmVjLmNvbT46DQo+Pg0KPj4g77u/T24gMjAxOS8xMS8xNCA2OjI2LCBEYW4gV2ls
-bGlhbXMgd3JvdGU6DQo+Pj4+IE9uIFdlZCwgTm92IDEzLCAyMDE5IGF0IDE6MjIgUE0gRGF2aWQg
-SGlsZGVuYnJhbmQgPGRhdmlkQHJlZGhhdC5jb20+IHdyb3RlOg0KPj4+Pg0KPj4+Pg0KPj4+Pg0K
-Pj4+Pj4gQW0gMTMuMTEuMjAxOSB1bSAyMjoxMiBzY2hyaWViIERhbiBXaWxsaWFtcyA8ZGFuLmou
-d2lsbGlhbXNAaW50ZWwuY29tPjoNCj4+Pj4+DQo+Pj4+PiDvu79PbiBXZWQsIE5vdiAxMywgMjAx
-OSBhdCAxMjo0MCBQTSBEYXZpZCBIaWxkZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT4gd3JvdGU6
-DQo+Pj4+PiBbLi5dDQo+Pj4+Pj4+Pj4+IEknbSBzdGlsbCBzdHJ1Z2dsaW5nIHRvIHVuZGVyc3Rh
-bmQgdGhlIG1vdGl2YXRpb24gb2YgZGlzdGluZ3Vpc2hpbmcNCj4+Pj4+Pj4+Pj4gImFjdGl2ZSIg
-YXMgc29tZXRoaW5nIGRpc3RpbmN0IGZyb20gIm9ubGluZSIuIEFzIGxvbmcgYXMgdGhlICJvbmxp
-bmUiDQo+Pj4+Pj4+Pj4+IGdyYW51bGFyaXR5IGlzIGltcHJvdmVkIGZyb20gc2VjdGlvbnMgZG93
-biB0byBzdWJzZWN0aW9ucyB0aGVuIG1vc3QNCj4+Pj4+Pj4+Pj4gY29kZSBwYXRocyBhcmUgZ29v
-ZCB0byBnby4gVGhlIG90aGVycyBjYW4gdXNlIGdldF9kZXZwYWdlbWFwKCkgdG8NCj4+Pj4+Pj4+
-Pj4gY2hlY2sgZm9yIFpPTkVfREVWSUNFIGluIGEgcmFjZSBmcmVlIG1hbm5lciBhcyB0aGV5IGN1
-cnJlbnRseSBkby4NCj4+Pj4+Pj4+Pg0KPj4+Pj4+Pj4+IEkgdGhvdWdodCB3ZSB3YW50ZWQgdG8g
-dW5pZnkgYWNjZXNzIGlmIHdlIGRvbuKAmXQgcmVhbGx5IGNhcmUgYWJvdXQgdGhlIHpvbmUgYXMg
-aW4gbW9zdCBwZm4gd2Fsa2VycyAtIEUuZy4sIGZvciB6b25lIHNocmlua2luZy4NCj4+Pj4+Pj4+
-DQo+Pj4+Pj4+PiBBZ3JlZSwgd2hlbiB0aGUgem9uZSBkb2VzIG5vdCBtYXR0ZXIsIHdoaWNoIGlz
-IG1vc3QgY2FzZXMsIHRoZW4NCj4+Pj4+Pj4+IHBmbl9vbmxpbmUoKSBhbmQgcGZuX3ZhbGlkKCkg
-YXJlIHN1ZmZpY2llbnQuDQo+Pj4+Pj4NCj4+Pj4+PiBPaCwgYW5kIGp1c3QgdG8gY2xhcmlmeSB3
-aHkgSSBwcm9wb3NlZCBwZm5fYWN0aXZlKCk6IFRoZSBpc3N1ZSByaWdodCBub3cgaXMgdGhhdCBh
-IFBGTiB0aGF0IGlzIHZhbGlkIGJ1dCBub3Qgb25saW5lIGNvdWxkIGJlIG9mZmxpbmUgbWVtb3J5
-IChtZW1tYXAgbm90IGluaXRpYWxpemVkKSBvciBaT05FX0RFVklDRS4gVGhhdOKAmHMgd2h5IEkg
-d2FudGVkIHRvIGhhdmUgYSB3YXkgdG8gZGV0ZWN0IGlmIGEgbWVtbWFwIHdhcyBpbml0aWFsaXpl
-ZCwgaW5kZXBlbmRlbnQgb2YgdGhlIHpvbmUuIFRoYXTigJhzIGltcG9ydGFudCBmb3IgZ2VuZXJp
-YyBQRk4gd2Fsa2Vycy4NCj4+Pj4+DQo+Pj4+PiBUaGF0J3Mgd2hhdCBJIHdhcyBkZWJhdGluZyB3
-aXRoIFRvc2hpa2kgWzFdLCB3aGV0aGVyIHRoZXJlIGlzIGEgcmVhbA0KPj4+Pj4gZXhhbXBsZSBv
-ZiBuZWVkaW5nIHRvIGRpc3Rpbmd1aXNoIFpPTkVfREVWSUNFIGZyb20gb2ZmbGluZSBtZW1vcnkg
-aW4gYQ0KPj4+Pj4gcGZuIHdhbGtlci4gVGhlIHByb3Bvc2VkIHVzZSBjYXNlIGluIHRoaXMgcGF0
-Y2ggc2V0IG9mIGJlaW5nIGFibGUgdG8NCj4+Pj4+IHNldCBod3BvaXNvbiBvbiBaT05FX0RFVklD
-RSBwYWdlcyBkb2VzIG5vdCBzZWVtIGxpa2UgYSBnb29kIGlkZWEgdG8NCj4+Pj4+IG1lLiBNeSBz
-dXNwaWNpb24gaXMgdGhhdCB0aGlzIGlzIGEgY29tbW9uIHRoZW1lIGFuZCBvdGhlcnMgYXJlIGxv
-b2tpbmcNCj4+Pj4+IHRvIGRvIHRoZXNlIHR5cGVzIHBhZ2UgbWFuaXB1bGF0aW9ucyB0aGF0IG9u
-bHkgbWFrZSBzZW5zZSBmb3Igb25saW5lDQo+Pj4+PiBtZW1vcnkuIElmIHRoYXQgaXMgdGhlIGNh
-c2UgdGhlbiB0cmVhdGluZyBaT05FX0RFVklDRSBhcyBvZmZsaW5lIHNlZW1zDQo+Pj4+PiB0aGUg
-cmlnaHQgZGlyZWN0aW9uLg0KPj4+Pg0KPj4+PiBSaWdodC4gQXQgbGVhc3QgaXQgd291bGQgYmUg
-bmljZSB0byBoYXZlIGZvciB6b25lIHNocmlua2luZyAtIG5vdCBzdXJlIGFib3V0IHRoZSBvdGhl
-ciB3YWxrZXJzLiBXZSB3b3VsZCBoYXZlIHRvIHNwZWNpYWwtY2FzZSBaT05FX0RFVklDRSBoYW5k
-bGluZyB0aGVyZS4NCj4+Pj4NCj4+Pg0KPj4+IEkgdGhpbmsgdGhhdCdzIG9rLi4uIEl0J3MgYWxy
-ZWFkeSB6b25lIGF3YXJlIGNvZGUgd2hlcmVhcyBwZm4gd2Fsa2Vycw0KPj4+IGFyZSB6b25lIHVu
-YXdhcmUgYW5kIHNob3VsZCBzdGF5IHRoYXQgd2F5IGlmIGF0IGFsbCBwb3NzaWJsZS4NCj4+Pg0K
-Pj4+PiBCdXQgYXMgSSBzYWlkLCBhIHN1YnNlY3Rpb24gbWFwIGZvciBvbmxpbmUgbWVtb3J5IGlz
-IGEgZ29vZCBzdGFydCwgZXNwZWNpYWxseSB0byBmaXggcGZuX3RvX29ubGluZV9wYWdlKCkuIEFs
-c28sIEkgdGhpbmsgdGhpcyBtaWdodCBiZSBhIHZlcnkgZ29vZCB0aGluZyB0byBoYXZlIGZvciBP
-c2NhcnMgbWVtbWFwLW9uLW1lbW9yeSB3b3JrIChJIGhhdmUgYSBwbGFuIGluIG15IGhlYWQgSSBj
-YW4gZGlzY3VzcyB3aXRoIE9zY2FyIG9uY2UgaGUgaGFzIHRpbWUgdG8gd29yayBvbiB0aGF0IGFn
-YWluKS4NCj4+Pg0KPj4+IE9rLCBJJ2xsIGtlZXAgYW4gZXllIG91dC4NCj4+DQo+PiBJIHVuZGVy
-c3RhbmQgeW91ciBwb2ludC4gVGhhbmtzIQ0KPj4NCj4+IEJ5IHRoZSB3YXksIEkgZm91bmQgYW5v
-dGhlciBwcm9ibGVtIGFib3V0IFpPTkVfREVWSUNFLCB3aGljaA0KPj4gaXMgcmFjZSBiZXR3ZWVu
-IG1lbW1hcCBpbml0aWFsaXphdGlvbiBhbmQgem9uZSBzaHJpbmtpbmcuDQo+Pg0KPj4gSXRlcmF0
-aW9uIG9mIGNyZWF0ZSBhbmQgZGVzdHJveSBuYW1lc3BhY2UgY2F1c2VzIHRoZSBwYW5pYyBhcyBi
-ZWxvdzoNCj4+DQo+PiBbICAgNDEuMjA3Njk0XSBrZXJuZWwgQlVHIGF0IG1tL3BhZ2VfYWxsb2Mu
-Yzo1MzUhDQo+PiBbICAgNDEuMjA4MTA5XSBpbnZhbGlkIG9wY29kZTogMDAwMCBbIzFdIFNNUCBQ
-VEkNCj4+IFsgICA0MS4yMDg1MDhdIENQVTogNyBQSUQ6IDI3NjYgQ29tbTogbmRjdGwgTm90IHRh
-aW50ZWQgNS40LjAtcmM0ICM2DQo+PiBbICAgNDEuMjA5MDY0XSBIYXJkd2FyZSBuYW1lOiBRRU1V
-IFN0YW5kYXJkIFBDIChpNDQwRlggKyBQSUlYLCAxOTk2KSwgQklPUyByZWwtMS4xMS4wLTAtZzYz
-NDUxZmNhMTMtcHJlYnVpbHQucWVtdS1wcm9qZWN0Lm9yZyAwNC8wMS8yMDE0DQo+PiBbICAgNDEu
-MjEwMTc1XSBSSVA6IDAwMTA6c2V0X3BmbmJsb2NrX2ZsYWdzX21hc2srMHg5NS8weGYwDQo+PiBb
-ICAgNDEuMjEwNjQzXSBDb2RlOiAwNCA0MSA4MyBlMiAzYyA0OCA4ZCAwNCBhOCA0OCBjMSBlMCAw
-NyA0OCAwMyAwNCBkZCBlMCA1OSA1NSBiYiA0OCA4YiA1OCA2OCA0OCAzOSBkYSA3MyAwZSA0OCBj
-NyBjNiA3MCBhYyAxMSBiYiBlOCAxYiBiMiBmZCBmZiA8MGY+IDBiIDQ4IDAzIDU4IDc4IDQ4IDM5
-IGRhIDczIGU5IDQ5IDAxIGNhIGI5IDNmIDAwIDAwIDAwIDRmIDhkIDBjDQo+PiBbICAgNDEuMjEy
-MzU0XSBSU1A6IDAwMTg6ZmZmZmFjMGQ0MTU1N2M4MCBFRkxBR1M6IDAwMDEwMjQ2DQo+PiBbICAg
-NDEuMjEyODIxXSBSQVg6IDAwMDAwMDAwMDAwMDAwNGEgUkJYOiAwMDAwMDAwMDAwMjQ0YTAwIFJD
-WDogMDAwMDAwMDAwMDAwMDAwMA0KPj4gWyAgIDQxLjIxMzQ1OV0gUkRYOiAwMDAwMDAwMDAwMDAw
-MDAwIFJTSTogMDAwMDAwMDAwMDAwMDAwMCBSREk6IGZmZmZmZmZmYmIxMTk3ZGMNCj4+IFsgICA0
-MS4yMTQxMDBdIFJCUDogMDAwMDAwMDAwMDAwMDAwYyBSMDg6IDAwMDAwMDAwMDAwMDA0MzkgUjA5
-OiAwMDAwMDAwMDAwMDAwMDU5DQo+PiBbICAgNDEuMjE0NzM2XSBSMTA6IDAwMDAwMDAwMDAwMDAw
-MDAgUjExOiBmZmZmYWMwZDQxNTU3YjA4IFIxMjogZmZmZjhiZTQ3NWVhNzJiMA0KPj4gWyAgIDQx
-LjIxNTM3Nl0gUjEzOiAwMDAwMDAwMDAwMDBmYTAwIFIxNDogMDAwMDAwMDAwMDI1MDAwMCBSMTU6
-IDAwMDAwMDAwZmZmYzBiYjUNCj4+IFsgICA0MS4yMTYwMDhdIEZTOiAgMDAwMDdmMzA4NjJhYjYw
-MCgwMDAwKSBHUzpmZmZmOGJlNTdiYzQwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAN
-Cj4+IFsgICA0MS4yMTY3NzFdIENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAw
-MDAwODAwNTAwMzMNCj4+IFsgICA0MS4yMTcyOTldIENSMjogMDAwMDU1ZTgyNGQwZDUwOCBDUjM6
-IDAwMDAwMDAyMzFkYWMwMDAgQ1I0OiAwMDAwMDAwMDAwMDAwNmUwDQo+PiBbICAgNDEuMjE3OTM0
-XSBDYWxsIFRyYWNlOg0KPj4gWyAgIDQxLjIxODIyNV0gIG1lbW1hcF9pbml0X3pvbmVfZGV2aWNl
-KzB4MTY1LzB4MTdjDQo+PiBbICAgNDEuMjE4NjQyXSAgbWVtcmVtYXBfcGFnZXMrMHg0YzEvMHg1
-NDANCj4+IFsgICA0MS4yMTg5ODldICBkZXZtX21lbXJlbWFwX3BhZ2VzKzB4MWQvMHg2MA0KPj4g
-WyAgIDQxLjIxOTM2N10gIHBtZW1fYXR0YWNoX2Rpc2srMHgxNmIvMHg2MDAgW25kX3BtZW1dDQo+
-PiBbICAgNDEuMjE5ODA0XSAgPyBkZXZtX25zaW9fZW5hYmxlKzB4YjgvMHhlMA0KPj4gWyAgIDQx
-LjIyMDE3Ml0gIG52ZGltbV9idXNfcHJvYmUrMHg2OS8weDFjMA0KPj4gWyAgIDQxLjIyMDUyNl0g
-IHJlYWxseV9wcm9iZSsweDFjMi8weDNlMA0KPj4gWyAgIDQxLjIyMDg1Nl0gIGRyaXZlcl9wcm9i
-ZV9kZXZpY2UrMHhiNC8weDEwMA0KPj4gWyAgIDQxLjIyMTIzOF0gIGRldmljZV9kcml2ZXJfYXR0
-YWNoKzB4NGYvMHg2MA0KPj4gWyAgIDQxLjIyMTYxMV0gIGJpbmRfc3RvcmUrMHhjOS8weDExMA0K
-Pj4gWyAgIDQxLjIyMTkxOV0gIGtlcm5mc19mb3Bfd3JpdGUrMHgxMTYvMHgxOTANCj4+IFsgICA0
-MS4yMjIzMjZdICB2ZnNfd3JpdGUrMHhhNS8weDFhMA0KPj4gWyAgIDQxLjIyMjYyNl0gIGtzeXNf
-d3JpdGUrMHg1OS8weGQwDQo+PiBbICAgNDEuMjIyOTI3XSAgZG9fc3lzY2FsbF82NCsweDViLzB4
-MTgwDQo+PiBbICAgNDEuMjIzMjY0XSAgZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4
-NDQvMHhhOQ0KPj4gWyAgIDQxLjIyMzcxNF0gUklQOiAwMDMzOjB4N2YzMDg2NWQwZWQ4DQo+PiBb
-ICAgNDEuMjI0MDM3XSBDb2RlOiA4OSAwMiA0OCBjNyBjMCBmZiBmZiBmZiBmZiBlYiBiMyAwZiAx
-ZiA4MCAwMCAwMCAwMCAwMCBmMyAwZiAxZSBmYSA0OCA4ZCAwNSA0NSA3OCAwZCAwMCA4YiAwMCA4
-NSBjMCA3NSAxNyBiOCAwMSAwMCAwMCAwMCAwZiAwNSA8NDg+IDNkIDAwIGYwIGZmIGZmIDc3IDU4
-IGMzIDBmIDFmIDgwIDAwIDAwIDAwIDAwIDQxIDU0IDQ5IDg5IGQ0IDU1DQo+PiBbICAgNDEuMjI1
-OTIwXSBSU1A6IDAwMmI6MDAwMDdmZmZlNWQzMGE3OCBFRkxBR1M6IDAwMDAwMjQ2IE9SSUdfUkFY
-OiAwMDAwMDAwMDAwMDAwMDAxDQo+PiBbICAgNDEuMjI2NjA4XSBSQVg6IGZmZmZmZmZmZmZmZmZm
-ZGEgUkJYOiAwMDAwNTVlODI0ZDA3ZjQwIFJDWDogMDAwMDdmMzA4NjVkMGVkOA0KPj4gWyAgIDQx
-LjIyNzI0Ml0gUkRYOiAwMDAwMDAwMDAwMDAwMDA3IFJTSTogMDAwMDU1ZTgyNGQwN2Y0MCBSREk6
-IDAwMDAwMDAwMDAwMDAwMDQNCj4+IFsgICA0MS4yMjc4NzBdIFJCUDogMDAwMDAwMDAwMDAwMDAw
-NyBSMDg6IDAwMDAwMDAwMDAwMDAwMDcgUjA5OiAwMDAwMDAwMDAwMDAwMDA2DQo+PiBbICAgNDEu
-MjI4NzUzXSBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAwMDAwMjQ2IFIxMjog
-MDAwMDAwMDAwMDAwMDAwNA0KPj4gWyAgIDQxLjIyOTQxOV0gUjEzOiAwMDAwN2YzMDg2MmFiNTI4
-IFIxNDogMDAwMDAwMDAwMDAwMDAwMSBSMTU6IDAwMDA1NWU4MjRkMDdmNDANCj4+DQo+PiBXaGls
-ZSBjcmVhdGluZyBhIG5hbWVzcGFjZSBhbmQgaW5pdGlhbGl6aW5nIG1lbW1hcCwgaWYgeW91IGRl
-c3Ryb3kgdGhlIG5hbWVzcGFjZQ0KPj4gYW5kIHNocmluayB0aGUgem9uZSwgaXQgd2lsbCBpbml0
-aWFsaXplIHRoZSBtZW1tYXAgb3V0c2lkZSB0aGUgem9uZSBhbmQNCj4+IHRyaWdnZXIgVk1fQlVH
-X09OX1BBR0UoIXpvbmVfc3BhbnNfcGZuKHBhZ2Vfem9uZShwYWdlKSwgcGZuKSwgcGFnZSkgaW4N
-Cj4+IHNldF9wZm5ibG9ja19mbGFnc19tYXNrKCkuDQo+IA0KPiBEb2VzIHRoYXQgaGFwcGVuIHdp
-dGggLW5leHQgYXMgd2VsbD8gVGhlcmUsIHdlIGN1cnJlbnRseSBkb27igJh0IHNocmluayB0aGUg
-Wk9ORV9ERVZJQ0Ugem9uZSBhbnltb3JlLg0KDQpJIGNvbmZpcm1lZCB0aGUgcGF0Y2guIFRoZSBw
-YW5pYyBkb2Vzbid0IG9jY3VyIHdpdGggbGludXgtbmV4dCBrZXJuZWwuDQpodHRwczovL2xvcmUu
-a2VybmVsLm9yZy9saW51eC1tbS8yMDE5MTAwNjA4NTY0Ni41NzY4LTYtZGF2aWRAcmVkaGF0LmNv
-bS8NCg0KVGhhbmsgeW91IGZvciB5b3VyIGluZm9ybWF0aW9uLg0KDQpUaGFua3MsDQpUb3NoaWtp
-IEZ1a2FzYXdh
+On 2019/11/13 22:47, James Clark wrote:
+> Hi Xiaojun,
+> 
+>> I can't reproduce this problem. If the current system doesn't support spe, it shouldn't report an error. I use the latest codes of the mainline:
+> 
+> I think the problem is related to the 'type' attribute of the event. To open the SPE PMU the event type on the platform I'm using is '7'. If I change
+> the code like this, the problem is fixed:
+> 
+> @@ -914,13 +914,27 @@ void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel)
+>                 pmu = perf_pmu__find("arm_spe_0");
+>                 if (pmu) {
+>                         evsel->pmu_name = pmu->name;
+> -                       evsel->core.attr.type = PERF_RECORD_AUXTRACE;
+> -                       evsel->core.attr.config = SPE_ATTR_TS_ENABLE
+> -                                               | SPE_ATTR_PA_ENABLE
+> -                                               | SPE_ATTR_JITTER
+> +                       evsel->core.attr.type = pmu->type;
+> +                       evsel->core.attr.config |= SPE_ATTR_TS_ENABLE
+>                                                 | SPE_ATTR_BRANCH_FILTER;
+> 
+
+Hi, James,
+OK. Thank you for your fix.
+
+> Also do you think jitter should be enabled by default? I thought that it might make the data less precise, so I removed it here.
+
+Since the interval for sampling without "jitter" is fixed (default 1024 on our server), I was worried that not adding it would result in the same result for each record, and some instructions could not be collected each time.
+
+However, after many tests, it is not clear from the results that there is a significant difference between them (enable it or not).
+
+So I am confused, whether to enable it or not.
+
+Thanks.
+Xiaojun.
+
+> 
+> -James
+> 
+>>
+>> commit f116b96685a046a89c25d4a6ba2da489145c8888 (mainline/master)
+>> Merge: f632bfaa33ed 603d9299da32
+>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>> Date:   Thu Oct 24 06:13:45 2019 -0400
+>>
+>>     Merge tag 'mfd-fixes-5.4' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
+>>
+>> I will go and see why this will be reported.
+>>
+>>>
+>>>
+>>> I would have expected to use the event name that is listed in the SPE documentation for branch misses which is br_mis_pred or br_mis_pred_retired:
+>>>
+>>>     E[7], byte 0 bit [7]
+>>>     Mispredicted. The defined values of this bit are:
+>>>     0 Did not cause correction to the predicted program flow.
+>>>     1 A branch that caused a correction to the predicted program flow.
+>>>
+>>>     If PMUv3 is implemented this Event is required to be implemented consistently with either BR_MIS_PRED or BR_MIS_PRED_RETIRED.
+>>>
+>>
+>> Do you mean that I can add these as new events to perf? If we think of them as new events, what should we do if the user does not add :pp for them?
+>> (Or for these events, users can only add :pp to use them?)
+>>
+>>>
+>>> +       if (!strcmp(perf_env__arch(evlist->env), "arm64")
+>>> +                       && evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
+>>> +                       && evsel->core.attr.precise_ip) {
+>>>
+>>> As I mentioned above PERF_COUNT_HW_BRANCH_MISSESdoesn't seem to match up with the actual event counter that is associated with this SPE event (BR_MIS_PRED). The fix for this is probably as simple as adding an OR for the other aliases for branch mispredicts.
+>>
+>> What you mean is that we can filter with spe events(like BR_MIS_PRED) first, and if we have other events that are exactly the same(no more for now), then we can handle them by adding OR in the future?
+>>
+>>>
+>>> +               pmu = perf_pmu__find("arm_spe_0");
+>>> +               if (pmu) {
+>>> +                       evsel->pmu_name = pmu->name;
+>>> +                       evsel->core.attr.type = PERF_RECORD_AUXTRACE;
+>>> +                       evsel->core.attr.config = SPE_ATTR_TS_ENABLE
+>>> +                                               | SPE_ATTR_PA_ENABLE
+>>>
+>>> I wouldn't set physical addresses by default as this requires root. I would leave that to the user if they want to manually configure SPE.
+>>
+>> Yes. You are right. I got a error for this case. I will fix it.
+>>
+>> ------------------
+>> ./perf record -e branch-misses:p ls
+>> Error:
+>> You may not have permission to collect stats.
+>> ...
+>> ------------------
+>>
+>> Thanks.
+>> Xiaojun.
+>>
+>>>
+>>> I have only looked briefly and I will do some more testing.
+>>>
+>>>
+>>> Thanks
+>>> James
+>>>
+>>>
+>>
+>>
+
 
