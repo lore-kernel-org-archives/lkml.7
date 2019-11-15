@@ -2,126 +2,130 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA85C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614C6C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9481206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B3420725
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L95sZqvQ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QQ9f3DZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfKOAEn (ORCPT
+        id S1727281AbfKOAFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 19:04:43 -0500
-Received: from mail-qv1-f74.google.com ([209.85.219.74]:55181 "EHLO
-        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfKOAEn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 19:04:43 -0500
-Received: by mail-qv1-f74.google.com with SMTP id i32so5337548qvi.21
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 16:04:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=AtYBVIFW/7jGl+9KqWhHNwm4HA65HS53beIwYaK2A58=;
-        b=L95sZqvQsAHolj7BPNH68M1I3S9AB8Jf1zCyTuU2wTo1Wz5oNIokeJdWYWnLqwGww6
-         s0iACpu3AzRR3C2eBHamXb8BUR/dibfXszwvNsAdBIUrkC+VlF/5f5zUiJjEpd7mQu1i
-         95eT7Gu5tTBtEZA+XNl0COULfmxqQ5LY6Ri5S0J1wvtkbxBD8a0YvyCuXJhLKLPv5vK2
-         mecTEeH1//VrKeDvsRPk5z7Jfes3clJX6JAyUdzz7OkYAdq49yX/WxDwVLaCi40N6fWD
-         0odpUhptplN5Cr+mrSJoIkdVYz2FX+Mw9gDVTGIjiYNXZ74kpnc0PBB8BvsNGr2qkpfm
-         W1bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=AtYBVIFW/7jGl+9KqWhHNwm4HA65HS53beIwYaK2A58=;
-        b=dzjIRv1yS/N7k644sICizm89bHJRD6rwmIac1anFT1vADmvBfT9i6bTHA7AUyzIjYY
-         TJL40LCkCgq2IvyytmX5V4uTY+x7PyK62/GPjD0+qtQCOYmjuZEQFk9h4kENcUwXeye8
-         Zk52/g0gmpZK19B/+hHWNuCtiOo2fJ433ZP3XQj5aYnKZdJNSlBmE7Dr3sZLZYmHWB/R
-         zCACNXy73Qd7zGE7dZC5ywQXFo8kSj0S4vOXNdhA3RyIcQ1Jbje5RVzpfHtBQV1MtPUF
-         vJY2dpx2COCKOmAgzg/fPs7u7S4TMFquWCfEiHgc9XTyWBR3i0czUYLqJ7nR9Uu1WjVp
-         9dHw==
-X-Gm-Message-State: APjAAAU0GlP7FsXLWFSWwFiPsPdSzx+RzoZj8EJw7GBGTOxwmLJBXjpY
-        /lgm3PdRF7+iuQB+ox7gTFhxQhIhUsKIa+k=
-X-Google-Smtp-Source: APXvYqzj8PR66IdH+ZesFoCutqqn1xQ7OBDyOhPAfV1oOrDv9zJtimekZMdWd+XVYcx8Qy5LDxWe8Zy5EIQIH/g=
-X-Received: by 2002:a0c:c125:: with SMTP id f34mr10599764qvh.22.1573776282301;
- Thu, 14 Nov 2019 16:04:42 -0800 (PST)
-Date:   Thu, 14 Nov 2019 16:04:38 -0800
-Message-Id: <20191115000438.45970-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH v1] regulator: core: Don't try to remove device links if add failed
-From:   Saravana Kannan <saravanak@google.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 Nov 2019 19:05:05 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36653 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbfKOAFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 19:05:04 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Ddrs3T92z9s4Y;
+        Fri, 15 Nov 2019 11:05:01 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573776302;
+        bh=Z8Krf4nl7BbTsHQgKDM3eQflPpkr4JmWXdsfcFOegaY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QQ9f3DZxjf8hS5vTXW1B5lISqfqsM2Au0I2HCoN5g611wYFOJXfbkVy915drYYv18
+         gzVO5flDOkJtYV3L2YDTG39ZHpsECZjiJdDwjmbq/1hgcVtsDQFrc1InFmjEH0ww8u
+         HPaEL0f3gHy6uCTlh88c6WDJkxXmb1z7hMJT6VY+EnyA6i4sQpVzLCjDH4mNdCVl/7
+         lC0OH7FD3ssgRai4fGRx1sRXCqtVQVvB7dEAqB5/87nOOgTRVwj3mdRlOxppnFFSX9
+         HSeXbfyJo51uNHM+3yk19zfoU/aA8kGZ17dNn+EsFmsNrVp2BpSzEJ3J8dqlfCeZ8U
+         ovbtkHZRH5zWA==
+Date:   Fri, 15 Nov 2019 11:05:00 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Uwe =?UTF-8?B?S2xlaW5lLUs=?= =?UTF-8?B?w7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: linux-next: manual merge of the pm tree with the printk tree
+Message-ID: <20191115110500.2bad45b2@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/8dHD0qGh0F9UnYxbYqUlngQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device_link_add() might not always succeed depending on the type of
-device link and the rest of the dependencies in the system. If
-device_link_add() didn't succeed, then we shouldn't try to remove the
-link later on as it might remove a link someone else created.
+--Sig_/8dHD0qGh0F9UnYxbYqUlngQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/regulator/core.c     | 8 ++++++--
- drivers/regulator/internal.h | 1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index a46be221dbdc..6fa790c58db1 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1844,6 +1844,7 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
- 	struct regulator_dev *rdev;
- 	struct regulator *regulator;
- 	const char *devname = dev ? dev_name(dev) : "deviceless";
-+	struct device_link *link;
- 	int ret;
- 
- 	if (get_type >= MAX_GET_TYPE) {
-@@ -1951,7 +1952,9 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
- 			rdev->use_count = 0;
- 	}
- 
--	device_link_add(dev, &rdev->dev, DL_FLAG_STATELESS);
-+	link = device_link_add(dev, &rdev->dev, DL_FLAG_STATELESS);
-+	if (!IS_ERR_OR_NULL(link))
-+		regulator->device_link = true;
- 
- 	return regulator;
- }
-@@ -2046,7 +2049,8 @@ static void _regulator_put(struct regulator *regulator)
- 	debugfs_remove_recursive(regulator->debugfs);
- 
- 	if (regulator->dev) {
--		device_link_remove(regulator->dev, &rdev->dev);
-+		if (regulator->device_link)
-+			device_link_remove(regulator->dev, &rdev->dev);
- 
- 		/* remove any sysfs entries */
- 		sysfs_remove_link(&rdev->dev.kobj, regulator->supply_name);
-diff --git a/drivers/regulator/internal.h b/drivers/regulator/internal.h
-index 83ae442f515b..2391b565ef11 100644
---- a/drivers/regulator/internal.h
-+++ b/drivers/regulator/internal.h
-@@ -36,6 +36,7 @@ struct regulator {
- 	struct list_head list;
- 	unsigned int always_on:1;
- 	unsigned int bypass:1;
-+	unsigned int device_link:1;
- 	int uA_load;
- 	unsigned int enable_count;
- 	unsigned int deferred_disables;
--- 
-2.24.0.432.g9d3f5f5b63-goog
+Today's linux-next merge of the pm tree got a conflict in:
 
+  scripts/checkpatch.pl
+
+between commit:
+
+  1d28122131b2 ("checkpatch: don't warn about new vsprintf pointer extensio=
+n '%pe'")
+
+from the printk tree and commit:
+
+  3bd32d6a2ee6 ("lib/vsprintf: Add %pfw conversion specifier for printing f=
+wnode names")
+
+from the pm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc scripts/checkpatch.pl
+index 4b40445938dc,3d1f08fa091c..000000000000
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@@ -6019,10 -6020,13 +6020,13 @@@ sub process=20
+  				my $fmt =3D get_quoted_string($lines[$count - 1], raw_line($count, 0)=
+);
+  				$fmt =3D~ s/%%//g;
+ =20
+- 				while ($fmt =3D~ /(\%[\*\d\.]*p(\w))/g) {
++ 				while ($fmt =3D~ /(\%[\*\d\.]*p(\w)(\w*))/g) {
+  					$specifier =3D $1;
+  					$extension =3D $2;
+- 					if ($extension !~ /[SsBKRraEehMmIiUDdgVCbGNOxt]/) {
++ 					$qualifier =3D $3;
+ -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
+++					if ($extension !~ /[SsBKRraEehMmIiUDdgVCbGNOxtf]/ ||
++ 					    ($extension eq "f" &&
++ 					     defined $qualifier && $qualifier !~ /^w/)) {
+  						$bad_specifier =3D $specifier;
+  						last;
+  					}
+
+--Sig_/8dHD0qGh0F9UnYxbYqUlngQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3N66wACgkQAVBC80lX
+0GyNNwf+MljcLS7Y6Hc82Z8yOBygn97YfuFT6keFtfO3L8o/7YuwoS8AcG1C1y1F
+spRnriouGH3pwp70UyJequEDNihIYitSwj4ttSHOLJcf13+4Du7tTqKzrug5I3Bi
+u3qUpC8F/74vjHLj8edRppXbHAdCBiIp4MKDp1cg6xJXbOxvewKQAzObDkHroBwY
+Pj9lm/laWe9biZvXQVVAj6oOpJHkLamwQyjqLipi+fG1fRW9kZga1PFCQZOxDYiz
+ggfop/qjoaaaeXzLfVGBORW8FRi1RLAjz6lkr1HZERsw8vHj0j1hVZn3Qp7XGiKF
++LGxhwr5aBqRZNiRa3Gul7OS+BC0OA==
+=tIuk
+-----END PGP SIGNATURE-----
+
+--Sig_/8dHD0qGh0F9UnYxbYqUlngQ--
