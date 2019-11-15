@@ -2,168 +2,83 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4655C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86561C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A8F20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573825957;
-	bh=byccjQGKDp78Hpig9iIFTYDmZ2hi5+wPX21QztoMffQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cIONvmXdp0GAfGMUGCBfjXsQ4HZTHW7IFQNiE1Hni/nAlq5s/N1SQxRoO50N3MSfo
-	 6Sh8IzKPaqrMX0vJnPv8ehobaEefenLxJ4j67MEWfzTWlJJlie8+lUf80SC1Tk7438
-	 dnbZtBWLo3RQnvjyQt9xiGY5x4vc52kLg4zNTdcA=
+	by mail.kernel.org (Postfix) with ESMTP id 643A320733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfKONwg (ORCPT
+        id S1727530AbfKONye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:52:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727411AbfKONwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:52:36 -0500
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 15 Nov 2019 08:54:34 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34947 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbfKONyd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:54:33 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 6166C3C009C;
+        Fri, 15 Nov 2019 14:54:31 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jjwboKzUmcTj; Fri, 15 Nov 2019 14:54:26 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AADD22073B;
-        Fri, 15 Nov 2019 13:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573825954;
-        bh=byccjQGKDp78Hpig9iIFTYDmZ2hi5+wPX21QztoMffQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jksCRt0n9nFcU+ZExUEHHKzIWbgnbV8XdpoR7rkhnQF7ZMS5HoKM7k5PLGDMp44++
-         qoEFF4fDOqnYCRvWSl5sBsoW141oAQ743jD66MGXoOROWargZKeIEkpQ4BoOMKsz0k
-         QTBZmrmAK7yVvtks+VlhPdIEc6bjs6iXSZYioSso=
-Received: by mail-qv1-f48.google.com with SMTP id d3so3771388qvs.11;
-        Fri, 15 Nov 2019 05:52:34 -0800 (PST)
-X-Gm-Message-State: APjAAAVkguIokj3sxK8IwJ/87xHXNpmKtESsZpjn/KB5RxpvHH6e4tYf
-        w6xHU81FBHGGo49syK5aqFU6jiCfMy0zWLZhNA==
-X-Google-Smtp-Source: APXvYqwWnpvZlkGEaU+MoyCE0QcbXaYmkR1k9FsQYEefvYoJDNpv7HxUniQpMKCZFcqXCVK++8fwMkHnwAevVKIkZj8=
-X-Received: by 2002:a0c:edcc:: with SMTP id i12mr1964139qvr.20.1573825953731;
- Fri, 15 Nov 2019 05:52:33 -0800 (PST)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 75B393C04C1;
+        Fri, 15 Nov 2019 14:54:25 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 15 Nov
+ 2019 14:54:25 +0100
+Date:   Fri, 15 Nov 2019 14:54:22 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Subject: Re: [PATCH] mmc: renesas_sdhi_internal_dmac: Add MMC_CAP_ERASE to
+ Gen3 SoCs
+Message-ID: <20191115135422.GA12691@vmlxhi-102.adit-jv.com>
+References: <20191112134808.23546-1-erosca@de.adit-jv.com>
+ <20191112204952.GA2976@kunai>
+ <CAPDyKFq8oVk26ruNA_R8HDXhMGKhDeHnL0q82xi40g1aeo109A@mail.gmail.com>
+ <20191114113743.GA19656@vmlxhi-102.adit-jv.com>
+ <CAPDyKFp5iqrFDM1EWnYBwFmQAiAA5FADDLAyuVVBgMu4Sx=x5w@mail.gmail.com>
+ <20191114220744.GA17678@vmlxhi-102.adit-jv.com>
+ <CAPDyKFoXEFbK_7-Nmkhz2_Sifc=hiPEGmUHKsp4=Baye86TCOg@mail.gmail.com>
+ <20191115125109.GA32576@lxhi-065.adit-jv.com>
 MIME-Version: 1.0
-References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
- <20191112055412.192675-2-dmitry.torokhov@gmail.com> <20191112120307.GB5195@sirena.co.uk>
- <20191112190328.GA199853@dtor-ws> <20191112191547.GK5195@sirena.co.uk>
- <20191112193653.GB13374@dtor-ws> <20191114222652.GA7517@bogus> <CAKdAkRQBrKOUTW8puakA26ODYW9=0H4VhwFhGQAqMs-cMmj3CQ@mail.gmail.com>
-In-Reply-To: <CAKdAkRQBrKOUTW8puakA26ODYW9=0H4VhwFhGQAqMs-cMmj3CQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 15 Nov 2019 07:52:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKUXPTC-fmUowpaHQpuKTfgfQ6D2n7kOZgkYt+MS7OfaA@mail.gmail.com>
-Message-ID: <CAL_JsqKUXPTC-fmUowpaHQpuKTfgfQ6D2n7kOZgkYt+MS7OfaA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
- and interrupts
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191115125109.GA32576@lxhi-065.adit-jv.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 5:09 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Thu, Nov 14, 2019 at 2:26 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Nov 12, 2019 at 11:36:53AM -0800, Dmitry Torokhov wrote:
-> > > On Tue, Nov 12, 2019 at 07:15:47PM +0000, Mark Brown wrote:
-> > > > On Tue, Nov 12, 2019 at 11:03:28AM -0800, Dmitry Torokhov wrote:
-> > > > > On Tue, Nov 12, 2019 at 12:03:07PM +0000, Mark Brown wrote:
-> > > > > > On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
-> > > >
-> > > > > > > +      interrupts:
-> > > > > > > +        items:
-> > > > > > > +          - description: main interrupt (attention) line.
-> > > > > > > +          - description: dedicated wakeup interrupt.
-> > > > > > > +        minItems: 1 # The wakeup interrupt is optional.
-> > > >
-> > > > > > > +      interrupt-names:
-> > > > > > > +        items:
-> > > > > > > +          - const: irq
-> > > > > > > +          - const: wakeup
-> > > > > > > +        minItems: 1
-> > > >
-> > > > > > How will this interact with a SPI device that defines interrupts at the
-> > > > > > device level, possibly more than one of them?  Especially if the device
-> > > > > > has its own idea what the interrupts should be called.
-> > > >
-> > > > > My understanding that individual drivers should be able to override
-> > > > > whatever the default behavior core has configured, and the device can
-> > > > > establish their own mapping. We have this in I2C and I believe this
-> > > > > works well.
-> > > >
-> > > > > Is the concern about the device tree scheme or SPI core handling?
-> > > >
-> > > > Both really.
-> > >
-> > > So as I mentioned, the driver is not forced to use the interrupt
-> > > supplied by the SPI core, and the worst thing is that the core
-> > > configures the main IRQ as wakeirq and driver would need to call
-> > > dev_pm_clear_wake_irq() before switching to correct one. I expect there
-> > > will be just a few drivers needing that and many more would benefit from
-> > > the default behavior and not needing to repeat the same boilerplate
-> > > code.
-> > >
-> > > As far as scheme goes - I hope that Rob could confirm that we can
-> > > override number of interrupts and names in consumers of the binding, as
-> > > needed.
-> >
-> > This won't work. A device schema doesn't override what's defined here,
-> > but just further constrains this schema.
-> >
-> > You could define a "spi irq" schema which devices can include if they
-> > want to, but I don't think this pattern is that common to SPI devices.
-> > There's not any spec behind compared to say alert irq for SMBus.
-> >
-> > The 'wakeup' irq name is standardized (for DT), but that's not SPI
-> > specific. About all we could define there is 'wakeup-source' is boolean
-> > and if there is more than one interrupt, one should be named 'wakeup'.
->
-> OK, so what I am hearing is "interrupt"/"interrupt-names" properties
-> should be defined in individual device's bindings, and wakeup-source
-> can stay in spi-controller.yaml, right?
+[to facilitate version tracking]
 
-It could, but it's not SPI specific. I think we should convert
-bindings/power/wakeup-source.txt instead. Something like this:
+Superseded by:
+https://lore.kernel.org/linux-renesas-soc/20191115134430.12621-1-erosca@de.adit-jv.com/
+("[PATCH v2] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests")
 
-select: true
-
-properties:
-  wakeup-source:
-    type: boolean
-    description: ...
-
-if:
-  properties:
-    interrupt-names:
-      contains:
-        const: wakeup
-  required:
-    - interrupt-names
-then:
-  required:
-    - wakeup-source
-
-dependencies:
-  wakeup-source: [ interrupts ]
-
-
-Rob
-
-> And as far as SPI core goes, we can still do what I proposed, because
-> we already handle "first" interrupt as the default one and the drivers
-> can override as needed anyway...
->
-> Thanks.
->
-> --
-> Dmitry
+-- 
+Best Regards,
+Eugeniu
