@@ -2,55 +2,56 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13A3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C11C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D6520718
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C05420718
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:17:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QmXceClB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P1ueIpeh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfKOKRP (ORCPT
+        id S1727555AbfKOKR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:17:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:53936 "EHLO
+        Fri, 15 Nov 2019 05:17:56 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:54770 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbfKOKRN (ORCPT
+        with ESMTP id S1727137AbfKOKR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:17:13 -0500
+        Fri, 15 Nov 2019 05:17:56 -0500
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFAELeI021035;
-        Fri, 15 Nov 2019 10:16:50 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFAERfJ021074;
+        Fri, 15 Nov 2019 10:16:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=kEBzW5bFpEsigVBsTTXhd4LHdOdlS9x/rndpgUook+0=;
- b=QmXceClB8p34iys5VDuKVySkAzZ4nh9dFKS4BNrvUbfMN+yZoNVZN1iKt1naAftTGmYu
- jHsxmKfERo5ya7YAeJdViHurp4hZkbUAj/IQDfw5hfaYAd/bjOJelRpVNCzih9pVH1TV
- HOZPCDXCpZDwrewquKXdkU2eC8LX5HgWReEARQ29ZX6kXJR2uyRhHiIPHCfn9L7egDEE
- DVoejjxyLFLd4dwDVvz8+LR5atlQLwEFKvdocAoqlCgYcJB/v5yWjdvzgOze0pX4szs9
- ymxaqO/tpKr/emc5HaxhwwFC1QioLZMmw3h87eIDCcFyC9FbN4fFgICksIk1dYWHXPxw +w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2w9gxpje2p-1
+ bh=GEUb/C//sxYHWwJHoIqtobWLRbr5DWDL/Y95mcw7Fwo=;
+ b=P1ueIpeh15zw3ZM4/jxR26XteBfIbiBKxcjSHoal6HvAxkxasRvVATDNV+VpyLTnL9ec
+ w0rNIxEzblpngOovKSv1rBjhT9LUPbg6MBsGfY3LB8y82bEHTgm2VJH1eXEZm1MWBD6d
+ 5QYMgKHAgVHfj75nvK/FGTw9pgh0nTcMwOw4Q5rIpqIeFl4k2V12I0whp6YSAmtep3a8
+ Wmu8skTTvdAMiw61YzF/4LY3XtznpcUwIpcc6F/lIIncJMfcPCMWF6pgyPCLM6lGmYyJ
+ pBgbeVrglALi18yEcx5HqRu0zWlmetu5YSxamnzkeJUI9D1aO+if3ae04pW0GaFkudAz DQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2w9gxpje1w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 10:16:50 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFADEql008030;
-        Fri, 15 Nov 2019 10:16:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2w9h148fjm-1
+        Fri, 15 Nov 2019 10:16:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFADF2H169520;
+        Fri, 15 Nov 2019 10:16:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2w9h0k4d8h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 10:16:49 +0000
+        Fri, 15 Nov 2019 10:16:35 +0000
 Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAFAGm0d007595;
-        Fri, 15 Nov 2019 10:16:48 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAFAGWmT016310;
+        Fri, 15 Nov 2019 10:16:32 GMT
 Received: from dhcp-10-175-208-51.vpn.oracle.com (/10.175.208.51)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 15 Nov 2019 02:16:48 -0800
+        with ESMTP ; Fri, 15 Nov 2019 02:16:32 -0800
 From:   Alan Maguire <alan.maguire@oracle.com>
 To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
         linux-kselftest@vger.kernel.org
@@ -63,22 +64,21 @@ Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
         corbet@lwn.net, tytso@mit.edu, adilger.kernel@dilger.ca,
         mcgrof@kernel.org, changbin.du@intel.com,
         linux-ext4@vger.kernel.org, linux-doc@vger.kernel.org,
-        sboyd@kernel.org, Alan Maguire <alan.maguire@oracle.com>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: [PATCH v4 linux-kselftest-test 6/6] kunit: update documentation to describe module-based build
-Date:   Fri, 15 Nov 2019 10:16:12 +0000
-Message-Id: <1573812972-10529-7-git-send-email-alan.maguire@oracle.com>
+        sboyd@kernel.org, Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v4 linux-kselftest-test 2/6] kunit: hide unexported try-catch interface in try-catch-impl.h
+Date:   Fri, 15 Nov 2019 10:16:08 +0000
+Message-Id: <1573812972-10529-3-git-send-email-alan.maguire@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com>
 References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-1911150096
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-1911150096
@@ -87,72 +87,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation should describe how to build kunit and tests as
-modules.
+Define function as static inline in try-catch-impl.h to allow it to
+be used in kunit itself and tests.  Also remove unused
+kunit_generic_try_catch
 
 Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Signed-off-by: Knut Omang <knut.omang@oracle.com>
 ---
- Documentation/dev-tools/kunit/faq.rst   |  3 ++-
- Documentation/dev-tools/kunit/index.rst |  3 +++
- Documentation/dev-tools/kunit/usage.rst | 16 ++++++++++++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ include/kunit/try-catch.h  | 10 ----------
+ lib/kunit/test-test.c      |  2 ++
+ lib/kunit/test.c           |  2 +-
+ lib/kunit/try-catch-impl.h | 28 ++++++++++++++++++++++++++++
+ lib/kunit/try-catch.c      | 13 ++-----------
+ 5 files changed, 33 insertions(+), 22 deletions(-)
+ create mode 100644 lib/kunit/try-catch-impl.h
 
-diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
-index bf20951..ea55b24 100644
---- a/Documentation/dev-tools/kunit/faq.rst
-+++ b/Documentation/dev-tools/kunit/faq.rst
-@@ -29,7 +29,8 @@ Yes, well, mostly.
+diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
+index 404f336..c507dd4 100644
+--- a/include/kunit/try-catch.h
++++ b/include/kunit/try-catch.h
+@@ -53,11 +53,6 @@ struct kunit_try_catch {
+ 	void *context;
+ };
  
- For the most part, the KUnit core framework (what you use to write the tests)
- can compile to any architecture; it compiles like just another part of the
--kernel and runs when the kernel boots. However, there is some infrastructure,
-+kernel and runs when the kernel boots, or when built as a module, when the
-+module is loaded.  However, there is some infrastructure,
- like the KUnit Wrapper (``tools/testing/kunit/kunit.py``) that does not support
- other architectures.
+-void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+-			  struct kunit *test,
+-			  kunit_try_catch_func_t try,
+-			  kunit_try_catch_func_t catch);
+-
+ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context);
  
-diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
-index 26ffb46..7ddc385 100644
---- a/Documentation/dev-tools/kunit/index.rst
-+++ b/Documentation/dev-tools/kunit/index.rst
-@@ -48,6 +48,9 @@ to a standalone program that can be run like any other program directly inside
- of a host operating system; to be clear, it does not require any virtualization
- support; it is just a regular program.
+ void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch);
+@@ -67,9 +62,4 @@ static inline int kunit_try_catch_get_result(struct kunit_try_catch *try_catch)
+ 	return try_catch->try_result;
+ }
  
-+Alternatively, kunit and kunit tests can be built as modules and tests will
-+run when the test module is loaded.
-+
- KUnit is fast. Excluding build time, from invocation to completion KUnit can run
- several dozen tests in only 10 to 20 seconds; this might not sound like a big
- deal to some people, but having such fast and easy to run tests fundamentally
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index c6e6963..82f9213 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -539,6 +539,22 @@ Interspersed in the kernel logs you might see the following:
+-/*
+- * Exposed for testing only.
+- */
+-void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch);
+-
+ #endif /* _KUNIT_TRY_CATCH_H */
+diff --git a/lib/kunit/test-test.c b/lib/kunit/test-test.c
+index 5ebe059..5a6cc04 100644
+--- a/lib/kunit/test-test.c
++++ b/lib/kunit/test-test.c
+@@ -7,6 +7,8 @@
+  */
+ #include <kunit/test.h>
  
- Congratulations, you just ran a KUnit test on the x86 architecture!
++#include "try-catch-impl.h"
++
+ struct kunit_try_catch_test_context {
+ 	struct kunit_try_catch *try_catch;
+ 	bool function_called;
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index 36ebf47..58a6227 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -7,11 +7,11 @@
+  */
  
-+In a similar manner, kunit and kunit tests can also be built as modules,
-+so if you wanted to run tests in this way you might add the following config
-+options to your ``.config``:
-+
-+.. code-block:: none
-+
-+	CONFIG_KUNIT=m
-+	CONFIG_KUNIT_EXAMPLE_TEST=m
-+
-+Once the kernel is built and installed, a simple
-+
-+.. code-block:: bash
-+	modprobe example-test
-+
-+...will run the tests.
-+
- Writing new tests for other architectures
- -----------------------------------------
+ #include <kunit/test.h>
+-#include <kunit/try-catch.h>
+ #include <linux/kernel.h>
+ #include <linux/sched/debug.h>
  
+ #include "string-stream.h"
++#include "try-catch-impl.h"
+ 
+ static void kunit_set_failure(struct kunit *test)
+ {
+diff --git a/lib/kunit/try-catch-impl.h b/lib/kunit/try-catch-impl.h
+new file mode 100644
+index 0000000..e308d5c
+--- /dev/null
++++ b/lib/kunit/try-catch-impl.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * An API to allow a function, that may fail, to be executed, and recover in a
++ * controlled manner.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++
++#ifndef _KUNIT_TRY_CATCH_IMPL_H
++#define _KUNIT_TRY_CATCH_IMPL_H
++
++#include <kunit/try-catch.h>
++#include <linux/types.h>
++
++struct kunit;
++
++static inline void kunit_try_catch_init(struct kunit_try_catch *try_catch,
++					struct kunit *test,
++					kunit_try_catch_func_t try,
++					kunit_try_catch_func_t catch)
++{
++	try_catch->test = test;
++	try_catch->try = try;
++	try_catch->catch = catch;
++}
++
++#endif /* _KUNIT_TRY_CATCH_IMPL_H */
+diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+index 55686839..4a66d16 100644
+--- a/lib/kunit/try-catch.c
++++ b/lib/kunit/try-catch.c
+@@ -8,12 +8,13 @@
+  */
+ 
+ #include <kunit/test.h>
+-#include <kunit/try-catch.h>
+ #include <linux/completion.h>
+ #include <linux/kernel.h>
+ #include <linux/kthread.h>
+ #include <linux/sched/sysctl.h>
+ 
++#include "try-catch-impl.h"
++
+ void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
+ {
+ 	try_catch->try_result = -EFAULT;
+@@ -106,13 +107,3 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 
+ 	try_catch->catch(try_catch->context);
+ }
+-
+-void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+-			  struct kunit *test,
+-			  kunit_try_catch_func_t try,
+-			  kunit_try_catch_func_t catch)
+-{
+-	try_catch->test = test;
+-	try_catch->try = try;
+-	try_catch->catch = catch;
+-}
 -- 
 1.8.3.1
 
