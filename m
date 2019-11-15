@@ -2,50 +2,64 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BE4C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C626C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD5B2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5742220733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573828307;
+	bh=z4t0QNOpMSUfT6xxNqEGeyK4kvswHzvxvuh4u4MxWE4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=1na+qrnm9WqySjStmOqndegddDnxhGUtJ1pxk8LQ/AtWg4z2jgyuaPFzfc+9lxqMK
+	 MA5MAaUylaqPe9igPHaRKDso6D2J5tKyl+zs0tvmbQQY0XoCYtyOQ4Cab/xOCAIPEB
+	 A3aVNTTOoi3ASruRRbY0rl6aUB49XPKFBLLgc26k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfKOO3v (ORCPT
+        id S1727614AbfKOObq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:29:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:60144 "EHLO foss.arm.com"
+        Fri, 15 Nov 2019 09:31:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727411AbfKOO3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:29:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71D9331B;
-        Fri, 15 Nov 2019 06:29:50 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03AD03F534;
-        Fri, 15 Nov 2019 06:29:48 -0800 (PST)
-Subject: Re: [PATCH v2] sched/uclamp: Fix overzealous type replacement
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
-        Tejun Heo <tj@kernel.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Qais Yousef <qais.yousef@arm.com>
-References: <20191115103908.27610-1-valentin.schneider@arm.com>
- <CAKfTPtBoi_5sUiGrTpYuV_u2vPkBK+caUzgaKxY3Ck3PKJXZiw@mail.gmail.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <f4fcc45e-7609-3836-162a-0a1839134bcf@arm.com>
-Date:   Fri, 15 Nov 2019 14:29:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727380AbfKOObq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 09:31:46 -0500
+Received: from [192.168.1.20] (cpe-24-28-70-126.austin.res.rr.com [24.28.70.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC7D2072D;
+        Fri, 15 Nov 2019 14:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573828305;
+        bh=z4t0QNOpMSUfT6xxNqEGeyK4kvswHzvxvuh4u4MxWE4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=tMCfohkEdQO5MZtypr3lSf1IVaJNmcuvM+seUixNNfXHYT1wU3BcK1Cfe+diLM0eV
+         fyzg3L/GNsHDQ+PhCDP+S6JRz0JMtKXb/fISpdS5IYkDXiRF5RBdamtlBk10zLLTLj
+         TmouuZ3KKjaXi3Y2CWdFcKM2A7/uTmgAkKcO5vH8=
+Subject: Re: [PATCH v4 46/47] net: ethernet: freescale: make UCC_GETH
+ explicitly depend on PPC32
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>, netdev <netdev@vger.kernel.org>
+References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
+ <20191108130123.6839-47-linux@rasmusvillemoes.dk>
+ <CAOZdJXUX2cZfaQTkBdNrwD=jT2399rZzRFtDj6vNa==9Bmkh5A@mail.gmail.com>
+ <CADRPPNS00uU+f6ap9D-pYQUFo_T-o2bgtnYaE9qAXOwck86-OQ@mail.gmail.com>
+From:   Timur Tabi <timur@kernel.org>
+Message-ID: <52639dfc-d558-8a92-5e2e-8ec18f39b383@kernel.org>
+Date:   Fri, 15 Nov 2019 08:31:42 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtBoi_5sUiGrTpYuV_u2vPkBK+caUzgaKxY3Ck3PKJXZiw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CADRPPNS00uU+f6ap9D-pYQUFo_T-o2bgtnYaE9qAXOwck86-OQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,14 +67,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/11/2019 14:07, Vincent Guittot wrote:
->> -static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
->> +static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
-> 
-> Out of curiosity why uclamp decided to use unsigned int to manipulate
-> utilization instead of unsigned long which is the type of util_avg ?
-> 
+On 11/14/19 11:44 PM, Li Yang wrote:
+>> Can you add an explanation why we don't want ucc_geth on non-PowerPC platforms?
+> I think it is because the QE Ethernet was never integrated in any
+> non-PowerPC SoC and most likely will not be in the future.  We
+> probably can make it compile for other architectures for general code
+> quality but it is not a priority.
 
-I didn't stare at the discussion much, but I think it stems from the
-design choices behind struct uclamp_se: everything is crammed in an unsigned
-int bitfield. Let me see if I can find some relevant mails.
+This explanation belongs in the commit message.
