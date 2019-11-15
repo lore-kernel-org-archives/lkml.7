@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC45C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EEBC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B188720740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83B62075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LYE++QQc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PgMonDeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfKOJvJ (ORCPT
+        id S1727655AbfKOJvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:51:09 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42009 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727539AbfKOJum (ORCPT
+        Fri, 15 Nov 2019 04:51:18 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33980 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbfKOJue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:50:42 -0500
-Received: by mail-pg1-f196.google.com with SMTP id q17so5722428pgt.9
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:41 -0800 (PST)
+        Fri, 15 Nov 2019 04:50:34 -0500
+Received: by mail-pl1-f194.google.com with SMTP id h13so4322028plr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yJ3LspI9bF0hEvtS0gNH7CaeJvv/WTYfNb2xDCT4Co4=;
-        b=LYE++QQcdVKyDuMJ0PD+qXUIM1TkL/v6Kq7zlSALHvb86aeCHvp5/UFe2opGhKc31i
-         IPYTfseCb/Z6qnz6agX8d2oCZSN18jZ8tJUhFkXtncJMfN2+xJE8fWxXGnP4tTZl4pmw
-         NLFEoY1sDQqcs9cwLjOodb8WACJMs/v0HVLw4=
+        bh=3FAkHAUt8UjwHfPNa2ELVQhby5Dsw5kyWNr40X4HEJw=;
+        b=PgMonDeO5XF7rCdpMJp6CaNxfXL091WmiI7dsEwsLmYhLWDoFw1w7ZsJu7ATDUxtrK
+         08XoEpXPHWMx900YlsA6i2scsfMuiFvqE2v5bVWFeTtvVGrb0lGnkmv/fnFTPO53+aYV
+         OK972WoJZdvpf1jPiZ9ky1bJ1IlS8NtcquysU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yJ3LspI9bF0hEvtS0gNH7CaeJvv/WTYfNb2xDCT4Co4=;
-        b=gyYnoHHqzZMpR/C+p9eWnWWy0AMqULmsTskGeQRR939ec7zLOOo5Ja8CK6Aj85tNbE
-         anO6j5hHJvC9zw7CJkhUaQXdwfjX/d8vpIII1nhwjJ6uHzvOww0Dq+lE6kR8h6kt8orH
-         x+eZ3GBjVeekMyZ/GQRhhCV/mYuQUS7yh69FUojelDxE5yPjBJeqLZS3/aaQ/fSH3802
-         VaHLdJkucAMvPZ2CJ+ZIs2bnz+TskPb3HSwWb/iHLaYnaNfWVJ2YecIIIyg2wva1mQaJ
-         W0awJ7G5a2w5tqjAOs/BGJSQ95aVF18R6N2zZ6XYJOC7yTbf8kAt0ZcnlpcxHSz3iFit
-         vEPQ==
-X-Gm-Message-State: APjAAAUj7sRWov0jd83VpzoU51hXcT1wwwQ5qic5d5lvjqjpmRuYqOHX
-        0x1sKhc+bR5aqQkqApQOD4JITw==
-X-Google-Smtp-Source: APXvYqwwHqFIUmVq3LNxNOrcbHXviXbaYlqOee3tLM7yy6f75WoEHydhU9ewVsG5fhW7BveWqXZCQQ==
-X-Received: by 2002:a62:180a:: with SMTP id 10mr16648263pfy.40.1573811441110;
-        Fri, 15 Nov 2019 01:50:41 -0800 (PST)
+        bh=3FAkHAUt8UjwHfPNa2ELVQhby5Dsw5kyWNr40X4HEJw=;
+        b=h5V29y5qwzhI44Q51apwBLtvyIuSS8w5kHFELUBBPAO+myp/cF7tNqR/Hra8UnQCqB
+         luVJU5RNtQo72H6n78j9wr1NR+hG5fNTPXliUdXzu93Vicb0AHVs3Utp8BJHRUfTRFZ5
+         8ftbUsv+K1BoFBCKCnt6zChVK5gjcvj51+OVYBgEX1AZMXn5/UxW9ung7UgCoxrVMqV2
+         cgyFKsYnWp/ZhyuC6ZRAs4U+JOo9yte0KJ4w9YfmpocUclw+Ue1sT5cIt7ykiHma41WR
+         OHKKRJv59z/iATqSDFL5/Tt4q8NA+lLws+PNsNr2UNifPZ2IyZwXWeU+sXU0GKrq62PR
+         Fxug==
+X-Gm-Message-State: APjAAAWsheTI4/ADnu+gfHdBiCjcKqElCcymN1TalfpVmQYelyi6aR5i
+        orhTz43tP1hJsgM2aD4oBA01Z3lDWqCilw==
+X-Google-Smtp-Source: APXvYqycVMniQw6h79XNvVJwPorxcPH6417cHIqJIHf+4w0wwiua2etSs2iFZNi4ovcnwfUa+L0s9A==
+X-Received: by 2002:a17:902:bf08:: with SMTP id bi8mr6895113plb.75.1573811433208;
+        Fri, 15 Nov 2019 01:50:33 -0800 (PST)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id x13sm9989335pfc.46.2019.11.15.01.50.40
+        by smtp.gmail.com with ESMTPSA id x25sm9050279pfq.73.2019.11.15.01.50.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2019 01:50:40 -0800 (PST)
+        Fri, 15 Nov 2019 01:50:32 -0800 (PST)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     dmitry.torokhov@gmail.com, groeck@chromium.org,
         briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
@@ -61,9 +61,9 @@ To:     dmitry.torokhov@gmail.com, groeck@chromium.org,
         dianders@chromium.org, fabien.lahoudere@collabora.com
 Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
         linux-input@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v5 14/18] iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
-Date:   Fri, 15 Nov 2019 01:34:08 -0800
-Message-Id: <20191115093412.144922-15-gwendal@chromium.org>
+Subject: [PATCH v5 09/18] platform: chrome: sensorhub: Add FIFO support
+Date:   Fri, 15 Nov 2019 01:34:03 -0800
+Message-Id: <20191115093412.144922-10-gwendal@chromium.org>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 In-Reply-To: <20191115093412.144922-1-gwendal@chromium.org>
 References: <20191115093412.144922-1-gwendal@chromium.org>
@@ -74,326 +74,807 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When EC supports FIFO, each IIO device registers a callback, to put
-samples in the buffer when they arrives from the FIFO.
-We can still use a trigger to collect samples, but there may be some
-duplications in the buffer: EC has a single FIFO, so once one sensor is
-using it, all sensors event will be in the FIFO.
+cros_ec_sensorhub registers a listener and query motion sense FIFO,
+spread to iio sensors registers.
 
-When no FIFO, the user space app needs to call trigger_new, or better
-register a high precision timer.
+To test, we can use libiio:
+iiod&
+iio_readdev -u ip:localhost -T 10000 -s 25 -b 16 cros-ec-gyro | od -x
 
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
 Changes in v5:
-- Revert modes setting that were removed by mistake
-- Remove unnecessary check when receving events from callback
-- Set clock_id to boottime by default, as it is what sensorhub_ring is
-  using.
-- Update commit messages reference to time domain: trigger and hub
-  generated events are always in the same time domain.
+- Use a goto in cros_ec_sensorhub_ring_handler to centralize error
+  handling
+- Use devm_add_action_or_reset to not need a .remove entry point for
+  cros_sensor_hub.
+- Fix logic error in cros_ec_sensorhub_register_push_data.
+- Update kernel_doc documentation.
+- Remve the need for comments in variable declaration section.
 Changes in v4:
-- Fix a logic error when the sensor is not "physical", for instance lig
-  angle: core_init() would return !0 even if there was no error.
+- Keep defining cros_ec_sensorhub in kernel-doc format
+- Fix logic error when checking if sensor index outside array.
 - Check patch with --strict option
     Use sizeof(*obj) instead of sizeof(struct ...obj)
     Alignement
-Change in v3:
-- Remove double line
-- Fix indentation
-- Add code to support iio clock_id setting. Optimized for
-  CLOCK_BOOTTIME.
-Change in v2 from "Use triggered buffer only when EC does not support
-FIFO":
-- Keep trigger all the time.
-- Add  devm_add_action to cleanup callback registration.
-- EC that "reports" legacy sensors do not have FIFO.
-- Use iiio_is_buffer_enabled instead of checking the scan_mask
-  before sending samples to buffer.
-- Add empty lines for visibility.
+    Use uX instead of uintX_t
+    Use !ptr instead of ptr != NULL
+Changes in v3:
+- Do not use ret !=
+- Simplfy errpr handling by removing a goto
+- Fix doxygen comments
+- Replace suspend/resume entry points with regular driver entry point;
+  There was an issue in the past where the sensor stack was preventing
+  device to suspend, but the proper fix has been implemented in cros_ec
+  code (6ad16b78a039b "platform/chrome: don't report EC_MKBP_EVENT_SENSOR_FIFO as wakeup")
+- Reduce mutex scope by checking return code outside of it.
+Changes in v2:
+- Do not register a .remove routinge in plaform_driver. A
+  devm_action_add is added later patch IIO driver register their
+callback.
+- Remove double lines, add lines before return calls.
+- Handle FLUSH flag from EC.
 
- drivers/iio/accel/cros_ec_accel_legacy.c      |  8 +-
- .../cros_ec_sensors/cros_ec_lid_angle.c       |  2 +-
- .../common/cros_ec_sensors/cros_ec_sensors.c  |  9 +--
- .../cros_ec_sensors/cros_ec_sensors_core.c    | 81 ++++++++++++++++++-
- drivers/iio/light/cros_ec_light_prox.c        |  9 +--
- drivers/iio/pressure/cros_ec_baro.c           |  9 +--
- .../linux/iio/common/cros_ec_sensors_core.h   | 10 ++-
- 7 files changed, 101 insertions(+), 27 deletions(-)
+- Use ktime_t for most timestamp measurements.
+- Add doxygen comments
+- Cleanup timestamp collection when processing FIFO.
+- Rename fifo_toggle to fifo_enable
 
-diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
-index 65f85faf6f31..b9f651e4ce99 100644
---- a/drivers/iio/accel/cros_ec_accel_legacy.c
-+++ b/drivers/iio/accel/cros_ec_accel_legacy.c
-@@ -171,7 +171,8 @@ static int cros_ec_accel_legacy_probe(struct platform_device *pdev)
- 	if (!indio_dev)
- 		return -ENOMEM;
+ drivers/platform/chrome/Makefile              |   3 +-
+ drivers/platform/chrome/cros_ec_sensorhub.c   | 108 +++--
+ .../platform/chrome/cros_ec_sensorhub_ring.c  | 427 ++++++++++++++++++
+ .../linux/platform_data/cros_ec_sensorhub.h   |  91 ++++
+ 4 files changed, 600 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
+
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index a164c40dc099..cb709048c003 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -17,7 +17,8 @@ obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+ obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
+ obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
+ obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
+-obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
++cros_ec_sensorsupport-objs			:= cros_ec_sensorhub_ring.o cros_ec_sensorhub.o
++obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorsupport.o
+ obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
+ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+ obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
+diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
+index 85e3d3f25786..04fd60f747c0 100644
+--- a/drivers/platform/chrome/cros_ec_sensorhub.c
++++ b/drivers/platform/chrome/cros_ec_sensorhub.c
+@@ -51,10 +51,8 @@ static int cros_ec_sensorhub_register(struct device *dev,
+ 	int ret, i, id, sensor_num;
+ 	struct cros_ec_dev *ec = sensorhub->ec;
+ 	int sensor_type[MOTIONSENSE_TYPE_MAX] = { 0 };
+-	struct ec_params_motion_sense *params;
+-	struct ec_response_motion_sense *resp;
+-	struct cros_ec_command *msg;
+ 	char *name;
++	struct cros_ec_command *msg = sensorhub->msg;
  
--	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
-+	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
-+					cros_ec_sensors_capture, NULL);
- 	if (ret)
- 		return ret;
- 
-@@ -191,11 +192,6 @@ static int cros_ec_accel_legacy_probe(struct platform_device *pdev)
- 		state->sign[CROS_EC_SENSOR_Z] = -1;
+ 	sensor_num = cros_ec_get_sensor_count(ec);
+ 	if (sensor_num < 0) {
+@@ -69,30 +67,21 @@ static int cros_ec_sensorhub_register(struct device *dev,
+ 		return -EINVAL;
  	}
  
--	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
--			cros_ec_sensors_capture, NULL);
--	if (ret)
--		return ret;
+-	/* Prepare a message to send INFO command to each sensor. */
+-	msg = kzalloc(sizeof(*msg) + max(sizeof(*params), sizeof(*resp)),
+-		      GFP_KERNEL);
+-	if (!msg)
+-		return -ENOMEM;
 -
- 	return devm_iio_device_register(dev, indio_dev);
- }
+ 	msg->version = 1;
+-	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+-	msg->outsize = sizeof(*params);
+-	msg->insize = sizeof(*resp);
+-	params = (struct ec_params_motion_sense *)msg->data;
+-	resp = (struct ec_response_motion_sense *)msg->data;
++	msg->insize = sizeof(struct ec_response_motion_sense);
++	msg->outsize = sizeof(struct ec_params_motion_sense);
  
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-index 1dcc2a16ab2d..e30a59fcf0f9 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-@@ -97,7 +97,7 @@ static int cros_ec_lid_angle_probe(struct platform_device *pdev)
- 	if (!indio_dev)
- 		return -ENOMEM;
+ 	id = 0;
+ 	for (i = 0; i < sensor_num; i++) {
+-		params->cmd = MOTIONSENSE_CMD_INFO;
+-		params->info.sensor_num = i;
++		sensorhub->params->cmd = MOTIONSENSE_CMD_INFO;
++		sensorhub->params->info.sensor_num = i;
+ 		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+ 		if (ret < 0) {
+ 			dev_warn(dev, "no info for EC sensor %d : %d/%d\n",
+ 				 i, ret, msg->result);
+ 			continue;
+ 		}
+-		switch (resp->info.type) {
++		switch (sensorhub->resp->info.type) {
+ 		case MOTIONSENSE_TYPE_ACCEL:
+ 			name = "cros-ec-accel";
+ 			break;
+@@ -115,14 +104,15 @@ static int cros_ec_sensorhub_register(struct device *dev,
+ 			name = "cros-ec-activity";
+ 			break;
+ 		default:
+-			dev_warn(dev, "unknown type %d\n", resp->info.type);
++			dev_warn(dev, "unknown type %d\n",
++				 sensorhub->resp->info.type);
+ 			continue;
+ 		}
+ 		ret = cros_ec_sensorhub_allocate_single_sensor(dev, name, i);
+ 		if (ret)
+-			goto error;
++			return ret;
  
--	ret = cros_ec_sensors_core_init(pdev, indio_dev, false);
-+	ret = cros_ec_sensors_core_init(pdev, indio_dev, false, NULL, NULL);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-index 7dce04473467..62a0dd970988 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-@@ -231,7 +231,9 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
--	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
-+	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
-+					cros_ec_sensors_capture,
-+					cros_ec_sensors_push_data);
- 	if (ret)
- 		return ret;
- 
-@@ -293,11 +295,6 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
- 	else
- 		state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
- 
--	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
--			cros_ec_sensors_capture, NULL);
--	if (ret)
--		return ret;
--
- 	return devm_iio_device_register(dev, indio_dev);
- }
- 
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-index b47da497a3c3..cffc712c32a7 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-@@ -12,6 +12,7 @@
- #include <linux/iio/iio.h>
- #include <linux/iio/kfifo_buf.h>
- #include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
- #include <linux/kernel.h>
- #include <linux/mfd/cros_ec.h>
- #include <linux/module.h>
-@@ -83,17 +84,71 @@ static void get_default_min_max_freq(enum motionsensor_type type,
+-		sensor_type[resp->info.type]++;
++		sensor_type[sensorhub->resp->info.type]++;
  	}
+ 
+ 	if (sensor_type[MOTIONSENSE_TYPE_ACCEL] >= 2)
+@@ -133,14 +123,9 @@ static int cros_ec_sensorhub_register(struct device *dev,
+ 		ret = cros_ec_sensorhub_allocate_single_sensor(dev,
+ 							"cros-ec-lid-angle", 0);
+ 		if (ret)
+-			goto error;
++			return ret;
+ 	}
+-	kfree(msg);
+ 	return 0;
+-
+-error:
+-	kfree(msg);
+-	return ret;
  }
  
-+int cros_ec_sensors_push_data(struct iio_dev *indio_dev,
-+			      s16 *data,
-+			      s64 timestamp)
-+{
-+	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-+	s16 *out;
-+	s64 delta;
-+	unsigned int i;
+ static int cros_ec_sensorhub_probe(struct platform_device *sensorhub_pdev)
+@@ -148,13 +133,29 @@ static int cros_ec_sensorhub_probe(struct platform_device *sensorhub_pdev)
+ 	struct device *dev = &sensorhub_pdev->dev;
+ 	struct cros_ec_dev *ec = dev_get_drvdata(dev->parent);
+ 	int ret, i;
+-	struct cros_ec_sensorhub *data =
+-		devm_kzalloc(dev, sizeof(struct cros_ec_sensorhub), GFP_KERNEL);
++	struct cros_ec_sensorhub *data;
++	struct cros_ec_command *msg;
+ 
++	msg = devm_kzalloc(dev, sizeof(struct cros_ec_command) +
++			max((u16)sizeof(struct ec_params_motion_sense),
++			    ec->ec_dev->max_response), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
 +
++	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
++
++	data = devm_kzalloc(dev, sizeof(struct cros_ec_sensorhub), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
++	data->dev = dev;
+ 	data->ec = ec;
++
++	mutex_init(&data->cmd_lock);
++	data->msg = msg;
++	data->params = (struct ec_params_motion_sense *)msg->data;
++	data->resp = (struct ec_response_motion_sense *)msg->data;
++
+ 	dev_set_drvdata(dev, data);
+ 
+ 	/* Check whether this EC is a sensor hub. */
+@@ -179,12 +180,63 @@ static int cros_ec_sensorhub_probe(struct platform_device *sensorhub_pdev)
+ 		}
+ 	}
+ 
 +	/*
-+	 * Ignore samples if the buffer is not set: it is needed if the ODR is
-+	 * set but the buffer is not enabled yet.
++	 * If the EC does not have a FIFO, the sensors will query their data
++	 * themselves via sysfs or a software trigger.
 +	 */
-+	if (!iio_buffer_enabled(indio_dev))
-+		return 0;
-+
-+	out = (s16 *)st->samples;
-+	for_each_set_bit(i,
-+			 indio_dev->active_scan_mask,
-+			 indio_dev->masklength) {
-+		*out = data[i];
-+		out++;
++	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
++		ret = cros_ec_sensorhub_ring_add(data);
++		if (ret)
++			return ret;
++		/*
++		 * The msg and its data is not under the control of the ring
++		 * handler.
++		 */
++		return devm_add_action_or_reset(dev,
++						cros_ec_sensorhub_ring_remove,
++						data);
 +	}
-+
-+	if (iio_device_get_clock(indio_dev) != CLOCK_BOOTTIME)
-+		delta = iio_get_time_ns(indio_dev) - cros_ec_get_time_ns();
-+	else
-+		delta = 0;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, st->samples,
-+					   timestamp + delta);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(cros_ec_sensors_push_data);
 +
-+static void cros_ec_sensors_core_clean(void *arg)
++#if CONFIG_PM_SLEEP
++/*
++ * When the EC is suspending, we must stop sending interrupt,
++ * we may use the same interrupt line for waking up the device.
++ * Tell the EC to stop sending non-interrupt event on the iio ring.
++ */
++static int cros_ec_ring_suspend(struct device *dev)
 +{
-+	struct platform_device *pdev = (struct platform_device *)arg;
-+	struct cros_ec_sensorhub *sensor_hub =
-+		dev_get_drvdata(pdev->dev.parent);
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-+	u8 sensor_num = st->param.info.sensor_num;
++	struct platform_device *pdev = to_platform_device(dev);
++	struct cros_ec_sensorhub *sensorhub = platform_get_drvdata(pdev);
++	struct cros_ec_dev *ec = sensorhub->ec;
 +
-+	cros_ec_sensorhub_unregister_push_data(sensor_hub, sensor_num);
++	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO))
++		return cros_ec_sensorhub_ring_fifo_enable(sensorhub, false);
+ 	return 0;
+ }
+ 
++static int cros_ec_ring_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct cros_ec_sensorhub *sensorhub = platform_get_drvdata(pdev);
++	struct cros_ec_dev *ec = sensorhub->ec;
++
++	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO))
++		return cros_ec_sensorhub_ring_fifo_enable(sensorhub, true);
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(cros_ec_sensorhub_ring_pm_ops,
++		cros_ec_ring_suspend,
++		cros_ec_ring_resume);
++
+ static struct platform_driver cros_ec_sensorhub_driver = {
+ 	.driver = {
+ 		.name = DRV_NAME,
++		.pm = &cros_ec_sensorhub_ring_pm_ops,
+ 	},
+ 	.probe = cros_ec_sensorhub_probe,
+ };
+diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+new file mode 100644
+index 000000000000..32333f67e26a
+--- /dev/null
++++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+@@ -0,0 +1,427 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * cros_ec_sensorhub_ring - Driver for Chrome OS EC Sensor hub FIFO.
++ *
++ * Copyright 2019 Google LLC
++ */
++
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/iio/iio.h>
++#include <linux/kernel.h>
++#include <linux/mfd/cros_ec.h>
++#include <linux/module.h>
++#include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_data/cros_ec_sensorhub.h>
++#include <linux/platform_device.h>
++#include <linux/sort.h>
++#include <linux/slab.h>
++
++static inline int cros_sensorhub_send_sample(
++		struct cros_ec_sensorhub *sensorhub,
++		struct cros_ec_sensors_ring_sample *sample)
++{
++	int id = sample->sensor_id;
++	cros_ec_sensorhub_push_data_cb_t cb;
++	struct iio_dev *indio_dev;
++
++	if (id > CROS_EC_SENSOR_MAX)
++		return -EINVAL;
++
++	cb = sensorhub->push_data[id].push_data_cb;
++	if (!cb)
++		return 0;
++
++	indio_dev = sensorhub->push_data[id].indio_dev;
++
++	if (sample->flag & MOTIONSENSE_SENSOR_FLAG_FLUSH)
++		return 0;
++
++	return cb(indio_dev, sample->vector, sample->timestamp);
 +}
 +
- /**
-  * cros_ec_sensors_core_init() - basic initialization of the core structure
-  * @pdev:		platform device created for the sensors
-  * @indio_dev:		iio device structure of the device
-  * @physical_device:	true if the device refers to a physical device
-+ * @trigger_capture:    function pointer to call buffer is triggered,
-+ *    for backward compatibility.
-+ * @push_data:          function to call when cros_ec_sensorhub receives
-+ *    a sample for that sensor.
-  *
-  * Return: 0 on success, -errno on failure.
-  */
- int cros_ec_sensors_core_init(struct platform_device *pdev,
- 			      struct iio_dev *indio_dev,
--			      bool physical_device)
-+			      bool physical_device,
-+			      cros_ec_sensors_capture_t trigger_capture,
-+			      cros_ec_sensorhub_push_data_cb_t push_data)
- {
- 	struct device *dev = &pdev->dev;
- 	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
-@@ -162,6 +217,30 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
- 			state->frequencies[2] =
- 			    state->resp->info_3.max_frequency;
- 		}
++/**
++ * cros_ec_sensorhub_register_push_data() - register the callback to the hub.
++ *
++ * @sensorhub : Sensor Hub object
++ * @sensor_num : The sensor the caller is interested in.
++ * @indio_dev : The iio device to use when a sample arrives.
++ * @cb : The callback to call when a sample arrives.
++ *
++ * The callback cb will be used by cros_ec_sensorhub_ring to distribute events
++ * from the EC.
++ *
++ * Return: 0 when callback is registered.
++ */
++int cros_ec_sensorhub_register_push_data(struct cros_ec_sensorhub *sensorhub,
++					 u8 sensor_num,
++					 struct iio_dev *indio_dev,
++					 cros_ec_sensorhub_push_data_cb_t cb)
++{
++	if (sensor_num >= CROS_EC_SENSOR_PDEV_MAX)
++		return -EINVAL;
++	if (sensorhub->push_data[sensor_num].indio_dev)
++		return -EINVAL;
 +
-+		ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-+						      trigger_capture, NULL);
-+		if (ret)
-+			return ret;
++	sensorhub->push_data[sensor_num].indio_dev = indio_dev;
++	sensorhub->push_data[sensor_num].push_data_cb = cb;
 +
-+		if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
-+			ret = cros_ec_sensorhub_register_push_data(sensor_hub,
-+						sensor_platform->sensor_num,
-+						indio_dev, push_data);
-+			if (ret)
-+				return ret;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cros_ec_sensorhub_register_push_data);
 +
-+			ret = devm_add_action_or_reset(dev,
-+						cros_ec_sensors_core_clean,
-+						pdev);
-+			if (ret)
-+				return ret;
++void cros_ec_sensorhub_unregister_push_data(struct cros_ec_sensorhub *sensorhub,
++					    u8 sensor_num)
++{
++	sensorhub->push_data[sensor_num].indio_dev = NULL;
++	sensorhub->push_data[sensor_num].push_data_cb = NULL;
++}
++EXPORT_SYMBOL_GPL(cros_ec_sensorhub_unregister_push_data);
 +
-+			/* Timestamp coming from FIFO are in ns since boot. */
-+			ret = iio_device_set_clock(indio_dev, CLOCK_BOOTTIME);
-+			if (ret)
-+				return ret;
++/**
++ * cros_ec_sensorhub_ring_fifo_enable() - Enable or disable interrupt generation
++ *  for FIFO events.
++ * @sensorhub : Sensor Hub object
++ * @on : true when events are requested.
++ *
++ * To be called before sleeping or when noone is listening.
++ * Return: 0 on success.
++ */
++int cros_ec_sensorhub_ring_fifo_enable(struct cros_ec_sensorhub *sensorhub,
++				       bool on)
++{
++	int ret;
++
++	mutex_lock(&sensorhub->cmd_lock);
++	sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INT_ENABLE;
++	sensorhub->params->fifo_int_enable.enable = on;
++
++	sensorhub->msg->outsize = sizeof(struct ec_params_motion_sense);
++	sensorhub->msg->insize = sizeof(struct ec_response_motion_sense);
++
++	ret = cros_ec_cmd_xfer_status(sensorhub->ec->ec_dev, sensorhub->msg);
++	mutex_unlock(&sensorhub->cmd_lock);
++
++	/* We expect to receive a payload of 4 bytes, ignore. */
++	if (ret > 0)
++		ret = 0;
++
++	return ret;
++}
++
++/**
++ * cros_ec_ring_process_event() - process one EC FIFO event
++ *
++ * @sensorhub: Sensorhub object.
++ * @fifo_info: fifo information from the EC (includes b point, EC timebase).
++ * @fifo_timestamp: EC IRQ, kernel timebase (aka c)
++ * @current_timestamp: calculated event timestamp, kernel timebase (aka a')
++ * @in: incoming FIFO event from EC (includes a point, EC timebase)
++ * @out: outgoing event to user space (includes a')
++ *
++ * Process one EC event, add it in the ring if necessary.
++ *
++ * Return: true if out event has been populated.
++ */
++static bool cros_ec_ring_process_event(struct cros_ec_sensorhub *sensorhub,
++				const struct cros_ec_fifo_info *fifo_info,
++				const ktime_t fifo_timestamp,
++				ktime_t *current_timestamp,
++				struct ec_response_motion_sensor_data *in,
++				struct cros_ec_sensors_ring_sample *out)
++{
++	int axis, async_flags;
++	const s64 now = cros_ec_get_time_ns();
++
++	/* Do not populate the filter based on asynchronous events. */
++	async_flags = in->flags &
++		(MOTIONSENSE_SENSOR_FLAG_ODR | MOTIONSENSE_SENSOR_FLAG_FLUSH);
++
++	if (in->flags & MOTIONSENSE_SENSOR_FLAG_TIMESTAMP && !async_flags) {
++		s64 a = in->timestamp;
++		s64 b = fifo_info->info.timestamp;
++		s64 c = fifo_timestamp;
++		s64 new_timestamp;
++
++		/*
++		 * disable filtering since we might add more jitter
++		 * if b is in a random point in time
++		 */
++		new_timestamp = c - b * 1000 + a * 1000;
++
++		/*
++		 * The timestamp can be stale if we had to use the fifo
++		 * info timestamp.
++		 */
++		if (new_timestamp - *current_timestamp > 0)
++			*current_timestamp = new_timestamp;
++	}
++
++	if (in->flags & MOTIONSENSE_SENSOR_FLAG_FLUSH) {
++		out->sensor_id = in->sensor_num;
++		out->timestamp = *current_timestamp;
++		out->flag = in->flags;
++		/*
++		 * No other payload information provided with
++		 * flush ack.
++		 */
++		return true;
++	}
++
++	if (in->flags & MOTIONSENSE_SENSOR_FLAG_TIMESTAMP)
++		/* If we just have a timestamp, skip this entry. */
++		return false;
++
++	/* Regular sample */
++	out->sensor_id = in->sensor_num;
++	if (*current_timestamp - now > 0) {
++		/* If the timestamp is in the future. */
++		out->timestamp = now;
++	} else {
++		out->timestamp = *current_timestamp;
++	}
++
++	out->flag = in->flags;
++	for (axis = 0; axis < 3; axis++)
++		out->vector[axis] = in->data[axis];
++
++	return true;
++}
++
++/**
++ * cros_ec_sensorhub_ring_handler() - the trigger handler function
++ *
++ * @sensorhub: device information.
++ *
++ * Called by the notifier, process the EC sensor FIFO queue.
++ */
++static void cros_ec_sensorhub_ring_handler(struct cros_ec_sensorhub *sensorhub)
++{
++	struct cros_ec_fifo_info *fifo_info = &sensorhub->fifo_info;
++	struct cros_ec_dev *ec = sensorhub->ec;
++	ktime_t fifo_timestamp, current_timestamp;
++	int i, j, number_data, ret;
++	unsigned long sensor_mask = 0;
++	struct ec_response_motion_sensor_data *in;
++	struct cros_ec_sensors_ring_sample *out, *last_out;
++
++	mutex_lock(&sensorhub->cmd_lock);
++
++	/* Get FIFO information if there are lost vectors. */
++	if (fifo_info->info.total_lost) {
++		/* Need to retrieve the number of lost vectors per sensor */
++		sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INFO;
++		sensorhub->msg->outsize = 1;
++		sensorhub->msg->insize =
++			sizeof(struct ec_response_motion_sense_fifo_info) +
++			sizeof(u16) * CROS_EC_SENSOR_MAX;
++
++		if (cros_ec_cmd_xfer_status(ec->ec_dev, sensorhub->msg) < 0)
++			goto error;
++
++		memcpy(fifo_info, &sensorhub->resp->fifo_info,
++		       sizeof(*fifo_info));
++
++		/*
++		 * Update collection time, will not be as precise as the
++		 * non-error case.
++		 */
++		fifo_timestamp = cros_ec_get_time_ns();
++	} else {
++		fifo_timestamp = sensorhub->fifo_timestamp[
++			CROS_EC_SENSOR_NEW_TS];
++	}
++
++	if (fifo_info->info.count > sensorhub->fifo_size ||
++	    fifo_info->info.size != sensorhub->fifo_size) {
++		dev_warn(sensorhub->dev,
++			 "Mismatch EC data: count %d, size %d - expected %d",
++			 fifo_info->info.count, fifo_info->info.size,
++			 sensorhub->fifo_size);
++		goto error;
++	}
++
++	/* Copy elements in the main fifo */
++	current_timestamp = sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS];
++	out = sensorhub->ring;
++	for (i = 0; i < fifo_info->info.count; i += number_data) {
++		sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_READ;
++		sensorhub->params->fifo_read.max_data_vector =
++			fifo_info->info.count - i;
++		sensorhub->msg->outsize =
++			sizeof(struct ec_params_motion_sense);
++		sensorhub->msg->insize =
++			sizeof(sensorhub->resp->fifo_read) +
++			sensorhub->params->fifo_read.max_data_vector *
++			  sizeof(struct ec_response_motion_sensor_data);
++		ret = cros_ec_cmd_xfer_status(ec->ec_dev, sensorhub->msg);
++		if (ret < 0) {
++			dev_warn(sensorhub->dev, "Fifo error: %d\n", ret);
++			break;
 +		}
- 	}
++		number_data = sensorhub->resp->fifo_read.number_data;
++		if (number_data == 0) {
++			dev_dbg(sensorhub->dev, "Unexpected empty FIFO\n");
++			break;
++		}
++		if (number_data > fifo_info->info.count - i) {
++			dev_warn(sensorhub->dev,
++				 "Invalid EC data: too many entry received: %d, expected %d",
++				 number_data, fifo_info->info.count - i);
++			break;
++		}
++		if (out + number_data >
++		    sensorhub->ring + fifo_info->info.count) {
++			dev_warn(sensorhub->dev,
++				 "Too many samples: %d (%zd data) to %d entries for expected %d entries",
++				 i, out - sensorhub->ring, i + number_data,
++				 fifo_info->info.count);
++			break;
++		}
++
++		for (in = sensorhub->resp->fifo_read.data, j = 0;
++		     j < number_data; j++, in++) {
++			if (cros_ec_ring_process_event(sensorhub, fifo_info,
++						       fifo_timestamp,
++						       &current_timestamp,
++						       in, out)) {
++				sensor_mask |= (1 << in->sensor_num);
++				out++;
++			}
++		}
++	}
++	mutex_unlock(&sensorhub->cmd_lock);
++	last_out = out;
++
++	if (out == sensorhub->ring)
++		/* Unexpected empty FIFO. */
++		goto ring_handler_end;
++
++	/*
++	 * Check if current_timestamp is ahead of the last sample.
++	 * Normally, the EC appends a timestamp after the last sample, but if
++	 * the AP is slow to respond to the IRQ, the EC may have added new
++	 * samples. Use the FIFO info timestamp as last timestamp then.
++	 */
++	if ((last_out - 1)->timestamp == current_timestamp)
++		current_timestamp = fifo_timestamp;
++
++	/* Warn on lost samples. */
++	for_each_set_bit(i, &sensor_mask, BITS_PER_LONG) {
++		int total_lost = fifo_info->info.total_lost;
++
++		if (total_lost) {
++			int lost = fifo_info->lost[i];
++
++			if (lost) {
++				dev_warn_ratelimited(sensorhub->dev,
++						     "Sensor %d: lost: %d out of %d\n",
++						     i, lost, total_lost);
++			}
++		}
++	}
++
++	/* push the event into the kfifo */
++	for (out = sensorhub->ring; out < last_out; out++)
++		cros_sensorhub_send_sample(sensorhub, out);
++
++ring_handler_end:
++	sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS] = current_timestamp;
++	return;
++
++error:
++	mutex_unlock(&sensorhub->cmd_lock);
++	return;
++}
++
++static int cros_ec_sensorhub_event(struct notifier_block *nb,
++				   unsigned long queued_during_suspend,
++				   void *_notify)
++{
++	struct cros_ec_sensorhub *sensorhub;
++	struct cros_ec_device *ec_dev;
++
++	sensorhub = container_of(nb, struct cros_ec_sensorhub, notifier);
++	ec_dev = sensorhub->ec->ec_dev;
++
++	if (ec_dev->event_data.event_type != EC_MKBP_EVENT_SENSOR_FIFO)
++		return NOTIFY_DONE;
++
++	if (ec_dev->event_size != sizeof(ec_dev->event_data.data.sensor_fifo)) {
++		dev_warn(ec_dev->dev, "Invalid fifo info size\n");
++		return NOTIFY_DONE;
++	}
++
++	if (queued_during_suspend)
++		return NOTIFY_OK;
++
++	sensorhub->fifo_info.info = ec_dev->event_data.data.sensor_fifo.info;
++	sensorhub->fifo_timestamp[CROS_EC_SENSOR_NEW_TS] =
++		ec_dev->last_event_time;
++	cros_ec_sensorhub_ring_handler(sensorhub);
++
++	return NOTIFY_OK;
++}
++
++/**
++ * cros_ec_sensorhub_ring_add() - Add/Remove the fifo functionality if the EC
++ *  supports it.
++ *
++ * @sensorhub : Sensor Hub object
++ *
++ * Return: 0 on success.
++ */
++int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub)
++{
++	struct cros_ec_dev *ec = sensorhub->ec;
++	int ret;
++
++	/* Retrieve FIFO information */
++	sensorhub->msg->version = 2;
++	sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INFO;
++	sensorhub->msg->outsize = 1;
++	sensorhub->msg->insize =
++		sizeof(struct ec_response_motion_sense_fifo_info) +
++		sizeof(u16) * CROS_EC_SENSOR_MAX;
++
++	ret = cros_ec_cmd_xfer_status(ec->ec_dev, sensorhub->msg);
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * Allocate the full fifo.
++	 * We need to copy the whole FIFO to set timestamps properly *
++	 */
++	sensorhub->fifo_size = sensorhub->resp->fifo_info.size;
++	sensorhub->ring = devm_kcalloc(sensorhub->dev, sensorhub->fifo_size,
++				       sizeof(*sensorhub->ring), GFP_KERNEL);
++	if (!sensorhub->ring)
++		return -ENOMEM;
++
++	sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS] =
++		cros_ec_get_time_ns();
++
++	/* register the notifier that will act as a top half interrupt. */
++	sensorhub->notifier.notifier_call = cros_ec_sensorhub_event;
++	ret = blocking_notifier_chain_register(&ec->ec_dev->event_notifier,
++					       &sensorhub->notifier);
++	if (ret < 0) {
++		dev_warn(sensorhub->dev, "failed to register notifier\n");
++		return ret;
++	}
++
++	/* Start collection samples. */
++	return cros_ec_sensorhub_ring_fifo_enable(sensorhub, true);
++}
++
++void cros_ec_sensorhub_ring_remove(void *arg)
++{
++	struct cros_ec_sensorhub *sensorhub = arg;
++	struct cros_ec_device *ec_dev = sensorhub->ec->ec_dev;
++
++	/* Disable the ring, prevent EC interrupt to the AP for nothing. */
++	cros_ec_sensorhub_ring_fifo_enable(sensorhub, false);
++	blocking_notifier_chain_unregister(&ec_dev->event_notifier,
++					   &sensorhub->notifier);
++}
+diff --git a/include/linux/platform_data/cros_ec_sensorhub.h b/include/linux/platform_data/cros_ec_sensorhub.h
+index 7421c956246f..5aaaa6cb012a 100644
+--- a/include/linux/platform_data/cros_ec_sensorhub.h
++++ b/include/linux/platform_data/cros_ec_sensorhub.h
+@@ -8,8 +8,20 @@
+ #ifndef __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
+ #define __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
  
- 	return 0;
-diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
-index d85a391e50c5..698b2ee81ebf 100644
---- a/drivers/iio/light/cros_ec_light_prox.c
-+++ b/drivers/iio/light/cros_ec_light_prox.c
-@@ -178,7 +178,9 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
--	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
-+	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
-+					cros_ec_sensors_capture,
-+					cros_ec_sensors_push_data);
- 	if (ret)
- 		return ret;
- 
-@@ -237,11 +239,6 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
- 
- 	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
- 
--	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
--					      cros_ec_sensors_capture, NULL);
--	if (ret)
--		return ret;
--
- 	return devm_iio_device_register(dev, indio_dev);
- }
- 
-diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
-index 2354302375de..e1c86b22676c 100644
---- a/drivers/iio/pressure/cros_ec_baro.c
-+++ b/drivers/iio/pressure/cros_ec_baro.c
-@@ -134,7 +134,9 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
--	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
-+	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
-+					cros_ec_sensors_capture,
-+					cros_ec_sensors_push_data);
- 	if (ret)
- 		return ret;
- 
-@@ -180,11 +182,6 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
- 
- 	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
- 
--	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
--					      cros_ec_sensors_capture, NULL);
--	if (ret)
--		return ret;
--
- 	return devm_iio_device_register(dev, indio_dev);
- }
- 
-diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-index 0af918978f97..b8f573ca9dcc 100644
---- a/include/linux/iio/common/cros_ec_sensors_core.h
-+++ b/include/linux/iio/common/cros_ec_sensors_core.h
-@@ -12,6 +12,7 @@
- #include <linux/irqreturn.h>
++#include <linux/ktime.h>
++#include <linux/mutex.h>
++#include <linux/notifier.h>
  #include <linux/platform_data/cros_ec_commands.h>
- #include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_data/cros_ec_sensorhub.h>
  
- enum {
- 	CROS_EC_SENSOR_X,
-@@ -32,6 +33,8 @@ enum {
- /* Minimum sampling period to use when device is suspending */
- #define CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY 1000  /* 1 second */
- 
-+typedef irqreturn_t (*cros_ec_sensors_capture_t)(int irq, void *p);
++/* Maximal number of sensors supported by the EC. */
++#define CROS_EC_SENSOR_MAX 16
++
++/*
++ * Maximal number of sensors supported by the hub:
++ * We add one for the lid angle inclinometer sensor.
++ */
++#define CROS_EC_SENSOR_PDEV_MAX (CROS_EC_SENSOR_MAX + 1)
 +
  /**
-  * struct cros_ec_sensors_core_state - state data for EC sensors IIO driver
-  * @ec:				cros EC device structure
-@@ -87,9 +90,14 @@ int cros_ec_sensors_read_cmd(struct iio_dev *indio_dev, unsigned long scan_mask,
+  * struct cros_ec_sensor_platform - ChromeOS EC sensor platform information.
+  * @sensor_num: Id of the sensor, as reported by the EC.
+@@ -18,13 +30,92 @@ struct cros_ec_sensor_platform {
+ 	u8 sensor_num;
+ };
  
- struct platform_device;
- int cros_ec_sensors_core_init(struct platform_device *pdev,
--			      struct iio_dev *indio_dev, bool physical_device);
-+			      struct iio_dev *indio_dev, bool physical_device,
-+			      cros_ec_sensors_capture_t trigger_capture,
-+			      cros_ec_sensorhub_push_data_cb_t push_data);
++struct iio_dev;
++
++/**
++ * typedef cros_ec_sensorhub_push_data_cb_t - Callback function to send datum
++ *     to specific sensors
++ *
++ * @indio_dev: The IIO device that will process the sample.
++ * @data: vector array of the ring sample.
++ * @timestamp: Timestamp in host timespace when the sample was acquired by
++ *             the EC.
++ */
++typedef int (*cros_ec_sensorhub_push_data_cb_t)(struct iio_dev *indio_dev,
++						s16 *data,
++						s64 timestamp);
++
++struct cros_ec_sensorhub_sensor_push_data {
++	struct iio_dev *indio_dev;
++	cros_ec_sensorhub_push_data_cb_t push_data_cb;
++};
++
++enum {
++	CROS_EC_SENSOR_LAST_TS,
++	CROS_EC_SENSOR_NEW_TS,
++	CROS_EC_SENSOR_ALL_TS
++};
++
++struct __ec_todo_packed cros_ec_fifo_info {
++	struct ec_response_motion_sense_fifo_info info;
++	u16    lost[CROS_EC_SENSOR_MAX];
++};
++
++struct cros_ec_sensors_ring_sample {
++	u8  sensor_id;
++	u8  flag;
++	s16 vector[3];
++	s64 timestamp;
++} __packed;
++
+ /**
+  * struct cros_ec_sensorhub - Sensor Hub device data.
+  *
++ * @dev:          Device object, mostly used for logging.
+  * @ec:           Embedded Controller where the hub is located.
++ * @msg: Structure to send FIFO requests.
++ * @params: pointer to parameters in msg.
++ * @resp: pointer to responses in msg.
++ * @cmd_lock : lock for sending msg.
++ * @notifier: Notifier to kick the FIFO interrupt.
++ * @ring: Preprocessed ring to store events.
++ * @fifo_timestamp: array for event timestamp and spreading.
++ * @fifo_info: copy of FIFO information coming from the EC.
++ * @fifo_size: size of the ring.
++ * @push_data: array of callback to send datums to iio sensor object.
+  */
+ struct cros_ec_sensorhub {
++	struct device *dev;
+ 	struct cros_ec_dev *ec;
++
++	struct cros_ec_command *msg;
++	struct ec_params_motion_sense *params;
++	struct ec_response_motion_sense *resp;
++	struct mutex cmd_lock;
++
++	struct notifier_block notifier;
++
++	struct cros_ec_sensors_ring_sample *ring;
++
++	ktime_t fifo_timestamp[CROS_EC_SENSOR_ALL_TS];
++	struct cros_ec_fifo_info fifo_info;
++	int    fifo_size;
++
++	struct cros_ec_sensorhub_sensor_push_data push_data[
++		CROS_EC_SENSOR_PDEV_MAX];
+ };
  
- irqreturn_t cros_ec_sensors_capture(int irq, void *p);
-+int cros_ec_sensors_push_data(struct iio_dev *indio_dev,
-+			      s16 *data,
-+			      s64 timestamp);
- 
- int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *st,
- 				 u16 opt_length);
++int cros_ec_sensorhub_register_push_data(struct cros_ec_sensorhub *sensorhub,
++					 u8 sensor_num,
++					 struct iio_dev *indio_dev,
++					 cros_ec_sensorhub_push_data_cb_t cb);
++
++void cros_ec_sensorhub_unregister_push_data(struct cros_ec_sensorhub *sensorhub,
++					    u8 sensor_num);
++
++int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub);
++void cros_ec_sensorhub_ring_remove(void *arg);
++int cros_ec_sensorhub_ring_fifo_enable(struct cros_ec_sensorhub *sensorhub,
++				       bool on);
++
+ #endif   /* __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H */
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
