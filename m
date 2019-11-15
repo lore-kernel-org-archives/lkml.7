@@ -2,77 +2,93 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC05C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A0FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2393C20731
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573792584;
-	bh=MPH8c5t2q8tDKDcSoX1E0hyx3wDVfXgAkaiLLTOUl9c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xb3HViVEj02e14X26zVT4ZSDCjse6c3t0azlhq7rPTENTOkjX2SAz4Rj69Chzd9sC
-	 UMcljMjUkPmqAa2K2RgBn6iBMbl13XTGdY56PGSTZ7OCg5r2j/ypH6puQdqdaASNCK
-	 xiu7zh+JV+pi0TzvHRizIMiP7OVNck2Ve15FTNZ0=
+	by mail.kernel.org (Postfix) with ESMTP id 3F057206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:36:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p6D2DUoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfKOEgX (ORCPT
+        id S1727170AbfKOEgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 23:36:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51506 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 23:36:32 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57499 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfKOEgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 23:36:22 -0500
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726549AbfKOEga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 23:36:30 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB0B20728;
-        Fri, 15 Nov 2019 04:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573792582;
-        bh=MPH8c5t2q8tDKDcSoX1E0hyx3wDVfXgAkaiLLTOUl9c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZjZudCcCLdf/g3NWLZHBvRh82XdZnMk7eJ22sQiOlw7tmajsXZKqdyDAe98emgwvY
-         6nwvYvjTKteew+ll87yWHPn1c4j5ZnjfE9a9TggXJ8gjIhD6YjphSF3VjD6dWrKRdo
-         PqU3R7d1u6K3zfYsHYrO7wKOKe9dIj3mDw5EZhWs=
-Received: by mail-qt1-f176.google.com with SMTP id o11so9461494qtr.11;
-        Thu, 14 Nov 2019 20:36:22 -0800 (PST)
-X-Gm-Message-State: APjAAAWHacYoBURMDpgT1Ex/WdHh0MfqsyI5QQZ3tevfOt11LsE586t1
-        AR53wt8OMxh6k+LvdtD5RCORZE4d9bZTW1kCv7I=
-X-Google-Smtp-Source: APXvYqyEVfUJcKNuJBdUvGkZuJhPdcKZNhu5NkZlypIG9JAM/A9WKKwqK8Q92zF/Y3Kh5IOc/QoPwWQgkR3S7XljIAA=
-X-Received: by 2002:ac8:1858:: with SMTP id n24mr11375005qtk.334.1573792581301;
- Thu, 14 Nov 2019 20:36:21 -0800 (PST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Dlt46Xdsz9sPK;
+        Fri, 15 Nov 2019 15:36:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573792589;
+        bh=oGJG6CibNn1LIfFqvAz8jRajFEACP07geZMp2/GkYqs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=p6D2DUojurHcCjaCI+NAN1rb3KTod1JkNMfDwEezxlfAycM/Cz1Li6/ZaMuq5LTYO
+         R63uVh2MTznv0CLrNNDRwEU0UgccPeBesehevzcfOrw9ABfEjx0ZCaTh60yuDgqUoM
+         ZVjOdoeeF7PQQsUvzbxfcsXee1dD5Idy7+CCGW+85ZCqI0KQ9qpsYxjFOChI+z+2OZ
+         gNuql/GdINJJG/98yz+pucFOhFX4VKqjdji+sMNv/eybzwnhjXd9oHh0FkgjdXQA+m
+         ZafnBU1j/8bNYX7+0iCyna/TBm+OHmfIOywe0NsnoX4ObSSuKXmJs8HSdXJQo4rHjE
+         /2eai5pwQCrag==
+Date:   Fri, 15 Nov 2019 15:36:28 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the vhost tree
+Message-ID: <20191115153628.62214e42@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk> <20191108130123.6839-47-linux@rasmusvillemoes.dk>
-In-Reply-To: <20191108130123.6839-47-linux@rasmusvillemoes.dk>
-From:   Timur Tabi <timur@kernel.org>
-Date:   Thu, 14 Nov 2019 22:35:43 -0600
-X-Gmail-Original-Message-ID: <CAOZdJXUX2cZfaQTkBdNrwD=jT2399rZzRFtDj6vNa==9Bmkh5A@mail.gmail.com>
-Message-ID: <CAOZdJXUX2cZfaQTkBdNrwD=jT2399rZzRFtDj6vNa==9Bmkh5A@mail.gmail.com>
-Subject: Re: [PATCH v4 46/47] net: ethernet: freescale: make UCC_GETH
- explicitly depend on PPC32
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>, netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/GTepAnVWKI5MsEM2dZKk+uo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 7:04 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> Currently, QUICC_ENGINE depends on PPC32, so this in itself does not
-> change anything. In order to allow removing the PPC32 dependency from
-> QUICC_ENGINE and avoid allmodconfig build failures, add this explicit
-> dependency.
+--Sig_/GTepAnVWKI5MsEM2dZKk+uo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Can you add an explanation why we don't want ucc_geth on non-PowerPC platforms?
+Hi all,
+
+After merging the vhost tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
+
+drivers/vhost/vhost.c: In function 'fetch_buf_packed':
+drivers/vhost/vhost.c:2568:1: warning: no return statement in function retu=
+rning non-void [-Wreturn-type]
+ 2568 | }
+      | ^
+
+Introduced by commit
+
+  b65f969494e9 ("vhost: partial infrastructure for vhost")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/GTepAnVWKI5MsEM2dZKk+uo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3OK0wACgkQAVBC80lX
+0Gy5uwf+IDnPpdhyUifv74A6j76Kmvya00rB4AjeIanhmSDNpev++UgK8R822VO2
+FNuYebln74PgZ1Wi3fjN6IP1ngS/SsL/rcwE+aUUUGYvJ3PY5ED/U9Ll4HaTALbO
+mJOhPp22bt6F05ak7GbDnXSYvUq/0dLHNOOGirZWlhI2xizRM53esdKV5NkVar6p
+3fMkV6skzPQM+lKWx1Z/j7yhabVOQP9IslgfeXqzozD7QnAv74aEY9dEG1973Et5
++wjrvF6KZOQsIoCV7ZiNTCtWPhtrE6U41zjzMwySe01iV11CAWdgal13f85Oa1GA
+cSbA6y31qmPY92/eScy3sscUy/wc6w==
+=5ZGK
+-----END PGP SIGNATURE-----
+
+--Sig_/GTepAnVWKI5MsEM2dZKk+uo--
