@@ -2,86 +2,135 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1441AC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63C7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD6F206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8F420709
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573788118;
+	bh=8/cY/P7mOC5ZWRzkTqP24RnTXXHa15NbkFVIzTSK364=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=vmy2y9Ql9JgsdGb3Pqvr8CWv8RkymdyD+GbKMkENf3lE4C9W3JdxaBKVgkjGX+aXc
+	 ajI2xZq3S9DKgAXpayGryVU6xTC2p5Ek/PVqkNH2FoKmtRkNEUytaxMsnRH4EbH6yK
+	 Bm8U//z3ezAHbksg5wEAspYC4XX578tmIMw4Wxlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfKODVx (ORCPT
+        id S1727180AbfKODV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 22:21:53 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2086 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726533AbfKODVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 22:21:52 -0500
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 0364F1DEFC3323A7AAC6;
-        Fri, 15 Nov 2019 11:21:48 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 15 Nov 2019 11:21:47 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 15 Nov 2019 11:21:47 +0800
-Date:   Fri, 15 Nov 2019 11:24:16 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-CC:     Chao Yu <yuchao0@huawei.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ritesh Harjani <riteshh@linux.ibm.com>
-Subject: Re: [PATCH v2] ext4: bio_alloc with __GFP_DIRECT_RECLAIM never fails
-Message-ID: <20191115032416.GA156858@architecture4>
-References: <20191030161244.GB3953@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20191031092315.139267-1-gaoxiang25@huawei.com>
- <5f46684a-a435-1e15-0054-b708edfce487@huawei.com>
- <20191115031953.GA30252@mit.edu>
+        Thu, 14 Nov 2019 22:21:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726533AbfKODV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 22:21:57 -0500
+Received: from localhost (unknown [104.132.150.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D03720706;
+        Fri, 15 Nov 2019 03:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573788116;
+        bh=8/cY/P7mOC5ZWRzkTqP24RnTXXHa15NbkFVIzTSK364=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=JR2qBG/tbs+2u/BVDVXsZprjTey36G9Dh+snSLlcAX1kxtk0l/rMWe3cwt4MlhdCq
+         5+ZfbOGgxzp29+cn8YPcISIO/YK4QCO4q0+1cz43bS73NJanBJf/fA8r/Yp3jRS/Yf
+         1RbyPZ7FUwo1BaJ36gTF8p0Kq3zbdl2nqTCaTAw0=
+Date:   Fri, 15 Nov 2019 11:21:53 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bin Liu <b-liu@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 05/13] usb: musb: create debugfs directory under usb
+ root
+Message-ID: <20191115032153.GC793701@kroah.com>
+References: <1573541519-28488-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1573541519-28488-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20191112152857.GA5853@uda0271908>
+ <20191114032018.GA122287@kroah.com>
+ <20191114140234.GB5853@uda0271908>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191115031953.GA30252@mit.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191114140234.GB5853@uda0271908>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
-
-On Thu, Nov 14, 2019 at 10:19:53PM -0500, Theodore Y. Ts'o wrote:
-> On Thu, Oct 31, 2019 at 05:29:58PM +0800, Chao Yu wrote:
-> > On 2019/10/31 17:23, Gao Xiang wrote:
-> > > Similar to [1] [2], bio_alloc with __GFP_DIRECT_RECLAIM flags
-> > > guarantees bio allocation under some given restrictions, as
-> > > stated in block/bio.c and fs/direct-io.c So here it's ok to
-> > > not check for NULL value from bio_alloc().
+On Thu, Nov 14, 2019 at 08:02:34AM -0600, Bin Liu wrote:
+> On Thu, Nov 14, 2019 at 11:20:18AM +0800, Greg Kroah-Hartman wrote:
+> > On Tue, Nov 12, 2019 at 09:28:57AM -0600, Bin Liu wrote:
+> > > Hi,
 > > > 
-> > > [1] https://lore.kernel.org/r/20191030035518.65477-1-gaoxiang25@huawei.com
-> > > [2] https://lore.kernel.org/r/20190830162812.GA10694@infradead.org
-> > > Cc: Theodore Ts'o <tytso@mit.edu>
-> > > Cc: Andreas Dilger <adilger.kernel@dilger.ca>
-> > > Cc: Ritesh Harjani <riteshh@linux.ibm.com>
-> > > Cc: Chao Yu <yuchao0@huawei.com>
-> > > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> > > On Tue, Nov 12, 2019 at 02:51:51PM +0800, Chunfeng Yun wrote:
+> > > > Now the USB gadget subsystem can use the USB debugfs root directory,
+> > > > so move musb's directory from the root of the debugfs filesystem into
+> > > > the root of usb
+> > > 
+> > > My opinion is this move is unnecessary. I breaks existing debug tools or
+> > > documentation which is already published on Internet. 
 > > 
-> > Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> > Having a "root" directory for a single random driver seems like you are
+> > making your driver a "very important" thing in the overall scheme of the
+> > kernel, right?  What's wrong with using the usb subdirectory like all
 > 
-> Thanks, applied.
+> Agree, it wasn't the right thing to do at the first place. But now
+> changing it adds support burden, because people very often refer to the
+> old information on the internet which no longer matches to the new
+> location. Basically, it is a cost of ABI change.
+
+What information says that /sys/kernel/debug/mdev/ is the location for
+this?  Is it in-kernel?
+
+> > other USB drivers use (after this patch series is merged)?  That feels
+> > like a much more "sane" way to handle the wide-open debugfs namespace.
 > 
-> 					- Ted
+> Though I commented on this musb patch, my opinion is for this whole
+> series, either drop the whole series or apply the whole series.
 
-Thanks for considering this. Have a nice day.
+I've applied all but this one and 2 others that did not build properly.
 
-Thanks,
-Gao Xiang
+> > Yes, there are no rules when it comes to debugfs file names and
+> > locations, but let's try to be sane please.
+> 
+> Fine with me. I can still support questions such as "can't open
+> /sys/kernel/debug/musb-hdrc.0/testmode: No such file or directory".
 
+What tool looks for that?
+
+thanks,
+
+greg k-h
