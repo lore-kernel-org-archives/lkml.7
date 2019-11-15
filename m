@@ -2,284 +2,1238 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22AEC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67484C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890B22073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:21:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nzgjakBF"
+	by mail.kernel.org (Postfix) with ESMTP id 0B2A92073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfKOKVb (ORCPT
+        id S1727434AbfKOKWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:21:31 -0500
-Received: from mail-eopbgr30073.outbound.protection.outlook.com ([40.107.3.73]:60006
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727135AbfKOKVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:21:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZDh7uAwRku4syBmcUrWDViOo868ow6tt1zvmrm3bXIAdQm318X0T9VtKSzH6ne4Eoo4vxEZu54yEivV/p3cb0YVivax4sSIBIwDR80dxna+A1ArdHUGYdBNz2tESbfen0FtZCHbdpLY2TL+J/LY8XGJj0fJMqSIg6EGLddKKamIfHXLATRnAQPKmsh53cSokTlGsELO/BmRf1YKESOqaOzGc5WR580+GhPPzlX/ErWClJFeBwu0CopIjjpPFvwwxIqMPRWvmLQTZdS+1PqcC/Hy2eRdZ03x0pw4q2xPTpO236XXuh0pLO/03baVfT4gZ2ADLWpHqjah9M1colybGSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/olkdiVOSfGvZitNrq6UgnMzUimg9aJkhWveDoD8GWU=;
- b=Haj5hRY5JPfWg8OXRDbc+wVH2IOz1+cPjc3WrfpZTCllHkUdaTNT/ZtI2KXOqN6i1P/aYgsUVYdmfqbq7R3AYhYs+RksIrbA4gdaVdo98wBcR9cHPPgaZ1KgsNZRruB6afnaiUWM3iA6FhnC/9wF1kg2oQG8x/M5fnXUq448H1dM/T7T4NKJOU1+zY2r38XSNozGfsGbPNHDu15/iLXyHZA4fBIXc7e1XDg4erTvc6S/9NZNqINyCJ8SrcPGTz1PS2TJrc/DdEUcoNjcC+WiOaSU6iPk/zxDGQU8BvgSJQqwR75wDo8N52W9/dNZICZGNW7w8vWg61DMIRhg2q/j3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/olkdiVOSfGvZitNrq6UgnMzUimg9aJkhWveDoD8GWU=;
- b=nzgjakBFbT6nRoy7upnjC7/kgii2AJXPsC5PfExwkA8xWhDk7J5A8YWJuQcmShlh5u1OK99MhzH5Fqn/WFSLwIJem7SfSIjwAcr0QRAiawflGxxuJeO/qJUvNvvCnuTimAeyaI5GKIB7WRVR+ep7RX37bzcATGy0D8HHPpjrgCs=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB5515.eurprd04.prod.outlook.com (20.178.104.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.28; Fri, 15 Nov 2019 10:21:22 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4182:4692:ffbd:43a0]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4182:4692:ffbd:43a0%6]) with mapi id 15.20.2451.029; Fri, 15 Nov 2019
- 10:21:22 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Biwen Li <biwen.li@nxp.com>, "peda@axentia.se" <peda@axentia.se>,
-        Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [v5,2/3] i2c: mux: pca954x: support property idle-state
-Thread-Topic: [v5,2/3] i2c: mux: pca954x: support property idle-state
-Thread-Index: AQHViJBl22hUmzXlbUux/Avv7TBADKeMKw/A
-Date:   Fri, 15 Nov 2019 10:21:22 +0000
-Message-ID: <DB7PR04MB4490B0121FEED3C74A682C248F700@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20191022041152.3663-1-biwen.li@nxp.com>
- <20191022041152.3663-2-biwen.li@nxp.com>
-In-Reply-To: <20191022041152.3663-2-biwen.li@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c060d2c2-23b5-4bf7-f452-08d769b59057
-x-ms-traffictypediagnostic: DB7PR04MB5515:|DB7PR04MB5515:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB55158E3D9C783380866925798F700@DB7PR04MB5515.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02229A4115
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(39860400002)(376002)(136003)(199004)(189003)(486006)(229853002)(76116006)(5660300002)(6246003)(44832011)(81166006)(74316002)(8676002)(7736002)(81156014)(8936002)(316002)(6436002)(305945005)(66066001)(26005)(33656002)(2501003)(4326008)(9686003)(186003)(52536014)(66556008)(54906003)(110136005)(66446008)(71200400001)(71190400001)(14454004)(478600001)(66476007)(66946007)(64756008)(76176011)(6506007)(55016002)(2906002)(25786009)(446003)(102836004)(7696005)(99286004)(86362001)(11346002)(3846002)(6116002)(476003)(256004)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5515;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7b2iNhwPsLiblKtRL8HGl1D7krgTEfLRjifgiFvb3cGqVCKUTWQLvwc/ttnvZeskSY6QIyi9mC38zaprKPEhAbWd5zIH+2bLO7kc6Gnw+t/f3SDpLOOTUVHgvZApXn/s56KABdkz4X4pLO47JjSbphKEQaBh1Q4q3Wjr5waeXTdtntAxtgwv2wxoFDzq4baJPSlVDWoIZD/w8Dch56ttruDqkoXaXD3DMh8TS9yLBWFPxp0NPTUfo9dRp1P1GHb6FNkfOOKRd8+x6QlxBpca+57ye9WF7elpgtZwOGAXmMDv6IE046n0uWiR4oqh93eh7JwGQgh/Fn6442SqIIbLANnAhEKBl5pBw0P7HDRH84NklFODbxB4q4kYqBEOczN9gIJttKlz3NVYwpyuurQn6Vol2h2klQITC9vM0yediHFt5ZaWzwSuxeVGHq68wi3V
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 15 Nov 2019 05:22:30 -0500
+Received: from mga04.intel.com ([192.55.52.120]:50563 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbfKOKW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:22:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 02:22:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
+   d="scan'208";a="379889946"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 15 Nov 2019 02:22:24 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iVYkB-0003BI-5w; Fri, 15 Nov 2019 12:22:23 +0200
+Date:   Fri, 15 Nov 2019 12:22:23 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v8 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ a new SoC
+Message-ID: <20191115102223.GQ32742@smile.fi.intel.com>
+References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
+ <33e649758b70490f01724a887c490d5008c7656d.1573797249.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c060d2c2-23b5-4bf7-f452-08d769b59057
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 10:21:22.6715
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NaRxiWymgGvSLe3c721bEAyScOZE2VFxmdFzqqI6IwN05OLEtfNGnvoi0gz7UEsciaLg+RS7I/OiGl8/4MwQqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5515
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33e649758b70490f01724a887c490d5008c7656d.1573797249.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Fri, Nov 15, 2019 at 05:25:07PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+> controls pin multiplexing & configuration including GPIO functions selection &
+> GPIO attributes configuration.
+> 
+> This IP is not based on & does not have anything in common with Chassis
+> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+> 
+> Add a new GPIO & pin control framework based driver for this IP.
 
-Any comments?
-If no comments, could you give me a reviewed-by?
+Same as per v7:
 
-Best Regards,
-Biwen Li
-> This supports property idle-state,if present, overrides i2c-mux-idle-disc=
-onnect.
->=20
-> My use cases:
-> 	- Use the property idle-state to fix
-> 	  an errata on LS2085ARDB and LS2088ARDB.
-> 	- Errata id: E-00013(board LS2085ARDB and
-> 	  LS2088ARDB revision on Rev.B, Rev.C and Rev.D).
-> 	- About E-00013:
-> 	  - Description: I2C1 and I2C3 buses
-> 	    are missing pull-up.
-> 	  - Impact: When the PCA954x device is tri-stated, the I2C bus
-> 	    will float. This makes the I2C bus and its associated
-> 	    downstream devices inaccessible.
-> 	  - Hardware fix: Populate resistors R189 and R190 for I2C1
-> 	    and resistors R228 and R229 for I2C3.
-> 	  - Software fix: Remove the tri-state option from the PCA954x
-> 	    driver(PCA954x always on enable status, specify a
-> 	    channel zero in dts to fix the errata E-00013).
->=20
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+Linus, I have no means to test this nor time to read any (internally?)
+available datasheet. At least my concerns against code were satisfied, except
+I'm not sure about locking model. If you consider it is okay, I'm fine with
+this version, although I believe there may be improvements made in the future.
+
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+
+> 
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 > ---
-> Change in v5:
-> 	- add extra precaution for pca954x_init
->=20
-> Change in v4:
-> 	- rename function
-> 	  pca954x_calculate_chan -> pca954x_regval
->=20
-> Change in v3:
-> 	- update subject and description
-> 	- add a helper function pca954x_calculate_chan()
->=20
-> Change in v2:
-> 	- update subject and description
-> 	- add property idle-state
->=20
->  drivers/i2c/muxes/i2c-mux-pca954x.c | 67 +++++++++++++++++++----------
->  1 file changed, 44 insertions(+), 23 deletions(-)
->=20
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> index 923aa3a5a3dc..218ba1a5ed7e 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> @@ -86,7 +86,7 @@ struct pca954x {
->=20
->  	u8 last_chan;		/* last register value */
->  	/* MUX_IDLE_AS_IS, MUX_IDLE_DISCONNECT or >=3D 0 for channel */
-> -	s8 idle_state;
-> +	s32 idle_state;
->=20
->  	struct i2c_client *client;
->=20
-> @@ -229,20 +229,23 @@ static int pca954x_reg_write(struct i2c_adapter
-> *adap,
->  				I2C_SMBUS_BYTE, &dummy);
->  }
->=20
-> +static u8 pca954x_regval(struct pca954x *data, u8 chan) {
-> +	/* We make switches look like muxes, not sure how to be smarter. */
-> +	if (data->chip->muxtype =3D=3D pca954x_ismux)
-> +		return chan | data->chip->enable;
-> +	else
-> +		return 1 << chan;
+>  drivers/pinctrl/Kconfig               |  18 +
+>  drivers/pinctrl/Makefile              |   1 +
+>  drivers/pinctrl/pinctrl-equilibrium.c | 944 ++++++++++++++++++++++++++++++++++
+>  drivers/pinctrl/pinctrl-equilibrium.h | 144 ++++++
+>  4 files changed, 1107 insertions(+)
+>  create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+>  create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+> 
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index b372419d61f2..7809e33c7762 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -420,4 +420,22 @@ config PINCTRL_TB10X
+>  	depends on OF && ARC_PLAT_TB10X
+>  	select GPIOLIB
+>  
+> +config PINCTRL_EQUILIBRIUM
+> +	tristate "Generic pinctrl and GPIO driver for Intel Lightning Mountain SoC"
+> +	select PINMUX
+> +	select PINCONF
+> +	select GPIOLIB
+> +	select GPIO_GENERIC
+> +	select GPIOLIB_IRQCHIP
+> +	select GENERIC_PINCONF
+> +	select GENERIC_PINCTRL_GROUPS
+> +	select GENERIC_PINMUX_FUNCTIONS
+> +
+> +	help
+> +	  Equilibrium pinctrl driver is a pinctrl & GPIO driver for Intel Lightning
+> +	  Mountain network processor SoC that supports both the linux GPIO and pin
+> +	  control frameworks. It provides interfaces to setup pinmux, assign desired
+> +	  pin functions, configure GPIO attributes for LGM SoC pins. Pinmux and
+> +	  pinconf settings are retrieved from device tree.
+> +
+>  endif
+> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> index ac537fdbc998..879f312bfb75 100644
+> --- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+> @@ -46,6 +46,7 @@ obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
+>  obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
+>  obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
+>  obj-$(CONFIG_PINCTRL_OCELOT)	+= pinctrl-ocelot.o
+> +obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
+>  
+>  obj-y				+= actions/
+>  obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
+> diff --git a/drivers/pinctrl/pinctrl-equilibrium.c b/drivers/pinctrl/pinctrl-equilibrium.c
+> new file mode 100644
+> index 000000000000..36c9072c5ece
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-equilibrium.c
+> @@ -0,0 +1,944 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (C) 2019 Intel Corporation */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/pinctrl/pinconf.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinmux.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "core.h"
+> +#include "pinconf.h"
+> +#include "pinmux.h"
+> +#include "pinctrl-equilibrium.h"
+> +
+> +#define PIN_NAME_FMT	"io-%d"
+> +#define PIN_NAME_LEN	10
+> +#define PAD_REG_OFF	0x100
+> +
+> +static void eqbr_gpio_disable_irq(struct irq_data *d)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
+> +	unsigned int offset = irqd_to_hwirq(d);
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
+> +	writel(BIT(offset), gctrl->membase + GPIO_IRNENCLR);
+> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
 > +}
 > +
->  static int pca954x_select_chan(struct i2c_mux_core *muxc, u32 chan)  {
->  	struct pca954x *data =3D i2c_mux_priv(muxc);
->  	struct i2c_client *client =3D data->client;
-> -	const struct chip_desc *chip =3D data->chip;
->  	u8 regval;
->  	int ret =3D 0;
->=20
-> -	/* we make switches look like muxes, not sure how to be smarter */
-> -	if (chip->muxtype =3D=3D pca954x_ismux)
-> -		regval =3D chan | chip->enable;
-> -	else
-> -		regval =3D 1 << chan;
-> -
-> +	regval =3D pca954x_regval(data, chan);
->  	/* Only select the channel if its different from the last channel */
->  	if (data->last_chan !=3D regval) {
->  		ret =3D pca954x_reg_write(muxc->parent, client, regval); @@ -256,7
-> +259,7 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32
-> chan)  {
->  	struct pca954x *data =3D i2c_mux_priv(muxc);
->  	struct i2c_client *client =3D data->client;
-> -	s8 idle_state;
-> +	s32 idle_state;
->=20
->  	idle_state =3D READ_ONCE(data->idle_state);
->  	if (idle_state >=3D 0)
-> @@ -402,6 +405,25 @@ static void pca954x_cleanup(struct i2c_mux_core
-> *muxc)
->  	i2c_mux_del_adapters(muxc);
->  }
->=20
-> +static int pca954x_init(struct i2c_client *client, struct pca954x
-> +*data) {
+> +static void eqbr_gpio_enable_irq(struct irq_data *d)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
+> +	unsigned int offset = irqd_to_hwirq(d);
+> +	unsigned long flags;
+> +
+> +	gc->direction_input(gc, offset);
+> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
+> +	writel(BIT(offset), gctrl->membase + GPIO_IRNRNSET);
+> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
+> +}
+> +
+> +static void eqbr_gpio_ack_irq(struct irq_data *d)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
+> +	unsigned int offset = irqd_to_hwirq(d);
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
+> +	writel(BIT(offset), gctrl->membase + GPIO_IRNCR);
+> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
+> +}
+> +
+> +static void eqbr_gpio_mask_ack_irq(struct irq_data *d)
+> +{
+> +	eqbr_gpio_disable_irq(d);
+> +	eqbr_gpio_ack_irq(d);
+> +}
+> +
+> +static inline void eqbr_cfg_bit(void __iomem *addr,
+> +				unsigned int offset, unsigned int set)
+> +{
+> +	if (set)
+> +		writel(readl(addr) | BIT(offset), addr);
+> +	else
+> +		writel(readl(addr) & ~BIT(offset), addr);
+> +}
+> +
+> +static int eqbr_irq_type_cfg(struct gpio_irq_type *type,
+> +			     struct eqbr_gpio_ctrl *gctrl,
+> +			     unsigned int offset)
+> +{
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
+> +	eqbr_cfg_bit(gctrl->membase + GPIO_IRNCFG, offset, type->trig_type);
+> +	eqbr_cfg_bit(gctrl->membase + GPIO_EXINTCR1, offset, type->trig_type);
+> +	eqbr_cfg_bit(gctrl->membase + GPIO_EXINTCR0, offset, type->logic_type);
+> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int eqbr_gpio_set_irq_type(struct irq_data *d, unsigned int type)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
+> +	unsigned int offset = irqd_to_hwirq(d);
+> +	struct gpio_irq_type it;
+> +
+> +	memset(&it, 0, sizeof(it));
+> +
+> +	if ((type & IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_NONE)
+> +		return 0;
+> +
+> +	switch (type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		it.trig_type = GPIO_EDGE_TRIG;
+> +		it.edge_type = GPIO_SINGLE_EDGE;
+> +		it.logic_type = GPIO_POSITIVE_TRIG;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		it.trig_type = GPIO_EDGE_TRIG;
+> +		it.edge_type = GPIO_SINGLE_EDGE;
+> +		it.logic_type = GPIO_NEGATIVE_TRIG;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		it.trig_type = GPIO_EDGE_TRIG;
+> +		it.edge_type = GPIO_BOTH_EDGE;
+> +		it.logic_type = GPIO_POSITIVE_TRIG;
+> +		break;
+> +
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		it.trig_type = GPIO_LEVEL_TRIG;
+> +		it.edge_type = GPIO_SINGLE_EDGE;
+> +		it.logic_type = GPIO_POSITIVE_TRIG;
+> +		break;
+> +
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		it.trig_type = GPIO_LEVEL_TRIG;
+> +		it.edge_type = GPIO_SINGLE_EDGE;
+> +		it.logic_type = GPIO_NEGATIVE_TRIG;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	eqbr_irq_type_cfg(&it, gctrl, offset);
+> +	if (it.trig_type == GPIO_EDGE_TRIG)
+> +		irq_set_handler_locked(d, handle_edge_irq);
+> +	else
+> +		irq_set_handler_locked(d, handle_level_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static void eqbr_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
+> +	struct irq_chip *ic = irq_desc_get_chip(desc);
+> +	unsigned long pins, offset;
+> +
+> +	chained_irq_enter(ic, desc);
+> +	pins = readl(gctrl->membase + GPIO_IRNCR);
+> +
+> +	for_each_set_bit(offset, &pins, gc->ngpio)
+> +		generic_handle_irq(irq_find_mapping(gc->irq.domain, offset));
+> +
+> +	chained_irq_exit(ic, desc);
+> +}
+> +
+> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_ctrl *gctrl)
+> +{
+> +	struct gpio_irq_chip *girq;
+> +	struct gpio_chip *gc;
+> +
+> +	gc = &gctrl->chip;
+> +	gc->label = gctrl->name;
+> +#if defined(CONFIG_OF_GPIO)
+> +	gc->of_node = gctrl->node;
+> +#endif
+> +
+> +	if (!of_property_read_bool(gctrl->node, "interrupt-controller")) {
+> +		dev_dbg(dev, "gc %s: doesn't act as interrupt controller!\n",
+> +			gctrl->name);
+> +		return 0;
+> +	}
+> +
+> +	gctrl->ic.name = "gpio_irq";
+> +	gctrl->ic.irq_mask = eqbr_gpio_disable_irq;
+> +	gctrl->ic.irq_unmask = eqbr_gpio_enable_irq;
+> +	gctrl->ic.irq_ack = eqbr_gpio_ack_irq;
+> +	gctrl->ic.irq_mask_ack = eqbr_gpio_mask_ack_irq;
+> +	gctrl->ic.irq_set_type = eqbr_gpio_set_irq_type;
+> +
+> +	girq = &gctrl->chip.irq;
+> +	girq->chip = &gctrl->ic;
+> +	girq->parent_handler = eqbr_irq_handler;
+> +	girq->num_parents = 1;
+> +	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents), GFP_KERNEL);
+> +	if (!girq->parents)
+> +		return -ENOMEM;
+> +
+> +	girq->default_type = IRQ_TYPE_NONE;
+> +	girq->handler = handle_bad_irq;
+> +	girq->parents[0] = gctrl->virq;
+> +
+> +	return 0;
+> +}
+> +
+> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct device *dev = drvdata->dev;
+> +	struct eqbr_gpio_ctrl *gctrl;
+> +	struct device_node *np;
+> +	struct resource res;
+> +	int i, ret;
+> +
+> +	for (i = 0; i < drvdata->nr_gpio_ctrls; i++) {
+> +		gctrl = drvdata->gpio_ctrls + i;
+> +		np = gctrl->node;
+> +
+> +		gctrl->name = devm_kasprintf(dev, GFP_KERNEL, "gpiochip%d", i);
+> +		if (!gctrl->name)
+> +			return -ENOMEM;
+> +
+> +		if (of_address_to_resource(np, 0, &res)) {
+> +			dev_err(dev, "Failed to get GPIO register address\n");
+> +			return -ENXIO;
+> +		}
+> +
+> +		gctrl->membase = devm_ioremap_resource(dev, &res);
+> +		if (IS_ERR(gctrl->membase))
+> +			return PTR_ERR(gctrl->membase);
+> +
+> +		gctrl->virq = irq_of_parse_and_map(np, 0);
+> +		if (!gctrl->virq) {
+> +			dev_err(dev, "%s: failed to parse and map irq\n",
+> +				gctrl->name);
+> +			return -ENXIO;
+> +		}
+> +		raw_spin_lock_init(&gctrl->lock);
+> +
+> +		ret = bgpio_init(&gctrl->chip, dev, gctrl->bank->nr_pins / 8,
+> +				 gctrl->membase + GPIO_IN,
+> +				 gctrl->membase + GPIO_OUTSET,
+> +				 gctrl->membase + GPIO_OUTCLR,
+> +				 gctrl->membase + GPIO_DIR,
+> +				 NULL, 0);
+> +		if (ret) {
+> +			dev_err(dev, "unable to init generic GPIO\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = gpiochip_setup(dev, gctrl);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = devm_gpiochip_add_data(dev, &gctrl->chip, gctrl);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static inline struct eqbr_pin_bank
+> +*find_pinbank_via_pin(struct eqbr_pinctrl_drv_data *pctl, unsigned int pin)
+> +{
+> +	struct eqbr_pin_bank *bank;
+> +	int i;
+> +
+> +	for (i = 0; i < pctl->nr_banks; i++) {
+> +		bank = &pctl->pin_banks[i];
+> +		if (pin >= bank->pin_base &&
+> +		    (pin - bank->pin_base) < bank->nr_pins)
+> +			return bank;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static const struct pinctrl_ops eqbr_pctl_ops = {
+> +	.get_groups_count	= pinctrl_generic_get_group_count,
+> +	.get_group_name		= pinctrl_generic_get_group_name,
+> +	.get_group_pins		= pinctrl_generic_get_group_pins,
+> +	.dt_node_to_map		= pinconf_generic_dt_node_to_map_all,
+> +	.dt_free_map		= pinconf_generic_dt_free_map,
+> +};
+> +
+> +static int eqbr_set_pin_mux(struct eqbr_pinctrl_drv_data *pctl,
+> +			    unsigned int pmx, unsigned int pin)
+> +{
+> +	struct eqbr_pin_bank *bank;
+> +	unsigned long flags;
+> +	unsigned int offset;
+> +	void __iomem *mem;
+> +
+> +	bank = find_pinbank_via_pin(pctl, pin);
+> +	if (!bank) {
+> +		dev_err(pctl->dev, "Couldn't find pin bank for pin %u\n", pin);
+> +		return -ENODEV;
+> +	}
+> +	mem = bank->membase;
+> +	offset = pin - bank->pin_base;
+> +
+> +	if (!(bank->aval_pinmap & BIT(offset))) {
+> +		dev_err(pctl->dev,
+> +			"PIN: %u is not valid, pinbase: %u, bitmap: %u\n",
+> +			pin, bank->pin_base, bank->aval_pinmap);
+> +		return -ENODEV;
+> +	}
+> +
+> +	raw_spin_lock_irqsave(&pctl->lock, flags);
+> +	writel(pmx, mem + (offset * 4));
+> +	raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +	return 0;
+> +}
+> +
+> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
+> +			       unsigned int selector, unsigned int group)
+> +{
+> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct function_desc *func;
+> +	struct group_desc *grp;
+> +	unsigned int *pinmux;
+> +	int i;
+> +
+> +	func = pinmux_generic_get_function(pctldev, selector);
+> +	if (!func)
+> +		return -EINVAL;
+> +
+> +	grp = pinctrl_generic_get_group(pctldev, group);
+> +	if (!grp)
+> +		return -EINVAL;
+> +
+> +	pinmux = grp->data;
+> +	for (i = 0; i < grp->num_pins; i++)
+> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
+> +
+> +	return 0;
+> +}
+> +
+> +static int eqbr_pinmux_gpio_request(struct pinctrl_dev *pctldev,
+> +				    struct pinctrl_gpio_range *range,
+> +				    unsigned int pin)
+> +{
+> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	return eqbr_set_pin_mux(pctl, EQBR_GPIO_MODE, pin);
+> +}
+> +
+> +static const struct pinmux_ops eqbr_pinmux_ops = {
+> +	.get_functions_count	= pinmux_generic_get_function_count,
+> +	.get_function_name	= pinmux_generic_get_function_name,
+> +	.get_function_groups	= pinmux_generic_get_function_groups,
+> +	.set_mux		= eqbr_pinmux_set_mux,
+> +	.gpio_request_enable	= eqbr_pinmux_gpio_request,
+> +	.strict			= true,
+> +};
+> +
+> +static int get_drv_cur(void __iomem *mem, unsigned int offset)
+> +{
+> +	unsigned int idx = offset / DRV_CUR_PINS; /* 0-15, 16-31 per register*/
+> +	unsigned int pin_offset = offset % DRV_CUR_PINS;
+> +
+> +	return PARSE_DRV_CURRENT(readl(mem + REG_DRCC(idx)), pin_offset);
+> +}
+> +
+> +static struct eqbr_gpio_ctrl
+> +*get_gpio_ctrls_via_bank(struct eqbr_pinctrl_drv_data *pctl,
+> +			struct eqbr_pin_bank *bank)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < pctl->nr_gpio_ctrls; i++) {
+> +		if (pctl->gpio_ctrls[i].bank == bank)
+> +			return &pctl->gpio_ctrls[i];
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static int eqbr_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
+> +			    unsigned long *config)
+> +{
+> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +	enum pin_config_param param = pinconf_to_config_param(*config);
+> +	struct eqbr_gpio_ctrl *gctrl;
+> +	struct eqbr_pin_bank *bank;
+> +	unsigned long flags;
+> +	unsigned int offset;
+> +	void __iomem *mem;
+> +	u32 val;
+> +
+> +	bank = find_pinbank_via_pin(pctl, pin);
+> +	if (!bank) {
+> +		dev_err(pctl->dev, "Couldn't find pin bank for pin %u\n", pin);
+> +		return -ENODEV;
+> +	}
+> +	mem = bank->membase;
+> +	offset = pin - bank->pin_base;
+> +
+> +	if (!(bank->aval_pinmap & BIT(offset))) {
+> +		dev_err(pctl->dev,
+> +			"PIN: %u is not valid, pinbase: %u, bitmap: %u\n",
+> +			pin, bank->pin_base, bank->aval_pinmap);
+> +		return -ENODEV;
+> +	}
+> +
+> +	raw_spin_lock_irqsave(&pctl->lock, flags);
+> +	switch (param) {
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		val = !!(readl(mem + REG_PUEN) & BIT(offset));
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		val = !!(readl(mem + REG_PDEN) & BIT(offset));
+> +		break;
+> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +		val = !!(readl(mem + REG_OD) & BIT(offset));
+> +		break;
+> +	case PIN_CONFIG_DRIVE_STRENGTH:
+> +		val = get_drv_cur(mem, offset);
+> +		break;
+> +	case PIN_CONFIG_SLEW_RATE:
+> +		val = !!(readl(mem + REG_SRC) & BIT(offset));
+> +		break;
+> +	case PIN_CONFIG_OUTPUT_ENABLE:
+> +		gctrl = get_gpio_ctrls_via_bank(pctl, bank);
+> +		if (!gctrl) {
+> +			dev_err(pctl->dev, "Failed to find gpio via bank pinbase: %u, pin: %u\n",
+> +				bank->pin_base, pin);
+> +			raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +			return -ENODEV;
+> +		}
+> +		val = !!(readl(gctrl->membase + GPIO_DIR) & BIT(offset));
+> +		break;
+> +	default:
+> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +		return -ENOTSUPP;
+> +	}
+> +	raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +	*config = pinconf_to_config_packed(param, val);
+> +;
+> +	return 0;
+> +}
+> +
+> +static int eqbr_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+> +			    unsigned long *configs, unsigned int num_configs)
+> +{
+> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct eqbr_gpio_ctrl *gctrl;
+> +	enum pin_config_param param;
+> +	struct eqbr_pin_bank *bank;
+> +	unsigned int val, offset;
+> +	struct gpio_chip *gc;
+> +	unsigned long flags;
+> +	void __iomem *mem;
+> +	u32 regval, mask;
+> +	int i;
+> +
+> +	for (i = 0; i < num_configs; i++) {
+> +		param = pinconf_to_config_param(configs[i]);
+> +		val = pinconf_to_config_argument(configs[i]);
+> +
+> +		bank = find_pinbank_via_pin(pctl, pin);
+> +		if (!bank) {
+> +			dev_err(pctl->dev,
+> +				"Couldn't find pin bank for pin %u\n", pin);
+> +			return -ENODEV;
+> +		}
+> +		mem = bank->membase;
+> +		offset = pin - bank->pin_base;
+> +
+> +		switch (param) {
+> +		case PIN_CONFIG_BIAS_PULL_UP:
+> +			mem += REG_PUEN;
+> +			mask = BIT(offset);
+> +			break;
+> +		case PIN_CONFIG_BIAS_PULL_DOWN:
+> +			mem += REG_PDEN;
+> +			mask = BIT(offset);
+> +			break;
+> +		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +			mem += REG_OD;
+> +			mask = BIT(offset);
+> +			break;
+> +		case PIN_CONFIG_DRIVE_STRENGTH:
+> +			mem += REG_DRCC(offset / DRV_CUR_PINS);
+> +			offset = (offset % DRV_CUR_PINS) * 2;
+> +			mask = GENMASK(1, 0) << offset;
+> +			break;
+> +		case PIN_CONFIG_SLEW_RATE:
+> +			mem += REG_SRC;
+> +			mask = BIT(offset);
+> +			break;
+> +		case PIN_CONFIG_OUTPUT_ENABLE:
+> +			gctrl = get_gpio_ctrls_via_bank(pctl, bank);
+> +			if (!gctrl) {
+> +				dev_err(pctl->dev, "Failed to find gpio via bank pinbase: %u, pin: %u\n",
+> +					bank->pin_base, pin);
+> +				return -ENODEV;
+> +			}
+> +			gc = &gctrl->chip;
+> +			gc->direction_output(gc, offset, 0);
+> +			continue;
+> +		default:
+> +			return -ENOTSUPP;
+> +		}
+> +
+> +		raw_spin_lock_irqsave(&pctl->lock, flags);
+> +		regval = readl(mem);
+> +		regval = (regval & ~mask) | ((val << offset) & mask);
+> +		writel(regval, mem);
+> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int eqbr_pinconf_group_get(struct pinctrl_dev *pctldev,
+> +				  unsigned int group, unsigned long *config)
+> +{
+> +	unsigned int i, npins, old = 0;
+> +	const unsigned int *pins;
 > +	int ret;
-> +	if (data->idle_state >=3D 0) {
-> +		data->last_chan =3D pca954x_regval(data, data->idle_state);
-> +	} else {
-> +		/* Disconnect multiplexer */
-> +		data->last_chan =3D 0;
+> +
+> +	ret = pinctrl_generic_get_group_pins(pctldev, group, &pins, &npins);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < npins; i++) {
+> +		if (eqbr_pinconf_get(pctldev, pins[i], config))
+> +			return -ENOTSUPP;
+> +
+> +		if (i && old != *config)
+> +			return -ENOTSUPP;
+> +
+> +		old = *config;
 > +	}
-> +	ret =3D i2c_smbus_write_byte(client, data->last_chan);
-> +	if (ret < 0) {
-> +		data->last_chan =3D 0;
-> +		dev_err(&client->dev, "failed to verify the mux, \
-> +			the mux maybe not present in fact\n");
+> +	return 0;
+> +}
+> +
+> +static int eqbr_pinconf_group_set(struct pinctrl_dev *pctldev,
+> +				  unsigned int group, unsigned long *configs,
+> +				  unsigned int num_configs)
+> +{
+> +	const unsigned int *pins;
+> +	unsigned int i, npins;
+> +	int ret;
+> +
+> +	ret = pinctrl_generic_get_group_pins(pctldev, group, &pins, &npins);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < npins; i++) {
+> +		ret = eqbr_pinconf_set(pctldev, pins[i], configs, num_configs);
+> +		if (ret)
+> +			return ret;
 > +	}
+> +	return 0;
+> +}
+> +
+> +static const struct pinconf_ops eqbr_pinconf_ops = {
+> +	.is_generic			= true,
+> +	.pin_config_get			= eqbr_pinconf_get,
+> +	.pin_config_set			= eqbr_pinconf_set,
+> +	.pin_config_group_get		= eqbr_pinconf_group_get,
+> +	.pin_config_group_set		= eqbr_pinconf_group_set,
+> +	.pin_config_config_dbg_show	= pinconf_generic_dump_config,
+> +};
+> +
+> +static bool is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
+> +			 unsigned int nr_funcs, unsigned int *idx)
+> +{
+> +	int i;
+> +
+> +	if (!funcs)
+> +		return false;
+> +
+> +	for (i = 0; i < nr_funcs; i++) {
+> +		if (funcs[i].name && !strcmp(funcs[i].name, name)) {
+> +			*idx = i;
+> +			return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
+> +		       unsigned int *nr_funcs, funcs_util_ops op)
+> +{
+> +	struct device_node *node = dev->of_node;
+> +	struct device_node *np;
+> +	struct property *prop;
+> +	const char *fn_name;
+> +	unsigned int fid;
+> +	int i, j;
+> +
+> +	i = 0;
+> +	for_each_child_of_node(node, np) {
+> +		prop = of_find_property(np, "groups", NULL);
+> +		if (!prop)
+> +			continue;
+> +
+> +		if (of_property_read_string(np, "function", &fn_name)) {
+> +			/* some groups may not have function, it's OK */
+> +			dev_dbg(dev, "Group %s: not function binded!\n",
+> +				(char *)prop->value);
+> +			continue;
+> +		}
+> +
+> +		switch (op) {
+> +		case OP_COUNT_NR_FUNCS:
+> +			if (!is_func_exist(funcs, fn_name, *nr_funcs, &fid))
+> +				*nr_funcs = *nr_funcs + 1;
+> +			break;
+> +
+> +		case OP_ADD_FUNCS:
+> +			if (!is_func_exist(funcs, fn_name, *nr_funcs, &fid))
+> +				funcs[i].name = fn_name;
+> +			break;
+> +
+> +		case OP_COUNT_NR_FUNC_GRPS:
+> +			if (is_func_exist(funcs, fn_name, *nr_funcs, &fid))
+> +				funcs[fid].nr_groups++;
+> +			break;
+> +
+> +		case OP_ADD_FUNC_GRPS:
+> +			if (is_func_exist(funcs, fn_name, *nr_funcs, &fid)) {
+> +				for (j = 0; j < funcs[fid].nr_groups; j++)
+> +					if (!funcs[fid].groups[j])
+> +						break;
+> +				funcs[fid].groups[j] = prop->value;
+> +			}
+> +			break;
+> +
+> +		default:
+> +				return -EINVAL;
+> +		}
+> +		i++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int eqbr_build_functions(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct device *dev = drvdata->dev;
+> +	struct eqbr_pmx_func *funcs = NULL;
+> +	unsigned int nr_funcs = 0;
+> +	int i, ret;
+> +
+> +	ret = funcs_utils(dev, funcs, &nr_funcs, OP_COUNT_NR_FUNCS);
+> +	if (ret)
+> +		return ret;
+> +
+> +	funcs = devm_kcalloc(dev, nr_funcs, sizeof(*funcs), GFP_KERNEL);
+> +	if (!funcs)
+> +		return -ENOMEM;
+> +
+> +	ret = funcs_utils(dev, funcs, &nr_funcs, OP_ADD_FUNCS);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = funcs_utils(dev, funcs, &nr_funcs, OP_COUNT_NR_FUNC_GRPS);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < nr_funcs; i++) {
+> +		if (!funcs[i].nr_groups)
+> +			continue;
+> +		funcs[i].groups = devm_kcalloc(dev, funcs[i].nr_groups,
+> +					       sizeof(*(funcs[i].groups)),
+> +					       GFP_KERNEL);
+> +		if (!funcs[i].groups)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	ret = funcs_utils(dev, funcs, &nr_funcs, OP_ADD_FUNC_GRPS);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < nr_funcs; i++) {
+> +		ret = pinmux_generic_add_function(drvdata->pctl_dev,
+> +						  funcs[i].name,
+> +						  funcs[i].groups,
+> +						  funcs[i].nr_groups,
+> +						  drvdata);
+> +		if (ret < 0) {
+> +			dev_err(dev, "Failed to register function %s\n",
+> +				funcs[i].name);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct device *dev = drvdata->dev;
+> +	struct device_node *node = dev->of_node;
+> +	unsigned int *pinmux, pin_id, pinmux_id;
+> +	struct group_desc group;
+> +	struct device_node *np;
+> +	struct property *prop;
+> +	int j, err;
+> +
+> +	for_each_child_of_node(node, np) {
+> +		prop = of_find_property(np, "groups", NULL);
+> +		if (!prop)
+> +			continue;
+> +
+> +		group.num_pins = of_property_count_u32_elems(np, "pins");
+> +		if (group.num_pins < 0) {
+> +			dev_err(dev, "No pins in the group: %s\n", prop->name);
+> +			return -EINVAL;
+> +		}
+> +		group.name = prop->value;
+> +		group.pins = devm_kcalloc(dev, group.num_pins,
+> +					  sizeof(*(group.pins)), GFP_KERNEL);
+> +		if (!group.pins)
+> +			return -ENOMEM;
+> +
+> +		pinmux = devm_kcalloc(dev, group.num_pins, sizeof(*pinmux),
+> +				      GFP_KERNEL);
+> +		if (!pinmux)
+> +			return -ENOMEM;
+> +
+> +		for (j = 0; j < group.num_pins; j++) {
+> +			if (of_property_read_u32_index(np, "pins", j, &pin_id)) {
+> +				dev_err(dev, "Group %s: Read intel pins id failed\n",
+> +					group.name);
+> +				return -EINVAL;
+> +			}
+> +			if (pin_id >= drvdata->pctl_desc.npins) {
+> +				dev_err(dev, "Group %s: Invalid pin ID, idx: %d, pin %u\n",
+> +					group.name, j, pin_id);
+> +				return -EINVAL;
+> +			}
+> +			group.pins[j] = pin_id;
+> +			if (of_property_read_u32_index(np, "pinmux", j, &pinmux_id)) {
+> +				dev_err(dev, "Group %s: Read intel pinmux id failed\n",
+> +					group.name);
+> +				return -EINVAL;
+> +			}
+> +			pinmux[j] = pinmux_id;
+> +		}
+> +
+> +		err = pinctrl_generic_add_group(drvdata->pctl_dev, group.name,
+> +						group.pins, group.num_pins,
+> +						pinmux);
+> +		if (err < 0) {
+> +			dev_err(dev, "Failed to register group %s\n", group.name);
+> +			return err;
+> +		}
+> +		memset(&group, 0, sizeof(group));
+> +		pinmux = NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pinctrl_reg(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct pinctrl_desc *pctl_desc;
+> +	struct pinctrl_pin_desc *pdesc;
+> +	struct device *dev;
+> +	unsigned int nr_pins;
+> +	char *pin_names;
+> +	int i, ret;
+> +
+> +	dev = drvdata->dev;
+> +	pctl_desc = &drvdata->pctl_desc;
+> +	pctl_desc->name = "eqbr-pinctrl";
+> +	pctl_desc->owner = THIS_MODULE;
+> +	pctl_desc->pctlops = &eqbr_pctl_ops;
+> +	pctl_desc->pmxops = &eqbr_pinmux_ops;
+> +	pctl_desc->confops = &eqbr_pinconf_ops;
+> +	raw_spin_lock_init(&drvdata->lock);
+> +
+> +	for (i = 0, nr_pins = 0; i < drvdata->nr_banks; i++)
+> +		nr_pins += drvdata->pin_banks[i].nr_pins;
+> +
+> +	pdesc = devm_kcalloc(dev, nr_pins, sizeof(*pdesc), GFP_KERNEL);
+> +	if (!pdesc)
+> +		return -ENOMEM;
+> +	pin_names = devm_kcalloc(dev, nr_pins, PIN_NAME_LEN, GFP_KERNEL);
+> +	if (!pin_names)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < nr_pins; i++) {
+> +		sprintf(pin_names, PIN_NAME_FMT, i);
+> +		pdesc[i].number = i;
+> +		pdesc[i].name = pin_names;
+> +		pin_names += PIN_NAME_LEN;
+> +	}
+> +	pctl_desc->pins = pdesc;
+> +	pctl_desc->npins = nr_pins;
+> +	dev_dbg(dev, "pinctrl total pin number: %u\n", nr_pins);
+> +
+> +	ret = devm_pinctrl_register_and_init(dev, pctl_desc, drvdata,
+> +					     &drvdata->pctl_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = eqbr_build_groups(drvdata);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to build groups\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = eqbr_build_functions(drvdata);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to build groups\n");
+> +		return ret;
+> +	}
+> +
+> +	return pinctrl_enable(drvdata->pctl_dev);
+> +}
+> +
+> +static int pinbank_init(struct device_node *np,
+> +			struct eqbr_pinctrl_drv_data *drvdata,
+> +			struct eqbr_pin_bank *bank, unsigned int id)
+> +{
+> +	struct device *dev = drvdata->dev;
+> +	struct of_phandle_args spec;
+> +	int ret;
+> +
+> +	bank->membase = drvdata->membase + id * PAD_REG_OFF;
+> +
+> +	ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &spec);
+> +	if (ret) {
+> +		dev_err(dev, "gpio-range not available!\n");
+> +		return ret;
+> +	}
+> +
+> +	bank->pin_base = spec.args[1];
+> +	bank->nr_pins = spec.args[2];
+> +
+> +	bank->aval_pinmap = readl(bank->membase + REG_AVAIL);
+> +	bank->id = id;
+> +
+> +	dev_dbg(dev, "pinbank id: %d, reg: %px, pinbase: %u, pin number: %u, pinmap: 0x%x\n",
+> +		id, bank->membase, bank->pin_base,
+> +		bank->nr_pins, bank->aval_pinmap);
 > +
 > +	return ret;
 > +}
 > +
->  /*
->   * I2C init/probing/exit functions
->   */
-> @@ -411,7 +433,6 @@ static int pca954x_probe(struct i2c_client *client,
->  	struct i2c_adapter *adap =3D client->adapter;
->  	struct device *dev =3D &client->dev;
->  	struct device_node *np =3D dev->of_node;
-> -	bool idle_disconnect_dt;
->  	struct gpio_desc *gpio;
->  	struct i2c_mux_core *muxc;
->  	struct pca954x *data;
-> @@ -462,23 +483,24 @@ static int pca954x_probe(struct i2c_client *client,
->  		}
->  	}
->=20
-> -	/* Write the mux register at addr to verify
-> +	data->idle_state =3D MUX_IDLE_AS_IS;
-> +	if (of_property_read_u32(np, "idle-state", &data->idle_state)) {
-> +		if (np && of_property_read_bool(np, "i2c-mux-idle-disconnect"))
-> +			data->idle_state =3D MUX_IDLE_DISCONNECT;
+> +static int pinbank_probe(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct device *dev = drvdata->dev;
+> +	struct device_node *np_gpio;
+> +	struct eqbr_gpio_ctrl *gctrls;
+> +	struct eqbr_pin_bank *banks;
+> +	int i, nr_gpio;
+> +
+> +	/* Count gpio bank number */
+> +	nr_gpio = 0;
+> +	for_each_node_by_name(np_gpio, "gpio") {
+> +		if (of_device_is_available(np_gpio))
+> +			nr_gpio++;
 > +	}
 > +
-> +	/*
-> +	 * Write the mux register at addr to verify
->  	 * that the mux is in fact present. This also
-> -	 * initializes the mux to disconnected state.
-> +	 * initializes the mux to a channel
-> +	 * or disconnected state.
->  	 */
-> -	if (i2c_smbus_write_byte(client, 0) < 0) {
-> +	ret =3D pca954x_init(client, data);
-> +	if (ret < 0) {
->  		dev_warn(dev, "probe failed\n");
->  		return -ENODEV;
->  	}
->=20
-> -	data->last_chan =3D 0;		   /* force the first selection */
-> -	data->idle_state =3D MUX_IDLE_AS_IS;
-> -
-> -	idle_disconnect_dt =3D np &&
-> -		of_property_read_bool(np, "i2c-mux-idle-disconnect");
-> -	if (idle_disconnect_dt)
-> -		data->idle_state =3D MUX_IDLE_DISCONNECT;
-> -
->  	ret =3D pca954x_irq_setup(muxc);
->  	if (ret)
->  		goto fail_cleanup;
-> @@ -531,8 +553,7 @@ static int pca954x_resume(struct device *dev)
->  	struct i2c_mux_core *muxc =3D i2c_get_clientdata(client);
->  	struct pca954x *data =3D i2c_mux_priv(muxc);
->=20
-> -	data->last_chan =3D 0;
-> -	return i2c_smbus_write_byte(client, 0);
-> +	return pca954x_init(client, data);
->  }
->  #endif
->=20
-> --
-> 2.17.1
+> +	if (!nr_gpio) {
+> +		dev_err(dev, "NO pin bank available!\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* Count pin bank number and gpio controller number */
+> +	banks = devm_kcalloc(dev, nr_gpio, sizeof(*banks), GFP_KERNEL);
+> +	if (!banks)
+> +		return -ENOMEM;
+> +
+> +	gctrls = devm_kcalloc(dev, nr_gpio, sizeof(*gctrls), GFP_KERNEL);
+> +	if (!gctrls)
+> +		return -ENOMEM;
+> +
+> +	dev_dbg(dev, "found %d gpio controller!\n", nr_gpio);
+> +
+> +	/* Initialize Pin bank */
+> +	i = 0;
+> +	for_each_node_by_name(np_gpio, "gpio") {
+> +		if (!of_device_is_available(np_gpio))
+> +			continue;
+> +
+> +		pinbank_init(np_gpio, drvdata, banks + i, i);
+> +
+> +		gctrls[i].node = np_gpio;
+> +		gctrls[i].bank = banks + i;
+> +		i++;
+> +	}
+> +
+> +	drvdata->pin_banks = banks;
+> +	drvdata->nr_banks = nr_gpio;
+> +	drvdata->gpio_ctrls = gctrls;
+> +	drvdata->nr_gpio_ctrls = nr_gpio;
+> +
+> +	return 0;
+> +}
+> +
+> +static int eqbr_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +	struct eqbr_pinctrl_drv_data *drvdata;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+> +
+> +	drvdata->dev = dev;
+> +
+> +	drvdata->membase = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(drvdata->membase))
+> +		return PTR_ERR(drvdata->membase);
+> +
+> +	ret = pinbank_probe(drvdata);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = pinctrl_reg(drvdata);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = gpiolib_reg(drvdata);
+> +	if (ret)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, drvdata);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id eqbr_pinctrl_dt_match[] = {
+> +	{ .compatible = "intel,lgm-io" },
+> +	{}
+> +};
+> +
+> +static struct platform_driver eqbr_pinctrl_driver = {
+> +	.probe	= eqbr_pinctrl_probe,
+> +	.driver = {
+> +		.name = "eqbr-pinctrl",
+> +		.of_match_table = eqbr_pinctrl_dt_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(eqbr_pinctrl_driver);
+> +
+> +MODULE_AUTHOR("Zhu Yixin <yixin.zhu@intel.com>, Rahul Tanwar <rahul.tanwar@intel.com>");
+> +MODULE_DESCRIPTION("Pinctrl Driver for LGM SoC (Equilibrium)");
+> diff --git a/drivers/pinctrl/pinctrl-equilibrium.h b/drivers/pinctrl/pinctrl-equilibrium.h
+> new file mode 100644
+> index 000000000000..83cb7dafc657
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-equilibrium.h
+> @@ -0,0 +1,144 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + *  Copyright(c) 2019 Intel Corporation.
+> + */
+> +
+> +#ifndef __PINCTRL_EQUILIBRIUM_H
+> +#define __PINCTRL_EQUILIBRIUM_H
+> +
+> +/* PINPAD register offset */
+> +#define REG_PMX_BASE	0x0	/* Port Multiplexer Control Register */
+> +#define REG_PUEN	0x80	/* PULL UP Enable Register */
+> +#define REG_PDEN	0x84	/* PULL DOWN Enable Register */
+> +#define REG_SRC		0x88	/* Slew Rate Control Register */
+> +#define REG_DCC0	0x8C	/* Drive Current Control Register 0 */
+> +#define REG_DCC1	0x90	/* Drive Current Control Register 1 */
+> +#define REG_OD		0x94	/* Open Drain Enable Register */
+> +#define REG_AVAIL	0x98	/* Pad Control Availability Register */
+> +#define DRV_CUR_PINS	16	/* Drive Current pin number per register */
+> +#define REG_DRCC(x)	(REG_DCC0 + (x) * 4) /* Driver current macro */
+> +
+> +/* GPIO register offset */
+> +#define GPIO_OUT	0x0	/* Data Output Register */
+> +#define GPIO_IN		0x4	/* Data Input Register */
+> +#define GPIO_DIR	0x8	/* Direction Register */
+> +#define GPIO_EXINTCR0	0x18	/* External Interrupt Control Register 0 */
+> +#define GPIO_EXINTCR1	0x1C	/* External Interrupt Control Register 1 */
+> +#define GPIO_IRNCR	0x20	/* IRN Capture Register */
+> +#define GPIO_IRNICR	0x24	/* IRN Interrupt Control Register */
+> +#define GPIO_IRNEN	0x28	/* IRN Interrupt Enable Register */
+> +#define GPIO_IRNCFG	0x2C	/* IRN Interrupt Configuration Register */
+> +#define GPIO_IRNRNSET	0x30	/* IRN Interrupt Enable Set Register */
+> +#define GPIO_IRNENCLR	0x34	/* IRN Interrupt Enable Clear Register */
+> +#define GPIO_OUTSET	0x40	/* Output Set Register */
+> +#define GPIO_OUTCLR	0x44	/* Output Clear Register */
+> +#define GPIO_DIRSET	0x48	/* Direction Set Register */
+> +#define GPIO_DIRCLR	0x4C	/* Direction Clear Register */
+> +
+> +/* parse given pin's driver current value */
+> +#define PARSE_DRV_CURRENT(val, pin) (((val) >> ((pin) * 2)) & 0x3)
+> +
+> +#define GPIO_EDGE_TRIG		0
+> +#define GPIO_LEVEL_TRIG		1
+> +#define GPIO_SINGLE_EDGE	0
+> +#define GPIO_BOTH_EDGE		1
+> +#define GPIO_POSITIVE_TRIG	0
+> +#define GPIO_NEGATIVE_TRIG	1
+> +
+> +#define EQBR_GPIO_MODE		0
+> +
+> +typedef enum {
+> +	OP_COUNT_NR_FUNCS,
+> +	OP_ADD_FUNCS,
+> +	OP_COUNT_NR_FUNC_GRPS,
+> +	OP_ADD_FUNC_GRPS,
+> +	OP_NONE,
+> +} funcs_util_ops;
+> +
+> +/**
+> + * struct gpio_irq_type: gpio irq configuration
+> + * @trig_type: level trigger or edge trigger
+> + * @edge_type: sigle edge or both edge
+> + * @logic_type: positive trigger or negative trigger
+> + */
+> +struct gpio_irq_type {
+> +	unsigned int trig_type;
+> +	unsigned int edge_type;
+> +	unsigned int logic_type;
+> +};
+> +
+> +/**
+> + * struct eqbr_pmx_func: represent a pin function.
+> + * @name: name of the pin function, used to lookup the function.
+> + * @groups: one or more names of pin groups that provide this function.
+> + * @nr_groups: number of groups included in @groups.
+> + */
+> +struct eqbr_pmx_func {
+> +	const char		*name;
+> +	const char		**groups;
+> +	unsigned int		nr_groups;
+> +};
+> +
+> +/**
+> + * struct eqbr_pin_bank: represent a pin bank.
+> + * @membase: base address of the pin bank register.
+> + * @id: bank id, to idenify the unique bank.
+> + * @pin_base: starting pin number of the pin bank.
+> + * @nr_pins: number of the pins of the pin bank.
+> + * @aval_pinmap: available pin bitmap of the pin bank.
+> + */
+> +struct eqbr_pin_bank {
+> +	void __iomem		*membase;
+> +	unsigned int		id;
+> +	unsigned int		pin_base;
+> +	unsigned int		nr_pins;
+> +	u32			aval_pinmap;
+> +};
+> +
+> +/**
+> + * struct eqbr_gpio_ctrl: represent a gpio controller.
+> + * @node: device node of gpio controller.
+> + * @bank: pointer to corresponding pin bank.
+> + * @membase: base address of the gpio controller.
+> + * @chip: gpio chip.
+> + * @ic:   irq chip.
+> + * @name: gpio chip name.
+> + * @virq: irq number of the gpio chip to parent's irq domain.
+> + * @lock: spin lock to protect gpio register write.
+> + */
+> +struct eqbr_gpio_ctrl {
+> +	struct device_node	*node;
+> +	struct eqbr_pin_bank	*bank;
+> +	void __iomem		*membase;
+> +	struct gpio_chip	chip;
+> +	struct irq_chip		ic;
+> +	const char		*name;
+> +	unsigned int		virq;
+> +	raw_spinlock_t		lock; /* protect gpio register */
+> +};
+> +
+> +/**
+> + * struct eqbr_pinctrl_drv_data:
+> + * @dev: device instance representing the controller.
+> + * @pctl_desc: pin controller descriptor.
+> + * @pctl_dev: pin control class device
+> + * @membase: base address of pin controller
+> + * @pin_banks: list of pin banks of the driver.
+> + * @nr_banks: number of pin banks.
+> + * @gpio_ctrls: list of gpio controllers.
+> + * @nr_gpio_ctrls: number of gpio controllers.
+> + * @lock: protect pinctrl register write
+> + */
+> +struct eqbr_pinctrl_drv_data {
+> +	struct device			*dev;
+> +	struct pinctrl_desc		pctl_desc;
+> +	struct pinctrl_dev		*pctl_dev;
+> +	void __iomem			*membase;
+> +	struct eqbr_pin_bank		*pin_banks;
+> +	unsigned int			nr_banks;
+> +	struct eqbr_gpio_ctrl		*gpio_ctrls;
+> +	unsigned int			nr_gpio_ctrls;
+> +	raw_spinlock_t			lock; /* protect pinpad register */
+> +};
+> +
+> +#endif /* __PINCTRL_EQUILIBRIUM_H */
+> -- 
+> 2.11.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
