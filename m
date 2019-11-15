@@ -2,346 +2,123 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AB6C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00805C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072FB206E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE370206E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Frg8F22e";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BH8fp8S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKOWLC (ORCPT
+        id S1727053AbfKOWNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:11:02 -0500
-Received: from fieldses.org ([173.255.197.46]:46202 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfKOWLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:11:01 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 9987A1C84; Fri, 15 Nov 2019 17:10:59 -0500 (EST)
-Date:   Fri, 15 Nov 2019 17:10:59 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/19] sunrpc: convert to time64_t for expiry
-Message-ID: <20191115221059.GA13596@fieldses.org>
-References: <20191111201639.2240623-1-arnd@arndb.de>
- <20191111201639.2240623-2-arnd@arndb.de>
+        Fri, 15 Nov 2019 17:13:20 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:45988 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfKOWNU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 17:13:20 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3A51860C1B; Fri, 15 Nov 2019 22:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573855999;
+        bh=44HhLxAT1m9ZyzYHe+uEYQs75rOZOAP5IkByaWQou6I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Frg8F22e8q5ujPwhzKs1Yx/jsLKDxEIsJdsu6hyDfLXQyWEkBfERKklguHjec0/N4
+         VGgbZQMRgRWQFfCl39jpkhM/yhOA9uvph/78QxwXUja1lTs0G1ZKPMgg3mUgStC4aT
+         aE7ViNH50NmAQV+iUoQx3CsBLG19zhkkQmx+GxR0=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61E9660C3E;
+        Fri, 15 Nov 2019 22:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573855998;
+        bh=44HhLxAT1m9ZyzYHe+uEYQs75rOZOAP5IkByaWQou6I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BH8fp8S4TeVuokHpW8eLbZx4jQ+2V5gZG2p81n4WJ4SskYUGqT5P6nW3gimx7bT8S
+         SdgqBU6aZJCJzH12K06bMh0vkkXBGl6c6V94q3ciZiXIZLvlBkBv2rgZU899Q28EpG
+         g74i1KbEeQEEiV8RamAuQqumnff20Pke9zFMClUs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61E9660C3E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Fri, 15 Nov 2019 15:13:17 -0700
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        maz@kernel.org, evgreen@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org
+Subject: Re: [PATCH 08/12] drivers: pinctrl: msm: setup GPIO chip in hierarchy
+Message-ID: <20191115221317.GH18786@codeaurora.org>
+References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
+ <1573756521-27373-9-git-send-email-ilina@codeaurora.org>
+ <5dcefd86.1c69fb81.c72c8.07a1@mx.google.com>
+ <20191115205555.GF18786@codeaurora.org>
+ <20191115215737.GG18786@codeaurora.org>
+ <5dcf2213.1c69fb81.1e0ec.f500@mx.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191111201639.2240623-2-arnd@arndb.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <5dcf2213.1c69fb81.1e0ec.f500@mx.google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 09:16:21PM +0100, Arnd Bergmann wrote:
-> Using signed 32-bit types for UTC time leads to the y2038 overflow,
-> which is what happens in the sunrpc code at the moment.
-> 
-> This changes the sunrpc code over to use time64_t where possible.
-> The one exception is the gss_import_v{1,2}_context() function for
-> kerberos5, which uses 32-bit timestamps in the protocol. Here,
-> we can at least treat the numbers as 'unsigned', which extends the
-> range from 2038 to 2106.
+On Fri, Nov 15 2019 at 15:09 -0700, Stephen Boyd wrote:
+>Quoting Lina Iyer (2019-11-15 13:57:37)
+>> On Fri, Nov 15 2019 at 13:55 -0700, Lina Iyer wrote:
+>> >>Quoting Lina Iyer (2019-11-14 10:35:17)
+>>
+>> >>>+static int msm_gpio_wakeirq(struct gpio_chip *gc,
+>> >>>+                           unsigned int child,
+>> >>>+                           unsigned int child_type,
+>> >>>+                           unsigned int *parent,
+>> >>>+                           unsigned int *parent_type)
+>> >>>+{
+>> >>>+       struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+>> >>>+       const struct msm_gpio_wakeirq_map *map;
+>> >>>+       int i;
+>> >>>+
+>> >>>+       *parent = GPIO_NO_WAKE_IRQ;
+>> >>>+       *parent_type = IRQ_TYPE_EDGE_RISING;
+>> >>>+
+>> >>>+       for (i = 0; i < pctrl->soc->nwakeirq_map; i++) {
+>> >>>+               map = &pctrl->soc->wakeirq_map[i];
+>> >>>+               if (map->gpio == child) {
+>> >>>+                       *parent = map->wakeirq;
+>> >>>+                       break;
+>> >>>+               }
+>> >>>+       }
+>> >>>+
+>> >>>+       return 0;
+>> >>
+>> >>Shouldn't we return -EINVAL if we can't translate the gpio irq to the
+>> >>parent domain? I would expect to see return -EINVAL here and the above
+>> >>if condition to return 0 instead of break.
+>> >>
+>> >Good catch. Sure.
+>> >>>+}
+>> >>>+
+>> Looking into this, we have been setting GPIO in hierarchy with PDC and
+>> the return 0 is appropriate as it would set the GPIO_NO_WAKE_IRQ as the
+>> parent and setup the IRQ correctly. We fail to setup GPIOs otherwise.
+>
+>Ah ok so by default we will set the parent irq to ~0 and that means
+>bypass pdc and go directly to GIC?
+>
+>Where do we fail to setup a GPIO otherwise? It sounds like we can always
+>translate to either something in the map or to ~0.
+>
+We do not, may be other architectures can use this check better.
 
-Looking at nfs-utils.... looks like this number is opaque to nfs-utils
-code, generated by gss_inquire_context, which actually defines it as
-uint32_t, so this makes sense.
-
---b.
-
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  include/linux/sunrpc/gss_api.h        |  4 ++--
->  include/linux/sunrpc/gss_krb5.h       |  2 +-
->  net/sunrpc/auth_gss/gss_krb5_mech.c   | 12 +++++++++---
->  net/sunrpc/auth_gss/gss_krb5_seal.c   |  8 ++++----
->  net/sunrpc/auth_gss/gss_krb5_unseal.c |  6 +++---
->  net/sunrpc/auth_gss/gss_krb5_wrap.c   | 16 ++++++++--------
->  net/sunrpc/auth_gss/gss_mech_switch.c |  2 +-
->  net/sunrpc/auth_gss/svcauth_gss.c     |  4 ++--
->  8 files changed, 30 insertions(+), 24 deletions(-)
-> 
-> diff --git a/include/linux/sunrpc/gss_api.h b/include/linux/sunrpc/gss_api.h
-> index 5ac5db4d295f..68c871924ebf 100644
-> --- a/include/linux/sunrpc/gss_api.h
-> +++ b/include/linux/sunrpc/gss_api.h
-> @@ -49,7 +49,7 @@ int gss_import_sec_context(
->  		size_t			bufsize,
->  		struct gss_api_mech	*mech,
->  		struct gss_ctx		**ctx_id,
-> -		time_t			*endtime,
-> +		time64_t		*endtime,
->  		gfp_t			gfp_mask);
->  u32 gss_get_mic(
->  		struct gss_ctx		*ctx_id,
-> @@ -109,7 +109,7 @@ struct gss_api_ops {
->  			const void		*input_token,
->  			size_t			bufsize,
->  			struct gss_ctx		*ctx_id,
-> -			time_t			*endtime,
-> +			time64_t		*endtime,
->  			gfp_t			gfp_mask);
->  	u32 (*gss_get_mic)(
->  			struct gss_ctx		*ctx_id,
-> diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_krb5.h
-> index 02c0412e368c..c1d77dd8ed41 100644
-> --- a/include/linux/sunrpc/gss_krb5.h
-> +++ b/include/linux/sunrpc/gss_krb5.h
-> @@ -106,9 +106,9 @@ struct krb5_ctx {
->  	struct crypto_sync_skcipher *initiator_enc_aux;
->  	u8			Ksess[GSS_KRB5_MAX_KEYLEN]; /* session key */
->  	u8			cksum[GSS_KRB5_MAX_KEYLEN];
-> -	s32			endtime;
->  	atomic_t		seq_send;
->  	atomic64_t		seq_send64;
-> +	time64_t		endtime;
->  	struct xdr_netobj	mech_used;
->  	u8			initiator_sign[GSS_KRB5_MAX_KEYLEN];
->  	u8			acceptor_sign[GSS_KRB5_MAX_KEYLEN];
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-> index 6e5d6d240215..75b3c2e9e8f8 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-> @@ -253,6 +253,7 @@ gss_import_v1_context(const void *p, const void *end, struct krb5_ctx *ctx)
->  {
->  	u32 seq_send;
->  	int tmp;
-> +	u32 time32;
->  
->  	p = simple_get_bytes(p, end, &ctx->initiate, sizeof(ctx->initiate));
->  	if (IS_ERR(p))
-> @@ -290,9 +291,11 @@ gss_import_v1_context(const void *p, const void *end, struct krb5_ctx *ctx)
->  		p = ERR_PTR(-ENOSYS);
->  		goto out_err;
->  	}
-> -	p = simple_get_bytes(p, end, &ctx->endtime, sizeof(ctx->endtime));
-> +	p = simple_get_bytes(p, end, &time32, sizeof(time32));
->  	if (IS_ERR(p))
->  		goto out_err;
-> +	/* unsigned 32-bit time overflows in year 2106 */
-> +	ctx->endtime = (time64_t)time32;
->  	p = simple_get_bytes(p, end, &seq_send, sizeof(seq_send));
->  	if (IS_ERR(p))
->  		goto out_err;
-> @@ -587,15 +590,18 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
->  {
->  	u64 seq_send64;
->  	int keylen;
-> +	u32 time32;
->  
->  	p = simple_get_bytes(p, end, &ctx->flags, sizeof(ctx->flags));
->  	if (IS_ERR(p))
->  		goto out_err;
->  	ctx->initiate = ctx->flags & KRB5_CTX_FLAG_INITIATOR;
->  
-> -	p = simple_get_bytes(p, end, &ctx->endtime, sizeof(ctx->endtime));
-> +	p = simple_get_bytes(p, end, &time32, sizeof(time32));
->  	if (IS_ERR(p))
->  		goto out_err;
-> +	/* unsigned 32-bit time overflows in year 2106 */
-> +	ctx->endtime = (time64_t)time32;
->  	p = simple_get_bytes(p, end, &seq_send64, sizeof(seq_send64));
->  	if (IS_ERR(p))
->  		goto out_err;
-> @@ -659,7 +665,7 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
->  static int
->  gss_import_sec_context_kerberos(const void *p, size_t len,
->  				struct gss_ctx *ctx_id,
-> -				time_t *endtime,
-> +				time64_t *endtime,
->  				gfp_t gfp_mask)
->  {
->  	const void *end = (const void *)((const char *)p + len);
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
-> index 48fe4a591b54..f1d280accf43 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_seal.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
-> @@ -131,14 +131,14 @@ gss_get_mic_v1(struct krb5_ctx *ctx, struct xdr_buf *text,
->  	struct xdr_netobj	md5cksum = {.len = sizeof(cksumdata),
->  					    .data = cksumdata};
->  	void			*ptr;
-> -	s32			now;
-> +	time64_t		now;
->  	u32			seq_send;
->  	u8			*cksumkey;
->  
->  	dprintk("RPC:       %s\n", __func__);
->  	BUG_ON(ctx == NULL);
->  
-> -	now = get_seconds();
-> +	now = ktime_get_real_seconds();
->  
->  	ptr = setup_token(ctx, token);
->  
-> @@ -170,7 +170,7 @@ gss_get_mic_v2(struct krb5_ctx *ctx, struct xdr_buf *text,
->  	struct xdr_netobj cksumobj = { .len = sizeof(cksumdata),
->  				       .data = cksumdata};
->  	void *krb5_hdr;
-> -	s32 now;
-> +	time64_t now;
->  	u8 *cksumkey;
->  	unsigned int cksum_usage;
->  	__be64 seq_send_be64;
-> @@ -198,7 +198,7 @@ gss_get_mic_v2(struct krb5_ctx *ctx, struct xdr_buf *text,
->  
->  	memcpy(krb5_hdr + GSS_KRB5_TOK_HDR_LEN, cksumobj.data, cksumobj.len);
->  
-> -	now = get_seconds();
-> +	now = ktime_get_real_seconds();
->  
->  	return (ctx->endtime < now) ? GSS_S_CONTEXT_EXPIRED : GSS_S_COMPLETE;
->  }
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_unseal.c b/net/sunrpc/auth_gss/gss_krb5_unseal.c
-> index ef2b25b86d2f..aaab91cf24c8 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_unseal.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_unseal.c
-> @@ -124,7 +124,7 @@ gss_verify_mic_v1(struct krb5_ctx *ctx,
->  
->  	/* it got through unscathed.  Make sure the context is unexpired */
->  
-> -	now = get_seconds();
-> +	now = ktime_get_real_seconds();
->  
->  	if (now > ctx->endtime)
->  		return GSS_S_CONTEXT_EXPIRED;
-> @@ -149,7 +149,7 @@ gss_verify_mic_v2(struct krb5_ctx *ctx,
->  	char cksumdata[GSS_KRB5_MAX_CKSUM_LEN];
->  	struct xdr_netobj cksumobj = {.len = sizeof(cksumdata),
->  				      .data = cksumdata};
-> -	s32 now;
-> +	time64_t now;
->  	u8 *ptr = read_token->data;
->  	u8 *cksumkey;
->  	u8 flags;
-> @@ -194,7 +194,7 @@ gss_verify_mic_v2(struct krb5_ctx *ctx,
->  		return GSS_S_BAD_SIG;
->  
->  	/* it got through unscathed.  Make sure the context is unexpired */
-> -	now = get_seconds();
-> +	now = ktime_get_real_seconds();
->  	if (now > ctx->endtime)
->  		return GSS_S_CONTEXT_EXPIRED;
->  
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-> index 14a0aff0cd84..6c1920eed771 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-> @@ -163,7 +163,7 @@ gss_wrap_kerberos_v1(struct krb5_ctx *kctx, int offset,
->  					    .data = cksumdata};
->  	int			blocksize = 0, plainlen;
->  	unsigned char		*ptr, *msg_start;
-> -	s32			now;
-> +	time64_t		now;
->  	int			headlen;
->  	struct page		**tmp_pages;
->  	u32			seq_send;
-> @@ -172,7 +172,7 @@ gss_wrap_kerberos_v1(struct krb5_ctx *kctx, int offset,
->  
->  	dprintk("RPC:       %s\n", __func__);
->  
-> -	now = get_seconds();
-> +	now = ktime_get_real_seconds();
->  
->  	blocksize = crypto_sync_skcipher_blocksize(kctx->enc);
->  	gss_krb5_add_padding(buf, offset, blocksize);
-> @@ -268,7 +268,7 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
->  	char			cksumdata[GSS_KRB5_MAX_CKSUM_LEN];
->  	struct xdr_netobj	md5cksum = {.len = sizeof(cksumdata),
->  					    .data = cksumdata};
-> -	s32			now;
-> +	time64_t		now;
->  	int			direction;
->  	s32			seqnum;
->  	unsigned char		*ptr;
-> @@ -359,7 +359,7 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
->  
->  	/* it got through unscathed.  Make sure the context is unexpired */
->  
-> -	now = get_seconds();
-> +	now = ktime_get_real_seconds();
->  
->  	if (now > kctx->endtime)
->  		return GSS_S_CONTEXT_EXPIRED;
-> @@ -439,7 +439,7 @@ gss_wrap_kerberos_v2(struct krb5_ctx *kctx, u32 offset,
->  		     struct xdr_buf *buf, struct page **pages)
->  {
->  	u8		*ptr, *plainhdr;
-> -	s32		now;
-> +	time64_t	now;
->  	u8		flags = 0x00;
->  	__be16		*be16ptr;
->  	__be64		*be64ptr;
-> @@ -481,14 +481,14 @@ gss_wrap_kerberos_v2(struct krb5_ctx *kctx, u32 offset,
->  	if (err)
->  		return err;
->  
-> -	now = get_seconds();
-> +	now = ktime_get_real_seconds();
->  	return (kctx->endtime < now) ? GSS_S_CONTEXT_EXPIRED : GSS_S_COMPLETE;
->  }
->  
->  static u32
->  gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
->  {
-> -	s32		now;
-> +	time64_t	now;
->  	u8		*ptr;
->  	u8		flags = 0x00;
->  	u16		ec, rrc;
-> @@ -557,7 +557,7 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
->  	/* do sequencing checks */
->  
->  	/* it got through unscathed.  Make sure the context is unexpired */
-> -	now = get_seconds();
-> +	now = ktime_get_real_seconds();
->  	if (now > kctx->endtime)
->  		return GSS_S_CONTEXT_EXPIRED;
->  
-> diff --git a/net/sunrpc/auth_gss/gss_mech_switch.c b/net/sunrpc/auth_gss/gss_mech_switch.c
-> index 82060099a429..94fddce7f224 100644
-> --- a/net/sunrpc/auth_gss/gss_mech_switch.c
-> +++ b/net/sunrpc/auth_gss/gss_mech_switch.c
-> @@ -374,7 +374,7 @@ int
->  gss_import_sec_context(const void *input_token, size_t bufsize,
->  		       struct gss_api_mech	*mech,
->  		       struct gss_ctx		**ctx_id,
-> -		       time_t			*endtime,
-> +		       time64_t			*endtime,
->  		       gfp_t gfp_mask)
->  {
->  	if (!(*ctx_id = kzalloc(sizeof(**ctx_id), gfp_mask)))
-> diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-> index 8be2f209982b..30ed5585a42a 100644
-> --- a/net/sunrpc/auth_gss/svcauth_gss.c
-> +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-> @@ -433,7 +433,7 @@ static int rsc_parse(struct cache_detail *cd,
->  	int id;
->  	int len, rv;
->  	struct rsc rsci, *rscp = NULL;
-> -	time_t expiry;
-> +	time64_t expiry;
->  	int status = -EINVAL;
->  	struct gss_api_mech *gm = NULL;
->  
-> @@ -1184,7 +1184,7 @@ static int gss_proxy_save_rsc(struct cache_detail *cd,
->  	static atomic64_t ctxhctr;
->  	long long ctxh;
->  	struct gss_api_mech *gm = NULL;
-> -	time_t expiry;
-> +	time64_t expiry;
->  	int status = -EINVAL;
->  
->  	memset(&rsci, 0, sizeof(rsci));
-> -- 
-> 2.20.0
+--lina
