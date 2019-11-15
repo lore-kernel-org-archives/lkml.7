@@ -2,99 +2,99 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6CAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AC7C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8028C20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573847018;
-	bh=ld4rW2k11Lbg2rHEcey2VfnIi5Nl31fVQgLrDuiv6/4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=frn1RUCdZ8zEsBFro2RcQSnWAEc7BTyM0eHoUdiUjQRMX9NxUbTDQOdFdHM75WewR
-	 7xBy5PEglrTt6Kn1KNn7my2qIQZtOWQJGQhUb5xwXi9FQB0SR8l7fe9yQrMwokH9oH
-	 ljXf4r1Ke/cNu9v+11rM1C2rYToUSkzW1A3aJ83c=
+	by mail.kernel.org (Postfix) with ESMTP id C072520732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:48:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VPWwE9Rr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKOTnh (ORCPT
+        id S1726881AbfKOTsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 14:43:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726505AbfKOTnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 14:43:37 -0500
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B1B2073A;
-        Fri, 15 Nov 2019 19:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573847016;
-        bh=ld4rW2k11Lbg2rHEcey2VfnIi5Nl31fVQgLrDuiv6/4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TWSZA0dCh+qFFJatZQNp41RyPHBy+vjy2Pyq2efmOp9AB7P/1lAj8oTRAASabhbMJ
-         8hQTnObbyuELO7dqN/qWn2SNHQyyxjwEC8EAKifdBM9iwKMSZvKVtrzi9ykSwWVuaG
-         sbx29g/Hh0yEmTyS8OeGSP6b02b2bXSz0eVnNDqc=
-Received: by mail-qv1-f45.google.com with SMTP id g12so4200834qvy.12;
-        Fri, 15 Nov 2019 11:43:36 -0800 (PST)
-X-Gm-Message-State: APjAAAXH3xn1MdwH7Nu+1Lk/egUjddzdBsaO9WuHxJd4wIaEAFs4mLA+
-        1yE5kNYMsKQglJW/HWnGP6Yj9mSrpJVjS5iDkw==
-X-Google-Smtp-Source: APXvYqzb9iMcXyAFITPQ01iU7106R3B8CRt3Yj3H790DDelfdGgmOQj80dVzPja+pL4WGrPQxTeaRIP7VepFEpUdfEo=
-X-Received: by 2002:ad4:42b4:: with SMTP id e20mr1570396qvr.85.1573847015232;
- Fri, 15 Nov 2019 11:43:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
- <20191112055412.192675-2-dmitry.torokhov@gmail.com> <20191112120307.GB5195@sirena.co.uk>
- <20191112190328.GA199853@dtor-ws> <20191112191547.GK5195@sirena.co.uk>
- <20191112193653.GB13374@dtor-ws> <20191114222652.GA7517@bogus>
- <CAKdAkRQBrKOUTW8puakA26ODYW9=0H4VhwFhGQAqMs-cMmj3CQ@mail.gmail.com>
- <CAL_JsqKUXPTC-fmUowpaHQpuKTfgfQ6D2n7kOZgkYt+MS7OfaA@mail.gmail.com> <20191115152221.GA4210@sirena.co.uk>
-In-Reply-To: <20191115152221.GA4210@sirena.co.uk>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 15 Nov 2019 13:43:23 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+9eejCg41poj--GDtUqOgSUoNMpB=OEAuKhNu1Ggb7Ew@mail.gmail.com>
-Message-ID: <CAL_Jsq+9eejCg41poj--GDtUqOgSUoNMpB=OEAuKhNu1Ggb7Ew@mail.gmail.com>
-Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
- and interrupts
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
+        Fri, 15 Nov 2019 14:48:53 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37563 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfKOTsx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 14:48:53 -0500
+Received: by mail-oi1-f194.google.com with SMTP id y194so9668669oie.4
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 11:48:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=89ki5gCyFaFazPM4MT3GuICeyjOsNZnH539wVj6PzCM=;
+        b=VPWwE9RrAqszxVB1mKYP6/s1DmY2ix8Y1fafLQWAW1wg1eaMprmTPWK/iPrrMUJsTB
+         7HEWh2OpE4cCL76nODlrp2JnwOpKlYYMVjdoYSIPaXcFxcjAoA5oC9tfbmZ86sZE87qS
+         kf1TVxe90rRN7AbhalLFMHiY57JoeloJ6qnB4tqTtyb/F3V9ygt/d+Fik42s54QbOsfP
+         /0Mp7D/W4KFUqzRxjFNjxRYHCOArf612hqwEDcodf4WmkpkKtQERh4i/bj62U2U7lTvu
+         L8iBUfClvKXkhGJjNB/jDJevtMJL7zKz0p46Bx1wFJVCEWjK5mwMY/8oQ/VumMGopZVZ
+         uyqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=89ki5gCyFaFazPM4MT3GuICeyjOsNZnH539wVj6PzCM=;
+        b=PU/TJIH+fRxoWXyI9soQl7MJ9JTQNehvMyWqGOM0Jz3nVgcxYUeRl6MpWP3PlBlFkf
+         igQq3LxFhBNwc3bpebYEPSfH1U4kBwV3aRMs76pAO5Z1lxtMFGjVtM0sHFc5NBAX7ean
+         0jKqsvMDvvmfKuH6RYdkYwQlKHZPlTUfI96I/X2A2gtHy6Nx88kPosqNFiIoQD2e0OkB
+         kSbtgpimEyAXATyZf7WGWI3SvCy4f7ct7C/1uG9/ytVsmr95G/SV/ndvh5Zqoso4W7ar
+         zjyxpdmFgJhhSE4xTOiEnbNaiQMzQlj2fkIb9rolirX+794tgHYFGvF8spN0bt6QBmSd
+         +w+w==
+X-Gm-Message-State: APjAAAW3Wcrc+n0vxGvqz5YcJSeiaQQVTHvWEW52Oe8Ay6wiRVCMyyZ7
+        uK/V144cXRJYWl+EjxjThfJhlw==
+X-Google-Smtp-Source: APXvYqxC+q6bqr48ncu6FV5lYoc6la8mAyX4ATuvLwxlhhukNSzuVzK+EEvv648084tqxyvuAKlo+Q==
+X-Received: by 2002:aca:c4d3:: with SMTP id u202mr9701947oif.59.1573847330775;
+        Fri, 15 Nov 2019 11:48:50 -0800 (PST)
+Received: from localhost (42.sub-174-240-141.myvzw.com. [174.240.141.42])
+        by smtp.gmail.com with ESMTPSA id z16sm3100151oih.56.2019.11.15.11.48.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 11:48:50 -0800 (PST)
+Date:   Fri, 15 Nov 2019 11:48:49 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Green Wan <green.wan@sifive.com>
+cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/4] riscv: dts: add support for PDMA device of HiFive
+ Unleashed Rev A00
+In-Reply-To: <20191107084955.7580-3-green.wan@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1911151148400.3813@viisi.sifive.com>
+References: <20191107084955.7580-1-green.wan@sifive.com> <20191107084955.7580-3-green.wan@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 9:22 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Nov 15, 2019 at 07:52:22AM -0600, Rob Herring wrote:
->
-> > if:
-> >   properties:
-> >     interrupt-names:
-> >       contains:
-> >         const: wakeup
-> >   required:
-> >     - interrupt-names
-> > then:
-> >   required:
-> >     - wakeup-source
->
-> That seems to say that if we have a device that has an interrupt called
-> "wakeup" then it must be a wakeup source.  Is that desirable?  Being
-> able to wake the system is partly a property of the system as a whole
-> (the wakeup signal needs to be wired somewhere where it can wake things)
-> and a device might have a signal that could be used to wake the system,
-> may even be called "wakeup" by the device but for some reason isn't
-> wired suitably in a given system.
+On Thu, 7 Nov 2019, Green Wan wrote:
 
-Perhaps it is too strict. It would be useful as a "Did you forget
-wakeup-source?" message, but we don't have a way to distinguish that.
+> Add PDMA support to (arch/riscv/boot/dts/sifive/fu540-c000.dtsi)
+> 
+> Signed-off-by: Green Wan <green.wan@sifive.com>
 
-Rob
+Thanks, queued for v5.5-rc1.
+
+
+- Paul
