@@ -2,136 +2,109 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9C7C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0E0C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580D520740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76C020730
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BFBIgmkk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EW8AUeKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfKOOJa (ORCPT
+        id S1727560AbfKOOMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:09:30 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46616 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbfKOOJ3 (ORCPT
+        Fri, 15 Nov 2019 09:12:16 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35549 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfKOOMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:09:29 -0500
-Received: by mail-qk1-f194.google.com with SMTP id h15so8130952qka.13
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:09:29 -0800 (PST)
+        Fri, 15 Nov 2019 09:12:16 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r7so10862946ljg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:12:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=01834Iuy8wrTkyETdgSEfcddUW82cA+Rc6Zt+MvTCwg=;
-        b=BFBIgmkk8QkntrHNjJLsvCL1a0ZURlA5X/gmLb4n3VPRP5m3aB6scRcD2DMxTLAV9P
-         UaMtjJH/lJaxRT3MaYZLNwy8cw9D1M5/6iAxnqhClJH46gGawBEotmmVwz9bc8u3IFV9
-         a3v4lMSNKHekmvWmxSCO3xS9GuPfrTZZ9gfrHLPlSSz+de3k9e1mbvTuAMlgMSg1inD0
-         htevxD4Ti62AfDMDE+osEpAwbIBY+1VPeWYkc7W/CwzYOFcM3WvoA9tt0pcZZGXm+LdO
-         O8XKMS5WarP50UJ1uTIL/tvlJnyEoGG2Ukx7eqBCtFPfW9ti43J0cbZRwFC28FPxF58w
-         Wt7Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=slql22Lvz46WLUa6lndozAHDqOw1IKVDi6n/pS/xzmc=;
+        b=EW8AUeKskgrRYNROo8Qv9VIP+RzHnB5xM/iAzMi0TB45huCydBA8sKyiW3/xypqRe3
+         MEFNXYMqPlFSNcDTGdyDcObMzjMJXbJB+9q9h+tQJb8I5yIfPb8btv23xPZPqjxtnJbR
+         KnNe3ZXBbtkiKJJCcvUfLd4Sfm3QtlKQB+aVrur7uO48Iw5DqCHlf5lXixhLJFEG3KU/
+         VYoGQfkfClEqRZolI0iryVZf0cdDj6sHqaZSZ2XH5ogiGujNqbJTUZc5ZOKFVi+RK24R
+         9SSZI4KHRdHz4Kf5VWOZh7hvTK/qpW317qhtZXXRZqmvOoJb8FGRuR/dBjT7iJPX1s3C
+         Cr9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=01834Iuy8wrTkyETdgSEfcddUW82cA+Rc6Zt+MvTCwg=;
-        b=KtjSgqCnL6HDs75umOTT7dLFAYlY3RWsxyOg4Y3OSgjIKUNF9rEoWJcM3rL/76UJmY
-         Ki/ECNiQ23PRK0eVdFmcWtg9tze3+ehpZ6toAnrH4PqD4OwCHC60dAanw+KlNEuqQLLb
-         5Z4Qes+sua8XtPL+3D+BosCZgiqiv6hMc6kBypQNihDkun5yH4zjRDX8/bzM51rTvJQ3
-         D/P55EztlpUjG0UDkPxuBorqockvkL7z3oHQTp0fNxxn64CciDMgieXCbf8/rHo81wmS
-         /Vpv3EAjEFPEDGG+tOkN8KAzyP2F8FE4QcxscxVKpSd7ExrbKbrgxgemMyardnO2psdY
-         F4Gg==
-X-Gm-Message-State: APjAAAVt9vgYuZIpCkJ3QdD4CjTts9wvyKiJUtwK9+/LfO8AOFBAlXye
-        HqSATX4aD2ItxDGkpo7X3QFNBA==
-X-Google-Smtp-Source: APXvYqySuuQ0WzAKMm3kXEkiDMguUlgyvE6K/2D67jOtzEpRUEwGr7GFZW94ehFUiDC6Dq2Nm3hHug==
-X-Received: by 2002:a37:76c6:: with SMTP id r189mr11712734qkc.303.1573826968699;
-        Fri, 15 Nov 2019 06:09:28 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id m65sm4836053qte.54.2019.11.15.06.09.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Nov 2019 06:09:28 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iVcHv-0002xw-Lj; Fri, 15 Nov 2019 10:09:27 -0400
-Date:   Fri, 15 Nov 2019 10:09:27 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 12/24] IB/{core,hw,umem}: set FOLL_PIN via
- pin_user_pages*(), fix up ODP
-Message-ID: <20191115140927.GB4055@ziepe.ca>
-References: <20191115055340.1825745-1-jhubbard@nvidia.com>
- <20191115055340.1825745-13-jhubbard@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=slql22Lvz46WLUa6lndozAHDqOw1IKVDi6n/pS/xzmc=;
+        b=Idavl0oSJu2+1YgKvNkSZoVdNQOGPxMU3KtEFCHaqSlI8D+k8emNLbZpPAohNg4rZd
+         3PmEVRxkVrk36eghwmdzqj7gFMlRyWEr43Q5O8CqU54V96Jxa6JcjzLJKumhMgb4rATs
+         CsyrbDBFHCM3GPcnGSLbfZvtSw9fmEwoSfzvrn/2Q1BBdBi0JskXzN8CaR7KaxAsgtzO
+         5Z7pRD3CTjf0OnMhOXTPGzNG3898Ary/qoNpgwaYivfHnPHRowhVnWN1cx6rVHsnNgDM
+         rwuEBoJQo1TVPLigZrYeN+L/t/uM7u8lPNcO9MFWaKK5d84HLagIDBtKbj3x7plQB/4b
+         YEvw==
+X-Gm-Message-State: APjAAAVRV8ppB22Zp9/6DmvR39PoZSf2rdRLb/R826DquaAXB2CFY5KB
+        sTX2vkR+v2CYPt87+uKho/RW/94Vob5yoe3/zgpzaw==
+X-Google-Smtp-Source: APXvYqyhDaYL80Ahst62ZZPsU/jmvGG4mTPUUh0TSUDWU4odSDAqEYSLIBo3opQCvc9EMgd5iDZQUbFmIkUAEE4+TeY=
+X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr10978072ljl.193.1573827133905;
+ Fri, 15 Nov 2019 06:12:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115055340.1825745-13-jhubbard@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
+ <20191115132520.GJ4131@hirez.programming.kicks-ass.net> <CAKfTPtB4UGmZ53iVRsOV+k4MiS=Dzqw2-6_sBhko0bHRMAed2g@mail.gmail.com>
+ <20191115140555.GL4131@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191115140555.GL4131@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 15 Nov 2019 15:12:02 +0100
+Message-ID: <CAKfTPtC97QxWRM=7MFMoRBjTTn+iLO4utL4DBoBnpyxTOeTfbw@mail.gmail.com>
+Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 09:53:28PM -0800, John Hubbard wrote:
-> Convert infiniband to use the new pin_user_pages*() calls.
-> 
-> Also, revert earlier changes to Infiniband ODP that had it using
-> put_user_page(). ODP is "Case 3" in
-> Documentation/core-api/pin_user_pages.rst, which is to say, normal
-> get_user_pages() and put_page() is the API to use there.
-> 
-> The new pin_user_pages*() calls replace corresponding get_user_pages*()
-> calls, and set the FOLL_PIN flag. The FOLL_PIN flag requires that the
-> caller must return the pages via put_user_page*() calls, but infiniband
-> was already doing that as part of an earlier commit.
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  drivers/infiniband/core/umem.c              |  2 +-
->  drivers/infiniband/core/umem_odp.c          | 13 ++++++-------
->  drivers/infiniband/hw/hfi1/user_pages.c     |  2 +-
->  drivers/infiniband/hw/mthca/mthca_memfree.c |  2 +-
->  drivers/infiniband/hw/qib/qib_user_pages.c  |  2 +-
->  drivers/infiniband/hw/qib/qib_user_sdma.c   |  2 +-
->  drivers/infiniband/hw/usnic/usnic_uiom.c    |  2 +-
->  drivers/infiniband/sw/siw/siw_mem.c         |  2 +-
->  8 files changed, 13 insertions(+), 14 deletions(-)
+On Fri, 15 Nov 2019 at 15:06, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Nov 15, 2019 at 02:37:27PM +0100, Vincent Guittot wrote:
+> > On Fri, 15 Nov 2019 at 14:25, Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
+>
+> > > > +     decayed = update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> > > > +     decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> > > > +     decayed |= update_irq_load_avg(rq, 0);
+> > >
+> > > Should not all 3 have their windows aligned and thus alway return the
+> > > exact same value?
+> >
+> > rt and dl yes but not irq
+>
+> Any reason for IRQ not to be aligned?
 
-Ok
+irq time is not accounted into task time so irq_avg use rq->clock
+whereas other use rq->clock_task
+But irq is also not sum up with others
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-
-Jason
+>
+> > But having aligned window doesn't mean that they will all decay.
+> > One can have been updated just before (during a dequeue as an example)
+> > or at least less than 1ms before
+>
+> Bah... true.
