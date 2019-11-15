@@ -2,96 +2,72 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6A2C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BAFC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320BC20733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1NFbqba"
+	by mail.kernel.org (Postfix) with ESMTP id B563A20733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfKONzp (ORCPT
+        id S1727588AbfKONzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:55:45 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45033 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfKONzo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:55:44 -0500
-Received: by mail-pl1-f196.google.com with SMTP id az9so4710173plb.11;
-        Fri, 15 Nov 2019 05:55:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n1fqLNzThkpou5xsZlJyghefoBsjgqzEyV05NKr6H6U=;
-        b=n1NFbqbanS718NMzvx0SmdaCzu9jDkzbceNCxrGmAqLD75WM3CjeMgVDCAZV4BgugG
-         MyUayMb8kms9JdXSKJH5t9azgwmQ8CYdUhw/uOi1QOJHCkPym0/ovZ0RmntCu5+KQett
-         lqecjAk1ftQbBhb4QsV+xAB07c5iFgomcfwj0ocSzVAgHgt8sBZQCrjLfwgkSFCTruTY
-         AkFVMg4VUJT0C8UX5DTLefdCt/s+5luJCAgmELO5Xt724B5uN0MnAqx44iNuLNDfMsLs
-         ExJPaSDT1I2YjPt9cQoIQjDlkTBtUHx/QowsfGwxOL+w+tB9zNrupw6BxmKWh8jJpQc4
-         xrfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n1fqLNzThkpou5xsZlJyghefoBsjgqzEyV05NKr6H6U=;
-        b=VCiuodrS5yhWKUuTJN5AzHujVIQl3Dy2e6wvxUzYIDaWxnAWYHEjjjKyslNP2qRHxm
-         +c3QmiSn765lU0W2bV3ZIVNXcb2C1GDzzWklaa5ATxV3MO46xq371Ucy1DGlNjBgGlKO
-         Ufq3uQ3lgaQiIca0GmOpJhGZxz9pbdmDyXfmJ9v/YxrDO9x3y1UqFcj+azx+Dfi6xC9/
-         C4CvES9QOr6wm1u5Eh4byZBoi9p3HqdUIYx/73GcMQLLeXbnZ6SH7Y4KINSqdzOOdNUU
-         tOLxGfhS+8aoOm4Xpkhtdkx1iLiAVapmvM2v05zymi20Rf1XBvompmsrkysJ0EpF9WD6
-         jQ+Q==
-X-Gm-Message-State: APjAAAV+YxC+ZqPbvpXBokT33w46Iar7u7sZ9sBlaKeUKbn7BjvJ4/jF
-        m0fHkb9NasVcJ/hASDDcVf4H13kB
-X-Google-Smtp-Source: APXvYqy9MIWaJU8Qz6+oah/tghadCTAPPSRJsVVqe4ncNzgHRlSzT+vWAeV9Ev29DBs6W5IaV/P5PQ==
-X-Received: by 2002:a17:902:d917:: with SMTP id c23mr15177030plz.199.1573826143893;
-        Fri, 15 Nov 2019 05:55:43 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a34sm10792143pgl.56.2019.11.15.05.55.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 05:55:42 -0800 (PST)
-Subject: Re: [PATCH 4.4 00/20] 4.4.202-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191115062006.854443935@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <61528559-4d1a-a3be-4e69-b7bf1bf8bea9@roeck-us.net>
-Date:   Fri, 15 Nov 2019 05:55:40 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 15 Nov 2019 08:55:49 -0500
+Received: from mga18.intel.com ([134.134.136.126]:11218 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727380AbfKONzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:55:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 05:55:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
+   d="scan'208";a="199205460"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.197])
+  by orsmga008.jf.intel.com with ESMTP; 15 Nov 2019 05:55:44 -0800
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     x86@kernel.org
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 0/2] x86/insn: Add some Intel instructions to the opcode map
+Date:   Fri, 15 Nov 2019 15:54:45 +0200
+Message-Id: <20191115135447.6519-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/14/19 10:20 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.202 release.
-> There are 20 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 17 Nov 2019 06:18:31 +0000.
-> Anything received after that time might be too late.
-> 
+Hi
 
-Build results:
-	total: 170 pass: 170 fail: 0
-Qemu test results:
-	total: 324 pass: 324 fail: 0
+Here is a patch to update the x86 opcode map, and a patch to update the
+perf tools' "new instructions" test accordingly.
 
-Guenter
+There are still a lot of AVX instructions to add and also
+CET instructions, which Yu-cheng is adding.
+
+
+Adrian Hunter (2):
+      x86/insn: perf tools: Add some instructions to the new instructions test
+      x86/insn: Add some Intel instructions to the opcode map
+
+ arch/x86/lib/x86-opcode-map.txt              |  18 +++--
+ tools/arch/x86/lib/x86-opcode-map.txt        |  18 +++--
+ tools/perf/arch/x86/tests/insn-x86-dat-32.c  |  52 +++++++++++++
+ tools/perf/arch/x86/tests/insn-x86-dat-64.c  |  62 +++++++++++++++
+ tools/perf/arch/x86/tests/insn-x86-dat-src.c | 109 +++++++++++++++++++++++++++
+ 5 files changed, 247 insertions(+), 12 deletions(-)
+
+
+Regards
+Adrian
