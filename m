@@ -2,84 +2,106 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817BDC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980C5C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED3F20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF6D20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fU56JVpr"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eL36vRAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfKOU7X (ORCPT
+        id S1727056AbfKOVAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 15:59:23 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44396 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfKOU7X (ORCPT
+        Fri, 15 Nov 2019 16:00:25 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38385 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbfKOVAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 15:59:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4av0+SBD1vMrf5zA32ZYJgLjHtl85+9kbIX+2Olyi+I=; b=fU56JVprSEQyoiHJfIPWJd2oA
-        wsFe+b0oNyR5hGs8sNcp+91MJE6ol/f/iom/RdVYHTyCVvRbViLkSvFkdCmUMcAw6A7ugagRkcw4F
-        PhYENfIikdQIUk2D6TA1kZPKpSUGs7dGmdOwTZSJZEw8tVE7HATvLZkhZZtQc9cuKF376i+nj98nL
-        /jwSFQMjJS2bJ6HSDvhIt+HvOLH+9mnhO6rmwRsFY4Vyg7sb9ZhS1NE5lcECAG3sowFPfwwgP7itk
-        fbnRaNK//Rsi2pOOOnMuCNY5z4DbacKmQjfPXf9NjHbSBOT2VeMr6BneCQPcQtN6cJF4y/+mWvcwv
-        x+EF4AJXw==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iViga-0002KT-7S; Fri, 15 Nov 2019 20:59:20 +0000
-Subject: Re: PROBLEM: error and warning from 5.4.0-rc7
-To:     Jeffrin Jose <jeffrin@rajagiritech.edu.in>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        Josh Boyer <jwboyer@fedoraproject.org>
-References: <20191115202559.GA160812@debian>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fe379dcc-5a43-4300-0ab6-458c493db888@infradead.org>
-Date:   Fri, 15 Nov 2019 12:59:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 15 Nov 2019 16:00:24 -0500
+Received: by mail-qk1-f195.google.com with SMTP id e2so9229626qkn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 13:00:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O2ZiPXcxOiy+M9Lvpig1+xN6nwmYl4rGDRQdufUv9tQ=;
+        b=eL36vRAPQHS67240QT8y/Z/uh98ececvMUIuLqsRx/fEHjtfbWeKaPntMIZxUWbxbT
+         5IdSpSWaEr1Jhn1zn00QzFm0mtIjyVFhZ8Xu283u9t1x55bd9zllEm3EBFGVOsy6AzQO
+         2GKIErImw4w19Pc2r8lqhDzorECU53vs7SZV3KfYr61lRScv1GxVUdKRcXTsYgHtYRTn
+         UAJS03kB+lWTNOonYv6mZw3EilVITvuTk80w2AmSMePOz1b1Y9me29Q6c2VK/4JAUn3o
+         3g1Vp7cwAU60h/6IhjG7P45vN0OFnNO1tP6b2K/g5wvq7tEF6tSbMS60f0KF8yf69fQG
+         ixRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O2ZiPXcxOiy+M9Lvpig1+xN6nwmYl4rGDRQdufUv9tQ=;
+        b=NXp/OWAunRepAXhkHEKrTWjYpMQJ2PmtKWu0gQ2tCw0ekCo9Ap3FtO2EtBXgSJQBw9
+         rMAd8aKwVlCW6y3wgGZ4edldaySYQWlktV/P6bE/7M+xE0es5b4hZgINZGdw3J6ZvkKO
+         P+qUju4Jl33brCoWYZ1Hb3/OXPIbTLkhmPmAjIsUiG3i4XbIHllQ0+q9n1oE0bwTXFRo
+         oHFYQGzYffCKnecMFazAbEY21o7nIFbnLFf4z/fOKKrOc2MhsHoX6JwG6kA4UtAcoegq
+         jj0n93LIO+7xZMv1Q0moobZeRP0BxfQklS1w022k+YCfOm/YxihfEXfGYQX0hT5Cdyt3
+         P5sw==
+X-Gm-Message-State: APjAAAWSqZwCVWbZQrtVXEphuXphtFvfjY8TvXPy5oO7MilCAgPBk0bp
+        2FyE2cW73vsKHsem0a3t5z90pg==
+X-Google-Smtp-Source: APXvYqxfbTbNheGaAeTCaa5mJhw+2O2ku0CEpc54KfvKQBFOm9sUAiO3NZAYqXaFMR2xb7maXDBryw==
+X-Received: by 2002:a37:8a01:: with SMTP id m1mr14700667qkd.147.1573851621968;
+        Fri, 15 Nov 2019 13:00:21 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id w69sm4955246qkb.26.2019.11.15.13.00.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Nov 2019 13:00:21 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iVihY-0007hl-Tn; Fri, 15 Nov 2019 17:00:20 -0400
+Date:   Fri, 15 Nov 2019 17:00:20 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     bharat@chelsio.com, dledford@redhat.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] RDMA/iw_cgxb4: Fix an error handling path in
+ 'c4iw_connect()'
+Message-ID: <20191115210020.GA29581@ziepe.ca>
+References: <20190923190746.10964-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-In-Reply-To: <20191115202559.GA160812@debian>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923190746.10964-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/15/19 12:25 PM, Jeffrin Jose wrote:
-> hello all
+On Mon, Sep 23, 2019 at 09:07:46PM +0200, Christophe JAILLET wrote:
+> We should jump to fail3 in order to undo the 'xa_insert_irq()' call.
 > 
-> i get error and warning from a typical 5.4.0-rc7.
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Not sure which Fixes tag to use because of the many refactorings in this
+> area. So I've choosen to use none :).
+> The issue was already there in 4a740838bf44c. This commit has renamed
+> all labels because a new fail1 was introduced. I've not searched further.
 > 
-> ------x--------x--error---x---------------x----
+> Naming of error labels should be improved. Having nowadays a fail5
+> between fail2 and fail3 (because fail5 was the last
+> error handling path added) is not that readable.
+> However, it goes beyong the purpose of this patch.
 > 
-> $cat 5.4.0-rc7-error.txt 
-> [    2.064029] Couldn't get size: 0x800000000000000e
-> [   12.906185] tpm_tis MSFT0101:00: IRQ index 0 not found
+> Maybe, just using a fail2a, just as already done in 9f5a9632e412 (which
+> introduced fail5) would be enough.
+> ---
+>  drivers/infiniband/hw/cxgb4/cm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hi,
-Missing a lot of context here.
+The disaster of the error label aside, this does fix the bug, so
+applied to for-next
 
-"Couldn't get size:" is from security/integrity/platform_certs/load_uefi.c.
-The "size" that is printed appears to be EFI_NOT_FOUND, so it seems that
-some error handling is not happening.
-
-#define EFI_NOT_FOUND		(14 | (1UL << (BITS_PER_LONG-1)))
-
-Adding a few cc:s.
-
--- 
-~Randy
-
+Thanks,
+Jason
