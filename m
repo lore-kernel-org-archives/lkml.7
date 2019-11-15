@@ -2,101 +2,199 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA744C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222EEC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE09820730
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AB820740
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dZnOiRST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfKOQva convert rfc822-to-8bit (ORCPT
+        id S1727677AbfKOQwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:51:30 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:35163 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727555AbfKOQva (ORCPT
+        Fri, 15 Nov 2019 11:52:38 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36418 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbfKOQwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:51:30 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-28-JYU6DzG4PJauNrdBTvHnwQ-1; Fri, 15 Nov 2019 16:51:25 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 15 Nov 2019 16:51:24 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 15 Nov 2019 16:51:24 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Shile Zhang' <shile.zhang@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "H . Peter Anvin" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
-Subject: RE: [RFC PATCH v3 7/7] x86/unwind/orc: remove run-time ORC unwind
- tables sort
-Thread-Topic: [RFC PATCH v3 7/7] x86/unwind/orc: remove run-time ORC unwind
- tables sort
-Thread-Index: AQHVm4CqL2sS2uy4n0+BG1AUQK0Os6eMck/g
-Date:   Fri, 15 Nov 2019 16:51:24 +0000
-Message-ID: <893d3caf85cd4ed0921fab84cfe28cad@AcuMS.aculab.com>
-References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
- <20191115064750.47888-8-shile.zhang@linux.alibaba.com>
-In-Reply-To: <20191115064750.47888-8-shile.zhang@linux.alibaba.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 15 Nov 2019 11:52:37 -0500
+Received: by mail-oi1-f195.google.com with SMTP id j7so9189043oib.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 08:52:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x9nEfpm4Qn3KUPLEqiBqX+Wd5id0rONEYyby+X9G1pY=;
+        b=dZnOiRSTLZSxks+CVIAANablbHG+rIYQIX3NV7GjDmo/GIrgxmBn8pgMKzhF99Nf8W
+         T37eXKZegY3lpG8kmBVdH3+UpUoxgAzo5EbonaljTE64o96bjQBiNSRYAl/sthMnPi1g
+         g9TiNZzFHEFLJ2eCr+Xa6RHsinhdBYjxEYFd0GOlHCVrOIio9KP0ZQRumTJhosrYcL4F
+         23cjDvd7e1akEQLnakcYzmmHy58/3Bgd9X/1wCjNiZFpv5sZUO9pXguURYrKJKJ224j8
+         JOH33/I93oBH8RwMtbsqT4zlw6+wp5KlhZFC4QsIPG904WjC6r+hdpC/QOhqoRIAYckF
+         NlCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x9nEfpm4Qn3KUPLEqiBqX+Wd5id0rONEYyby+X9G1pY=;
+        b=jLp9E1KynzZ5I7DATaHa2ECN9/r+6Becld0kaY3z5e0NBW8bptxw/nZzN4vgI1uq/C
+         8pPL7zFaKIdw41uoPsV+KgfdzP+OEiVDxUZ6D46YyL3ucF3/857MYb01ItWFZ0QqGsT+
+         8emO4JuzDvAKYDgGKkRXwSv7K733A8lBo0EEp8F/47zoeEbzj+3jgAsZCTnhYXwpDL72
+         qUXqpNppv7r9gElg0NxaQsGnC4jYnXxm24QkO2eiliityEZ0wgKKxreAQfppyPT6QZDS
+         Tk1jkUgo6vyFo4UY4LyNia13S11czFRyfcD67dzLfEzahasyxBlpi/nyCUIRD4gPV75Q
+         /g4g==
+X-Gm-Message-State: APjAAAVV3TJA3rkOjQJfENai9zMBzno+qvwmX2EdLBdLLBjRsBD3ATq+
+        Mhhrq4olv+TIl8yWKM4htSNP998D61Vll6KCnSG6dg==
+X-Google-Smtp-Source: APXvYqx2AVq593cMA+4ji4GXv3QAPg+9ct1XuU7Gg2GfBYSTG5+OuzHnoVtVqjmqrRu+pyuUAdg9xFHbBvX7RVKUhaE=
+X-Received: by 2002:aca:4fce:: with SMTP id d197mr8992480oib.142.1573836755958;
+ Fri, 15 Nov 2019 08:52:35 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: JYU6DzG4PJauNrdBTvHnwQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20191107205334.158354-1-hannes@cmpxchg.org> <20191107205334.158354-3-hannes@cmpxchg.org>
+ <CALvZod5y2NPPg=24q33=ktQqwyUsH1gpwHgROe5z_P+tW74SDw@mail.gmail.com> <20191115160722.GA309754@cmpxchg.org>
+In-Reply-To: <20191115160722.GA309754@cmpxchg.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 15 Nov 2019 08:52:24 -0800
+Message-ID: <CALvZod6YVC-dRV9PaGSCzPE_JA8fhUUEkeBnT7j4ZUVFGWiaOw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shile Zhang
-> Sent: 15 November 2019 06:48
-...
->  arch/x86/kernel/unwind_orc.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> index 332ae6530fa8..280da6fa9922 100644
-> --- a/arch/x86/kernel/unwind_orc.c
-> +++ b/arch/x86/kernel/unwind_orc.c
-> @@ -273,9 +273,11 @@ void __init unwind_init(void)
->  		return;
->  	}
-> 
-> -	/* Sort the .orc_unwind and .orc_unwind_ip tables: */
-> -	sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
-> -	     orc_sort_swap);
-> +	/*
-> +	 * Note, orc_unwind and orc_unwind_ip tables has been sorted in
-> +	 * vmlinux link phase by sorttable tool at build time.
-> +	 * Its ready for binary search now.
-> +	 */
+On Fri, Nov 15, 2019 at 8:07 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> On Thu, Nov 14, 2019 at 03:47:59PM -0800, Shakeel Butt wrote:
+> > On Thu, Nov 7, 2019 at 12:53 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > >
+> > > We use refault information to determine whether the cache workingset
+> > > is stable or transitioning, and dynamically adjust the inactive:active
+> > > file LRU ratio so as to maximize protection from one-off cache during
+> > > stable periods, and minimize IO during transitions.
+> > >
+> > > With cgroups and their nested LRU lists, we currently don't do this
+> > > correctly. While recursive cgroup reclaim establishes a relative LRU
+> > > order among the pages of all involved cgroups, refaults only affect
+> > > the local LRU order in the cgroup in which they are occuring. As a
+> > > result, cache transitions can take longer in a cgrouped system as the
+> > > active pages of sibling cgroups aren't challenged when they should be.
+> > >
+> > > [ Right now, this is somewhat theoretical, because the siblings, under
+> > >   continued regular reclaim pressure, should eventually run out of
+> > >   inactive pages - and since inactive:active *size* balancing is also
+> > >   done on a cgroup-local level, we will challenge the active pages
+> > >   eventually in most cases. But the next patch will move that relative
+> > >   size enforcement to the reclaim root as well, and then this patch
+> > >   here will be necessary to propagate refault pressure to siblings. ]
+> > >
+> > > This patch moves refault detection to the root of reclaim. Instead of
+> > > remembering the cgroup owner of an evicted page, remember the cgroup
+> > > that caused the reclaim to happen. When refaults later occur, they'll
+> > > correctly influence the cross-cgroup LRU order that reclaim follows.
+> >
+> > Can you please explain how "they'll correctly influence"? I see that
+> > if the refaulted page was evicted due to pressure in some ancestor,
+> > then that's ancestor's refault distance and active file size will be
+> > used to decide to activate the refaulted page but how that is
+> > influencing cross-cgroup LRUs?
+>
+> I take it the next patch answered your question: Activating a page
+> inside a cgroup has an effect on how it's reclaimed relative to pages
+> in sibling cgroups. So the influence part isn't new with this change -
+> it's about recognizing that an activation has an effect on a wider
+> scope than just the local cgroup, and considering that scope when
+> making the decision whether to activate or not.
+>
 
-How fast is sort() if the table is sorted?
-Relying on the kernel sources and build scripts always being in sync seems dangerous.
-Probably better to leave the sort in for a release of two.
+Thanks for the clarification.
 
-	David
+> > > @@ -302,6 +330,17 @@ void workingset_refault(struct page *page, void *shadow)
+> > >          */
+> > >         refault_distance = (refault - eviction) & EVICTION_MASK;
+> > >
+> > > +       /*
+> > > +        * The activation decision for this page is made at the level
+> > > +        * where the eviction occurred, as that is where the LRU order
+> > > +        * during page reclaim is being determined.
+> > > +        *
+> > > +        * However, the cgroup that will own the page is the one that
+> > > +        * is actually experiencing the refault event.
+> > > +        */
+> > > +       memcg = get_mem_cgroup_from_mm(current->mm);
+> >
+> > Why not page_memcg(page)? page is locked.
+>
+> Nice catch! Indeed, the page is charged and locked at this point, so
+> we don't have to do another lookup and refcounting dance here.
+>
+> Delta patch:
+>
+> ---
+>
+> From 8984f37f3e88b1b39c7d6470b313730093b24474 Mon Sep 17 00:00:00 2001
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> Date: Fri, 15 Nov 2019 09:14:04 -0500
+> Subject: [PATCH] mm: vmscan: detect file thrashing at the reclaim root fix
+>
+> Shakeel points out that the page is locked and already charged by the
+> time we call workingset_refault(). Instead of doing another cgroup
+> lookup and reference from current->mm we can simply use page_memcg().
+>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+For the complete patch:
 
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+
+> ---
+>  mm/workingset.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/mm/workingset.c b/mm/workingset.c
+> index f0885d9f41cd..474186b76ced 100644
+> --- a/mm/workingset.c
+> +++ b/mm/workingset.c
+> @@ -338,7 +338,7 @@ void workingset_refault(struct page *page, void *shadow)
+>          * However, the cgroup that will own the page is the one that
+>          * is actually experiencing the refault event.
+>          */
+> -       memcg = get_mem_cgroup_from_mm(current->mm);
+> +       memcg = page_memcg(page);
+>         lruvec = mem_cgroup_lruvec(memcg, pgdat);
+>
+>         inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
+> @@ -349,7 +349,7 @@ void workingset_refault(struct page *page, void *shadow)
+>          * the memory was available to the page cache.
+>          */
+>         if (refault_distance > active_file)
+> -               goto out_memcg;
+> +               goto out;
+>
+>         SetPageActive(page);
+>         advance_inactive_age(memcg, pgdat);
+> @@ -360,9 +360,6 @@ void workingset_refault(struct page *page, void *shadow)
+>                 SetPageWorkingset(page);
+>                 inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
+>         }
+> -
+> -out_memcg:
+> -       mem_cgroup_put(memcg);
+>  out:
+>         rcu_read_unlock();
+>  }
+> --
+> 2.24.0
+>
