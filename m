@@ -2,100 +2,100 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E1CC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A944CC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E60D2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F9F2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NkQvKiCD"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OOmozher"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfKOXas (ORCPT
+        id S1727354AbfKOXcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 18:30:48 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43658 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfKOXar (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 18:30:47 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l24so6653658pgh.10
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 15:30:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:subject:from:user-agent:date;
-        bh=gSbKMKql5sEqE07IQgKTqMTq9G16VWJ3CxdiQ6od//U=;
-        b=NkQvKiCDlxAzjl0sBQbqPC6dIibiAXMCtybhHP7pvXnnksE9DrSG/C93e1uNoJxkEQ
-         6BXQcgL/odCwAPKBSbE3r+5aBZgwxudDwH+fI1tnMB8hU6He3fi2Lk58Ag6BfJEyvqfU
-         zMl+JEMn9ky8RPW1cru1G5BaEkpM0a301fGt4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
-         :user-agent:date;
-        bh=gSbKMKql5sEqE07IQgKTqMTq9G16VWJ3CxdiQ6od//U=;
-        b=U1Xghc0COaqCZ6kfi7dPdpnmY1V7/VN85cE9iX5UsvwWD+VEsdw8e4XXTjy31YGrVK
-         vSpTRGWlPKrNp7KUMijYrYQ+64l6BXR1bBK84si9SdSombDCf0/nxd+uGUrZhVrWweXz
-         j83qLLRpzppWx8xblo61FG6NpGH/3palo6GanXMGlfj4ztcuIr+g9RZHuIquWgsf0ULC
-         D+ogTNQ/47Q/y4mRXbXwNhft+n4laQ93uiW8O/AZp/Y60WwxT4sdPRIhHiiQJ8+ccIcd
-         r+TQ+0xSFD7AmDBxVOchfu16UuRyjiEY1Nsh1qz71+NrVyJD4JQRy3h85iV47Z0lHgBn
-         /b0A==
-X-Gm-Message-State: APjAAAXTX7/Dm+gmzwaxd1tcdfcmvPm06DgpTPe2F8TAZ9bw6GqeBTsE
-        hoQF14HFVdfqb1npwtixMA9M6w==
-X-Google-Smtp-Source: APXvYqwD5U2lVQiKyC0uYB6z/gPgwJXPG5mK8PMHOR2GiQV3y/nT0jjVkvX/wzWRLSIZAwqGIprs+g==
-X-Received: by 2002:aa7:961d:: with SMTP id q29mr19742795pfg.89.1573860646234;
-        Fri, 15 Nov 2019 15:30:46 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id o124sm1832653pfb.56.2019.11.15.15.30.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 15:30:45 -0800 (PST)
-Message-ID: <5dcf3525.1c69fb81.88c99.5986@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 15 Nov 2019 18:32:19 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52363 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727056AbfKOXcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 18:32:19 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47FF4c1p53z9sPF;
+        Sat, 16 Nov 2019 10:32:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573860736;
+        bh=eQ5I90vi/r0lH3+Kp3ZPgiAXcKCN9HvIO3uUKvDMdPY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OOmozherXoZ64OXWu8I70kJYMLbMr/J8oOiJHQn8EFEi4M3ui0zXP1IXSH7UZhgwz
+         jWws8zFVnD3F8+bCpC06pAA5GZWY0IORdi6ktTzm4MsNol/rGl6Fazc/wZj5ME+CUs
+         4wjARPxMZMoC/IFs/5lGrV6RNhDkipNneJdaU8qxMERQeFBhBZhy0GpwvqHc9Yqd6H
+         I9aCIrpyZPpbeccUnb904ojZ+stlGWo2oUX6R//eQYZQGunIyRVU2Hq0xMRWCFrb4y
+         aT8Dz5ad9VCd87yMUx2y5zgfar9tFyEUd5Wll3Fzsea/knpOU8IBki9rYdnrcBDSCu
+         nhObh0DF5H+gg==
+Date:   Sat, 16 Nov 2019 10:32:13 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Alasdair G Kergon <agk@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joe Thornber <dm-devel@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: Re: linux-next: Tree for Nov 15 (drivers/md/dm-integrity)
+Message-ID: <20191116103213.47a1991f@canb.auug.org.au>
+In-Reply-To: <20191115231050.GA29649@redhat.com>
+References: <20191115190525.77efdf6c@canb.auug.org.au>
+        <f368f431-b741-d04f-440b-3d8c3c035537@infradead.org>
+        <20191116094620.497663ab@canb.auug.org.au>
+        <20191115231050.GA29649@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573593774-12539-3-git-send-email-eberman@codeaurora.org>
-References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-3-git-send-email-eberman@codeaurora.org>
-Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, psodagud@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v2 02/18] firmware: qcom_scm: Add funcnum IDs
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 15:30:44 -0800
+Content-Type: multipart/signed; boundary="Sig_/rpeBUN6Yd2jv+1d_t4lJIva";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Elliot Berman (2019-11-12 13:22:38)
-> Add LEGACY_FUNCNUM to qcom_scm-32.c and move SMCCC_FUNCNUM closer to
-> other smccc-specific macros.
+--Sig_/rpeBUN6Yd2jv+1d_t4lJIva
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Mike,
+
+On Fri, 15 Nov 2019 18:10:51 -0500 Mike Snitzer <snitzer@redhat.com> wrote:
+>
+> Yes, I've pushed a fixed commit, please see:
+> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.gi=
+t/commit/?h=3Dfor-next&id=3Dd537858ac8aaf4311b51240893add2fc62003b97
 >=20
-> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
-> ---
->  drivers/firmware/qcom_scm-32.c | 8 +++++---
->  drivers/firmware/qcom_scm-64.c | 3 +--
->  2 files changed, 6 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-3=
-2.c
-> index 5d52641..5077fcf 100644
-> --- a/drivers/firmware/qcom_scm-32.c
-> +++ b/drivers/firmware/qcom_scm-32.c
-> @@ -38,6 +38,8 @@ static struct qcom_scm_entry qcom_scm_wb[] =3D {
-> =20
->  static DEFINE_MUTEX(qcom_scm_lock);
-> =20
-> +#define LEGACY_FUNCNUM(s, c)   (((s) << 10) | ((c) & 0x3ff))
 
-Same name comment here. Otherwise
+Yeah, sorry for the noise, I should read more ahead in my email before
+replying.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/rpeBUN6Yd2jv+1d_t4lJIva
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3PNX0ACgkQAVBC80lX
+0GzR8ggAnIPyKhzm9H/UEtVk/yhaIGtHCjjs3bGYL0WnIFjfa9I3QyTttf+sA2S7
+BbQrSZxaAP0M5G3/RLp1ES+xe0Ep8unh8hV7dj47we8J0pAUyd7o92vtnOUjlWiQ
+dRAt4rYCmY9meDb+frH1Uzhn2jM3bHtwuWL6X2b6+xF5JQLFx3qi9AnXtgRgpQ0L
+/yNiZAEnFSCLyTOMlcbteqHhxVirJ7VTN4Iq0JgEg19vf4UiT8RF78cvjwial1Io
+dfK7pCF+yD7IwXzkkCYbVyys5EALWQZS9xLM48QkKCgeigMBjvSt3LUxuaatrqfb
+IKWgWFF28iHGlTx1oGWlgySZbuatkA==
+=GAOr
+-----END PGP SIGNATURE-----
+
+--Sig_/rpeBUN6Yd2jv+1d_t4lJIva--
