@@ -5,157 +5,176 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4172C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C01C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3232073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE14E20733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvgK/nC3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEFLQjC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKOUiw (ORCPT
+        id S1726973AbfKOUlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 15:38:52 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44684 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfKOUiw (ORCPT
+        Fri, 15 Nov 2019 15:41:00 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45821 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfKOUlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 15:38:52 -0500
-Received: by mail-ed1-f68.google.com with SMTP id a67so8458664edf.11;
-        Fri, 15 Nov 2019 12:38:49 -0800 (PST)
+        Fri, 15 Nov 2019 15:41:00 -0500
+Received: by mail-pf1-f193.google.com with SMTP id z4so7200591pfn.12;
+        Fri, 15 Nov 2019 12:40:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sTcLhwvIMhlqP/s/7QCSwHIRuZ9rOIYUpZfr1zzirzY=;
-        b=cvgK/nC3KBowcn7VWNctBq67Zjhrogzf+pKX091gF8wMMklXrkKkxC/qh+L8sjxbkb
-         jlzFGtSrgPj4RqO7s2+vYId1X3oV7PbtcRJRsTFxRCN5QpKsxcHGD020t8u3/myjhD6v
-         TeNKrw3p8HMXimZkoIZLpkO57Pg0vUvHr7WuVBuk3EjLezIettb6kLUV//ogvqPdHogn
-         fcAOW7iyOyPIMtfMA2zIpjqaiGFXAlvPy6etcoeXR9FhZFjk/YlG5oG9rFC5OQEwr0HM
-         46yNdS4wj2C9y8Xd2V38RaGcY26nCEsDIdpPok0hiMH2631bTfp+4iN3h9VPKcnGviG0
-         X0SQ==
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=/eNCiZb2B70OcvEG4CFJpEsh/64tl0xUputhGCMOUYk=;
+        b=KEFLQjC68s5hcGa6HKaiZ36mHeZpBcRX+uss4WLCl0rPqOYZ4dh//08RCSMKEXvuE3
+         j9DDSyJ5+tjD3/fi5VQiUzPpZ6+PelhIpMzTDq0xlJ5uqwNa4odNBXz17oVt7sCpDWai
+         aTGOjT4INKJniDU8CLFuk8UjPBplWMDbnhaO83Uy4ctCQNgeVYq7Mbpa4tnvmSbx/ZmP
+         hlLbrg8t6Xr+QQoEAMpRQsnzAabIy45HqpZ3mrX2RX+h8KVY3nKdDURlH3ICnnQaWoo0
+         5NMK5qixklNzxtQgbjktf9GMjf/jvvmXj2eX/kylQht65vYStMwmFEbo1Lgcp0ww6NB9
+         6r+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sTcLhwvIMhlqP/s/7QCSwHIRuZ9rOIYUpZfr1zzirzY=;
-        b=EGDlK4Bi5zcoiYmzzaQAI5lPVI8bfBaDQSMzPeS81ETKqnXCJIHtDLxVc97NsVVZ8m
-         uiepHI2c9YMGbLSCmaCJcnCLRAjTJFbZ5k1a5iXZGBmmgllLrYxibaQ08e6FZI3UFcMe
-         GDIuam2KS9QtOP7ybDz/hfe51/2iSoaSNx39H4I+Ek7DMf1MC8k5Zw4kyzQBxp7yBEbF
-         Sl0OtZ53l+uW4Al2H6ZxhhwKU9SRVru4wuN1XON13HH21wCYix1OxrXg47DO0wocN+OY
-         XsYWugIHwuTt3L/W/a/9jOxrOWaN6xSXrFxkGdUoaanjfisr3MFIC86MDKpeiNsHV7y8
-         Q+BA==
-X-Gm-Message-State: APjAAAVcE1zOeQysSdDJrOp4uPpoPR3wAn+ELl9f/wBGTh4uMpPdFgXR
-        ux7gCJ3BR++wwGKxTtl855eHVsn6hXI59qF5sKg=
-X-Google-Smtp-Source: APXvYqwuAPBsZ0YGDKdBX9FyeN/gNpDmSQGu5aWDAyMALQe7sM9Uq0EyDUVp8RGHG6+jBF6lAntMd8tkd1Xk35ywnQs=
-X-Received: by 2002:a17:906:d210:: with SMTP id w16mr3708950ejz.86.1573850328320;
- Fri, 15 Nov 2019 12:38:48 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=/eNCiZb2B70OcvEG4CFJpEsh/64tl0xUputhGCMOUYk=;
+        b=EPhI+mNHJtt3Vad3yW+nxIXxfL/SDpMqDwDh0WPLTdwO2weBBgNrK7q7j/k3LNK8Xv
+         WJSLtkCKUslI4SmmtUjauZPzqWzbtFgJb9SX8Emp861MsX9JL2JOwkl6e70mEG5b9H54
+         D/wWiPDDs1XK+6WxJBohsDi0KzURhQC0hwP2C5SN1I5sVSHVQPxUb+WUVjXJM5W6awsZ
+         fggv3GOlj7gU/tgGovdg0BwOP8tLoXwMKFk9vlhM98GByJmr+bRMrzK3iSihXckDROFZ
+         9Bdp9KUukuWwa5ly3m7sLeO+/v2x3EAF1M21TnSaQVxOo+rWSObm2M8TQnl7ZKCb4P+0
+         FBrQ==
+X-Gm-Message-State: APjAAAVD0S9nNKx8kiT9ygfiUzDgx4ZCdq5N0lz8BWWNe6hBETvWmw57
+        FCdzmqSiUxLjjYs95yrh+bU=
+X-Google-Smtp-Source: APXvYqy74GmqDuG9mHumRBh3b9gvQ06iG7nb1jxhEOnmmOgripvzWoZiWV+GTyyrtTmTBC6fGimcow==
+X-Received: by 2002:a63:1e1f:: with SMTP id e31mr18356918pge.303.1573850457702;
+        Fri, 15 Nov 2019 12:40:57 -0800 (PST)
+Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
+        by smtp.gmail.com with ESMTPSA id b82sm11511061pfb.33.2019.11.15.12.40.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 12:40:56 -0800 (PST)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
+Thread-Topic: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
+Thread-Index: AQHVm1y/foErHfC6cU+1DW6VLv0AgqeMszGN
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Fri, 15 Nov 2019 20:40:51 +0000
+Message-ID: <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+References: <cover.1573784557.git.eswara.kota@linux.intel.com>
+ <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
+In-Reply-To: <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191115015607.11291-1-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20191115015607.11291-1-ivan.khoronzhuk@linaro.org>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 15 Nov 2019 22:38:37 +0200
-Message-ID: <CA+h21hq+DfUQOeH30z0r_dhKp6EOwtbgRCAYBRGUmaZOo1BBwQ@mail.gmail.com>
-Subject: Re: [net-next PATCH] taprio: don't reject same mqprio settings
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 03:58, Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
+On 11/14/19, 9:31 PM, Dilip Kota wrote:
+
+> Add support to PCIe RC controller on Intel Gateway SoCs.
+> PCIe controller is based of Synopsys DesignWare PCIe core.
 >
-> The taprio qdisc allows to set mqprio setting but only once. In case
-> if mqprio settings are provided next time the error is returned as
-> it's not allowed to change traffic class mapping in-flignt and that
-> is normal. But if configuration is absolutely the same - no need to
-> return error. It allows to provide same command couple times,
-> changing only base time for instance, or changing only scheds maps,
-> but leaving mqprio setting w/o modification. It more corresponds the
-> message: "Changing the traffic mapping of a running schedule is not
-> supported", so reject mqprio if it's really changed.
+> Intel PCIe driver requires Upconfigure support, Fast Training
+> Sequence and link speed configurations. So adding the respective
+> helper functions in the PCIe DesignWare framework.
+> It also programs hardware autonomous speed during speed
+> configuration so defining it in pci_regs.h.
 >
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > ---
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
-Tested-by: Vladimir Oltean <olteanv@gmail.com>
+[.....]
 
-I would even kindly suggest a tag:
-Fixes: a3d43c0d56f1 ("taprio: Add support adding an admin schedule")
-
-since the patch is doing nothing but making the tc-taprio command
-idempotent, aka running it 10 times in a row produces the same result.
-Previously, it would have worked the first time but failed the rest of
-9 times, which is catastrophic for any sort of scripted environments.
-It should have behaved like this from the beginning.
-
-The problem is that it conflicts trivially with 9c66d1564676 ("taprio:
-Add support for hardware offloading"), which made its appearance in
-5.4. It's up to you if you want to rebase this on top of 5.4 as well,
-for the stable trees.
-
->  net/sched/sch_taprio.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  drivers/pci/controller/dwc/Kconfig           |  10 +
+>  drivers/pci/controller/dwc/Makefile          |   1 +
+>  drivers/pci/controller/dwc/pcie-designware.c |  57 +++
+>  drivers/pci/controller/dwc/pcie-designware.h |  12 +
+>  drivers/pci/controller/dwc/pcie-intel-gw.c   | 542 +++++++++++++++++++++=
+++++++
+>  include/uapi/linux/pci_regs.h                |   1 +
+>  6 files changed, 623 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
 >
-> diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-> index 7cd68628c637..bd844f2cbf7a 100644
-> --- a/net/sched/sch_taprio.c
-> +++ b/net/sched/sch_taprio.c
-> @@ -1347,6 +1347,26 @@ static int taprio_parse_clockid(struct Qdisc *sch, struct nlattr **tb,
->         return err;
->  }
->
-> +static int taprio_mqprio_cmp(struct net_device *dev,
-> +                            struct tc_mqprio_qopt *mqprio)
-> +{
-> +       int i;
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
+dwc/Kconfig
+> index 0ba988b5b5bc..fb6d474477df 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -82,6 +82,16 @@ config PCIE_DW_PLAT_EP
+>  	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>  	  selected.
+> =20
+> +config PCIE_INTEL_GW
+> +	bool "Intel Gateway PCIe host controller support"
+> +	depends on OF && (X86 || COMPILE_TEST)
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say 'Y' here to enable PCIe Host controller support on Intel
+> +	  Gateway SoCs.
+> +	  The PCIe controller uses the DesignWare core plus Intel-specific
+> +	  hardware wrappers.
 > +
-> +       if (mqprio->num_tc != dev->num_tc)
-> +               return -1;
-> +
-> +       for (i = 0; i < mqprio->num_tc; i++)
-> +               if (dev->tc_to_txq[i].count != mqprio->count[i] ||
-> +                   dev->tc_to_txq[i].offset != mqprio->offset[i])
-> +                       return -1;
-> +
-> +       for (i = 0; i < TC_BITMASK + 1; i++)
 
-Huh, odd, I wonder what's wrong with <= these days. I do see it's
-being used like that in 2 more places in the code, so let's opt for
-consistency.
+Please add this config alphabetical order!
+So, this config should be after 'config PCI_IMX6'.
+There is no reason to put this config at the first place.
 
-> +               if (dev->prio_tc_map[i] != mqprio->prio_tc_map[i])
-> +                       return -1;
-> +
-> +       return 0;
-> +}
-> +
->  static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
->                          struct netlink_ext_ack *extack)
->  {
-> @@ -1398,6 +1418,10 @@ static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
->         admin = rcu_dereference(q->admin_sched);
->         rcu_read_unlock();
->
-> +       /* no changes - no new mqprio settings */
-> +       if (mqprio && !taprio_mqprio_cmp(dev, mqprio))
-> +               mqprio = NULL;
-> +
->         if (mqprio && (oper || admin)) {
->                 NL_SET_ERR_MSG(extack, "Changing the traffic mapping of a running schedule is not supported");
->                 err = -ENOTSUPP;
-> --
-> 2.20.1
->
+>  config PCI_EXYNOS
+>  	bool "Samsung Exynos PCIe controller"
+>  	depends on SOC_EXYNOS5440 || COMPILE_TEST
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller=
+/dwc/Makefile
+> index b30336181d46..99db83cd2f35 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) +=3D pcie-designware.o
+>  obj-$(CONFIG_PCIE_DW_HOST) +=3D pcie-designware-host.o
+>  obj-$(CONFIG_PCIE_DW_EP) +=3D pcie-designware-ep.o
+>  obj-$(CONFIG_PCIE_DW_PLAT) +=3D pcie-designware-plat.o
+> +obj-$(CONFIG_PCIE_INTEL_GW) +=3D pcie-intel-gw.o
+
+Ditto.
+
+Best regards,
+Jingoo Han
+
+>  obj-$(CONFIG_PCI_DRA7XX) +=3D pci-dra7xx.o
+>  obj-$(CONFIG_PCI_EXYNOS) +=3D pci-exynos.o
+>  obj-$(CONFIG_PCI_IMX6) +=3D pci-imx6.o
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/c=
+ontroller/dwc/pcie-designware.c
+> index 820488dfeaed..479e250695a0 100644
+
+[.....]
