@@ -2,152 +2,166 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23707C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998E7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6AD20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hbmfSiRO"
+	by mail.kernel.org (Postfix) with ESMTP id 76C972072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfKOPgW (ORCPT
+        id S1727743AbfKOPhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:36:22 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48116 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727893AbfKOPgR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:36:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573832176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o+ceyNOAgwOHGOedPh8jjnXDmvLZ/5D9KblQB5Ic6zg=;
-        b=hbmfSiROdmw+GqdbnS8Ajy0my+P05Xwwea3PWPxt3dTEYlu1OVrozqge4NlNs5x5K3+JBq
-        Fh3ohZgTyXCqrFpVsxmhWWz1hh8jHKzodKwMD7R9OSZ5k7YzGClP75U11udXXyhRuQX0h8
-        gUMgBCWIhx7OAzuQ67hQtekP+pm3lQE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-9G6vf67KOMymBhSKmwPLHw-1; Fri, 15 Nov 2019 10:36:10 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17B5C8A20E2;
-        Fri, 15 Nov 2019 15:36:08 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-154.ams2.redhat.com [10.36.116.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E40F6117E;
-        Fri, 15 Nov 2019 15:36:04 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v8 8/8] platform/x86: touchscreen_dmi: Add info for the Chuwi Vi8 Plus tablet
-Date:   Fri, 15 Nov 2019 16:35:29 +0100
-Message-Id: <20191115153529.215244-9-hdegoede@redhat.com>
-In-Reply-To: <20191115153529.215244-1-hdegoede@redhat.com>
-References: <20191115153529.215244-1-hdegoede@redhat.com>
+        Fri, 15 Nov 2019 10:37:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:32918 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727564AbfKOPhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 10:37:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A421530E;
+        Fri, 15 Nov 2019 07:37:10 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B1103F534;
+        Fri, 15 Nov 2019 07:37:08 -0800 (PST)
+Date:   Fri, 15 Nov 2019 15:37:06 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 05/14] add support for Clang's Shadow Call Stack (SCS)
+Message-ID: <20191115153705.GJ41572@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191105235608.107702-1-samitolvanen@google.com>
+ <20191105235608.107702-6-samitolvanen@google.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 9G6vf67KOMymBhSKmwPLHw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105235608.107702-6-samitolvanen@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add touchscreen info for the Chuwi Vi8 Plus tablet. This tablet uses a
-Chipone ICN8505 touchscreen controller, with the firmware used by the
-touchscreen embedded in the EFI firmware.
+On Tue, Nov 05, 2019 at 03:55:59PM -0800, Sami Tolvanen wrote:
+> This change adds generic support for Clang's Shadow Call Stack,
+> which uses a shadow stack to protect return addresses from being
+> overwritten by an attacker. Details are available here:
+> 
+>   https://clang.llvm.org/docs/ShadowCallStack.html
+> 
+> Note that security guarantees in the kernel differ from the
+> ones documented for user space. The kernel must store addresses
+> of shadow stacks used by other tasks and interrupt handlers in
+> memory, which means an attacker capable reading and writing
+> arbitrary memory may be able to locate them and hijack control
+> flow by modifying shadow stacks that are not currently in use.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> ---
+>  Makefile                       |   6 ++
+>  arch/Kconfig                   |  33 ++++++
+>  include/linux/compiler-clang.h |   6 ++
+>  include/linux/compiler_types.h |   4 +
+>  include/linux/scs.h            |  57 ++++++++++
+>  init/init_task.c               |   8 ++
+>  kernel/Makefile                |   1 +
+>  kernel/fork.c                  |   9 ++
+>  kernel/sched/core.c            |   2 +
+>  kernel/scs.c                   | 187 +++++++++++++++++++++++++++++++++
+>  10 files changed, 313 insertions(+)
+>  create mode 100644 include/linux/scs.h
+>  create mode 100644 kernel/scs.c
+> 
+> diff --git a/Makefile b/Makefile
+> index b37d0e8fc61d..7f3a4c5c7dcc 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -846,6 +846,12 @@ ifdef CONFIG_LIVEPATCH
+>  KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
+>  endif
+>  
+> +ifdef CONFIG_SHADOW_CALL_STACK
+> +CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
+> +KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
+> +export CC_FLAGS_SCS
+> +endif
+> +
+>  # arch Makefile may override CC so keep this after arch Makefile is included
+>  NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+>  
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 5f8a5d84dbbe..5e34cbcd8d6a 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -521,6 +521,39 @@ config STACKPROTECTOR_STRONG
+>  	  about 20% of all kernel functions, which increases the kernel code
+>  	  size by about 2%.
+>  
+> +config ARCH_SUPPORTS_SHADOW_CALL_STACK
+> +	bool
+> +	help
+> +	  An architecture should select this if it supports Clang's Shadow
+> +	  Call Stack, has asm/scs.h, and implements runtime support for shadow
+> +	  stack switching.
+> +
+> +config SHADOW_CALL_STACK_VMAP
+> +	bool
+> +	depends on SHADOW_CALL_STACK
+> +	help
+> +	  Use virtually mapped shadow call stacks. Selecting this option
+> +	  provides better stack exhaustion protection, but increases per-thread
+> +	  memory consumption as a full page is allocated for each shadow stack.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v7:
-- Remove PROPERTY_ENTRY_BOOL("efi-embedded-firmware") properties entry,
-  as this is no longer necessary
+The bool needs some display text to make it selectable.
 
-Changes in v6:
-- Switch from crc sums to SHA256 hashes for the firmware hash
----
- drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+This should probably be below SHADOW_CALL_STACK so that when it shows up
+in menuconfig it's where you'd expect it to be.
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/=
-touchscreen_dmi.c
-index 4449e4c0b26b..4a09b479cda5 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -132,6 +132,18 @@ static const struct ts_dmi_data chuwi_vi8_data =3D {
- =09.properties     =3D chuwi_vi8_props,
- };
-=20
-+static const struct ts_dmi_data chuwi_vi8_plus_data =3D {
-+=09.embedded_fw =3D {
-+=09=09.name=09=3D "chipone/icn8505-HAMP0002.fw",
-+=09=09.prefix =3D { 0xb0, 0x07, 0x00, 0x00, 0xe4, 0x07, 0x00, 0x00 },
-+=09=09.length=09=3D 35012,
-+=09=09.sha256=09=3D { 0x93, 0xe5, 0x49, 0xe0, 0xb6, 0xa2, 0xb4, 0xb3,
-+=09=09=09    0x88, 0x96, 0x34, 0x97, 0x5e, 0xa8, 0x13, 0x78,
-+=09=09=09    0x72, 0x98, 0xb8, 0x29, 0xeb, 0x5c, 0xa7, 0xf1,
-+=09=09=09    0x25, 0x13, 0x43, 0xf4, 0x30, 0x7c, 0xfc, 0x7c },
-+=09},
-+};
-+
- static const struct property_entry chuwi_vi10_props[] =3D {
- =09PROPERTY_ENTRY_U32("touchscreen-min-x", 0),
- =09PROPERTY_ENTRY_U32("touchscreen-min-y", 4),
-@@ -743,6 +755,15 @@ const struct dmi_system_id touchscreen_dmi_table[] =3D=
- {
- =09=09=09DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.D86JLBNR"),
- =09=09},
- =09},
-+=09{
-+=09=09/* Chuwi Vi8 Plus (CWI519) */
-+=09=09.driver_data =3D (void *)&chuwi_vi8_plus_data,
-+=09=09.matches =3D {
-+=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Hampoo"),
-+=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "D2D3_Vi8A1"),
-+=09=09=09DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+=09=09},
-+=09},
- =09{
- =09=09/* Chuwi Vi10 (CWI505) */
- =09=09.driver_data =3D (void *)&chuwi_vi10_data,
-@@ -1137,6 +1158,9 @@ static int __init ts_dmi_init(void)
- =09=09return 0; /* Not an error */
-=20
- =09ts_data =3D dmi_id->driver_data;
-+=09/* Some dmi table entries only provide an efi_embedded_fw_desc */
-+=09if (!ts_data->properties)
-+=09=09return 0;
-=20
- =09error =3D bus_register_notifier(&i2c_bus_type, &ts_dmi_notifier);
- =09if (error)
---=20
-2.23.0
+I locally hacked that in, but when building defconfig +
+SHADOW_CALL_STACK + SHADOW_CALL_STACK_VMAP, the build explodes as below:
 
+| [mark@lakrids:~/src/linux]% usellvm 9.0.0 usekorg 8.1.0 make ARCH=arm64 CROSS_COMPILE=aarch64-linux- CC=clang -j56 -s
+| arch/arm64/kernel/scs.c:28:7: error: use of undeclared identifier 'VMALLOC_START'
+|                                          VMALLOC_START, VMALLOC_END,
+|                                          ^
+| arch/arm64/kernel/scs.c:28:22: error: use of undeclared identifier 'VMALLOC_END'
+|                                          VMALLOC_START, VMALLOC_END,
+|                                                         ^
+| arch/arm64/kernel/scs.c:29:7: error: use of undeclared identifier 'SCS_GFP'
+|                                          SCS_GFP, PAGE_KERNEL,
+|                                          ^
+| arch/arm64/kernel/scs.c:29:16: error: use of undeclared identifier 'PAGE_KERNEL'
+|                                          SCS_GFP, PAGE_KERNEL,
+|                                                   ^
+| 4 errors generated.
+| scripts/Makefile.build:265: recipe for target 'arch/arm64/kernel/scs.o' failed
+| make[2]: *** [arch/arm64/kernel/scs.o] Error 1
+| scripts/Makefile.build:509: recipe for target 'arch/arm64/kernel' failed
+| make[1]: *** [arch/arm64/kernel] Error 2
+| Makefile:1655: recipe for target 'arch/arm64' failed
+| make: *** [arch/arm64] Error 2
+| make: *** Waiting for unfinished jobs....
+
+Other than that, this largely looks good to me!
+
+Thanks,
+Mark.
