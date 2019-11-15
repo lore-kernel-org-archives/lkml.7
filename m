@@ -2,85 +2,119 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EB8C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336CFC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C5520679
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FBE20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="M8kPyMeL"
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="LngHprQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKOUVt (ORCPT
+        id S1726912AbfKOU0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 15:21:49 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:48708 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbfKOUVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 15:21:49 -0500
-Received: from [10.133.216.62] (unknown [46.114.32.62])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 269921EC0D0D;
-        Fri, 15 Nov 2019 21:21:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573849307;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CJ5nL9wzLm/h6B/VGer8ezaThD56Vy5DLPCRUmPBrP8=;
-        b=M8kPyMeLjtA78o+y77W7UZgoXpRYA9GJPHacy+jFFUAoE3iBbe0I5QB98MugP/8j2dxtnf
-        GY7XBlknM+BQsrnQ7tkDyLcv107QrWFewLcxI/swL4gWc9tomCuaJX9vUl9sUYmAw/vJj0
-        pD3Hw5hGd4Yakc9SksgDzjBXhvrcUeE=
-Date:   Fri, 15 Nov 2019 21:21:45 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <alpine.DEB.2.21.1911152027200.28787@nanos.tec.linutronix.de>
-References: <20191115161445.30809-1-longman@redhat.com> <20191115161445.30809-2-longman@redhat.com> <7EAED44C-A93E-405E-B57B-89AC3F779A70@alien8.de> <alpine.DEB.2.21.1911152027200.28787@nanos.tec.linutronix.de>
+        Fri, 15 Nov 2019 15:26:07 -0500
+Received: from mail-pl1-f176.google.com ([209.85.214.176]:41675 "EHLO
+        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbfKOU0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 15:26:07 -0500
+Received: by mail-pl1-f176.google.com with SMTP id d29so5415010plj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 12:26:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ZVwV0Su/mCSi6pnRKM6ly2exmq/+tkRldsAhX2HmYpw=;
+        b=LngHprQQ7rYIvRBtWm/sIjeg8lm9PDQxuHFPsluHRQi+shKhLsLOkluiN5+gXTz+W9
+         XPxh5MZkrDX9m/Q2TTPk2aC+Uy9jDGKSqFNFR1pQnPArW1sgqRffuDmCBLnSwBaSBjtX
+         /wTH93W3dEcTJ+5xKK3k2pchX1ponLhBkRlCZ6BG9xUy+Z0XV5DGywjMhEFSeQqgpykC
+         8ruHP7cIp1qyePB8IihR/XQhrzVWQC7NytGupkZf1sYvHvl01sk78DS3tl+JjEeN664/
+         rCfqeOPkkw6lH/lWiuWXvQT1k0xvcCXP0QYbrUOSvLhi2oKHmiRDYQ8PM9Et29p16zJQ
+         oKZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ZVwV0Su/mCSi6pnRKM6ly2exmq/+tkRldsAhX2HmYpw=;
+        b=tbGbp4yv8p3rSx0+Ar4b5zN01rpY+Jf1KqDCKq1A6fhX1Hhzd6RQG9BGrdZyWIqacj
+         t5/NZcbvBBn/xwBrmfrQue3N/Vj5xlEbR3z/T+kifeVq+UZczO8N/fAHUm56irDUuKRn
+         EYmNugvVWERwpOKEku3xuGCzgO88oYOgCNk6ZFQ+qyhsJwqiBPs0zQWut3pwghPAQpog
+         1lOuE7tiY3ILCbONi+nxlrtNiRVBA7lZt2vR0OuPZSkWLvfqRq0ADdcaRXdhbAtqiucU
+         YX76VV9QpDSMbHkHrwkTLV/lukvIeEsushacNXHWzSfT2dyVGBYyDDFNm/dttMq7SDmu
+         pk0w==
+X-Gm-Message-State: APjAAAX3ZtppJBisk4W+9Zic/XFdJpXFfxfXqDIR31nJ+QW8g2BGcvMT
+        7Y2nbO5la+Xdm/0YrroFOjw9b3RsXTs=
+X-Google-Smtp-Source: APXvYqxgJON4Hp0Zr/4qVu2XBMNK0Kh/I9QSz1bLmhwYersP8nge+yFcpGu9VYw0TBoaY6hZAW/Dww==
+X-Received: by 2002:a17:902:9343:: with SMTP id g3mr17421449plp.278.1573849566285;
+        Fri, 15 Nov 2019 12:26:06 -0800 (PST)
+Received: from debian ([122.164.27.240])
+        by smtp.gmail.com with ESMTPSA id x203sm11001126pgx.61.2019.11.15.12.26.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 12:26:05 -0800 (PST)
+Date:   Sat, 16 Nov 2019 01:55:59 +0530
+From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, jeffrin@rajagiritech.edu.in
+Subject: PROBLEM: error and warning from 5.4.0-rc7
+Message-ID: <20191115202559.GA160812@debian>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/2] x86/speculation: Fix incorrect MDS/TAA mitigation status
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-From:   Boris Petkov <bp@alien8.de>
-Message-ID: <C365EA60-3A23-4C39-B21C-2CBC0B450E3C@alien8.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On November 15, 2019 8:35:54 PM GMT+01:00, Thomas Gleixner <tglx@linutronix=
-=2Ede> wrote:
->See the last sentence of the paragraph you replied to :)
+hello all
 
-Proves even more that this should be documented in *all* places that talk =
-about TAA cmdline options and we should not rely on references but write st=
-uff out everywhere so that people can see it directly=2E
+i get error and warning from a typical 5.4.0-rc7.
 
->But serioulsy, yes we should mention the interaction in
->kernel-parameters=2Etxt as well=2E Something like:
->
->	off        - Unconditionally disable MDS mitigation=2E
->+		     On TAA affected machines, mds=3Doff can be prevented
->+		     by an active TAA mitigation as both vulnerabilities
->+		     are mitigated with the same mechanism=2E
->
->and the other way round for TAA=2E
+------x--------x--error---x---------------x----
 
-Ack=2E
+$cat 5.4.0-rc7-error.txt 
+[    2.064029] Couldn't get size: 0x800000000000000e
+[   12.906185] tpm_tis MSFT0101:00: IRQ index 0 not found
+$
 
-Thx=2E
+-------------x------------------x--------------
 
---=20
-Sent from a small device: formatting sux and brevity is inevitable=2E 
+
+
+----------x----------warning----x-------------x-------------------------x-------------
+
+$cat 5.4.0-rc7-warn.txt 
+[    0.249749] MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.
+[    0.249783]  #3
+[    0.253901] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
+[    2.011803] i8042: PNP: PS/2 appears to have AUX port disabled, if this is incorrect please boot with i8042.nopnp
+[    2.013717] rtc rtc0: invalid alarm value: 2019-11-14T14:63:40
+[    2.234933] sdhci-pci 0000:00:1e.6: failed to setup card detect gpio
+[    2.280028] i2c_hid i2c-ELAN1300:00: i2c-ELAN1300:00 supply vdd not found, using dummy regulator
+[    2.280065] i2c_hid i2c-ELAN1300:00: i2c-ELAN1300:00 supply vddl not found, using dummy regulator
+[    3.043252] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x83 has wMaxPacketSize 0, skipping
+[    3.043254] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x3 has wMaxPacketSize 0, skipping
+[   15.114547] platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
+[   16.059585] uvcvideo 1-6:1.0: Entity type for entity Extension 4 was not initialized!
+[   16.059587] uvcvideo 1-6:1.0: Entity type for entity Processing 2 was not initialized!
+[   16.059588] uvcvideo 1-6:1.0: Entity type for entity Camera 1 was not initialized!
+[   23.368830] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x83 has wMaxPacketSize 0, skipping
+[   23.368835] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x3 has wMaxPacketSize 0, skipping
+[ 1415.852546] done.
+[ 1416.144078] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x83 has wMaxPacketSize 0, skipping
+[ 1416.144083] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x3 has wMaxPacketSize 0, skipping
+[ 1421.652063] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x83 has wMaxPacketSize 0, skipping
+[ 1421.652068] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x3 has wMaxPacketSize 0, skipping
+$
+
+------------------x-------------------x-------------------x----------------
+
+
+
+--
+software engineer
+rajagiri school of engineering and technology
