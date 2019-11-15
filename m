@@ -2,88 +2,99 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F6FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9027AC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629522072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667152072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfKOWjY (ORCPT
+        id S1727104AbfKOWkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:39:24 -0500
-Received: from mga01.intel.com ([192.55.52.88]:32628 "EHLO mga01.intel.com"
+        Fri, 15 Nov 2019 17:40:33 -0500
+Received: from mga01.intel.com ([192.55.52.88]:32679 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfKOWjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:39:23 -0500
+        id S1726953AbfKOWkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 17:40:32 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 14:39:23 -0800
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 14:40:31 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,309,1569308400"; 
-   d="scan'208";a="214860788"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Nov 2019 14:39:22 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iVkFN-000F3a-Vc; Sat, 16 Nov 2019 06:39:21 +0800
-Date:   Sat, 16 Nov 2019 06:38:34 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bryan Whitehead <Bryan.Whitehead@microchip.com>
-Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mscc.c: fix semicolon.cocci warnings
-Message-ID: <20191115223834.ysp6nhb7mlhepdvl@4978f4969bb8>
-References: <201911160629.1h9COFsK%lkp@intel.com>
+   d="scan'208";a="203699427"
+Received: from bpgilles-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.95.141])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Nov 2019 14:40:26 -0800
+Date:   Sat, 16 Nov 2019 00:40:25 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-stable@vger.kernel.org,
+        Christian Bundy <christianbundy@fraction.io>
+Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
+Message-ID: <20191115224025.GA29389@linux.intel.com>
+References: <20191111233418.17676-1-jsnitsel@redhat.com>
+ <20191112200328.GA11213@linux.intel.com>
+ <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
+ <20191112202623.GB5584@ziepe.ca>
+ <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
+ <20191114165357.GA11107@linux.intel.com>
+ <20191114165629.GC26068@ziepe.ca>
+ <20191115174329.GA22029@linux.intel.com>
+ <20191115183621.GD4055@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201911160629.1h9COFsK%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191115183621.GD4055@ziepe.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+On Fri, Nov 15, 2019 at 02:36:21PM -0400, Jason Gunthorpe wrote:
+> On Fri, Nov 15, 2019 at 07:43:29PM +0200, Jarkko Sakkinen wrote:
+> > On Thu, Nov 14, 2019 at 12:56:29PM -0400, Jason Gunthorpe wrote:
+> > > On Thu, Nov 14, 2019 at 06:55:06PM +0200, Jarkko Sakkinen wrote:
+> > > > > Would it function with the timeout values set at the beginning of
+> > > > > tpm_tis_core_init (max values)?
+> > > > 
+> > > > tpm_get_timeouts() should be replaced with:
+> > > > 
+> > > > if (tpm_chip_start()) {
+> > > > 	dev_err(dev, "Could not get TPM timeouts and durations\n");
+> > > > 	rc = -ENODEV;
+> > > > 	goto out_err;
+> > > > }
+> > > > 
+> > > > tpm_stop_chip(chip);
+> > > > 
+> > > > tpm_get_timeouts() is called by tpm_auto_startup(). Also the function
+> > > > should be moved to tpm_chip.c and converted to a static function so
+> > > > that it won't be called from random cal sites like above.
+> > > 
+> > > Careful, the design here was to allow a driver to do only
+> > > get_timeouts, then additional setup work, then do auto_startup()
+> > > 
+> > > Forcing a driver to do auto_startup too early may not be good.
+> > 
+> > All drivers always do it anyway because all drivers always call
+> > tpm_chip_register().
+> 
+> But chip_register is after the driver has done it's setup and after it
+> may have called get_timeouts
+> 
+> auto_setup should not be moved to before chip_register()
 
-drivers/net/phy/mscc.c:1683:3-4: Unneeded semicolon
+I do not see any sense calling from get_timeouts() from call sites
+in the same initialization flow.
 
-
- Remove unneeded semicolon.
-
-Generated by: scripts/coccinelle/misc/semicolon.cocci
-
-Fixes: 75a1ccfe6c72 ("mscc.c: Add support for additional VSC PHYs")
-CC: Bryan Whitehead <Bryan.Whitehead@microchip.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git master
-head:   a98cdaf73e32d1538cc225464fcf61310749471e
-commit: 75a1ccfe6c726ba33a2f9859d39deb2eba620583 [217/233] mscc.c: Add support for additional VSC PHYs
-
- mscc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -1680,7 +1680,7 @@ static int vsc8584_config_init(struct ph
- 		default:
- 			ret = -EINVAL;
- 			break;
--		};
-+		}
- 
- 		if (ret)
- 			goto err;
+/Jarkko
