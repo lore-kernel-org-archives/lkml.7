@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621ECC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C586C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1762053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B002073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573799074;
-	bh=nbulacUqIadxMlZBCS4rMN8+T0v+V/v63eur+BAthzg=;
+	s=default; t=1573799075;
+	bh=+lOdOz5Bsl3ojARjkt8cEhh41nUL37Xc/V1jTZ75+ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4uaiPVnh+pTNEu+KtFkh6MVXjqKhCssp9GsUq5Jh+rkSYVmWh1ExNJkRzaOF53rN
-	 O06NbOHR+cEZqk3JivLNIomrX24uAVN9LFtIUySLM0TktCIrFQlMdbABVyQABTsgmt
-	 R6v6RvHf6vsZt1n3U0yY8sfkKuYNeIv4M6hXteJc=
+	b=O4kea5T2kLSh/HFt0m4GAffPtLVgY8FvodUxKwEn23XtpEO/WJeLZcUTn3HWdY8C3
+	 Fiklx78kaP6Jnd4rizwcgvrM5AotGhfcsdAFpbnUK5+fmTWBIB/Bg783uzmjXu4r6u
+	 vxuuk8+ES9c9R04Cp8QaXcLwt+wtlNJ3fXoDWFQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfKOGVU (ORCPT
+        id S1727958AbfKOGYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:21:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50004 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:24:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbfKOGVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:21:18 -0500
+        id S1727164AbfKOGVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:21:21 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD7ED20740;
-        Fri, 15 Nov 2019 06:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB3DE207DD;
+        Fri, 15 Nov 2019 06:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798877;
-        bh=nbulacUqIadxMlZBCS4rMN8+T0v+V/v63eur+BAthzg=;
+        s=default; t=1573798879;
+        bh=+lOdOz5Bsl3ojARjkt8cEhh41nUL37Xc/V1jTZ75+ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ALl5b0o2OzOdjDtiaj3gKOtcFVTY9rsgj6r2HpwTTRT6kE1IM7dse0BBDAC/l9Q3o
-         li9LiuhWf1P/ESKrEix+c0HBhq9i2hTWM7A+zCaDY+RzjxNIha/bqqUBsaZJFIUhRf
-         4jKsdnGeBRNV8hQBAEe9alhWTUXv5qLTLRLRKaW8=
+        b=M2AbL3KKu9lPiWMX5g1EHOtReSSVnFBQqHzGgixznPp9HBfSmtPYvApe6XCRi+Rrw
+         +DJhQFRGSem6BnHFmZUzjmKUZciBr+WS5nfT/3NWS4e+1jrsgjhrGuXD2DyH0+dEwG
+         +jp9Bb0s23FFkq04O5pTxWUVtUx0u2aZjFD7GXGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,11 +46,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Borislav Petkov <bp@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Neelima Krishnan <neelima.krishnan@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 13/20] x86/speculation/taa: Add mitigation for TSX Async Abort
-Date:   Fri, 15 Nov 2019 14:20:42 +0800
-Message-Id: <20191115062012.772797119@linuxfoundation.org>
+Subject: [PATCH 4.4 14/20] x86/speculation/taa: Add sysfs reporting for TSX Async Abort
+Date:   Fri, 15 Nov 2019 14:20:43 +0800
+Message-Id: <20191115062013.019072725@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
 References: <20191115062006.854443935@linuxfoundation.org>
@@ -65,300 +68,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-commit 1b42f017415b46c317e71d41c34ec088417a1883 upstream.
+commit 6608b45ac5ecb56f9e171252229c39580cc85f0f upstream.
 
-TSX Async Abort (TAA) is a side channel vulnerability to the internal
-buffers in some Intel processors similar to Microachitectural Data
-Sampling (MDS). In this case, certain loads may speculatively pass
-invalid data to dependent operations when an asynchronous abort
-condition is pending in a TSX transaction.
+Add the sysfs reporting file for TSX Async Abort. It exposes the
+vulnerability and the mitigation state similar to the existing files for
+the other hardware vulnerabilities.
 
-This includes loads with no fault or assist condition. Such loads may
-speculatively expose stale data from the uarch data structures as in
-MDS. Scope of exposure is within the same-thread and cross-thread. This
-issue affects all current processors that support TSX, but do not have
-ARCH_CAP_TAA_NO (bit 8) set in MSR_IA32_ARCH_CAPABILITIES.
-
-On CPUs which have their IA32_ARCH_CAPABILITIES MSR bit MDS_NO=0,
-CPUID.MD_CLEAR=1 and the MDS mitigation is clearing the CPU buffers
-using VERW or L1D_FLUSH, there is no additional mitigation needed for
-TAA. On affected CPUs with MDS_NO=1 this issue can be mitigated by
-disabling the Transactional Synchronization Extensions (TSX) feature.
-
-A new MSR IA32_TSX_CTRL in future and current processors after a
-microcode update can be used to control the TSX feature. There are two
-bits in that MSR:
-
-* TSX_CTRL_RTM_DISABLE disables the TSX sub-feature Restricted
-Transactional Memory (RTM).
-
-* TSX_CTRL_CPUID_CLEAR clears the RTM enumeration in CPUID. The other
-TSX sub-feature, Hardware Lock Elision (HLE), is unconditionally
-disabled with updated microcode but still enumerated as present by
-CPUID(EAX=7).EBX{bit4}.
-
-The second mitigation approach is similar to MDS which is clearing the
-affected CPU buffers on return to user space and when entering a guest.
-Relevant microcode update is required for the mitigation to work.  More
-details on this approach can be found here:
-
-  https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html
-
-The TSX feature can be controlled by the "tsx" command line parameter.
-If it is force-enabled then "Clear CPU buffers" (MDS mitigation) is
-deployed. The effective mitigation state can be read from sysfs.
-
- [ bp:
-   - massage + comments cleanup
-   - s/TAA_MITIGATION_TSX_DISABLE/TAA_MITIGATION_TSX_DISABLED/g - Josh.
-   - remove partial TAA mitigation in update_mds_branch_idle() - Josh.
-   - s/tsx_async_abort_cmdline/tsx_async_abort_parse_cmdline/g
- ]
+Sysfs file path is:
+/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
 
 Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+Reviewed-by: Mark Gross <mgross@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-[bwh: Backported to 4.4:
- - Add #include "cpu.h" in bugs.c
- - Drop __ro_after_init attribute
- - Drop "nosmt" support
- - Adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/cpufeatures.h   |    1 
- arch/x86/include/asm/msr-index.h     |    4 +
- arch/x86/include/asm/nospec-branch.h |    4 -
- arch/x86/include/asm/processor.h     |    7 ++
- arch/x86/kernel/cpu/bugs.c           |  103 +++++++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/common.c         |   15 +++++
- 6 files changed, 132 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   23 +++++++++++++++++++++++
+ drivers/base/cpu.c         |    9 +++++++++
+ include/linux/cpu.h        |    3 +++
+ 3 files changed, 35 insertions(+)
 
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -340,5 +340,6 @@
- #define X86_BUG_MDS		X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
- #define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
- #define X86_BUG_SWAPGS		X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
-+#define X86_BUG_TAA		X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -72,6 +72,10 @@
- 						  * Sampling (MDS) vulnerabilities.
- 						  */
- #define ARCH_CAP_TSX_CTRL_MSR		BIT(7)	/* MSR for TSX control is available. */
-+#define ARCH_CAP_TAA_NO			BIT(8)	/*
-+						 * Not susceptible to
-+						 * TSX Async Abort (TAA) vulnerabilities.
-+						 */
- 
- #define MSR_IA32_BBL_CR_CTL		0x00000119
- #define MSR_IA32_BBL_CR_CTL3		0x0000011e
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -268,7 +268,7 @@ DECLARE_STATIC_KEY_FALSE(mds_idle_clear)
- #include <asm/segment.h>
- 
- /**
-- * mds_clear_cpu_buffers - Mitigation for MDS vulnerability
-+ * mds_clear_cpu_buffers - Mitigation for MDS and TAA vulnerability
-  *
-  * This uses the otherwise unused and obsolete VERW instruction in
-  * combination with microcode which triggers a CPU buffer flush when the
-@@ -291,7 +291,7 @@ static inline void mds_clear_cpu_buffers
- }
- 
- /**
-- * mds_user_clear_cpu_buffers - Mitigation for MDS vulnerability
-+ * mds_user_clear_cpu_buffers - Mitigation for MDS and TAA vulnerability
-  *
-  * Clear CPU buffers if the corresponding static key is enabled
-  */
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -852,4 +852,11 @@ enum mds_mitigations {
- 	MDS_MITIGATION_VMWERV,
- };
- 
-+enum taa_mitigations {
-+	TAA_MITIGATION_OFF,
-+	TAA_MITIGATION_UCODE_NEEDED,
-+	TAA_MITIGATION_VERW,
-+	TAA_MITIGATION_TSX_DISABLED,
-+};
-+
- #endif /* _ASM_X86_PROCESSOR_H */
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -30,11 +30,14 @@
- #include <asm/intel-family.h>
- #include <asm/e820.h>
- 
-+#include "cpu.h"
-+
- static void __init spectre_v1_select_mitigation(void);
- static void __init spectre_v2_select_mitigation(void);
- static void __init ssb_select_mitigation(void);
- static void __init l1tf_select_mitigation(void);
- static void __init mds_select_mitigation(void);
-+static void __init taa_select_mitigation(void);
- 
- /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
- u64 x86_spec_ctrl_base;
-@@ -94,6 +97,7 @@ void __init check_bugs(void)
- 	ssb_select_mitigation();
- 	l1tf_select_mitigation();
- 	mds_select_mitigation();
-+	taa_select_mitigation();
- 
- 	arch_smt_update();
- 
-@@ -247,6 +251,93 @@ static int __init mds_cmdline(char *str)
- early_param("mds", mds_cmdline);
- 
- #undef pr_fmt
-+#define pr_fmt(fmt)	"TAA: " fmt
-+
-+/* Default mitigation for TAA-affected CPUs */
-+static enum taa_mitigations taa_mitigation = TAA_MITIGATION_VERW;
-+
-+static const char * const taa_strings[] = {
-+	[TAA_MITIGATION_OFF]		= "Vulnerable",
-+	[TAA_MITIGATION_UCODE_NEEDED]	= "Vulnerable: Clear CPU buffers attempted, no microcode",
-+	[TAA_MITIGATION_VERW]		= "Mitigation: Clear CPU buffers",
-+	[TAA_MITIGATION_TSX_DISABLED]	= "Mitigation: TSX disabled",
-+};
-+
-+static void __init taa_select_mitigation(void)
-+{
-+	u64 ia32_cap;
-+
-+	if (!boot_cpu_has_bug(X86_BUG_TAA)) {
-+		taa_mitigation = TAA_MITIGATION_OFF;
-+		return;
-+	}
-+
-+	/* TSX previously disabled by tsx=off */
-+	if (!boot_cpu_has(X86_FEATURE_RTM)) {
-+		taa_mitigation = TAA_MITIGATION_TSX_DISABLED;
-+		goto out;
-+	}
-+
-+	if (cpu_mitigations_off()) {
-+		taa_mitigation = TAA_MITIGATION_OFF;
-+		return;
-+	}
-+
-+	/* TAA mitigation is turned off on the cmdline (tsx_async_abort=off) */
-+	if (taa_mitigation == TAA_MITIGATION_OFF)
-+		goto out;
-+
-+	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
-+		taa_mitigation = TAA_MITIGATION_VERW;
-+	else
-+		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
-+
-+	/*
-+	 * VERW doesn't clear the CPU buffers when MD_CLEAR=1 and MDS_NO=1.
-+	 * A microcode update fixes this behavior to clear CPU buffers. It also
-+	 * adds support for MSR_IA32_TSX_CTRL which is enumerated by the
-+	 * ARCH_CAP_TSX_CTRL_MSR bit.
-+	 *
-+	 * On MDS_NO=1 CPUs if ARCH_CAP_TSX_CTRL_MSR is not set, microcode
-+	 * update is required.
-+	 */
-+	ia32_cap = x86_read_arch_cap_msr();
-+	if ( (ia32_cap & ARCH_CAP_MDS_NO) &&
-+	    !(ia32_cap & ARCH_CAP_TSX_CTRL_MSR))
-+		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
-+
-+	/*
-+	 * TSX is enabled, select alternate mitigation for TAA which is
-+	 * the same as MDS. Enable MDS static branch to clear CPU buffers.
-+	 *
-+	 * For guests that can't determine whether the correct microcode is
-+	 * present on host, enable the mitigation for UCODE_NEEDED as well.
-+	 */
-+	static_branch_enable(&mds_user_clear);
-+
-+out:
-+	pr_info("%s\n", taa_strings[taa_mitigation]);
-+}
-+
-+static int __init tsx_async_abort_parse_cmdline(char *str)
-+{
-+	if (!boot_cpu_has_bug(X86_BUG_TAA))
-+		return 0;
-+
-+	if (!str)
-+		return -EINVAL;
-+
-+	if (!strcmp(str, "off")) {
-+		taa_mitigation = TAA_MITIGATION_OFF;
-+	} else if (!strcmp(str, "full")) {
-+		taa_mitigation = TAA_MITIGATION_VERW;
-+	}
-+
-+	return 0;
-+}
-+early_param("tsx_async_abort", tsx_async_abort_parse_cmdline);
-+
-+#undef pr_fmt
- #define pr_fmt(fmt)     "Spectre V1 : " fmt
- 
- enum spectre_v1_mitigation {
-@@ -758,6 +849,7 @@ static void update_mds_branch_idle(void)
+@@ -1300,6 +1300,21 @@ static ssize_t mds_show_state(char *buf)
+ 		       sched_smt_active() ? "vulnerable" : "disabled");
  }
  
- #define MDS_MSG_SMT "MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.\n"
-+#define TAA_MSG_SMT "TAA CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/tsx_async_abort.html for more details.\n"
- 
- void arch_smt_update(void)
++static ssize_t tsx_async_abort_show_state(char *buf)
++{
++	if ((taa_mitigation == TAA_MITIGATION_TSX_DISABLED) ||
++	    (taa_mitigation == TAA_MITIGATION_OFF))
++		return sprintf(buf, "%s\n", taa_strings[taa_mitigation]);
++
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
++		return sprintf(buf, "%s; SMT Host state unknown\n",
++			       taa_strings[taa_mitigation]);
++	}
++
++	return sprintf(buf, "%s; SMT %s\n", taa_strings[taa_mitigation],
++		       sched_smt_active() ? "vulnerable" : "disabled");
++}
++
+ static char *stibp_state(void)
  {
-@@ -790,6 +882,17 @@ void arch_smt_update(void)
+ 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+@@ -1365,6 +1380,9 @@ static ssize_t cpu_show_common(struct de
+ 	case X86_BUG_MDS:
+ 		return mds_show_state(buf);
+ 
++	case X86_BUG_TAA:
++		return tsx_async_abort_show_state(buf);
++
+ 	default:
  		break;
  	}
- 
-+	switch (taa_mitigation) {
-+	case TAA_MITIGATION_VERW:
-+	case TAA_MITIGATION_UCODE_NEEDED:
-+		if (sched_smt_active())
-+			pr_warn_once(TAA_MSG_SMT);
-+		break;
-+	case TAA_MITIGATION_TSX_DISABLED:
-+	case TAA_MITIGATION_OFF:
-+		break;
-+	}
+@@ -1401,4 +1419,9 @@ ssize_t cpu_show_mds(struct device *dev,
+ {
+ 	return cpu_show_common(dev, attr, buf, X86_BUG_MDS);
+ }
 +
- 	mutex_unlock(&spec_ctrl_mutex);
++ssize_t cpu_show_tsx_async_abort(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return cpu_show_common(dev, attr, buf, X86_BUG_TAA);
++}
+ #endif
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -536,12 +536,20 @@ ssize_t __weak cpu_show_mds(struct devic
+ 	return sprintf(buf, "Not affected\n");
  }
  
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -954,6 +954,21 @@ static void __init cpu_set_bug_bits(stru
- 	if (!cpu_matches(NO_SWAPGS))
- 		setup_force_cpu_bug(X86_BUG_SWAPGS);
- 
-+	/*
-+	 * When the CPU is not mitigated for TAA (TAA_NO=0) set TAA bug when:
-+	 *	- TSX is supported or
-+	 *	- TSX_CTRL is present
-+	 *
-+	 * TSX_CTRL check is needed for cases when TSX could be disabled before
-+	 * the kernel boot e.g. kexec.
-+	 * TSX_CTRL check alone is not sufficient for cases when the microcode
-+	 * update is not present or running as guest that don't get TSX_CTRL.
-+	 */
-+	if (!(ia32_cap & ARCH_CAP_TAA_NO) &&
-+	    (cpu_has(c, X86_FEATURE_RTM) ||
-+	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
-+		setup_force_cpu_bug(X86_BUG_TAA);
++ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	return sprintf(buf, "Not affected\n");
++}
 +
- 	if (cpu_matches(NO_MELTDOWN))
- 		return;
+ static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
+ static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
+ static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
+ static DEVICE_ATTR(spec_store_bypass, 0444, cpu_show_spec_store_bypass, NULL);
+ static DEVICE_ATTR(l1tf, 0444, cpu_show_l1tf, NULL);
+ static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
++static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
  
+ static struct attribute *cpu_root_vulnerabilities_attrs[] = {
+ 	&dev_attr_meltdown.attr,
+@@ -550,6 +558,7 @@ static struct attribute *cpu_root_vulner
+ 	&dev_attr_spec_store_bypass.attr,
+ 	&dev_attr_l1tf.attr,
+ 	&dev_attr_mds.attr,
++	&dev_attr_tsx_async_abort.attr,
+ 	NULL
+ };
+ 
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -52,6 +52,9 @@ extern ssize_t cpu_show_l1tf(struct devi
+ 			     struct device_attribute *attr, char *buf);
+ extern ssize_t cpu_show_mds(struct device *dev,
+ 			    struct device_attribute *attr, char *buf);
++extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
++					struct device_attribute *attr,
++					char *buf);
+ 
+ extern __printf(4, 5)
+ struct device *cpu_device_create(struct device *parent, void *drvdata,
 
 
