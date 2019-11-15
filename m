@@ -2,142 +2,157 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F642C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E48C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5639820815
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573813667;
-	bh=8oHQt7MPagfOxYSdD/WliNlX/xPE5ypyV6uVQjdJNTk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B32CTcwAQeLDZy9QElXBOAfxtPdD17dMscf2IAoMVgB6J+W+waNaqtT7hj630nt3/
-	 y9F0uyVQu6oIuQGQuNGkMeGQvnNMqu1yiD5UDr5FCUSPKXIJ/SU+6YZ63NRJOYKZnR
-	 hZS/kixgUiKHY8K0ErmdDnRQh5wg3ovYjZ4zFm04=
+	by mail.kernel.org (Postfix) with ESMTP id 837492077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WxsOerES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfKOK1q (ORCPT
+        id S1727540AbfKOK1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:27:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfKOK1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:27:45 -0500
-Received: from vkoul-mobl.Dlink (unknown [106.51.108.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 970B820748;
-        Fri, 15 Nov 2019 10:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573813665;
-        bh=8oHQt7MPagfOxYSdD/WliNlX/xPE5ypyV6uVQjdJNTk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02PboHr+ua8Y+fd3oIByquwwz/Y5JQMn/3lbO2ZNd1Vy/wQzl7KMpBd4iVtaOw5xW
-         rxPhBXILFyHZX/oqkQqZtRjz3ouCQ5NYfyTjNHPV1yN7rqpkyReElQcAMpL8uEb8NB
-         wJ8LMGYeAD7DlHJQa8nUPQyEzaNHMLTSJhqLMlUc=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Takashi Iwai <tiwai@suse.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC PATCH 3/3] ASoC: qcom: q6asm-dai: add support to flac decoder
-Date:   Fri, 15 Nov 2019 15:57:05 +0530
-Message-Id: <20191115102705.649976-4-vkoul@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191115102705.649976-1-vkoul@kernel.org>
-References: <20191115102705.649976-1-vkoul@kernel.org>
+        Fri, 15 Nov 2019 05:27:49 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39500 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727515AbfKOK1r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:27:47 -0500
+Received: by mail-lj1-f195.google.com with SMTP id p18so10142691ljc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:27:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=s4HMcsPs8cjZ6BAAS4T6v8josVfK505Km0iWyRPGXIo=;
+        b=WxsOerESuXKK3YeifFDCXB72E5FRI1ynKWqNQ1i+YgEoRvsiBI5fcx1tVVElOymGyM
+         5ZNggZXK1DvE59Or5JkwwVbCLVe2X2GgngiGaPxMmfeOZ5k90kBYNE1yifKK58X+u8d2
+         DzdEULL2R/aE1TfEt53OnUgVZaCApLrpF7zYY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s4HMcsPs8cjZ6BAAS4T6v8josVfK505Km0iWyRPGXIo=;
+        b=ggdsiiKH7PHkpmvIelsVY2rAcTqtolHUupSSj3eAl8UFrtHFAceM9ZMpRemW3ZOJrV
+         31xPQkwV962KJDRAZqxTAnpH5xRkjZNXKgMCU/DXXb7u7rXSWYYwduuekd933NTIHeAC
+         t/c2LqSYevPk7c0gGg/1SKnWHySx04X3VXDtFSYOGd8y3rML2jy2lsQTG9V23Q/Kqtps
+         zTu/+KHUwaJyF1WW0EwCaw6XvnUr+b7q99AMP1kEb2+1vBYxwobpOL5Nd8NwWod3SgRa
+         csFqXnKXWq+btcsdnRzPwWbxwz0tLj9e3vthRB4wbMgfT8hDfV/FS8/ga8dbnmgFbMu7
+         Hktw==
+X-Gm-Message-State: APjAAAULcYcT9dY2OOwnyPAfiDjpeyq2vXcuWzFrX6kx2IBi+eLrg7t6
+        ha81hl/N05bTE3lX1siWNx7afQ==
+X-Google-Smtp-Source: APXvYqycJQWJcX7oryo4kxovzNzZzRKngUCqSR34tt6HBVqlZROmp7cx+h4vlIJdhrF+Aeqbx+g93Q==
+X-Received: by 2002:a2e:9712:: with SMTP id r18mr10860051lji.12.1573813664844;
+        Fri, 15 Nov 2019 02:27:44 -0800 (PST)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id f5sm3576761ljn.24.2019.11.15.02.27.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 02:27:43 -0800 (PST)
+Subject: Re: [PATCH 17/23] y2038: time: avoid timespec usage in settimeofday()
+To:     Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abelvesa@linux.com>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Linux API <linux-api@vger.kernel.org>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+ <20191108211323.1806194-8-arnd@arndb.de> <20191114230127.GA3580@ryzen.lan>
+ <CAK8P3a3jn8GcedX=HaTFiPY+fyHPoyVUnpcX19nMZqmuUA1RzA@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <73a56955-552a-3a95-a410-3064401913f7@rasmusvillemoes.dk>
+Date:   Fri, 15 Nov 2019 11:27:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a3jn8GcedX=HaTFiPY+fyHPoyVUnpcX19nMZqmuUA1RzA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qualcomm DSPs also support the flac decoder, so add support for FLAC
-decoder and convert the snd_dec_flac params to qdsp format.
+On 15/11/2019 08.58, Arnd Bergmann wrote:
+> On Fri, Nov 15, 2019 at 12:01 AM Abel Vesa <abelvesa@linux.com> wrote:
+>>
+>> On 19-11-08 22:12:16, Arnd Bergmann wrote:
+>>> The compat_get_timeval() and timeval_valid() interfaces
+>>> are deprecated and getting removed along with the definition
+>>> of struct timeval itself.
+>>>
+>>> Change the two implementations of the settimeofday()
+>>> system call to open-code these helpers and completely
+>>> avoid references to timeval.
+>>>
+> 
+> I'm not sure how we get to the RCU stall, but this is almost certainly another
+> symptom of a typo I had introduced in the patch, which others have also
+> reported. This is the the fix in today's linux-next:
+> 
+> --- a/kernel/time/time.c
+> +++ b/kernel/time/time.c
+> @@ -207,7 +207,7 @@ SYSCALL_DEFINE2(settimeofday, struct
+> __kernel_old_timeval __user *, tv,
+>                     get_user(new_ts.tv_nsec, &tv->tv_usec))
+>                         return -EFAULT;
+> 
+> -               if (tv->tv_usec > USEC_PER_SEC)
+> +               if (new_ts->tv_usec > USEC_PER_SEC)
+>                         return -EINVAL;
 
-Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- sound/soc/qcom/qdsp6/q6asm-dai.c | 35 +++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+Hopefully not :)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index 548eb4fa2da6..56e306bdbbe1 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -635,8 +635,14 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
- 	struct snd_soc_component *c = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
- 	int dir = stream->direction;
- 	struct q6asm_dai_data *pdata;
-+	struct q6asm_flac_cfg flac_cfg;
- 	struct device *dev = c->dev;
- 	int ret;
-+	union snd_codec_options *codec_options;
-+	struct snd_dec_flac *flac;
-+
-+	codec_options = &(prtd->codec_param.codec.options);
-+
- 
- 	memcpy(&prtd->codec_param, params, sizeof(*params));
- 
-@@ -673,6 +679,32 @@ static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
- 		return ret;
- 	}
- 
-+	switch (params->codec.id) {
-+	case SND_AUDIOCODEC_FLAC:
-+
-+		memset(&flac_cfg, 0x0, sizeof(struct q6asm_flac_cfg));
-+		flac = &codec_options->flac_d;
-+
-+		flac_cfg.ch_cfg = params->codec.ch_in;
-+		flac_cfg.sample_rate =  params->codec.sample_rate;
-+		flac_cfg.stream_info_present = 1;
-+		flac_cfg.sample_size = flac->sample_size;
-+		flac_cfg.min_blk_size = flac->min_blk_size;
-+		flac_cfg.max_blk_size = flac->max_blk_size;
-+		flac_cfg.max_frame_size = flac->max_frame_size;
-+		flac_cfg.min_frame_size = flac->min_frame_size;
-+
-+		ret = q6asm_stream_media_format_block_flac(prtd->audio_client,
-+							   &flac_cfg);
-+		if (ret < 0) {
-+			dev_err(dev, "FLAC CMD Format block failed:%d\n", ret);
-+			return -EIO;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
- 				       (prtd->pcm_size / prtd->periods),
- 				       prtd->periods);
-@@ -768,8 +800,9 @@ static int q6asm_dai_compr_get_caps(struct snd_compr_stream *stream,
- 	caps->max_fragment_size = COMPR_PLAYBACK_MAX_FRAGMENT_SIZE;
- 	caps->min_fragments = COMPR_PLAYBACK_MIN_NUM_FRAGMENTS;
- 	caps->max_fragments = COMPR_PLAYBACK_MAX_NUM_FRAGMENTS;
--	caps->num_codecs = 1;
-+	caps->num_codecs = 2;
- 	caps->codecs[0] = SND_AUDIOCODEC_MP3;
-+	caps->codecs[1] = SND_AUDIOCODEC_FLAC;
- 
- 	return 0;
- }
--- 
-2.23.0
+>                 new_ts.tv_nsec *= NSEC_PER_USEC;
 
+So the actual patch in next-20191115 does
+
+-               if (copy_from_user(&user_tv, tv, sizeof(*tv)))
++               if (get_user(new_ts.tv_sec, &tv->tv_sec) ||
++                   get_user(new_ts.tv_nsec, &tv->tv_usec))
+                        return -EFAULT;
+
+-               if (!timeval_valid(&user_tv))
++               if (new_ts.tv_nsec > USEC_PER_SEC)
+                        return -EINVAL;
+
+-               new_ts.tv_sec = user_tv.tv_sec;
+-               new_ts.tv_nsec = user_tv.tv_usec * NSEC_PER_USEC;
++               new_ts.tv_nsec *= NSEC_PER_USEC;
+
+But removing the "user value is < 0" check, relying on the timespec
+value being rejected later, is wrong: 1000=8*125. Multiplying by 8
+always gives a value with the low three bits clear, multiplying by 125
+is reversible. So you can take any target value with the three low bits
+clear, logic shift right by 3, multiply by 0x1cac083126e978d5 , and flip
+the top three bits as you wish to generate 8 pre-images of that target
+value. Four of those will be negative. A trivial example is 0x80..000
+(aka LONG_MIN) and its cousins 0xa0..000, 0xc0..000, 0xe0..000 which all
+become 0 and thus accepted after multiplying by NSEC_PER_USEC. But also
+-858989233 (or -3689348814741906097 if long is 64 bit) become 4226200
+which isn't even a multiple of 1000 - there's 500M examples to choose
+from :)
+
+I'm pretty sure it doesn't generate worse code, gcc is smart enough to
+compile "foo > BAR || foo < 0" as if it was written "(unsigned version
+of foo)foo > BAR". And while a value of USEC_PER_SEC itself will not
+overflow and then be rejeted because the real comparison done later is
+">= NSEC_PER_SEC", I think it's clearer to say "foo >= USEC_PER_SEC ||
+foo < 0) just so the same pattern is used.
+
+Rasmus
