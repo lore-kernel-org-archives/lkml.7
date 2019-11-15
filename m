@@ -2,89 +2,127 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3498C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57B1C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9633F2073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8876B2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKOJYx (ORCPT
+        id S1727159AbfKOJZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:24:53 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:16850 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725829AbfKOJYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:24:53 -0500
-X-IronPort-AV: E=Sophos;i="5.68,307,1569254400"; 
-   d="scan'208";a="78503839"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 15 Nov 2019 17:24:47 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id C99C64CE1BE4;
-        Fri, 15 Nov 2019 17:16:31 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.140) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Fri, 15 Nov 2019 17:24:52 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, Cao jin <caoj.fnst@cn.fujitsu.com>,
-        <linux-acpi@vger.kernel.org>
-Subject: [RFC PATCH] x86/acpi: Drop duplicate BOOT table initialization
-Date:   Fri, 15 Nov 2019 17:24:24 +0800
-Message-ID: <20191115092424.17356-1-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.17.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.167.225.140]
-X-yoursite-MailScanner-ID: C99C64CE1BE4.A8462
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+        Fri, 15 Nov 2019 04:25:14 -0500
+Received: from mga03.intel.com ([134.134.136.65]:1110 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727002AbfKOJZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:25:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 01:25:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,307,1569308400"; 
+   d="scan'208";a="214743830"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Nov 2019 01:25:11 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v8 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Fri, 15 Nov 2019 17:25:06 +0800
+Message-Id: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cao jin <caoj.fnst@cn.fujitsu.com>
+Hi,
 
-ACPI BOOT table is initialized in both acpi_boot_table_init &
-acpi_boot_init of setup_arch, but its usage is quite late at the end of
-start_kernel. It should be safe to drop one of them. Since it is less
-related with table init, drop it from there.
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
-Cc: <linux-acpi@vger.kernel.org>
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
----
- arch/x86/kernel/acpi/boot.c | 2 --
- 1 file changed, 2 deletions(-)
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 
-It existed since git repo is built, so it might has its reason? The
-patch is not tested since I don't have BOOT table in my firmware.
+v8:
+- Rename compatible name from intel,lightning-mountain-io to intel,lgm-io
+  in both driver source & dt bindings to be consistent with other bindings
+  for LGM SoC.
 
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index 04205ce127a1..ca1c15bb0b48 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -1558,8 +1558,6 @@ void __init acpi_boot_table_init(void)
- 		return;
- 	}
- 
--	acpi_table_parse(ACPI_SIG_BOOT, acpi_parse_sbf);
--
- 	/*
- 	 * blacklist may disable ACPI entirely
- 	 */
+v7:
+- Fix code quality/style related review concerns.
+- Correct license id & data types used for some properties in dt bindings.
+- Add possible values for drive-strength & slew rate in dt bindings.
+- Rename compatible name to more self explanatory name in dt bindings.
+- Fix make dt_binding_check reported errors. Ensure make dt_binding_check
+  passes.
+
+v6:
+- Fix code quality/style/readability related review concerns.
+- Remove enum usage from pinmux property in dt bindings.
+
+v5:
+- Fix code style/readability related review concerns.
+- Change data type of groups property to uint32-array in dt bindings.
+
+v4:
+- Correct data types for some pin config properties in dt bindings.
+- Improve pattern regex as per review feedback in dt bindings.
+- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
+  do reg updates in eqbr_pinconf_set() routine itself.
+- Add locking in few ops where it was missing.
+- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
+  in variable namings so as not to confuse with GPIO descriptors.
+- Address code quality/convention/style related review concerns.
+
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 944 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 144 ++++
+ 5 files changed, 1223 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
 -- 
-2.21.0
-
-
+2.11.0
 
