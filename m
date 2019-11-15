@@ -2,85 +2,101 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9257C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9374C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F1A2072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747512072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jFTdO6uQ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NRJTOEwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfKOWp3 (ORCPT
+        id S1727083AbfKOWqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:45:29 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33244 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfKOWp3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:45:29 -0500
-Received: by mail-pg1-f195.google.com with SMTP id h27so6657133pgn.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:45:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:subject:from:user-agent:date;
-        bh=TIQx/W2wsyTfrLCB4wkXJI0AK0ooLAfik2qBodlMv9Q=;
-        b=jFTdO6uQkNPKGB+sgB3g5p+gLJ2Z2GX0XxDXRULOaYD7dXrTMJvMy8ooEOa76ptYJy
-         O+9QnZzvExaXj7XG7tmndRtrCg6eqfmp+jOQKPUgULH0iRPc2XF4VbcW+F4S3fL++ry3
-         LUosm1MhLc68sRXzjbITUGgMXegakDZbtWZDo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
-         :user-agent:date;
-        bh=TIQx/W2wsyTfrLCB4wkXJI0AK0ooLAfik2qBodlMv9Q=;
-        b=d6ykZvFoIcFamT3jQvA8pI9TyIwPnYupUSS2Q9PTai41GAWcZbOT3J1pB0gcJMmRPD
-         le9iF9qOFbGLCvl+KdMKa6kCv8BNvvXQRD+/1eksCBcVYMT1Hb4J0mnydDnzIKNZrafd
-         K6nCSfdbQ3jeDmMJafLH1oHk+zuLIjBerlHVlQhhZhaZdnTzuMINvbe2xZhezx7A394l
-         SSMpFLlT99Nq7IRJjdXlDhUJvmk9URLeMhaWMtq0D+8cMoOOoEXmrTbI7NMDWXpq72Af
-         CPBc/DxT1NduzRtKFJvyXk7INH1StbIwbbmEY2u+HW75YlXMLKPKMIH4IIoBsdWDY+0c
-         4r6A==
-X-Gm-Message-State: APjAAAWcVtYajQDT9xcKZDNUvQYPdidoB+YTmQVFX08EOQttyubz9LF2
-        eZXI0VK5+WG7MPn9z2+GOx1QVg==
-X-Google-Smtp-Source: APXvYqwIieFZ+AoiRqEA6AOmCV2fSK0ePU0g/VFuOLiyJGWLORJamjpTLg0d14VcejqPVesEBsIPqA==
-X-Received: by 2002:a62:108:: with SMTP id 8mr20401575pfb.53.1573857928696;
-        Fri, 15 Nov 2019 14:45:28 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r28sm12330264pfl.37.2019.11.15.14.45.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 14:45:28 -0800 (PST)
-Message-ID: <5dcf2a88.1c69fb81.8b56d.469f@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 15 Nov 2019 17:46:25 -0500
+Received: from ozlabs.org ([203.11.71.1]:34945 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726974AbfKOWqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 17:46:25 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47FD3d6wm9z9s7T;
+        Sat, 16 Nov 2019 09:46:21 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573857982;
+        bh=9kk4tpM+xxjU0ufiMTeD1kx3KsiLzcD7YNCNHOC4ve0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NRJTOEwBJNx9ZWewdvG/6aKTkCtT1kblChM8nrDB+f064gzs6RvFy9lC6mXLXdSlm
+         Drl0tfSjHRzDodTtRs+kXgmXDQFUJR+Ed/o6aQjETvn1Kuyz7KRPMxQfap0sMuhmDu
+         rCC1r1I/hj+SuFsxq9AydRAoRiZQ7VqYgp2IIU4jMC065tCYQaulDNYNepDj7rTYlK
+         MSCc7u3YDl3Ht/PvIRDTEbThh92wl1LKxxNMsotAs6C8ZrNaOnO/ULyTvFhAEksI0l
+         mC6aXfIrC5SuMdBrRuxG7a9s00KW+Ctt0eHyzZEVrRxp5qLNMxB5n/T0BEhqFXHzPT
+         a+b8UHmAluiNw==
+Date:   Sat, 16 Nov 2019 09:46:20 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Snitzer <snitzer@redhat.com>,
+        Alasdair G Kergon <agk@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joe Thornber <dm-devel@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: Re: linux-next: Tree for Nov 15 (drivers/md/dm-integrity)
+Message-ID: <20191116094620.497663ab@canb.auug.org.au>
+In-Reply-To: <f368f431-b741-d04f-440b-3d8c3c035537@infradead.org>
+References: <20191115190525.77efdf6c@canb.auug.org.au>
+        <f368f431-b741-d04f-440b-3d8c3c035537@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573593774-12539-6-git-send-email-eberman@codeaurora.org>
-References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-6-git-send-email-eberman@codeaurora.org>
-Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, psodagud@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v2 05/18] firmware: qcom_scm: Remove unused qcom_scm_get_version
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 14:45:27 -0800
+Content-Type: multipart/signed; boundary="Sig_/eXHVxvF=qGFYOOsJe.=izN.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Elliot Berman (2019-11-12 13:22:41)
-> Remove unused qcom_scm_get_version.
+--Sig_/eXHVxvF=qGFYOOsJe.=izN.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Fri, 15 Nov 2019 08:17:48 -0800 Randy Dunlap <rdunlap@infradead.org> wro=
+te:
+>
+> on i386:
 >=20
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
-> ---
+> ld: drivers/md/dm-integrity.o: in function `calculate_device_limits':
+> dm-integrity.c:(.text.unlikely+0x1e9): undefined reference to `__udivdi3'
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Caused by commit
 
+  a236c37603bd ("dm integrity: fix excessive alignment of metadata runs")
+
+=46rom the device-mapper tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/eXHVxvF=qGFYOOsJe.=izN.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3PKrwACgkQAVBC80lX
+0GwPbQgAkkzpeWaBKkI6HeFDee9HWiD5sxxknAq8l1BBraY7AeFPNtJ1Ct3pVItd
+I46PVCzzqOqwUYE6XVXE0YEqB8hh7pnBVTXdM322uNDGK5K/RHHIUpVvGjUCgLkF
+zR5xfv6MkZ4ZT0wBALxe1R2REp/wPsTa5k/g1IcOHumKTq7lOfxTHHa8gdTnuo94
+2TmrvOANSyh2/bKwylOppoaJBrVo+5ev+h7YmcdzjLUQVhcaZn8I543LS7kcOhxO
+qf8BelKVE6PelvRukZn16qWMosoq7ik/vKfVwY0jqzZKh+OGDjg60XOuyNzsPh8k
+ZEGMKkUn4mHU5Hc9yBBIVvfU2vD3NQ==
+=SARL
+-----END PGP SIGNATURE-----
+
+--Sig_/eXHVxvF=qGFYOOsJe.=izN.--
