@@ -2,106 +2,81 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980C5C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941F7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF6D20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eL36vRAP"
+	by mail.kernel.org (Postfix) with ESMTP id 6C8512073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfKOVAZ (ORCPT
+        id S1726828AbfKOVCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 16:00:25 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38385 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfKOVAY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 16:00:24 -0500
-Received: by mail-qk1-f195.google.com with SMTP id e2so9229626qkn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 13:00:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O2ZiPXcxOiy+M9Lvpig1+xN6nwmYl4rGDRQdufUv9tQ=;
-        b=eL36vRAPQHS67240QT8y/Z/uh98ececvMUIuLqsRx/fEHjtfbWeKaPntMIZxUWbxbT
-         5IdSpSWaEr1Jhn1zn00QzFm0mtIjyVFhZ8Xu283u9t1x55bd9zllEm3EBFGVOsy6AzQO
-         2GKIErImw4w19Pc2r8lqhDzorECU53vs7SZV3KfYr61lRScv1GxVUdKRcXTsYgHtYRTn
-         UAJS03kB+lWTNOonYv6mZw3EilVITvuTk80w2AmSMePOz1b1Y9me29Q6c2VK/4JAUn3o
-         3g1Vp7cwAU60h/6IhjG7P45vN0OFnNO1tP6b2K/g5wvq7tEF6tSbMS60f0KF8yf69fQG
-         ixRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O2ZiPXcxOiy+M9Lvpig1+xN6nwmYl4rGDRQdufUv9tQ=;
-        b=NXp/OWAunRepAXhkHEKrTWjYpMQJ2PmtKWu0gQ2tCw0ekCo9Ap3FtO2EtBXgSJQBw9
-         rMAd8aKwVlCW6y3wgGZ4edldaySYQWlktV/P6bE/7M+xE0es5b4hZgINZGdw3J6ZvkKO
-         P+qUju4Jl33brCoWYZ1Hb3/OXPIbTLkhmPmAjIsUiG3i4XbIHllQ0+q9n1oE0bwTXFRo
-         oHFYQGzYffCKnecMFazAbEY21o7nIFbnLFf4z/fOKKrOc2MhsHoX6JwG6kA4UtAcoegq
-         jj0n93LIO+7xZMv1Q0moobZeRP0BxfQklS1w022k+YCfOm/YxihfEXfGYQX0hT5Cdyt3
-         P5sw==
-X-Gm-Message-State: APjAAAWSqZwCVWbZQrtVXEphuXphtFvfjY8TvXPy5oO7MilCAgPBk0bp
-        2FyE2cW73vsKHsem0a3t5z90pg==
-X-Google-Smtp-Source: APXvYqxfbTbNheGaAeTCaa5mJhw+2O2ku0CEpc54KfvKQBFOm9sUAiO3NZAYqXaFMR2xb7maXDBryw==
-X-Received: by 2002:a37:8a01:: with SMTP id m1mr14700667qkd.147.1573851621968;
-        Fri, 15 Nov 2019 13:00:21 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id w69sm4955246qkb.26.2019.11.15.13.00.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Nov 2019 13:00:21 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iVihY-0007hl-Tn; Fri, 15 Nov 2019 17:00:20 -0400
-Date:   Fri, 15 Nov 2019 17:00:20 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     bharat@chelsio.com, dledford@redhat.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/iw_cgxb4: Fix an error handling path in
- 'c4iw_connect()'
-Message-ID: <20191115210020.GA29581@ziepe.ca>
-References: <20190923190746.10964-1-christophe.jaillet@wanadoo.fr>
+        Fri, 15 Nov 2019 16:02:04 -0500
+Received: from sauhun.de ([88.99.104.3]:43742 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfKOVCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 16:02:04 -0500
+Received: from localhost (p54B33606.dip0.t-ipconnect.de [84.179.54.6])
+        by pokefinder.org (Postfix) with ESMTPSA id 185802C03E3;
+        Fri, 15 Nov 2019 22:02:02 +0100 (CET)
+Date:   Fri, 15 Nov 2019 22:02:01 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Wen Yang <wenyang@linux.alibaba.com>
+Cc:     zhiche.yy@alibaba-inc.com, xlpang@linux.alibaba.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: core: fix use after free in of_i2c_notify
+Message-ID: <20191115210201.GB8973@kunai>
+References: <20191108083648.56503-1-wenyang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
 Content-Disposition: inline
-In-Reply-To: <20190923190746.10964-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191108083648.56503-1-wenyang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 09:07:46PM +0200, Christophe JAILLET wrote:
-> We should jump to fail3 in order to undo the 'xa_insert_irq()' call.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Not sure which Fixes tag to use because of the many refactorings in this
-> area. So I've choosen to use none :).
-> The issue was already there in 4a740838bf44c. This commit has renamed
-> all labels because a new fail1 was introduced. I've not searched further.
-> 
-> Naming of error labels should be improved. Having nowadays a fail5
-> between fail2 and fail3 (because fail5 was the last
-> error handling path added) is not that readable.
-> However, it goes beyong the purpose of this patch.
-> 
-> Maybe, just using a fail2a, just as already done in 9f5a9632e412 (which
-> introduced fail5) would be enough.
-> ---
->  drivers/infiniband/hw/cxgb4/cm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-The disaster of the error label aside, this does fix the bug, so
-applied to for-next
+--7ZAtKRhVyVSsbBD2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Jason
+On Fri, Nov 08, 2019 at 04:36:48PM +0800, Wen Yang wrote:
+> We can't use "adap" after it has been freed.
+>=20
+> Fixes: 5bf4fa7daea6 ("i2c: break out OF support into separate file")
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+
+Applied to for-current, thanks!
+
+
+--7ZAtKRhVyVSsbBD2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3PEkkACgkQFA3kzBSg
+KbaqzBAAoQV5GxF7KrMUwnwhRzNrDaYURGV+A1ny13BABQ40jF9rK8gRwDGurOg1
+NG765QeVNZBNUIsOYlJsUxfJb5MdMIDhDS1+O4TizvEodpJVu9z9j4fMfxvxKGtW
+prFwnUxvFYVySpfo2zbreBgQ1zX1DO0J1TX50wxnm53IXcl4lqz/KKKNH5J3EYmc
+vs68S/3iwjU50xGFecnmBlojog35sXWtXZbLu0FXrR5R0lqzMOS30jzeHi6SoIzw
+giL+CQoDqbLv2ucQXFsSI4PIhTVEniSgr1lOiouNkAMEkfTH/ByhugNtQZkh8QcZ
+KjfwmKXTcbzngK0QubQOQo7v2sAxIs7fPoi6HUrFeTWKaw6LRjQ/u3jAR0ag84i8
+WO2oN0PYu7DEeI1fNkfeX1jeFU2nCF6poBs/xaMNd08mtFRN8WETb8/CCHcqpDbO
+VxWyDqeKorF8/OQWn9YxMuRPwGhFnL0nhwRn6fgHL5eCW2+6ct+tYL+r4jUROGk2
+eYRSw+iuYUodcjGdc1Y3VBoNgfREIuLR11ITp/evegrwGPm6UNy3TGCobVyY3AWR
+6oXoLO8A0FkbW5Cy5FhdLr1SHmKrfKXUaP6aw96Er+FqysHQRE50zJi48+ev7gjT
+e1L66WOhy7QXfn9wP0cyuoSKl5HjjrLPzhlwE2u4D0ZTm5ZSv+I=
+=ug3Z
+-----END PGP SIGNATURE-----
+
+--7ZAtKRhVyVSsbBD2--
