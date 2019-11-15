@@ -2,105 +2,181 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630BAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE44AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476B32073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A838A2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:59:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XUjQSp3K";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NApyADSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfKOJ7G (ORCPT
+        id S1727405AbfKOJ7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:59:06 -0500
-Received: from gecko.sbs.de ([194.138.37.40]:35385 "EHLO gecko.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbfKOJ7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:59:04 -0500
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id xAF9wYvb017753
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 10:58:34 +0100
-Received: from [139.22.40.153] ([139.22.40.153])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id xAF9wWAJ021696;
-        Fri, 15 Nov 2019 10:58:32 +0100
-Subject: Re: [PATCH 2/2] arm64: export __hyp_stub_vectors
-To:     Peng Fan <peng.fan@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>
-Cc:     "allison@lohutok.net" <allison@lohutok.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ralf.ramsauer@oth-regensburg.de" <ralf.ramsauer@oth-regensburg.de>,
-        Alice Guo <alice.guo@nxp.com>, dl-linux-imx <linux-imx@nxp.com>
-References: <1573810972-2159-1-git-send-email-peng.fan@nxp.com>
- <1573810972-2159-2-git-send-email-peng.fan@nxp.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <3aeabfb9-0680-08f6-49bc-38930c7a23df@siemens.com>
-Date:   Fri, 15 Nov 2019 10:58:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <1573810972-2159-2-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 15 Nov 2019 04:59:11 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:58928 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfKOJ7K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:59:10 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5780F61737; Fri, 15 Nov 2019 09:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573811949;
+        bh=RrMUjJPRQz+smOvwPr79jK6ZcVL32D1D6S/AAnEJU84=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XUjQSp3KOvPdG0eJBfeBToCeF/dEzJkX68mSGabbFE678RQmo0dlt7okZRqOWngVo
+         hV43qc2v6lGtBDXZMMGaeIydNAhshrBeViTt4QomUqCPFDJ/gcaQjzu3tmznki/thg
+         RrQanHZmVxwOGy+hTgnAg4mHojsY61WD8M6MtP4U=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 39D936171B;
+        Fri, 15 Nov 2019 09:59:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573811947;
+        bh=RrMUjJPRQz+smOvwPr79jK6ZcVL32D1D6S/AAnEJU84=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NApyADScKuSl3b4fm6JHs7osUS0dLEZwdEbSZSWrLAVxP6jESv8wZYtQRAna5GOHL
+         a1OJaJ7EzzJTr5VK27M7D3g8+r/fjW220S5gbyhWVzus1qfemZAL4zHSxTrPAYgab/
+         TrvxqhR5Dx854l00G8j6nFf0SshXDgNiXSndwDow=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 39D936171B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 1/3] dt-bindings: clock: Add YAML schemas for the QCOM DISPCC clock bindings
+Date:   Fri, 15 Nov 2019 15:28:47 +0530
+Message-Id: <1573811929-21695-2-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573811929-21695-1-git-send-email-tdas@codeaurora.org>
+References: <1573811929-21695-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.11.19 10:45, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> External hypervisors, like Jailhouse, need this address when they are
-> deactivated, in order to restore original state.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->   arch/arm64/include/asm/virt.h | 2 ++
->   arch/arm64/kernel/hyp-stub.S  | 1 +
->   2 files changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-> index 0958ed6191aa..b1b48353e3b3 100644
-> --- a/arch/arm64/include/asm/virt.h
-> +++ b/arch/arm64/include/asm/virt.h
-> @@ -62,6 +62,8 @@
->    */
->   extern u32 __boot_cpu_mode[2];
->   
-> +extern char __hyp_stub_vectors[];
-> +
->   void __hyp_set_vectors(phys_addr_t phys_vector_base);
->   void __hyp_reset_vectors(void);
->   
-> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-> index f17af9a39562..22b728fb14bd 100644
-> --- a/arch/arm64/kernel/hyp-stub.S
-> +++ b/arch/arm64/kernel/hyp-stub.S
-> @@ -38,6 +38,7 @@ ENTRY(__hyp_stub_vectors)
->   	ventry	el1_fiq_invalid			// FIQ 32-bit EL1
->   	ventry	el1_error_invalid		// Error 32-bit EL1
->   ENDPROC(__hyp_stub_vectors)
-> +EXPORT_SYMBOL(__hyp_stub_vectors);
->   
->   	.align 11
->   
-> 
+The DISPCC clock provider have a bunch of generic properties that
+are needed in a device tree. Add a YAML schemas for those.
 
-While I would not dislike to have patch-free access in Jailhouse, I'm 
-not sure if an out-of-tree use case justifies this an export.
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,dispcc.txt      | 19 -------
+ .../devicetree/bindings/clock/qcom,dispcc.yaml     | 66 ++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 19 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
 
-Also, this lacks the arm equivalent to be complete.
+diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc.txt b/Documentation/devicetree/bindings/clock/qcom,dispcc.txt
+deleted file mode 100644
+index d639e18..0000000
+--- a/Documentation/devicetree/bindings/clock/qcom,dispcc.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-Qualcomm Technologies, Inc. Display Clock Controller Binding
+-------------------------------------------------------------
+-
+-Required properties :
+-
+-- compatible : shall contain "qcom,sdm845-dispcc"
+-- reg : shall contain base register location and length.
+-- #clock-cells : from common clock binding, shall contain 1.
+-- #reset-cells : from common reset binding, shall contain 1.
+-- #power-domain-cells : from generic power domain binding, shall contain 1.
+-
+-Example:
+-	dispcc: clock-controller@af00000 {
+-		compatible = "qcom,sdm845-dispcc";
+-		reg = <0xaf00000 0x100000>;
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-		#power-domain-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+new file mode 100644
+index 0000000..1185e49
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,dispcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Display Clock & Reset Controller Binding
++
++maintainers:
++  - Taniya Das <tdas@codeaurora.org>
++
++description: |
++  Qualcomm display clock control module which supports the clocks, resets and
++  power domains.
++
++properties:
++  compatible:
++    enum:
++      - qcom,sdm845-dispcc
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: Board XO source
++      - description: GPLL0 source from GCC
++
++  clock-names:
++    items:
++      - const: xo
++      - const: gpll0
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  # Example of DISPCC with clock node properties for SDM845:
++  - |
++    clock-controller@af00000 {
++      compatible = "qcom,sdm845-dispcc";
++      reg = <0xaf00000 0x10000>;
++      clocks = <&rpmhcc 0>, <&gcc 24>;
++      clock-names = "xo", "gpll0";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++     };
++...
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
 
-Jan
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
