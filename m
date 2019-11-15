@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7B8C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA574C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA72D20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8968220733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfKOJLL (ORCPT
+        id S1727401AbfKOJLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:11:11 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6677 "EHLO huawei.com"
+        Fri, 15 Nov 2019 04:11:07 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37838 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726196AbfKOJLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:11:10 -0500
+        id S1727254AbfKOJLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:11:05 -0500
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0F0E4234DB2A165C0FA1;
-        Fri, 15 Nov 2019 17:11:08 +0800 (CST)
+        by Forcepoint Email with ESMTP id 24863D4EB8CC1AEBFA11;
+        Fri, 15 Nov 2019 17:11:03 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
  (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 15 Nov 2019
- 17:10:57 +0800
+ 17:10:55 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -33,9 +33,9 @@ To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <kernel-hardening@lists.openwall.com>
 CC:     <linux-kernel@vger.kernel.org>, <oss@buserror.net>,
         Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH 6/6] powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst and add 64bit part
-Date:   Fri, 15 Nov 2019 17:32:09 +0800
-Message-ID: <20191115093209.26434-7-yanaijie@huawei.com>
+Subject: [PATCH 4/6] powerpc/fsl_booke/64: do not clear the BSS for the second pass
+Date:   Fri, 15 Nov 2019 17:32:07 +0800
+Message-ID: <20191115093209.26434-5-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20191115093209.26434-1-yanaijie@huawei.com>
 References: <20191115093209.26434-1-yanaijie@huawei.com>
@@ -48,8 +48,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we support both 32 and 64 bit KASLR for fsl booke. Add document for
-64 bit part and rename kaslr-booke32.rst to kaslr-booke.rst.
+The BSS section has already cleared out in the first pass. No need to
+clear it again. This can save some time when booting with KASLR
+enabled.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Scott Wood <oss@buserror.net>
@@ -61,70 +62,27 @@ Cc: Paul Mackerras <paulus@samba.org>
 Cc: Nicholas Piggin <npiggin@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>
 ---
- .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 ++++++++++++++++---
- 1 file changed, 31 insertions(+), 4 deletions(-)
- rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
+ arch/powerpc/kernel/head_64.S | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/powerpc/kaslr-booke32.rst b/Documentation/powerpc/kaslr-booke.rst
-similarity index 59%
-rename from Documentation/powerpc/kaslr-booke32.rst
-rename to Documentation/powerpc/kaslr-booke.rst
-index 8b259fdfdf03..42121fed8249 100644
---- a/Documentation/powerpc/kaslr-booke32.rst
-+++ b/Documentation/powerpc/kaslr-booke.rst
-@@ -1,15 +1,18 @@
- .. SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index ad79fddb974d..76d8cdeddc69 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -907,6 +907,13 @@ start_here_multiplatform:
+ 	bl      relative_toc
+ 	tovirt(r2,r2)
  
--===========================
--KASLR for Freescale BookE32
--===========================
-+=========================
-+KASLR for Freescale BookE
-+=========================
- 
- The word KASLR stands for Kernel Address Space Layout Randomization.
- 
- This document tries to explain the implementation of the KASLR for
--Freescale BookE32. KASLR is a security feature that deters exploit
-+Freescale BookE. KASLR is a security feature that deters exploit
- attempts relying on knowledge of the location of kernel internals.
- 
-+KASLR for Freescale BookE32
-+-------------------------
++	/* Do not clear the BSS for the second pass if randomized */
++	LOAD_REG_ADDR(r3, kernstart_virt_addr)
++	lwz     r3,0(r3)
++	LOAD_REG_IMMEDIATE(r4, KERNELBASE)
++	cmpw	r3,r4
++	bne	4f
 +
- Since CONFIG_RELOCATABLE has already supported, what we need to do is
- map or copy kernel to a proper place and relocate. Freescale Book-E
- parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
-@@ -38,5 +41,29 @@ bit of the entropy to decide the index of the 64M zone. Then we chose a
- 
-                               kernstart_virt_addr
- 
-+
-+KASLR for Freescale BookE64
-+---------------------------
-+
-+The implementation for Freescale BookE64 is similar as BookE32. One
-+difference is that Freescale BookE64 set up a TLB mapping of 1G during
-+booting. Another difference is that ppc64 needs the kernel to be
-+64K-aligned. So we can randomize the kernel in this 1G mapping and make
-+it 64K-aligned. This can save some code to creat another TLB map at early
-+boot. The disadvantage is that we only have about 1G/64K = 16384 slots to
-+put the kernel in::
-+
-+    KERNELBASE
-+
-+          64K                     |--> kernel <--|
-+           |                      |              |
-+        +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
-+        |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
-+        +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
-+        |                         |                        1G
-+        |----->   offset    <-----|
-+
-+                              kernstart_virt_addr
-+
- To enable KASLR, set CONFIG_RANDOMIZE_BASE = y. If KASLR is enable and you
- want to disable it at runtime, add "nokaslr" to the kernel cmdline.
+ 	/* Clear out the BSS. It may have been done in prom_init,
+ 	 * already but that's irrelevant since prom_init will soon
+ 	 * be detached from the kernel completely. Besides, we need
 -- 
 2.17.2
 
