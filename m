@@ -2,85 +2,71 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E37C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46973C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F7F20733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236DE20733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKOJRK (ORCPT
+        id S1727146AbfKOJRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:17:10 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:34364 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726196AbfKOJRJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:17:09 -0500
-X-IronPort-AV: E=Sophos;i="5.68,307,1569254400"; 
-   d="scan'208";a="78503109"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 15 Nov 2019 17:17:07 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 068A44CE1BF5;
-        Fri, 15 Nov 2019 17:08:56 +0800 (CST)
-Received: from [10.167.226.60] (10.167.226.60) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Fri, 15 Nov 2019 17:17:16 +0800
-Subject: Re: [RFC PATCH] x86/acpi: Drop duplicate BOOT table initialization
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-CC:     the arch/x86 maintainers <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20191115050613.1556-1-ruansy.fnst@cn.fujitsu.com>
- <CAJZ5v0jmQEKip=7530mTSzeY_bRSyJv_Y7B49AJuLiDaTjJqSQ@mail.gmail.com>
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-Message-ID: <f0ecbe30-67e8-4376-0848-b1d67200fe30@cn.fujitsu.com>
-Date:   Fri, 15 Nov 2019 17:18:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 15 Nov 2019 04:17:33 -0500
+Received: from mga14.intel.com ([192.55.52.115]:46998 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbfKOJRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:17:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 01:17:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,307,1569308400"; 
+   d="scan'208";a="236009207"
+Received: from powerlab.fi.intel.com (HELO powerlab.backendnet) ([10.237.71.25])
+  by fmsmga002.fm.intel.com with ESMTP; 15 Nov 2019 01:17:31 -0800
+From:   Artem Bityutskiy <dedekind1@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] trace/synthetic_events: increase SYNTH_FIELDS_MAX
+Date:   Fri, 15 Nov 2019 11:17:30 +0200
+Message-Id: <20191115091730.9192-1-dedekind1@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0jmQEKip=7530mTSzeY_bRSyJv_Y7B49AJuLiDaTjJqSQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.226.60]
-X-yoursite-MailScanner-ID: 068A44CE1BF5.AEEC8
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/15/19 5:09 PM, Rafael J. Wysocki wrote:
-> On Fri, Nov 15, 2019 at 6:06 AM Shiyang Ruan <ruansy.fnst@cn.fujitsu.com> wrote:
->>
->> From: Cao jin <caoj.fnst@cn.fujitsu.com>
->>
->> ACPI BOOT table is initialized in both acpi_boot_table_init &
->> acpi_boot_init of setup_arch, but its usage is quite late at the end of
->> start_kernel. It should be safe to drop one of them. Since it is less
->> related with table init, drop it from there.
->>
->> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
-> 
-> Please resend with a CC to linux-acpi@vger.kernel.org
-> 
+From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 
-Sure. It is better to let get_maintainer.pl tell the whole list.
+Increase the maximum allowed count of synthetic event fields from 16 to 32
+in order to allow for larger-than-usual events.
 
+Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+---
+ kernel/trace/trace_events_hist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 7482a1466ebf..f49d1a36d3ae 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -23,7 +23,7 @@
+ #include "trace_dynevent.h"
+ 
+ #define SYNTH_SYSTEM		"synthetic"
+-#define SYNTH_FIELDS_MAX	16
++#define SYNTH_FIELDS_MAX	32
+ 
+ #define STR_VAR_LEN_MAX		32 /* must be multiple of sizeof(u64) */
+ 
 -- 
-Sincerely,
-Cao jin
-
+2.20.1
 
