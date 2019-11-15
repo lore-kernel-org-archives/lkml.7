@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D69C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542C5C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7102073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1E22067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820795;
-	bh=uuXdCeHw8M7PF+g/FD8wgy9eJN6WWbVCdXJrPj2bZjY=;
+	s=default; t=1573820797;
+	bh=9VKxjHtWpMCgHBhDgLv1k4RFgCQ5eFhjvMu77UTg7Jk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=IJu/R0hR7LsPtFI8XdiqIiJg/ebOUCVaZU2M0PwzRKYrPXzj2ceCLeQrFvE0Yr698
-	 PtzJO0x+WFGLEphvugXIl2HQPnKXSPy/GtAb28xrb2U0Ojw9K3S2F5epf6cV7RBh3C
-	 5tJri3YqPFEnHPKA8M8gnOZf2HMPJEjwt4dt/WMs=
+	b=pzpOaG32AM31IOqVdKFQM7H5mCWUlOg5gJTDSkoY2+itlCN8G71OHMFvjsAcK2kcw
+	 rxKeBVya5ch7czZLYf/lAJ23ACQNVNZ+LEXkQY40ogpaoAXtiDZQYRHxTb3HhyYZWj
+	 R1UcUt0BeK25JdYQ2RDIs0FfkSzUI/XE1ni9UOOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfKOM0e (ORCPT
+        id S1727949AbfKOM0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:26:34 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32830 "EHLO
+        Fri, 15 Nov 2019 07:26:31 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32826 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727641AbfKOMZM (ORCPT
+        with ESMTP id S1727365AbfKOMZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:25:12 -0500
+        Fri, 15 Nov 2019 07:25:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=daHt2+8Hmvwc3q4oviLYlwCDGGFI8F6MVXhLSm92SYw=; b=N37ZirmfJhdE
-        DgQuJBJ4gLC61qwuo3BGP1xiwQkaWamyFAVmkdIjZxA9mpEGb3CZnOaWqRWPs3sW5EWRcmdglRsva
-        nINkULePgpdGc8gadnhT4H7jsmr5RmSnffRbAQE4t54q67cZBVqEAAWi5crLbryK4Gqs2misrV6a2
-        VxGlo=;
+        List-Archive; bh=qICwKqMRm4yg2Mobp12iIzV+VQB/juSAmGwdio0/GME=; b=mnFynAlTrYRB
+        cytoaSOKA8ZeJoWK3vvwmFvrKNUY9ZiWEnWS+UayPDKvWfadrWpSR/5gxz7RrzJylzOLbiiUNMG6A
+        PZHb7dQEb6MO9D74N1r9Ye8sbV06EnROVXHdxr1ipo1K5uzrYW10wCccsPRWl64JPnYbgbnUABYdQ
+        eqKSw=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaey-0000Ku-O8; Fri, 15 Nov 2019 12:25:08 +0000
+        id 1iVaer-0000Jv-Ld; Fri, 15 Nov 2019 12:25:01 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3BD982741609; Fri, 15 Nov 2019 12:25:08 +0000 (GMT)
+        id 23ADF27415A7; Fri, 15 Nov 2019 12:25:01 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Pascal Paillet <p.paillet@st.com>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, p.paillet@st.com
-Subject: Applied "regulator: core: Let boot-on regulators be powered off" to the regulator tree
-In-Reply-To: <20191113102737.27831-1-p.paillet@st.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: tas2770: clean up an indentation issue" to the asoc tree
+In-Reply-To: <20191112190218.282337-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122508.3BD982741609@ypsilon.sirena.org.uk>
-Date:   Fri, 15 Nov 2019 12:25:08 +0000 (GMT)
+Message-Id: <20191115122501.23ADF27415A7@ypsilon.sirena.org.uk>
+Date:   Fri, 15 Nov 2019 12:25:01 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: core: Let boot-on regulators be powered off
+   ASoC: tas2770: clean up an indentation issue
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -88,41 +89,43 @@ to this mail.
 Thanks,
 Mark
 
-From 089b3f61ecfc43ca4ea26d595e1d31ead6de3f7b Mon Sep 17 00:00:00 2001
-From: Pascal Paillet <p.paillet@st.com>
-Date: Wed, 13 Nov 2019 11:27:37 +0100
-Subject: [PATCH] regulator: core: Let boot-on regulators be powered off
+From b26eb5173c85082eec7d6e18369f6f9d96bf0b21 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Tue, 12 Nov 2019 19:02:18 +0000
+Subject: [PATCH] ASoC: tas2770: clean up an indentation issue
 
-Boot-on regulators are always kept on because their use_count value
-is now incremented at boot time and never cleaned.
+There is a block that is indented too deeply, remove
+the extraneous tabs.
 
-Only increment count value for alway-on regulators.
-regulator_late_cleanup() is now able to power off boot-on regulators
-when unused.
-
-Fixes: 05f224ca6693 ("regulator: core: Clean enabling always-on regulators + their supplies")
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
-Link: https://lore.kernel.org/r/20191113102737.27831-1-p.paillet@st.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20191112190218.282337-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/codecs/tas2770.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index a5b2a9b02108..5e6c629806e4 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1403,7 +1403,9 @@ static int set_machine_constraints(struct regulator_dev *rdev,
- 			rdev_err(rdev, "failed to enable\n");
- 			return ret;
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index ad76f22fcfac..54c8135fe43c 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -761,12 +761,12 @@ static int tas2770_i2c_probe(struct i2c_client *client,
+ 	tas2770->reset_gpio = devm_gpiod_get_optional(tas2770->dev,
+ 							  "reset-gpio",
+ 						      GPIOD_OUT_HIGH);
+-		if (IS_ERR(tas2770->reset_gpio)) {
+-			if (PTR_ERR(tas2770->reset_gpio) == -EPROBE_DEFER) {
+-				tas2770->reset_gpio = NULL;
+-				return -EPROBE_DEFER;
+-			}
++	if (IS_ERR(tas2770->reset_gpio)) {
++		if (PTR_ERR(tas2770->reset_gpio) == -EPROBE_DEFER) {
++			tas2770->reset_gpio = NULL;
++			return -EPROBE_DEFER;
  		}
--		rdev->use_count++;
-+
-+		if (rdev->constraints->always_on)
-+			rdev->use_count++;
- 	}
++	}
  
- 	print_constraints(rdev);
+ 	tas2770->channel_size = 0;
+ 	tas2770->slot_width = 0;
 -- 
 2.20.1
 
