@@ -7,85 +7,78 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA15C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F81EC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A10B20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DBA32072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="isV1GwSy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MJ2Vf728"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKOSsY (ORCPT
+        id S1726977AbfKOSsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:48:24 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33940 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfKOSsY (ORCPT
+        Fri, 15 Nov 2019 13:48:51 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45285 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfKOSsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:48:24 -0500
-Received: by mail-pl1-f195.google.com with SMTP id h13so5273065plr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 10:48:22 -0800 (PST)
+        Fri, 15 Nov 2019 13:48:50 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k1so5093212pgg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 10:48:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:cc:to:subject:from:user-agent:date;
-        bh=X4twp3pctC7VCYEezfWUSk2DKafsbFD6g/B7PxJ7beE=;
-        b=isV1GwSykbdCIUh1Sq2o8vQA3iKaQVXo2ALyRNUWZ8d6X0VzM46cePA97/qONQhJ00
-         RFJ8tV421WaulCuo3jygFdZGKUKdOYYkry8Skc2I706xbc0HLFhIDEepgOxGqQdmgQS0
-         3vfOyfjJdFFH/sFlt9zScWDVH7vA6ecKloMps=
+        bh=fmszmsa19doMDiKVkd5JyjEU2EGslIacVXAuEqSrae8=;
+        b=MJ2Vf728p+IDQNuwMyN+qBbVI4AXW+zK1iJOm+FRbwoS7HdhDVqUq9ABoFNp9GHfv1
+         +w6YXWJM4nwTjAD7AuZ6fu5mqIU+7o5jh9j+jy/TQduvLgQeHCwDgSeMfTxXlq79hKWH
+         vlfF83jP9VXR0ao9aRPL6TBrqTLUtSrSX9izA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
          :user-agent:date;
-        bh=X4twp3pctC7VCYEezfWUSk2DKafsbFD6g/B7PxJ7beE=;
-        b=eXn29llbfutiHE2ZSbutLzlBv+2a9PjztMG5VPwbCg+DcetvFTTeGpPBsk3dx9X8pE
-         9O50v1HMxvNUn8Zzj4QIjDHRtGZnWqlSRZf+KmB6kVq8anz9EUydOAXXtS39XB/ih2Ul
-         9CKIp/y8FOwBESX1gf9lIG528T+G6kU2NKYyG+ThAGmJpL5ird4kxrB/plN15QJvqQ4T
-         LxK+Ok27bRZULNyykMZO8qwezZVrrfpfb2BIhp9P4C9TkAOJjmxOK5LMsecId0jSAbK+
-         AjADQzndKGte+NtiO/gBtfdjihZvOGMYJohOzoBATKoliLojkDPUW/A9WjG7olOLlJXK
-         Cupg==
-X-Gm-Message-State: APjAAAUHqxl3wLFCTABxoYjJPewE37KCOE2fAIWQ5x97q6zOKeDfJyfC
-        zIsWuiRGiCSAHIF6BfGw1TFNQA==
-X-Google-Smtp-Source: APXvYqzCEHYKTJk35+KbDAqTeknJ92k5jjiweJcm0Q36J9YfJLytr/wLW+RFHHfKHabR4PfHBGRO9g==
-X-Received: by 2002:a17:902:8ec6:: with SMTP id x6mr16554556plo.151.1573843701878;
-        Fri, 15 Nov 2019 10:48:21 -0800 (PST)
+        bh=fmszmsa19doMDiKVkd5JyjEU2EGslIacVXAuEqSrae8=;
+        b=AMuEU9FceSVqr6I2s/ye4mUXsSVvLrLbdal2QzmI07bnJztjrUY55+NCk81YU2dS7W
+         GSOHCbih/rLP8gdekIchRb2gquerXHHkhY8HoYYKwo38m3IfN/zanNfLD30gWgDQqN33
+         HgN2wJgTImA28QxWJiQxZQQwH8N9plH3xNwmF0v98bW6KwN6P6dTiNP7AMzoZCyvc45P
+         L8Cq+VpD7mVbcLEZju2Ajsscg/u6m/JbrFUqUjxogMiAIbbpdsl8KawNePWuOtI+jbom
+         5QC6imf3MTHD5CEtgLiy9Kyhn5vdT0uWfZTktMwNHvvtUl/n85Ng49IGcJ8cUanmmxv0
+         pl9w==
+X-Gm-Message-State: APjAAAWo51GYkWoD1NddlxSs0Qzq/3qCxxx6IitMsNsPmyZjXoJI7os3
+        HTO+PVuPlhbCeFXG/1pkJ1rT0w==
+X-Google-Smtp-Source: APXvYqw6HSHHsj7mgPXycNxOL2uo40yDdeVwbGg5kQPzgO7awllnUIimHBetpe8MbKVK5Gxm3+WLjQ==
+X-Received: by 2002:a63:5508:: with SMTP id j8mr17243237pgb.97.1573843729530;
+        Fri, 15 Nov 2019 10:48:49 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a26sm11247215pff.155.2019.11.15.10.48.21
+        by smtp.gmail.com with ESMTPSA id k6sm8741468pfi.119.2019.11.15.10.48.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 10:48:21 -0800 (PST)
-Message-ID: <5dcef2f5.1c69fb81.ccbc2.1a7e@mx.google.com>
+        Fri, 15 Nov 2019 10:48:49 -0800 (PST)
+Message-ID: <5dcef311.1c69fb81.f78a4.b0ee@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573756521-27373-2-git-send-email-ilina@codeaurora.org>
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-2-git-send-email-ilina@codeaurora.org>
+In-Reply-To: <1573756521-27373-3-git-send-email-ilina@codeaurora.org>
+References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-3-git-send-email-ilina@codeaurora.org>
 Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
         linux-gpio@vger.kernel.org, agross@kernel.org,
         dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
 To:     Lina Iyer <ilina@codeaurora.org>, bjorn.andersson@linaro.org,
         linus.walleij@linaro.org, maz@kernel.org
-Subject: Re: [PATCH 01/12] irqdomain: add bus token DOMAIN_BUS_WAKEUP
+Subject: Re: [PATCH 02/12] drivers: irqchip: qcom-pdc: update max PDC interrupts
 From:   Stephen Boyd <swboyd@chromium.org>
 User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 10:48:20 -0800
+Date:   Fri, 15 Nov 2019 10:48:48 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-11-14 10:35:10)
-> A single controller can handle normal interrupts and wake-up interrupts
-> independently, with a different numbering space. It is thus crucial to
-> allow the driver for such a controller discriminate between the two.
+Quoting Lina Iyer (2019-11-14 10:35:11)
+> Newer SoCs have increased the number of interrupts routed to the PDC
+> interrupt controller. Update the definition of max PDC interrupts.
 >=20
-> A simple way to do so is to tag the wake-up irqdomain with a "bus token"
-> that indicates the wake-up domain. This slightly abuses the notion of
-> bus, but also radically simplifies the design of such a driver. Between
-> two evils, we choose the least damaging.
->=20
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
 > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 > ---
 
