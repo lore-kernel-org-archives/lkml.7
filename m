@@ -2,74 +2,95 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8B8C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3145AC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9198E2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057F12073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:10:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="it38MDpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfKONI5 (ORCPT
+        id S1727486AbfKONKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:08:57 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55196 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727272AbfKONI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:08:57 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 34D7B2A6BA2C4B011194;
-        Fri, 15 Nov 2019 21:08:54 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 15 Nov 2019
- 21:08:45 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jmorris@namei.org>, <serge@hallyn.com>, <nayna@linux.ibm.com>,
-        <zohar@linux.ibm.com>, <dhowells@redhat.com>,
-        <jwboyer@fedoraproject.org>, <yuehaibing@huawei.com>
-CC:     <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] x86/efi: remove unused variables
-Date:   Fri, 15 Nov 2019 21:08:30 +0800
-Message-ID: <20191115130830.13320-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 15 Nov 2019 08:10:34 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51151 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727223AbfKONKd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:10:33 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFD2Pcu022731;
+        Fri, 15 Nov 2019 14:10:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=9rmwto7fOBN39SiXRHKuxkPMdmv3HZGhG7BMLDLWBXs=;
+ b=it38MDpuYDLhG6jamaFeoXmLhqluiQEOXdJsj4ujecEVyW1onH6GHGQ0bekhkvwenlC4
+ 07uZCgXKkx0GLS3DG1SG02fFxmzQtNHs9MuK4Pz5TXoWmcKAbNlOHN2BCJldDEnqfjYb
+ uXeHsmFKaavG/nAr+2Y49GmfOCN/KXhigkGF+vFFfxlKV30IEGZpMmkEORjZgaCbBnBK
+ 7T+hNMNL/xLdxrYWhIiwegLkhRGLrADw5ZA0YRiMyk6vGHQCXaMwJpJbndNQoM4uRsik
+ CGA/8J750EcqctHJBrNmWyQdDKL1skR0tht2fjjbDjpTADlGZIlPuTmLczGgdHAu7GfY 3g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w7psbm8hg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 14:10:20 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ED50910002A;
+        Fri, 15 Nov 2019 14:10:19 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D6A6F2BC106;
+        Fri, 15 Nov 2019 14:10:19 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov
+ 2019 14:10:19 +0100
+Subject: Re: [PATCH 0/2] Add support for ADC on stm32mp157c-ed1
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <54a1b172-df71-0fec-cd40-e974dc70af34@st.com>
+Date:   Fri, 15 Nov 2019 14:10:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit ad723674d675 ("x86/efi: move common keyring
-handler functions to new file") leave this unused.
+Hi Fabrice
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- security/integrity/platform_certs/load_uefi.c | 5 -----
- 1 file changed, 5 deletions(-)
+On 11/8/19 5:37 PM, Fabrice Gasnier wrote:
+> This series adds support for digital-to-analog converter on
+> stm32mp157c-ed1 board:
+> - define pins that can be used for ADC
+> - configure ADC channels to use these
+> 
+> Fabrice Gasnier (2):
+>    ARM: dts: stm32: add ADC pins used for stm32mp157c-ed1
+>    ARM: dts: stm32: add ADC support to stm32mp157c-ed1
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi |  6 ++++++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts     | 16 ++++++++++++++++
+>   2 files changed, 22 insertions(+)
+> 
+Series applied on stm32-next.
 
-diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-index 4369204..111898a 100644
---- a/security/integrity/platform_certs/load_uefi.c
-+++ b/security/integrity/platform_certs/load_uefi.c
-@@ -11,11 +11,6 @@
- #include "../integrity.h"
- #include "keyring_handler.h"
- 
--static efi_guid_t efi_cert_x509_guid __initdata = EFI_CERT_X509_GUID;
--static efi_guid_t efi_cert_x509_sha256_guid __initdata =
--	EFI_CERT_X509_SHA256_GUID;
--static efi_guid_t efi_cert_sha256_guid __initdata = EFI_CERT_SHA256_GUID;
--
- /*
-  * Look to see if a UEFI variable called MokIgnoreDB exists and return true if
-  * it does.
--- 
-2.7.4
-
-
+Regards
+Alex
