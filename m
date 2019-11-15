@@ -4,140 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C0CC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCCCC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB99A2073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795FF2073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfKOHpx (ORCPT
+        id S1727409AbfKOHqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:45:53 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59512 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfKOHpx (ORCPT
+        Fri, 15 Nov 2019 02:46:00 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:33415 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfKOHqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:45:53 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2AB4F2915D1;
-        Fri, 15 Nov 2019 07:45:51 +0000 (GMT)
-Date:   Fri, 15 Nov 2019 08:45:48 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v2 09/10] media: uapi: h264: Add DPB entry field reference
- flags
-Message-ID: <20191115084548.45ea5b8d@collabora.com>
-In-Reply-To: <HE1PR06MB401159909AF49930BDD02658AC700@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-        <20191029012550.24628-1-jonas@kwiboo.se>
-        <HE1PR06MB401142C1E45B302094AD1149AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-        <20191031112056.3442d6ac@collabora.com>
-        <HE1PR06MB401159909AF49930BDD02658AC700@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 15 Nov 2019 02:46:00 -0500
+Received: from localhost ([46.78.193.225]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MgNxZ-1hxGfZ3Nkt-00ht6M; Fri, 15 Nov 2019 08:45:27 +0100
+Date:   Fri, 15 Nov 2019 08:45:24 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
+Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
+        tglx@linutronix.de, mchehab+samsung@kernel.org,
+        davem@davemloft.net, paulmck@linux.ibm.com,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/4] MAINTAINERS: add maintainer for ping iio sensors
+Message-ID: <20191115074522.o237qv2hivdawn45@arbad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:R3YeHRSDgxZM/qfBF5BAAc6W1GiIOvqg9saqoNCLjAxLOpbM8xM
+ +9Alvx4ZVShXDqkTrssJagSSVf1w/DbIXR6e6icWOF8Yrd5t1VyxYAV4MtZfJ6RdDUe/6bA
+ hr/HIVU6T4F3GLnvtasBeeL4usPUf3DH8VOxRXcXfrXYXHvaWkFIWqZY450LjUE6dkX9mu5
+ nws5fQtq9nVbOu3ujsYQA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jtiVqWsSXIQ=:quQlDAO92j49Xs7ucDVLyd
+ Tv6x9xha7xQNE7Y+wtyjZuJjrkO/IdRgnZJlpgF0QFw1A5CRNCHzShiZTsA7AveaH1tgNDBh/
+ hik/E3azwHgEnljxXheJDbY4HyqAWpUrLnOhNZGICyIl265kl7u8iPA9kIfMfNAKJYH0ALZjD
+ 0Tc79P6Hvqb+SxBfE6VxM8rMf6cZhMZKw2MgLaGq+OU88ncQgF9Ip4eYMcHnu1w4C5LSXMf9d
+ Qr12Y4lPWBjZrVcASch4sz8kR8yQ0aCGVwd0PCqbgj0Ba0FVqH69kFaZ/7RxGvn2neMhAS7kw
+ YPw0lwOqNJ8zFUJMOPqUUx6SKzI9DVjXrDTKsYyh37Ni45DLSihYKulvwGSWGkv/MFTVUycrK
+ ZUOHgnR1VagXU42aXUPuqbGUTdf4V2M42qpleVIQXvLlXpo0UWrmys5PvCKub6IFfL/oQWlWN
+ +fLo1XT732ou2VHxmeiF9CO3RvN5vYuqXyguSkc/3M30z99AcWWXw569fCL/MdsMRpiLWKCHY
+ bJ15mcH2vmPht2wFwG4DWH6tyTs6A94Tf4fUNM3LogddRzCdVGAsfMaJZw5cUNajWenmsPbXG
+ OnQYB3xJATZ30iW2wpNdcnAMeHzvadIcVBxmGVB+i0z87Xg0UrNeE3eQa0c+jYlpLuvqYMKLQ
+ +DsTvl9+rnXeIJq+usBtt0w/0j6BPo9V/Fv7DCSg+7oWz83MAQ5cc1b3eOtr/ch6Zn60On/Qs
+ Rkw8ts31GfWZ9e78OKAroOn1MsKYdam2h+QxWRcpNYjat+H7TxAXxHh03UMf4zM3RVQ0CNwgp
+ 54+7pgquR1SOGg1HbhhcRIUqiEYsPMoM7py33hFVaCGrmsMDBtjO/pq69n2z8tyd4GYmC/M3D
+ lucPrQnUQCnf37h2QcoQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 06:26:54 +0000
-Jonas Karlman <jonas@kwiboo.se> wrote:
+Add a maintainer for the new parallax PING))) and LaserPING IIO sensors
 
-> On 2019-10-31 11:20, Boris Brezillon wrote:
-> > On Tue, 29 Oct 2019 01:26:01 +0000
-> > Jonas Karlman <jonas@kwiboo.se> wrote:
-> >  
-> >> Add DPB entry flags to help indicate when a reference frame is a field picture
-> >> and how the DPB entry is referenced, top or bottom field or full frame.
-> >>
-> >> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> >> ---
-> >>  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 12 ++++++++++++
-> >>  include/media/h264-ctrls.h                       |  4 ++++
-> >>  2 files changed, 16 insertions(+)
-> >>
-> >> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> >> index 28313c0f4e7c..d472a54d1c4d 100644
-> >> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> >> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> >> @@ -2028,6 +2028,18 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >>      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
-> >>        - 0x00000004
-> >>        - The DPB entry is a long term reference frame
-> >> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE``
-> >> +      - 0x00000008
-> >> +      - The DPB entry is a field picture
-> >> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_TOP``
-> >> +      - 0x00000010
-> >> +      - The DPB entry is a top field reference
-> >> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM``
-> >> +      - 0x00000020
-> >> +      - The DPB entry is a bottom field reference
-> >> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME``
-> >> +      - 0x00000030
-> >> +      - The DPB entry is a reference frame
-> >>  
-> >>  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
-> >>      Specifies the decoding mode to use. Currently exposes slice-based and
-> >> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> >> index e877bf1d537c..76020ebd1e6c 100644
-> >> --- a/include/media/h264-ctrls.h
-> >> +++ b/include/media/h264-ctrls.h
-> >> @@ -185,6 +185,10 @@ struct v4l2_ctrl_h264_slice_params {
-> >>  #define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
-> >>  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
-> >>  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
-> >> +#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE	0x08
-> >> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_TOP	0x10
-> >> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM	0x20
-> >> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME	0x30  
-> > I don't remember all the details, but do we really need 3 flags?
-> > Maybe I'm wrong, but it looks like the following combination doesn't
-> > make sense:
-> >
-> > - FIELD_PICTURE + REF_FRAME: if it's a full frame ref it should
-> >   contain both top and bottom fields right, so it's no longer a
-> >   FIELD_PICTURE, is it?
-> >
-> > Can't we just have 2 flags?
-> >
-> > FIELD_PICTURE		0x08
-> > FIELD_REF_TOP		0x10 (meaning that FIELD_REF_BOTTOM is
-> > 			      0x00)
-> >
-> > and then have the following combinations:
-> >
-> > top field ref => FIELD_PICTURE | FIELD_REF_TOP
-> > bottom field ref => FIELD_PICTURE
-> > full frame ref => 0x0  
-> 
-> I am not sure and will need to look closer at spec and what ffmpeg is doing.
-> These flags was mostly inspired by the information ffmpeg stores in
-> H264Picture->reference and H264Picture->field_picture.
-> 
-> I also believe that the new FLAG_REF_TOP/BOTTOM may make FLAG_ACTIVE obsolete.
-> 
-> active => flags & FLAG_REF_FRAME
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Can't we keep the ACTIVE flag and drop the REF_FRAME one then? AFAIU,
-all we need to know in addition to what we already have is:
-
-* is the reference a full-frame or a field?
-* if it is a field, which one (top or bottom)?
-
-Hence my suggestion to keep only 2 flags.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c6c34d04ce95..ad469adffb99 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12264,6 +12264,13 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/panasonic-laptop.c
+ 
++PARALLAX PING IIO SENSOR DRIVER
++M:	Andreas Klinger <ak@it-klinger.de>
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
++F:	drivers/iio/proximity/ping.c
++
+ PARALLEL LCD/KEYPAD PANEL DRIVER
+ M:	Willy Tarreau <willy@haproxy.com>
+ M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
+-- 
+2.11.0
