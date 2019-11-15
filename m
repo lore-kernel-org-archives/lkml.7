@@ -2,1753 +2,596 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9671C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDE3C33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7749820740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D276D20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/8N0eLq"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="T18LGZyW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfKOMUz (ORCPT
+        id S1727412AbfKOMXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:20:55 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:32916 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727355AbfKOMUz (ORCPT
+        Fri, 15 Nov 2019 07:23:22 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26922 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727196AbfKOMXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:20:55 -0500
-Received: by mail-lj1-f196.google.com with SMTP id t5so10500933ljk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 04:20:50 -0800 (PST)
+        Fri, 15 Nov 2019 07:23:22 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFCDIds007138;
+        Fri, 15 Nov 2019 07:22:49 -0500
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2052.outbound.protection.outlook.com [104.47.45.52])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2w7prk1cjt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 07:22:48 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IHDXh23bS0Na30rzF9pTtbb0yRu2f5oS3todxF3dsq4lPMDkyeJsiff7HkWIzCt3JJSZ/xHAaOuskqUX9hxXNiSsJ0KPMu4n6fp4oYL+KiuyO/IqPvaeaOB+yhD/GY9PSttRMOJ3o+yqgPyCW65eV4fotl4jJD2t6nTewNoWiMsmLjFBXBPlPEUCTRq3Ql5YukDgsDoFsYXjx9i/Cf2EPTIV3qv79Hbe/wrF8cQgh+sDnrFuplYUdnZebMKho+Ah7C02yLbNLxZGCpjXb/H2l8MFNlaVA4CwWuyA/8WDJGiO2B2D2WjQgTX85X9x5bcdfUTpwoA6zjuK6yrrfrj8Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/wqyuoq275gET2AQG/5I1bavArdzogEonkiAK6MXxlU=;
+ b=GVERlKGnC+eU8N1TKVWUqtanBrH3c23zl7v0xKv+L8ZtZEZKaR/0w1eDoJHZgPQZsKGGjWQqgeEnDD0hQZP8PdXK5M6dXkDIT5VeZ/wcBIMml6AuGI2y9/JNzd0/uxH5Yh+7dwwrvbeL+SYbkEFuBBzHXrLpZKtv5mnLbILdN389zYKAFlKTjHZHjVyY9SJulT7fVyJ+AGop3JnkQhaAzLWeZRUS4f+SLO4iHy1uiIW6rX9AgqLB41HC0xvVnNGbQn5Frt7H6lT4s2iItX3ITq0pg/5BD++qb/PD3C+MFM3PrQ6h372GqfnLuqJf6gBA/ezn/7V4cfEIYuTZvbb8gw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9cJxCZW0lwok1TFb4p00c7WTj1OruvC633mSgsiBKKo=;
-        b=R/8N0eLqb8Q+UA9xaiJWTInU7lxcAQ8uIlBzUYtoR7yMnsKSlVAJPOpb0v+dIuZ3Po
-         JplKh4nLOjrnSTiEepiXHGfZtz+u3ytYxebPdIpYB7M3lWqIOunRDTlwzHn4DbE8xiq8
-         fu2GGWPwcAFzKksEVkhv6imU4jWfAMU29aZ6p91Ddo+EuNafBHTFG5u9ttJwUfGC+PxH
-         0IzLjZBukfHw18bEIn3LT32LCZ2abrFIWDILLTdxtuKMTQaHBFRZvVGrQYzvP7hShBJP
-         CKiyxT2Y4keaMu78KC64NU46SiKDcZSZoa3M2/PqkGnBQ4uedatcfrc6yrmKgzPiCQX8
-         ZY0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9cJxCZW0lwok1TFb4p00c7WTj1OruvC633mSgsiBKKo=;
-        b=PF21MnLm1gZqgHfSvWPeqgfMAUf6Hqi/wYRF+2X01NDqcJE3P15WAj/YntNvr7TEgD
-         gBr5YAUYwOPFHaSl2ZMvhbMPoHVzyvoqPSebyY5WaOfhjdf1Any3jFd1VLxU6gVEOFYd
-         6tgQkWCh2i+ZcPs1py+t/kQ0Yo8OER5QxsX+gCh3ghcku5njpFGq39a26NscZMPfFdNe
-         7XZOW8jAKKHRa9KsmA6BfGXJZI2+hlnD/nx95sOH77ID3mrElv7kf3XxMpcPB1HFwi4V
-         1mg0VrHOrTZGRto1aBaEz+KSWAQ/xiiMK0q3XAPD39ASQRX7nJDfl+p6wUVaJ6U/Ee5H
-         Yeyg==
-X-Gm-Message-State: APjAAAV80aF6ibs5vA5dWkOHzwbaKA4/kuJC/gq8PislMwZXLj9oiASU
-        9iGmc1a3UEiooCV3YL5uJty0D/amX/BFbQ==
-X-Google-Smtp-Source: APXvYqxRsNs2+10hveBP5EHbJQ57hSHDUuoQEYGNT8+0y1uNc7mlpzgrZhfHvlbAIujU3VKncelCWg==
-X-Received: by 2002:a2e:994f:: with SMTP id r15mr11129492ljj.18.1573820448788;
-        Fri, 15 Nov 2019 04:20:48 -0800 (PST)
-Received: from centauri (ua-84-217-220-205.bbcust.telenor.se. [84.217.220.205])
-        by smtp.gmail.com with ESMTPSA id k186sm4575436lfd.64.2019.11.15.04.20.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 04:20:48 -0800 (PST)
-Date:   Fri, 15 Nov 2019 13:20:46 +0100
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Nishanth Menon <nm@ti.com>, linux-arm-msm@vger.kernel.org,
-        vireshk@kernel.org, bjorn.andersson@linaro.org,
-        ulf.hansson@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, amit.kucheria@linaro.org
-Subject: Re: [PATCH v2 11/14] power: avs: Add support for CPR (Core Power
- Reduction)
-Message-ID: <20191115122046.GA244045@centauri>
-References: <20190725104144.22924-1-niklas.cassel@linaro.org>
- <20190725104144.22924-12-niklas.cassel@linaro.org>
- <20190818010415.A100F21019@mail.kernel.org>
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/wqyuoq275gET2AQG/5I1bavArdzogEonkiAK6MXxlU=;
+ b=T18LGZyWUp9iocw/L88WlIhy6mSVEQppXHRFIhzHvv98t/jgB8NwYjLy4kZDjKUCYN4pLGqxEyAbpgiUYf2jc2ERPveNwe0hOmdepBJKNBTw3IUjjDFnKFbxbWZxPXwjG4QX7RXD/+RYryFy3YC0btFc/NZkKuZw+E1FZYaG5tc=
+Received: from BN6PR03CA0017.namprd03.prod.outlook.com (2603:10b6:404:23::27)
+ by BN7PR03MB3700.namprd03.prod.outlook.com (2603:10b6:406:cb::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Fri, 15 Nov
+ 2019 12:22:46 +0000
+Received: from CY1NAM02FT063.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::200) by BN6PR03CA0017.outlook.office365.com
+ (2603:10b6:404:23::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22 via Frontend
+ Transport; Fri, 15 Nov 2019 12:22:45 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT063.mail.protection.outlook.com (10.152.75.161) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2451.23
+ via Frontend Transport; Fri, 15 Nov 2019 12:22:45 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xAFCMhtw031683
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 15 Nov 2019 04:22:43 -0800
+Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.231) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 15 Nov 2019 07:22:43 -0500
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <gregkh@linuxfoundation.org>,
+        <linux-iio@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>,
+        Paul Cercueil <paul.cercueil@analog.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v4 1/4] iio: adc: Add support for AD7091R5 ADC
+Date:   Fri, 15 Nov 2019 14:23:13 +0200
+Message-ID: <20191115122316.20893-1-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818010415.A100F21019@mail.kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(39860400002)(396003)(136003)(346002)(189003)(199004)(44832011)(478600001)(356004)(54906003)(106002)(70586007)(50226002)(336012)(6916009)(305945005)(47776003)(316002)(86362001)(14444005)(16586007)(7636002)(70206006)(966005)(7416002)(486006)(476003)(2616005)(2351001)(30864003)(48376002)(107886003)(5660300002)(6666004)(36756003)(126002)(186003)(6306002)(26005)(4326008)(51416003)(246002)(8936002)(8676002)(426003)(50466002)(1076003)(2906002)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR03MB3700;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c21ae3e5-e8fb-4af5-5934-08d769c68545
+X-MS-TrafficTypeDiagnostic: BN7PR03MB3700:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <BN7PR03MB37003C3F3F111DD5D964F5FFF0700@BN7PR03MB3700.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 02229A4115
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qKZxww8lmqJkSpttB/7sADtBRbM/b9p8OMDnNmC+EZ29QvKO8idVuLQNP9gnsqRUVBBFokWMOMhgA5T5h0M0G0RGZ6x6JHP0mmbPvMo1tF4siCzWt8yH7r7GEof9XUOpC5pnQ6YVreAxR/4d1Um1QSJk1s0znwOjgjD47lbGJRCeF9i1dP5mdXSGXy4aYzYyFINf6m8jEDUqmKD6/6XlNcFVpGoJslqJyRyPlXr2wcZ88Zt1oj8C7c9gdAmYGCkaV/T5s9yJO1l++zUfURTbipMM79b4zyMqAJwu2xMX92XLDLG0JTKiF2/7LNM6ZJ066vrjoUprCypNfRddoCBcTH2PcxBy6q5i387x9FXmL+MeIf0Xhh7sV2QsIbkPQNJAZYg7FK+fnr+wB9xvhcoLuA5LfZ+LUScq011GTGNwHONL2uIDRaZLnZL8KHqJz158Z3FHViQmaU4ItF0oOUWq5jCzBkUSAov9MNyloMA8sOM=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2019 12:22:45.4818
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c21ae3e5-e8fb-4af5-5934-08d769c68545
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB3700
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 clxscore=1015 spamscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911150116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Again, thank you for your review Stephen, much appreciated.
-Sorry that I haven't been able to reply to your comments sooner.
+From: Paul Cercueil <paul.cercueil@analog.com>
+
+AD7091R5 is 4-Channel, I2C, Ultra Low Power,12-Bit ADC.
+
+This driver will also support AD7091R2/4/8 in the future.
+
+Datasheet:
+Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7091r-5.pdf
+
+Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
+Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+---
+Changes in v4:
+-comment to specify mutex role
+-return on error in set_mode
+-int foo replaced by dummy
+-undef channel removed
+-device tree specific table added
+-comment matches endif 
+
+ drivers/iio/adc/Kconfig        |   7 +
+ drivers/iio/adc/Makefile       |   1 +
+ drivers/iio/adc/ad7091r-base.c | 260 +++++++++++++++++++++++++++++++++
+ drivers/iio/adc/ad7091r-base.h |  25 ++++
+ drivers/iio/adc/ad7091r5.c     | 108 ++++++++++++++
+ 5 files changed, 401 insertions(+)
+ create mode 100644 drivers/iio/adc/ad7091r-base.c
+ create mode 100644 drivers/iio/adc/ad7091r-base.h
+ create mode 100644 drivers/iio/adc/ad7091r5.c
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 7e3286265a38..80b1b9551749 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -22,6 +22,13 @@ config AD7124
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called ad7124.
+ 
++config AD7091R5
++	tristate "Analog Devices AD7091R5 ADC Driver"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  Say yes here to build support for Analog Devices AD7091R-5 ADC.
++
+ config AD7266
+ 	tristate "Analog Devices AD7265/AD7266 ADC driver"
+ 	depends on SPI_MASTER
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index ef9cc485fb67..55e44735aaac 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -6,6 +6,7 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_AD_SIGMA_DELTA) += ad_sigma_delta.o
+ obj-$(CONFIG_AD7124) += ad7124.o
++obj-$(CONFIG_AD7091R5) += ad7091r5.o ad7091r-base.o
+ obj-$(CONFIG_AD7266) += ad7266.o
+ obj-$(CONFIG_AD7291) += ad7291.o
+ obj-$(CONFIG_AD7298) += ad7298.o
+diff --git a/drivers/iio/adc/ad7091r-base.c b/drivers/iio/adc/ad7091r-base.c
+new file mode 100644
+index 000000000000..854de7c654c2
+--- /dev/null
++++ b/drivers/iio/adc/ad7091r-base.c
+@@ -0,0 +1,260 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AD7091RX Analog to Digital converter driver
++ *
++ * Copyright 2014-2019 Analog Devices Inc.
++ */
++
++#include <linux/bitops.h>
++#include <linux/iio/events.h>
++#include <linux/iio/iio.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++
++#include "ad7091r-base.h"
++
++#define AD7091R_REG_RESULT  0
++#define AD7091R_REG_CHANNEL 1
++#define AD7091R_REG_CONF    2
++#define AD7091R_REG_ALERT   3
++#define AD7091R_REG_CH_LOW_LIMIT(ch) ((ch) * 3 + 4)
++#define AD7091R_REG_CH_HIGH_LIMIT(ch) ((ch) * 3 + 5)
++#define AD7091R_REG_CH_HYSTERESIS(ch) ((ch) * 3 + 6)
++
++/* AD7091R_REG_RESULT */
++#define AD7091R_REG_RESULT_CH_ID(x)	    (((x) >> 13) & 0x3)
++#define AD7091R_REG_RESULT_CONV_RESULT(x)   ((x) & 0xfff)
++
++/* AD7091R_REG_CONF */
++#define AD7091R_REG_CONF_AUTO   BIT(8)
++#define AD7091R_REG_CONF_CMD    BIT(10)
++
++#define AD7091R_REG_CONF_MODE_MASK  \
++	(AD7091R_REG_CONF_AUTO | AD7091R_REG_CONF_CMD)
++
++enum ad7091r_mode {
++	AD7091R_MODE_SAMPLE,
++	AD7091R_MODE_COMMAND,
++	AD7091R_MODE_AUTOCYCLE,
++};
++
++struct ad7091r_state {
++	struct device *dev;
++	struct regmap *map;
++	const struct ad7091r_chip_info *chip_info;
++	enum ad7091r_mode mode;
++	struct mutex lock; /*lock to prevent concurent reads */
++};
++
++static int ad7091r_set_mode(struct ad7091r_state *st, enum ad7091r_mode mode)
++{
++	int ret, conf;
++
++	switch (mode) {
++	case AD7091R_MODE_SAMPLE:
++		conf = 0;
++		break;
++	case AD7091R_MODE_COMMAND:
++		conf = AD7091R_REG_CONF_CMD;
++		break;
++	case AD7091R_MODE_AUTOCYCLE:
++		conf = AD7091R_REG_CONF_AUTO;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
++				 AD7091R_REG_CONF_MODE_MASK, conf);
++	if (ret)
++		return ret;
++
++	st->mode = mode;
++
++	return 0;
++}
++
++static int ad7091r_set_channel(struct ad7091r_state *st, unsigned int channel)
++{
++	unsigned int dummy;
++	int ret;
++
++	/* AD7091R_REG_CHANNEL specified which channels to be converted */
++	ret = regmap_write(st->map, AD7091R_REG_CHANNEL,
++			BIT(channel) | (BIT(channel) << 8));
++	if (ret)
++		return ret;
++
++	/*
++	 * There is a latency of one conversion before the channel conversion
++	 * sequence is updated
++	 */
++	return regmap_read(st->map, AD7091R_REG_RESULT, &dummy);
++}
++
++static int ad7091r_read_one(struct iio_dev *iio_dev,
++		unsigned int channel, unsigned int *read_val)
++{
++	struct ad7091r_state *st = iio_priv(iio_dev);
++	unsigned int val;
++	int ret;
++
++	ret = ad7091r_set_channel(st, channel);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(st->map, AD7091R_REG_RESULT, &val);
++	if (ret)
++		return ret;
++
++	if (AD7091R_REG_RESULT_CH_ID(val) != channel)
++		return -EIO;
++
++	*read_val = AD7091R_REG_RESULT_CONV_RESULT(val);
++
++	return 0;
++}
++
++static int ad7091r_read_raw(struct iio_dev *iio_dev,
++			   struct iio_chan_spec const *chan,
++			   int *val, int *val2, long m)
++{
++	struct ad7091r_state *st = iio_priv(iio_dev);
++	unsigned int read_val;
++	int ret;
++
++	mutex_lock(&st->lock);
++
++	switch (m) {
++	case IIO_CHAN_INFO_RAW:
++		if (st->mode != AD7091R_MODE_COMMAND) {
++			ret = -EBUSY;
++			goto unlock;
++		}
++
++		ret = ad7091r_read_one(iio_dev, chan->channel, &read_val);
++		if (ret)
++			goto unlock;
++
++		*val = read_val;
++		ret = IIO_VAL_INT;
++		break;
++
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++unlock:
++	mutex_unlock(&st->lock);
++	return ret;
++}
++
++static const struct iio_info ad7091r_info = {
++	.read_raw = ad7091r_read_raw,
++};
++
++static irqreturn_t ad7091r_event_handler(int irq, void *private)
++{
++	struct ad7091r_state *st = (struct ad7091r_state *) private;
++	struct iio_dev *iio_dev = dev_get_drvdata(st->dev);
++	unsigned int i, read_val;
++	int ret;
++	s64 timestamp = iio_get_time_ns(iio_dev);
++
++	ret = regmap_read(st->map, AD7091R_REG_ALERT, &read_val);
++	if (ret)
++		return IRQ_HANDLED;
++
++	for (i = 0; i < st->chip_info->num_channels; i++) {
++		if (read_val & BIT(i * 2))
++			iio_push_event(iio_dev,
++					IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
++						IIO_EV_TYPE_THRESH,
++						IIO_EV_DIR_RISING), timestamp);
++		if (read_val & BIT(i * 2 + 1))
++			iio_push_event(iio_dev,
++					IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
++						IIO_EV_TYPE_THRESH,
++						IIO_EV_DIR_FALLING), timestamp);
++	}
++
++	return IRQ_HANDLED;
++}
++
++int ad7091r_probe(struct device *dev, const char *name,
++		const struct ad7091r_chip_info *chip_info,
++		struct regmap *map, int irq)
++{
++	struct iio_dev *iio_dev;
++	struct ad7091r_state *st;
++	int ret;
++
++	iio_dev = devm_iio_device_alloc(dev, sizeof(*st));
++	if (!iio_dev)
++		return -ENOMEM;
++
++	st = iio_priv(iio_dev);
++	st->dev = dev;
++	st->chip_info = chip_info;
++	st->map = map;
++
++	iio_dev->dev.parent = dev;
++	iio_dev->name = name;
++	iio_dev->info = &ad7091r_info;
++	iio_dev->modes = INDIO_DIRECT_MODE;
++
++	iio_dev->num_channels = chip_info->num_channels;
++	iio_dev->channels = chip_info->channels;
++
++	if (irq) {
++		ret = devm_request_threaded_irq(dev, irq, NULL,
++				ad7091r_event_handler,
++				IRQF_TRIGGER_FALLING | IRQF_ONESHOT, name, st);
++		if (ret)
++			return ret;
++	}
++
++	/* Use command mode by default to convert only desired channels*/
++	ret = ad7091r_set_mode(st, AD7091R_MODE_COMMAND);
++	if (ret)
++		return ret;
++
++	return devm_iio_device_register(dev, iio_dev);
++}
++EXPORT_SYMBOL_GPL(ad7091r_probe);
++
++static bool ad7091r_writeable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case AD7091R_REG_RESULT:
++	case AD7091R_REG_ALERT:
++		return false;
++	default:
++		return true;
++	}
++}
++
++static bool ad7091r_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case AD7091R_REG_RESULT:
++	case AD7091R_REG_ALERT:
++		return true;
++	default:
++		return false;
++	}
++}
++
++const struct regmap_config ad7091r_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 16,
++	.writeable_reg = ad7091r_writeable_reg,
++	.volatile_reg = ad7091r_volatile_reg,
++};
++EXPORT_SYMBOL_GPL(ad7091r_regmap_config);
++
++MODULE_AUTHOR("Beniamin Bia <beniamin.bia@analog.com>");
++MODULE_DESCRIPTION("Analog Devices AD7091Rx multi-channel converters");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/iio/adc/ad7091r-base.h b/drivers/iio/adc/ad7091r-base.h
+new file mode 100644
+index 000000000000..b0b4fe01a681
+--- /dev/null
++++ b/drivers/iio/adc/ad7091r-base.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * AD7091RX Analog to Digital converter driver
++ *
++ * Copyright 2014-2019 Analog Devices Inc.
++ */
++
++#ifndef __DRIVERS_IIO_ADC_AD7091R_BASE_H__
++#define __DRIVERS_IIO_ADC_AD7091R_BASE_H__
++
++struct device;
++struct ad7091r_state;
++
++struct ad7091r_chip_info {
++	unsigned int num_channels;
++	const struct iio_chan_spec *channels;
++};
++
++extern const struct regmap_config ad7091r_regmap_config;
++
++int ad7091r_probe(struct device *dev, const char *name,
++		const struct ad7091r_chip_info *chip_info,
++		struct regmap *map, int irq);
++
++#endif /* __DRIVERS_IIO_ADC_AD7091R_BASE_H__ */
+diff --git a/drivers/iio/adc/ad7091r5.c b/drivers/iio/adc/ad7091r5.c
+new file mode 100644
+index 000000000000..30ff0108a6ed
+--- /dev/null
++++ b/drivers/iio/adc/ad7091r5.c
+@@ -0,0 +1,108 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AD7091R5 Analog to Digital converter driver
++ *
++ * Copyright 2014-2019 Analog Devices Inc.
++ */
++
++#include <linux/i2c.h>
++#include <linux/iio/iio.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++
++#include "ad7091r-base.h"
++
++static const struct iio_event_spec ad7091r5_events[] = {
++	{
++		.type = IIO_EV_TYPE_THRESH,
++		.dir = IIO_EV_DIR_RISING,
++		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
++				 BIT(IIO_EV_INFO_ENABLE),
++	},
++	{
++		.type = IIO_EV_TYPE_THRESH,
++		.dir = IIO_EV_DIR_FALLING,
++		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
++				 BIT(IIO_EV_INFO_ENABLE),
++	},
++	{
++		.type = IIO_EV_TYPE_THRESH,
++		.dir = IIO_EV_DIR_EITHER,
++		.mask_separate = BIT(IIO_EV_INFO_HYSTERESIS),
++	},
++};
++
++#define AD7091R_CHANNEL(idx, bits, ev, num_ev) { \
++	.type = IIO_VOLTAGE, \
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
++	.indexed = 1, \
++	.channel = idx, \
++	.event_spec = ev, \
++	.num_event_specs = num_ev, \
++}
++static const struct iio_chan_spec ad7091r5_channels_irq[] = {
++	AD7091R_CHANNEL(0, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
++	AD7091R_CHANNEL(1, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
++	AD7091R_CHANNEL(2, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
++	AD7091R_CHANNEL(3, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
++};
++
++static const struct iio_chan_spec ad7091r5_channels_noirq[] = {
++	AD7091R_CHANNEL(0, 12, NULL, 0),
++	AD7091R_CHANNEL(1, 12, NULL, 0),
++	AD7091R_CHANNEL(2, 12, NULL, 0),
++	AD7091R_CHANNEL(3, 12, NULL, 0),
++};
++
++static const struct ad7091r_chip_info ad7091r5_chip_info_irq = {
++	.channels = ad7091r5_channels_irq,
++	.num_channels = ARRAY_SIZE(ad7091r5_channels_irq),
++};
++
++static const struct ad7091r_chip_info ad7091r5_chip_info_noirq = {
++	.channels = ad7091r5_channels_noirq,
++	.num_channels = ARRAY_SIZE(ad7091r5_channels_noirq),
++};
++
++static int ad7091r5_i2c_probe(struct i2c_client *i2c,
++		const struct i2c_device_id *id)
++{
++	const struct ad7091r_chip_info *chip_info;
++	struct regmap *map = devm_regmap_init_i2c(i2c, &ad7091r_regmap_config);
++
++	if (IS_ERR(map))
++		return PTR_ERR(map);
++
++	if (i2c->irq)
++		chip_info = &ad7091r5_chip_info_irq;
++	else
++		chip_info = &ad7091r5_chip_info_noirq;
++
++	return ad7091r_probe(&i2c->dev, id->name, chip_info, map, i2c->irq);
++}
++
++static const struct of_device_id ad7091r5_dt_ids[] = {
++	{ .compatible = "adi,ad7091r5" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, ad7091r5_dt_ids);
++
++static const struct i2c_device_id ad7091r5_i2c_ids[] = {
++	{"ad7091r5", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, ad7091r5_i2c_ids);
++
++static struct i2c_driver ad7091r5_driver = {
++	.driver = {
++		.name = "ad7091r5",
++		.of_match_table = ad7091r5_dt_ids,
++	},
++	.probe = ad7091r5_i2c_probe,
++	.id_table = ad7091r5_i2c_ids,
++};
++module_i2c_driver(ad7091r5_driver);
++
++MODULE_AUTHOR("Beniamin Bia <beniamin.bia@analog.com>");
++MODULE_DESCRIPTION("Analog Devices AD7091R5 multi-channel ADC driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
-I've taken your review comments into consideration, and have
-implemented almost all of your suggestions, and have sent out
-new version of this patch series here:
-https://patchwork.kernel.org/project/linux-arm-msm/list/?series=203641
-
-To easier find review comments, bounce on [REVIEW-THX] and [REVIEW-ETC].
-
-On Sat, Aug 17, 2019 at 06:04:14PM -0700, Stephen Boyd wrote:
-> Quoting Niklas Cassel (2019-07-25 03:41:39)
-> > diff --git a/drivers/power/avs/Kconfig b/drivers/power/avs/Kconfig
-> > index b5a217b828dc..4d4d742b3c6f 100644
-> > --- a/drivers/power/avs/Kconfig
-> > +++ b/drivers/power/avs/Kconfig
-> > @@ -12,6 +12,21 @@ menuconfig POWER_AVS
-> >  
-> >           Say Y here to enable Adaptive Voltage Scaling class support.
-> >  
-> > +config QCOM_CPR
-> > +       tristate "QCOM Core Power Reduction (CPR) support"
-> > +       depends on POWER_AVS
-> > +       select PM_OPP
-> > +       help
-> > +         Say Y here to enable support for the CPR hardware found on Qualcomm
-> > +         SoCs like MSM8916.
-> 
-> Maybe mention qcs404 too, because it looks like 8916 isn't actually here
-> :)
-
-[REVIEW-THX]
-MSM8916 will require slightly more changes, e.g. a power-domain driver,
-before we can enable CPR support. Will only mention QCS404 for now.
-
-> 
-> > +
-> > +         This driver populates CPU OPPs tables and makes adjustments to the
-> > +         tables based on feedback from the CPR hardware. If you want to do
-> > +         CPUfrequency scaling say Y here.
-> > +
-> > +         To compile this driver as a module, choose M here: the module will
-> > +         be called qcom-cpr
-> > +
-> >  config ROCKCHIP_IODOMAIN
-> >          tristate "Rockchip IO domain support"
-> >          depends on POWER_AVS && ARCH_ROCKCHIP && OF
-> > diff --git a/drivers/power/avs/Makefile b/drivers/power/avs/Makefile
-> > index a1b8cd453f19..8cd17e6660ee 100644
-> > --- a/drivers/power/avs/Makefile
-> > +++ b/drivers/power/avs/Makefile
-> > @@ -1,3 +1,4 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> >  obj-$(CONFIG_POWER_AVS_OMAP)           += smartreflex.o
-> >  obj-$(CONFIG_ROCKCHIP_IODOMAIN)                += rockchip-io-domain.o
-> > +obj-$(CONFIG_QCOM_CPR)                 += qcom-cpr.o
-> 
-> Try to make this alphabetical on config name?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > diff --git a/drivers/power/avs/qcom-cpr.c b/drivers/power/avs/qcom-cpr.c
-> > new file mode 100644
-> > index 000000000000..d6bce2832589
-> > --- /dev/null
-> > +++ b/drivers/power/avs/qcom-cpr.c
-> > @@ -0,0 +1,1885 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
-> > + * Copyright (c) 2019, Linaro Limited
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/err.h>
-> > +#include <linux/debugfs.h>
-> > +#include <linux/string.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/list.h>
-> > +#include <linux/init.h>
-> > +#include <linux/io.h>
-> > +#include <linux/bitops.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_domain.h>
-> > +#include <linux/pm_opp.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/nvmem-consumer.h>
-> > +#include <linux/bitops.h>
-> > +
-> > +/* Register Offsets for RB-CPR and Bit Definitions */
-> > +
-> > +/* RBCPR Version Register */
-> > +#define REG_RBCPR_VERSION              0
-> > +#define RBCPR_VER_2                    0x02
-> > +#define FLAGS_IGNORE_1ST_IRQ_STATUS    BIT(0)
-> > +
-> > +/* RBCPR Gate Count and Target Registers */
-> > +#define REG_RBCPR_GCNT_TARGET(n)       (0x60 + 4 * (n))
-> > +
-> > +#define RBCPR_GCNT_TARGET_TARGET_SHIFT 0
-> > +#define RBCPR_GCNT_TARGET_TARGET_MASK  GENMASK(11, 0)
-> > +#define RBCPR_GCNT_TARGET_GCNT_SHIFT   12
-> > +#define RBCPR_GCNT_TARGET_GCNT_MASK    GENMASK(9, 0)
-> > +
-> > +/* RBCPR Timer Control */
-> > +#define REG_RBCPR_TIMER_INTERVAL       0x44
-> > +#define REG_RBIF_TIMER_ADJUST          0x4c
-> > +
-> > +#define RBIF_TIMER_ADJ_CONS_UP_MASK    GENMASK(3, 0)
-> > +#define RBIF_TIMER_ADJ_CONS_UP_SHIFT   0
-> > +#define RBIF_TIMER_ADJ_CONS_DOWN_MASK  GENMASK(3, 0)
-> > +#define RBIF_TIMER_ADJ_CONS_DOWN_SHIFT 4
-> > +#define RBIF_TIMER_ADJ_CLAMP_INT_MASK  GENMASK(7, 0)
-> > +#define RBIF_TIMER_ADJ_CLAMP_INT_SHIFT 8
-> > +
-> > +/* RBCPR Config Register */
-> > +#define REG_RBIF_LIMIT                 0x48
-> > +#define RBIF_LIMIT_CEILING_MASK                GENMASK(5, 0)
-> > +#define RBIF_LIMIT_CEILING_SHIFT       6
-> > +#define RBIF_LIMIT_FLOOR_BITS          6
-> > +#define RBIF_LIMIT_FLOOR_MASK          GENMASK(5, 0)
-> > +
-> > +#define RBIF_LIMIT_CEILING_DEFAULT     RBIF_LIMIT_CEILING_MASK
-> > +#define RBIF_LIMIT_FLOOR_DEFAULT       0
-> > +
-> > +#define REG_RBIF_SW_VLEVEL             0x94
-> > +#define RBIF_SW_VLEVEL_DEFAULT         0x20
-> > +
-> > +#define REG_RBCPR_STEP_QUOT            0x80
-> > +#define RBCPR_STEP_QUOT_STEPQUOT_MASK  GENMASK(7, 0)
-> > +#define RBCPR_STEP_QUOT_IDLE_CLK_MASK  GENMASK(3, 0)
-> > +#define RBCPR_STEP_QUOT_IDLE_CLK_SHIFT 8
-> > +
-> > +/* RBCPR Control Register */
-> > +#define REG_RBCPR_CTL                  0x90
-> > +
-> > +#define RBCPR_CTL_LOOP_EN                      BIT(0)
-> > +#define RBCPR_CTL_TIMER_EN                     BIT(3)
-> > +#define RBCPR_CTL_SW_AUTO_CONT_ACK_EN          BIT(5)
-> > +#define RBCPR_CTL_SW_AUTO_CONT_NACK_DN_EN      BIT(6)
-> > +#define RBCPR_CTL_COUNT_MODE                   BIT(10)
-> > +#define RBCPR_CTL_UP_THRESHOLD_MASK    GENMASK(3, 0)
-> > +#define RBCPR_CTL_UP_THRESHOLD_SHIFT   24
-> > +#define RBCPR_CTL_DN_THRESHOLD_MASK    GENMASK(3, 0)
-> > +#define RBCPR_CTL_DN_THRESHOLD_SHIFT   28
-> > +
-> > +/* RBCPR Ack/Nack Response */
-> > +#define REG_RBIF_CONT_ACK_CMD          0x98
-> > +#define REG_RBIF_CONT_NACK_CMD         0x9c
-> > +
-> > +/* RBCPR Result status Register */
-> > +#define REG_RBCPR_RESULT_0             0xa0
-> > +
-> > +#define RBCPR_RESULT0_BUSY_SHIFT       19
-> > +#define RBCPR_RESULT0_BUSY_MASK                BIT(RBCPR_RESULT0_BUSY_SHIFT)
-> > +#define RBCPR_RESULT0_ERROR_LT0_SHIFT  18
-> > +#define RBCPR_RESULT0_ERROR_SHIFT      6
-> > +#define RBCPR_RESULT0_ERROR_MASK       GENMASK(11, 0)
-> > +#define RBCPR_RESULT0_ERROR_STEPS_SHIFT        2
-> > +#define RBCPR_RESULT0_ERROR_STEPS_MASK GENMASK(3, 0)
-> > +#define RBCPR_RESULT0_STEP_UP_SHIFT    1
-> > +
-> > +/* RBCPR Interrupt Control Register */
-> > +#define REG_RBIF_IRQ_EN(n)             (0x100 + 4 * (n))
-> > +#define REG_RBIF_IRQ_CLEAR             0x110
-> > +#define REG_RBIF_IRQ_STATUS            0x114
-> > +
-> > +#define CPR_INT_DONE           BIT(0)
-> > +#define CPR_INT_MIN            BIT(1)
-> > +#define CPR_INT_DOWN           BIT(2)
-> > +#define CPR_INT_MID            BIT(3)
-> > +#define CPR_INT_UP             BIT(4)
-> > +#define CPR_INT_MAX            BIT(5)
-> > +#define CPR_INT_CLAMP          BIT(6)
-> > +#define CPR_INT_ALL    (CPR_INT_DONE | CPR_INT_MIN | CPR_INT_DOWN | \
-> > +                       CPR_INT_MID | CPR_INT_UP | CPR_INT_MAX | CPR_INT_CLAMP)
-> > +#define CPR_INT_DEFAULT        (CPR_INT_UP | CPR_INT_DOWN)
-> > +
-> > +#define CPR_NUM_RING_OSC       8
-> > +
-> > +/* CPR eFuse parameters */
-> > +#define CPR_FUSE_TARGET_QUOT_BITS_MASK GENMASK(11, 0)
-> > +
-> > +#define CPR_FUSE_MIN_QUOT_DIFF         50
-> > +
-> > +#define FUSE_REVISION_UNKNOWN          (-1)
-> > +
-> > +enum voltage_change_dir {
-> > +       NO_CHANGE,
-> > +       DOWN,
-> > +       UP,
-> > +};
-> > +
-> > +struct cpr_fuse {
-> > +       char *ring_osc;
-> > +       char *init_voltage;
-> > +       char *quotient;
-> > +       char *quotient_offset;
-> > +};
-> > +
-> > +struct fuse_corner_data {
-> > +       int ref_uV;
-> > +       int max_uV;
-> > +       int min_uV;
-> > +       int max_volt_scale;
-> > +       int max_quot_scale;
-> > +       /* fuse quot */
-> > +       int quot_offset;
-> > +       int quot_scale;
-> > +       int quot_adjust;
-> > +       /* fuse quot_offset */
-> > +       int quot_offset_scale;
-> > +       int quot_offset_adjust;
-> > +};
-> > +
-> > +struct cpr_fuses {
-> > +       int init_voltage_step;
-> > +       int init_voltage_width;
-> > +       struct fuse_corner_data *fuse_corner_data;
-> > +};
-> > +
-> > +struct pvs_bin {
-> 
-> Why does this struct exist?
-
-[REVIEW-THX]
-This struct is a remnant from a previous patch series version,
-and is now unused, will remove it, thanks.
-
-> 
-> > +       int *uV;
-> > +};
-> > +
-> > +struct pvs_fuses {
-> > +       char **pvs_fuse;
-> > +       struct pvs_bin *pvs_bins;
-> 
-> This can be int **pvs_bins?
-
-[REVIEW-THX]
-This struct is a remnant from a previous patch series version,
-and is now unused, will remove it, thanks.
-
-> 
-> > +};
-> > +
-> > +struct corner_data {
-> > +       unsigned int fuse_corner;
-> > +       unsigned long freq;
-> > +};
-> > +
-> > +struct cpr_desc {
-> > +       unsigned int num_fuse_corners;
-> > +       int min_diff_quot;
-> > +       int *step_quot;
-> > +       struct cpr_fuses cpr_fuses;
-> > +       struct pvs_fuses *pvs_fuses;
-> > +       bool reduce_to_fuse_uV;
-> > +       bool reduce_to_corner_uV;
-> > +};
-> > +
-> > +struct acc_desc {
-> > +       unsigned int    enable_reg;
-> > +       u32             enable_mask;
-> > +
-> > +       struct reg_sequence     *config;
-> > +       struct reg_sequence     *settings;
-> > +       int                     num_regs_per_fuse;
-> > +};
-> > +
-> > +struct cpr_acc_desc {
-> > +       const struct cpr_desc *cpr_desc;
-> > +       const struct acc_desc *acc_desc;
-> > +};
-> > +
-> > +struct fuse_corner {
-> > +       int min_uV;
-> > +       int max_uV;
-> > +       int uV;
-> > +       int quot;
-> > +       int step_quot;
-> > +       const struct reg_sequence *accs;
-> > +       int num_accs;
-> > +       unsigned long max_freq;
-> > +       u32 ring_osc_idx;
-> 
-> Can this be a u8?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +};
-> > +
-> > +struct corner {
-> > +       int min_uV;
-> > +       int max_uV;
-> > +       int uV;
-> > +       int last_uV;
-> > +       int quot_adjust;
-> > +       u32 save_ctl;
-> > +       u32 save_irq;
-> > +       unsigned long freq;
-> > +       struct fuse_corner *fuse_corner;
-> > +};
-> > +
-> > +struct cpr_drv {
-> > +       unsigned int            num_corners;
-> > +
-> > +       unsigned int            ref_clk_khz;
-> > +       unsigned int            timer_delay_us;
-> > +       unsigned int            timer_cons_up;
-> > +       unsigned int            timer_cons_down;
-> > +       unsigned int            up_threshold;
-> > +       unsigned int            down_threshold;
-> > +       unsigned int            idle_clocks;
-> > +       unsigned int            gcnt_us;
-> > +       unsigned int            vdd_apc_step_up_limit;
-> > +       unsigned int            vdd_apc_step_down_limit;
-> > +       unsigned int            clamp_timer_interval;
-> > +       unsigned int            performance_state;
-> > +
-> > +       struct generic_pm_domain pd;
-> > +       struct device           *dev;
-> > +       struct mutex            lock;
-> > +       void __iomem            *base;
-> > +       struct corner           *corner;
-> > +       struct regulator        *vdd_apc;
-> > +       struct clk              *cpu_clk;
-> > +       struct regmap           *tcsr;
-> > +       bool                    loop_disabled;
-> > +       bool                    suspended;
-> > +       u32                     gcnt;
-> > +       unsigned long           flags;
-> > +
-> > +       struct fuse_corner      *fuse_corners;
-> > +       struct corner           *corners;
-> > +
-> > +       const struct cpr_desc *desc;
-> > +       const struct acc_desc *acc_desc;
-> > +       const struct cpr_fuse *cpr_fuses;
-> > +
-> > +       struct dentry *debugfs;
-> > +};
-> > +
-> > +static bool cpr_is_allowed(struct cpr_drv *drv)
-> > +{
-> > +       if (drv->loop_disabled)
-> > +               return false;
-> > +       else
-> > +               return true;
-> 
-> Simplify to return !drv->loop_disabled
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +}
-> > +
-> > +static void cpr_write(struct cpr_drv *drv, u32 offset, u32 value)
-> > +{
-> > +       writel_relaxed(value, drv->base + offset);
-> > +}
-> > +
-> [...]
-> > +
-> > +static void cpr_corner_restore(struct cpr_drv *drv, struct corner *corner)
-> > +{
-> > +       u32 gcnt, ctl, irq, ro_sel, step_quot;
-> > +       struct fuse_corner *fuse = corner->fuse_corner;
-> > +       int i;
-> > +
-> > +       ro_sel = fuse->ring_osc_idx;
-> > +       gcnt = drv->gcnt;
-> > +       gcnt |= fuse->quot - corner->quot_adjust;
-> > +
-> > +       /* Program the step quotient and idle clocks */
-> > +       step_quot = drv->idle_clocks << RBCPR_STEP_QUOT_IDLE_CLK_SHIFT;
-> > +       step_quot |= fuse->step_quot & RBCPR_STEP_QUOT_STEPQUOT_MASK;
-> > +       cpr_write(drv, REG_RBCPR_STEP_QUOT, step_quot);
-> > +
-> > +       /* Clear the target quotient value and gate count of all ROs */
-> > +       for (i = 0; i < CPR_NUM_RING_OSC; i++)
-> > +               cpr_write(drv, REG_RBCPR_GCNT_TARGET(i), 0);
-> > +
-> > +       cpr_write(drv, REG_RBCPR_GCNT_TARGET(ro_sel), gcnt);
-> > +       ctl = corner->save_ctl;
-> > +       cpr_write(drv, REG_RBCPR_CTL, ctl);
-> > +       irq = corner->save_irq;
-> > +       cpr_irq_set(drv, irq);
-> > +       dev_dbg(drv->dev, "gcnt = 0x%08x, ctl = 0x%08x, irq = 0x%08x\n", gcnt,
-> 
-> Use %#08x to get the 0x part?
-
-[REVIEW-THX]
-Fixed here and elsewhere, thanks.
-
-> 
-> > +               ctl, irq);
-> > +}
-> > +
-> > +static void cpr_set_acc(struct regmap *tcsr, struct fuse_corner *f,
-> > +                       struct fuse_corner *end)
-> > +{
-> > +       if (f < end) {
-> > +               for (f += 1; f <= end; f++)
-> > +                       regmap_multi_reg_write(tcsr, f->accs, f->num_accs);
-> > +       } else {
-> > +               for (f -= 1; f >= end; f--)
-> > +                       regmap_multi_reg_write(tcsr, f->accs, f->num_accs);
-> > +       }
-> > +}
-> > +
-> > +static int cpr_pre_voltage(struct cpr_drv *drv,
-> > +                          struct fuse_corner *fuse_corner,
-> > +                          enum voltage_change_dir dir)
-> > +{
-> > +       int ret = 0;
-> > +       struct fuse_corner *prev_fuse_corner = drv->corner->fuse_corner;
-> > +
-> > +       if (drv->tcsr && dir == DOWN)
-> > +               cpr_set_acc(drv->tcsr, prev_fuse_corner, fuse_corner);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static int cpr_post_voltage(struct cpr_drv *drv,
-> > +                           struct fuse_corner *fuse_corner,
-> > +                           enum voltage_change_dir dir)
-> > +{
-> > +       int ret = 0;
-> 
-> ret never changes in the above two functions. Remove it?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +       struct fuse_corner *prev_fuse_corner = drv->corner->fuse_corner;
-> > +
-> > +       if (drv->tcsr && dir == UP)
-> > +               cpr_set_acc(drv->tcsr, prev_fuse_corner, fuse_corner);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static int cpr_scale_voltage(struct cpr_drv *drv, struct corner *corner,
-> > +                            int new_uV, enum voltage_change_dir dir)
-> > +{
-> > +       int ret = 0;
-> 
-> Drop initial assignment to 0 because it's overwritten immediately below.
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +       struct fuse_corner *fuse_corner = corner->fuse_corner;
-> > +
-> > +       ret = cpr_pre_voltage(drv, fuse_corner, dir);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = regulator_set_voltage(drv->vdd_apc, new_uV, new_uV);
-> > +       if (ret) {
-> > +               dev_err_ratelimited(drv->dev, "failed to set apc voltage %d\n",
-> > +                                   new_uV);
-> > +               return ret;
-> > +       }
-> > +
-> > +       ret = cpr_post_voltage(drv, fuse_corner, dir);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> [...]
-> > +
-> > +static irqreturn_t cpr_irq_handler(int irq, void *dev)
-> > +{
-> > +       struct cpr_drv *drv = dev;
-> > +       u32 val;
-> > +
-> > +       mutex_lock(&drv->lock);
-> > +
-> > +       val = cpr_read(drv, REG_RBIF_IRQ_STATUS);
-> > +       if (drv->flags & FLAGS_IGNORE_1ST_IRQ_STATUS)
-> > +               val = cpr_read(drv, REG_RBIF_IRQ_STATUS);
-> > +
-> > +       dev_dbg(drv->dev, "IRQ_STATUS = %#02x\n", val);
-> > +
-> > +       if (!cpr_ctl_is_enabled(drv)) {
-> > +               dev_dbg(drv->dev, "CPR is disabled\n");
-> 
-> Shouldn't this return IRQ_NONE because it's spurious?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +               goto unlock;
-> > +       } else if (cpr_ctl_is_busy(drv) && !drv->clamp_timer_interval) {
-> > +               dev_dbg(drv->dev, "CPR measurement is not ready\n");
-> > +               goto unlock;
-> > +       } else if (!cpr_is_allowed(drv)) {
-> > +               val = cpr_read(drv, REG_RBCPR_CTL);
-> > +               dev_err_ratelimited(drv->dev,
-> > +                                   "Interrupt broken? RBCPR_CTL = %#02x\n",
-> > +                                   val);
-> 
-> Same case, return IRQ_NONE?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +               goto unlock;
-> 
-> Maybe the goto can be dropped and you can use an else here to fall into
-> the 'normal' processing modes. Everything would have to be indented
-> again, but it will probably look alright.
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +       }
-> > +
-> > +       /* Following sequence of handling is as per each IRQ's priority */
-> > +       if (val & CPR_INT_UP) {
-> > +               cpr_scale(drv, UP);
-> > +       } else if (val & CPR_INT_DOWN) {
-> > +               cpr_scale(drv, DOWN);
-> > +       } else if (val & CPR_INT_MIN) {
-> > +               cpr_irq_clr_nack(drv);
-> > +       } else if (val & CPR_INT_MAX) {
-> > +               cpr_irq_clr_nack(drv);
-> > +       } else if (val & CPR_INT_MID) {
-> > +               /* RBCPR_CTL_SW_AUTO_CONT_ACK_EN is enabled */
-> > +               dev_dbg(drv->dev, "IRQ occurred for Mid Flag\n");
-> > +       } else {
-> > +               dev_dbg(drv->dev, "IRQ occurred for unknown flag (%#08x)\n",
-> > +                       val);
-> > +       }
-> > +
-> > +       /* Save register values for the corner */
-> > +       cpr_corner_save(drv, drv->corner);
-> > +
-> > +unlock:
-> > +       mutex_unlock(&drv->lock);
-> > +
-> > +       return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int cpr_enable(struct cpr_drv *drv)
-> > +{
-> > +       int ret;
-> > +
-> > +       ret = regulator_enable(drv->vdd_apc);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       mutex_lock(&drv->lock);
-> > +
-> > +       if (cpr_is_allowed(drv) && drv->corner) {
-> > +               cpr_irq_clr(drv);
-> > +               cpr_corner_restore(drv, drv->corner);
-> > +               cpr_ctl_enable(drv, drv->corner);
-> > +       }
-> > +       mutex_unlock(&drv->lock);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int cpr_disable(struct cpr_drv *drv)
-> > +{
-> > +       int ret;
-> > +
-> > +       ret = regulator_disable(drv->vdd_apc);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       mutex_lock(&drv->lock);
-> > +
-> > +       if (cpr_is_allowed(drv))
-> > +               cpr_ctl_disable(drv);
-> > +       mutex_unlock(&drv->lock);
-> 
-> Seems weird to disable cpr in reverse order. Is that OK? Or should the
-> cpr monitoring be disabled first and then regulator is disabled? When is
-> the CPU's regulator disabled in relation to when it is hotplugged or
-> idle? I haven't followed the power domain stuff too closely.
-
-[REVIEW-ETC]
-In downstream they do it like this.
-https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/regulator/cpr-regulator.c?h=msm-4.14#n1334
-cpr_regulator_enable() first enables the regulator, then enables the loop.
-cpr_regulator_disable() first disables the regulator, then disables the loop.
-
-However, I agree with you, disable should to the same as enable,
-but in reversed order, so that is what I will do. Thank you.
-
-
-The CPU's regulator for QCS404 is defined as always-on, and all the CPUs
-in the (one and only) CPU cluster shares a single regulator.
-
-Even though the regulator is always-on, it is not possible to hotplug all
-the CPUs (not sure if this is a Linux limitation or a PSCI firmware limitation).
-
-QCS404 has standalone power collapse, but not yet cluster power collapse.
-
-When talking to Qualcomm hardware engineers, they explained that when a core
-is offline/power-collapsed, the control logic loop in CPR hardware ignores
-that offline/power-collapsed CPU.
-
-Currently CPR works fine, even though all CPUs are able to enter standalone
-power collapse. This is probably because the rail still has power.
-
-Regardless, I think that we should merge this code, it is an improvement for
-QCS404 that works today.
-Even with cluster power collapse, I would assume that the firmware would
-enable power for the rail before exiting the cluster sleep state.
-If we ever decide to enable cluster power collapse for QCS404, and it actually
-turns out to cause a problem, let's deal with it then.
-
-> 
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +#ifdef CONFIG_PM_SLEEP
-> > +static int cpr_suspend(struct device *dev)
-> > +{
-> > +       struct cpr_drv *drv = platform_get_drvdata(to_platform_device(dev));
-> > +
-> > +       if (cpr_is_allowed(drv)) {
-> 
-> Sometimes cpr_is_allowed() is tested inside the mutex and other times
-> not. Please be consistent.
-
-[REVIEW-THX]
-Fixed, thanks.
-However, after talking with Ulf Hansson, this has been removed,
-since the operations performed in resume()/suspend()
-were the same as in ->power_on()/->power_off().
-
-> 
-> > +               mutex_lock(&drv->lock);
-> > +               cpr_ctl_disable(drv);
-> > +               cpr_irq_clr(drv);
-> > +               drv->suspended = true;
-> > +               mutex_unlock(&drv->lock);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int cpr_resume(struct device *dev)
-> > +{
-> > +       struct cpr_drv *drv = platform_get_drvdata(to_platform_device(dev));
-> > +
-> > +       if (cpr_is_allowed(drv)) {
-> > +               mutex_lock(&drv->lock);
-> > +               drv->suspended = false;
-> > +               cpr_irq_clr(drv);
-> > +               cpr_ctl_enable(drv, drv->corner);
-> > +               mutex_unlock(&drv->lock);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +#endif
-> > +
-> > +static SIMPLE_DEV_PM_OPS(cpr_pm_ops, cpr_suspend, cpr_resume);
-> > +
-> > +static int cpr_config(struct cpr_drv *drv)
-> > +{
-> > +       int i;
-> > +       u32 val, gcnt;
-> > +       struct corner *corner;
-> > +
-> > +       /* Disable interrupt and CPR */
-> > +       cpr_write(drv, REG_RBIF_IRQ_EN(0), 0);
-> > +       cpr_write(drv, REG_RBCPR_CTL, 0);
-> > +
-> > +       /* Program the default HW Ceiling, Floor and vlevel */
-> 
-> Why capitalize ceiling and floor?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +       val = (RBIF_LIMIT_CEILING_DEFAULT & RBIF_LIMIT_CEILING_MASK)
-> > +               << RBIF_LIMIT_CEILING_SHIFT;
-> > +       val |= RBIF_LIMIT_FLOOR_DEFAULT & RBIF_LIMIT_FLOOR_MASK;
-> > +       cpr_write(drv, REG_RBIF_LIMIT, val);
-> > +       cpr_write(drv, REG_RBIF_SW_VLEVEL, RBIF_SW_VLEVEL_DEFAULT);
-> > +
-> > +       /* Clear the target quotient value and gate count of all ROs */
-> 
-> RO == ring oscillator? Maybe just write ring oscillator.
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +       for (i = 0; i < CPR_NUM_RING_OSC; i++)
-> > +               cpr_write(drv, REG_RBCPR_GCNT_TARGET(i), 0);
-> > +
-> > +       /* Init and save gcnt */
-> > +       gcnt = (drv->ref_clk_khz * drv->gcnt_us) / 1000;
-> > +       gcnt = gcnt & RBCPR_GCNT_TARGET_GCNT_MASK;
-> > +       gcnt <<= RBCPR_GCNT_TARGET_GCNT_SHIFT;
-> > +       drv->gcnt = gcnt;
-> > +
-> > +       /* Program the delay count for the timer */
-> > +       val = (drv->ref_clk_khz * drv->timer_delay_us) / 1000;
-> > +       cpr_write(drv, REG_RBCPR_TIMER_INTERVAL, val);
-> > +       dev_dbg(drv->dev, "Timer count: 0x%0x (for %d us)\n", val,
-> > +               drv->timer_delay_us);
-> > +
-> [...]
-> > +
-> > +static int cpr_read_efuse(struct device *dev, const char *cname, u32 *data)
-> > +{
-> > +       struct nvmem_cell *cell;
-> > +       ssize_t len;
-> > +       char *ret;
-> > +       int i;
-> > +
-> > +       if (!data) {
-> 
-> Looks like debug stuff, drop it?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +               dev_err(dev, "invalid storage to read cell %s\n", cname);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       /* Optional cells will use their initialition values */
-> 
-> initialization?
-
-[REVIEW-THX]
-Dropped this comment since the code accompanied code has now been dropped.
-
-> 
-> > +       if (!cname)
-> 
-> Same?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +               return 0;
-> > +
-> > +       *data = 0;
-> > +
-> > +       cell = nvmem_cell_get(dev, cname);
-> > +       if (IS_ERR(cell)) {
-> > +               if (PTR_ERR(cell) != -EPROBE_DEFER)
-> > +                       dev_info(dev, "undefined cell %s\n", cname);
-> 
-> dev_err()?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +               return PTR_ERR(cell);
-> > +       }
-> > +
-> > +       ret = nvmem_cell_read(cell, &len);
-> > +       nvmem_cell_put(cell);
-> > +       if (IS_ERR(ret)) {
-> > +               dev_err(dev, "can't read cell %s\n", cname);
-> > +               return PTR_ERR(ret);
-> > +       }
-> > +
-> > +       for (i = 0; i < len; i++)
-> > +               *data |= ret[i] << (8 * i);
-> 
-> Amazing we don't have some sort of char array to u32 function.
-
-[REVIEW-ETC]
-I don't know of any. If there is any, please let me know.
-
-> 
-> > +
-> > +       kfree(ret);
-> > +       dev_dbg(dev, "efuse read(%s) = %x, bytes %ld\n", cname, *data, len);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> [...]
-> > +
-> > +static int cpr_calculate_scaling(const char *quot_offset,
-> > +                                struct cpr_drv *drv,
-> > +                                const struct fuse_corner_data *fdata,
-> > +                                const struct corner *corner)
-> > +{
-> > +       u32 quot_diff = 0;
-> > +       unsigned long freq_diff;
-> > +       int scaling;
-> > +       const struct fuse_corner *fuse, *prev_fuse;
-> > +       int ret;
-> > +
-> > +       fuse = corner->fuse_corner;
-> > +       prev_fuse = fuse - 1;
-> > +
-> > +       if (quot_offset) {
-> > +               ret = cpr_read_efuse(drv->dev, quot_offset, &quot_diff);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               quot_diff *= fdata->quot_offset_scale;
-> > +               quot_diff += fdata->quot_offset_adjust;
-> > +       } else {
-> > +               quot_diff = fuse->quot - prev_fuse->quot;
-> > +       }
-> > +
-> > +       freq_diff = fuse->max_freq - prev_fuse->max_freq;
-> > +       freq_diff /= 1000000; /* Convert to MHz */
-> > +       scaling = 1000 * quot_diff / freq_diff;
-> > +       return min(scaling, fdata->max_quot_scale);
-> > +}
-> > +
-> > +static int cpr_interpolate(const struct corner *corner, int step_volt,
-> > +                          const struct fuse_corner_data *fdata)
-> > +{
-> > +       unsigned long f_high, f_low, f_diff;
-> > +       int uV_high, uV_low, uV;
-> > +       u64 temp, temp_limit;
-> > +       const struct fuse_corner *fuse, *prev_fuse;
-> > +
-> > +       fuse = corner->fuse_corner;
-> > +       prev_fuse = fuse - 1;
-> > +
-> > +       f_high = fuse->max_freq;
-> > +       f_low = prev_fuse->max_freq;
-> > +       uV_high = fuse->uV;
-> > +       uV_low = prev_fuse->uV;
-> > +       f_diff = fuse->max_freq - corner->freq;
-> > +
-> > +       /*
-> > +        * Don't interpolate in the wrong direction. This could happen
-> > +        * if the adjusted fuse voltage overlaps with the previous fuse's
-> > +        * adjusted voltage.
-> > +        */
-> > +       if (f_high <= f_low || uV_high <= uV_low || f_high <= corner->freq)
-> > +               return corner->uV;
-> > +
-> > +       temp = f_diff * (uV_high - uV_low);
-> > +       do_div(temp, f_high - f_low);
-> > +
-> > +       /*
-> > +        * max_volt_scale has units of uV/MHz while freq values
-> > +        * have units of Hz.  Divide by 1000000 to convert to.
-> > +        */
-> > +       temp_limit = f_diff * fdata->max_volt_scale;
-> > +       do_div(temp_limit, 1000000);
-> > +
-> > +       uV = uV_high - min(temp, temp_limit);
-> > +       return roundup(uV, step_volt);
-> > +}
-> > +
-> > +static unsigned int cpr_get_fuse_corner(struct dev_pm_opp *opp)
-> > +{
-> > +       struct device_node *np;
-> > +       unsigned int fuse_corner = 0;
-> > +
-> > +       np = dev_pm_opp_get_of_node(opp);
-> > +       if (of_property_read_u32(np, "qcom,opp-fuse-level", &fuse_corner)) {
-> > +               pr_err("%s: missing 'qcom,opp-fuse-level' property\n",
-> > +                      __func__);
-> > +               return 0;
-> > +       }
-> > +
-> > +       of_node_put(np);
-> 
-> Do you need to of_node_put() on error above?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +
-> > +       return fuse_corner;
-> > +}
-> > +
-> > +unsigned long cpr_get_opp_hz_for_req(struct dev_pm_opp *ref)
-> > +{
-> > +       u64 rate = 0;
-> > +       struct device *cpu_dev;
-> > +       struct device_node *ref_np;
-> > +       struct device_node *desc_np;
-> > +       struct device_node *child_np = NULL;
-> > +       struct device_node *child_req_np = NULL;
-> > +
-> > +       cpu_dev = get_cpu_device(0);
-> > +       if (!cpu_dev)
-> > +               return 0;
-> > +
-> > +       desc_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
-> > +       if (!desc_np)
-> > +               return 0;
-> > +
-> > +       ref_np = dev_pm_opp_get_of_node(ref);
-> > +       if (!ref_np)
-> > +               goto out_ref;
-> > +
-> > +       do {
-> > +               of_node_put(child_req_np);
-> > +               child_np = of_get_next_available_child(desc_np, child_np);
-> > +               child_req_np = of_parse_phandle(child_np, "required-opps", 0);
-> > +       } while (child_np && child_req_np != ref_np);
-> > +
-> > +       if (child_np && child_req_np == ref_np)
-> > +               of_property_read_u64(child_np, "opp-hz", &rate);
-> > +
-> > +       of_node_put(child_req_np);
-> > +       of_node_put(child_np);
-> > +       of_node_put(ref_np);
-> > +out_ref:
-> > +       of_node_put(desc_np);
-> > +
-> > +       return (unsigned long) rate;
-> > +}
-> > +
-> > +static int cpr_corner_init(struct cpr_drv *drv)
-> > +{
-> > +       const struct cpr_desc *desc = drv->desc;
-> > +       const struct cpr_fuse *fuses = drv->cpr_fuses;
-> > +       int i, level, count, scaling = 0;
-> > +       unsigned int fnum, fc;
-> > +       const char *quot_offset;
-> > +       struct fuse_corner *fuse, *prev_fuse;
-> > +       struct corner *corner, *end;
-> > +       struct corner_data *cdata;
-> > +       const struct fuse_corner_data *fdata;
-> > +       bool apply_scaling;
-> > +       unsigned long freq_diff, freq_diff_mhz;
-> > +       unsigned long freq;
-> > +       int step_volt = regulator_get_linear_step(drv->vdd_apc);
-> > +       struct dev_pm_opp *opp;
-> > +       struct device *pd_dev;
-> > +
-> > +       if (!step_volt)
-> > +               return -EINVAL;
-> > +
-> > +       corner = drv->corners;
-> > +       end = &corner[drv->num_corners - 1];
-> > +
-> > +       pd_dev = &drv->pd.dev;
-> > +       cdata = devm_kzalloc(drv->dev,
-> > +                            sizeof(struct corner_data) * drv->num_corners,
-> > +                            GFP_KERNEL);
-> > +       if (!cdata)
-> > +               return -ENOMEM;
-> > +
-> > +       /*
-> > +        * Store maximum frequency for each fuse corner based on the frequency
-> > +        * plan
-> > +        */
-> > +       count = dev_pm_opp_get_opp_count(pd_dev);
-> > +       for (level = 1; level <= count; level++) {
-> > +               opp = dev_pm_opp_find_level_exact(pd_dev, level);
-> > +               if (IS_ERR(opp))
-> > +                       return -EINVAL;
-> > +               fc = cpr_get_fuse_corner(opp);
-> > +               if (!fc) {
-> > +                       dev_pm_opp_put(opp);
-> > +                       return -EINVAL;
-> > +               }
-> > +               fnum = fc - 1;
-> > +               freq = cpr_get_opp_hz_for_req(opp);
-> > +               if (!freq) {
-> > +                       dev_pm_opp_put(opp);
-> > +                       return -EINVAL;
-> > +               }
-> > +               cdata[level - 1].fuse_corner = fnum;
-> > +               cdata[level - 1].freq = freq;
-> > +
-> > +               fuse = &drv->fuse_corners[fnum];
-> > +               dev_dbg(drv->dev, "freq: %lu level: %u fuse level: %u\n",
-> > +                       freq, dev_pm_opp_get_level(opp) - 1, fnum);
-> > +               if (freq > fuse->max_freq)
-> > +                       fuse->max_freq = freq;
-> > +               dev_pm_opp_put(opp);
-> > +       }
-> > +
-> > +       /*
-> > +        * Get the quotient adjustment scaling factor, according to:
-> > +        *
-> > +        * scaling = min(1000 * (QUOT(corner_N) - QUOT(corner_N-1))
-> > +        *              / (freq(corner_N) - freq(corner_N-1)), max_factor)
-> > +        *
-> > +        * QUOT(corner_N):      quotient read from fuse for fuse corner N
-> > +        * QUOT(corner_N-1):    quotient read from fuse for fuse corner (N - 1)
-> > +        * freq(corner_N):      max frequency in MHz supported by fuse corner N
-> > +        * freq(corner_N-1):    max frequency in MHz supported by fuse corner
-> > +        *                       (N - 1)
-> > +        *
-> > +        * Then walk through the corners mapped to each fuse corner
-> > +        * and calculate the quotient adjustment for each one using the
-> > +        * following formula:
-> > +        *
-> > +        * quot_adjust = (freq_max - freq_corner) * scaling / 1000
-> > +        *
-> > +        * freq_max: max frequency in MHz supported by the fuse corner
-> > +        * freq_corner: frequency in MHz corresponding to the corner
-> > +        * scaling: calculated from above equation
-> > +        *
-> > +        *
-> > +        *     +                           +
-> > +        *     |                         v |
-> > +        *   q |           f c           o |           f c
-> > +        *   u |         c               l |         c
-> > +        *   o |       f                 t |       f
-> > +        *   t |     c                   a |     c
-> > +        *     | c f                     g | c f
-> > +        *     |                         e |
-> > +        *     +---------------            +----------------
-> > +        *       0 1 2 3 4 5 6               0 1 2 3 4 5 6
-> > +        *          corner                      corner
-> > +        *
-> > +        *    c = corner
-> > +        *    f = fuse corner
-> > +        *
-> > +        */
-> > +       for (apply_scaling = false, i = 0; corner <= end; corner++, i++) {
-> > +               fnum = cdata[i].fuse_corner;
-> > +               fdata = &desc->cpr_fuses.fuse_corner_data[fnum];
-> > +               quot_offset = fuses[fnum].quotient_offset;
-> > +               fuse = &drv->fuse_corners[fnum];
-> > +               if (fnum)
-> > +                       prev_fuse = &drv->fuse_corners[fnum - 1];
-> > +               else
-> > +                       prev_fuse = NULL;
-> > +
-> > +               corner->fuse_corner = fuse;
-> > +               corner->freq = cdata[i].freq;
-> > +               corner->uV = fuse->uV;
-> > +
-> > +               if (prev_fuse && cdata[i - 1].freq == prev_fuse->max_freq) {
-> > +                       scaling = cpr_calculate_scaling(quot_offset, drv,
-> > +                                                       fdata, corner);
-> > +                       if (scaling < 0)
-> > +                               return scaling;
-> > +
-> > +                       apply_scaling = true;
-> > +               } else if (corner->freq == fuse->max_freq) {
-> > +                       /* This is a fuse corner; don't scale anything */
-> > +                       apply_scaling = false;
-> > +               }
-> > +
-> > +               if (apply_scaling) {
-> > +                       freq_diff = fuse->max_freq - corner->freq;
-> > +                       freq_diff_mhz = freq_diff / 1000000;
-> > +                       corner->quot_adjust = scaling * freq_diff_mhz / 1000;
-> > +
-> > +                       corner->uV = cpr_interpolate(corner, step_volt, fdata);
-> > +               }
-> > +
-> > +               corner->max_uV = fuse->max_uV;
-> > +               corner->min_uV = fuse->min_uV;
-> > +               corner->uV = clamp(corner->uV, corner->min_uV, corner->max_uV);
-> > +               corner->last_uV = corner->uV;
-> > +
-> > +               /* Reduce the ceiling voltage if needed */
-> > +               if (desc->reduce_to_corner_uV && corner->uV < corner->max_uV)
-> > +                       corner->max_uV = corner->uV;
-> > +               else if (desc->reduce_to_fuse_uV && fuse->uV < corner->max_uV)
-> > +                       corner->max_uV = max(corner->min_uV, fuse->uV);
-> > +
-> > +               dev_dbg(drv->dev, "corner %d: [%d %d %d] quot %d\n", i,
-> > +                       corner->min_uV, corner->uV, corner->max_uV,
-> > +                       fuse->quot - corner->quot_adjust);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct cpr_fuse *cpr_get_fuses(struct cpr_drv *drv)
-> > +{
-> > +       const struct cpr_desc *desc = drv->desc;
-> > +       struct cpr_fuse *fuses;
-> > +       int i;
-> > +
-> > +       fuses = devm_kzalloc(drv->dev,
-> > +                            sizeof(struct cpr_fuse) * desc->num_fuse_corners,
-> > +                            GFP_KERNEL);
-> > +       if (!fuses)
-> > +               return ERR_PTR(-ENOMEM);
-> > +
-> > +       for (i = 0; i < desc->num_fuse_corners; i++) {
-> > +               char tbuf[32];
-> > +
-> > +               snprintf(tbuf, 32, "cpr_ring_osc%d", i + 1);
-> > +               fuses[i].ring_osc = devm_kstrdup(drv->dev, tbuf, GFP_KERNEL);
-> > +               if (!fuses[i].ring_osc)
-> > +                       return ERR_PTR(-ENOMEM);
-> > +
-> > +               snprintf(tbuf, 32, "cpr_init_voltage%d", i + 1);
-> > +               fuses[i].init_voltage = devm_kstrdup(drv->dev, tbuf,
-> > +                                                    GFP_KERNEL);
-> > +               if (!fuses[i].init_voltage)
-> > +                       return ERR_PTR(-ENOMEM);
-> > +
-> > +               snprintf(tbuf, 32, "cpr_quotient%d", i + 1);
-> > +               fuses[i].quotient = devm_kstrdup(drv->dev, tbuf, GFP_KERNEL);
-> > +               if (!fuses[i].quotient)
-> > +                       return ERR_PTR(-ENOMEM);
-> > +
-> > +               snprintf(tbuf, 32, "cpr_quotient_offset%d", i + 1);
-> > +               fuses[i].quotient_offset = devm_kstrdup(drv->dev, tbuf,
-> > +                                                       GFP_KERNEL);
-> > +               if (!fuses[i].quotient_offset)
-> > +                       return ERR_PTR(-ENOMEM);
-> > +       }
-> > +
-> > +       return fuses;
-> > +}
-> > +
-> > +static int cpr_set_loop_allowed(struct cpr_drv *drv)
-> > +{
-> > +       drv->loop_disabled = false;
-> > +
-> > +       return 0;
-> 
-> Drop the return code?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +}
-> > +
-> > +static int cpr_init_parameters(struct cpr_drv *drv)
-> > +{
-> > +       struct device_node *of_node = drv->dev->of_node;
-> > +       int ret;
-> > +       struct clk *clk;
-> > +
-> > +       clk = clk_get(drv->dev, "ref");
-> > +       if (IS_ERR(clk))
-> > +               return PTR_ERR(clk);
-> > +
-> > +       drv->ref_clk_khz = clk_get_rate(clk) / 1000;
-> > +       clk_put(clk);
-> > +
-> > +       ret = of_property_read_u32(of_node, "qcom,cpr-timer-delay-us",
-> > +                                  &drv->timer_delay_us);
-> > +       if (ret)
-> > +               return ret;
-> > +       ret = of_property_read_u32(of_node, "qcom,cpr-timer-cons-up",
-> > +                                  &drv->timer_cons_up);
-> > +       if (ret)
-> > +               return ret;
-> > +       drv->timer_cons_up &= RBIF_TIMER_ADJ_CONS_UP_MASK;
-> > +       ret = of_property_read_u32(of_node, "qcom,cpr-timer-cons-down",
-> > +                                  &drv->timer_cons_down);
-> > +       if (ret)
-> > +               return ret;
-> > +       drv->timer_cons_down &= RBIF_TIMER_ADJ_CONS_DOWN_MASK;
-> > +
-> > +       ret = of_property_read_u32(of_node, "qcom,cpr-up-threshold",
-> > +                                  &drv->up_threshold);
-> > +       drv->up_threshold &= RBCPR_CTL_UP_THRESHOLD_MASK;
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = of_property_read_u32(of_node, "qcom,cpr-down-threshold",
-> > +                                  &drv->down_threshold);
-> > +       drv->down_threshold &= RBCPR_CTL_DN_THRESHOLD_MASK;
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = of_property_read_u32(of_node, "qcom,cpr-idle-clocks",
-> > +                                  &drv->idle_clocks);
-> > +       drv->idle_clocks &= RBCPR_STEP_QUOT_IDLE_CLK_MASK;
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = of_property_read_u32(of_node, "qcom,cpr-gcnt-us", &drv->gcnt_us);
-> > +       if (ret)
-> > +               return ret;
-> > +       ret = of_property_read_u32(of_node, "qcom,vdd-apc-step-up-limit",
-> > +                                  &drv->vdd_apc_step_up_limit);
-> > +       if (ret)
-> > +               return ret;
-> > +       ret = of_property_read_u32(of_node, "qcom,vdd-apc-step-down-limit",
-> > +                                  &drv->vdd_apc_step_down_limit);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = of_property_read_u32(of_node, "qcom,cpr-clamp-timer-interval",
-> > +                                  &drv->clamp_timer_interval);
-> > +       if (ret && ret != -EINVAL)
-> > +               return ret;
-> > +
-> > +       drv->clamp_timer_interval = min_t(unsigned int,
-> > +                                         drv->clamp_timer_interval,
-> > +                                         RBIF_TIMER_ADJ_CLAMP_INT_MASK);
-> > +
-> > +       dev_dbg(drv->dev, "up threshold = %u, down threshold = %u\n",
-> > +               drv->up_threshold, drv->down_threshold);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int cpr_find_initial_corner(struct cpr_drv *drv)
-> > +{
-> > +       unsigned long rate;
-> > +       const struct corner *end;
-> > +       struct corner *iter;
-> > +       int i = 0;
-> > +
-> > +       if (IS_ERR_OR_NULL(drv->cpu_clk)) {
-> 
-> Will this ever happen?
-
-[REVIEW-ETC]
-Since incorporating your other review comment in cpr_pd_attach_dev(),
-this function could still get a NULL clk.
-Changed the check so that we only return -EINVAL if (!drv->cpu_clk).
-
-> 
-> > +               dev_err(drv->dev, "cpu clk is not set\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       end = &drv->corners[drv->num_corners - 1];
-> > +       rate = clk_get_rate(drv->cpu_clk);
-> > +
-> > +       for (iter = drv->corners; iter <= end; iter++) {
-> > +               if (iter->freq > rate)
-> > +                       break;
-> > +               i++;
-> > +               if (iter->freq == rate) {
-> > +                       drv->corner = iter;
-> > +                       drv->performance_state = i;
-> > +                       break;
-> > +               }
-> > +               if (iter->freq < rate) {
-> > +                       drv->corner = iter;
-> > +                       drv->performance_state = i;
-> > +               }
-> > +       }
-> > +
-> > +       if (!drv->corner) {
-> > +               dev_err(drv->dev, "boot up corner not found\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       dev_dbg(drv->dev, "boot up perf state: %d\n", i);
-> > +
-> > +       return 0;
-> > +}
-> [...]
-> > +
-> > +static unsigned int cpr_get_performance(struct generic_pm_domain *genpd,
-> > +                                       struct dev_pm_opp *opp)
-> > +{
-> > +       return dev_pm_opp_get_level(opp);
-> > +}
-> > +
-> > +static int cpr_power_off(struct generic_pm_domain *domain)
-> > +{
-> > +       struct cpr_drv *drv = container_of(domain, struct cpr_drv, pd);
-> > +
-> > +       return cpr_disable(drv);
-> > +}
-> > +
-> > +static int cpr_power_on(struct generic_pm_domain *domain)
-> > +{
-> > +       struct cpr_drv *drv = container_of(domain, struct cpr_drv, pd);
-> > +
-> > +       return cpr_enable(drv);
-> > +}
-> > +
-> > +static int cpr_pd_attach_dev(struct generic_pm_domain *domain,
-> > +                            struct device *dev)
-> > +{
-> > +       struct cpr_drv *drv = container_of(domain, struct cpr_drv, pd);
-> > +       const struct acc_desc *acc_desc = drv->acc_desc;
-> > +       size_t len;
-> > +       int ret;
-> > +
-> > +       dev_dbg(drv->dev, "attach callback for: %s\n", dev_name(dev));
-> > +
-> > +       if (!drv->cpu_clk) {
-> 
-> Maybe this could be if (drv->cpu_clk) return 0, and then deindent
-> everything else.
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +               drv->cpu_clk = devm_clk_get(dev, NULL);
-> > +               if (IS_ERR_OR_NULL(drv->cpu_clk)) {
-> 
-> NULL is a valid clk. Probably just want to check for IS_ERR() and also
-> not do anything with the return value besides PTR_ERR() on it?
-> Eventually EPROBE_DEFER will arrive.
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +                       dev_err(drv->dev, "could not get cpu clk\n");
-> > +                       return -EINVAL;
-> > +               }
-> > +
-> > +               dev_dbg(drv->dev, "using cpu clk from: %s\n", dev_name(dev));
-> > +
-> > +               /* Everything related to (virtual) corners has to be initialized
-> > +                * here, when attaching to the power domain, since it depends on
-> > +                * the power domain's OPP table, which isn't available earlier.
-> > +                */
-> > +               drv->num_corners = dev_pm_opp_get_opp_count(&drv->pd.dev);
-> > +               if (drv->num_corners < 0)
-> > +                       return drv->num_corners;
-> > +               if (drv->num_corners < 2) {
-> > +                       dev_err(drv->dev, "need at least 2 OPPs to use CPR\n");
-> > +                       return -EINVAL;
-> > +               }
-> > +
-> > +               dev_dbg(drv->dev, "number of OPPs: %d\n", drv->num_corners);
-> > +
-> > +               len = sizeof(*drv->corners) * drv->num_corners;
-> > +               drv->corners = devm_kzalloc(dev, len, GFP_KERNEL);
-> > +               if (!drv->corners)
-> > +                       return -ENOMEM;
-> > +
-> > +               ret = cpr_corner_init(drv);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               ret = cpr_set_loop_allowed(drv);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               ret = cpr_init_parameters(drv);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               /* Configure CPR HW but keep it disabled */
-> > +               ret = cpr_config(drv);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               ret = cpr_find_initial_corner(drv);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               if (acc_desc->config)
-> > +                       regmap_multi_reg_write(drv->tcsr, acc_desc->config,
-> > +                                              acc_desc->num_regs_per_fuse);
-> > +
-> > +               /* Enable ACC if required */
-> > +               if (acc_desc->enable_mask)
-> > +                       regmap_update_bits(drv->tcsr, acc_desc->enable_reg,
-> > +                                          acc_desc->enable_mask,
-> > +                                          acc_desc->enable_mask);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int cpr_debug_info_open(struct inode *inode, struct file *file)
-> > +{
-> > +       file->private_data = inode->i_private;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static ssize_t cpr_debug_info_read(struct file *file, char __user *buff,
-> > +                                  size_t count, loff_t *ppos)
-> > +{
-> > +       u32 gcnt, ro_sel, ctl, irq_status, reg, error_steps;
-> > +       u32 step_dn, step_up, error, error_lt0, busy;
-> > +       struct cpr_drv *drv = file->private_data;
-> > +       struct fuse_corner *fuse_corner;
-> > +       struct corner *corner;
-> > +       ssize_t len, ret = 0;
-> > +       char *debugfs_buf;
-> > +
-> > +       debugfs_buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-> > +       if (!debugfs_buf)
-> > +               return -ENOMEM;
-> > +
-> > +       mutex_lock(&drv->lock);
-> > +
-> > +       corner = drv->corner;
-> > +       fuse_corner = corner->fuse_corner;
-> > +
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      "corner, current_volt = %d uV\n",
-> > +                      corner->last_uV);
-> > +       ret += len;
-> > +
-> > +       ro_sel = fuse_corner->ring_osc_idx;
-> > +       gcnt = cpr_read(drv, REG_RBCPR_GCNT_TARGET(ro_sel));
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      "rbcpr_gcnt_target (%u) = 0x%02X\n", ro_sel, gcnt);
-> > +       ret += len;
-> > +
-> > +       ctl = cpr_read(drv, REG_RBCPR_CTL);
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      "rbcpr_ctl = 0x%02X\n", ctl);
-> > +       ret += len;
-> > +
-> > +       irq_status = cpr_read(drv, REG_RBIF_IRQ_STATUS);
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      "rbcpr_irq_status = 0x%02X\n", irq_status);
-> > +       ret += len;
-> > +
-> > +       reg = cpr_read(drv, REG_RBCPR_RESULT_0);
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      "rbcpr_result_0 = 0x%02X\n", reg);
-> > +       ret += len;
-> > +
-> > +       step_dn = reg & 0x01;
-> > +       step_up = (reg >> RBCPR_RESULT0_STEP_UP_SHIFT) & 0x01;
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      "  [step_dn = %u", step_dn);
-> > +       ret += len;
-> > +
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      ", step_up = %u", step_up);
-> > +       ret += len;
-> > +
-> > +       error_steps = (reg >> RBCPR_RESULT0_ERROR_STEPS_SHIFT)
-> > +                               & RBCPR_RESULT0_ERROR_STEPS_MASK;
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> 
-> > +                      ", error_steps = %u", error_steps);
-> > +       ret += len;
-> > +
-> > +       error = (reg >> RBCPR_RESULT0_ERROR_SHIFT) & RBCPR_RESULT0_ERROR_MASK;
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      ", error = %u", error);
-> > +       ret += len;
-> > +
-> > +       error_lt0 = (reg >> RBCPR_RESULT0_ERROR_LT0_SHIFT) & 0x01;
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      ", error_lt_0 = %u", error_lt0);
-> > +       ret += len;
-> > +
-> > +       busy = (reg >> RBCPR_RESULT0_BUSY_SHIFT) & 0x01;
-> > +       len = snprintf(debugfs_buf + ret, PAGE_SIZE - ret,
-> > +                      ", busy = %u]\n", busy);
-> > +       ret += len;
-> > +       mutex_unlock(&drv->lock);
-> 
-> What is the mutex for? Doesn't seem like a good idea for the debugfs API
-> to be able to DDOS the threaded irq.
-
-[REVIEW-THX]
-Since we are only reading debug registers, it should be ok if this function
-executes at the same time as cpr_set_performance() or cpr_irq_handler().
-The user will need to monitor this data continuously when debugging anyway.
-Dropped the mutex.
-
-> 
-> > +
-> > +       ret = simple_read_from_buffer(buff, count, ppos, debugfs_buf, ret);
-> 
-> Can this use a seq_file instead of simple_read_from_buffer()?
-
-[REVIEW-THX]
-Fixed, thanks.
-
-> 
-> > +       kfree(debugfs_buf);
-> > +       return ret;
-> > +}
-> > +
-> > +static const struct file_operations cpr_debug_info_fops = {
-> > +       .open = cpr_debug_info_open,
-> > +       .read = cpr_debug_info_read,
-> > +};
-> > +
-> > +static void cpr_debugfs_init(struct cpr_drv *drv)
-> > +{
-> > +       drv->debugfs = debugfs_create_dir("qcom_cpr", NULL);
-> > +
-> > +       debugfs_create_file("debug_info", 0444, drv->debugfs,
-> > +                           drv, &cpr_debug_info_fops);
-> > +}
-> > +
-> > +static int cpr_probe(struct platform_device *pdev)
-> > +{
-> > +       struct resource *res;
-> > +       struct device *dev = &pdev->dev;
-> > +       struct cpr_drv *drv;
-> > +       size_t len;
-> > +       int irq, ret;
-> > +       const struct cpr_acc_desc *data;
-> > +       struct device_node *np;
-> > +       u32 cpr_rev = FUSE_REVISION_UNKNOWN;
-> > +
-> > +       data = of_device_get_match_data(dev);
-> > +       if (!data || !data->cpr_desc || !data->acc_desc)
-> > +               return -EINVAL;
-> > +
-> > +       drv = devm_kzalloc(dev, sizeof(*drv), GFP_KERNEL);
-> > +       if (!drv)
-> > +               return -ENOMEM;
-> > +       drv->dev = dev;
-> > +       drv->desc = data->cpr_desc;
-> > +       drv->acc_desc = data->acc_desc;
-> > +
-> > +       len = sizeof(*drv->fuse_corners) * drv->desc->num_fuse_corners;
-> > +       drv->fuse_corners = devm_kzalloc(dev, len, GFP_KERNEL);
-> 
-> Use devm_kcalloc() to allocate arrays
-
-[REVIEW-THX]
-Fixed here and elsewhere, thanks.
-
-> 
-> > +       if (!drv->fuse_corners)
-> > +               return -ENOMEM;
-> > +
-> > +       np = of_parse_phandle(dev->of_node, "acc-syscon", 0);
-> > +       if (!np)
-> > +               return -ENODEV;
-> > +
-> > +       drv->tcsr = syscon_node_to_regmap(np);
-> > +       of_node_put(np);
-> > +       if (IS_ERR(drv->tcsr))
-> > +               return PTR_ERR(drv->tcsr);
-> > +
-> > +       mutex_init(&drv->lock);
-> > +
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       drv->base = devm_ioremap_resource(dev, res);
-> > +       if (IS_ERR(drv->base))
-> > +               return PTR_ERR(drv->base);
-> > +
-> > +       irq = platform_get_irq(pdev, 0);
-> > +       if (irq < 0)
-> > +               return -EINVAL;
-> > +
-> > +       drv->vdd_apc = devm_regulator_get(dev, "vdd-apc");
-> > +       if (IS_ERR(drv->vdd_apc))
-> > +               return PTR_ERR(drv->vdd_apc);
-> > +
-> > +       /* Initialize fuse corners, since it simply depends
-> 
-> Please fix multi line comment style to have a single /* at the
-> beginning.
-
-[REVIEW-THX]
-Fixed here and elsewhere, thanks.
-
-> 
-> > +        * on data in efuses.
-> > +        * Everything related to (virtual) corners has to be
-> > +        * initialized after attaching to the power domain,
-> > +        * since is depends on the OPP table.
-> > +        */
-> > +       ret = cpr_read_efuse(dev, "cpr_fuse_revision", &cpr_rev);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       drv->cpr_fuses = cpr_get_fuses(drv);
-> > +       if (IS_ERR(drv->cpr_fuses))
-> > +               return PTR_ERR(drv->cpr_fuses);
-> > +
-> > +       ret = cpr_populate_ring_osc_idx(drv);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = cpr_fuse_corner_init(drv);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = devm_request_threaded_irq(dev, irq, NULL,
-> > +                                       cpr_irq_handler,
-> > +                                       IRQF_ONESHOT | IRQF_TRIGGER_RISING,
-> > +                                       "cpr", drv);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       drv->pd.name = devm_kstrdup_const(dev, dev->of_node->full_name,
-> > +                                         GFP_KERNEL);
-> > +       if (!drv->pd.name)
-> > +               return -EINVAL;
-> > +
-> > +       drv->pd.power_off = cpr_power_off;
-> > +       drv->pd.power_on = cpr_power_on;
-> > +       drv->pd.set_performance_state = cpr_set_performance;
-> > +       drv->pd.opp_to_performance_state = cpr_get_performance;
-> > +       drv->pd.attach_dev = cpr_pd_attach_dev;
-> > +
-> > +       ret = pm_genpd_init(&drv->pd, NULL, true);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = of_genpd_add_provider_simple(dev->of_node, &drv->pd);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       platform_set_drvdata(pdev, drv);
-> > +       cpr_debugfs_init(drv);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int cpr_remove(struct platform_device *pdev)
-> > +{
-> > +       struct cpr_drv *drv = platform_get_drvdata(pdev);
-> > +
-> > +       if (cpr_is_allowed(drv)) {
-> > +               cpr_ctl_disable(drv);
-> > +               cpr_irq_set(drv, 0);
-> > +       }
-> > +
-> > +       of_genpd_del_provider(pdev->dev.of_node);
-> > +       pm_genpd_remove(&drv->pd);
-> > +
-> > +       debugfs_remove_recursive(drv->debugfs);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct of_device_id cpr_match_table[] = {
-> > +       { .compatible = "qcom,qcs404-cpr", .data = &qcs404_cpr_acc_desc },
-> > +       { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, cpr_match_table);
-> > +
-> > +static struct platform_driver cpr_driver = {
-> > +       .probe          = cpr_probe,
-> > +       .remove         = cpr_remove,
-> > +       .driver         = {
-> > +               .name   = "qcom-cpr",
-> > +               .of_match_table = cpr_match_table,
-> > +               .pm = &cpr_pm_ops,
-> > +       },
-> > +};
-> > +module_platform_driver(cpr_driver);
-> > +
-> > +MODULE_DESCRIPTION("Core Power Reduction (CPR) driver");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_ALIAS("platform:qcom-cpr");
-> 
-> Is the alias needed?
-
-[REVIEW-THX]
-No, it is not. Dropped it, thanks.
