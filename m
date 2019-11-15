@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429C9C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13770C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC0420740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E0520637
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573799003;
-	bh=5dZm02Y5W8JVLKx8OzfurbiZHSforxN3jets5Hf3HKc=;
+	s=default; t=1573799011;
+	bh=olnyG+rGZi2UGUB9/NymHhikAwqiJs8FqEvON9dtLYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w8mYmtvp7WJKKOeUh6Li6GMD5rkaToY8S5qvbaWsTQyn2is1tsROzZ2y/nDh2nDZx
-	 xYdyWWBgWD1y+b9Ws6wXFfbocGDyyBJnp1Myeu4E2M5eLlRjcnrMHe6VlcEoISfJiJ
-	 YnbscouO0m38z/ME5+hatFgUr8lQH5Yt8kY5qr9E=
+	b=jtOXthXelmKxRGPtA5lyFSkD6yF+PWFCIOh0y3wr+/YrMjSayoTKCxi4ifj3+U3q/
+	 5zAaArFc6DlVFSPcHQ07i4jXdBPyQXUsUYlwk/QJxUialBe4gtnQlF4LpIRC+XKP44
+	 gPanIIwIT1eck9tpd2uLWjtcK8XX8JRHIsUqvlHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfKOGWy (ORCPT
+        id S1727811AbfKOGWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52386 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbfKOGWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:50 -0500
+        id S1727753AbfKOGWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:36 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ECEC2082E;
-        Fri, 15 Nov 2019 06:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85FC820637;
+        Fri, 15 Nov 2019 06:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798968;
-        bh=5dZm02Y5W8JVLKx8OzfurbiZHSforxN3jets5Hf3HKc=;
+        s=default; t=1573798955;
+        bh=olnyG+rGZi2UGUB9/NymHhikAwqiJs8FqEvON9dtLYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lurComEGD2mSo/PI/Qtj2rlk+7LREtRMauUCXhtHl/vcsFhilWRdgUazP4AMBUEEp
-         3l8PFBQDsGQ0Xzr5gWsjoM7NHoGBXlJlAnR9hKkAcwhDpcc/w9VSL2OiWdZViOkMtV
-         k2PN0s6OPeM8pgmU7sokFEFqxlGXxUg/a0sQnTlM=
+        b=de6ew/M7Q6SLUn5l2mKwKanKxTjyG6puoze2V1oEhBckJf7MhBH+pNbZNDwrHBcUN
+         lc/fN0cMruGGDGuJs9EvcwMRozdjE0SzKmiSNz0gwqWUgpY/VrHSHIzeftm2iZFBC7
+         wicwK/dQG/vXL99//Q4DmDj4hOG6oFHHxu7tkg60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vineela Tummalapalli <vineela.tummalapalli@intel.com>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Neelima Krishnan <neelima.krishnan@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 26/31] x86/bugs: Add ITLB_MULTIHIT bug infrastructure
-Date:   Fri, 15 Nov 2019 14:20:55 +0800
-Message-Id: <20191115062019.325664294@linuxfoundation.org>
+Subject: [PATCH 4.9 07/31] x86/cpu: Add a helper function x86_read_arch_cap_msr()
+Date:   Fri, 15 Nov 2019 14:20:36 +0800
+Message-Id: <20191115062012.261664141@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
@@ -63,258 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-commit db4d30fbb71b47e4ecb11c4efa5d8aad4b03dfae upstream.
+commit 286836a70433fb64131d2590f4bf512097c255e1 upstream.
 
-Some processors may incur a machine check error possibly resulting in an
-unrecoverable CPU lockup when an instruction fetch encounters a TLB
-multi-hit in the instruction TLB. This can occur when the page size is
-changed along with either the physical address or cache type. The relevant
-erratum can be found here:
+Add a helper function to read the IA32_ARCH_CAPABILITIES MSR.
 
-   https://bugzilla.kernel.org/show_bug.cgi?id=205195
-
-There are other processors affected for which the erratum does not fully
-disclose the impact.
-
-This issue affects both bare-metal x86 page tables and EPT.
-
-It can be mitigated by either eliminating the use of large pages or by
-using careful TLB invalidations when changing the page size in the page
-tables.
-
-Just like Spectre, Meltdown, L1TF and MDS, a new bit has been allocated in
-MSR_IA32_ARCH_CAPABILITIES (PSCHANGE_MC_NO) and will be set on CPUs which
-are mitigated against this issue.
-
-Signed-off-by: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
-Co-developed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-[bwh: Backported to 4.9:
- - No support for X86_VENDOR_HYGON, ATOM_AIRMONT_NP
- - Adjust context, indentation]
+Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+Reviewed-by: Mark Gross <mgross@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/ABI/testing/sysfs-devices-system-cpu |    1 
- arch/x86/include/asm/cpufeatures.h                 |    1 
- arch/x86/include/asm/msr-index.h                   |    7 ++
- arch/x86/kernel/cpu/bugs.c                         |   13 ++++
- arch/x86/kernel/cpu/common.c                       |   61 +++++++++++----------
- drivers/base/cpu.c                                 |    8 ++
- include/linux/cpu.h                                |    2 
- 7 files changed, 65 insertions(+), 28 deletions(-)
+ arch/x86/kernel/cpu/common.c |   15 +++++++++++----
+ arch/x86/kernel/cpu/cpu.h    |    2 ++
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -359,6 +359,7 @@ What:		/sys/devices/system/cpu/vulnerabi
- 		/sys/devices/system/cpu/vulnerabilities/l1tf
- 		/sys/devices/system/cpu/vulnerabilities/mds
- 		/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
-+		/sys/devices/system/cpu/vulnerabilities/itlb_multihit
- Date:		January 2018
- Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
- Description:	Information about CPU vulnerabilities
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -358,5 +358,6 @@
- #define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
- #define X86_BUG_SWAPGS		X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
- #define X86_BUG_TAA		X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
-+#define X86_BUG_ITLB_MULTIHIT	X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -77,6 +77,13 @@
- 						  * Microarchitectural Data
- 						  * Sampling (MDS) vulnerabilities.
- 						  */
-+#define ARCH_CAP_PSCHANGE_MC_NO		BIT(6)	 /*
-+						  * The processor is not susceptible to a
-+						  * machine check error due to modifying the
-+						  * code page size along with either the
-+						  * physical address or cache type
-+						  * without TLB invalidation.
-+						  */
- #define ARCH_CAP_TSX_CTRL_MSR		BIT(7)	/* MSR for TSX control is available. */
- #define ARCH_CAP_TAA_NO			BIT(8)	/*
- 						 * Not susceptible to
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1395,6 +1395,11 @@ static ssize_t l1tf_show_state(char *buf
- }
- #endif
- 
-+static ssize_t itlb_multihit_show_state(char *buf)
-+{
-+	return sprintf(buf, "Processor vulnerable\n");
-+}
-+
- static ssize_t mds_show_state(char *buf)
- {
- #ifdef CONFIG_HYPERVISOR_GUEST
-@@ -1497,6 +1502,9 @@ static ssize_t cpu_show_common(struct de
- 	case X86_BUG_TAA:
- 		return tsx_async_abort_show_state(buf);
- 
-+	case X86_BUG_ITLB_MULTIHIT:
-+		return itlb_multihit_show_state(buf);
-+
- 	default:
- 		break;
- 	}
-@@ -1538,4 +1546,9 @@ ssize_t cpu_show_tsx_async_abort(struct
- {
- 	return cpu_show_common(dev, attr, buf, X86_BUG_TAA);
- }
-+
-+ssize_t cpu_show_itlb_multihit(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return cpu_show_common(dev, attr, buf, X86_BUG_ITLB_MULTIHIT);
-+}
- #endif
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
-@@ -891,13 +891,14 @@ static void identify_cpu_without_cpuid(s
- 	c->x86_cache_bits = c->x86_phys_bits;
+@@ -962,19 +962,26 @@ static bool __init cpu_matches(unsigned
+ 	return m && !!(m->driver_data & which);
  }
  
--#define NO_SPECULATION	BIT(0)
--#define NO_MELTDOWN	BIT(1)
--#define NO_SSB		BIT(2)
--#define NO_L1TF		BIT(3)
--#define NO_MDS		BIT(4)
--#define MSBDS_ONLY	BIT(5)
--#define NO_SWAPGS	BIT(6)
-+#define NO_SPECULATION		BIT(0)
-+#define NO_MELTDOWN		BIT(1)
-+#define NO_SSB			BIT(2)
-+#define NO_L1TF			BIT(3)
-+#define NO_MDS			BIT(4)
-+#define MSBDS_ONLY		BIT(5)
-+#define NO_SWAPGS		BIT(6)
-+#define NO_ITLB_MULTIHIT	BIT(7)
- 
- #define VULNWL(_vendor, _family, _model, _whitelist)	\
- 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-@@ -915,26 +916,26 @@ static const __initconst struct x86_cpu_
- 	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
- 
- 	/* Intel Family 6 */
--	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
--	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
--	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
--
--	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
--	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION | NO_ITLB_MULTIHIT),
-+
-+	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
- 
--	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
--	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF | NO_SWAPGS),
--	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	/*
- 	 * Technically, swapgs isn't serializing on AMD (despite it previously
-@@ -945,13 +946,13 @@ static const __initconst struct x86_cpu_
- 	 */
- 
- 	/* AMD Family 0xf - 0x12 */
--	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
--	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-+	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
--	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 	{}
- };
- 
-@@ -976,6 +977,10 @@ static void __init cpu_set_bug_bits(stru
+-static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
++u64 x86_read_arch_cap_msr(void)
  {
- 	u64 ia32_cap = x86_read_arch_cap_msr();
+ 	u64 ia32_cap = 0;
  
-+	/* Set ITLB_MULTIHIT bug if cpu is not in the whitelist and not mitigated */
-+	if (!cpu_matches(NO_ITLB_MULTIHIT) && !(ia32_cap & ARCH_CAP_PSCHANGE_MC_NO))
-+		setup_force_cpu_bug(X86_BUG_ITLB_MULTIHIT);
++	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES))
++		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, ia32_cap);
++
++	return ia32_cap;
++}
++
++static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
++{
++	u64 ia32_cap = x86_read_arch_cap_msr();
 +
  	if (cpu_matches(NO_SPECULATION))
  		return;
  
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -544,6 +544,12 @@ ssize_t __weak cpu_show_tsx_async_abort(
- 	return sprintf(buf, "Not affected\n");
- }
+ 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
+ 	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
  
-+ssize_t __weak cpu_show_itlb_multihit(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "Not affected\n");
-+}
+-	if (cpu_has(c, X86_FEATURE_ARCH_CAPABILITIES))
+-		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, ia32_cap);
+-
+ 	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
+ 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
+ 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
+--- a/arch/x86/kernel/cpu/cpu.h
++++ b/arch/x86/kernel/cpu/cpu.h
+@@ -51,4 +51,6 @@ extern int detect_ht_early(struct cpuinf
+ 
+ extern void x86_spec_ctrl_setup_ap(void);
+ 
++extern u64 x86_read_arch_cap_msr(void);
 +
- static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
- static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
- static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
-@@ -551,6 +557,7 @@ static DEVICE_ATTR(spec_store_bypass, 04
- static DEVICE_ATTR(l1tf, 0444, cpu_show_l1tf, NULL);
- static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
- static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
-+static DEVICE_ATTR(itlb_multihit, 0444, cpu_show_itlb_multihit, NULL);
- 
- static struct attribute *cpu_root_vulnerabilities_attrs[] = {
- 	&dev_attr_meltdown.attr,
-@@ -560,6 +567,7 @@ static struct attribute *cpu_root_vulner
- 	&dev_attr_l1tf.attr,
- 	&dev_attr_mds.attr,
- 	&dev_attr_tsx_async_abort.attr,
-+	&dev_attr_itlb_multihit.attr,
- 	NULL
- };
- 
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -59,6 +59,8 @@ extern ssize_t cpu_show_mds(struct devic
- extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
- 					struct device_attribute *attr,
- 					char *buf);
-+extern ssize_t cpu_show_itlb_multihit(struct device *dev,
-+				      struct device_attribute *attr, char *buf);
- 
- extern __printf(4, 5)
- struct device *cpu_device_create(struct device *parent, void *drvdata,
+ #endif /* ARCH_X86_CPU_H */
 
 
