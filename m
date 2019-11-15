@@ -2,96 +2,88 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC99C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67365C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B9B2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DE920730
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKOScs (ORCPT
+        id S1726920AbfKOScy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:32:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44376 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfKOScs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:32:48 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iVgOR-0005QE-69; Fri, 15 Nov 2019 19:32:27 +0100
-Date:   Fri, 15 Nov 2019 19:32:26 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-cc:     Bart Van Assche <bvanassche@acm.org>, dsterba@suse.cz,
-        bhelgaas@google.com,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        sakari.ailus@linux.intel.com,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] async: Let kfree() out of the critical area of the
- lock
-In-Reply-To: <9bfecf17-3c1b-414e-b271-4fd2d884faa3@huawei.com>
-Message-ID: <alpine.DEB.2.21.1911151931420.28787@nanos.tec.linutronix.de>
-References: <ae3b790d-9883-0ec0-425d-5ac9b32c2d0f@huawei.com> <9bfecf17-3c1b-414e-b271-4fd2d884faa3@huawei.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 15 Nov 2019 13:32:54 -0500
+Received: from mail.itouring.de ([188.40.134.68]:43298 "EHLO mail.itouring.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfKOScx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 13:32:53 -0500
+Received: from tux.wizards.de (p5B07EF98.dip0.t-ipconnect.de [91.7.239.152])
+        by mail.itouring.de (Postfix) with ESMTPSA id 52D3B4160141;
+        Fri, 15 Nov 2019 19:32:51 +0100 (CET)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+        by tux.wizards.de (Postfix) with ESMTP id D47175F04C2;
+        Fri, 15 Nov 2019 19:32:50 +0100 (CET)
+Subject: Re: [PATCH BUGFIX V2 1/1] block, bfq: deschedule empty bfq_queues not
+ referred by any process
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        tschubert@bafh.org, patdung100@gmail.com, cevich@redhat.com
+References: <20191114093311.47877-1-paolo.valente@linaro.org>
+ <20191114093311.47877-2-paolo.valente@linaro.org>
+From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <89dde326-fc76-10cc-5ec9-ec5fd4dae4ac@applied-asynchrony.com>
+Date:   Fri, 15 Nov 2019 19:32:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191114093311.47877-2-paolo.valente@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/14/19 10:33 AM, Paolo Valente wrote:
+> Since commit 3726112ec731 ("block, bfq: re-schedule empty queues if
+> they deserve I/O plugging"), to prevent the service guarantees of a
+> bfq_queue from being violated, the bfq_queue may be left busy, i.e.,
+> scheduled for service, even if empty (see comments in
+> __bfq_bfqq_expire() for details). But, if no process will send
+> requests to the bfq_queue any longer, then there is no point in
+> keeping the bfq_queue scheduled for service.
+> 
+> In addition, keeping the bfq_queue scheduled for service, but with no
+> process reference any longer, may cause the bfq_queue to be freed when
+> descheduled from service. But this is assumed to never happen, and
+> causes a UAF if it happens. This, in turn, caused crashes [1, 2].
+> 
+> This commit fixes this issue by descheduling an empty bfq_queue when
+> it remains with not process reference.
+> 
+> [1] https://bugzilla.redhat.com/show_bug.cgi?id=1767539
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=205447
+> 
+> Fixes: 3726112ec731 ("block, bfq: re-schedule empty queues if they deserve I/O plugging")
+> Reported-by: Chris Evich <cevich@redhat.com>
+> Reported-by: Patrick Dung <patdung100@gmail.com>
+> Reported-by: Thorsten Schubert <tschubert@bafh.org>
+> Tested-by: Thorsten Schubert <tschubert@bafh.org>
+> Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 
+Jens,
 
-On Fri, 11 Oct 2019, Yunfeng Ye wrote:
-
-> The async_lock is big global lock, and kfree() is not always cheap, it
-> will increase lock contention. it's better let kfree() outside the lock
-> to keep the critical area as short as possible.
-> 
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-> ---
-> v1 -> v2:
->  - update the description
->  - add "Reviewed-by"
-> 
->  kernel/async.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/async.c b/kernel/async.c
-> index 4f9c1d6..1de270d 100644
-> --- a/kernel/async.c
-> +++ b/kernel/async.c
-> @@ -135,12 +135,12 @@ static void async_run_entry_fn(struct work_struct *work)
->  	list_del_init(&entry->domain_list);
->  	list_del_init(&entry->global_list);
-> 
-> -	/* 3) free the entry */
-> -	kfree(entry);
->  	atomic_dec(&entry_count);
-> -
->  	spin_unlock_irqrestore(&async_lock, flags);
-> 
-> +	/* 3) free the entry */
-> +	kfree(entry);
-> +
->  	/* 4) wake up any waiters */
->  	wake_up(&async_done);
-
-The wakeup should happen before the kfree() for the very same reasons.
+can you please also tag this for stable-5.3 before the next push?
+The original problem was found on 5.3 after all, and hoping for the
+stable-bot to pick it up automagically is a bit unreliable.
 
 Thanks,
-
-	tglx
+Holger
