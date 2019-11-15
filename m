@@ -2,122 +2,172 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BECAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC35C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3374B2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:40:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUFG1Adq"
+	by mail.kernel.org (Postfix) with ESMTP id 730532072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfKOLkA (ORCPT
+        id S1727337AbfKOLpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:40:00 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43695 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbfKOLj7 (ORCPT
+        Fri, 15 Nov 2019 06:45:13 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53555 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbfKOLpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:39:59 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y23so10324368ljh.10;
-        Fri, 15 Nov 2019 03:39:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UmAi2H6KzYBMsHnO/QLE+PxP3dI7L9bn6T/LMsCVk58=;
-        b=pUFG1AdqOH3wjtFFxLf+iHxJHmMCAwgWgYt+Kf3UyMAZ8bJihvtybvsikZGmmp112C
-         Lpw3J8laa3CZUtx8wTHJAINyLMHI3B1wa6KPuYAJ9i1wsDm34ZXeacBUzobWMT2TFXVx
-         appDjFnTPzXY3pC/qtpoxSZYWha+Xe0qEFthv24Zm1aGzVhCX9jCPHsdh+yI5Et/hSM4
-         Ha/wxLHHxJ9z5P1/DkG4lij87MvGa1CpJ2mXBBXzE3PGJlkuayMX1e8pEp+B1IwfNv7p
-         q4m9I5adKBIsEa8r//xd0qs9+FrMAR+0xOQdEb2gHugAYWx8j1sfvzNmmbbqU/nv6vO4
-         FTjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UmAi2H6KzYBMsHnO/QLE+PxP3dI7L9bn6T/LMsCVk58=;
-        b=g72FVGyqP/8TQw8fmv0Fwf9rUedryhgzd0WHgCpIcYSyh0TuJxErbo9KXXAFMA4QQb
-         6uJdHMokR25VRio1N0YrZSdvPnrH8qTwRIAxr5Dwm3N+/NhmpKNBbCK46p8YAsUInn4P
-         +K4MNhg/EJEiOSRv4iGDoikuCXRCZ5q6kmqRz7WvK0saMFZA9QuG1fWbDx4VM+uYGD1F
-         VjILLD/IKzIptnktVJixfjs0hh5u8e+gGow6XhrmepIDapFPAXS+9+A2tsfhmmvyYoRx
-         62Kio/DGNaoVKB1z3DEEKGTo3JMcTMwd6yQwxwDRV88bKwSLKZ1pH0fPQG0ABeOiKPNr
-         u/bw==
-X-Gm-Message-State: APjAAAWPHs3GWxV1/j6Lm971OBuKafLVChN1h3T3baR6E5bfvhuJUlkb
-        e6LGAaNIX4DMM/G8OkrF5KS7uEpI
-X-Google-Smtp-Source: APXvYqxw/RuX+HC0aay7/RhWP6COvieyS/R8ADY2Pgeb/UJPnoCtNftVN+PW0z9r8FrtZdTBXp08Rg==
-X-Received: by 2002:a2e:9712:: with SMTP id r18mr11130390lji.12.1573817996154;
-        Fri, 15 Nov 2019 03:39:56 -0800 (PST)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id r22sm4067987lji.71.2019.11.15.03.39.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2019 03:39:55 -0800 (PST)
-Subject: Re: [PATCH v2] drm/tegra: Turn off and reset hardware across
- suspend-resume
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190811183932.15850-1-digetx@gmail.com>
- <20191114203117.GA761559@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3b8e79ad-598c-f0f7-4589-00bb0acc1867@gmail.com>
-Date:   Fri, 15 Nov 2019 14:39:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 15 Nov 2019 06:45:13 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iVa1Z-0007QU-T6; Fri, 15 Nov 2019 12:44:25 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iVa1Q-0008K2-Ab; Fri, 15 Nov 2019 12:44:16 +0100
+Date:   Fri, 15 Nov 2019 12:44:16 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     mark.rutland@arm.com, alexandre.belloni@bootlin.com,
+        mhocko@suse.com, julien.thierry@arm.com, catalin.marinas@arm.com,
+        christoffer.dall@arm.com, dhowells@redhat.com,
+        yamada.masahiro@socionext.com, ryabinin.a.a@gmail.com,
+        glider@google.com, kvmarm@lists.cs.columbia.edu, corbet@lwn.net,
+        liuwenliang@huawei.com, daniel.lezcano@linaro.org,
+        linux@armlinux.org.uk, kasan-dev@googlegroups.com,
+        geert@linux-m68k.org, dvyukov@google.com,
+        bcm-kernel-feedback-list@broadcom.com, drjones@redhat.com,
+        vladimir.murzin@arm.com, keescook@chromium.org, arnd@arndb.de,
+        marc.zyngier@arm.com, andre.przywara@arm.com, pombredanne@nexb.com,
+        jinb.park7@gmail.com, tglx@linutronix.de, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, nico@fluxnic.net,
+        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rob@landley.net, philip@cog.systems, akpm@linux-foundation.org,
+        thgarnie@google.com, kirill.shutemov@linux.intel.com
+Subject: Re: [PATCH v6 0/6] KASan for arm
+Message-ID: <20191115114416.ba6lmwb7q4gmepzc@pengutronix.de>
+References: <20190617221134.9930-1-f.fainelli@gmail.com>
+ <20191114181243.q37rxoo3seds6oxy@pengutronix.de>
+ <7322163f-e08e-a6b7-b143-e9d59917ee5b@gmail.com>
+ <20191115070842.2x7psp243nfo76co@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191114203117.GA761559@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115070842.2x7psp243nfo76co@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:28:52 up  2:47, 19 users,  load average: 0.00, 0.04, 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.11.2019 23:31, Thierry Reding пишет:
-> On Sun, Aug 11, 2019 at 09:39:32PM +0300, Dmitry Osipenko wrote:
->> The drivers core bumps runtime PM refcount during of entering into
->> suspend to workaround some problem where parent device may become turned
->> off before its children. In order to disable and reset CRTCs/HDMI/etc
->> hardware, the runtime PM needs to be "forced" into suspend mode.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>
->> Changelog:
->>
->> v2: The SYSTEM_SLEEP_PM_OPS are now set for all of the relevant drivers and
->>     not only for the DC because turned out that they all should enforce the
->>     suspending.
->>
->>  drivers/gpu/drm/tegra/dc.c    | 2 ++
->>  drivers/gpu/drm/tegra/dpaux.c | 2 ++
->>  drivers/gpu/drm/tegra/dsi.c   | 2 ++
->>  drivers/gpu/drm/tegra/hdmi.c  | 2 ++
->>  drivers/gpu/drm/tegra/hub.c   | 2 ++
->>  drivers/gpu/drm/tegra/sor.c   | 2 ++
->>  drivers/gpu/drm/tegra/vic.c   | 2 ++
->>  7 files changed, 14 insertions(+)
-> 
-> I'm not exactly sure I understand why this is necessary. Runtime PM is
-> controlled by the drivers themselves so that when an output (say SOR) is
-> disabled, it drops the runtime PM reference. The idea is that since the
-> disabled output is no longer needed it can just go into a low power mode
-> which on Tegra usually means clocks off and reset asserted (and in some
-> cases also power domain off).
-> 
-> DRM/KMS has system-level suspend support, which we use to disable all
-> outputs when entering suspend. I see that, unfortunately, this doesn't
-> seem to actually cause the devices to runtime suspend. I'm pretty sure
-> that this used to work at some point, so I don't know what changed. I'd
-> have to look into this a little more. The core doing something like this
-> behind the driver's back seems wrong and having to force the device into
-> suspend mode seems like it's just piling up on the workarounds.
+Hi Florian,
 
-Please let me know if you'll find a better solution.
+On 19-11-15 08:08, Marco Felsch wrote:
+> Hi Florian,
+> 
+> On 19-11-14 15:01, Florian Fainelli wrote:
+> > Hello Marco,
+> > 
+> > On 11/14/19 10:12 AM, Marco Felsch wrote:
+> > > Hi Florian,
+> > > 
+> > > first of all, many thanks for your work on this series =) I picked your
+> > > and Arnd patches to make it compilable. Now it's compiling but my imx6q
+> > > board didn't boot anymore. I debugged the code and found that the branch
+> > > to 'start_kernel' won't be reached
+> > > 
+> > > 8<------- arch/arm/kernel/head-common.S -------
+> > > ....
+> > > 
+> > > #ifdef CONFIG_KASAN
+> > >         bl      kasan_early_init
+> > > #endif
+> > > 	mov     lr, #0
+> > > 	b       start_kernel
+> > > ENDPROC(__mmap_switched)
+> > > 
+> > > ....
+> > > 8<----------------------------------------------
+> > > 
+> > > Now, I found also that 'KASAN_SHADOW_OFFSET' isn't set due to missing
+> > > 'CONFIG_KASAN_SHADOW_OFFSET' and so no '-fasan-shadow-offset=xxxxx' is
+> > > added. Can that be the reason why my board isn't booted anymore?
+> > 
+> > The latest that I have is here, though not yet submitted since I needed
+> > to solve one issue on a specific platform with a lot of memory:
+> > 
+> > https://github.com/ffainelli/linux/pull/new/kasan-v7
+> 
+> Thanks for that hint, I will try this series too :) I read that you
+> wanna prepare a v7 but didn't found it ^^
+> 
+> > Can you share your branch as well? I did not pick all of Arnd's patches
+> > since some appeared to be seemingly independent from KASan on ARM. This
+> > is the KASAN related options that are set in my configuration:
+> 
+> Of course I will push it to github and inform you shortly.
 
+Here comes the link:
+https://github.com/medude/linux/tree/v5.4/topic/kasan-arm.v7
+
+I just applied Arnds Patche which you didn't added into your v7.
+
+> > grep KASAN build/linux-custom/.config
+> > CONFIG_HAVE_ARCH_KASAN=y
+> > CONFIG_CC_HAS_KASAN_GENERIC=y
+> > CONFIG_KASAN=y
+> > CONFIG_KASAN_GENERIC=y
+> > CONFIG_KASAN_OUTLINE=y
+> > # CONFIG_KASAN_INLINE is not set
+> > CONFIG_KASAN_STACK=1
+> > CONFIG_TEST_KASAN=m
+> 
+> My config is:
+> 
+> CONFIG_HAVE_ARCH_KASAN=y
+> CONFIG_CC_HAS_KASAN_GENERIC=y
+> CONFIG_KASAN=y
+> CONFIG_KASAN_GENERIC=y
+> CONFIG_KASAN_OUTLINE=y
+> # CONFIG_KASAN_INLINE is not set
+> CONFIG_KASAN_STACK=1
+> # CONFIG_TEST_KASAN is not set
+> 
+> > are you using something different by any chance?
+> 
+> Unfortunately not.
+
+With your v7 it is working on my imx6 but unfortunately I can't run my
+gstreamer testcase. My CPU load goes to 100% after starting gstreamer
+and nothing happens.. But the test_kasan module works =) So I decided to
+check a imx6quadplus but this target did not boot.. I used another
+toolchain for the imx6quadplus gcc-9 instead of gcc-8. So it seems that
+something went wrong during compilation. Because you didn't changed
+something within the logic.
+
+I wonder why we must not define the CONFIG_KASAN_SHADOW_OFFSET for arm.
+
+Regards,
+  Marco
+
+> Regards,
+>   Marco
+> 
+> > -- 
+> > Florian
+> > 
+> 
