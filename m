@@ -4,60 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E961C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69149C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5A5207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380632075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820769;
-	bh=3EDYhBicncZw1f38fOSEFTBlQwSB3TzgMfJMwxBGfZM=;
+	s=default; t=1573820776;
+	bh=2kT458QwiUoJ1anrPh85zSPZ+t9Tlaax6hx/8GssUrU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=lpUI66RM9//2KsV5xEQ6B68RRLFYEmFtGhI2ajkOKXzzQBL+FQyk4p9wPipY3KN7g
-	 PC2qwh4LhKgIQNMkadzsXZuT27BR+nojxA8F+VyiiD5gHnlEdXbBD+RYnCtaNEG8kY
-	 kQ/5WlsLJj+Ka41g2axQ0M9U3M62OAkto4mg+4UE=
+	b=Kil+3po8PQzc/FmNmmo/SvlqzsIrios5Yfax2s+tL8sSFK9780N5dgk3arvTek5MI
+	 a9H8gNML+cxno2uludirY4WGyCD45MkRwjY4ga5P3H784Gg9G6WKG77O70udL7g6VW
+	 +TTn0odM23x3fAJaUcEiVpc5AMWj5vomjSOx3LF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfKOMZV (ORCPT
+        id S1727927AbfKOM0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:25:21 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33046 "EHLO
+        Fri, 15 Nov 2019 07:26:15 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32956 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbfKOMZS (ORCPT
+        with ESMTP id S1727668AbfKOMZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:25:18 -0500
+        Fri, 15 Nov 2019 07:25:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Re2hQTtNAD8CYEK6W+NpLcveT//8Obo4//e0YXTuxTc=; b=jFUZ7q7H99n3
-        xPQxQwwN0FSWoZ4uDzb52Mb2epbh5Dk1Pu4v30mUzg4m2Tg2ytDV1g9i9KMQcFA0tV4ikY96WpUep
-        tX7rbioDKzEJGCoLKywvVyc3NG+AnZxUhoiVokGz3Dua7cWzwUduasdtTK+DBdmn6tpeLNEJwsC0S
-        jakRc=;
+        List-Archive; bh=NoJQ/BiAhwJPJINl8oVLkVKiRSpmH92kSU++XZetC4w=; b=AX7xCxNoUWqj
+        vtQ7yCrfzLG7qoCLrx8SeqModvFHZhqGcXsHGU8f0pPjbTnSPNs7C88qKQ0OIVB6RRQ5noDvHyVNl
+        GyEVps9wjMmmyFD5WIQVNuKrmAr+kwtGtINtOUJYg+FFDbJVWyb9gFAYhb/W4Bttk+Y9/ceHShYaO
+        lsDOM=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaf4-0000Lk-F0; Fri, 15 Nov 2019 12:25:14 +0000
+        id 1iVaex-0000Km-W9; Fri, 15 Nov 2019 12:25:08 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EF8D427415A7; Fri, 15 Nov 2019 12:25:13 +0000 (GMT)
+        id 7C3AF2741609; Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     "Cc:"@sirena.co.uk, "Cc:"@sirena.co.uk,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Applied "spi: tegra20-slink: add missed clk_unprepare" to the spi tree
-In-Reply-To: <20191115083122.12278-1-hslester96@gmail.com>
+To:     Christoph Fritz <chf.fritz@googlemail.com>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Christian Hemp <c.hemp@phytec.de>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Riedmueller <s.riedmueller@phytec.de>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: Applied "regulator: da9062: add of_map_mode support for bucks" to the regulator tree
+In-Reply-To: <1573652416-9848-3-git-send-email-chf.fritz@googlemail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122513.EF8D427415A7@ypsilon.sirena.org.uk>
-Date:   Fri, 15 Nov 2019 12:25:13 +0000 (GMT)
+Message-Id: <20191115122507.7C3AF2741609@ypsilon.sirena.org.uk>
+Date:   Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +71,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: tegra20-slink: add missed clk_unprepare
+   regulator: da9062: add of_map_mode support for bucks
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,51 +96,104 @@ to this mail.
 Thanks,
 Mark
 
-From 04358e40ba96d687c0811c21d9dede73f5244a98 Mon Sep 17 00:00:00 2001
-From: Chuhong Yuan <hslester96@gmail.com>
-Date: Fri, 15 Nov 2019 16:31:22 +0800
-Subject: [PATCH] spi: tegra20-slink: add missed clk_unprepare
+From 844e7492ee3da1a8714bf3cc1dd54d777a5257c2 Mon Sep 17 00:00:00 2001
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Date: Wed, 13 Nov 2019 14:40:14 +0100
+Subject: [PATCH] regulator: da9062: add of_map_mode support for bucks
 
-The driver misses calling clk_unprepare in probe failure and remove.
-Add the calls to fix it.
+This patch adds of_map_mode support for bucks to set regulator modes
+from within regulator framework.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191115083122.12278-1-hslester96@gmail.com
+Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+Signed-off-by: Christian Hemp <c.hemp@phytec.de>
+Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+Link: https://lore.kernel.org/r/1573652416-9848-3-git-send-email-chf.fritz@googlemail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-tegra20-slink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/regulator/da9062-regulator.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 51573f41ed12..7f4d932dade7 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -1072,7 +1072,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	ret = clk_enable(tspi->clk);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Clock enable failed %d\n", ret);
--		goto exit_free_master;
-+		goto exit_clk_unprepare;
- 	}
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index 601002e3e012..29f4a60398a3 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -98,6 +98,20 @@ static const unsigned int da9062_buck_b_limits[] = {
+ 	2300000, 2400000, 2500000, 2600000, 2700000, 2800000, 2900000, 3000000
+ };
  
- 	spi_irq = platform_get_irq(pdev, 0);
-@@ -1145,6 +1145,8 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	free_irq(spi_irq, tspi);
- exit_clk_disable:
- 	clk_disable(tspi->clk);
-+exit_clk_unprepare:
-+	clk_unprepare(tspi->clk);
- exit_free_master:
- 	spi_master_put(master);
- 	return ret;
-@@ -1158,6 +1160,7 @@ static int tegra_slink_remove(struct platform_device *pdev)
- 	free_irq(tspi->irq, tspi);
- 
- 	clk_disable(tspi->clk);
-+	clk_unprepare(tspi->clk);
- 
- 	if (tspi->tx_dma_chan)
- 		tegra_slink_deinit_dma_param(tspi, false);
++static unsigned int da9062_map_buck_mode(unsigned int mode)
++{
++	switch (mode) {
++	case DA9063_BUCK_MODE_SLEEP:
++		return REGULATOR_MODE_STANDBY;
++	case DA9063_BUCK_MODE_SYNC:
++		return REGULATOR_MODE_FAST;
++	case DA9063_BUCK_MODE_AUTO:
++		return REGULATOR_MODE_NORMAL;
++	default:
++		return -EINVAL;
++	}
++}
++
+ static int da9062_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
+ {
+ 	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
+@@ -360,6 +374,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 		.desc.vsel_reg = DA9062AA_VBUCK1_A,
+ 		.desc.vsel_mask = DA9062AA_VBUCK1_A_MASK,
+ 		.desc.linear_min_sel = 0,
++		.desc.of_map_mode = da9062_map_buck_mode,
+ 		.sleep = REG_FIELD(DA9062AA_VBUCK1_A,
+ 			__builtin_ffs((int)DA9062AA_BUCK1_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -396,6 +411,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 		.desc.vsel_reg = DA9062AA_VBUCK3_A,
+ 		.desc.vsel_mask = DA9062AA_VBUCK3_A_MASK,
+ 		.desc.linear_min_sel = 0,
++		.desc.of_map_mode = da9062_map_buck_mode,
+ 		.sleep = REG_FIELD(DA9062AA_VBUCK3_A,
+ 			__builtin_ffs((int)DA9062AA_BUCK3_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -432,6 +448,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 		.desc.vsel_reg = DA9062AA_VBUCK4_A,
+ 		.desc.vsel_mask = DA9062AA_VBUCK4_A_MASK,
+ 		.desc.linear_min_sel = 0,
++		.desc.of_map_mode = da9062_map_buck_mode,
+ 		.sleep = REG_FIELD(DA9062AA_VBUCK4_A,
+ 			__builtin_ffs((int)DA9062AA_BUCK4_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -604,6 +621,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 		.desc.vsel_reg = DA9062AA_VBUCK1_A,
+ 		.desc.vsel_mask = DA9062AA_VBUCK1_A_MASK,
+ 		.desc.linear_min_sel = 0,
++		.desc.of_map_mode = da9062_map_buck_mode,
+ 		.sleep = REG_FIELD(DA9062AA_VBUCK1_A,
+ 			__builtin_ffs((int)DA9062AA_BUCK1_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -640,6 +658,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 		.desc.vsel_reg = DA9062AA_VBUCK2_A,
+ 		.desc.vsel_mask = DA9062AA_VBUCK2_A_MASK,
+ 		.desc.linear_min_sel = 0,
++		.desc.of_map_mode = da9062_map_buck_mode,
+ 		.sleep = REG_FIELD(DA9062AA_VBUCK2_A,
+ 			__builtin_ffs((int)DA9062AA_BUCK2_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -676,6 +695,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 		.desc.vsel_reg = DA9062AA_VBUCK3_A,
+ 		.desc.vsel_mask = DA9062AA_VBUCK3_A_MASK,
+ 		.desc.linear_min_sel = 0,
++		.desc.of_map_mode = da9062_map_buck_mode,
+ 		.sleep = REG_FIELD(DA9062AA_VBUCK3_A,
+ 			__builtin_ffs((int)DA9062AA_BUCK3_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -712,6 +732,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 		.desc.vsel_reg = DA9062AA_VBUCK4_A,
+ 		.desc.vsel_mask = DA9062AA_VBUCK4_A_MASK,
+ 		.desc.linear_min_sel = 0,
++		.desc.of_map_mode = da9062_map_buck_mode,
+ 		.sleep = REG_FIELD(DA9062AA_VBUCK4_A,
+ 			__builtin_ffs((int)DA9062AA_BUCK4_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
 -- 
 2.20.1
 
