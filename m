@@ -2,122 +2,121 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB8EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE4AC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773452072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:03:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iZ8+aNot"
+	by mail.kernel.org (Postfix) with ESMTP id D97092072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573794297;
+	bh=o4xVn6JWS/1SPWu+jKWiezJpPgRQKPQE3KnZ5ttMTZ0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=HOiSGFD4Rvm6ILshEL3+1wo9Z8gW9J9WZHblOwnaHz2dIlapmEGM0yoTnJQ2ZOOh+
+	 eY60lkPiBfHQ5p/kNMX5NNDPBZ1SB3S793h9V2v6xo4qdoA+2oKZxJVgLUZ8gT2+DL
+	 wszJ4gizGPGKdJbSYXzORLMcKVoskYnKn6J2wiao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbfKOFDX (ORCPT
+        id S1727096AbfKOFE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 00:03:23 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54151 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfKOFDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 00:03:23 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47DmT34pVtz9sP3;
-        Fri, 15 Nov 2019 16:03:19 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573794200;
-        bh=OAFeKSF/yqSzlXgKP5uS38QWQaYi2GwZ+7FrnVq8BjU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iZ8+aNotzcw9TY7qLrODyOb6zrReInMG0lEW+SoNA/r5Q1KTi1CM+bQBUPbVWTerv
-         y/hdcXHwB/qgAducPo2liy1espz6bAWOQspMJboGGi804qqrVGIszNKgkev+lypPpb
-         A1ge+12/a6wIQWrKwcydY9bUOfoQ+QP3goQExyywDuIyFdwgdunxSnQJjPKTvTWIMP
-         Cwm0OXLDVKuW+a94UcNVeG/gAf03w6YRv+0M30dWfbbK0hw0Skir5ukeT3IpAXhW94
-         ynlNQcjrB0OF6lj1x8P/FL9CepmJe+5bi0iiiGdkshW5orS1Yt6++Dx+NTSpHD6gIk
-         rIHiPHgc0lsDg==
-Date:   Fri, 15 Nov 2019 16:03:19 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the livepatching tree with the ftrace
- tree
-Message-ID: <20191115160319.2d84224d@canb.auug.org.au>
+        Fri, 15 Nov 2019 00:04:56 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41972 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfKOFE4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 00:04:56 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p26so5823320pfq.8;
+        Thu, 14 Nov 2019 21:04:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=GE6hQGhTHyMhnZauws25uJSkPSE0gyI3eS4kkDg4LbY=;
+        b=jwjQitG4mPk4I/rwoKlZTLvSKE8EYNuOR9HeBS3e6Yzlw2fSTLnVbhzI0JRTDK632W
+         UAKFTNWm2xYX393OCvjSX7IjRtGPrX4nn2LmYwlD/U3qG8LDGjAXmckITVOTwsTIs4j5
+         pd5lMpxNKuRQdLJtzMcTx8gon+3MINLJBUtLjTvGVI1PPphLEW2LAFb/FdnCh0tQIPnC
+         QjXPdj6PMV7LT7biwuJ5arXzrBXK2yuNFgTahwXuWP4i5NEUYq0lOVC1roQT/3LGuCsP
+         FNiftJ8raQqXlU9FBwpS64QYtEupSah+cT8/5OIr7arvrlEOkHXOhnC30FT/cMzEhTNu
+         loqQ==
+X-Gm-Message-State: APjAAAVdbzATFaEBIaxDlHRqihd4wW/Doy6Tg4pZVWV9BJmQhqzWBpZL
+        4wWcMIGI4hDb5lWHrYF30tp5L/suNmA=
+X-Google-Smtp-Source: APXvYqzvSdSzlDAanRSyD1+gCAKlRxwBmY9wZ3K7A1gRCQvAUTP7lL0PumlgCYaic91mNvz1oPwOog==
+X-Received: by 2002:a63:e145:: with SMTP id h5mr14385538pgk.447.1573794295347;
+        Thu, 14 Nov 2019 21:04:55 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:9d6:9cca:ff8c:efe0])
+        by smtp.gmail.com with ESMTPSA id y16sm9078871pfo.62.2019.11.14.21.04.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 21:04:54 -0800 (PST)
+Date:   Thu, 14 Nov 2019 21:04:53 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MIPS fixes
+Message-ID: <20191115050453.zcgijwj7qt7uvx2c@pburton-laptop>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/eccss_9xX3vHAyOCwFgNRNO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pl2idvt5zzjql3wu"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/eccss_9xX3vHAyOCwFgNRNO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+--pl2idvt5zzjql3wu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Today's linux-next merge of the livepatching tree got a conflict in:
+Hi Linus,
 
-  tools/testing/selftests/livepatch/Makefile
+Here's a single fix for SGI IP27 machines & a MAINTAINERS update; please
+pull.
 
-between commit:
+Thanks,
+    Paul
 
-  8c666d2ab576 ("selftests/livepatch: Test interaction with ftrace_enabled")
 
-from the ftrace tree and commit:
+The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
 
-  ecd25094c5f5 ("livepatch: Selftests of the API for tracking system state =
-changes")
+  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
 
-from the livepatching tree.
+are available in the Git repository at:
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.4_4
 
---=20
-Cheers,
-Stephen Rothwell
+for you to fetch changes up to f6929c92e283a35b183c293574adcbca409bf144:
 
-diff --cc tools/testing/selftests/livepatch/Makefile
-index 1886d9d94b88,1cf40a9e7185..000000000000
---- a/tools/testing/selftests/livepatch/Makefile
-+++ b/tools/testing/selftests/livepatch/Makefile
-@@@ -5,6 -5,6 +5,7 @@@ TEST_PROGS :=3D=20
-  	test-livepatch.sh \
-  	test-callbacks.sh \
-  	test-shadow-vars.sh \
-- 	test-ftrace.sh
-++	test-ftrace.sh \
-+ 	test-state.sh
- =20
-  include ../lib.mk
+  MAINTAINERS: Remove Kevin as maintainer of BMIPS generic platforms (2019-11-04 10:46:05 -0800)
 
---Sig_/eccss_9xX3vHAyOCwFgNRNO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+----------------------------------------------------------------
+A fix & simplification for SGI IP27 exception handlers, and a small
+MAINTAINERS update for Broadcom MIPS systems.
+
+----------------------------------------------------------------
+Florian Fainelli (1):
+      MAINTAINERS: Remove Kevin as maintainer of BMIPS generic platforms
+
+Thomas Bogendoerfer (1):
+      MIPS: SGI-IP27: fix exception handler replication
+
+ MAINTAINERS                      |  1 -
+ arch/mips/sgi-ip27/Kconfig       |  7 -------
+ arch/mips/sgi-ip27/ip27-init.c   | 21 ++++++---------------
+ arch/mips/sgi-ip27/ip27-memory.c |  4 ----
+ 4 files changed, 6 insertions(+), 27 deletions(-)
+
+--pl2idvt5zzjql3wu
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3OMZcACgkQAVBC80lX
-0GyHmQf/cz1NtlRPqaLLVIA6avaiLzK767nq/yA9qj0HU6KxxIwyDT0geGObPIEM
-yin7xkG+q6p7Ivl5iIJurhwfrQ53uOlqj7eHYzUvzQlcnTKfMdhn2IfqBBcHxUC/
-N3mLd57Bv94xRe8v1SYwIiGwuue/TYOVEvidvJAG14BWHoRCt4RIUreQtXn6zx49
-YyQjtxXsBCFGuk7XPw0emsY6PBgfOUg1sepWAACgZwdSDRr6KydnZq4m7uQ+jKI4
-Ey0yOO4gFOU2lu4MpAXCokS8cbTkNlsCcCQc3kHS/BXyOqr7MLDzofuPmJIYCrwy
-ARMxyzP/NnivzaMVmwG2Hk3Iad1/mw==
-=lDdk
+iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXc4x9QAKCRA+p5+stXUA
+3ScnAQCKK/Wzy90fKGnlhiXB2z+7Pdh0MLceC7rOkwdQJgs28wEA6DipbI11TQXU
+xe1El0zhm2K0aKV1hvHm7Q2ImjcYmAU=
+=0h92
 -----END PGP SIGNATURE-----
 
---Sig_/eccss_9xX3vHAyOCwFgNRNO--
+--pl2idvt5zzjql3wu--
