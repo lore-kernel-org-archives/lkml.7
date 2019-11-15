@@ -6,119 +6,83 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558C0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25888C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1082072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3C020729
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfKOFdy (ORCPT
+        id S1727238AbfKOFe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 00:33:54 -0500
-Received: from muru.com ([72.249.23.125]:42414 "EHLO muru.com"
+        Fri, 15 Nov 2019 00:34:57 -0500
+Received: from mail5.windriver.com ([192.103.53.11]:48684 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfKOFdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 00:33:53 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id C7FA980E7;
-        Fri, 15 Nov 2019 05:34:29 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH] phy: cpcap-usb: Fix error path when no host driver is loaded
-Date:   Thu, 14 Nov 2019 21:33:50 -0800
-Message-Id: <20191115053350.20004-1-tony@atomide.com>
-X-Mailer: git-send-email 2.23.0
+        id S1725848AbfKOFe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 00:34:57 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id xAF5Yh0X027136
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 14 Nov 2019 21:34:43 -0800
+Received: from pek-lpggp6.wrs.com (128.224.153.40) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.40) with Microsoft SMTP Server id 14.3.468.0; Thu, 14 Nov 2019
+ 21:34:42 -0800
+From:   Yongxin Liu <yongxin.liu@windriver.com>
+To:     <andy@infradead.org>, <dvhart@infradead.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mario.limonciello@dell.com>
+Subject: [PATCH] Revert "platform/x86: wmi: Destroy on cleanup rather than unregister"
+Date:   Fri, 15 Nov 2019 13:27:10 +0800
+Message-ID: <20191115052710.46880-1-yongxin.liu@windriver.com>
+X-Mailer: git-send-email 2.14.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If musb_mailbox() returns an error, we must still continue to finish
-configuring the phy.
+This reverts commit 7b11e8989618581bc0226ad313264cdc05d48d86.
 
-Otherwise the phy state may end up only half initialized, and this can
-cause the debug serial console to stop working. And this will happen if the
-usb driver musb controller is not loaded.
+Consider the following hardware setting.
 
-Let's fix the issue by adding helper for cpcap_usb_try_musb_mailbox().
+|-PNP0C14:00
+|  |-- device #1
+|-PNP0C14:01
+|  |-- device #2
 
-Fixes: 6d6ce40f63af ("phy: cpcap-usb: Add CPCAP PMIC USB support")
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+When unloading wmi driver module, device #2 will be first unregistered.
+But device_destroy() using MKDEV(0, 0) will locate PNP0C14:00 first
+and unregister it. This is incorrect. Should use device_unregister() to
+unregister the real parent device.
+
+Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
 ---
- drivers/phy/motorola/phy-cpcap-usb.c | 29 ++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ drivers/platform/x86/wmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
---- a/drivers/phy/motorola/phy-cpcap-usb.c
-+++ b/drivers/phy/motorola/phy-cpcap-usb.c
-@@ -207,6 +207,19 @@ static int cpcap_phy_get_ints_state(struct cpcap_phy_ddata *ddata,
- static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata);
- static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata);
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 59e9aa0f9643..e16f660aa117 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1347,7 +1347,7 @@ static int acpi_wmi_remove(struct platform_device *device)
+ 	acpi_remove_address_space_handler(acpi_device->handle,
+ 				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
+ 	wmi_free_devices(acpi_device);
+-	device_destroy(&wmi_bus_class, MKDEV(0, 0));
++	device_unregister((struct device *)dev_get_drvdata(&device->dev));
  
-+static void cpcap_usb_try_musb_mailbox(struct cpcap_phy_ddata *ddata,
-+				       enum musb_vbus_id_status status)
-+{
-+	int error;
-+
-+	error = musb_mailbox(status);
-+	if (!error)
-+		return;
-+
-+	dev_dbg(ddata->dev, "%s: musb_mailbox failed: %i\n",
-+		__func__, error);
-+}
-+
- static void cpcap_usb_detect(struct work_struct *work)
- {
- 	struct cpcap_phy_ddata *ddata;
-@@ -226,9 +239,7 @@ static void cpcap_usb_detect(struct work_struct *work)
- 		if (error)
- 			goto out_err;
+ 	return 0;
+ }
+@@ -1401,7 +1401,7 @@ static int acpi_wmi_probe(struct platform_device *device)
+ 	return 0;
  
--		error = musb_mailbox(MUSB_ID_GROUND);
--		if (error)
--			goto out_err;
-+		cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
+ err_remove_busdev:
+-	device_destroy(&wmi_bus_class, MKDEV(0, 0));
++	device_unregister(wmi_bus_dev);
  
- 		error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3,
- 					   CPCAP_BIT_VBUSSTBY_EN |
-@@ -257,9 +268,7 @@ static void cpcap_usb_detect(struct work_struct *work)
- 			error = cpcap_usb_set_usb_mode(ddata);
- 			if (error)
- 				goto out_err;
--			error = musb_mailbox(MUSB_ID_GROUND);
--			if (error)
--				goto out_err;
-+			cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
- 
- 			return;
- 		}
-@@ -269,16 +278,12 @@ static void cpcap_usb_detect(struct work_struct *work)
- 		error = cpcap_usb_set_usb_mode(ddata);
- 		if (error)
- 			goto out_err;
--		error = musb_mailbox(MUSB_VBUS_VALID);
--		if (error)
--			goto out_err;
-+		cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_VALID);
- 
- 		return;
- 	}
- 
--	error = musb_mailbox(MUSB_VBUS_OFF);
--	if (error)
--		goto out_err;
-+	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
- 
- 	/* Default to debug UART mode */
- 	error = cpcap_usb_set_uart_mode(ddata);
+ err_remove_notify_handler:
+ 	acpi_remove_notify_handler(acpi_device->handle, ACPI_DEVICE_NOTIFY,
 -- 
-2.23.0
+2.14.4
+
