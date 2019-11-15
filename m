@@ -7,54 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DA4C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FEDC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119F92073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48DF2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798919;
-	bh=DapC7MFQ0nomUONrp9RWoECZsN52MGyL7iftAmoKWwk=;
+	s=default; t=1573798921;
+	bh=84h4FQt6SJOXzFlgVAQq65w3ASczpQabMyKt2XJ2IA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZUE4yMKImDUroVxHyDJBIyuVZyfpANSqtfaQJG9X4aWNLvWJ6dUfLoG75CVte7Xt
-	 i2mxvNr50DQ2PFhoXPZwlxjJSjuemMzomngQnLL0oWNNbn2TfDnfOyVfJXGLKyCFmm
-	 kJwK6PJ36BOcoVrHbN+fE7f0okhtTqiY/MbPXHtY=
+	b=zN2mq2b0OOk9J72I0OvieT9C1JTYJ7adKhflE6Z9MxUB7K9cjGTFtB8YgMMor8sZh
+	 WMTbfAo1AU+U277jxpTnnxx16GjnA2in+yUqU96B00GRNdxdFiM9pXDJihKHm5g8cT
+	 9lKm8KmEbCPU896S5hPTkv201RbXtYmtwZBUzy78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfKOGV5 (ORCPT
+        id S1727547AbfKOGWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:21:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50954 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727510AbfKOGVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:21:55 -0500
+        id S1727528AbfKOGV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:21:57 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D1972073A;
-        Fri, 15 Nov 2019 06:21:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E0BC2073B;
+        Fri, 15 Nov 2019 06:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798914;
-        bh=DapC7MFQ0nomUONrp9RWoECZsN52MGyL7iftAmoKWwk=;
+        s=default; t=1573798916;
+        bh=84h4FQt6SJOXzFlgVAQq65w3ASczpQabMyKt2XJ2IA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SYprjwg7pPIlHplhBrOAoFYKdB1kzV9oTPsSNCmZx9ce1SwIKJAX0TACLxz9skols
-         y3g1B4DkHt8JaUSldSWoZYwFO1Kpnrt3LmWo8mOpXCvvPGyX3CFAVJE2Qsa2lPWhRp
-         A8aOoH1kscw8DL17Cqj01HrInBzi6xOJfUgKv8iw=
+        b=WJGv+B4PdIpRcuQFWHlnVDVEoBQMvtdcI7tLbxUK31lmMcCyi7T2IsyXxKU9RI3RS
+         jowgsEQQqTNaBrcKZ0wp/mN5LVW5XlVMSmCRbmtagOH+8EO/ST+NrSaN3BiOk901CA
+         J8Lbky8ZuDo2FCRpAQcSJjWkiubt+sTEgb2coTrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 01/31] kvm: mmu: Dont read PDPTEs when paging is not enabled
-Date:   Fri, 15 Nov 2019 14:20:30 +0800
-Message-Id: <20191115062010.110140555@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Neelima Krishnan <neelima.krishnan@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 10/31] x86/speculation/taa: Add sysfs reporting for TSX Async Abort
+Date:   Fri, 15 Nov 2019 14:20:39 +0800
+Message-Id: <20191115062013.337944928@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,40 +66,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junaid Shahid <junaids@google.com>
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-[ Upstream commit d35b34a9a70edae7ef923f100e51b8b5ae9fe899 ]
+commit 6608b45ac5ecb56f9e171252229c39580cc85f0f upstream.
 
-kvm should not attempt to read guest PDPTEs when CR0.PG = 0 and
-CR4.PAE = 1.
+Add the sysfs reporting file for TSX Async Abort. It exposes the
+vulnerability and the mitigation state similar to the existing files for
+the other hardware vulnerabilities.
 
-Signed-off-by: Junaid Shahid <junaids@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Sysfs file path is:
+/sys/devices/system/cpu/vulnerabilities/tsx_async_abort
+
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+Reviewed-by: Mark Gross <mgross@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kvm/x86.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   23 +++++++++++++++++++++++
+ drivers/base/cpu.c         |    9 +++++++++
+ include/linux/cpu.h        |    3 +++
+ 3 files changed, 35 insertions(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -587,7 +587,7 @@ static bool pdptrs_changed(struct kvm_vc
- 	gfn_t gfn;
- 	int r;
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1418,6 +1418,21 @@ static ssize_t mds_show_state(char *buf)
+ 		       sched_smt_active() ? "vulnerable" : "disabled");
+ }
  
--	if (is_long_mode(vcpu) || !is_pae(vcpu))
-+	if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
- 		return false;
++static ssize_t tsx_async_abort_show_state(char *buf)
++{
++	if ((taa_mitigation == TAA_MITIGATION_TSX_DISABLED) ||
++	    (taa_mitigation == TAA_MITIGATION_OFF))
++		return sprintf(buf, "%s\n", taa_strings[taa_mitigation]);
++
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
++		return sprintf(buf, "%s; SMT Host state unknown\n",
++			       taa_strings[taa_mitigation]);
++	}
++
++	return sprintf(buf, "%s; SMT %s\n", taa_strings[taa_mitigation],
++		       sched_smt_active() ? "vulnerable" : "disabled");
++}
++
+ static char *stibp_state(void)
+ {
+ 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+@@ -1483,6 +1498,9 @@ static ssize_t cpu_show_common(struct de
+ 	case X86_BUG_MDS:
+ 		return mds_show_state(buf);
  
- 	if (!test_bit(VCPU_EXREG_PDPTR,
-@@ -7491,7 +7491,7 @@ int kvm_arch_vcpu_ioctl_set_sregs(struct
- 		kvm_update_cpuid(vcpu);
- 
- 	idx = srcu_read_lock(&vcpu->kvm->srcu);
--	if (!is_long_mode(vcpu) && is_pae(vcpu)) {
-+	if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
- 		load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
- 		mmu_reset_needed = 1;
++	case X86_BUG_TAA:
++		return tsx_async_abort_show_state(buf);
++
+ 	default:
+ 		break;
  	}
+@@ -1519,4 +1537,9 @@ ssize_t cpu_show_mds(struct device *dev,
+ {
+ 	return cpu_show_common(dev, attr, buf, X86_BUG_MDS);
+ }
++
++ssize_t cpu_show_tsx_async_abort(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return cpu_show_common(dev, attr, buf, X86_BUG_TAA);
++}
+ #endif
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -537,12 +537,20 @@ ssize_t __weak cpu_show_mds(struct devic
+ 	return sprintf(buf, "Not affected\n");
+ }
+ 
++ssize_t __weak cpu_show_tsx_async_abort(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	return sprintf(buf, "Not affected\n");
++}
++
+ static DEVICE_ATTR(meltdown, 0444, cpu_show_meltdown, NULL);
+ static DEVICE_ATTR(spectre_v1, 0444, cpu_show_spectre_v1, NULL);
+ static DEVICE_ATTR(spectre_v2, 0444, cpu_show_spectre_v2, NULL);
+ static DEVICE_ATTR(spec_store_bypass, 0444, cpu_show_spec_store_bypass, NULL);
+ static DEVICE_ATTR(l1tf, 0444, cpu_show_l1tf, NULL);
+ static DEVICE_ATTR(mds, 0444, cpu_show_mds, NULL);
++static DEVICE_ATTR(tsx_async_abort, 0444, cpu_show_tsx_async_abort, NULL);
+ 
+ static struct attribute *cpu_root_vulnerabilities_attrs[] = {
+ 	&dev_attr_meltdown.attr,
+@@ -551,6 +559,7 @@ static struct attribute *cpu_root_vulner
+ 	&dev_attr_spec_store_bypass.attr,
+ 	&dev_attr_l1tf.attr,
+ 	&dev_attr_mds.attr,
++	&dev_attr_tsx_async_abort.attr,
+ 	NULL
+ };
+ 
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -56,6 +56,9 @@ extern ssize_t cpu_show_l1tf(struct devi
+ 			     struct device_attribute *attr, char *buf);
+ extern ssize_t cpu_show_mds(struct device *dev,
+ 			    struct device_attribute *attr, char *buf);
++extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
++					struct device_attribute *attr,
++					char *buf);
+ 
+ extern __printf(4, 5)
+ struct device *cpu_device_create(struct device *parent, void *drvdata,
 
 
