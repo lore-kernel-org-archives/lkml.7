@@ -2,119 +2,58 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336CFC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1D0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02FBE20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="LngHprQQ"
+	by mail.kernel.org (Postfix) with ESMTP id BECBE20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKOU0H (ORCPT
+        id S1726980AbfKOU1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 15:26:07 -0500
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:41675 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfKOU0H (ORCPT
+        Fri, 15 Nov 2019 15:27:33 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:40708 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfKOU1d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 15:26:07 -0500
-Received: by mail-pl1-f176.google.com with SMTP id d29so5415010plj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 12:26:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ZVwV0Su/mCSi6pnRKM6ly2exmq/+tkRldsAhX2HmYpw=;
-        b=LngHprQQ7rYIvRBtWm/sIjeg8lm9PDQxuHFPsluHRQi+shKhLsLOkluiN5+gXTz+W9
-         XPxh5MZkrDX9m/Q2TTPk2aC+Uy9jDGKSqFNFR1pQnPArW1sgqRffuDmCBLnSwBaSBjtX
-         /wTH93W3dEcTJ+5xKK3k2pchX1ponLhBkRlCZ6BG9xUy+Z0XV5DGywjMhEFSeQqgpykC
-         8ruHP7cIp1qyePB8IihR/XQhrzVWQC7NytGupkZf1sYvHvl01sk78DS3tl+JjEeN664/
-         rCfqeOPkkw6lH/lWiuWXvQT1k0xvcCXP0QYbrUOSvLhi2oKHmiRDYQ8PM9Et29p16zJQ
-         oKZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ZVwV0Su/mCSi6pnRKM6ly2exmq/+tkRldsAhX2HmYpw=;
-        b=tbGbp4yv8p3rSx0+Ar4b5zN01rpY+Jf1KqDCKq1A6fhX1Hhzd6RQG9BGrdZyWIqacj
-         t5/NZcbvBBn/xwBrmfrQue3N/Vj5xlEbR3z/T+kifeVq+UZczO8N/fAHUm56irDUuKRn
-         EYmNugvVWERwpOKEku3xuGCzgO88oYOgCNk6ZFQ+qyhsJwqiBPs0zQWut3pwghPAQpog
-         1lOuE7tiY3ILCbONi+nxlrtNiRVBA7lZt2vR0OuPZSkWLvfqRq0ADdcaRXdhbAtqiucU
-         YX76VV9QpDSMbHkHrwkTLV/lukvIeEsushacNXHWzSfT2dyVGBYyDDFNm/dttMq7SDmu
-         pk0w==
-X-Gm-Message-State: APjAAAX3ZtppJBisk4W+9Zic/XFdJpXFfxfXqDIR31nJ+QW8g2BGcvMT
-        7Y2nbO5la+Xdm/0YrroFOjw9b3RsXTs=
-X-Google-Smtp-Source: APXvYqxgJON4Hp0Zr/4qVu2XBMNK0Kh/I9QSz1bLmhwYersP8nge+yFcpGu9VYw0TBoaY6hZAW/Dww==
-X-Received: by 2002:a17:902:9343:: with SMTP id g3mr17421449plp.278.1573849566285;
-        Fri, 15 Nov 2019 12:26:06 -0800 (PST)
-Received: from debian ([122.164.27.240])
-        by smtp.gmail.com with ESMTPSA id x203sm11001126pgx.61.2019.11.15.12.26.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 12:26:05 -0800 (PST)
-Date:   Sat, 16 Nov 2019 01:55:59 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, jeffrin@rajagiritech.edu.in
-Subject: PROBLEM: error and warning from 5.4.0-rc7
-Message-ID: <20191115202559.GA160812@debian>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Fri, 15 Nov 2019 15:27:33 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5D2C814E119EE;
+        Fri, 15 Nov 2019 12:27:32 -0800 (PST)
+Date:   Fri, 15 Nov 2019 12:27:31 -0800 (PST)
+Message-Id: <20191115.122731.1145457374181096453.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next 0/7] net: stmmac: CPU Performance
+ Improvements
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1573731453.git.Jose.Abreu@synopsys.com>
+References: <cover.1573731453.git.Jose.Abreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 Nov 2019 12:27:32 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hello all
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Thu, 14 Nov 2019 12:42:44 +0100
 
-i get error and warning from a typical 5.4.0-rc7.
+> CPU Performance improvements for stmmac. Please check bellow for results
+> before and after the series.
+ ...
 
-------x--------x--error---x---------------x----
-
-$cat 5.4.0-rc7-error.txt 
-[    2.064029] Couldn't get size: 0x800000000000000e
-[   12.906185] tpm_tis MSFT0101:00: IRQ index 0 not found
-$
-
--------------x------------------x--------------
-
-
-
-----------x----------warning----x-------------x-------------------------x-------------
-
-$cat 5.4.0-rc7-warn.txt 
-[    0.249749] MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.
-[    0.249783]  #3
-[    0.253901] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
-[    2.011803] i8042: PNP: PS/2 appears to have AUX port disabled, if this is incorrect please boot with i8042.nopnp
-[    2.013717] rtc rtc0: invalid alarm value: 2019-11-14T14:63:40
-[    2.234933] sdhci-pci 0000:00:1e.6: failed to setup card detect gpio
-[    2.280028] i2c_hid i2c-ELAN1300:00: i2c-ELAN1300:00 supply vdd not found, using dummy regulator
-[    2.280065] i2c_hid i2c-ELAN1300:00: i2c-ELAN1300:00 supply vddl not found, using dummy regulator
-[    3.043252] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x83 has wMaxPacketSize 0, skipping
-[    3.043254] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x3 has wMaxPacketSize 0, skipping
-[   15.114547] platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
-[   16.059585] uvcvideo 1-6:1.0: Entity type for entity Extension 4 was not initialized!
-[   16.059587] uvcvideo 1-6:1.0: Entity type for entity Processing 2 was not initialized!
-[   16.059588] uvcvideo 1-6:1.0: Entity type for entity Camera 1 was not initialized!
-[   23.368830] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x83 has wMaxPacketSize 0, skipping
-[   23.368835] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x3 has wMaxPacketSize 0, skipping
-[ 1415.852546] done.
-[ 1416.144078] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x83 has wMaxPacketSize 0, skipping
-[ 1416.144083] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x3 has wMaxPacketSize 0, skipping
-[ 1421.652063] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x83 has wMaxPacketSize 0, skipping
-[ 1421.652068] usb 1-8: config 1 interface 1 altsetting 0 endpoint 0x3 has wMaxPacketSize 0, skipping
-$
-
-------------------x-------------------x-------------------x----------------
-
-
-
---
-software engineer
-rajagiri school of engineering and technology
+Series applied, thanks.
