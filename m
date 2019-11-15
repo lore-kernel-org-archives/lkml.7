@@ -2,112 +2,96 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427EFC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E657C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3CA2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364FF20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573818381;
-	bh=+JETbYn9GhjlZ4SS63mSBzSyRhWCuR9wadNvfdwHQcA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KTnk42/6KNaeOBqDnN/hDi5zbz4CvbF2LZtVXuDr+cmReDP1k7x3p132qcHru1t07
-	 BR17HLaW/65JPmj3YK0m7F4HvvrISI+AEnn3919VMVxxyOiz3QjDCVUlNnMliNOtew
-	 kY/c/bAztchicQgD93Jnu0NIgQbSLD7hpaMDyzmY=
+	s=default; t=1573818390;
+	bh=0ghNXRxv0XQeQoTUBbtxGBMNkhSqvp2R6oRI3ThRTFY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=WyNyC2WoMxSdwudIL45s42OPYjbX62ueiC2qL5b7xHyeOS6Of8HCpRMXRspv4WKda
+	 rynPlbeBXCK8+ekvFUkP7S5OKpmJq/+EsB92EisCZ425mVoZtTAUxEO5Km8o5eEFyl
+	 qkSPw8lky7vsp2gYbondJ3KA9DPskrd+SNqJta2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfKOLqU (ORCPT
+        id S1727450AbfKOLq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:46:20 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36074 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbfKOLqT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:46:19 -0500
-Received: by mail-oi1-f196.google.com with SMTP id j7so8374726oib.3;
-        Fri, 15 Nov 2019 03:46:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xFqS/qZz0IFP6XdyI3eRL4Ng99szmuHxo7BYforgxcw=;
-        b=jh5jbtMb0NXm9Vvrwf9neWAM3gCpT51X7iGRukk+0/+6NbdOqW4CtSHykinvWzUx6r
-         hjpA/+WJ2yTq6HU28P2Bo36hNMLB8uoNxsFOrUu6TvW5GOLS1aqVklUpEzFGDNOwCnfr
-         5GNGnFCv+gn3BCdRohkLXHQxak0RkOvRItYa6MAFStViGg0b+w81FZ64bduWHXRWLqDT
-         7vAQg3Ev/YoGmDGfEfBWyiC33JtIeftt4ikf7xNCNstKnMFJiWM7Xik7I3KCX5XQtTn+
-         F4VBmO547gY29TpZpYLrrlNKvPpGacrSynbSPseKxhBZENs7PwXMP9M0N3VTwjfHDkJj
-         fh+Q==
-X-Gm-Message-State: APjAAAVh0ehWU7P13HRv68Ii26VFr7WjkF3BlW5y10rPNTd+kKS8GiSc
-        /9HUQzddBafYSjnaYdv0NZXZJKchmCwdeUgf6bM=
-X-Google-Smtp-Source: APXvYqx73oJAcN5YwdEQcOHXx+83dFzsmmK0zqs/TLO/k3CdjLE3Sho8BRt5Zbj2Du8Xu/eW9AftkdzYHUoWsG6RTJU=
-X-Received: by 2002:a05:6808:901:: with SMTP id w1mr7725371oih.57.1573818378589;
- Fri, 15 Nov 2019 03:46:18 -0800 (PST)
+        Fri, 15 Nov 2019 06:46:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727421AbfKOLq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 06:46:28 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E9892072D;
+        Fri, 15 Nov 2019 11:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573818388;
+        bh=0ghNXRxv0XQeQoTUBbtxGBMNkhSqvp2R6oRI3ThRTFY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=T0MLys2PWf3E9IxL9JNS4kd1xgRhpnnkT5AK7kZyYHiMYj9LZ9U76dsuvoqMRp8VS
+         UaRpzT4yEF60waHyxcMGDqTL6eyEUyIqaIbyB/tjJ4o0b57ujUQiZMg/3q8fX/aayf
+         5iVGojPoXcT+GHRX63/0C3jg3fXYvgSU9f9aCDKc=
+Date:   Fri, 15 Nov 2019 11:46:24 +0000
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     catalin.marinas@arm.com,
+        Linux ARM Kernel Mailing List 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] arm64: Fix for -rc8 / final
+Message-ID: <20191115114622.GA12198@willie-the-truck>
 MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
-In-Reply-To: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 15 Nov 2019 12:46:07 +0100
-Message-ID: <CAJZ5v0gCffTP-GsmbmjoJ5K7QMk7egYipMiKu+89Q1PAhRyrQA@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 6:07 PM Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> which might be inefficient when cpufreq driver has rate limitation.
->
-> When a task is attached on a CPU, we have call path:
->
-> update_load_avg()
->   update_cfs_rq_load_avg()
->     cfs_rq_util_change -- > trig frequency update
->   attach_entity_load_avg()
->     cfs_rq_util_change -- > trig frequency update
->
-> The 1st frequency update will not take into account the utilization of the
-> newly attached task and the 2nd one might be discard because of rate
-> limitation of the cpufreq driver.
+Hi Linus,
 
-Kind of on a second thought, it shouldn't matter for governors other
-than schedutil that the new task's utilization is not taken into
-account by the first update, because they measure utilization by
-themselves.
+Please pull this one trivial fix for -rc8/final that ensures that the
+script used to detect RELR relocation support in the toolchain works
+correctly when $CC contains quotes. Although it fails safely (by failing
+to detect the support when it exists), it would be nice to have this
+fixed in 5.4 given that it was only introduced in the last merge window.
 
-> update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> and update_load_avg() so we can move the call to
-> cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
-> interesting to notice that update_load_avg() already calls directly
-> cfs_rq_util_change() for !SMP case.
->
-> This changes will also ensure that cpufreq_update_util() is called even
-> when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-> irq, rt or dl pelt signals.
+Thanks,
 
-So this change appears to be the relevant one for non-schedutil governors.
+Will
 
-Now, there is a rate limit in schedutil too, see
-sugov_should_update_freq(), but I'm not sure if that matters in the
-context of this patch.
+--->8
+
+The following changes since commit 6767df245f4736d0cf0c6fb7cf9cf94b27414245:
+
+  arm64: Do not mask out PTE_RDONLY in pte_same() (2019-11-06 19:31:56 +0000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 65e1f38d9a2f07d4b81f369864c105880e47bd5a:
+
+  scripts/tools-support-relr.sh: un-quote variables (2019-11-13 10:52:05 +0000)
+
+----------------------------------------------------------------
+arm64 fix for -rc8 / final
+
+- Handle CC variables containing quotes in tools-support-relr.sh script
+
+----------------------------------------------------------------
+Ilie Halip (1):
+      scripts/tools-support-relr.sh: un-quote variables
+
+ scripts/tools-support-relr.sh | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
