@@ -2,224 +2,66 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9866AC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE20DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7D920715
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OEh7auQ/"
+	by mail.kernel.org (Postfix) with ESMTP id 9F4E220715
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfKOPbu (ORCPT
+        id S1727656AbfKOPeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:31:50 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46752 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbfKOPbu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:31:50 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e9so11098495ljp.13
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 07:31:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ykMLw7c6H8/K5CaztcyfkwioTDKwoxliChMIVSSHonE=;
-        b=OEh7auQ/a82nLIsYH5bimIotZ6VGn0EP4rnWaNo08EsuWLTfnju/KOe/Vh8VX6fE5C
-         hGyspaPy8Fhfy7l/5PT5aQ5gkMeVCa6SIQonXQuuASEjYRxOxNyOJEGMyeAbaWo8mzgq
-         LJ/LEO8eib4gwWaT83FUU2b4icQH2AB8CfaMShV9nB+HiX5dlbJedQSTfhLxF3MOF93U
-         b9+pU1VG/VH14u/Ssv1exGuRXH0MPl6Cf7MxEu8tmIJRu8JrxHQXeeqSZ347Bw+GqZkC
-         Bd2248apFA2wYiD7C5emF1DhRFWM5qFXcPVkJp0zZi0aplWPH5uQi8GctTmt664UrHUb
-         NaHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ykMLw7c6H8/K5CaztcyfkwioTDKwoxliChMIVSSHonE=;
-        b=Ndud46ww1SGseJU8GA6gDCSXLogjqwG2i83zLuICSEkLtVgMFLY6t1vaRDMuZJyUCA
-         C0iNJpoech1mYStrrMoRqF42mEg0U1AIrzx/Dv8AVzXUH9/OPrwmGDtw2A16m3MRf5f9
-         OOjJVFAwIj9plZtjFutgIOxtk9PFrLtQ7BHP4KyQ7FVQ8tRw9hS7cY3RXiafXboH1pIM
-         w+22a/OLf6vyGz/kiH4DOvCU3FPAdddIvuCZP9kFT2DVYYXeW7pxB/wT5G2/ZUbU8l8p
-         QRIfGYtV6ZsTe21XrIm6ZBIUCjZxRbBe7masEb4Xxci6jereElwYwnNmSni1X5I0BIAN
-         9qPg==
-X-Gm-Message-State: APjAAAUFI829FqDVzwlEKAAv18YPRQoHvXdsTmpWsP9dlR/CET9VsEOC
-        oLlyVjBvtZIXMiukTPDfoOWBoDB5UCjX2+MwQmPluQ==
-X-Google-Smtp-Source: APXvYqwlKVcJKcJym0hbZ2tjVVBo4LzGmnYLWGfHlD3WOYhJNMzYPHJf4/MpUQOsYELfViEMD6QYR4ykc2DiuV6pqCQ=
-X-Received: by 2002:a2e:9748:: with SMTP id f8mr10390818ljj.87.1573831907226;
- Fri, 15 Nov 2019 07:31:47 -0800 (PST)
-MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115132520.GJ4131@hirez.programming.kicks-ass.net> <CAKfTPtB4UGmZ53iVRsOV+k4MiS=Dzqw2-6_sBhko0bHRMAed2g@mail.gmail.com>
- <20191115151220.GO4131@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191115151220.GO4131@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 15 Nov 2019 16:31:35 +0100
-Message-ID: <CAKfTPtCg-zEysYmGSFTa4bjh0D=sf1UsT0WpeWcVrb9SLt+VZw@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Fri, 15 Nov 2019 10:34:17 -0500
+Received: from mga02.intel.com ([134.134.136.20]:25964 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727526AbfKOPeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 10:34:17 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 07:34:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
+   d="scan'208";a="208449702"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga006.jf.intel.com with ESMTP; 15 Nov 2019 07:34:16 -0800
+Date:   Fri, 15 Nov 2019 07:34:16 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 06/16] x86/cpu: Clear VMX feature flag if VMX is not
+ fully enabled
+Message-ID: <20191115153416.GA6055@linux.intel.com>
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+ <20191022000836.1907-1-sean.j.christopherson@intel.com>
+ <20191025163858.GF6483@zn.tnic>
+ <20191114183238.GH24045@linux.intel.com>
+ <5aacaba0-76e2-9824-ebd4-fa510bce712d@redhat.com>
+ <20191115103434.GH18929@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115103434.GH18929@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 16:12, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Nov 15, 2019 at 02:37:27PM +0100, Vincent Guittot wrote:
-> > On Fri, 15 Nov 2019 at 14:25, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > > Should not all 3 have their windows aligned and thus alway return the
-> > > exact same value?
-> >
-> > rt and dl yes but not irq
-> >
-> > But having aligned window doesn't mean that they will all decay.
-> > One can have been updated just before (during a dequeue as an example)
-> > or at least less than 1ms before
->
-> Now, the thing is, if that update happened in sched/rt, then it wouldn't
-> have called cpufreq anyway. And once we're idle longer than a period,
-> they'll all decay at once.
->
-> Except indeed that IRQ stuff, which runs out of sync.
->
-> That is, I'm just not convinced it matters much if we keep rq->cfs
-> on the list forever (like UP). Because we'll only stop calling when
-> update_blocked_averages() when everything hit 0, and up until that
-> point, we'll get one update per period from rq->cfs.
->
-> For good measure we can force an update when @done, at that point we
-> know all 0s.
->
-> How is something like this?
->
-> ---
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 545bcb90b4de..a99ac2aa4a23 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -3508,9 +3508,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
->         cfs_rq->load_last_update_time_copy = sa->last_update_time;
->  #endif
->
-> -       if (decayed)
-> -               cfs_rq_util_change(cfs_rq, 0);
-> -
->         return decayed;
->  }
->
-> @@ -3620,8 +3617,12 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->                 attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
->                 update_tg_load_avg(cfs_rq, 0);
->
-> -       } else if (decayed && (flags & UPDATE_TG))
-> -               update_tg_load_avg(cfs_rq, 0);
-> +       } else if (decayed) {
-> +               cfs_rq_util_change(cfs_rq, 0);
-> +
-> +               if (flags & UPDATE_TG)
-> +                       update_tg_load_avg(cfs_rq, 0);
-> +       }
->  }
->
->  #ifndef CONFIG_64BIT
-> @@ -7453,7 +7454,7 @@ static void update_blocked_averages(int cpu)
->         struct cfs_rq *cfs_rq, *pos;
->         const struct sched_class *curr_class;
->         struct rq_flags rf;
-> -       bool done = true;
-> +       bool done = true, decayed = false;
->
->         rq_lock_irqsave(rq, &rf);
->         update_rq_clock(rq);
-> @@ -7476,10 +7477,14 @@ static void update_blocked_averages(int cpu)
->          * list_add_leaf_cfs_rq() for details.
->          */
->         for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
-> +               bool last = cfs_rq == &rq->cfs;
->                 struct sched_entity *se;
->
-> -               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
-> +               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
->                         update_tg_load_avg(cfs_rq, 0);
-> +                       if (last)
+On Fri, Nov 15, 2019 at 11:34:34AM +0100, Borislav Petkov wrote:
+> Btw, Sean, are you sending a new version of this ontop of latest
+> tip/master or linux-next or so? I'd like to look at the rest of the bits
+> in detail.
 
-using this last make code more readable
-
-> +                               decayed = true;
-> +               }
->
->                 /* Propagate pending load changes to the parent, if any: */
->                 se = cfs_rq->tg->se[cpu];
-> @@ -7490,7 +7495,7 @@ static void update_blocked_averages(int cpu)
->                  * There can be a lot of idle CPU cgroups.  Don't let fully
->                  * decayed cfs_rqs linger on the list.
->                  */
-> -               if (cfs_rq_is_decayed(cfs_rq))
-> +               if (!last && cfs_rq_is_decayed(cfs_rq))
->                         list_del_leaf_cfs_rq(cfs_rq);
-
-Keeping root cfs in the list will not change anything now that
-cfs_rq_util_change is in update_load_avg()
-cfs_rq_util_change will not be called
-
->
->                 /* Don't need periodic decay once load/util_avg are null */
-> @@ -7498,6 +7503,9 @@ static void update_blocked_averages(int cpu)
->                         done = false;
->         }
->
-> +       if (decayed || done)
-
-I'm not sure to get why you want to call cpufreq when done is true
-which means that everything reaches 0
-Why do you prefer to use done instead of ORing the decay of  rt, dl,
-irq and cfs ?
-
-> +               cpufreq_update_util(rq, 0);
-> +
->         update_blocked_load_status(rq, !done);
->         rq_unlock_irqrestore(rq, &rf);
->  }
-> @@ -7555,6 +7563,7 @@ static inline void update_blocked_averages(int cpu)
->         struct cfs_rq *cfs_rq = &rq->cfs;
->         const struct sched_class *curr_class;
->         struct rq_flags rf;
-> +       bool done, decayed;
->
->         rq_lock_irqsave(rq, &rf);
->         update_rq_clock(rq);
-> @@ -7568,9 +7577,13 @@ static inline void update_blocked_averages(int cpu)
->         update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
->         update_irq_load_avg(rq, 0);
->
-> -       update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-> +       decayed = update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-> +       done = !(cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
->
-> -       update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
-> +       if (decayed || done)
-> +               cpufreq_update_util(rq, 0);
-> +
-> +       update_blocked_load_status(rq, !done);
->         rq_unlock_irqrestore(rq, &rf);
->  }
->
+Sure, I'll rebase and get a new version sent out today.
