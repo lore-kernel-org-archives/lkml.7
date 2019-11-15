@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA171C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C7CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5AB2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E88820659
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cofN0QFd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJDRQGwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbfKOCbw (ORCPT
+        id S1727359AbfKOCcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 21:31:52 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42405 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfKOCbw (ORCPT
+        Thu, 14 Nov 2019 21:32:11 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46483 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfKOCcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 21:31:52 -0500
-Received: by mail-pl1-f193.google.com with SMTP id j12so3599615plt.9;
-        Thu, 14 Nov 2019 18:31:52 -0800 (PST)
+        Thu, 14 Nov 2019 21:32:10 -0500
+Received: by mail-pl1-f195.google.com with SMTP id l4so3590426plt.13;
+        Thu, 14 Nov 2019 18:32:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=h6woE9Nax3taBQLO1Xq0hMJ7t3v77ZgaLEpNXtLBqYw=;
-        b=cofN0QFdBQBBZWBqAPL412SkfosAs2T/j5MlC1NZhQzLYZAtGY9qZbMfv8MLf82obh
-         LRJwCuHNn257xPQ5RQB9uUsATL4ZTdt8IrDYhMR+L/I/ITBarNbQ8zVSbX5/W5vslT9A
-         i0xNn13K4Fbxtw3E56WGx8PpABojvQKBxziNhraKhL3P9HOMOPa1v6kaxmkDBm+ffsUv
-         MFapumUuBTESODXze8NVdNohz1ejFxjNwAcCPl4YRwkOkfQEE5sxt452JRpVCkKTNPgD
-         R67M+cUvo0GQU+IeXVRMsYQtKjwaCsXWtPACBRYRfnMde6kJ2WVmTMwxtuT6A4QUPpAC
-         83Qg==
+        bh=Fttiw/oDs0Uq/UnWiexTFTxknwV5NhGvclqPw1ctNSU=;
+        b=HJDRQGwiWTXXahopW3SPScUyfWClkXLkzhOMG+QqK5jZByeQfh2vI1DxspRH7/DRWU
+         +qdS/AIqHnPA7hx26YkxeazCQeXxCF2IXaeDf69MDsULoP+dmIyueLysDK28M8G1taYq
+         SgnyFmHlULD4/xx56TDNVD5U+JH2/qkquWYHLNvicyUbc2SPndcWFah8JxMz+fLwBlbj
+         Je2U8vvRtE0YygnIAAchhCS84v6e3yRKoQGAno1diVGzapVLUHviod28rr7KioVrVjdt
+         AcYYit7rKve6odhXePpnEWvhEN7xh9TLAPAO2EA/jsykn+6PL3I61C0UQr0YQmFUchKi
+         XlYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=h6woE9Nax3taBQLO1Xq0hMJ7t3v77ZgaLEpNXtLBqYw=;
-        b=XYHql//KS2ixqzKK9htN0maaw4PhWVlF+r+vA63vL3yKawkcs5EUfZl2djI7XA0xkY
-         2gNp3t3nmRmpPZ2qjYdC/OPptOXZ3Aj66b8CLaNUMo5VmoZ62brosWlxO2GVLDt02APE
-         Hkdrepk2em7gq+ujHzhLY66IqBg59MC6CFl5pmzIeDzSRIqv3xq3QXgYQncuYJbtjh3o
-         H4TH/V5fKLDr1fDa+q23Ubrz3U5DQe7ewId5mFjDkkEj+psWtFZ90LJHUvU50vClfi+N
-         Ei7hx32HDaYuP4auFzxmi9ifzm8yn6e6gW6bUkOrqCxeV/Q+sX/i2H00eLWJlHmmM8Fa
-         6Bjw==
-X-Gm-Message-State: APjAAAXH8V4MZRTc4spxXwUGo/s11zGvOdBnuTBkU9/BW7m7nS6tZ6Mb
-        zaWbGO5HiRJ9qs/tC0+Snslme3B9m2w=
-X-Google-Smtp-Source: APXvYqzAUhIBw+VcQnG1lY6CysbVw9ZlCNeOQjQh+LQA3QxviXODi/AYf0p2v6NWz+/SnyQKQTdaXg==
-X-Received: by 2002:a17:902:b614:: with SMTP id b20mr12718401pls.305.1573785111544;
-        Thu, 14 Nov 2019 18:31:51 -0800 (PST)
+        bh=Fttiw/oDs0Uq/UnWiexTFTxknwV5NhGvclqPw1ctNSU=;
+        b=aUJn8xnt+GlTRHbLNeffth1IgiZlESOJd5uc7c3ooIAfIyTzUKAQdh/KF8OcChSzfp
+         Kul2255mL1efCC6DI7OvuKB5FTZCPzGrFBiwButjO664M5+dxd6ZmM2Iey6PCmUaf3wy
+         Nuy0M0rEanKKKUYLTwAOD7f7xvKEFoivaev0VKE72KcuTvNH2SWtFYiwuzazRdtV+jwE
+         tVIygLeUTNiOefIfYOylCDLN8hYgk+TQgXvVfkRxLOIj+VfwC7q8J6EP3HK2ufGL50aT
+         UzqY5nfLVYAS6MS1Nhvu8AEqTXLcIjSZ9MDaLkIiWvW5B8H31CyO4I2u1Ly3z819Lzp9
+         irUQ==
+X-Gm-Message-State: APjAAAW4QqyH09FRROq4BNQZhPPNfOs6FgIiMajnO9vEI4VUV4+Ko+X6
+        dgM16udKkU5cHbWR+lSK73w=
+X-Google-Smtp-Source: APXvYqw5ylN3GmwZ9XCb7MShZDLrbWVcOxet3FjwxUvO1N+H10zg72dbh/XJTvtrQvZtGVwhA7YNUg==
+X-Received: by 2002:a17:902:7444:: with SMTP id e4mr12548883plt.48.1573785130116;
+        Thu, 14 Nov 2019 18:32:10 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id u20sm9464351pgo.50.2019.11.14.18.31.48
+        by smtp.gmail.com with ESMTPSA id a16sm7691223pfc.56.2019.11.14.18.32.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 18:31:50 -0800 (PST)
+        Thu, 14 Nov 2019 18:32:09 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] media: pxa_camera: add missed tasklet_kill
-Date:   Fri, 15 Nov 2019 10:31:43 +0800
-Message-Id: <20191115023143.7128-1-hslester96@gmail.com>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] net: macb: add missed tasklet_kill
+Date:   Fri, 15 Nov 2019 10:32:01 +0800
+Message-Id: <20191115023201.7188-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,34 +73,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver forgets to kill tasklet when probe fails and remove.
-Add the calls to fix it.
+This driver forgets to kill tasklet in remove.
+Add the call to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/media/platform/pxa_camera.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/cadence/macb_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
-index 8d47ea0c33f8..43ae645d866b 100644
---- a/drivers/media/platform/pxa_camera.c
-+++ b/drivers/media/platform/pxa_camera.c
-@@ -2530,6 +2530,7 @@ static int pxa_camera_probe(struct platform_device *pdev)
- 	v4l2_device_unregister(&pcdev->v4l2_dev);
- exit_deactivate:
- 	pxa_camera_deactivate(pcdev);
-+	tasklet_kill(&pcdev->task_eof);
- exit_free_dma:
- 	dma_release_channel(pcdev->dma_chans[2]);
- exit_free_dma_u:
-@@ -2544,6 +2545,7 @@ static int pxa_camera_remove(struct platform_device *pdev)
- 	struct pxa_camera_dev *pcdev = dev_get_drvdata(&pdev->dev);
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 1e1b774e1953..2ec416098fa3 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4383,6 +4383,7 @@ static int macb_remove(struct platform_device *pdev)
  
- 	pxa_camera_deactivate(pcdev);
-+	tasklet_kill(&pcdev->task_eof);
- 	dma_release_channel(pcdev->dma_chans[0]);
- 	dma_release_channel(pcdev->dma_chans[1]);
- 	dma_release_channel(pcdev->dma_chans[2]);
+ 	if (dev) {
+ 		bp = netdev_priv(dev);
++		tasklet_kill(&bp->hresp_err_tasklet);
+ 		if (dev->phydev)
+ 			phy_disconnect(dev->phydev);
+ 		mdiobus_unregister(bp->mii_bus);
 -- 
 2.24.0
 
