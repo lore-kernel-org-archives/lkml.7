@@ -2,107 +2,126 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA9DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9902EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CF320718
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:18:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q1j/WVVW"
+	by mail.kernel.org (Postfix) with ESMTP id 6F5BD20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573813147;
+	bh=NZ63NmQNdqqOg8QZk/cSBZAcCPCaW4OKgvlGkuOPuu8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0qtJz+4d4lBc5VRHN6rsacGTtgHqdrSyPqw+YW0hlV13kzgLTxP/SAZ4AiEtsIFyV
+	 OXoD03YTi4V0Fl9dvuOiAseZCN56tHbQxQEaCfTGRdT4UxTLC2owp7NgPaDo4MOuM6
+	 vt3CU54KcB+FnRddXoCRZsV0qX1dpswz3GI41HLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfKOKSv (ORCPT
+        id S1727653AbfKOKTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:18:51 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:58990 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727210AbfKOKSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:18:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YDvUZ1Hjvu2Y0zfQ41yF7z6oWVUTYWyxCjOIEg/zrLM=; b=Q1j/WVVWMgR7ADpplI8+Mh5xy
-        Lb1pi3AMLogapbukX3zscigH6wuB6DKf23ZZ5ebNPh9FQbyjTGgf0fOup7UmbFGP1tx/Ux6gpTYd/
-        s/Bd3Pmzk77VpAC6h5GdeGfDmeMGv2CfWs2ZrZMvbTALF963pM38VPU2MvCt5dZx2H7b/Jlihig8u
-        IuL2XtaNbDEAnjHsUo36PpjOdrMxrEFJuOXVXcpHhcKbZwbQZXXZEkI9wrrdykX7v+pcK/c+R/RQ+
-        nAdU/plUCfG5Zzipe+NfSVt0/DzFu8RXrzvkgTXcQGaeSAXhuutNa88peREFz+HTk+Nq7SAUezzug
-        xrRKaIaXQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVYgT-0006CB-1p; Fri, 15 Nov 2019 10:18:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Fri, 15 Nov 2019 05:19:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfKOKTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:19:06 -0500
+Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 162E3303D9F;
-        Fri, 15 Nov 2019 11:17:23 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 286A22B128BE7; Fri, 15 Nov 2019 11:18:31 +0100 (CET)
-Date:   Fri, 15 Nov 2019 11:18:31 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH 3/9] sched/vtime: Handle nice updates under vtime
-Message-ID: <20191115101831.GW5671@hirez.programming.kicks-ass.net>
-References: <20191106030807.31091-1-frederic@kernel.org>
- <20191106030807.31091-4-frederic@kernel.org>
- <20191115101648.GC4131@hirez.programming.kicks-ass.net>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8604420718;
+        Fri, 15 Nov 2019 10:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573813145;
+        bh=NZ63NmQNdqqOg8QZk/cSBZAcCPCaW4OKgvlGkuOPuu8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=By8G6G5e28iA0Gr4bOhEr021LSlPDBGfHVO0N5aCMvrVTJJvlcseP8YM2r4e+EJYq
+         TQQAo+FYUxYBJ7e2EpyKYTq3uMup1e9SWyd6iEUlzU7hd8hRDAKNDTxWgS8qc3CwBU
+         xaheU4z7POPb7ogz3JHCyaVaoGyErw0LNtkwTLPY=
+Date:   Fri, 15 Nov 2019 18:19:02 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jouni =?iso-8859-1?Q?H=F6gander?= <jouni.hogander@unikie.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH] drivers/base: Fix memory leak in error paths
+Message-ID: <20191115101902.GB337025@kroah.com>
+References: <20191114121840.5585-1-jouni.hogander@unikie.com>
+ <20191115032603.GG793701@kroah.com>
+ <878soha7tc.fsf@unikie.com>
+ <20191115082022.GB55909@kroah.com>
+ <8736epa202.fsf@unikie.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191115101648.GC4131@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8736epa202.fsf@unikie.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 11:16:48AM +0100, Peter Zijlstra wrote:
-> On Wed, Nov 06, 2019 at 04:08:01AM +0100, Frederic Weisbecker wrote:
-> > The cputime niceness is determined while checking the target's nice value
-> > at cputime accounting time. Under vtime this happens on context switches,
-> > user exit and guest exit. But nice value updates while the target is
-> > running are not taken into account.
-> > 
-> > So if a task runs tickless for 10 seconds in userspace but it has been
-> > reniced after 5 seconds from -1 (not nice) to 1 (nice), on user exit
-> > vtime will account the whole 10 seconds as CPUTIME_NICE because it only
-> > sees the latest nice value at accounting time which is 1 here. Yet it's
-> > wrong, 5 seconds should be accounted as CPUTIME_USER and 5 seconds as
-> > CPUTIME_NICE.
-> > 
-> > In order to solve this, we now cover nice updates withing three cases:
-> > 
-> > * If the nice updater is the current task, although we are in kernel
-> >   mode there can be pending user or guest time in the cache to flush
-> >   under the prior nice state. Account these if any. Also toggle the
-> >   vtime nice flag for further user/guest cputime accounting.
-> > 
-> > * If the target runs on a different CPU, we interrupt it with an IPI to
-> >   update the vtime state in place. If the task is running in user or
-> >   guest, the pending cputime is accounted under the prior nice state.
-> >   Then the vtime nice flag is toggled for further user/guest cputime
-> >   accounting.
+On Fri, Nov 15, 2019 at 12:05:17PM +0200, Jouni Högander wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 > 
-> But but but, I thought the idea was to _never_ send interrupts to
-> NOHZ_FULL cpus ?!?
+> >> >> This memory leak was reported by Syzkaller:
+> >> >> 
+> >> >> BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
+> >> >>   comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
+> >> >>   hex dump (first 32 bytes):
+> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+> >> >>   backtrace:
+> >> >>     [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
+> >> >>     [<000000002340019b>] device_add+0x882/0x1750
+> >> >>     [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
+> >> >>     [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
+> >> >>     [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
+> >> >>     [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
+> >> >>     [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
+> >> >>     [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
+> >> >>     [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
+> >> >>     [<00000000984cabb9>] do_syscall_64+0x16f/0x580
+> >> >>     [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >> >>     [<00000000e6ca2d9f>] 0xffffffffffffffff
+> >> >
+> >> > How is this a leak?  This is in device_add(), not removing the device.
+> >> > When the structure really is freed then it can be removed.
+> >> 
+> >> In net/core/net-sysfs.c:netdev_register_kobject device_add allocates
+> >> dev->p. Now if register_queue_kobjects fails the error path is calling
+> >> device_del and dev->p is never freed. Proper fix here could be to call
+> >> put_device after device_del?
+> >
+> > Hm, this sounds like you have a reference count leak here, as
+> > put_device() should be properly called already in this case.  You might
+> > want to look further to see where exactly the register_queue_kobjects()
+> > call fails in order to see if we grabbed a reference we forgot to put
+> > back on an error path.
+> 
+> Ok, did some more debugging on
+> this. net/core/net-sysfs.c:netdev_register_kobject is doing
+> device_initialize(dev). This is in
+> drivers/base/core.c:device_initialize:
+> 
+>  * NOTE: Use put_device() to give up your reference instead of freeing
+>  * @dev directly once you have called this function.
+> 
+> My understanding is that remaining reference on error path is taken by
+> device_initialize and as instructed in the note above it should be given
+> up using put_device?
 
-That is, isn't the cure worse than the problem? I mean, who bloody cares
-about silly accounting crud more than not getting interrupts on their
-NOHZ_FULL cpus.
+Yes, that is correct.
+
+> Tested this and it's fixing the memory leak I found in my Syzkaller
+> exercise. Addition to that it seems to be fixing also this one:
+> 
+> https://syzkaller.appspot.com/bug?id=f5f4af9fb9ffb3112ad6e30f717f769decdccdfc
+
+Great!  Care to submit a patch for this?
+
+thanks,
+
+greg k-h
