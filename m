@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3463BC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03A0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BAF20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A1E20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kio4pezu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZUF5+zH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKOOuQ (ORCPT
+        id S1727695AbfKOOuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:50:16 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42857 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbfKOOuP (ORCPT
+        Fri, 15 Nov 2019 09:50:19 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43448 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfKOOuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:50:15 -0500
-Received: by mail-qt1-f195.google.com with SMTP id t20so11039780qtn.9
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:50:14 -0800 (PST)
+        Fri, 15 Nov 2019 09:50:17 -0500
+Received: by mail-qt1-f194.google.com with SMTP id j5so9624411qtn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:50:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lJzGk9L/f6bPyPgYlAcUVdIxyQcpeRxruAGEz+vTV7Y=;
-        b=Kio4pezu6ImCeG2mPNJ6cPi+B1BcudVnJhiprS6CAi5A8YzlqUWhO792FzvS8MrFal
-         ksgM8cf9zP5ST2BhbT4/d7PIWE6RbQRpispbVKb810Sbg7p5CACIX8WL0/NUAp2l5KwD
-         eUbMRsbDDVBIAoB/st4X7XDPXYVR4ryycYoUmgNHqqiPzRUyOl/LyCxzgRa7vW5PhQEJ
-         8ssNa2FI9WSz69+DGdMlTNviAUEcrTzOUSsn4Tr+hhPcQT3aSpvB8NIlVnBpRba6te5m
-         /z0+1ZDOV6MtL9wqaelZUJ+Bv9cLhvEst0qMN9ixi5UBb96emno5nZBco/4MSb3uCTQZ
-         SI6g==
+        bh=l+4mkyNeIAriOyBCvcPCL0FWxBlCR+Eo/bwv8rBr75Q=;
+        b=hZUF5+zHmYT/d8V7di2HpG+vnWA3EgTCIrP4G0wRU7NeDZsZqSe9dd55qd2mRya3ji
+         Qc3I/XiDPKPPJyPmoVFMRhcn5onmeSCP7ssi5OpQv487QmpwQHw+89zaODYpTXa0FBXv
+         zxaCc/gdF5d2pET+7MyTtOL72PMda7ipeGOUgdUEAH0hXeb90ZXKlZJ51uVry8L0ft5c
+         FOuCJCbYEXhcns7knXhOlBG5qmOoF9H/ncpDDCGVdTN+WVkRR2dktFNZIpevbiw4C7Ht
+         K1aZ8QvZeAFYj2CGp9i0OksIzgAUnsc09a/SvonfnWlyx+1G6+bet6sdrlGvWMcbn7p6
+         NGtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=lJzGk9L/f6bPyPgYlAcUVdIxyQcpeRxruAGEz+vTV7Y=;
-        b=D7slwXLlSU3hylbQCCQaIFVXoTltz1IRtJoxR0bT/ugmUMA4xWxGCMd5+BEDNmXfGt
-         R3Wig3dI+S6jLRYqX+lEATuT89tttbT3TC3PLCz2SSMkW9MhsxtllDo3iTBYYdgCcqnL
-         LUNVrgwtIPQKgCuQ9re6CV+lwp4UYY23uYsyArJGwooRuKGskl1vTMXyyRYNbbPct3h8
-         TEreHLKcq1Q9MKYB4RoVmxdDNJ6X9woh4uqiHtYVLcR0jrJ2eFkLnx4cvMGuxSDelHOh
-         cppvivI39OA5XNooG9qidsdBYKD+W1AJltpztqzOU3R2S3NmBtI29u56wzIRX7P7zKkj
-         U2kQ==
-X-Gm-Message-State: APjAAAWWruu9YgelsFypcUY0cn9mp6TbaghNgNNrca51d3FI8oB5Oe4h
-        knxoXKTOrok6AZjOC4Uf2A==
-X-Google-Smtp-Source: APXvYqxPVD04HrF7ATil6Ea+ZZAB/kHds6U9F7YKwXNNfzjn9hxw10gw+PKCsKze4/ehSjYzwlweqQ==
-X-Received: by 2002:ac8:1b85:: with SMTP id z5mr14017615qtj.308.1573829414000;
-        Fri, 15 Nov 2019 06:50:14 -0800 (PST)
+        bh=l+4mkyNeIAriOyBCvcPCL0FWxBlCR+Eo/bwv8rBr75Q=;
+        b=W0vZ503v578Brkcuai/A1HYZdeFR0y4A3bjL7LuTFSAbrXpQIgbG7PhyVB3MpXKbZp
+         sdlnLUjHQaE0Jry3MwPYxe3/OtDhxWMHCrbhZ7LYHxbPI6HktIr6RIH1pSt2aMTVZnqw
+         J4RasXvr27eW8eh6QRrahZ0LCTAOHcYmJ2sjHukbNS4cepv+xh6uti4WEsFyXpnbjvfS
+         fILoaWvSheu/W93/+RPZ1Q0xlDgkP7okMVkxIHDrD56+AKGSvS4Okuh9AQ5byMQHgGMl
+         s6GEHSXzA+tABVMpNkxySOz1YI7ROK9cSr/nc2dLS7LzQ60POb3SiJysWa5S7nqzI6e/
+         +1aA==
+X-Gm-Message-State: APjAAAW77ZrYG9tPO9dcZUweN1h10K6Bg4aQjEvuM32xWskRqPGrw6fX
+        3eAt88Ya5n3QYvaRDhK/2Q==
+X-Google-Smtp-Source: APXvYqzwpE8i+pIolZtNUclrU4Dad47PZRhH/Fg7eHcjKZD3cqYQNZ62WyIJKkR+V1ztTUZO6I9ZfA==
+X-Received: by 2002:ac8:4a88:: with SMTP id l8mr13817252qtq.314.1573829416389;
+        Fri, 15 Nov 2019 06:50:16 -0800 (PST)
 Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id l124sm4329317qkf.122.2019.11.15.06.50.12
+        by smtp.gmail.com with ESMTPSA id l124sm4329317qkf.122.2019.11.15.06.50.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 06:50:13 -0800 (PST)
+        Fri, 15 Nov 2019 06:50:16 -0800 (PST)
 From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -65,9 +65,9 @@ To:     Borislav Petkov <bp@alien8.de>,
 Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
         Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/4] x86/boot: Add max_addr field in struct boot_params
-Date:   Fri, 15 Nov 2019 09:49:15 -0500
-Message-Id: <20191115144917.28469-3-msys.mizuma@gmail.com>
+Subject: [PATCH v5 3/4] x86/boot: Get the max address from SRAT
+Date:   Fri, 15 Nov 2019 09:49:16 -0500
+Message-Id: <20191115144917.28469-4-msys.mizuma@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115144917.28469-1-msys.mizuma@gmail.com>
 References: <20191115144917.28469-1-msys.mizuma@gmail.com>
@@ -78,49 +78,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Add max_addr field in struct boot_params. max_addr shows the
-maximum memory address to be reachable by memory hot-add.
-max_addr is set by parsing ACPI SRAT.
+Get the max address from SRAT and write it into boot_params->max_addr.
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 ---
- Documentation/x86/zero-page.rst       | 4 ++++
- arch/x86/include/uapi/asm/bootparam.h | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/boot/compressed/acpi.c | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/x86/zero-page.rst b/Documentation/x86/zero-page.rst
-index f088f5881666..cc3938d68481 100644
---- a/Documentation/x86/zero-page.rst
-+++ b/Documentation/x86/zero-page.rst
-@@ -19,6 +19,7 @@ Offset/Size	Proto	Name			Meaning
- 058/008		ALL	tboot_addr      	Physical address of tboot shared page
- 060/010		ALL	ist_info		Intel SpeedStep (IST) BIOS support information
- 						(struct ist_info)
-+078/010		ALL	max_addr		The possible maximum physical memory address [1]_
- 080/010		ALL	hd0_info		hd0 disk parameter, OBSOLETE!!
- 090/010		ALL	hd1_info		hd1 disk parameter, OBSOLETE!!
- 0A0/010		ALL	sys_desc_table		System description table (struct sys_desc_table),
-@@ -43,3 +44,6 @@ Offset/Size	Proto	Name			Meaning
- 						(array of struct e820_entry)
- D00/1EC		ALL	eddbuf			EDD data (array of struct edd_info)
- ===========	=====	=======================	=================================================
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index a0f81438a0fd..47db706656e0 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -362,17 +362,32 @@ static unsigned long get_acpi_srat_table(void)
+ 	return 0;
+ }
+ 
+-static void subtable_parse(struct acpi_subtable_header *sub_table, int *num)
++/**
++ * subtable_parse - Cache the immovable memory regions into the
++ * immovable_mem array and update the index of the array.
++ *
++ * Return the end physical address of hotpluggable region.
++ * The system memory can be extended to the address by hotplug.
++ */
++static unsigned long subtable_parse(struct acpi_subtable_header *sub_table,
++				    int *num)
+ {
+ 	struct acpi_srat_mem_affinity *ma;
++	unsigned long addr = 0;
+ 
+ 	ma = (struct acpi_srat_mem_affinity *)sub_table;
+ 
+-	if (!(ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) && ma->length) {
+-		immovable_mem[*num].start = ma->base_address;
+-		immovable_mem[*num].size = ma->length;
+-		(*num)++;
++	if (ma->length) {
++		if (ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE)
++			addr = ma->base_address + ma->length;
++		else {
++			immovable_mem[*num].start = ma->base_address;
++			immovable_mem[*num].size = ma->length;
++			(*num)++;
++		}
+ 	}
 +
-+.. [1] max_addr shows the maximum memory address to be reachable by memory
-+       hot-add. max_addr is set by parsing ACPI SRAT.
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index c895df5482c5..6efad338bba9 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -158,7 +158,7 @@ struct boot_params {
- 	__u64  tboot_addr;				/* 0x058 */
- 	struct ist_info ist_info;			/* 0x060 */
- 	__u64 acpi_rsdp_addr;				/* 0x070 */
--	__u8  _pad3[8];					/* 0x078 */
-+	__u64 max_addr;					/* 0x078 */
- 	__u8  hd0_info[16];	/* obsolete! */		/* 0x080 */
- 	__u8  hd1_info[16];	/* obsolete! */		/* 0x090 */
- 	struct sys_desc_table sys_desc_table; /* obsolete! */	/* 0x0a0 */
++	return addr;
+ }
+ 
+ /**
+@@ -391,6 +406,7 @@ int count_immovable_mem_regions(void)
+ 	struct acpi_subtable_header *sub_table;
+ 	struct acpi_table_header *table_header;
+ 	char arg[MAX_ACPI_ARG_LENGTH];
++	unsigned long max_addr = 0, addr;
+ 	int num = 0;
+ 
+ 	if (cmdline_find_option("acpi", arg, sizeof(arg)) == 3 &&
+@@ -409,7 +425,9 @@ int count_immovable_mem_regions(void)
+ 		sub_table = (struct acpi_subtable_header *)table;
+ 		if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
+ 
+-			subtable_parse(sub_table, &num);
++			addr = subtable_parse(sub_table, &num);
++			if (addr > max_addr)
++				max_addr = addr;
+ 
+ 			if (num >= MAX_NUMNODES*2) {
+ 				debug_putstr("Too many immovable memory regions, aborting.\n");
+@@ -418,6 +436,9 @@ int count_immovable_mem_regions(void)
+ 		}
+ 		table += sub_table->length;
+ 	}
++
++	boot_params->max_addr = max_addr;
++
+ 	return num;
+ }
+ #endif /* CONFIG_RANDOMIZE_BASE && CONFIG_MEMORY_HOTREMOVE */
 -- 
 2.20.1
 
