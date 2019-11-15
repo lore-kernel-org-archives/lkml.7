@@ -2,94 +2,147 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896A8C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B922AC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE04206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573788483;
-	bh=mzHXkEiondE/oUwYrxCVLRKS7ykKvBhskkP1l9EDy+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=geQ7YYsiWTZP696FNua1Yt/htMQvCWz2dS5qRUcMNRpu3QpeCxXgt9Wul4ONaiBv0
-	 pmbA6UoyNnPH9V4J6bea6+7/LtHieDTnje/McwJ2EQ+bdRIcuB0kPNfD4/XBx6teSf
-	 EhmT5IwzgDgRTdpsriRlcWaKiqC88Z4ARyJl7stc=
+	by mail.kernel.org (Postfix) with ESMTP id 9163E206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:29:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFIgWxCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKOD2C (ORCPT
+        id S1727211AbfKOD27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 22:28:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbfKOD2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 22:28:02 -0500
-Received: from localhost (unknown [104.132.150.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16981206EF;
-        Fri, 15 Nov 2019 03:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573788481;
-        bh=mzHXkEiondE/oUwYrxCVLRKS7ykKvBhskkP1l9EDy+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p9h/JpQMEKVeOVB9MsSE1JGVtB6UhkbYvS0jS4N/TZjRxkg5AbDT5pwPG41RxsLIp
-         Nw8NuNCh0t7yMzgb/Z8bZUjDMjSqvhsoS4DrWsg92KE33eiC2/DozDaUp+FI9H2bBB
-         YrwzqK10hFcafJTqCDzo96wsvRKZbjJJQJmtPWoQ=
-Date:   Fri, 15 Nov 2019 11:27:59 +0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     rafael@kernel.org, viro@zeniv.linux.org.uk, rostedt@goodmis.org,
-        oleg@redhat.com, mchehab+samsung@kernel.org, corbet@lwn.net,
-        tytso@mit.edu, jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, zhengbin13@huawei.com,
-        yi.zhang@huawei.com, chenxiang66@hisilicon.com, xiexiuqi@huawei.com
-Subject: Re: [PATCH 1/3] dcache: add a new enum type for 'dentry_d_lock_class'
-Message-ID: <20191115032759.GA795729@kroah.com>
-References: <1573788472-87426-1-git-send-email-yukuai3@huawei.com>
- <1573788472-87426-2-git-send-email-yukuai3@huawei.com>
+        Thu, 14 Nov 2019 22:28:59 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34128 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfKOD27 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 22:28:59 -0500
+Received: by mail-qk1-f195.google.com with SMTP id 205so7045651qkk.1;
+        Thu, 14 Nov 2019 19:28:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D+30VBQ6Z6pahGzwHddR4V87xEKzy9SO3iX26pCuliI=;
+        b=nFIgWxCJ2dZ8AUUfrv0rBQqDPsE/g8aWDwr4HMuPFIEKpaOIi6EVMubajiKEh6jCW6
+         H/RgXIFJXhd70OnQ6oObOTeMo0OhmLRkHOaadLiHuiD8yVVmWytBR7zy8oP2jEmZhBql
+         kfAYz+Fql23qHA0/BEMZyoOajXF4G/DC27SKMpBNTEhizPcYGzrhMKw0fFh6MiqWXM3G
+         ia9ou95D5ZtF1zj82ilfZRtVHz5t/7xNFTbsUPkJLCeKuhuo6rvZAASwybUzJT/rq0UD
+         q13bwhOppW486v84zFWOGGfLR4L/nFDiL9FLLWNtr67JUaEKSVyLN3oHJip2bhNVFqbZ
+         qFrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D+30VBQ6Z6pahGzwHddR4V87xEKzy9SO3iX26pCuliI=;
+        b=YMgGAT/GfyFEVfZ7NDxiWm8jUVd/y74dy9VbjVwfV2nW+etj8UVts+KueDOZAXcjQ9
+         petPunoqUPC1ZSMwL8gEvcNbYQ3/ik1tQjdXAYo40sLoiCVh3CqG0/2hOae3kxhJtc9l
+         CNEVz4Scxiokclt2X2fSCmlT2B+RfxAK8LbRkCFzI2ULPh+cZSmgwgV+IwneU6RLxEQY
+         yMKYZG3qv1Iyfp+daWEjKzXebRERWH+l0KAT4YWZN4qbaeVtkmgxNYmtz1kTT7Ekf/Tk
+         Z5r6g238eC/DVsvNPCVT3wxruRnPGFXH1UCXWFu4d0IRs1LIOAnVTdhMgGYhpufqmX1j
+         FLvQ==
+X-Gm-Message-State: APjAAAWRBXZlLUf8CpaUEMO/BgBJPnC5LUMWE1ArHpunkAqsIASKKhiE
+        ABHENnPn3E1zr6BlOQI8XHEkpP/bazGEVXrGdrsHWg==
+X-Google-Smtp-Source: APXvYqxsrgGnkZmjzHHh9s5lDeis0yQ/6UHqrpj3Z/tO+JbLzt/a8BVZivpTzV/HhB1gm2pA9rs180XhETvLdVvMCGQ=
+X-Received: by 2002:a37:4b97:: with SMTP id y145mr10563545qka.133.1573788538446;
+ Thu, 14 Nov 2019 19:28:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573788472-87426-2-git-send-email-yukuai3@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <0a6b113010ad772a633b9cfeeb280dc41f17b951.1573206815.git.baolin.wang@linaro.org>
+ <20191114180233.GA14860@bogus>
+In-Reply-To: <20191114180233.GA14860@bogus>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 15 Nov 2019 11:28:46 +0800
+Message-ID: <CADBw62pdQ+xFkkPkzsy7j6OFh-6DTdMwPV4j4RTJ0p4+nBJJDQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum
+ thermal documentation
+To:     Rob Herring <robh@kernel.org>
+Cc:     Baolin Wang <baolin.wang@linaro.org>, rui.zhang@intel.com,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        Orson Zhai <orsonzhai@gmail.com>, freeman.liu@unisoc.com,
+        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 11:27:50AM +0800, yu kuai wrote:
-> 'dentry_d_lock_class' can be used for spin_lock_nested in case lockdep
-> confused about two different dentry take the 'd_lock'.
-> 
-> However, a single 'DENTRY_D_LOCK_NESTED' may not be enough if more than
-> two dentry are involed. So, and in 'DENTRY_D_LOCK_NESTED_2'
-> 
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->  include/linux/dcache.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-> index 10090f1..8eb84ef 100644
-> --- a/include/linux/dcache.h
-> +++ b/include/linux/dcache.h
-> @@ -129,7 +129,8 @@ struct dentry {
->  enum dentry_d_lock_class
->  {
->  	DENTRY_D_LOCK_NORMAL, /* implicitly used by plain spin_lock() APIs. */
-> -	DENTRY_D_LOCK_NESTED
-> +	DENTRY_D_LOCK_NESTED,
-> +	DENTRY_D_LOCK_NESTED_2
+Hi Rob,
 
-You should document this, as "_2" does not make much sense to anyone
-only looking at the code :(
+On Fri, Nov 15, 2019 at 2:02 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Nov 08, 2019 at 05:54:30PM +0800, Baolin Wang wrote:
+> > From: Freeman Liu <freeman.liu@unisoc.com>
+> >
+> > Add the Spreadtrum thermal documentation.
+> >
+> > Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  .../devicetree/bindings/thermal/sprd-thermal.txt   |   41 ++++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.txt
+>
+> Please make this a schema. See Documentation/devicetree/writing-schema.rst
 
-Or rename it better.
+OK.
 
-thanks,
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.txt b/Documentation/devicetree/bindings/thermal/sprd-thermal.txt
+> > new file mode 100644
+> > index 0000000..a9da7f4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.txt
+> > @@ -0,0 +1,41 @@
+> > +* Spreadtrum thermal sensor controller bindings
+> > +
+> > +Required properties:
+> > +- compatible : Should be "sprd,ums512-thermal"
+> > +- reg: Address range of the thermal registers
+> > +- clock-names: "enable" for thermal module enable clock.
+> > +- clocks: Should contain a clock specifier for each entry in clock-names.
+> > +- nvmem-cells: A phandle to the calibration data provided by a nvmem device.
+> > +- nvmem-cell-names: Should be "thm_sign_cal" and "thm_ratio_cal".
+> > +- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
+> > +
+> > +Child nodes properties:
+> > +- reg: Specify the sensor id.
+> > +- nvmem-cells: A phandle to the calibration data provided by a nvmem device.
+> > +- nvmem-cell-names: Should be "sen_delta_cal".
+> > +
+> > +Example:
+> > +
+> > +     ap_thm0: thermal@32200000 {
+> > +             compatible = "sprd,ums512-thermal";
+> > +             reg = <0 0x32200000 0 0x10000>;
+> > +             clock-names = "enable";
+> > +             clocks = <&aonapb_gate CLK_THM0_EB>;
+> > +             #thermal-sensor-cells = <1>;
+> > +             nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
+> > +             nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
+> > +
+> > +             prometheus0-sensor@0{
+>
+> space                               ^
 
-greg k-h
+OK. Will fix.
+
+>
+> > +                     reg = <0>;
+> > +                     nvmem-cells = <&thm0_sen0>;
+> > +                     nvmem-cell-names = "sen_delta_cal";
+> > +             };
+> > +
+> > +             ank1-sensor@1{
+>
+> space                        ^
+
+Yes, will fix in next version. Thanks for your comments.
