@@ -2,85 +2,81 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF7FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A88C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49C1206D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48845206D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iHgcUugC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JwLPwh/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKOXmY (ORCPT
+        id S1727388AbfKOXoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 18:42:24 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45640 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfKOXmY (ORCPT
+        Fri, 15 Nov 2019 18:44:15 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53714 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbfKOXoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 18:42:24 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k1so5372334pgg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 15:42:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:subject:from:user-agent:date;
-        bh=iToz+vl4UuzXnSoAQspKE/x5E1vlqbw9FMJgzVbrjnU=;
-        b=iHgcUugCHyxz+Iw82+c0FQudbT+3AwXkxLNtu05j9DFuZILtosVa0pZIeWLjgzoFuD
-         cc1GFg8q3ApqpdBguYzZg6eVfLNM+atlybo29YbDCtEV2DNxRgLJ6w4VGShzuOwM5hYM
-         7nWHaAupLVyptVHk+3dTgYA5jwGewS9OTTjeA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
-         :user-agent:date;
-        bh=iToz+vl4UuzXnSoAQspKE/x5E1vlqbw9FMJgzVbrjnU=;
-        b=mVpLa8JxeAcETMrBU7w8uASG2/ett3hQyubO0OPUT1Wq3a1HTQSivUgSZ3h6aQS+c1
-         1H2YN2F1o5PoVX6XlZZmsXTlPjzyniDiOM4n/wOv6tDZDWW9mF4SY2pMJsQNFdZ86oC6
-         W0MyO/eYiReAePk+K4c3bUV1PT/myEfZ+dvNUstHy/WDG0b783HRVU+kIfTKHRvaMwHQ
-         JFeYHc/z1YhW/dcO4oyi9fQexdRTTmVpRt/aPr0cLO5aspDagmlC9OKr01StVYDM2/k1
-         HUKDb/Li3rBAScrs8DOlLWPCUYSduZNja/F7Sw+9hpVk8vHjkkeIvORU+P3kVcIynNnC
-         BqNg==
-X-Gm-Message-State: APjAAAVvE4VLPOEK/y4Q3YiCzs8Jj7iVcbP+PZUUUhWLl4jDdybgP/r0
-        F5/3d1frLZaTyjDRUtQmZCviNQ==
-X-Google-Smtp-Source: APXvYqzPVvn22bxdM71aWAaZx9pasmXtHh4KdT7avVg7z9GGIKmnqNx/kRti4q2XTGASSasRs84xOw==
-X-Received: by 2002:a62:e306:: with SMTP id g6mr12085031pfh.32.1573861343328;
-        Fri, 15 Nov 2019 15:42:23 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id p3sm13034585pfb.163.2019.11.15.15.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 15:42:22 -0800 (PST)
-Message-ID: <5dcf37de.1c69fb81.8aa8.6308@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 15 Nov 2019 18:44:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FEky5kd3UxgQGOzkEXIPDTXEoTONlGizTLsmqA8bwWA=; b=JwLPwh/InU2pJOkVs5TtJ6ZsH
+        idRgPyOqtFMmoibc0jLx+IFH72OW/aXO2IWt4E+QnNJbnJSGdA6JzWFEDd1A6rfwQca9Bp5gYbhaM
+        oTxbJocQVcU9hK3XyFRtSlk5jUvyFBoGoR60Ii8Y0tdneY/touCOKtFDT9HvFt1jmz88wI/xWJ5hW
+        ReoXLKYLbGwMwa2yrHSE0NlU8eXBkAz4CRRWgNCHd3d2gG7h7ohv/S8O4EWkc0+HnE7Jx9IDBrbRQ
+        DnfEpsa8VQ2a+6f06zF0vSu32XEIswGCnE+hmmwcZb70FoNa2PIC1lWH7thwD0PUHX/w/IRsv4j2T
+        m0+Njbz2A==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVlGA-0005PX-Re; Fri, 15 Nov 2019 23:44:14 +0000
+Subject: Re: linux-next: Tree for Nov 15 (thermal:
+ THERMAL_GOV_POWER_ALLOCATOR)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <20191115190525.77efdf6c@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <247cd41e-a07b-adf0-4ec2-6467f0257837@infradead.org>
+Date:   Fri, 15 Nov 2019 15:44:14 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573593774-12539-8-git-send-email-eberman@codeaurora.org>
-References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-8-git-send-email-eberman@codeaurora.org>
-Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, psodagud@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v2 07/18] firmware: qcom_scm-64: Add SCM results to descriptor
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 15:42:21 -0800
+In-Reply-To: <20191115190525.77efdf6c@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Elliot Berman (2019-11-12 13:22:43)
-> Remove knowledge of arm_smccc_res struct from client wrappers so that
-> client wrappers only work QCOM SCM data structures. SCM calls may have
-> up to 3 arguments, so qcom_scm_call_smccc is responsible now for filling
-> those 3 arguments accordingly.
+On 11/15/19 12:05 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20191114:
+> 
 
-Why? Now we can't mark the descriptor 'const'. That looks like a step
-backwards from before where we had an input structure 'desc' and an
-output structure 'res'. If anything, we should make the output structure
-'res' optional in cases where nobody cares to look at the result.
+on i386:
 
+WARNING: unmet direct dependencies detected for THERMAL_GOV_POWER_ALLOCATOR
+  Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
+  Selected by [y]:
+  - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
+
+
+THERMAL_GOV_POWER_ALLOCATOR is selected by THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
+even though ENERGY_MODEL is not set/enabled.
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
