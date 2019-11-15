@@ -2,91 +2,152 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6494C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED66C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB0E2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5E22073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="udqLCFcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfKOQI3 (ORCPT
+        id S1727587AbfKOQKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:08:29 -0500
-Received: from mga11.intel.com ([192.55.52.93]:21438 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727505AbfKOQI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:08:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 08:08:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
-   d="scan'208";a="405377086"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Nov 2019 08:08:26 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        tmricht@linux.ibm.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH] perf: Fix the mlock accounting, again
-Date:   Fri, 15 Nov 2019 18:08:18 +0200
-Message-Id: <20191115160818.6480-1-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 15 Nov 2019 11:10:32 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43980 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727461AbfKOQKc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 11:10:32 -0500
+Received: by mail-qk1-f196.google.com with SMTP id z23so8480416qkj.10
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 08:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QXQnsuzIdBD4R7XwRkiLdL633g5N2HlkyOWWAExgJGo=;
+        b=udqLCFcds+MJ2Y/juBQ9HAl4utewCmMZfse7vGLAKZuboTmXzCedLxYEXt/DXXTZC4
+         cl2y/Mf8bkDabGez0Kf6FAWqIKLKrNkIFoTFyKjMjiDUBHqHZy7lV72ftLWBpa1NKv9O
+         VmkZ79DKNubg//mSi9AMOyHnOAG6WxSurIJGRzaOuguYmeIWAhyG5WHJIrLyIfIoH13v
+         /Qdm2YO9qLLoxV8Iv8g9DYFb1yGQbh6RmUHTm6D5XNMrVWcjJ+Mgeu9/TsklEBdHnXHg
+         PE5hYh5xNmiN5EdT/d+5FJlH+v0QwKW0DULKZVFGKU1lo1AIZQ3sNg0MkPJZKBfT52sI
+         8A1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QXQnsuzIdBD4R7XwRkiLdL633g5N2HlkyOWWAExgJGo=;
+        b=k+5QXIp8RaCLoyriiQLjk6KHdjfxTKBwguAdZbI+r7Qppn9R08XFx9ZVezz5R7Fj7+
+         PgzyeQLqai7XNvIvhc6YzczubHWAGobrfCpknbI6/T3FMSv26n3tOen2Qhj5EX2lEpW1
+         gkjWlqzCyKay7dHKSJ9pQuudo8praPgTrxfqmDOE1WZfBK19qLD/zZ8vYy0zEM8PCUxW
+         xf3sImG+/WWaQrWuL/Jh4zlUk9hTiWHMfZ5itWXbrq4ODq8H8zSHHaWm1IxSk11AChLS
+         tcZ6C9ApPZk55oO3MEO1Kwk7oA05dlpOWA2BCEe1cGgVByeYZeQq0KZC3GQjbmS9SkzA
+         a36A==
+X-Gm-Message-State: APjAAAVtXrzeFVl2k3XDJVwaWbM1Wo4oEPy0s7mlOIVYQ/mQuyB59Zzo
+        V0divLodeMQ598bb52RjrGdKkA==
+X-Google-Smtp-Source: APXvYqzpikIUfpamKtvZpl4aOMTDjuDVakJhUx8VpGxQ7emrsC+EYMZ4sVhQZWenOPg5pF/S+NpI1w==
+X-Received: by 2002:a37:4e03:: with SMTP id c3mr8749809qkb.6.1573834231034;
+        Fri, 15 Nov 2019 08:10:31 -0800 (PST)
+Received: from localhost (rfs.netwinder.org. [206.248.184.2])
+        by smtp.gmail.com with ESMTPSA id 70sm4236561qkj.48.2019.11.15.08.10.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Nov 2019 08:10:30 -0800 (PST)
+Date:   Fri, 15 Nov 2019 11:10:29 -0500
+From:   Ralph Siemsen <ralph.siemsen@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Jeremy Cline <jcline@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 4.9 02/31] Bluetooth: hci_ldisc: Postpone
+ HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+Message-ID: <20191115161029.GA32365@maple.netwinder.org>
+References: <20191115062009.813108457@linuxfoundation.org>
+ <20191115062010.682028342@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191115062010.682028342@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit
+Hi Greg,
 
-  5e6c3c7b1ec2 ("perf/aux: Fix tracking of auxiliary trace buffer allocation")
+On Fri, Nov 15, 2019 at 02:20:31PM +0800, Greg Kroah-Hartman wrote:
+>From: Kefeng Wang <wangkefeng.wang@huawei.com>
+>
+>commit 56897b217a1d0a91c9920cb418d6b3fe922f590a upstream.
+>
+>task A:                                task B:
+>hci_uart_set_proto                     flush_to_ldisc
+> - p->open(hu) -> h5_open  //alloc h5  - receive_buf
+> - set_bit HCI_UART_PROTO_READY         - tty_port_default_receive_buf
+> - hci_uart_register_dev                 - tty_ldisc_receive_buf
+>                                          - hci_uart_tty_receive
+>				           - test_bit HCI_UART_PROTO_READY
+>				            - h5_recv
+> - clear_bit HCI_UART_PROTO_READY             while() {
+> - p->open(hu) -> h5_close //free h5
+>				              - h5_rx_3wire_hdr
+>				               - h5_reset()  //use-after-free
+>                                              }
+>
+>It could use ioctl to set hci uart proto, but there is
+>a use-after-free issue when hci_uart_register_dev() fail in
+>hci_uart_set_proto(), see stack above, fix this by setting
+>HCI_UART_PROTO_READY bit only when hci_uart_register_dev()
+>return success.
+>
+>Reported-by: syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com
+>Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>Reviewed-by: Jeremy Cline <jcline@redhat.com>
+>Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+>Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-tried to guess the correct combination of arithmetic operations that would
-undo the AUX buffer's mlock accounting, and failed, leaking the bottom part
-when an allocation needs to be changed partially to both user->locked_vm
-and mm->pinned_vm, eventually leaving the user with no locked bonus:
+I was just about to ask why this had not been merged into 4.9. Spent a 
+while searching archives for any discussion to explain its absence, but 
+couldn't find anything. Also watched your kernel-recipes talk...
 
-$ perf record -e intel_pt//u -m1,128 uname
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.061 MB perf.data ]
-$ perf record -e intel_pt//u -m1,128 uname
-Permission error mapping pages.
-Consider increasing /proc/sys/kernel/perf_event_mlock_kb,
-or try again with a smaller value of -m/--mmap_pages.
-(current value: 1,128)
+BTW, this also seems to be missing from 4.4 branch, although it was 
+merged for 3.16 (per https://lore.kernel.org/stable/?q=Postpone+HCI).
 
-Fix this by subtracting both locked and pinned counts when AUX buffer is
-unmapped.
+I gather that the usual rule is that a fix must be in newer versions 
+before it can go into older ones. Or at least, some patches were 
+rejected on that basis. If this is in fact the policy, perhaps it could 
+be added to stable-kernel-rules.rst ?
 
-Signefdoff-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
----
- kernel/events/core.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+-Ralph
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 16d80ad8d6d7..522438887206 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5664,10 +5664,8 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 		perf_pmu_output_stop(event);
- 
- 		/* now it's safe to free the pages */
--		if (!rb->aux_mmap_locked)
--			atomic_long_sub(rb->aux_nr_pages, &mmap_user->locked_vm);
--		else
--			atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
-+		atomic_long_sub(rb->aux_nr_pages - rb->aux_mmap_locked, &mmap_user->locked_vm);
-+		atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
- 
- 		/* this has to be the last one */
- 		rb_free_aux(rb);
--- 
-2.24.0
-
+>---
+> drivers/bluetooth/hci_ldisc.c |    3 +--
+> 1 file changed, 1 insertion(+), 2 deletions(-)
+>
+>--- a/drivers/bluetooth/hci_ldisc.c
+>+++ b/drivers/bluetooth/hci_ldisc.c
+>@@ -653,15 +653,14 @@ static int hci_uart_set_proto(struct hci
+> 		return err;
+>
+> 	hu->proto = p;
+>-	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+>
+> 	err = hci_uart_register_dev(hu);
+> 	if (err) {
+>-		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+> 		p->close(hu);
+> 		return err;
+> 	}
+>
+>+	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+> 	return 0;
+> }
+>
+>
+>
