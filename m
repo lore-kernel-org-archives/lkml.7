@@ -2,126 +2,152 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9902EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0187FC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5BD20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573813147;
-	bh=NZ63NmQNdqqOg8QZk/cSBZAcCPCaW4OKgvlGkuOPuu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0qtJz+4d4lBc5VRHN6rsacGTtgHqdrSyPqw+YW0hlV13kzgLTxP/SAZ4AiEtsIFyV
-	 OXoD03YTi4V0Fl9dvuOiAseZCN56tHbQxQEaCfTGRdT4UxTLC2owp7NgPaDo4MOuM6
-	 vt3CU54KcB+FnRddXoCRZsV0qX1dpswz3GI41HLY=
+	by mail.kernel.org (Postfix) with ESMTP id CA6792075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:19:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nHuYle8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfKOKTG (ORCPT
+        id S1727563AbfKOKT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:19:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfKOKTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:19:06 -0500
-Received: from localhost (unknown [104.132.150.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8604420718;
-        Fri, 15 Nov 2019 10:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573813145;
-        bh=NZ63NmQNdqqOg8QZk/cSBZAcCPCaW4OKgvlGkuOPuu8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=By8G6G5e28iA0Gr4bOhEr021LSlPDBGfHVO0N5aCMvrVTJJvlcseP8YM2r4e+EJYq
-         TQQAo+FYUxYBJ7e2EpyKYTq3uMup1e9SWyd6iEUlzU7hd8hRDAKNDTxWgS8qc3CwBU
-         xaheU4z7POPb7ogz3JHCyaVaoGyErw0LNtkwTLPY=
-Date:   Fri, 15 Nov 2019 18:19:02 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jouni =?iso-8859-1?Q?H=F6gander?= <jouni.hogander@unikie.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: Re: [PATCH] drivers/base: Fix memory leak in error paths
-Message-ID: <20191115101902.GB337025@kroah.com>
-References: <20191114121840.5585-1-jouni.hogander@unikie.com>
- <20191115032603.GG793701@kroah.com>
- <878soha7tc.fsf@unikie.com>
- <20191115082022.GB55909@kroah.com>
- <8736epa202.fsf@unikie.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8736epa202.fsf@unikie.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Fri, 15 Nov 2019 05:19:29 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:49056 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOKT3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:19:29 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFAEITu047434;
+        Fri, 15 Nov 2019 10:16:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=aUmmUofXeDq4ex4OiGNZ0rOva3H7BkAtzGPYlS55bLk=;
+ b=nHuYle8Xty0AFSNWkPzS01umuJvgDfPs7wnJsKEkmb3wEmAFZA9m6ADpCi3xqoLsGtGd
+ Z3KnGAiwTZMsrWUq/ifEwPFsT0E3obZCRX9/N3WhhOAIuRtzQ5vY93ewLEo9ZTkmE5Wd
+ NNLKVjfN3sx2Et9XcM1iaqY5JWvKEToHIyJKQuA4a6y41COXAtwq4FF+A++Sv4ah0sbf
+ HOsNmQHNnNTbXM82dvkXlDuAQ2tlz7f3bqBUUH6pfVL+qMpuchnyZd50ClZt/dh31VK4
+ oxZMn3cgvHjQ9WB1wgbUElqNpPmYoYqCjrzVdViSDriL7uxELP/adwQHlnVPos5kki9N uw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2w9gxpje6f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Nov 2019 10:16:48 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFADDrC007930;
+        Fri, 15 Nov 2019 10:16:47 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2w9h148fhj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Nov 2019 10:16:47 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAFAGi6e007575;
+        Fri, 15 Nov 2019 10:16:44 GMT
+Received: from dhcp-10-175-208-51.vpn.oracle.com (/10.175.208.51)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 15 Nov 2019 02:16:44 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        corbet@lwn.net, tytso@mit.edu, adilger.kernel@dilger.ca,
+        mcgrof@kernel.org, changbin.du@intel.com,
+        linux-ext4@vger.kernel.org, linux-doc@vger.kernel.org,
+        sboyd@kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: [PATCH v4 linux-kselftest-test 5/6] kunit: allow kunit to be loaded as a module
+Date:   Fri, 15 Nov 2019 10:16:11 +0000
+Message-Id: <1573812972-10529-6-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com>
+References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911150096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911150096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 12:05:17PM +0200, Jouni Högander wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> 
-> >> >> This memory leak was reported by Syzkaller:
-> >> >> 
-> >> >> BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
-> >> >>   comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
-> >> >>   hex dump (first 32 bytes):
-> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-> >> >>   backtrace:
-> >> >>     [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
-> >> >>     [<000000002340019b>] device_add+0x882/0x1750
-> >> >>     [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
-> >> >>     [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
-> >> >>     [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
-> >> >>     [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
-> >> >>     [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
-> >> >>     [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
-> >> >>     [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
-> >> >>     [<00000000984cabb9>] do_syscall_64+0x16f/0x580
-> >> >>     [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >> >>     [<00000000e6ca2d9f>] 0xffffffffffffffff
-> >> >
-> >> > How is this a leak?  This is in device_add(), not removing the device.
-> >> > When the structure really is freed then it can be removed.
-> >> 
-> >> In net/core/net-sysfs.c:netdev_register_kobject device_add allocates
-> >> dev->p. Now if register_queue_kobjects fails the error path is calling
-> >> device_del and dev->p is never freed. Proper fix here could be to call
-> >> put_device after device_del?
-> >
-> > Hm, this sounds like you have a reference count leak here, as
-> > put_device() should be properly called already in this case.  You might
-> > want to look further to see where exactly the register_queue_kobjects()
-> > call fails in order to see if we grabbed a reference we forgot to put
-> > back on an error path.
-> 
-> Ok, did some more debugging on
-> this. net/core/net-sysfs.c:netdev_register_kobject is doing
-> device_initialize(dev). This is in
-> drivers/base/core.c:device_initialize:
-> 
->  * NOTE: Use put_device() to give up your reference instead of freeing
->  * @dev directly once you have called this function.
-> 
-> My understanding is that remaining reference on error path is taken by
-> device_initialize and as instructed in the note above it should be given
-> up using put_device?
+Making kunit itself buildable as a module allows for "always-on"
+kunit configuration; specifying CONFIG_KUNIT=m means the module
+is built but only used when loaded.  Kunit test modules will load
+kunit.ko as an implicit dependency, so simply running
+"modprobe my-kunit-tests" will load the tests along with the kunit
+module and run them.
 
-Yes, that is correct.
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
+---
+ lib/kunit/Kconfig  |  2 +-
+ lib/kunit/Makefile |  4 +++-
+ lib/kunit/test.c   | 13 +++++++++++++
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
-> Tested this and it's fixing the memory leak I found in my Syzkaller
-> exercise. Addition to that it seems to be fixing also this one:
-> 
-> https://syzkaller.appspot.com/bug?id=f5f4af9fb9ffb3112ad6e30f717f769decdccdfc
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index 9ebd5e6..065aa16 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -3,7 +3,7 @@
+ #
+ 
+ menuconfig KUNIT
+-	bool "KUnit - Enable support for unit tests"
++	tristate "KUnit - Enable support for unit tests"
+ 	help
+ 	  Enables support for kernel unit tests (KUnit), a lightweight unit
+ 	  testing and mocking framework for the Linux kernel. These tests are
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index bc6e5e54..fab5564 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -1,4 +1,6 @@
+-obj-$(CONFIG_KUNIT) +=			test.o \
++obj-$(CONFIG_KUNIT) +=			kunit.o
++
++kunit-objs +=				test.o \
+ 					string-stream.o \
+ 					assert.o \
+ 					try-catch.o
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index 87b5cf1..41ef71a 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -486,3 +486,16 @@ void kunit_cleanup(struct kunit *test)
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(kunit_cleanup);
++
++static int kunit_init(void)
++{
++	return 0;
++}
++late_initcall(kunit_init);
++
++static void __exit kunit_exit(void)
++{
++}
++module_exit(kunit_exit);
++
++MODULE_LICENSE("GPL");
+-- 
+1.8.3.1
 
-Great!  Care to submit a patch for this?
-
-thanks,
-
-greg k-h
