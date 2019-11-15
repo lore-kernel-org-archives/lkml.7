@@ -2,118 +2,157 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCF0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445CBC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82FBD20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EaoAKkm4"
+	by mail.kernel.org (Postfix) with ESMTP id 298E82073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKOSTX (ORCPT
+        id S1727054AbfKOST0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:19:23 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34501 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfKOSTW (ORCPT
+        Fri, 15 Nov 2019 13:19:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44306 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfKOSTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:19:22 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z188so6390654pgb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 10:19:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:to:subject:from:user-agent:date;
-        bh=/nPbsdCJvwt5lKKSjGD3DLzTdGucI41FrjpblwIsypo=;
-        b=EaoAKkm4BqcYz0t8roJcx9ZGH2ZwnA35uEWBR9b+b+UfNnEGGPfkn2GMxv+SW2BrwE
-         kT/LksAzxIDphLmWMWfjlHn57yIe0BUhKtAumfwEy+E0QujKRxuLjqrx5sDVKcQEBB22
-         lSgKZXpa6E+Cz/zv/IT9DVHmE/Ol4XZE15gGk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:to:subject:from
-         :user-agent:date;
-        bh=/nPbsdCJvwt5lKKSjGD3DLzTdGucI41FrjpblwIsypo=;
-        b=s9lz+YtOx633mWP/YjbfyqzNUaDgUMMGSf1efOCnG5e2Jud/VFr0aQBYGHiGwXkgdS
-         czZBUskkDYSG6JqNQZ2v+H4Ib3+mYnupgczaeVnXtc3FnLYBfJVJ3RUCE63zJZ7BXq/D
-         LjSXu3FK7JvUOvMQimQGCQwkDhe00PnuMPlbyjVA0PtHQkQT9Non5xJmlcRaa8X7T4ct
-         f2X8VJOYHFDXZ6pZ/w0V3pqPD7s7/TXnBz2gILUyoW2f8Qu3izZBgwojLos/Ng3PKFzt
-         Vj9bt8PbVinASeD1j0d9PubChjo7Fg9zzRvT4SS/F1bn311wRSe6Qlj9hOjiKIiWdO+F
-         qLOQ==
-X-Gm-Message-State: APjAAAVIWO1C7YJXcTPJwZIfw/r+0VnZlim/odKx6LV81ijUHsGQstZU
-        Pu/O9+0XGDL0njL8rs3QIFbKNw==
-X-Google-Smtp-Source: APXvYqw4aSsYPurq2VMWDwYSwROjnsjmTt0F1DX8PauKVTqLhoSLVwwxc6wZfCS/R0GLPZtK1TVkQA==
-X-Received: by 2002:a62:ea0b:: with SMTP id t11mr19675909pfh.182.1573841961943;
-        Fri, 15 Nov 2019 10:19:21 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k13sm10639792pgl.69.2019.11.15.10.19.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 10:19:21 -0800 (PST)
-Message-ID: <5dceec29.1c69fb81.4c2d0.e24d@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 15 Nov 2019 13:19:24 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iVgBk-00059S-1d; Fri, 15 Nov 2019 19:19:20 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B43111C18CF;
+        Fri, 15 Nov 2019 19:19:19 +0100 (CET)
+Date:   Fri, 15 Nov 2019 18:19:19 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] futex: Provide state handling for exec() as well
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191106224556.753355618@linutronix.de>
+References: <20191106224556.753355618@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <0000000000006062280596203360@google.com>
-References: <0000000000006062280596203360@google.com>
-To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        lvivier@redhat.com, mchehab+samsung@kernel.org, mpm@selenic.com,
-        syzbot <syzbot+6d8505fcdf25f00ac276@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Subject: Re: KASAN: use-after-free Read in chaoskey_disconnect
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 10:19:20 -0800
+Message-ID: <157384195969.12247.9678359807421410494.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting syzbot (2019-10-30 05:52:08)
-> Hello,
->=20
-> syzbot found the following crash on:
->=20
-> HEAD commit:    ff6409a6 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D15e1ba24e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D3230c37d44289=
-5b7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D6d8505fcdf25f00=
-ac276
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D169b8904e00=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D166f3104e00000
->=20
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6d8505fcdf25f00ac276@syzkaller.appspotmail.com
->=20
+The following commit has been merged into the locking/core branch of tip:
 
-Ok, let's try that again
+Commit-ID:     1cc7f1d098bbada1f999b143893b31e0bc0cafc4
+Gitweb:        https://git.kernel.org/tip/1cc7f1d098bbada1f999b143893b31e0bc0cafc4
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 06 Nov 2019 22:55:43 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 15 Nov 2019 19:10:53 +01:00
 
-#syz test: https://github.com/google/kasan.git ff6409a6
+futex: Provide state handling for exec() as well
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 5b799aa973a3..c487709499fc 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2440,8 +2440,8 @@ void add_hwgenerator_randomness(const char *buffer, s=
-ize_t count,
- 	 * We'll be woken up again once below random_write_wakeup_thresh,
- 	 * or when the calling thread is about to terminate.
- 	 */
--	wait_event_freezable(random_write_wait,
--			kthread_should_stop() ||
-+	wait_event_interruptible(random_write_wait,
-+			kthread_should_stop() || freezing(current) ||
- 			ENTROPY_BITS(&input_pool) <=3D random_write_wakeup_bits);
- 	mix_pool_bytes(poolp, buffer, count);
- 	credit_entropy_bits(poolp, entropy);
+exec() attempts to handle potentially held futexes gracefully by running
+the futex exit handling code like exit() does.
+
+The current implementation has no protection against concurrent incoming
+waiters. The reason is that the futex state cannot be set to
+FUTEX_STATE_DEAD after the cleanup because the task struct is still active
+and just about to execute the new binary.
+
+While its arguably buggy when a task holds a futex over exec(), for
+consistency sake the state handling can at least cover the actual futex
+exit cleanup section. This provides state consistency protection accross
+the cleanup. As the futex state of the task becomes FUTEX_STATE_OK after the
+cleanup has been finished, this cannot prevent subsequent attempts to
+attach to the task in case that the cleanup was not successfull in mopping
+up all leftovers.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20191106224556.753355618@linutronix.de
+
+---
+ kernel/futex.c | 38 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/futex.c b/kernel/futex.c
+index f618562..0c9850a 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -3661,7 +3661,7 @@ static void exit_robust_list(struct task_struct *curr)
+ 	}
+ }
+ 
+-void futex_exec_release(struct task_struct *tsk)
++static void futex_cleanup(struct task_struct *tsk)
+ {
+ 	if (unlikely(tsk->robust_list)) {
+ 		exit_robust_list(tsk);
+@@ -3701,7 +3701,7 @@ void futex_exit_recursive(struct task_struct *tsk)
+ 	tsk->futex_state = FUTEX_STATE_DEAD;
+ }
+ 
+-void futex_exit_release(struct task_struct *tsk)
++static void futex_cleanup_begin(struct task_struct *tsk)
+ {
+ 	/*
+ 	 * Switch the state to FUTEX_STATE_EXITING under tsk->pi_lock.
+@@ -3717,10 +3717,40 @@ void futex_exit_release(struct task_struct *tsk)
+ 	raw_spin_lock_irq(&tsk->pi_lock);
+ 	tsk->futex_state = FUTEX_STATE_EXITING;
+ 	raw_spin_unlock_irq(&tsk->pi_lock);
++}
+ 
+-	futex_exec_release(tsk);
++static void futex_cleanup_end(struct task_struct *tsk, int state)
++{
++	/*
++	 * Lockless store. The only side effect is that an observer might
++	 * take another loop until it becomes visible.
++	 */
++	tsk->futex_state = state;
++}
+ 
+-	tsk->futex_state = FUTEX_STATE_DEAD;
++void futex_exec_release(struct task_struct *tsk)
++{
++	/*
++	 * The state handling is done for consistency, but in the case of
++	 * exec() there is no way to prevent futher damage as the PID stays
++	 * the same. But for the unlikely and arguably buggy case that a
++	 * futex is held on exec(), this provides at least as much state
++	 * consistency protection which is possible.
++	 */
++	futex_cleanup_begin(tsk);
++	futex_cleanup(tsk);
++	/*
++	 * Reset the state to FUTEX_STATE_OK. The task is alive and about
++	 * exec a new binary.
++	 */
++	futex_cleanup_end(tsk, FUTEX_STATE_OK);
++}
++
++void futex_exit_release(struct task_struct *tsk)
++{
++	futex_cleanup_begin(tsk);
++	futex_cleanup(tsk);
++	futex_cleanup_end(tsk, FUTEX_STATE_DEAD);
+ }
+ 
+ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
