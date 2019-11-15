@@ -2,159 +2,135 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECACBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE475C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C461820740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C912073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="GGQXyqfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfKOKFY (ORCPT
+        id S1727658AbfKOKF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:05:24 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:41526 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfKOKFW (ORCPT
+        Fri, 15 Nov 2019 05:05:27 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35784 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727632AbfKOKFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:05:22 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iVYTf-0003WY-Is; Fri, 15 Nov 2019 10:05:19 +0000
-To:     Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: re: NFS: handle source server reboot
-Message-ID: <c64dfc7b-0c0b-e571-5a49-f32034eccaa5@canonical.com>
-Date:   Fri, 15 Nov 2019 10:05:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 15 Nov 2019 05:05:24 -0500
+Received: by mail-lj1-f195.google.com with SMTP id r7so10073832ljg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:05:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=E3sXchnQK6r0cbCO41TzSdNyYDZO5b9qiU92SWHzyaY=;
+        b=GGQXyqfAOOdn2W+1sXwtBvsy92bU6TkWIfV4fpktp026z4PB3TSvxZ0SBhT8E7OlT6
+         Q0NPLYkSp6Ly+KCZ0MCiexwh4ckM7I+V5D/eNPIuOF+QJXEDzTa25PYbqdH3XS+QYyRT
+         xK0lc680H8iIyhT8xFqqYqJLoGbSe2S3PGPAlDbsEqKs0yKUCU1msu/kMU7uRfHP/nYE
+         EWYzNYe+dL5s9xxB5FsA14YsJeLZAShYgAhjgagOvHfMwGi47t72O4u5Nk085epZU8J1
+         w7Ms9aP3ZzLHfvR0YEPibjX+UzuHx5M3peE6Hz3bQVElSqHGtAYG8G/LqF6Zf/zBtbzB
+         fIpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version:content-transfer-encoding;
+        bh=E3sXchnQK6r0cbCO41TzSdNyYDZO5b9qiU92SWHzyaY=;
+        b=Vs8/oTD2YvLuhoT9CMaQVlxsSI539zwB4/qqNMKf8qomqEZRUIJ0cc7cJ1WdPGzcL9
+         4gOYsF/9V6Rr/+v/Kso2MBg0+MLtiDggJHfNWrhKNx2WZRYOPoH55ozJlCn6x14m1KvK
+         KX9+FVxqnZAcVJIDc5dnh6gJ5Y4CrmAdhj2/A/O20F65MWrC66dNa7lygN/ew254ymuX
+         EYtBqPsnDoQLusJ8OemOx8GAejT28p0DyxAd1pcKW9M06pJug+s7IDkEcPck6KkJan8d
+         MMFpLAMIN2VEgCnMS9BMeupEzlj8V0tNhz9eh8acmVeWI7j0PH7tiZwYC4j5ZUdxHd9G
+         PCJA==
+X-Gm-Message-State: APjAAAU5osjr0Y2SKfqc5pMWA579PQ2JTU1u5enYuR9RuFlaicviYx/Q
+        MHtDTCQ5QmUG3cSWhFkUKyZb6uFqnLfSLw==
+X-Google-Smtp-Source: APXvYqy4I4omiLNNVKrf3idEsLlQPggt3o4md59DtcnBbH4pie88Z1O31ITPk0/nYDiBggFn9sRPNA==
+X-Received: by 2002:a2e:7204:: with SMTP id n4mr9981244ljc.139.1573812318913;
+        Fri, 15 Nov 2019 02:05:18 -0800 (PST)
+Received: from GL-434 ([109.204.235.119])
+        by smtp.gmail.com with ESMTPSA id e14sm3727391ljb.75.2019.11.15.02.05.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Nov 2019 02:05:18 -0800 (PST)
+From:   jouni.hogander@unikie.com (Jouni =?utf-8?Q?H=C3=B6gander?=)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH] drivers/base: Fix memory leak in error paths
+References: <20191114121840.5585-1-jouni.hogander@unikie.com>
+        <20191115032603.GG793701@kroah.com> <878soha7tc.fsf@unikie.com>
+        <20191115082022.GB55909@kroah.com>
+Date:   Fri, 15 Nov 2019 12:05:17 +0200
+In-Reply-To: <20191115082022.GB55909@kroah.com> (Greg Kroah-Hartman's message
+        of "Fri, 15 Nov 2019 16:20:22 +0800")
+Message-ID: <8736epa202.fsf@unikie.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.2 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Static analysis with Coverity has detected a memory leak in the
-following commit:
+>> >> This memory leak was reported by Syzkaller:
+>> >>=20
+>> >> BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
+>> >>   comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
+>> >>   hex dump (first 32 bytes):
+>> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+>> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+>> >>   backtrace:
+>> >>     [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
+>> >>     [<000000002340019b>] device_add+0x882/0x1750
+>> >>     [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
+>> >>     [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
+>> >>     [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
+>> >>     [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
+>> >>     [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
+>> >>     [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
+>> >>     [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
+>> >>     [<00000000984cabb9>] do_syscall_64+0x16f/0x580
+>> >>     [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>> >>     [<00000000e6ca2d9f>] 0xffffffffffffffff
+>> >
+>> > How is this a leak?  This is in device_add(), not removing the device.
+>> > When the structure really is freed then it can be removed.
+>>=20
+>> In net/core/net-sysfs.c:netdev_register_kobject device_add allocates
+>> dev->p. Now if register_queue_kobjects fails the error path is calling
+>> device_del and dev->p is never freed. Proper fix here could be to call
+>> put_device after device_del?
+>
+> Hm, this sounds like you have a reference count leak here, as
+> put_device() should be properly called already in this case.  You might
+> want to look further to see where exactly the register_queue_kobjects()
+> call fails in order to see if we grabbed a reference we forgot to put
+> back on an error path.
 
-commit 0e65a32c8a569db363048e17a708b1a0913adbef
-Author: Olga Kornievskaia <kolga@netapp.com>
-Date:   Fri Jun 14 14:38:40 2019 -0400
+Ok, did some more debugging on
+this. net/core/net-sysfs.c:netdev_register_kobject is doing
+device_initialize(dev). This is in
+drivers/base/core.c:device_initialize:
 
-    NFS: handle source server reboot
+ * NOTE: Use put_device() to give up your reference instead of freeing
+ * @dev directly once you have called this function.
 
-In function __nfs4_copy_file_range() in fs/nfs/nfs4file.c, analysis is
-as follows:
+My understanding is that remaining reference on error path is taken by
+device_initialize and as instructed in the note above it should be given
+up using put_device? Tested this and it's fixing the memory leak I found
+in my Syzkaller exercise. Addition to that it seems to be fixing also
+this one:
 
+https://syzkaller.appspot.com/bug?id=3Df5f4af9fb9ffb3112ad6e30f717f769decdc=
+cdfc
 
-155retry:
-   5. Condition !nfs42_files_from_same_server(file_in, file_out), taking
-false branch.
-   9. Condition !nfs42_files_from_same_server(file_in, file_out), taking
-false branch.
+BR,
 
-156        if (!nfs42_files_from_same_server(file_in, file_out)) {
-157                /* for inter copy, if copy size if smaller than 12 RPC
-158                 * payloads, fallback to traditional copy. There are
-159                 * 14 RPCs during an NFSv4.x mount between source/dest
-160                 * servers.
-161                 */
-162                if (sync ||
-163                        count <= 14 *
-NFS_SERVER(file_inode(file_in))->rsize)
-164                        return -EOPNOTSUPP;
-165                cn_resp = kzalloc(sizeof(struct nfs42_copy_notify_res),
-166                                GFP_NOFS);
-167                if (unlikely(cn_resp == NULL))
-168                        return -ENOMEM;
-169
-170                ret = nfs42_proc_copy_notify(file_in, file_out, cn_resp);
-171                if (ret) {
-172                        ret = -EOPNOTSUPP;
-173                        goto out;
-174                }
-175                nss = &cn_resp->cnr_src;
-176                cnrs = &cn_resp->cnr_stateid;
-177        }
-178        ret = nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count,
-179                                nss, cnrs, sync);
-180out:
-   6. freed_arg: kfree frees cn_resp.
-
-   CID 91571 (#1 of 1): Double free (USE_AFTER_FREE)10. double_free:
-Calling kfree frees pointer cn_resp which has already been freed.
-
-181        kfree(cn_resp);
-
-   7. Condition ret == -11, taking true branch.
-
-182        if (ret == -EAGAIN)
-   8. Jumping to label retry.
-
-183                goto retry;
-184        return ret;
-185}
-186
-
-On the 2nd iteration of the retry loop, cn_resp is being free'd twice if
-the call to nfs42_files_from_same_server() returns zero since cn_resp is
-not kalloc'd in the 2nd iteration. A naive fix would be to set cn_resp
-to NULL after the kfree on line 181, but I'm not sure if there is a
-better way to resolve this.
-
-Colin
+Jouni H=C3=B6gander
