@@ -2,95 +2,79 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3145AC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84788C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057F12073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD282073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="it38MDpu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t6Z61JPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfKONKe (ORCPT
+        id S1727435AbfKONNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:10:34 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51151 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727223AbfKONKd (ORCPT
+        Fri, 15 Nov 2019 08:13:12 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42328 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfKONNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:10:33 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFD2Pcu022731;
-        Fri, 15 Nov 2019 14:10:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=9rmwto7fOBN39SiXRHKuxkPMdmv3HZGhG7BMLDLWBXs=;
- b=it38MDpuYDLhG6jamaFeoXmLhqluiQEOXdJsj4ujecEVyW1onH6GHGQ0bekhkvwenlC4
- 07uZCgXKkx0GLS3DG1SG02fFxmzQtNHs9MuK4Pz5TXoWmcKAbNlOHN2BCJldDEnqfjYb
- uXeHsmFKaavG/nAr+2Y49GmfOCN/KXhigkGF+vFFfxlKV30IEGZpMmkEORjZgaCbBnBK
- 7T+hNMNL/xLdxrYWhIiwegLkhRGLrADw5ZA0YRiMyk6vGHQCXaMwJpJbndNQoM4uRsik
- CGA/8J750EcqctHJBrNmWyQdDKL1skR0tht2fjjbDjpTADlGZIlPuTmLczGgdHAu7GfY 3g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w7psbm8hg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 Nov 2019 14:10:20 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ED50910002A;
-        Fri, 15 Nov 2019 14:10:19 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D6A6F2BC106;
-        Fri, 15 Nov 2019 14:10:19 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov
- 2019 14:10:19 +0100
-Subject: Re: [PATCH 0/2] Add support for ADC on stm32mp157c-ed1
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <54a1b172-df71-0fec-cd40-e974dc70af34@st.com>
-Date:   Fri, 15 Nov 2019 14:10:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 15 Nov 2019 08:13:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5qrBznl1kz5QJqxp+sQGpXhaRVzPWa1p4hJJNJZ0Jd0=; b=t6Z61JPhK9IXU/lJ4yGh3OOzK
+        gyhHKgZVsCGkNkSL6aEOaoVabBnVMo90ps+rq/SckVJEPwL+MMqAMJxsqlR4buTwGoTixGUM9whnw
+        uyZkcjTmBkgmylU2/4MUiCpK+9RQv5aTNTsPqlhjMhmKZPvuJa8zSapEmOlIGr+xt7/9EnaDU8udX
+        x43/eka0xB3lwd5bjaASiexgzw0Sr/j28On2VEk5oSWsAA0Vohci6bBvlHXlD32ST+Gjd2B+vJmJ6
+        LeVa+Ud/9AzZ5T/ErB5f2NK4pUbiA+j4sbQ1zHroKy0Qu6fNDZTFWLwTOyjdZvKjMO4OV1YNmM/I+
+        ZfIyFqKMA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVbPS-0006G2-P6; Fri, 15 Nov 2019 13:13:10 +0000
+Date:   Fri, 15 Nov 2019 05:13:10 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 28/28] xfs: rework unreferenced inode lookups
+Message-ID: <20191115131310.GA18378@infradead.org>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-29-david@fromorbit.com>
+ <20191106221846.GE37080@bfoster>
+ <20191114221602.GJ4614@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114221602.GJ4614@dread.disaster.area>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrice
+On Fri, Nov 15, 2019 at 09:16:02AM +1100, Dave Chinner wrote:
+> > Can we tie these into the proper locking interface using flags? For
+> > example, something like xfs_ilock(ip, XFS_ILOCK_EXCL|XFS_ILOCK_NONOWNER)
+> > or xfs_ilock(ip, XFS_ILOCK_EXCL_NONOWNER) perhaps?
+> 
+> I'd prefer not to make this part of the common locking interface -
+> it's a one off special use case, not something we want to progate
+> elsewhere into the code.
+> 
+> Now that I think over it, I probably should have tagged this with
+> patch with [RFC]. I think we should just get rid of the mrlock
+> wrappers rather than add more, and that would simplify this a lot.
 
-On 11/8/19 5:37 PM, Fabrice Gasnier wrote:
-> This series adds support for digital-to-analog converter on
-> stm32mp157c-ed1 board:
-> - define pins that can be used for ADC
-> - configure ADC channels to use these
-> 
-> Fabrice Gasnier (2):
->    ARM: dts: stm32: add ADC pins used for stm32mp157c-ed1
->    ARM: dts: stm32: add ADC support to stm32mp157c-ed1
-> 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi |  6 ++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts     | 16 ++++++++++++++++
->   2 files changed, 22 insertions(+)
-> 
-Series applied on stm32-next.
-
-Regards
-Alex
+Yes, killing off the mrlock wrappers would be very helpful.  The only
+thing we use them for is asserts on the locking state.  We could either
+switch to lockdep_assert_held*, or just open code the write locked bit.
+While it is a little more ugly I'd tend towards the latter given that
+the locking asserts are too useful to require lockdep builds with their
+performance impact.
