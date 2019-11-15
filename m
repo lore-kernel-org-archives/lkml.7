@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706FAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CCCC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4947920733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289D620733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TSxkLjju"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UcNOeX7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfKOWeB (ORCPT
+        id S1727220AbfKOWeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:34:01 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33813 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfKOWd7 (ORCPT
+        Fri, 15 Nov 2019 17:34:04 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43964 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727178AbfKOWeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:33:59 -0500
-Received: by mail-pl1-f194.google.com with SMTP id h13so5643028plr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:33:59 -0800 (PST)
+        Fri, 15 Nov 2019 17:34:01 -0500
+Received: by mail-pl1-f195.google.com with SMTP id a18so5616516plm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2t2lfkYvCG1qZ4zH71UsZZVKevqEX7pyTohdYU3/dDg=;
-        b=TSxkLjjusnWyOxYQuwJ0yeo2qVuacsTryAzYn0nABmfZ+giChdSbiAlTILiu0av+QY
-         jkWKBo4DLgZtHrpz+tdF+VlAgQsfA3OdIm5fhLhv9vSP8EAGtXSK+OSQOTBRtAQcct2g
-         QR0Sglw0sLDa8vkUzDJ7iwCPgDCjEiKh+VvE3qSkwQesXq0iaKdptZvJJxiDYbc1N+j4
-         xaT/k5+AjeJLF9P+ANrQoOWHWCa16LHqeI0KGWEjIvKKArK5TYv/F94+FbsrOhMSzjwN
-         nH0qNcPvGaUtYtZ3JDYIjIjaFjXf66XE2kFG4WMS8hUVt2ONxPzvC68OWC0+AqOf4NGA
-         wEtw==
+        bh=pnStBG/T13CIghpMMY37iVdEqu6Tf6ypUdEca+Im12A=;
+        b=UcNOeX7QeFUdS+8BsU3HT6dUr5DPakiIHn/4UvPOHLFYqY/K6ujtP4IZer6qWH4PsL
+         kSBTMAw/WQgyxTxeo4ivek0tX/PV86dgJw0UkYo6ERIwQlFRePO6NKrAtfa6NCJ20W2O
+         TsLzkBAGM6YB4DuaLNvOwjU3GdT2dzYF5IIKeZ0U3QUbT9dSuHzqJDl+QXBysh5SV+Ov
+         lw25nX/7WiyUcJ5Xp4DrwnC0HKLo02gWkWh9DR0hT+OxTsQXWX6d6dxK8t070uRMMt9V
+         r9oATtIcUAuwarcVv9V2aewPHt7avcTKRzk1AKnwfy3HSFUqXiDShEdVFb9swtzK8Huo
+         4nkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=2t2lfkYvCG1qZ4zH71UsZZVKevqEX7pyTohdYU3/dDg=;
-        b=e5/IJYSo6re7kNarFud4StX8+Qf4bIfJ6nzSObVXG+MlARCAcmUhpuw4VRiu22Rle6
-         Cse68n+oiqM54jGGHkj1Kv+/eivngKf39qGuAX7s/3+GRuMvrK7dPy1N1MfebwNYSspA
-         oh3mix9JrK2PWjOKb6H34KzF5aV0XrziSctN+I0Nz2EPnQSR5XOkY4rEGfgadWe2824X
-         b/usc1mkxrPQPajSrM8MOxn84IjwzxznX7/1puoq5eyqpixApyZ31X1D1NOwdyVNCh9r
-         4UyLpoQLq5czUXk4cspkbjASnfWuNFFA4i7hMN6FvMEC9PHTyukyb2Up4MDIqQO80K60
-         CEzg==
-X-Gm-Message-State: APjAAAUHP9AltWVEDNsgmqxus1PIdUTY/p8BbqBHspp97Q+Ar+ExtOcn
-        werfWcrmMrGTpnyOta+dO2EB5Q==
-X-Google-Smtp-Source: APXvYqyCcGnCxpjNDXnOlQ5PDU1yc/iIX1FpvG9yax85c887grRTZSpLNG9/CAqWEFTR/yqC0+Ui1Q==
-X-Received: by 2002:a17:902:9a47:: with SMTP id x7mr3791386plv.84.1573857238838;
-        Fri, 15 Nov 2019 14:33:58 -0800 (PST)
+        bh=pnStBG/T13CIghpMMY37iVdEqu6Tf6ypUdEca+Im12A=;
+        b=S0USZpYOt+njxTIcdLLhWzXZta10kaap4bn3+9R6I6ay9MBNkI9EDCXqACsJ/aVM21
+         DJGyFZogpvjBEuR+Emrsjn5QsIyTTRQFL2eu57b4SUg01gErJLC6CjL24AkjCkm5DZoR
+         HqI6VrlzmxopzypbQhkB1qbofKdP+6AzDcIYQ8Rs7xZqFSaTz5BPXD2GeaWTBsR6toXu
+         1/iWSUaX5Lhb6UJkYHBAIfOOgtnuIbkcNqk0fUTvFvTgDv/auDo/oPhuBFGz4+azAA5H
+         4Tq4Px5sf48TwcHQdNfd4nHUoc1r2EOKLAHNsU9+6n2GfukkLks6tBUICyGRHgXxrzgi
+         qT+A==
+X-Gm-Message-State: APjAAAV8bz3r+uhXSgQwcVJDj8t5gHzT20wIpcssvb7WEwgyPEdSEGxh
+        FnqMl3oCb5laAXei6IL9Sx+UCw==
+X-Google-Smtp-Source: APXvYqyUkVVN6TQZYe84qUdIeuFg+UeaXSpsS5sSY6gzAeOIOOHIRLFnS9NzrP3wYAkm6hhStgbJiw==
+X-Received: by 2002:a17:902:fe8f:: with SMTP id x15mr17473187plm.343.1573857240779;
+        Fri, 15 Nov 2019 14:34:00 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.33.58
+        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.33.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 14:33:58 -0800 (PST)
+        Fri, 15 Nov 2019 14:34:00 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19+][PATCH 02/20] ARM: dts: stm32: relax qspi pins slew-rate for stm32mp157
-Date:   Fri, 15 Nov 2019 15:33:38 -0700
-Message-Id: <20191115223356.27675-2-mathieu.poirier@linaro.org>
+Subject: [stable 4.19+][PATCH 04/20] crypto: stm31/hash - Fix hmac issue more than 256 bytes
+Date:   Fri, 15 Nov 2019 15:33:40 -0700
+Message-Id: <20191115223356.27675-4-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115223356.27675-1-mathieu.poirier@linaro.org>
 References: <20191115223356.27675-1-mathieu.poirier@linaro.org>
@@ -69,60 +69,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+From: Lionel Debieve <lionel.debieve@st.com>
 
-commit 86ec2e1739aa1d6565888b4b2059fa47354e1a89 upstream
+commit 0acabecebc912b3ba06289e4ef40476acc499a37 upstream
 
-Relax qspi pins slew-rate to minimize peak currents.
+Correct condition for the second hmac loop. Key must be only
+set in the first loop. Initial condition was wrong,
+HMAC_KEY flag was not properly checked.
 
-Fixes: 844030057339 ("ARM: dts: stm32: add flash nor support on stm32mp157c eval board")
-
-Link: https://lore.kernel.org/r/20191025130122.11407-1-alexandre.torgue@st.com
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: stable <stable@vger.kernel.org> # 4.19+
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/crypto/stm32/stm32-hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index c4851271e810..d9dce0c804e1 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -290,13 +290,13 @@
- 						 <STM32_PINMUX('F', 6, AF9)>; /* QSPI_BK1_IO3 */
- 					bias-disable;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 				pins2 {
- 					pinmux = <STM32_PINMUX('B', 6, AF10)>; /* QSPI_BK1_NCS */
- 					bias-pull-up;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 			};
+diff --git a/drivers/crypto/stm32/stm32-hash.c b/drivers/crypto/stm32/stm32-hash.c
+index 590d7352837e..641b11077f47 100644
+--- a/drivers/crypto/stm32/stm32-hash.c
++++ b/drivers/crypto/stm32/stm32-hash.c
+@@ -365,7 +365,7 @@ static int stm32_hash_xmit_cpu(struct stm32_hash_dev *hdev,
+ 		return -ETIMEDOUT;
  
-@@ -308,13 +308,13 @@
- 						 <STM32_PINMUX('G', 7, AF11)>; /* QSPI_BK2_IO3 */
- 					bias-disable;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 				pins2 {
- 					pinmux = <STM32_PINMUX('C', 0, AF10)>; /* QSPI_BK2_NCS */
- 					bias-pull-up;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 			};
- 
+ 	if ((hdev->flags & HASH_FLAGS_HMAC) &&
+-	    (hdev->flags & ~HASH_FLAGS_HMAC_KEY)) {
++	    (!(hdev->flags & HASH_FLAGS_HMAC_KEY))) {
+ 		hdev->flags |= HASH_FLAGS_HMAC_KEY;
+ 		stm32_hash_write_key(hdev);
+ 		if (stm32_hash_wait_busy(hdev))
 -- 
 2.17.1
 
