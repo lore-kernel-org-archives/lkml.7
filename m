@@ -2,103 +2,225 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83ACCC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1A5C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5956820732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C162620733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:21:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AVbJwHsG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfKORSL (ORCPT
+        id S1727607AbfKORVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:18:11 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46116 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727531AbfKORSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:18:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 367BDAD20;
-        Fri, 15 Nov 2019 17:18:09 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 18:18:07 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@google.com
-Subject: Re: [PATCH v2] sched/topology, cpuset: Account for housekeeping CPUs
- to avoid empty cpumasks
-Message-ID: <20191115171807.GH19372@blackbody.suse.cz>
-References: <20191104003906.31476-1-valentin.schneider@arm.com>
- <d7ed40aa-1ac1-a42d-51eb-b1bd9f839fb1@arm.com>
+        Fri, 15 Nov 2019 12:21:50 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52708 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbfKORVt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 12:21:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573838507;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DdDOR7FDv/WmPIQVIDx5aIjH2GXLxNyZ+4tY7JcKXZk=;
+        b=AVbJwHsGPpFvP9PaaOYFtmU1MEKx3mTMtLcIBwsJZSZTJzM6VFLkA33jAOr/yX+SZRdQna
+        UWzo19dDlJiqfGEj1oL75ZGDSQpXfEf77jWlS9Qp6KUvGhHlK5XXvY/Xtw7X/OzPExTLvC
+        bW1iOnNPPjkOEinTwF9lRAI3C3gHgzU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-6d3nc2CFO3-lAzhrQJMhbw-1; Fri, 15 Nov 2019 12:21:44 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6785F8048F3;
+        Fri, 15 Nov 2019 17:21:43 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B8D1668432;
+        Fri, 15 Nov 2019 17:21:42 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 12:21:40 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/28] mm: directed shrinker work deferral
+Message-ID: <20191115172140.GA55854@bfoster>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-10-david@fromorbit.com>
+ <20191104152525.GA10665@bfoster>
+ <20191114204926.GC4614@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nFBW6CQlri5Qm8JQ"
+In-Reply-To: <20191114204926.GC4614@dread.disaster.area>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 6d3nc2CFO3-lAzhrQJMhbw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <d7ed40aa-1ac1-a42d-51eb-b1bd9f839fb1@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 15, 2019 at 07:49:26AM +1100, Dave Chinner wrote:
+> On Mon, Nov 04, 2019 at 10:25:25AM -0500, Brian Foster wrote:
+> > On Fri, Nov 01, 2019 at 10:45:59AM +1100, Dave Chinner wrote:
+> > > From: Dave Chinner <dchinner@redhat.com>
+> > >=20
+> > > Introduce a mechanism for ->count_objects() to indicate to the
+> > > shrinker infrastructure that the reclaim context will not allow
+> > > scanning work to be done and so the work it decides is necessary
+> > > needs to be deferred.
+> > >=20
+> > > This simplifies the code by separating out the accounting of
+> > > deferred work from the actual doing of the work, and allows better
+> > > decisions to be made by the shrinekr control logic on what action it
+> > > can take.
+> > >=20
+> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > > ---
+> >=20
+> > My understanding from the previous discussion(s) is that this is not
+> > tied directly to the gfp mask because that is not the only intended use=
+.
+> > While it is currently a boolean tied to the the entire shrinker call,
+> > the longer term objective is per-object granularity.
+>=20
+> Longer term, yes, but right now such things are not possible as the
+> shrinker needs more context to be able to make sane per-object
+> decisions. shrinker policy decisions that affect the entire run
+> scope should be handled by the ->count operation - it's the one that
+> says whether the scan loop should run or not, and right now GFP_NOFS
+> for all filesystem shrinkers is a pure boolean policy
+> implementation.
+>=20
+> The next future step is to provide a superblock context with
+> GFP_NOFS to indicate which filesystem we cannot recurse into. That
+> is also a shrinker instance wide check, so again it's something that
+> ->count should be deciding.
+>=20
+> i.e. ->count determines what is to be done, ->scan iterates the work
+> that has to be done until we are done.
+>=20
 
---nFBW6CQlri5Qm8JQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, makes sense in general.
 
-Hello.
+> > I find the argument reasonable enough, but if the above is true, why do
+> > we move these checks from ->scan_objects() to ->count_objects() (in the
+> > next patch) when per-object decisions will ultimately need to be made b=
+y
+> > the former?
+>=20
+> Because run/no-run policy belongs in one place, and things like
+> GFP_NOFS do no change across calls to the ->scan loop. i.e. after
+> the first ->scan call in a loop that calls it hundreds to thousands
+> of times, the GFP_NOFS run/no-run check is completely redundant.
+>=20
 
-On Thu, Nov 14, 2019 at 04:03:50PM +0000, Valentin Schneider <valentin.schn=
-eider@arm.com> wrote:
-> Michal, could I nag you for a reviewed-by? I'd feel a bit more confident
-> with any sort of approval from folks who actually do use cpusets.
-TL;DR I played with the v5.4-rc6 _without_ this fixup and I conclude it
-unnecessary (IOW my previous theoretical observation was wrong).
+What loop is currently called hundreds to thousands of times that this
+change prevents? AFAICT the current nofs checks in the ->scan calls
+explicitly terminate the scan loop. So we're effectively saving a
+function call by doing this earlier in the count ->call. (Nothing wrong
+with that, I'm just not following the numbers used in this reasoning..).
 
+> Once we introduce a new policy that allows the fs shrinker to do
+> careful reclaim in GFP_NOFS conditions, we need to do substantial
+> rework the shrinker scan loop and how it accounts the work that is
+> done - we now have at least 3 or 4 different return counters
+> (skipped because locked, skipped because referenced,
+> reclaimed, deferred reclaim because couldn't lock/recursion) and
+> the accounting and decisions to be made are a lot more complex.
+>=20
 
-The original problem is non-issue with v2 cpuset controller, because
-effective_cpus are never empty. isolcpus doesn't take out cpuset CPUs,
-hotplug does. In the case, no online CPU remains in the cpuset, it
-inherits ancestor's non-empty cpuset.
+Yeah, that's generally what I expected from your previous description.
 
-I reproduced the problem with v1 (before your fix). However, in v1
-effective =3D=3D allowed (we're destructive and overwrite allowed on
-hotunplug) and we already check the emptiness of=20
+> In that case, the ->count function will drop the GFP_NOFS check, but
+> still do all the other things is needs to do. The GFP_NOFS check
+> will go deep in the guts of the shrinker scan implementation where
+> the per-object recursion problem exists. But for most shrinkers,
+> it's still going to be a global boolean check...
+>=20
 
-  cpumask_intersects(cp->cpus_allowed, housekeeping_cpumask(HK_FLAG_DOMAIN)
+So once the nofs checks are lifted out of the ->count callback and into
+the core shrinker, is there still a use case to defer an entire ->count
+instance from the callback?
 
-few lines higher. I.e. the fixup adds redundant check against the empty
-sched domain production.
+> > That seems like unnecessary churn and inconsistent with the
+> > argument against just temporarily doing something like what Christoph
+> > suggested in the previous version, particularly since IIRC the only use
+> > in this series was for gfp mask purposes.
+>=20
+> If people want to call avoiding repeated, unnecessary evaluation of
+> the same condition hundreds of times instead of once "unnecessary
+> churn", then I'll drop it.
+>=20
 
-Sorry for the noise and HTH,
-Michal
+I'm not referring to the functional change as churn. What I was
+referring to is that we're shuffling around the boilerplate gfp checking
+code between the different shrinker callbacks, knowing that it's
+eventually going to be lifted out, when we could potentially just lift
+that code up a level now.
 
---nFBW6CQlri5Qm8JQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Brian
 
------BEGIN PGP SIGNATURE-----
+> > >  include/linux/shrinker.h | 7 +++++++
+> > >  mm/vmscan.c              | 8 ++++++++
+> > >  2 files changed, 15 insertions(+)
+> > >=20
+> > > diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
+> > > index 0f80123650e2..3405c39ab92c 100644
+> > > --- a/include/linux/shrinker.h
+> > > +++ b/include/linux/shrinker.h
+> > > @@ -31,6 +31,13 @@ struct shrink_control {
+> > > =20
+> > >  =09/* current memcg being shrunk (for memcg aware shrinkers) */
+> > >  =09struct mem_cgroup *memcg;
+> > > +
+> > > +=09/*
+> > > +=09 * set by ->count_objects if reclaim context prevents reclaim fro=
+m
+> > > +=09 * occurring. This allows the shrinker to immediately defer all t=
+he
+> > > +=09 * work and not even attempt to scan the cache.
+> > > +=09 */
+> > > +=09bool defer_work;
+> > >  };
+> > > =20
+> > >  #define SHRINK_STOP (~0UL)
+> > > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > > index ee4eecc7e1c2..a215d71d9d4b 100644
+> > > --- a/mm/vmscan.c
+> > > +++ b/mm/vmscan.c
+> > > @@ -536,6 +536,13 @@ static unsigned long do_shrink_slab(struct shrin=
+k_control *shrinkctl,
+> > >  =09trace_mm_shrink_slab_start(shrinker, shrinkctl, nr,
+> > >  =09=09=09=09   freeable, delta, total_scan, priority);
+> > > =20
+> > > +=09/*
+> > > +=09 * If the shrinker can't run (e.g. due to gfp_mask constraints), =
+then
+> > > +=09 * defer the work to a context that can scan the cache.
+> > > +=09 */
+> > > +=09if (shrinkctl->defer_work)
+> > > +=09=09goto done;
+> > > +
+> >=20
+> > I still find the fact that this per-shrinker invocation field is never
+> > reset unnecessarily fragile, and I don't see any good reason not to
+> > reset it prior to the shrinker callback that potentially sets it.
+>=20
+> I missed that when updating. I'll reset it in the next version.
+>=20
+> -Dave.
+> --=20
+> Dave Chinner
+> david@fromorbit.com
+>=20
 
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl3O3cgACgkQia1+riC5
-qSiGeA//dbxeLleRivvTRMu6ewhKeYA5GfAfmrsle+ZHgxKgu13LIa8eHLAWPu/Z
-YyHPHLctNpNYafHe47dMbAxduA4roPTtZzN8AMN4bRkrT85c1ZqCAVel6eZLU9Dj
-RIwV9vK3E6RBObG8W9Qq7b6Rhlty6mwnGpxil7oqJq/MxKe0DOYjYKsrl5JROc3G
-iywiIignt9izFFqK1z7R4TX4H9Q0ir/FEiu75CWMx7Ch5jSMgCUwcJiE1gTDognS
-vKIDIp0BD4nidnpLoP18iaywle6HbZOX6xT2GJXS5waCY6uKzHas++Jh/PdWYpTR
-+fzCQDS9otWlwSPUj/GSKwJbRakmxMWsfJp2/QreiWWbcS9XBxEH56jD03PBIF8A
-3toQN5kLVu+kWf2v5v+avd6jaIXMRtm5uBigmkmmax/vjq9UtzWI8FzMhcx48BTI
-FHzWdwP3BcptZClp6O/4pLQ8doP/RINGtQgvYvnFvEDrJQGO2xxJ78FBRZ7WxQVU
-BuS3yDu8Ntxa8CuJBgFNJpN9yDu0rGHbknKDTHZ2vXWT6/v6B3B2UkdGGvmm4mQC
-RKoUjKoTQoLDCIvErQLI+PP62twGsz0lGJVm8WEPhVbs5AZIXPAJ8tx8LKngfXE8
-38cy25tQ+hKhVtf+jIclTTYaN3Nvh2MBUKpZYXAQwdvXeiGn3NI=
-=2oDh
------END PGP SIGNATURE-----
-
---nFBW6CQlri5Qm8JQ--
