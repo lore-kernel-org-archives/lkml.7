@@ -2,81 +2,92 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E29FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783BFC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D801020733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5050D2072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:45:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nkqj7y10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfKOWoI (ORCPT
+        id S1727279AbfKOWpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:44:08 -0500
-Received: from correo.us.es ([193.147.175.20]:50000 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726958AbfKOWoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:44:07 -0500
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 7CF46FB456
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 23:44:03 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 607497E4DE
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 23:44:03 +0100 (CET)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 4FA175D0; Fri, 15 Nov 2019 23:44:03 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 6489DDA4CA;
-        Fri, 15 Nov 2019 23:44:01 +0100 (CET)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Fri, 15 Nov 2019 23:44:01 +0100 (CET)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 209CF426CCBA;
-        Fri, 15 Nov 2019 23:44:01 +0100 (CET)
-Date:   Fri, 15 Nov 2019 23:44:02 +0100
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, Ander Juaristi <a@juaristi.eus>,
-        wenxu <wenxu@ucloud.cn>, Thomas Gleixner <tglx@linutronix.de>,
-        Phil Sutter <phil@nwl.cc>, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 09/16] netfilter: nft_meta: use 64-bit time arithmetic
-Message-ID: <20191115224402.twm2lbbd66236t42@salvia>
-References: <20191108213257.3097633-1-arnd@arndb.de>
- <20191108213257.3097633-10-arnd@arndb.de>
+        Fri, 15 Nov 2019 17:45:14 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40611 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfKOWpO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 17:45:14 -0500
+Received: by mail-pl1-f194.google.com with SMTP id e3so5642976plt.7
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:45:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=7Lv3OlOPwc1itG1VgoAiwhDXhnQEj1MoRWBeTDRndG4=;
+        b=Nkqj7y10JNCu5K6kPudtI3lXHEwaZBSWUhX29HR/Abt8O2VfHSQU5mdiEVOiigMCw6
+         zsEj8MCsojhqm3YwGiyADl9ZPM0yX8rquJ1Z0q9RlkRg3Jr8td15JaCbE8CpRk/HgDm3
+         +tploRipqGjbIXjj7nLILijQjuVP6SsHpOJ5o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=7Lv3OlOPwc1itG1VgoAiwhDXhnQEj1MoRWBeTDRndG4=;
+        b=EPoAK2P+u45z+txyaf/dD7tfOMXrks6A0k/gZWIyhJpe6NBDZsj870SFcAL66wfASg
+         V98pPEGOVOGF+BKv53AgrYFveQGylW5E+68Lzl9KwuLYAPvlODqpepLdmg2rGI/H3Rjk
+         fkEMkGuNjtOzLUDn+WKsfM/ro5rBawIf62mUTZ8q1zQJeCiU5Cd/abz5zct+F7m2dXx9
+         CsJfqPR4+GATcqQRlD/WCfedrXspX5XxoirlUzYe9QVZVtB5g31kQaVubsSreN2ZGLwC
+         zTMK5SJKrqp6fZJYz7A7iJeUiu/yMEGxPqqd+mqLP/DJbpebxlf2f5elVC5W/ZdrQ1MC
+         e2rw==
+X-Gm-Message-State: APjAAAXwe+d9IxSi717TpnWBtCQDPb+QS2T/emMjzY72+gd/9pXvSHuf
+        UcDF3a44eHMOjLHmv/ILKztkiQ==
+X-Google-Smtp-Source: APXvYqxKvvQFWUoIX8E+lfiE355scZNy4BpKhjdSk1Emyyc0LcYlxCPxZKzrkbThPxbIN4SfSJj3Zw==
+X-Received: by 2002:a17:90a:f496:: with SMTP id bx22mr22379458pjb.126.1573857912758;
+        Fri, 15 Nov 2019 14:45:12 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k4sm11900933pfa.25.2019.11.15.14.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 14:45:12 -0800 (PST)
+Message-ID: <5dcf2a78.1c69fb81.f690a.481c@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108213257.3097633-10-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573593774-12539-5-git-send-email-eberman@codeaurora.org>
+References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-5-git-send-email-eberman@codeaurora.org>
+Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH v2 04/18] firmware: qcom_scm: Apply consistent naming scheme to command IDs
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 14:45:11 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:32:47PM +0100, Arnd Bergmann wrote:
-> On 32-bit architectures, get_seconds() returns an unsigned 32-bit
-> time value, which also matches the type used in the nft_meta
-> code. This will not overflow in year 2038 as a time_t would, but
-> it still suffers from the overflow problem later on in year 2106.
-> 
-> Change this instance to use the time64_t type consistently
-> and avoid the deprecated get_seconds().
-> 
-> The nft_meta_weekday() calculation potentially gets a little slower
-> on 32-bit architectures, but now it has the same behavior as on
-> 64-bit architectures and does not overflow.
+Quoting Elliot Berman (2019-11-12 13:22:40)
+> Create a consistent naming scheme for command IDs. The scheme is
+> QCOM_SCM_##svc_##cmd. Remove unused macros QCOM_SCM_FLAG_HLOS,
+> QCOM_SCM_FLAG_COLDBOOT_MC, QCOM_SCM_FLAG_WARMBOOT_MC,
+> QCOM_SCM_CMD_CORE_HOTPLUGGED, and QCOM_SCM_BOOT_ADDR_MC.
+>=20
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+> ---
 
-Applied, thanks Arnd.
+Would be nice to state that the object file is the same before and after
+this patch is applied, confirmed by compiling the file before and after
+and diffing the output.
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+
