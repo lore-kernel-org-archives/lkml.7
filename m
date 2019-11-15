@@ -2,95 +2,95 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920F9C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EEDC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D1F2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6452073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:52:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cMX8at+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfKORv2 (ORCPT
+        id S1726920AbfKORwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:51:28 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:44364 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfKORv0 (ORCPT
+        Fri, 15 Nov 2019 12:52:34 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55152 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726131AbfKORwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:51:26 -0500
-Received: by mail-io1-f72.google.com with SMTP id z1so7173427ioh.11
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 09:51:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to:cc;
-        bh=pGJy5bV/ClMY0bQDidFNUwMMkISrO4lRL5Ugf+Rz2YY=;
-        b=HyNrFjKjViZeLuDFulZpBjtAPQkz5Cn2F76zUMyiweo4r9/Kg+mxmoU1mb0qKUW9YG
-         CgDzjgda/oRudvzsb/mvNDfMLxU/XL7ULJtBeU781nyn9tMLEotb9qRIEXhpniRUGGb7
-         oSI8t1QEP1+rWs4vEAQicot77eA701BsclNnaPZM2QQTjaU3XmiTkDi+kuKq6puiIbzr
-         iau+WPoJzG3p5Lg9ltUz+zWUozA3L9azR+CxYX5dM9Chwt58PBBxznKTHQvPNeKXBetV
-         Hcx4FIdtQnyghub1FuHSfS0/93th8twdUypr3SGwpeuThAr6Y0+to1AbK2wC15f34dTf
-         eplA==
-X-Gm-Message-State: APjAAAXjZhzrTWzjEqodFIIV+LFZOzyjjvzaQQ8pUqU0r8aWil0CpBcO
-        kC49urZZnE94P8E6WEhvP0l0stEKiuB4FTLM1gZFJZ78SNGC
-X-Google-Smtp-Source: APXvYqxIKKi0/wnIl2ukMipzPOcGhT1Mj43uGPGEnX0b3CFttSEg5G8lFDDVS8HLZr0z0KhEQPp+P5k74GJmu4km2VyfzOyuGwXP
+        Fri, 15 Nov 2019 12:52:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573840353;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dGqn2wXaDwx9A6TmaPBjbD4iV16jXQiloPf6sWcs7RQ=;
+        b=cMX8at+7lw88n56wv6sKfdo2cvRWF1zSRrq+B3hj4nPzYOXg3pwOI+kNu+YH9olxkdYzq4
+        623++W4JZlw5WomSiFmlKcByiuY6hZiaLRKtryA7whlHsWyMMxrq8lPRhIpxs20a7UVu2z
+        bO3mJF3IA2DMQki01TDK5RfV8S2MYnM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-82-4q1upNmyPdygPntzOWZ9Hg-1; Fri, 15 Nov 2019 12:52:29 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D049A801E7E;
+        Fri, 15 Nov 2019 17:52:27 +0000 (UTC)
+Received: from treble (ovpn-120-26.rdu2.redhat.com [10.10.120.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4EF2360BE1;
+        Fri, 15 Nov 2019 17:52:26 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 11:52:24 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/7] Speed booting by sorting ORC unwind tables at
+ build time
+Message-ID: <20191115175224.ozuiei2vlfvynok5@treble>
+References: <20191115164539.57930-1-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8555:: with SMTP id b21mr1949271ios.22.1573840284098;
- Fri, 15 Nov 2019 09:51:24 -0800 (PST)
-Date:   Fri, 15 Nov 2019 09:51:24 -0800
-In-Reply-To: <5dcee59a.1c69fb81.188d.e4b9@mx.google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001129840597663fa0@google.com>
-Subject: Re: Re: INFO: task hung in chaoskey_disconnect
-From:   syzbot <syzbot+f41c4f7c6d8b0b778780@syzkaller.appspotmail.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
-        arnd@arndb.de, b.zolnierkie@samsung.com,
-        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, lvivier@redhat.com, mchehab@kernel.org,
-        mpm@selenic.com, swboyd@chromium.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191115164539.57930-1-shile.zhang@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 4q1upNmyPdygPntzOWZ9Hg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Quoting syzbot (2019-11-06 04:32:09)
->> Hello,
+On Sat, Nov 16, 2019 at 12:45:32AM +0800, Shile Zhang wrote:
+> Hi,
+>=20
+> I refactored the code, followed by Peter's suggestions in v3, thank you!
+> Any suggestions and comments are welcome!
+>=20
+> Thanks!
+>=20
+> Changelog:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> v3->v4:
+> - Code refactored for Peter's review findings and suggestions.
 
->> syzbot found the following crash on:
+Hi Shile,
 
->> HEAD commit:    b1aa9d83 usb: raw: add raw-gadget interface
->> git tree:       https://github.com/google/kasan.git usb-fuzzer
->> console output: https://syzkaller.appspot.com/x/log.txt?x=16ae2adce00000
->> kernel config:   
->> https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
->> dashboard link:  
->> https://syzkaller.appspot.com/bug?extid=f41c4f7c6d8b0b778780
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:       
->> https://syzkaller.appspot.com/x/repro.syz?x=10248158e00000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16afbf7ce00000
+I haven't given it a proper review yet, but one minor suggestion.  In
+general it's good practice to wait at least a few business days before
+posting a new version of a patch set.  That way it gives people time to
+review, and it also helps to avoid flooding people's inboxes.
 
->> IMPORTANT: if you fix the bug, please add the following tag to the  
->> commit:
->> Reported-by: syzbot+f41c4f7c6d8b0b778780@syzkaller.appspotmail.com
-
-> I suspect this is because of the kthread getting stuck problem reported
-> by Maciej. Maybe try the commit that Herbert picked up.
-
-> #syz test:  
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-
-Bugs found by USB fuzzer can only be tested on  
-https://github.com/google/kasan.git tree,
-usb-fuzzer branch because USB fuzzer is not upstreamed yet.
-See https://goo.gl/tpsmEJ#usb-fuzzer for details.
-
+--=20
+Josh
 
