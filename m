@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D53C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1F0C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEA320728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A4720723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfKOQqn (ORCPT
+        id S1727814AbfKOQqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:46:43 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:54080 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727555AbfKOQqn (ORCPT
+        Fri, 15 Nov 2019 11:46:46 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:35509 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727625AbfKOQqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:46:43 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TiAOFJs_1573836341;
+        Fri, 15 Nov 2019 11:46:45 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TiAOFJs_1573836341;
 Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TiAOFJs_1573836341)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 16 Nov 2019 00:45:49 +0800
+          Sat, 16 Nov 2019 00:45:50 +0800
 From:   Shile Zhang <shile.zhang@linux.alibaba.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -36,9 +36,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-kbuild@vger.kernel.org,
         Shile Zhang <shile.zhang@linux.alibaba.com>
-Subject: [RFC PATCH v4 2/7] scripts/sortextable: kernel coding style formating
-Date:   Sat, 16 Nov 2019 00:45:34 +0800
-Message-Id: <20191115164539.57930-3-shile.zhang@linux.alibaba.com>
+Subject: [RFC PATCH v4 6/7] scripts/sorttable: Add ORC unwind tables sort concurrently
+Date:   Sat, 16 Nov 2019 00:45:38 +0800
+Message-Id: <20191115164539.57930-7-shile.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.0.rc2
 In-Reply-To: <20191115164539.57930-1-shile.zhang@linux.alibaba.com>
 References: <20191115164539.57930-1-shile.zhang@linux.alibaba.com>
@@ -49,440 +49,303 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the inconsistent function format and kernel code style,
-referred to commit 3aec8638246f ("recordmcount: Kernel style
-function signature formatting") and
-commit 2e63152bc190 ("recordmcount: Kernel style formatting")
+ORC unwinder have two tables, .orc_unwind_ip and .orc_unwind, which
+needs sorted for binary search. To sort it at build time can save more
+CPU cycles help to speed up kernel booting.
 
-Make the code more readable and extendable, no functional changes.
+Add the ORC tables sorting in a sperated thread helps to avoid more link
+cost of kernel building.
 
+https://lore.kernel.org/lkml/20191108092136.GH4114@hirez.programming.kicks-ass.net/
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
 ---
- scripts/sortextable.c | 182 ++++++++++++++++++++++--------------------
- scripts/sortextable.h |  31 +++----
- 2 files changed, 111 insertions(+), 102 deletions(-)
+ scripts/Makefile    |   6 ++
+ scripts/sorttable.h | 201 ++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 202 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/sortextable.c b/scripts/sortextable.c
-index cd9762ba4467..e5384e86b58c 100644
---- a/scripts/sortextable.c
-+++ b/scripts/sortextable.c
-@@ -50,6 +50,14 @@
- #define EM_ARCV2	195
- #endif
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 658d201f7f8b..d6670bd420f6 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -26,6 +26,12 @@ HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
+ HOSTLDLIBS_sign-file = -lcrypto
+ HOSTLDLIBS_extract-cert = -lcrypto
  
-+static uint32_t (*r)(const uint32_t *);
-+static uint16_t (*r2)(const uint16_t *);
-+static uint64_t (*r8)(const uint64_t *);
-+static void (*w)(uint32_t, uint32_t *);
-+static void (*w2)(uint16_t, uint16_t *);
-+static void (*w8)(uint64_t, uint64_t *);
-+typedef void (*table_sort_t)(char *, int);
++ifdef CONFIG_UNWINDER_ORC
++HOSTCFLAGS_sorttable.o += -I$(srctree)/tools/arch/$(ARCH)/include
++HOSTCFLAGS_sorttable.o += -DUNWINDER_ORC_ENABLED
++HOSTLDLIBS_sorttable = -lpthread
++endif
 +
- /*
-  * Get the whole file as a programming convenience in order to avoid
-  * malloc+lseek+read+free of many pieces.  If successful, then mmap
-@@ -75,6 +83,7 @@ static void *mmap_file(char const *fname, size_t *size)
- 		fprintf(stderr, "not a regular file: %s\n", fname);
- 		goto out;
- 	}
-+
- 	addr = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
- 	if (addr == MAP_FAILED) {
- 		fprintf(stderr, "Could not mmap file: %s\n", fname);
-@@ -88,64 +97,65 @@ static void *mmap_file(char const *fname, size_t *size)
- 	return addr;
- }
+ always		:= $(hostprogs-y) $(hostprogs-m)
  
--static uint64_t r8be(const uint64_t *x)
--{
--	return get_unaligned_be64(x);
--}
- static uint32_t rbe(const uint32_t *x)
- {
- 	return get_unaligned_be32(x);
- }
-+
- static uint16_t r2be(const uint16_t *x)
- {
- 	return get_unaligned_be16(x);
- }
--static uint64_t r8le(const uint64_t *x)
-+
-+static uint64_t r8be(const uint64_t *x)
- {
--	return get_unaligned_le64(x);
-+	return get_unaligned_be64(x);
- }
-+
- static uint32_t rle(const uint32_t *x)
- {
- 	return get_unaligned_le32(x);
- }
-+
- static uint16_t r2le(const uint16_t *x)
- {
- 	return get_unaligned_le16(x);
- }
- 
--static void w8be(uint64_t val, uint64_t *x)
-+static uint64_t r8le(const uint64_t *x)
- {
--	put_unaligned_be64(val, x);
-+	return get_unaligned_le64(x);
- }
-+
- static void wbe(uint32_t val, uint32_t *x)
- {
- 	put_unaligned_be32(val, x);
- }
-+
- static void w2be(uint16_t val, uint16_t *x)
- {
- 	put_unaligned_be16(val, x);
- }
--static void w8le(uint64_t val, uint64_t *x)
-+
-+static void w8be(uint64_t val, uint64_t *x)
- {
--	put_unaligned_le64(val, x);
-+	put_unaligned_be64(val, x);
- }
-+
- static void wle(uint32_t val, uint32_t *x)
- {
- 	put_unaligned_le32(val, x);
- }
-+
- static void w2le(uint16_t val, uint16_t *x)
- {
- 	put_unaligned_le16(val, x);
- }
- 
--static uint64_t (*r8)(const uint64_t *);
--static uint32_t (*r)(const uint32_t *);
--static uint16_t (*r2)(const uint16_t *);
--static void (*w8)(uint64_t, uint64_t *);
--static void (*w)(uint32_t, uint32_t *);
--static void (*w2)(uint16_t, uint16_t *);
--
--typedef void (*table_sort_t)(char *, int);
-+static void w8le(uint64_t val, uint64_t *x)
-+{
-+	put_unaligned_le64(val, x);
-+}
- 
- /*
-  * Move reserved section indices SHN_LORESERVE..SHN_HIRESERVE out of
-@@ -188,108 +198,100 @@ static int compare_relative_table(const void *a, const void *b)
- 	return 0;
- }
- 
--static void x86_sort_relative_table(char *extab_image, int image_size)
-+static void sort_relative_table(char *extab_image, int image_size)
- {
--	int i;
-+	int i = 0;
- 
--	i = 0;
-+	/*
-+	 * Do the same thing the runtime sort does, first normalize to
-+	 * being relative to the start of the section.
-+	 */
- 	while (i < image_size) {
- 		uint32_t *loc = (uint32_t *)(extab_image + i);
--
- 		w(r(loc) + i, loc);
--		w(r(loc + 1) + i + 4, loc + 1);
--		w(r(loc + 2) + i + 8, loc + 2);
--
--		i += sizeof(uint32_t) * 3;
-+		i += 4;
- 	}
- 
--	qsort(extab_image, image_size / 12, 12, compare_relative_table);
-+	qsort(extab_image, image_size / 8, 8, compare_relative_table);
- 
-+	/* Now denormalize. */
- 	i = 0;
- 	while (i < image_size) {
- 		uint32_t *loc = (uint32_t *)(extab_image + i);
--
- 		w(r(loc) - i, loc);
--		w(r(loc + 1) - (i + 4), loc + 1);
--		w(r(loc + 2) - (i + 8), loc + 2);
--
--		i += sizeof(uint32_t) * 3;
-+		i += 4;
- 	}
- }
- 
--static void sort_relative_table(char *extab_image, int image_size)
-+static void x86_sort_relative_table(char *extab_image, int image_size)
- {
--	int i;
-+	int i = 0;
- 
--	/*
--	 * Do the same thing the runtime sort does, first normalize to
--	 * being relative to the start of the section.
--	 */
--	i = 0;
- 	while (i < image_size) {
- 		uint32_t *loc = (uint32_t *)(extab_image + i);
-+
- 		w(r(loc) + i, loc);
--		i += 4;
-+		w(r(loc + 1) + i + 4, loc + 1);
-+		w(r(loc + 2) + i + 8, loc + 2);
-+
-+		i += sizeof(uint32_t) * 3;
- 	}
- 
--	qsort(extab_image, image_size / 8, 8, compare_relative_table);
-+	qsort(extab_image, image_size / 12, 12, compare_relative_table);
- 
--	/* Now denormalize. */
- 	i = 0;
- 	while (i < image_size) {
- 		uint32_t *loc = (uint32_t *)(extab_image + i);
-+
- 		w(r(loc) - i, loc);
--		i += 4;
-+		w(r(loc + 1) - (i + 4), loc + 1);
-+		w(r(loc + 2) - (i + 8), loc + 2);
-+
-+		i += sizeof(uint32_t) * 3;
- 	}
- }
- 
--static int
--do_file(char const *const fname, void *addr)
-+static int do_file(char const *const fname, void *addr)
- {
--	table_sort_t custom_sort = NULL;
--	Elf32_Ehdr *ehdr = addr;
- 	int rc = -1;
-+	Elf32_Ehdr *ehdr = addr;
-+	table_sort_t custom_sort = NULL;
- 
- 	switch (ehdr->e_ident[EI_DATA]) {
--	default:
--		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
--			ehdr->e_ident[EI_DATA], fname);
--		return -1;
- 	case ELFDATA2LSB:
--		r = rle;
--		r2 = r2le;
--		r8 = r8le;
--		w = wle;
--		w2 = w2le;
--		w8 = w8le;
-+		r	= rle;
-+		r2	= r2le;
-+		r8	= r8le;
-+		w	= wle;
-+		w2	= w2le;
-+		w8	= w8le;
- 		break;
- 	case ELFDATA2MSB:
--		r = rbe;
--		r2 = r2be;
--		r8 = r8be;
--		w = wbe;
--		w2 = w2be;
--		w8 = w8be;
-+		r	= rbe;
-+		r2	= r2be;
-+		r8	= r8be;
-+		w	= wbe;
-+		w2	= w2be;
-+		w8	= w8be;
- 		break;
--	}  /* end switch */
--	if (memcmp(ELFMAG, ehdr->e_ident, SELFMAG) != 0
--	||  (r2(&ehdr->e_type) != ET_EXEC && r2(&ehdr->e_type) != ET_DYN)
--	||  ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
-+	default:
-+		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
-+			ehdr->e_ident[EI_DATA], fname);
-+		return -1;
-+	}
-+
-+	if (memcmp(ELFMAG, ehdr->e_ident, SELFMAG) != 0 ||
-+	    (r2(&ehdr->e_type) != ET_EXEC && r2(&ehdr->e_type) != ET_DYN) ||
-+	    ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
- 		fprintf(stderr, "unrecognized ET_EXEC/ET_DYN file %s\n", fname);
- 		return -1;
- 	}
- 
--	custom_sort = NULL;
- 	switch (r2(&ehdr->e_machine)) {
--	default:
--		fprintf(stderr, "unrecognized e_machine %d %s\n",
--			r2(&ehdr->e_machine), fname);
--		break;
- 	case EM_386:
- 	case EM_X86_64:
- 		custom_sort = x86_sort_relative_table;
- 		break;
--
- 	case EM_S390:
- 	case EM_AARCH64:
- 	case EM_PARISC:
-@@ -304,40 +306,45 @@ do_file(char const *const fname, void *addr)
- 	case EM_MIPS:
- 	case EM_XTENSA:
- 		break;
--	}  /* end switch */
-+	default:
-+		fprintf(stderr, "unrecognized e_machine %d %s\n",
-+			r2(&ehdr->e_machine), fname);
-+		return -1;
-+	}
- 
- 	switch (ehdr->e_ident[EI_CLASS]) {
--	default:
--		fprintf(stderr, "unrecognized ELF class %d %s\n",
--			ehdr->e_ident[EI_CLASS], fname);
--		break;
- 	case ELFCLASS32:
--		if (r2(&ehdr->e_ehsize) != sizeof(Elf32_Ehdr)
--		||  r2(&ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
-+		if (r2(&ehdr->e_ehsize) != sizeof(Elf32_Ehdr) ||
-+		    r2(&ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
- 			fprintf(stderr,
- 				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
- 			break;
- 		}
- 		rc = do32(ehdr, fname, custom_sort);
- 		break;
--	case ELFCLASS64: {
-+	case ELFCLASS64:
-+		{
- 		Elf64_Ehdr *const ghdr = (Elf64_Ehdr *)ehdr;
--		if (r2(&ghdr->e_ehsize) != sizeof(Elf64_Ehdr)
--		||  r2(&ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
-+		if (r2(&ghdr->e_ehsize) != sizeof(Elf64_Ehdr) ||
-+		    r2(&ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
- 			fprintf(stderr,
--				"unrecognized ET_EXEC/ET_DYN file: %s\n", fname);
-+				"unrecognized ET_EXEC/ET_DYN file: %s\n",
-+				fname);
- 			break;
- 		}
- 		rc = do64(ghdr, fname, custom_sort);
-+		}
-+		break;
-+	default:
-+		fprintf(stderr, "unrecognized ELF class %d %s\n",
-+			ehdr->e_ident[EI_CLASS], fname);
- 		break;
- 	}
--	}  /* end switch */
- 
- 	return rc;
- }
- 
--int
--main(int argc, char *argv[])
-+int main(int argc, char *argv[])
- {
- 	int i, n_error = 0;  /* gcc-4.3.0 false positive complaint */
- 	size_t size = 0;
-@@ -361,5 +368,6 @@ main(int argc, char *argv[])
- 
- 		munmap(addr, size);
- 	}
-+
- 	return !!n_error;
- }
-diff --git a/scripts/sortextable.h b/scripts/sortextable.h
-index 5a62e94df678..b7e407e09f59 100644
---- a/scripts/sortextable.h
-+++ b/scripts/sortextable.h
-@@ -6,7 +6,7 @@
+ # The following hostprogs-y programs are only build on demand
+diff --git a/scripts/sorttable.h b/scripts/sorttable.h
+index 82589ff90e25..41c8dd9c75fc 100644
+--- a/scripts/sorttable.h
++++ b/scripts/sorttable.h
+@@ -4,6 +4,14 @@
   *
+  * Copyright 2011 - 2012 Cavium, Inc.
+  *
++ * Added ORC unwind tables sort support, and other updates:
++ * Copyright (C) 1999-2019 Alibaba Group Holding Limited. by:
++ * Shile Zhang <shile.zhang@linux.alibaba.com>
++ *
++ * Some of code was taken out of /lib/sort.c, and
++ * arch/x86/kernel/unwind_orc.c written by:
++ * Copyright (C) 2017 Josh Poimboeuf <jpoimboe@redhat.com>
++ *
   * Some of this code was taken out of recordmcount.h written by:
   *
-- * Copyright 2009 John F. Reiser <jreiser@BitWagon.com>.  All rights reserved.
-+ * Copyright 2009 John F. Reiser <jreiser@BitWagon.com>. All rights reserved.
-  * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
-  */
+  * Copyright 2009 John F. Reiser <jreiser@BitWagon.com>. All rights reserved.
+@@ -75,6 +83,131 @@
+ # define _w			w
+ #endif
  
-@@ -87,8 +87,9 @@ static int compare_extable(const void *a, const void *b)
- 	return 0;
- }
- 
--static int
--do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
-+static int do_func(Elf_Ehdr *ehdr,
-+		   char const *const fname,
-+		   table_sort_t custom_sort)
++#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
++/* ORC unwinder only support X86_64 */
++#include <errno.h>
++#include <pthread.h>
++#include <asm/orc_types.h>
++
++int *g_orc_ip_table;
++struct orc_entry *g_orc_table;
++
++pthread_t orc_sort_thread;
++
++/**
++ * sort - sort an array of elements
++ * @base: pointer to data to sort
++ * @num: number of elements
++ * @size: size of each element
++ * @cmp_func: pointer to comparison function
++ * @swap_func: pointer to swap function
++ *
++ * This function does a heapsort on the given array. You may provide a
++ * swap_func function optimized to your element type.
++ *
++ * Sorting time is O(n log n) both on average and worst-case. While
++ * qsort is about 20% faster on average, it suffers from exploitable
++ * O(n*n) worst-case behavior and extra memory requirements that make
++ * it less suitable for kernel use.
++ *
++ * This code token out of /lib/sort.c.
++ */
++static void sort(void *base, size_t num, size_t size,
++	  int (*cmp_func)(const void *, const void *),
++	  void (*swap_func)(void *, void *, int size))
++{
++	/* pre-scale counters for performance */
++	int i = (num/2 - 1) * size, n = num * size, c, r;
++
++	/* heapify */
++	for ( ; i >= 0; i -= size) {
++		for (r = i; r * 2 + size < n; r  = c) {
++			c = r * 2 + size;
++			if (c < n - size &&
++					cmp_func(base + c, base + c + size) < 0)
++				c += size;
++			if (cmp_func(base + r, base + c) >= 0)
++				break;
++			swap_func(base + r, base + c, size);
++		}
++	}
++
++	/* sort */
++	for (i = n - size; i > 0; i -= size) {
++		swap_func(base, base + i, size);
++		for (r = 0; r * 2 + size < i; r = c) {
++			c = r * 2 + size;
++			if (c < i - size &&
++					cmp_func(base + c, base + c + size) < 0)
++				c += size;
++			if (cmp_func(base + r, base + c) >= 0)
++				break;
++			swap_func(base + r, base + c, size);
++		}
++	}
++}
++
++static inline unsigned long orc_ip(const int *ip)
++{
++	return (unsigned long)ip + *ip;
++}
++
++static void orc_sort_swap(void *_a, void *_b, int size)
++{
++	struct orc_entry *orc_a, *orc_b;
++	struct orc_entry orc_tmp;
++	int *a = _a, *b = _b, tmp;
++	int delta = _b - _a;
++
++	/* Swap the .orc_unwind_ip entries: */
++	tmp = *a;
++	*a = *b + delta;
++	*b = tmp - delta;
++
++	/* Swap the corresponding .orc_unwind entries: */
++	orc_a = g_orc_table + (a - g_orc_ip_table);
++	orc_b = g_orc_table + (b - g_orc_ip_table);
++	orc_tmp = *orc_a;
++	*orc_a = *orc_b;
++	*orc_b = orc_tmp;
++}
++
++static int orc_sort_cmp(const void *_a, const void *_b)
++{
++	struct orc_entry *orc_a;
++	const int *a = _a, *b = _b;
++	unsigned long a_val = orc_ip(a);
++	unsigned long b_val = orc_ip(b);
++
++	if (a_val > b_val)
++		return 1;
++	if (a_val < b_val)
++		return -1;
++
++	/*
++	 * The "weak" section terminator entries need to always be on the left
++	 * to ensure the lookup code skips them in favor of real entries.
++	 * These terminator entries exist to handle any gaps created by
++	 * whitelisted .o files which didn't get objtool generation.
++	 */
++	orc_a = g_orc_table + (a - g_orc_ip_table);
++	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
++}
++
++static void *sort_orctable(void *arg)
++{
++	unsigned int *size = (unsigned int *)arg;
++	unsigned int num_entries;
++
++	num_entries = *size / sizeof(int);
++
++	sort(g_orc_ip_table, num_entries, sizeof(int),
++	     orc_sort_cmp, orc_sort_swap);
++
++	pthread_exit(NULL);
++}
++#endif
++
+ static int compare_extable(const void *a, const void *b)
  {
- 	Elf_Shdr *shdr;
- 	Elf_Shdr *shstrtab_sec;
-@@ -126,7 +127,7 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
- 	secstrtab = (const char *)ehdr + _r(&shstrtab_sec->sh_offset);
- 	for (i = 0; i < num_sections; i++) {
- 		idx = r(&shdr[i].sh_name);
--		if (strcmp(secstrtab + idx, "__ex_table") == 0) {
-+		if (!strcmp(secstrtab + idx, "__ex_table")) {
- 			extab_sec = shdr + i;
- 			extab_index = i;
- 		}
-@@ -136,26 +137,26 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
- 			relocs = (void *)ehdr + _r(&shdr[i].sh_offset);
- 			relocs_size = _r(&shdr[i].sh_size);
- 		}
--		if (strcmp(secstrtab + idx, ".symtab") == 0)
-+		if (!strcmp(secstrtab + idx, ".symtab"))
- 			symtab_sec = shdr + i;
--		if (strcmp(secstrtab + idx, ".strtab") == 0)
-+		if (!strcmp(secstrtab + idx, ".strtab"))
- 			strtab_sec = shdr + i;
- 		if (r(&shdr[i].sh_type) == SHT_SYMTAB_SHNDX)
- 			symtab_shndx_start = (Elf32_Word *)(
- 				(const char *)ehdr + _r(&shdr[i].sh_offset));
+ 	Elf_Addr av = _r(a);
+@@ -91,6 +224,7 @@ static int do_sort(Elf_Ehdr *ehdr,
+ 		   char const *const fname,
+ 		   table_sort_t custom_sort)
+ {
++	int rc = -1;
+ 	Elf_Shdr *s, *shdr = (Elf_Shdr *)((char *)ehdr + _r(&ehdr->e_shoff));
+ 	Elf_Shdr *strtab_sec = NULL;
+ 	Elf_Shdr *symtab_sec = NULL;
+@@ -111,6 +245,11 @@ static int do_sort(Elf_Ehdr *ehdr,
+ 	int idx;
+ 	unsigned int shnum;
+ 	unsigned int shstrndx;
++#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
++	unsigned int orc_ip_size = 0;
++	unsigned int orc_size = 0;
++	unsigned int orc_num_entries = 0;
++#endif
+ 
+ 	shstrndx = r2(&ehdr->e_shstrndx);
+ 	if (shstrndx == SHN_XINDEX)
+@@ -141,21 +280,61 @@ static int do_sort(Elf_Ehdr *ehdr,
+ 		if (r(&s->sh_type) == SHT_SYMTAB_SHNDX)
+ 			symtab_shndx = (Elf32_Word *)((const char *)ehdr +
+ 						      _r(&s->sh_offset));
++
++#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
++		/* locate the ORC unwind tables */
++		if (!strcmp(secstrings + idx, ".orc_unwind_ip")) {
++			orc_ip_size = s->sh_size;
++			g_orc_ip_table = (int *)((void *)ehdr +
++						   s->sh_offset);
++		}
++		if (!strcmp(secstrings + idx, ".orc_unwind")) {
++			orc_size = s->sh_size;
++			g_orc_table = (struct orc_entry *)((void *)ehdr +
++							     s->sh_offset);
++		}
++#endif
++	} /* for loop */
++
++#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
++	if (!g_orc_ip_table || !g_orc_table) {
++		fprintf(stderr,
++			"incomplete ORC unwind tables in file: %s\n", fname);
++		goto out;
++	}
++
++	orc_num_entries = orc_ip_size / sizeof(int);
++	if (orc_ip_size % sizeof(int) != 0 ||
++	    orc_size % sizeof(struct orc_entry) != 0 ||
++	    orc_num_entries != orc_size / sizeof(struct orc_entry)) {
++		fprintf(stderr,
++			"inconsistent ORC unwind table entries in file: %s\n",
++			fname);
++		goto out;
  	}
--	if (strtab_sec == NULL) {
--		fprintf(stderr,	"no .strtab in  file: %s\n", fname);
-+	if (!strtab_sec) {
-+		fprintf(stderr,	"no .strtab in file: %s\n", fname);
- 		return -1;
+ 
++	/* create thread to sort ORC unwind tables concurrently */
++	if (pthread_create(&orc_sort_thread, NULL,
++			   sort_orctable, &orc_ip_size)) {
++		fprintf(stderr,
++			"pthread_create orc_sort_thread failed '%s': %s\n",
++			strerror(errno), fname);
++		goto out;
++	}
++#endif
+ 	if (!extab_sec) {
+ 		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
+-		return -1;
++		goto out;
  	}
--	if (symtab_sec == NULL) {
--		fprintf(stderr,	"no .symtab in  file: %s\n", fname);
-+	if (!symtab_sec) {
-+		fprintf(stderr,	"no .symtab in file: %s\n", fname);
- 		return -1;
+ 
+ 	if (!symtab_sec) {
+ 		fprintf(stderr,	"no .symtab in file: %s\n", fname);
+-		return -1;
++		goto out;
  	}
- 	symtab = (const Elf_Sym *)((const char *)ehdr +
- 				   _r(&symtab_sec->sh_offset));
--	if (extab_sec == NULL) {
--		fprintf(stderr,	"no __ex_table in  file: %s\n", fname);
-+	if (!extab_sec) {
-+		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
- 		return -1;
+ 
+ 	if (!strtab_sec) {
+ 		fprintf(stderr,	"no .strtab in file: %s\n", fname);
+-		return -1;
++		goto out;
  	}
- 	strtab = (const char *)ehdr + _r(&strtab_sec->sh_offset);
-@@ -181,14 +182,14 @@ do_func(Elf_Ehdr *ehdr, char const *const fname, table_sort_t custom_sort)
- 		if (ELF_ST_TYPE(sym->st_info) != STT_OBJECT)
- 			continue;
- 		idx = r(&sym->st_name);
--		if (strcmp(strtab + idx, "main_extable_sort_needed") == 0) {
-+		if (!strcmp(strtab + idx, "main_extable_sort_needed")) {
- 			sort_needed_sym = sym;
- 			break;
- 		}
- 	}
--	if (sort_needed_sym == NULL) {
-+	if (!sort_needed_sym) {
+ 
+ 	extab_image = (void *)ehdr + _r(&extab_sec->sh_offset);
+@@ -192,7 +371,7 @@ static int do_sort(Elf_Ehdr *ehdr,
  		fprintf(stderr,
--			"no main_extable_sort_needed symbol in  file: %s\n",
-+			"no main_extable_sort_needed symbol in file: %s\n",
+ 			"no main_extable_sort_needed symbol in file: %s\n",
  			fname);
- 		return -1;
+-		return -1;
++		goto out;
  	}
+ 
+ 	sort_needed_sec = &shdr[get_secindex(r2(&sym->st_shndx),
+@@ -205,6 +384,18 @@ static int do_sort(Elf_Ehdr *ehdr,
+ 
+ 	/* extable has been sorted, clear the flag */
+ 	w(0, sort_needed_loc);
++	rc = 0;
+ 
+-	return 0;
++out:
++#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
++	if (orc_sort_thread) {
++		/* wait for ORC tables sort done */
++		rc = pthread_join(orc_sort_thread, NULL);
++		if (rc)
++			fprintf(stderr,
++				"pthread_join orc_sort_thread failed "
++				"'%s': %s\n", strerror(errno), fname);
++	}
++#endif
++	return rc;
+ }
 -- 
 2.24.0.rc2
 
