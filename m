@@ -2,120 +2,96 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50CEC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222DFC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED6620740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573812214;
-	bh=hGwcyc7dse7aO4c4QTH0uwqziYR/8Omebj93aT3/dfY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u15v5GdTWPYljdUO3LIBzTYYMkmAg631+Fqb6A2L3jkhBZ9Hg87dAeCB+6wF/WgXY
-	 OMDGzg7d8rwdFunNO2jinCHPakjJ1kt52m/Gps06RGoiNr0JblmCfsaVJ7PnEZHY4X
-	 8v4lQCEOyDANYIEOu5Dvx1b+4I5w9RqF1ykamaPM=
+	by mail.kernel.org (Postfix) with ESMTP id EFE782073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:04:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GTWXCCOn";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cWprBifP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfKOKDd (ORCPT
+        id S1727427AbfKOKEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:03:33 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43914 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfKOKDd (ORCPT
+        Fri, 15 Nov 2019 05:04:21 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:33840 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727365AbfKOKEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:03:33 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l20so8111869oie.10;
-        Fri, 15 Nov 2019 02:03:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SXs3HY8YTAHDWbWH1wQlCggSxa17Nb5994AEWlereo4=;
-        b=F2IpUuHkBLOC/jLR/goXePgHZXrKwQojVPhKwXrb+btbPM0x3Gw6wHyuQHWd9vFEUb
-         LGpLLxMbfc9+MrnDUbMoFhEWQzuI4QcRuk44rZ3LDLLclcfZ3uS9nTLFkDBRrccGgobS
-         FR3Ywp5FHKmNnUBdgR2uhfVX5gPm4b4EBdjwTOSz/123vuVXjGRC2do5PfNFtAzmEOcK
-         uTEJ96pviVHs4qQwkWERjHzSfNuoCsGMDYmmHaRsitY+CahrLAMA0QRkVj2N8MDicRRv
-         2ckcPsHtkacb771hxwdCxa1KghjPioByijgqZ+IcY1e1cid9+qnim42f2KjjLpHXC4e0
-         hr+Q==
-X-Gm-Message-State: APjAAAVx5Yl5Wg8SrHOXAGz1cv0DOLs7i0xnUBwgcJGO49qMbbjYb7/P
-        o7wXKhDWt2WDZEVzJcAdW5uAGyHnovDhJUIjonc=
-X-Google-Smtp-Source: APXvYqwiAa8H0BnnhAV06ueQYnpFwJa+VHpNTuCaIVQesI+RmNL/91h2SB+RspBXW3ItPkDPPzqd4eu8aBOy2UvXCAI=
-X-Received: by 2002:aca:530c:: with SMTP id h12mr7658865oib.110.1573812211998;
- Fri, 15 Nov 2019 02:03:31 -0800 (PST)
-MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org> <20191115095447.GU4114@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191115095447.GU4114@hirez.programming.kicks-ass.net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 15 Nov 2019 11:03:20 +0100
-Message-ID: <CAJZ5v0hjsWM=bRg4k2qNCfcqjQ08N+6kG=1vCXpjbi5qEx7utw@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Nov 2019 05:04:20 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3635B61187; Fri, 15 Nov 2019 10:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573812259;
+        bh=VaQ+M/cW4KikmTdqZ7Lp5Io5EF9nqMDanu2nvq5JxhM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GTWXCCOnq5XtWiQ4ZxV8/n7it/OX0dwNRMOAruCpQMTeg7kBmOwQa+n3ZiVsxJUpJ
+         WT5D9/tbk2qk+zi7j+Sv3pXrsQm52NfNTB+cA9vwgPZ5rGETJnKMstV3I/OGIn+A/B
+         2nnIuw/CPTwpCVrWq8JHQKml9W7CDAe/1QUghQvs=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 54E82610DC;
+        Fri, 15 Nov 2019 10:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573812256;
+        bh=VaQ+M/cW4KikmTdqZ7Lp5Io5EF9nqMDanu2nvq5JxhM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cWprBifPUUATJDsFJkKauI4x/6I7C8D7Qt4zTLmcTAQafcqAJUT2NHKemjD/WHTFL
+         JIjERMPvZTfXtabobfS4Bg1vQ0460zcF6vQBBh9KH0WFTmjUsKt442VVvHPyrhgbKE
+         6a2DoZ5moYVN//CbLTs9YU3VoLho6zHACVPeNJ1A=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 54E82610DC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 0/3] Add display clock controller driver for SC7180
+Date:   Fri, 15 Nov 2019 15:34:02 +0530
+Message-Id: <1573812245-23827-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 10:55 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
-> > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> > which might be inefficient when cpufreq driver has rate limitation.
-> >
-> > When a task is attached on a CPU, we have call path:
-> >
-> > update_load_avg()
-> >   update_cfs_rq_load_avg()
-> >     cfs_rq_util_change -- > trig frequency update
-> >   attach_entity_load_avg()
-> >     cfs_rq_util_change -- > trig frequency update
-> >
-> > The 1st frequency update will not take into account the utilization of the
-> > newly attached task and the 2nd one might be discard because of rate
-> > limitation of the cpufreq driver.
->
-> Doesn't this just show that a dumb rate limit in the driver is broken?
->
-> > update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> > and update_load_avg() so we can move the call to
-> > cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
-> > interesting to notice that update_load_avg() already calls directly
-> > cfs_rq_util_change() for !SMP case.
-> >
-> > This changes will also ensure that cpufreq_update_util() is called even
-> > when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-> > irq, rt or dl pelt signals.
->
-> I don't think it does that; that is, iirc the return value of
-> ___update_load_sum() is 1 every time a period lapses. So even if the avg
-> is 0 and doesn't change, it'll still return 1 on every period.
->
-> Which is what that dumb rate-limit thing wants of course. But I'm still
-> thinking that it's stupid to do. If nothing changes, don't generate
-> events.
->
-> If anything, update_blocked_avgerages() should look at
-> @done/others_have_blocked() to emit events for rt,dl,irq.
->
-> So why are we making the scheduler code more ugly instead of fixing that
-> driver?
+Add support for the display clock controller found on SC7180
+based devices. This would allow display drivers to probe and
+control their clocks.
 
-I guess we could "fix" the driver by making it rate limit MSR writes
-only, but I'm not sure if that would help.
+This driver depends on the display port clock ops support
+https://patchwork.kernel.org/patch/11069087/
+
+Taniya Das (3):
+  dt-bindings: clock: Add YAML schemas for the QCOM DISPCC clock
+    bindings
+  dt-bindings: clock: Introduce QCOM Display clock bindings
+  clk: qcom: Add display clock controller driver for SC7180
+
+ .../devicetree/bindings/clock/qcom,dispcc.txt      |  19 -
+ .../devicetree/bindings/clock/qcom,dispcc.yaml     |  67 ++
+ drivers/clk/qcom/Kconfig                           |   9 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/dispcc-sc7180.c                   | 776 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,dispcc-sc7180.h     |  46 ++
+ 6 files changed, 899 insertions(+), 19 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+ create mode 100644 drivers/clk/qcom/dispcc-sc7180.c
+ create mode 100644 include/dt-bindings/clock/qcom,dispcc-sc7180.h
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
+
