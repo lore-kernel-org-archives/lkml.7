@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4D9C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED56C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C45A207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6844D2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798936;
-	bh=aembyKkNwnQdKyORIcdGPDuQMUoQXmBjYnUeXhN7uwQ=;
+	s=default; t=1573798939;
+	bh=pCATTbiF5NuP+y+tN0vyFUdJXhwdFoHoBkoltCfJUlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G8j5Hvrqk7m/Na10Tk8OgdJ9B/XkiTENopvG7ThPmnfmvhXHxBIkuegGDP5wBRAYq
-	 kD2/tLtkqrRaoPTY2ztnjCzog39gOGt654vo5v42veO3dmjGJXLFYO+hG/BQCGk1bh
-	 ElOBJk5fR0viyte01m2xImD0GNURRn/eNB5LnT4I=
+	b=md+KivsnTLvyK4RHXdHOI14PVCWENPHUsHTL56mJ0awNp9LggOEyaRQ8uUssMtoZa
+	 XAGMVtmBtBjYn/gjBzBPMwuF/RFHgJd15O5ABZ+oA6IRH9nQqmf/vtqkTsYnP3P7Uq
+	 Gej1BeWgZbcvdQ7TUBx6PNzF9ar0aAbFpOZAEZt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfKOGWP (ORCPT
+        id S1727658AbfKOGWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51410 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727621AbfKOGWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:12 -0500
+        id S1727629AbfKOGWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:15 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A399C207FC;
-        Fri, 15 Nov 2019 06:22:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFE8820728;
+        Fri, 15 Nov 2019 06:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798932;
-        bh=aembyKkNwnQdKyORIcdGPDuQMUoQXmBjYnUeXhN7uwQ=;
+        s=default; t=1573798934;
+        bh=pCATTbiF5NuP+y+tN0vyFUdJXhwdFoHoBkoltCfJUlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y8KvqTCrnsPHcXWyGo00ngJXhJCL/QMww16+C4YDzLcBh6dOo24+7bs47DEvSEJUo
-         kOFBNnmIRleNwBuqqzuSdew9Vg7c7uF6OfK2o9v23lZGxK32pRDipfmNLi9CDJIUE2
-         M23M9sFeoB8rQqKloMVzDFAgFr6ygbCEHfgB7ymg=
+        b=Dg0OInXCeh50cIRb9Za/fr2AXMpImcmjTKZ65142G8vaV/B95uA5C5IGHDXxiPBOs
+         13OOn/1P+L90bRkq6b7ii8abooz0Y9R3AWAU4stQqZdQb9O9TN/10kjCLtbLoyxe7v
+         fFTD7rSxc1iVuzQZyX9HevMSvvsxHcB5x6tXO9hY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 17/31] KVM: x86: extend usage of RET_MMIO_PF_* constants
-Date:   Fri, 15 Nov 2019 14:20:46 +0800
-Message-Id: <20191115062017.119192578@linuxfoundation.org>
+Subject: [PATCH 4.9 18/31] kvm: Convert kvm_lock to a mutex
+Date:   Fri, 15 Nov 2019 14:20:47 +0800
+Message-Id: <20191115062017.228649452@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
@@ -59,330 +60,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Junaid Shahid <junaids@google.com>
 
-commit 9b8ebbdb74b5ad76b9dfd8b101af17839174b126 upstream.
+commit 0d9ce162cf46c99628cc5da9510b959c7976735b upstream.
 
-The x86 MMU if full of code that returns 0 and 1 for retry/emulate.  Use
-the existing RET_MMIO_PF_RETRY/RET_MMIO_PF_EMULATE enum, renaming it to
-drop the MMIO part.
+It doesn't seem as if there is any particular need for kvm_lock to be a
+spinlock, so convert the lock to a mutex so that sleepable functions (in
+particular cond_resched()) can be called while holding it.
 
+Signed-off-by: Junaid Shahid <junaids@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 4.9: adjust context]
+[bwh: Backported to 4.9:
+ - Drop changes in kvm_hyperv_tsc_notifier(), vm_stat_clear(),
+   vcpu_stat_clear(), kvm_uevent_notify_change()
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kvm/mmu.c         |   93 +++++++++++++++++++++------------------------
- arch/x86/kvm/paging_tmpl.h |   18 ++++----
- 2 files changed, 54 insertions(+), 57 deletions(-)
+ Documentation/virtual/kvm/locking.txt |    6 +++---
+ arch/s390/kvm/kvm-s390.c              |    4 ++--
+ arch/x86/kvm/mmu.c                    |    4 ++--
+ arch/x86/kvm/x86.c                    |   10 +++++-----
+ include/linux/kvm_host.h              |    2 +-
+ virt/kvm/kvm_main.c                   |   18 +++++++++---------
+ 6 files changed, 22 insertions(+), 22 deletions(-)
 
+--- a/Documentation/virtual/kvm/locking.txt
++++ b/Documentation/virtual/kvm/locking.txt
+@@ -13,8 +13,8 @@ The acquisition orders for mutexes are a
+ - kvm->slots_lock is taken outside kvm->irq_lock, though acquiring
+   them together is quite rare.
+ 
+-For spinlocks, kvm_lock is taken outside kvm->mmu_lock.  Everything
+-else is a leaf: no other lock is taken inside the critical sections.
++Everything else is a leaf: no other lock is taken inside the critical
++sections.
+ 
+ 2: Exception
+ ------------
+@@ -142,7 +142,7 @@ See the comments in spte_has_volatile_bi
+ ------------
+ 
+ Name:		kvm_lock
+-Type:		spinlock_t
++Type:		mutex
+ Arch:		any
+ Protects:	- vm_list
+ 
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -1422,13 +1422,13 @@ int kvm_arch_init_vm(struct kvm *kvm, un
+ 	kvm->arch.sca = (struct bsca_block *) get_zeroed_page(alloc_flags);
+ 	if (!kvm->arch.sca)
+ 		goto out_err;
+-	spin_lock(&kvm_lock);
++	mutex_lock(&kvm_lock);
+ 	sca_offset += 16;
+ 	if (sca_offset + sizeof(struct bsca_block) > PAGE_SIZE)
+ 		sca_offset = 0;
+ 	kvm->arch.sca = (struct bsca_block *)
+ 			((char *) kvm->arch.sca + sca_offset);
+-	spin_unlock(&kvm_lock);
++	mutex_unlock(&kvm_lock);
+ 
+ 	sprintf(debug_name, "kvm-%u", current->pid);
+ 
 --- a/arch/x86/kvm/mmu.c
 +++ b/arch/x86/kvm/mmu.c
-@@ -142,6 +142,20 @@ module_param(dbg, bool, 0644);
- /* make pte_list_desc fit well in cache line */
- #define PTE_LIST_EXT 3
+@@ -4979,7 +4979,7 @@ mmu_shrink_scan(struct shrinker *shrink,
+ 	int nr_to_scan = sc->nr_to_scan;
+ 	unsigned long freed = 0;
  
-+/*
-+ * Return values of handle_mmio_page_fault and mmu.page_fault:
-+ * RET_PF_RETRY: let CPU fault again on the address.
-+ * RET_PF_EMULATE: mmio page fault, emulate the instruction directly.
-+ *
-+ * For handle_mmio_page_fault only:
-+ * RET_PF_INVALID: the spte is invalid, let the real page fault path update it.
-+ */
-+enum {
-+	RET_PF_RETRY = 0,
-+	RET_PF_EMULATE = 1,
-+	RET_PF_INVALID = 2,
-+};
-+
- struct pte_list_desc {
- 	u64 *sptes[PTE_LIST_EXT];
- 	struct pte_list_desc *more;
-@@ -2598,13 +2612,13 @@ done:
- 	return ret;
- }
+-	spin_lock(&kvm_lock);
++	mutex_lock(&kvm_lock);
  
--static bool mmu_set_spte(struct kvm_vcpu *vcpu, u64 *sptep, unsigned pte_access,
--			 int write_fault, int level, gfn_t gfn, kvm_pfn_t pfn,
--			 bool speculative, bool host_writable)
-+static int mmu_set_spte(struct kvm_vcpu *vcpu, u64 *sptep, unsigned pte_access,
-+			int write_fault, int level, gfn_t gfn, kvm_pfn_t pfn,
-+		       	bool speculative, bool host_writable)
- {
- 	int was_rmapped = 0;
- 	int rmap_count;
--	bool emulate = false;
-+	int ret = RET_PF_RETRY;
- 
- 	pgprintk("%s: spte %llx write_fault %d gfn %llx\n", __func__,
- 		 *sptep, write_fault, gfn);
-@@ -2634,12 +2648,12 @@ static bool mmu_set_spte(struct kvm_vcpu
- 	if (set_spte(vcpu, sptep, pte_access, level, gfn, pfn, speculative,
- 	      true, host_writable)) {
- 		if (write_fault)
--			emulate = true;
-+			ret = RET_PF_EMULATE;
- 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+ 	list_for_each_entry(kvm, &vm_list, vm_list) {
+ 		int idx;
+@@ -5029,7 +5029,7 @@ unlock:
+ 		break;
  	}
  
- 	if (unlikely(is_mmio_spte(*sptep)))
--		emulate = true;
-+		ret = RET_PF_EMULATE;
- 
- 	pgprintk("%s: setting spte %llx\n", __func__, *sptep);
- 	pgprintk("instantiating %s PTE (%s) at %llx (%llx) addr %p\n",
-@@ -2659,7 +2673,7 @@ static bool mmu_set_spte(struct kvm_vcpu
- 
- 	kvm_release_pfn_clean(pfn);
- 
--	return emulate;
-+	return ret;
+-	spin_unlock(&kvm_lock);
++	mutex_unlock(&kvm_lock);
+ 	return freed;
  }
  
- static kvm_pfn_t pte_prefetch_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn,
-@@ -2798,14 +2812,13 @@ static int kvm_handle_bad_page(struct kv
- 	 * Do not cache the mmio info caused by writing the readonly gfn
- 	 * into the spte otherwise read access on readonly gfn also can
- 	 * caused mmio page fault and treat it as mmio access.
--	 * Return 1 to tell kvm to emulate it.
- 	 */
- 	if (pfn == KVM_PFN_ERR_RO_FAULT)
--		return 1;
-+		return RET_PF_EMULATE;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5978,17 +5978,17 @@ static int kvmclock_cpufreq_notifier(str
  
- 	if (pfn == KVM_PFN_ERR_HWPOISON) {
- 		kvm_send_hwpoison_signal(kvm_vcpu_gfn_to_hva(vcpu, gfn), current);
--		return 0;
-+		return RET_PF_RETRY;
- 	}
+ 	smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
  
- 	return -EFAULT;
-@@ -3031,13 +3044,13 @@ static int nonpaging_map(struct kvm_vcpu
- 	}
- 
- 	if (fast_page_fault(vcpu, v, level, error_code))
--		return 0;
-+		return RET_PF_RETRY;
- 
- 	mmu_seq = vcpu->kvm->mmu_notifier_seq;
- 	smp_rmb();
- 
- 	if (try_async_pf(vcpu, prefault, gfn, v, &pfn, write, &map_writable))
--		return 0;
-+		return RET_PF_RETRY;
- 
- 	if (handle_abnormal_pfn(vcpu, v, gfn, pfn, ACC_ALL, &r))
- 		return r;
-@@ -3056,7 +3069,7 @@ static int nonpaging_map(struct kvm_vcpu
- out_unlock:
- 	spin_unlock(&vcpu->kvm->mmu_lock);
- 	kvm_release_pfn_clean(pfn);
--	return 0;
-+	return RET_PF_RETRY;
- }
- 
- 
-@@ -3383,54 +3396,38 @@ exit:
- 	return reserved;
- }
- 
--/*
-- * Return values of handle_mmio_page_fault:
-- * RET_MMIO_PF_EMULATE: it is a real mmio page fault, emulate the instruction
-- *			directly.
-- * RET_MMIO_PF_INVALID: invalid spte is detected then let the real page
-- *			fault path update the mmio spte.
-- * RET_MMIO_PF_RETRY: let CPU fault again on the address.
-- * RET_MMIO_PF_BUG: a bug was detected (and a WARN was printed).
-- */
--enum {
--	RET_MMIO_PF_EMULATE = 1,
--	RET_MMIO_PF_INVALID = 2,
--	RET_MMIO_PF_RETRY = 0,
--	RET_MMIO_PF_BUG = -1
--};
--
- static int handle_mmio_page_fault(struct kvm_vcpu *vcpu, u64 addr, bool direct)
- {
- 	u64 spte;
- 	bool reserved;
- 
- 	if (mmio_info_in_cache(vcpu, addr, direct))
--		return RET_MMIO_PF_EMULATE;
-+		return RET_PF_EMULATE;
- 
- 	reserved = walk_shadow_page_get_mmio_spte(vcpu, addr, &spte);
- 	if (WARN_ON(reserved))
--		return RET_MMIO_PF_BUG;
-+		return -EINVAL;
- 
- 	if (is_mmio_spte(spte)) {
- 		gfn_t gfn = get_mmio_spte_gfn(spte);
- 		unsigned access = get_mmio_spte_access(spte);
- 
- 		if (!check_mmio_spte(vcpu, spte))
--			return RET_MMIO_PF_INVALID;
-+			return RET_PF_INVALID;
- 
- 		if (direct)
- 			addr = 0;
- 
- 		trace_handle_mmio_page_fault(addr, gfn, access);
- 		vcpu_cache_mmio_info(vcpu, addr, gfn, access);
--		return RET_MMIO_PF_EMULATE;
-+		return RET_PF_EMULATE;
- 	}
- 
- 	/*
- 	 * If the page table is zapped by other cpus, let CPU fault again on
- 	 * the address.
- 	 */
--	return RET_MMIO_PF_RETRY;
-+	return RET_PF_RETRY;
- }
- EXPORT_SYMBOL_GPL(handle_mmio_page_fault);
- 
-@@ -3480,7 +3477,7 @@ static int nonpaging_page_fault(struct k
- 	pgprintk("%s: gva %lx error %x\n", __func__, gva, error_code);
- 
- 	if (page_fault_handle_page_track(vcpu, error_code, gfn))
--		return 1;
-+		return RET_PF_EMULATE;
- 
- 	r = mmu_topup_memory_caches(vcpu);
- 	if (r)
-@@ -3568,7 +3565,7 @@ static int tdp_page_fault(struct kvm_vcp
- 	MMU_WARN_ON(!VALID_PAGE(vcpu->arch.mmu.root_hpa));
- 
- 	if (page_fault_handle_page_track(vcpu, error_code, gfn))
--		return 1;
-+		return RET_PF_EMULATE;
- 
- 	r = mmu_topup_memory_caches(vcpu);
- 	if (r)
-@@ -3585,13 +3582,13 @@ static int tdp_page_fault(struct kvm_vcp
- 	}
- 
- 	if (fast_page_fault(vcpu, gpa, level, error_code))
--		return 0;
-+		return RET_PF_RETRY;
- 
- 	mmu_seq = vcpu->kvm->mmu_notifier_seq;
- 	smp_rmb();
- 
- 	if (try_async_pf(vcpu, prefault, gfn, gpa, &pfn, write, &map_writable))
--		return 0;
-+		return RET_PF_RETRY;
- 
- 	if (handle_abnormal_pfn(vcpu, 0, gfn, pfn, ACC_ALL, &r))
- 		return r;
-@@ -3610,7 +3607,7 @@ static int tdp_page_fault(struct kvm_vcp
- out_unlock:
- 	spin_unlock(&vcpu->kvm->mmu_lock);
- 	kvm_release_pfn_clean(pfn);
--	return 0;
-+	return RET_PF_RETRY;
- }
- 
- static void nonpaging_init_context(struct kvm_vcpu *vcpu,
-@@ -4526,24 +4523,24 @@ int kvm_mmu_page_fault(struct kvm_vcpu *
- 	enum emulation_result er;
- 	bool direct = vcpu->arch.mmu.direct_map || mmu_is_nested(vcpu);
- 
-+	r = RET_PF_INVALID;
- 	if (unlikely(error_code & PFERR_RSVD_MASK)) {
- 		r = handle_mmio_page_fault(vcpu, cr2, direct);
--		if (r == RET_MMIO_PF_EMULATE) {
-+		if (r == RET_PF_EMULATE) {
- 			emulation_type = 0;
- 			goto emulate;
+-	spin_lock(&kvm_lock);
++	mutex_lock(&kvm_lock);
+ 	list_for_each_entry(kvm, &vm_list, vm_list) {
+ 		kvm_for_each_vcpu(i, vcpu, kvm) {
+ 			if (vcpu->cpu != freq->cpu)
+ 				continue;
+ 			kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
+-			if (vcpu->cpu != smp_processor_id())
++			if (vcpu->cpu != raw_smp_processor_id())
+ 				send_ipi = 1;
  		}
--		if (r == RET_MMIO_PF_RETRY)
--			return 1;
--		if (r < 0)
--			return r;
--		/* Must be RET_MMIO_PF_INVALID.  */
  	}
+-	spin_unlock(&kvm_lock);
++	mutex_unlock(&kvm_lock);
  
--	r = vcpu->arch.mmu.page_fault(vcpu, cr2, error_code, false);
-+	if (r == RET_PF_INVALID) {
-+		r = vcpu->arch.mmu.page_fault(vcpu, cr2, error_code, false);
-+		WARN_ON(r == RET_PF_INVALID);
-+	}
-+
-+	if (r == RET_PF_RETRY)
-+		return 1;
- 	if (r < 0)
- 		return r;
--	if (!r)
--		return 1;
+ 	if (freq->old < freq->new && send_ipi) {
+ 		/*
+@@ -6126,12 +6126,12 @@ static void pvclock_gtod_update_fn(struc
+ 	struct kvm_vcpu *vcpu;
+ 	int i;
  
- 	if (mmio_info_in_cache(vcpu, cr2, direct))
- 		emulation_type = 0;
---- a/arch/x86/kvm/paging_tmpl.h
-+++ b/arch/x86/kvm/paging_tmpl.h
-@@ -577,7 +577,7 @@ static int FNAME(fetch)(struct kvm_vcpu
- 	struct kvm_mmu_page *sp = NULL;
- 	struct kvm_shadow_walk_iterator it;
- 	unsigned direct_access, access = gw->pt_access;
--	int top_level, emulate;
-+	int top_level, ret;
- 
- 	direct_access = gw->pte_access;
- 
-@@ -643,15 +643,15 @@ static int FNAME(fetch)(struct kvm_vcpu
- 	}
- 
- 	clear_sp_write_flooding_count(it.sptep);
--	emulate = mmu_set_spte(vcpu, it.sptep, gw->pte_access, write_fault,
--			       it.level, gw->gfn, pfn, prefault, map_writable);
-+	ret = mmu_set_spte(vcpu, it.sptep, gw->pte_access, write_fault,
-+			   it.level, gw->gfn, pfn, prefault, map_writable);
- 	FNAME(pte_prefetch)(vcpu, gw, it.sptep);
- 
--	return emulate;
-+	return ret;
- 
- out_gpte_changed:
- 	kvm_release_pfn_clean(pfn);
--	return 0;
-+	return RET_PF_RETRY;
+-	spin_lock(&kvm_lock);
++	mutex_lock(&kvm_lock);
+ 	list_for_each_entry(kvm, &vm_list, vm_list)
+ 		kvm_for_each_vcpu(i, vcpu, kvm)
+ 			kvm_make_request(KVM_REQ_MASTERCLOCK_UPDATE, vcpu);
+ 	atomic_set(&kvm_guest_has_master_clock, 0);
+-	spin_unlock(&kvm_lock);
++	mutex_unlock(&kvm_lock);
  }
  
-  /*
-@@ -746,12 +746,12 @@ static int FNAME(page_fault)(struct kvm_
- 		if (!prefault)
- 			inject_page_fault(vcpu, &walker.fault);
+ static DECLARE_WORK(pvclock_gtod_work, pvclock_gtod_update_fn);
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -129,7 +129,7 @@ static inline bool is_error_page(struct
  
--		return 0;
-+		return RET_PF_RETRY;
+ extern struct kmem_cache *kvm_vcpu_cache;
+ 
+-extern spinlock_t kvm_lock;
++extern struct mutex kvm_lock;
+ extern struct list_head vm_list;
+ 
+ struct kvm_io_range {
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -87,7 +87,7 @@ module_param(halt_poll_ns_shrink, uint,
+  *	kvm->lock --> kvm->slots_lock --> kvm->irq_lock
+  */
+ 
+-DEFINE_SPINLOCK(kvm_lock);
++DEFINE_MUTEX(kvm_lock);
+ static DEFINE_RAW_SPINLOCK(kvm_count_lock);
+ LIST_HEAD(vm_list);
+ 
+@@ -666,9 +666,9 @@ static struct kvm *kvm_create_vm(unsigne
+ 	if (r)
+ 		goto out_err;
+ 
+-	spin_lock(&kvm_lock);
++	mutex_lock(&kvm_lock);
+ 	list_add(&kvm->vm_list, &vm_list);
+-	spin_unlock(&kvm_lock);
++	mutex_unlock(&kvm_lock);
+ 
+ 	preempt_notifier_inc();
+ 
+@@ -724,9 +724,9 @@ static void kvm_destroy_vm(struct kvm *k
+ 
+ 	kvm_destroy_vm_debugfs(kvm);
+ 	kvm_arch_sync_events(kvm);
+-	spin_lock(&kvm_lock);
++	mutex_lock(&kvm_lock);
+ 	list_del(&kvm->vm_list);
+-	spin_unlock(&kvm_lock);
++	mutex_unlock(&kvm_lock);
+ 	kvm_free_irq_routing(kvm);
+ 	for (i = 0; i < KVM_NR_BUSES; i++) {
+ 		if (kvm->buses[i])
+@@ -3752,13 +3752,13 @@ static int vm_stat_get(void *_offset, u6
+ 	u64 tmp_val;
+ 
+ 	*val = 0;
+-	spin_lock(&kvm_lock);
++	mutex_lock(&kvm_lock);
+ 	list_for_each_entry(kvm, &vm_list, vm_list) {
+ 		stat_tmp.kvm = kvm;
+ 		vm_stat_get_per_vm((void *)&stat_tmp, &tmp_val);
+ 		*val += tmp_val;
  	}
- 
- 	if (page_fault_handle_page_track(vcpu, error_code, walker.gfn)) {
- 		shadow_page_table_clear_flood(vcpu, addr);
--		return 1;
-+		return RET_PF_EMULATE;
- 	}
- 
- 	vcpu->arch.write_fault_to_shadow_pgtable = false;
-@@ -773,7 +773,7 @@ static int FNAME(page_fault)(struct kvm_
- 
- 	if (try_async_pf(vcpu, prefault, walker.gfn, addr, &pfn, write_fault,
- 			 &map_writable))
--		return 0;
-+		return RET_PF_RETRY;
- 
- 	if (handle_abnormal_pfn(vcpu, mmu_is_nested(vcpu) ? 0 : addr,
- 				walker.gfn, pfn, walker.pte_access, &r))
-@@ -818,7 +818,7 @@ static int FNAME(page_fault)(struct kvm_
- out_unlock:
- 	spin_unlock(&vcpu->kvm->mmu_lock);
- 	kvm_release_pfn_clean(pfn);
--	return 0;
-+	return RET_PF_RETRY;
+-	spin_unlock(&kvm_lock);
++	mutex_unlock(&kvm_lock);
+ 	return 0;
  }
  
- static gpa_t FNAME(get_level1_sp_gpa)(struct kvm_mmu_page *sp)
+@@ -3772,13 +3772,13 @@ static int vcpu_stat_get(void *_offset,
+ 	u64 tmp_val;
+ 
+ 	*val = 0;
+-	spin_lock(&kvm_lock);
++	mutex_lock(&kvm_lock);
+ 	list_for_each_entry(kvm, &vm_list, vm_list) {
+ 		stat_tmp.kvm = kvm;
+ 		vcpu_stat_get_per_vm((void *)&stat_tmp, &tmp_val);
+ 		*val += tmp_val;
+ 	}
+-	spin_unlock(&kvm_lock);
++	mutex_unlock(&kvm_lock);
+ 	return 0;
+ }
+ 
 
 
