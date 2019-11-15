@@ -2,165 +2,171 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF20C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DB3C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E212072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8162072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QB7rz/OL"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="uUT8/z3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfKOF6E (ORCPT
+        id S1727314AbfKOF7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 00:58:04 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4987 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfKOFxv (ORCPT
+        Fri, 15 Nov 2019 00:59:44 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:47062 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfKOF7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 00:53:51 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dce3d6c0000>; Thu, 14 Nov 2019 21:53:48 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 14 Nov 2019 21:53:45 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 14 Nov 2019 21:53:45 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 Nov
- 2019 05:53:43 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 Nov
- 2019 05:53:43 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 15 Nov 2019 05:53:43 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dce3d670004>; Thu, 14 Nov 2019 21:53:43 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v5 03/24] mm/gup: move try_get_compound_head() to top, fix minor issues
-Date:   Thu, 14 Nov 2019 21:53:19 -0800
-Message-ID: <20191115055340.1825745-4-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191115055340.1825745-1-jhubbard@nvidia.com>
-References: <20191115055340.1825745-1-jhubbard@nvidia.com>
+        Fri, 15 Nov 2019 00:59:44 -0500
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xAF5xML6026641;
+        Fri, 15 Nov 2019 14:59:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xAF5xML6026641
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573797563;
+        bh=VA8X3h+y+KvJiojZ5g26ovV795yixeERhKPix/QmG/c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uUT8/z3Po6ePdKq0xpsKyb9l9TXSWwsRM/l8lXibFE3IeVnwt+SVxALoOieK7aB2F
+         FevGAbMqZ6jWoGmrjfTcVHoYK8iNirlko/v6DPrLjSrC1K2wx8q2uUQIZ13HeyUgzV
+         0W3uLor+/yItWFr0Ggdt4wNL8yQ8133ip71NOQG/9QIYOvggKmrNkoagfsZMcGufnV
+         HK2GU9MNY/HvGHlytbN4NCKFrl7PoPZwu/JtVHipzbL7sCIHkl/1fd1PMf9p3FJzSZ
+         NxblPdTzUDwp94F5+KNQRZXt2IbBPFRNlgz5OOV35blyPJTs4cK8J8lkeMIcb1ejcJ
+         w3+PdyHGORqwQ==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id k19so2089035vke.10;
+        Thu, 14 Nov 2019 21:59:22 -0800 (PST)
+X-Gm-Message-State: APjAAAXA/NsSEGm8rj1gibLdulB0z7QGiBHtEbvYCOTmMzAcORusPh0r
+        akqlnFmB2xVQ72h5fVMmxguRg/d7GaFwhG4qRks=
+X-Google-Smtp-Source: APXvYqyZJAPFWi3reLTRhjgvpArjLWd5wfehmmvNraZbh7if4u73Xae3mpQOmM94kk9sT124enz7GBfmsdDdrRzxqUY=
+X-Received: by 2002:a1f:7387:: with SMTP id o129mr7550948vkc.73.1573797561403;
+ Thu, 14 Nov 2019 21:59:21 -0800 (PST)
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573797228; bh=d/evUCgyh4jJdY5ueaFF83lqRKs0ktjGRjtkREPwHjI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=QB7rz/OLZU9ZWRQo12u7PAgDCtQ74XPmIH/aL6txgqpbr2Qa5qC6IuKjaG0Flwl/S
-         T6pB7Kos8jG8bN8Ac0Qc4rydLSuRDis71LxJiynKerPFEnwpVIqBF+n/LiC2QCDn5B
-         A64ahgTCmsYHx+ddsl95NmdxhtB5diD3x6CBgGAgsuvuplOvHpf56wICN5EohFleLE
-         WWapMkPsiqWSikj2RW4bzHxTJvOkRSoGQwh9Uxcf5g87AONOzNZyp87gT7smahdAdO
-         3pSKKFMQRi70fVPADRAtmPbLAit2nPzJYUdM3IYHiNEPbFf6eQsb7LMmsvPWpaYdZX
-         dAqvgtjG+2SoA==
+References: <20191113210544.1894-1-robh@kernel.org> <30b73f89-1ba1-6052-53bd-414ebdfa142c@codeaurora.org>
+ <CAL_Jsq+WFvwBy4rpZkT=_KMYzzvrsLcaTMFSydY_euuFLAsZEQ@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+WFvwBy4rpZkT=_KMYzzvrsLcaTMFSydY_euuFLAsZEQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 15 Nov 2019 14:58:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASNugzCjzgObh8+fMvDhUNspapZy9rCA57eX3cLs6NW_g@mail.gmail.com>
+Message-ID: <CAK7LNASNugzCjzgObh8+fMvDhUNspapZy9rCA57eX3cLs6NW_g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Improve validation build error handling
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An upcoming patch uses try_get_compound_head() more widely,
-so move it to the top of gup.c.
+On Fri, Nov 15, 2019 at 1:34 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Nov 14, 2019 at 9:21 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+> >
+> > On 11/13/2019 2:05 PM, Rob Herring wrote:
+> > > Schema errors can cause make to exit before useful information is
+> > > printed. This leaves developers wondering what's wrong. It can be
+> > > overcome passing '-k' to make, but that's not an obvious solution.
+> > > There's 2 scenarios where this happens.
+> > >
+> > > When using DT_SCHEMA_FILES to validate with a single schema, any error
+> > > in the schema results in processed-schema.yaml being empty causing a
+> > > make error. The result is the specific errors in the schema are never
+> > > shown because processed-schema.yaml is the first target built. Simply
+> > > making processed-schema.yaml last in extra-y ensures the full schema
+> > > validation with detailed error messages happen first.
+> > >
+> > > The 2nd problem is while schema errors are ignored for
+> > > processed-schema.yaml, full validation of the schema still runs in
+> > > parallel and any schema validation errors will still stop the build when
+> > > running validation of dts files. The fix is to not add the schema
+> > > examples to extra-y in this case. This means 'dtbs_check' is no longer a
+> > > superset of 'dt_binding_check'. Update the documentation to make this
+> > > clear.
+> > >
+> > > Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> >
+> > I injected a syntax error into a random binding file, and compared the
+> > output with and without this patch.  This patch makes a massive
+> > improvement in giving the user the necessary information to identify and
+> > fix issues.  Thanks!
 
-Also fix a tiny spelling error and a checkpatch.pl warning.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- mm/gup.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+Could you show me an example of the injected syntax error,
+and how this commit will improve the diagnostic?
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 858541ea30ce..b859bd4da4d7 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -29,6 +29,21 @@ struct follow_page_context {
- 	unsigned int page_mask;
- };
-=20
-+/*
-+ * Return the compound head page with ref appropriately incremented,
-+ * or NULL if that failed.
-+ */
-+static inline struct page *try_get_compound_head(struct page *page, int re=
-fs)
-+{
-+	struct page *head =3D compound_head(page);
-+
-+	if (WARN_ON_ONCE(page_ref_count(head) < 0))
-+		return NULL;
-+	if (unlikely(!page_cache_add_speculative(head, refs)))
-+		return NULL;
-+	return head;
-+}
-+
- /**
-  * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned p=
-ages
-  * @pages:  array of pages to be maybe marked dirty, and definitely releas=
-ed.
-@@ -1793,20 +1808,6 @@ static void __maybe_unused undo_dev_pagemap(int *nr,=
- int nr_start,
- 	}
- }
-=20
--/*
-- * Return the compund head page with ref appropriately incremented,
-- * or NULL if that failed.
-- */
--static inline struct page *try_get_compound_head(struct page *page, int re=
-fs)
--{
--	struct page *head =3D compound_head(page);
--	if (WARN_ON_ONCE(page_ref_count(head) < 0))
--		return NULL;
--	if (unlikely(!page_cache_add_speculative(head, refs)))
--		return NULL;
--	return head;
--}
--
- #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
- static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- 			 unsigned int flags, struct page **pages, int *nr)
---=20
-2.24.0
 
+For example, I changed as follows:
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+index 47bc1ac36426..358cb1fa4bb6 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+@@ -89,7 +89,7 @@ required:
+   - clocks
+
+ allOf:
+-  - if:
++  - if2:
+       properties:
+         compatible:
+           contains:
+
+
+
+The tool clearly explains the cause of the error.
+I am struggling to understand what the current problem is.
+
+
+
+masahiro@pug:~/ref/linux$ make -j8  ARCH=arm  dt_binding_check
+  CHKDT   Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+  DTC     Documentation/devicetree/bindings/arm/altera.example.dt.yaml
+  DTC     Documentation/devicetree/bindings/arm/nxp/lpc32xx.example.dt.yaml
+  DTC     Documentation/devicetree/bindings/arm/pmu.example.dt.yaml
+  DTC     Documentation/devicetree/bindings/arm/rockchip.example.dt.yaml
+  DTC     Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.example.dt.yaml
+  DTC     Documentation/devicetree/bindings/arm/primecell.example.dt.yaml
+  DTC     Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/nxp/lpc32xx.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/pmu.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/altera.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/rockchip.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/primecell.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+/home/masahiro/ref/linux/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml:
+allOf:0: 'if2' is not one of ['$ref', 'if', 'then', 'else']
+make[1]: *** [Documentation/devicetree/bindings/Makefile;12:
+Documentation/devicetree/bindings/gpu/arm,mali-midgard.example.dts]
+Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile;1266: dt_binding_check] Error 2
+
+
+
+
+
+
+> BTW, update dtschema and you'll get better (or more at least) messages
+> when 'is not valid under any of the given schemas' errors occur.
+>
+> > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>
+> Thanks.
+>
+> Rob
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
