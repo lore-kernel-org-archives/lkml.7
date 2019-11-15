@@ -3,79 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A7EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB88C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690912073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1542220733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfKON6J (ORCPT
+        id S1727628AbfKON72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:58:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39068 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 08:59:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:59582 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbfKON6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:58:09 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E61C20733;
-        Fri, 15 Nov 2019 13:58:07 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 08:58:05 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, yu kuai <yukuai3@huawei.com>,
-        rafael@kernel.org, oleg@redhat.com, mchehab+samsung@kernel.org,
-        corbet@lwn.net, tytso@mit.edu, jmorris@namei.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        zhengbin13@huawei.com, yi.zhang@huawei.com,
-        chenxiang66@hisilicon.com, xiexiuqi@huawei.com
-Subject: Re: [PATCH 1/3] dcache: add a new enum type for
- 'dentry_d_lock_class'
-Message-ID: <20191115085805.008870cb@gandalf.local.home>
-In-Reply-To: <20191115134823.GQ26530@ZenIV.linux.org.uk>
-References: <1573788472-87426-1-git-send-email-yukuai3@huawei.com>
-        <1573788472-87426-2-git-send-email-yukuai3@huawei.com>
-        <20191115032759.GA795729@kroah.com>
-        <20191115041243.GN26530@ZenIV.linux.org.uk>
-        <20191115072011.GA1203354@kroah.com>
-        <20191115131625.GO26530@ZenIV.linux.org.uk>
-        <20191115083813.65f5523c@gandalf.local.home>
-        <20191115134823.GQ26530@ZenIV.linux.org.uk>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727412AbfKON72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:59:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 508CD31B;
+        Fri, 15 Nov 2019 05:59:27 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A7863F8F4;
+        Fri, 15 Nov 2019 05:59:26 -0800 (PST)
+Date:   Fri, 15 Nov 2019 13:59:24 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Will Deacon <will@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the ftrace tree with the arm64 tree
+Message-ID: <20191115135923.GA32389@arrakis.emea.arm.com>
+References: <20191115135357.10386fac@canb.auug.org.au>
+ <20191115122513.GB41572@lakrids.cambridge.arm.com>
+ <20191115084827.6e04ec9f@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115084827.6e04ec9f@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 13:48:23 +0000
-Al Viro <viro@zeniv.linux.org.uk> wrote:
-
-> > BTW, what do you mean by "can debugfs_remove_recursive() rely upon the
-> > lack of attempts to create new entries inside the subtree it's trying
-> > to kill?"  
+On Fri, Nov 15, 2019 at 08:48:27AM -0500, Steven Rostedt wrote:
+> On Fri, 15 Nov 2019 12:25:14 +0000
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> > Steven (Rostedt), what's your preference for handling this?
+> > 
+> > We can drop revert the arm64 change to vmlinux.lds.h for now (and I can
+> > send it as a subsequent cleanup), or you could merge my
+> > arm64/ftrace-with-regs branch and fix this up in the ftrace tree.
 > 
-> Is it possible for something to call e.g. debugfs_create_dir() (or any
-> similar primitive) with parent inside the subtree that has been
-> passed to debugfs_remove_recursive() call that is still in progress?
+> Or we can just make a note of this, and mention it in our pull requests
+> to Linus.
 > 
-> If debugfs needs to cope with that, debugfs_remove_recursive() needs
-> considerably heavier locking, to start with.
+> We could make a single branch where we merged the two branches, fix it
+> up (as I believe Stephen did it correctly) and tell Linus "here's the
+> fix up".
+> 
+> This is a common occurrence and Linus has no problems with this. As
+> long as he's given a heads up.
 
-I don't know about debugfs, but at least tracefs (which cut and pasted
-from debugfs) does not allow that. At least in theory it doesn't allow
-that (and if it does, it's a bug in the locking at the higher levels).
+I'm fine sending Linus the pull request with the conflict as long as you
+and Mark are ok with Stephen's resolution. The only nitpick I have is
+that the two comments prior to MCOUNT_REC should be merged into a single
+block (I guess we can leave this to Linus to sort out out).
 
-And perhaps debugfs shouldn't allow that either. As it is only suppose
-to be a light weight way to interact with the kernel, hence the name
-"debugfs".
-
-Yu, do you have a test case for the "infinite loop" case?
-
--- Steve
+-- 
+Catalin
