@@ -2,186 +2,227 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9336EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB93DC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7234B20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCB420740
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZuuS3UkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfKOJsr (ORCPT
+        id S1727272AbfKOJuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:48:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33122 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726920AbfKOJsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:48:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9E007B154;
-        Fri, 15 Nov 2019 09:48:44 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id B5EE51E3BEA; Fri, 15 Nov 2019 10:48:42 +0100 (CET)
-Date:   Fri, 15 Nov 2019 10:48:42 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 2/2] mm: devmap: refactor 1-based refcounting for
- ZONE_DEVICE pages
-Message-ID: <20191115094842.GA9043@quack2.suse.cz>
-References: <20191115001134.2489505-1-jhubbard@nvidia.com>
- <20191115001134.2489505-3-jhubbard@nvidia.com>
+        Fri, 15 Nov 2019 04:50:21 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40488 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfKOJuV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:50:21 -0500
+Received: by mail-pl1-f196.google.com with SMTP id e3so4304450plt.7
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yHK3NwHDuyMXQHGzp6/50XMxDMlIuMMyQ5piOVpvkxM=;
+        b=ZuuS3UkOo3apEXPYARBEVlHQfRIAxokV9/5NCCh9cL6r/iNm0L7thB/wfxz+PoptCn
+         i8WjSOWERzekExknbYH4522ivmq/08ub4G5MUCBlu6gV341tyqN/43pFsWGvs+Ep8jpX
+         YDhzcgxH3gn9rs8jY3iEvxIrgIurnho89LrgE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yHK3NwHDuyMXQHGzp6/50XMxDMlIuMMyQ5piOVpvkxM=;
+        b=puPxI+GJ4DPJqMppb5h1bwPte1/H3FT4q5d89iYkrxVzFQV/yKgKXXlb8RkXTEebMj
+         vzhu+IcyBDHDWBFrD1OYL7K9JJga0t+8KkmKLT9LO8WwzdpTrkf3N2iP5R17mJqX3cOl
+         oKU6xLobiWoqlBH7JV1Wk2Ueg4BebB7DCBJ81qsmiwobCdEUf4BNJuxDg6i9Gql51ULY
+         +MS02Xs0UDKYaihoad4LyfSRu8+fdQQOifHN2qP0i5UiCE7uHNDTUJcW2NY5wpmLjspU
+         EfVa2oBryv8nhS0ut2AnlG80tWMTTROZ+lLz0ZzczGACy7VoP/0oqArXrDclvf0MjKvh
+         qFDQ==
+X-Gm-Message-State: APjAAAV7Vpbi9flh7mYTFdIqp+KYupUbzJBtkGXfLuwvpmFoutoKkHkZ
+        AMKSK8pcwmhU6r0hWfCLPFHRuw==
+X-Google-Smtp-Source: APXvYqxbvWA3/NAdQnMqBSJECBtN4fg0wT+GRe8cyTzynYQUMxKJ0M7M3MiBWpusD3992fJnD1snzw==
+X-Received: by 2002:a17:90a:5895:: with SMTP id j21mr19092775pji.129.1573811419250;
+        Fri, 15 Nov 2019 01:50:19 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id d25sm10665819pfq.70.2019.11.15.01.50.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 01:50:18 -0800 (PST)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     dmitry.torokhov@gmail.com, groeck@chromium.org,
+        briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
+        bleung@chromium.org, enric.balletbo@collabora.com,
+        dianders@chromium.org, fabien.lahoudere@collabora.com
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v5 00/18] cros_ec: Add sensorhub driver and FIFO processing
+Date:   Fri, 15 Nov 2019 01:33:54 -0800
+Message-Id: <20191115093412.144922-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191115001134.2489505-3-jhubbard@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14-11-19 16:11:34, John Hubbard wrote:
-> An upcoming patch changes and complicates the refcounting and
-> especially the "put page" aspects of it. In order to keep
-> everything clean, refactor the devmap page release routines:
-> 
-> * Rename put_devmap_managed_page() to page_is_devmap_managed(),
->   and limit the functionality to "read only": return a bool,
->   with no side effects.
-> 
-> * Add a new routine, put_devmap_managed_page(), to handle checking
->   what kind of page it is, and what kind of refcount handling it
->   requires.
-> 
-> * Rename __put_devmap_managed_page() to free_devmap_managed_page(),
->   and limit the functionality to unconditionally freeing a devmap
->   page.
-> 
-> This is originally based on a separate patch by Ira Weiny, which
-> applied to an early version of the put_user_page() experiments.
-> Since then, Jérôme Glisse suggested the refactoring described above.
-> 
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Suggested-by: Jérôme Glisse <jglisse@redhat.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+This patchset adds a sensorhub driver for spreading sensor
+events coming from the Embedded controller sensor FIFO:
 
-Looks good to me. You can add:
+       +---------------+ +--------------+ +----
+       | cros_ec_accel | | cros_ec_gyro | | ...
+       +---------------+ +--------------+ +----
+           id:0       \        id:1 |       / id:..
+                 +------------------------------+
+                 |       cros_ec_sensorhub      |
+                 +------------------------------+
+                 |           cros_ec_dev        |
+                 +------------------------------+
+                 | cros_ec_i2c, cros_ec_lpc, .. |
+                 +------------------------------+
+                                 |
+                                 EC
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+When new sensors events are present, the EC raises and interrupt,
+sensorhub reads the FIFO and uses the 'id' field to spread the event to
+the proper IIO sensors. This stack is similar to the HID sensor input
+stack.
 
-								Honza
+The first patch move cros_ec_proto functions documentations into the
+code to prevent rot.
 
-> ---
->  include/linux/mm.h | 27 ++++++++++++++++++++++++---
->  mm/memremap.c      | 16 ++--------------
->  2 files changed, 26 insertions(+), 17 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index a2adf95b3f9c..96228376139c 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -967,9 +967,10 @@ static inline bool is_zone_device_page(const struct page *page)
->  #endif
->  
->  #ifdef CONFIG_DEV_PAGEMAP_OPS
-> -void __put_devmap_managed_page(struct page *page);
-> +void free_devmap_managed_page(struct page *page);
->  DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
-> -static inline bool put_devmap_managed_page(struct page *page)
-> +
-> +static inline bool page_is_devmap_managed(struct page *page)
->  {
->  	if (!static_branch_unlikely(&devmap_managed_key))
->  		return false;
-> @@ -978,7 +979,6 @@ static inline bool put_devmap_managed_page(struct page *page)
->  	switch (page->pgmap->type) {
->  	case MEMORY_DEVICE_PRIVATE:
->  	case MEMORY_DEVICE_FS_DAX:
-> -		__put_devmap_managed_page(page);
->  		return true;
->  	default:
->  		break;
-> @@ -986,6 +986,27 @@ static inline bool put_devmap_managed_page(struct page *page)
->  	return false;
->  }
->  
-> +static inline bool put_devmap_managed_page(struct page *page)
-> +{
-> +	bool is_devmap = page_is_devmap_managed(page);
-> +
-> +	if (is_devmap) {
-> +		int count = page_ref_dec_return(page);
-> +
-> +		/*
-> +		 * devmap page refcounts are 1-based, rather than 0-based: if
-> +		 * refcount is 1, then the page is free and the refcount is
-> +		 * stable because nobody holds a reference on the page.
-> +		 */
-> +		if (count == 1)
-> +			free_devmap_managed_page(page);
-> +		else if (!count)
-> +			__put_page(page);
-> +	}
-> +
-> +	return is_devmap;
-> +}
-> +
->  #else /* CONFIG_DEV_PAGEMAP_OPS */
->  static inline bool put_devmap_managed_page(struct page *page)
->  {
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index e899fa876a62..2ba773859031 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -411,20 +411,8 @@ struct dev_pagemap *get_dev_pagemap(unsigned long pfn,
->  EXPORT_SYMBOL_GPL(get_dev_pagemap);
->  
->  #ifdef CONFIG_DEV_PAGEMAP_OPS
-> -void __put_devmap_managed_page(struct page *page)
-> +void free_devmap_managed_page(struct page *page)
->  {
-> -	int count = page_ref_dec_return(page);
-> -
-> -	/* still busy */
-> -	if (count > 1)
-> -		return;
-> -
-> -	/* only triggered by the dev_pagemap shutdown path */
-> -	if (count == 0) {
-> -		__put_page(page);
-> -		return;
-> -	}
-> -
->  	/* notify page idle for dax */
->  	if (!is_device_private_page(page)) {
->  		wake_up_var(&page->_refcount);
-> @@ -461,5 +449,5 @@ void __put_devmap_managed_page(struct page *page)
->  	page->mapping = NULL;
->  	page->pgmap->ops->page_free(page);
->  }
-> -EXPORT_SYMBOL(__put_devmap_managed_page);
-> +EXPORT_SYMBOL(free_devmap_managed_page);
->  #endif /* CONFIG_DEV_PAGEMAP_OPS */
-> -- 
-> 2.24.0
-> 
+The inext 3 patches add a primitive cros_ec_sensorhub. MFD just have to
+register this driver if at least one sensor is presented by the EC.
+cros_ec_sensorhub retrieves more information from the EC to find out
+which sensors are actually present:
+  mfd: cros_ec: Add sensor_count and make check_features public
+  platform: cros_ec: Add cros_ec_sensor_hub driver
+  platform/mfd:iio: cros_ec: Register sensor through sensorhub
+
+The next 3 patches prepare for FIFO support:
+  platform: chrome: cros-ec: record event timestamp in the hard irq
+  platform: chrome: cros_ec: Do not attempt to register a non-positive
+  platform: chrome: cros_ec: handle MKBP more events flag
+
+That last patch fixes a regression that changes event processing.
+Revert the patches that fixed that regression.
+
+The next 3 patches add FIFO support. An interface is added to connect
+the IIO sensors with cros_ec_sensorhub, and filters are needed to spread
+the timestamp when the EC send batches of events and deal with variation
+in interrupt delay.
+  platform: chrome: sensorhub: Add FIFO support
+  platform: chrome: sensorhub: Add code to spread timestmap
+  platform: chrome: sensorhub: Add median filter
+
+The remaining patches update IIO cros_ec drivers:
+The first patch moves cros_ec_sensor_core functions documentation into
+the .c file.
+The second one exports iio_device_set_clock, so that the timestamp
+generated by the FIFO matches the default timestamp exposed by the IIO
+devices.
+Then we can use the FIFO function exposed by cros_ec_sensorhub:
+  iio: cros_ec: Use triggered buffer only when EC does not support FIFO
+
+The power management functions are not necessary anymore, since we
+shutoff the FIFO from cros_ec_sensorhub:
+  iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
+
+Finally, the last 3 patches present sensor information following the IIO
+ABI:
+-  Configurable EC timeout to allow batch mode in buffer/hwfifo_timeout,
+  in seconds.
+-  Hard coded EC FIFO size in buffer/hwfifo_watermark_max
+-  Sensor sampling frequency in hertz at sampling_frequency:
+  iio: cros_ec: Expose hwfifo_timeout
+  iio: cros_ec: Report hwfifo_watermark_max
+  iio: cros_ec: Use Hertz as unit for sampling frequency
+
+For testing, libiio test tools can be used:
+A iio device link looks like:
+iio:device1 ->
+...09:00/GOOG0004:00/cros-ec-dev.6.auto/cros-ec-sensorhub.7.auto/
+                     cros-ec-accel.15.auto/iio:device1
+
+When FIFO is available, no trigger are presented. Once
+sampling_freqeuncy and hwfifo_timeout are set, sensor events flow
+when listening to /dev/iio:device1:
+echo 12 > sampling_frequency   # Set ODR to at least 12Hz
+echo .100 > buffer/hwfifo_timeout  # do not wait more than 100ms to
+                                   # to send samples
+iio_readdev -b 2 -T 1000 -s 2 iio:device1 2>/dev/null| od -x
+0000000 ffd0 2e20 d990 0000 8630 b56c 07ea 0000
+0000020 ffc0 2e10 d970 0000 877e b56c 07ea 0000
+0000040`
+
+When FIFO is not supported by the EC, a trigger is present in the
+directory. After registering a trigger, setting sampling_frequency,
+the latest data collected by the sensor will be retrieved by the host
+when the trigger expires.
+
+When cros_ec_accel_legacy driver is used, no FIFO is supported and the
+sampling frequency for the accelerometers is hard coded at 10Hz.
+
+This set is built upon the master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+Enrico Granata (2):
+  platform: chrome: cros_ec: Do not attempt to register a non-positive
+    IRQ number
+  platform: chrome: cros_ec: handle MKBP more events flag
+
+Gwendal Grignou (16):
+  mfd: cros_ec: Add sensor_count and make check_features public
+  platform: cros_ec: Add cros_ec_sensor_hub driver
+  platform/mfd:iio: cros_ec: Register sensor through sensorhub
+  platform: chrome: cros-ec: record event timestamp in the hard irq
+  Revert "Input: cros_ec_keyb - add back missing mask for event_type"
+  Revert "Input: cros_ec_keyb: mask out extra flags in event_type"
+  platform: chrome: sensorhub: Add FIFO support
+  platform: chrome: sensorhub: Add code to spread timestmap
+  platform: chrome: sensorhub: Add median filter
+  iio: cros_ec: Move function description to .c file
+  iio: expose iio_device_set_clock
+  iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
+  iio: cros_ec: Remove pm function
+  iio: cros_ec: Expose hwfifo_timeout
+  iio: cros_ec: Report hwfifo_watermark_max
+  iio: cros_ec: Use Hertz as unit for sampling frequency
+
+ drivers/iio/accel/cros_ec_accel_legacy.c      |  14 +-
+ drivers/iio/common/cros_ec_sensors/Kconfig    |   2 +-
+ .../cros_ec_sensors/cros_ec_lid_angle.c       |   3 +-
+ .../common/cros_ec_sensors/cros_ec_sensors.c  |  19 +-
+ .../cros_ec_sensors/cros_ec_sensors_core.c    | 359 +++++--
+ drivers/iio/industrialio-core.c               |   8 +-
+ drivers/iio/light/cros_ec_light_prox.c        |  21 +-
+ drivers/iio/pressure/cros_ec_baro.c           |  14 +-
+ drivers/input/keyboard/cros_ec_keyb.c         |   6 +-
+ drivers/mfd/cros_ec_dev.c                     | 235 +----
+ drivers/platform/chrome/Kconfig               |  12 +
+ drivers/platform/chrome/Makefile              |   2 +
+ drivers/platform/chrome/cros_ec.c             |  51 +-
+ drivers/platform/chrome/cros_ec_ishtp.c       |  25 +-
+ drivers/platform/chrome/cros_ec_lpc.c         |  17 +-
+ drivers/platform/chrome/cros_ec_proto.c       | 197 +++-
+ drivers/platform/chrome/cros_ec_rpmsg.c       |  19 +-
+ drivers/platform/chrome/cros_ec_sensorhub.c   | 249 +++++
+ .../platform/chrome/cros_ec_sensorhub_ring.c  | 987 ++++++++++++++++++
+ .../linux/iio/common/cros_ec_sensors_core.h   | 104 +-
+ include/linux/iio/iio.h                       |   2 +
+ include/linux/platform_data/cros_ec_proto.h   |  41 +-
+ .../linux/platform_data/cros_ec_sensorhub.h   | 196 ++++
+ 23 files changed, 2054 insertions(+), 529 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_sensorhub.c
+ create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
+ create mode 100644 include/linux/platform_data/cros_ec_sensorhub.h
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.24.0.432.g9d3f5f5b63-goog
+
