@@ -2,102 +2,118 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6423C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD69C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5B22073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jgtg2xpI"
+	by mail.kernel.org (Postfix) with ESMTP id BAA632073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfKOKiu (ORCPT
+        id S1727486AbfKOKjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:38:50 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35526 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbfKOKiu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:38:50 -0500
-Received: by mail-ua1-f67.google.com with SMTP id s14so2869995uad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:38:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sZ++OTuPO6CZ+10/YPxexGs+9BN/3XmrfWtpRIF0DC4=;
-        b=Jgtg2xpIT0dwdOdXRUAYtWgX6xEO5ERBK9nrN0ggu3CtBKZyQjYtKiHUsGK5GVzhTh
-         eC2rddyP1BAGqiR9Dq9KmLE5Ags9wbKtnfehJDcokXym2kuAImlsKmvbIpFNh4k59CRk
-         UDpOM5oNxENQNWJkLaTcA0OXRcQW2wxDUzgSMnUuwCY8+2OAt6aJbfS62hfAURhMZyF5
-         FWoRZBubYKZqZZh5/ov9OO47V+5UrdQLbNSiuCr/qiYxpB+60w63W8ww7aZ0Gh+gNpKn
-         nCpRGaYDRG1J5o5cubgni0VZshY747rWRrnGJ8JFkiGbi2pj96GMjOCNvMbiya9BfzD5
-         aBbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sZ++OTuPO6CZ+10/YPxexGs+9BN/3XmrfWtpRIF0DC4=;
-        b=f91O34gPth4VxegLN81VTyclEl6gdo805dTrf4atlZy1CZ+0i5pMHAFzosJL6NZ2wX
-         ftnA3dDpLCj3gCZag2Q1tgNKrztRltxI3G2KfDjzi+yg/q67/bF73cX7UvRT7Fglszcp
-         TFosrkV/tcao9asCpi5JapGHtPQgUfZQNx/dZl0A16NU84LIxiv4ISNrwx1ws3X5Q7FG
-         qij2r0NtMno9Mq2mtdJCfKSMoUZ6SJ2hxaK6QbWSY97AXIjQN97OS/5HTmCWvU5jtMXY
-         LEs9a1e+eU3AAKjTPNK5se9/vUFd1Sd+HPqlgCgJZ+IUrmvZphCXmZtaI3I2W1wf1IEd
-         Zr/w==
-X-Gm-Message-State: APjAAAWKm0d60/NcHys9c0e6pjWeV8nDCHFa9jf76npJ2klMNIyZOIcQ
-        8KimHy9GzBjHyVI49Rih3G4IHNul2VoGklFPTj1uuw==
-X-Google-Smtp-Source: APXvYqzd+TcmESt8dSevMJ24MEo4z4LNvcbauV1r1Id1E9/CXrpU0GUvOEVQEubjkyM1dRFh2E5eGC5q2ua8YIMUFFg=
-X-Received: by 2002:ab0:2042:: with SMTP id g2mr8430889ual.19.1573814328587;
- Fri, 15 Nov 2019 02:38:48 -0800 (PST)
+        Fri, 15 Nov 2019 05:39:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:56870 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbfKOKjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:39:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9479630E;
+        Fri, 15 Nov 2019 02:39:20 -0800 (PST)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 235E23F534;
+        Fri, 15 Nov 2019 02:39:19 -0800 (PST)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, tj@kernel.org,
+        patrick.bellasi@matbug.net, surenb@google.com, qperret@google.com,
+        Qais Yousef <qais.yousef@arm.com>
+Subject: [PATCH v2] sched/uclamp: Fix overzealous type replacement
+Date:   Fri, 15 Nov 2019 10:39:08 +0000
+Message-Id: <20191115103908.27610-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20191112134808.23546-1-erosca@de.adit-jv.com> <20191112204952.GA2976@kunai>
- <CAPDyKFq8oVk26ruNA_R8HDXhMGKhDeHnL0q82xi40g1aeo109A@mail.gmail.com>
- <20191114113743.GA19656@vmlxhi-102.adit-jv.com> <CAPDyKFp5iqrFDM1EWnYBwFmQAiAA5FADDLAyuVVBgMu4Sx=x5w@mail.gmail.com>
- <20191114201514.GA3058@kunai> <CAPDyKFpbu0tCWyUHRjVySRF3QR6Hzd8MXA+RhNeCjED1nPtkYg@mail.gmail.com>
- <20191115101205.GB2227@kunai>
-In-Reply-To: <20191115101205.GB2227@kunai>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 15 Nov 2019 11:38:12 +0100
-Message-ID: <CAPDyKFps4GbHYA7LkVXhhXyG_wUxH9U-2giap2Y1Qdk2ssfmWg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: renesas_sdhi_internal_dmac: Add MMC_CAP_ERASE to
- Gen3 SoCs
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 11:12, Wolfram Sang <wsa@the-dreams.de> wrote:
->
->
-> > I think using a workqueue for scheduling a reset work with a timeout
-> > of 5 s, as in your case.
->
-> Sorry, I didn't get it. You think what exactly? Is it good / bad / ok
-> for now / ok in general?
+Some uclamp helpers had their return type changed from 'unsigned int' to
+'enum uclamp_id' by commit
 
-Sorry.
+  0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
 
-It's good for now!
+but it happens that some do return a value in the [0, SCHED_CAPACITY_SCALE]
+range, which should really be unsigned int. The affected helpers are
+uclamp_none(), uclamp_rq_max_value() and uclamp_eff_value(). Fix those up.
 
-If/when you start implementing support for HW busy detection, then you
-need to adjust to the timeout value according to cmd->busy_timeout
-from the core.
+Note that this doesn't lead to any obj diff using a relatively recent
+aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
+properly returns an 11 bit value (bits_per(1024)) and doesn't seem to do
+anything funny. I'm still marking this as fixing the above commit to be on
+the safe side.
 
-Kind regards
-Uffe
+Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+v2 changes:
+o Also fix uclamp_none() (Vincent)
+o Collect reviewed-by
+o Slightly reword changelog
+---
+ kernel/sched/core.c  | 6 +++---
+ kernel/sched/sched.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 513a4794ff36..3ceff1c93ef1 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -810,7 +810,7 @@ static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
+ 	return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
+ }
+ 
+-static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
++static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
+ {
+ 	if (clamp_id == UCLAMP_MIN)
+ 		return 0;
+@@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
+ }
+ 
+ static inline
+-enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
++unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+ 				   unsigned int clamp_value)
+ {
+ 	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+@@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+ 	return uc_req;
+ }
+ 
+-enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
++unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+ 	struct uclamp_se uc_eff;
+ 
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 05c282775f21..280a3c735935 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2300,7 +2300,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+ #endif /* CONFIG_CPU_FREQ */
+ 
+ #ifdef CONFIG_UCLAMP_TASK
+-enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
++unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+ 
+ static __always_inline
+ unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+-- 
+2.22.0
+
