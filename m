@@ -2,153 +2,132 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326C0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D42C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078BB20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:07:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JWRjfXgp"
+	by mail.kernel.org (Postfix) with ESMTP id AF13F20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573808871;
+	bh=xswaWFnxbD0dzOiFDXbhCOPNBl+MZTrev9sN+FtP/jo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1u06l4BxuwhsjjuSL4TB2CHb6Ql1m9gR75qJNRrrujtsZk38D5IA9oRPBsGCgjNK4
+	 ZRojtT4ilKYqNYUp4uQsf7sHCyjBneiY84k4pGj2ipo4n/JeqkSCy3bhfc4ZWLUXva
+	 sWHDlCrk7/4HRds4Jdhym+aXMurEB+n97mk59PsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKOJHo (ORCPT
+        id S1727249AbfKOJHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:07:44 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:58230 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOJHn (ORCPT
+        Fri, 15 Nov 2019 04:07:50 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45487 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOJHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:07:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Wywu5hu/w55f41qJ3KYVl1DQLx0MMhrbVYtcMb7LQiU=; b=JWRjfXgpPe6mraasyPv85Cjqn
-        JaxLy+jW5A0DomqL9rwK1XYh3zaMv41Aba5AOFAijR84ffzJlP1U9rkH3XBBFAT1UfAjU4vBYLv18
-        3zrmPWrqyA+zJcXIxPXpw2LznWr5vG4orDqm81t+MXBevKEI3PpOcdeLx7aAD+xfiKdMHaIgGVo1j
-        d1MfTT9OJl2Q8GvqGdHguyOHBYuUq+7Ta+m8/2I2wXwoIJSmd9h/m8jnQJxR5rhMowtI6AfPWyH60
-        OlGSU9b9hXiZ4IF02OF9e9fYITev46N50c3IElq0NQyJAqnvMwxE9qYWAWjJQu5q+JX/gbCbeSQ1O
-        uIbNewhmw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVXZe-000558-Pg; Fri, 15 Nov 2019 09:07:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8A9C1303DDD;
-        Fri, 15 Nov 2019 10:06:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 96C1F29E4EBA3; Fri, 15 Nov 2019 10:07:23 +0100 (CET)
-Date:   Fri, 15 Nov 2019 10:07:23 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [RFC PATCH v3 6/7] scripts/sorttable: Add ORC unwind tables sort
- concurrently
-Message-ID: <20191115090723.GS4114@hirez.programming.kicks-ass.net>
-References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
- <20191115064750.47888-7-shile.zhang@linux.alibaba.com>
+        Fri, 15 Nov 2019 04:07:50 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 14so7989296oir.12;
+        Fri, 15 Nov 2019 01:07:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1T8ZMHXbmRWySVpMqhSZ6mvt4yKvrwJAfUEqvmZGEFo=;
+        b=P/x/cM6ow2zgScqWC0SOz4iKlG6fUHX2J8MeFvzRIt/SLnDnb18fqmBNULk5Q6ZHFn
+         utszk13Edbnu2W6HmoSLZM2I/LiCX21jr2KG50LYh9h+7zHvwfiES92mEqfxF77/lOEA
+         bvqPPunW1w5YprdXDkdsHbI4apU7vbWr4oQasCLZ+siiBtNWntCOxy/nYlCGH9Y4M6UR
+         PXHfKPOohtluARPwZu8QCk0/WMr9rQCy1gh7wvwiIfREGCM6KfzCa0t1CaKfkinVrDsd
+         9InEu7NoGjVawep4Ju65/wfXvpMhsad0X0q8dmRzozXKyzBEbVHUL5eZz8b3D02GYZan
+         4GCA==
+X-Gm-Message-State: APjAAAU6P3DbNXL3yDjosegGrF/+aKvlwC3h60VBXBbtVbDdw3a0kXdZ
+        P0j9tvXqCPtyfLEfP1aAjo+/sxMORF1+4kaBuSc=
+X-Google-Smtp-Source: APXvYqzI/FOo/sg1miVsMISAbvdhiV1iv9fSqVjCPwEZmKhXSlDhRP22rwowRwXpxJKt6JU7K34qSmypZWxBY3coMQY=
+X-Received: by 2002:aca:1101:: with SMTP id 1mr7322552oir.103.1573808869178;
+ Fri, 15 Nov 2019 01:07:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115064750.47888-7-shile.zhang@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <13588000.TfE7eV4KYW@kreacher> <3144686.I8R4d9A2JO@kreacher>
+ <CAJZ5v0jiBrx2xxf2EdvGrqke0ByK5YWXEw0R2rpHZYAJjgwJmg@mail.gmail.com> <001a01d59b53$5eb8ae10$1c2a0a30$@net>
+In-Reply-To: <001a01d59b53$5eb8ae10$1c2a0a30$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 15 Nov 2019 10:07:38 +0100
+Message-ID: <CAJZ5v0ig_Juva_nHjtWjWPv4bghFYasxiJOZbtv8==cwqhBpdQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] cpuidle: teo: Avoid expecting unrealistic idle times
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 02:47:49PM +0800, Shile Zhang wrote:
+On Fri, Nov 15, 2019 at 2:24 AM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.11.14 15:51 Rafael J. Wysocki wrote:
+> > On Wed, Nov 13, 2019 at 1:11 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >>
+> >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >>
+> >> If an idle state shallower than the one "matching" the time till the
+> >> next timer event is considered for selection, expect the idle duration
+> >> to fall in the middle of the "bin" corresponding to that state rather
+> >> than at the beginning of it which is unrealistic.
+> >>
+> >> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >> ---
+> >>  drivers/cpuidle/governors/teo.c |    9 ++++++++-
+> >>  1 file changed, 8 insertions(+), 1 deletion(-)
+> >>
+> >> Index: linux-pm/drivers/cpuidle/governors/teo.c
+> >> ===================================================================
+> >> --- linux-pm.orig/drivers/cpuidle/governors/teo.c
+> >> +++ linux-pm/drivers/cpuidle/governors/teo.c
+> >> @@ -360,7 +360,14 @@ static int teo_select(struct cpuidle_dri
+> >>
+> >>                 if (max_early_idx >= 0) {
+> >>                         idx = max_early_idx;
+> >> -                       duration_ns = drv->states[idx].target_residency_ns;
+> >> +                       /*
+> >> +                        * Expect the idle duration to fall in the middle of the
+> >> +                        * "bin" corresponding to idx (note that the maximum
+> >> +                        * state index is guaranteed to be greater than idx at
+> >> +                        * this point).
+> >> +                        */
+> >> +                       duration_ns = (drv->states[idx].target_residency_ns +
+> >> +                               drv->states[idx+1].target_residency_ns) / 2;
+> >>                 }
+> >>         }
+> >
+> > This change turns out to cause the governor to choose idle states that
+> > are too deep or too shallow too often, so I'm withdrawing it.
+>
+> O.K. thanks for letting us know.
+> I did see some differences in the testing I did so far, but hadn't drilled down
+> into it yet.
+> I am somewhat wondering about the above and below stats in general.
+>
+> By the way, I had a daft mistake in my post processing program, such that the
+> "below" graph for idle state 0 was always plotting 0.
+>
+> Reference for that sweep test that I do (which is as far I got so far):
+> http://www.smythies.com/~doug/linux/idle/teo-2019-11/sweep/index.html
+>
+> Legend:
+>
+> teo-v2: re-run of previous teo-v2 so that I could get non-zero idle state "below" data
+> linux-next 2019.11.07 + cpuidle: Consolidate disabled state checks +
+> [PATCH v2] cpuidle: Use nanoseconds as the unit of time
+>
+> teo-v3: teo-v2 + cpuidle: teo: Exclude cpuidle overhead from computations
+>
+> teo-v4: linux-pm + linux-next 2019.11.12 +
+> cpuidle: teo: Avoid code duplication in conditionals
+> cpuidle: teo: Avoid expecting unrealistic idle times
+> cpuidle: teo: Avoid using "early hits" incorrectly
+>
+> teo-v5: teo-v4 + cpuidle: teo: Exclude cpuidle overhead from computations
 
-> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
-> +/* ORC unwinder only support X86_64 */
-> +#include <errno.h>
-> +#include <pthread.h>
-> +#include <linux/types.h>
-> +
-> +#define ORC_REG_UNDEFINED	0
-> +#define ERRSTRING_MAXSZ		256
-> +
-> +struct orc_entry {
-> +	s16		sp_offset;
-> +	s16		bp_offset;
-> +	unsigned	sp_reg:4;
-> +	unsigned	bp_reg:4;
-> +	unsigned	type:2;
-> +	unsigned	end:1;
-> +} __attribute__((packed));
-> +
-> +struct orctable_info {
-> +	size_t	orc_size;
-> +	size_t	orc_ip_size;
-> +} orctable;
-
-There's ./arch/x86/include/asm/orc_types.h for this. Please don't
-duplicate. objtool uses that same header.
-
-> +/**
-> + * sort - sort an array of elements
-> + * @base: pointer to data to sort
-> + * @num: number of elements
-> + * @size: size of each element
-> + * @cmp_func: pointer to comparison function
-> + * @swap_func: pointer to swap function
-> + *
-> + * This function does a heapsort on the given array. You may provide a
-> + * swap_func function optimized to your element type.
-> + *
-> + * Sorting time is O(n log n) both on average and worst-case. While
-> + * qsort is about 20% faster on average, it suffers from exploitable
-> + * O(n*n) worst-case behavior and extra memory requirements that make
-> + * it less suitable for kernel use.
-> + *
-> + * This code token out of /lib/sort.c.
-> + */
-> +static void sort(void *base, size_t num, size_t size,
-> +	  int (*cmp_func)(const void *, const void *),
-> +	  void (*swap_func)(void *, void *, int size))
-> +{
-> +	/* pre-scale counters for performance */
-> +	int i = (num/2 - 1) * size, n = num * size, c, r;
-> +
-> +	/* heapify */
-> +	for ( ; i >= 0; i -= size) {
-> +		for (r = i; r * 2 + size < n; r  = c) {
-> +			c = r * 2 + size;
-> +			if (c < n - size &&
-> +					cmp_func(base + c, base + c + size) < 0)
-> +				c += size;
-> +			if (cmp_func(base + r, base + c) >= 0)
-> +				break;
-> +			swap_func(base + r, base + c, size);
-> +		}
-> +	}
-> +
-> +	/* sort */
-> +	for (i = n - size; i > 0; i -= size) {
-> +		swap_func(base, base + i, size);
-> +		for (r = 0; r * 2 + size < i; r = c) {
-> +			c = r * 2 + size;
-> +			if (c < i - size &&
-> +					cmp_func(base + c, base + c + size) < 0)
-> +				c += size;
-> +			if (cmp_func(base + r, base + c) >= 0)
-> +				break;
-> +			swap_func(base + r, base + c, size);
-> +		}
-> +	}
-> +}
-
-Do we really need to copy the heapsort implementation? That is, why not
-use libc's qsort() ? This is userspace after all.
+Thanks for running the tests, appreciated!
