@@ -2,91 +2,129 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5050C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A05EC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A468220730
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB5E2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:22:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XPmJB/Tr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfKOQVH (ORCPT
+        id S1727705AbfKOQWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:21:07 -0500
-Received: from mga02.intel.com ([134.134.136.20]:29366 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727423AbfKOQVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:21:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 08:21:06 -0800
-X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
-   d="scan'208";a="195434252"
-Received: from tzanussi-mobl.amr.corp.intel.com (HELO [10.252.195.108]) ([10.252.195.108])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 15 Nov 2019 08:21:06 -0800
-Subject: Re: [PATCH] trace/synthetic_events: increase SYNTH_FIELDS_MAX
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Artem Bityutskiy <dedekind1@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20191115091730.9192-1-dedekind1@gmail.com>
- <20191115105227.341c238e@gandalf.local.home>
-From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
-Message-ID: <8751ffdd-ea8c-4aa5-663d-0d7d0fd0886d@linux.intel.com>
-Date:   Fri, 15 Nov 2019 10:21:05 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191115105227.341c238e@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Fri, 15 Nov 2019 11:22:10 -0500
+Received: from mail-qv1-f46.google.com ([209.85.219.46]:36204 "EHLO
+        mail-qv1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727423AbfKOQWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 11:22:09 -0500
+Received: by mail-qv1-f46.google.com with SMTP id cv8so3834065qvb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 08:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=w7jUeJOoUXH4Qqizv6WofWArxITzVZUe1/AouJiaEWs=;
+        b=XPmJB/TrxXdwntPZQn/pG6IoPfqIvTjFs+9AtqLINMFVbip/eogNS3LiL73jcgCDqt
+         qzmOneG1K5ysjBPQWNRkd/re3r84pvUlKqyLRvf/6UxeGHDKbYY0u2IyrGO1BPXCUiQA
+         qwxOnRh6mUS8vkcCXw2gsbSavUaw+O0d6FsOOWrEOpEo02JStDLR5KCW2RJ0k10pYpta
+         siowDyjSw9vKOeMs3VmH7Qu3v3zTjz9b/JKw4CVYUcFMkqQeXKTObbCv1cmZm+hKdkkv
+         NCeUdwxFTXohiIMUyWoLBhStmLB0UF7DP3HPMpGqAwjXfd1xRAq2UCd13nKp//Vlslfy
+         VFxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=w7jUeJOoUXH4Qqizv6WofWArxITzVZUe1/AouJiaEWs=;
+        b=EuvDHdeNpqn83x3QRu96LcEHmuD2imx+3TtppKQSjWJjT4U4TchAocn6hmXP2rI8Gz
+         zWBKITJu7PXEHHLLYrCf14S41rIwzwPv5F1Fi+VV95arcCPFcZ47V29zuF5f+YW9V6ZU
+         wu7B8FNdPs5rh7dqSS/bjymmpBl0qbXnthDLHtDyplAT5dcUnF8R+8EzPWgIjNMV2YtT
+         YciQQ/CmgJcREd9Qa+aMkv056Bd6DMS1a4RYPngA5+8k/djR3kNtJdjyndXlRHSD2W5C
+         uKWRLo+NiAUu4WZmscgWmP9YZsyYsUWyzjZLSBCNwjSru9js0sbx2newjws17Q0QfUxa
+         bmLw==
+X-Gm-Message-State: APjAAAV07niNVO4gOLDxmLtVBDldxuQBj4ImMuI+w0tRmgQDelXuWdQV
+        9FzAYWdYGPF4nWIewdrouIQieg==
+X-Google-Smtp-Source: APXvYqyjlk1Foro5VxpnbnLOuSGsg14UtbsKQ/fmNm8FzqdVwfvXbEY4e5nIUOhxpANgsHD4qBiyEQ==
+X-Received: by 2002:a0c:a998:: with SMTP id a24mr9881957qvb.117.1573834927156;
+        Fri, 15 Nov 2019 08:22:07 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id q17sm5356533qtq.58.2019.11.15.08.22.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 08:22:06 -0800 (PST)
+Message-ID: <1573834925.5937.127.camel@lca.pw>
+Subject: Re: [PATCH -next] mm/vmscan: fix some -Wenum-conversion warnings
+From:   Qian Cai <cai@lca.pw>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     akpm@linux-foundation.org, surenb@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 15 Nov 2019 11:22:05 -0500
+In-Reply-To: <20191115161723.GB309754@cmpxchg.org>
+References: <1573826697-869-1-git-send-email-cai@lca.pw>
+         <20191115161723.GB309754@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve and Artem,
-
-On 11/15/2019 9:52 AM, Steven Rostedt wrote:
-> On Fri, 15 Nov 2019 11:17:30 +0200
-> Artem Bityutskiy <dedekind1@gmail.com> wrote:
+On Fri, 2019-11-15 at 11:17 -0500, Johannes Weiner wrote:
+> On Fri, Nov 15, 2019 at 09:04:57AM -0500, Qian Cai wrote:
+> > The -next commit "mm: vmscan: enforce inactive:active ratio at the
+> > reclaim root" [1] introduced some GCC -Wenum-conversion warnings,
+> > 
+> > mm/vmscan.c:2216:39: warning: implicit conversion from enumeration type
+> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> > [-Wenum-conversion]
+> >         inactive = lruvec_page_state(lruvec, inactive_lru);
+> >                    ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~~~
+> > mm/vmscan.c:2217:37: warning: implicit conversion from enumeration type
+> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> > [-Wenum-conversion]
+> >         active = lruvec_page_state(lruvec, active_lru);
+> >                  ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~
+> > mm/vmscan.c:2746:42: warning: implicit conversion from enumeration type
+> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> > [-Wenum-conversion]
+> >         file = lruvec_page_state(target_lruvec, LRU_INACTIVE_FILE);
 > 
->> From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
->>
->> Increase the maximum allowed count of synthetic event fields from 16 to 32
->> in order to allow for larger-than-usual events.
-> 
-> I'm fine with this, Tom are you OK with it?
+> Interesting, it doesn't show these for me with gcc-9.2.0.
 
-Yeah, looks good to me.  Thanks for the patch, Artem.
-
-Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-
-Tom
+Sorry, I meant to say it is clang.
 
 > 
-> -- Steve
+> We should definitely fix these!
 > 
->>
->> Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
->> ---
->>   kernel/trace/trace_events_hist.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
->> index 7482a1466ebf..f49d1a36d3ae 100644
->> --- a/kernel/trace/trace_events_hist.c
->> +++ b/kernel/trace/trace_events_hist.c
->> @@ -23,7 +23,7 @@
->>   #include "trace_dynevent.h"
->>   
->>   #define SYNTH_SYSTEM		"synthetic"
->> -#define SYNTH_FIELDS_MAX	16
->> +#define SYNTH_FIELDS_MAX	32
->>   
->>   #define STR_VAR_LEN_MAX		32 /* must be multiple of sizeof(u64) */
->>   
+> > @@ -2213,8 +2213,9 @@ static bool inactive_is_low(struct lruvec *lruvec, enum lru_list inactive_lru)
+> >  	unsigned long inactive_ratio;
+> >  	unsigned long gb;
+> >  
+> > -	inactive = lruvec_page_state(lruvec, inactive_lru);
+> > -	active = lruvec_page_state(lruvec, active_lru);
+> > +	inactive = lruvec_page_state(lruvec,
+> > +				     (enum node_stat_item)inactive_lru);
+> > +	active = lruvec_page_state(lruvec, (enum node_stat_item)active_lru);
 > 
+> This is fragile, as it relies on the absolute values being identical,
+> which we don't guarantee. However, we do guarantee the relative order
+> between the LRU items, and we use NR_LRU_BASE for the translation.
+> 
+> Please use NR_LRU_BASE + (in)active_lru here.
+> 
+> > @@ -2743,7 +2744,8 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+> >  	 * thrashing, try to reclaim those first before touching
+> >  	 * anonymous pages.
+> >  	 */
+> > -	file = lruvec_page_state(target_lruvec, LRU_INACTIVE_FILE);
+> > +	file = lruvec_page_state(target_lruvec,
+> > +				 (enum node_stat_item)LRU_INACTIVE_FILE);
+> 
+> This should just directly use NR_INACTIVE_FILE instead.
+> 
+> Thanks
