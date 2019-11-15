@@ -2,151 +2,111 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7622C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D339C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C840F2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A3420733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfKOJJY (ORCPT
+        id S1727306AbfKOJJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:09:24 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6234 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725829AbfKOJJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:09:23 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 090D03BEE30B7D809372;
-        Fri, 15 Nov 2019 17:09:21 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 15 Nov 2019
- 17:09:14 +0800
-Subject: Re: [PATCH v3] lib: optimize cpumask_local_spread()
-To:     Michal Hocko <mhocko@kernel.org>
-References: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191108103102.GF15658@dhcp22.suse.cz>
- <c6f24942-c8d6-e46a-f433-152d29af8c71@hisilicon.com>
- <20191112115630.GD2763@dhcp22.suse.cz>
- <00856999-739f-fd73-eddd-d71e4e94962e@hisilicon.com>
- <20191114144317.GJ20866@dhcp22.suse.cz>
-CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Paul Burton" <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        <netdev@vger.kernel.org>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <9af13fea-95a6-30cb-2c0e-770aa649a549@hisilicon.com>
-Date:   Fri, 15 Nov 2019 17:09:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Fri, 15 Nov 2019 04:09:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:55392 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfKOJJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:09:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D5F4328;
+        Fri, 15 Nov 2019 01:09:44 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBF883F6C4;
+        Fri, 15 Nov 2019 01:09:42 -0800 (PST)
+Date:   Fri, 15 Nov 2019 09:09:40 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
+        Tejun Heo <tj@kernel.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Quentin Perret <qperret@google.com>
+Subject: Re: [PATCH] sched/uclamp: Fix overzealous type replacement
+Message-ID: <20191115090939.6ku6cc44iaoanjph@e107158-lin.cambridge.arm.com>
+References: <20191113165334.14291-1-valentin.schneider@arm.com>
+ <CAKfTPtCeGPS57wdyVjA7mnQTW4EeTrd0LX-_1f_+MWp--1FRNQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191114144317.GJ20866@dhcp22.suse.cz>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtCeGPS57wdyVjA7mnQTW4EeTrd0LX-_1f_+MWp--1FRNQ@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
+On 11/15/19 09:12, Vincent Guittot wrote:
+> On Wed, 13 Nov 2019 at 17:55, Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+> >
+> > Some uclamp helpers had their return type changed from 'unsigned int' to
+> > 'enum uclamp_id' by commit
+> >
+> >   0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+> >
+> > but it happens that some *actually* do return an unsigned int value. Those
+> > are the helpers that return a utilization value: uclamp_rq_max_value() and
+> > uclamp_eff_value(). Fix those up.
+> >
+> > Note that this doesn't lead to any obj diff using a relatively recent
+> > aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
+> > already figures out that the return value is 11 bits (bits_per(1024)) and
+> > doesn't seem to do anything funny. I'm still marking this as fixing the
+> > above commit to be on the safe side.
+> >
+> > Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+> > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> > ---
+> >  kernel/sched/core.c  | 4 ++--
+> >  kernel/sched/sched.h | 2 +-
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 513a4794ff36..71a45025cd2e 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
+> >  }
+> >
+> >  static inline
+> > -enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+> > +unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+> >                                    unsigned int clamp_value)
+> >  {
+> >         struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+> > @@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+> >         return uc_req;
+> >  }
+> >
+> > -enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+> > +unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+> >  {
+> >         struct uclamp_se uc_eff;
+> >
+> 
+> And static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id) ?
+> 
+> Should it be fixed as well as it can return SCHED_CAPACITY_SCALE ?
 
-On 2019/11/14 22:43, Michal Hocko wrote:
-> On Wed 13-11-19 10:46:05, Shaokun Zhang wrote:
-> [...]
->>>> available: 4 nodes (0-3)
->>>> node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
->>>> node 0 size: 63379 MB
->>>> node 0 free: 61899 MB
->>>> node 1 cpus: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
->>>> node 1 size: 64509 MB
->>>> node 1 free: 63942 MB
->>>> node 2 cpus: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
->>>> node 2 size: 64509 MB
->>>> node 2 free: 63056 MB
->>>> node 3 cpus: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
->>>> node 3 size: 63997 MB
->>>> node 3 free: 63420 MB
->>>> node distances:
->>>> node   0   1   2   3
->>>>   0:  10  16  32  33
->>>>   1:  16  10  25  32
->>>>   2:  32  25  10  16
->>>>   3:  33  32  16  10
-> [...]
->> before patch
->> Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
->> 2
->> Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
->> 48
-> 
-> node 2
-> 
->> Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
->> 0
-> 
-> node 0
-> 
->> Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
->> 24
-> 
-> node 1
-> 
->> Euler:/sys/bus/pci #
->>
->> after patch
->> Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
->> 2
->> Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
->> 48
-> 
-> node 2
-> 
->> Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
->> 72
-> 
-> node 3
-> 
->> Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
->> 24
-> 
-> node 1
-> 
-> So few more questions. The only difference seems to be IRQ369
-> moving from 0 to 3 and having the device affinity to node 2
-> makes some sense because node 3 is closer. So far so good.
+Indeed. That should return unsigned int too as it's returning the uclamp value.
 
-Right, it is what we want.
+Thanks
 
-> I still have a large gap to get the whole picture. Namely why those
-> other IRQs are not using any of the existing CPUs on the node 2.
-> Could you explain that please?
-> 
-
-Oh, my mistake, for the previous instance, I don't list all IRQs and
-just choose one IRQ from one NUMA node. You can see that the IRQ
-number is not consistent :-).
-IRQ from 345 to 368 will be bound to CPU cores which are in NUMA node2
-and each IRQ is corresponding to one core.
-
-Euler:/sys/bus/pci # cat /proc/irq/346/smp_affinity_list
-49
-
-Others are the similar.
-
-> Btw. this all should be in the changelog.
-
-Ok, I will follow it in future.
-
-Thanks,
-Shaokun
-
-> 
-
+--
+Qais Yousef
