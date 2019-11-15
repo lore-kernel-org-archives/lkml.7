@@ -2,114 +2,216 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2119C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCA6C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9324520728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2D920728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QUbG1FRk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CBFLAcP+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfKORO7 (ORCPT
+        id S1727655AbfKORPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:14:59 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48378 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727548AbfKORO7 (ORCPT
+        Fri, 15 Nov 2019 12:15:01 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39519 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727625AbfKORPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:14:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573838098;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i//VdLznyJQ1f9EYHUzbZrmnX/uwUJtCHfRMoEiRRFM=;
-        b=QUbG1FRkgiruETIr+rJqo4Q7IA89FwWUFX0oGpDRZiyB0khjdgglhnEOBOTF/xUDiikFTS
-        fkFl4TfdPeOPXPUqP3E8XNN+eO1qE/x3zz+s92U6BpKfeOzCUcsg+Gw+W1HQYPeeB7Kv4S
-        uIDRGj3uuq5B9ogg5xILALUQ2O8jcas=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-bn7BejAKOU--lJSVYPquaA-1; Fri, 15 Nov 2019 12:14:55 -0500
-Received: by mail-wm1-f69.google.com with SMTP id h191so7301474wme.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 09:14:54 -0800 (PST)
+        Fri, 15 Nov 2019 12:15:00 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v138so9241302oif.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 09:15:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OMJenj5JQASv6g4NovikQm2+Hb7lZX8x9WL40qMINts=;
+        b=CBFLAcP+oKm5ozaC/dYCuIf8klMNXsh2hapTlsQCl2wIwMP890KgmIt8FubWjOJotW
+         SBA0qHxfNEqf/6i9Jdz5242Bv3Qp2u6lAlduKS5V0Fuvapxf0kOztkzl27w0zsBtb8xX
+         yTnmYMeItCp35Kq3H5eBWsRbw8ofmOm+ZBpYyFF12krdl0qWEAfg8Hcg7hzPswVqn1fN
+         FwFNQRyyE3KBIFlaWKzS0W2mmgQ/hbL0TF60KX4gWFSxibKz0QDKtLPtOI4IrWzykGA8
+         7M2/Jp9d2h2Msqwj3bx5oQAdQZXvkYzLAGBZzJqyqk7VWIo6D482M+7RzUU3qO9b2Uly
+         Fyqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fkKZc7EVVIK/btwaEMMtK6umsKN2KQyJVj0fen7NWM4=;
-        b=KnuLg+GIbDkXHQByTygxYXvHguSZaLsYVEXJ42dZn2pwclIuKV23/9yBZYrux25fWQ
-         h1oTWtFgspEdUwYa3UI20EExT5289gSLh14xY1npmv6CYYnbsUDRA105EqTBAR50d4N5
-         gzX5a2/GD/7HoW3c2h/ALKfuHUFQftfnXRz0BUhia8OyrsCMjcJqzeD2jyMF8me2/t4V
-         mtQ/YqCkSV6xHAKmDV1DanBdQCIbTXvQShLg5caiUXtecI8i5CAVN2m7EVQySMz5SSQS
-         QB4c13YBPD7f0fX/wmEFiDDMlH3/sIlwoGej8qiW4SYsxTY5W4nrKSKo4DvE81NcAASx
-         A1Aw==
-X-Gm-Message-State: APjAAAUtb3FSZgpko1o+lEbjyhbfjfAdYdInUNtD3QY9ViohZPzT/5ju
-        /EX/OW/NQKKuwRC0E0tvhj/NB0AdjzPsrv6zMYvZ9yd4O37Wyah1SdTbcm4yEq4aW6H6Lee6XK5
-        44QGBSvCiMcg766cCBYWRGBLq
-X-Received: by 2002:a1c:7709:: with SMTP id t9mr15737398wmi.80.1573838093812;
-        Fri, 15 Nov 2019 09:14:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzFYsvAwIE6O5TRg5h8L4op6aHWHNgR4Qnu7Nap2afcKOa3ebQhqU+/jSY5LlHI0javOU1nhQ==
-X-Received: by 2002:a1c:7709:: with SMTP id t9mr15737362wmi.80.1573838093545;
-        Fri, 15 Nov 2019 09:14:53 -0800 (PST)
-Received: from localhost.localdomain ([151.29.177.194])
-        by smtp.gmail.com with ESMTPSA id a6sm13758352wrh.69.2019.11.15.09.14.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Nov 2019 09:14:52 -0800 (PST)
-Date:   Fri, 15 Nov 2019 18:14:50 +0100
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, will@kernel.org, oleg@redhat.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        bigeasy@linutronix.de, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH 0/5] locking: Percpu-rwsem rewrite
-Message-ID: <20191115171450.GJ19129@localhost.localdomain>
-References: <20191113102115.116470462@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OMJenj5JQASv6g4NovikQm2+Hb7lZX8x9WL40qMINts=;
+        b=Bu/xG3LTgOPpqqhovdlPtwjJf5On759b/q++kD1lSI7RVNOgwf/Q3kYfzZcV5iMY1c
+         sUxvle8muKDZ2DO3vYaNgkxQOTj072pYvnTmjhUYw6bwMssynKSwqqUjdY2W6eUOzB8M
+         d2vzS2AoeQyXkDiOhK4QRHxTKRwksdLyJBkmbocMFbRUhnhHlJly3o1TmklUYLezj4Rb
+         VIyqdJpTFwoWfPCrKDJstLGq7LoWagt6JVDU2R3Y0dJ/6H9M2bDLcMa5iIbddyTzL5xX
+         svSO7+9bktclm0B8QZAgGEbHv/gk6MJfqynF59w6Y6bxpSfcfH/pT0+T+Tj2WDDzTqA+
+         ioTQ==
+X-Gm-Message-State: APjAAAUUlnVVadZEV7/7WRVquUCNr1WJ8tXpQnOqDQljtZbIqeCEM/UE
+        QZc3c37Tq9sQW+tcHvEGPEOIcPhepU/FV4qNGMOgTw==
+X-Google-Smtp-Source: APXvYqxHWXVF03C+YdxtSxrgLxdL91oUGsi161YRDrFwzpCwmUgbv+aRRG2bYG5Q9dZzAnZnGy6OsSdj2lBrotybY3s=
+X-Received: by 2002:aca:4ec6:: with SMTP id c189mr8959788oib.70.1573838099466;
+ Fri, 15 Nov 2019 09:14:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113102115.116470462@infradead.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-MC-Unique: bn7BejAKOU--lJSVYPquaA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191114180303.66955-1-elver@google.com> <20191114195046.GP2865@paulmck-ThinkPad-P72>
+ <20191114213303.GA237245@google.com> <20191114221559.GS2865@paulmck-ThinkPad-P72>
+ <CANpmjNPxAOUAxXHd9tka5gCjR_rNKmBk+k5UzRsXT0a0CtNorw@mail.gmail.com> <20191115164159.GU2865@paulmck-ThinkPad-P72>
+In-Reply-To: <20191115164159.GU2865@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 15 Nov 2019 18:14:46 +0100
+Message-ID: <CANpmjNPy2RDBUhV-j-APzwYr-_x2V9QwgPTYZph36rCpEVqZSQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] Add Kernel Concurrency Sanitizer (KCSAN)
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 15 Nov 2019 at 17:42, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Fri, Nov 15, 2019 at 01:02:08PM +0100, Marco Elver wrote:
+> > On Thu, 14 Nov 2019 at 23:16, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > On Thu, Nov 14, 2019 at 10:33:03PM +0100, Marco Elver wrote:
+> > > > On Thu, 14 Nov 2019, Paul E. McKenney wrote:
+> > > >
+> > > > > On Thu, Nov 14, 2019 at 07:02:53PM +0100, Marco Elver wrote:
+> > > > > > This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
+> > > > > > KCSAN is a sampling watchpoint-based *data race detector*. More details
+> > > > > > are included in **Documentation/dev-tools/kcsan.rst**. This patch-series
+> > > > > > only enables KCSAN for x86, but we expect adding support for other
+> > > > > > architectures is relatively straightforward (we are aware of
+> > > > > > experimental ARM64 and POWER support).
+> > > > > >
+> > > > > > To gather early feedback, we announced KCSAN back in September, and have
+> > > > > > integrated the feedback where possible:
+> > > > > > http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
+> > > > > >
+> > > > > > The current list of known upstream fixes for data races found by KCSAN
+> > > > > > can be found here:
+> > > > > > https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
+> > > > > >
+> > > > > > We want to point out and acknowledge the work surrounding the LKMM,
+> > > > > > including several articles that motivate why data races are dangerous
+> > > > > > [1, 2], justifying a data race detector such as KCSAN.
+> > > > > >
+> > > > > > [1] https://lwn.net/Articles/793253/
+> > > > > > [2] https://lwn.net/Articles/799218/
+> > > > >
+> > > > > I queued this and ran a quick rcutorture on it, which completed
+> > > > > successfully with quite a few reports.
+> > > >
+> > > > Great. Many thanks for queuing this in -rcu. And regarding merge window
+> > > > you mentioned, we're fine with your assumption to targeting the next
+> > > > (v5.6) merge window.
+> > > >
+> > > > I've just had a look at linux-next to check what a future rebase
+> > > > requires:
+> > > >
+> > > > - There is a change in lib/Kconfig.debug and moving KCSAN to the
+> > > >   "Generic Kernel Debugging Instruments" section seems appropriate.
+> > > > - bitops-instrumented.h was removed and split into 3 files, and needs
+> > > >   re-inserting the instrumentation into the right places.
+> > > >
+> > > > Otherwise there are no issues. Let me know what you recommend.
+> > >
+> > > Sounds good!
+> > >
+> > > I will be rebasing onto v5.5-rc1 shortly after it comes out.  My usual
+> > > approach is to fix any conflicts during that rebasing operation.
+> > > Does that make sense, or would you prefer to send me a rebased stack at
+> > > that point?  Either way is fine for me.
+> >
+> > That's fine with me, thanks!  To avoid too much additional churn on
+> > your end, I just replied to the bitops patch with a version that will
+> > apply with the change to bitops-instrumented infrastructure.
+>
+> My first thought was to replace 8/10 of the previous version of your
+> patch in -rcu (047ca266cfab "asm-generic, kcsan: Add KCSAN instrumentation
+> for bitops"), but this does not apply.  So I am guessing that I instead
+> do this substitution when a rebase onto -rc1..
+>
+> Except...
+>
+> > Also considering the merge window, we had a discussion and there are
+> > some arguments for targeting the v5.5 merge window:
+> > - we'd unblock ARM and POWER ports;
+> > - we'd unblock people wanting to use the data_race macro;
+> > - we'd unblock syzbot just tracking upstream;
+> > Unless there are strong reasons to not target v5.5, I leave it to you
+> > if you think it's appropriate.
+>
+> My normal process is to send the pull request shortly after -rc5 comes
+> out, but you do call out some benefits of getting it in sooner, so...
+>
+> What I will do is to rebase your series onto (say) -rc7, test it, and
+> see about an RFC pull request.
+>
+> One possible complication is the new 8/10 patch.  But maybe it will
+> apply against -rc7?
+>
+> Another possible complication is this:
+>
+> scripts/kconfig/conf  --syncconfig Kconfig
+> *
+> * Restart config...
+> *
+> *
+> * KCSAN: watchpoint-based dynamic data race detector
+> *
+> KCSAN: watchpoint-based dynamic data race detector (KCSAN) [N/y/?] (NEW)
+>
+> Might be OK in this case because it is quite obvious what it is doing.
+> (Avoiding pain from this is the reason that CONFIG_RCU_EXPERT exists.)
+>
+> But I will just mention this in the pull request.
+>
+> If there is a -rc8, there is of course a higher probability of making it
+> into the next merge window.
+>
+> Fair enough?
 
-On 13/11/19 11:21, Peter Zijlstra wrote:
-> Yet another version of the percpu-rwsem rewrite..
->=20
-> This one (ab)uses the waitqueue in an entirely different and unique way, =
-but no
-> longer shares it like it did. It retains the use of rcuwait for the
-> writer-waiting-for-readers-to-complete condition.
->=20
-> This one should be FIFO fair with writer-stealing.
->=20
-> It seems to pass locktorture torture_type=3Dpercpu_rwsem_lock. But as alw=
-ays,
-> this stuff is tricky, please look carefully.
+Totally fine with that, sounds like a good plan, thanks!
 
-Backported this series to v5.2.21-rt13.
+If it helps, in theory we can also drop and delay the bitops
+instrumentation patch until the new bitops instrumentation
+infrastructure is in 5.5-rc1. There won't be any false positives if
+this is missing, we might just miss a few data races until we have it.
 
-locktorture looks good (running for several hours) and DEBUG_LOCKS splat
-[1] not reproducible anymore.
-
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
-
-Thanks!
-
-Juri
-
-1 - https://lore.kernel.org/lkml/20190326093421.GA29508@localhost.localdoma=
-in/
-
+Thanks,
+-- Marco
