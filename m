@@ -7,59 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D299C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FCEC33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66373207FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321FE207FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820785;
-	bh=MNooDav1f3qm4aeDmYawwRh6m3R+ULY/Okcq3oPCnH4=;
+	s=default; t=1573820788;
+	bh=ShLByoMib5GDWRmGpfAXmcxKahyzswH+OvSeSQ7l7oM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=NEkYneBXGPqlhf8PB9O0fXdnP6mjHEro3AuANFKmBOGPHVTZPXR1MfHMe57qKh+B/
-	 c1cFrD+M1oQwpoWfnIrOtaw7S8717Or3ihqamXdWjusOihkthZ2wge+PP/Th96um5P
-	 q+PsVtxpHOJS/RBd7Mtou9JRczbox+lAxKTRPFTw=
+	b=BOdQZgdWxG+PVox2ik8lui7sUMm+CA12/HnMOYzaTW0l4t020OVI8xCd+aoazuJVw
+	 n/IjQdmfCTsMqB6/nzhxCyCLs4a8/F+ErxhMya+hAqmml23LRWEO1jxEWQv1A83k95
+	 zbcne9AAJcr1VU3iy/7cE3RMkPwiADs/FPmwxxdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbfKOM0Y (ORCPT
+        id S1727658AbfKOMZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:26:24 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32878 "EHLO
+        Fri, 15 Nov 2019 07:25:13 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32828 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbfKOMZO (ORCPT
+        with ESMTP id S1727638AbfKOMZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:25:14 -0500
+        Fri, 15 Nov 2019 07:25:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=immwQu1s4GLBl9d9SM1DbC/YW1vUXocvDwY8FGJGiCY=; b=oR82FhYFqr8f
-        xA0DUVdcDhwNVB50yvpHL96TcDazahN8+TjfNU/B6JlWJL8VDX3jY4nIJN0tBhdxqxvpm2UUglRbA
-        ZoSBmDkdZ4I3hNBa9y8CQA2vrHtNFJlAHcox8I+Jt6wpQ+aUIFsW9FD2yWgLmJ5bz4jC5HJDPFayN
-        nB09c=;
+        List-Archive; bh=fz8jcrh/IFmNSf19R75zpgiaL6oK1a5JOhUgpBqW6fc=; b=HjTNCn/EvDkn
+        RhKF2VsqyIx3Q2q0f/KdcCi9w5udwexkzZ/i1+AwwbhOJu3oquvRWaL7eKb0kwVLXmj0V9a3d0HC/
+        OW8v5b5HVBZjZqLQvVOjwmb0/JsvjRPNA3HvNx7yQb/NsvCX7DgWUOpz16q1WwH1D1AV8WXHUotP1
+        FyB1M=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaes-0000Jz-1K; Fri, 15 Nov 2019 12:25:02 +0000
+        id 1iVaey-0000Kt-GT; Fri, 15 Nov 2019 12:25:08 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 64F8E2741609; Fri, 15 Nov 2019 12:25:01 +0000 (GMT)
+        id 02ABF27415A7; Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jacob Rasmussen <jacobraz@chromium.org>
-Cc:     alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>,
-        Jacob Rasmussen <jacobraz@google.com>, <jacobraz@google.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Ross Zwisler <zwisler@google.com>, stable@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: rt5645: Fixed typo for buddy jack support." to the asoc tree
-In-Reply-To: <20191114232011.165762-1-jacobraz@google.com>
+To:     Pascal Paillet <p.paillet@st.com>
+Cc:     broonie@kernel.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        pascal paillet <p.paillet@st.com>, p.paillet@st.com
+Subject: Applied "regulator: stpmic1: Set a default ramp delay value" to the regulator tree
+In-Reply-To: <20191113161529.27739-1-p.paillet@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122501.64F8E2741609@ypsilon.sirena.org.uk>
-Date:   Fri, 15 Nov 2019 12:25:01 +0000 (GMT)
+Message-Id: <20191115122508.02ABF27415A7@ypsilon.sirena.org.uk>
+Date:   Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rt5645: Fixed typo for buddy jack support.
+   regulator: stpmic1: Set a default ramp delay value
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -92,38 +89,66 @@ to this mail.
 Thanks,
 Mark
 
-From fe23be2d85b05f561431d75acddec726ea807d2a Mon Sep 17 00:00:00 2001
-From: Jacob Rasmussen <jacobraz@chromium.org>
-Date: Thu, 14 Nov 2019 16:20:11 -0700
-Subject: [PATCH] ASoC: rt5645: Fixed typo for buddy jack support.
+From 9ebde17c5d0387a5e1f71e687ac35d36e01208cc Mon Sep 17 00:00:00 2001
+From: Pascal Paillet <p.paillet@st.com>
+Date: Wed, 13 Nov 2019 17:15:29 +0100
+Subject: [PATCH] regulator: stpmic1: Set a default ramp delay value
 
-Had a typo in e7cfd867fd98 that resulted in buddy jack support not being
-fixed.
+Set a default ramp delay value to the regulators with the worst
+case value.
 
-Fixes: e7cfd867fd98 ("ASoC: rt5645: Fixed buddy jack support.")
-Signed-off-by: Jacob Rasmussen <jacobraz@google.com>
-Reviewed-by: Ross Zwisler <zwisler@google.com>
-Cc: <jacobraz@google.com>
-CC: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191114232011.165762-1-jacobraz@google.com
+Signed-off-by: pascal paillet <p.paillet@st.com>
+Link: https://lore.kernel.org/r/20191113161529.27739-1-p.paillet@st.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/rt5645.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/stpmic1_regulator.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
-index 902ac98a3fbe..19662ee330d6 100644
---- a/sound/soc/codecs/rt5645.c
-+++ b/sound/soc/codecs/rt5645.c
-@@ -3271,7 +3271,7 @@ static void rt5645_jack_detect_work(struct work_struct *work)
- 				    report, SND_JACK_MICROPHONE);
- 		return;
- 	case 4:
--		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x002;
-+		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x0020;
- 		break;
- 	default: /* read rt5645 jd1_1 status */
- 		val = snd_soc_component_read32(rt5645->component, RT5645_INT_IRQ_ST) & 0x1000;
+diff --git a/drivers/regulator/stpmic1_regulator.c b/drivers/regulator/stpmic1_regulator.c
+index f09061473613..f3d7d007ecbb 100644
+--- a/drivers/regulator/stpmic1_regulator.c
++++ b/drivers/regulator/stpmic1_regulator.c
+@@ -54,6 +54,8 @@ enum {
+ 
+ /* Enable time worst case is 5000mV/(2250uV/uS) */
+ #define PMIC_ENABLE_TIME_US 2200
++/* Ramp delay worst case is (2250uV/uS) */
++#define PMIC_RAMP_DELAY 2200
+ 
+ static const struct regulator_linear_range buck1_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(725000, 0, 4, 0),
+@@ -208,6 +210,7 @@ static const struct regulator_ops stpmic1_switch_regul_ops = {
+ 	.enable_val = 1, \
+ 	.disable_val = 0, \
+ 	.enable_time = PMIC_ENABLE_TIME_US, \
++	.ramp_delay = PMIC_RAMP_DELAY, \
+ 	.supply_name = #base, \
+ }
+ 
+@@ -227,6 +230,7 @@ static const struct regulator_ops stpmic1_switch_regul_ops = {
+ 	.enable_val = 1, \
+ 	.disable_val = 0, \
+ 	.enable_time = PMIC_ENABLE_TIME_US, \
++	.ramp_delay = PMIC_RAMP_DELAY, \
+ 	.bypass_reg = LDO3_ACTIVE_CR, \
+ 	.bypass_mask = LDO_BYPASS_MASK, \
+ 	.bypass_val_on = LDO_BYPASS_MASK, \
+@@ -248,6 +252,7 @@ static const struct regulator_ops stpmic1_switch_regul_ops = {
+ 	.enable_val = 1, \
+ 	.disable_val = 0, \
+ 	.enable_time = PMIC_ENABLE_TIME_US, \
++	.ramp_delay = PMIC_RAMP_DELAY, \
+ 	.supply_name = #base, \
+ }
+ 
+@@ -267,6 +272,7 @@ static const struct regulator_ops stpmic1_switch_regul_ops = {
+ 	.enable_val = 1, \
+ 	.disable_val = 0, \
+ 	.enable_time = PMIC_ENABLE_TIME_US, \
++	.ramp_delay = PMIC_RAMP_DELAY, \
+ 	.of_map_mode = stpmic1_map_mode, \
+ 	.pull_down_reg = ids##_PULL_DOWN_REG, \
+ 	.pull_down_mask = ids##_PULL_DOWN_MASK, \
 -- 
 2.20.1
 
