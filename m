@@ -2,720 +2,423 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36A3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB116C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683F02072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F132072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vCvH5rQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfKOPoY (ORCPT
+        id S1727640AbfKOPon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:44:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36476 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbfKOPoY (ORCPT
+        Fri, 15 Nov 2019 10:44:43 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45785 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbfKOPon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:44:24 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id E25FB29162F
-Message-ID: <dc637b43a4ef4609f9200f3fc91ee76fef75f64a.camel@collabora.com>
-Subject: Re: [PATCH v3 2/3] media: hantro: Support color conversion via
- post-processing
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Date:   Fri, 15 Nov 2019 12:44:11 -0300
-In-Reply-To: <1e1c7a0e3d25187723ccac1a8360b5aae9aed8cd.camel@pengutronix.de>
-References: <20191113175603.24742-1-ezequiel@collabora.com>
-         <20191113175603.24742-3-ezequiel@collabora.com>
-         <1e1c7a0e3d25187723ccac1a8360b5aae9aed8cd.camel@pengutronix.de>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
+        Fri, 15 Nov 2019 10:44:43 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n21so11133454ljg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 07:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=84pl1/1+YPRtIqTofzdrWQY2WZWjY9tDk/ZvXd4FhfU=;
+        b=vCvH5rQ0JC4w4QwWVm5lwaEEg+3sxM3iFLQU9k+U3ozBbKcf2+0rPoueV0G1KLP/uy
+         sspJPoRqhGtxsNUOz9Asjt26NxCbR9s6vl1DZwzRK7E7PQf1y3vx7IAmPDS8iGwA36F7
+         0KuPtN8HCc84Rfl3IWPzvQ4iLo26eRWhzSA4ANnUOEmq5vCIdREcYXvrgJoO3MB40aoW
+         vtaFscl/4GtNQkVEHhPlYII5nSGNVtdnn+Z1IO6hhjHyQFgN/dXQq/fHwaEssTF92laA
+         gtdEgLgMbjpj/NJJISw/mLpmZww3EC+As3UbZkriMyj9Y5DS4mxmEVDx7ts/aJgUs8H+
+         IoAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=84pl1/1+YPRtIqTofzdrWQY2WZWjY9tDk/ZvXd4FhfU=;
+        b=rnC6qCqnfvvfMjeo8xuXk5+uBwCPtGGaSqNeBms6TrBQffwkhspOJw5bxkLyqZhH+G
+         cB3lwgPOLmHk0Cxkjtrz+DMR5TmatV6Lik8Ki/eVwJCEesSXeKRpNKlnNuHRB1BJBoOv
+         YqSkSAHweI6HPkRcePptDiTLImW4w1h8uISeLN0ztxZqDmciu8kgwMdVD0HCtxa+LsMQ
+         SkNInDD2DdFD5c/iv9Kv+c+AFsFkj5FIoDkUxqRqBGkjP0qMT5VRxBQrHnTVXv5G96TW
+         1EBjAyY34LLjBXUUXhbOwR5rAOI5H5fttnPIVDoaNMpxa28+sd3oQh3spAGurAeebzsA
+         Wf/Q==
+X-Gm-Message-State: APjAAAUtAxuR5TOHr1VWN0m8mMFcVcXI6lbr5eDopBff+7hxKM1ZgN4r
+        a9RIdp5wIlysTjVwW3jvycs=
+X-Google-Smtp-Source: APXvYqwjp5Jc5QL96PbtcfSeNmz7lyM5E4hliHUzg13SaO34zCfUgrkVkLxYPcA4usBJcXzj7wgevg==
+X-Received: by 2002:a05:651c:1053:: with SMTP id x19mr11796456ljm.39.1573832679135;
+        Fri, 15 Nov 2019 07:44:39 -0800 (PST)
+Received: from seldlx21914.corpusers.net ([37.139.156.40])
+        by smtp.gmail.com with ESMTPSA id r22sm4412765lji.71.2019.11.15.07.44.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 07:44:38 -0800 (PST)
+Date:   Fri, 15 Nov 2019 16:44:36 +0100
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Cc:     vitaly.wool@konsulko.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Seth Jennings <sjenning@redhat.com>
+Subject: [RFC] zswap: use B-tree for search
+Message-Id: <20191115164436.da3ae5bd403564174e334bca@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; x86_64-unknown-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Philipp,
+The current zswap implementation uses red-black trees to store entries
+and to perform lookups. Although this algorithm obviously has complexity
+of O(log N) it still takes a while to complete lookup (or, even more for
+replacement) of an entry, when the amount of entries is huge (100K+).
 
-Thanks for reviewing.
+B-trees are known to handle such cases more efficiently (i. e. also with
+O(log N) complexity but with way lower coefficient) so trying zswap with
+B-trees sounded good to me from the start.
 
-On Thu, 2019-11-14 at 10:48 +0100, Philipp Zabel wrote:
-> Hi Ezequiel,
-> 
-> On Wed, 2019-11-13 at 14:56 -0300, Ezequiel Garcia wrote:
-> > The Hantro G1 decoder is able to enable a post-processor
-> > on the decoding pipeline, which can be used to perform
-> > scaling and color conversion.
-> > 
-> > The post-processor is integrated to the decoder, and it's
-> > possible to use it in a way that is completely transparent
-> > to the user.
-> > 
-> > This commit enables color conversion via post-processing,
-> > which means the driver now exposes YUV packed, in addition to NV12.
-> > 
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  drivers/staging/media/hantro/Makefile         |   1 +
-> >  drivers/staging/media/hantro/hantro.h         |  64 +++++++-
-> >  drivers/staging/media/hantro/hantro_drv.c     |   8 +-
-> >  .../staging/media/hantro/hantro_g1_h264_dec.c |   2 +-
-> >  .../media/hantro/hantro_g1_mpeg2_dec.c        |   2 +-
-> >  drivers/staging/media/hantro/hantro_g1_regs.h |  53 +++++++
-> >  .../staging/media/hantro/hantro_g1_vp8_dec.c  |   2 +-
-> >  drivers/staging/media/hantro/hantro_h264.c    |   6 +-
-> >  drivers/staging/media/hantro/hantro_hw.h      |  13 ++
-> >  .../staging/media/hantro/hantro_postproc.c    | 141 ++++++++++++++++++
-> >  drivers/staging/media/hantro/hantro_v4l2.c    |  52 ++++++-
-> >  drivers/staging/media/hantro/rk3288_vpu_hw.c  |  10 ++
-> >  12 files changed, 343 insertions(+), 11 deletions(-)
-> >  create mode 100644 drivers/staging/media/hantro/hantro_postproc.c
-> > 
-> > diff --git a/drivers/staging/media/hantro/Makefile b/drivers/staging/media/hantro/Makefile
-> > index 5d6b0383d280..496b30c3c396 100644
-> > --- a/drivers/staging/media/hantro/Makefile
-> > +++ b/drivers/staging/media/hantro/Makefile
-> > @@ -3,6 +3,7 @@ obj-$(CONFIG_VIDEO_HANTRO) += hantro-vpu.o
-> >  hantro-vpu-y += \
-> >  		hantro_drv.o \
-> >  		hantro_v4l2.o \
-> > +		hantro_postproc.o \
-> >  		hantro_h1_jpeg_enc.o \
-> >  		hantro_g1_h264_dec.o \
-> >  		hantro_g1_mpeg2_dec.o \
-> > diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-> > index deb90ae37859..6016a1a42503 100644
-> > --- a/drivers/staging/media/hantro/hantro.h
-> > +++ b/drivers/staging/media/hantro/hantro.h
-> > @@ -60,6 +60,8 @@ struct hantro_irq {
-> >   * @num_enc_fmts:		Number of encoder formats.
-> >   * @dec_fmts:			Decoder formats.
-> >   * @num_dec_fmts:		Number of decoder formats.
-> > + * @postproc_fmts:		Post-processor formats.
-> > + * @num_postproc_fmts:		Number of post-processor formats.
-> >   * @codec:			Supported codecs
-> >   * @codec_ops:			Codec ops.
-> >   * @init:			Initialize hardware.
-> > @@ -70,6 +72,7 @@ struct hantro_irq {
-> >   * @num_clocks:			number of clocks in the array
-> >   * @reg_names:			array of register range names
-> >   * @num_regs:			number of register range names in the array
-> > + * @postproc_regs:		&struct hantro_postproc_regs pointer
-> >   */
-> >  struct hantro_variant {
-> >  	unsigned int enc_offset;
-> > @@ -78,6 +81,8 @@ struct hantro_variant {
-> >  	unsigned int num_enc_fmts;
-> >  	const struct hantro_fmt *dec_fmts;
-> >  	unsigned int num_dec_fmts;
-> > +	const struct hantro_fmt *postproc_fmts;
-> > +	unsigned int num_postproc_fmts;
-> >  	unsigned int codec;
-> >  	const struct hantro_codec_ops *codec_ops;
-> >  	int (*init)(struct hantro_dev *vpu);
-> > @@ -88,6 +93,7 @@ struct hantro_variant {
-> >  	int num_clocks;
-> >  	const char * const *reg_names;
-> >  	int num_regs;
-> > +	const struct hantro_postproc_regs *postproc_regs;
-> >  };
-> >  
-> >  /**
-> > @@ -213,6 +219,7 @@ struct hantro_dev {
-> >   *			context, and it's called right before
-> >   *			calling v4l2_m2m_job_finish.
-> >   * @codec_ops:		Set of operations related to codec mode.
-> > + * @postproc:		Post-processing context.
-> >   * @jpeg_enc:		JPEG-encoding context.
-> >   * @mpeg2_dec:		MPEG-2-decoding context.
-> >   * @vp8_dec:		VP8-decoding context.
-> > @@ -237,6 +244,7 @@ struct hantro_ctx {
-> >  			  unsigned int bytesused);
-> >  
-> >  	const struct hantro_codec_ops *codec_ops;
-> > +	struct hantro_postproc_ctx postproc;
-> >  
-> >  	/* Specific for particular codec modes. */
-> >  	union {
-> > @@ -274,6 +282,23 @@ struct hantro_reg {
-> >  	u32 mask;
-> >  };
-> >  
-> > +struct hantro_postproc_regs {
-> > +	struct hantro_reg pipeline_en;
-> > +	struct hantro_reg max_burst;
-> > +	struct hantro_reg clk_gate;
-> > +	struct hantro_reg out_swap32;
-> > +	struct hantro_reg out_endian;
-> > +	struct hantro_reg out_luma_base;
-> > +	struct hantro_reg input_width;
-> > +	struct hantro_reg input_height;
-> > +	struct hantro_reg output_width;
-> > +	struct hantro_reg output_height;
-> > +	struct hantro_reg input_fmt;
-> > +	struct hantro_reg output_fmt;
-> > +	struct hantro_reg orig_width;
-> > +	struct hantro_reg display_width;
-> > +};
-> > +
-> >  /* Logging helpers */
-> >  
-> >  /**
-> > @@ -352,9 +377,23 @@ static inline u32 vdpu_read(struct hantro_dev *vpu, u32 reg)
-> >  	return val;
-> >  }
-> >  
-> > -static inline void hantro_reg_write(struct hantro_dev *vpu,
-> > -				    const struct hantro_reg *reg,
-> > -				    u32 val)
-> > +static inline void
-> > +hantro_reg_write(struct hantro_dev *vpu,
-> > +		 const struct hantro_reg *reg,
-> > +		 u32 val)
-> > +{
-> > +	u32 v;
-> > +
-> > +	v = vdpu_read(vpu, reg->base);
-> > +	v &= ~(reg->mask << reg->shift);
-> > +	v |= ((val & reg->mask) << reg->shift);
-> > +	vdpu_write(vpu, v, reg->base);
-> > +}
-> 
-> This adds barriers to all the currently relaxed writes in the VP8
-> decoders. Maybe split this into a separate patch and add an explanation.
-> 
+The implementation of B-trees that is currently present in Linux kernel
+isn't really doing things in the best possible way (i. e. it has
+recursion) but I thought it was worth trying anyway. So I modified zswap
+(the patch follows below) to use lib/btree and I can see substantial
+improvement in my tests when thie patch is applied. I do not post test
+results here since we're not quite there yet; I'd like to first hear
+opinions on the idea as such and on the way I use B-trees here. Thanks
+in advance :)
 
-Yes, I missed this.
+Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.com>
 
-> > +
-> > +static inline void
-> > +hantro_reg_write_relaxed(struct hantro_dev *vpu,
-> > +			 const struct hantro_reg *reg,
-> > +			 u32 val)
-> >  {
-> >  	u32 v;
-> >  
-> > @@ -381,4 +420,23 @@ hantro_get_dst_buf(struct hantro_ctx *ctx)
-> >  	return v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> >  }
-> >  
-> > +static inline bool
-> > +hantro_needs_postproc(struct hantro_ctx *ctx)
-> > +{
-> > +	return ctx->vpu_dst_fmt->fourcc != V4L2_PIX_FMT_NV12;
-> > +}
-> > +
-> > +static inline dma_addr_t
-> > +hantro_get_dec_buf_addr(struct hantro_ctx *ctx, struct vb2_buffer *vb)
-> > +{
-> > +	if (hantro_needs_postproc(ctx))
-> > +		return ctx->postproc.dec_q[vb->index].dma;
-> > +	return vb2_dma_contig_plane_dma_addr(vb, 0);
-> > +}
-> > +
-> > +void hantro_postproc_disable(struct hantro_ctx *ctx);
-> > +void hantro_postproc_setup(struct hantro_ctx *ctx);
-> > +void hantro_postproc_free(struct hantro_ctx *ctx);
-> > +int hantro_postproc_alloc(struct hantro_ctx *ctx);
-> > +
-> >  #endif /* HANTRO_H_ */
-> > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-> > index 26108c96b674..fb08296db168 100644
-> > --- a/drivers/staging/media/hantro/hantro_drv.c
-> > +++ b/drivers/staging/media/hantro/hantro_drv.c
-> > @@ -53,7 +53,7 @@ dma_addr_t hantro_get_ref(struct hantro_ctx *ctx, u64 ts)
-> >  	if (index < 0)
-> >  		return 0;
-> >  	buf = vb2_get_buffer(q, index);
-> > -	return vb2_dma_contig_plane_dma_addr(buf, 0);
-> > +	return hantro_get_dec_buf_addr(ctx, buf);
-> >  }
-> >  
-> >  static int
-> > @@ -159,12 +159,18 @@ void hantro_prepare_run(struct hantro_ctx *ctx)
-> >  	src_buf = hantro_get_src_buf(ctx);
-> >  	v4l2_ctrl_request_setup(src_buf->vb2_buf.req_obj.req,
-> >  				&ctx->ctrl_handler);
-> > +
-> > +	if (!hantro_needs_postproc(ctx))
-> > +		hantro_postproc_disable(ctx);
-> 
-> Why isn't PP enabled in prepare_run? Does this mean the first frame is
-> not post-processed?
-> 
+ mm/zswap.c |  147 +++++++++++++++++++++++++++-------------------------------------
+ 1 file changed, 64 insertions(+), 83 deletions(-)
 
-No, because hantro_finish_run is called (despite its name)
-before the decoding operation is actually triggered.
-
-I guess this hantro_finish_run name adds some confusion:
-prepare_run and finish_run should be something along
-start_prepare_run, end_prepare_run. 
-
-And also, perhaps disabling the post-processor in prepare_run
-works just fine. I need to check that.
-
-> >  }
-> >  
-> >  void hantro_finish_run(struct hantro_ctx *ctx)
-> >  {
-> >  	struct vb2_v4l2_buffer *src_buf;
-> >  
-> > +	if (hantro_needs_postproc(ctx))
-> > +		hantro_postproc_setup(ctx);
-> > +
-> >  	src_buf = hantro_get_src_buf(ctx);
-> >  	v4l2_ctrl_request_complete(src_buf->vb2_buf.req_obj.req,
-> >  				   &ctx->ctrl_handler);
-> > diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> > index 70a6b5b26477..9b292722c9de 100644
-> > --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> > +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> > @@ -243,7 +243,7 @@ static void set_buffers(struct hantro_ctx *ctx)
-> >  	vdpu_write_relaxed(vpu, src_dma, G1_REG_ADDR_STR);
-> >  
-> >  	/* Destination (decoded frame) buffer. */
-> > -	dst_dma = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
-> > +	dst_dma = hantro_get_dec_buf_addr(ctx, &dst_buf->vb2_buf);
-> >  	vdpu_write_relaxed(vpu, dst_dma, G1_REG_ADDR_DST);
-> >  
-> >  	/* Higher profiles require DMV buffer appended to reference frames. */
-> > diff --git a/drivers/staging/media/hantro/hantro_g1_mpeg2_dec.c b/drivers/staging/media/hantro/hantro_g1_mpeg2_dec.c
-> > index f3bf67d8a289..0abe0be2c1ad 100644
-> > --- a/drivers/staging/media/hantro/hantro_g1_mpeg2_dec.c
-> > +++ b/drivers/staging/media/hantro/hantro_g1_mpeg2_dec.c
-> > @@ -121,7 +121,7 @@ hantro_g1_mpeg2_dec_set_buffers(struct hantro_dev *vpu, struct hantro_ctx *ctx,
-> >  	vdpu_write_relaxed(vpu, addr, G1_REG_RLC_VLC_BASE);
-> >  
-> >  	/* Destination frame buffer */
-> > -	addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-> > +	addr = hantro_get_dec_buf_addr(ctx, dst_buf);
-> >  	current_addr = addr;
-> >  
-> >  	if (picture->picture_structure == PICT_BOTTOM_FIELD)
-> > diff --git a/drivers/staging/media/hantro/hantro_g1_regs.h b/drivers/staging/media/hantro/hantro_g1_regs.h
-> > index 5c0ea7994336..c1756e3d5391 100644
-> > --- a/drivers/staging/media/hantro/hantro_g1_regs.h
-> > +++ b/drivers/staging/media/hantro/hantro_g1_regs.h
-> > @@ -9,6 +9,8 @@
-> >  #ifndef HANTRO_G1_REGS_H_
-> >  #define HANTRO_G1_REGS_H_
-> >  
-> > +#define G1_SWREG(nr)                 ((nr) * 4)
-> > +
-> >  /* Decoder registers. */
-> >  #define G1_REG_INTERRUPT				0x004
-> >  #define     G1_REG_INTERRUPT_DEC_PIC_INF		BIT(24)
-> > @@ -298,4 +300,55 @@
-> >  #define     G1_REG_REF_BUF_CTRL2_APF_THRESHOLD(x)	(((x) & 0x3fff) << 0)
-> >  #define G1_REG_SOFT_RESET				0x194
-> >  
-> > +/* Post-processor registers. */
-> > +#define G1_REG_PP_INTERRUPT		G1_SWREG(60)
-> > +#define    G1_REG_PP_READY_IRQ		BIT(12)
-> > +#define    G1_REG_PP_IRQ		BIT(8)
-> > +#define    G1_REG_PP_IRQ_DIS		BIT(4)
-> > +#define    G1_REG_PP_PIPELINE_EN	BIT(1)
-> > +#define    G1_REG_PP_EXTERNAL_TRIGGER	BIT(0)
-> > +#define G1_REG_PP_DEV_CONFIG		G1_SWREG(61)
-> > +#define     G1_REG_PP_AXI_RD_ID(v)	(((v) << 24) & GENMASK(31, 24))
-> > +#define     G1_REG_PP_AXI_WR_ID(v)	(((v) << 16) & GENMASK(23, 16))
-> > +#define     G1_REG_PP_INSWAP32_E(v)	((v) ? BIT(10) : 0)
-> > +#define     G1_REG_PP_DATA_DISC_E(v)	((v) ? BIT(9) : 0)
-> > +#define     G1_REG_PP_CLK_GATE_E(v)	((v) ? BIT(8) : 0)
-> > +#define     G1_REG_PP_IN_ENDIAN(v)	((v) ? BIT(7) : 0)
-> > +#define     G1_REG_PP_OUT_ENDIAN(v)	((v) ? BIT(6) : 0)
-> > +#define     G1_REG_PP_OUTSWAP32_E(v)	((v) ? BIT(5) : 0)
-> > +#define     G1_REG_PP_MAX_BURST(v)	(((v) << 0) & GENMASK(4, 0))
-> > +#define G1_REG_PP_IN_LUMA_BASE		G1_SWREG(63)
-> > +#define G1_REG_PP_IN_CB_BASE		G1_SWREG(64)
-> > +#define G1_REG_PP_IN_CR_BASE		G1_SWREG(65)
-> > +#define G1_REG_PP_OUT_LUMA_BASE		G1_SWREG(66)
-> > +#define G1_REG_PP_OUT_CHROMA_BASE	G1_SWREG(67)
-> > +#define G1_REG_PP_CONTRAST_ADJUST	G1_SWREG(68)
-> > +#define G1_REG_PP_COLOR_CONVERSION	G1_SWREG(69)
-> > +#define G1_REG_PP_COLOR_CONVERSION0	G1_SWREG(70)
-> > +#define G1_REG_PP_COLOR_CONVERSION1	G1_SWREG(71)
-> > +#define G1_REG_PP_INPUT_SIZE		G1_SWREG(72)
-> > +#define    G1_REG_PP_INPUT_SIZE_HEIGHT(v) (((v) << 9) & GENMASK(16, 9))
-> > +#define    G1_REG_PP_INPUT_SIZE_WIDTH(v)  (((v) << 0) & GENMASK(8, 0))
-> > +#define G1_REG_PP_SCALING0		G1_SWREG(79)
-> > +#define     G1_REG_PP_PADD_R(v)	(((v) << 23) & GENMASK(27, 23))
-> > +#define     G1_REG_PP_PADD_G(v)	(((v) << 18) & GENMASK(22, 18))
-> > +#define     G1_REG_PP_RANGEMAP_Y(v) ((v) ? BIT(31) : 0)
-> > +#define     G1_REG_PP_RANGEMAP_C(v) ((v) ? BIT(30) : 0)
-> > +#define     G1_REG_PP_YCBCR_RANGE(v) ((v) ? BIT(29) : 0)
-> > +#define     G1_REG_PP_RGB_16(v) ((v) ? BIT(28) : 0)
-> > +#define G1_REG_PP_SCALING1		G1_SWREG(80)
-> > +#define     G1_REG_PP_PADD_B(v)	(((v) << 18) & GENMASK(22, 18))
-> > +#define G1_REG_PP_MASK_R		G1_SWREG(82)
-> > +#define G1_REG_PP_MASK_G		G1_SWREG(83)
-> > +#define G1_REG_PP_MASK_B		G1_SWREG(84)
-> > +#define G1_REG_PP_CONTROL		G1_SWREG(85)
-> > +#define     G1_REG_PP_CONTROL_IN_FMT(v)	(((v) << 29) & GENMASK(31, 29))
-> > +#define     G1_REG_PP_CONTROL_OUT_FMT(v) (((v) << 26) & GENMASK(28, 26))
-> > +#define     G1_REG_PP_CONTROL_OUT_HEIGHT(v) (((v) << 15) & GENMASK(25, 15))
-> > +#define     G1_REG_PP_CONTROL_OUT_WIDTH(v) (((v) << 4) & GENMASK(14, 4))
-> > +#define G1_REG_PP_MASK1_ORIG_WIDTH	G1_SWREG(88)
-> > +#define     G1_REG_PP_ORIG_WIDTH(v)	(((v) << 23) & GENMASK(31, 23))
-> > +#define G1_REG_PP_DISPLAY_WIDTH		G1_SWREG(92)
-> > +#define G1_REG_PP_FUSE			G1_SWREG(99)
-> > +
-> >  #endif /* HANTRO_G1_REGS_H_ */
-> > diff --git a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > index cad18094fee0..e708994d1aba 100644
-> > --- a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > +++ b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > @@ -422,7 +422,7 @@ static void cfg_buffers(struct hantro_ctx *ctx,
-> >  	}
-> >  	vdpu_write_relaxed(vpu, reg, G1_REG_FWD_PIC(0));
-> >  
-> > -	dst_dma = vb2_dma_contig_plane_dma_addr(&vb2_dst->vb2_buf, 0);
-> > +	dst_dma = hantro_get_dec_buf_addr(ctx, &vb2_dst->vb2_buf);
-> >  	vdpu_write_relaxed(vpu, dst_dma, G1_REG_ADDR_DST);
-> >  }
-> >  
-> > diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
-> > index 694a330f508e..5c84ebcdd0ea 100644
-> > --- a/drivers/staging/media/hantro/hantro_h264.c
-> > +++ b/drivers/staging/media/hantro/hantro_h264.c
-> > @@ -629,7 +629,11 @@ int hantro_h264_dec_init(struct hantro_ctx *ctx)
-> >  	tbl = priv->cpu;
-> >  	memcpy(tbl->cabac_table, h264_cabac_table, sizeof(tbl->cabac_table));
-> >  
-> > -	v4l2_fill_pixfmt_mp(&pix_mp, ctx->dst_fmt.pixelformat,
-> > +	/*
-> > +	 * For the decoder picture size, we want the decoder
-> > +	 * native pixel format.
-> > +	 */
-> > +	v4l2_fill_pixfmt_mp(&pix_mp, V4L2_PIX_FMT_NV12,
-> >  			    ctx->dst_fmt.width, ctx->dst_fmt.height);
-> >  	h264_dec->pic_size = pix_mp.plane_fmt[0].sizeimage;
-> >  
-> > diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-> > index 69b88f4d3fb3..18e7d9e1f469 100644
-> > --- a/drivers/staging/media/hantro/hantro_hw.h
-> > +++ b/drivers/staging/media/hantro/hantro_hw.h
-> > @@ -28,11 +28,13 @@ struct hantro_variant;
-> >   * @cpu:	CPU pointer to the buffer.
-> >   * @dma:	DMA address of the buffer.
-> >   * @size:	Size of the buffer.
-> > + * @attrs:	Attributes of the DMA mapping.
-> >   */
-> >  struct hantro_aux_buf {
-> >  	void *cpu;
-> >  	dma_addr_t dma;
-> >  	size_t size;
-> > +	unsigned long attrs;
-> >  };
-> >  
-> >  /**
-> > @@ -109,6 +111,15 @@ struct hantro_vp8_dec_hw_ctx {
-> >  	struct hantro_aux_buf prob_tbl;
-> >  };
-> >  
-> > +/**
-> > + * struct hantro_postproc_ctx
-> > + *
-> > + * @dec_q:		References buffers, in decoder format.
-> > + */
-> > +struct hantro_postproc_ctx {
-> > +	struct hantro_aux_buf dec_q[VB2_MAX_FRAME];
-> > +};
-> > +
-> >  /**
-> >   * struct hantro_codec_ops - codec mode specific operations
-> >   *
-> > @@ -144,6 +155,8 @@ extern const struct hantro_variant rk3399_vpu_variant;
-> >  extern const struct hantro_variant rk3328_vpu_variant;
-> >  extern const struct hantro_variant rk3288_vpu_variant;
-> >  
-> > +extern const struct hantro_postproc_regs hantro_g1_postproc_regs;
-> > +
-> >  extern const u32 hantro_vp8_dec_mc_filter[8][6];
-> >  
-> >  void hantro_watchdog(struct work_struct *work);
-> > diff --git a/drivers/staging/media/hantro/hantro_postproc.c b/drivers/staging/media/hantro/hantro_postproc.c
-> > new file mode 100644
-> > index 000000000000..865435386363
-> > --- /dev/null
-> > +++ b/drivers/staging/media/hantro/hantro_postproc.c
-> > @@ -0,0 +1,141 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Hantro G1 post-processor support
-> > + *
-> > + * Copyright (C) 2019 Collabora, Ltd.
-> > + */
-> > +
-> > +#include <linux/dma-mapping.h>
-> > +#include <linux/types.h>
-> > +
-> > +#include "hantro.h"
-> > +#include "hantro_hw.h"
-> > +#include "hantro_g1_regs.h"
-> > +
-> > +#define HANTRO_PP_REG_WRITE(vpu, reg_name, val) \
-> > +	do { \
-> > +		if ((vpu)->variant->postproc_regs->(reg_name).base)	\
-> > +			hantro_reg_write_relaxed((vpu), \
-> > +					 &(vpu)->variant->postproc_regs->(reg_name), \
-> > +					 (val)); \
-> > +	} while (0)
-> > +
-> > +#define HANTRO_PP_REG_WRITE_S(vpu, reg_name, val) \
-> > +	do { \
-> > +		if ((vpu)->variant->postproc_regs->(reg_name).base)	\
-> > +			hantro_reg_write((vpu), \
-> > +					 &(vpu)->variant->postproc_regs->(reg_name), \
-> > +					 (val)); \
-> > +	} while (0)
-> 
-> Why all these checks, are any of the register fields optional?
-> 
-
-That was the plan. Perhaps now it makes less sense,
-but maybe it's safer this way, if it's extended?
-
-OTOH, we might want to make sure the driver fails (or warns).
-
-> > +
-> > +#define VPU_PP_IN_YUYV			0x0
-> > +#define VPU_PP_IN_NV12			0x1
-> > +#define VPU_PP_IN_YUV420		0x2
-> > +#define VPU_PP_IN_YUV240_TILED		0x5
-> > +#define VPU_PP_OUT_RGB			0x0
-> > +#define VPU_PP_OUT_YUYV			0x3
-> > +
-> > +const struct hantro_postproc_regs hantro_g1_postproc_regs = {
-> > +	.pipeline_en = {G1_REG_PP_INTERRUPT, 1, 0x1},
-> > +	.max_burst = {G1_REG_PP_DEV_CONFIG, 0, 0x1f},
-> > +	.clk_gate = {G1_REG_PP_DEV_CONFIG, 1, 0x1},
-> > +	.out_swap32 = {G1_REG_PP_DEV_CONFIG, 5, 0x1},
-> > +	.out_endian = {G1_REG_PP_DEV_CONFIG, 6, 0x1},
-> > +	.out_luma_base = {G1_REG_PP_OUT_LUMA_BASE, 0, 0xffffffff},
-> > +	.input_width = {G1_REG_PP_INPUT_SIZE, 0, 0x1ff},
-> > +	.input_height = {G1_REG_PP_INPUT_SIZE, 9, 0x1ff},
-> > +	.output_width = {G1_REG_PP_CONTROL, 4, 0x7ff},
-> > +	.output_height = {G1_REG_PP_CONTROL, 15, 0x7ff},
-> > +	.input_fmt = {G1_REG_PP_CONTROL, 29, 0x7},
-> > +	.output_fmt = {G1_REG_PP_CONTROL, 26, 0x7},
-> > +	.orig_width = {G1_REG_PP_MASK1_ORIG_WIDTH, 23, 0x1ff},
-> > +	.display_width = {G1_REG_PP_DISPLAY_WIDTH, 0, 0xfff},
-> > +};
-> > +
-> > +void hantro_postproc_setup(struct hantro_ctx *ctx)
-> > +{
-> > +	struct hantro_dev *vpu = ctx->dev;
-> > +	struct vb2_v4l2_buffer *dst_buf;
-> > +	u32 src_pp_fmt, dst_pp_fmt;
-> > +	dma_addr_t dst_dma;
-> > +
-> > +	/* Turn on pipeline mode. Must be done first. */
-> > +	HANTRO_PP_REG_WRITE_S(vpu, pipeline_en, 0x1);
-> > +
-> > +	src_pp_fmt = VPU_PP_IN_NV12;
-> > +
-> > +	switch (ctx->vpu_dst_fmt->fourcc) {
-> > +	case V4L2_PIX_FMT_YUYV:
-> > +		dst_pp_fmt = VPU_PP_OUT_YUYV;
-> > +		break;
-> > +	default:
-> > +		WARN(1, "output format %d not supported by the post-processor, this wasn't expected.",
-> > +		     ctx->vpu_dst_fmt->fourcc);
-> > +		dst_pp_fmt = 0;
-> > +		break;
-> > +	}
-> > +
-> > +	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> > +	dst_dma = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
-> > +
-> > +	HANTRO_PP_REG_WRITE(vpu, clk_gate, 0x1);
-> > +	HANTRO_PP_REG_WRITE(vpu, out_endian, 0x1);
-> > +	HANTRO_PP_REG_WRITE(vpu, out_swap32, 0x1);
-> > +	HANTRO_PP_REG_WRITE(vpu, max_burst, 16);
-> > +	HANTRO_PP_REG_WRITE(vpu, out_luma_base, dst_dma);
-> > +	HANTRO_PP_REG_WRITE(vpu, input_width, MB_WIDTH(ctx->dst_fmt.width));
-> > +	HANTRO_PP_REG_WRITE(vpu, input_height, MB_HEIGHT(ctx->dst_fmt.height));
-> > +	HANTRO_PP_REG_WRITE(vpu, input_fmt, src_pp_fmt);
-> > +	HANTRO_PP_REG_WRITE(vpu, output_fmt, dst_pp_fmt);
-> > +	HANTRO_PP_REG_WRITE(vpu, output_width, ctx->dst_fmt.width);
-> > +	HANTRO_PP_REG_WRITE(vpu, output_height, ctx->dst_fmt.height);
-> > +	HANTRO_PP_REG_WRITE(vpu, orig_width, MB_WIDTH(ctx->dst_fmt.width));
-> > +	HANTRO_PP_REG_WRITE(vpu, display_width, ctx->dst_fmt.width);
-> > +}
-> > +
-> > +void hantro_postproc_free(struct hantro_ctx *ctx)
-> > +{
-> > +	struct hantro_dev *vpu = ctx->dev;
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < VB2_MAX_FRAME; ++i) {
-> > +		struct hantro_aux_buf *priv = &ctx->postproc.dec_q[i];
-> > +
-> > +		if (priv->cpu) {
-> > +			dma_free_attrs(vpu->dev, priv->size, priv->cpu,
-> > +				       priv->dma, priv->attrs);
-> > +			priv->cpu = NULL;
-> > +		}
-> > +	}
-> > +}
-> > +
-> > +int hantro_postproc_alloc(struct hantro_ctx *ctx)
-> > +{
-> > +	struct hantro_dev *vpu = ctx->dev;
-> > +	unsigned int i, buf_size;
-> > +
-> > +	buf_size = ctx->dst_fmt.plane_fmt[0].sizeimage;
-> > +
-> > +	for (i = 0; i < VB2_MAX_FRAME; ++i) {
-> 
-> If requests less than VB2_MAX_FRAME capture frames, some of those are
-> unused. I think it would be better to match the amount of capture frames
-> here.
-> 
-
-Right.
-
-> > +		struct hantro_aux_buf *priv = &ctx->postproc.dec_q[i];
-> > +
-> > +		/*
-> > +		 * The buffers on this queue are meant as intermediate
-> > +		 * buffers for the decoder, so no mapping is needed.
-> > +		 */
-> > +		priv->attrs = DMA_ATTR_NO_KERNEL_MAPPING;
-> > +		priv->cpu = dma_alloc_attrs(vpu->dev, buf_size, &priv->dma,
-> > +					    GFP_KERNEL, priv->attrs);
-> > +		if (!priv->cpu)
-> > +			return -ENOMEM;
-> > +		priv->size = buf_size;
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> > +void hantro_postproc_disable(struct hantro_ctx *ctx)
-> > +{
-> > +	struct hantro_dev *vpu = ctx->dev;
-> > +
-> > +	HANTRO_PP_REG_WRITE_S(vpu, pipeline_en, 0x0);
-> > +}
-> > diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-> > index 238e53b28f8f..ff665d4f004f 100644
-> > --- a/drivers/staging/media/hantro/hantro_v4l2.c
-> > +++ b/drivers/staging/media/hantro/hantro_v4l2.c
-> > @@ -46,6 +46,19 @@ hantro_get_formats(const struct hantro_ctx *ctx, unsigned int *num_fmts)
-> >  	return formats;
-> >  }
-> >  
-> > +static const struct hantro_fmt *
-> > +hantro_get_postproc_formats(const struct hantro_ctx *ctx,
-> > +			    unsigned int *num_fmts)
-> > +{
-> > +	if (hantro_is_encoder_ctx(ctx)) {
-> > +		*num_fmts = 0;
-> > +		return NULL;
-> > +	}
-> > +
-> > +	*num_fmts = ctx->dev->variant->num_postproc_fmts;
-> > +	return ctx->dev->variant->postproc_fmts;
-> > +}
-> > +
-> >  static const struct hantro_fmt *
-> >  hantro_find_format(const struct hantro_ctx *ctx, u32 fourcc)
-> >  {
-> > @@ -57,6 +70,10 @@ hantro_find_format(const struct hantro_ctx *ctx, u32 fourcc)
-> >  		if (formats[i].fourcc == fourcc)
-> >  			return &formats[i];
-> >  
-> > +	formats = hantro_get_postproc_formats(ctx, &num_fmts);
-> > +	for (i = 0; i < num_fmts; i++)
-> > +		if (formats[i].fourcc == fourcc)
-> > +			return &formats[i];
-> >  	return NULL;
-> >  }
-> >  
-> > @@ -151,6 +168,20 @@ static int vidioc_enum_fmt(struct file *file, void *priv,
-> >  		}
-> >  		++j;
-> >  	}
-> > +
-> > +	/* Enumerate post-processed formats. */
-> 
-> I think here some of the explanation from the commit message of patch 3
-> could be added: why the driver is enumerating PP formats after non-PP
-> formats.
-> 
-
-Right.
-
-> > +	if (!capture)
-> > +		return -EINVAL;
-> > +	formats = hantro_get_postproc_formats(ctx, &num_fmts);
-> > +	for (i = 0; i < num_fmts; i++) {
-> > +		if (j == f->index) {
-> > +			fmt = &formats[i];
-> > +			f->pixelformat = fmt->fourcc;
-> > +			return 0;
-> > +		}
-> > +		++j;
-> > +	}
-> > +
-> >  	return -EINVAL;
-> >  }
-> >  
-> > @@ -241,9 +272,10 @@ static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
-> >  		/*
-> >  		 * The H264 decoder needs extra space on the output buffers
-> >  		 * to store motion vectors. This is needed for reference
-> > -		 * frames.
-> > +		 * frames and only if the format is non-post-processed (NV12).
-> >  		 */
-> > -		if (ctx->vpu_src_fmt->fourcc == V4L2_PIX_FMT_H264_SLICE)
-> > +		if (ctx->vpu_src_fmt->fourcc == V4L2_PIX_FMT_H264_SLICE &&
-> > +		    fmt->fourcc == V4L2_PIX_FMT_NV12)
-> 
-> If you change hantro_needs_postproc to use a struct hantro_fmt argument,
-> you could use hantro_needs_postproc(fmt) here.
-> 
-
-Makes sense.
-
-> >  			pix_mp->plane_fmt[0].sizeimage +=
-> >  				128 * DIV_ROUND_UP(pix_mp->width, 16) *
-> >  				      DIV_ROUND_UP(pix_mp->height, 16);
-> > @@ -611,10 +643,23 @@ static int hantro_start_streaming(struct vb2_queue *q, unsigned int count)
-> >  
-> >  		vpu_debug(4, "Codec mode = %d\n", codec_mode);
-> >  		ctx->codec_ops = &ctx->dev->variant->codec_ops[codec_mode];
-> > -		if (ctx->codec_ops->init)
-> > +		if (ctx->codec_ops->init) {
-> >  			ret = ctx->codec_ops->init(ctx);
-> > +			if (ret)
-> > +				return ret;
-> > +		}
-> > +
-> > +		if (hantro_needs_postproc(ctx)) {
-> > +			ret = hantro_postproc_alloc(ctx);
-> 
-> Why is this done in start_streaming? Wouldn't capture side REQBUFS be a
-> better place for this?
-> 
-
-Yes, makes sense as well.
-
-Thanks!
-Ezequiel
-
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 46a322316e52..c2cc07be1322 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -21,7 +21,7 @@
+ #include <linux/types.h>
+ #include <linux/atomic.h>
+ #include <linux/frontswap.h>
+-#include <linux/rbtree.h>
++#include <linux/btree.h>
+ #include <linux/swap.h>
+ #include <linux/crypto.h>
+ #include <linux/mempool.h>
+@@ -134,7 +134,6 @@ struct zswap_pool {
+  * This structure contains the metadata for tracking a single compressed
+  * page within zswap.
+  *
+- * rbnode - links the entry into red-black tree for the appropriate swap type
+  * offset - the swap offset for the entry.  Index into the red-black tree.
+  * refcount - the number of outstanding reference to the entry. This is needed
+  *            to protect against premature freeing of the entry by code
+@@ -149,7 +148,6 @@ struct zswap_pool {
+  * value - value of the same-value filled pages which have same content
+  */
+ struct zswap_entry {
+-	struct rb_node rbnode;
+ 	pgoff_t offset;
+ 	int refcount;
+ 	unsigned int length;
+@@ -166,11 +164,11 @@ struct zswap_header {
+ 
+ /*
+  * The tree lock in the zswap_tree struct protects a few things:
+- * - the rbtree
++ * - the tree
+  * - the refcount field of each entry in the tree
+  */
+ struct zswap_tree {
+-	struct rb_root rbroot;
++	struct btree_head head;
+ 	spinlock_t lock;
+ };
+ 
+@@ -252,7 +250,6 @@ static struct zswap_entry *zswap_entry_cache_alloc(gfp_t gfp)
+ 	if (!entry)
+ 		return NULL;
+ 	entry->refcount = 1;
+-	RB_CLEAR_NODE(&entry->rbnode);
+ 	return entry;
+ }
+ 
+@@ -262,58 +259,18 @@ static void zswap_entry_cache_free(struct zswap_entry *entry)
+ }
+ 
+ /*********************************
+-* rbtree functions
++* btree functions
+ **********************************/
+-static struct zswap_entry *zswap_rb_search(struct rb_root *root, pgoff_t offset)
+-{
+-	struct rb_node *node = root->rb_node;
+-	struct zswap_entry *entry;
++static struct btree_geo *btree_pgofft_geo;
+ 
+-	while (node) {
+-		entry = rb_entry(node, struct zswap_entry, rbnode);
+-		if (entry->offset > offset)
+-			node = node->rb_left;
+-		else if (entry->offset < offset)
+-			node = node->rb_right;
+-		else
+-			return entry;
+-	}
+-	return NULL;
+-}
+-
+-/*
+- * In the case that a entry with the same offset is found, a pointer to
+- * the existing entry is stored in dupentry and the function returns -EEXIST
+- */
+-static int zswap_rb_insert(struct rb_root *root, struct zswap_entry *entry,
+-			struct zswap_entry **dupentry)
++static struct zswap_entry *zswap_search(struct btree_head *head, pgoff_t offset)
+ {
+-	struct rb_node **link = &root->rb_node, *parent = NULL;
+-	struct zswap_entry *myentry;
+-
+-	while (*link) {
+-		parent = *link;
+-		myentry = rb_entry(parent, struct zswap_entry, rbnode);
+-		if (myentry->offset > entry->offset)
+-			link = &(*link)->rb_left;
+-		else if (myentry->offset < entry->offset)
+-			link = &(*link)->rb_right;
+-		else {
+-			*dupentry = myentry;
+-			return -EEXIST;
+-		}
+-	}
+-	rb_link_node(&entry->rbnode, parent, link);
+-	rb_insert_color(&entry->rbnode, root);
+-	return 0;
++	return btree_lookup(head, btree_pgofft_geo, &offset);
+ }
+ 
+-static void zswap_rb_erase(struct rb_root *root, struct zswap_entry *entry)
++static void zswap_erase(struct btree_head *head, struct zswap_entry *entry)
+ {
+-	if (!RB_EMPTY_NODE(&entry->rbnode)) {
+-		rb_erase(&entry->rbnode, root);
+-		RB_CLEAR_NODE(&entry->rbnode);
+-	}
++	btree_remove(head, btree_pgofft_geo, &entry->offset);
+ }
+ 
+ /*
+@@ -342,25 +299,40 @@ static void zswap_entry_get(struct zswap_entry *entry)
+ /* caller must hold the tree lock
+ * remove from the tree and free it, if nobody reference the entry
+ */
+-static void zswap_entry_put(struct zswap_tree *tree,
++static void zswap_entry_put(struct btree_head *head,
+ 			struct zswap_entry *entry)
+ {
+ 	int refcount = --entry->refcount;
+ 
+ 	BUG_ON(refcount < 0);
+ 	if (refcount == 0) {
+-		zswap_rb_erase(&tree->rbroot, entry);
++		zswap_erase(head, entry);
+ 		zswap_free_entry(entry);
+ 	}
+ }
+ 
++static int zswap_insert_or_replace(struct btree_head *head,
++				struct zswap_entry *entry)
++{
++	struct zswap_entry *old;
++
++	do {
++		old = btree_remove(head, btree_pgofft_geo, &entry->offset);
++		if (old) {
++			zswap_duplicate_entry++;
++			zswap_entry_put(head, old);
++		}
++	} while (old);
++	return btree_insert(head, btree_pgofft_geo, &entry->offset, entry,
++			GFP_ATOMIC);
++}
+ /* caller must hold the tree lock */
+-static struct zswap_entry *zswap_entry_find_get(struct rb_root *root,
++static struct zswap_entry *zswap_entry_find_get(struct btree_head *head,
+ 				pgoff_t offset)
+ {
+ 	struct zswap_entry *entry;
+ 
+-	entry = zswap_rb_search(root, offset);
++	entry = zswap_search(head, offset);
+ 	if (entry)
+ 		zswap_entry_get(entry);
+ 
+@@ -861,7 +833,7 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
+ 
+ 	/* find and ref zswap entry */
+ 	spin_lock(&tree->lock);
+-	entry = zswap_entry_find_get(&tree->rbroot, offset);
++	entry = zswap_entry_find_get(&tree->head, offset);
+ 	if (!entry) {
+ 		/* entry was invalidated */
+ 		spin_unlock(&tree->lock);
+@@ -910,7 +882,7 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
+ 
+ 	spin_lock(&tree->lock);
+ 	/* drop local reference */
+-	zswap_entry_put(tree, entry);
++	zswap_entry_put(&tree->head, entry);
+ 
+ 	/*
+ 	* There are two possible situations for entry here:
+@@ -919,8 +891,8 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
+ 	*     because invalidate happened during writeback
+ 	*  search the tree and free the entry if find entry
+ 	*/
+-	if (entry == zswap_rb_search(&tree->rbroot, offset))
+-		zswap_entry_put(tree, entry);
++	if (entry == zswap_search(&tree->head, offset))
++		zswap_entry_put(&tree->head, entry);
+ 	spin_unlock(&tree->lock);
+ 
+ 	goto end;
+@@ -934,7 +906,7 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
+ 	*/
+ fail:
+ 	spin_lock(&tree->lock);
+-	zswap_entry_put(tree, entry);
++	zswap_entry_put(&tree->head, entry);
+ 	spin_unlock(&tree->lock);
+ 
+ end:
+@@ -988,7 +960,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ 				struct page *page)
+ {
+ 	struct zswap_tree *tree = zswap_trees[type];
+-	struct zswap_entry *entry, *dupentry;
++	struct zswap_entry *entry;
+ 	struct crypto_comp *tfm;
+ 	int ret;
+ 	unsigned int hlen, dlen = PAGE_SIZE;
+@@ -1096,16 +1068,12 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ insert_entry:
+ 	/* map */
+ 	spin_lock(&tree->lock);
+-	do {
+-		ret = zswap_rb_insert(&tree->rbroot, entry, &dupentry);
+-		if (ret == -EEXIST) {
+-			zswap_duplicate_entry++;
+-			/* remove from rbtree */
+-			zswap_rb_erase(&tree->rbroot, dupentry);
+-			zswap_entry_put(tree, dupentry);
+-		}
+-	} while (ret == -EEXIST);
++	ret = zswap_insert_or_replace(&tree->head, entry);
+ 	spin_unlock(&tree->lock);
++	if (ret < 0)  {
++		zswap_reject_alloc_fail++;
++		goto put_dstmem;
++	}
+ 
+ 	/* update stats */
+ 	atomic_inc(&zswap_stored_pages);
+@@ -1138,7 +1106,7 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
+ 
+ 	/* find */
+ 	spin_lock(&tree->lock);
+-	entry = zswap_entry_find_get(&tree->rbroot, offset);
++	entry = zswap_entry_find_get(&tree->head, offset);
+ 	if (!entry) {
+ 		/* entry was written back */
+ 		spin_unlock(&tree->lock);
+@@ -1168,7 +1136,7 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
+ 
+ freeentry:
+ 	spin_lock(&tree->lock);
+-	zswap_entry_put(tree, entry);
++	zswap_entry_put(&tree->head, entry);
+ 	spin_unlock(&tree->lock);
+ 
+ 	return 0;
+@@ -1182,36 +1150,41 @@ static void zswap_frontswap_invalidate_page(unsigned type, pgoff_t offset)
+ 
+ 	/* find */
+ 	spin_lock(&tree->lock);
+-	entry = zswap_rb_search(&tree->rbroot, offset);
++	entry = zswap_search(&tree->head, offset);
+ 	if (!entry) {
+ 		/* entry was written back */
+ 		spin_unlock(&tree->lock);
+ 		return;
+ 	}
+ 
+-	/* remove from rbtree */
+-	zswap_rb_erase(&tree->rbroot, entry);
++	/* remove from tree */
++	zswap_erase(&tree->head, entry);
+ 
+ 	/* drop the initial reference from entry creation */
+-	zswap_entry_put(tree, entry);
++	zswap_entry_put(&tree->head, entry);
+ 
+ 	spin_unlock(&tree->lock);
+ }
+ 
++void do_free_entry(void *elem, unsigned long opaque, unsigned long *key,
++		size_t index, void *func2)
++{
++	struct zswap_entry *entry = elem;
++	zswap_free_entry(entry);
++}
++
+ /* frees all zswap entries for the given swap type */
+ static void zswap_frontswap_invalidate_area(unsigned type)
+ {
+ 	struct zswap_tree *tree = zswap_trees[type];
+-	struct zswap_entry *entry, *n;
+ 
+ 	if (!tree)
+ 		return;
+ 
+ 	/* walk the tree and free everything */
+ 	spin_lock(&tree->lock);
+-	rbtree_postorder_for_each_entry_safe(entry, n, &tree->rbroot, rbnode)
+-		zswap_free_entry(entry);
+-	tree->rbroot = RB_ROOT;
++	btree_visitor(&tree->head, btree_pgofft_geo, 0, do_free_entry, NULL);
++	btree_destroy(&tree->head);
+ 	spin_unlock(&tree->lock);
+ 	kfree(tree);
+ 	zswap_trees[type] = NULL;
+@@ -1226,8 +1199,11 @@ static void zswap_frontswap_init(unsigned type)
+ 		pr_err("alloc failed, zswap disabled for swap type %d\n", type);
+ 		return;
+ 	}
+-
+-	tree->rbroot = RB_ROOT;
++	if (btree_init(&tree->head) < 0) {
++		pr_err("couldn't init the tree head\n");
++		kfree(tree);
++		return;
++	}
+ 	spin_lock_init(&tree->lock);
+ 	zswap_trees[type] = tree;
+ }
+@@ -1302,6 +1278,11 @@ static int __init init_zswap(void)
+ 
+ 	zswap_init_started = true;
+ 
++	if (sizeof(pgoff_t) == 8)
++		btree_pgofft_geo = &btree_geo64;
++	else
++		btree_pgofft_geo = &btree_geo32;
++
+ 	if (zswap_entry_cache_create()) {
+ 		pr_err("entry cache creation failed\n");
+ 		goto cache_fail;
