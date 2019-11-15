@@ -2,104 +2,119 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6809C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6445FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C7C20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573825024;
-	bh=xw6+YS+K/aX6p3C3mvtL28AvnVECOYE38j0p3cjI+i4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AsJHNGoc4M20FUfzwzF/AGPM4Bg3Q3rLcwbBAf1CZWRJr9RFf18lNeYXJxvGxW0ba
-	 wr8rXaohDl8cY8Rpaf0+dXL0vSEzdZffYA4TRZexTND0zxnXMHrwf2xphg4IY7UmNo
-	 7zRAD63IIfJM1uT6typx+KCJ9iVBYYrE0LaKjVpw=
+	by mail.kernel.org (Postfix) with ESMTP id 3A2C82077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:37:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9YDxlPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfKONhD (ORCPT
+        id S1727593AbfKONhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:37:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727329AbfKONhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:37:03 -0500
-Received: from localhost (unknown [122.181.197.112])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E30EC20728;
-        Fri, 15 Nov 2019 13:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573825022;
-        bh=xw6+YS+K/aX6p3C3mvtL28AvnVECOYE38j0p3cjI+i4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=exIVUUp5a2Q2YN9kc/gsxvHncmC3Ty8P1XudP4oreOB/6MqS4o8V6SYYyUf+zXvaz
-         a4QhGJ8J9jUJ4GjjizqVUdg3vNUmN7BJ58B61qzY0oEX3f5CxKYQX1b25HsZ8dIqpL
-         G8I0vRA1AUrD7KMckbe7o/4eM/xzNtNvx+m/nETo=
-Date:   Fri, 15 Nov 2019 19:06:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] ALSA: compress: Add support for FLAC
-Message-ID: <20191115133657.GA6762@vkoul-mobl>
-References: <20191115102705.649976-1-vkoul@kernel.org>
- <s5h7e41jmvl.wl-tiwai@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5h7e41jmvl.wl-tiwai@suse.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 15 Nov 2019 08:37:18 -0500
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:50771 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfKONhR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:37:17 -0500
+Received: by mail-qk1-f201.google.com with SMTP id a13so6360052qkc.17
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 05:37:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=G6EkFeMScJt97Zxa/Roqr4qkhmepcK8pLPvMI4jl0bE=;
+        b=N9YDxlPJbBf24qBKjbmFUxwjp7HYh9Ovm2F3sroCnhW54f4ELGNBCOqk2ZiQX4Dgpy
+         vmNv+jIJlJGo5typ0J71QQG814xAs4eigUB3DDbVSCl9nr3ZHSJ3yGZHReeTlnuqnMW5
+         gOhV6h7VCN6ymjvH1Bz5ThBxZijXPiTx+sy+Hw39CD+TmfZblOa9QolPFOTUEigAAkuC
+         /CMh8DjrEU8ykD8FXhkTiGp8EByDzvHlnJIUSYBkIztIBuNlNXE29mnqmfhER4dFr6bb
+         TPqDohmWv+56Uy543hwCjVDvlbcudJl5rNp62XN2lUxzm3euJayVaClqXTmQIOqGYkTG
+         +4xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=G6EkFeMScJt97Zxa/Roqr4qkhmepcK8pLPvMI4jl0bE=;
+        b=YOot0SpS3NM6ZmwjKnCMoPr5fIyNlMFACfy22RY126JUsZWzHVLr9Q7nlrVJLx6V8/
+         +dBWhj9SXZ0wX296izYvfhRNyW46wRHwMeARXPJhNrZVqhuIDr+WWdivtRJIWsfQevPP
+         oiyoZ2gnYnlKKN9z46TNBQI11n+ck24PC6GLpHbICrEFaX30ACL0I5HVQR29YdKLTe7K
+         Ax0+Iv5TcsyPA+1/NNEPRAIMBrKSA+/ps7BoHr1Ev4EEbm3b/5lVcQmv7GyEcTn1RQPo
+         6NwsDdkITCKoQxV323uj43fc3oTXL9cja+RpYBe6liWixo8LB0I1621+quvkbVofEebc
+         zB0g==
+X-Gm-Message-State: APjAAAUP3VKqe3ODW7VCHJFSCXloKb5fl+MOZmUT+AvRk6QgHa0Ay4eQ
+        jWTO6/k0bcsyQZM4LXNSLvgPUWZvs0+C6k+0
+X-Google-Smtp-Source: APXvYqzJ46bYPFjtSSq8kogygD+LPGa6FFnWHBGyFRx9kgGBVmWcTAg4PmkA5mIHPXfXKuLZjcGRJJ4EAOBufHLf
+X-Received: by 2002:a37:98c6:: with SMTP id a189mr12586235qke.230.1573825036610;
+ Fri, 15 Nov 2019 05:37:16 -0800 (PST)
+Date:   Fri, 15 Nov 2019 14:37:11 +0100
+Message-Id: <cover.1573824989.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v2 0/1] usb: gadget: add raw-gadget interface
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Felipe Balbi <balbi@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-11-19, 14:21, Takashi Iwai wrote:
-> On Fri, 15 Nov 2019 11:27:02 +0100,
-> Vinod Koul wrote:
-> > 
-> > The current design of sending codec parameters assumes that decoders
-> > will have parsers so they can parse the encoded stream for parameters
-> > and configure the decoder.
-> > 
-> > But this assumption may not be universally true and we know some DSPs
-> > which do not contain the parsers so additional parameters are required
-> > to be passed.
-> > 
-> > So add these parameters starting with FLAC decoder. The size of
-> > snd_codec_options is still 120 bytes after this change (due to this
-> > being a union)
-> > 
-> > I think we should also bump the (minor) version if this proposal is
-> > acceptable so the userspace can check and populate flac specific structure.
-> > 
-> > Along, with the core header change, patches are added to support FLAC
-> > in Qualcomm drivers. This was tested on 96boards db845c
-> > 
-> > Srinivas Kandagatla (1):
-> >   ASoC: qcom: q6asm: add support to flac config
-> > 
-> > Vinod Koul (2):
-> >   ALSA: compress: add flac decoder params
-> >   ASoC: qcom: q6asm-dai: add support to flac decoder
-> 
-> Feel free to take my ACK for ALSA core part:
->   Acked-by: Takashi Iwai <tiwai@suse.de>
+This patchset (currently a single patch) adds a new userspace interface
+for the USB Gadget subsystem called USB Raw Gadget (I don't mind changing
+the name to something else if there are better ideas). This is what
+currently being used to enable coverage-buided USB fuzzing with syzkaller:
 
-Thanks Takashi, should we bump the version for the header to check for.
-Btw I plan to add other decoders required as well. I have mp3 working
-without any additional params but rest need additional info
+https://github.com/google/syzkaller/blob/master/docs/linux/external_fuzzing_usb.md
 
-Thanks
+Initially I was using GadgetFS (together with the Dummy HCD/UDC module)
+to perform emulation of USB devices for fuzzing, but later switched to a
+custom written interface. The incentive to implement a different interface
+was to provide a somewhat raw and direct access to the USB Gadget layer
+for the userspace, where every USB request is passed to the userspace to
+get a response. See documentation for the list of differences between
+Raw Gadget and GadgetFS.
+
+This patchset has been pushed to the public Linux kernel Gerrit instance:
+
+https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2144
+
+Changes v1 -> v2:
+- Moved raw.c to legacy/.
+- Changed uapi header to use __u* types.
+- Switched from debugfs entry to a misc device.
+- Changed raw_dev from refcount to kref.
+- Moved UDC_NAME_LENGTH_MAX to uapi headers.
+- Used usb_endpoint_type() and usb_endpoint_dir_in/out() functions instead
+  of open coding them.
+- Added "WITH Linux-syscall-note" to SPDX id in the uapi header.
+- Removed pr_err() if case dev_new() fails.
+- Reduced the number of debugging messages.
+
+Andrey Konovalov (1):
+  usb: gadget: add raw-gadget interface
+
+ Documentation/usb/index.rst         |    1 +
+ Documentation/usb/raw-gadget.rst    |   60 ++
+ drivers/usb/gadget/legacy/Kconfig   |    8 +
+ drivers/usb/gadget/legacy/Makefile  |    1 +
+ drivers/usb/gadget/legacy/raw.c     | 1057 +++++++++++++++++++++++++++
+ include/uapi/linux/usb/raw_gadget.h |  167 +++++
+ 6 files changed, 1294 insertions(+)
+ create mode 100644 Documentation/usb/raw-gadget.rst
+ create mode 100644 drivers/usb/gadget/legacy/raw.c
+ create mode 100644 include/uapi/linux/usb/raw_gadget.h
+
 -- 
-~Vinod
+2.24.0.432.g9d3f5f5b63-goog
+
