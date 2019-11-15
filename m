@@ -5,62 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA664C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDEFC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F0520733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0094220733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cMafIXdS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lUnyeeCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfKOWeL (ORCPT
+        id S1727450AbfKOWeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:34:11 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43213 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbfKOWeK (ORCPT
+        Fri, 15 Nov 2019 17:34:17 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40224 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfKOWeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:34:10 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 3so7322706pfb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:09 -0800 (PST)
+        Fri, 15 Nov 2019 17:34:13 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 15so6624190pgt.7
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RCAvV+63fHypoFXOnsyRxH4xHTzRyP2HC/taWojKmLE=;
-        b=cMafIXdS6g1uj9flwmN+t7PFzSGyqKH/b0cq+G1THxzoFk+UYaUMhkK+sCXvoR+FRO
-         T/JwOcWSRAaDWyQpMyfm6t8Zb6xoOLE3pEo2VEaHnfKiwlYUUFO3RDSGQagkVZ+iwFjP
-         wmmcuLiR+iKDMK2bzVS9A3BLyV6YTliwZCITCbOSSg1eQn5ZOIEhEWr/kh5vqAomZ4ZQ
-         cgRA8eugzOEYPUvEM8fNYj8/Yg/ARhoLFq31/vgr7hZNUdFh2ItkshREq+pM+lKJazBg
-         bqbGPI4XSYbM8QdMhxpjnWpQ3YJz8+9wR7dpzxgu9Pvr/+j05k3lwfNTVW/WugA3V86p
-         o+NA==
+        bh=0FzUVopNzASq04/LVv5rKzD9cgfLq5ObIrBYoMo9qvk=;
+        b=lUnyeeCJ4IPMz/XNH2z+dyXgbsLnZDQySzkmpacsxLxrXVqQl5YYPtMDCr/HHxKjVR
+         hU7Y+LuaiVCYaAjIOQjWN7XE8ySh88tskiNLwFDvEcME9WjRgKWKI31q/MYW4ijhkG95
+         iB/cXtsbnEgCUngeVPLDAl6BX33rNqrbYi6fcdGtnxKTNTBQFt/aemX3uKRsgXeS0agk
+         m5dsnfapvZLJb77v9GDsdm0umUO3c/oDvqDF0UXRKla1EvNzWUNN+FQGF9bj+EE7X21B
+         IdzvJlAJMLMIe18u6ncmei3dFZe6zL8vc2bVx70r1wV15uwQTsYgUDsMuE3R/50EMWIJ
+         uu2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=RCAvV+63fHypoFXOnsyRxH4xHTzRyP2HC/taWojKmLE=;
-        b=XBXr206p1i/T7DJ7baL0364i/JRv3FQikyv8fKTapZDbr6WjvURTQS2Xqc1vWC7qrJ
-         dXRm22pvrHmVv47MZCzTkNo3p0Db/deJ4CTg4+Uv/TMptPh+GRqtgWaGye35jKdou971
-         EIyfiGOY0G8emqWAi/Rg1Rh5XgBGnqc49GVnmC7cFpKsd5yITAnKDaWCp5Az9AqC0gPd
-         d/hb4c/VdkiadSSMhsdy/XYO115OucslS1WyNIr2Q8zWQ38tw8yBV5Ofb8TdpnU0Ggbt
-         r5VOdBbayObPgO5fhC8ZCBMnA0hUX7LD61b/Q0yE1wgOXVFddDC87z8+eQMGptI2KF7S
-         +jkw==
-X-Gm-Message-State: APjAAAVb/au6v0wFUQ+Td7AKXxjeLgqPtekB2Egohzi58eIt/RBNQkxM
-        +Si+Zlpo+BE1dfq/FkLC/TdW1Q==
-X-Google-Smtp-Source: APXvYqw4qvK8le8SxLbnkh5RF54RDhXA5UUgg6LQQZAv/fDVCg5l5miSaDJNYjoAmSiE4kYzPg4uSQ==
-X-Received: by 2002:a62:1914:: with SMTP id 20mr19374168pfz.68.1573857249524;
-        Fri, 15 Nov 2019 14:34:09 -0800 (PST)
+        bh=0FzUVopNzASq04/LVv5rKzD9cgfLq5ObIrBYoMo9qvk=;
+        b=fLmQZSihCo21f/hvjEfQRuVhqN/w+etFLSOaLA4LaQjKc4rnSWYoZvlU2aV3Igz4T2
+         81sxwawuquYv5FDstRQgIPbv27BzEejCdFBoNH2blNMNl3Rm5WC3ZUUYi+eQ24hXkIcX
+         IjDPn8UpQZGt0N6ef9OuduLqKp4j9NlTRFuFLUfjjrX/S3zIetvP3fqHfAkLgNkft2xj
+         eJhwnAhmJFX8HTS7ZgsQxAUjXMRKppB4Dpgj6oy/6VEnq2UzfJl5iYjmwwFN3wZZLvo5
+         JeBKrXjzPPVdnJ6JpJ4rMdfLJadvfJ0v456QPaSYgehAXuH7MdKo9nu5/543jBmjzTvS
+         e3Ig==
+X-Gm-Message-State: APjAAAXkebplR+ykjIXEz+mD/v4/ixvbRwQIwuZapAGcB00Rz42MdhtG
+        iaLFFJ5nLq8ZN9v+C1aZKQLG8Q==
+X-Google-Smtp-Source: APXvYqwIfu18fK0DfDJ9UvpBvk2czYs+yHL1APaCSoHaNFjaDFHmk39inhfdV0r/CZWJE79UEyL9tw==
+X-Received: by 2002:aa7:843d:: with SMTP id q29mr20193053pfn.156.1573857251386;
+        Fri, 15 Nov 2019 14:34:11 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.34.08
+        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.34.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 14:34:09 -0800 (PST)
+        Fri, 15 Nov 2019 14:34:10 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19+][PATCH 14/20] pinctrl: stm32: fix memory leak issue
-Date:   Fri, 15 Nov 2019 15:33:50 -0700
-Message-Id: <20191115223356.27675-14-mathieu.poirier@linaro.org>
+Subject: [stable 4.19+][PATCH 16/20] ASoC: stm32: i2s: fix 16 bit format support
+Date:   Fri, 15 Nov 2019 15:33:52 -0700
+Message-Id: <20191115223356.27675-16-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115223356.27675-1-mathieu.poirier@linaro.org>
 References: <20191115223356.27675-1-mathieu.poirier@linaro.org>
@@ -69,104 +69,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Torgue <alexandre.torgue@st.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit cd8c9b5a49576bf28990237715bc2cb2210ac80a upstream
+commit 0c4c68d6fa1bae74d450e50823c24fcc3cd0b171 upstream
 
-configs is allocated by pinconf_generic_parse_dt_config(),
-pinctrl_utils_add_map_configs() duplicates configs so it can and has to
-be freed to prevent memory leaks.
+I2S supports 16 bits data in 32 channel length.
+However the expected driver behavior, is to
+set channel length to 16 bits when data format is 16 bits.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable <stable@vger.kernel.org> # 4.19+
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/pinctrl/stm32/pinctrl-stm32.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ sound/soc/stm/stm32_i2s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index a9bec6e6fdd1..14dfbbd6c1c3 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -410,7 +410,7 @@ static int stm32_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 	unsigned int num_configs;
- 	bool has_config = 0;
- 	unsigned reserve = 0;
--	int num_pins, num_funcs, maps_per_pin, i, err;
-+	int num_pins, num_funcs, maps_per_pin, i, err = 0;
- 
- 	pctl = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -437,41 +437,45 @@ static int stm32_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 	if (has_config && num_pins >= 1)
- 		maps_per_pin++;
- 
--	if (!num_pins || !maps_per_pin)
--		return -EINVAL;
-+	if (!num_pins || !maps_per_pin) {
-+		err = -EINVAL;
-+		goto exit;
-+	}
- 
- 	reserve = num_pins * maps_per_pin;
- 
- 	err = pinctrl_utils_reserve_map(pctldev, map,
- 			reserved_maps, num_maps, reserve);
- 	if (err)
--		return err;
-+		goto exit;
- 
- 	for (i = 0; i < num_pins; i++) {
- 		err = of_property_read_u32_index(node, "pinmux",
- 				i, &pinfunc);
- 		if (err)
--			return err;
-+			goto exit;
- 
- 		pin = STM32_GET_PIN_NO(pinfunc);
- 		func = STM32_GET_PIN_FUNC(pinfunc);
- 
- 		if (!stm32_pctrl_is_function_valid(pctl, pin, func)) {
- 			dev_err(pctl->dev, "invalid function.\n");
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto exit;
- 		}
- 
- 		grp = stm32_pctrl_find_group_by_pin(pctl, pin);
- 		if (!grp) {
- 			dev_err(pctl->dev, "unable to match pin %d to group\n",
- 					pin);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto exit;
- 		}
- 
- 		err = stm32_pctrl_dt_node_to_map_func(pctl, pin, func, grp, map,
- 				reserved_maps, num_maps);
- 		if (err)
--			return err;
-+			goto exit;
- 
- 		if (has_config) {
- 			err = pinctrl_utils_add_map_configs(pctldev, map,
-@@ -479,11 +483,13 @@ static int stm32_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 					configs, num_configs,
- 					PIN_MAP_TYPE_CONFIGS_GROUP);
- 			if (err)
--				return err;
-+				goto exit;
- 		}
- 	}
- 
--	return 0;
-+exit:
-+	kfree(configs);
-+	return err;
- }
- 
- static int stm32_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 449bb7049a28..004d83091505 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -501,7 +501,7 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
+ 	switch (format) {
+ 	case 16:
+ 		cfgr = I2S_CGFR_DATLEN_SET(I2S_I2SMOD_DATLEN_16);
+-		cfgr_mask = I2S_CGFR_DATLEN_MASK;
++		cfgr_mask = I2S_CGFR_DATLEN_MASK | I2S_CGFR_CHLEN;
+ 		break;
+ 	case 32:
+ 		cfgr = I2S_CGFR_DATLEN_SET(I2S_I2SMOD_DATLEN_32) |
 -- 
 2.17.1
 
