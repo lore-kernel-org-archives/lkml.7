@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD419C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DC5C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AFA20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB77E2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798900;
-	bh=R/yEUO+q2waTOvNlrvQlDw37xD7IuqRvVUN46oEIu2w=;
+	s=default; t=1573798905;
+	bh=yVJGv9t7sCYlVFIiE0CQuIFyDDiIizjCpMePLyQhcJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rc7OjuE2KyifJWh3WbamUbtjMBnSDnGLmpfTY6iW8BB58fEwSqA5aeDgv06QTLQf3
-	 k/HL6T7bR85vTZ/AMvxGZ/LopRrHLQwQ+v7OLXjaGFqXesQTqsU4jLYuveLbGAOREn
-	 48YbjUKsTNTQPtFTg3BzDQ2byWdoaivYucKQqlOw=
+	b=GpjejsME8GPKDSPJZ6cWfJKxpkJ66AWgakdcOFyx12VfxLQAFpfw5CQdZbq+ht2AB
+	 UtgYITOAMR74Zok5Mo0pyCINO3R0PhBmsQ55Vq/HwIoCIgkULqZkNZBs/VV2EyuEby
+	 RTiPyb40aww2zJDkIjZtmem9XF7ibwL9AOOuffSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfKOGVj (ORCPT
+        id S1727427AbfKOGVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:21:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50422 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:21:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727339AbfKOGVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:21:33 -0500
+        id S1727274AbfKOGVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:21:42 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5155B20732;
-        Fri, 15 Nov 2019 06:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F93E20637;
+        Fri, 15 Nov 2019 06:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798892;
-        bh=R/yEUO+q2waTOvNlrvQlDw37xD7IuqRvVUN46oEIu2w=;
+        s=default; t=1573798901;
+        bh=yVJGv9t7sCYlVFIiE0CQuIFyDDiIizjCpMePLyQhcJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9dfC5DJ7MwRQDZZBbroOJqEqXenEYzbeD0N+e/lufCrrrkAGLkSNo2d9zhXfAvX/
-         Nbd96WLa8+kpxhUQIJzvNBKg3HTX49+zDPrQu3+rBZjOMiga9cHG+bsANLI++IiiGY
-         +y3P2CUyhLYTY4zK/kj8d+Tt87+wUJWuysCmoFtU=
+        b=aYSK5CguyM4/2s5Dr2mUIcKNiutOvfo2WZNMrGJOqlxxFl3bUcpThnI5Vr9+wdz0s
+         2P0givgK8V1nWyZlOeLXc+dW/gnU8QqALDFcPoU8aDRP9INOR0CHBUFGgh+YO6GR6s
+         so8QUa27evxOl7BG2gba2xSaeaagXV8c4qAAmlHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Amit Pundir <amit.pundir@linaro.org>
-Subject: [PATCH 4.4 02/20] MIPS: BCM63XX: fix switch core reset on BCM6368
-Date:   Fri, 15 Nov 2019 14:20:31 +0800
-Message-Id: <20191115062008.088360533@linuxfoundation.org>
+        stable@vger.kernel.org, Anton Blanchard <anton@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>
+Subject: [PATCH 4.4 05/20] powerpc/boot: Request no dynamic linker for boot wrapper
+Date:   Fri, 15 Nov 2019 14:20:34 +0800
+Message-Id: <20191115062009.709977680@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
 References: <20191115062006.854443935@linuxfoundation.org>
@@ -63,38 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Gorski <jonas.gorski@gmail.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-commit 8a38dacf87180738d42b058334c951eba15d2d47 upstream.
+commit ff45000fcb56b5b0f1a14a865d3541746d838a0a upstream.
 
-The Ethernet Switch core mask was set to 0, causing the switch core to
-be not reset on BCM6368 on boot. Provide the proper mask so the switch
-core gets reset to a known good state.
+The boot wrapper performs its own relocations and does not require
+PT_INTERP segment. However currently we don't tell the linker that.
 
-Fixes: 799faa626c71 ("MIPS: BCM63XX: add core reset helper")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
+Prior to binutils 2.28 that works OK. But since binutils commit
+1a9ccd70f9a7 ("Fix the linker so that it will not silently generate ELF
+binaries with invalid program headers. Fix readelf to report such
+invalid binaries.") binutils tries to create a program header segment
+due to PT_INTERP, and the link fails because there is no space for it:
+
+  ld: arch/powerpc/boot/zImage.pseries: Not enough room for program headers, try linking with -N
+  ld: final link failed: Bad value
+
+So tell the linker not to do that, by passing --no-dynamic-linker.
+
+Cc: stable@vger.kernel.org
+Reported-by: Anton Blanchard <anton@samba.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+[mpe: Drop dependency on ld-version.sh and massage change log]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[ajd: backport to v4.4 (resolve conflict with a comment line)]
+Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/bcm63xx/reset.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/boot/wrapper |   24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
---- a/arch/mips/bcm63xx/reset.c
-+++ b/arch/mips/bcm63xx/reset.c
-@@ -119,7 +119,7 @@
- #define BCM6368_RESET_DSL	0
- #define BCM6368_RESET_SAR	SOFTRESET_6368_SAR_MASK
- #define BCM6368_RESET_EPHY	SOFTRESET_6368_EPHY_MASK
--#define BCM6368_RESET_ENETSW	0
-+#define BCM6368_RESET_ENETSW	SOFTRESET_6368_ENETSW_MASK
- #define BCM6368_RESET_PCM	SOFTRESET_6368_PCM_MASK
- #define BCM6368_RESET_MPI	SOFTRESET_6368_MPI_MASK
- #define BCM6368_RESET_PCIE	0
+--- a/arch/powerpc/boot/wrapper
++++ b/arch/powerpc/boot/wrapper
+@@ -161,6 +161,28 @@ case "$elfformat" in
+     elf32-powerpc)	format=elf32ppc	;;
+ esac
+ 
++ld_version()
++{
++    # Poached from scripts/ld-version.sh, but we don't want to call that because
++    # this script (wrapper) is distributed separately from the kernel source.
++    # Extract linker version number from stdin and turn into single number.
++    awk '{
++	gsub(".*\\)", "");
++	gsub(".*version ", "");
++	gsub("-.*", "");
++	split($1,a, ".");
++	print a[1]*100000000 + a[2]*1000000 + a[3]*10000;
++	exit
++    }'
++}
++
++# Do not include PT_INTERP segment when linking pie. Non-pie linking
++# just ignores this option.
++LD_VERSION=$(${CROSS}ld --version | ld_version)
++LD_NO_DL_MIN_VERSION=$(echo 2.26 | ld_version)
++if [ "$LD_VERSION" -ge "$LD_NO_DL_MIN_VERSION" ] ; then
++	nodl="--no-dynamic-linker"
++fi
+ 
+ platformo=$object/"$platform".o
+ lds=$object/zImage.lds
+@@ -412,7 +434,7 @@ if [ "$platform" != "miboot" ]; then
+     if [ -n "$link_address" ] ; then
+         text_start="-Ttext $link_address"
+     fi
+-    ${CROSS}ld -m $format -T $lds $text_start $pie -o "$ofile" \
++    ${CROSS}ld -m $format -T $lds $text_start $pie $nodl -o "$ofile" \
+ 	$platformo $tmp $object/wrapper.a
+     rm $tmp
+ fi
 
 
