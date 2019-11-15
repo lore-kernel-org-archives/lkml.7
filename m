@@ -2,117 +2,168 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7750DC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E48C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFD32077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887F320748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NQLd1g5f"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=c0d3.blue header.i=@c0d3.blue header.b="O8JtRdnt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfKOKx7 (ORCPT
+        id S1727387AbfKOK4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:53:59 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45164 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfKOKx6 (ORCPT
+        Fri, 15 Nov 2019 05:56:35 -0500
+Received: from mail.aperture-lab.de ([138.201.29.205]:33618 "EHLO
+        mail.aperture-lab.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfKOK4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:53:58 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v8so7649784lfa.12
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:53:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=YrBKYAXW2pBZSbQ2SIp4S+nYebHNxgT7XYL6TriEP8k=;
-        b=NQLd1g5fKoaez5J87XjZtjuNW4KXaDwXMaUwYF9ueSa8RJTFOY8QHy5z2i9uxqJ9Nz
-         AzD6vtXsjMX2jQHd16HGN+jQQa17OAkoy5cAQYyTY5bwkY/6nGpfluYDjRXPzrZswyo6
-         6iwraTyyS13J8R2LiQ2M38BXIsrM4+CEuv6715gfHhH6md62glQy4RYXyUO54TrMAucM
-         Aaan0HThwCAP4um+hFu2j6hubBXbyIC4AEQpR+MCHHbb0rbeENqYeJtsu+XkKITlugRJ
-         e0yR+FmPn4HnNOLoQ/UP+YpsCny9+oiz+Knpez74A35fsTFRJoezeWNz+jgOBvxQsea3
-         K76g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=YrBKYAXW2pBZSbQ2SIp4S+nYebHNxgT7XYL6TriEP8k=;
-        b=QtQ/khFyHCL54svGG8HMGfQPBeIa2jeRi6InWjTIhdbKbnTiLm0PJfqXG7bmoS3r+J
-         QGn2gC5OD3KRH634vug8I1HZ9N8DyGldS7y59UNPIlRKVUkGKnLMfT7SUspYrtrjN/V7
-         ElzxSxfrXKRSFXok0h2ea0kJDYIxhaqB+7m3pLgkQz2kSFUTT5hwkYEf0fg6SLKHkT7J
-         enlmBKGnN0LbKUYzllI60B5B+BqzIbhUfT7AjYOGfsQdKBjG7I/XgQpEGK3uqYmYAcLT
-         EtcMejvrJh/6ANyoG35VRrRk/Xy8uZJa91/uTRy7fYEWtOsBGbGPO67NnOFxDERUG9UF
-         tm9w==
-X-Gm-Message-State: APjAAAUuIyFSdRP3CX0QYR9orn7ZtF1cBHWYeuBYYknOk+tqAN2W3MYs
-        DITvUbCZiNiuIVcLqHIYf+/aNA==
-X-Google-Smtp-Source: APXvYqwJm9kjyX50miWZJi1AorPayww0DL6AYzoF4y4u+n5SXXKGJRe8XKtDsFsG7BO1UZzJN2egdw==
-X-Received: by 2002:a05:6512:511:: with SMTP id o17mr255769lfb.167.1573815236204;
-        Fri, 15 Nov 2019 02:53:56 -0800 (PST)
-Received: from jax (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
-        by smtp.gmail.com with ESMTPSA id r19sm4025146lfm.61.2019.11.15.02.53.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Nov 2019 02:53:55 -0800 (PST)
-Date:   Fri, 15 Nov 2019 11:53:53 +0100
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     arm@kernel.org, soc@kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: [GIT PULL] tee subsys fixes for v5.4 (take two)
-Message-ID: <20191115105353.GA26176@jax>
+        Fri, 15 Nov 2019 05:56:35 -0500
+From:   =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c0d3.blue; s=2018;
+        t=1573815392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=uBJc7hcajP8FEHgdeBWBaFOQbOLebSdyenmlOi0uYxA=;
+        b=O8JtRdntbEJURgpdD6MrUYkKYQYwyHbUNpMTSGs9rE8JbGfernDCI6mD8fKb2qukSC1FV+
+        ZBXt7Q/srnvMlQgQjZJgpve874drG5Y+k+G4+PVDhmURl/Jo+jaSTMbMrD0KjtuUDHEYHh
+        ZKetoahkmkKWGOetJK43EZreuRZdLVY11wn4wRwkDOllSrY9PB1JiuwiqcSNLiiOUskzQX
+        rMLmWk488ReuJm3Pd94UBJO6jGQxQU+IPi/pZvXUcujJHMd975fmw/U8JCBCyFsOZTta1S
+        s4AqP3D9GqvllPahTJ5SjYTu8+2trJeD+SfM4rbfGhKFPwgy6uqwDqLIhUZAiw==
+To:     ath10k@lists.infradead.org
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ben Greear <greearb@candelatech.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <ll@simonwunderlich.de>
+Subject: [PATCH net-next v2] ath10k: fix RX of frames with broken FCS in monitor mode
+Date:   Fri, 15 Nov 2019 11:56:12 +0100
+Message-Id: <20191115105612.8531-1-linus.luessing@c0d3.blue>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=c0d3.blue;
+        s=2018; t=1573815392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=uBJc7hcajP8FEHgdeBWBaFOQbOLebSdyenmlOi0uYxA=;
+        b=MMfU0F89mh6EF+HRdjK7Qm9SsszXQXVQH8OEu8xiT+nDw+d9FYqeftHJDPdGVEAMmGhtXn
+        DYZYpjaQBlvZQOq2ue58DttUqGzKqsRIzNVf/lhFFxwBO3OCfbJQ2MgyCPeS+OqRLEvINB
+        q6b9N+hiNtFCKSZBAeMZDqgwkskCfB818bY/9SpdlaWg7m3CEmOXde+8CPyGqgGv5Alfwh
+        2kxFDq4STya73izPJ4XvnJTDwvpE8X/dTpQgYT9EmlGbwWknIJHDg3NATzVGwI6KdVnt1C
+        ImvCic5cn0NWp9LGRtcwkGcOt9QwEmR7dCPqu/ciBtlxnU3q8enPdY7NliXA6Q==
+ARC-Seal: i=1; s=2018; d=c0d3.blue; t=1573815392; a=rsa-sha256; cv=none;
+        b=KUUWM6vRn3AtzkRE3UM7xMjLNEdf9BrkiLXVJ5fDdPnyYR20R+KkU3mtbapdbMrLqKNQ+A
+        rrKNIglcXVdWorWhmSnuQExegzNsHXPerTiTBPPkBxgvieE5NtfSCVRwMua7qRYMf2iapg
+        M2xPM2k46UdQvoNDdSpT6DOLj+d7RD7wRlwrRGKjbaglBmUiGKwGfHrtLPsnK07nPvY/BI
+        ChcGcHcCDTRAawEBP1Y1hl5I2CI0K3dj0m3xwFsmAKyocvesfLDAwROkvcozB0I0KYVLsS
+        qxp6SrGcWbPYl1J1jpTveKCJ6wkVR9D4tmtvghVtEw69M8HxfE4rLzpenq5GHQ==
+ARC-Authentication-Results: i=1;
+        ORIGINATING;
+        auth=pass smtp.auth=linus.luessing@c0d3.blue smtp.mailfrom=linus.luessing@c0d3.blue
+Authentication-Results: ORIGINATING;
+        auth=pass smtp.auth=linus.luessing@c0d3.blue smtp.mailfrom=linus.luessing@c0d3.blue
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello arm-soc maintainers,
+From: Linus Lüssing <ll@simonwunderlich.de>
 
-Please pull these OP-TEE driver fixes. There's one user-after-free issue if
-in the error handling path when the OP-TEE driver is initializing. There's
-also one fix to to register dynamically allocated shared memory needed by
-kernel clients communicating with secure world via memory references.
+So far, frames were forwarded regardless of the FCS correctness leading
+to userspace applications listening on the monitor mode interface to
+receive potentially broken frames, even with the "fcsfail" flag unset.
 
-"tee: optee: Fix dynamic shm pool allocations" is now from version 2 which
-includes a fix up with a small but vital dependency.
+By default, with the "fcsfail" flag of a monitor mode interface
+unset, frames with FCS errors should be dropped. With this patch, the
+fcsfail flag is taken into account correctly.
 
-If you think it's too late for v5.4 please queue this for v5.5 instead.
+Cc: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Linus Lüssing <ll@simonwunderlich.de>
+---
+This was tested on an Open Mesh A41 device, featuring a QCA4019. And
+with this firmware:
 
-Thanks,
-Jens
+https://www.candelatech.com/downloads/ath10k-4019-10-4b/firmware-5-ct-full-community-12.bin-lede.011
 
+But from looking at the code it seems that the vanilla ath10k has the
+same issue, therefore submitting it here.
 
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+Changelog v2:
 
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+* removed the spinlock as only a 32 bit statistics counter is
+  incremented
 
-are available in the Git repository at:
+Changelog RFC->v1:
 
-  git://git.linaro.org/people/jens.wiklander/linux-tee.git/ tags/tee-fixes-for-v5.4
+* removed "ar->monitor" check
+* added a debug counter
 
-for you to fetch changes up to 03212e347f9443e524d6383c6806ac08295c1fb0:
+---
 
-  tee: optee: fix device enumeration error handling (2019-11-15 11:31:24 +0100)
+ drivers/net/wireless/ath/ath10k/core.h   | 1 +
+ drivers/net/wireless/ath/ath10k/debug.c  | 2 ++
+ drivers/net/wireless/ath/ath10k/htt_rx.c | 7 +++++++
+ 3 files changed, 10 insertions(+)
 
-----------------------------------------------------------------
-Two OP-TE driver fixes:
-- Add proper cleanup on optee_enumerate_devices() failure
-- Make sure to register kernel allocations of dynamic shared memory
+diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
+index af68eb5d0776..d445482fa945 100644
+--- a/drivers/net/wireless/ath/ath10k/core.h
++++ b/drivers/net/wireless/ath/ath10k/core.h
+@@ -1180,6 +1180,7 @@ struct ath10k {
+ 
+ 	struct {
+ 		/* protected by data_lock */
++		u32 rx_crc_err_drop;
+ 		u32 fw_crash_counter;
+ 		u32 fw_warm_reset_counter;
+ 		u32 fw_cold_reset_counter;
+diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
+index bd2b5628f850..5e4cd2966e6f 100644
+--- a/drivers/net/wireless/ath/ath10k/debug.c
++++ b/drivers/net/wireless/ath/ath10k/debug.c
+@@ -1094,6 +1094,7 @@ static const char ath10k_gstrings_stats[][ETH_GSTRING_LEN] = {
+ 	"d_rts_good",
+ 	"d_tx_power", /* in .5 dbM I think */
+ 	"d_rx_crc_err", /* fcs_bad */
++	"d_rx_crc_err_drop", /* frame with FCS error, dropped late in kernel */
+ 	"d_no_beacon",
+ 	"d_tx_mpdus_queued",
+ 	"d_tx_msdu_queued",
+@@ -1193,6 +1194,7 @@ void ath10k_debug_get_et_stats(struct ieee80211_hw *hw,
+ 	data[i++] = pdev_stats->rts_good;
+ 	data[i++] = pdev_stats->chan_tx_power;
+ 	data[i++] = pdev_stats->fcs_bad;
++	data[i++] = ar->stats.rx_crc_err_drop;
+ 	data[i++] = pdev_stats->no_beacons;
+ 	data[i++] = pdev_stats->mpdu_enqued;
+ 	data[i++] = pdev_stats->msdu_enqued;
+diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
+index 9f0e7b4943ec..8139c9cea1d8 100644
+--- a/drivers/net/wireless/ath/ath10k/htt_rx.c
++++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
+@@ -1285,6 +1285,13 @@ static void ath10k_process_rx(struct ath10k *ar, struct sk_buff *skb)
+ 
+ 	status = IEEE80211_SKB_RXCB(skb);
+ 
++	if (!(ar->filter_flags & FIF_FCSFAIL) &&
++	    status->flag & RX_FLAG_FAILED_FCS_CRC) {
++		ar->stats.rx_crc_err_drop++;
++		dev_kfree_skb_any(skb);
++		return;
++	}
++
+ 	ath10k_dbg(ar, ATH10K_DBG_DATA,
+ 		   "rx skb %pK len %u peer %pM %s %s sn %u %s%s%s%s%s%s %srate_idx %u vht_nss %u freq %u band %u flag 0x%x fcs-err %i mic-err %i amsdu-more %i\n",
+ 		   skb,
+-- 
+2.24.0.rc2
 
-----------------------------------------------------------------
-Jens Wiklander (1):
-      tee: optee: fix device enumeration error handling
-
-Sumit Garg (1):
-      tee: optee: Fix dynamic shm pool allocations
-
- drivers/tee/optee/call.c     |  7 +++++++
- drivers/tee/optee/core.c     | 20 ++++++++++++--------
- drivers/tee/optee/shm_pool.c | 12 +++++++++++-
- 3 files changed, 30 insertions(+), 9 deletions(-)
