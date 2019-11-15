@@ -2,360 +2,156 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ECAC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C763C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E57D2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012E820732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:30:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="wfac57Yi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfKOP3j (ORCPT
+        id S1727621AbfKOPa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:29:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60956 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727412AbfKOP3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:29:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EF00DB9E5;
-        Fri, 15 Nov 2019 15:29:35 +0000 (UTC)
-Subject: Re: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1619 SoC and Realtek
- Mjolnir EVB
-To:     James Tai <james.tai@realtek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        'DTML' <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-References: <73fb8106ec1a4665b59a2d187a576b71@realtek.com>
- <9cadb78c-99af-8948-e76f-c26f263693b3@suse.de>
- <fbc4dee61c2547458fa0791f38abaed2@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <610ad23f-d133-8fd9-1741-80eb47157929@suse.de>
-Date:   Fri, 15 Nov 2019 16:29:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 15 Nov 2019 10:30:56 -0500
+Received: from cmta16.telus.net ([209.171.16.89]:51915 "EHLO cmta16.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727476AbfKOPaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 10:30:55 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id VdYfit82MFXoiVdYgiVUb5; Fri, 15 Nov 2019 08:30:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1573831854; bh=yMfigeQBBOt/OlOFPFk+3W/D65H7EvP4UA3rosQWmIU=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=wfac57YiF7xX0aRDFhpiq2jQiMFLwNxMs0W07nH49IDSESIAN/8MSZYt3E1x7koTr
+         Whuw3FZgTy6TE9Tv2aQXobQzF6EYjXyTtdafkSbrY6Ks7DfvyJtfzrYJIWlGDo1c2o
+         QtSB954/ZeuIGfeqRz59R1fn82HTZYEAdk9YC6JxqmxtVzgIqG/GPYNoKirIUMLZ5Y
+         S5bxf6nrzayoyQQe/2nv3Tdo/1HPJ8P20rFqMCJ8wuGtOlV/6Tw1G0pNMZDBVEtajE
+         1j4P0LyE+XsCK5ZnYlwIgvluZoT9fvwy3JvNsTMecTr2UyNaIlvDRbAlgbdcA20UBP
+         Z5+HMtLj20wVw==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=HoEI5HbS c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=XbKOgolVw54_PmlDEtoA:9 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Peter Zijlstra'" <peterz@infradead.org>
+Cc:     "'linux-kernel'" <linux-kernel@vger.kernel.org>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>,
+        "'Juri Lelli'" <juri.lelli@redhat.com>,
+        "'Steven Rostedt'" <rostedt@goodmis.org>,
+        "'Mel Gorman'" <mgorman@suse.de>,
+        "'open list:THERMAL'" <linux-pm@vger.kernel.org>,
+        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Sargun Dhillon'" <sargun@sargun.me>,
+        "'Tejun Heo'" <tj@kernel.org>, "'Xie XiuQi'" <xiexiuqi@huawei.com>,
+        <xiezhipeng1@huawei.com>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>
+References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org> <20191115095447.GU4114@hirez.programming.kicks-ass.net> <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com> <20191115103735.GE4131@hirez.programming.kicks-ass.net> <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com> <20191115105110.GG4131@hirez.programming.kicks-ass.net> <CAKfTPtC3g4iCxvAJo9Km9fZ0fPSw5Jt9TY2+xF7kxGmOZ66gxw@mail.gmail.com> <20191115130144.GA4097@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191115130144.GA4097@hirez.programming.kicks-ass.net>
+Subject: RE: [PATCH v4] sched/freq: move call to cpufreq_update_util
+Date:   Fri, 15 Nov 2019 07:30:47 -0800
+Message-ID: <000001d59bc9$aab4e010$001ea030$@net>
 MIME-Version: 1.0
-In-Reply-To: <fbc4dee61c2547458fa0791f38abaed2@realtek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdWbtO4ylk/1Cq0UT7GdBw8Mb2nOvgADxNjA
+X-CMAE-Envelope: MS4wfHHFw51kjAZZ0qdbGvJn7HzWIB4x3VEf3XTQKgWc4M/sDOsEmPYxF6VpbwmuHyROFdkggo5LWZiX9Jmv1VGR1f1BqKRv5Fkk/jATlDEyYHtrTfX4Mh7x
+ 4ph6c4uhrsvltmOk0m+pGBnDz0Oa+i4pk8IFM8/UMWb420NveSPauJCWgGT60b2VqV/7HVjygj1GZY/shKU6vV55xcYRBYoldeNxBr+I0TzdVK4Fnmzdhu52
+ uluAHLN6KA86IbSLZkb7Ccejm74bH2V45J1HMjS8HB+/x5DF/fQ6o651qk5rf/olEOcGrMc+YHnil4PNsLGJkTjYVJS3k+Nt73+ywI/tgXqo+Wg7/NB2YtIt
+ guEqL03+zfdBLedYHoGrsVy8qonhYG3m8i/FMNHXDtAi4OG1DsBaFPzVJ3K2jetF+77b4tnbXa2ThnMD2/rueSBthhUWHoUDSksdIl5e5CiNW0aZLaVNFw13
+ 5dlaPSABLUYwuR246zvaciE4ed2mpUpzxUeCAJoH61YLrp5tkDMUy7r6U7ljyAbz6g6xvDjV49aoucfuH2K5tBJKRTugyHy4Jg7ujsuISdiSNVNy+y24vKcu
+ qhWPf+3vPSHPRue7PG/I218F/N/q5TA5+0QGru+fVif/Nig0pdOd0bMrVtxjgIfXA1h1F8pwlg/5PrZ8U+jZ+Kae
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 15.11.19 um 15:52 schrieb James Tai:
->>> Add Device Trees for Realtek RTD1619 SoC family, RTD1619 SoC and
->>> Realtek Mjolnir EVB.
->>>
->>> Signed-off-by: James Tai <james.tai@realtek.com>
->>> ---
->>
->> Lacking the requested changelog.
->>
->>>  arch/arm64/boot/dts/realtek/Makefile          |   2 +
->>>  .../boot/dts/realtek/rtd1619-mjolnir.dts      |  40 +++++
->>>  arch/arm64/boot/dts/realtek/rtd1619.dtsi      |  12 ++
->>>  arch/arm64/boot/dts/realtek/rtd16xx.dtsi      | 163
->> ++++++++++++++++++
->>>  4 files changed, 217 insertions(+)
->>>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
->>>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619.dtsi
->>>  create mode 100644 arch/arm64/boot/dts/realtek/rtd16xx.dtsi
->>
->> Somehow the last hunk (rtd16xx.dtsi) didn't apply with git-am or patch -p1, not
->> sure why. I have manually copied the file into place and fixed up some more
->> nits below:
->>
->>>
->>> diff --git a/arch/arm64/boot/dts/realtek/Makefile
->>> b/arch/arm64/boot/dts/realtek/Makefile
->>> index 555638ada721..fb5f05978ecc 100644
->>> --- a/arch/arm64/boot/dts/realtek/Makefile
->>> +++ b/arch/arm64/boot/dts/realtek/Makefile
->>> @@ -7,3 +7,5 @@ dtb-$(CONFIG_ARCH_REALTEK) +=
->> rtd1295-probox2-ava.dtb
->>>  dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
->>>
->>>  dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
->>> +
->>> +dtb-$(CONFIG_ARCH_REALTEK) += rtd1619-mjolnir.dtb
->>> diff --git a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
->>> b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
->>> new file mode 100644
->>> index 000000000000..6ab791af3896
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
->>> @@ -0,0 +1,40 @@
->>> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
->>> +/*
->>> + * Copyright (c) 2019 Realtek Semiconductor Corp.
->>> + */
->>> +
->>> +/dts-v1/;
->>> +
->>> +#include "rtd1619.dtsi"
->>> +
->>> +/ {
->>> +	compatible = "realtek,rtd1619", "realtek,mjolnir";
->>
->> Order not fixed from v2. This is a schema violation and logically wrong.
->>
->>> +	model= "Realtek Mjolnir EVB";
->>
->> Space missing before =. Missed that in v2.
->>
->>> +
->>> +	memory@0 {
->>> +		device_type = "memory";
->>> +		reg = <0x0 0x80000000>;
->>> +	};
->>> +
->>> +	chosen {
->>> +		stdout-path = "serial0:115200n8";
->>> +	};
->>> +
->>> +	aliases {
->>> +		serial0 = &uart0; /* The UART0 is debug console */
->>> +		serial1 = &uart1; /* The UART1 is on M.2 slot */
->>> +		serial2 = &uart2; /* The UART2 is on GPIO connector */
->>> +	};
->>> +};
->>> +
->>> +&uart0 {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&uart1 {
->>> +	status = "disabled";
->>> +};
->>> +
->>> +&uart2 {
->>> +	status = "disabled";
->>> +};
->>
->> The comments were intended to go above each node, not after the aliases.
->> I've taken the liberty to annotate them further with their PCB label.
->>
->>> diff --git a/arch/arm64/boot/dts/realtek/rtd1619.dtsi
->>> b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
->>> new file mode 100644
->>> index 000000000000..e52bf708b04e
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
->>> @@ -0,0 +1,12 @@
->>> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
->>> +/*
->>> + * Realtek RTD1619 SoC
->>> + *
->>> + * Copyright (c) 2019 Realtek Semiconductor Corp.
->>> + */
->>> +
->>> +#include "rtd16xx.dtsi"
->>> +
->>> +/ {
->>> +	compatible = "realtek,rtd1619";
->>> +};
->>> diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
->>> b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
->>> new file mode 100644
->>> index 000000000000..d9b572a870f5
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
->>> @@ -0,0 +1,163 @@
->>> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
->>> +/*
->>> + * Realtek RTD16xx SoC family
->>> + *
->>> + * Copyright (c) 2019 Realtek Semiconductor Corp.
->>> + */
->>> +
->>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +#include <dt-bindings/interrupt-controller/irq.h>
->>> +
->>> +/{
->>
->> Space missing. Missed that in v2.
->>
->>> +	interrupt-parent = <&gic>;
->>> +	#address-cells = <1>;
->>> +	#size-cells = <1>;
->>> +
->>> +	cpus {
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +
->>> +		cpu0: cpu@0 {
->>> +			device_type = "cpu";
->>> +			compatible = "arm,cortex-a55";
->>> +			reg = <0x0>;
->>> +			enable-method = "psci";
->>> +			next-level-cache = <&l2>;
->>> +		};
->>> +
->>> +		cpu1: cpu@100 {
->>> +			device_type = "cpu";
->>> +			compatible = "arm,cortex-a55";
->>> +			reg = <0x100>;
->>> +			enable-method = "psci";
->>> +			next-level-cache = <&l3>;
->>> +		};
->>> +
->>> +		cpu2: cpu@200 {
->>> +			device_type = "cpu";
->>> +			compatible = "arm,cortex-a55";
->>> +			reg = <0x200>;
->>> +			enable-method = "psci";
->>> +			next-level-cache = <&l3>;
->>> +		};
->>> +
->>> +		cpu3: cpu@300 {
->>> +			device_type = "cpu";
->>> +			compatible = "arm,cortex-a55";
->>> +			reg = <0x300>;
->>> +			enable-method = "psci";
->>> +			next-level-cache = <&l3>;
->>> +		};
->>> +
->>> +		cpu4: cpu@400 {
->>> +			device_type = "cpu";
->>> +			compatible = "arm,cortex-a55";
->>> +			reg = <0x400>;
->>> +			enable-method = "psci";
->>> +			next-level-cache = <&l3>;
->>> +		};
->>> +
->>> +		cpu5: cpu@500 {
->>> +			device_type = "cpu";
->>> +			compatible = "arm,cortex-a55";
->>> +			reg = <0x500>;
->>> +			enable-method = "psci";
->>> +			next-level-cache = <&l3>;
->>> +		};
->>> +
->>> +		l2: l2-cache {
->>> +			compatible = "cache";
->>> +			next-level-cache = <&l3>;
->>> +
->>> +		};
->>> +
->>> +		l3: l3-cache {
->>> +			compatible = "cache";
->>> +		};
->>> +	};
->>> +
->>> +	timer {
->>> +		compatible = "arm,armv8-timer";
->>> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
->>> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
->>> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
->>> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
->>> +	};
->>> +
->>> +	arm_pmu: pmu {
->>> +		compatible = "arm,armv8-pmuv3";
->>> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
->>> +	};
->>> +
->>> +	psci {
->>> +		compatible = "arm,psci-1.0";
->>> +		method = "smc";
->>> +	};
->>> +
->>> +	osc27M: osc {
->>> +		compatible = "fixed-clock";
->>> +		clock-frequency = <27000000>;
->>> +		clock-output-names = "osc27M";
->>> +		#clock-cells = <0>;
->>> +	};
->>> +
->>> +	soc@98000000 {
->>
->> If the node has a unit address, it also needs a reg property with that value. So
->> let's drop the unit address.
->>
->>> +		compatible = "simple-bus";
->>> +		#address-cells = <1>;
->>> +		#size-cells = <1>;
->>> +		ranges = <0x98000000 0x98000000 0x68000000>;
->>> +
->>> +		rbus: r-bus@98000000 {
->>> +			compatible = "simple-bus";
->>> +			reg = <0x98000000 0x200000>;
->>> +			#address-cells = <1>;
->>> +			#size-cells = <1>;
->>> +			ranges = <0x0 0x98000000 0x200000>;
->>> +
->>> +			uart0: serial0@7800 {
->>> +				compatible = "snps,dw-apb-uart";
->>> +				reg = <0x7800 0x400>;
->>> +				reg-shift = <2>;
->>> +				reg-io-width = <4>;
->>> +				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
->>> +				clock-frequency = <27000000>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>> +			uart1: serial1@1b200 {
->>> +				compatible = "snps,dw-apb-uart";
->>> +				reg = <0x1b200 0x400>;
->>> +				reg-shift = <2>;
->>> +				reg-io-width = <4>;
->>> +				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
->>> +				clock-frequency = <432000000>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>> +			uart2: serial2@1b400 {
->>> +				compatible = "snps,dw-apb-uart";
->>> +				reg = <0x1b400 0x400>;
->>> +				reg-shift = <2>;
->>> +				reg-io-width = <4>;
->>> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
->>> +				clock-frequency = <432000000>;
->>> +				status = "disabled";
->>> +			};
->>> +		};
->>> +
->>> +		gic: interrupt-controller@ff100000 {
->>> +			compatible = "arm,gic-v3";
->>> +			reg = <0xff100000 0x10000>,
->>> +			      <0xff140000 0xc0000>;
->>> +			interrupt-controller;
->>> +			#interrupt-cells = <3>;
->>> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->>> +		};
->>> +	};
->>> +};
->>> +
->>> +&arm_pmu {
->>> +	interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
->>> +		<&cpu3>, <&cpu4>, <&cpu5>;
->>> +};
->>
->> Now that they're in the same file, this can just go into the node.
->>
-> 
-> I'll correct these mistakes in next version.
-> 
+Hi Peter,
 
-No need for a v4, I already have it queued.
+On 2019.11.15 05:02 Peter Zijlstra wrote:
+> On Fri, Nov 15, 2019 at 12:03:31PM +0100, Vincent Guittot wrote:
+>
+>> This patch does 2 things:
+>> - fix the spurious call to cpufreq just before attaching a task
+>
+> Right, so that one doesn't concern me too much.
+>
+>> - make sure cpufreq is still called when cfs is 0 but not irq/rt or dl
+>
+> But per the rq->has_blocked_load logic we would mostly stop sending
+> events once we reach all 0s.
+>
+> Now, most of those updates will be through _nohz_idle_balance() ->
+> update_nohz_stats(), which are remote, which means intel_pstate is
+> ignoring them anyway.
+>
+> Now the _nohz_idle_balance() -> update_blocked_averages() thing runs
+> local, and that will update the one random idle CPU we picked to run
+> nohz balance, but all others will be left where they were.
+>
+> So why does intel_pstate care... Esp. on SKL+ with per-core P state this
+> is of dubious value.
+>
+> Also, and maybe I should go read back, why do we care what the P state
+> is when we're mostly in C states anyway? These are all idle CPUs,
+> otherwise we wouldkn't be running update_blocked_averages() on them
+> anyway.
+>
+> Much confusion..
 
-Regards,
-Andreas
+Background:
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+It is true that this is very likely a rare use case.
+Apparently, I can make my test system considerably more "idle"
+than most.
+
+For many years now, I have never seen the time between calls,
+per CPU, to the intel_pstate driver exceed 4 seconds.
+
+Then as of:
+sched/fair: Fix O(nr_cgroups) in load balance path
+and for an idle system, the time between calls could
+be as much as a few hundred seconds. Myself, and not
+knowing much (anything) about scheduler details, I found
+this odd, and so investigated.
+
+And yes, so who cares if we are in deep C states anyhow?
+If, for whatever reason, the system is running with
+"intel_idle.max_cstate=1" my findings were that
+the processor could end up consuming a lot more energy
+for a long long time. Why? Because, at least for my
+processor, and older i7-2600K (no HWP), in idle state 1, the
+CPU does not relinquish its vote to the PLL, and with
+no calls to the driver the requested p-state doesn't decay.
+
+Not previously mentioned: The situation is considerably
+exasperated by this piece of boost code within the intel_pstate
+driver:
+
+        /*
+         * If the average P-state during the previous cycle was higher than the
+         * current target, add 50% of the difference to the target to reduce
+         * possible performance oscillations and offset possible performance
+         * loss related to moving the workload from one CPU to another within
+         * a package/module.
+         */
+        avg_pstate = get_avg_pstate(cpu);
+        if (avg_pstate > target)
+                target += (avg_pstate - target) >> 1;
+
+Hope this helps.
+
+... Doug
+ 
+
