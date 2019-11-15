@@ -2,179 +2,159 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URI_HEX autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9229AC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5547C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E41F20733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8018320733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:28:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s/vJKlHv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfKOJ1v (ORCPT
+        id S1727081AbfKOJ2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:27:51 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:63483 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725829AbfKOJ1v (ORCPT
+        Fri, 15 Nov 2019 04:28:03 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:38725 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfKOJ2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:27:51 -0500
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 15 Nov 2019 01:27:45 -0800
-IronPort-SDR: XSPeWFqeddtga09FZDEpjbfSgtuLFrdb4IyaS7qWEX6x8rqX/kxnrUhptITFZDp9EL67Q/AJis
- oOrzNIUTs8/rCd7YjqlNf1iWCOtdNuQA2gN9MrMWkujTJUQIkDo4WQMC776Z3T6sGpE3go54Ls
- cAVpnOnGTQz9+sPUwCly9ja144YVyecnj0u5Cx7WgojJm+JjH6CD/yDCsVA21992wvw5bUaFB2
- KhZaFC+mDnHz3y9Mgb5mpirxi+WoeTV8EX5eQHf5sv0VPV2FPk8km0qfjCzOXcGqj1tSpnIN1K
- eVI7eh/4x4X4gT2vjo8BexZE
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 15 Nov 2019 01:27:45 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 65CBB21F5; Fri, 15 Nov 2019 01:27:45 -0800 (PST)
-Date:   Fri, 15 Nov 2019 01:27:45 -0800
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] pwm: Convert period and duty cycle to u64
-Message-ID: <20191115092745.GA21025@codeaurora.org>
-References: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
- <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
- <20191016101539.GC1303817@ulmo>
- <20191017060247.GA12487@codeaurora.org>
- <20191017104313.GA3122066@ulmo>
+        Fri, 15 Nov 2019 04:28:03 -0500
+Received: by mail-ua1-f65.google.com with SMTP id u99so2810987uau.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:28:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SxLLly/NDlRCS30fS9KIwQ6+KObnKWcAwfTZ0ZVdfoc=;
+        b=s/vJKlHvRVRbLxSM9gw7Z2Ss/5b9KpGP8+dQXRh9GElgkA11nMKbvRg4sn5hIwKg5J
+         VgQ3YiwM4S/MkTcME3YnZEKO9/Id0BVpWUbRzj+PU1ymRr71oGfDpXlkapBIGVRxogFy
+         VxNx/LwqgSddqip8zTm59kZisunqqLVNGvcjlmRHh2GwnQ0Gp240oPLOO0seM1t0cDs9
+         PKtGK5trxHgct46123f7/LFPkMAH+y/nesq0Lo/4cqlA8COgWAKQEW6LiUJgwWUHcIL/
+         mFfqQUpqGvN3B3+sPfx4U0AibuqCcFX4FmR1hfIBztD9Sx8qVWE+4nsuIyJ8hdxVK3Xn
+         zZww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SxLLly/NDlRCS30fS9KIwQ6+KObnKWcAwfTZ0ZVdfoc=;
+        b=uOLlX16yhcB6426ZPqjAktmDoF14sKjuIfsGwMr5+Y2sxgAl7eiJVhXgtUwOAFcPc7
+         1aq2GnFhBDkHe63+i1L76CV9w5CyoMVZ9AW2LfM8uj0ZGNDyyPagYpitjdP8BkqEagw9
+         6lexkk/RssKvwup2rvZRgIKMqJTWfKXkQsBg8zGQ0qmWRBsQqet8/r9xkQpoygqZBote
+         mH9lqOMXonmzLk0VSLxWgbepNcHauCnpLopJYFqUSlZ9H6j5n4TFf5ennO5AWlgmWEEi
+         TK5Pug6gOQt0OhlT6hqsYEwoLP+JdCvcJu238ufbfE9/mBqhvxbyHF3nhL/6ed8VXONC
+         Jh3w==
+X-Gm-Message-State: APjAAAXEFXkEPQ+2kMcdaAMbSznT4XiH5/lX95OnEPCi2mZ9/oyPm9ij
+        /Jvk0ujyTtCUn7nTs/xM9rL2CPcDIceLyV3Kl+ghUw==
+X-Google-Smtp-Source: APXvYqyzRwtFIjZ1mG/sfGTrmo5k+aGOrGMpYjafFb+fvgL/SdX5QSjvGsMOddkXeHjXeJsXGzGStJwvtyirThpsTBY=
+X-Received: by 2002:ab0:2042:: with SMTP id g2mr8284571ual.19.1573810081741;
+ Fri, 15 Nov 2019 01:28:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017104313.GA3122066@ulmo>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20191112134808.23546-1-erosca@de.adit-jv.com> <20191112204952.GA2976@kunai>
+ <CAPDyKFq8oVk26ruNA_R8HDXhMGKhDeHnL0q82xi40g1aeo109A@mail.gmail.com>
+ <20191114113743.GA19656@vmlxhi-102.adit-jv.com> <CAPDyKFp5iqrFDM1EWnYBwFmQAiAA5FADDLAyuVVBgMu4Sx=x5w@mail.gmail.com>
+ <20191114220744.GA17678@vmlxhi-102.adit-jv.com>
+In-Reply-To: <20191114220744.GA17678@vmlxhi-102.adit-jv.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 15 Nov 2019 10:27:25 +0100
+Message-ID: <CAPDyKFoXEFbK_7-Nmkhz2_Sifc=hiPEGmUHKsp4=Baye86TCOg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: renesas_sdhi_internal_dmac: Add MMC_CAP_ERASE to
+ Gen3 SoCs
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
+On Thu, 14 Nov 2019 at 23:07, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+>
+> Hi Ulf,
+>
+> On Thu, Nov 14, 2019 at 01:48:41PM +0100, Ulf Hansson wrote:
+>
+> [..]
+> >
+> > Let's first take a step back, because I don't know how the HW busy
+> > detection works for your controller.
+> >
+> > I have noticed there is TMIO_STAT_CMD_BUSY bit being set for some
+> > variants, which seems to cause renesas_sdhi_wait_idle() to loop for a
+> > pre-defined number of loops/timeout. This looks scary, but I can't
+> > tell if it's really a problem.
+> >
+> > BTW, do you know what TMIO_STAT_CMD_BUSY actually is monitoring?
+> >
+> > I have also noticed that MMC_CAP_WAIT_WHILE_BUSY isn't set for any of
+> > the renesas/tmio variant hosts. Is that simply because the HW doesn't
+> > support this? Or because implementation is missing?
+>
+> Hopefully Wolfram just addressed that?
+>
+> > If you want to run a test that stretches the behaviour on the timeout
+> > path, I would rather use an SD-card (the older the better). For eMMCs
+> > the erase likely translates to a trim/discard, which is far more
+> > quicker than a real erase - as is what happens on an old SD card.
+>
+> Running 'blkdiscard' with different SD cards on H3ULCB, I don't see any
+> signs of misbehavior:
+>
+> root@rcar-gen3:~# blkdiscard -V
+> blkdiscard from util-linux 2.32.1
+>
+> root@rcar-gen3:~# lsblk
+> NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+> mmcblk0      179:0    0 59.2G  0 disk
+> mmcblk0boot0 179:8    0    4M  1 disk
+> mmcblk0boot1 179:16   0    4M  1 disk
+> mmcblk1      179:24   0   30G  0 disk
+>
+> # Erasing 32 GiB uSD Card
+> root@rcar-gen3:~# time blkdiscard -v /dev/mmcblk1
+> /dev/mmcblk1: Discarded 32227983360 bytes from the offset 0
+>
+> real    0m1.198s
+> user    0m0.001s
+> sys     0m0.122s
+>
+> # Erasing 64 GiB eMMC
+> root@rcar-gen3:~# time blkdiscard -v /dev/mmcblk0
+> /dev/mmcblk0: Discarded 63585648640 bytes from the offset 0
+>
+> real    0m8.703s
+> user    0m0.002s
+> sys     0m1.909s
+>
+> I guess that by decreasing below erase sizes, I could further increase
+> the execution time, but these sysfs properties are read-only:
+>
+> cat /sys/devices/platform/soc/ee100000.sd/mmc_host/mmc1/mmc1:59b4/preferred_erase_size
+> 4194304
+> cat /sys/devices/platform/soc/ee100000.sd/mmc_host/mmc1/mmc1:59b4/erase_size
+> 512
+>
 
-On Thu, Oct 17, 2019 at 12:43:13PM +0200, Thierry Reding wrote:
-> On Wed, Oct 16, 2019 at 11:02:47PM -0700, Guru Das Srinagesh wrote:
-> > On Wed, Oct 16, 2019 at 12:15:39PM +0200, Thierry Reding wrote:
-> > > On Tue, Oct 15, 2019 at 07:11:39PM -0700, Guru Das Srinagesh wrote:
-> > > > Because period and duty cycle are defined as ints with units of
-> > > > nanoseconds, the maximum time duration that can be set is limited to
-> > > > ~2.147 seconds. Change their definitions to u64 so that higher durations
-> > > > may be set.
-> > > > 
-> > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > > ---
-> > > >  drivers/pwm/core.c  |  4 ++--
-> > > >  drivers/pwm/sysfs.c | 10 +++++-----
-> > > >  include/linux/pwm.h | 16 ++++++++--------
-> > > >  3 files changed, 15 insertions(+), 15 deletions(-)
-> > > 
-> > > Actually, we can't do that without further preparatory work. The reason
-> > > is that consumers use the period and duty_cycle members in computations
-> > > of their own, which lead to errors such as this:
-> > > 
-> > > 	armv7l-unknown-linux-gnueabihf-ld: drivers/video/backlight/pwm_bl.o: in function `pwm_backlight_probe':
-> > > 	pwm_bl.c:(.text+0x3b0): undefined reference to `__aeabi_uldivmod'
-> > > 
-> > > So I think we need to audit all consumers carefully and make sure that
-> > > they use do_div() where necessary to avoid such errors.
-> > > 
-> > > Thierry
-> > 
-> > Hi Thierry,
-> > 
-> > I would like to try doing the preparatory work by fixing the errors seen
-> > in consumers so that this u64 patch may be applied without issues.
-> > 
-> > Before sending the patch, I tried "make"-ing for arm, arm64 and i386
-> > architectures to check for compilation/linking errors and encountered
-> > none. I see that the above error arises from using a cross-compiler for
-> > arm v7, which I haven't tried yet.
-> > 
-> > Could you please provide details of the compile tests that you run at
-> > your end? I could then try to reproduce the errors you see in the
-> > consumer drivers and fix them. Please do share any other ideas or
-> > suggestions you may have in this regard.
-> 
-> I keep a set of scripts in the pwm/ subdirectory of the following
-> repository:
-> 
-> 	https://github.com/thierryreding/scripts
-> 
-> Typically what I do is run:
-> 
-> 	$ /path/to/scripts.git/pwm/build --jobs 13 --color
-> 
-> That requires a bit of setup for the cross-compilers. I have the
-> following in my ~/.cross-compile file:
-> 
-> 	path: $HOME/pbs-stage1/bin:$HOME/toolchain/avr32/bin:$HOME/toolchain/unicore32/bin
-> 	arm: armv7l-unknown-linux-gnueabihf-
-> 	arm64: aarch64-unknown-linux-gnu-
-> 	avr32: avr32-
-> 	blackfin: bfin-unknown-elf-
-> 	mips: mips-linux-gnu-
-> 	unicore32: unicore32-linux-
-> 	riscv: riscv64-linux-gnu-
-> 	x86:
-> 	x86_64:
-> 
-> The blackfin and unicore32 builds are expected to fail because the
-> blackfin architecture was removed and there's no recent enough kernel
-> publicly available for unicore32.
-> 
-> The last two entries in .cross-compile indicate that builds are native,
-> so regular gcc from the build system will be used.
-> 
-> Most of these compilers I've built from scratch using pbs-stage1:
-> 
-> 	https://github.com/thierryreding/pbs-stage1
-> 
-> Note that I don't guarantee that that build system works for anyone but
-> myself, but I'd be happy to hear feedback if you decide to use it. That
-> said, you can probably find prebuilt toolchains for all of the above in
-> a number of locations, like:
-> 
-> 	https://mirrors.edge.kernel.org/pub/tools/crosstool/
-> 
-> or:
-> 
-> 	https://toolchains.bootlin.com/
-> 
-> Thierry
+This test and due to the discussions with Wolfram and you in this
+thread, I would actually suggest that you enable MMC_CAP_ERASE for all
+tmio variants, rather than just for this particular one.
 
-I tried replicating your compilation setup and found that it worked
-right out of the box with no serious issues. I decided to build the
-compilers from scratch and only had to update my make to the latest
-version and also install help2man and u-boot-tools on my Ubuntu machine.
+In other words, set the cap in tmio_mmc_host_probe() should be fine,
+as it seems none of the tmio variants supports HW busy detection at
+this point.
 
-I found your setup very easy to use on the whole and very well designed.
-I added a "set -x" to the /path/to/scripts.git/build/pwm script in order
-to figure out how it worked initially. 
-
-I didn't add the lines for unicore32 and blackfin in my ~/.cross-compile
-file as you had indicated that they were expected to fail. It was very
-convenient for me to run the build command for a specific arch by
-appending its name to the end of the command you provided and thus
-verify that the compilation errors I was getting were getting fixed for
-that arch. Then by simply dropping the architecture's name from the end
-I could run the build command for all archs - very cool.
-
-That said, I wasn't able to compile-test avr32 and x86_64. I couldn't
-find avr32 in the targets folder of the pbs-stage1 git repo and so
-couldn't build it from scratch, and I couldn't find a pre-built version
-either. There isn't a config for x86_64 in
-/path/to/scripts.git/pwm/configs and so the build/pwm script wasn't
-picking it up even though I had added a blank line for it in
-~/.cross-compile. Those are the only two issues I encountered with
-replicating your setup.
-
-Thank you.
-
-Guru Das.
+Kind regards
+Uffe
