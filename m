@@ -2,101 +2,106 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD563C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6056DC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A470E206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E662073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dU0+mr97"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rno4ShLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKOT1V (ORCPT
+        id S1726953AbfKOT3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 14:27:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52482 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726549AbfKOT1V (ORCPT
+        Fri, 15 Nov 2019 14:29:45 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35008 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfKOT3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 14:27:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573846040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=t5bwJ9Tc1a6zK9nwOUNz5ANnrBVZCbMu+cXsXVw3oDM=;
-        b=dU0+mr97oylYvI5i1aeIHmZhKglG3AH9R21Xq3QItiMyHZWnI1L7VcHfbDgmY1yOwrqbkV
-        V7BkyY7OLEGgtK6rY8a/Dr4YET++a45LBtejqY2UAbzA/VtvQ+g871LaRwdL2qzWtLNDer
-        SNexZpvej50/pChOx6pYZMY629mAxR8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-MJGi2mUPNc-Hu_d0if3aEA-1; Fri, 15 Nov 2019 14:27:17 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38A9118B5F6A;
-        Fri, 15 Nov 2019 19:27:16 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9EBF960490;
-        Fri, 15 Nov 2019 19:27:15 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 14:27:14 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alasdair Kergon <agk@redhat.com>
-Subject: Re: linux-next: Tree for Nov 15 (drivers/md/dm-integrity)
-Message-ID: <20191115192714.GA28629@redhat.com>
-References: <20191115190525.77efdf6c@canb.auug.org.au>
- <f368f431-b741-d04f-440b-3d8c3c035537@infradead.org>
- <d3a96436-0d9c-a13f-7524-33b203910367@infradead.org>
+        Fri, 15 Nov 2019 14:29:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k32so740627pgl.2;
+        Fri, 15 Nov 2019 11:29:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WaaUqkfXG6+isoCbG7XYOEWjloSaTM6xtmYz8DIEXkU=;
+        b=rno4ShLranjXQFBAlU93J9agjWmAohLT/NdRrnQdjDUvjW356IzQ/i9DS3WBVnPDqV
+         z8gigtrhOVqd3thKFp3iS3rfHFx8pOMX8kxLllIUow02vLgDJLbXR0WAE+7+kMmcAryh
+         i2Jirm/5qv/g2NBLzZ7QkEKSWgRx24NjeC4ozzllWCYiFM2kRX9WJ89UdCUA4wAOptAQ
+         2N0duLD2Y0qQG3e0MPq6W8AsQdG5pzT0RUgucaxmHbeJ0HniRbYC+nvbjA8RGBHtKwBV
+         rktbUdQ7RE+vtevZ4LiJ91G6zsFbsDPEIN6rK8rOx7NsH8g/Wo6IgI2M8AcFXfPqNZB4
+         33hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WaaUqkfXG6+isoCbG7XYOEWjloSaTM6xtmYz8DIEXkU=;
+        b=e4nv5CbvG9qX6Bw0Q92WO7sW3N7noTXL2Sz5S1A9Sff14PXraHbVOnySn2wuL+Qs2j
+         ILuiosSlW+BUsvlNiWIvZfuuXtob+iZAoreY8HbqW8Goife8VqbeVbYxletMq1/Zeoho
+         cPpghNy8tLkItxtgaMnY8ttWdPt5nTwhEVjqgptgpEsQIkMd+Lzp84zqugipHx3ztyiy
+         ddpOvLECWN0ZHnG4yfKKK4tgjLtgZ/z3RHTmRKsUYoQ34THoqDV4LLz5bOezPfiRBytg
+         2XnaDF5o4qujCLo+Vhx9R1lXtzAJhfo48Xi6CH07RZ9NNyC2xc0rgy6aamfOlufgGd41
+         VfHQ==
+X-Gm-Message-State: APjAAAWNLPdpNL0MBoayH+F7qdFXHHT56J5/wL76BuNO76WkcLVMIJn2
+        HKTOrBUfPAiC35Pzz6+Lr/Y=
+X-Google-Smtp-Source: APXvYqx+ExOdXdGMW9KMuDs01Hxq3xtbd7o1vtnDS+THGhL5gHHqzvTh80CDe3Z7gJU6ge3RkVCvWg==
+X-Received: by 2002:a62:1ad6:: with SMTP id a205mr19315307pfa.64.1573846183595;
+        Fri, 15 Nov 2019 11:29:43 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id c9sm10908010pfn.65.2019.11.15.11.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 11:29:42 -0800 (PST)
+Date:   Fri, 15 Nov 2019 11:29:40 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Jiada Wang <jiada_wang@mentor.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, rydberg@bitmath.org,
+        nick@shmanahar.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
+        Andrew_Gabbasov@mentor.com, lkp@lists.01.org
+Subject: Re: [Input] 9290ec3cea: suspend_stress.fail
+Message-ID: <20191115192940.GT13374@dtor-ws>
+References: <20191106070146.18759-2-jiada_wang@mentor.com>
+ <20191114094424.GF6910@shao2-debian>
 MIME-Version: 1.0
-In-Reply-To: <d3a96436-0d9c-a13f-7524-33b203910367@infradead.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: MJGi2mUPNc-Hu_d0if3aEA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191114094424.GF6910@shao2-debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15 2019 at 11:19am -0500,
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Thu, Nov 14, 2019 at 05:44:25PM +0800, kernel test robot wrote:
+> FYI, we noticed the following commit (built with gcc-7):
+> 
+> commit: 9290ec3cea1dd9d312d1230825a75c798b670ea1 ("[PATCH v5 01/48] Input: introduce input_mt_report_slot_inactive")
+> url: https://github.com/0day-ci/linux/commits/Jiada-Wang/atmel_mxt_ts-misc/20191108-190609
+> base: https://git.kernel.org/cgit/linux/kernel/git/xen/tip.git linux-next
+> 
+> in testcase: suspend_stress
+> with following parameters:
+> 
+> 	mode: mem
+> 	iterations: 10
+> 
+> 
+> 
+> on test machine: 8 threads KabyLake-r with 8G memory
+> 
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
 
-> On 11/15/19 8:17 AM, Randy Dunlap wrote:
-> > On 11/15/19 12:05 AM, Stephen Rothwell wrote:
-> >> Hi all,
-> >>
-> >> Changes since 20191114:
-> >>
-> >=20
-> > on i386:
-> >=20
-> > ld: drivers/md/dm-integrity.o: in function `calculate_device_limits':
-> > dm-integrity.c:(.text.unlikely+0x1e9): undefined reference to `__udivdi=
-3'
-> >=20
-> >=20
+Is this reproducing reliably? I do not see dmesg attached so it is
+unclear what input device(s) are connected to the system...
 
-Thanks, I'll get it fixed up.
-=20
-> BTW, dm-devel@redhat.com seems to be invalid or dead.
->=20
-> so adding Alasdair and Mike.
+Thanks.
 
-Think this is likely occurring for non-subscribers.
-I haven't looked into it though, will check with Alasdair and/or others
-to see if they are aware of any backend changes.
-
-Mike
-
+-- 
+Dmitry
