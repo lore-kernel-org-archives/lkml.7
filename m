@@ -2,102 +2,97 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52255C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AF3C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF2820732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242D020732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="deSp+3nU";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="deSp+3nU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gZS6RSm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKOWRr (ORCPT
+        id S1727415AbfKOWSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:17:47 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:47084 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfKOWRp (ORCPT
+        Fri, 15 Nov 2019 17:18:54 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36696 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726661AbfKOWSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:17:45 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D03356110D; Fri, 15 Nov 2019 22:17:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856264;
-        bh=H7EIuSj3inAEWMh8l92XUYSE0NT9quVn5kYYn9WSNeM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=deSp+3nUWvpF1cYsIZYkHSFsPsKZTs+7HRr4c5CgrL8rh8VqXvK5vP1Ub/+xapvRb
-         H9t644yX1/D3uAQOMiBGxnNzkaUypjO1+/t83CxaPagsKgvx3whj3LC1kYuzA6bPoc
-         anknIwvIkivj4SS58zBR/bKrnfMS2iJjHDsk0sfs=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 15 Nov 2019 17:18:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573856332;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AMgkoSicOFAnhjHIcwY0YsB6eNzSszo1NgSn0TnzlzY=;
+        b=gZS6RSm2h/Ch7hdaaCKtEMhuwrGlRkul5nlmgqTGQuJUALjKGDjXrZGz5Y4fnvQp/6zx3B
+        zKXmv9tBINRv8yBuj6zHsAEdgMNfYO4KcsCyIdmp2d6dnVfcrdL8QMEDUH4xy3z9ATCnGq
+        IsBzNNwpfcoOIt6Hc0QG1gg2QAFnWcU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-114-yj32-B_rPTua7VTcMSmtLg-1; Fri, 15 Nov 2019 17:18:50 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4DA4661015;
-        Fri, 15 Nov 2019 22:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856264;
-        bh=H7EIuSj3inAEWMh8l92XUYSE0NT9quVn5kYYn9WSNeM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=deSp+3nUWvpF1cYsIZYkHSFsPsKZTs+7HRr4c5CgrL8rh8VqXvK5vP1Ub/+xapvRb
-         H9t644yX1/D3uAQOMiBGxnNzkaUypjO1+/t83CxaPagsKgvx3whj3LC1kYuzA6bPoc
-         anknIwvIkivj4SS58zBR/bKrnfMS2iJjHDsk0sfs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4DA4661015
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, maz@kernel.org, linus.walleij@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v2 02/12] drivers: irqchip: qcom-pdc: update max PDC interrupts
-Date:   Fri, 15 Nov 2019 15:11:45 -0700
-Message-Id: <1573855915-9841-3-git-send-email-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
-References: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 496E31005500;
+        Fri, 15 Nov 2019 22:18:48 +0000 (UTC)
+Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 73D9A608D2;
+        Fri, 15 Nov 2019 22:18:41 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     linux-input@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cole Rogers <colerogers@disroot.org>,
+        Joe Perches <joe@perches.com>, Teika Kazura <teika@gmx.com>,
+        Alexander Mikhaylenko <exalm7659@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: synaptics - enable RMI mode for X1 Extreme 2nd Generation
+Date:   Fri, 15 Nov 2019 17:18:13 -0500
+Message-Id: <20191115221814.31903-1-lyude@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: yj32-B_rPTua7VTcMSmtLg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer SoCs have increased the number of interrupts routed to the PDC
-interrupt controller. Update the definition of max PDC interrupts.
+Just got one of these for debugging some unrelated issues, and noticed
+that Lenovo seems to have gone back to using RMI4 over smbus with
+Synaptics touchpads on some of their new systems, particularly this one.
+So, let's enable RMI mode for the X1 Extreme 2nd Generation.
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: stable@vger.kernel.org
 ---
- drivers/irqchip/qcom-pdc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index c175333..690cf10 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/err.h>
-@@ -18,7 +18,7 @@
- #include <linux/slab.h>
- #include <linux/types.h>
- 
--#define PDC_MAX_IRQS		126
-+#define PDC_MAX_IRQS		168
- 
- #define CLEAR_INTR(reg, intr)	(reg & ~(1 << intr))
- #define ENABLE_INTR(reg, intr)	(reg | (1 << intr))
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptic=
+s.c
+index 56fae3472114..704558d449a2 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -177,6 +177,7 @@ static const char * const smbus_pnp_ids[] =3D {
+ =09"LEN0096", /* X280 */
+ =09"LEN0097", /* X280 -> ALPS trackpoint */
+ =09"LEN009b", /* T580 */
++=09"LEN0402", /* X1 Extreme 2nd Generation */
+ =09"LEN200f", /* T450s */
+ =09"LEN2054", /* E480 */
+ =09"LEN2055", /* E580 */
+--=20
+2.21.0
 
