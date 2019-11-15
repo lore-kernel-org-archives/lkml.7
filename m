@@ -2,71 +2,171 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46973C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236DE20733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BBF20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:19:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KJsystCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfKOJRd (ORCPT
+        id S1727004AbfKOJT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:17:33 -0500
-Received: from mga14.intel.com ([192.55.52.115]:46998 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbfKOJRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:17:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 01:17:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,307,1569308400"; 
-   d="scan'208";a="236009207"
-Received: from powerlab.fi.intel.com (HELO powerlab.backendnet) ([10.237.71.25])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Nov 2019 01:17:31 -0800
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] trace/synthetic_events: increase SYNTH_FIELDS_MAX
-Date:   Fri, 15 Nov 2019 11:17:30 +0200
-Message-Id: <20191115091730.9192-1-dedekind1@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 15 Nov 2019 04:19:56 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:58364 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOJT4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:19:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CaVJL0m4rVC3kIgt7PaU/sZ/HckuS6iVscw9ZZiEBBw=; b=KJsystCX+eKUhlSxbNUCd/mmx
+        HMGb8vM5Z2ldYimeZVR2muQrcWpB98iMQ3W8DOuva+pWvm3DyHlxsfgcDGnuWf6YNF1WCAOIRZxhA
+        QZRk3E6WFHZdIeGs0Z3ehNZe6wobo5EqeWNsI2uL4aj3n6V3ftzYbN6ZmV/WeKTW4hkxTse6htBsA
+        VwBaHuSgw6tdp2CfOdqTzRq9eYjJ4KPbRyV46kGhGPqU3m1z1E6PCa8/Mfls2Gfcr6MFW5d1QFO0g
+        3L9E5+FY/ccD0Vh7yYkvNiCjOeeB8puQmXkkovj8vpqdW3PLzy4KVi2kL7e7aqhlz+SGTq4ZGdXvt
+        Bi8iVWMkg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVXlc-0005KW-EY; Fri, 15 Nov 2019 09:19:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3C4A2303D9F;
+        Fri, 15 Nov 2019 10:18:37 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4929429E4EBB1; Fri, 15 Nov 2019 10:19:45 +0100 (CET)
+Date:   Fri, 15 Nov 2019 10:19:45 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [RFC PATCH v3 6/7] scripts/sorttable: Add ORC unwind tables sort
+ concurrently
+Message-ID: <20191115091945.GT4114@hirez.programming.kicks-ass.net>
+References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
+ <20191115064750.47888-7-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115064750.47888-7-shile.zhang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+On Fri, Nov 15, 2019 at 02:47:49PM +0800, Shile Zhang wrote:
 
-Increase the maximum allowed count of synthetic event fields from 16 to 32
-in order to allow for larger-than-usual events.
+> @@ -141,21 +306,44 @@ static int do_sort(Elf_Ehdr *ehdr,
+>  		if (r(&s->sh_type) == SHT_SYMTAB_SHNDX)
+>  			symtab_shndx = (Elf32_Word *)((const char *)ehdr +
+>  						      _r(&s->sh_offset));
+> -	}
+>  
+> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
+> +		/* locate the ORC unwind tables */
+> +		if (!strcmp(secstrings + idx, ".orc_unwind_ip")) {
+> +			orctable.orc_ip_size = s->sh_size;
+> +			g_orc_ip_table = (int *)((void *)ehdr +
+> +						   s->sh_offset);
+> +		}
+> +		if (!strcmp(secstrings + idx, ".orc_unwind")) {
+> +			orctable.orc_size = s->sh_size;
+> +			g_orc_table = (struct orc_entry *)((void *)ehdr +
+> +							     s->sh_offset);
+> +		}
+> +#endif
+> +	} /* for loop */
+> +
+> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
 
-Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
----
- kernel/trace/trace_events_hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Maybe something like:
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 7482a1466ebf..f49d1a36d3ae 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -23,7 +23,7 @@
- #include "trace_dynevent.h"
- 
- #define SYNTH_SYSTEM		"synthetic"
--#define SYNTH_FIELDS_MAX	16
-+#define SYNTH_FIELDS_MAX	32
- 
- #define STR_VAR_LEN_MAX		32 /* must be multiple of sizeof(u64) */
- 
--- 
-2.20.1
+	if (g_orc_table && g_orc_ip_table) {
+		 if (pthread_create(...))
+		...
+	} else if (g_orc_table || g_orc_up_table) {
+		fprintf(stderr, "incomplete ORC tables...\n");
+	}
 
+> +	/* create thread to sort ORC unwind tables concurrently */
+> +	if (pthread_create(&orc_sort_thread, NULL, sort_orctable, &orctable)) {
+> +		fprintf(stderr,
+> +			"pthread_create orc_sort_thread failed '%s': %s\n",
+> +			strerror(errno), fname);
+> +		goto out;
+> +	}
+> +#endif
+>  	if (!extab_sec) {
+>  		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
+> -		return -1;
+> +		goto out;
+>  	}
+>  
+>  	if (!symtab_sec) {
+>  		fprintf(stderr,	"no .symtab in file: %s\n", fname);
+> -		return -1;
+> +		goto out;
+>  	}
+>  
+>  	if (!strtab_sec) {
+>  		fprintf(stderr,	"no .strtab in file: %s\n", fname);
+> -		return -1;
+> +		goto out;
+>  	}
+>  
+>  	extab_image = (void *)ehdr + _r(&extab_sec->sh_offset);
+> @@ -192,7 +380,7 @@ static int do_sort(Elf_Ehdr *ehdr,
+>  		fprintf(stderr,
+>  			"no main_extable_sort_needed symbol in file: %s\n",
+>  			fname);
+> -		return -1;
+> +		goto out;
+>  	}
+>  
+>  	sort_needed_sec = &shdr[get_secindex(r2(&sym->st_shndx),
+> @@ -205,6 +393,20 @@ static int do_sort(Elf_Ehdr *ehdr,
+>  
+>  	/* extable has been sorted, clear the flag */
+>  	w(0, sort_needed_loc);
+> +	rc = 0;
+>  
+> -	return 0;
+> +out:
+> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
+> +	{ /* to avoid gcc warning about declaration */
+> +	void *retval = NULL;
+
+and then here:
+
+	if (orc_sort_thread) {
+		void *retval = NULL;
+		pthread_join(...);
+		...
+	}
+
+> +
+> +	/* wait for ORC tables sort done */
+> +	pthread_join(orc_sort_thread, &retval);
+> +	if (retval) {
+> +		fprintf(stderr, "%s in file: %s\n", (char *)retval, fname);
+> +		rc = -1;
+> +	}
+> +	}
+> +#endif
+> +	return rc;
+>  }
