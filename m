@@ -2,77 +2,158 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355EBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A844C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4E520729
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECD720729
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TNzmAWCC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FUR4r36m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfKOOHq (ORCPT
+        id S1727632AbfKOOID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:07:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34562 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfKOOHp (ORCPT
+        Fri, 15 Nov 2019 09:08:03 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39006 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbfKOOID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:07:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lAZYg3lS135TwSE30pNm6foCygkKVQSy8A1PI6nH2bM=; b=TNzmAWCCScOR2GxCFXUW0B9z6
-        Tu9V8WfQkcTEmTnlofuupVMf4k+D8zlIKu5xM7xLUlAPNYFh4evZ+fzTa7jHk7G41vcch05E32xvQ
-        ZTzXogv37+1W6ffGTnP9Zj/XpuDm0y1vdPchaII8iZPkUW5XThG5k+10Y44PZE8h63Y2zzCP3nTEy
-        q2V3LrcA/6OnoHuQ4xI/PW4SQWLy6fCeLZjyCmtJKWtKv8c7Y/u620R/tSkAXsSVKJiqgqA18pFdQ
-        MwsIRwzQDxxQAuWuD0G684VqYqIv6M8FAQz9ZmdmxJK0lvZPFtU2XU/1peO9A8GPEJJp6Ue9gpPKm
-        BxCuXhzOA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVcGC-0000rB-Qe; Fri, 15 Nov 2019 14:07:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 13AE9303D9F;
-        Fri, 15 Nov 2019 15:06:31 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 338A02B12E7AC; Fri, 15 Nov 2019 15:07:39 +0100 (CET)
-Date:   Fri, 15 Nov 2019 15:07:39 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, eranian@google.com
-Subject: Re: [PATCH] perf/x86/intel: Avoid PEBS_ENABLE MSR access in PMI
-Message-ID: <20191115140739.GM4131@hirez.programming.kicks-ass.net>
-References: <20191115133917.24424-1-kan.liang@linux.intel.com>
+        Fri, 15 Nov 2019 09:08:03 -0500
+Received: by mail-lj1-f196.google.com with SMTP id p18so10848490ljc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:08:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VHXyS4BV5OVtqBWRmRRF2YVqJlV8moIcPViTWoSzmjI=;
+        b=FUR4r36mPgKSflt6dlDzfMMMLLRk2dMxOoFSFhmSjwV3fIjHFWB/XhH0hOtwUKJzCS
+         b6/ya4RhaSn8V6RzipWU4nIDMB0o8uV/G0zsKfyz3RJOhUBeUrpboU5rXkXe/I66dmo9
+         s8Cj2GkNMPrhgyOK56WMxkY16btzG/RbnR+J7O4DlZ1Ze8I52eojK/P6xPA4HbTZmeFc
+         DTWNCEbvpOeIyoTfhRrFEx+l/pKQin9Ale4EXwUxyBWEZMKGTpM2BF5fNJueFLDvoNSU
+         PSTYizM5WddVBAEBbeWjF1lTu1UpevFe1WK/a1TzGMjP2xd33p7jjXVHa3169mcwrinc
+         uQ1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VHXyS4BV5OVtqBWRmRRF2YVqJlV8moIcPViTWoSzmjI=;
+        b=BT6LGIa/F9EJhEcAe/vO3TPyCm7c+Yi4RaDAESve335aFiJVb3j5IEMbfW65KP8LdS
+         g/Q5a41fZX7XPWRc02Fh2wCh7F13GdcY4xMZvLMCEXikgsPN2pCIrGlMErh43odSQjwI
+         m48z2LFYy6lhEz8rNd8udvhOygc1Ohi25OUoBFQMBv4eRQkXGfJZZamBKyJSJ3dLrKdl
+         ZhDiKvjB6U7Keijyzpf1O2zqfMGQFVIa9rlgxFvfIn/SGN4iRdUqwZlgj5B06BJoucNC
+         rjNelAANMjSv1F3ZfdVGaIHcgUaGT6N07afOpp5Yj5WHqa78D31/7LsQGcWptiWpJspA
+         l5lg==
+X-Gm-Message-State: APjAAAWAWMDpXHav+uChDckzjEcfK3v5tWAT3xHGl6AsLFK+QQ0LWFhj
+        oa/xBWHehd2f0xGHfWv+EBglqAiY4XNx/ZUljjll0g==
+X-Google-Smtp-Source: APXvYqxc11sdU/BUWFa2FbYjiioRXxs0N77ZQoFDfrZAGKJVj7SKBP7CLlyof9+uHFre4aCluKjMFSx/JyX1bU9Ibmk=
+X-Received: by 2002:a2e:7811:: with SMTP id t17mr5696893ljc.225.1573826880859;
+ Fri, 15 Nov 2019 06:08:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115133917.24424-1-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191115103908.27610-1-valentin.schneider@arm.com>
+In-Reply-To: <20191115103908.27610-1-valentin.schneider@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 15 Nov 2019 15:07:48 +0100
+Message-ID: <CAKfTPtBoi_5sUiGrTpYuV_u2vPkBK+caUzgaKxY3Ck3PKJXZiw@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/uclamp: Fix overzealous type replacement
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
+        Tejun Heo <tj@kernel.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Qais Yousef <qais.yousef@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 05:39:17AM -0800, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The perf PMI handler, intel_pmu_handle_irq(), currently does
-> unnecessary MSR accesses when PEBS is enabled.
-> 
-> When entering the handler, global ctrl is explicitly disabled. All
-> counters do not count anymore. It doesn't matter if the PEBS is
-> enabled or disabled. Furthermore, cpuc->pebs_enabled is not changed
-> in PMI. The PEBS status doesn't change. The PEBS_ENABLE MSR doesn't need
-> to be changed either.
+On Fri, 15 Nov 2019 at 11:39, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+> Some uclamp helpers had their return type changed from 'unsigned int' to
+> 'enum uclamp_id' by commit
+>
+>   0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+>
+> but it happens that some do return a value in the [0, SCHED_CAPACITY_SCALE]
+> range, which should really be unsigned int. The affected helpers are
+> uclamp_none(), uclamp_rq_max_value() and uclamp_eff_value(). Fix those up.
+>
+> Note that this doesn't lead to any obj diff using a relatively recent
+> aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
+> properly returns an 11 bit value (bits_per(1024)) and doesn't seem to do
+> anything funny. I'm still marking this as fixing the above commit to be on
+> the safe side.
+>
+> Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+> Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+> v2 changes:
+> o Also fix uclamp_none() (Vincent)
+> o Collect reviewed-by
+> o Slightly reword changelog
+> ---
+>  kernel/sched/core.c  | 6 +++---
+>  kernel/sched/sched.h | 2 +-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 513a4794ff36..3ceff1c93ef1 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -810,7 +810,7 @@ static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
+>         return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
+>  }
+>
+> -static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
+> +static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
 
-PMI can throttle, and iirc x86_pmu_stop() ends up in
-intel_pmu_pebs_disable()
+Out of curiosity why uclamp decided to use unsigned int to manipulate
+utilization instead of unsigned long which is the type of util_avg ?
+
+>  {
+>         if (clamp_id == UCLAMP_MIN)
+>                 return 0;
+> @@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
+>  }
+>
+>  static inline
+> -enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+> +unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+>                                    unsigned int clamp_value)
+>  {
+>         struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+> @@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+>         return uc_req;
+>  }
+>
+> -enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+> +unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+>         struct uclamp_se uc_eff;
+>
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 05c282775f21..280a3c735935 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2300,7 +2300,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+>  #endif /* CONFIG_CPU_FREQ */
+>
+>  #ifdef CONFIG_UCLAMP_TASK
+> -enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+> +unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+>
+>  static __always_inline
+>  unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+> --
+> 2.22.0
+>
