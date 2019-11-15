@@ -2,111 +2,137 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC66C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3252C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12CDB20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A905A20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyoReDyy"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qmV6JkgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfKOJo5 (ORCPT
+        id S1727634AbfKOJpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:44:57 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54287 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfKOJo4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:44:56 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z26so8957775wmi.4;
-        Fri, 15 Nov 2019 01:44:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=s61crLo7rMvO8Wf80iBrPDgDwSffbeyNgj2v4Ncj5Ag=;
-        b=DyoReDyyhRBmrZaTauJCDmNm+/tlTd3FWW/ZoNYN05xqz6RvoflkhN+J91NI8ye6E4
-         5/VSJXf/6UpCZPNIno3j6M4oUR2TN3R+xG9uV6Fc3RwJcqyasO/Lqw71+d4uNVMle4Vz
-         61PGIXq+qSJkhUU3SK7GYZbuYMT0KFN7lrqURh4wg1vR0F7fedMlJ0l/3wDbguRCJI1u
-         xRYQd3W09q1P5EH2j6QOz/rYwK6YBNOTwC83douYCfnHnJNypcE64rDt8sZuHrCS+hXp
-         f8YZ1WVWZfn1vc1IoCQCk+9DvU+dANWjX92j41uXBeJfn4HWvfOSeikJG/402s4DNYv9
-         Q03w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=s61crLo7rMvO8Wf80iBrPDgDwSffbeyNgj2v4Ncj5Ag=;
-        b=M2B36gHIJUp18WQ/tOtESlB8QMI9pP7JmCDxGOQ5e0+dzIJVI+GsA1/GiI+czh0Ufs
-         NfREdOSBIQqT4FpzweWn/Y802YoP+RuSqGTKPLkDqKwWSN1uLZCep7tP8rMX7EB4t/+H
-         XcCnGw9bjtp8ZkdQleMEO5CiaWd8itbFxDgFoSmpSjKK2263lJC4IbrWQOeCkyn4p4WU
-         dPWMAEG9PFeqLiBXTr1feRCn8qIiIK/irRzOj1BOflYKEoMvWlrhr9UNFJZihD48VBbj
-         APJbYB7SMvI4O5vTRE3djQuDupyaM7q8wUirrYDBd5ndzd2XmD9Rf2NuKVIRODeMrNp7
-         uwqA==
-X-Gm-Message-State: APjAAAXs6q29fyDURtwK1hWK0ysQXLP29iC/TOn09fWAKWGP6lv+WNJi
-        NE8Ea7tblI2+VkkgRqyfJdbJuLTx
-X-Google-Smtp-Source: APXvYqyU+TVj8L3P31QRcrvtWrtvI3pOCkxyInBkWrRnjj5g3p+UdchNp9kkKhraOwu7Mnb6ySx4KQ==
-X-Received: by 2002:a7b:cc8b:: with SMTP id p11mr13682877wma.38.1573811094469;
-        Fri, 15 Nov 2019 01:44:54 -0800 (PST)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id d13sm10097783wrq.51.2019.11.15.01.44.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 01:44:53 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] More KVM fixes for 5.4-rc8
-Date:   Fri, 15 Nov 2019 10:44:52 +0100
-Message-Id: <1573811092-12834-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 15 Nov 2019 04:45:00 -0500
+Received: from mail-eopbgr150052.outbound.protection.outlook.com ([40.107.15.52]:28227
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726920AbfKOJo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:44:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CS/pMTbyI/0miJ3UkFWluYWw3tN5XwP6VYGD+634odR0apqBNqtGbolEtlqT5p08PZW9YNXFq8y+Rp295rdlzfbE3ENnX8pwYMxZVVOaTS8ZSvVhxjkSonUk8w9SrwMrmk5JLV2AgquX8JY/2FmVzLjpXTfacg6ErojvDWwjV/RmN/w5KoSWGXUygBpwV6EQSIjNR3gkYlSQ3KDvZwskwM4isq+YTAuO03CqI4f+Dxjj8Tif6lxwdsmLhpAWvOpIbCnMt77vYWXZVF12KUJF9HTibUMQ/ZAva0mIZX/G1R8V7TdbokZe3eGyzLgndKc9BGcGfpPJUhRoB9eqTLaC3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rJZfFuTnbCx8UjUCbAUHEAXt/UD+sEx/l/f4hZGjbGk=;
+ b=jEBqdXdru8S/jDo83yWTQxEryXM94HuMq9Qt0v4mkbTqJxtkFZBZDI7BrT06zlzy4QcsBjnVS82KHc8XPb1G18AdpNuvxOjt/DGniwtnS/gL2jsVmYhhZod90wvW3ux4fvcCKxq3f7few9kIGhYa0IfGvcHHFYxpkLGk+HUK3TMiq9xjfWhfQVxfCpeo59MyzoAuekRRHxvv1di9rosClP+bikDAliWMIn7Y5eXMie7UQFdYxNrUcTrvuacGLfV+KHhgLQZ0po9inhLMXxH3V8iYE6K/yOBgFZTK9mjCzRUjuNWxEtLxdYJVMHDBgEvcJVQpbOdfL+adF64MFfChag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rJZfFuTnbCx8UjUCbAUHEAXt/UD+sEx/l/f4hZGjbGk=;
+ b=qmV6JkgPVj+eEndShtFMxylcjwSQWuH8CPl68qkM0hc9SjEaX0gk5wIMzfb+5THrrM1PqKrakcMkYwDX0H05wiwaIVOfPaiN04RlA582MKmFOsW/XRQ0s5XnEWEPlZyJ72WR0RltPJSTiYZD6QSZJVZ0WKxEotOGXPl3aLG0TWA=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4883.eurprd04.prod.outlook.com (20.176.215.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.26; Fri, 15 Nov 2019 09:44:56 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2451.024; Fri, 15 Nov 2019
+ 09:44:56 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>
+CC:     "allison@lohutok.net" <allison@lohutok.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jan.kiszka@siemens.com" <jan.kiszka@siemens.com>,
+        "ralf.ramsauer@oth-regensburg.de" <ralf.ramsauer@oth-regensburg.de>,
+        Alice Guo <alice.guo@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 1/2] arm64: kernel: hyp-stub: drop unneeded including files
+Thread-Topic: [PATCH 1/2] arm64: kernel: hyp-stub: drop unneeded including
+ files
+Thread-Index: AQHVm5lWKrMcQvbyVEW9TIQ/py78Hg==
+Date:   Fri, 15 Nov 2019 09:44:56 +0000
+Message-ID: <1573810972-2159-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0010.apcprd03.prod.outlook.com
+ (2603:1096:203:2e::22) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6fb2b17e-b6ad-4532-3813-08d769b078c8
+x-ms-traffictypediagnostic: AM0PR04MB4883:|AM0PR04MB4883:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB488382C3983860A77A4B715788700@AM0PR04MB4883.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:586;
+x-forefront-prvs: 02229A4115
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(376002)(39860400002)(189003)(199004)(66556008)(6506007)(25786009)(14454004)(305945005)(110136005)(54906003)(4744005)(66946007)(86362001)(66476007)(50226002)(256004)(8936002)(5660300002)(8676002)(99286004)(81166006)(81156014)(4326008)(2616005)(66066001)(486006)(3846002)(6116002)(316002)(7736002)(52116002)(64756008)(66446008)(36756003)(186003)(102836004)(26005)(71200400001)(71190400001)(2906002)(44832011)(2501003)(6512007)(478600001)(476003)(6486002)(386003)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4883;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JyEPlNDfXkZcjSQ8kclYbKpaX9eBxrG6MK1ljCWH00p8IWqjUvv6RyGiMGYNO0KzD31WoczatVjdd6TY9+z/JrnhojD8aPsTvYcfmXY5oF/Yihfw9Fop8tyV6yS3vwsPrn0hjv79LmZDLaNpZgWlulH1ejuVIYnvtgCFbdWmirO2OCInFDRLFEDkEw4+U5wz8FXpgHvdlsSV20NsKZ2x+tEbCdqhzvgbOvBK3LSnUrWwa0SlpD2OFZDKlXctdBOIB3U/wwRyv7esQ3Wkdmp5eA9gvUIP1MsLKEkFB7t8fmc81yWkN2BNFnVvb/HswTPd/t0WTsA8S4xXIyOCrF8NsKrmCvrV9PhdwMBy3OhpwAGqR98jI0io5iNoIuQigxsk+ORVGGwt815JqkcbZ/aYWqA6AwlhxymK3cHFW4v1zNLaFmCZWQozM+nWqzeyiI8d
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fb2b17e-b6ad-4532-3813-08d769b078c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 09:44:56.1900
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sJfTIl+6xPUkLx0TzQXBliG1Jdu0MbwjQTxprGMFYTZLoOBpL4LpmEMV49S0iZYtLLb2PHsCSu5+7qWAkQ1C6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4883
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+From: Peng Fan <peng.fan@nxp.com>
 
-The following changes since commit 8c5bd25bf42effd194d4b0b43895c42b374e620b:
+These files are not needed to be included, so remove them.
 
-  Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm (2019-11-12 13:19:15 -0800)
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ arch/arm64/kernel/hyp-stub.S | 4 ----
+ 1 file changed, 4 deletions(-)
 
-are available in the git repository at:
+diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+index 73d46070b315..f17af9a39562 100644
+--- a/arch/arm64/kernel/hyp-stub.S
++++ b/arch/arm64/kernel/hyp-stub.S
+@@ -8,12 +8,8 @@
+=20
+ #include <linux/init.h>
+ #include <linux/linkage.h>
+-#include <linux/irqchip/arm-gic-v3.h>
+=20
+ #include <asm/assembler.h>
+-#include <asm/kvm_arm.h>
+-#include <asm/kvm_asm.h>
+-#include <asm/ptrace.h>
+ #include <asm/virt.h>
+=20
+ 	.text
+--=20
+2.16.4
 
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to 9cb09e7c1c9af2968d5186ef9085f05641ab65d9:
-
-  KVM: Add a comment describing the /dev/kvm no_compat handling (2019-11-15 10:14:04 +0100)
-
-----------------------------------------------------------------
-* Fixes for CONFIG_KVM_COMPAT=n
-* Two updates to the IFU erratum
-* selftests build fix
-* Brown paper bag fix
-
-----------------------------------------------------------------
-Marc Zyngier (2):
-      KVM: Forbid /dev/kvm being opened by a compat task when CONFIG_KVM_COMPAT=n
-      KVM: Add a comment describing the /dev/kvm no_compat handling
-
-Paolo Bonzini (1):
-      kvm: x86: disable shattered huge page recovery for PREEMPT_RT.
-
-Sean Christopherson (1):
-      KVM: x86/mmu: Take slots_lock when using kvm_mmu_zap_all_fast()
-
-Vitaly Kuznetsov (1):
-      selftests: kvm: fix build with glibc >= 2.30
-
-Xiaoyao Li (1):
-      KVM: X86: Reset the three MSR list number variables to 0 in kvm_init_msr_list()
-
- arch/x86/kvm/mmu.c                       | 10 +++++++---
- arch/x86/kvm/x86.c                       |  4 ++++
- tools/testing/selftests/kvm/lib/assert.c |  4 ++--
- virt/kvm/kvm_main.c                      | 15 ++++++++++++++-
- 4 files changed, 27 insertions(+), 6 deletions(-)
