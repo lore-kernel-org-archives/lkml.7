@@ -7,41 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52625C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD5BC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB2A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914AC2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfKOJnk (ORCPT
+        id S1727507AbfKOJnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:43:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42943 "EHLO
+        Fri, 15 Nov 2019 04:43:43 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42950 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfKOJnf (ORCPT
+        with ESMTP id S1727314AbfKOJni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:43:35 -0500
+        Fri, 15 Nov 2019 04:43:38 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVY8R-0004TT-22; Fri, 15 Nov 2019 10:43:23 +0100
+        id 1iVY8F-0004Ob-BM; Fri, 15 Nov 2019 10:43:11 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B6BF91C08AC;
-        Fri, 15 Nov 2019 10:43:22 +0100 (CET)
-Date:   Fri, 15 Nov 2019 09:43:22 -0000
-From:   "tip-bot2 for Christoph Hellwig" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EB0A71C18B4;
+        Fri, 15 Nov 2019 10:43:10 +0100 (CET)
+Date:   Fri, 15 Nov 2019 09:43:10 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86: Remove the calgary IOMMU driver
-Cc:     Christoph Hellwig <hch@lst.de>,
+Subject: [tip: core/kprobes] x86/ftrace: Use text_poke()
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191113071836.21041-2-hch@lst.de>
-References: <20191113071836.21041-2-hch@lst.de>
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191111132457.761255803@infradead.org>
+References: <20191111132457.761255803@infradead.org>
 MIME-Version: 1.0
-Message-ID: <157381100233.29467.3042165776889495875.tip-bot2@tip-bot2>
+Message-ID: <157381099055.29467.10982011694493970062.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,2053 +62,1006 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+The following commit has been merged into the core/kprobes branch of tip:
 
-Commit-ID:     90dc392fc445ee2fc17c2617e306774b269386ac
-Gitweb:        https://git.kernel.org/tip/90dc392fc445ee2fc17c2617e306774b269386ac
-Author:        Christoph Hellwig <hch@lst.de>
-AuthorDate:    Wed, 13 Nov 2019 08:18:34 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 15 Nov 2019 10:36:59 +01:00
+Commit-ID:     9706f7c3531fee00505ebd03bf3aa0af76510877
+Gitweb:        https://git.kernel.org/tip/9706f7c3531fee00505ebd03bf3aa0af76510877
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 26 Aug 2019 14:48:23 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 15 Nov 2019 09:07:42 +01:00
 
-x86: Remove the calgary IOMMU driver
+x86/ftrace: Use text_poke()
 
-The calgary IOMMU was only used on high-end IBM systems in the early
-x86_64 age and has no known users left.  Remove it to avoid having to
-touch it for pending changes to the DMA API.
+Move ftrace over to using the generic x86 text_poke functions; this
+avoids having a second/different copy of that code around.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191113071836.21041-2-hch@lst.de
+This also avoids ftrace violating the (new) W^X rule and avoids
+fragmenting the kernel text page-tables, due to no longer having to
+toggle them RW.
 
+Tested-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191111132457.761255803@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- MAINTAINERS                       |   10 +-
- arch/x86/Kconfig                  |   30 +-
- arch/x86/configs/x86_64_defconfig |    1 +-
- arch/x86/include/asm/calgary.h    |   57 +-
- arch/x86/include/asm/pci_64.h     |   14 +-
- arch/x86/include/asm/tce.h        |   35 +-
- arch/x86/kernel/Makefile          |    1 +-
- arch/x86/kernel/pci-calgary_64.c  | 1586 +----------------------------
- arch/x86/kernel/pci-dma.c         |    6 +-
- arch/x86/kernel/tce_64.c          |  177 +---
- 10 files changed, 1917 deletions(-)
- delete mode 100644 arch/x86/include/asm/calgary.h
- delete mode 100644 arch/x86/include/asm/tce.h
- delete mode 100644 arch/x86/kernel/pci-calgary_64.c
- delete mode 100644 arch/x86/kernel/tce_64.c
+ arch/x86/include/asm/ftrace.h |   2 +-
+ arch/x86/kernel/alternative.c |  18 +-
+ arch/x86/kernel/ftrace.c      | 663 +++++----------------------------
+ arch/x86/kernel/traps.c       |   9 +-
+ 4 files changed, 134 insertions(+), 558 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 296de2b..9993db5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3629,16 +3629,6 @@ L:	cake@lists.bufferbloat.net (moderated for non-subscribers)
- S:	Maintained
- F:	net/sched/sch_cake.c
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index c38a666..dbd9b08 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -34,8 +34,6 @@ struct dyn_arch_ftrace {
+ 	/* No extra data needed for x86 */
+ };
  
--CALGARY x86-64 IOMMU
--M:	Muli Ben-Yehuda <mulix@mulix.org>
--M:	Jon Mason <jdmason@kudzu.us>
--L:	iommu@lists.linux-foundation.org
--S:	Maintained
--F:	arch/x86/kernel/pci-calgary_64.c
--F:	arch/x86/kernel/tce_64.c
--F:	arch/x86/include/asm/calgary.h
--F:	arch/x86/include/asm/tce.h
+-int ftrace_int3_handler(struct pt_regs *regs);
 -
- CAN NETWORK DRIVERS
- M:	Wolfgang Grandegger <wg@grandegger.com>
- M:	Marc Kleine-Budde <mkl@pengutronix.de>
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d6e1faa..4d27bdc 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -932,36 +932,6 @@ config GART_IOMMU
+ #define FTRACE_GRAPH_TRAMP_ADDR FTRACE_GRAPH_ADDR
  
- 	  If unsure, say Y.
+ #endif /*  CONFIG_DYNAMIC_FTRACE */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 714b4a2..ce737f1 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -949,7 +949,7 @@ static struct bp_patching_desc {
+ 	int nr_entries;
+ } bp_patching;
  
--config CALGARY_IOMMU
--	bool "IBM Calgary IOMMU support"
--	select IOMMU_HELPER
--	select SWIOTLB
--	depends on X86_64 && PCI
--	---help---
--	  Support for hardware IOMMUs in IBM's xSeries x366 and x460
--	  systems. Needed to run systems with more than 3GB of memory
--	  properly with 32-bit PCI devices that do not support DAC
--	  (Double Address Cycle). Calgary also supports bus level
--	  isolation, where all DMAs pass through the IOMMU.  This
--	  prevents them from going anywhere except their intended
--	  destination. This catches hard-to-find kernel bugs and
--	  mis-behaving drivers and devices that do not use the DMA-API
--	  properly to set up their DMA buffers.  The IOMMU can be
--	  turned off at boot time with the iommu=off parameter.
--	  Normally the kernel will make the right choice by itself.
--	  If unsure, say Y.
--
--config CALGARY_IOMMU_ENABLED_BY_DEFAULT
--	def_bool y
--	prompt "Should Calgary be enabled by default?"
--	depends on CALGARY_IOMMU
--	---help---
--	  Should Calgary be enabled by default? if you choose 'y', Calgary
--	  will be used (if it exists). If you choose 'n', Calgary will not be
--	  used even if it exists. If you choose 'n' and would like to use
--	  Calgary anyway, pass 'iommu=calgary' on the kernel command line.
--	  If unsure, say Y.
--
- config MAXSMP
- 	bool "Enable Maximum number of SMP Processors and NUMA Nodes"
- 	depends on X86_64 && SMP && DEBUG_KERNEL
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
-index d0a5ffe..0b9654c 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -25,7 +25,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_FORCE_UNLOAD=y
- CONFIG_SMP=y
--CONFIG_CALGARY_IOMMU=y
- CONFIG_NR_CPUS=64
- CONFIG_SCHED_SMT=y
- CONFIG_PREEMPT_VOLUNTARY=y
-diff --git a/arch/x86/include/asm/calgary.h b/arch/x86/include/asm/calgary.h
-deleted file mode 100644
-index facd374..0000000
---- a/arch/x86/include/asm/calgary.h
-+++ /dev/null
-@@ -1,57 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Derived from include/asm-powerpc/iommu.h
-- *
-- * Copyright IBM Corporation, 2006-2007
-- *
-- * Author: Jon Mason <jdmason@us.ibm.com>
-- * Author: Muli Ben-Yehuda <muli@il.ibm.com>
-- */
--
--#ifndef _ASM_X86_CALGARY_H
--#define _ASM_X86_CALGARY_H
--
--#include <linux/spinlock.h>
--#include <linux/device.h>
--#include <linux/dma-mapping.h>
--#include <linux/timer.h>
--#include <asm/types.h>
--
--struct iommu_table {
--	const struct cal_chipset_ops *chip_ops; /* chipset specific funcs */
--	unsigned long  it_base;      /* mapped address of tce table */
--	unsigned long  it_hint;      /* Hint for next alloc */
--	unsigned long *it_map;       /* A simple allocation bitmap for now */
--	void __iomem  *bbar;         /* Bridge BAR */
--	u64	       tar_val;      /* Table Address Register */
--	struct timer_list watchdog_timer;
--	spinlock_t     it_lock;      /* Protects it_map */
--	unsigned int   it_size;      /* Size of iommu table in entries */
--	unsigned char  it_busno;     /* Bus number this table belongs to */
--};
--
--struct cal_chipset_ops {
--	void (*handle_quirks)(struct iommu_table *tbl, struct pci_dev *dev);
--	void (*tce_cache_blast)(struct iommu_table *tbl);
--	void (*dump_error_regs)(struct iommu_table *tbl);
--};
--
--#define TCE_TABLE_SIZE_UNSPECIFIED	~0
--#define TCE_TABLE_SIZE_64K		0
--#define TCE_TABLE_SIZE_128K		1
--#define TCE_TABLE_SIZE_256K		2
--#define TCE_TABLE_SIZE_512K		3
--#define TCE_TABLE_SIZE_1M		4
--#define TCE_TABLE_SIZE_2M		5
--#define TCE_TABLE_SIZE_4M		6
--#define TCE_TABLE_SIZE_8M		7
--
--extern int use_calgary;
--
--#ifdef CONFIG_CALGARY_IOMMU
--extern int detect_calgary(void);
--#else
--static inline int detect_calgary(void) { return -ENODEV; }
--#endif
--
--#endif /* _ASM_X86_CALGARY_H */
-diff --git a/arch/x86/include/asm/pci_64.h b/arch/x86/include/asm/pci_64.h
-index f5411de..4e1aef5 100644
---- a/arch/x86/include/asm/pci_64.h
-+++ b/arch/x86/include/asm/pci_64.h
-@@ -4,20 +4,6 @@
+-static int patch_cmp(const void *key, const void *elt)
++static int notrace patch_cmp(const void *key, const void *elt)
+ {
+ 	struct text_poke_loc *tp = (struct text_poke_loc *) elt;
  
- #ifdef __KERNEL__
+@@ -961,7 +961,7 @@ static int patch_cmp(const void *key, const void *elt)
+ }
+ NOKPROBE_SYMBOL(patch_cmp);
  
--#ifdef CONFIG_CALGARY_IOMMU
--static inline void *pci_iommu(struct pci_bus *bus)
--{
--	struct pci_sysdata *sd = bus->sysdata;
--	return sd->iommu;
--}
--
--static inline void set_pci_iommu(struct pci_bus *bus, void *val)
--{
--	struct pci_sysdata *sd = bus->sysdata;
--	sd->iommu = val;
--}
--#endif /* CONFIG_CALGARY_IOMMU */
--
- extern int (*pci_config_read)(int seg, int bus, int dev, int fn,
- 			      int reg, int len, u32 *value);
- extern int (*pci_config_write)(int seg, int bus, int dev, int fn,
-diff --git a/arch/x86/include/asm/tce.h b/arch/x86/include/asm/tce.h
-deleted file mode 100644
-index 6ed2dea..0000000
---- a/arch/x86/include/asm/tce.h
-+++ /dev/null
-@@ -1,35 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * This file is derived from asm-powerpc/tce.h.
-- *
-- * Copyright (C) IBM Corporation, 2006
-- *
-- * Author: Muli Ben-Yehuda <muli@il.ibm.com>
-- * Author: Jon Mason <jdmason@us.ibm.com>
-- */
--
--#ifndef _ASM_X86_TCE_H
--#define _ASM_X86_TCE_H
--
--extern unsigned int specified_table_size;
--struct iommu_table;
--
--#define TCE_ENTRY_SIZE   8   /* in bytes */
--
--#define TCE_READ_SHIFT   0
--#define TCE_WRITE_SHIFT  1
--#define TCE_HUBID_SHIFT  2   /* unused */
--#define TCE_RSVD_SHIFT   8   /* unused */
--#define TCE_RPN_SHIFT    12
--#define TCE_UNUSED_SHIFT 48  /* unused */
--
--#define TCE_RPN_MASK     0x0000fffffffff000ULL
--
--extern void tce_build(struct iommu_table *tbl, unsigned long index,
--		      unsigned int npages, unsigned long uaddr, int direction);
--extern void tce_free(struct iommu_table *tbl, long index, unsigned int npages);
--extern void * __init alloc_tce_table(void);
--extern void __init free_tce_table(void *tbl);
--extern int __init build_tce_table(struct pci_dev *dev, void __iomem *bbar);
--
--#endif /* _ASM_X86_TCE_H */
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3578ad2..1167a46 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -146,7 +146,6 @@ ifeq ($(CONFIG_X86_64),y)
- 	obj-$(CONFIG_AUDIT)		+= audit_64.o
+-int poke_int3_handler(struct pt_regs *regs)
++int notrace poke_int3_handler(struct pt_regs *regs)
+ {
+ 	struct text_poke_loc *tp;
+ 	void *ip;
+@@ -1209,10 +1209,15 @@ void text_poke_finish(void)
+ 	text_poke_flush(NULL);
+ }
  
- 	obj-$(CONFIG_GART_IOMMU)	+= amd_gart_64.o aperture_64.o
--	obj-$(CONFIG_CALGARY_IOMMU)	+= pci-calgary_64.o tce_64.o
+-void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate)
++void __ref text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate)
+ {
+ 	struct text_poke_loc *tp;
  
- 	obj-$(CONFIG_MMCONF_FAM10H)	+= mmconf-fam10h_64.o
- 	obj-y				+= vsmp_64.o
-diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
-deleted file mode 100644
-index 23fdec0..0000000
---- a/arch/x86/kernel/pci-calgary_64.c
-+++ /dev/null
-@@ -1,1586 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Derived from arch/powerpc/kernel/iommu.c
-- *
-- * Copyright IBM Corporation, 2006-2007
-- * Copyright (C) 2006  Jon Mason <jdmason@kudzu.us>
-- *
-- * Author: Jon Mason <jdmason@kudzu.us>
-- * Author: Muli Ben-Yehuda <muli@il.ibm.com>
--
-- */
--
--#define pr_fmt(fmt) "Calgary: " fmt
--
--#include <linux/kernel.h>
--#include <linux/init.h>
--#include <linux/types.h>
--#include <linux/slab.h>
--#include <linux/mm.h>
--#include <linux/spinlock.h>
--#include <linux/string.h>
--#include <linux/crash_dump.h>
--#include <linux/dma-mapping.h>
--#include <linux/dma-direct.h>
--#include <linux/bitmap.h>
--#include <linux/pci_ids.h>
--#include <linux/pci.h>
--#include <linux/delay.h>
--#include <linux/scatterlist.h>
--#include <linux/iommu-helper.h>
--
--#include <asm/iommu.h>
--#include <asm/calgary.h>
--#include <asm/tce.h>
--#include <asm/pci-direct.h>
--#include <asm/dma.h>
--#include <asm/rio.h>
--#include <asm/bios_ebda.h>
--#include <asm/x86_init.h>
--#include <asm/iommu_table.h>
--
--#ifdef CONFIG_CALGARY_IOMMU_ENABLED_BY_DEFAULT
--int use_calgary __read_mostly = 1;
--#else
--int use_calgary __read_mostly = 0;
--#endif /* CONFIG_CALGARY_DEFAULT_ENABLED */
--
--#define PCI_DEVICE_ID_IBM_CALGARY 0x02a1
--#define PCI_DEVICE_ID_IBM_CALIOC2 0x0308
--
--/* register offsets inside the host bridge space */
--#define CALGARY_CONFIG_REG	0x0108
--#define PHB_CSR_OFFSET		0x0110 /* Channel Status */
--#define PHB_PLSSR_OFFSET	0x0120
--#define PHB_CONFIG_RW_OFFSET	0x0160
--#define PHB_IOBASE_BAR_LOW	0x0170
--#define PHB_IOBASE_BAR_HIGH	0x0180
--#define PHB_MEM_1_LOW		0x0190
--#define PHB_MEM_1_HIGH		0x01A0
--#define PHB_IO_ADDR_SIZE	0x01B0
--#define PHB_MEM_1_SIZE		0x01C0
--#define PHB_MEM_ST_OFFSET	0x01D0
--#define PHB_AER_OFFSET		0x0200
--#define PHB_CONFIG_0_HIGH	0x0220
--#define PHB_CONFIG_0_LOW	0x0230
--#define PHB_CONFIG_0_END	0x0240
--#define PHB_MEM_2_LOW		0x02B0
--#define PHB_MEM_2_HIGH		0x02C0
--#define PHB_MEM_2_SIZE_HIGH	0x02D0
--#define PHB_MEM_2_SIZE_LOW	0x02E0
--#define PHB_DOSHOLE_OFFSET	0x08E0
--
--/* CalIOC2 specific */
--#define PHB_SAVIOR_L2		0x0DB0
--#define PHB_PAGE_MIG_CTRL	0x0DA8
--#define PHB_PAGE_MIG_DEBUG	0x0DA0
--#define PHB_ROOT_COMPLEX_STATUS 0x0CB0
--
--/* PHB_CONFIG_RW */
--#define PHB_TCE_ENABLE		0x20000000
--#define PHB_SLOT_DISABLE	0x1C000000
--#define PHB_DAC_DISABLE		0x01000000
--#define PHB_MEM2_ENABLE		0x00400000
--#define PHB_MCSR_ENABLE		0x00100000
--/* TAR (Table Address Register) */
--#define TAR_SW_BITS		0x0000ffffffff800fUL
--#define TAR_VALID		0x0000000000000008UL
--/* CSR (Channel/DMA Status Register) */
--#define CSR_AGENT_MASK		0xffe0ffff
--/* CCR (Calgary Configuration Register) */
--#define CCR_2SEC_TIMEOUT	0x000000000000000EUL
--/* PMCR/PMDR (Page Migration Control/Debug Registers */
--#define PMR_SOFTSTOP		0x80000000
--#define PMR_SOFTSTOPFAULT	0x40000000
--#define PMR_HARDSTOP		0x20000000
--
--/*
-- * The maximum PHB bus number.
-- * x3950M2 (rare): 8 chassis, 48 PHBs per chassis = 384
-- * x3950M2: 4 chassis, 48 PHBs per chassis        = 192
-- * x3950 (PCIE): 8 chassis, 32 PHBs per chassis   = 256
-- * x3950 (PCIX): 8 chassis, 16 PHBs per chassis   = 128
-- */
--#define MAX_PHB_BUS_NUM		256
--
--#define PHBS_PER_CALGARY	  4
--
--/* register offsets in Calgary's internal register space */
--static const unsigned long tar_offsets[] = {
--	0x0580 /* TAR0 */,
--	0x0588 /* TAR1 */,
--	0x0590 /* TAR2 */,
--	0x0598 /* TAR3 */
--};
--
--static const unsigned long split_queue_offsets[] = {
--	0x4870 /* SPLIT QUEUE 0 */,
--	0x5870 /* SPLIT QUEUE 1 */,
--	0x6870 /* SPLIT QUEUE 2 */,
--	0x7870 /* SPLIT QUEUE 3 */
--};
--
--static const unsigned long phb_offsets[] = {
--	0x8000 /* PHB0 */,
--	0x9000 /* PHB1 */,
--	0xA000 /* PHB2 */,
--	0xB000 /* PHB3 */
--};
--
--/* PHB debug registers */
--
--static const unsigned long phb_debug_offsets[] = {
--	0x4000	/* PHB 0 DEBUG */,
--	0x5000	/* PHB 1 DEBUG */,
--	0x6000	/* PHB 2 DEBUG */,
--	0x7000	/* PHB 3 DEBUG */
--};
--
--/*
-- * STUFF register for each debug PHB,
-- * byte 1 = start bus number, byte 2 = end bus number
-- */
--
--#define PHB_DEBUG_STUFF_OFFSET	0x0020
--
--unsigned int specified_table_size = TCE_TABLE_SIZE_UNSPECIFIED;
--static int translate_empty_slots __read_mostly = 0;
--static int calgary_detected __read_mostly = 0;
--
--static struct rio_table_hdr	*rio_table_hdr __initdata;
--static struct scal_detail	*scal_devs[MAX_NUMNODES] __initdata;
--static struct rio_detail	*rio_devs[MAX_NUMNODES * 4] __initdata;
--
--struct calgary_bus_info {
--	void *tce_space;
--	unsigned char translation_disabled;
--	signed char phbid;
--	void __iomem *bbar;
--};
--
--static void calgary_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev);
--static void calgary_tce_cache_blast(struct iommu_table *tbl);
--static void calgary_dump_error_regs(struct iommu_table *tbl);
--static void calioc2_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev);
--static void calioc2_tce_cache_blast(struct iommu_table *tbl);
--static void calioc2_dump_error_regs(struct iommu_table *tbl);
--static void calgary_init_bitmap_from_tce_table(struct iommu_table *tbl);
--static void get_tce_space_from_tar(void);
--
--static const struct cal_chipset_ops calgary_chip_ops = {
--	.handle_quirks = calgary_handle_quirks,
--	.tce_cache_blast = calgary_tce_cache_blast,
--	.dump_error_regs = calgary_dump_error_regs
--};
--
--static const struct cal_chipset_ops calioc2_chip_ops = {
--	.handle_quirks = calioc2_handle_quirks,
--	.tce_cache_blast = calioc2_tce_cache_blast,
--	.dump_error_regs = calioc2_dump_error_regs
--};
--
--static struct calgary_bus_info bus_info[MAX_PHB_BUS_NUM] = { { NULL, 0, 0 }, };
--
--static inline int translation_enabled(struct iommu_table *tbl)
++	if (unlikely(system_state == SYSTEM_BOOTING)) {
++		text_poke_early(addr, opcode, len);
++		return;
++	}
++
+ 	text_poke_flush(addr);
+ 
+ 	tp = &tp_vec[tp_vec_nr++];
+@@ -1230,10 +1235,15 @@ void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emu
+  * dynamically allocated memory. This function should be used when it is
+  * not possible to allocate memory.
+  */
+-void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
++void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+ {
+ 	struct text_poke_loc tp;
+ 
++	if (unlikely(system_state == SYSTEM_BOOTING)) {
++		text_poke_early(addr, opcode, len);
++		return;
++	}
++
+ 	text_poke_loc_init(&tp, addr, opcode, len, emulate);
+ 	text_poke_bp_batch(&tp, 1);
+ }
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 024c305..3d8adeb 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -34,6 +34,8 @@
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
++static int ftrace_poke_late = 0;
++
+ int ftrace_arch_code_modify_prepare(void)
+     __acquires(&text_mutex)
+ {
+@@ -43,16 +45,20 @@ int ftrace_arch_code_modify_prepare(void)
+ 	 * ftrace has it set to "read/write".
+ 	 */
+ 	mutex_lock(&text_mutex);
+-	set_kernel_text_rw();
+-	set_all_modules_text_rw();
++	ftrace_poke_late = 1;
+ 	return 0;
+ }
+ 
+ int ftrace_arch_code_modify_post_process(void)
+     __releases(&text_mutex)
+ {
+-	set_all_modules_text_ro();
+-	set_kernel_text_ro();
++	/*
++	 * ftrace_make_{call,nop}() may be called during
++	 * module load, and we need to finish the text_poke_queue()
++	 * that they do, here.
++	 */
++	text_poke_finish();
++	ftrace_poke_late = 0;
+ 	mutex_unlock(&text_mutex);
+ 	return 0;
+ }
+@@ -60,67 +66,34 @@ int ftrace_arch_code_modify_post_process(void)
+ union ftrace_code_union {
+ 	char code[MCOUNT_INSN_SIZE];
+ 	struct {
+-		unsigned char op;
++		char op;
+ 		int offset;
+ 	} __attribute__((packed));
+ };
+ 
+-static int ftrace_calc_offset(long ip, long addr)
 -{
--	/* only PHBs with translation enabled have an IOMMU table */
--	return (tbl != NULL);
+-	return (int)(addr - ip);
 -}
 -
--static void iommu_range_reserve(struct iommu_table *tbl,
--	unsigned long start_addr, unsigned int npages)
+-static unsigned char *
+-ftrace_text_replace(unsigned char op, unsigned long ip, unsigned long addr)
++static const char *ftrace_text_replace(char op, unsigned long ip, unsigned long addr)
+ {
+ 	static union ftrace_code_union calc;
+ 
+-	calc.op		= op;
+-	calc.offset	= ftrace_calc_offset(ip + MCOUNT_INSN_SIZE, addr);
++	calc.op = op;
++	calc.offset = (int)(addr - (ip + MCOUNT_INSN_SIZE));
+ 
+ 	return calc.code;
+ }
+ 
+-static unsigned char *
+-ftrace_call_replace(unsigned long ip, unsigned long addr)
 -{
--	unsigned long index;
--	unsigned long end;
--	unsigned long flags;
--
--	index = start_addr >> PAGE_SHIFT;
--
--	/* bail out if we're asked to reserve a region we don't cover */
--	if (index >= tbl->it_size)
--		return;
--
--	end = index + npages;
--	if (end > tbl->it_size) /* don't go off the table */
--		end = tbl->it_size;
--
--	spin_lock_irqsave(&tbl->it_lock, flags);
--
--	bitmap_set(tbl->it_map, index, npages);
--
--	spin_unlock_irqrestore(&tbl->it_lock, flags);
+-	return ftrace_text_replace(0xe8, ip, addr);
 -}
 -
--static unsigned long iommu_range_alloc(struct device *dev,
--				       struct iommu_table *tbl,
--				       unsigned int npages)
--{
--	unsigned long flags;
--	unsigned long offset;
--	unsigned long boundary_size;
--
--	boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
--			      PAGE_SIZE) >> PAGE_SHIFT;
--
--	BUG_ON(npages == 0);
--
--	spin_lock_irqsave(&tbl->it_lock, flags);
--
--	offset = iommu_area_alloc(tbl->it_map, tbl->it_size, tbl->it_hint,
--				  npages, 0, boundary_size, 0);
--	if (offset == ~0UL) {
--		tbl->chip_ops->tce_cache_blast(tbl);
--
--		offset = iommu_area_alloc(tbl->it_map, tbl->it_size, 0,
--					  npages, 0, boundary_size, 0);
--		if (offset == ~0UL) {
--			pr_warn("IOMMU full\n");
--			spin_unlock_irqrestore(&tbl->it_lock, flags);
--			if (panic_on_overflow)
--				panic("Calgary: fix the allocator.\n");
--			else
--				return DMA_MAPPING_ERROR;
--		}
--	}
--
--	tbl->it_hint = offset + npages;
--	BUG_ON(tbl->it_hint > tbl->it_size);
--
--	spin_unlock_irqrestore(&tbl->it_lock, flags);
--
--	return offset;
+-static inline int
+-within(unsigned long addr, unsigned long start, unsigned long end)
++static const char *ftrace_nop_replace(void)
+ {
+-	return addr >= start && addr < end;
 -}
 -
--static dma_addr_t iommu_alloc(struct device *dev, struct iommu_table *tbl,
--			      void *vaddr, unsigned int npages, int direction)
+-static unsigned long text_ip_addr(unsigned long ip)
 -{
--	unsigned long entry;
--	dma_addr_t ret;
--
--	entry = iommu_range_alloc(dev, tbl, npages);
--	if (unlikely(entry == DMA_MAPPING_ERROR)) {
--		pr_warn("failed to allocate %u pages in iommu %p\n",
--			npages, tbl);
--		return DMA_MAPPING_ERROR;
--	}
--
--	/* set the return dma address */
--	ret = (entry << PAGE_SHIFT) | ((unsigned long)vaddr & ~PAGE_MASK);
--
--	/* put the TCEs in the HW table */
--	tce_build(tbl, entry, npages, (unsigned long)vaddr & PAGE_MASK,
--		  direction);
--	return ret;
--}
--
--static void iommu_free(struct iommu_table *tbl, dma_addr_t dma_addr,
--	unsigned int npages)
--{
--	unsigned long entry;
--	unsigned long flags;
--
--	/* were we called with bad_dma_address? */
--	if (unlikely(dma_addr == DMA_MAPPING_ERROR)) {
--		WARN(1, KERN_ERR "Calgary: driver tried unmapping bad DMA "
--		       "address 0x%Lx\n", dma_addr);
--		return;
--	}
--
--	entry = dma_addr >> PAGE_SHIFT;
--
--	BUG_ON(entry + npages > tbl->it_size);
--
--	tce_free(tbl, entry, npages);
--
--	spin_lock_irqsave(&tbl->it_lock, flags);
--
--	bitmap_clear(tbl->it_map, entry, npages);
--
--	spin_unlock_irqrestore(&tbl->it_lock, flags);
--}
--
--static inline struct iommu_table *find_iommu_table(struct device *dev)
--{
--	struct pci_dev *pdev;
--	struct pci_bus *pbus;
--	struct iommu_table *tbl;
--
--	pdev = to_pci_dev(dev);
--
--	/* search up the device tree for an iommu */
--	pbus = pdev->bus;
--	do {
--		tbl = pci_iommu(pbus);
--		if (tbl && tbl->it_busno == pbus->number)
--			break;
--		tbl = NULL;
--		pbus = pbus->parent;
--	} while (pbus);
--
--	BUG_ON(tbl && (tbl->it_busno != pbus->number));
--
--	return tbl;
--}
--
--static void calgary_unmap_sg(struct device *dev, struct scatterlist *sglist,
--			     int nelems,enum dma_data_direction dir,
--			     unsigned long attrs)
--{
--	struct iommu_table *tbl = find_iommu_table(dev);
--	struct scatterlist *s;
--	int i;
--
--	if (!translation_enabled(tbl))
--		return;
--
--	for_each_sg(sglist, s, nelems, i) {
--		unsigned int npages;
--		dma_addr_t dma = s->dma_address;
--		unsigned int dmalen = s->dma_length;
--
--		if (dmalen == 0)
--			break;
--
--		npages = iommu_num_pages(dma, dmalen, PAGE_SIZE);
--		iommu_free(tbl, dma, npages);
--	}
--}
--
--static int calgary_map_sg(struct device *dev, struct scatterlist *sg,
--			  int nelems, enum dma_data_direction dir,
--			  unsigned long attrs)
--{
--	struct iommu_table *tbl = find_iommu_table(dev);
--	struct scatterlist *s;
--	unsigned long vaddr;
--	unsigned int npages;
--	unsigned long entry;
--	int i;
--
--	for_each_sg(sg, s, nelems, i) {
--		BUG_ON(!sg_page(s));
--
--		vaddr = (unsigned long) sg_virt(s);
--		npages = iommu_num_pages(vaddr, s->length, PAGE_SIZE);
--
--		entry = iommu_range_alloc(dev, tbl, npages);
--		if (entry == DMA_MAPPING_ERROR) {
--			/* makes sure unmap knows to stop */
--			s->dma_length = 0;
--			goto error;
--		}
--
--		s->dma_address = (entry << PAGE_SHIFT) | s->offset;
--
--		/* insert into HW table */
--		tce_build(tbl, entry, npages, vaddr & PAGE_MASK, dir);
--
--		s->dma_length = s->length;
--	}
--
--	return nelems;
--error:
--	calgary_unmap_sg(dev, sg, nelems, dir, 0);
--	for_each_sg(sg, s, nelems, i) {
--		sg->dma_address = DMA_MAPPING_ERROR;
--		sg->dma_length = 0;
--	}
--	return 0;
--}
--
--static dma_addr_t calgary_map_page(struct device *dev, struct page *page,
--				   unsigned long offset, size_t size,
--				   enum dma_data_direction dir,
--				   unsigned long attrs)
--{
--	void *vaddr = page_address(page) + offset;
--	unsigned long uaddr;
--	unsigned int npages;
--	struct iommu_table *tbl = find_iommu_table(dev);
--
--	uaddr = (unsigned long)vaddr;
--	npages = iommu_num_pages(uaddr, size, PAGE_SIZE);
--
--	return iommu_alloc(dev, tbl, vaddr, npages, dir);
--}
--
--static void calgary_unmap_page(struct device *dev, dma_addr_t dma_addr,
--			       size_t size, enum dma_data_direction dir,
--			       unsigned long attrs)
--{
--	struct iommu_table *tbl = find_iommu_table(dev);
--	unsigned int npages;
--
--	npages = iommu_num_pages(dma_addr, size, PAGE_SIZE);
--	iommu_free(tbl, dma_addr, npages);
--}
--
--static void* calgary_alloc_coherent(struct device *dev, size_t size,
--	dma_addr_t *dma_handle, gfp_t flag, unsigned long attrs)
--{
--	void *ret = NULL;
--	dma_addr_t mapping;
--	unsigned int npages, order;
--	struct iommu_table *tbl = find_iommu_table(dev);
--
--	size = PAGE_ALIGN(size); /* size rounded up to full pages */
--	npages = size >> PAGE_SHIFT;
--	order = get_order(size);
--
--	/* alloc enough pages (and possibly more) */
--	ret = (void *)__get_free_pages(flag, order);
--	if (!ret)
--		goto error;
--	memset(ret, 0, size);
--
--	/* set up tces to cover the allocated range */
--	mapping = iommu_alloc(dev, tbl, ret, npages, DMA_BIDIRECTIONAL);
--	if (mapping == DMA_MAPPING_ERROR)
--		goto free;
--	*dma_handle = mapping;
--	return ret;
--free:
--	free_pages((unsigned long)ret, get_order(size));
--	ret = NULL;
--error:
--	return ret;
--}
--
--static void calgary_free_coherent(struct device *dev, size_t size,
--				  void *vaddr, dma_addr_t dma_handle,
--				  unsigned long attrs)
--{
--	unsigned int npages;
--	struct iommu_table *tbl = find_iommu_table(dev);
--
--	size = PAGE_ALIGN(size);
--	npages = size >> PAGE_SHIFT;
--
--	iommu_free(tbl, dma_handle, npages);
--	free_pages((unsigned long)vaddr, get_order(size));
--}
--
--static const struct dma_map_ops calgary_dma_ops = {
--	.alloc = calgary_alloc_coherent,
--	.free = calgary_free_coherent,
--	.map_sg = calgary_map_sg,
--	.unmap_sg = calgary_unmap_sg,
--	.map_page = calgary_map_page,
--	.unmap_page = calgary_unmap_page,
--	.dma_supported = dma_direct_supported,
--	.mmap = dma_common_mmap,
--	.get_sgtable = dma_common_get_sgtable,
--};
--
--static inline void __iomem * busno_to_bbar(unsigned char num)
--{
--	return bus_info[num].bbar;
--}
--
--static inline int busno_to_phbid(unsigned char num)
--{
--	return bus_info[num].phbid;
--}
--
--static inline unsigned long split_queue_offset(unsigned char num)
--{
--	size_t idx = busno_to_phbid(num);
--
--	return split_queue_offsets[idx];
--}
--
--static inline unsigned long tar_offset(unsigned char num)
--{
--	size_t idx = busno_to_phbid(num);
--
--	return tar_offsets[idx];
--}
--
--static inline unsigned long phb_offset(unsigned char num)
--{
--	size_t idx = busno_to_phbid(num);
--
--	return phb_offsets[idx];
--}
--
--static inline void __iomem* calgary_reg(void __iomem *bar, unsigned long offset)
--{
--	unsigned long target = ((unsigned long)bar) | offset;
--	return (void __iomem*)target;
--}
--
--static inline int is_calioc2(unsigned short device)
--{
--	return (device == PCI_DEVICE_ID_IBM_CALIOC2);
--}
--
--static inline int is_calgary(unsigned short device)
--{
--	return (device == PCI_DEVICE_ID_IBM_CALGARY);
--}
--
--static inline int is_cal_pci_dev(unsigned short device)
--{
--	return (is_calgary(device) || is_calioc2(device));
--}
--
--static void calgary_tce_cache_blast(struct iommu_table *tbl)
--{
--	u64 val;
--	u32 aer;
--	int i = 0;
--	void __iomem *bbar = tbl->bbar;
--	void __iomem *target;
--
--	/* disable arbitration on the bus */
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_AER_OFFSET);
--	aer = readl(target);
--	writel(0, target);
--
--	/* read plssr to ensure it got there */
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_PLSSR_OFFSET);
--	val = readl(target);
--
--	/* poll split queues until all DMA activity is done */
--	target = calgary_reg(bbar, split_queue_offset(tbl->it_busno));
--	do {
--		val = readq(target);
--		i++;
--	} while ((val & 0xff) != 0xff && i < 100);
--	if (i == 100)
--		pr_warn("PCI bus not quiesced, continuing anyway\n");
--
--	/* invalidate TCE cache */
--	target = calgary_reg(bbar, tar_offset(tbl->it_busno));
--	writeq(tbl->tar_val, target);
--
--	/* enable arbitration */
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_AER_OFFSET);
--	writel(aer, target);
--	(void)readl(target); /* flush */
--}
--
--static void calioc2_tce_cache_blast(struct iommu_table *tbl)
--{
--	void __iomem *bbar = tbl->bbar;
--	void __iomem *target;
--	u64 val64;
--	u32 val;
--	int i = 0;
--	int count = 1;
--	unsigned char bus = tbl->it_busno;
--
--begin:
--	printk(KERN_DEBUG "Calgary: CalIOC2 bus 0x%x entering tce cache blast "
--	       "sequence - count %d\n", bus, count);
--
--	/* 1. using the Page Migration Control reg set SoftStop */
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "1a. read 0x%x [LE] from %p\n", val, target);
--	val |= PMR_SOFTSTOP;
--	printk(KERN_DEBUG "1b. writing 0x%x [LE] to %p\n", val, target);
--	writel(cpu_to_be32(val), target);
--
--	/* 2. poll split queues until all DMA activity is done */
--	printk(KERN_DEBUG "2a. starting to poll split queues\n");
--	target = calgary_reg(bbar, split_queue_offset(bus));
--	do {
--		val64 = readq(target);
--		i++;
--	} while ((val64 & 0xff) != 0xff && i < 100);
--	if (i == 100)
--		pr_warn("CalIOC2: PCI bus not quiesced, continuing anyway\n");
--
--	/* 3. poll Page Migration DEBUG for SoftStopFault */
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_DEBUG);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "3. read 0x%x [LE] from %p\n", val, target);
--
--	/* 4. if SoftStopFault - goto (1) */
--	if (val & PMR_SOFTSTOPFAULT) {
--		if (++count < 100)
--			goto begin;
--		else {
--			pr_warn("CalIOC2: too many SoftStopFaults, aborting TCE cache flush sequence!\n");
--			return; /* pray for the best */
--		}
--	}
--
--	/* 5. Slam into HardStop by reading PHB_PAGE_MIG_CTRL */
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	printk(KERN_DEBUG "5a. slamming into HardStop by reading %p\n", target);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "5b. read 0x%x [LE] from %p\n", val, target);
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_DEBUG);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "5c. read 0x%x [LE] from %p (debug)\n", val, target);
--
--	/* 6. invalidate TCE cache */
--	printk(KERN_DEBUG "6. invalidating TCE cache\n");
--	target = calgary_reg(bbar, tar_offset(bus));
--	writeq(tbl->tar_val, target);
--
--	/* 7. Re-read PMCR */
--	printk(KERN_DEBUG "7a. Re-reading PMCR\n");
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "7b. read 0x%x [LE] from %p\n", val, target);
--
--	/* 8. Remove HardStop */
--	printk(KERN_DEBUG "8a. removing HardStop from PMCR\n");
--	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	val = 0;
--	printk(KERN_DEBUG "8b. writing 0x%x [LE] to %p\n", val, target);
--	writel(cpu_to_be32(val), target);
--	val = be32_to_cpu(readl(target));
--	printk(KERN_DEBUG "8c. read 0x%x [LE] from %p\n", val, target);
--}
--
--static void __init calgary_reserve_mem_region(struct pci_dev *dev, u64 start,
--	u64 limit)
--{
--	unsigned int numpages;
--
--	limit = limit | 0xfffff;
--	limit++;
--
--	numpages = ((limit - start) >> PAGE_SHIFT);
--	iommu_range_reserve(pci_iommu(dev->bus), start, numpages);
--}
--
--static void __init calgary_reserve_peripheral_mem_1(struct pci_dev *dev)
--{
--	void __iomem *target;
--	u64 low, high, sizelow;
--	u64 start, limit;
--	struct iommu_table *tbl = pci_iommu(dev->bus);
--	unsigned char busnum = dev->bus->number;
--	void __iomem *bbar = tbl->bbar;
--
--	/* peripheral MEM_1 region */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_LOW);
--	low = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_HIGH);
--	high = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_SIZE);
--	sizelow = be32_to_cpu(readl(target));
--
--	start = (high << 32) | low;
--	limit = sizelow;
--
--	calgary_reserve_mem_region(dev, start, limit);
--}
--
--static void __init calgary_reserve_peripheral_mem_2(struct pci_dev *dev)
--{
--	void __iomem *target;
--	u32 val32;
--	u64 low, high, sizelow, sizehigh;
--	u64 start, limit;
--	struct iommu_table *tbl = pci_iommu(dev->bus);
--	unsigned char busnum = dev->bus->number;
--	void __iomem *bbar = tbl->bbar;
--
--	/* is it enabled? */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
--	if (!(val32 & PHB_MEM2_ENABLE))
--		return;
--
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_LOW);
--	low = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_HIGH);
--	high = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_SIZE_LOW);
--	sizelow = be32_to_cpu(readl(target));
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_SIZE_HIGH);
--	sizehigh = be32_to_cpu(readl(target));
--
--	start = (high << 32) | low;
--	limit = (sizehigh << 32) | sizelow;
--
--	calgary_reserve_mem_region(dev, start, limit);
--}
--
--/*
-- * some regions of the IO address space do not get translated, so we
-- * must not give devices IO addresses in those regions. The regions
-- * are the 640KB-1MB region and the two PCI peripheral memory holes.
-- * Reserve all of them in the IOMMU bitmap to avoid giving them out
-- * later.
-- */
--static void __init calgary_reserve_regions(struct pci_dev *dev)
--{
--	unsigned int npages;
--	u64 start;
--	struct iommu_table *tbl = pci_iommu(dev->bus);
--
--	/* avoid the BIOS/VGA first 640KB-1MB region */
--	/* for CalIOC2 - avoid the entire first MB */
--	if (is_calgary(dev->device)) {
--		start = (640 * 1024);
--		npages = ((1024 - 640) * 1024) >> PAGE_SHIFT;
--	} else { /* calioc2 */
--		start = 0;
--		npages = (1 * 1024 * 1024) >> PAGE_SHIFT;
--	}
--	iommu_range_reserve(tbl, start, npages);
--
--	/* reserve the two PCI peripheral memory regions in IO space */
--	calgary_reserve_peripheral_mem_1(dev);
--	calgary_reserve_peripheral_mem_2(dev);
--}
--
--static int __init calgary_setup_tar(struct pci_dev *dev, void __iomem *bbar)
--{
--	u64 val64;
--	u64 table_phys;
--	void __iomem *target;
--	int ret;
--	struct iommu_table *tbl;
--
--	/* build TCE tables for each PHB */
--	ret = build_tce_table(dev, bbar);
--	if (ret)
--		return ret;
--
--	tbl = pci_iommu(dev->bus);
--	tbl->it_base = (unsigned long)bus_info[dev->bus->number].tce_space;
--
--	if (is_kdump_kernel())
--		calgary_init_bitmap_from_tce_table(tbl);
--	else
--		tce_free(tbl, 0, tbl->it_size);
--
--	if (is_calgary(dev->device))
--		tbl->chip_ops = &calgary_chip_ops;
--	else if (is_calioc2(dev->device))
--		tbl->chip_ops = &calioc2_chip_ops;
--	else
--		BUG();
--
--	calgary_reserve_regions(dev);
--
--	/* set TARs for each PHB */
--	target = calgary_reg(bbar, tar_offset(dev->bus->number));
--	val64 = be64_to_cpu(readq(target));
--
--	/* zero out all TAR bits under sw control */
--	val64 &= ~TAR_SW_BITS;
--	table_phys = (u64)__pa(tbl->it_base);
--
--	val64 |= table_phys;
--
--	BUG_ON(specified_table_size > TCE_TABLE_SIZE_8M);
--	val64 |= (u64) specified_table_size;
--
--	tbl->tar_val = cpu_to_be64(val64);
--
--	writeq(tbl->tar_val, target);
--	readq(target); /* flush */
--
--	return 0;
--}
--
--static void __init calgary_free_bus(struct pci_dev *dev)
--{
--	u64 val64;
--	struct iommu_table *tbl = pci_iommu(dev->bus);
--	void __iomem *target;
--	unsigned int bitmapsz;
--
--	target = calgary_reg(tbl->bbar, tar_offset(dev->bus->number));
--	val64 = be64_to_cpu(readq(target));
--	val64 &= ~TAR_SW_BITS;
--	writeq(cpu_to_be64(val64), target);
--	readq(target); /* flush */
--
--	bitmapsz = tbl->it_size / BITS_PER_BYTE;
--	free_pages((unsigned long)tbl->it_map, get_order(bitmapsz));
--	tbl->it_map = NULL;
--
--	kfree(tbl);
--	
--	set_pci_iommu(dev->bus, NULL);
--
--	/* Can't free bootmem allocated memory after system is up :-( */
--	bus_info[dev->bus->number].tce_space = NULL;
--}
--
--static void calgary_dump_error_regs(struct iommu_table *tbl)
--{
--	void __iomem *bbar = tbl->bbar;
--	void __iomem *target;
--	u32 csr, plssr;
--
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_CSR_OFFSET);
--	csr = be32_to_cpu(readl(target));
--
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_PLSSR_OFFSET);
--	plssr = be32_to_cpu(readl(target));
--
--	/* If no error, the agent ID in the CSR is not valid */
--	pr_emerg("DMA error on Calgary PHB 0x%x, 0x%08x@CSR 0x%08x@PLSSR\n",
--		 tbl->it_busno, csr, plssr);
--}
--
--static void calioc2_dump_error_regs(struct iommu_table *tbl)
--{
--	void __iomem *bbar = tbl->bbar;
--	u32 csr, csmr, plssr, mck, rcstat;
--	void __iomem *target;
--	unsigned long phboff = phb_offset(tbl->it_busno);
--	unsigned long erroff;
--	u32 errregs[7];
--	int i;
--
--	/* dump CSR */
--	target = calgary_reg(bbar, phboff | PHB_CSR_OFFSET);
--	csr = be32_to_cpu(readl(target));
--	/* dump PLSSR */
--	target = calgary_reg(bbar, phboff | PHB_PLSSR_OFFSET);
--	plssr = be32_to_cpu(readl(target));
--	/* dump CSMR */
--	target = calgary_reg(bbar, phboff | 0x290);
--	csmr = be32_to_cpu(readl(target));
--	/* dump mck */
--	target = calgary_reg(bbar, phboff | 0x800);
--	mck = be32_to_cpu(readl(target));
--
--	pr_emerg("DMA error on CalIOC2 PHB 0x%x\n", tbl->it_busno);
--
--	pr_emerg("0x%08x@CSR 0x%08x@PLSSR 0x%08x@CSMR 0x%08x@MCK\n",
--		 csr, plssr, csmr, mck);
--
--	/* dump rest of error regs */
--	pr_emerg("");
--	for (i = 0; i < ARRAY_SIZE(errregs); i++) {
--		/* err regs are at 0x810 - 0x870 */
--		erroff = (0x810 + (i * 0x10));
--		target = calgary_reg(bbar, phboff | erroff);
--		errregs[i] = be32_to_cpu(readl(target));
--		pr_cont("0x%08x@0x%lx ", errregs[i], erroff);
--	}
--	pr_cont("\n");
--
--	/* root complex status */
--	target = calgary_reg(bbar, phboff | PHB_ROOT_COMPLEX_STATUS);
--	rcstat = be32_to_cpu(readl(target));
--	printk(KERN_EMERG "Calgary: 0x%08x@0x%x\n", rcstat,
--	       PHB_ROOT_COMPLEX_STATUS);
--}
--
--static void calgary_watchdog(struct timer_list *t)
--{
--	struct iommu_table *tbl = from_timer(tbl, t, watchdog_timer);
--	void __iomem *bbar = tbl->bbar;
--	u32 val32;
--	void __iomem *target;
--
--	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_CSR_OFFSET);
--	val32 = be32_to_cpu(readl(target));
--
--	/* If no error, the agent ID in the CSR is not valid */
--	if (val32 & CSR_AGENT_MASK) {
--		tbl->chip_ops->dump_error_regs(tbl);
--
--		/* reset error */
--		writel(0, target);
--
--		/* Disable bus that caused the error */
--		target = calgary_reg(bbar, phb_offset(tbl->it_busno) |
--				     PHB_CONFIG_RW_OFFSET);
--		val32 = be32_to_cpu(readl(target));
--		val32 |= PHB_SLOT_DISABLE;
--		writel(cpu_to_be32(val32), target);
--		readl(target); /* flush */
--	} else {
--		/* Reset the timer */
--		mod_timer(&tbl->watchdog_timer, jiffies + 2 * HZ);
--	}
--}
--
--static void __init calgary_set_split_completion_timeout(void __iomem *bbar,
--	unsigned char busnum, unsigned long timeout)
--{
--	u64 val64;
--	void __iomem *target;
--	unsigned int phb_shift = ~0; /* silence gcc */
--	u64 mask;
--
--	switch (busno_to_phbid(busnum)) {
--	case 0: phb_shift = (63 - 19);
--		break;
--	case 1: phb_shift = (63 - 23);
--		break;
--	case 2: phb_shift = (63 - 27);
--		break;
--	case 3: phb_shift = (63 - 35);
--		break;
--	default:
--		BUG_ON(busno_to_phbid(busnum));
--	}
--
--	target = calgary_reg(bbar, CALGARY_CONFIG_REG);
--	val64 = be64_to_cpu(readq(target));
--
--	/* zero out this PHB's timer bits */
--	mask = ~(0xFUL << phb_shift);
--	val64 &= mask;
--	val64 |= (timeout << phb_shift);
--	writeq(cpu_to_be64(val64), target);
--	readq(target); /* flush */
--}
--
--static void __init calioc2_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev)
--{
--	unsigned char busnum = dev->bus->number;
--	void __iomem *bbar = tbl->bbar;
--	void __iomem *target;
--	u32 val;
--
 -	/*
--	 * CalIOC2 designers recommend setting bit 8 in 0xnDB0 to 1
+-	 * On x86_64, kernel text mappings are mapped read-only, so we use
+-	 * the kernel identity mapping instead of the kernel text mapping
+-	 * to modify the kernel text.
+-	 *
+-	 * For 32bit kernels, these mappings are same and we can use
+-	 * kernel identity mapping to modify code.
 -	 */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_SAVIOR_L2);
--	val = cpu_to_be32(readl(target));
--	val |= 0x00800000;
--	writel(cpu_to_be32(val), target);
--}
+-	if (within(ip, (unsigned long)_text, (unsigned long)_etext))
+-		ip = (unsigned long)__va(__pa_symbol(ip));
 -
--static void __init calgary_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev)
+-	return ip;
++	return ideal_nops[NOP_ATOMIC5];
+ }
+ 
+-static const unsigned char *ftrace_nop_replace(void)
++static const char *ftrace_call_replace(unsigned long ip, unsigned long addr)
+ {
+-	return ideal_nops[NOP_ATOMIC5];
++	return ftrace_text_replace(CALL_INSN_OPCODE, ip, addr);
+ }
+ 
+-static int
+-ftrace_modify_code_direct(unsigned long ip, unsigned const char *old_code,
+-		   unsigned const char *new_code)
++static int ftrace_verify_code(unsigned long ip, const char *old_code)
+ {
+-	unsigned char replaced[MCOUNT_INSN_SIZE];
+-
+-	ftrace_expected = old_code;
++	char cur_code[MCOUNT_INSN_SIZE];
+ 
+ 	/*
+ 	 * Note:
+@@ -129,31 +102,41 @@ ftrace_modify_code_direct(unsigned long ip, unsigned const char *old_code,
+ 	 * Carefully read and modify the code with probe_kernel_*(), and make
+ 	 * sure what we read is what we expected it to be before modifying it.
+ 	 */
+-
+ 	/* read the text we want to modify */
+-	if (probe_kernel_read(replaced, (void *)ip, MCOUNT_INSN_SIZE))
++	if (probe_kernel_read(cur_code, (void *)ip, MCOUNT_INSN_SIZE)) {
++		WARN_ON(1);
+ 		return -EFAULT;
++	}
+ 
+ 	/* Make sure it is what we expect it to be */
+-	if (memcmp(replaced, old_code, MCOUNT_INSN_SIZE) != 0)
++	if (memcmp(cur_code, old_code, MCOUNT_INSN_SIZE) != 0) {
++		WARN_ON(1);
+ 		return -EINVAL;
++	}
+ 
+-	ip = text_ip_addr(ip);
+-
+-	/* replace the text with the new text */
+-	if (probe_kernel_write((void *)ip, new_code, MCOUNT_INSN_SIZE))
+-		return -EPERM;
++	return 0;
++}
+ 
+-	sync_core();
++static int
++ftrace_modify_code_direct(unsigned long ip, const char *old_code,
++			  const char *new_code)
++{
++	int ret = ftrace_verify_code(ip, old_code);
++	if (ret)
++		return ret;
+ 
++	/* replace the text with the new text */
++	if (ftrace_poke_late)
++		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
++	else
++		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+ 	return 0;
+ }
+ 
+-int ftrace_make_nop(struct module *mod,
+-		    struct dyn_ftrace *rec, unsigned long addr)
++int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long addr)
+ {
+-	unsigned const char *new, *old;
+ 	unsigned long ip = rec->ip;
++	const char *new, *old;
+ 
+ 	old = ftrace_call_replace(ip, addr);
+ 	new = ftrace_nop_replace();
+@@ -167,19 +150,20 @@ int ftrace_make_nop(struct module *mod,
+ 	 * just modify the code directly.
+ 	 */
+ 	if (addr == MCOUNT_ADDR)
+-		return ftrace_modify_code_direct(rec->ip, old, new);
++		return ftrace_modify_code_direct(ip, old, new);
+ 
+-	ftrace_expected = NULL;
+-
+-	/* Normal cases use add_brk_on_nop */
++	/*
++	 * x86 overrides ftrace_replace_code -- this function will never be used
++	 * in this case.
++	 */
+ 	WARN_ONCE(1, "invalid use of ftrace_make_nop");
+ 	return -EINVAL;
+ }
+ 
+ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ {
+-	unsigned const char *new, *old;
+ 	unsigned long ip = rec->ip;
++	const char *new, *old;
+ 
+ 	old = ftrace_nop_replace();
+ 	new = ftrace_call_replace(ip, addr);
+@@ -189,43 +173,6 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ }
+ 
+ /*
+- * The modifying_ftrace_code is used to tell the breakpoint
+- * handler to call ftrace_int3_handler(). If it fails to
+- * call this handler for a breakpoint added by ftrace, then
+- * the kernel may crash.
+- *
+- * As atomic_writes on x86 do not need a barrier, we do not
+- * need to add smp_mb()s for this to work. It is also considered
+- * that we can not read the modifying_ftrace_code before
+- * executing the breakpoint. That would be quite remarkable if
+- * it could do that. Here's the flow that is required:
+- *
+- *   CPU-0                          CPU-1
+- *
+- * atomic_inc(mfc);
+- * write int3s
+- *				<trap-int3> // implicit (r)mb
+- *				if (atomic_read(mfc))
+- *					call ftrace_int3_handler()
+- *
+- * Then when we are finished:
+- *
+- * atomic_dec(mfc);
+- *
+- * If we hit a breakpoint that was not set by ftrace, it does not
+- * matter if ftrace_int3_handler() is called or not. It will
+- * simply be ignored. But it is crucial that a ftrace nop/caller
+- * breakpoint is handled. No other user should ever place a
+- * breakpoint on an ftrace nop/caller location. It must only
+- * be done by this code.
+- */
+-atomic_t modifying_ftrace_code __read_mostly;
+-
+-static int
+-ftrace_modify_code(unsigned long ip, unsigned const char *old_code,
+-		   unsigned const char *new_code);
+-
+-/*
+  * Should never be called:
+  *  As it is only called by __ftrace_replace_code() which is called by
+  *  ftrace_replace_code() that x86 overrides, and by ftrace_update_code()
+@@ -237,452 +184,84 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
+ 				 unsigned long addr)
+ {
+ 	WARN_ON(1);
+-	ftrace_expected = NULL;
+ 	return -EINVAL;
+ }
+ 
+-static unsigned long ftrace_update_func;
+-static unsigned long ftrace_update_func_call;
+-
+-static int update_ftrace_func(unsigned long ip, void *new)
 -{
--	unsigned char busnum = dev->bus->number;
--
--	/*
--	 * Give split completion a longer timeout on bus 1 for aic94xx
--	 * http://bugzilla.kernel.org/show_bug.cgi?id=7180
--	 */
--	if (is_calgary(dev->device) && (busnum == 1))
--		calgary_set_split_completion_timeout(tbl->bbar, busnum,
--						     CCR_2SEC_TIMEOUT);
--}
--
--static void __init calgary_enable_translation(struct pci_dev *dev)
--{
--	u32 val32;
--	unsigned char busnum;
--	void __iomem *target;
--	void __iomem *bbar;
--	struct iommu_table *tbl;
--
--	busnum = dev->bus->number;
--	tbl = pci_iommu(dev->bus);
--	bbar = tbl->bbar;
--
--	/* enable TCE in PHB Config Register */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
--	val32 |= PHB_TCE_ENABLE | PHB_DAC_DISABLE | PHB_MCSR_ENABLE;
--
--	printk(KERN_INFO "Calgary: enabling translation on %s PHB %#x\n",
--	       (dev->device == PCI_DEVICE_ID_IBM_CALGARY) ?
--	       "Calgary" : "CalIOC2", busnum);
--	printk(KERN_INFO "Calgary: errant DMAs will now be prevented on this "
--	       "bus.\n");
--
--	writel(cpu_to_be32(val32), target);
--	readl(target); /* flush */
--
--	timer_setup(&tbl->watchdog_timer, calgary_watchdog, 0);
--	mod_timer(&tbl->watchdog_timer, jiffies);
--}
--
--static void __init calgary_disable_translation(struct pci_dev *dev)
--{
--	u32 val32;
--	unsigned char busnum;
--	void __iomem *target;
--	void __iomem *bbar;
--	struct iommu_table *tbl;
--
--	busnum = dev->bus->number;
--	tbl = pci_iommu(dev->bus);
--	bbar = tbl->bbar;
--
--	/* disable TCE in PHB Config Register */
--	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
--	val32 &= ~(PHB_TCE_ENABLE | PHB_DAC_DISABLE | PHB_MCSR_ENABLE);
--
--	printk(KERN_INFO "Calgary: disabling translation on PHB %#x!\n", busnum);
--	writel(cpu_to_be32(val32), target);
--	readl(target); /* flush */
--
--	del_timer_sync(&tbl->watchdog_timer);
--}
--
--static void __init calgary_init_one_nontraslated(struct pci_dev *dev)
--{
--	pci_dev_get(dev);
--	set_pci_iommu(dev->bus, NULL);
--
--	/* is the device behind a bridge? */
--	if (dev->bus->parent)
--		dev->bus->parent->self = dev;
--	else
--		dev->bus->self = dev;
--}
--
--static int __init calgary_init_one(struct pci_dev *dev)
--{
--	void __iomem *bbar;
--	struct iommu_table *tbl;
+-	unsigned char old[MCOUNT_INSN_SIZE];
 -	int ret;
 -
--	bbar = busno_to_bbar(dev->bus->number);
--	ret = calgary_setup_tar(dev, bbar);
--	if (ret)
--		goto done;
+-	memcpy(old, (void *)ip, MCOUNT_INSN_SIZE);
 -
--	pci_dev_get(dev);
+-	ftrace_update_func = ip;
+-	/* Make sure the breakpoints see the ftrace_update_func update */
+-	smp_wmb();
 -
--	if (dev->bus->parent) {
--		if (dev->bus->parent->self)
--			printk(KERN_WARNING "Calgary: IEEEE, dev %p has "
--			       "bus->parent->self!\n", dev);
--		dev->bus->parent->self = dev;
--	} else
--		dev->bus->self = dev;
+-	/* See comment above by declaration of modifying_ftrace_code */
+-	atomic_inc(&modifying_ftrace_code);
 -
--	tbl = pci_iommu(dev->bus);
--	tbl->chip_ops->handle_quirks(tbl, dev);
+-	ret = ftrace_modify_code(ip, old, new);
 -
--	calgary_enable_translation(dev);
--
--	return 0;
--
--done:
--	return ret;
--}
--
--static int __init calgary_locate_bbars(void)
--{
--	int ret;
--	int rioidx, phb, bus;
--	void __iomem *bbar;
--	void __iomem *target;
--	unsigned long offset;
--	u8 start_bus, end_bus;
--	u32 val;
--
--	ret = -ENODATA;
--	for (rioidx = 0; rioidx < rio_table_hdr->num_rio_dev; rioidx++) {
--		struct rio_detail *rio = rio_devs[rioidx];
--
--		if ((rio->type != COMPAT_CALGARY) && (rio->type != ALT_CALGARY))
--			continue;
--
--		/* map entire 1MB of Calgary config space */
--		bbar = ioremap_nocache(rio->BBAR, 1024 * 1024);
--		if (!bbar)
--			goto error;
--
--		for (phb = 0; phb < PHBS_PER_CALGARY; phb++) {
--			offset = phb_debug_offsets[phb] | PHB_DEBUG_STUFF_OFFSET;
--			target = calgary_reg(bbar, offset);
--
--			val = be32_to_cpu(readl(target));
--
--			start_bus = (u8)((val & 0x00FF0000) >> 16);
--			end_bus = (u8)((val & 0x0000FF00) >> 8);
--
--			if (end_bus) {
--				for (bus = start_bus; bus <= end_bus; bus++) {
--					bus_info[bus].bbar = bbar;
--					bus_info[bus].phbid = phb;
--				}
--			} else {
--				bus_info[start_bus].bbar = bbar;
--				bus_info[start_bus].phbid = phb;
--			}
--		}
--	}
--
--	return 0;
--
--error:
--	/* scan bus_info and iounmap any bbars we previously ioremap'd */
--	for (bus = 0; bus < ARRAY_SIZE(bus_info); bus++)
--		if (bus_info[bus].bbar)
--			iounmap(bus_info[bus].bbar);
+-	atomic_dec(&modifying_ftrace_code);
 -
 -	return ret;
 -}
 -
--static int __init calgary_init(void)
--{
--	int ret;
--	struct pci_dev *dev = NULL;
--	struct calgary_bus_info *info;
--
--	ret = calgary_locate_bbars();
--	if (ret)
--		return ret;
--
--	/* Purely for kdump kernel case */
--	if (is_kdump_kernel())
--		get_tce_space_from_tar();
--
--	do {
--		dev = pci_get_device(PCI_VENDOR_ID_IBM, PCI_ANY_ID, dev);
--		if (!dev)
--			break;
--		if (!is_cal_pci_dev(dev->device))
--			continue;
--
--		info = &bus_info[dev->bus->number];
--		if (info->translation_disabled) {
--			calgary_init_one_nontraslated(dev);
--			continue;
--		}
--
--		if (!info->tce_space && !translate_empty_slots)
--			continue;
--
--		ret = calgary_init_one(dev);
--		if (ret)
--			goto error;
--	} while (1);
--
--	dev = NULL;
--	for_each_pci_dev(dev) {
--		struct iommu_table *tbl;
--
--		tbl = find_iommu_table(&dev->dev);
--
--		if (translation_enabled(tbl))
--			dev->dev.dma_ops = &calgary_dma_ops;
--	}
--
--	return ret;
--
--error:
--	do {
--		dev = pci_get_device(PCI_VENDOR_ID_IBM, PCI_ANY_ID, dev);
--		if (!dev)
--			break;
--		if (!is_cal_pci_dev(dev->device))
--			continue;
--
--		info = &bus_info[dev->bus->number];
--		if (info->translation_disabled) {
--			pci_dev_put(dev);
--			continue;
--		}
--		if (!info->tce_space && !translate_empty_slots)
--			continue;
--
--		calgary_disable_translation(dev);
--		calgary_free_bus(dev);
--		pci_dev_put(dev); /* Undo calgary_init_one()'s pci_dev_get() */
--		dev->dev.dma_ops = NULL;
--	} while (1);
--
--	return ret;
--}
--
--static inline int __init determine_tce_table_size(void)
--{
+ int ftrace_update_ftrace_func(ftrace_func_t func)
+ {
+-	unsigned long ip = (unsigned long)(&ftrace_call);
+-	unsigned char *new;
 -	int ret;
 -
--	if (specified_table_size != TCE_TABLE_SIZE_UNSPECIFIED)
--		return specified_table_size;
+-	ftrace_update_func_call = (unsigned long)func;
 -
--	if (is_kdump_kernel() && saved_max_pfn) {
--		/*
--		 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
--		 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
--		 * larger table size has twice as many entries, so shift the
--		 * max ram address by 13 to divide by 8K and then look at the
--		 * order of the result to choose between 0-7.
--		 */
--		ret = get_order((saved_max_pfn * PAGE_SIZE) >> 13);
--		if (ret > TCE_TABLE_SIZE_8M)
--			ret = TCE_TABLE_SIZE_8M;
--	} else {
--		/*
--		 * Use 8M by default (suggested by Muli) if it's not
--		 * kdump kernel and saved_max_pfn isn't set.
--		 */
--		ret = TCE_TABLE_SIZE_8M;
+-	new = ftrace_call_replace(ip, (unsigned long)func);
+-	ret = update_ftrace_func(ip, new);
+-
+-	/* Also update the regs callback function */
+-	if (!ret) {
+-		ip = (unsigned long)(&ftrace_regs_call);
+-		new = ftrace_call_replace(ip, (unsigned long)func);
+-		ret = update_ftrace_func(ip, new);
 -	}
 -
 -	return ret;
 -}
 -
--static int __init build_detail_arrays(void)
+-static nokprobe_inline int is_ftrace_caller(unsigned long ip)
 -{
--	unsigned long ptr;
--	unsigned numnodes, i;
--	int scal_detail_size, rio_detail_size;
--
--	numnodes = rio_table_hdr->num_scal_dev;
--	if (numnodes > MAX_NUMNODES){
--		printk(KERN_WARNING
--			"Calgary: MAX_NUMNODES too low! Defined as %d, "
--			"but system has %d nodes.\n",
--			MAX_NUMNODES, numnodes);
--		return -ENODEV;
--	}
--
--	switch (rio_table_hdr->version){
--	case 2:
--		scal_detail_size = 11;
--		rio_detail_size = 13;
--		break;
--	case 3:
--		scal_detail_size = 12;
--		rio_detail_size = 15;
--		break;
--	default:
--		printk(KERN_WARNING
--		       "Calgary: Invalid Rio Grande Table Version: %d\n",
--		       rio_table_hdr->version);
--		return -EPROTO;
--	}
--
--	ptr = ((unsigned long)rio_table_hdr) + 3;
--	for (i = 0; i < numnodes; i++, ptr += scal_detail_size)
--		scal_devs[i] = (struct scal_detail *)ptr;
--
--	for (i = 0; i < rio_table_hdr->num_rio_dev;
--		    i++, ptr += rio_detail_size)
--		rio_devs[i] = (struct rio_detail *)ptr;
+-	if (ip == ftrace_update_func)
+-		return 1;
 -
 -	return 0;
 -}
 -
--static int __init calgary_bus_has_devices(int bus, unsigned short pci_dev)
+-/*
+- * A breakpoint was added to the code address we are about to
+- * modify, and this is the handle that will just skip over it.
+- * We are either changing a nop into a trace call, or a trace
+- * call to a nop. While the change is taking place, we treat
+- * it just like it was a nop.
+- */
+-int ftrace_int3_handler(struct pt_regs *regs)
 -{
--	int dev;
--	u32 val;
+ 	unsigned long ip;
++	const char *new;
+ 
+-	if (WARN_ON_ONCE(!regs))
+-		return 0;
 -
--	if (pci_dev == PCI_DEVICE_ID_IBM_CALIOC2) {
--		/*
--		 * FIXME: properly scan for devices across the
--		 * PCI-to-PCI bridge on every CalIOC2 port.
--		 */
+-	ip = regs->ip - INT3_INSN_SIZE;
+-
+-	if (ftrace_location(ip)) {
+-		int3_emulate_call(regs, (unsigned long)ftrace_regs_caller);
+-		return 1;
+-	} else if (is_ftrace_caller(ip)) {
+-		if (!ftrace_update_func_call) {
+-			int3_emulate_jmp(regs, ip + CALL_INSN_SIZE);
+-			return 1;
+-		}
+-		int3_emulate_call(regs, ftrace_update_func_call);
 -		return 1;
 -	}
 -
--	for (dev = 1; dev < 8; dev++) {
--		val = read_pci_config(bus, dev, 0, 0);
--		if (val != 0xffffffff)
--			break;
--	}
--	return (val != 0xffffffff);
+-	return 0;
+-}
+-NOKPROBE_SYMBOL(ftrace_int3_handler);
+-
+-static int ftrace_write(unsigned long ip, const char *val, int size)
+-{
+-	ip = text_ip_addr(ip);
+-
+-	if (probe_kernel_write((void *)ip, val, size))
+-		return -EPERM;
+-
+-	return 0;
 -}
 -
--/*
-- * calgary_init_bitmap_from_tce_table():
-- * Function for kdump case. In the second/kdump kernel initialize
-- * the bitmap based on the tce table entries obtained from first kernel
-- */
--static void calgary_init_bitmap_from_tce_table(struct iommu_table *tbl)
+-static int add_break(unsigned long ip, const char *old)
 -{
--	u64 *tp;
--	unsigned int index;
--	tp = ((u64 *)tbl->it_base);
--	for (index = 0 ; index < tbl->it_size; index++) {
--		if (*tp != 0x0)
--			set_bit(index, tbl->it_map);
--		tp++;
--	}
+-	unsigned char replaced[MCOUNT_INSN_SIZE];
+-	unsigned char brk = BREAKPOINT_INSTRUCTION;
+-
+-	if (probe_kernel_read(replaced, (void *)ip, MCOUNT_INSN_SIZE))
+-		return -EFAULT;
+-
+-	ftrace_expected = old;
+-
+-	/* Make sure it is what we expect it to be */
+-	if (memcmp(replaced, old, MCOUNT_INSN_SIZE) != 0)
+-		return -EINVAL;
+-
+-	return ftrace_write(ip, &brk, 1);
 -}
 -
--/*
-- * get_tce_space_from_tar():
-- * Function for kdump case. Get the tce tables from first kernel
-- * by reading the contents of the base address register of calgary iommu
-- */
--static void __init get_tce_space_from_tar(void)
+-static int add_brk_on_call(struct dyn_ftrace *rec, unsigned long addr)
 -{
--	int bus;
--	void __iomem *target;
--	unsigned long tce_space;
+-	unsigned const char *old;
+-	unsigned long ip = rec->ip;
 -
--	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
--		struct calgary_bus_info *info = &bus_info[bus];
--		unsigned short pci_device;
--		u32 val;
+-	old = ftrace_call_replace(ip, addr);
 -
--		val = read_pci_config(bus, 0, 0, 0);
--		pci_device = (val & 0xFFFF0000) >> 16;
--
--		if (!is_cal_pci_dev(pci_device))
--			continue;
--		if (info->translation_disabled)
--			continue;
--
--		if (calgary_bus_has_devices(bus, pci_device) ||
--						translate_empty_slots) {
--			target = calgary_reg(bus_info[bus].bbar,
--						tar_offset(bus));
--			tce_space = be64_to_cpu(readq(target));
--			tce_space = tce_space & TAR_SW_BITS;
--
--			tce_space = tce_space & (~specified_table_size);
--			info->tce_space = (u64 *)__va(tce_space);
--		}
--	}
--	return;
+-	return add_break(rec->ip, old);
 -}
 -
--static int __init calgary_iommu_init(void)
+-
+-static int add_brk_on_nop(struct dyn_ftrace *rec)
 -{
+-	unsigned const char *old;
+-
+-	old = ftrace_nop_replace();
+-
+-	return add_break(rec->ip, old);
+-}
+-
+-static int add_breakpoints(struct dyn_ftrace *rec, bool enable)
+-{
+-	unsigned long ftrace_addr;
 -	int ret;
 -
--	/* ok, we're trying to use Calgary - let's roll */
--	printk(KERN_INFO "PCI-DMA: Using Calgary IOMMU\n");
+-	ftrace_addr = ftrace_get_addr_curr(rec);
 -
--	ret = calgary_init();
--	if (ret) {
--		printk(KERN_ERR "PCI-DMA: Calgary init failed %d, "
--		       "falling back to no_iommu\n", ret);
--		return ret;
+-	ret = ftrace_test_record(rec, enable);
+-
+-	switch (ret) {
+-	case FTRACE_UPDATE_IGNORE:
+-		return 0;
+-
+-	case FTRACE_UPDATE_MAKE_CALL:
+-		/* converting nop to call */
+-		return add_brk_on_nop(rec);
+-
+-	case FTRACE_UPDATE_MODIFY_CALL:
+-	case FTRACE_UPDATE_MAKE_NOP:
+-		/* converting a call to a nop */
+-		return add_brk_on_call(rec, ftrace_addr);
+-	}
+-	return 0;
+-}
+-
+-/*
+- * On error, we need to remove breakpoints. This needs to
+- * be done caefully. If the address does not currently have a
+- * breakpoint, we know we are done. Otherwise, we look at the
+- * remaining 4 bytes of the instruction. If it matches a nop
+- * we replace the breakpoint with the nop. Otherwise we replace
+- * it with the call instruction.
+- */
+-static int remove_breakpoint(struct dyn_ftrace *rec)
+-{
+-	unsigned char ins[MCOUNT_INSN_SIZE];
+-	unsigned char brk = BREAKPOINT_INSTRUCTION;
+-	const unsigned char *nop;
+-	unsigned long ftrace_addr;
+-	unsigned long ip = rec->ip;
+-
+-	/* If we fail the read, just give up */
+-	if (probe_kernel_read(ins, (void *)ip, MCOUNT_INSN_SIZE))
+-		return -EFAULT;
+-
+-	/* If this does not have a breakpoint, we are done */
+-	if (ins[0] != brk)
+-		return 0;
+-
+-	nop = ftrace_nop_replace();
+-
+-	/*
+-	 * If the last 4 bytes of the instruction do not match
+-	 * a nop, then we assume that this is a call to ftrace_addr.
+-	 */
+-	if (memcmp(&ins[1], &nop[1], MCOUNT_INSN_SIZE - 1) != 0) {
+-		/*
+-		 * For extra paranoidism, we check if the breakpoint is on
+-		 * a call that would actually jump to the ftrace_addr.
+-		 * If not, don't touch the breakpoint, we make just create
+-		 * a disaster.
+-		 */
+-		ftrace_addr = ftrace_get_addr_new(rec);
+-		nop = ftrace_call_replace(ip, ftrace_addr);
+-
+-		if (memcmp(&ins[1], &nop[1], MCOUNT_INSN_SIZE - 1) == 0)
+-			goto update;
+-
+-		/* Check both ftrace_addr and ftrace_old_addr */
+-		ftrace_addr = ftrace_get_addr_curr(rec);
+-		nop = ftrace_call_replace(ip, ftrace_addr);
+-
+-		ftrace_expected = nop;
+-
+-		if (memcmp(&ins[1], &nop[1], MCOUNT_INSN_SIZE - 1) != 0)
+-			return -EINVAL;
+-	}
+-
+- update:
+-	return ftrace_write(ip, nop, 1);
+-}
+-
+-static int add_update_code(unsigned long ip, unsigned const char *new)
+-{
+-	/* skip breakpoint */
+-	ip++;
+-	new++;
+-	return ftrace_write(ip, new, MCOUNT_INSN_SIZE - 1);
+-}
+-
+-static int add_update_call(struct dyn_ftrace *rec, unsigned long addr)
+-{
+-	unsigned long ip = rec->ip;
+-	unsigned const char *new;
+-
+-	new = ftrace_call_replace(ip, addr);
+-	return add_update_code(ip, new);
+-}
+-
+-static int add_update_nop(struct dyn_ftrace *rec)
+-{
+-	unsigned long ip = rec->ip;
+-	unsigned const char *new;
+-
+-	new = ftrace_nop_replace();
+-	return add_update_code(ip, new);
+-}
+-
+-static int add_update(struct dyn_ftrace *rec, bool enable)
+-{
+-	unsigned long ftrace_addr;
+-	int ret;
+-
+-	ret = ftrace_test_record(rec, enable);
+-
+-	ftrace_addr  = ftrace_get_addr_new(rec);
+-
+-	switch (ret) {
+-	case FTRACE_UPDATE_IGNORE:
+-		return 0;
+-
+-	case FTRACE_UPDATE_MODIFY_CALL:
+-	case FTRACE_UPDATE_MAKE_CALL:
+-		/* converting nop to call */
+-		return add_update_call(rec, ftrace_addr);
+-
+-	case FTRACE_UPDATE_MAKE_NOP:
+-		/* converting a call to a nop */
+-		return add_update_nop(rec);
 -	}
 -
 -	return 0;
 -}
 -
--int __init detect_calgary(void)
+-static int finish_update_call(struct dyn_ftrace *rec, unsigned long addr)
 -{
--	int bus;
--	void *tbl;
--	int calgary_found = 0;
--	unsigned long ptr;
--	unsigned int offset, prev_offset;
+-	unsigned long ip = rec->ip;
+-	unsigned const char *new;
+-
+-	new = ftrace_call_replace(ip, addr);
+-
+-	return ftrace_write(ip, new, 1);
+-}
+-
+-static int finish_update_nop(struct dyn_ftrace *rec)
+-{
+-	unsigned long ip = rec->ip;
+-	unsigned const char *new;
+-
+-	new = ftrace_nop_replace();
+-
+-	return ftrace_write(ip, new, 1);
+-}
+-
+-static int finish_update(struct dyn_ftrace *rec, bool enable)
+-{
+-	unsigned long ftrace_addr;
 -	int ret;
 -
--	/*
--	 * if the user specified iommu=off or iommu=soft or we found
--	 * another HW IOMMU already, bail out.
--	 */
--	if (no_iommu || iommu_detected)
--		return -ENODEV;
+-	ret = ftrace_update_record(rec, enable);
 -
--	if (!use_calgary)
--		return -ENODEV;
+-	ftrace_addr = ftrace_get_addr_new(rec);
 -
--	if (!early_pci_allowed())
--		return -ENODEV;
+-	switch (ret) {
+-	case FTRACE_UPDATE_IGNORE:
+-		return 0;
 -
--	printk(KERN_DEBUG "Calgary: detecting Calgary via BIOS EBDA area\n");
--
--	ptr = (unsigned long)phys_to_virt(get_bios_ebda());
--
--	rio_table_hdr = NULL;
--	prev_offset = 0;
--	offset = 0x180;
--	/*
--	 * The next offset is stored in the 1st word.
--	 * Only parse up until the offset increases:
--	 */
--	while (offset > prev_offset) {
--		/* The block id is stored in the 2nd word */
--		if (*((unsigned short *)(ptr + offset + 2)) == 0x4752){
--			/* set the pointer past the offset & block id */
--			rio_table_hdr = (struct rio_table_hdr *)(ptr + offset + 4);
--			break;
--		}
--		prev_offset = offset;
--		offset = *((unsigned short *)(ptr + offset));
--	}
--	if (!rio_table_hdr) {
--		printk(KERN_DEBUG "Calgary: Unable to locate Rio Grande table "
--		       "in EBDA - bailing!\n");
--		return -ENODEV;
--	}
--
--	ret = build_detail_arrays();
--	if (ret) {
--		printk(KERN_DEBUG "Calgary: build_detail_arrays ret %d\n", ret);
--		return -ENOMEM;
--	}
--
--	specified_table_size = determine_tce_table_size();
--
--	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
--		struct calgary_bus_info *info = &bus_info[bus];
--		unsigned short pci_device;
--		u32 val;
--
--		val = read_pci_config(bus, 0, 0, 0);
--		pci_device = (val & 0xFFFF0000) >> 16;
--
--		if (!is_cal_pci_dev(pci_device))
--			continue;
--
--		if (info->translation_disabled)
--			continue;
--
--		if (calgary_bus_has_devices(bus, pci_device) ||
--		    translate_empty_slots) {
--			/*
--			 * If it is kdump kernel, find and use tce tables
--			 * from first kernel, else allocate tce tables here
--			 */
--			if (!is_kdump_kernel()) {
--				tbl = alloc_tce_table();
--				if (!tbl)
--					goto cleanup;
--				info->tce_space = tbl;
--			}
--			calgary_found = 1;
--		}
--	}
--
--	printk(KERN_DEBUG "Calgary: finished detection, Calgary %s\n",
--	       calgary_found ? "found" : "not found");
--
--	if (calgary_found) {
--		iommu_detected = 1;
--		calgary_detected = 1;
--		printk(KERN_INFO "PCI-DMA: Calgary IOMMU detected.\n");
--		printk(KERN_INFO "PCI-DMA: Calgary TCE table spec is %d\n",
--		       specified_table_size);
--
--		x86_init.iommu.iommu_init = calgary_iommu_init;
--	}
--	return calgary_found;
--
--cleanup:
--	for (--bus; bus >= 0; --bus) {
--		struct calgary_bus_info *info = &bus_info[bus];
--
--		if (info->tce_space)
--			free_tce_table(info->tce_space);
--	}
--	return -ENOMEM;
--}
--
--static int __init calgary_parse_options(char *p)
--{
--	unsigned int bridge;
--	unsigned long val;
--	size_t len;
--	ssize_t ret;
--
--	while (*p) {
--		if (!strncmp(p, "64k", 3))
--			specified_table_size = TCE_TABLE_SIZE_64K;
--		else if (!strncmp(p, "128k", 4))
--			specified_table_size = TCE_TABLE_SIZE_128K;
--		else if (!strncmp(p, "256k", 4))
--			specified_table_size = TCE_TABLE_SIZE_256K;
--		else if (!strncmp(p, "512k", 4))
--			specified_table_size = TCE_TABLE_SIZE_512K;
--		else if (!strncmp(p, "1M", 2))
--			specified_table_size = TCE_TABLE_SIZE_1M;
--		else if (!strncmp(p, "2M", 2))
--			specified_table_size = TCE_TABLE_SIZE_2M;
--		else if (!strncmp(p, "4M", 2))
--			specified_table_size = TCE_TABLE_SIZE_4M;
--		else if (!strncmp(p, "8M", 2))
--			specified_table_size = TCE_TABLE_SIZE_8M;
--
--		len = strlen("translate_empty_slots");
--		if (!strncmp(p, "translate_empty_slots", len))
--			translate_empty_slots = 1;
--
--		len = strlen("disable");
--		if (!strncmp(p, "disable", len)) {
--			p += len;
--			if (*p == '=')
--				++p;
--			if (*p == '\0')
--				break;
--			ret = kstrtoul(p, 0, &val);
--			if (ret)
--				break;
--
--			bridge = val;
--			if (bridge < MAX_PHB_BUS_NUM) {
--				printk(KERN_INFO "Calgary: disabling "
--				       "translation for PHB %#x\n", bridge);
--				bus_info[bridge].translation_disabled = 1;
--			}
--		}
--
--		p = strpbrk(p, ",");
--		if (!p)
--			break;
--
--		p++; /* skip ',' */
--	}
--	return 1;
--}
--__setup("calgary=", calgary_parse_options);
--
--static void __init calgary_fixup_one_tce_space(struct pci_dev *dev)
--{
--	struct iommu_table *tbl;
--	unsigned int npages;
--	int i;
--
--	tbl = pci_iommu(dev->bus);
--
--	for (i = 0; i < 4; i++) {
--		struct resource *r = &dev->resource[PCI_BRIDGE_RESOURCES + i];
--
--		/* Don't give out TCEs that map MEM resources */
--		if (!(r->flags & IORESOURCE_MEM))
--			continue;
--
--		/* 0-based? we reserve the whole 1st MB anyway */
--		if (!r->start)
--			continue;
--
--		/* cover the whole region */
--		npages = resource_size(r) >> PAGE_SHIFT;
--		npages++;
--
--		iommu_range_reserve(tbl, r->start, npages);
--	}
--}
--
--static int __init calgary_fixup_tce_spaces(void)
--{
--	struct pci_dev *dev = NULL;
--	struct calgary_bus_info *info;
--
--	if (no_iommu || swiotlb || !calgary_detected)
--		return -ENODEV;
--
--	printk(KERN_DEBUG "Calgary: fixing up tce spaces\n");
--
--	do {
--		dev = pci_get_device(PCI_VENDOR_ID_IBM, PCI_ANY_ID, dev);
--		if (!dev)
--			break;
--		if (!is_cal_pci_dev(dev->device))
--			continue;
--
--		info = &bus_info[dev->bus->number];
--		if (info->translation_disabled)
--			continue;
--
--		if (!info->tce_space)
--			continue;
--
--		calgary_fixup_one_tce_space(dev);
--
--	} while (1);
--
--	return 0;
--}
--
--/*
-- * We need to be call after pcibios_assign_resources (fs_initcall level)
-- * and before device_initcall.
-- */
--rootfs_initcall(calgary_fixup_tce_spaces);
--
--IOMMU_INIT_POST(detect_calgary);
-diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-index fa4352d..57de2eb 100644
---- a/arch/x86/kernel/pci-dma.c
-+++ b/arch/x86/kernel/pci-dma.c
-@@ -12,7 +12,6 @@
- #include <asm/dma.h>
- #include <asm/iommu.h>
- #include <asm/gart.h>
--#include <asm/calgary.h>
- #include <asm/x86_init.h>
- #include <asm/iommu_table.h>
+-	case FTRACE_UPDATE_MODIFY_CALL:
+-	case FTRACE_UPDATE_MAKE_CALL:
+-		/* converting nop to call */
+-		return finish_update_call(rec, ftrace_addr);
++	ip = (unsigned long)(&ftrace_call);
++	new = ftrace_call_replace(ip, (unsigned long)func);
++	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL);
  
-@@ -112,11 +111,6 @@ static __init int iommu_setup(char *p)
+-	case FTRACE_UPDATE_MAKE_NOP:
+-		/* converting a call to a nop */
+-		return finish_update_nop(rec);
+-	}
++	ip = (unsigned long)(&ftrace_regs_call);
++	new = ftrace_call_replace(ip, (unsigned long)func);
++	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL);
  
- 		gart_parse_options(p);
+ 	return 0;
+ }
  
--#ifdef CONFIG_CALGARY_IOMMU
--		if (!strncmp(p, "calgary", 7))
--			use_calgary = 1;
--#endif /* CONFIG_CALGARY_IOMMU */
--
- 		p += strcspn(p, ",");
- 		if (*p == ',')
- 			++p;
-diff --git a/arch/x86/kernel/tce_64.c b/arch/x86/kernel/tce_64.c
-deleted file mode 100644
-index 6384be7..0000000
---- a/arch/x86/kernel/tce_64.c
-+++ /dev/null
-@@ -1,177 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * This file manages the translation entries for the IBM Calgary IOMMU.
-- *
-- * Derived from arch/powerpc/platforms/pseries/iommu.c
-- *
-- * Copyright (C) IBM Corporation, 2006
-- *
-- * Author: Jon Mason <jdmason@us.ibm.com>
-- * Author: Muli Ben-Yehuda <muli@il.ibm.com>
-- */
--
--#include <linux/types.h>
--#include <linux/slab.h>
--#include <linux/mm.h>
--#include <linux/spinlock.h>
--#include <linux/string.h>
--#include <linux/pci.h>
--#include <linux/dma-mapping.h>
--#include <linux/memblock.h>
--#include <asm/tce.h>
--#include <asm/calgary.h>
--#include <asm/proto.h>
--#include <asm/cacheflush.h>
--
--/* flush a tce at 'tceaddr' to main memory */
--static inline void flush_tce(void* tceaddr)
+-static void do_sync_core(void *data)
 -{
--	/* a single tce can't cross a cache line */
--	if (boot_cpu_has(X86_FEATURE_CLFLUSH))
--		clflush(tceaddr);
--	else
--		wbinvd();
+-	sync_core();
 -}
 -
--void tce_build(struct iommu_table *tbl, unsigned long index,
--	unsigned int npages, unsigned long uaddr, int direction)
+-static void run_sync(void)
 -{
--	u64* tp;
--	u64 t;
--	u64 rpn;
+-	int enable_irqs;
 -
--	t = (1 << TCE_READ_SHIFT);
--	if (direction != DMA_TO_DEVICE)
--		t |= (1 << TCE_WRITE_SHIFT);
--
--	tp = ((u64*)tbl->it_base) + index;
--
--	while (npages--) {
--		rpn = (virt_to_bus((void*)uaddr)) >> PAGE_SHIFT;
--		t &= ~TCE_RPN_MASK;
--		t |= (rpn << TCE_RPN_SHIFT);
--
--		*tp = cpu_to_be64(t);
--		flush_tce(tp);
--
--		uaddr += PAGE_SIZE;
--		tp++;
--	}
--}
--
--void tce_free(struct iommu_table *tbl, long index, unsigned int npages)
--{
--	u64* tp;
--
--	tp  = ((u64*)tbl->it_base) + index;
--
--	while (npages--) {
--		*tp = cpu_to_be64(0);
--		flush_tce(tp);
--		tp++;
--	}
--}
--
--static inline unsigned int table_size_to_number_of_entries(unsigned char size)
--{
--	/*
--	 * size is the order of the table, 0-7
--	 * smallest table is 8K entries, so shift result by 13 to
--	 * multiply by 8K
--	 */
--	return (1 << size) << 13;
--}
--
--static int tce_table_setparms(struct pci_dev *dev, struct iommu_table *tbl)
--{
--	unsigned int bitmapsz;
--	unsigned long bmppages;
--	int ret;
--
--	tbl->it_busno = dev->bus->number;
--
--	/* set the tce table size - measured in entries */
--	tbl->it_size = table_size_to_number_of_entries(specified_table_size);
--
--	/*
--	 * number of bytes needed for the bitmap size in number of
--	 * entries; we need one bit per entry
--	 */
--	bitmapsz = tbl->it_size / BITS_PER_BYTE;
--	bmppages = __get_free_pages(GFP_KERNEL, get_order(bitmapsz));
--	if (!bmppages) {
--		printk(KERN_ERR "Calgary: cannot allocate bitmap\n");
--		ret = -ENOMEM;
--		goto done;
--	}
--
--	tbl->it_map = (unsigned long*)bmppages;
--
--	memset(tbl->it_map, 0, bitmapsz);
--
--	tbl->it_hint = 0;
--
--	spin_lock_init(&tbl->it_lock);
--
--	return 0;
--
--done:
--	return ret;
--}
--
--int __init build_tce_table(struct pci_dev *dev, void __iomem *bbar)
--{
--	struct iommu_table *tbl;
--	int ret;
--
--	if (pci_iommu(dev->bus)) {
--		printk(KERN_ERR "Calgary: dev %p has sysdata->iommu %p\n",
--		       dev, pci_iommu(dev->bus));
--		BUG();
--	}
--
--	tbl = kzalloc(sizeof(struct iommu_table), GFP_KERNEL);
--	if (!tbl) {
--		printk(KERN_ERR "Calgary: error allocating iommu_table\n");
--		ret = -ENOMEM;
--		goto done;
--	}
--
--	ret = tce_table_setparms(dev, tbl);
--	if (ret)
--		goto free_tbl;
--
--	tbl->bbar = bbar;
--
--	set_pci_iommu(dev->bus, tbl);
--
--	return 0;
--
--free_tbl:
--	kfree(tbl);
--done:
--	return ret;
--}
--
--void * __init alloc_tce_table(void)
--{
--	unsigned int size;
--
--	size = table_size_to_number_of_entries(specified_table_size);
--	size *= TCE_ENTRY_SIZE;
--
--	return memblock_alloc_low(size, size);
--}
--
--void __init free_tce_table(void *tbl)
--{
--	unsigned int size;
--
--	if (!tbl)
+-	/* No need to sync if there's only one CPU */
+-	if (num_online_cpus() == 1)
 -		return;
 -
--	size = table_size_to_number_of_entries(specified_table_size);
--	size *= TCE_ENTRY_SIZE;
+-	enable_irqs = irqs_disabled();
 -
--	memblock_free(__pa(tbl), size);
+-	/* We may be called with interrupts disabled (on bootup). */
+-	if (enable_irqs)
+-		local_irq_enable();
+-	on_each_cpu(do_sync_core, NULL, 1);
+-	if (enable_irqs)
+-		local_irq_disable();
 -}
+-
+ void ftrace_replace_code(int enable)
+ {
+ 	struct ftrace_rec_iter *iter;
+ 	struct dyn_ftrace *rec;
+-	const char *report = "adding breakpoints";
+-	int count = 0;
++	const char *new, *old;
+ 	int ret;
+ 
+ 	for_ftrace_rec_iter(iter) {
+ 		rec = ftrace_rec_iter_record(iter);
+ 
+-		ret = add_breakpoints(rec, enable);
+-		if (ret)
+-			goto remove_breakpoints;
+-		count++;
+-	}
+-
+-	run_sync();
++		switch (ftrace_test_record(rec, enable)) {
++		case FTRACE_UPDATE_IGNORE:
++		default:
++			continue;
+ 
+-	report = "updating code";
+-	count = 0;
++		case FTRACE_UPDATE_MAKE_CALL:
++			old = ftrace_nop_replace();
++			break;
+ 
+-	for_ftrace_rec_iter(iter) {
+-		rec = ftrace_rec_iter_record(iter);
++		case FTRACE_UPDATE_MODIFY_CALL:
++		case FTRACE_UPDATE_MAKE_NOP:
++			old = ftrace_call_replace(rec->ip, ftrace_get_addr_curr(rec));
++			break;
++		}
+ 
+-		ret = add_update(rec, enable);
+-		if (ret)
+-			goto remove_breakpoints;
+-		count++;
++		ret = ftrace_verify_code(rec->ip, old);
++		if (ret) {
++			ftrace_bug(ret, rec);
++			return;
++		}
+ 	}
+ 
+-	run_sync();
+-
+-	report = "removing breakpoints";
+-	count = 0;
+-
+ 	for_ftrace_rec_iter(iter) {
+ 		rec = ftrace_rec_iter_record(iter);
+ 
+-		ret = finish_update(rec, enable);
+-		if (ret)
+-			goto remove_breakpoints;
+-		count++;
+-	}
++		switch (ftrace_test_record(rec, enable)) {
++		case FTRACE_UPDATE_IGNORE:
++		default:
++			continue;
+ 
+-	run_sync();
++		case FTRACE_UPDATE_MAKE_CALL:
++		case FTRACE_UPDATE_MODIFY_CALL:
++			new = ftrace_call_replace(rec->ip, ftrace_get_addr_new(rec));
++			break;
+ 
+-	return;
++		case FTRACE_UPDATE_MAKE_NOP:
++			new = ftrace_nop_replace();
++			break;
++		}
+ 
+- remove_breakpoints:
+-	pr_warn("Failed on %s (%d):\n", report, count);
+-	ftrace_bug(ret, rec);
+-	for_ftrace_rec_iter(iter) {
+-		rec = ftrace_rec_iter_record(iter);
+-		/*
+-		 * Breakpoints are handled only when this function is in
+-		 * progress. The system could not work with them.
+-		 */
+-		if (remove_breakpoint(rec))
+-			BUG();
++		text_poke_queue((void *)rec->ip, new, MCOUNT_INSN_SIZE, NULL);
++		ftrace_update_record(rec, enable);
+ 	}
+-	run_sync();
+-}
+-
+-static int
+-ftrace_modify_code(unsigned long ip, unsigned const char *old_code,
+-		   unsigned const char *new_code)
+-{
+-	int ret;
+-
+-	ret = add_break(ip, old_code);
+-	if (ret)
+-		goto out;
+-
+-	run_sync();
+-
+-	ret = add_update_code(ip, new_code);
+-	if (ret)
+-		goto fail_update;
+-
+-	run_sync();
+-
+-	ret = ftrace_write(ip, new_code, 1);
+-	/*
+-	 * The breakpoint is handled only when this function is in progress.
+-	 * The system could not work if we could not remove it.
+-	 */
+-	BUG_ON(ret);
+- out:
+-	run_sync();
+-	return ret;
+-
+- fail_update:
+-	/* Also here the system could not work with the breakpoint */
+-	if (ftrace_write(ip, old_code, 1))
+-		BUG();
+-	goto out;
++	text_poke_finish();
+ }
+ 
+ void arch_ftrace_update_code(int command)
+ {
+-	/* See comment above by declaration of modifying_ftrace_code */
+-	atomic_inc(&modifying_ftrace_code);
+-
+ 	ftrace_modify_all_code(command);
+-
+-	atomic_dec(&modifying_ftrace_code);
+ }
+ 
+ int __init ftrace_dyn_arch_init(void)
+@@ -747,6 +326,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	unsigned long start_offset;
+ 	unsigned long end_offset;
+ 	unsigned long op_offset;
++	unsigned long call_offset;
+ 	unsigned long offset;
+ 	unsigned long npages;
+ 	unsigned long size;
+@@ -763,10 +343,12 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 		start_offset = (unsigned long)ftrace_regs_caller;
+ 		end_offset = (unsigned long)ftrace_regs_caller_end;
+ 		op_offset = (unsigned long)ftrace_regs_caller_op_ptr;
++		call_offset = (unsigned long)ftrace_regs_call;
+ 	} else {
+ 		start_offset = (unsigned long)ftrace_caller;
+ 		end_offset = (unsigned long)ftrace_epilogue;
+ 		op_offset = (unsigned long)ftrace_caller_op_ptr;
++		call_offset = (unsigned long)ftrace_call;
+ 	}
+ 
+ 	size = end_offset - start_offset;
+@@ -823,16 +405,21 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	/* put in the new offset to the ftrace_ops */
+ 	memcpy(trampoline + op_offset, &op_ptr, OP_REF_SIZE);
+ 
++	/* put in the call to the function */
++	mutex_lock(&text_mutex);
++	call_offset -= start_offset;
++	memcpy(trampoline + call_offset,
++	       text_gen_insn(CALL_INSN_OPCODE,
++			     trampoline + call_offset,
++			     ftrace_ops_get_func(ops)), CALL_INSN_SIZE);
++	mutex_unlock(&text_mutex);
++
+ 	/* ALLOC_TRAMP flags lets us know we created it */
+ 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
+ 
+ 	set_vm_flush_reset_perms(trampoline);
+ 
+-	/*
+-	 * Module allocation needs to be completed by making the page
+-	 * executable. The page is still writable, which is a security hazard,
+-	 * but anyhow ftrace breaks W^X completely.
+-	 */
++	set_memory_ro((unsigned long)trampoline, npages);
+ 	set_memory_x((unsigned long)trampoline, npages);
+ 	return (unsigned long)trampoline;
+ fail:
+@@ -859,43 +446,35 @@ static unsigned long calc_trampoline_call_offset(bool save_regs)
+ void arch_ftrace_update_trampoline(struct ftrace_ops *ops)
+ {
+ 	ftrace_func_t func;
+-	unsigned char *new;
+ 	unsigned long offset;
+ 	unsigned long ip;
+ 	unsigned int size;
+-	int ret, npages;
++	const char *new;
+ 
+-	if (ops->trampoline) {
+-		/*
+-		 * The ftrace_ops caller may set up its own trampoline.
+-		 * In such a case, this code must not modify it.
+-		 */
+-		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
+-			return;
+-		npages = PAGE_ALIGN(ops->trampoline_size) >> PAGE_SHIFT;
+-		set_memory_rw(ops->trampoline, npages);
+-	} else {
++	if (!ops->trampoline) {
+ 		ops->trampoline = create_trampoline(ops, &size);
+ 		if (!ops->trampoline)
+ 			return;
+ 		ops->trampoline_size = size;
+-		npages = PAGE_ALIGN(size) >> PAGE_SHIFT;
++		return;
+ 	}
+ 
++	/*
++	 * The ftrace_ops caller may set up its own trampoline.
++	 * In such a case, this code must not modify it.
++	 */
++	if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
++		return;
++
+ 	offset = calc_trampoline_call_offset(ops->flags & FTRACE_OPS_FL_SAVE_REGS);
+ 	ip = ops->trampoline + offset;
+-
+ 	func = ftrace_ops_get_func(ops);
+ 
+-	ftrace_update_func_call = (unsigned long)func;
+-
++	mutex_lock(&text_mutex);
+ 	/* Do a safe modify in case the trampoline is executing */
+ 	new = ftrace_call_replace(ip, (unsigned long)func);
+-	ret = update_ftrace_func(ip, new);
+-	set_memory_ro(ops->trampoline, npages);
+-
+-	/* The update should never fail */
+-	WARN_ON(ret);
++	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL);
++	mutex_unlock(&text_mutex);
+ }
+ 
+ /* Return the address of the function the trampoline calls */
+@@ -981,19 +560,18 @@ void arch_ftrace_trampoline_free(struct ftrace_ops *ops)
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ extern void ftrace_graph_call(void);
+ 
+-static unsigned char *ftrace_jmp_replace(unsigned long ip, unsigned long addr)
++static const char *ftrace_jmp_replace(unsigned long ip, unsigned long addr)
+ {
+-	return ftrace_text_replace(0xe9, ip, addr);
++	return ftrace_text_replace(JMP32_INSN_OPCODE, ip, addr);
+ }
+ 
+ static int ftrace_mod_jmp(unsigned long ip, void *func)
+ {
+-	unsigned char *new;
++	const char *new;
+ 
+-	ftrace_update_func_call = 0UL;
+ 	new = ftrace_jmp_replace(ip, (unsigned long)func);
+-
+-	return update_ftrace_func(ip, new);
++	text_poke_bp((void *)ip, new, MCOUNT_INSN_SIZE, NULL);
++	return 0;
+ }
+ 
+ int ftrace_enable_ftrace_graph_caller(void)
+@@ -1019,10 +597,9 @@ int ftrace_disable_ftrace_graph_caller(void)
+ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent,
+ 			   unsigned long frame_pointer)
+ {
++	unsigned long return_hooker = (unsigned long)&return_to_handler;
+ 	unsigned long old;
+ 	int faulted;
+-	unsigned long return_hooker = (unsigned long)
+-				&return_to_handler;
+ 
+ 	/*
+ 	 * When resuming from suspend-to-ram, this function can be indirectly
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 4bb0f84..c91d117 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -568,15 +568,6 @@ NOKPROBE_SYMBOL(do_general_protection);
+ 
+ dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
+ {
+-#ifdef CONFIG_DYNAMIC_FTRACE
+-	/*
+-	 * ftrace must be first, everything else may cause a recursive crash.
+-	 * See note by declaration of modifying_ftrace_code in ftrace.c
+-	 */
+-	if (unlikely(atomic_read(&modifying_ftrace_code)) &&
+-	    ftrace_int3_handler(regs))
+-		return;
+-#endif
+ 	if (poke_int3_handler(regs))
+ 		return;
+ 
