@@ -2,143 +2,118 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F989C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF52EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2391520725
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0F72071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oS+L4APa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bNsKgL/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfKOBfR (ORCPT
+        id S1727301AbfKOBkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 20:35:17 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38001 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfKOBfR (ORCPT
+        Thu, 14 Nov 2019 20:40:14 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40151 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfKOBkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 20:35:17 -0500
-Received: by mail-wr1-f67.google.com with SMTP id i12so9156015wro.5;
-        Thu, 14 Nov 2019 17:35:15 -0800 (PST)
+        Thu, 14 Nov 2019 20:40:13 -0500
+Received: by mail-lf1-f65.google.com with SMTP id j26so6686001lfh.7
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 17:40:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=B2XNQuUR8Wh6kRLjMqlhXvwKQ8d9fAfymRV8s7wKrPI=;
-        b=oS+L4APaOZrpJXEc1LLhVdt8mkJ12CUna5vRiYhGh4GfIXHelKvs9BXZXdDQkJISzl
-         pFx9HsScYfYTw51MURxTbA7Z5Vku8km4XuZs5prR0VxkFNEMBO7j/Tdd3ufqo4S3ehas
-         0RjA21mxGrsYWpjnvT2vYkCh1NKOtz21qBr1KQACAZajhdd2VGjaI9ny1cJU6mJyHXWR
-         FOZzXQJts1qA0FZ8f6hEo52ulY+VGodgXRQVLsg0RGudlRovFOXdEoCi7Cs/zfVlmEwN
-         K9W/eA0EwgkQyNZXVpfb/BJXdjyft2a8KV/5H0a81JANtQwsdHMXKze+WIsz3Za5GNTW
-         tmpQ==
+        bh=rFskqtLP2N2VaZi1tFqSAtlpsDvGGv7YPwSPEpuMZEo=;
+        b=bNsKgL/vFHp5Dmh3egwCsmkq3RAyW9y/VBXFH8UbShDrDwtrKHLz34Pn4zFWo7NY3z
+         5PTmOWxwXywEvoxu/SVKs/6hilrCcEjC1tkbXU0MpRa0Kjf7gd9thLWv7a4NNgMTEhjy
+         R+PXiaXD6Fumb4JQVKY6gBby+WxozAtLDvBfgUxDFoXKVSVk/i0026CQAfFbbcVENqUv
+         nXeDS56UsnuKqn3R+tKNQBxYvYuZ5LuP2VlicTTUdzTi6YuDc/FFH2zGkx6Wyd5uRiC9
+         rZ15dZyUHKKwXmGVMqaYnwBITAFeEPy2k0xgOebCWOX4T2HsIZT7P1/Hr8okT67PFkqB
+         09qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=B2XNQuUR8Wh6kRLjMqlhXvwKQ8d9fAfymRV8s7wKrPI=;
-        b=U4gwJL1VOlE5//2feZsggLKkGtGhZAkNSfLfO1K37lIHYcM9qPTxrH7NF6k8MjCKgW
-         hjqlkyS7/rnz4J1UW0h+Zm3L8xtgo8G6Mfs8I1/sIKg2/PohBpr+GUGnzc9VduEw4Sex
-         osMOLG6s5+iDCjTzcdazxRLKCqmqEWWSCKEqdFL7agsxz7rnLdJnVYJAzdtgmXRFD8HD
-         ot7rWLi0Jf4LpcbQ/A/HAojSFNxorMO5BoM91tNYIuvr93jr63fio4VoCuyziQDBEULn
-         xn9TLtqCql6g7JaTcFFg3ezXBfmwrRs9IA+vl28eedxpqPo0GVFQiYmMEKuFkh7o3Aih
-         zsNA==
-X-Gm-Message-State: APjAAAU36KlbreJ38/HMBI2TQAidANrJu5Fp7fxXF70yWXSQZ3uZE7Kj
-        FUh5/1MSUCQ3pg/yWiqk4/zBmUcwQbEQ8dsj/jg=
-X-Google-Smtp-Source: APXvYqwRXz+nyq3UvXDsIXwlYqr0wfbLRVw8mbwknO68m+ZoU3fcqdhkspiN8I/+JjRfETY84SFGP6yFGTBxFQ9aeik=
-X-Received: by 2002:adf:9786:: with SMTP id s6mr12669139wrb.188.1573781714445;
- Thu, 14 Nov 2019 17:35:14 -0800 (PST)
+        bh=rFskqtLP2N2VaZi1tFqSAtlpsDvGGv7YPwSPEpuMZEo=;
+        b=A+u1oETw/GEDJ2yCVLVXO2zWxD8gpwXl0a9NcTX2aXxMHwEd8Bt06zj+XSDPFWui7M
+         Oe2tXXr7yHH2rr0qV/u1YYmQOOc1gXN2Ka7JRs4v/HYK+XEdORischXVO7i9N/+nslbd
+         d0wJrAWsvGaVtWVZmbJFSYk/Nnblwx7mwy8CwnpPs1AnBhiMDY2XdwoAC9HhF/slGVWD
+         IWW0QVC48O6WOHVVNYIMBb3/GEXRazuZlQGVWJkqEUlSoRvsD/0kzfKp7N+robmiOsGm
+         l2NHxa+8xfmpFN/eC9P49DjM+rc/u1OOAnZzrQIoek4EEHRt0zbSbJNSFvfTMWotlMFn
+         Is6g==
+X-Gm-Message-State: APjAAAWNOEl/xYlrAd68/1MoTg1mVlLBnFEgpHd8UBDEtARyOVxAfesQ
+        YmNhV3bciDTqlwDHIUQuJ6IFn1rsbOegg1WHdF0fsg==
+X-Google-Smtp-Source: APXvYqz60nURqcP+ihfir96vZTjjr0ZAN8WS3qlm2R92Tk9C+zIRN/Bzmh5fMkWjRsuUPdRJxDb2bptiDaojJBCZVYY=
+X-Received: by 2002:a19:c790:: with SMTP id x138mr9439033lff.61.1573782011720;
+ Thu, 14 Nov 2019 17:40:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
- <20191111090230.3402-3-chunyan.zhang@unisoc.com> <20191114205235.GA16668@bogus>
-In-Reply-To: <20191114205235.GA16668@bogus>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Fri, 15 Nov 2019 09:34:38 +0800
-Message-ID: <CAAfSe-s==xzeK_Y0rVezunR0T86b7ZcASo4HcW6g74qH7v-vbg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: serial: Convert sprd-uart to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>
+References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-12-brijesh.singh@amd.com>
+ <CABayD+ctvNszs6gVdjP+geJTk1RN3Ko-RWaRTdeU6-7G1=F=Mw@mail.gmail.com>
+In-Reply-To: <CABayD+ctvNszs6gVdjP+geJTk1RN3Ko-RWaRTdeU6-7G1=F=Mw@mail.gmail.com>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Thu, 14 Nov 2019 17:39:35 -0800
+Message-ID: <CABayD+fnnyLxh1Nak9vskKQpLBOXROvaaj5Q64Ksx_qHB0DE5g@mail.gmail.com>
+Subject: Re: [PATCH v3 11/11] KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP ioctl
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 04:52, Rob Herring <robh@kernel.org> wrote:
+On Thu, Nov 14, 2019 at 5:22 PM Steve Rutherford <srutherford@google.com> wrote:
 >
-> On Mon, Nov 11, 2019 at 05:02:27PM +0800, Chunyan Zhang wrote:
+> On Wed, Jul 10, 2019 at 1:13 PM Singh, Brijesh <brijesh.singh@amd.com> wrote:
 > >
-> > Convert the sprd-uart binding to DT schema using json-schema.
+> >  struct kvm_arch_async_pf {
+> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index e675fd89bb9a..31653e8d5927 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -7466,6 +7466,47 @@ static int svm_get_page_enc_bitmap(struct kvm *kvm,
+> >         return ret;
+> >  }
 > >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  .../devicetree/bindings/serial/sprd-uart.txt  | 32 ---------
-> >  .../devicetree/bindings/serial/sprd-uart.yaml | 69 +++++++++++++++++++
-> >  2 files changed, 69 insertions(+), 32 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
-> >  create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> > deleted file mode 100644
-> > index 9607dc616205..000000000000
-> > --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> > +++ /dev/null
-> > @@ -1,32 +0,0 @@
-> > -* Spreadtrum serial UART
-> > -
-> > -Required properties:
-> > -- compatible: must be one of:
-> > -  * "sprd,sc9836-uart"
-> > -  * "sprd,sc9860-uart", "sprd,sc9836-uart"
-> > -
-> > -- reg: offset and length of the register set for the device
-> > -- interrupts: exactly one interrupt specifier
-> > -- clock-names: Should contain following entries:
-> > -  "enable" for UART module enable clock,
-> > -  "uart" for UART clock,
-> > -  "source" for UART source (parent) clock.
-> > -- clocks: Should contain a clock specifier for each entry in clock-names.
-> > -  UART clock and source clock are optional properties, but enable clock
-> > -  is required.
-> > -
-> > -Optional properties:
-> > -- dma-names: Should contain "rx" for receive and "tx" for transmit channels.
-> > -- dmas: A list of dma specifiers, one for each entry in dma-names.
-> > -
-> > -Example:
-> > -     uart0: serial@0 {
-> > -             compatible = "sprd,sc9860-uart",
-> > -                          "sprd,sc9836-uart";
-> > -             reg = <0x0 0x100>;
-> > -             interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> > -             dma-names = "rx", "tx";
-> > -             dmas = <&ap_dma 19>, <&ap_dma 20>;
-> > -             clock-names = "enable", "uart", "source";
-> > -             clocks = <&clk_ap_apb_gates 9>, <&clk_uart0>, <&ext_26m>;
-> > -     };
-> > diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.yaml b/Documentation/devicetree/bindings/serial/sprd-uart.yaml
-> > new file mode 100644
-> > index 000000000000..0cc4668a9b9c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/sprd-uart.yaml
-> > @@ -0,0 +1,69 @@
-> > +# SPDX-License-Identifier: GPL-2.0
+> > +static int svm_set_page_enc_bitmap(struct kvm *kvm,
+> > +                                  struct kvm_page_enc_bitmap *bmap)
+> > +{
+> > +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > +       unsigned long gfn_start, gfn_end;
+> > +       unsigned long *bitmap;
+> > +       unsigned long sz, i;
+> > +       int ret;
+> > +
+> > +       if (!sev_guest(kvm))
+> > +               return -ENOTTY;
+> > +
+> > +       gfn_start = bmap->start_gfn;
+> > +       gfn_end = gfn_start + bmap->num_pages;
+> > +
+> > +       sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / 8;
+> > +       bitmap = kmalloc(sz, GFP_KERNEL);
 >
-> Dual license please. If you are okay with that on both patches, I can
-> fix them and apply patches 1-4.
-
-Sure, thanks for your help.
-
-Chunyan
-
+> This kmalloc should probably be either a vmalloc or kvmalloc. The max
+> size, if I'm reading kmalloc correctly, is 2^10 pages. That's 4MB,
+> which should correspond to a bitmap for a 128GB VM, which is a
+> plausible VM size.
 >
-> Rob
+> --Steve
+
+Ignore this, you are clearly never going to copy that much in one
+call, and the backing bitmap correctly uses kvmalloc.
