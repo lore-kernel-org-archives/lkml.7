@@ -2,85 +2,133 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F81EC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF1EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBA32072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MJ2Vf728"
+	by mail.kernel.org (Postfix) with ESMTP id 7E0B02072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKOSsv (ORCPT
+        id S1727016AbfKOSsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:48:51 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45285 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfKOSsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:48:50 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k1so5093212pgg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 10:48:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:subject:from:user-agent:date;
-        bh=fmszmsa19doMDiKVkd5JyjEU2EGslIacVXAuEqSrae8=;
-        b=MJ2Vf728p+IDQNuwMyN+qBbVI4AXW+zK1iJOm+FRbwoS7HdhDVqUq9ABoFNp9GHfv1
-         +w6YXWJM4nwTjAD7AuZ6fu5mqIU+7o5jh9j+jy/TQduvLgQeHCwDgSeMfTxXlq79hKWH
-         vlfF83jP9VXR0ao9aRPL6TBrqTLUtSrSX9izA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
-         :user-agent:date;
-        bh=fmszmsa19doMDiKVkd5JyjEU2EGslIacVXAuEqSrae8=;
-        b=AMuEU9FceSVqr6I2s/ye4mUXsSVvLrLbdal2QzmI07bnJztjrUY55+NCk81YU2dS7W
-         GSOHCbih/rLP8gdekIchRb2gquerXHHkhY8HoYYKwo38m3IfN/zanNfLD30gWgDQqN33
-         HgN2wJgTImA28QxWJiQxZQQwH8N9plH3xNwmF0v98bW6KwN6P6dTiNP7AMzoZCyvc45P
-         L8Cq+VpD7mVbcLEZju2Ajsscg/u6m/JbrFUqUjxogMiAIbbpdsl8KawNePWuOtI+jbom
-         5QC6imf3MTHD5CEtgLiy9Kyhn5vdT0uWfZTktMwNHvvtUl/n85Ng49IGcJ8cUanmmxv0
-         pl9w==
-X-Gm-Message-State: APjAAAWo51GYkWoD1NddlxSs0Qzq/3qCxxx6IitMsNsPmyZjXoJI7os3
-        HTO+PVuPlhbCeFXG/1pkJ1rT0w==
-X-Google-Smtp-Source: APXvYqw6HSHHsj7mgPXycNxOL2uo40yDdeVwbGg5kQPzgO7awllnUIimHBetpe8MbKVK5Gxm3+WLjQ==
-X-Received: by 2002:a63:5508:: with SMTP id j8mr17243237pgb.97.1573843729530;
-        Fri, 15 Nov 2019 10:48:49 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k6sm8741468pfi.119.2019.11.15.10.48.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 10:48:49 -0800 (PST)
-Message-ID: <5dcef311.1c69fb81.f78a4.b0ee@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 15 Nov 2019 13:48:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:35346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbfKOSsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 13:48:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA4E930E;
+        Fri, 15 Nov 2019 10:48:53 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 028533F534;
+        Fri, 15 Nov 2019 10:48:51 -0800 (PST)
+Subject: Re: [PATCH v2] sched/topology, cpuset: Account for housekeeping CPUs
+ to avoid empty cpumasks
+To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com
+References: <20191104003906.31476-1-valentin.schneider@arm.com>
+ <d7ed40aa-1ac1-a42d-51eb-b1bd9f839fb1@arm.com>
+ <20191115171807.GH19372@blackbody.suse.cz>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <c425c5cb-ba8a-e5f6-d91c-5479779cfb7a@arm.com>
+Date:   Fri, 15 Nov 2019 18:48:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573756521-27373-3-git-send-email-ilina@codeaurora.org>
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-3-git-send-email-ilina@codeaurora.org>
-Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-To:     Lina Iyer <ilina@codeaurora.org>, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, maz@kernel.org
-Subject: Re: [PATCH 02/12] drivers: irqchip: qcom-pdc: update max PDC interrupts
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 10:48:48 -0800
+In-Reply-To: <20191115171807.GH19372@blackbody.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-11-14 10:35:11)
-> Newer SoCs have increased the number of interrupts routed to the PDC
-> interrupt controller. Update the definition of max PDC interrupts.
->=20
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
+On 15/11/2019 17:18, Michal Koutný wrote:
+> Hello.
+> 
+> On Thu, Nov 14, 2019 at 04:03:50PM +0000, Valentin Schneider <valentin.schneider@arm.com> wrote:
+>> Michal, could I nag you for a reviewed-by? I'd feel a bit more confident
+>> with any sort of approval from folks who actually do use cpusets.
+> TL;DR I played with the v5.4-rc6 _without_ this fixup and I conclude it
+> unnecessary (IOW my previous theoretical observation was wrong).
+> 
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Thanks for going through the trouble of testing the thing.
 
+> 
+> The original problem is non-issue with v2 cpuset controller, because
+> effective_cpus are never empty. isolcpus doesn't take out cpuset CPUs,
+> hotplug does. In the case, no online CPU remains in the cpuset, it
+> inherits ancestor's non-empty cpuset.
+> 
+
+But we still take out the isolcpus from the domain span before handing it
+over to the scheduler:
+
+	cpumask_or(dp, dp, b->effective_cpus);                               
+	cpumask_and(dp, dp, housekeeping_cpumask(HK_FLAG_DOMAIN));
+
+But...
+
+> I reproduced the problem with v1 (before your fix). However, in v1
+> effective == allowed (we're destructive and overwrite allowed on
+> hotunplug) and we already check the emptiness of 
+> 
+>   cpumask_intersects(cp->cpus_allowed, housekeeping_cpumask(HK_FLAG_DOMAIN)
+> 
+> few lines higher. I.e. the fixup adds redundant check against the empty
+> sched domain production.
+> 
+
+...You're right, I've been misreading that as a '!is_sched_load_balance()'
+condition ever since. Duh. So this condition will always catch cpusets than
+only span outside the housekeeping domain, and my previous fixup will
+catch newly-empty cpusets (due to HP). Perhaps it would've been cleaner to
+merge the two, but as things stand this patch isn't needed (as you say).
+
+
+I tried this out to really be sure (8 CPU SMP aarch64 qemu target):
+
+  cd /sys/fs/cgroup/cpuset                                                                             
+                                                                                                     
+  mkdir cs1                                                                                            
+  echo 1 > cs1/cpuset.cpu_exclusive                                                                    
+  echo 0 > cs1/cpuset.mems                                                                             
+  echo 0-4 > cs1/cpuset.cpus                                                                           
+                                                                                                     
+  mkdir cs2                                                                                            
+  echo 1 > cs2/cpuset.cpu_exclusive                                                                    
+  echo 0 > cs2/cpuset.mems                                                                             
+  echo 5-7 > cs2/cpuset.cpus                                                                           
+                                                                                                     
+  echo 0 > cpuset.sched_load_balance
+
+booted with
+  
+  isolcpus=6-7
+
+It seems that creating a cpuset with CPUs only outside the housekeeping
+domain is forbidden, so I'm creating cs2 with *one* CPU in the domain. When
+I hotplug it out, nothing dies horribly:
+
+  echo 0 > /sys/devices/system/cpu/cpu5/online
+  [   24.688145] CPU5: shutdown
+  [   24.689438] psci: CPU5 killed.
+  [   24.714168] allowed=0-4 effective=0-4 housekeeping=0-5
+  [   24.714642] allowed=6-7 effective=6-7 housekeeping=0-5
+  [   24.715416] CPU5 attaching NULL sched-domain.
+
+> Sorry for the noise and HTH,
+
+Sure does, thanks!
+
+> Michal
+> 
