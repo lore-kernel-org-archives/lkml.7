@@ -2,341 +2,180 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E53C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00073C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0734720723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD79420723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:57:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l0Jutpb7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nCwqxwKR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b8Jcmhx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfKOU4A (ORCPT
+        id S1726962AbfKOU5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 15:56:00 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:54212 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfKOUz7 (ORCPT
+        Fri, 15 Nov 2019 15:57:24 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57419 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726599AbfKOU5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 15:55:59 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 70E8E6106C; Fri, 15 Nov 2019 20:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573851358;
-        bh=q8ehKbSaRswTHrhcKVkRojqb3pK7OFcjQn47HZCpCL8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l0Jutpb7adP3MrODoqiJgh58sK67mIPKSj95fWPzv8clOOeL4OPkyHJv/P3A/sy30
-         mwqD/lIRYpbdV4PjODCatxARboKlZR24iWteH8BLV2rU2UgW+O9LUKPCzGyrmUL4EL
-         wyssg18CGIuWgdMLJAcaxaUebpNKBc/QYcIkbJfI=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 15 Nov 2019 15:57:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573851443;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2QEJbiz+89oQBqVefvp57/tK+Zdt+Qq0QP+KzJjkhEg=;
+        b=b8Jcmhx0OzjJubvi2pY/5T37fY3RgIlcXds7l8pW+/Zmj/USLy8LfyB38hGkUqiZ0Tal6b
+        Ba33KKai61EnMfzdHD1CkXTigAdGmRLgoNjhKoKHVNwfaz9N1YAqq6ElONYyZef9GsD/x5
+        v8VVMZ2Ju5IX1NPSH0ZOwMFRE/P/eb8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-WxEv-1IUOTq9QO01IYm4bA-1; Fri, 15 Nov 2019 15:57:21 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B33EE60F83;
-        Fri, 15 Nov 2019 20:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573851357;
-        bh=q8ehKbSaRswTHrhcKVkRojqb3pK7OFcjQn47HZCpCL8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nCwqxwKRYrk8iRrUnSBStVuAQC8r/Cuv4QJvaWuqTifi3XTTuzWVI5+M6FUIT9qGD
-         GS2RfLyuYtCq/19gKihvH8upJBx1GS9wzVLLLNOFR1+d2qyeA8LnFB7VMfRe+1yQJm
-         DRuCZEuRP59hctdH+wbnbPMFAljkNCC44uJTw46g=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B33EE60F83
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Fri, 15 Nov 2019 13:55:55 -0700
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        maz@kernel.org, evgreen@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org
-Subject: Re: [PATCH 08/12] drivers: pinctrl: msm: setup GPIO chip in hierarchy
-Message-ID: <20191115205555.GF18786@codeaurora.org>
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org>
- <1573756521-27373-9-git-send-email-ilina@codeaurora.org>
- <5dcefd86.1c69fb81.c72c8.07a1@mx.google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF51F18B9FAA;
+        Fri, 15 Nov 2019 20:57:20 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B58260BF7;
+        Fri, 15 Nov 2019 20:57:15 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id A79D7224776; Fri, 15 Nov 2019 15:57:14 -0500 (EST)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     virtio-fs@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     vgoyal@redhat.com, stefanha@redhat.com, dgilbert@redhat.com,
+        miklos@szeredi.hu
+Subject: [PATCH 2/4] virtiofs: Add an index to keep track of first request queue
+Date:   Fri, 15 Nov 2019 15:57:03 -0500
+Message-Id: <20191115205705.2046-3-vgoyal@redhat.com>
+In-Reply-To: <20191115205705.2046-1-vgoyal@redhat.com>
+References: <20191115205705.2046-1-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5dcefd86.1c69fb81.c72c8.07a1@mx.google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: WxEv-1IUOTq9QO01IYm4bA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Quoting Lina Iyer (2019-11-14 10:35:17)
->> Some GPIOs are marked as wakeup capable and are routed to another
->> interrupt controller that is an always-domain and can detect interrupts
->> even most of the SoC is powered off. The wakeup interrupt controller
->
->even when?
->
->> wakes up the GIC and replays the interrupt at the GIC.
->>
->> Setup the TLMM irqchip in hierarchy with the wakeup interrupt controller
->> and ensure the wakeup GPIOs are handled correctly.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->
->Is it Co-developed-by for Maulik?
->
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->
->Some minor comments. Shouldn't be hard to fix and resend quickly I hope.
->
-Thanks for the review Stephen. I will fix these and resend.
+We have many virtqueues and first queue which carries fuse normal requests
+(except forget requests) has index pointed to by enum VQ_REQUEST. This work=
+s
+fine as long as number of queues are not dynamic.
 
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
->> index 763da0b..c245686 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
->> @@ -44,6 +46,7 @@
->>   * @enabled_irqs:   Bitmap of currently enabled irqs.
->>   * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
->>   *                  detection.
->> + * @skip_wake_irqs: Skip IRQs that are handled by wakeup interrupt contrroller
->
->s/contrroller/controller/
->
->>   * @soc;            Reference to soc_data of platform specific data.
->>   * @regs:           Base addresses for the TLMM tiles.
->>   */
->> @@ -778,10 +794,37 @@ static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
->>
->>  static void msm_gpio_irq_enable(struct irq_data *d)
->>  {
->> +       /*
->> +        * Clear the interrupt that may be pending before we enable
->> +        * the line.
->> +        * This is especially a problem with the GPIOs routed to the
->> +        * PDC. These GPIOs are direct-connect interrupts to the GIC.
->> +        * Disabling the interrupt line at the PDC does not prevent
->> +        * the interrupt from being latched at the GIC. The state at
->> +        * GIC needs to be cleared before enabling.
->> +        */
->> +       if (d->parent_data) {
->> +               irq_chip_set_parent_state(d, IRQCHIP_STATE_PENDING, 0);
->> +               irq_chip_enable_parent(d);
->> +       }
->>
->>         msm_gpio_irq_clear_unmask(d, true);
->>  }
->>
->> +static void msm_gpio_irq_disable(struct irq_data *d)
->> +{
->> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +       struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->> +
->> +       if (d->parent_data)
->> +               irq_chip_disable_parent(d);
->> +
->> +       if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
->> +               return;
->> +
->> +       msm_gpio_irq_mask(d);
->
->Why not
->
->	if (!test_bit(...)
->		msm_gpio_irq_mask(d);
->
->> +}
->> +
->>  static void msm_gpio_irq_unmask(struct irq_data *d)
->>  {
->>         msm_gpio_irq_clear_unmask(d, false);
->> @@ -912,6 +964,15 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
->>         struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->>         unsigned long flags;
->>
->> +       if (d->parent_data)
->> +               irq_chip_set_wake_parent(d, on);
->> +
->> +       /*
->> +        * While they may not wake up when the TLMM is powered off,
->> +        * some GPIOs would like to wakeup the system from suspend
->> +        * when TLMM is powered on. To allow that, enable the GPIO
->> +        * summary line to be wakeup capable at GIC.
->> +        */
->
->Can this comment go above the irq_set_irq_wake() line below instead of
->this spinlock?
->
-Sure.
+I am about to introduce one more virtqueue, called notification queue, whic=
+h
+will be present only if device on host supports it. That means index of
+request queue will change depending on if notification queue is present
+or not.
 
->>         raw_spin_lock_irqsave(&pctrl->lock, flags);
->>
->>         irq_set_irq_wake(pctrl->irq, on);
->> @@ -990,6 +1051,30 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
->>         chained_irq_exit(chip, desc);
->>  }
->>
->> +static int msm_gpio_wakeirq(struct gpio_chip *gc,
->> +                           unsigned int child,
->> +                           unsigned int child_type,
->> +                           unsigned int *parent,
->> +                           unsigned int *parent_type)
->> +{
->> +       struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->> +       const struct msm_gpio_wakeirq_map *map;
->> +       int i;
->> +
->> +       *parent = GPIO_NO_WAKE_IRQ;
->> +       *parent_type = IRQ_TYPE_EDGE_RISING;
->> +
->> +       for (i = 0; i < pctrl->soc->nwakeirq_map; i++) {
->> +               map = &pctrl->soc->wakeirq_map[i];
->> +               if (map->gpio == child) {
->> +                       *parent = map->wakeirq;
->> +                       break;
->> +               }
->> +       }
->> +
->> +       return 0;
->
->Shouldn't we return -EINVAL if we can't translate the gpio irq to the
->parent domain? I would expect to see return -EINVAL here and the above
->if condition to return 0 instead of break.
->
-Good catch. Sure.
->> +}
->> +
->>  static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
->>  {
->>         if (pctrl->soc->reserved_gpios)
->> @@ -1004,6 +1089,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>         struct gpio_irq_chip *girq;
->>         int ret;
->>         unsigned ngpio = pctrl->soc->ngpios;
->> +       struct device_node *np;
->>
->>         if (WARN_ON(ngpio > MAX_NR_GPIO))
->>                 return -EINVAL;
->> @@ -1020,17 +1106,44 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>
->>         pctrl->irq_chip.name = "msmgpio";
->>         pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
->> +       pctrl->irq_chip.irq_disable = msm_gpio_irq_disable;
->>         pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
->>         pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
->>         pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
->> +       pctrl->irq_chip.irq_eoi = irq_chip_eoi_parent;
->>         pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
->>         pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
->>         pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
->>         pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->>
->> +       np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
->> +       if (np) {
->> +               int i;
->> +               bool skip;
->> +               unsigned int gpio;
->
->Can these be placed at the top of this function instead of buried
->halfway down here?
->
->> +
->> +               chip->irq.parent_domain = irq_find_matching_host(np,
->> +                                                DOMAIN_BUS_WAKEUP);
->> +               of_node_put(np);
->> +               if (!chip->irq.parent_domain)
->> +                       return -EPROBE_DEFER;
->> +               chip->irq.child_to_parent_hwirq = msm_gpio_wakeirq;
->> +
->> +               /*
->> +                * Let's skip handling the GPIOs, if the parent irqchip
->> +                * handling the direct connect IRQ of the GPIO.
->
->is handling?
->
->> +                */
->> +               skip = irq_domain_qcom_handle_wakeup(chip->irq.parent_domain);
->> +               for (i = 0; skip && i < pctrl->soc->nwakeirq_map; i++) {
->> +                       gpio = pctrl->soc->wakeirq_map[i].gpio;
->> +                       set_bit(gpio, pctrl->skip_wake_irqs);
->> +               }
->> +       }
->> +
->>         girq = &chip->irq;
->>         girq->chip = &pctrl->irq_chip;
->>         girq->parent_handler = msm_gpio_irq_handler;
->> +       girq->fwnode = pctrl->dev->fwnode;
->>         girq->num_parents = 1;
->>         girq->parents = devm_kcalloc(pctrl->dev, 1, sizeof(*girq->parents),
->>                                      GFP_KERNEL);
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
->> index 48569cda8..1547020 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
->> @@ -5,6 +5,8 @@
->>  #ifndef __PINCTRL_MSM_H__
->>  #define __PINCTRL_MSM_H__
->>
->> +#include <linux/gpio/driver.h>
->
->What is this include for?
->
-Must be from an older version. Will remove.
+So, add a variable to keep track of that index and this will help when
+notification queue is added in next patch.
 
->> +
->>  struct pinctrl_pin_desc;
->>
->>  /**
->> @@ -101,6 +113,8 @@ struct msm_pingroup {
->>   * @ngroups:       The numbmer of entries in @groups.
->>   * @ngpio:         The number of pingroups the driver should expose as GPIOs.
->>   * @pull_no_keeper: The SoC does not support keeper bias.
->> + * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
->> + * @nwakeirq_map:   The number of entries in @hierarchy_map
->
->Is it 'number of entries in @wakeirq_map"?
->
-Yes. Thanks.
->>   */
->>  struct msm_pinctrl_soc_data {
->>         const struct pinctrl_pin_desc *pins;
->> @@ -114,6 +128,8 @@ struct msm_pinctrl_soc_data {
->>         const char *const *tiles;
->>         unsigned int ntiles;
->>         const int *reserved_gpios;
->> +       const struct msm_gpio_wakeirq_map *wakeirq_map;
->> +       unsigned int nwakeirq_map;
->>  };
->>
->>  extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
->> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
->> index 637c0bf..e01391c 100644
->> --- a/include/linux/soc/qcom/irq.h
->> +++ b/include/linux/soc/qcom/irq.h
->> @@ -18,4 +18,17 @@
->>  #define IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP                (IRQ_DOMAIN_FLAG_NONCORE << 0)
->>  #define IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP                (IRQ_DOMAIN_FLAG_NONCORE << 1)
->>
->> +/**
->> + * irq_domain_qcom_handle_wakeup: Return if the domain handles interrupt
->> + *                                configuration
->> + * @d: irq domain
->> + *
->> + * This QCOM specific irq domain call returns if the interrupt controller
->> + * requires the interrupt be masked at the child interrupt controller.
->> + */
->> +static inline bool irq_domain_qcom_handle_wakeup(struct irq_domain *d)
->
->could be const irq_domain here.
->
-Ok.
->> +{
->> +       return (d->flags & IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP);
->> +}
->> +
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ fs/fuse/virtio_fs.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-Thanks,
-Lina
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index a0fb0a93980c..1ab4b7b83707 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -49,6 +49,7 @@ struct virtio_fs {
+ =09struct virtio_fs_vq *vqs;
+ =09unsigned int nvqs;               /* number of virtqueues */
+ =09unsigned int num_request_queues; /* number of request queues */
++=09unsigned int first_reqq_idx;=09/* First request queue idx */
+ };
+=20
+ struct virtio_fs_forget_req {
+@@ -597,7 +598,9 @@ static int virtio_fs_setup_vqs(struct virtio_device *vd=
+ev,
+ =09if (fs->num_request_queues =3D=3D 0)
+ =09=09return -EINVAL;
+=20
+-=09fs->nvqs =3D VQ_REQUEST + fs->num_request_queues;
++=09/* One hiprio queue and rest are request queues */
++=09fs->nvqs =3D 1 + fs->num_request_queues;
++=09fs->first_reqq_idx =3D 1;
+ =09fs->vqs =3D kcalloc(fs->nvqs, sizeof(fs->vqs[VQ_HIPRIO]), GFP_KERNEL);
+ =09if (!fs->vqs)
+ =09=09return -ENOMEM;
+@@ -617,10 +620,11 @@ static int virtio_fs_setup_vqs(struct virtio_device *=
+vdev,
+ =09names[VQ_HIPRIO] =3D fs->vqs[VQ_HIPRIO].name;
+=20
+ =09/* Initialize the requests virtqueues */
+-=09for (i =3D VQ_REQUEST; i < fs->nvqs; i++) {
++=09for (i =3D fs->first_reqq_idx; i < fs->nvqs; i++) {
+ =09=09char vq_name[VQ_NAME_LEN];
+=20
+-=09=09snprintf(vq_name, VQ_NAME_LEN, "requests.%u", i - VQ_REQUEST);
++=09=09snprintf(vq_name, VQ_NAME_LEN, "requests.%u",
++=09=09=09 i - fs->first_reqq_idx);
+ =09=09virtio_fs_init_vq(&fs->vqs[i], vq_name, VQ_REQUEST);
+ =09=09callbacks[i] =3D virtio_fs_vq_done;
+ =09=09names[i] =3D fs->vqs[i].name;
+@@ -990,7 +994,7 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *f=
+svq,
+ static void virtio_fs_wake_pending_and_unlock(struct fuse_iqueue *fiq)
+ __releases(fiq->lock)
+ {
+-=09unsigned int queue_id =3D VQ_REQUEST; /* TODO multiqueue */
++=09unsigned int queue_id;
+ =09struct virtio_fs *fs;
+ =09struct fuse_req *req;
+ =09struct virtio_fs_vq *fsvq;
+@@ -1004,6 +1008,7 @@ __releases(fiq->lock)
+ =09spin_unlock(&fiq->lock);
+=20
+ =09fs =3D fiq->priv;
++=09queue_id =3D fs->first_reqq_idx;
+=20
+ =09pr_debug("%s: opcode %u unique %#llx nodeid %#llx in.len %u out.len %u\=
+n",
+ =09=09  __func__, req->in.h.opcode, req->in.h.unique,
+@@ -1077,7 +1082,7 @@ static int virtio_fs_fill_super(struct super_block *s=
+b)
+=20
+ =09err =3D -ENOMEM;
+ =09/* Allocate fuse_dev for hiprio and notification queues */
+-=09for (i =3D 0; i < VQ_REQUEST; i++) {
++=09for (i =3D 0; i < fs->first_reqq_idx; i++) {
+ =09=09struct virtio_fs_vq *fsvq =3D &fs->vqs[i];
+=20
+ =09=09fsvq->fud =3D fuse_dev_alloc();
+@@ -1085,17 +1090,17 @@ static int virtio_fs_fill_super(struct super_block =
+*sb)
+ =09=09=09goto err_free_fuse_devs;
+ =09}
+=20
+-=09ctx.fudptr =3D (void **)&fs->vqs[VQ_REQUEST].fud;
++=09ctx.fudptr =3D (void **)&fs->vqs[fs->first_reqq_idx].fud;
+ =09err =3D fuse_fill_super_common(sb, &ctx);
+ =09if (err < 0)
+ =09=09goto err_free_fuse_devs;
+=20
+-=09fc =3D fs->vqs[VQ_REQUEST].fud->fc;
++=09fc =3D fs->vqs[fs->first_reqq_idx].fud->fc;
+=20
+ =09for (i =3D 0; i < fs->nvqs; i++) {
+ =09=09struct virtio_fs_vq *fsvq =3D &fs->vqs[i];
+=20
+-=09=09if (i =3D=3D VQ_REQUEST)
++=09=09if (i =3D=3D fs->first_reqq_idx)
+ =09=09=09continue; /* already initialized */
+ =09=09fuse_dev_install(fsvq->fud, fc);
+ =09}
+--=20
+2.20.1
+
