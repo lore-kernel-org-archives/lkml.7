@@ -2,149 +2,228 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE26C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D78C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39F72073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82A32073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nGQ4lsiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfKOJnW (ORCPT
+        id S1727603AbfKOJoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:43:22 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42898 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfKOJnV (ORCPT
+        Fri, 15 Nov 2019 04:44:22 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50428 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfKOJoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:43:21 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVY8D-0004MZ-Dd; Fri, 15 Nov 2019 10:43:09 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0C8711C18B4;
-        Fri, 15 Nov 2019 10:43:09 +0100 (CET)
-Date:   Fri, 15 Nov 2019 09:43:08 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/kprobes] x86/alternative: Remove text_poke_loc::len
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191111132457.989922744@infradead.org>
-References: <20191111132457.989922744@infradead.org>
+        Fri, 15 Nov 2019 04:44:21 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAF9i9cM070472;
+        Fri, 15 Nov 2019 03:44:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573811049;
+        bh=E0WzhltMB1uCqHukFqL7nvpsZ7Dg3L6LXU0D/M/afHk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nGQ4lsiTTMA/u3mYvQBGiCimGGu+zhohaFc7OZ7bIu+CWjxxF1eWkRUBFtOuyYeCa
+         OKc7HWEV9E2Vb0B10pGrfZ2BFSL/Q+m77cERWOeDxYFdTbhQd2autXTZqwz9BxfO+g
+         lJ4q4DWNpBtxmyRXdYJSyxkH7gWGik8yTMi/ByJI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAF9i9JV054404;
+        Fri, 15 Nov 2019 03:44:09 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 15
+ Nov 2019 03:44:08 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 15 Nov 2019 03:44:08 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAF9i55L081214;
+        Fri, 15 Nov 2019 03:44:05 -0600
+Subject: Re: [PATCH v4 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Rob Herring <robh@kernel.org>
+CC:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-9-peter.ujfalusi@ti.com> <20191105021900.GA17829@bogus>
+ <fc1ea525-54f1-ff1a-7e1c-61b54f5be862@ti.com>
+ <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <b4705f2e-b2fb-f00f-7d4d-bd440fe89135@ti.com>
+Date:   Fri, 15 Nov 2019 11:45:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Message-ID: <157381098865.29467.6521569703486012857.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+In-Reply-To: <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/kprobes branch of tip:
+Rob,
 
-Commit-ID:     a94d4b4a2a99d9c1277210ba7f74667e3a2bc76d
-Gitweb:        https://git.kernel.org/tip/a94d4b4a2a99d9c1277210ba7f74667e3a2bc76d
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 09 Oct 2019 12:44:20 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 15 Nov 2019 09:07:43 +01:00
+On 14/11/2019 19.53, Rob Herring wrote:
+> On Tue, Nov 5, 2019 at 4:07 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>>
+>>
+>> On 05/11/2019 4.19, Rob Herring wrote:
+>>> On Fri, Nov 01, 2019 at 10:41:28AM +0200, Peter Ujfalusi wrote:
+>>>> New binding document for
+>>>> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
+>>>>
+>>>> UDMA-P is introduced as part of the K3 architecture and can be found in
+>>>> AM654 and j721e.
+>>>>
+>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>>> ---
+>>>> Rob,
+>>>>
+>>>> can you give me some hint on how to fix these two warnings from dt_binding_check:
+>>>>
+>>>>   DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
+>>>> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dts:23.13-72: Warning (ranges_format): /example-0/interconnect@30800000:ranges: "ranges" property has invalid length (24 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
+>>>>   CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
+>>>
+>>> The default #address-cells is 1 for examples. So you need to
+>>> either override it or change ranges parent address size.
+>>
+>> wrapping the cbass_main_navss inside:
+>> cbass_main {
+>>     #address-cells = <2>;
+>>     #size-cells = <2>;
+>>     ...
+>> };
+>>
+>> fixes it.
+>>
+>>>>
+>>>> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml: interconnect@30800000: $nodename:0: 'interconnect@30800000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+>>>
+>>> Use 'bus' for the node name of 'simple-bus'.
+>>
+>> I took the navss node from the upstream dts (I'm going to fix it there
+>> as well).
+>> It has simple-bus for the navss, which is not quite right as NAVSS is
+>> not a bus, but a big subsystem with multiple components (UDMAP, ringacc,
+>> INTA, INTR, timers, etc).
+>>
+>> What about to change the binding doc to simple-mfd like this
+> 
+> That's really for things not memory-mapped (I'm sure you can probably
+> find an example to contradict me), so better to keep simple-bus if all
+> the child nodes have addresses.
 
-x86/alternative: Remove text_poke_loc::len
+According to Documentation/devicetree/bindings/mfd/mfd.txt:
+- A range of memory registers containing "miscellaneous system
+  registers" also known as a system controller "syscon" or any other
+  memory range containing a mix of unrelated hardware devices.
 
-Per the BUG_ON(len != insn.length) in text_poke_loc_init(), tp->len
-must indeed be the same as text_opcode_size(tp->opcode). Use this to
-remove this field from the structure.
+NAVSS (NAVigator SubSystem) falls in the later case, it contains
+unrelated blocks, like the UDMAP, ringacc, mailboxes, spinlocks,
+interrupt aggregator, interrupt router, etc.
 
-Sadly, due to 8 byte alignment, this only increases the structure
-padding.
+- compatible : "simple-mfd" - this signifies that the operating system
+  should consider all subnodes of the MFD device as separate devices
+  akin to how "simple-bus" indicates when to see subnodes as children
+  for a simple memory-mapped bus.
 
-Tested-by: Alexei Starovoitov <ast@kernel.org>
-Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191111132457.989922744@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/alternative.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+This is a bit confusing, but NAVSS is not really a bus, everything in it
+can be accessed by the CPU via memory mapped registers (some sub devices
+does not have registers defined, they are controlled via system firmware).
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index cfcfadf..6e3ee73 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -938,7 +938,6 @@ static void do_sync_core(void *info)
- 
- struct text_poke_loc {
- 	void *addr;
--	int len;
- 	s32 rel32;
- 	u8 opcode;
- 	const u8 text[POKE_MAX_OPCODE_SIZE];
-@@ -965,6 +964,7 @@ int notrace poke_int3_handler(struct pt_regs *regs)
- {
- 	struct text_poke_loc *tp;
- 	void *ip;
-+	int len;
- 
- 	/*
- 	 * Having observed our INT3 instruction, we now must observe
-@@ -1004,7 +1004,8 @@ int notrace poke_int3_handler(struct pt_regs *regs)
- 			return 0;
- 	}
- 
--	ip += tp->len;
-+	len = text_opcode_size(tp->opcode);
-+	ip += len;
- 
- 	switch (tp->opcode) {
- 	case INT3_INSN_OPCODE:
-@@ -1085,10 +1086,12 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 	 * Second step: update all but the first byte of the patched range.
- 	 */
- 	for (do_sync = 0, i = 0; i < nr_entries; i++) {
--		if (tp[i].len - sizeof(int3) > 0) {
-+		int len = text_opcode_size(tp[i].opcode);
-+
-+		if (len - sizeof(int3) > 0) {
- 			text_poke((char *)tp[i].addr + sizeof(int3),
- 				  (const char *)tp[i].text + sizeof(int3),
--				  tp[i].len - sizeof(int3));
-+				  len - sizeof(int3));
- 			do_sync++;
- 		}
- 	}
-@@ -1141,7 +1144,6 @@ void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
- 	BUG_ON(len != insn.length);
- 
- 	tp->addr = addr;
--	tp->len = len;
- 	tp->opcode = insn.opcode.bytes[0];
- 
- 	switch (tp->opcode) {
+> Do you need the node name to be 'navss' for some reason? If so, then
+> better have a compatible string in there to identify it. If not, just
+> use 'bus' and be done with it.
+
+We don't need unique compatible for the NAVSS itself as there is not
+much we can configure on the top level, it is 'just' a big subsystem
+with all sorts of things.
+
+I like to keep the 'navss' as node name as it gives human understandable
+representation of it in /sys for example, easier to see the topology.
+
+I just feel that the 'bus' does not really apply to what NAVSS is.
+Probably my view of simple-bus is not correct.
+
+>> cbass_main_navss: navss@30800000 {
+>>     compatible = "simple-mfd";
+>>     #address-cells = <2>;
+>>     #size-cells = <2>;
+>>     ...
+>> };
+>>
+>> and fix up the DT when I got to the point when I can send the patches to
+>> enable DMA for am654 and j721e?
+> 
+> There's no requirement yet for DTS files to not have warnings.
+
+Sure, but it does not hurt if they are clean ;)
+
+>>>> +  compatible:
+>>>> +    oneOf:
+>>>> +      - const: ti,am654-navss-main-udmap
+>>>> +      - const: ti,am654-navss-mcu-udmap
+>>>> +      - const: ti,j721e-navss-main-udmap
+>>>> +      - const: ti,j721e-navss-mcu-udmap
+>>>
+>>> enum works better than oneOf+const. Better error messages.
+>>
+>> Like this:
+>>   compatible:
+>>     oneOf:
+>>       - description: for AM654
+>>         items:
+>>           - enum:
+>>               - ti,am654-navss-main-udmap
+>>               - ti,am654-navss-mcu-udmap
+>>
+>>       - description: for J721E
+>>         items:
+>>           - enum:
+>>               - ti,j721e-navss-main-udmap
+>>               - ti,j721e-navss-mcu-udmap
+> 
+> If the 'description' was useful, but it's not. Just:
+> 
+> compatible:
+>   enum:
+>     - ti,am654-navss-main-udmap
+>     - ti,am654-navss-mcu-udmap
+>     - ti,j721e-navss-main-udmap
+>     - ti,j721e-navss-mcu-udmap
+
+OK, can I keep your Reviewed-by you have given to v5 if I do this change
+for v6?
+
+> 
+> 
+> Rob
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
