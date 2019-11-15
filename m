@@ -2,118 +2,103 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2FBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D20C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFDF20729
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A172070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gHubXHNe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GjufNMLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfKOASX (ORCPT
+        id S1727206AbfKOAXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 19:18:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44987 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726956AbfKOASW (ORCPT
+        Thu, 14 Nov 2019 19:23:14 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41327 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfKOAXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 19:18:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573777101;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZC4oRKrw/qWdzHQoCwRQZNWCxM2orILGhYYmWScMkN8=;
-        b=gHubXHNew/mkVcGaYaMqRrWGEeAkWLVYPrKA47WAYffSSFu6KJYi3USmcnmrJ1HhrIShwr
-        KiAbCfWtbzt/tB0Q37QmiHIMACuyYVxtr/U9OefiVAaworV8FFsVbsXo4X4WE1T5oo1wsk
-        UgsQWCOGzmIFaXRSIyYrFVX1iJXR7HM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-218-GWv-dqrhPmGI0TpTUuYg4g-1; Thu, 14 Nov 2019 19:18:17 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C270107ACC5;
-        Fri, 15 Nov 2019 00:18:15 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-39.pek2.redhat.com [10.72.12.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9BEC03DBB;
-        Fri, 15 Nov 2019 00:18:06 +0000 (UTC)
-Subject: Re: [PATCH 3/3 v9] kexec: Fix i386 build warnings that missed
- declaration of struct kimage
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, bhe@redhat.com, dyoung@redhat.com,
-        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
-        horms@verge.net.au, kexec@lists.infradead.org
-References: <20191108090027.11082-1-lijiang@redhat.com>
- <20191108090027.11082-4-lijiang@redhat.com> <20191114123920.GA7222@zn.tnic>
- <59fbd119-495a-4d00-9738-98c22b276c1f@redhat.com>
- <20191114144353.GB7222@zn.tnic>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <16a61f4d-a112-6766-0272-9cfd65e78503@redhat.com>
-Date:   Fri, 15 Nov 2019 08:18:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 14 Nov 2019 19:23:14 -0500
+Received: by mail-oi1-f196.google.com with SMTP id e9so7073243oif.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 16:23:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RsrGyoqQOYTH2PPKiYL70RKRI4in0yNtJQIpGh3K26A=;
+        b=GjufNMLb+2YWJLijLeqWGOvXAVzz4XsHL1I40V3nObyb3FekAhPvoAXapmoM3+HXQl
+         4lXuWj5kAUZ8DShtZYDijjP4NLhLGvDJ4jZFRJmu+Lg5XQCKQj1vhFU5DfAoKfnVAxxP
+         mkT/Lo7o3ATgV4w+prTyisBFmjzSxW1Z6Gnx47cfQqYV9BZdEIWIYZsD6Q0b8YBQsUe4
+         a9j8xUqQXkmBtiLEwHAKNuPsGCarYjqGuqxsN3zKm2uuv9/2p/MK0I1+wKKGz0Hc/vPJ
+         Swi3A+ww7I1gjZiAi87V35E+2V8ah7vDTvMDRrBc70t63sUFVwVUfl+KUh5nVHImZ/ww
+         nvKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RsrGyoqQOYTH2PPKiYL70RKRI4in0yNtJQIpGh3K26A=;
+        b=Aywpvd6PtojBnGBbZObK+UlLTXhGrxPIrlsB/vxGpHjhCvWG5R6WR+XUiVTYDFET0D
+         Lk0E3YN3OZs0nTL45T8PfoAz7L+P5U3nimbAQHlSLt7ndVwyzbTg+IgPfuZzlxW7p4P/
+         LCaC/SSKA7sIxUwkF9aoQ7yCfraS0sAHbdYcOZRfi7UwZKP9nrTG1UcHSoPk7haijAi6
+         j+bI/8FWJ/Q67Hy96FTymWxWtUWQ4hCqD2WTFnlITUZmcP/z30mt+dQINqGjNAPSZM8V
+         0eA5dR/uEhn5z34q58HjKekkjigQvgyNKSzcnS3QZ6kUtPsm7Ts1r4CgtoH2MvL0WeZp
+         pijQ==
+X-Gm-Message-State: APjAAAVpBpZGZ7Nthag/oeiIARYqXf5QwxWbP2ne+abOan5UOKNO86zM
+        mr3NNQ21//KCcaBY/E1fPj8zDiKCwNkElSLLKd8AEg==
+X-Google-Smtp-Source: APXvYqxfcWlpb80bfV9/wf4du5Ri0OHkQNIq7dTOGMorsiq+ISYV3iyGYJ5gy6j6vXuX0krZDW5k5bg9mqAlmEdJMVY=
+X-Received: by 2002:aca:c3cf:: with SMTP id t198mr5965693oif.10.1573777393028;
+ Thu, 14 Nov 2019 16:23:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191114144353.GB7222@zn.tnic>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: GWv-dqrhPmGI0TpTUuYg4g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20191002231617.3670-1-john.stultz@linaro.org> <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
+ <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com> <CALAqxLVh6GbiKmuK60e6f+_dWh-TS2ZLrwx0WsSo5bKp-F3iLA@mail.gmail.com>
+ <648e2943-42f5-e07d-5bb4-f6fd8b38b726@redhat.com> <CALAqxLWh0=GRod5ORpi+ENpWCkmY39mUw_=NV67sKY8qH_otZw@mail.gmail.com>
+ <f2236442-111d-cd84-fc47-0737df71cf3a@redhat.com> <CALAqxLWHbhst5KXAGCswKVp7ztzFHxdb6nskfze+Jk+xWo2Ssw@mail.gmail.com>
+ <7877d69b-b17c-d4a4-9806-3dca98fc9e26@redhat.com> <CALAqxLWE-8YkYmrKoP6-+2xherwsGZ8-CeUyOFe9YPQj6EuSpg@mail.gmail.com>
+ <7ea7824f-abc2-4cf6-720a-3668b6286781@redhat.com> <CALAqxLVrEYT5RbL_R0tx_3jHzt7ZuWHDPuEwt1r2iXgPwR+Czw@mail.gmail.com>
+ <f5c9f5a3-97b8-389b-47ee-cfa5ddb9afa7@redhat.com> <CALAqxLW5vYpGY1yLTvRefiX6anOGsPWW_Dc1Rj8kdf9+BDm0kw@mail.gmail.com>
+ <5965292c-4837-5f3b-816e-287174c909ff@redhat.com> <CALAqxLXhmS2CsPRgjOdZHhzegc_z9pOse4C6oPH44ny9JJcf+A@mail.gmail.com>
+ <2d98ea33-e128-6b38-8c16-c6339cb27fd1@redhat.com>
+In-Reply-To: <2d98ea33-e128-6b38-8c16-c6339cb27fd1@redhat.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 14 Nov 2019 16:23:02 -0800
+Message-ID: <CALAqxLXGFBcfdpzt+xznH1jqPfnL2KXG5eeCwz114ohgriT6tQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E5=9C=A8 2019=E5=B9=B411=E6=9C=8814=E6=97=A5 22:43, Borislav Petkov =E5=86=
-=99=E9=81=93:
-> On Thu, Nov 14, 2019 at 10:20:42PM +0800, lijiang wrote:
->> I really saw my building result, but kbuild reported the following messa=
-ges:
->>
->> vim +5 arch/x86/include/asm/crash.h
->>
->> dd5f726076cc76 Vivek Goyal 2014-08-08   4 =20
->> dd5f726076cc76 Vivek Goyal 2014-08-08  @5  int crash_load_segments(struc=
-t kimage *image);
->> dd5f726076cc76 Vivek Goyal 2014-08-08   6  int crash_copy_backup_region(=
-struct kimage *image);
->> dd5f726076cc76 Vivek Goyal 2014-08-08   7  int crash_setup_memmap_entrie=
-s(struct kimage *image,
->> dd5f726076cc76 Vivek Goyal 2014-08-08   8  =09=09struct boot_params *par=
-ams);
->> 89f579ce99f7e0 Yi Wang     2018-11-22   9  void crash_smp_send_stop(void=
-);
->> dd5f726076cc76 Vivek Goyal 2014-08-08  10 =20
->>
->> :::::: The code at line 5 was first introduced by commit=20
->>        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> :::::: dd5f726076cc7639d9713b334c8c133f77c6757a kexec: support for kexec=
- on panic using new system call
->>        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->=20
-> You should not take the report of a bot blindly but should always double
-> check it. Like every other computer system programmed by humans, it can
-> make mistakes.
->=20
+On Thu, Nov 14, 2019 at 2:11 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 22-10-2019 07:58, John Stultz wrote:
+> > I'm fine to
+> > continue digging and working on this approach, but I also don't want
+> > to have to pollute the core code too much for this oddball hardware
+> > (esp since doing the vbus control in the role-switch intermediary does
+> > work ok - or at least better then this approach so far).
+>
+> Given the special nature of the hardware I'm fine with the OTG intermediary
+> approach here. IMHO it is fine to just stick with that and to not spend
+> too much time on this.
 
-Indeed, i totally agree.
-
->> Would you mind giving me any suggestions about this?
->=20
-> I'll take care of it all and push the results out soon.
->=20
-
-OK, thank you so much.
-
-Lianbo
-
+Ok.  That was what I was leaning towards as well.
+Thanks again for all the review and feedback here! I really appreciate it!
+-john
