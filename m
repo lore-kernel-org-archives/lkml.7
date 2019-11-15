@@ -2,101 +2,81 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9374C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FEDC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747512072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NRJTOEwB"
+	by mail.kernel.org (Postfix) with ESMTP id 3867820723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKOWqZ (ORCPT
+        id S1727171AbfKOWqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:46:25 -0500
-Received: from ozlabs.org ([203.11.71.1]:34945 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbfKOWqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:46:25 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47FD3d6wm9z9s7T;
-        Sat, 16 Nov 2019 09:46:21 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573857982;
-        bh=9kk4tpM+xxjU0ufiMTeD1kx3KsiLzcD7YNCNHOC4ve0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NRJTOEwBJNx9ZWewdvG/6aKTkCtT1kblChM8nrDB+f064gzs6RvFy9lC6mXLXdSlm
-         Drl0tfSjHRzDodTtRs+kXgmXDQFUJR+Ed/o6aQjETvn1Kuyz7KRPMxQfap0sMuhmDu
-         rCC1r1I/hj+SuFsxq9AydRAoRiZQ7VqYgp2IIU4jMC065tCYQaulDNYNepDj7rTYlK
-         MSCc7u3YDl3Ht/PvIRDTEbThh92wl1LKxxNMsotAs6C8ZrNaOnO/ULyTvFhAEksI0l
-         mC6aXfIrC5SuMdBrRuxG7a9s00KW+Ctt0eHyzZEVrRxp5qLNMxB5n/T0BEhqFXHzPT
-         a+b8UHmAluiNw==
-Date:   Sat, 16 Nov 2019 09:46:20 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Snitzer <snitzer@redhat.com>,
-        Alasdair G Kergon <agk@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Thornber <dm-devel@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>
-Subject: Re: linux-next: Tree for Nov 15 (drivers/md/dm-integrity)
-Message-ID: <20191116094620.497663ab@canb.auug.org.au>
-In-Reply-To: <f368f431-b741-d04f-440b-3d8c3c035537@infradead.org>
-References: <20191115190525.77efdf6c@canb.auug.org.au>
-        <f368f431-b741-d04f-440b-3d8c3c035537@infradead.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/eXHVxvF=qGFYOOsJe.=izN.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Fri, 15 Nov 2019 17:46:54 -0500
+Received: from baldur.buserror.net ([165.227.176.147]:55598 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbfKOWqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 17:46:53 -0500
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1iVkKM-0007zt-Nm; Fri, 15 Nov 2019 16:44:31 -0600
+Message-ID: <71e4f8797fa6e4a116a6d1cabcb63871d7a0c4e0.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Timur Tabi <timur@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
+Date:   Fri, 15 Nov 2019 16:44:29 -0600
+In-Reply-To: <02dd5acd-b81e-fde3-028c-16e754e846b5@kernel.org>
+References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
+         <20191108130123.6839-33-linux@rasmusvillemoes.dk>
+         <CAOZdJXU1ELqQh7TitAJW7bsmnj89wq3opJGVizC2B19nL_3_rQ@mail.gmail.com>
+         <9f1a846b-c303-92fa-9620-f492ef940de7@rasmusvillemoes.dk>
+         <02dd5acd-b81e-fde3-028c-16e754e846b5@kernel.org>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: timur@kernel.org, linux@rasmusvillemoes.dk, qiang.zhao@nxp.com, leoyang.li@nxp.com, christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v4 32/47] serial: ucc_uart: use of_property_read_u32()
+ in ucc_uart_probe()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/eXHVxvF=qGFYOOsJe.=izN.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2019-11-15 at 08:35 -0600, Timur Tabi wrote:
+> On 11/15/19 2:01 AM, Rasmus Villemoes wrote:
+> > That would be a separate patch, this patch is only concerned with
+> > eliminating the implicit assumption of the host being big-endian. And
+> > there's already been some pushback to adding arch-specific ifdefs (which
+> > I agree with, but as I responded there see as the lesser evil), so
+> > unless there's a very good reason to add that complexity, I'd rather not.
+> 
+> We don't want to encourage people to introduce device trees that don't 
+> have the brg-frequency property in them.
 
-Hi all,
+Yeah, workarounds like this should be as targeted as possible.  If we knew the
+specific chips/boards on which U-Boot has this problem, then limiting it to
+those would have been even better (e.g. fix up the device tree from the
+platform code), but at this point containing the damage to PPC seems like the
+most reasonable approach.  It's not relevant to this specific patch, but it is
+relevant to a patchset expanding the set of platforms on which this code
+builds.
 
-On Fri, 15 Nov 2019 08:17:48 -0800 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> on i386:
->=20
-> ld: drivers/md/dm-integrity.o: in function `calculate_device_limits':
-> dm-integrity.c:(.text.unlikely+0x1e9): undefined reference to `__udivdi3'
+-Scott
 
-Caused by commit
 
-  a236c37603bd ("dm integrity: fix excessive alignment of metadata runs")
-
-=46rom the device-mapper tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/eXHVxvF=qGFYOOsJe.=izN.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3PKrwACgkQAVBC80lX
-0GwPbQgAkkzpeWaBKkI6HeFDee9HWiD5sxxknAq8l1BBraY7AeFPNtJ1Ct3pVItd
-I46PVCzzqOqwUYE6XVXE0YEqB8hh7pnBVTXdM322uNDGK5K/RHHIUpVvGjUCgLkF
-zR5xfv6MkZ4ZT0wBALxe1R2REp/wPsTa5k/g1IcOHumKTq7lOfxTHHa8gdTnuo94
-2TmrvOANSyh2/bKwylOppoaJBrVo+5ev+h7YmcdzjLUQVhcaZn8I543LS7kcOhxO
-qf8BelKVE6PelvRukZn16qWMosoq7ik/vKfVwY0jqzZKh+OGDjg60XOuyNzsPh8k
-ZEGMKkUn4mHU5Hc9yBBIVvfU2vD3NQ==
-=SARL
------END PGP SIGNATURE-----
-
---Sig_/eXHVxvF=qGFYOOsJe.=izN.--
