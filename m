@@ -2,108 +2,131 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14AAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14309C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A4B206DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98FC20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="guB1CbXX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="plD1YOaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKOEav (ORCPT
+        id S1727113AbfKOEeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 23:30:51 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45096 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfKOEav (ORCPT
+        Thu, 14 Nov 2019 23:34:00 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39637 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfKOEd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 23:30:51 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 14so7483571oir.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 20:30:50 -0800 (PST)
+        Thu, 14 Nov 2019 23:33:59 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 29so5188056pgm.6;
+        Thu, 14 Nov 2019 20:33:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kRWArS8EY6M5DOjOjqwZ6+pvf8YoFwoc/oPe6h/50XU=;
-        b=guB1CbXX81G22dmWZBHxcVVxa54wwF5isiRP8DfyGl6WLw5qsD8/1yYkL94xe1bvja
-         YWrfIftutXLXDL0eJK6ZS/da065bfHQYvNr79ght47XY6Zo0Ik8kf5tpJXSMFAAFQnCw
-         ubcAHiqDy1ycfTVOPB41eht7V6f8fV65ZKDZ0inrspQuNJKy3jkEwKSowxth/UevHA+Z
-         fTEAoFQL0v3zpTHMc57OpaWN8U0odan50b9dK7PBSP1E9f0eElQWxG9JTLJNXx33+/fU
-         uN/a1NVNCswzKJSR8+RQj5yu/EViETOWFER8emzdphHbCRqRIAw57SwazMYWno23m3Pf
-         w2vA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uG8EYto2G5KUs/xrRVV9nqvd+H7D1BzazmBvDXAUch4=;
+        b=plD1YOaNtJ71eOne2Z0YRcvw2L0eBFV+IsZdz01pd3dF/+Cp7NEW+SaLgddIzKXvIb
+         kv2oQTPWaU9yuuvo9mhmpZlgPLnVwIx8sBAiz4A9FDvwlESV8kTbUli5Crq9aI9MOXCf
+         HlaVk45La7pdje3K/dt9Opmq3P6teL6SnnSkLRgp/XTIYRSFR8vsW8ODOj8mfKR67wEi
+         aegHhKAy6bAszf8Vu1eZbUUhXXi2v7ltLq3ixDO9dqlx890OGZSwfLpFXG1d9CWLFZ59
+         I+9pZZSCHI7Zu947gxt/ktg3F+hdamMooXOsoFzv96ozqUF5hPZmBt+g39YCyaghndFu
+         rtNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kRWArS8EY6M5DOjOjqwZ6+pvf8YoFwoc/oPe6h/50XU=;
-        b=ba3H46lnY9nBhEht6W7xnf/6IDxuDGzqL6hzyptgXDpksDEkVRiTyMZv14aTpHWmJi
-         MwCjAua97QUYD3+yuwbHlmMku9LmvgARVhZXXou5Gwy07eH0eGb14B35bhuP0GusDcQB
-         Jqt8BkTsz2YJcUo6SmIQXKYUuIfA8n1I62L5bjvGp0iv01V2fhQA95k9N0vCwfRWTqSj
-         klxH/hpV1/yrRxNy3nviHHppGWoLfbZMVSYUHCvvbJ+H3vE1qHearLQnwQ25yMNHsx3U
-         eqIQNikSglOIzOpyNR8ET51Rnwo3Hf54QIybw1JoXQj0QgPXznjkhWY2aZxRuDO3N0UL
-         Qucg==
-X-Gm-Message-State: APjAAAWAQKxkBrgm/HCP7r7lZc5IF721gGoLmLCgvVZCycd6hWiO4/74
-        90Le+Xj8uwnbQ9zb5ycUd6aMCU3rxOu7qoA/REIrQw==
-X-Google-Smtp-Source: APXvYqxglauMMGlyWf/TClpfIHTmgAmcgrRFm8og4eYzgO7jYK3rFnEyN8B0fbbAiBI0hQLPzfZ1wmS7ammk00zCWVA=
-X-Received: by 2002:aca:ead7:: with SMTP id i206mr6863559oih.0.1573792250134;
- Thu, 14 Nov 2019 20:30:50 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uG8EYto2G5KUs/xrRVV9nqvd+H7D1BzazmBvDXAUch4=;
+        b=J1d01wNZs5YzqpAmdbFPqwW76Hg2UvD2nv0rn8A+fM78m7sfQuv1RI8kZ3hzuT9/8k
+         GRR8fznDTBkwGz057QMPwnjN1EALBtltN68XeLB73tCpJGHC+cdi8NWpT62r+KXpWu2a
+         eYzdiRgUcH+nmNQGj5gzf/vQLo3FlV6TAsWHiNrcV5+OGEr1lfCmzYleiZey4cqApq2Z
+         M1FqTs/irNalYLyLBrhl1Ecgp1TgdztZ0FI+1L/RxkERoIUnIoZK6fuxeBZakWoCekrT
+         kG6wY8nF6pUrKp7aOYM7/hludotlfNIeEQ8pXkj/jvv4lUotTUVzH5lMXMg+SvXf4MR6
+         Vcpw==
+X-Gm-Message-State: APjAAAWGQ3LEzioigAfJOaYga0jUl1fUoMWGpAjdUYMzDX2dVJYjdm1p
+        CX0PAHFSMq9Y8BUfOnbObPUyIXVhqGA=
+X-Google-Smtp-Source: APXvYqzdYiwsPqZoNlVml6tlzRZzQKB4JQJ2ZAJztAW0vdJWLBdWIj5wPzwiGCeMgkTS6VEnWQ+S3A==
+X-Received: by 2002:a62:aa0a:: with SMTP id e10mr5708723pff.46.1573792439044;
+        Thu, 14 Nov 2019 20:33:59 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
+        by smtp.gmail.com with ESMTPSA id m11sm1769772pgd.62.2019.11.14.20.33.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 20:33:57 -0800 (PST)
+Date:   Fri, 15 Nov 2019 13:33:56 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jonathan Richardson <jonathan.richardson@broadcom.com>,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        sergey.senozhatsky@gmail.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: console output duplicated when registering additional consoles
+Message-ID: <20191115043356.GA220831@google.com>
+References: <CAHrpVsUHgJA3wjh4fDg43y5OFCCvQb-HSRpyGyhFEKXcWw8WnQ@mail.gmail.com>
+ <CAHrpVsW6jRUYK_mu+dLaBvucAAtUPQ0zcH6_NxsUsTrPewiY_w@mail.gmail.com>
+ <20191114095737.wl5nvxu3w6p5thfc@pathway.suse.cz>
 MIME-Version: 1.0
-References: <20191025044721.16617-1-alastair@au1.ibm.com> <20191025044721.16617-3-alastair@au1.ibm.com>
-In-Reply-To: <20191025044721.16617-3-alastair@au1.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 14 Nov 2019 20:30:38 -0800
-Message-ID: <CAPcyv4gb7xZpY+F9qupJbLznqHbyCOuOee8R6aLby72UkyjtZg@mail.gmail.com>
-Subject: Re: [PATCH 02/10] nvdimm: remove prototypes for nonexistent functions
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anton Blanchard <anton@ozlabs.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Greg Kurz <groug@kaod.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114095737.wl5nvxu3w6p5thfc@pathway.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 9:49 PM Alastair D'Silva <alastair@au1.ibm.com> wrote:
->
-> From: Alastair D'Silva <alastair@d-silva.org>
->
-> These functions don't exist, so remove the prototypes for them.
->
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Gosh, that part of printk is really complex.
 
-Looks good, applied.
+On (19/11/14 10:57), Petr Mladek wrote:
+> For a proper solution we would need to match boot and real
+> consoles that write messages into the physical device.
+> But I am afraid that there is no support for this.
+
+Wouldn't those have same tty driver?
+
+---
+
+ kernel/printk/printk.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index f1b08015d3fa..a84cb20acf42 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2690,6 +2690,19 @@ static int __init keep_bootcon_setup(char *str)
+ 
+ early_param("keep_bootcon", keep_bootcon_setup);
+ 
++static bool known_console_driver(struct console *newcon)
++{
++	struct console *con;
++
++	for_each_console(con) {
++		if (!(con->flags & CON_ENABLED))
++			continue;
++		if (con->device && con->device == newcon->device)
++			return true;
++	}
++	return false;
++}
++
+ /*
+  * The console driver calls this routine during kernel initialization
+  * to register the console printing procedure with printk() and to
+@@ -2828,6 +2841,9 @@ void register_console(struct console *newcon)
+ 	if (newcon->flags & CON_EXTENDED)
+ 		nr_ext_console_drivers++;
+ 
++	if (known_console_driver(newcon))
++		newcon->flags &= ~CON_PRINTBUFFER;
++
+ 	if (newcon->flags & CON_PRINTBUFFER) {
+ 		/*
+ 		 * console_unlock(); will print out the buffered messages
