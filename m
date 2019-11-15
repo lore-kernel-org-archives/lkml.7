@@ -2,99 +2,110 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA59C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB297C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9368820723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZe+lZUE"
+	by mail.kernel.org (Postfix) with ESMTP id B9B9520723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbfKOIcF (ORCPT
+        id S1726996AbfKOIeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:32:05 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37233 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOIcF (ORCPT
+        Fri, 15 Nov 2019 03:34:36 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36687 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOIeg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 03:32:05 -0500
-Received: by mail-pl1-f194.google.com with SMTP id bb5so4135179plb.4;
-        Fri, 15 Nov 2019 00:32:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OCpyp7VlXRWKtfspUgWzs1CQ4X3tbOzNUUacTAQ1h0c=;
-        b=LZe+lZUE9hQ0aZNfcLDPsBUDHmfZCHMlwOVbI2C+0igiwcL1MTf0W975poTI0U68eB
-         pLruGRp9Rg+UyjBzHaPBZAhlQcY2u3sNvfNc98fDmx+pBAJ4Sjt6MVHCQ0hApcKbE0Uf
-         BgF81Q7dq5gh5dxlQTLrWO/jH0lwkpusB3Gq7XW4AWn1QyOGHGrmhNNbacLxDh5uergJ
-         DRipIURtIrxwBVvDeWcnZ4sOyn6mF8WzBrWhhPqNRk442OB6JYWxPLjH6GOZkqH2Aa37
-         0fiD1SMcsIUYD3RxEdroAnDxKGLbiZLvL5fvnOvzuwGll+AIZPufdYBfIG4IrkWNBN+d
-         2bEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OCpyp7VlXRWKtfspUgWzs1CQ4X3tbOzNUUacTAQ1h0c=;
-        b=WsnRKD9qFoRDgJbmEpNbTywCUddaSYV2ZqNACgS7dDO62iDo1lpIFjEl2FAJgi80h6
-         Y+uWunsZeiLxHZ8HRl3cDhyByBVVPMUuAssnqapc9LsbG70P8WRyFDH3da1ntARKy3G4
-         rsXxxQGZgOPLIkz2to2xFmLLl+JexF6GclG3B1qCC/232lZcdTY4CXGelc1DHMgiVWCK
-         cyYbB18vx+E5H8D1exadYF8yjL0OH90PcNIpy6Op7qm0BEYB7OUFZtLfyCSKmNYglE4y
-         CdIT2okd5Z7bEElx2JGFo0MIsPAOxM+RsXRWO5dnXlC0+kfLKRT4VFYOIRrcYV1c6f+9
-         reww==
-X-Gm-Message-State: APjAAAVl2Ud2UMprZQskHDJcGXo1/aREBjJK7OLg5Y49wbmFE4BCOf3U
-        dYXEUOgbZEJDAelv+rFdGlw=
-X-Google-Smtp-Source: APXvYqzGHHWHf6oK+MCJbGsnVBtLpmAG4XOJZSPBpO9E3gdQsRFrknJkZa+90QJvK9ZIXkeiY3KaiA==
-X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr7023396plr.257.1573806724797;
-        Fri, 15 Nov 2019 00:32:04 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id z4sm9190597pfn.80.2019.11.15.00.32.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 00:32:04 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 2/2] dmaengine: mmp_pdma: add missed of_dma_controller_free
-Date:   Fri, 15 Nov 2019 16:31:53 +0800
-Message-Id: <20191115083153.12334-1-hslester96@gmail.com>
+        Fri, 15 Nov 2019 03:34:36 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iVX3l-0003jD-NV; Fri, 15 Nov 2019 09:34:29 +0100
+Received: from mgr by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iVX3l-0007c3-1j; Fri, 15 Nov 2019 09:34:29 +0100
+From:   Michael Grzeschik <m.grzeschik@pengutronix.de>
+To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        kernel@pengutronix.de, festevam@gmail.com
+Cc:     devicetree@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ARM: dts: imx25: fix usbhost1 node
+Date:   Fri, 15 Nov 2019 09:34:15 +0100
+Message-Id: <20191115083415.28976-1-m.grzeschik@pengutronix.de>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
+References: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver calls of_dma_controller_register in probe but does not free
-it in remove.
-Add the call to fix it.
+The usb port represented by &usbhost1 uses an USB phy internal to the
+SoC. We add the phy_type to the base dtsi so the board dts only have to
+overwrite it if they use a different configuration. While at it we also
+pin the usbhost port to host mode and limit the speed of the phy to
+full-speed only, which it is only capable of.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 ---
- drivers/dma/mmp_pdma.c | 2 ++
- 1 file changed, 2 insertions(+)
+v1 -> v2: added the maximum speed limitation of the internal phy
 
-diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
-index 7fe494fc50d4..ad06f260e907 100644
---- a/drivers/dma/mmp_pdma.c
-+++ b/drivers/dma/mmp_pdma.c
-@@ -945,6 +945,8 @@ static int mmp_pdma_remove(struct platform_device *op)
- 	struct mmp_pdma_phy *phy;
- 	int i, irq = 0, irq_num = 0;
+ arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts | 2 --
+ arch/arm/boot/dts/imx25-pdk.dts                        | 2 --
+ arch/arm/boot/dts/imx25.dtsi                           | 3 +++
+ 3 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+index 0fde90df2b546..3f38c2e60a745 100644
+--- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+@@ -165,8 +165,6 @@
+ };
  
-+	if (op->dev.of_node)
-+		of_dma_controller_free(op->dev.of_node);
+ &usbhost1 {
+-	phy_type = "serial";
+-	dr_mode = "host";
+ 	status = "okay";
+ };
  
- 	for (i = 0; i < pdev->dma_channels; i++) {
- 		if (platform_get_irq(op, i) > 0)
+diff --git a/arch/arm/boot/dts/imx25-pdk.dts b/arch/arm/boot/dts/imx25-pdk.dts
+index 05cccd12624cb..fb66884d8a2fa 100644
+--- a/arch/arm/boot/dts/imx25-pdk.dts
++++ b/arch/arm/boot/dts/imx25-pdk.dts
+@@ -304,8 +304,6 @@
+ };
+ 
+ &usbhost1 {
+-	phy_type = "serial";
+-	dr_mode = "host";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+index 9a097ef014af5..40b95a290bd6b 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -570,6 +570,9 @@
+ 				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				fsl,usbphy = <&usbphy1>;
++				maximum-speed = "full-speed";
++				phy_type = "serial";
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
 -- 
 2.24.0
 
